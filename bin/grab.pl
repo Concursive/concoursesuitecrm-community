@@ -87,7 +87,7 @@ sub insert {
 
 sub main () {
 
-my $site_config = "$ARGV[0]" . "/database/site.cfg";
+#my $site_config = "$ARGV[0]" . "/database/site.cfg";
 
 open LOG, ">>$LOGFILE" or die "Cannot open $LOGFILE for write :$!";
 
@@ -96,26 +96,29 @@ print LOG `date`;
 print LOG "$0\n";
 print LOG "\nconfiguration: $site_config\n"; 
         
-open CONF, $site_config or die "Cannot open $site_config for read :$!";
+#open CONF, $site_config or die "Cannot open $site_config for read :$!";
 
         
-	while (<CONF>) {
-		chomp;
-		next if (/^#/);
-		s/^[ \t]*//;
-		s/[ \t\r\n]*$//;
-		next if (/^$/);
+#	while (<CONF>) {
+#		chomp;
+#		next if (/^#/);
+#		s/^[ \t]*//;
+#		s/[ \t\r\n]*$//;
+#		next if (/^$/);
 
-		if ( /^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/ ) {
-			$key = $1;
-			$val = $2;
-			print LOG "Processing Entry: '$key'\n";
+#		if ( /^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/ ) {
+#			$key = $1;
+#			$val = $2;
+#			print LOG "Processing Entry: '$key'\n";
 
-			$SITE_CODE = $val if ($key =~ /SITE_CODE/);	
-			$DBNAME = $val if ($key =~ /DB/);	
+#			$SITE_CODE = $val if ($key =~ /SITE_CODE/);	
+#			$DBNAME = $val if ($key =~ /DB/);	
 
-		}
-	} 
+#		}
+#	} 
+
+	$DBNAME = 'cdb_' . $ARGV[0];
+	$SITE_CODE = $ARGV[0];
 
 	if (!$SITE_CODE || !$DBNAME)
 	{
