@@ -179,6 +179,71 @@ public class PrivateString {
     }
   }
 
+  public static String encryptAsymmetric(String keyFilename, String inString) {
+    Key key = PrivateString.loadKey(keyFilename);
+    return PrivateString.encryptAsymmetric(key, inString);
+  }
+
+
+  /**
+   *  Encrypts a string using a public key, can only be decrypted using the
+   *  private key
+   *
+   *@param  key       Description of the Parameter
+   *@param  inString  Description of the Parameter
+   *@return           Description of the Return Value
+   */
+  public static String encryptAsymmetric(Key publicKey, String inString) {
+    try {
+      Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+      
+      Cipher cipher = Cipher.getInstance("RSA/None/OAEPPadding", "BC");
+      cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+      byte[] inputBytes = inString.getBytes("UTF8");
+      byte[] outputBytes = cipher.doFinal(inputBytes);
+
+      BASE64Encoder encoder = new BASE64Encoder();
+      String base64 = encoder.encode(outputBytes);
+      return (base64);
+    } catch (Exception e) {
+      return null;
+    }
+  }
+  
+  public static String decryptAsymmetric(String keyFilename, String inString) {
+    Key key = PrivateString.loadKey(keyFilename);
+    return PrivateString.decryptAsymmetric(key, inString);
+  }
+
+  
+  /**
+   *  Decrypts a base64 encoded string, with a private key, that was encoded 
+   *  using a public key
+   *
+   *@param  key       Description of the Parameter
+   *@param  inString  Description of the Parameter
+   *@return           Description of the Return Value
+   */
+  public static String decryptAsymmetric(Key privateKey, String inString) {
+    try {
+      Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+      
+      Cipher cipher = Cipher.getInstance("RSA/None/OAEPPadding", "BC");
+      cipher.init(Cipher.DECRYPT_MODE, privateKey);
+
+      BASE64Decoder decoder = new BASE64Decoder();
+
+      byte[] inputBytes = decoder.decodeBuffer(inString);
+      byte[] outputBytes = cipher.doFinal(inputBytes);
+
+      String result = new String(outputBytes, "UTF8");
+      return result;
+    } catch (Exception e) {
+      System.out.println(e.toString());
+      return null;
+    }
+  }
+
 
   /**
    *  Description of the Method
