@@ -1,15 +1,11 @@
 <%@ page import="org.aspcfs.modules.mycfs.base.CalendarEvent"%>
 <jsp:useBean id="cal" class="org.aspcfs.utils.web.CalendarView" scope="page"/>
-<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <html>
 <head>
 <title>Calendar</title>
-<link rel="stylesheet" href="css/template0<%= User.getBrowserIdAndOS() %>.css" type="text/css">
-<link rel="stylesheet" href="css/template0.css" type="text/css">
-
+<jsp:include page="templates/cssInclude.jsp" flush="true"/>
 <% String formName = request.getParameter("form"); %>
 <% String element = request.getParameter("element"); %>
-
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
   function openWindow(month, day, year) {
     width = 600;
@@ -19,14 +15,12 @@
     Win = open(url, 'as_events', 'toolbar=0,location=0,directories=0,status=0,menubar=0,resizable=1,width=' + width + ',height=' + height + ',scrollbars=yes');
     Win.focus();
   }
-
   function returnDate(dayVal, monVal, yearVal) {
     opener.document.<%= formName %>.<%= element %>.value = monVal + '/' + dayVal + '/' + yearVal; 
     window.close();
   }
 </script>
 </head>
-
 <body>
 <form name="monthBean" action="month.jsp">
 <%
@@ -66,11 +60,9 @@
   }
   
   if (dateString != null) {
-  
     String tmp1;
     String tmp2;
     String tmp3;
-  
     if (dateString.indexOf("/") > 0) {
       java.util.StringTokenizer ds = new java.util.StringTokenizer(dateString, "/");
       if (ds.countTokens() == 3) {

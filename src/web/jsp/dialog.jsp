@@ -1,7 +1,6 @@
 <jsp:useBean id="Dialog" class="org.aspcfs.utils.web.HtmlDialog" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-
 <%if(Dialog.getShowAndConfirm()){
   if(Dialog.getText().equals("")){
 %>
@@ -25,30 +24,27 @@ else{%>
 <%}
 }else{%>
 <html>
-        <link rel="stylesheet" href="css/template0<%= User.getBrowserIdAndOS() %>.css" type="text/css">
-        <link rel="stylesheet" href="css/template0.css" type="text/css">
-  <title><%=Dialog.getTitle()%></title>
+  <jsp:include page="templates/cssInclude.jsp" flush="true"/>
+  <title><%= Dialog.getTitle() %></title>
   <body>
     <br>
     <table cellpadding="4" cellspacing="0" border="0" width="95%" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr valign="center">
-      <td>
-       Are you sure you wish to permanently delete this object from CFS?
-      </td>
+        <td>
+           Are you sure you wish to permanently delete this object from CFS?
+        </td>
       </tr>
-      
       <tr><td>&nbsp;</td></tr>
       <tr><td>&nbsp;</td></tr>
       <tr><td>&nbsp;</td></tr>
       <tr><td>&nbsp;</td></tr>
-      
       <tr align="center">
-      <td>
-        <input type="button" value="Ok" onClick="<%=toHtml(Dialog.getDeleteUrl())%>">
-        <input type="button" value="Cancel" onClick="javascript:window.close();">
+        <td>
+          <input type="button" value="Ok" onClick="<%=toHtml(Dialog.getDeleteUrl())%>">
+          <input type="button" value="Cancel" onClick="javascript:window.close();">
         </td>
       </tr>
      </table>
- </body>
+   </body>
 </html>
 <%}%>

@@ -72,7 +72,7 @@
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2" valign=center align=left>
       <strong>Snapshot</strong>
     </td>
   </tr>
@@ -80,12 +80,11 @@
     <tr class="containerBody">
 
 	<td colspan=2 width=100%>
-		<dhv:browser id="ie" minVersion="5.5" include="true">
+		<dhv:browser id="ie" minVersion="5.5">
 		  <input type="hidden" name="msgBody" value="">
 	<iframe id="edit" frameborder="0" class="richEdit" style="border: 1px solid #cccccc; width: 100%; height: 100%;" onblur="return false">
 	<body style="color: black; background: white; font: 8pt verdana;">
-	<link rel="stylesheet" href="css/template0ie.css" type="text/css">
-	<link rel="stylesheet" href="css/template0.css" type="text/css">
+	<jsp:include page="../templates/cssInclude.jsp" flush="true"/>
 	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	<tr class="title">
 	<td colspan=2 valign=center align=left>
