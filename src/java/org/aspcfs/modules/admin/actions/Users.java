@@ -222,20 +222,6 @@ public final class Users extends CFSModule {
       String contactId = context.getRequest().getParameter("contactId");
 
       db = this.getConnection(context);
-      ContactTypeList contactTypeList = new ContactTypeList();
-      contactTypeList.setShowEmployees(true);
-      contactTypeList.buildList(db);
-      contactTypeList.setDefaultKey(typeId);
-      contactTypeList.setJsEvent("onChange=\"javascript:updateContactList();\"");
-      context.getRequest().setAttribute("ContactTypeList", contactTypeList);
-
-      ContactList contactList = new ContactList();
-      contactList.setEmptyHtmlSelectRecord("-- Please Select --");
-      contactList.setIncludeNonUsersOnly(true);
-      contactList.setPersonalId(getUserId(context));
-      contactList.setTypeId(Integer.parseInt(typeId));
-      contactList.buildList(db);
-      context.getRequest().setAttribute("ContactList", contactList);
 
       RoleList roleList = new RoleList();
       roleList.setEmptyHtmlSelectRecord("-- Please Select --");

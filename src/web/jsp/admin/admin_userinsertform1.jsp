@@ -1,6 +1,4 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
-<jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="RoleList" class="org.aspcfs.modules.admin.base.RoleList" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
@@ -9,31 +7,6 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript">
-<!-- 
-  function toggle(id) {
-    var obj = document.getElementById(id);
-    obj.style.display = (obj.style.display == 'none')?'':'none';
-    if (obj.style.display == '') {
-      document.addUser.contact_nameFirst.focus();
-    }
-    return false;
-  }
-  
-  function hideSpan(id) {
-    var obj = document.getElementById(id);
-    obj.style.display = 'none';
-    return false;
-  }
-  
-  function updateContactList() {
-    var sel = document.forms['addUser'].elements['typeId'];
-    var value = sel.options[sel.selectedIndex].value;
-    var url = "Users.do?command=ContactJSList&typeId=" + escape(value);
-    window.frames['server_commands'].location.href=url;
-  }
-//  End -->
-</SCRIPT>
 <body>
 <form name="addUser" action="Users.do?command=AddUser&auto-populate=true" method="post">
 <a href="Admin.do">Setup</a> >
