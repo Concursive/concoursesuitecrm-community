@@ -458,8 +458,8 @@
       <property>surveyId</property>
       </map>
       <map class="com.darkhorseventures.webutils.CustomLookupList" id="savedCriteriaElement" 
-         table="saved_criteriaelement" uniqueField="id">
-      <property field="id" alias="guid"/>
+         table="saved_criteriaelement">
+      <property field="id" lookup="searchCriteriaList"/>
       <property field="field"/>
       <property field="operator"/>
       <property field="operatorid"/>
