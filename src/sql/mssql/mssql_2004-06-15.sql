@@ -1,9 +1,10 @@
 -- Database upgrade v2.8 (2004-06-15)
 -- NOT FINISHED YET
 -- TODO: Compare with postgresql for anything that might have been missed
---       - Tables (ok)
---       - Constaints
---       - Foreign Keys
+--       X Tables
+--       - Constraints
+--       X Foreign Keys
+--       - Inserts
 
 ALTER TABLE organization ADD [import_id] [int] NULL;
 
@@ -1837,69 +1838,7 @@ ALTER TABLE [ticket_sun_form] WITH NOCHECK ADD
 	CONSTRAINT [DF__ticket_su__enabl__4A6E022D] DEFAULT (1) FOR [enabled]
 GO
 
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(18,1,'accounts-service-contracts',1,1,1,1,'Service Contracts',180,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(19,1,'accounts-assets',1,1,1,1,'Assets',190,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(20,1,'accounts-accounts-tickets-maintenance-report',1,1,1,1,'Ticket Maintenance Notes',200,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(21,1,'accounts-accounts-tickets-activity-log',1,1,1,1,'Ticket Activities',210,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(22,1,'portal-user',1,1,1,1,'Customer Portal User',220,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(23,1,'accounts-quotes',1,1,1,1,'Quotes',230,0,0,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(24,1,'accounts-orders',1,1,1,1,'Orders',240,0,0,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(25,1,'accounts-products',1,1,1,1,'Products and Services',250,0,0,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(33,2,'contacts-external_contacts-imports',1,1,1,1,'Imports',80,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(57,8,'tickets-maintenance-report',1,1,1,1,'Maintenance Notes',50,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(58,8,'tickets-activity-log',1,1,1,1,'Activities',60,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(68,9,'admin-sysconfig-products',1,1,1,1,'Labor Category Editor',100,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(86,17,'product-catalog',1,0,0,0,'Access to Product Catalog module',10,0,0,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(87,17,'product-catalog-product',1,1,1,1,'Products',20,0,0,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(88,18,'products',1,0,0,0,'Access to Products and Services module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(89,19,'quotes',1,1,1,1,'Access to Quotes module',10,1,1,0)
-INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(90,20,'orders',1,1,1,1,'Access to Orders module',10,1,1,0)
 
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(16,8,NULL,'open_calls_report.xml',1,'Open Calls','Which tickets are open?','Jun 15 2004  8:49:59:000AM',0,'Jun 15 2004  8:49:59:000AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(17,8,NULL,'contract_review_report.xml',1,'Contract Review','What is the expiration date for each contract?','Jun 15 2004  8:49:59:000AM',0,'Jun 15 2004  8:49:59:000AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(18,8,NULL,'call_history_report.xml',1,'Call History','How have tickets been resolved?','Jun 15 2004  8:49:59:010AM',0,'Jun 15 2004  8:49:59:010AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(19,8,NULL,'assets_under_contract_report.xml',1,'Assets Under Contract','Which assets are covered by contracts?','Jun 15 2004  8:49:59:010AM',0,'Jun 15 2004  8:49:59:010AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(20,8,NULL,'activity_log_report.xml',1,'Contract Activity Summary','What is the hourly summary for each contract?','Jun 15 2004  8:49:59:010AM',0,'Jun 15 2004  8:49:59:010AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(21,8,NULL,'callvolume_day_assignee.xml',1,'Call Volume by Assignee per Day','How many tickets are there by assignee per day?','Jun 15 2004  8:49:59:020AM',0,'Jun 15 2004  8:49:59:020AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(22,8,NULL,'callvolume_month_assignee.xml',1,'Call Volume by Assignee per Month','How many tickets are there by assignee per month?','Jun 15 2004  8:49:59:020AM',0,'Jun 15 2004  8:49:59:020AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(23,8,NULL,'callvolume_day_cat.xml',1,'Call Volume by Category per Day','How many tickets are there by category per day?','Jun 15 2004  8:49:59:020AM',0,'Jun 15 2004  8:49:59:020AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(24,8,NULL,'callvolume_month_cat.xml',1,'Call Volume by Category per Month','How many tickets are there by category per month?','Jun 15 2004  8:49:59:020AM',0,'Jun 15 2004  8:49:59:020AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(25,8,NULL,'callvolume_day_enteredby.xml',1,'Call Volume by User Entered per Day','How many tickets are there by user who entered the ticket per day?','Jun 15 2004  8:49:59:030AM',0,'Jun 15 2004  8:49:59:030AM',0,1,0)
-INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(26,8,NULL,'callvolume_month_ent.xml',1,'Call Volume by User Entered per Month','How many tickets are there by user who entered the ticket per month?','Jun 15 2004  8:49:59:030AM',0,'Jun 15 2004  8:49:59:030AM',0,1,0)
-
--- Insert default lookup_order_status
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_order_status] ON
-GO
-INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Pending',0,0,1)
-INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(2,'In Progress',0,0,1)
-INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Cancelled',0,0,1)
-INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Rejected',0,0,1)
-INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Complete',0,0,1)
-INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Closed',0,0,1)
-
-SET IDENTITY_INSERT [lookup_order_status] OFF
-GO
-SET NOCOUNT OFF
- 
--- Insert default lookup_order_type
-SET NOCOUNT ON
-SET IDENTITY_INSERT [lookup_order_type] ON
-GO
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(1,'New',0,0,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Change',0,0,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Upgrade',0,0,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Downgrade',0,0,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Disconnect',0,0,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Move',0,0,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(7,'Return',0,0,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(8,'Suspend',0,0,1)
-INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(9,'Unsuspend',0,0,1)
-
-SET IDENTITY_INSERT [lookup_order_type] OFF
-GO
-SET NOCOUNT OFF
- 
 -- Insert default lookup_asset_status
 SET NOCOUNT ON
 SET IDENTITY_INSERT [lookup_asset_status] ON
@@ -1948,8 +1887,6 @@ SET IDENTITY_INSERT [lookup_response_model] OFF
 GO
 SET NOCOUNT OFF
  
-INSERT [module_field_categorylink] ([id],[module_id],[category_id],[level],[description],[entered])VALUES(4,17,200403192,10,'Product Catalog Categories','Jun 15 2004  8:49:59:710AM')
-
 -- Insert default lookup_phone_model
 SET NOCOUNT ON
 SET IDENTITY_INSERT [lookup_phone_model] ON
@@ -2005,8 +1942,6 @@ SET IDENTITY_INSERT [lookup_hours_reason] OFF
 GO
 SET NOCOUNT OFF
  
-INSERT [database_version] ([version_id],[script_filename],[script_version],[entered])VALUES(1,'mssql.sql','2004-06-15','Jun 15 2004  8:50:20:450AM')
-
 -- Insert default lookup_quote_status
 SET NOCOUNT ON
 SET IDENTITY_INSERT [lookup_quote_status] ON
@@ -2026,6 +1961,39 @@ SET IDENTITY_INSERT [lookup_quote_status] OFF
 GO
 SET NOCOUNT OFF
  
+-- Insert default lookup_order_status
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_order_status] ON
+GO
+INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Pending',0,0,1)
+INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(2,'In Progress',0,0,1)
+INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Cancelled',0,0,1)
+INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Rejected',0,0,1)
+INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Complete',0,0,1)
+INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Closed',0,0,1)
+
+SET IDENTITY_INSERT [lookup_order_status] OFF
+GO
+SET NOCOUNT OFF
+ 
+-- Insert default lookup_order_type
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_order_type] ON
+GO
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(1,'New',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Change',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Upgrade',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Downgrade',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Disconnect',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Move',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(7,'Return',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(8,'Suspend',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(9,'Unsuspend',0,0,1)
+
+SET IDENTITY_INSERT [lookup_order_type] OFF
+GO
+SET NOCOUNT OFF
+ 
 -- Insert default lookup_orderaddress_types
 SET NOCOUNT ON
 SET IDENTITY_INSERT [lookup_orderaddress_types] ON
@@ -2037,18 +2005,6 @@ SET IDENTITY_INSERT [lookup_orderaddress_types] OFF
 GO
 SET NOCOUNT OFF
  
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(10,'Customer','Customer portal user',0,'Jun 15 2004  8:50:05:890AM',0,'Jun 15 2004  8:50:05:890AM',1,1)
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(11,'Products and Services Customer','Products and Services portal user',0,'Jun 15 2004  8:50:05:950AM',0,'Jun 15 2004  8:50:05:950AM',0,420041011)
-
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(13,15,130041304,'lookupList','lookup_asset_status',10,'Asset Status','Jun 15 2004  8:49:59:480AM',130041000)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(14,16,130041305,'lookupList','lookup_sc_category',10,'Service Contract Category','Jun 15 2004  8:49:59:500AM',130041100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(15,16,130041306,'lookupList','lookup_sc_type',20,'Service Contract Type','Jun 15 2004  8:49:59:640AM',130041100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(16,16,116041409,'lookupList','lookup_response_model',30,'Response Time Model','Jun 15 2004  8:49:59:640AM',130041100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(17,16,116041410,'lookupList','lookup_phone_model',40,'Phone Service Model','Jun 15 2004  8:49:59:650AM',130041100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(18,16,116041411,'lookupList','lookup_onsite_model',50,'Onsite Service Model','Jun 15 2004  8:49:59:650AM',130041100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(19,16,116041412,'lookupList','lookup_email_model',60,'Email Service Model','Jun 15 2004  8:49:59:670AM',130041100)
-INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(20,16,308041546,'lookupList','lookup_hours_reason',70,'Contract Hours Adjustment Reason','Jun 15 2004  8:49:59:680AM',130041100)
-
 -- Insert default lookup_payment_methods
 SET NOCOUNT ON
 SET IDENTITY_INSERT [lookup_payment_methods] ON
@@ -2063,24 +2019,6 @@ SET IDENTITY_INSERT [lookup_payment_methods] OFF
 GO
 SET NOCOUNT OFF
  
--- Insert default category_editor_lookup
-SET NOCOUNT ON
-SET IDENTITY_INSERT [category_editor_lookup] ON
-GO
-INSERT [category_editor_lookup] ([id],[module_id],[constant_id],[table_name],[level],[description],[entered],[category_id],[max_levels])VALUES(1,8,202041401,'ticket_category',10,'Ticket Categories','Jun 15 2004  8:49:59:040AM',8,4)
-INSERT [category_editor_lookup] ([id],[module_id],[constant_id],[table_name],[level],[description],[entered],[category_id],[max_levels])VALUES(2,15,202041400,'asset_category',10,'Asset Categories','Jun 15 2004  8:49:59:490AM',130041000,3)
-
-SET IDENTITY_INSERT [category_editor_lookup] OFF
-GO
-SET NOCOUNT OFF
- 
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products])VALUES(15,'Assets',NULL,1500,1,1,0,1,0,1,0,0,0,0)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products])VALUES(16,'Service Contracts',NULL,1400,1,1,0,1,0,0,0,0,0,0)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products])VALUES(17,'Product Catalog',NULL,1100,1,1,1,0,0,0,0,0,0,1)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products])VALUES(18,'Products and Services',NULL,300,0,0,0,0,0,0,0,0,0,0)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products])VALUES(19,'Quotes',NULL,900,0,0,0,0,0,0,0,0,0,0)
-INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products])VALUES(20,'Orders',NULL,1000,0,0,0,0,0,0,0,0,1,0)
-
 -- Insert default lookup_creditcard_types
 SET NOCOUNT ON
 SET IDENTITY_INSERT [lookup_creditcard_types] ON
@@ -2093,7 +2031,12 @@ INSERT [lookup_creditcard_types] ([code],[description],[default_item],[level],[e
 SET IDENTITY_INSERT [lookup_creditcard_types] OFF
 GO
 SET NOCOUNT OFF
- 
+
+
+INSERT [module_field_categorylink] ([id],[module_id],[category_id],[level],[description],[entered])VALUES(4,17,200403192,10,'Product Catalog Categories','Jun 15 2004  8:49:59:710AM')
+
+-- rebuild help
+
  CREATE  INDEX [import_entered_idx] ON [import]([entered]) ON [PRIMARY]
 GO
 
@@ -3458,4 +3401,6 @@ ALTER TABLE [trouble_asset_replacement] ADD
 		[form_id]
 	)
 GO
+
+INSERT [database_version] ([version_id],[script_filename],[script_version],[entered])VALUES(1,'mssql.sql','2004-06-15','Jun 15 2004  8:50:20:450AM')
 

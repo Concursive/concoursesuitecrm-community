@@ -1098,60 +1098,7 @@ CREATE TABLE quote_notes (
 
 -- TODO: NEED TO CHANGE THE INSERTS SO THEY DO NOT USE THE SERIAL ID
 
-INSERT INTO role VALUES (10, 'Customer', 'Customer portal user', 0, '2004-06-15 08:40:36.458', 0, '2004-06-15 08:40:36.458', true, 1);
-INSERT INTO role VALUES (11, 'Products and Services Customer', 'Products and Services portal user', 0, '2004-06-15 08:40:36.491', 0, '2004-06-15 08:40:36.491', false, 420041011);
-
 -- TODO: UPDATE THE LEVELS
-
-INSERT INTO permission_category VALUES (15, 'Assets', NULL, 1500, true, true, false, true, false, true, false, false, false, false);
-INSERT INTO permission_category VALUES (16, 'Service Contracts', NULL, 1400, true, true, false, true, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (17, 'Product Catalog', NULL, 1100, true, true, true, false, false, false, false, false, false, true);
-INSERT INTO permission_category VALUES (18, 'Products and Services', NULL, 300, false, false, false, false, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (19, 'Quotes', NULL, 900, false, false, false, false, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (20, 'Orders', NULL, 1000, false, false, false, false, false, false, false, false, true, false);
-
-INSERT INTO permission VALUES (18, 1, 'accounts-service-contracts', true, true, true, true, 'Service Contracts', 180, true, true, false);
-INSERT INTO permission VALUES (19, 1, 'accounts-assets', true, true, true, true, 'Assets', 190, true, true, false);
-INSERT INTO permission VALUES (20, 1, 'accounts-accounts-tickets-maintenance-report', true, true, true, true, 'Ticket Maintenance Notes', 200, true, true, false);
-INSERT INTO permission VALUES (21, 1, 'accounts-accounts-tickets-activity-log', true, true, true, true, 'Ticket Activities', 210, true, true, false);
-INSERT INTO permission VALUES (22, 1, 'portal-user', true, true, true, true, 'Customer Portal User', 220, true, true, false);
-INSERT INTO permission VALUES (23, 1, 'accounts-quotes', true, true, true, true, 'Quotes', 230, false, false, false);
-INSERT INTO permission VALUES (24, 1, 'accounts-orders', true, true, true, true, 'Orders', 240, false, false, false);
-INSERT INTO permission VALUES (25, 1, 'accounts-products', true, true, true, true, 'Products and Services', 250, false, false, false);
-INSERT INTO permission VALUES (33, 2, 'contacts-external_contacts-imports', true, true, true, true, 'Imports', 80, true, true, false);
-INSERT INTO permission VALUES (57, 8, 'tickets-maintenance-report', true, true, true, true, 'Maintenance Notes', 50, true, true, false);
-INSERT INTO permission VALUES (58, 8, 'tickets-activity-log', true, true, true, true, 'Activities', 60, true, true, false);
-INSERT INTO permission VALUES (68, 9, 'admin-sysconfig-products', true, true, true, true, 'Labor Category Editor', 100, true, true, false);
-INSERT INTO permission VALUES (86, 17, 'product-catalog', true, false, false, false, 'Access to Product Catalog module', 10, false, false, false);
-INSERT INTO permission VALUES (87, 17, 'product-catalog-product', true, true, true, true, 'Products', 20, false, false, false);
-INSERT INTO permission VALUES (88, 18, 'products', true, false, false, false, 'Access to Products and Services module', 10, true, true, false);
-INSERT INTO permission VALUES (89, 19, 'quotes', true, true, true, true, 'Access to Quotes module', 10, true, true, false);
-INSERT INTO permission VALUES (90, 20, 'orders', true, true, true, true, 'Access to Orders module', 10, true, true, false);
-INSERT INTO lookup_lists_lookup VALUES (13, 15, 130041304, 'lookupList', 'lookup_asset_status', 10, 'Asset Status', '2004-06-15 08:40:34.647', 130041000);
-INSERT INTO lookup_lists_lookup VALUES (14, 16, 130041305, 'lookupList', 'lookup_sc_category', 10, 'Service Contract Category', '2004-06-15 08:40:34.663', 130041100);
-INSERT INTO lookup_lists_lookup VALUES (15, 16, 130041306, 'lookupList', 'lookup_sc_type', 20, 'Service Contract Type', '2004-06-15 08:40:34.668', 130041100);
-INSERT INTO lookup_lists_lookup VALUES (16, 16, 116041409, 'lookupList', 'lookup_response_model', 30, 'Response Time Model', '2004-06-15 08:40:34.67', 130041100);
-INSERT INTO lookup_lists_lookup VALUES (17, 16, 116041410, 'lookupList', 'lookup_phone_model', 40, 'Phone Service Model', '2004-06-15 08:40:34.674', 130041100);
-INSERT INTO lookup_lists_lookup VALUES (18, 16, 116041411, 'lookupList', 'lookup_onsite_model', 50, 'Onsite Service Model', '2004-06-15 08:40:34.677', 130041100);
-INSERT INTO lookup_lists_lookup VALUES (19, 16, 116041412, 'lookupList', 'lookup_email_model', 60, 'Email Service Model', '2004-06-15 08:40:34.679', 130041100);
-INSERT INTO lookup_lists_lookup VALUES (20, 16, 308041546, 'lookupList', 'lookup_hours_reason', 70, 'Contract Hours Adjustment Reason', '2004-06-15 08:40:34.68', 130041100);
-
-INSERT INTO category_editor_lookup VALUES (1, 8, 202041401, 'ticket_category', 10, 'Ticket Categories', '2004-06-15 08:40:34.477', 8, 4);
-INSERT INTO category_editor_lookup VALUES (2, 15, 202041400, 'asset_category', 10, 'Asset Categories', '2004-06-15 08:40:34.658', 130041000, 3);
-SELECT pg_catalog.setval ('category_editor_lookup_id_seq', 2, true);
-
-INSERT INTO report VALUES (16, 8, NULL, 'open_calls_report.xml', 1, 'Open Calls', 'Which tickets are open?', '2004-06-15 08:40:34.452', 0, '2004-06-15 08:40:34.452', 0, true, false);
-INSERT INTO report VALUES (17, 8, NULL, 'contract_review_report.xml', 1, 'Contract Review', 'What is the expiration date for each contract?', '2004-06-15 08:40:34.454', 0, '2004-06-15 08:40:34.454', 0, true, false);
-INSERT INTO report VALUES (18, 8, NULL, 'call_history_report.xml', 1, 'Call History', 'How have tickets been resolved?', '2004-06-15 08:40:34.456', 0, '2004-06-15 08:40:34.456', 0, true, false);
-INSERT INTO report VALUES (19, 8, NULL, 'assets_under_contract_report.xml', 1, 'Assets Under Contract', 'Which assets are covered by contracts?', '2004-06-15 08:40:34.459', 0, '2004-06-15 08:40:34.459', 0, true, false);
-INSERT INTO report VALUES (20, 8, NULL, 'activity_log_report.xml', 1, 'Contract Activity Summary', 'What is the hourly summary for each contract?', '2004-06-15 08:40:34.461', 0, '2004-06-15 08:40:34.461', 0, true, false);
-INSERT INTO report VALUES (21, 8, NULL, 'callvolume_day_assignee.xml', 1, 'Call Volume by Assignee per Day', 'How many tickets are there by assignee per day?', '2004-06-15 08:40:34.463', 0, '2004-06-15 08:40:34.463', 0, true, false);
-INSERT INTO report VALUES (22, 8, NULL, 'callvolume_month_assignee.xml', 1, 'Call Volume by Assignee per Month', 'How many tickets are there by assignee per month?', '2004-06-15 08:40:34.465', 0, '2004-06-15 08:40:34.465', 0, true, false);
-INSERT INTO report VALUES (23, 8, NULL, 'callvolume_day_cat.xml', 1, 'Call Volume by Category per Day', 'How many tickets are there by category per day?', '2004-06-15 08:40:34.468', 0, '2004-06-15 08:40:34.468', 0, true, false);
-INSERT INTO report VALUES (24, 8, NULL, 'callvolume_month_cat.xml', 1, 'Call Volume by Category per Month', 'How many tickets are there by category per month?', '2004-06-15 08:40:34.47', 0, '2004-06-15 08:40:34.47', 0, true, false);
-INSERT INTO report VALUES (25, 8, NULL, 'callvolume_day_enteredby.xml', 1, 'Call Volume by User Entered per Day', 'How many tickets are there by user who entered the ticket per day?', '2004-06-15 08:40:34.473', 0, '2004-06-15 08:40:34.473', 0, true, false);
-INSERT INTO report VALUES (26, 8, NULL, 'callvolume_month_ent.xml', 1, 'Call Volume by User Entered per Month', 'How many tickets are there by user who entered the ticket per month?', '2004-06-15 08:40:34.475', 0, '2004-06-15 08:40:34.475', 0, true, false);
-
 
 INSERT INTO lookup_asset_status VALUES (1, 'In use', false, 10, true);
 INSERT INTO lookup_asset_status VALUES (2, 'Not in use', false, 20, true);
@@ -1214,21 +1161,6 @@ INSERT INTO lookup_email_model VALUES (4, 'Next business day', false, 40, true);
 INSERT INTO lookup_hours_reason VALUES (1, 'Purchase', false, 10, true);
 INSERT INTO lookup_hours_reason VALUES (2, 'Renewal', false, 20, true);
 INSERT INTO lookup_hours_reason VALUES (3, 'Correction', false, 30, true);
-
-
-INSERT INTO lookup_quote_status VALUES (1, 'Incomplete', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (2, 'Pending internal approval', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (3, 'Approved internally', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (4, 'Unapproved internally', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (5, 'Pending customer acceptance', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (6, 'Accepted by customer', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (7, 'Rejected by customer', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (8, 'Changes requested by customer', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (9, 'Cancelled', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (10, 'Complete', false, 0, true);
-
-
-
 
 
 INSERT INTO lookup_quote_status VALUES (1, 'Incomplete', false, 0, true);
@@ -2892,4 +2824,5 @@ SELECT pg_catalog.setval ('customer_product_history_history_id_seq', 1, false);
 
 SELECT pg_catalog.setval ('quote_notes_notes_id_seq', 1, false);
 
+INSERT [database_version] ([version_id],[script_filename],[script_version],[entered])VALUES(1,'mssql.sql','2004-06-15','Jun 15 2004  8:50:20:450AM')
 

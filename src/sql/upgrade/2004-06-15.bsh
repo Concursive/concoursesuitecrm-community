@@ -1,0 +1,678 @@
+
+import org.aspcfs.modules.base.Constants;
+import java.sql.*;
+import org.aspcfs.modules.admin.base.*;
+
+// Accounts
+PermissionCategory category = new PermissionCategory(db, PermissionCategory.lookupId(db, "Accounts"));
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("accounts-service-contracts");
+permission.setDescription("Service Contracts");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(180);
+permission.setEnabled(true);
+permission.setActive(true);
+permission.setViewpoints(false);
+permission.insert(db);
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("accounts-assets");
+permission.setDescription("Assets");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(190);
+permission.setEnabled(true);
+permission.setActive(true);
+permission.setViewpoints(false);
+permission.insert(db);
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("accounts-accounts-tickets-maintenance-report");
+permission.setDescription("Ticket Maintenance Notes");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(190);
+permission.setEnabled(true);
+permission.setActive(true);
+permission.setViewpoints(false);
+permission.insert(db);
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("accounts-accounts-tickets-activity-log");
+permission.setDescription("Ticket Activities");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(210);
+permission.setEnabled(true);
+permission.setActive(true);
+permission.setViewpoints(false);
+permission.insert(db);
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("portal-user");
+permission.setDescription("Customer Portal User");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(220);
+permission.setEnabled(true);
+permission.setActive(true);
+permission.setViewpoints(false);
+permission.insert(db);
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("accounts-quotes");
+permission.setDescription("Quotes");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(230);
+permission.setEnabled(false);
+permission.setActive(false);
+permission.setViewpoints(false);
+permission.insert(db);
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("accounts-orders");
+permission.setDescription("Orders");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(240);
+permission.setEnabled(false);
+permission.setActive(false);
+permission.setViewpoints(false);
+permission.insert(db);
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("accounts-products");
+permission.setDescription("Products and Services");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(250);
+permission.setEnabled(false);
+permission.setActive(false);
+permission.setViewpoints(false);
+permission.insert(db);
+
+// Contacts
+PermissionCategory category = new PermissionCategory(db, PermissionCategory.lookupId(db, "Contacts"));
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("contacts-external_contacts-imports");
+permission.setDescription("Imports");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(80);
+permission.setEnabled(true);
+permission.setActive(true);
+permission.setViewpoints(false);
+permission.insert(db);
+
+// Tickets
+PermissionCategory category = new PermissionCategory(db, PermissionCategory.lookupId(db, "Tickets"));
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("tickets-maintenance-report");
+permission.setDescription("Maintenance Notes");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(50);
+permission.setEnabled(true);
+permission.setActive(true);
+permission.setViewpoints(false);
+permission.insert(db);
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("tickets-activity-log");
+permission.setDescription("Activities");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(60);
+permission.setEnabled(true);
+permission.setActive(true);
+permission.setViewpoints(false);
+permission.insert(db);
+
+Report report = new Report();
+report.setCategoryId(category.getId());
+report.setPermissionId(-1);
+report.setFilename("open_calls_report.xml");
+report.setType(1);
+report.setTitle("Open Calls");
+report.setDescription("Which tickets are open?");
+report.setEnteredBy(0);
+report.setModifiedBy(0);
+report.setEnabled(true);
+report.setCustom(false);
+report.insert(db);
+
+Report report = new Report();
+report.setCategoryId(category.getId());
+report.setPermissionId(-1);
+report.setFilename("contract_review_report.xml");
+report.setType(1);
+report.setTitle("Contract Review");
+report.setDescription("What is the expiration date for each contract?");
+report.setEnteredBy(0);
+report.setModifiedBy(0);
+report.setEnabled(true);
+report.setCustom(false);
+report.insert(db);
+
+Report report = new Report();
+report.setCategoryId(category.getId());
+report.setPermissionId(-1);
+report.setFilename("call_history_report.xml");
+report.setType(1);
+report.setTitle("Call History");
+report.setDescription("How have tickets been resolved?");
+report.setEnteredBy(0);
+report.setModifiedBy(0);
+report.setEnabled(true);
+report.setCustom(false);
+report.insert(db);
+
+Report report = new Report();
+report.setCategoryId(category.getId());
+report.setPermissionId(-1);
+report.setFilename("assets_under_contract_report.xml");
+report.setType(1);
+report.setTitle("Assets Under Contract");
+report.setDescription("Which assets are covered by contracts?");
+report.setEnteredBy(0);
+report.setModifiedBy(0);
+report.setEnabled(true);
+report.setCustom(false);
+report.insert(db);
+
+Report report = new Report();
+report.setCategoryId(category.getId());
+report.setPermissionId(-1);
+report.setFilename("activity_log_report.xml");
+report.setType(1);
+report.setTitle("Contract Activity Summary");
+report.setDescription("What is the hourly summary for each contract?");
+report.setEnteredBy(0);
+report.setModifiedBy(0);
+report.setEnabled(true);
+report.setCustom(false);
+report.insert(db);
+
+Report report = new Report();
+report.setCategoryId(category.getId());
+report.setPermissionId(-1);
+report.setFilename("callvolume_day_assignee.xml");
+report.setType(1);
+report.setTitle("Call Volume by Assignee per Day");
+report.setDescription("How many tickets are there by assignee per day?");
+report.setEnteredBy(0);
+report.setModifiedBy(0);
+report.setEnabled(true);
+report.setCustom(false);
+report.insert(db);
+
+Report report = new Report();
+report.setCategoryId(category.getId());
+report.setPermissionId(-1);
+report.setFilename("callvolume_month_assignee.xml");
+report.setType(1);
+report.setTitle("Call Volume by Assignee per Month");
+report.setDescription("How many tickets are there by assignee per month?");
+report.setEnteredBy(0);
+report.setModifiedBy(0);
+report.setEnabled(true);
+report.setCustom(false);
+report.insert(db);
+
+Report report = new Report();
+report.setCategoryId(category.getId());
+report.setPermissionId(-1);
+report.setFilename("callvolume_day_cat.xml");
+report.setType(1);
+report.setTitle("Call Volume by Category per Day");
+report.setDescription("How many tickets are there by category per day?");
+report.setEnteredBy(0);
+report.setModifiedBy(0);
+report.setEnabled(true);
+report.setCustom(false);
+report.insert(db);
+
+Report report = new Report();
+report.setCategoryId(category.getId());
+report.setPermissionId(-1);
+report.setFilename("callvolume_month_cat.xml");
+report.setType(1);
+report.setTitle("Call Volume by Category per Month");
+report.setDescription("How many tickets are there by category per month?");
+report.setEnteredBy(0);
+report.setModifiedBy(0);
+report.setEnabled(true);
+report.setCustom(false);
+report.insert(db);
+
+Report report = new Report();
+report.setCategoryId(category.getId());
+report.setPermissionId(-1);
+report.setFilename("callvolume_day_enteredby.xml");
+report.setType(1);
+report.setTitle("Call Volume by User Entered per Day");
+report.setDescription("How many tickets are there by user who entered the ticket per day?");
+report.setEnteredBy(0);
+report.setModifiedBy(0);
+report.setEnabled(true);
+report.setCustom(false);
+report.insert(db);
+
+Report report = new Report();
+report.setCategoryId(category.getId());
+report.setPermissionId(-1);
+report.setFilename("callvolume_month_ent.xml");
+report.setType(1);
+report.setTitle("Call Volume by User Entered per Month");
+report.setDescription("How many tickets are there by user who entered the ticket per month?");
+report.setEnteredBy(0);
+report.setModifiedBy(0);
+report.setEnabled(true);
+report.setCustom(false);
+report.insert(db);
+
+PreparedStatement pst = db.prepareStatement(
+    "INSERT INTO category_editor_lookup " +
+    "(module_id, constant_id, table_name, level, description, category_id, max_levels) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+pst.setInt(1, category.getId());
+pst.setInt(2, 202041401);
+pst.setString(3, "ticket_category");
+pst.setInt(4, 10);
+pst.setString(5, "Ticket Categories");
+pst.setInt(6, 8);
+pst.setInt(7, 4);
+pst.execute();
+pst.close();
+
+
+// Admin
+PermissionCategory category = new PermissionCategory(db, PermissionCategory.lookupId(db, "Admin"));
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("admin-sysconfig-products");
+permission.setDescription("Labor Category Editor");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(100);
+permission.setEnabled(true);
+permission.setActive(true);
+permission.setViewpoints(false);
+permission.insert(db);
+
+// Assets
+PermissionCategory category = new PermissionCategory();
+category.setCategory("Assets");
+category.setDescription(null);
+category.setLevel(1500);
+category.setEnabled(true);
+category.setActive(true);
+category.setFolders(false);
+category.setLookups(true);
+category.setViewpoints(false);
+category.setCategories(true);
+category.setScheduledEvents(false);
+category.setObjectEvents(false);
+category.setReports(false);
+category.setProducts(false);
+category.insert(db);
+
+PreparedStatement pst = db.prepareStatement(
+  "INSERT INTO lookup_lists_lookup " +
+  "(module_id, category_id, lookup_id, level, table_name, description, class_name) " +
+  "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+pst.setInt(1, category.getId());
+pst.setInt(2, 130041000);
+pst.setInt(3, 130041304);
+pst.setInt(4, 10);
+pst.setString(5, "lookup_asset_status");
+pst.setString(6, "Asset Status");
+pst.setString(7, "lookupList");
+pst.execute();
+pst.close();
+
+PreparedStatement pst = db.prepareStatement(
+    "INSERT INTO category_editor_lookup " +
+    "(module_id, constant_id, table_name, level, description, category_id, max_levels) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+pst.setInt(1, category.getId());
+pst.setInt(2, 202041400);
+pst.setString(3, "asset_category");
+pst.setInt(4, 10);
+pst.setString(5, "Asset Categories");
+pst.setInt(6, 130041000);
+pst.setInt(7, 3);
+pst.execute();
+pst.close();
+
+// Service Contracts
+PermissionCategory category = new PermissionCategory();
+category.setCategory("Service Contracts");
+category.setDescription(null);
+category.setLevel(1400);
+category.setEnabled(true);
+category.setActive(true);
+category.setFolders(false);
+category.setLookups(true);
+category.setViewpoints(false);
+category.setCategories(false);
+category.setScheduledEvents(false);
+category.setObjectEvents(false);
+category.setReports(false);
+category.setProducts(false);
+category.insert(db);
+
+PreparedStatement pst = db.prepareStatement(
+  "INSERT INTO lookup_lists_lookup " +
+  "(module_id, category_id, lookup_id, level, table_name, description, class_name) " +
+  "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+pst.setInt(1, category.getId());
+pst.setInt(2, 130041100);
+pst.setInt(3, 130041305);
+pst.setInt(4, 10);
+pst.setString(5, "lookup_sc_category");
+pst.setString(6, "Service Contract Category");
+pst.setString(7, "lookupList");
+pst.execute();
+pst.close();
+
+PreparedStatement pst = db.prepareStatement(
+  "INSERT INTO lookup_lists_lookup " +
+  "(module_id, category_id, lookup_id, level, table_name, description, class_name) " +
+  "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+pst.setInt(1, category.getId());
+pst.setInt(2, 130041100);
+pst.setInt(3, 130041306);
+pst.setInt(4, 20);
+pst.setString(5, "lookup_sc_type");
+pst.setString(6, "Service Contract Type");
+pst.setString(7, "lookupList");
+pst.execute();
+pst.close();
+
+PreparedStatement pst = db.prepareStatement(
+  "INSERT INTO lookup_lists_lookup " +
+  "(module_id, category_id, lookup_id, level, table_name, description, class_name) " +
+  "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+pst.setInt(1, category.getId());
+pst.setInt(2, 130041100);
+pst.setInt(3, 116041409);
+pst.setInt(4, 30);
+pst.setString(5, "lookup_response_model");
+pst.setString(6, "Response Time Model");
+pst.setString(7, "lookupList");
+pst.execute();
+pst.close();
+
+PreparedStatement pst = db.prepareStatement(
+  "INSERT INTO lookup_lists_lookup " +
+  "(module_id, category_id, lookup_id, level, table_name, description, class_name) " +
+  "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+pst.setInt(1, category.getId());
+pst.setInt(2, 130041100);
+pst.setInt(3, 116041410);
+pst.setInt(4, 40);
+pst.setString(5, "lookup_phone_model");
+pst.setString(6, "Phone Service Model");
+pst.setString(7, "lookupList");
+pst.execute();
+pst.close();
+
+PreparedStatement pst = db.prepareStatement(
+  "INSERT INTO lookup_lists_lookup " +
+  "(module_id, category_id, lookup_id, level, table_name, description, class_name) " +
+  "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+pst.setInt(1, category.getId());
+pst.setInt(2, 130041100);
+pst.setInt(3, 116041411);
+pst.setInt(4, 50);
+pst.setString(5, "lookup_onsite_model");
+pst.setString(6, "Onsite Service Model");
+pst.setString(7, "lookupList");
+pst.execute();
+pst.close();
+
+PreparedStatement pst = db.prepareStatement(
+  "INSERT INTO lookup_lists_lookup " +
+  "(module_id, category_id, lookup_id, level, table_name, description, class_name) " +
+  "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+pst.setInt(1, category.getId());
+pst.setInt(2, 130041100);
+pst.setInt(3, 116041412);
+pst.setInt(4, 60);
+pst.setString(5, "lookup_email_model");
+pst.setString(6, "Email Service Model");
+pst.setString(7, "lookupList");
+pst.execute();
+pst.close();
+
+PreparedStatement pst = db.prepareStatement(
+  "INSERT INTO lookup_lists_lookup " +
+  "(module_id, category_id, lookup_id, level, table_name, description, class_name) " +
+  "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+pst.setInt(1, category.getId());
+pst.setInt(2, 130041100);
+pst.setInt(3, 308041546);
+pst.setInt(4, 70);
+pst.setString(5, "lookup_hours_reason");
+pst.setString(6, "Contract Hours Adjustment Reason");
+pst.setString(7, "lookupList");
+pst.execute();
+pst.close();
+
+// Product Catalog
+PermissionCategory category = new PermissionCategory();
+category.setCategory("Product Catalog");
+category.setDescription(null);
+category.setLevel(1100);
+category.setEnabled(true);
+category.setActive(true);
+category.setFolders(true);
+category.setLookups(false);
+category.setViewpoints(false);
+category.setCategories(false);
+category.setScheduledEvents(false);
+category.setObjectEvents(false);
+category.setReports(false);
+category.setProducts(true);
+category.insert(db);
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("product-catalog");
+permission.setDescription("Access to Product Catalog module");
+permission.setView(true);
+permission.setAdd(false);
+permission.setEdit(false);
+permission.setDelete(false);
+permission.setPermissionLevel(10);
+permission.setEnabled(false);
+permission.setActive(false);
+permission.setViewpoints(false);
+permission.insert(db);
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("product-catalog-product");
+permission.setDescription("Products");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(20);
+permission.setEnabled(false);
+permission.setActive(false);
+permission.setViewpoints(false);
+permission.insert(db);
+
+// Products and Services
+PermissionCategory category = new PermissionCategory();
+category.setCategory("Products and Services");
+category.setDescription(null);
+category.setLevel(300);
+category.setEnabled(false);
+category.setActive(false);
+category.setFolders(false);
+category.setLookups(false);
+category.setViewpoints(false);
+category.setCategories(false);
+category.setScheduledEvents(false);
+category.setObjectEvents(false);
+category.setReports(false);
+category.setProducts(false);
+category.insert(db);
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("products");
+permission.setDescription("Access to Products and Services module");
+permission.setView(true);
+permission.setAdd(false);
+permission.setEdit(false);
+permission.setDelete(false);
+permission.setPermissionLevel(10);
+permission.setEnabled(true);
+permission.setActive(true);
+permission.setViewpoints(false);
+permission.insert(db);
+
+// Quotes
+PermissionCategory category = new PermissionCategory();
+category.setCategory("Quotes");
+category.setDescription(null);
+category.setLevel(900);
+category.setEnabled(false);
+category.setActive(false);
+category.setFolders(false);
+category.setLookups(false);
+category.setViewpoints(false);
+category.setCategories(false);
+category.setScheduledEvents(false);
+category.setObjectEvents(false);
+category.setReports(false);
+category.setProducts(false);
+category.insert(db);
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("quotes");
+permission.setDescription("Access to Quotes module");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(10);
+permission.setEnabled(true);
+permission.setActive(true);
+permission.setViewpoints(false);
+permission.insert(db);
+
+// Orders
+PermissionCategory category = new PermissionCategory();
+category.setCategory("Orders");
+category.setDescription(null);
+category.setLevel(1000);
+category.setEnabled(false);
+category.setActive(false);
+category.setFolders(false);
+category.setLookups(false);
+category.setViewpoints(false);
+category.setCategories(false);
+category.setScheduledEvents(false);
+category.setObjectEvents(false);
+category.setReports(true);
+category.setProducts(false);
+category.insert(db);
+
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("orders");
+permission.setDescription("Access to Orders module");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(10);
+permission.setEnabled(true);
+permission.setActive(true);
+permission.setViewpoints(false);
+permission.insert(db);
+
+// Role permissions
+Role role = new Role();
+role.setRole("Products and Services Customer");
+role.setDescription("Products and Services portal user");
+role.setEnabled(false);
+role.setRoleType(Constants.ROLETYPE_PRODUCTS);
+role.setEnteredBy(0);
+role.setModifiedBy(0);
+role.insert(db);
+
+Role role = new Role();
+role.setRole("Customer");
+role.setDescription("Customer portal user");
+role.setEnabled(true);
+role.setRoleType(Constants.ROLETYPE_CUSTOMER);
+role.setEnteredBy(0);
+role.setModifiedBy(0);
+role.insert(db);
+
+PreparedStatement pst = db.prepareStatement(
+  "INSERT INTO role_permission " +
+  "(role_id, permission_id, role_view, role_add, role_edit, role_delete) " +
+  "VALUES(?,?,?,?,?,?) ");
+pst.setInt(1, role.getId());
+pst.setInt(2, permissionId);
+pst.setBoolean(3, true);
+pst.setBoolean(4, true);
+pst.setBoolean(5, true);
+pst.setBoolean(6, true);
+pst.execute();
+pst.close();
+
+
+
+
+
+
