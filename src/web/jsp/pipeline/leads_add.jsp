@@ -151,8 +151,8 @@ Add Opportunity<br>
                 <div id="changeaccount"><%= OppDetails.getHeader().getAccountLink() != -1 ? OppDetails.getHeader().getAccountName() : "None Selected" %></div>
               </td>
               <td>
-                <input type="hidden" name="header_accountLink" id="header_accountLink" value="<%= OppDetails.getHeader().getAccountLink() %>">
-                &nbsp;[<a href="javascript:document.forms['addOpportunity'].opp_type[0].checked='t';popAccountsListSingle('header_accountLink','changeaccount');" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;">Select</a>]&nbsp;<font color="red">*</font> <%= showAttribute(request, "acctContactError") %>
+                <input type="hidden" name="header_accountLink" id="header_accountLink" value="<%= OppDetails.getHeader().getAccountLink() %>">&nbsp;<font color="red">*</font> <%= showAttribute(request, "acctContactError") %>
+                &nbsp;[<a href="javascript:document.forms['addOpportunity'].opp_type[0].checked='t';popAccountsListSingle('header_accountLink','changeaccount');" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;">Select</a>]
               </td>
             </tr>
        </table>
