@@ -23,7 +23,7 @@
 <form name="contactListView" method="post" action="/MyCFSInbox.do?command=ContactList">
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
 <input type=hidden name="letter">
-<table width="100%" border="0">
+<table width="20%" border="0">
   <tr>
     
     <td align="left">
@@ -35,10 +35,6 @@
   <option <%= ContactListInfo.getOptionValue("myprojects") %>>My Projects</option>
 	</select>
      </td>
-  </tr>
-</table>
-
-<tr>
     <td>
       <% 
         if(ContactListInfo.getListView().equals("employees")){
@@ -59,7 +55,8 @@
         </select>
       <%}%>
     </td>
-  </tr>
+    </tr>
+</table>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
    <tr class="title">
