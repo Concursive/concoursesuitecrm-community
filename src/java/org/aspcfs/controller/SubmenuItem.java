@@ -17,6 +17,14 @@ public class SubmenuItem {
   String link = "";
   String htmlClass = "r";
   String permission = "";
+  
+  String graphicWidth = "";
+  String graphicHeight = "";
+  String graphicOn = "";
+  String graphicOff = "";
+  String graphicRollover = "";
+  
+  boolean isActive = false;
 
 
   /**
@@ -43,8 +51,21 @@ public class SubmenuItem {
     this.setLink(new String(otherItem.getLink()));
     this.setHtmlClass(new String(otherItem.getHtmlClass()));
     this.setPermission(new String(otherItem.getPermission()));
+    
+    this.setGraphicOn(new String(otherItem.getGraphicOn()));
+    this.setGraphicOff(new String(otherItem.getGraphicOff()));
+    this.setGraphicRollover(new String(otherItem.getGraphicRollover()));
+    this.setGraphicWidth(new String(otherItem.getGraphicRollover()));
+    this.setGraphicHeight(new String(otherItem.getGraphicRollover()));
   }
 
+	public boolean getIsActive() {
+		return isActive;
+	}
+	
+	public void setIsActive(boolean isActive) {
+		this.isActive = isActive;
+	}
 
   /**
    *  Sets the Name attribute of the SubmenuItem object
@@ -56,7 +77,18 @@ public class SubmenuItem {
     this.name = tmp;
   }
 
+	public String getGraphicWidth() { return graphicWidth; }
+	public String getGraphicHeight() { return graphicHeight; }
+	public String getGraphicOn() { return graphicOn; }
+	public String getGraphicOff() { return graphicOff; }
+	public String getGraphicRollover() { return graphicRollover; }
+	public void setGraphicWidth(String tmp) { this.graphicWidth = tmp; }
+	public void setGraphicHeight(String tmp) { this.graphicHeight = tmp; }
+	public void setGraphicOn(String tmp) { this.graphicOn = tmp; }
+	public void setGraphicOff(String tmp) { this.graphicOff = tmp; }
+	public void setGraphicRollover(String tmp) { this.graphicRollover = tmp; }
 
+  
   /**
    *  Sets the Html attribute of the SubmenuItem object
    *
@@ -178,6 +210,13 @@ public class SubmenuItem {
     }
   }
 
+  public String getImageHtml() {
+    if (link == null || link.equals("")) {
+      return shortHtml;
+    } else {
+      return ("<a href='" + link + "'><img name='" + shortHtml + "' src='images/" + ( (isActive) ? graphicOn : graphicOff) + "' border=0 onMouseOut=\"MM_swapImgRestore()\" onMouseOver=\"MM_swapImage('" + shortHtml + "','','images/" + graphicRollover + "',1)\"></a>");
+    }
+  }
 
   /**
    *  Gets the Name attribute of the SubmenuItem object
