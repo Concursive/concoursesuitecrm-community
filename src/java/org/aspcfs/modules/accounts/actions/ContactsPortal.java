@@ -286,8 +286,8 @@ public final class ContactsPortal extends CFSModule {
         mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
         mail.setType("text/html");
         mail.setTo(emailAddress.getEmail());
-        mail.setSubject("Dark Horse CRM portal login information");
-        mail.setBody("Your Dark Horse CRM portal account has been disabled <br><br>");
+        mail.setSubject("Login information");
+        mail.setBody("Your self-service account has been disabled<br /><br />");
         if (mail.send() == 2) {
           System.err.println(mail.getErrorMsg());
         }
@@ -341,8 +341,8 @@ public final class ContactsPortal extends CFSModule {
         mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
         mail.setType("text/html");
         mail.setTo(emailAddress.getEmail());
-        mail.setSubject("Dark Horse CRM portal login information");
-        mail.setBody("Your Dark Horse CRM portal account has been enabled.<br><br>");
+        mail.setSubject("Login information");
+        mail.setBody("Your self-service account has been enabled.<br><br>");
         if (mail.send() == 2) {
           System.err.println(mail.getErrorMsg());
         }
@@ -437,17 +437,18 @@ public final class ContactsPortal extends CFSModule {
       addRecentItem(context, newUser);
       context.getRequest().setAttribute("UserRecord", newUser);
       updateSystemHierarchyCheck(db, context);
-
       //send email
       SMTPMessage mail = new SMTPMessage();
       mail.setHost(ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
       mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
       mail.setType("text/html");
       mail.setTo(emailAddress.getEmail());
-      mail.setSubject("Portal login information");
-      mail.setBody("Your Dark Horse CRM portal account username is " + newUser.getUsername() + ".<br><br>" +
-          "Your password is :<br>" + password + "<br><br>");
-
+      mail.setSubject("Login information");
+      mail.setBody(
+          "A self-service account has been created for you.<br />" +
+          "<br />" +
+          "Your account username is: " + newUser.getUsername() + "<br />" +
+          "Your password is: " + password + "<br />");
       if (mail.send() == 2) {
         System.err.println(mail.getErrorMsg());
       }
@@ -542,32 +543,31 @@ public final class ContactsPortal extends CFSModule {
       mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
       mail.setType("text/html");
       mail.setTo(emailAddress.getEmail());
-      mail.setSubject("Portal login update");
+      mail.setSubject("Login information");
       String mailBody = "";
-      mailBody = "Your login information has been changed.<br><br>";
+      mailBody = 
+          "Your self-service login information has changed.<br />" +
+          "<br />";
       if (roleChanged) {
-        mailBody = mailBody + "You would now be able to access the customer portal.<br><br>";
+        mailBody = mailBody + "Your account has been updated so that you now have access to login.<br /><br />";
       }
       if (expirationDateChanged) {
         if ("".equals(tmpExpires.trim())) {
-          mailBody = mailBody + "The time limit on your portal account expiration has been removed.<br><br>";
+          mailBody = mailBody + "The expiration date on your account has been removed.<br /><br />";
         } else {
-          mailBody = mailBody + "Your portal account expires on " + tmpExpires + ".<br><br>";
+          mailBody = mailBody + "Your account expires on " + tmpExpires + ".<br /><br />";
         }
       }
       if (newPassword) {
-        mailBody = mailBody + "Your new password is " + password + ".<br><br>";
+        mailBody = mailBody + "Your new password is: " + password + "<br /><br />";
       }
-
       mail.setBody(mailBody);
-
       if (mail.send() == 2) {
         System.err.println(mail.getErrorMsg());
       }
     } else {
       return false;
     }
-
     return true;
   }
 }
