@@ -27,6 +27,8 @@ public class CustomLookupList extends LookupList {
     }
     sql.append("FROM " + tableName);
     PreparedStatement pst = db.prepareStatement(sql.toString());
+    System.out.println("CustomLookupElement-> " + pst.toString());
+
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
       CustomLookupElement thisElement = new CustomLookupElement(rs);
