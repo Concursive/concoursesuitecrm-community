@@ -140,6 +140,11 @@ public class CFSModule {
     return ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getNameFirst();
   }
 
+  protected SystemStatus getSystemStatus(ActionContext context) {
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    return (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+  }
+   
 
   /**
    *  Gets the User attribute of the CFSModule object
