@@ -78,7 +78,7 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
         }
       }
     } catch (Exception e) {
-      System.out.println("ContextSessionListener-> Error: " + e.toString());
+      //System.out.println("ContextSessionListener-> Error: " + e.toString());
     }
   }
 
