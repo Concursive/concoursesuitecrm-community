@@ -10,7 +10,6 @@
 <jsp:useBean id="categoryList3" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="assetStatusList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="Filters" class="org.aspcfs.modules.base.FilterList" scope="request"/>
-<jsp:useBean id="chosenContractId" class="java.lang.Integer" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popAssets.js"></script>

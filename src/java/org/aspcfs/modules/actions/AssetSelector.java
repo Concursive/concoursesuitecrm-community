@@ -107,7 +107,6 @@ public final class AssetSelector extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      context.getRequest().setAttribute("chosenContractId", new Integer(tmpContractId));
       context.getRequest().setAttribute("assetList", assetList);
       context.getSession().setAttribute("selectedAssets", selectedList);
       if (listDone) {
