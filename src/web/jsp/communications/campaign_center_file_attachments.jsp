@@ -104,7 +104,7 @@ File Attachments
 <dhv:permission name="campaign-campaigns-edit">
 <td width="200" valign="top">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerBody">
+  <tr class="containerBack">
     <form method="post" name="inputForm" action="CampaignManager.do?command=UploadFile&id=<%= Campaign.getId() %>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
       <td align="center" width="100%">
         <input type="file" name="id<%= Campaign.getId() %>" size="30"><br>

@@ -2,7 +2,7 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
 <jsp:useBean id="Survey" class="com.darkhorseventures.cfsbase.Survey" scope="request"/>
-<jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
+<jsp:useBean id="fileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <form name="modForm" action="/CampaignManager.do?command=InsertAttachment&id=<%= Campaign.getId() %>" method="post">
 <a href="CampaignManager.do">Communications Manager</a> >
@@ -33,12 +33,12 @@ Attachments
       Interactive Responses
     </td>
     <td width="100%" valign="top">
-      <dhv:evaluate if="<%= Campaign.hasSurvey() %>">
-        Added: <%= Survey.getName() %>&nbsp;
-      </dhv:evaluate>
       <a href="CampaignManager.do?command=ViewAttachment&id=<%= Campaign.getId() %>">
-        Click to change interactive response attachment
+        Change interactive response attachment
       </a>
+      <dhv:evaluate if="<%= Campaign.hasSurvey() %>">
+        <br>Attached: <%= Survey.getName() %>&nbsp;
+      </dhv:evaluate>
     </td>
   </tr>
   <tr class="containerBody">
@@ -46,12 +46,12 @@ Attachments
       File Attachments
     </td>
     <td width="100%" valign="top">
-      <dhv:evaluate if="<%= Campaign.hasFiles() %>">
-        Added: A bunch of files
-      </dhv:evaluate>
       <a href="CampaignManager.do?command=ManageFileAttachments&id=<%= Campaign.getId() %>">  
-        Click to change file attachments
+        Change file attachments
       </a>
+      <dhv:evaluate if="<%= fileItemList.size() > 0 %>">
+        <br>Added: <%= fileItemList.size() %> file<%= (fileItemList.size() != 1?"s":"") %>
+      </dhv:evaluate>
     </td>
   </tr>
 </table>
