@@ -74,7 +74,7 @@ Upload Document Version<br>
       Subject
     </td>
     <td>
-      <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
+      <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>">
       <input type="text" name="subject" size="59" maxlength="255" value="<%= FileItem.getSubject() %>"><font color="red">*</font>
     </td>
   </tr>

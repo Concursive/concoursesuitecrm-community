@@ -73,8 +73,8 @@ Upload Document<br>
       Subject
     </td>
     <td>
-      <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
-      <input type="text" name="subject" size="59" maxlength="255"><font color="red">*</font>
+      <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>">
+      <input type="text" name="subject" size="59" maxlength="255" value="<%= toHtmlValue((String)request.getAttribute("subject")) %>"><font color="red">*</font>
     </td>
   </tr>
   <tr class="containerBody">
