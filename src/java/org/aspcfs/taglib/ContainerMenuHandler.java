@@ -152,8 +152,10 @@ public class ContainerMenuHandler extends TagSupport {
               Template linkText = new Template(thisItem.getLink());
               linkText.setParseElements(params);
               if (style == TABS) {
-                this.pageContext.getOut().write("<th nowrap onClick=\"javascript:window.location.href='" + linkText.getParsedText() + appendToUrl + "'\">");
+                this.pageContext.getOut().write("<th nowrap>");
+                this.pageContext.getOut().write("<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
                 this.pageContext.getOut().write(thisItem.getLongHtml());
+                this.pageContext.getOut().write("</a>");
                 this.pageContext.getOut().write("</th>");
               } else {
                 this.pageContext.getOut().write("<a class=\"containerOn\" href=\"" + linkText.getParsedText() + appendToUrl + "\">");
@@ -164,8 +166,10 @@ public class ContainerMenuHandler extends TagSupport {
               Template linkText = new Template(thisItem.getLink());
               linkText.setParseElements(params);
               if (style == TABS) {
-                this.pageContext.getOut().write("<td nowrap onClick=\"javascript:window.location.href='" + linkText.getParsedText() + appendToUrl + "'\">");
+                this.pageContext.getOut().write("<td nowrap>");
+                this.pageContext.getOut().write("<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
                 this.pageContext.getOut().write(thisItem.getLongHtml());
+                this.pageContext.getOut().write("</a>");
                 this.pageContext.getOut().write("</td>");
               } else {
                 this.pageContext.getOut().write("<a class=\"containerOff\" href=\"" + linkText.getParsedText() + appendToUrl + "\">");

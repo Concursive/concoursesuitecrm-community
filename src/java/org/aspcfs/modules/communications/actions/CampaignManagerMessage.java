@@ -150,11 +150,6 @@ public final class CampaignManagerMessage extends CFSModule {
         return ("PermissionError");
       }
       newMessage.setModifiedBy(getUserId(context));
-      //If the user chooses to format the text then format it... this will convert
-      //their linefeeds into <br> html tags
-      if (newMessage.getFormatLineFeeds()) {
-        newMessage.setMessageText(StringUtils.toHtmlValue(newMessage.getMessageText()));
-      }
       resultCount = newMessage.update(db);
       if (resultCount == -1) {
         processErrors(context, newMessage.getErrors());
@@ -277,11 +272,6 @@ public final class CampaignManagerMessage extends CFSModule {
     try {
       newMessage.setEnteredBy(getUserId(context));
       newMessage.setModifiedBy(getUserId(context));
-      //If the user chooses to format the text then format it... this will convert
-      //their linefeeds into <br> html tags
-      if (newMessage.getFormatLineFeeds()) {
-        newMessage.setMessageText(StringUtils.toHtmlValue(newMessage.getMessageText()));
-      }
       db = this.getConnection(context);
       recordInserted = newMessage.insert(db);
       if (recordInserted) {

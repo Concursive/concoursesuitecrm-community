@@ -15,11 +15,12 @@ import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.login.base.AuthenticationItem;
-import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import java.io.*;
 import org.aspcfs.utils.*;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.iteam.base.FileItem;
 
 /**
  *  Module for processing a generated report and storing into a database

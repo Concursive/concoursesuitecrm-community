@@ -3,13 +3,13 @@
   var thisReportId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, reportId) {
+  function displayMenu(loc, id, reportId) {
     thisReportId = reportId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuReport", "down", 0, 0, 170, getHeight("menuReportTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
   //Menu link functions
@@ -28,34 +28,34 @@
 </script>
 <div id="menuReportContainer" class="menu">
   <div id="menuReportContent">
-    <table id="menuReportTable" class="pulldown" width="170">
+    <table id="menuReportTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="contacts-external_contacts-reports-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Data</a>
+          View Data
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="contacts-external_contacts-reports-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="download()">
+        <th>
           <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:download()">Download as .CSV File</a>
+          Download as .CSV File
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="contacts-external_contacts-reports-delete">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteReport()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteReport()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

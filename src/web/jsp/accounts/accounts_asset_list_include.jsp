@@ -37,8 +37,8 @@
         <% int status = -1;%>
         <% status = OrgDetails.getEnabled() ? 1 : 0; %>
       	<%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('menuAsset', '<%=request.getParameter("orgId") %>', '<%= thisAsset.getId() %>');"
-         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+         <a href="javascript:displayMenu('select<%= i %>','menuAsset', '<%=request.getParameter("orgId") %>', '<%= thisAsset.getId() %>');"
+         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuAsset');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
 		<td width="15%" nowrap>
       <a href="AccountsAssets.do?command=View&orgId=<%=request.getParameter("orgId")%>&id=<%= thisAsset.getId()%>"><%= toHtml(thisAsset.getSerialNumber()) %></a>

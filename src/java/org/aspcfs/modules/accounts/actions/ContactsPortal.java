@@ -431,7 +431,9 @@ public final class ContactsPortal extends CFSModule {
     newUser.setExpires(tmpDate);
     newUser.setEnteredBy(getUserId(context));
     newUser.setModifiedBy(getUserId(context));
-    newUser.setTimeZone((String) context.getServletContext().getAttribute("SYSTEM.TIMEZONE"));
+    newUser.setTimeZone(getPref(context, "SYSTEM.TIMEZONE"));
+    newUser.setCurrency(getPref(context, "SYSTEM.CURRENCY"));
+    newUser.setLanguage(getPref(context, "SYSTEM.LANGUAGE"));
     recordInserted = newUser.insert(db);
 
     //subsequently use this email address to email the user
@@ -521,7 +523,7 @@ public final class ContactsPortal extends CFSModule {
 
     //has password been generated?
     String password = null;
-    if ("on".equals(context.getRequest().getParameter("autoGenerate"))) {
+    if (DatabaseUtils.parseBoolean(context.getRequest().getParameter("autoGenerate"))) {
       newPassword = true;
       password = thisContact.getNameLast().toLowerCase() + String.valueOf(StringUtils.rand(1, 9999));
       newUser.setPassword1(password);

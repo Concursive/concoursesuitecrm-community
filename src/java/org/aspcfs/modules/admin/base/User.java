@@ -1,4 +1,4 @@
-//Copyright 2001-2003 Dark Horse Ventures
+//Copyright 2001-2004 Dark Horse Ventures
 
 package org.aspcfs.modules.admin.base;
 
@@ -15,7 +15,7 @@ import org.aspcfs.controller.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.*;
-
+import org.aspcfs.modules.actions.*;
 /**
  *  Represents a user access record <p>
  *
@@ -51,6 +51,9 @@ public class User extends GenericBean {
   protected User managerUser = null;
   protected String ip = null;
   protected String timeZone = null;
+  private String currency = null;
+  private String language = null;
+  private Locale locale = null;
   protected int startOfDay = -1;
   protected int endOfDay = -1;
   protected int enteredBy = -1;
@@ -208,18 +211,6 @@ public class User extends GenericBean {
 
 
   /**
-   *  Gets the yTDCurrency attribute of the User object
-   *
-   *@return    The yTDCurrency value
-   */
-  public String getYTDCurrency() {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    String amountOut = numberFormatter.format(YTD);
-    return amountOut;
-  }
-
-
-  /**
    *  Constructor for the User object
    *
    *@param  db                Description of Parameter
@@ -250,7 +241,7 @@ public class User extends GenericBean {
    *@param  tmp  The new expires value
    */
   public void setExpires(String tmp) {
-    this.expires = DateUtils.parseTimestampString(tmp);
+    this.expires = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -1348,6 +1339,85 @@ public class User extends GenericBean {
 
 
   /**
+   *  Gets the currency attribute of the User object
+   *
+   *@return    The currency value
+   */
+  public String getCurrency() {
+    return currency;
+  }
+
+
+  /**
+   *  Sets the currency attribute of the User object
+   *
+   *@param  tmp  The new currency value
+   */
+  public void setCurrency(String tmp) {
+    this.currency = tmp;
+  }
+
+
+  /**
+   *  Gets the language attribute of the User object
+   *
+   *@return    The language value
+   */
+  public String getLanguage() {
+    return language;
+  }
+
+
+  /**
+   *  Sets the language and locale attributes of the User object
+   *
+   *@param  tmp  The new language value
+   */
+  public void setLanguage(String tmp) {
+    this.language = tmp;
+    if (language == null) {
+      locale = Locale.getDefault();
+    } else {
+      switch (language.length()) {
+          case 2:
+            locale = new Locale(language.substring(0, 2), "");
+            break;
+          case 5:
+            locale = new Locale(language.substring(0, 2), language.substring(3, 5));
+            break;
+          case 10:
+            // fr_FR_EURO
+            locale = new Locale(language.substring(0, 2), language.substring(3, 5), language.substring(6));
+            break;
+          default:
+            locale = Locale.getDefault();
+            break;
+      }
+    }
+  }
+
+
+  /**
+   *  Gets the locale attribute of the User object
+   *
+   *@return    The locale value
+   */
+  public Locale getLocale() {
+    return locale;
+  }
+
+
+  /**
+   *  Sets the locale attribute of the User object
+   *
+   *@param  tmp  The new locale value
+   */
+  public void setLocale(Locale tmp) {
+    this.locale = tmp;
+  }
+
+
+  /**
    *  Gets the FullChildList attribute of the User object
    *
    *@param  inList       Description of Parameter
@@ -1626,6 +1696,12 @@ public class User extends GenericBean {
       if (timeZone != null) {
         sql.append("timezone, ");
       }
+      if (currency != null) {
+        sql.append("currency, ");
+      }
+      if (language != null) {
+        sql.append("language, ");
+      }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
@@ -1638,6 +1714,12 @@ public class User extends GenericBean {
         sql.append("?, ");
       }
       if (timeZone != null) {
+        sql.append("?, ");
+      }
+      if (currency != null) {
+        sql.append("?, ");
+      }
+      if (language != null) {
         sql.append("?, ");
       }
       sql.append("?, ?) ");
@@ -1732,7 +1814,7 @@ public class User extends GenericBean {
     sql.append("role_id = ?, " +
         "modifiedBy = ?, " +
         "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
-        "WHERE username = ? " + 
+        "WHERE username = ? " +
         "AND modified = ? ");
 
     pst = db.prepareStatement(sql.toString());
@@ -1751,24 +1833,26 @@ public class User extends GenericBean {
     updated = pst.executeUpdate();
     pst.close();
 
-    if (updated != 1)
+    if (updated != 1) {
       return updated;
-    
+    }
+
     //fetch the updated user id
     int tmpUserId = -1;
     ResultSet rs = null;
     sql = new StringBuffer();
     sql.append(
-      "SELECT user_id " +
-      "FROM access " + 
-      "WHERE username = ? ");
+        "SELECT user_id " +
+        "FROM access " +
+        "WHERE username = ? ");
     pst = db.prepareStatement(sql.toString());
     i = 0;
     pst.setString(++i, this.username);
-    
+
     rs = pst.executeQuery();
-    if (rs.next())
+    if (rs.next()) {
       tmpUserId = rs.getInt("user_id");
+    }
 
     return tmpUserId;
   }
@@ -1926,11 +2010,13 @@ public class User extends GenericBean {
     if (this.id > -1) {
       String sql =
           "UPDATE access " +
-          "SET timezone = ? " +
+          "SET timezone = ?, currency = ?, language = ? " +
           "WHERE user_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setString(1, this.timeZone);
-      pst.setInt(2, this.id);
+      pst.setString(2, this.currency);
+      pst.setString(3, this.language);
+      pst.setInt(4, this.id);
       pst.executeUpdate();
       pst.close();
     }
@@ -1958,6 +2044,7 @@ public class User extends GenericBean {
         "a.enabled as access_enabled, a.assistant, " +
         "a.entered as access_entered, a.enteredby as access_enteredby, " +
         "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
+        "a.currency, a.language, " +
         "r.role, r.role_type, " +
         "m_usr.enabled as mgr_enabled, " +
         "c.* " +
@@ -2034,22 +2121,8 @@ public class User extends GenericBean {
    *@param  divisor  Description of the Parameter
    *@return          The grossPipelineCurrency value
    */
-  public String getGrossPipelineCurrency(int divisor) {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    double tempValue = (java.lang.Math.round(pipelineValue) / divisor);
-    String amountOut = "";
-
-    if (tempValue < 1) {
-      if (tempValue == 0.0) {
-        amountOut = "0";
-      } else {
-        amountOut = "<1";
-      }
-    } else {
-      amountOut = numberFormatter.format(tempValue);
-    }
-
-    return amountOut;
+  public double getGrossPipeline(int divisor) {
+    return (java.lang.Math.round(pipelineValue) / divisor);
   }
 
 
@@ -2280,6 +2353,8 @@ public class User extends GenericBean {
     enteredBy = rs.getInt("access_enteredby");
     modified = rs.getTimestamp("access_modified");
     modifiedBy = rs.getInt("access_modifiedby");
+    currency = rs.getString("currency");
+    language = rs.getString("language");
     //role table
     this.setRole(rs.getString("role"));
     roleType = DatabaseUtils.getInt(rs, "role_type");
@@ -2537,6 +2612,34 @@ public class User extends GenericBean {
     ArrayList thisList = new ArrayList();
     thisList.add("expires");
     return thisList;
+  }
+
+
+  /**
+   *  Gets the idByEmailAddress attribute of the User class
+   *
+   *@param  db                Description of the Parameter
+   *@param  email             Description of the Parameter
+   *@return                   The idByEmailAddress value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int getIdByEmailAddress(Connection db, String email) throws SQLException {
+    int userId = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT user_id " +
+        "FROM contact c, contact_emailaddress e " +
+        "WHERE lower(e.email) = ? " +
+        "AND c.contact_id = e.contact_id " +
+        "AND user_id IS NOT NULL " +
+        "AND user_id > 0 ");
+    pst.setString(1, email.toLowerCase());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      userId = rs.getInt("user_id");
+    }
+    rs.close();
+    pst.close();
+    return userId;
   }
 }
 

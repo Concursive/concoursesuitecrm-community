@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.utils.web.*, org.aspcfs.modules.assets.base.*, org.aspcfs.modules.troubletickets.base.* " %>
 <jsp:useBean id="asset" class="org.aspcfs.modules.assets.base.Asset" scope="request"/>
 <jsp:useBean id="ticketList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
@@ -64,16 +65,16 @@
         <dhv:permission name="accounts-accounts-tickets-view"><a href="AccountTickets.do?command=TicketDetails&id=<%=thisTicket.getId()%>"></dhv:permission><%=thisTicket.getPaddedId() %><dhv:permission name="accounts-accounts-tickets-view"></a></dhv:permission>
     </td>
     <td width="12%" >
-      <dhv:tz timestamp="<%=thisTicket.getEntered()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= thisTicket.getEntered() %>" dateOnly="true" default="&nbsp;"/>
 		</td>
     <td width="32%" >
       <%=toHtml(thisTicket.getProblem())%>
 		</td>
 		<td width="12%" >
-    <dhv:tz timestamp="<%=thisTicket.getClosed()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+    <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" dateOnly="true" default="&nbsp;"/>
 		</td>
 		<td width="32%" >
-      <%=toHtml(thisTicket.getSolution())%>
+      <%= toHtml(thisTicket.getSolution()) %>
 		</td>
    </tr>
    <%}

@@ -230,15 +230,6 @@ public final class TroubleTickets extends CFSModule {
         files.setOwner(this.getUserId(context));
       }
       files.buildList(db);
-      Iterator i = files.iterator();
-      while (i.hasNext()) {
-        FileItem thisItem = (FileItem) i.next();
-        //TODO: Remove these and replace in JSP with user cache
-        Contact enteredBy = this.getUser(context, thisItem.getEnteredBy()).getContact();
-        Contact modifiedBy = this.getUser(context, thisItem.getModifiedBy()).getContact();
-        thisItem.setEnteredByString(enteredBy.getNameFirstLast());
-        thisItem.setModifiedByString(modifiedBy.getNameFirstLast());
-      }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

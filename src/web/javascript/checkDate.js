@@ -1,5 +1,6 @@
 /**
  * Checks to see if a date is entered in the 3-20-2001 or 3/20/2001 format
+ * Allow mm/dd or dd/mm
  * @arg1 = date to check
  */
 
@@ -37,7 +38,7 @@ function checkDate(datein) {
   
   if (sep[3] != null) return false;
   
-  if ((m <= 0 || m > 12) ||
+  if ((m <= 0 || m > 31) ||
       (d <= 0 || d > 31) ||
       (y < 0 || (y > 99 && y < 999) || y > 2200)) {
     return false;

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,com.zeroio.iteam.base.*,org.aspcfs.modules.troubletickets.base.*" %>
 <jsp:useBean id="FileList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <jsp:useBean id="TicketRptListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -74,7 +75,7 @@ Export Data
   <tr>
     <td nowrap class="row<%= rowid %>">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('menuReport','<%= thisItem.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayMenu('select<%= count %>','menuReport','<%= thisItem.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuReport');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td width="100%" class="row<%= rowid %>">
       <a href="javascript:popURL('TroubleTickets.do?command=ShowReportHtml&pid=-1&fid=<%= thisItem.getId() %>&popup=true','Report','600','400','yes','yes');"><%=toHtml(thisItem.getSubject())%></a>
@@ -83,10 +84,10 @@ Export Data
       <%= thisItem.getRelativeSize() %>k
     </td>
     <td class="row<%= rowid %>" nowrap>
-      <dhv:tz timestamp="<%= thisItem.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= thisItem.getEntered() %>" />
     </td>
     <td class="row<%= rowid %>" nowrap>
-      <%= toHtml(thisItem.getEnteredByString()) %>
+      <dhv:username id="<%= thisItem.getEnteredBy() %>" />
     </td>
     <td align="right" class="row<%= rowid %>">
     <%= thisItem.getDownloads() %>

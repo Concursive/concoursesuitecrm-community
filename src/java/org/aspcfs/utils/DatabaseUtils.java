@@ -263,9 +263,21 @@ public class DatabaseUtils {
    *@return      Description of the Return Value
    */
   public static java.sql.Timestamp parseTimestamp(String tmp) {
+    return parseTimestamp(tmp, Locale.getDefault());
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  tmp     Description of the Parameter
+   *@param  locale  Description of the Parameter
+   *@return         Description of the Return Value
+   */
+  public static java.sql.Timestamp parseTimestamp(String tmp, Locale locale) {
     java.sql.Timestamp timestampValue = null;
     try {
-      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).parse(tmp);
+      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, locale).parse(tmp);
       timestampValue = new java.sql.Timestamp(new java.util.Date().getTime());
       timestampValue.setTime(tmpDate.getTime());
       return timestampValue;
@@ -286,10 +298,22 @@ public class DatabaseUtils {
    *@return      Description of the Return Value
    */
   public static java.sql.Timestamp parseDateToTimestamp(String tmp) {
-    java.sql.Timestamp timestampValue = DatabaseUtils.parseTimestamp(tmp);
+    return parseDateToTimestamp(tmp, Locale.getDefault());
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  tmp     Description of the Parameter
+   *@param  locale  Description of the Parameter
+   *@return         Description of the Return Value
+   */
+  public static java.sql.Timestamp parseDateToTimestamp(String tmp, Locale locale) {
+    java.sql.Timestamp timestampValue = DatabaseUtils.parseTimestamp(tmp, locale);
     if (timestampValue == null) {
       try {
-        java.util.Date tmpDate = DateFormat.getDateInstance(DateFormat.SHORT).parse(tmp);
+        java.util.Date tmpDate = DateFormat.getDateInstance(DateFormat.SHORT, locale).parse(tmp);
         timestampValue = new java.sql.Timestamp(System.currentTimeMillis());
         timestampValue.setTime(tmpDate.getTime());
         timestampValue.setNanos(0);

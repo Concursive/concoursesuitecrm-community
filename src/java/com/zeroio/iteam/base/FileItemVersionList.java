@@ -1,8 +1,8 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
@@ -21,7 +21,8 @@ import org.aspcfs.utils.web.HtmlSelect;
  *
  *@author     matt rajkowski
  *@created    January 15, 2003
- *@version    $Id$
+ *@version    $Id: FileItemVersionList.java,v 1.3.130.1 2004/03/19 21:00:50
+ *      rvasista Exp $
  */
 public class FileItemVersionList extends ArrayList {
 
@@ -319,25 +320,45 @@ public class FileItemVersionList extends ArrayList {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public int queryFileSize(Connection db) throws SQLException {
-    int recordSize = 0;
+  public long queryFileSize(Connection db) throws SQLException {
+    long recordSize = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
-        "SELECT SUM(size/1048576) AS recordsize " +
+        "SELECT SUM(size) AS recordsize " +
         "FROM project_files_version v " +
         "WHERE v.item_id > -1 ";
     createFilter(sqlFilter);
     PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);
-    ResultSet rs = null;
-    try {
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        recordSize = DatabaseUtils.getInt(rs, "recordsize", 0);
-      }
-    } catch (SQLException e) {
-      //If the filesize causes an overflow then sql will return an error
-      recordSize = -1;
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      recordSize = DatabaseUtils.getLong(rs, "recordsize", 0);
+    }
+    rs.close();
+    pst.close();
+    return recordSize;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  ownerId           Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static long queryOwnerSize(Connection db, int ownerId) throws SQLException {
+    long recordSize = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT SUM(size) AS recordsize " +
+        "FROM project_files_version v " +
+        "WHERE v.item_id > -1 " +
+        "AND v.enteredby = ? ");
+    pst.setInt(1, ownerId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      recordSize = DatabaseUtils.getLong(rs, "recordsize", 0);
     }
     rs.close();
     pst.close();

@@ -102,7 +102,7 @@ Search Results
         <% } %>
         
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('menuContact','<%= thisContact.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>', '<%= hasClonePermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+         <a href="javascript:displayMenu('select<%= count %>','menuContact','<%= thisContact.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>', '<%= hasClonePermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuContact');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
         <td class="row<%= rowid %>" <%= "".equals(toString(thisContact.getNameLastFirst())) ? "width=\"10\"" : ""  %> nowrap>
           <% if(!"".equals(toString(thisContact.getNameLastFirst()))){ %>

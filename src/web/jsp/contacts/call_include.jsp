@@ -99,8 +99,8 @@
       Alert Date
     </td>
     <td>
-      <input type="text" size="10" name="alertDate" value="<dhv:tz timestamp="<%= CallDetails.getAlertDate() %>"  dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>"> 
-      <a href="javascript:popCalendar('addCall', 'alertDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" size="10" name="alertDate" value="<zeroio:tz timestamp="<%= CallDetails.getAlertDate() %>" dateOnly="true" />"> 
+      <a href="javascript:popCalendar('addCall', 'alertDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
     </td>
   </tr>
 </table>

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="MessageList" class="org.aspcfs.modules.communications.base.MessageList" scope="request"/>
 <jsp:useBean id="CampaignMessageListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -76,8 +77,8 @@ Message List
   <tr class="containerBody">
     <td width="8" valign="center" nowrap align="center" class="row<%= rowid %>">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-      <a href="javascript:displayMenu('menuMsg', '<%= thisMessage.getId() %>');"
-      onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+      <a href="javascript:displayMenu('select<%= count %>','menuMsg', '<%= thisMessage.getId() %>');"
+      onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuMsg');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
 		<td width="40%" valign="center" class="row<%= rowid %>">
       <a href="CampaignManagerMessage.do?command=Details&id=<%=thisMessage.getId()%>"><%= toHtml(thisMessage.getName()) %></a>
@@ -89,7 +90,7 @@ Message List
       <dhv:username id="<%= thisMessage.getEnteredBy() %>" lastFirst="true" />
     </td>
     <td valign="center" class="row<%= rowid %>" nowrap>
-      <dhv:tz timestamp="<%= thisMessage.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= thisMessage.getModified() %>" />
     </td>
   </tr>
 <%

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*, org.aspcfs.utils.web.*,java.util.*,org.aspcfs.modules.assets.base.*,org.aspcfs.modules.servicecontracts.base.*,java.text.DateFormat" %>
 <jsp:useBean id="serviceContractList" class="org.aspcfs.modules.servicecontracts.base.ServiceContractList" scope="request"/>
 <jsp:useBean id="finalServiceContracts" class="org.aspcfs.modules.servicecontracts.base.ServiceContractList" scope="request"/>
@@ -76,10 +77,10 @@
         <%=toHtml(serviceContractTypeSelect.getSelectedValue(thisContract.getType()))%> 
       </td>
       <td width="20%" valign="center">
-        <dhv:tz timestamp="<%=thisContract.getCurrentStartDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%=thisContract.getCurrentStartDate()%>" dateOnly="true" default="&nbsp;"/>
       </td>
       <td width="20%" valign="center" nowrap>
-        <dhv:tz timestamp="<%=thisContract.getCurrentEndDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%=thisContract.getCurrentEndDate()%>" dateOnly="true" default="&nbsp;"/>
       </td>
     </tr>
     <%  

@@ -48,6 +48,9 @@ public class SystemStatus {
   //Cached lookup tables
   private HashMap lookups = new HashMap();
 
+  //Cached object collections
+  private HashMap objects = new HashMap();
+
   //Site Preferences
   private Map preferences = new LinkedHashMap();
   private int sessionTimeout = 5400;
@@ -172,7 +175,7 @@ public class SystemStatus {
 
   /**
    *  Gets the Import Manager for this Application Instance <br>
-   *NOTE: There is one Import Manager per application instance
+   *  NOTE: There is one Import Manager per application instance
    *
    *@param  context  Description of the Parameter
    *@return          The importManager value
@@ -490,15 +493,18 @@ public class SystemStatus {
       System.out.println("SystemStatus-> Preferences Error: " + e.getMessage());
     }
     //Build the workflow manager preferences
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("SystemStatus-> Loading workflow processes: " + fileLibraryPath + "workflow.xml");
-    }
     try {
       //Build processes from database
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("SystemStatus-> Loading workflow processes from database");
+      }
       hookManager.setFileLibraryPath(fileLibraryPath);
       hookManager.initializeBusinessProcessList(db);
       hookManager.initializeObjectHookList(db);
       if (hookManager.getProcessList().size() == 0 || hookManager.getHookList().size() == 0) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("SystemStatus-> Loading workflow processes: " + fileLibraryPath + "workflow.xml");
+        }
         //Build processes from file (backwards compatible)
         //NOTE: The file is fine, but it should be imported into the database so
         //users can use the web editor
@@ -568,7 +574,7 @@ public class SystemStatus {
    *@exception  SQLException  Description of the Exception
    */
   public LookupList getLookupList(Connection db, String tableName) throws SQLException {
-    if (!(lookups.containsKey(tableName))) {
+    if (!lookups.containsKey(tableName) && db != null) {
       synchronized (this) {
         if (!(lookups.containsKey(tableName))) {
           lookups.put(tableName, new LookupList(db, tableName));
@@ -795,5 +801,37 @@ public class SystemStatus {
       return Integer.parseInt(intValue);
     }
   }
+
+
+  /**
+   *  Gets the objects attribute of the SystemStatus object
+   *
+   *@return    The objects value
+   */
+  public HashMap getObjects() {
+    return objects;
+  }
+
+
+  /**
+   *  Sets the objects attribute of the SystemStatus object
+   *
+   *@param  tmp  The new objects value
+   */
+  public void setObjects(HashMap tmp) {
+    this.objects = tmp;
+  }
+
+
+  /**
+   *  Gets the object attribute of the SystemStatus object
+   *
+   *@param  label  Description of the Parameter
+   *@return        The object value
+   */
+  public Object getObject(String label) {
+    return objects.get(label);
+  }
+
 }
 

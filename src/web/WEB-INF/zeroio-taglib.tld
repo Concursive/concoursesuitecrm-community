@@ -5,15 +5,15 @@
 
 <taglib>
   <!-- Version number of this taglib -->
-  <tlib-version>1.1</tlib-version>
+  <tlib-version>1.0</tlib-version>
   <!-- Minimum version of JSP spec required -->
   <jsp-version>1.1</jsp-version>
   <!-- taglib name of this tag library -->
-  <short-name>dhv</short-name>
+  <short-name>zeroio</short-name>
   <!-- URI of taglib -->
-  <uri>http://www.darkhorseventures.com/taglibs/darkhorseventures.jar</uri>
+  <uri>http://www.teamelements.com/iteam</uri>
   <!-- The name to use in titles, etc. for the taglib -->
-  <display-name>Darkhorse Ventures Tag Library</display-name>
+  <display-name>Zeroio Tag Library</display-name>
 
   <tag>
     <name>durationSelect</name> 
@@ -42,4 +42,332 @@
         <rtexprvalue>yes</rtexprvalue>
       </attribute>
   </tag>
+  
+  <tag>
+    <name>permission</name> 
+    <tag-class>com.zeroio.taglib.PermissionHandler</tag-class>
+    <body-content>JSP</body-content>
+    <display-name>
+      Access the team member and project permissions
+    </display-name>
+    <attribute>
+      <name>name</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>if</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>username</name> 
+    <tag-class>com.zeroio.taglib.UsernameHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Get the user's name from memory
+    </display-name>
+    <attribute>
+      <name>id</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>project</name> 
+    <tag-class>com.zeroio.taglib.ProjectNameHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Get the project's name from memory
+    </display-name>
+    <attribute>
+      <name>id</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>tabbedMenu</name> 
+    <tag-class>com.zeroio.taglib.TabbedMenuHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Display a tabbed menu table row
+    </display-name>
+    <attribute>
+      <name>text</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>key</name>
+      <required>yes</required>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>url</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>folderHierarchy</name> 
+    <tag-class>com.zeroio.taglib.FolderHierarchyHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Display the folder trails
+    </display-name>
+    <attribute>
+      <name>showLastLink</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>role</name> 
+    <tag-class>com.zeroio.taglib.RoleHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Get the user's role from memory
+    </display-name>
+    <attribute>
+      <name>id</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>roleSelect</name> 
+    <tag-class>com.zeroio.taglib.RoleSelectHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Get the role drop-down from memory
+    </display-name>
+    <attribute>
+      <name>name</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>onChange</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>timeSelect</name> 
+    <tag-class>com.zeroio.taglib.HtmlSelectTime</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Display HTML fields for entering time
+    </display-name>
+    <attribute>
+      <name>baseName</name>
+      <required>yes</required>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>yes</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>timeZone</name>
+      <required>no</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>spinner</name> 
+    <tag-class>com.zeroio.taglib.HtmlSpinner</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Display an HTML text field with indent and unindent arrows to manipulate field
+    </display-name>
+    <attribute>
+      <name>name</name>
+      <required>yes</required>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>no</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>min</name>
+      <required>yes</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>max</name>
+      <required>yes</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>tabLabel</name> 
+    <tag-class>com.zeroio.taglib.ProjectLabelHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Output the custom tab name for the specified project
+    </display-name>
+    <attribute>
+      <name>name</name>
+      <required>yes</required>
+    </attribute>
+    <attribute>
+      <name>object</name>
+      <required>yes</required>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>tz</name> 
+    <tag-class>com.zeroio.taglib.DateTimeHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Access the User's session and output the specified datetime according to their timezone
+    </display-name>
+    <attribute>
+      <name>timestamp</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>dateOnly</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>dateFormat</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>timeFormat</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>default</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>pattern</name>
+      <required>no</required>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>currency</name> 
+    <tag-class>com.zeroio.taglib.CurrencyHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Displays the supplied amount with the supplied currency code and locale
+    </display-name>
+    <attribute>
+      <name>value</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>code</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>default</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>locale</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>number</name> 
+    <tag-class>com.zeroio.taglib.NumberHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Displays the specified number in the supplied locale
+    </display-name>
+    <attribute>
+      <name>value</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>default</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>locale</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>debug</name> 
+    <tag-class>com.zeroio.taglib.DebugHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Displays debug information if enabled in controller
+    </display-name>
+    <attribute>
+      <name>value</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>dateSelect</name> 
+    <tag-class>com.zeroio.taglib.CalendarHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Display HTML field for entering date based on locale
+    </display-name>
+    <attribute>
+      <name>dateFormat</name>
+      <required>no</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>form</name>
+      <required>yes</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>field</name>
+      <required>yes</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>timestamp</name>
+      <required>yes</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+  </tag>
+  
 </taglib>

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*,java.util.*,org.aspcfs.modules.assets.base.*,org.aspcfs.modules.servicecontracts.base.*,java.text.DateFormat" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="serviceContractList" class="org.aspcfs.modules.servicecontracts.base.ServiceContractList" scope="request"/>
@@ -75,8 +76,8 @@ Service Contracts
           <% int status = -1;%>
           <% status = OrgDetails.getEnabled() ? 1 : 0; %>
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-           <a href="javascript:displayMenu('menuServiceContract', '<%=request.getParameter("orgId") %>', '<%= thisContract.getId() %>');"
-           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0" /></a>
+           <a href="javascript:displayMenu('select<%= i %>','menuServiceContract', '<%=request.getParameter("orgId") %>', '<%= thisContract.getId() %>');"
+           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuServiceContract');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0" /></a>
       </td>
       <td width="20%">
         <a href="AccountsServiceContracts.do?command=View&orgId=<%=request.getParameter("orgId")%>&id=<%= thisContract.getId()%>"><%= toHtml(thisContract.getServiceContractNumber()) %></a>
@@ -92,10 +93,10 @@ Service Contracts
       </dhv:evaluate>&nbsp;
       </td>
       <td width="20%">
-        <dhv:tz timestamp="<%=thisContract.getCurrentStartDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%=thisContract.getCurrentStartDate()%>" dateOnly="true" default="&nbsp;"/>
       </td>
       <td width="20%"  nowrap>
-        <dhv:tz timestamp="<%=thisContract.getCurrentEndDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%=thisContract.getCurrentEndDate()%>" dateOnly="true" default="&nbsp;"/>
       </td>
     </tr>
     <%  

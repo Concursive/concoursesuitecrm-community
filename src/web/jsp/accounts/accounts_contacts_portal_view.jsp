@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
@@ -87,7 +88,7 @@ Contact Details
     </td>
     <td>
       <%if (portalUserDetails.getEnabled()){%>
-      <dhv:tz timestamp="<%=portalUserDetails.getExpires()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= portalUserDetails.getExpires() %>" dateOnly="true" default="&nbsp;"/>
       <%}else{%>
        Portal access has been disbled for this account contact.
       <%}%>

@@ -964,7 +964,6 @@
   <action name="CampaignManagerAttachment" class="org.aspcfs.modules.communications.actions.CampaignManagerAttachment">
     <forward name="DefaultOK" resource="/communications/campaign_attachments.jsp" layout="nav"/>
   </action>
-  
   <action name="CampaignDocuments" class="org.aspcfs.modules.communications.actions.CampaignDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="ViewOK" resource="/communications/campaign_documents_list.jsp" layout="nav"/>
@@ -982,66 +981,162 @@
   <!-- Project Management Module -->
   <action name="ProjectManagement" class="com.zeroio.iteam.actions.ProjectManagement">
     <bean name="Project" class="com.zeroio.iteam.base.Project" scope="request" />
+    <forward name="DefaultOK" resource="/iteam/projects_personalview.jsp" layout="nav"/>
     <forward name="PersonalViewOK" resource="/iteam/projects_personalview.jsp" layout="nav"/>
     <forward name="EnterpriseViewOK" resource="/iteam/projects_enterpriseview.jsp" layout="nav"/>
+    <forward name="RSVPOK" resource="/iteam/projects_invitations.jsp" layout="nav"/>
+    <forward name="OverviewOK" resource="/iteam/projects_overview.jsp" layout="nav"/>
     <forward name="AddProjectOK" resource="/iteam/projects_addproject.jsp" layout="nav"/>
     <forward name="ModifyProjectOK" resource="/iteam/projects_modifyproject.jsp" layout="nav"/>
-    <forward name="UpdateProjectOK" resource="/ProjectManagement.do?command=ProjectCenter"/>
+    <forward name="UpdateProjectOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Details"/>
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
+    <forward name="DeleteProjectOK" resource="/iteam/ProjectManagement.do?command=EnterpriseView"/>
+    <forward name="DeleteProjectERROR" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Details"/>
+    <forward name="CustomizeProjectOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;command=CustomizeProject" layout="nav"/>
+    <forward name="UpdateFeaturesOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Setup"/>
+    <forward name="UpdatePermissionsOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Setup"/>
+    <forward name="AcceptProjectOK" resource="/iteam/ProjectManagement.do?command=RSVP"/>
+    <forward name="RejectProjectOK" resource="/iteam/ProjectManagement.do?command=RSVP"/>
+    <forward name="ResizeOK" resource="/iteam/projects_center_resize.jsp"/>
+  </action>
+  <action name="ProjectManagementNews" class="com.zeroio.iteam.actions.ProjectManagementNews">
+    <bean name="newsArticle" class="com.zeroio.iteam.base.NewsArticle" scope="request" />
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
+    <forward name="NewsDetailsPopupOK" resource="/iteam/projects_center_news_details.jsp" layout="style"/>
+    <forward name="SaveOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
+    <forward name="SaveAndAddPageOK" resource="/iteam/ProjectManagementNews.do?command=AddPage"/>
+    <forward name="SavePageOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
+    <forward name="DeletePageOK" resource="/iteam/ProjectManagementNews.do?command=Edit"/>
+    <forward name="SaveDetailsOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
+    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
   </action>
   <action name="ProjectManagementRequirements" class="com.zeroio.iteam.actions.ProjectManagementRequirements">
     <bean name="Requirement" class="com.zeroio.iteam.base.Requirement" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
-    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
+    <forward name="PopupOK" resource="/iteam/projects_center_requirements_details.jsp" layout="style"/>
+    <forward name="AddOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
+    <forward name="UpdateOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
+    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
+    <forward name="PrepareImportOK" resource="/iteam/projects_center_requirements_import.jsp" layout="nav"/>
+    <forward name="ImportOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+    <forward name="ImportERROR" resource="/iteam/projects_center_requirements_import.jsp" layout="nav"/>
   </action>
   <action name="ProjectManagementTeam" class="com.zeroio.iteam.actions.ProjectManagementTeam">
     <bean name="TeamMemberList" class="com.zeroio.iteam.base.TeamMemberList" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
     <forward name="MakeUserListOK" resource="/iteam/projects_makeuserlist.jsp"/>
-    <forward name="ModifyOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Team"/>
+    <forward name="ModifyOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Team"/>
+    <forward name="ModifyERROR" resource="/iteam/ProjectManagementTeam.do?command=Modify"/>
+    <forward name="ChangeRoleOK" resource="/iteam/projects_center_changerole_ok.jsp"/>
+    <forward name="ChangeRoleERROR" resource="/iteam/projects_center_changerole_error.jsp"/>
+    <forward name="InvitationsOK" resource="/iteam/projects_center.jsp" layout="nav"/>
+  </action>
+  <action name="ProjectManagementTeamList" class="com.zeroio.iteam.actions.ProjectManagementTeamList">
+    <forward name="ProjectsOK" resource="/iteam/projects_makeprojectlist.jsp"/>
+    <forward name="MakeUserListOK" resource="/iteam/projects_makeuserlist.jsp"/>
+    <forward name="MakeTeamMemberListOK" resource="/iteam/projects_maketeamlist.jsp"/>
+    <forward name="MakeDepartmentListOK" resource="/iteam/projects_makedepartmentlist.jsp"/>
   </action>
   <action name="ProjectManagementAssignments" class="com.zeroio.iteam.actions.ProjectManagementAssignments">
     <bean name="Assignment" class="com.zeroio.iteam.base.Assignment" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
-    <forward name="AddOKRequirements" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
-    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
-    <forward name="PopupOK" resource="/iteam/projects_center_assignments_modify.jsp" layout="style"/>
-    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
+    <forward name="SaveOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+    <forward name="PopupOK" resource="/iteam/projects_center_assignments_add.jsp" layout="style"/>
+    <forward name="PopupDetailsOK" resource="/iteam/projects_center_assignments_details.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/iteam/closepopup.jsp"/>
+    <forward name="DetailsREDIRECT" resource="/iteam/ProjectManagementAssignments.do?command=Details"/>
+    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+    <forward name="MoveOK" resource="/iteam/projects_center_hierarchy.jsp" layout="style"/>
+    <forward name="MoveItemOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+  </action>
+  <action name="ProjectManagementAssignmentsFolder" class="com.zeroio.iteam.actions.ProjectManagementAssignments">
+    <bean name="assignmentFolder" class="com.zeroio.iteam.base.AssignmentFolder" scope="request" />
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
+    <forward name="SaveOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+    <forward name="PopupOK" resource="/iteam/projects_center_assignments_folder_add.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/iteam/closepopup.jsp"/>
+    <forward name="PopupDetailsOK" resource="/iteam/projects_center_assignments_folder_details.jsp" layout="style"/>
+    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+  </action>
+  <action name="ProjectManagementIssueCategories" class="com.zeroio.iteam.actions.ProjectManagementIssueCategories">
+    <bean name="IssueCategory" class="com.zeroio.iteam.base.IssueCategory" scope="request" />
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
+    <forward name="SaveOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Issues_Categories"/>
+    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Issues_Categories"/>
   </action>
   <action name="ProjectManagementIssues" class="com.zeroio.iteam.actions.ProjectManagementIssues">
     <bean name="Issue" class="com.zeroio.iteam.base.Issue" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Issues"/>
+    <forward name="SaveOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Issues"/>
+    <forward name="SaveDetailsOK" resource="/iteam/ProjectManagementIssues.do?command=Details"/>
+    <forward name="AddOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Issues"/>
+    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Issues"/>
     <forward name="PopupOK" resource="/iteam/projects_center_issues_details.jsp" layout="style"/>
-    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
+    <forward name="PopupCloseOK" resource="/iteam/closepopup.jsp"/>
   </action>
   <action name="ProjectManagementIssueReply" class="com.zeroio.iteam.actions.ProjectManagementIssues">
     <bean name="IssueReply" class="com.zeroio.iteam.base.IssueReply" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/ProjectManagementIssues.do?command=Details"/>
-    <forward name="DownloadOK" resource="/ProjectManagementIssues.do?command=Details"/>
+    <forward name="SaveOK" resource="/iteam/ProjectManagementIssues.do?command=Details"/>
+    <forward name="AddOK" resource="/iteam/ProjectManagementIssues.do?command=Details"/>
+    <forward name="DeleteOK" resource="/iteam/ProjectManagementIssues.do?command=Details"/>
+    <forward name="DownloadOK" resource="/iteam/ProjectManagementIssues.do?command=Details"/>
   </action>
   <action name="ProjectManagementFiles" class="com.zeroio.iteam.actions.ProjectManagementFiles">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
-    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
-    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
-    <forward name="DeleteERROR" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="AddOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="UpdateOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="DeleteVersionOK" resource="/iteam/ProjectManagementFiles.do?command=Details"/>
+    <forward name="DeleteERROR" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="MoveOK" resource="/iteam/projects_center_file_hierarchy.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/iteam/closepopup.jsp"/>
+  </action>
+  <action name="ProjectManagementFileFolders" class="com.zeroio.iteam.actions.ProjectManagementFileFolders">
+    <bean name="fileFolder" class="com.zeroio.iteam.base.FileFolder" scope="request" />
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="InsertOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="UpdateOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="DeleteERROR" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="MoveOK" resource="/iteam/projects_center_folder_hierarchy.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/iteam/closepopup.jsp"/>
   </action>
   <action name="ProjectManagementLists" class="com.zeroio.iteam.actions.ProjectManagementLists">
     <bean name="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
-    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
+    <forward name="AddOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
+    <forward name="UpdateOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
+    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
+    <forward name="MoveOK" resource="/iteam/projects_center_lists_hierarchy.jsp" layout="style"/>
+    <forward name="DetailsOK" resource="/iteam/projects_center_lists_details.jsp" layout="nav"/>
+    <forward name="PopupOK" resource="/iteam/projects_center_lists_details.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/iteam/closepopup.jsp"/>
   </action>
   <action name="ProjectManagementListsCategory" class="com.zeroio.iteam.actions.ProjectManagementLists">
     <bean name="category" class="org.aspcfs.modules.tasks.base.TaskCategory" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="AddCategoryOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
-    <forward name="UpdateCategoryOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
+    <forward name="SaveOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
+    <forward name="UpdateOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
+    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
+  </action>
+  <action name="ProjectManagementTickets" class="com.zeroio.iteam.actions.ProjectManagementTickets">
+    <bean name="ticket" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request" />
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Tickets"/>
+    <forward name="UpdateOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Tickets"/>
+    <forward name="ReopenOK" resource="/iteam/ProjectManagementTickets.do?command=Modify"/>
+    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Tickets"/>
+  </action>
+  <action name="ProjectManagementSearch" class="com.zeroio.iteam.actions.Search">
+    <bean name="searchBean" class="com.zeroio.iteam.beans.SearchBean" scope="session" />
+    <forward name="SearchFormOK" resource="/iteam/search_form.jsp" layout="nav"/>
+    <forward name="IndexOK" resource="/iteam/search_index_ok.jsp" layout="nav"/>
+    <forward name="SearchResultsOK" resource="/iteam/search_results.jsp" layout="nav"/>
+    <forward name="SearchResultsERROR" resource="/iteam/search_results_error.jsp" layout="nav"/>
+    <forward name="TipsOK" resource="/iteam/search_tips.jsp" layout="style"/>
   </action>
   <!-- End Project Management Module -->
 

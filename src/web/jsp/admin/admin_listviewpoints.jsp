@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.admin.base.*" %>
 <jsp:useBean id="ViewpointList" class="org.aspcfs.modules.admin.base.ViewpointList" scope="request"/>
 <jsp:useBean id="ViewpointListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -69,13 +70,13 @@ Viewpoints
       <tr>
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-          <a href="javascript:displayMenu('menuViewpoint', '<%= UserRecord.getId() %>','<%= thisViewpoint.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+          <a href="javascript:displayMenu('select<%= count %>','menuViewpoint', '<%= UserRecord.getId() %>','<%= thisViewpoint.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuViewpoint');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
         <td class="row<%= rowid %>" width="150">
           <a href="Viewpoints.do?command=ViewpointDetails&id=<%= thisViewpoint.getId() %>&userId=<%= UserRecord.getId()%>"><%= thisViewpoint.getVpUser().getContact().getNameLastFirst() %></a>
         </td>
         <td class="row<%= rowid %>">
-          <dhv:tz timestamp="<%= thisViewpoint.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+          <zeroio:tz timestamp="<%= thisViewpoint.getEntered() %>" />
         </td>
          <td class="row<%= rowid %>">
           <%= thisViewpoint.getEnabled() ? "<font color=\"green\">Yes</font>":"<font color=\"red\">No</font>" %>

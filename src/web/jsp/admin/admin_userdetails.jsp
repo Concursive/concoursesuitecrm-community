@@ -1,5 +1,6 @@
 <%-- THIS FORM INCORRECTLY USES BUTTONS NAMED 'action' AND SHOULD BE UPDATED --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.admin.base.*" %>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
@@ -74,13 +75,11 @@ User Details
 </dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel">Last Login</td>
-    
-    <td><dhv:tz timestamp="<%= UserRecord.getLastLogin() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>" default="&nbsp;"/></td>
+    <td><zeroio:tz timestamp="<%= UserRecord.getLastLogin() %>" default="&nbsp;"/></td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">Account Expires On</td>
-    <td><dhv:tz timestamp="<%= UserRecord.getExpires() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>" default="&nbsp;"/></td>
-    
+    <td><zeroio:tz timestamp="<%= UserRecord.getExpires() %>" default="&nbsp;"/></td>
   </tr>
 </table>
 <br>

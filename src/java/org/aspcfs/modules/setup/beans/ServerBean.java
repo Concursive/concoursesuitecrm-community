@@ -5,6 +5,7 @@ package org.aspcfs.modules.setup.beans;
 import com.darkhorseventures.framework.beans.*;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+import java.text.NumberFormat;
 
 /**
  *  Bean to encapsulate the Configure Server HTML form
@@ -22,6 +23,8 @@ public class ServerBean extends GenericBean {
   private String emailAddress = null;
   private String fax = null;
   private String timeZone = null;
+  private String currency = null;
+  private String language = null;
 
 
   /**
@@ -91,6 +94,46 @@ public class ServerBean extends GenericBean {
    */
   public void setTimeZone(String tmp) {
     this.timeZone = tmp;
+  }
+
+
+  /**
+   *  Gets the currency attribute of the ServerBean object
+   *
+   *@return    The currency value
+   */
+  public String getCurrency() {
+    return currency;
+  }
+
+
+  /**
+   *  Sets the currency attribute of the ServerBean object
+   *
+   *@param  tmp  The new currency value
+   */
+  public void setCurrency(String tmp) {
+    this.currency = tmp;
+  }
+
+
+  /**
+   *  Gets the language attribute of the ServerBean object
+   *
+   *@return    The language value
+   */
+  public String getLanguage() {
+    return language;
+  }
+
+
+  /**
+   *  Sets the language attribute of the ServerBean object
+   *
+   *@param  tmp  The new language value
+   */
+  public void setLanguage(String tmp) {
+    this.language = tmp;
   }
 
 
@@ -167,6 +210,21 @@ public class ServerBean extends GenericBean {
     }
   }
 
+  public String getCurrencyDefault() {
+    if (currency != null) {
+      return currency;
+    } else {
+      return NumberFormat.getCurrencyInstance().getCurrency().getCurrencyCode();
+    }
+  }
+  
+  public String getLanguageDefault() {
+    if (language != null) {
+      return language;
+    } else {
+      return "en_US";
+    }
+  }
 
   /**
    *  Gets the valid attribute of the ServerBean object

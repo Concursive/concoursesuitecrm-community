@@ -4,14 +4,14 @@
   var thisLinkId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, actionId, linkId) {
+  function displayMenu(loc, id, actionId, linkId) {
     thisLinkId = linkId;
     thisActionId = actionId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuAction", "down", 0, 0, 170, getHeight("menuActionTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
   //Menu link functions
@@ -34,44 +34,44 @@
 </script>
 <div id="menuActionContainer" class="menu">
   <div id="menuActionContent">
-    <table id="menuActionTable" class="pulldown" width="170">
+    <table id="menuActionTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="myhomepage-action-lists-view">
-      <tr>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
         <td>
           &nbsp;
         </td>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="myhomepage-action-lists-edit">
-      <tr>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
         <td>
           &nbsp;
         </td>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          Modify
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="myhomepage-action-lists-edit">
-      <tr>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="addContacts()">
         <td>
           &nbsp;
         </td>
         <td width="100%">
-          <a href="javascript:addContacts()">Add Contacts</a>
+          Add Contacts
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="myhomepage-action-lists-delete">
-      <tr>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteAction()">
         <td>
           &nbsp;
         </td>
         <td width="100%">
-          <a href="javascript:deleteAction()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

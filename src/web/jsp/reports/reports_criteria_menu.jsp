@@ -3,13 +3,13 @@
   var thisCriteriaId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, criteriaId) {
+  function displayMenu(loc, id, criteriaId) {
     thisCriteriaId = criteriaId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menu1", "down", 0, 0, 170, getHeight("menu1Table"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   //Menu link functions
   function select() {
@@ -21,21 +21,21 @@
 </script>
 <div id="menu1Container" class="menu">
   <div id="menu1Content">
-    <table id="menu1Table" class="pulldown" width="170">
-      <tr>
-        <td>
+    <table id="menu1Table" class="pulldown" width="170" cellspacing="0">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="select()">
+        <th>
           <img src="images/icons/stock_compile-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:select()">Use this criteria</a>
+          Use this criteria
         </td>
       </tr>
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteCriteria()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteCriteria()">Delete this criteria</a>
+          Delete this criteria
         </td>
       </tr>
     </table>

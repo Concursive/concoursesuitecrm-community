@@ -5,7 +5,9 @@
  *@created    March 20, 2002
  *@version    $Id$
  */
- 
+-- REQUIRES: new_product.sql
+-- REQUIRES: new_project.sql
+
 CREATE TABLE ticket_level (
   code INT IDENTITY PRIMARY KEY,
   description VARCHAR(300) NOT NULL UNIQUE,
@@ -108,6 +110,10 @@ CREATE TABLE ticket (
 CREATE INDEX "ticket_cidx" ON "ticket" ("assigned_to", "closed");
 CREATE INDEX "ticketlist_entered" ON "ticket" (entered);
 
+CREATE TABLE project_ticket_count (
+  project_id INT UNIQUE NOT NULL REFERENCES projects(project_id),
+  key_count INT NOT NULL DEFAULT 0
+);
 
 CREATE TABLE ticketlog (
   id INT IDENTITY PRIMARY KEY
@@ -175,3 +181,7 @@ CREATE TABLE trouble_asset_replacement(
   part_description TEXT
 );
 
+CREATE TABLE ticketlink_project (
+  ticket_id INT NOT NULL REFERENCES ticket(ticketid),
+  project_id INT NOT NULL REFERENCES projects(project_id)
+);

@@ -6,6 +6,8 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
 
 /**
  *  Various utilities that relate to Image processing
@@ -26,9 +28,9 @@ public class ImageUtils {
    *@exception  IOException  Description of the Exception
    */
   public static void saveThumbnail(File originalFile, File thumbnailFile, double maxWidth, double maxHeight) throws IOException {
-    BufferedImage originalImage = ImageIO.read(originalFile);
-    double ratioWidth = maxWidth / originalImage.getWidth();
-    double ratioHeight = maxHeight / originalImage.getHeight();
+    BufferedImage thumbnailImage = ImageIO.read(originalFile);
+    double ratioWidth = maxWidth / thumbnailImage.getWidth();
+    double ratioHeight = maxHeight / thumbnailImage.getHeight();
     double ratio = 1;
     if (maxWidth > 0 && maxHeight < 0) {
       ratio = ratioWidth;
@@ -44,9 +46,30 @@ public class ImageUtils {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("ImageUtils-> Ratio: " + ratio);
     }
+    
+    //Soften
+    try {
+      float softenFactor = 0.05f;
+      float[] softenArray = {0, softenFactor, 0, softenFactor, 1-(softenFactor*4), softenFactor, 0, softenFactor, 0};
+      Kernel kernel = new Kernel(3, 3, softenArray);
+      ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+      thumbnailImage = cOp.filter(thumbnailImage, null);
+    } catch (Exception e) {
+    }
+     
+    //Sharpen
+    /* float[] sharpenArray = { 0, -1, 0, -1, 5, -1, 0, -1, 0 };
+    Kernel kernel = new Kernel(3, 3, sharpenArray);
+    ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+    thumbnailImage = cOp.filter(thumbnailImage, null);
+     */
+    
+    //Scale
     AffineTransform at = AffineTransform.getScaleInstance(ratio, ratio);
     AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-    BufferedImage thumbnailImage = op.filter(originalImage, null);
+    thumbnailImage = op.filter(thumbnailImage, null);
+    
+    
     ImageIO.write(thumbnailImage, "jpg", thumbnailFile);
   }
 

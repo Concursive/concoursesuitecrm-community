@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
 <%@ page import="org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
@@ -100,7 +101,7 @@ Call Details
             Alert Date
           </td>
           <td>
-          <dhv:tz timestamp="<%= CallDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+          <zeroio:tz timestamp="<%= CallDetails.getAlertDate() %>" dateOnly="true" default="&nbsp;"/>
           </td>
         </tr>
         <tr class="containerBody">
@@ -109,8 +110,7 @@ Call Details
           </td>
           <td>
             <dhv:username id="<%= CallDetails.getEnteredBy() %>"/>
-            -
-            <dhv:tz timestamp="<%= CallDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+            <zeroio:tz timestamp="<%= CallDetails.getEntered() %>" />
           </td>
         </tr>
         <tr class="containerBody">
@@ -119,8 +119,7 @@ Call Details
           </td>
           <td>
             <dhv:username id="<%= CallDetails.getModifiedBy() %>"/>
-            -
-            <dhv:tz timestamp="<%= CallDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+            <zeroio:tz timestamp="<%= CallDetails.getModified() %>" />
           </td>
         </tr>
       </table><br>

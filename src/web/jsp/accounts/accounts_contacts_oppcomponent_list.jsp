@@ -1,9 +1,12 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.pipeline.base.OpportunityHeader,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OpportunityHeaderList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="AccountContactOppsPagedListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <dhv:evaluate if="<%= !isPopup(request) %>">
@@ -99,10 +102,10 @@ Opportunities
               </dhv:evaluate>
             </td>
             <td valign="top" align="right" class="row<%= rowid %>" nowrap>
-              $<%= toHtml(oppHeader.getTotalValueCurrency()) %>
+              <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
             </td>      
             <td valign="top" align="center" class="row<%= rowid %>" nowrap>
-              <dhv:tz timestamp="<%= oppHeader.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+              <zeroio:tz timestamp="<%= oppHeader.getModified() %>" />
             </td>       
           </tr>
       <%

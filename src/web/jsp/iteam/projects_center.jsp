@@ -1,113 +1,105 @@
+<%--
+ Copyright 2000-2004 Matt Rajkowski
+ matt.rajkowski@teamelements.com
+ http://www.teamelements.com
+ This source code cannot be modified, distributed or used without
+ permission from Matt Rajkowski
+--%>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
+<jsp:useBean id="currentMember" class="com.zeroio.iteam.base.TeamMember" scope="request"/>
+<jsp:useBean id="projectView" class="java.lang.String" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" type="text/javascript" src="javascript/spanDisplay.js"></script>
 <%
   if (Project.getId() == -1) {
 %>
-<BR><font color='red'>This project does not belong to you, or does not exist!
+<br/><font color="red">This project does not belong to you, or does not exist!
 <%
   } else {
+    String section = (String) request.getAttribute("IncludeSection");
+    String includeSection = "projects_center_" + section + ".jsp";
 %>
-<table border='0' width='100%' cellspacing='0' cellpadding='0'>
+<table border="0" width="100%">
   <tr>
-  <td bgcolor='#E4E4E4' valign='top' nowrap>
-    <font color='#000000'>
-      <b><img border="0" src="images/project.gif" align="absbottom">&nbsp;Project Center</b>
-    </font>
-  </td>
-  <td bgcolor='#E4E4E4' valign='top'>
-    <p align='right'>
-    <font color='#000000'>
-
-    &nbsp; [<a href="ProjectManagementRequirements.do?command=Add&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">New Requirement</a>]
-
-    &nbsp; [<a href="ProjectManagementTeam.do?command=Modify&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">Modify Team</a>]
-
-    &nbsp; [<a href="ProjectManagementAssignments.do?command=Add&pid=<%= Project.getId() %><%= ("Requirements".equals(request.getParameter("section"))?"&return=Requirements":"") %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">New Activity</a>]
-
-    &nbsp; [<a href="ProjectManagementIssues.do?command=Add&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">New Issue</a>]
-
-    <br>[<a href="ProjectManagement.do?command=ModifyProject&pid=<%= Project.getId() %>&return=ProjectCenter" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">Update Project</a>]
-
-  </font>
-  </td>
-  </tr> 
-</table>
-
-<table border='0' width='100%' cellspacing='0' cellpadding='0'>
+    <td>
+      <img src="images/icons/stock_navigator-open-toolbar-16.gif" border="0" align="absmiddle">
+    </td>
+    <td width="100%">
+      <strong><%= toHtml(Project.getTitle()) %></strong>
+    </td>
+    <td align="right" nowrap>
+      (Role: <zeroio:role id="<%= currentMember.getUserLevel() %>"/>)
+    </td>
+  </tr>
   <tr>
-  <td width='100%'>
-    <img border='0' src='images/graybar_main.gif' width='100%' height='11'>
-<%
-    String approvalResponse = "";
-    if (Project.getApprovalDate() == null) {
-      approvalResponse = ", <font color='red'>Under Review</font>";
-    } else {
-      approvalResponse = ", <font color='darkgreen'>Approved</font>";
-    }
-    
-    String requestedByResponse = "";
-    if ((Project.getRequestedBy().equals(""))) {
-      requestedByResponse = "unknown request source";
-    } else {
-      requestedByResponse = Project.getRequestedBy();
-    }
-
-    String requestedDeptResponse = "";
-    if (Project.getRequestedByDept().equals("")) {
-     requestedDeptResponse = "";
-    } else {
-      requestedDeptResponse = "from " + Project.getRequestedByDept();
-    }
-%>
-    <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-    <tr>
-      <td width='15' bgcolor='#E6E9CC' align='left' valign='top'>
-        <br>
-      </td>
-      <td width='200' bgcolor='#E6E9CC' align='left' valign='top'>
-        <b><%= toHtml(Project.getTitle()) %></b><br>
-        <%= Project.getRequestDateString() %><%= approvalResponse %>
-      </td>
-      <td bgcolor='#E6E9CC' align='left' valign='top'>
-        <%= toHtml(Project.getShortDescription()) %><br>Requested by <%= requestedByResponse %> <%= requestedDeptResponse %>
-      </td>
-      <td bgcolor='#E6E9CC' align='right' valign='top'>
-        &nbsp;
-      </td>
-    </tr>
-    </table>
-
-    <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-    <tr>
-      <td width='15' bgcolor='#E6E9CC' align='left' valign='top'>&nbsp;</td>
-      <td bgcolor='#E6E9CC' align='right' valign='center'>
-        <a href="ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>" onMouseOver="window.status='Requirements'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='images/pc-requirements.gif' width='89' height='20'></a>
-        <a href="ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>" onMouseOver="window.status='Team Members'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='images/pc-team.gif'></a>
-        <a href="ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=<%= Project.getId() %>" onMouseOver="window.status='Activities'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='images/pc-activities.gif' width='63' height='20'></a>
-        <a href="ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=<%= Project.getId() %>" onMouseOver="window.status='Lists'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='images/pc-lists.gif' width='45' height='20'></a>
-        <a href="ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>" onMouseOver="window.status='Issues'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='images/pc-issues.gif' width='48' height='20'></a>
-        <a href="ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>&folderId=<%= Project.getFiles().getFolderId() %>" onMouseOver="window.status='File Sharing'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='images/pc-filesharing.gif' width='76' height='20'></a>
-        <table border="0" width="100%" cellspacing="7" bgcolor="#FFFFFF">
-          <tr>
-            <td>
-<% String includeSection = "projects_center_" + (String)request.getAttribute("IncludeSection") + ".jsp"; %>
-<jsp:include page="<%= includeSection %>" flush="true"/>
-            </td>
-          </tr>
-        </table>
-      </td>
-      <td width='15' bgcolor='#E6E9CC' align='right' valign='top'>&nbsp;</td>
-    </tr>
-  </table>
-    
-  <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-    <tr>
-      <td width='100%' bgcolor='#E6E9CC' align='left' valign='top'>&nbsp;</td>
-    </tr>
-  </table>
+    <td>&nbsp;</td>
+    <td colspan="2">
+      <%= toHtml(Project.getShortDescription()) %>
+    </td>
+  </tr>
 </table>
-
+<div class="tabs" id="toptabs">
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
+  <tr>
+    <zeroio:permission name="project-news-view">
+      <dhv:evaluate if="<%= Project.getShowNews() %>">
+        <zeroio:tabbedMenu text="<%= Project.getLabel("News") %>" key="home,news" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=News&pid=" + Project.getId() %>"/>
+      </dhv:evaluate>
+    </zeroio:permission>
+    <zeroio:permission name="project-discussion-forums-view">
+      <dhv:evaluate if="<%= Project.getShowDiscussion() %>">
+        <zeroio:tabbedMenu text="<%= Project.getLabel("Discussion") %>" key="issues" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=" + Project.getId() %>"/>
+      </dhv:evaluate>
+    </zeroio:permission>
+    <zeroio:permission name="project-documents-view">
+      <dhv:evaluate if="<%= Project.getShowDocuments() %>">
+        <zeroio:tabbedMenu text="<%= Project.getLabel("Documents") %>" key="file" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=" + Project.getId() + "&folderId=-1" %>"/>
+      </dhv:evaluate>
+    </zeroio:permission>
+    <zeroio:permission name="project-lists-view">
+      <dhv:evaluate if="<%= Project.getShowLists() %>">
+        <zeroio:tabbedMenu text="<%= Project.getLabel("Lists") %>" key="lists" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=" + Project.getId() %>"/>
+      </dhv:evaluate>
+    </zeroio:permission>
+    <zeroio:permission name="project-plan-view">
+      <dhv:evaluate if="<%= Project.getShowPlan() %>">
+        <zeroio:tabbedMenu text="<%= Project.getLabel("Plan") %>" key="requirements,assignments" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + Project.getId() %>"/>
+      </dhv:evaluate>
+    </zeroio:permission>
+    <zeroio:permission name="project-tickets-view">
+      <dhv:evaluate if="<%= Project.getShowTickets() %>">
+        <zeroio:tabbedMenu text="<%= Project.getLabel("Tickets") %>" key="tickets" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=" + Project.getId() %>"/>
+      </dhv:evaluate>
+    </zeroio:permission>
+    <zeroio:permission name="project-team-view">
+      <dhv:evaluate if="<%= Project.getShowTeam() %>">
+        <zeroio:tabbedMenu text="<%= Project.getLabel("Team") %>" key="team" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + Project.getId() %>"/>
+      </dhv:evaluate>
+    </zeroio:permission>
+    <zeroio:permission name="project-details-view">
+      <dhv:evaluate if="<%= Project.getShowDetails() %>">
+        <zeroio:tabbedMenu text="<%= Project.getLabel("Details") %>" key="details,modifyproject" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Details&pid=" + Project.getId() %>"/>
+      </dhv:evaluate>
+    </zeroio:permission>
+    <dhv:evaluate if="<%= currentMember.getRoleId() <= TeamMember.PROJECT_LEAD %>">
+      <zeroio:tabbedMenu text="Setup" key="setup" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Setup&pid=" + Project.getId() %>"/>
+    </dhv:evaluate>
+    <td width="100%" style="background-image: none; background-color: transparent; border: 0px; border-bottom: 1px solid #666; cursor: default;">&nbsp;</td>
+  </tr>
+</table>
+</div>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td class="containerBack">
+      <jsp:include page="<%= includeSection %>" flush="true"/>
+      <br>
+    </td>
+  </tr>
+</table>
 <%
   }
 %>
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

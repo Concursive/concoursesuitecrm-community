@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*" %>
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
@@ -62,7 +63,7 @@ Add Version
 		<td class="containerBack">
     <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
       <font color="red">This ticket was closed on
-      <dhv:tz timestamp="<%= TicketDetails.getClosed() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= TicketDetails.getClosed() %>" />
       </font><br>
       &nbsp;<br>
     </dhv:evaluate>

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -31,7 +32,7 @@ Schedule
       Run Date
     </td>
     <td>
-      <dhv:tz timestamp="<%= Campaign.getActiveDate() %>"  dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">

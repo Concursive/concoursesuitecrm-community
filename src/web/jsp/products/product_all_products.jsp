@@ -52,7 +52,7 @@ Labor Category Editor
        <tr class="row<%= rowid %>">
         <td>
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-           <a href="javascript:displayMenu('menuProduct', '<%= thisProduct.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+           <a href="javascript:displayMenu('select<%= i %>','menuProduct', '<%= thisProduct.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuProduct');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
         </td>
         <td>
           <a href="ProductsCatalog.do?command=ViewProductDetails&productId=<%=thisProduct.getId()%>&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(thisProduct.getSku()) %></a>

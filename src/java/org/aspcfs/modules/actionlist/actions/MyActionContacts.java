@@ -473,13 +473,6 @@ public final class MyActionContacts extends CFSModule {
     InstantCampaign actionCampaign = new InstantCampaign();
     try {
       db = getConnection(context);
-
-      //If the user chooses to format the text then format it... this will convert
-      //their linefeeds into <br> html tags
-      if (thisMessage.getFormatLineFeeds()) {
-        thisMessage.setMessageText(StringUtils.toHtmlValue(thisMessage.getMessageText()));
-      }
-
       //build the Action List
       ActionList actionList = new ActionList(db, Integer.parseInt(actionListId));
       

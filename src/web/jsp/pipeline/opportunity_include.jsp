@@ -1,11 +1,12 @@
 <%-- reusable opportunity form --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.pipeline.base.*,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
-  <%
+<%
     String entity = "pipeline";
     if("contact".equals(request.getParameter("entity"))){
         entity = "contact";
@@ -166,8 +167,8 @@
       Est. Close Date
     </td>
     <td>
-      <input type="text" size="10" name="<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>" value="<dhv:tz timestamp="<%= ComponentDetails.getCloseDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('opportunityForm', '<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" name="<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>" size="10" value="<zeroio:tz timestamp="<%= ComponentDetails.getCloseDate() %>" dateOnly="true"/>">
+      <a href="javascript:popCalendar('opportunityForm', '<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"></a>
       <font color="red">*</font> <%= showAttribute(request, "closeDateError") %>
     </td>
   </tr>
@@ -176,7 +177,9 @@
       Low Estimate
     </td>
     <td>
-      <input type="text" size="10" name="<%= opportunityHeader.getId() > 0 ? "low" : "component_low" %>" value="<%= toHtmlValue(ComponentDetails.getLowAmount()) %>"><%= showAttribute(request, "lowHighError") %>
+      <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+      <input type="text" name="<%= opportunityHeader.getId() > 0 ? "low" : "component_low" %>" size="15" value="<zeroio:number value="<%= ComponentDetails.getLow() %>" locale="<%= User.getLocale() %>" />">
+      <%= showAttribute(request, "lowHighError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -184,8 +187,10 @@
       Best Guess Estimate
     </td>
     <td>
-      <input type="text" size="10" name="<%= opportunityHeader.getId() > 0 ? "guess" : "component_guess" %>" value="<%= toHtmlValue(ComponentDetails.getGuessAmount()) %>">
-      <font color="red">*</font> <%= showAttribute(request, "guessError") %>
+      <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+      <input type="text" name="<%= opportunityHeader.getId() > 0 ? "guess" : "component_guess" %>" size="15" value="<zeroio:number value="<%= ComponentDetails.getGuess() %>" locale="<%= User.getLocale() %>" />">
+      <font color="red">*</font>
+      <%= showAttribute(request, "guessError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -193,7 +198,9 @@
       High Estimate
     </td>
     <td>
-      <input type="text" size="10" name="<%= opportunityHeader.getId() > 0 ? "high" : "component_high" %>" value="<%= toHtmlValue(ComponentDetails.getHighAmount()) %>">
+      <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+      <input type="text" name="<%= opportunityHeader.getId() > 0 ? "high" : "component_high" %>" size="15" value="<zeroio:number value="<%= ComponentDetails.getHigh() %>" locale="<%= User.getLocale() %>" />">
+      <%= showAttribute(request, "highError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -203,7 +210,8 @@
     <td>
       <input type="text" size="5" name="<%= opportunityHeader.getId() > 0 ? "terms" : "component_terms" %>" value="<%= toHtmlValue(ComponentDetails.getTermsString()) %>">
       <%= UnitTypeList.getHtml((opportunityHeader.getId() > 0 ? "units" : "component_units"), (ComponentDetails.getUnits() != null ? ComponentDetails.getUnits() : "")) %>
-      <font color="red">*</font> <%= showAttribute(request, "termsError") %>
+      <font color="red">*</font>
+      <%= showAttribute(request, "termsError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -237,8 +245,9 @@
       Alert Date
     </td>
     <td>
-      <input type="text" size="10" name="<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>" value="<dhv:tz timestamp="<%= ComponentDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('opportunityForm', '<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" name="<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>" size="10" value="<zeroio:tz timestamp="<%= ComponentDetails.getAlertDate() %>" dateOnly="true"/>">
+      <zeroio:debug value="TODO: This needs to be set to the system locale" />
+      <a href="javascript:popCalendar('opportunityForm', '<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"></a>
     </td>
   </tr>
 </table>

@@ -1,14 +1,16 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
 
 import java.sql.*;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.ArrayList;
 import java.text.*;
 import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.framework.actions.*;
@@ -19,7 +21,8 @@ import org.aspcfs.utils.DatabaseUtils;
  *
  *@author     matt rajkowski
  *@created    July 23, 2001
- *@version    $Id$
+ *@version    $Id: Requirement.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista Exp
+ *      $
  */
 public class Requirement extends GenericBean {
 
@@ -48,15 +51,16 @@ public class Requirement extends GenericBean {
   private java.sql.Timestamp closeDate = null;
 
   private int enteredBy = -1;
-  private String enteredByString = "";
   private java.sql.Timestamp entered = null;
 
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
-  private String modifiedByString = "";
-
+  //Helpers
   private AssignmentList assignments = new AssignmentList();
   private boolean treeOpen = false;
+  private AssignmentFolder plan = new AssignmentFolder();
+  private int planActivityCount = -1;
+  private int planClosedCount = -1;
 
 
   /**
@@ -173,6 +177,7 @@ public class Requirement extends GenericBean {
     enteredBy = rs.getInt("enteredBy");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedBy");
+    startDate = rs.getTimestamp("startdate");
 
     //lookup_project_loe table
     estimatedLoeType = rs.getString("loe_estimated_type");
@@ -587,16 +592,6 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the enteredByString attribute of the Requirement object
-   *
-   *@param  tmp  The new enteredByString value
-   */
-  public void setEnteredByString(String tmp) {
-    this.enteredByString = tmp;
-  }
-
-
-  /**
    *  Sets the entered attribute of the Requirement object
    *
    *@param  tmp  The new entered value
@@ -664,22 +659,32 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Sets the modifiedByString attribute of the Requirement object
-   *
-   *@param  tmp  The new modifiedByString value
-   */
-  public void setModifiedByString(String tmp) {
-    this.modifiedByString = tmp;
-  }
-
-
-  /**
    *  Sets the treeOpen attribute of the Requirement object
    *
    *@param  tmp  The new treeOpen value
    */
   public void setTreeOpen(boolean tmp) {
     this.treeOpen = tmp;
+  }
+
+
+  /**
+   *  Sets the planActivityCount attribute of the Requirement object
+   *
+   *@param  tmp  The new planActivityCount value
+   */
+  public void setPlanActivityCount(int tmp) {
+    this.planActivityCount = tmp;
+  }
+
+
+  /**
+   *  Sets the planClosedCount attribute of the Requirement object
+   *
+   *@param  tmp  The new planClosedCount value
+   */
+  public void setPlanClosedCount(int tmp) {
+    this.planClosedCount = tmp;
   }
 
 
@@ -1094,16 +1099,6 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the enteredByString attribute of the Requirement object
-   *
-   *@return    The enteredByString value
-   */
-  public String getEnteredByString() {
-    return enteredByString;
-  }
-
-
-  /**
    *  Gets the entered attribute of the Requirement object
    *
    *@return    The entered value
@@ -1146,8 +1141,8 @@ public class Requirement extends GenericBean {
    *
    *@return    The modified value
    */
-  public String getModified() {
-    return modified.toString();
+  public Timestamp getModified() {
+    return modified;
   }
 
 
@@ -1157,11 +1152,11 @@ public class Requirement extends GenericBean {
    *@return    The modifiedString value
    */
   public String getModifiedString() {
-    try {
-      return DateFormat.getDateInstance(DateFormat.SHORT).format(modified);
-    } catch (NullPointerException e) {
+    if (modified != null) {
+      return modified.toString();
+    } else {
+      return "";
     }
-    return ("");
   }
 
 
@@ -1186,16 +1181,6 @@ public class Requirement extends GenericBean {
    */
   public int getModifiedBy() {
     return modifiedBy;
-  }
-
-
-  /**
-   *  Gets the modifiedByString attribute of the Requirement object
-   *
-   *@return    The modifiedByString value
-   */
-  public String getModifiedByString() {
-    return modifiedByString;
   }
 
 
@@ -1230,23 +1215,29 @@ public class Requirement extends GenericBean {
 
 
   /**
+   *  Gets the plan attribute of the Requirement object
+   *
+   *@return    The plan value
+   */
+  public AssignmentFolder getPlan() {
+    return plan;
+  }
+
+
+  /**
    *  Gets the assignmentTag attribute of the Requirement object
    *
    *@param  link  Description of the Parameter
    *@return       The assignmentTag value
    */
   public String getAssignmentTag(String link) {
-    if (this.hasAssignments()) {
-      String treeGraphic = null;
-      if (treeOpen) {
-        treeGraphic = "tree1.gif";
-      } else {
-        treeGraphic = "tree0.gif";
-      }
-      return "<a href=\"" + link + "\"><img border=\"0\" src=\"images/" + treeGraphic + "\" align=\"absmiddle\"></a>";
+    String treeGraphic = null;
+    if (treeOpen) {
+      treeGraphic = "tree1.gif";
     } else {
-      return "<img border=\"0\" src=\"images/" + "tree.gif" + "\" align=\"absmiddle\">";
+      treeGraphic = "tree0.gif";
     }
+    return "<a href=\"" + link + "\"><img border=\"0\" src=\"images/" + treeGraphic + "\" align=\"absmiddle\"></a>";
   }
 
 
@@ -1257,6 +1248,26 @@ public class Requirement extends GenericBean {
    */
   public boolean isTreeOpen() {
     return treeOpen;
+  }
+
+
+  /**
+   *  Gets the planActivityCount attribute of the Requirement object
+   *
+   *@return    The planActivityCount value
+   */
+  public int getPlanActivityCount() {
+    return planActivityCount;
+  }
+
+
+  /**
+   *  Gets the planClosedCount attribute of the Requirement object
+   *
+   *@return    The planClosedCount value
+   */
+  public int getPlanClosedCount() {
+    return planClosedCount;
   }
 
 
@@ -1345,7 +1356,7 @@ public class Requirement extends GenericBean {
     sql.append("INSERT INTO project_requirements ");
     sql.append("(project_id, submittedBy, departmentBy, shortDescription, description, ");
     sql.append("dateReceived, estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, ");
-    sql.append("deadline, approvedBy, approvalDate, closedBy, closeDate, ");
+    sql.append("startdate, deadline, approvedBy, approvalDate, closedBy, closeDate, ");
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -1353,7 +1364,7 @@ public class Requirement extends GenericBean {
       sql.append("modified, ");
     }
     sql.append("enteredBy, modifiedBy) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
     }
@@ -1378,6 +1389,7 @@ public class Requirement extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, estimatedLoeTypeId);
     DatabaseUtils.setInt(pst, ++i, actualLoe);
     DatabaseUtils.setInt(pst, ++i, actualLoeTypeId);
+    DatabaseUtils.setTimestamp(pst, ++i, startDate);
     DatabaseUtils.setTimestamp(pst, ++i, deadline);
 
     if (approved) {
@@ -1447,17 +1459,38 @@ public class Requirement extends GenericBean {
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1 || this.projectId == -1) {
-      throw new SQLException("ID was not specified");
+      throw new SQLException("Requirement ID was not specified");
     }
-
+    boolean commit = db.getAutoCommit();
     int recordCount = 0;
-    PreparedStatement pst = db.prepareStatement(
-        "DELETE FROM project_requirements " +
-        "WHERE requirement_id = ? ");
-    pst.setInt(1, id);
-    recordCount = pst.executeUpdate();
-    pst.close();
-
+    try {
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      //Delete assignments/assignment folders and mappings
+      RequirementMapList.delete(db, id);
+      AssignmentList.delete(db, id);
+      AssignmentFolderList.delete(db, id);
+      //Delete the requirement
+      PreparedStatement pst = db.prepareStatement(
+          "DELETE FROM project_requirements " +
+          "WHERE requirement_id = ? ");
+      pst.setInt(1, id);
+      recordCount = pst.executeUpdate();
+      pst.close();
+      if (commit) {
+        db.commit();
+      }
+    } catch (Exception e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
     if (recordCount == 0) {
       errors.put("actionError", "Requirement could not be deleted because it no longer exists.");
       return false;
@@ -1491,20 +1524,16 @@ public class Requirement extends GenericBean {
     if (this.getId() == -1 || this.projectId == -1) {
       throw new SQLException("ID was not specified");
     }
-
     if (!isValid()) {
       return -1;
     }
-
     int resultCount = 0;
-
     Requirement previousState = new Requirement(db, this.getId());
-
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_requirements " +
         "SET submittedBy = ?, departmentBy = ?, shortDescription = ?, description = ?, " +
         " dateReceived = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, actual_loetype = ?, " +
-        " deadline = ?, approvedBy = ?, approvalDate = ?, closedBy = ?, closeDate = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+        " startdate = ?, deadline = ?, approvedBy = ?, approvalDate = ?, closedBy = ?, closeDate = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE requirement_id = ? " +
         "AND project_id = ? " +
         "AND modified = ? ");
@@ -1522,8 +1551,8 @@ public class Requirement extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, estimatedLoeTypeId);
     DatabaseUtils.setInt(pst, ++i, actualLoe);
     DatabaseUtils.setInt(pst, ++i, actualLoeTypeId);
+    DatabaseUtils.setTimestamp(pst, ++i, startDate);
     DatabaseUtils.setTimestamp(pst, ++i, deadline);
-
     if (previousState.getApproved() && approved) {
       DatabaseUtils.setInt(pst, ++i, previousState.getApprovedBy());
       pst.setTimestamp(++i, previousState.getApprovalDate());
@@ -1539,7 +1568,6 @@ public class Requirement extends GenericBean {
       pst.setNull(++i, java.sql.Types.INTEGER);
       pst.setNull(++i, java.sql.Types.DATE);
     }
-
     if (previousState.getClosed() && closed) {
       DatabaseUtils.setInt(pst, ++i, previousState.getClosedBy());
       pst.setTimestamp(++i, previousState.getCloseDate());
@@ -1555,15 +1583,12 @@ public class Requirement extends GenericBean {
       pst.setNull(++i, java.sql.Types.INTEGER);
       pst.setNull(++i, java.sql.Types.DATE);
     }
-
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
     pst.setInt(++i, projectId);
     pst.setTimestamp(++i, modified);
-
     resultCount = pst.executeUpdate();
     pst.close();
-
     return resultCount;
   }
 
@@ -1581,6 +1606,204 @@ public class Requirement extends GenericBean {
     assignments.setRequirementId(this.getId());
     assignments.buildList(db);
     return assignments.size();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  folderState       Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildPlan(Connection db, ArrayList folderState) throws SQLException {
+    plan.getFolders().setRequirementId(this.getId());
+    plan.getFolders().setParentId(0);
+    plan.getFolders().buildList(db);
+    plan.getAssignments().setRequirementId(this.getId());
+    plan.getAssignments().setFolderId(0);
+    plan.getAssignments().setClosedOnly(this.getAssignments().getClosedOnly());
+    plan.getAssignments().setIncompleteOnly(this.getAssignments().getIncompleteOnly());
+    plan.getAssignments().buildList(db);
+    buildItems(db, plan.getFolders(), true, folderState);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildPlanActivityCount(Connection db) throws SQLException {
+    if (id == -1) {
+      planActivityCount = -1;
+      planClosedCount = -1;
+    }
+    //Total count
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT COUNT(*) AS plan_count " +
+        "FROM project_assignments " +
+        "WHERE requirement_id = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      planActivityCount = rs.getInt("plan_count");
+    }
+    rs.close();
+    pst.close();
+    //Complete-Closed count
+    pst = db.prepareStatement(
+        "SELECT COUNT(*) AS plan_count " +
+        "FROM project_assignments " +
+        "WHERE requirement_id = ? " +
+        "AND complete_date IS NOT NULL ");
+    pst.setInt(1, id);
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      planClosedCount = rs.getInt("plan_count");
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildFolderHierarchy(Connection db) throws SQLException {
+    plan.getFolders().setRequirementId(this.getId());
+    plan.getFolders().setParentId(0);
+    plan.getFolders().buildList(db);
+    buildItems(db, plan.getFolders(), false, null);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  folderList        Description of the Parameter
+   *@param  buildAssignments  Description of the Parameter
+   *@param  folderState       Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  private void buildItems(Connection db, AssignmentFolderList folderList, boolean buildAssignments, ArrayList folderState) throws SQLException {
+    Iterator i = folderList.iterator();
+    while (i.hasNext()) {
+      AssignmentFolder folder = (AssignmentFolder) i.next();
+      if (isFolderTreeOpen(folderState, folder.getId())) {
+        folder.setTreeOpen(true);
+        folder.getFolders().setRequirementId(folder.getRequirementId());
+        folder.getFolders().setParentId(folder.getId());
+        folder.getFolders().buildList(db);
+        if (buildAssignments) {
+          folder.getAssignments().setRequirementId(folder.getRequirementId());
+          folder.getAssignments().setFolderId(folder.getId());
+          folder.getAssignments().setClosedOnly(this.getAssignments().getClosedOnly());
+          folder.getAssignments().setIncompleteOnly(this.getAssignments().getIncompleteOnly());
+          folder.getAssignments().buildList(db);
+        }
+        buildItems(db, folder.getFolders(), buildAssignments, folderState);
+      } else {
+        folder.setTreeOpen(false);
+      }
+    }
+  }
+
+
+  /**
+   *  Gets the folderTreeOpen attribute of the Requirement object
+   *
+   *@param  folderIds  Description of the Parameter
+   *@param  folderId   Description of the Parameter
+   *@return            The folderTreeOpen value
+   */
+  private boolean isFolderTreeOpen(ArrayList folderIds, int folderId) {
+    if (folderIds == null) {
+      return true;
+    }
+    if (folderIds.contains(new Integer(folderId))) {
+      return true;
+    }
+    return false;
+  }
+
+
+  /**
+   *  Gets the planActivityCount attribute of the Requirement object
+   *
+   *@return    The planActivityCount value
+   */
+  public int getGeneratedPlanActivityCount() {
+    if (plan != null) {
+      return plan.getAssignments().size() + addActivityCount(plan.getFolders());
+    } else {
+      return 0;
+    }
+  }
+
+
+  /**
+   *  Adds a feature to the ActivityCount attribute of the Requirement object
+   *
+   *@param  folders  The feature to be added to the ActivityCount attribute
+   *@return          Description of the Return Value
+   */
+  private int addActivityCount(AssignmentFolderList folders) {
+    int count = 0;
+    Iterator i = folders.iterator();
+    while (i.hasNext()) {
+      AssignmentFolder thisFolder = (AssignmentFolder) i.next();
+      count += thisFolder.getAssignments().size() + addActivityCount(thisFolder.getFolders());
+    }
+    return count;
+  }
+
+
+  /**
+   *  Gets the percentComplete attribute of the Requirement object
+   *
+   *@return    The percentComplete value
+   */
+  public int getPercentComplete() {
+    if (planActivityCount == 0) {
+      return 100;
+    } else if (planActivityCount > -1 && planClosedCount > -1) {
+      double value = (double) Math.round(((double) planClosedCount / (double) planActivityCount) * 100.0);
+      return (int) value;
+    }
+    return 0;
+  }
+
+
+  /**
+   *  Gets the percentIncomplete attribute of the Requirement object
+   *
+   *@return    The percentIncomplete value
+   */
+  public int getPercentIncomplete() {
+    if (planActivityCount > -1 && planClosedCount > -1) {
+      double value = (double) (100.0 - (double) Math.round(((double) planClosedCount / (double) planActivityCount) * 100.0));
+      return (int) value;
+    }
+    return 0;
+  }
+  
+  
+  /**
+   *  The following fields depend on a timezone preference
+   *
+   *@return    The timeZoneParams value
+   */
+  public static ArrayList getTimeZoneParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("startDate");
+    thisList.add("deadline");
+    return thisList;
   }
 }
 

@@ -8,7 +8,6 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.*;
-import com.zeroio.iteam.base.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.accounts.base.Organization;
@@ -17,6 +16,8 @@ import java.io.*;
 import java.text.*;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.admin.base.UserList;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.iteam.base.FileItem;
 
 /**
  *  Description of the Class

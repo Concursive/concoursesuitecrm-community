@@ -1,0 +1,47 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  July 13, 2004
+  - Updates all of the existing assignments to be organized in the requirement map
+*/
+import java.sql.*;
+import java.util.*;
+import com.zeroio.iteam.base.*;
+
+ProjectList projects = new ProjectList();
+projects.buildList(db);
+
+Iterator i = projects.iterator();
+while (i.hasNext()) {
+  int mapCount = 0;
+  boolean hasPermissions = false;
+  Project thisProject = (Project) i.next();
+  
+  // For each project, get the assignments and put them in the map
+  AssignmentList assignments = new AssignmentList();
+  assignments.setProjectId(thisProject.getId());
+  assignments.buildList(db);
+  
+  Iterator j = assignments.iterator();
+  while (j.hasNext()) {
+    Assignment thisAssignment = (Assignment) j.next();
+    
+    if (thisAssignment.getRequirementId() > 0) {
+      ++mapCount;
+    
+      //Record the position of this entry
+      RequirementMapItem mapItem = new RequirementMapItem();
+      mapItem.setProjectId(thisAssignment.getProjectId());
+      mapItem.setRequirementId(thisAssignment.getRequirementId());
+      mapItem.setAssignmentId(thisAssignment.getId());
+      mapItem.setIndent(-1);
+      mapItem.setPrevIndent(-1);
+      mapItem.setPrevMapId(-1);
+      mapItem.append(db);
+    }
+  }
+  if (mapCount > 0) {
+    print("Project map added, count: " + mapCount);
+  }
+}

@@ -1,5 +1,7 @@
 package org.aspcfs.utils.web;
 
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import org.aspcfs.modules.mycfs.base.CalendarEvent;
 import org.aspcfs.modules.mycfs.base.CalendarEventList;
 import org.aspcfs.modules.mycfs.beans.CalendarBean;
@@ -48,6 +50,7 @@ public class CalendarView {
   protected boolean frontPageView = false;
   protected boolean popup = false;
   protected boolean showSubject = true;
+  protected String borderSize = "";
 
   protected String cellPadding = "";
   protected String cellSpacing = "";
@@ -73,7 +76,7 @@ public class CalendarView {
    *@since
    */
   public CalendarView() {
-    this("EN", "US");
+    this("en", "US");
   }
 
 
@@ -84,8 +87,6 @@ public class CalendarView {
    *@since
    */
   public CalendarView(HttpServletRequest request) {
-    this("EN", "US");
-
     String year = request.getParameter("year");
     String month = request.getParameter("month");
     String day = request.getParameter("day");
@@ -94,6 +95,10 @@ public class CalendarView {
     String origMonth = request.getParameter("origMonth");
     String dateString = request.getParameter("date");
     String timeZone = request.getParameter("timeZone");
+    String language = request.getParameter("language");
+    String country = request.getParameter("country");
+    setLocale(language, country);
+    this.update();
 
     //If the user clicks the next/previous arrow, increment/decrement the month
     //Range checking is not necessary on the month.  The calendar object automatically
@@ -107,11 +112,10 @@ public class CalendarView {
         if (request.getParameter("prev.x") != null) {
           monthTmp += -1;
         }
-        month = "" + monthTmp;
+        month = String.valueOf(monthTmp);
       } catch (NumberFormatException e) {
       }
     }
-
     //set time zone
     if (timeZone != null && !"".equals(timeZone)) {
       cal.setTimeZone(TimeZone.getTimeZone(timeZone));
@@ -128,7 +132,7 @@ public class CalendarView {
    *@param  calendarInfo  Description of the Parameter
    */
   public CalendarView(CalendarBean calendarInfo) {
-    this("EN", "US");
+    this("en", "US");
 
     this.calendarInfo = calendarInfo;
 
@@ -395,7 +399,18 @@ public class CalendarView {
     this.cellSpacing = " cellspacing='" + tmp + "'";
   }
 
+  
+  /**
+   *  Sets the BorderSize attribute of the CalendarView object
+   *
+   *@param  tmp  The new BorderSize value
+   *@since
+   */
+  public void setBorderSize(int tmp) {
+    this.borderSize = "border=" + tmp + " ";
+  }
 
+  
   /**
    *  Sets the HeaderSpace attribute of the CalendarView object
    *
@@ -417,6 +432,22 @@ public class CalendarView {
     symbols = new DateFormatSymbols(theLocale);
     monthNames = symbols.getMonths();
     shortMonthNames = symbols.getShortMonths();
+  }
+  
+  
+  /**
+   *  Sets the locale attribute of the CalendarView object
+   *
+   *@param  language  The new locale value
+   *@param  country   The new locale value
+   */
+  public void setLocale(String language, String country) {
+    if (language == null) {
+      language = "en";
+      country = "US";
+    }
+    Locale theLocale = new Locale(language, country);
+    setLocale(theLocale);
   }
 
 
@@ -586,7 +617,7 @@ public class CalendarView {
    *@since
    */
   public String getDay() {
-    return "" + day;
+    return "" + cal.get(Calendar.DAY_OF_MONTH);
   }
 
 
@@ -758,13 +789,13 @@ public class CalendarView {
    *@since
    */
   public boolean isCurrentDay(Calendar tmp, int indate) {
-    Calendar thisCal = Calendar.getInstance();
+    Calendar thisMonth = Calendar.getInstance();
     if (timeZone != null) {
-      thisCal.setTimeZone(timeZone);
+      thisMonth.setTimeZone(timeZone);
     }
-    if ((indate == thisCal.get(Calendar.DAY_OF_MONTH)) &&
-        (tmp.get(Calendar.MONTH) == thisCal.get(Calendar.MONTH)) &&
-        (tmp.get(Calendar.YEAR) == thisCal.get(Calendar.YEAR))) {
+    if ((indate == thisMonth.get(Calendar.DAY_OF_MONTH)) &&
+        (tmp.get(Calendar.MONTH) == thisMonth.get(Calendar.MONTH)) &&
+        (tmp.get(Calendar.YEAR) == thisMonth.get(Calendar.YEAR))) {
       return true;
     } else {
       return false;
@@ -912,7 +943,7 @@ public class CalendarView {
     }
     //Display Calendar
     html.append(
-        "<center><table height=\"100%\" width='" + tableWidth + "'" + cellSpacing + cellPadding + " class='" + pre + "calendar' id='calendarTable'>" +
+        "<center><table height=\"100%\" width='" + tableWidth + "' " + borderSize + cellSpacing + cellPadding + " class='" + pre + "calendar' id='calendarTable'>" +
         "<tr name=\"staticrow\" height=\"4%\">");
 
     //Display Previous Month Arrow

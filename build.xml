@@ -587,12 +587,8 @@
       </fileset>
     </copy>
     <copy todir="${dist.dir}/cfs">
-      <fileset dir="${src.web.dir}/html">
-        <include name="**"/>
-      </fileset>
-    </copy>
-    <copy todir="${dist.dir}/cfs">
       <fileset dir="${src.web.dir}">
+        <include name="html/**" />
         <include name="images/**" />
         <include name="javascript/**" />
         <include name="css/**" />

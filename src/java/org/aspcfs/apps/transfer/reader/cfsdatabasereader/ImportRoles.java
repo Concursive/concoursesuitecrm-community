@@ -1,7 +1,6 @@
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
 import java.sql.*;
-import com.zeroio.iteam.base.*;
 import org.aspcfs.apps.transfer.*;
 import org.aspcfs.apps.transfer.DataWriter;
 import org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReaderImportModule;
@@ -10,6 +9,7 @@ import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.admin.base.RoleList;
 import org.aspcfs.utils.web.*;
 import java.util.*;
+import org.aspcfs.modules.admin.base.PermissionList;
 
 /**
  *  Reads all roles and permissions, and re-reads the user data for

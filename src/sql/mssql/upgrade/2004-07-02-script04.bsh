@@ -1,0 +1,76 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  March 29, 2004
+  Adds a project_ticket_count record
+*/
+import java.sql.*;
+import java.util.*;
+
+HashMap projects = new HashMap();
+// Get the list of projects
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT project_id " +
+  "FROM projects ");
+while (rs.next()) {
+  int id = rs.getInt("project_id");
+  projects.put(String.valueOf(id), new Integer(0));
+}
+rs.close();
+st.close();
+
+// initialize the counts to 0
+Iterator i = projects.keySet().iterator();
+PreparedStatement pst = db.prepareStatement(
+  "INSERT INTO project_ticket_count " +
+  "(project_id) VALUES (?) ");
+while (i.hasNext()) {
+  int id = Integer.parseInt((String) i.next());
+  pst.setInt(1, id);
+  pst.execute();
+}
+pst.close();
+
+// go through each ticket, assign a key_count value
+pst = db.prepareStatement(
+  "UPDATE ticket " +
+  "SET key_count = ? " +
+  "WHERE ticketid = ? ");
+
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT * " +
+  "FROM ticketlink_project " +
+  "ORDER BY project_id, ticket_id ");
+while (rs.next()) {
+  int ticketId = rs.getInt("ticket_id");
+  int projectId = rs.getInt("project_id");
+  
+  Integer thisCount = (Integer) projects.get(String.valueOf(projectId));
+  projects.put(String.valueOf(projectId), new Integer(thisCount.intValue() + 1));
+  
+  pst.setInt(1, thisCount.intValue() + 1);
+  pst.setInt(2, ticketId);
+  pst.executeUpdate();
+}
+rs.close();
+st.close();
+pst.close();
+
+// go through the HashMap and set the project count
+pst = db.prepareStatement(
+  "UPDATE project_ticket_count " +
+  "SET key_count = ? " +
+  "WHERE project_id = ? ");
+i = projects.keySet().iterator();
+while (i.hasNext()) {
+  int projectId = Integer.parseInt((String) i.next());
+  Integer thisCount = (Integer) projects.get(String.valueOf(projectId));
+  pst.setInt(1, thisCount.intValue());
+  pst.setInt(2, projectId);
+  pst.executeUpdate();
+}
+pst.close();
+

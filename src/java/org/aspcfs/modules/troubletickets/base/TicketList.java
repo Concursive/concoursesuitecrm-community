@@ -53,8 +53,13 @@ public class TicketList extends ArrayList implements SyncableList {
   private int customerProductId = -1;
   private boolean onlyWithProducts = false;
   private boolean hasEstimatedResolutionDate = false;
+  private int projectId = -1;
+  private int forProjectUser = -1;
   //search filters
   private String searchText = "";
+  //calendar
+  protected java.sql.Timestamp alertRangeStart = null;
+  protected java.sql.Timestamp alertRangeEnd = null;
 
 
   /**
@@ -263,6 +268,36 @@ public class TicketList extends ArrayList implements SyncableList {
    */
   public void setSeverity(String tmp) {
     this.severity = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the projectId attribute of the TicketList object
+   *
+   *@param  tmp  The new projectId value
+   */
+  public void setProjectId(int tmp) {
+    this.projectId = tmp;
+  }
+
+
+  /**
+   *  Sets the forProjectUser attribute of the TicketList object
+   *
+   *@param  tmp  The new forProjectUser value
+   */
+  public void setForProjectUser(int tmp) {
+    this.forProjectUser = tmp;
+  }
+
+
+  /**
+   *  Sets the forProjectUser attribute of the TicketList object
+   *
+   *@param  tmp  The new forProjectUser value
+   */
+  public void setForProjectUser(String tmp) {
+    this.forProjectUser = Integer.parseInt(tmp);
   }
 
 
@@ -533,6 +568,46 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
+   *  Sets the alertRangeStart attribute of the TicketList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(java.sql.Timestamp tmp) {
+    this.alertRangeStart = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the TicketList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(String tmp) {
+    this.alertRangeStart = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the TicketList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(java.sql.Timestamp tmp) {
+    this.alertRangeEnd = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the TicketList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(String tmp) {
+    this.alertRangeEnd = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
    *  Gets the assignedTo attribute of the TicketList object
    *
    *@return    The assignedTo value
@@ -570,7 +645,6 @@ public class TicketList extends ArrayList implements SyncableList {
   public boolean getOnlyUnassigned() {
     return onlyUnassigned;
   }
-
 
 
   /**
@@ -708,6 +782,46 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
+   *  Gets the pagedListInfo attribute of the TicketList object
+   *
+   *@return    The pagedListInfo value
+   */
+  public PagedListInfo getPagedListInfo() {
+    return pagedListInfo;
+  }
+
+
+  /**
+   *  Gets the alertRangeStart attribute of the TicketList object
+   *
+   *@return    The alertRangeStart value
+   */
+  public java.sql.Timestamp getAlertRangeStart() {
+    return alertRangeStart;
+  }
+
+
+  /**
+   *  Gets the alertRangeEnd attribute of the TicketList object
+   *
+   *@return    The alertRangeEnd value
+   */
+  public java.sql.Timestamp getAlertRangeEnd() {
+    return alertRangeEnd;
+  }
+
+
+  /**
+   *  Gets the forProjectUser attribute of the TicketList object
+   *
+   *@return    The forProjectUser value
+   */
+  public int getForProjectUser() {
+    return forProjectUser;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of Parameter
@@ -715,24 +829,19 @@ public class TicketList extends ArrayList implements SyncableList {
    *@since
    */
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM ticket t " +
         "WHERE t.ticketid > 0 ");
-
     createFilter(sqlFilter, db);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() +
@@ -745,7 +854,6 @@ public class TicketList extends ArrayList implements SyncableList {
       }
       rs.close();
       pst.close();
-
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
@@ -761,7 +869,6 @@ public class TicketList extends ArrayList implements SyncableList {
         rs.close();
         pst.close();
       }
-
       //Determine column to sort by
       pagedListInfo.setDefaultSort("t.entered", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
@@ -795,7 +902,8 @@ public class TicketList extends ArrayList implements SyncableList {
         "a.location AS assetlocation, " +
         "a.onsite_service_model AS assetonsiteservicemodel , " +
         "pc.sku AS productsku , " +
-        "pc.product_name AS productname  " +
+        "pc.product_name AS productname, " +
+        "tlp.project_id " +
         "FROM ticket t " +
         "LEFT JOIN organization o ON (t.org_id = o.org_id) " +
         "LEFT JOIN lookup_department ld ON (t.department_code = ld.code) " +
@@ -806,6 +914,7 @@ public class TicketList extends ArrayList implements SyncableList {
         "LEFT JOIN service_contract sc ON (t.link_contract_id = sc.contract_id) " +
         "LEFT JOIN asset a ON (t.link_asset_id = a.asset_id) " +
         "LEFT JOIN product_catalog pc ON (t.product_id = pc.product_id) " +
+        "LEFT JOIN ticketlink_project tlp ON (t.ticketid = tlp.ticket_id) " +
         "WHERE t.ticketid > 0 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -949,6 +1058,13 @@ public class TicketList extends ArrayList implements SyncableList {
     if (onlyWithProducts == true) {
       sqlFilter.append("AND t.product_id IS NOT NULL ");
     }
+    if (projectId > 0) {
+      sqlFilter.append("AND t.ticketid IN (SELECT ticket_id FROM ticketlink_project WHERE project_id = ?) ");
+    }
+    if (forProjectUser > -1) {
+      sqlFilter.append("AND t.ticketid IN (SELECT ticket_id FROM ticketlink_project WHERE project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
+          "AND status IS NULL)) ");
+    }
     //Sync API
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
@@ -1040,6 +1156,12 @@ public class TicketList extends ArrayList implements SyncableList {
     }
     if (customerProductId > 0) {
       pst.setInt(++i, customerProductId);
+    }
+    if (projectId > 0) {
+      pst.setInt(++i, projectId);
+    }
+    if (forProjectUser > -1) {
+      pst.setInt(++i, forProjectUser);
     }
     //Sync API
     if (syncType == Constants.SYNC_INSERTS) {
@@ -1134,6 +1256,25 @@ public class TicketList extends ArrayList implements SyncableList {
     pst.close();
     return count;
   }
+  
+  
+  /**
+   *  Each ticket in a project has its own unique count
+   *
+   *@param  db                Description of the Parameter
+   *@param  projectId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void insertProjectTicketCount(Connection db, int projectId) throws SQLException {
+    // Every new project needs a project_ticket_count record
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO project_ticket_count " +
+        "(project_id) VALUES " +
+        "(?) ");
+    pst.setInt(1, projectId);
+    pst.execute();
+    pst.close();
+  }
 
   public HashMap queryRecordCount(Connection db, TimeZone timeZone) throws SQLException {
 
@@ -1166,5 +1307,22 @@ public class TicketList extends ArrayList implements SyncableList {
     return events;
   }
   
+
+  /**
+   *  Each ticket in a project has its own unique count
+   *
+   *@param  db                Description of the Parameter
+   *@param  projectId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void deleteProjectTicketCount(Connection db, int projectId) throws SQLException {
+    // Every new project needs a project_ticket_count record
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM project_ticket_count " +
+        "WHERE project_id = ? ");
+    pst.setInt(1, projectId);
+    pst.execute();
+    pst.close();
+  }
 }
 

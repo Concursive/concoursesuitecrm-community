@@ -77,8 +77,8 @@ Search Results
       <% int status = -1;%>
       <dhv:permission name="accounts-accounts-edit"><% status = thisOrg.getEnabled() ? 1 : 0; %></dhv:permission>
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('menuAccount', '<%= thisOrg.getOrgId() %>', '<%= status %>');"
-       onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayMenu('select<%= i %>','menuAccount', '<%= thisOrg.getOrgId() %>', '<%= status %>');"
+       onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuAccount');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
 		<td class="row<%= rowid %>">
       <a href="Accounts.do?command=Details&orgId=<%=thisOrg.getOrgId()%>"><%= toHtml(thisOrg.getName()) %></a>

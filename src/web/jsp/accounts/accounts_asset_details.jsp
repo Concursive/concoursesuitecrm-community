@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*,org.aspcfs.modules.assets.base.*,org.aspcfs.modules.servicecontracts.base.*,java.text.DateFormat" %>
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
@@ -14,6 +15,7 @@
 <jsp:useBean id="categoryList3" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="assetStatusList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <form name="viewAccountAsset" action="AccountsAssets.do?command=Modify&auto-populate=true&id=<%=asset.getId()%>" method="post">
@@ -94,7 +96,7 @@
       Date Listed
     </td>
     <td>
-    <dhv:tz timestamp="<%= asset.getDateListed() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+    <zeroio:tz timestamp="<%= asset.getDateListed() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -241,7 +243,7 @@
       Expiration Date
     </td>
     <td>
-      <dhv:tz timestamp="<%=asset.getExpirationDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= asset.getExpirationDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -273,7 +275,7 @@
       Purchase Date
     </td>
     <td>
-      <dhv:tz timestamp="<%=asset.getPurchaseDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=asset.getPurchaseDate()%>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -281,7 +283,7 @@
       Purchase Cost
     </td>
     <td>
-      <%= (asset.getPurchaseCost() == -1) ? "" : "$" + asset.getPurchaseCostCurrency() %>&nbsp;
+      <zeroio:currency value="<%= asset.getPurchaseCost() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">

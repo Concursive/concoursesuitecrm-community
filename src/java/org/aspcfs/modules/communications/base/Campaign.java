@@ -705,7 +705,7 @@ public class Campaign extends GenericBean {
    *@param  tmp  The new entered value
    */
   public void setActiveDate(String tmp) {
-    this.activeDate = DateUtils.parseTimestampString(tmp);
+    this.activeDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -725,7 +725,7 @@ public class Campaign extends GenericBean {
    *@param  tmp  The new inactiveDate value
    */
   public void setInactiveDate(String tmp) {
-    this.inactiveDate = DateUtils.parseTimestampString(tmp);
+    this.inactiveDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 

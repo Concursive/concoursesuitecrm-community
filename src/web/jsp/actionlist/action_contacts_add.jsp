@@ -2,6 +2,7 @@
 <%@ page import="org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="SCL" class="org.aspcfs.modules.communications.base.SearchCriteriaList" scope="request"/>
 <jsp:useBean id="ActionList" class="org.aspcfs.modules.actionlist.base.ActionList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript">
 function saveCriteria() {

@@ -3,6 +3,7 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.utils.web.*, org.aspcfs.modules.troubletickets.base.*" %>
 <jsp:useBean id="ticketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request" />
 <jsp:useBean id="activityDetails" class="org.aspcfs.modules.troubletickets.base.TicketActivityLog" scope="request" />
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>

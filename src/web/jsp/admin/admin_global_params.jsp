@@ -2,6 +2,8 @@
 <jsp:useBean id="Timeout" class="java.lang.String" scope="request"/>
 <jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
 <%@ page import="org.aspcfs.utils.web.HtmlSelectTimeZone" %>
+<%@ page import="org.aspcfs.utils.web.HtmlSelectLanguage" %>
+<%@ page import="org.aspcfs.utils.web.HtmlSelectCurrency" %>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -103,6 +105,28 @@ Configure System
       </td>
       <td>
          <%= HtmlSelectTimeZone.getSelect("timeZone", getPref(getServletContext(), "SYSTEM.TIMEZONE")).getValueFromId(getPref(getServletContext(), "SYSTEM.TIMEZONE")) %>
+      </td>
+    </tr>
+    <tr class="row<%= (++count % 2 == 0 ? "1":"2") %>">
+      <td align="center">
+        <a href="AdminConfig.do?command=Modify&param=SYSTEM.CURRENCY">Edit</a>
+      </td>
+      <td>
+         Default currency for system
+      </td>
+      <td>
+         <%= HtmlSelectCurrency.getSelect("currency", getPref(getServletContext(), "SYSTEM.CURRENCY")).getValueFromId(getPref(getServletContext(), "SYSTEM.CURRENCY")) %>
+      </td>
+    </tr>
+    <tr class="row<%= (++count % 2 == 0 ? "1":"2") %>">
+      <td align="center">
+        <a href="AdminConfig.do?command=Modify&param=SYSTEM.LANGUAGE">Edit</a>
+      </td>
+      <td>
+         Default locale for system
+      </td>
+      <td>
+         <%= HtmlSelectLanguage.getSelect("language", getPref(getServletContext(), "SYSTEM.LANGUAGE")).getValueFromId(getPref(getServletContext(), "SYSTEM.LANGUAGE")) %>
       </td>
     </tr>
 </dhv:evaluate>

@@ -69,8 +69,8 @@ Contacts
 		<tr class="containerBody">
       <td valign="center" nowrap class="row<%= rowid %>">
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('menuContact', '<%= OrgDetails.getOrgId() %>', '<%= thisContact.getId() %>', '<%= thisContact.getPrimaryContact() %>');"
-         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+         <a href="javascript:displayMenu('select<%= i %>', 'menuContact', '<%= OrgDetails.getOrgId() %>', '<%= thisContact.getId() %>', '<%= thisContact.getPrimaryContact() %>');"
+         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuContact');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td valign="center" width="50%" class="row<%= rowid %>">
         <a href="Contacts.do?command=Details&id=<%=thisContact.getId()%>"><%= toHtml(thisContact.getNameLastFirst()) %></a>

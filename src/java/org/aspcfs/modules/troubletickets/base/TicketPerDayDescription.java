@@ -104,13 +104,7 @@ public class TicketPerDayDescription extends GenericBean {
    *@param  tmp  The new activityDate value
    */
   public void setActivityDate(String tmp) {
-    java.sql.Timestamp tmpDate = null;
-    tmpDate = DateUtils.parseTimestampString(tmp, "M/d/yy");
-    if (tmpDate == null) {
-      tmpDate = DateUtils.parseTimestampString(tmp, "M-d-yy");
-    }
-
-    this.activityDate = tmpDate;
+    activityDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -292,10 +286,8 @@ public class TicketPerDayDescription extends GenericBean {
    *@return    The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
-
     ArrayList thisList = new ArrayList();
     thisList.add("activityDate");
-
     return thisList;
   }
 
@@ -342,14 +334,12 @@ public class TicketPerDayDescription extends GenericBean {
    *@param  parseItem  Description of the Parameter
    */
   public void buildRecord(HttpServletRequest request, int parseItem) {
-
     this.setActivityDate(request.getParameter("activityDate" + parseItem));
     this.setDescriptionOfService(request.getParameter("descriptionOfService" + parseItem));
     this.setTravelHours(request.getParameter("travelHours" + parseItem));
     this.setTravelMinutes(request.getParameter("travelMinutes" + parseItem));
     this.setLaborHours(request.getParameter("laborHours" + parseItem));
     this.setLaborMinutes(request.getParameter("laborMinutes" + parseItem));
-
   }
 
 

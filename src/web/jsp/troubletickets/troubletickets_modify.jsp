@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="org.aspcfs.modules.troubletickets.base.*,org.aspcfs.modules.communications.base.Campaign,org.aspcfs.modules.communications.base.CampaignList,org.aspcfs.utils.web.HtmlSelect" %>
@@ -13,6 +14,7 @@
 <jsp:useBean id="SubList2" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="SubList3" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <body>
 <form name="details" action="TroubleTickets.do?command=Update&auto-populate=true" method="post">
@@ -51,7 +53,7 @@ Modify Ticket
   	<td class="containerBack">
       <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
         <font color="red">This ticket was closed on
-        <dhv:tz timestamp="<%= TicketDetails.getClosed() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+        <zeroio:tz timestamp="<%= TicketDetails.getClosed() %>" />
         </font><br>
         <br>
       </dhv:evaluate>

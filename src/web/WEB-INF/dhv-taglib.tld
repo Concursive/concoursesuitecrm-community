@@ -281,6 +281,10 @@
       <required>no</required>
     </attribute>
     <attribute>
+    <name>label</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
       <name>object</name>
       <required>yes</required>
     </attribute>
@@ -298,6 +302,14 @@
     </attribute>
     <attribute>
       <name>showHiddenParams</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>tableClass</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>showForm</name>
       <required>no</required>
     </attribute>
     <attribute>
@@ -320,6 +332,11 @@
     <attribute>
       <name>enableJScript</name>
       <required>no</required>
+    </attribute>
+    <attribute>
+         <name>scrollReload</name>
+      <required>no</required>
+       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
   

@@ -15,8 +15,7 @@ import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 
 /**
- *  Assets are h/w, s/w or systems that are serviced under the 
- *  service contract.
+ *  Assets are h/w, s/w or systems that are serviced under the service contract.
  *
  *@author     kbhoopal
  *@created    March 16, 2004
@@ -180,7 +179,7 @@ public class Asset extends GenericBean {
    *@param  tmp  The new dateListed value
    */
   public void setDateListed(String tmp) {
-    this.dateListed = DatabaseUtils.parseTimestamp(tmp);
+    this.dateListed = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -350,7 +349,7 @@ public class Asset extends GenericBean {
    *@param  tmp  The new expirationDate value
    */
   public void setExpirationDate(String tmp) {
-    this.expirationDate = DatabaseUtils.parseTimestamp(tmp);
+    this.expirationDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -390,7 +389,7 @@ public class Asset extends GenericBean {
    *@param  tmp  The new purchaseDate value
    */
   public void setPurchaseDate(String tmp) {
-    this.purchaseDate = DatabaseUtils.parseTimestamp(tmp);
+    this.purchaseDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -400,16 +399,7 @@ public class Asset extends GenericBean {
    *@param  tmp  The new purchaseCost value
    */
   public void setPurchaseCost(String tmp) {
-    tmp = StringUtils.replace(tmp, ",", "");
-    tmp = StringUtils.replace(tmp, "$", "");
-
-    if (!"".equals(tmp)){
-      try {
-        this.purchaseCost = Double.parseDouble(tmp);
-      } catch (NumberFormatException ne) {
-        errors.put("purchaseCostError", tmp + " is invalid input for this field");
-      }
-    }
+    this.purchaseCost = Double.parseDouble(tmp);
   }
 
 
@@ -1049,6 +1039,18 @@ public class Asset extends GenericBean {
 
 
   /**
+   *  Gets the numberParams attribute of the Asset class
+   *
+   *@return    The numberParams value
+   */
+  public static ArrayList getNumberParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("purchaseCost");
+    return thisList;
+  }
+
+
+  /**
    *  Gets the valid attribute of the Asset object
    *
    *@return                   The valid value
@@ -1290,9 +1292,9 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Seperate method to delete the dependencies and then
-   *  the object. This seperation allows asset alone
-   *  to be deleted when other objects are deleted (for e.g., tickets)   
+   *  Seperate method to delete the dependencies and then the object. This
+   *  seperation allows asset alone to be deleted when other objects are deleted
+   *  (for e.g., tickets)
    *
    *@param  db                Description of the Parameter
    *@param  baseFilePath      File path of documents related to a ticket
@@ -1387,3 +1389,4 @@ public class Asset extends GenericBean {
     serviceContractNumber = rs.getString("service_contract_number");
   }
 }
+

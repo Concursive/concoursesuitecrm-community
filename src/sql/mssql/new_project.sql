@@ -27,16 +27,6 @@ CREATE TABLE lookup_project_priority (
   type INTEGER NOT NULL
 );
 
-
-CREATE TABLE lookup_project_issues (
-  code INT IDENTITY PRIMARY KEY,
-  description VARCHAR(50) NOT NULL,
-  default_item BIT DEFAULT 0,
-  level INTEGER DEFAULT 0,
-  enabled BIT DEFAULT 1,
-  group_id INTEGER NOT NULL DEFAULT 0
-);
-
 CREATE TABLE lookup_project_status (
   code INT IDENTITY PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
@@ -58,9 +48,28 @@ CREATE TABLE lookup_project_loe (
   group_id INTEGER NOT NULL DEFAULT 0
 );
 
+CREATE TABLE lookup_project_role (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1,
+  group_id INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE lookup_project_category (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(80) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  group_id INTEGER NOT NULL DEFAULT 0
+);
+
+
 CREATE TABLE projects (
   project_id INT IDENTITY PRIMARY KEY,
-  group_id INTEGER NULL,
+  group_id INTEGER NOT NULL,
   department_id INTEGER REFERENCES lookup_department(code),
   template_id INTEGER,
   title VARCHAR(100) NOT NULL ,
@@ -69,12 +78,35 @@ CREATE TABLE projects (
   requestedDept VARCHAR(50) NULL ,
   requestDate DATETIME DEFAULT CURRENT_TIMESTAMP NULL ,
   approvalDate DATETIME NULL ,
+  approvalBy INTEGER NULL REFERENCES access(user_id),
   closeDate DATETIME NULL,
   owner INTEGER NULL,
   entered DATETIME DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES access(user_id),
   modified DATETIME DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy INTEGER NOT NULL REFERENCES access(user_id)
+  modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
+  category_id INTEGER NULL REFERENCES lookup_project_category(code),
+  portal BIT NOT NULL DEFAULT 0,
+  allow_guests BIT NOT NULL DEFAULT 0,
+  news_enabled BIT NOT NULL DEFAULT 1,
+  details_enabled BIT NOT NULL DEFAULT 1,
+  team_enabled BIT NOT NULL DEFAULT 1,
+  plan_enabled BIT NOT NULL DEFAULT 1,
+  lists_enabled BIT NOT NULL DEFAULT 1,
+  discussion_enabled BIT NOT NULL DEFAULT 1,
+  tickets_enabled BIT NOT NULL DEFAULT 1,
+  documents_enabled BIT NOT NULL DEFAULT 1,
+  news_label VARCHAR(50) NULL,
+  details_label VARCHAR(50) NULL,
+  team_label VARCHAR(50) NULL,
+  plan_label VARCHAR(50) NULL,
+  lists_label VARCHAR(50) NULL,
+  discussion_label VARCHAR(50) NULL,
+  tickets_label VARCHAR(50) NULL,
+  documents_label VARCHAR(50) NULL,
+  est_closedate DATETIME,
+  budget FLOAT,
+  budget_currency VARCHAR(5)
 );
 
 CREATE INDEX "projects_idx"
@@ -102,9 +134,21 @@ CREATE TABLE project_requirements (
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy INTEGER NOT NULL REFERENCES access(user_id)
+  modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
+  startdate DATETIME NULL
 );
 
+CREATE TABLE project_assignments_folder (
+  folder_id INT IDENTITY PRIMARY KEY,
+  parent_id INTEGER NULL REFERENCES project_assignments_folder(folder_id),
+  requirement_id INTEGER NOT NULL REFERENCES project_requirements(requirement_id),
+  name VARCHAR(255) NOT NULL,
+  description TEXT NULL,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredBy INTEGER NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER NOT NULL REFERENCES access(user_id)
+);
 
 CREATE TABLE project_assignments (
   assignment_id INT IDENTITY PRIMARY KEY,
@@ -112,7 +156,6 @@ CREATE TABLE project_assignments (
   requirement_id INTEGER NULL REFERENCES project_requirements(requirement_id),
   assignedBy INTEGER REFERENCES access(user_id),
   user_assign_id INTEGER NULL REFERENCES access(user_id),
-  activity_id INTEGER REFERENCES lookup_project_activity,
   technology VARCHAR(50) NULL,
   role VARCHAR(255) NULL,
   estimated_loevalue INTEGER NULL,
@@ -130,7 +173,9 @@ CREATE TABLE project_assignments (
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy INTEGER NOT NULL REFERENCES access(user_id)
+  modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
+  folder_id INTEGER NULL REFERENCES project_assignments_folder(folder_id),
+  percent_complete INTEGER NULL
 );
 
 CREATE INDEX "project_assignments_idx" ON "project_assignments"
@@ -147,10 +192,26 @@ CREATE TABLE project_assignments_status (
   status_date DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE project_issues_categories (
+  category_id INT IDENTITY PRIMARY KEY,
+  project_id INTEGER NOT NULL REFERENCES projects(project_id),
+  subject VARCHAR(255) NOT NULL,
+  description TEXT NULL,
+  enabled BIT NOT NULL DEFAULT 1,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredBy INTEGER NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
+  topics_count INTEGER NOT NULL DEFAULT 0,
+  posts_count INTEGER NOT NULL DEFAULT 0,
+  last_post_date DATETIME,
+  last_post_by INTEGER
+);
+
 CREATE TABLE project_issues (
   issue_id INT IDENTITY PRIMARY KEY,
   project_id INTEGER NOT NULL REFERENCES projects(project_id),
-  type_id INTEGER NULL REFERENCES lookup_project_issues,
+  category_id INTEGER NULL REFERENCES project_issues_categories(category_id),
   subject VARCHAR(255) NOT NULL,
   message TEXT NOT NULL,
   importance INTEGER DEFAULT 0,
@@ -158,18 +219,12 @@ CREATE TABLE project_issues (
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy INTEGER NOT NULL REFERENCES access(user_id)
+  modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
+  reply_count INTEGER NOT NULL DEFAULT 0,
+  last_reply_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_reply_by INTEGER
 );
 
-CREATE INDEX "project_issues_limit_idx"
-  ON "project_issues"
-  ("type_id", "project_id", "enteredby");
-  
-CREATE INDEX "project_issues_idx"
-  ON "project_issues"
-  ("issue_id");  
-  
-  
 CREATE TABLE project_issue_replies (
   reply_id INT IDENTITY PRIMARY KEY ,
   issue_id INTEGER NOT NULL REFERENCES project_issues,
@@ -189,9 +244,14 @@ CREATE TABLE project_folders (
   link_item_id INTEGER NOT NULL,
   subject VARCHAR(255) NOT NULL,
   description TEXT,
-  parent INT NULL
+  parent_id INT NULL,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredBy INTEGER NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
+  display INTEGER NULL
 );
-  
+
 CREATE TABLE project_files (
   item_id INT IDENTITY PRIMARY KEY ,
   link_module_id INTEGER NOT NULL,
@@ -235,15 +295,91 @@ CREATE TABLE project_files_download (
   download_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE project_files_thumbnail (
+  item_id INTEGER REFERENCES project_files(item_id),
+  filename VARCHAR(255) NOT NULL,
+  size INTEGER DEFAULT 0 ,
+  version FLOAT DEFAULT 0 ,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredBy INTEGER NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER NOT NULL REFERENCES access(user_id)
+);
+
 
 CREATE TABLE project_team (
   project_id INTEGER NOT NULL REFERENCES projects(project_id),
   user_id INTEGER NOT NULL REFERENCES access(user_id),
-  userLevel INTEGER NULL,
+  userlevel INTEGER NOT NULL REFERENCES lookup_project_role(code),
   entered DATETIME DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES access(user_id),
   modified DATETIME DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INTEGER NOT NULL REFERENCES access(user_id)
+  modifiedby INTEGER NOT NULL REFERENCES access(user_id),
+  status INTEGER NULL,
+  last_accessed DATETIME
+);
+CREATE UNIQUE INDEX project_team_uni_idx ON project_team (project_id, user_id);
+
+CREATE TABLE project_news (
+  news_id INT IDENTITY PRIMARY KEY,
+  project_id INTEGER NOT NULL REFERENCES projects(project_id),
+  category_id INTEGER NULL,
+  subject VARCHAR(255) NOT NULL,
+  intro VARCHAR(2048) NULL,
+  message TEXT,
+  entered DATETIME DEFAULT CURRENT_TIMESTAMP,
+  enteredby INTEGER NOT NULL REFERENCES access(user_id),
+  modified DATETIME DEFAULT CURRENT_TIMESTAMP,
+   modifiedby INTEGER NOT NULL REFERENCES access(user_id),
+  start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  end_date DATETIME DEFAULT NULL,
+  allow_replies BIT DEFAULT 0,
+  allow_rating BIT DEFAULT 0,
+  rating_count INTEGER NOT NULL DEFAULT 0,
+  avg_rating FLOAT DEFAULT 0,
+  priority_id INTEGER DEFAULT 10,
+  read_count INTEGER NOT NULL DEFAULT 0,
+  enabled BIT DEFAULT 1,
+  status INTEGER DEFAULT NULL,
+  html BIT NOT NULL DEFAULT 1
 );
 
+CREATE TABLE project_requirements_map (
+  map_id INT IDENTITY PRIMARY KEY,
+  project_id INTEGER NOT NULL REFERENCES projects,
+  requirement_id INTEGER NOT NULL REFERENCES project_requirements,
+  position INTEGER NOT NULL,
+  indent INTEGER NOT NULL DEFAULT 0,
+  folder_id INTEGER NULL REFERENCES project_assignments_folder,
+  assignment_id INTEGER NULL REFERENCES project_assignments
+);
 
+CREATE INDEX proj_req_map_pr_req_pos_idx ON project_requirements_map (project_id, requirement_id, position);
+
+CREATE TABLE lookup_project_permission_category (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1,
+  group_id INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE lookup_project_permission (
+  code INT IDENTITY PRIMARY KEY,
+  category_id INTEGER REFERENCES lookup_project_permission_category(code),
+  permission VARCHAR(300) UNIQUE NOT NULL,
+  description VARCHAR(300) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1,
+  group_id INTEGER NOT NULL DEFAULT 0,
+  default_role INTEGER REFERENCES lookup_project_role(code)
+);
+
+CREATE TABLE project_permissions (
+  id INT IDENTITY PRIMARY KEY,
+  project_id INTEGER NOT NULL REFERENCES projects(project_id),
+  permission_id INTEGER NOT NULL REFERENCES lookup_project_permission(code),
+  userlevel INTEGER NOT NULL REFERENCES lookup_project_role(code)
+);

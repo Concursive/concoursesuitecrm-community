@@ -1,9 +1,12 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.pipeline.base.OpportunityComponent,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="componentList" class="org.aspcfs.modules.pipeline.base.OpportunityComponentList" scope="request"/>
 <jsp:useBean id="ComponentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -118,7 +121,7 @@ Opportunity Details
         </dhv:permission>
       <% } %>
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('menuOpp','<%= ContactDetails.getId() %>', '<%= opportunityHeader.getId() %>','<%= oppComponent.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayMenu('select<%= count %>','menuOpp','<%= ContactDetails.getId() %>', '<%= opportunityHeader.getId() %>','<%= oppComponent.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td width="100%" valign="top" class="row<%= rowid %>">
       <a href="ExternalContactsOppComponents.do?command=DetailsComponent&contactId=<%= ContactDetails.getId() %>&id=<%= oppComponent.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
@@ -128,10 +131,10 @@ Opportunity Details
       <%= oppComponent.getClosed() != null ? "<font color=\"red\">closed</font>" : "<font color=\"green\">open</font>" %>
     </td>
     <td valign="top" align="right" nowrap class="row<%= rowid %>">
-      $<%= oppComponent.getGuessCurrency() %>
+      <zeroio:currency value="<%= oppComponent.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">
-      <dhv:tz timestamp="<%= oppComponent.getCloseDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= oppComponent.getCloseDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= toHtml(oppComponent.getStageName()) %>

@@ -1,39 +1,33 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.actions;
 
+import com.zeroio.iteam.base.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
+import java.util.*;
 import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.framework.actions.*;
 import com.zeroio.iteam.base.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.admin.base.User;
-
-import java.io.*;
-import java.util.*;
-import com.jrefinery.chart.*;
-import com.jrefinery.chart.data.*;
-import com.jrefinery.chart.ui.*;
-import com.jrefinery.data.*;
-import com.jrefinery.chart.entity.StandardEntityCollection;
-import com.jrefinery.chart.tooltips.TimeSeriesToolTipGenerator;
-import java.awt.Color;
 
 /**
  *  Description of the Class
  *
  *@author     matt rajkowski
  *@created    November 28, 2001
- *@version    $Id$
+ *@version    $Id: ProjectManagementAssignments.java,v 1.12.134.1 2004/03/19
+ *      21:00:50 rvasista Exp $
  */
 public final class ProjectManagementAssignments extends CFSModule {
 
@@ -45,243 +39,49 @@ public final class ProjectManagementAssignments extends CFSModule {
    *@since
    */
   public String executeCommandAdd(ActionContext context) {
-	  
-/* 	if (!(hasPermission(context, "projects-activities-add"))) {
-	    return ("PermissionError");
-    	}
-*/
-    Exception errorMessage = null;
-
-    String projectId = (String)context.getRequest().getParameter("pid");
-
-    Connection db = null;
-    try {
-      db = getConnection(context);
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
-      context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("assignments_add").toLowerCase());
-      
-      RequirementList requirements = new RequirementList();
-      requirements.setProject(thisProject);
-      requirements.setProjectId(thisProject.getId());
-      requirements.buildList(db);
-      requirements.setEmptyHtmlSelectRecord("-- Select Requirement --");
-      context.getRequest().setAttribute("RequirementList", requirements);
-      
-      thisProject.buildTeamMemberList(db);
-      java.util.Iterator i = thisProject.getTeam().iterator();
-      while (i.hasNext()) {
-        TeamMember thisMember = (TeamMember)i.next();
-        User thisUser = new User();
-        thisUser.setBuildContact(true);
-        thisUser.buildRecord(db, thisMember.getUserId());
-        thisMember.setUser(thisUser);
-        thisMember.setContact(thisUser.getContact());
-      }
-      
-      LookupList activityList = new LookupList(db, "lookup_project_activity");
-      activityList.addItem(0, "-- Select Activity --");
-      context.getRequest().setAttribute("ActivityList", activityList);
-      
-      LookupList priorityList = new LookupList(db, "lookup_project_priority");
-      context.getRequest().setAttribute("PriorityList", priorityList);
-      
-      LookupList statusList = new LookupList(db, "lookup_project_status");
-      statusList.addItem(0, "-- Select Status --");
-      context.getRequest().setAttribute("StatusList", statusList);
-      
-      LookupList loeList = new LookupList(db, "lookup_project_loe");
-      context.getRequest().setAttribute("LoeList", loeList);
-      
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    addModuleBean(context, "AddItem", "");
-    if (errorMessage == null) {
-      return ("ProjectCenterOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
-   */
-  public String executeCommandInsert(ActionContext context) {
-	  
-/* 	if (!(hasPermission(context, "projects-activities-add"))) {
-	    return ("PermissionError");
-    	}
- */	
     Exception errorMessage = null;
     Connection db = null;
-
-    String projectId = (String)context.getRequest().getParameter("pid");
-
-    boolean recordInserted = false;
-    try {
-      db = getConnection(context);
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
-      context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("assignments_add").toLowerCase());
-
-      Assignment thisAssignment = (Assignment)context.getFormBean();
-      thisAssignment.setProjectId(thisProject.getId());
-      thisAssignment.setEnteredBy(getUserId(context));
-      thisAssignment.setModifiedBy(getUserId(context));
-      recordInserted = thisAssignment.insert(db);
-      if (!recordInserted) {
-        processErrors(context, thisAssignment.getErrors());
-      } else {
-        processInsertHook(context, thisAssignment);
-        context.getRequest().setAttribute("pid", projectId);
-      }
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
-      if (recordInserted) {
-        if ("Requirements".equals(context.getRequest().getParameter("return"))) {
-          return ("AddOKRequirements");
-        } else {
-          return ("AddOK");
-        }
-      } else {
-        return (executeCommandAdd(context));
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
-  }
-
-  public String executeCommandDetails(ActionContext context) {
-	  
-/* 	if (!(hasPermission(context, "projects-activities-view"))) {
-	    return ("PermissionError");
-    	}
- */	
-    Exception errorMessage = null;
-
-    String projectId = (String)context.getRequest().getParameter("pid");
-    String assignmentId = (String)context.getRequest().getParameter("aid");
-    
-    Connection db = null;
-    try {
-      db = getConnection(context);
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
-      context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("assignments_details").toLowerCase());
-
-      Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
-      context.getRequest().setAttribute("Assignment", thisAssignment);
-      
-      RequirementList requirements = new RequirementList();
-      requirements.setProject(thisProject);
-      requirements.setProjectId(thisProject.getId());
-      requirements.buildList(db);
-      requirements.setEmptyHtmlSelectRecord("-- Select Requirement --");
-      context.getRequest().setAttribute("RequirementList", requirements);
-      
-      thisProject.buildTeamMemberList(db);
-      java.util.Iterator i = thisProject.getTeam().iterator();
-      while (i.hasNext()) {
-        TeamMember thisMember = (TeamMember)i.next();
-        User thisUser = new User();
-        thisUser.setBuildContact(true);
-        thisUser.buildRecord(db, thisMember.getUserId());
-        thisMember.setUser(thisUser);
-        thisMember.setContact(thisUser.getContact());
-      }
-      
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    addModuleBean(context, "Details", "");
-    if (errorMessage == null) {
-      return ("ProjectCenterOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
-  }
-  
-  public String executeCommandModify(ActionContext context) {
-	  
-/* 	if (!(hasPermission(context, "projects-activities-edit"))) {
-	    return ("PermissionError");
-    	}
- */	
-    Exception errorMessage = null;
-
-    String projectId = (String)context.getRequest().getParameter("pid");
-    String assignmentId = (String)context.getRequest().getParameter("aid");
+    //Parameters
+    String projectId = (String) context.getRequest().getParameter("pid");
     this.checkReturnPage(context);
-    
-    Connection db = null;
     try {
       db = getConnection(context);
+      //Load the project
       Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+        return "PermissionError";
+      }
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("assignments_modify").toLowerCase());
-
-      Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
-      context.getRequest().setAttribute("Assignment", thisAssignment);
-      
-      RequirementList requirements = new RequirementList();
-      requirements.setProject(thisProject);
-      requirements.setProjectId(thisProject.getId());
-      requirements.buildList(db);
-      requirements.setEmptyHtmlSelectRecord("-- Select Requirement --");
-      context.getRequest().setAttribute("RequirementList", requirements);
-      
+      context.getRequest().setAttribute("IncludeSection", ("assignments_add").toLowerCase());
+      //Load team member drop-down list
       thisProject.buildTeamMemberList(db);
       java.util.Iterator i = thisProject.getTeam().iterator();
       while (i.hasNext()) {
-        TeamMember thisMember = (TeamMember)i.next();
+        TeamMember thisMember = (TeamMember) i.next();
         User thisUser = new User();
         thisUser.setBuildContact(true);
+        thisUser.setBuildContactDetails(true);
         thisUser.buildRecord(db, thisMember.getUserId());
         thisMember.setUser(thisUser);
-        thisMember.setContact(thisUser.getContact());
       }
-      
-      LookupList activityList = new LookupList(db, "lookup_project_activity");
-      activityList.addItem(0, "-- Select Activity --");
-      context.getRequest().setAttribute("ActivityList", activityList);
-      
+      //Load priority drop-down list
       LookupList priorityList = new LookupList(db, "lookup_project_priority");
       context.getRequest().setAttribute("PriorityList", priorityList);
-      
+      //Load status drop-down list
       LookupList statusList = new LookupList(db, "lookup_project_status");
-      statusList.addItem(0, "-- Select Status --");
       context.getRequest().setAttribute("StatusList", statusList);
-      
+      //Load status percent drop-down list
+      HtmlPercentList statusPercentList = new HtmlPercentList();
+      context.getRequest().setAttribute("StatusPercentList", statusPercentList);
+      //Load LOE drop-down list
       LookupList loeList = new LookupList(db, "lookup_project_loe");
       context.getRequest().setAttribute("LoeList", loeList);
-      
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
-    addModuleBean(context, "Details", "");
     if (errorMessage == null) {
       if (context.getRequest().getParameter("popup") != null) {
         return ("PopupOK");
@@ -294,173 +94,678 @@ public final class ProjectManagementAssignments extends CFSModule {
     }
   }
 
-  public String executeCommandUpdate(ActionContext context) {
-	  
-/* 	if (!(hasPermission(context, "projects-activities-edit"))) {
-	    return ("PermissionError");
-    	}
- */	
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since
+   */
+  public String executeCommandSave(ActionContext context) {
     Exception errorMessage = null;
-
-    Assignment thisAssignment = (Assignment)context.getFormBean();
-    this.checkReturnPage(context);
-    
     Connection db = null;
-    int resultCount = 0;
-
+    int resultCount = -1;
+    boolean recordInserted = false;
+    //Parameters
+    String projectId = (String) context.getRequest().getParameter("pid");
+    this.checkReturnPage(context);
+    Assignment thisAssignment = (Assignment) context.getFormBean();
     try {
-      db = this.getConnection(context);
-      
-      Project thisProject = new Project(db, thisAssignment.getProjectId(), getUserRange(context));
-      
-      thisAssignment.setProject(thisProject);
-      thisAssignment.setProjectId(thisProject.getId());
+      db = getConnection(context);
+      //Load the project
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject.buildPermissionList(db);
+      //Process the assignment
       thisAssignment.setModifiedBy(getUserId(context));
-      
-      resultCount = thisAssignment.update(db, context);
-      if (resultCount == -1) {
-        processErrors(context, thisAssignment.getErrors());
-        context.getRequest().setAttribute("Project", thisProject);
-        context.getRequest().setAttribute("Assignment", thisAssignment);
-        context.getRequest().setAttribute("IncludeSection", ("assignments_modify").toLowerCase());
-      } else {
-        context.getRequest().setAttribute("pid", "" + thisProject.getId());
-        context.getRequest().setAttribute("IncludeSection", ("assignments").toLowerCase());
+      thisAssignment.setProjectId(thisProject.getId());
+      //Check permissions
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify") &&
+          !hasProjectAccess(context, db, thisProject, "project-plan-view")) {
+        return "PermissionError";
       }
-    } catch (SQLException e) {
+      // Only assign to users of the project
+      if (thisAssignment.getUserAssignedId() > -1 && !TeamMemberList.isOnTeam(db, thisProject.getId(), thisAssignment.getUserAssignedId())) {
+        return "PermissionError";
+      }
+      if (thisAssignment.getId() > 0) {
+        //Check user permissions
+        TeamMember currentMember = new TeamMember(db, thisProject.getId(), getUserId(context));
+        if (thisAssignment.getUserAssignedId() != getUserId(context) && currentMember.getRoleId() > TeamMember.PROJECT_LEAD) {
+          return "PermissionError";
+        }
+        thisAssignment.setProject(thisProject);
+        resultCount = thisAssignment.update(db);
+        indexAddItem(context, thisAssignment);
+      } else {
+        if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+          return "PermissionError";
+        }
+        thisAssignment.setEnteredBy(getUserId(context));
+        recordInserted = thisAssignment.insert(db);
+        indexAddItem(context, thisAssignment);
+      }
+      if (!recordInserted && resultCount < 0) {
+        processErrors(context, thisAssignment.getErrors());
+      } else {
+        context.getRequest().setAttribute("pid", projectId);
+      }
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
-      this.freeConnection(context, db);
+      freeConnection(context, db);
     }
-
     if (errorMessage == null) {
-      if (resultCount == -1) {
-        return ("ProjectCenterOK");
-      } else if (resultCount == 1) {
+      if (resultCount == 0) {
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+        return ("UserError");
+      } else if (recordInserted || resultCount == 1) {
+        if ("true".equals(context.getRequest().getParameter("donew"))) {
+          context.getRequest().removeAttribute("Assignment");
+          Assignment empty = new Assignment();
+          empty.setIndent(thisAssignment.getIndent());
+          empty.setPrevIndent(thisAssignment.getIndent());
+          empty.setPrevMapId(thisAssignment.getPrevMapId());
+          context.getRequest().setAttribute("Assignment", empty);
+          return (executeCommandAdd(context));
+        }
         if (context.getRequest().getParameter("popup") != null) {
           return "PopupCloseOK";
         } else {
-          return ("UpdateOK");
+          return ("SaveOK");
         }
       } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
+        return (executeCommandAdd(context));
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
   }
-  
-  private static void checkReturnPage(ActionContext context) {
-    String returnPage = (String)context.getRequest().getParameter("return");
-    if (returnPage == null) returnPage = (String)context.getRequest().getAttribute("return");
-    context.getRequest().setAttribute("return", returnPage);
-    
-    String param = (String)context.getRequest().getParameter("param");
-    if (param == null) param = (String)context.getRequest().getAttribute("param");
-    context.getRequest().setAttribute("param", param);
-  }
-  
-  
-  public String executeCommandGantt(ActionContext context) {
-    Exception errorMessage = null;
-    String projectId = (String)context.getRequest().getParameter("pid");
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandDetails(ActionContext context) {
     Connection db = null;
-    Project thisProject = null;
-    LookupList activityList = null;
+    //Parameters
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String assignmentId = (String) context.getRequest().getParameter("aid");
     try {
       db = getConnection(context);
-      thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      //Load the project
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-view")) {
+        return "PermissionError";
+      }
+      context.getRequest().setAttribute("Project", thisProject);
+      context.getRequest().setAttribute("IncludeSection", ("assignments_details").toLowerCase());
+      //Load the assignment
+      Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
+      context.getRequest().setAttribute("Assignment", thisAssignment);
+      //Load priority drop-down list
+      LookupList priorityList = new LookupList(db, "lookup_project_priority");
+      context.getRequest().setAttribute("PriorityList", priorityList);
+      //Load status drop-down list
+      LookupList statusList = new LookupList(db, "lookup_project_status");
+      context.getRequest().setAttribute("StatusList", statusList);
+      //Load status percent drop-down list
+      HtmlPercentList statusPercentList = new HtmlPercentList();
+      context.getRequest().setAttribute("StatusPercentList", statusPercentList);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (isPopup(context)) {
+      return ("PopupDetailsOK");
+    } else {
+      return ("ProjectCenterOK");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandModify(ActionContext context) {
+    Connection db = null;
+    //Parameters
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String assignmentId = (String) context.getRequest().getParameter("aid");
+    this.checkReturnPage(context);
+    try {
+      db = getConnection(context);
+      //Load the project
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject.buildPermissionList(db);
+      //Check permissions
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify") &&
+          !hasProjectAccess(context, db, thisProject, "project-plan-view")) {
+        return "PermissionError";
+      }
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", ("assignments_add").toLowerCase());
-      thisProject.setBuildRequirementAssignments(true);
-      thisProject.buildRequirementList(db);
-      activityList = new LookupList(db, "lookup_project_activity");
+      //Load the assignment
+      Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
+      context.getRequest().setAttribute("Assignment", thisAssignment);
+      //Check user permissions
+      if (!hasModifyAccess(context, db, thisProject, thisAssignment)) {
+        return "DetailsREDIRECT";
+      }
+      //Generate form data
+      thisProject.buildTeamMemberList(db);
+      java.util.Iterator i = thisProject.getTeam().iterator();
+      while (i.hasNext()) {
+        TeamMember thisMember = (TeamMember) i.next();
+        User thisUser = new User();
+        thisUser.setBuildContact(true);
+        thisUser.setBuildContactDetails(true);
+        thisUser.buildRecord(db, thisMember.getUserId());
+        thisMember.setUser(thisUser);
+      }
+      //Load priority drop-down
+      LookupList priorityList = new LookupList(db, "lookup_project_priority");
+      context.getRequest().setAttribute("PriorityList", priorityList);
+      //Load status drop-down
+      LookupList statusList = new LookupList(db, "lookup_project_status");
+      context.getRequest().setAttribute("StatusList", statusList);
+      //Load status percent drop-down list
+      HtmlPercentList statusPercentList = new HtmlPercentList();
+      context.getRequest().setAttribute("StatusPercentList", statusPercentList);
+      //Load LOE drop-down
+      LookupList loeList = new LookupList(db, "lookup_project_loe");
+      context.getRequest().setAttribute("LoeList", loeList);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (isPopup(context)) {
+      return ("PopupOK");
+    } else {
+      return ("ProjectCenterOK");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandAddFolder(ActionContext context) {
+    String projectId = (String) context.getRequest().getParameter("pid");
+    this.checkReturnPage(context);
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+        return "PermissionError";
+      }
+      context.getRequest().setAttribute("Project", thisProject);
+      context.getRequest().setAttribute("IncludeSection", ("assignments_folder_add").toLowerCase());
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (context.getRequest().getParameter("popup") != null) {
+      return ("PopupOK");
+    } else {
+      return ("ProjectCenterOK");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandSaveFolder(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    int resultCount = -1;
+    boolean recordInserted = false;
+    //Parameters
+    String projectId = (String) context.getRequest().getParameter("pid");
+    this.checkReturnPage(context);
+    AssignmentFolder thisFolder = (AssignmentFolder) context.getFormBean();
+    try {
+      db = getConnection(context);
+      //Load the project
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+        return "PermissionError";
+      }
+      context.getRequest().setAttribute("Project", thisProject);
+      context.getRequest().setAttribute("IncludeSection", ("assignments_add").toLowerCase());
+      //Process the folder
+      thisFolder.setModifiedBy(getUserId(context));
+      if (thisFolder.getId() > 0) {
+        thisFolder.setProjectId(thisProject.getId());
+        resultCount = thisFolder.update(db, context);
+        indexAddItem(context, thisFolder);
+      } else {
+        thisFolder.setEnteredBy(getUserId(context));
+        recordInserted = thisFolder.insert(db);
+        indexAddItem(context, thisFolder);
+      }
+      if (!recordInserted && resultCount < 0) {
+        processErrors(context, thisFolder.getErrors());
+      } else {
+        context.getRequest().setAttribute("pid", projectId);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      if (resultCount == 0) {
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+        return ("UserError");
+      } else if (recordInserted || resultCount == 1) {
+        if ("true".equals(context.getRequest().getParameter("donew"))) {
+          context.getRequest().removeAttribute("assignmentFolder");
+          AssignmentFolder empty = new AssignmentFolder();
+          empty.setIndent(thisFolder.getIndent());
+          empty.setPrevIndent(thisFolder.getIndent());
+          empty.setPrevMapId(thisFolder.getPrevMapId());
+          context.getRequest().setAttribute("assignmentFolder", empty);
+          return (executeCommandAddFolder(context));
+        }
+        if (context.getRequest().getParameter("popup") != null) {
+          return "PopupCloseOK";
+        } else {
+          return ("SaveOK");
+        }
+      } else {
+        return (executeCommandAddFolder(context));
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandDelete(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String assignmentId = (String) context.getRequest().getParameter("aid");
+
+    boolean recordDeleted = false;
+    try {
+      db = getConnection(context);
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+        return "PermissionError";
+      }
+
+      Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
+      recordDeleted = thisAssignment.delete(db);
+      indexDeleteItem(context, thisAssignment);
+      if (!recordDeleted) {
+        processErrors(context, thisAssignment.getErrors());
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      return "DeleteOK";
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandMove(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String requirementId = (String) context.getRequest().getParameter("rid");
+    String assignmentId = (String) context.getRequest().getParameter("aid");
+
+    boolean recordDeleted = false;
+    try {
+      db = getConnection(context);
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+        return "PermissionError";
+      }
+
+      Requirement thisRequirement = new Requirement(db, Integer.parseInt(requirementId), thisProject.getId());
+      thisRequirement.buildFolderHierarchy(db);
+      Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
+      context.getRequest().setAttribute("project", thisProject);
+      context.getRequest().setAttribute("requirement", thisRequirement);
+      context.getRequest().setAttribute("assignment", thisAssignment);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      return "MoveOK";
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandSaveMove(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    //Parameters
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String assignmentId = (String) context.getRequest().getParameter("aid");
+    String newFolderId = (String) context.getRequest().getParameter("parent");
+    try {
+      this.checkReturnPage(context);
+      db = getConnection(context);
+      //Load the project and permissions
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+        return "PermissionError";
+      }
+      //Load the assignment
+      Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
+      thisAssignment.updateFolderId(db, Integer.parseInt(newFolderId));
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      return "PopupCloseOK";
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandDeleteFolder(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String folderId = (String) context.getRequest().getParameter("folderId");
+
+    boolean recordDeleted = false;
+    try {
+      db = getConnection(context);
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+        return "PermissionError";
+      }
+      AssignmentFolder thisFolder = new AssignmentFolder(db, Integer.parseInt(folderId), thisProject.getId());
+      recordDeleted = thisFolder.delete(db);
+      indexDeleteItem(context, thisFolder);
+      if (!recordDeleted) {
+        processErrors(context, thisFolder.getErrors());
+      } else {
+        context.getRequest().setAttribute("pid", projectId);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      return "DeleteOK";
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandModifyFolder(ActionContext context) {
+    Exception errorMessage = null;
+
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String folderId = (String) context.getRequest().getParameter("folderId");
+    this.checkReturnPage(context);
+
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      //Load the project
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+        return "PermissionError";
+      }
+      context.getRequest().setAttribute("Project", thisProject);
+      context.getRequest().setAttribute("IncludeSection", ("assignments_folder_add").toLowerCase());
+      //Load the folder
+      AssignmentFolder thisFolder = new AssignmentFolder(db, Integer.parseInt(folderId), thisProject.getId());
+      context.getRequest().setAttribute("assignmentFolder", thisFolder);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
-    //Now that the data is ready, compile it into a Gantt chart
-    GanttSeriesCollection categoryData = new GanttSeriesCollection();
-    Iterator requirements = thisProject.getRequirements().iterator();
-    GanttSeries series = new GanttSeries("Scheduled");
-    while (requirements.hasNext()) {
-      Requirement thisRequirement = (Requirement) requirements.next();
-      Iterator assignments = thisRequirement.getAssignments().iterator();
-      while (assignments.hasNext()) {
-        Assignment thisAssignment = (Assignment) assignments.next();
-        java.util.Date start = thisAssignment.getStartDate();
-        if (start == null) {
-          start = thisAssignment.getAssignDate();
-        }
-        
-        java.util.Date end = null;
-        if (thisAssignment.getComplete()) {
-          end = thisAssignment.getCompleteDate();
-        } else {
-          end = thisAssignment.getDueDate();
-        }
-        
-        if (end == null) {
-          end = start;
-        }
-        
-        if (start != null && end != null) {
-          if (end.before(start)) {
-            end.setTime(start.getTime() + 60000);
-          }
-          
-          TimeAllocation timeFrame = new TimeAllocation(start, end);
-          series.add(thisAssignment.getActivity(), timeFrame);
-          
-          System.out.println("ADDED-----> " + thisAssignment.getRole() + String.valueOf(start) + " " + String.valueOf(end));
-        }
-      }
-    }
-    
-    if (series.getItemCount() > 0) {
-      System.out.println("ProjectManagementAssignments-> Gantt Series: " + series.getItemCount());
-      categoryData.add(series);
-    }
-    
-    System.out.println("ProjectManagementAssignments-> Gantt Categories: " + categoryData.getCategoryCount());
-    
-    IntervalCategoryDataset dataset = categoryData;
-    
-    JFreeChart chart = ChartFactory.createGanttChart(thisProject.getShortDescription(),  // chart title
-        "Task",              // domain axis label
-        "Date",              // range axis label
-        dataset,             // data
-        true,                 // include legend
-        true,                // tooltips
-        false                // urls
-        );
-    chart.setBackgroundPaint(Color.white);
-    int width = 600;
-    int height = 500;
-    try {
-      String realPath = context.getServletContext().getRealPath("/");
-      String filePath = realPath + "graphs" + fs;
-      java.util.Date testDate = new java.util.Date();
-      String fileName = String.valueOf(getUserId(context)) + String.valueOf(testDate.getTime()) + String.valueOf(context.getSession().getCreationTime());
-
-      // Write the chart image
-      File imageFile = new File(filePath + fileName + ".jpg");
-      ChartUtilities.saveChartAsJPEG(imageFile, 1.0f, chart, width, height);
-    } catch (IOException e) {
-      e.printStackTrace(System.out);
-    }
-      
-    addModuleBean(context, "Gantt", "");
     if (errorMessage == null) {
-      return ("ProjectCenterOK");
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("PopupOK");
+      } else {
+        return ("ProjectCenterOK");
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandFolderDetails(ActionContext context) {
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String folderId = (String) context.getRequest().getParameter("folderId");
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      //Load the project
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-view")) {
+        return "PermissionError";
+      }
+      context.getRequest().setAttribute("Project", thisProject);
+      context.getRequest().setAttribute("IncludeSection", ("assignments_folder_details").toLowerCase());
+      //Load the folder
+      AssignmentFolder thisFolder = new AssignmentFolder(db, Integer.parseInt(folderId), thisProject.getId());
+      context.getRequest().setAttribute("assignmentFolder", thisFolder);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (context.getRequest().getParameter("popup") != null) {
+      return ("PopupDetailsOK");
+    } else {
+      return ("ProjectCenterOK");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   */
+  private static void checkReturnPage(ActionContext context) {
+    String returnPage = (String) context.getRequest().getParameter("return");
+    if (returnPage == null) {
+      returnPage = (String) context.getRequest().getAttribute("return");
+    }
+    context.getRequest().setAttribute("return", returnPage);
+    //1st param
+    String param = (String) context.getRequest().getParameter("param");
+    if (param == null) {
+      param = (String) context.getRequest().getAttribute("param");
+    }
+    context.getRequest().setAttribute("param", param);
+    //2nd param
+    String param2 = (String) context.getRequest().getParameter("param2");
+    if (param2 == null) {
+      param2 = (String) context.getRequest().getAttribute("param2");
+    }
+    context.getRequest().setAttribute("param2", param2);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public synchronized String executeCommandMoveItem(ActionContext context) {
+    Connection db = null;
+    //Parameters
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String requirementId = (String) context.getRequest().getParameter("rid");
+    String assignmentId = (String) context.getRequest().getParameter("aid");
+    String folderId = (String) context.getRequest().getParameter("folderId");
+    String direction = (String) context.getRequest().getParameter("dir");
+    try {
+      //this.checkReturnPage(context);
+      db = getConnection(context);
+      //Load the project and permissions
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-modify")) {
+        return "PermissionError";
+      }
+      //Configure the item to be moved
+      RequirementMapItem mapItem = new RequirementMapItem();
+      mapItem.setProjectId(Integer.parseInt(projectId));
+      mapItem.setRequirementId(Integer.parseInt(requirementId));
+      mapItem.setFolderId(DatabaseUtils.parseInt(folderId, -1));
+      mapItem.setAssignmentId(DatabaseUtils.parseInt(assignmentId, -1));
+      try {
+        db.setAutoCommit(false);
+        if ("r".equals(direction)) {
+          mapItem.moveRight(db);
+        } else if ("l".equals(direction)) {
+          mapItem.moveLeft(db);
+        } else if ("u".equals(direction)) {
+          mapItem.moveUp(db);
+        } else if ("d".equals(direction)) {
+          mapItem.moveDown(db);
+        }
+        db.commit();
+      } catch (SQLException e) {
+        db.rollback();
+      } finally {
+        db.setAutoCommit(true);
+      }
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      freeConnection(context, db);
+    }
+    return "MoveItemOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@param  thisProject       Description of the Parameter
+   *@param  thisAssignment    Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  private boolean hasModifyAccess(ActionContext context, Connection db, Project thisProject, Assignment thisAssignment) throws SQLException {
+    //See if the team member has access to perform an assignment action
+    TeamMember thisMember = (TeamMember) context.getRequest().getAttribute("currentMember");
+    if (thisMember == null) {
+      try {
+        //Load from project
+        thisMember = new TeamMember(db, thisProject.getId(), this.getUserId(context));
+      } catch (Exception notValid) {
+        //Create a guest
+        thisMember = new TeamMember();
+        thisMember.setProjectId(thisProject.getId());
+        thisMember.setUserLevel(getUserLevel(context, db, TeamMember.GUEST));
+        thisMember.setRoleId(TeamMember.GUEST);
+      }
+      context.getRequest().setAttribute("currentMember", thisMember);
+    }
+    //Check the permission
+    return (thisAssignment.getUserAssignedId() == getUserId(context) || thisMember.getRoleId() <= TeamMember.PROJECT_LEAD);
   }
 }
 

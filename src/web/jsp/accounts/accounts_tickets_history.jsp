@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.troubletickets.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
@@ -49,7 +50,7 @@ History
               <%= toHtml(thisEntry.getEnteredByName()) %>
             </td>
             <td nowrap valign="top">
-              <dhv:tz timestamp="<%= thisEntry.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+              <zeroio:tz timestamp="<%= thisEntry.getEntered() %>" />
             </td>
             <td valign="top" width="100%">
               <%= toHtml(thisEntry.getEntryText()) %>

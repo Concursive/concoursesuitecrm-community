@@ -4,6 +4,8 @@
 <%@ page import="org.aspcfs.modules.pipeline.base.*" %>
 <%@ page import="org.aspcfs.modules.pipeline.beans.*" %>
 <jsp:useBean id="opportunityList" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
@@ -37,10 +39,10 @@
       <%= toHtml(thisOpportunity.getComponent().getDescription()) %>
     </td>
     <td width="20%" valign="center" align="right" nowrap class="row<%= row %>">
-      <%= toHtml(thisOpportunity.getComponent().getGuessCurrency()) %>
+      <zeroio:currency value="<%= thisOpportunity.getComponent().getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
     <td width="20%" valign="center" align="right" nowrap class="row<%= row %>">
-      <%= toHtml(thisOpportunity.getComponent().getCloseDateString()) %>
+      <zeroio:tz timestamp="<%= thisOpportunity.getComponent().getCloseDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
 <%  

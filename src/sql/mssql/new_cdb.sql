@@ -26,7 +26,9 @@ CREATE TABLE access (
   expires DATETIME DEFAULT NULL,
   alias INT DEFAULT -1,
   assistant INT DEFAULT -1,
-  enabled BIT NOT NULL DEFAULT 1
+  enabled BIT NOT NULL DEFAULT 1,
+  currency VARCHAR(5),
+  language VARCHAR(20)
 );
 
 CREATE TABLE lookup_industry (

@@ -146,13 +146,7 @@ public class TicketActivityLog extends GenericBean {
    *@param  tmp  The new alertDate value
    */
   public void setAlertDate(String tmp) {
-    java.sql.Timestamp tmpDate = null;
-    tmpDate = DateUtils.parseTimestampString(tmp, "M/d/yy");
-    if (tmpDate == null) {
-      tmpDate = DateUtils.parseTimestampString(tmp, "M-d-yy");
-    }
-
-    this.alertDate = tmpDate;
+    alertDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -823,10 +817,8 @@ public class TicketActivityLog extends GenericBean {
    *@return    The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
-
     ArrayList thisList = new ArrayList();
     thisList.add("alertDate");
-
     return thisList;
   }
 

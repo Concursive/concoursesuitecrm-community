@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*, org.aspcfs.modules.communications.base.Campaign" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="CampaignList" class="org.aspcfs.modules.communications.base.CampaignList" scope="request"/>
@@ -83,7 +84,7 @@ Messages
             <%= (("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id")))?" <font color=\"red\">(Cancelled)</font>":"") %>
           </td>
           <td valign="top" align="left" nowrap class="row<%= rowid %>">
-            <dhv:tz timestamp="<%= campaign.getActiveDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+            <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" dateOnly="true" default="&nbsp;"/>
           </td>
           <td valign="top" nowrap class="row<%= rowid %>">
             <%=toHtml(campaign.getStatus())%>

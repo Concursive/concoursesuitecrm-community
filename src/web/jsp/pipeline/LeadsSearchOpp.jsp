@@ -6,6 +6,7 @@
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
@@ -136,10 +137,10 @@ Search Opportunities
     </td>
     <td>
       <input type="text" size="10" name="searchdateCloseDateStart" value="<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateStart") %>">
-      <a href="javascript:popCalendar('searchLeads', 'searchdateCloseDateStart');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <a href="javascript:popCalendar('searchLeads', 'searchdateCloseDateStart', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
       &nbsp;and<br>
       <input type="text" size="10" name="searchdateCloseDateEnd" value="<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateEnd") %>">
-      <a href="javascript:popCalendar('searchLeads', 'searchdateCloseDateEnd');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <a href="javascript:popCalendar('searchLeads', 'searchdateCloseDateEnd', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
     </td>
   </tr>
   <tr>

@@ -1,8 +1,10 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.text.DateFormat"%>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="RoleList" class="org.aspcfs.modules.admin.base.RoleList" scope="request"/>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
@@ -91,8 +93,8 @@ Modify User
   <tr class="containerBody">
     <td nowrap class="formLabel">Expire Date</td>
     <td>
-      <input type="text" size="10" name="expires" value="<dhv:tz timestamp="<%= UserRecord.getExpires() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('details', 'expires');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" size="10" name="expires" value="<zeroio:tz timestamp="<%= UserRecord.getExpires() %>" dateOnly="true" />">
+      <a href="javascript:popCalendar('details', 'expires', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
     </td>
   </tr>
   <tr class="containerBody">

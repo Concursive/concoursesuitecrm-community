@@ -559,15 +559,15 @@ public class HttpMultiPartParser {
           fileInfo.setFileContents(baos.toByteArray());
         } else {
           File thisFile = new File(path);
-          if (validFile){
+          if (validFile) {
             fileInfo.setLocalFile(thisFile);
             fileInfo.setSize((int) thisFile.length());
             os = null;
-          }else{
+          } else {
             thisFile.delete();
           }
         }
-        if (validFile){
+        if (validFile) {
           dataTable.put(paramName, fileInfo);
         }
       } catch (Exception e) {

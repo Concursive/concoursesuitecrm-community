@@ -67,7 +67,7 @@ View Employees
   <tr>
       <td width="8" valign="center" class="row<%= rowid %>" nowrap>
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-        <a href="javascript:displayMenu('menuEmployee','<%= thisEmployee.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+        <a href="javascript:displayMenu('select<%= count %>','menuEmployee','<%= thisEmployee.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuEmployee');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
       </td>
     <td class="row<%= rowid %>" nowrap>
       <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLastFirst()) %></a>

@@ -9,6 +9,7 @@
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="AccountTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactSource" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
@@ -288,7 +289,9 @@ Group Details
             <span name="new1a" ID="new1a" style="display:none">&nbsp;</span>
           </td>
           <td valign="center">
-            <span name="new1" ID="new1" style="display:none"><a href="javascript:popCalendar('searchForm', 'searchValue');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/>Date</a></span>
+            <span name="new1" ID="new1" style="display:none">
+            <a href="javascript:popCalendar('searchForm', 'searchValue', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+            </span>
           </td>
         </tr>
         <tr>

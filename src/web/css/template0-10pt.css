@@ -3,7 +3,7 @@ BODY {
   font-size: 10pt; background: white;
   color: #000000;
 }
-TABLE, TD, TH, LI, P, UL, OL, TEXTAREA, INPUT, SELECT, A {
+TABLE, TD, TH, LI, P, UL, OL, TEXTAREA, INPUT, SELECT, A, div.tabs th, div.tabs td  {
   font-family: verdana, helvetica, arial, sans-serif; 
   font-size: 10pt;
   color: #000000;
@@ -16,3 +16,4 @@ OPTGROUP {
 .pagedListHeader td {
   font-size: 14pt;
 }
+h1 { point-size: 12pt; }

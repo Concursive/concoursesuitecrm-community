@@ -171,7 +171,7 @@ public class Setup extends CFSModule {
       //Encode the key for transmission
       BASE64Encoder encoder = new BASE64Encoder();
       bean.setZlib(encoder.encode(ObjectUtils.toByteArray(key)));
-      bean.setText(PrivateString.encrypt(key, "5USERBINARY-1.0"));
+      bean.setText(PrivateString.encrypt(key, "5USERBINARY-1.1"));
       bean.setWebserver(
           HTTPUtils.getServerName(context.getRequest().getScheme() + "://" +
           HTTPUtils.getServerUrl(context.getRequest())));
@@ -702,6 +702,8 @@ public class Setup extends CFSModule {
       prefs.add("FAXSERVER", bean.getFax());
       prefs.add("EMAILADDRESS", bean.getEmailAddress());
       prefs.add("SYSTEM.TIMEZONE", bean.getTimeZone());
+      prefs.add("SYSTEM.CURRENCY", bean.getCurrency());
+      prefs.add("SYSTEM.LANGUAGE", bean.getLanguage());
       prefs.save();
       return "ConfigureServerOK";
     } catch (Exception e) {

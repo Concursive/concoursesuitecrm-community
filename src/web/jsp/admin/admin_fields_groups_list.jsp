@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.*,org.aspcfs.modules.admin.base.*,org.aspcfs.modules.base.*" %>
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
@@ -137,10 +138,10 @@ Folder
         <%= (thisField.getEnabled()? "Yes" : "No") %>
       </td>
       <td width="10%" align="center" nowrap>
-      <dhv:tz timestamp="<%= thisField.getStartDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= thisField.getStartDate() %>" dateOnly="true" default="&nbsp;"/>
       </td>
       <td width="10%" align="center" nowrap>
-        <dhv:tz timestamp="<%= thisField.getEndDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%= thisField.getEndDate() %>" dateOnly="true" default="&nbsp;"/>
       </td>
     </tr>
 <%

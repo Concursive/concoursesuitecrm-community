@@ -5,7 +5,7 @@
   var thisTaskId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, orgId, ticId, taskId) {
+  function displayMenu(loc, id, orgId, ticId, taskId) {
     thisOrgId = orgId;
     thisTicId = ticId;
     thisTaskId = taskId;
@@ -13,7 +13,7 @@
       menu_init = true;
       new ypSlideOutMenu("menuTask", "down", 0, 0, 170, getHeight("menuTaskTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
   //Menu link functions
@@ -27,34 +27,34 @@
 </script>
 <div id="menuTaskContainer" class="menu">
   <div id="menuTaskContent">
-    <table id="menuTaskTable" class="pulldown" width="170">
+    <table id="menuTaskTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="accounts-accounts-tickets-tasks-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-tickets-tasks-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">Modify</a>
+          Modify
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-tickets-tasks-delete">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteTask()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteTask()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

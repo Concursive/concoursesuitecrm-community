@@ -10,6 +10,7 @@ import com.darkhorseventures.framework.beans.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.actionlist.base.*;
 
@@ -50,10 +51,13 @@ public class Task extends GenericBean {
 
   //other
   private int contactId = -1;
+  private int ticketId = -1;
+  private int projectId = -1;
   private boolean hasLinks = false;
   private String contactName = null;
 
   private Contact contact = null;
+  private Ticket ticket = null;
   private TaskLink linkDetails = new TaskLink();
 
   private boolean hasEnabledOwnerAccount = true;
@@ -275,7 +279,7 @@ public class Task extends GenericBean {
    *@param  tmp  The new dueDate value
    */
   public void setDueDate(String tmp) {
-    this.dueDate = DatabaseUtils.parseTimestamp(tmp);
+    this.dueDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -492,6 +496,56 @@ public class Task extends GenericBean {
 
 
   /**
+   *  Sets the ticketId attribute of the Task object
+   *
+   *@param  ticketId  The new ticketId value
+   */
+  public void setTicketId(int ticketId) {
+    this.ticketId = ticketId;
+  }
+
+
+  /**
+   *  Sets the ticketId attribute of the Task object
+   *
+   *@param  ticketId  The new ticketId value
+   */
+  public void setTicketId(String ticketId) {
+    this.ticketId = Integer.parseInt(ticketId);
+  }
+
+
+  /**
+   *  Gets the projectId attribute of the Task object
+   *
+   *@return    The projectId value
+   */
+  public int getProjectId() {
+    return projectId;
+  }
+
+
+  /**
+   *  Sets the projectId attribute of the Task object
+   *
+   *@param  tmp  The new projectId value
+   */
+  public void setProjectId(int tmp) {
+    this.projectId = tmp;
+  }
+
+
+  /**
+   *  Sets the projectId attribute of the Task object
+   *
+   *@param  tmp  The new projectId value
+   */
+  public void setProjectId(String tmp) {
+    this.projectId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the estimatedLOEType attribute of the Task object
    *
    *@param  estimatedLOEType  The new estimatedLOEType value
@@ -673,12 +727,32 @@ public class Task extends GenericBean {
 
 
   /**
+   *  Gets the ticket attribute of the Task object
+   *
+   *@return    The ticket value
+   */
+  public Ticket getTicket() {
+    return ticket;
+  }
+
+
+  /**
    *  Gets the hasLinks attribute of the Task object
    *
    *@return    The hasLinks value
    */
   public boolean getHasLinks() {
     return hasLinks;
+  }
+
+
+  /**
+   *  Gets the ticketId attribute of the Task object
+   *
+   *@return    The ticketId value
+   */
+  public int getTicketId() {
+    return ticketId;
   }
 
 
@@ -1097,7 +1171,7 @@ public class Task extends GenericBean {
         db.rollback();
       }
       throw new SQLException(e.getMessage());
-    }finally {
+    } finally {
       if (commit) {
         db.setAutoCommit(true);
       }
@@ -1329,8 +1403,11 @@ public class Task extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Task ID not specified");
     }
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       deleteRelationships(db);
       PreparedStatement pst = db.prepareStatement(
           "DELETE from task " +
@@ -1338,12 +1415,18 @@ public class Task extends GenericBean {
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -1357,13 +1440,13 @@ public class Task extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean deleteRelationships(Connection db) throws SQLException {
-    String sql = null;
     boolean commit = true;
     try {
       commit = db.getAutoCommit();
       if (commit) {
         db.setAutoCommit(false);
       }
+      //Delete contact link
       PreparedStatement pst = db.prepareStatement(
           "DELETE from tasklink_contact " +
           "WHERE task_id = ? "
@@ -1371,7 +1454,7 @@ public class Task extends GenericBean {
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-
+      //Delete ticket link
       pst = db.prepareStatement(
           "DELETE from tasklink_ticket " +
           "WHERE task_id = ? "
@@ -1379,7 +1462,7 @@ public class Task extends GenericBean {
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-
+      //Delete project link
       pst = db.prepareStatement(
           "DELETE from tasklink_project " +
           "WHERE task_id = ? ");
@@ -1432,12 +1515,25 @@ public class Task extends GenericBean {
         contactId = rs.getInt("contact_id");
         hasLinks = true;
       }
-      rs.close();
-      pst.close();
-
       if (contactId > 0) {
         contact = new Contact(db, contactId);
         contactName = contact.getValidName();
+      }
+      //build the linked ticket info
+      sql = "SELECT ticket_id " +
+          "FROM tasklink_ticket " +
+          "WHERE task_id = ? ";
+      i = 0;
+      pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        this.ticketId = rs.getInt("ticket_id");
+      }
+      rs.close();
+      pst.close();
+      if (ticketId > 0) {
+        this.ticket = new Ticket(db, this.ticketId);
       }
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
@@ -1518,6 +1614,85 @@ public class Task extends GenericBean {
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, this.getId());
     pst.setInt(++i, projectId);
+    pst.execute();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  projectId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void deleteProjectLink(Connection db, int projectId) throws SQLException {
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM tasklink_project " +
+        "WHERE task_id = ? AND project_id = ?");
+    pst.setInt(++i, this.getId());
+    pst.setInt(++i, projectId);
+    pst.execute();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  newCategoryId     Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void updateCategoryId(Connection db, int newCategoryId) throws SQLException {
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE task " +
+        "SET category_id = ? " +
+        "WHERE task_id = ? ");
+    pst.setInt(++i, newCategoryId);
+    pst.setInt(++i, id);
+    pst.execute();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  taskId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void markComplete(Connection db, int taskId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE task " +
+        "SET complete = ?, completedate = ? " +
+        "WHERE task_id = ? ");
+    pst.setBoolean(1, true);
+    pst.setTimestamp(2, new java.sql.Timestamp(System.currentTimeMillis()));
+    pst.setInt(3, taskId);
+    pst.execute();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  taskId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void markIncomplete(Connection db, int taskId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE task " +
+        "SET complete = ?, completedate = ? " +
+        "WHERE task_id = ? ");
+    pst.setBoolean(1, false);
+    pst.setNull(2, java.sql.Types.TIMESTAMP);
+    pst.setInt(3, taskId);
     pst.execute();
     pst.close();
   }

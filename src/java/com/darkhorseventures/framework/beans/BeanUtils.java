@@ -3,11 +3,7 @@ package com.darkhorseventures.framework.beans;
 import java.util.*;
 import java.lang.reflect.*;
 import javax.servlet.http.*;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.login.beans.UserBean;
+import com.zeroio.controller.AutoPopulate;
 
 /**
  *  This class is used by the ControllerServlet (and the extended
@@ -63,44 +59,31 @@ public class BeanUtils
   /**
    *  Description of the Method
    *
-   *@param  bean             Description of Parameter
-   *@param  request          Description of Parameter
-   *@param  nestedAttribute  Description of Parameter
-   *@param  indexAttribute   Description of Parameter
-   *@since
+   *@param  bean             Description of the Parameter
+   *@param  request          Description of the Parameter
+   *@param  nestedAttribute  Description of the Parameter
+   *@param  indexAttribute   Description of the Parameter
    */
   public void populateObject(Object bean, HttpServletRequest request, String nestedAttribute, String indexAttribute) {
+    // Object to help populating
+    AutoPopulate autoPopulate = new AutoPopulate(request, bean);
+    // Populate the request parameters
     Enumeration e = request.getParameterNames();
     String paramName = null;
-    //get list of time sensitive properties of the bean
-    ArrayList timeParams = (ArrayList) ObjectUtils.getObject(bean, "TimeZoneParams");
     while (e.hasMoreElements()) {
       paramName = (String) e.nextElement();
+      autoPopulate.setName(paramName);
       // a form has been submitted and requested to be auto-populated,
       // so we do that here..going through every element and trying
       // to call a setXXX() method on the bean object passed in for the value
       // of the request parameter currently being checked.
       String[] paramValues = request.getParameterValues(paramName);
       if (paramValues.length > 1) {
-        populateParameter(paramName, request, paramValues, bean, nestedAttribute, indexAttribute, timeParams);
+        populateParameter(autoPopulate, paramName, paramValues, bean, nestedAttribute, indexAttribute);
       } else {
-        populateParameter(paramName, request, paramValues[0], bean, nestedAttribute, indexAttribute, timeParams);
+        populateParameter(autoPopulate, paramName, paramValues[0], bean, nestedAttribute, indexAttribute);
       }
     }
-  }
-
-
-  /**
-   *  The purpose of this method is to get a list of all public accessor methods
-   *  from the source object using reflection. Then it will attempt to call the
-   *  mutator method of the target object that match any of the accessor methods
-   *  of the source object with the values from the call to the accessor methods
-   *  of the source object.
-   *
-   *@param  source  Description of Parameter
-   *@param  target  Description of Parameter
-   */
-  public static void populateObject(Object source, Object target) {
   }
 
 
@@ -108,15 +91,14 @@ public class BeanUtils
   /**
    *  A helper method for the populateObject() method.
    *
-   *@param  param            Description of Parameter
-   *@param  value            Description of Parameter
-   *@param  target           Description of Parameter
-   *@param  nestedAttribute  Description of Parameter
-   *@param  indexAttribute   Description of Parameter
-   *@param  request          Description of the Parameter
-   *@param  timeParams       Description of the Parameter
+   *@param  param            Description of the Parameter
+   *@param  value            Description of the Parameter
+   *@param  target           Description of the Parameter
+   *@param  nestedAttribute  Description of the Parameter
+   *@param  indexAttribute   Description of the Parameter
+   *@param  autoPopulate     Description of the Parameter
    */
-  private static void populateParameter(String param, HttpServletRequest request, Object value, Object target, String nestedAttribute, String indexAttribute, ArrayList timeParams) {
+  private static void populateParameter(AutoPopulate autoPopulate, String param, Object value, Object target, String nestedAttribute, String indexAttribute) {
     if ((param == null) || (param.length() == 0) || (value == null) || (target == null)) {
       return;
     }
@@ -141,18 +123,16 @@ public class BeanUtils
         if (indexPos >= 0) {
           paramName = paramName.substring(0, indexPos);
         }
-        if (!value.getClass().isArray() && timeParams != null) {
-          //check for timezone if it is a time sensitive parameter
-          value = adjustTimeZone(request, timeParams, param, value);
-        }
-        if (index >= 0) {
-          argTypes = new Class[]{Integer.TYPE, value.getClass()};
-          method = target.getClass().getMethod("set" + paramName, argTypes);
-          method.invoke(target, new Object[]{new Integer(index), value});
-        } else {
-          argTypes = new Class[]{value.getClass()};
-          method = target.getClass().getMethod("set" + paramName, argTypes);
-          method.invoke(target, new Object[]{value});
+        if (!autoPopulate.populateObject(target, param, (String) value)) {
+          if (index >= 0) {
+            argTypes = new Class[]{Integer.TYPE, value.getClass()};
+            method = target.getClass().getMethod("set" + paramName, argTypes);
+            method.invoke(target, new Object[]{new Integer(index), value});
+          } else {
+            argTypes = new Class[]{value.getClass()};
+            method = target.getClass().getMethod("set" + paramName, argTypes);
+            method.invoke(target, new Object[]{value});
+          }
         }
       } else {
         String nestedMethod = paramName.substring(0, dotPos);
@@ -179,7 +159,7 @@ public class BeanUtils
           nestedTarget = method.invoke(target, new Object[0]);
         }
 
-        populateParameter(paramName.substring(dotPos + 1, paramName.length()), request, value, nestedTarget, nestedAttribute, indexAttribute, timeParams);
+        populateParameter(autoPopulate, paramName.substring(dotPos + 1, paramName.length()), value, nestedTarget, nestedAttribute, indexAttribute);
       }
     } catch (Throwable t) {
     }
@@ -187,30 +167,16 @@ public class BeanUtils
 
 
   /**
-   *  Checks to see if the bean wants the specified value, from the request,
-   *  converted from the user's timezone
+   *  The purpose of this method is to get a list of all public accessor methods
+   *  from the source object using reflection. Then it will attempt to call the
+   *  mutator method of the target object that match any of the accessor methods
+   *  of the source object with the values from the call to the accessor methods
+   *  of the source object.
    *
-   *@param  request     Description of the Parameter
-   *@param  paramName   Description of the Parameter
-   *@param  paramValue  Description of the Parameter
-   *@param  timeParams  Description of the Parameter
-   *@return             Description of the Return Value
+   *@param  source  Description of the Parameter
+   *@param  target  Description of the Parameter
    */
-  private static Object adjustTimeZone(HttpServletRequest request, ArrayList timeParams, String paramName, Object paramValue) {
-    if (timeParams != null && paramValue instanceof java.lang.String) {
-      String adjustedDate = (String) paramValue;
-      if (timeParams.contains(paramName) && !"".equals(adjustedDate)) {
-        UserBean userBean = (UserBean) request.getSession().getAttribute("User");
-        if (userBean != null) {
-          User thisUser = userBean.getUserRecord();
-          if (thisUser.getTimeZone() != null) {
-            adjustedDate = DateUtils.getUserToServerDateTimeString(TimeZone.getTimeZone(thisUser.getTimeZone()), DateFormat.SHORT, DateFormat.LONG, adjustedDate);
-          }
-        }
-      }
-      return adjustedDate;
-    }
-    return paramValue;
+  public static void populateObject(Object source, Object target) {
   }
 }
 

@@ -1,47 +1,105 @@
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.contacts.base.*" %>
+<%--
+ Copyright 2000-2004 Matt Rajkowski
+ matt.rajkowski@teamelements.com
+ http://www.teamelements.com
+ This source code cannot be modified, distributed or used without
+ permission from Matt Rajkowski
+--%>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %> 
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.admin.base.User" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
+<jsp:useBean id="currentMember" class="com.zeroio.iteam.base.TeamMember" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<table border='0' width='100%'  bgcolor='#000000' cellspacing='0' cellpadding='0'>
-  <tr>
-    <td width='100%' bgcolor='#0033CC'>
-      <b><font color='#FFFFFF'>&nbsp;Team</font></b>
+<table border="0" cellpadding="1" cellspacing="0" width="100%">
+  <tr class="subtab">
+    <td>
+      <img src="images/icons/stock_new-bcard-16.gif" border="0" align="absmiddle">
+      Team
     </td>
   </tr>
 </table>
-   
-<table border='0' width='100%' bgcolor='#FFFFFF' cellpadding='0' cellspacing='0'>
+<br>
+<zeroio:permission name="project-team-edit">
+<a href="ProjectManagementTeam.do?command=Modify&pid=<%= Project.getId() %>">Modify Team</a><br>
+</zeroio:permission>
+<zeroio:permission name="project-team-edit-role">
+<script language="javascript" type="text/javascript">
+  function updateRole(pid, id, rid) {
+    window.frames['server_commands'].location.href='ProjectManagementTeam.do?command=ChangeRole&pid=' + pid + '&id=' + id + '&role=' + rid;
+  }
+</script>
+<font color="blue">* Immediately change the team member's role by making changes below</font>
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0" width="0" border="0" frameborder="0"></iframe>
+</zeroio:permission>
+<dhv:pagedListStatus label="Members" title="<%= showError(request, "actionError") %>" object="projectTeamInfo"/>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-    <td width='150' bgcolor='#808080' align='left' valign='bottom'><font color='#FFFFFF'>&lt;Name&gt;</font></td>
-    <td width='220' bgcolor='#808080' align='left' valign='bottom'><font color='#FFFFFF'>&lt;Company&gt;</font></td>
-    <td width='150' bgcolor='#808080' align='left' valign='bottom'><font color='#FFFFFF'>&lt;Email&gt;</font></td>
-    <td width='100' bgcolor='#808080' align='left' valign='bottom'><font color='#FFFFFF'>&lt;Added&gt;</font></td>
-    <td width='30' bgcolor='#808080' align='left' valign='bottom'><font color='#FFFFFF'>&lt;Project Manager&gt;</font></td>
+    <th><strong>Role</strong></th>
+    <th width="50%"><strong>Name</strong></th>
+    <th width="50%"><strong>Department</strong></th>
+    <zeroio:permission name="project-team-view-email">
+      <th nowrap><strong>Email Address</strong></th>
+    </zeroio:permission>
+    <th nowrap><strong>Status</strong></th>
+    <th nowrap><strong>Last Accessed</strong></th>
   </tr>
-<%    
-  String bgColorVar = " bgColor='#E4E4E4'";
+<%
   TeamMemberList team = Project.getTeam();
+  if (team.size() == 0) {
+%>
+  <tr class="row2">
+    <td colspan="6">Team has not been defined</td>
+  </tr>
+<%
+  }
+  int rowId = 0;
   Iterator i = team.iterator();
   while (i.hasNext()) {
-    TeamMember thisMember = (TeamMember)i.next();
-    Contact thisContact = (Contact)thisMember.getContact();
-    if (thisContact == null) thisContact = new Contact();
+    rowId = (rowId != 1?1:2);
+    TeamMember thisMember = (TeamMember) i.next();
+    User thisContact = (User) thisMember.getUser();
+    if (thisContact == null) thisContact = new User();
 %>    
-  <tr>
-    <td align='left'<%= bgColorVar %>><b><font color='black'><%= toHtml(thisContact.getNameFull()) %></font></b></td>
-    <td align='left'<%= bgColorVar %>><font color='black'><%= toHtml(thisContact.getOrgName()) %><br><%= toHtml(thisContact.getDepartmentName()) %></font></td>
-    <td align='left'<%= bgColorVar %>><font color='black'><a href='mailto:<%= thisContact.getEmailAddress("Business") %>'><%= thisContact.getEmailAddress("Business") %></a>&nbsp;</font></td>
-    <td align='left'<%= bgColorVar %>><font color='black'><%= thisMember.getEnteredString() %></font></td>
-    <td align='center'<%= bgColorVar %>><font color='black'><%= thisMember.getUserLevel() %></font></td>
+  <tr class="row<%= rowId %>">
+    <td valign="top" nowrap>
+      <zeroio:permission name="project-team-edit-role" if="none">
+        <zeroio:role id="<%= thisMember.getUserLevel() %>"/>
+      </zeroio:permission>
+      <zeroio:permission name="project-team-edit-role">
+        <zeroio:roleSelect
+          name="<%= "role" + thisMember.getUserId() %>"
+          value="<%= thisMember.getUserLevel() %>"
+          onChange="<%= "javascript:updateRole(" + thisMember.getProjectId() + ", " + thisMember.getUserId() + ", this.options[this.selectedIndex].value);" %>"/>
+      </zeroio:permission>
+    </td>
+    <td valign="top"><%= toHtml(thisContact.getContact().getNameFirstLast()) %></td>
+    <td valign="top"><%= toHtml(thisContact.getContact().getDepartmentName()) %></td>
+    <zeroio:permission name="project-team-view-email"> 
+       <td valign="top" nowrap>
+        <dhv:evaluate if="<%= thisContact.getContact().getEmailAddress(1) != null %>"><a href="mailto:<%= thisContact.getContact().getEmailAddress(1) %>"><%= thisContact.getContact().getEmailAddress(1) %></a></dhv:evaluate>&nbsp;
+      </td>
+    </zeroio:permission>
+    <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_ADDED %>">
+      <td valign="top" nowrap>Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true"/></td>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_PENDING %>">
+      <td valign="top" nowrap><font color="green">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true"/></font></td>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_INVITING %>">
+      <td valign="top" nowrap><font color="green">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true"/></font></td>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_MAILERROR %>">
+      <td valign="top" nowrap><font color="red">Invitation could not be sent to email address</font></td>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_REFUSED %>">
+      <td valign="top" nowrap><font color="red">Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true"/></font></td>
+    </dhv:evaluate>
+    <td nowrap valign="top">
+      <zeroio:tz timestamp="<%= thisMember.getLastAccessed() %>" dateOnly="true" default="--"/>
+    </td>
   </tr>
 <%    
-    if (bgColorVar.equals(" bgColor='#E4E4E4'")) {
-      bgColorVar = "";
-    } else {
-      bgColorVar = " bgColor='#E4E4E4'";
-    }
   }
 %>
 </table>
-&nbsp;<br>
-<hr color='#000000' width='100%' noshade size='1'>
-  

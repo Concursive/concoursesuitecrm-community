@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*" %>
 <%@ page import="org.aspcfs.modules.pipeline.base.*" %>
 <%@ page import="com.zeroio.iteam.base.*" %>
@@ -9,6 +10,7 @@
 <jsp:useBean id="oppList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="GraphTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Read in the image map for the graph --%>
 <% String includePage = "../graphs/" + (String) request.getAttribute("GraphFileName") + ".map";%>          
@@ -79,7 +81,7 @@ Dashboard
       <table width="285" cellpadding="3" cellspacing="0" border="0" class="pagedList">
         <tr>
           <th valign="center" nowrap>
-            Reports ($Gr. Pipe.)
+            Reports (Gr. Pipe.)
           </th>
           <th width="125" valign="center">
             Title
@@ -100,7 +102,15 @@ Dashboard
         <tr class="row<%= rowid %>">
           <td valign="center" nowrap>
             <a href="Leads.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLastFirst()) %></a>
-            ($<%=thisRec.getGrossPipelineCurrency(1000)%>K)
+            <dhv:evaluate if="<%= thisRec.getGrossPipeline(1000) == 0.0 %>">
+              (0K)
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= thisRec.getGrossPipeline(1000) > 0 && thisRec.getGrossPipeline(1000) < 1 %>">
+              (&lt;1K)
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= thisRec.getGrossPipeline(1000) >= 1 %>">
+              (<zeroio:currency value="<%= thisRec.getGrossPipeline(1000) %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
+            </dhv:evaluate>
             <dhv:evaluate exp="<%=!(thisRec.getEnabled())%>"><font color="red">*</font></dhv:evaluate>
           </td>
           <td width="125" valign="center">
@@ -145,7 +155,15 @@ Dashboard
             </dhv:evaluate>
           </td>
           <td width="55" class="row<%= rowid %>">
-            $<%= thisHeader.getTotalValue(1000) %>K
+            <dhv:evaluate if="<%= thisHeader.getTotalValue(1000) == 0.0 %>">
+              (0K)
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= thisHeader.getTotalValue(1000) > 0 && thisHeader.getTotalValue(1000) < 1 %>">
+              (&lt;1K)
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= thisHeader.getTotalValue(1000) >= 1 %>">
+              (<zeroio:currency value="<%= thisHeader.getTotalValue(1000) %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
+            </dhv:evaluate>
           </td>
         </tr>
 <%

@@ -263,21 +263,6 @@ public class XMLUtils {
       }
     }
     return null;
-    /*
-     *  if (nodeText == null) {
-     *  return null;
-     *  } else {
-     *  int begin = 0;
-     *  int end = nodeText.length();
-     *  if (nodeText.startsWith(System.getProperty("line.separator"))) {
-     *  begin = (System.getProperty("line.separator").length());
-     *  }
-     *  if (nodeText.endsWith(System.getProperty("line.separator"))) {
-     *  end = end - (System.getProperty("line.separator").length());
-     *  }
-     *  return nodeText.substring(begin, end);
-     *  }
-     */
   }
 
 

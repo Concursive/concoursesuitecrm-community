@@ -187,7 +187,7 @@ public class ServiceContract extends GenericBean {
    *@param  tmp  The new initialStartDate value
    */
   public void setInitialStartDate(String tmp) {
-    this.initialStartDate = DateUtils.parseTimestampString(tmp);
+    this.initialStartDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -207,7 +207,7 @@ public class ServiceContract extends GenericBean {
    *@param  tmp  The new currentStartDate value
    */
   public void setCurrentStartDate(String tmp) {
-    this.currentStartDate = DateUtils.parseTimestampString(tmp);
+    this.currentStartDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -227,7 +227,7 @@ public class ServiceContract extends GenericBean {
    *@param  tmp  The new currentEndDate value
    */
   public void setCurrentEndDate(String tmp) {
-    this.currentEndDate = DateUtils.parseTimestampString(tmp);
+    this.currentEndDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -640,18 +640,6 @@ public class ServiceContract extends GenericBean {
    */
   public double getContractValue() {
     return contractValue;
-  }
-
-
-  /**
-   *  Gets the contractValueCurrency attribute of the ServiceContract object
-   *
-   *@return    The contractValueCurrency value
-   */
-  public String getContractValueCurrency() {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    String amountOut = numberFormatter.format(contractValue);
-    return amountOut;
   }
 
 

@@ -1,8 +1,8 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
@@ -19,7 +19,8 @@ import org.aspcfs.utils.DatabaseUtils;
  *
  *@author     matt rajkowski
  *@created    January 15, 2003
- *@version    $Id$
+ *@version    $Id: FileItemVersion.java,v 1.1 2003/01/15 15:52:56 mrajkowski Exp
+ *      $
  */
 public class FileItemVersion extends GenericBean {
 
@@ -32,7 +33,7 @@ public class FileItemVersion extends GenericBean {
   private String directory = "";
   private int size = 0;
   private double version = 0;
-  private String image = "file.gif";
+  private String image = null;
   private boolean enabled = false;
   private int downloads = 0;
   private java.sql.Timestamp entered = null;
@@ -514,7 +515,7 @@ public class FileItemVersion extends GenericBean {
    *@return    The imageTag value
    */
   public String getImageTag() {
-    return "<img border=\"0\" src=\"images/" + image + "\" align=\"absmiddle\" alt=\"" + "" + "\">";
+    return FileItem.getImageTag(image, "", FileItem.getExtension(clientFilename));
   }
 
 

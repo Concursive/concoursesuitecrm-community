@@ -1,9 +1,12 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.pipeline.base.OpportunityHeader,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OpportunityHeaderList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="AccountContactOppsPagedListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -96,7 +99,7 @@ Opportunities
             <td width="8" valign="top" align="center" class="row<%= rowid %>" nowrap>
               <%-- Use the unique id for opening the menu, and toggling the graphics --%>
               <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-              <a href="javascript:displayMenu('menuOpp','<%= oppHeader.getId() %>','<%= oppHeader.getContactLink() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+              <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= oppHeader.getId() %>','<%= oppHeader.getContactLink() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
             </td>
             <td width="100%" valign="top" class="row<%= rowid %>">
               <a href="AccountContactsOpps.do?command=DetailsOpp&headerId=<%= oppHeader.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
@@ -107,10 +110,10 @@ Opportunities
               </dhv:evaluate>
             </td>
             <td valign="top" align="right" class="row<%= rowid %>" nowrap>
-              $<%= toHtml(oppHeader.getTotalValueCurrency()) %>
+              <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
             </td>      
             <td valign="top" align="center" class="row<%= rowid %>" nowrap>
-             <dhv:tz timestamp="<%= oppHeader.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+             <zeroio:tz timestamp="<%= oppHeader.getModified() %>" />
             </td>       
           </tr>
       <%

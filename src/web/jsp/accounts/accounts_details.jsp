@@ -1,8 +1,11 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -105,7 +108,7 @@ Account Details
       Revenue
     </td>
     <td>
-       $<%= OrgDetails.getRevenueCurrency() %>&nbsp;
+       <zeroio:currency value="<%= OrgDetails.getRevenue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
   </tr>
 </dhv:evaluate>
@@ -129,7 +132,7 @@ Account Details
       Contract End Date
     </td>
     <td>
-      <dhv:tz timestamp="<%= OrgDetails.getContractEndDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= OrgDetails.getContractEndDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
 </dhv:evaluate>
@@ -151,7 +154,7 @@ Account Details
       Alert Date
     </td>
     <td>
-      <dhv:tz timestamp="<%= OrgDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= OrgDetails.getAlertDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
 </dhv:evaluate>
@@ -372,8 +375,7 @@ Account Details
     </td>
     <td>
       <dhv:username id="<%= OrgDetails.getEnteredBy() %>" />
-      -
-      <dhv:tz timestamp="<%= OrgDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= OrgDetails.getEntered() %>" />
     </td>
   </tr>
   <tr class="containerBody">
@@ -382,8 +384,7 @@ Account Details
     </td>
     <td>
       <dhv:username id="<%= OrgDetails.getModifiedBy() %>" />
-      -
-      <dhv:tz timestamp="<%= OrgDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= OrgDetails.getModified() %>" />
     </td>
   </tr>
 </table>

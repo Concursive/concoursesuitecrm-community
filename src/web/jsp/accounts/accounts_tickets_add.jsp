@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*" %>
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -268,7 +269,7 @@ Add Ticket
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td>
-            <textarea name="problem" cols="55" rows="3"><%= toString(TicketDetails.getProblem()) %></textarea>
+            <textarea name="problem" cols="55" rows="8"><%= toString(TicketDetails.getProblem()) %></textarea>
           </td>
           <td valign="top">
             <font color="red">*</font> <%= showAttribute(request, "problemError") %>
@@ -380,8 +381,8 @@ Add Ticket
       Assignment Date
     </td>
     <td>
-      <input type="text" size="10" name="assignedDate" value="<dhv:tz timestamp="<%= TicketDetails.getAssignedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('addticket', 'assignedDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" size="10" name="assignedDate" value="<zeroio:tz timestamp="<%= TicketDetails.getAssignedDate() %>" dateOnly="true" />">
+      <a href="javascript:popCalendar('addticket', 'assignedDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
     </td>
   </tr>
   <tr class="containerBody">
@@ -389,8 +390,8 @@ Add Ticket
       Estimated Resolution Date
     </td>
     <td>
-      <input type="text" size="10" name="estimatedResolutionDate" value="<dhv:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('addticket', 'estimatedResolutionDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" size="10" name="estimatedResolutionDate" value="<zeroio:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" />">
+      <a href="javascript:popCalendar('addticket', 'estimatedResolutionDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
     </td>
   </tr>
 	<tr class="containerBody">
@@ -398,7 +399,7 @@ Add Ticket
       Issue Notes
     </td>
     <td>
-      <textarea name="comment" cols="55" rows="3"><%= toString(TicketDetails.getComment()) %></textarea>
+      <textarea name="comment" cols="55" rows="5"><%= toString(TicketDetails.getComment()) %></textarea>
     </td>
 	</tr>
 </table>
@@ -414,7 +415,7 @@ Add Ticket
       Cause
     </td>
     <td>
-      <textarea name="cause" cols="55" rows="3"><%= toString(TicketDetails.getCause()) %></textarea>
+      <textarea name="cause" cols="55" rows="8"><%= toString(TicketDetails.getCause()) %></textarea>
     </td>
   </tr>
 	<tr class="containerBody">
@@ -422,7 +423,7 @@ Add Ticket
       Resolution
     </td>
     <td>
-      <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br />
+      <textarea name="solution" cols="55" rows="8"><%= toString(TicketDetails.getSolution()) %></textarea><br />
       <input type="checkbox" name="closeNow" value="true" <%= TicketDetails.getCloseIt() ? " checked" : ""%>>Close ticket
       <%--
       <br>
@@ -435,8 +436,8 @@ Add Ticket
       Resolution Date
     </td>
     <td>
-      <input type="text" size="10" name="resolutionDate" value="<dhv:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('addticket', 'resolutionDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" size="10" name="resolutionDate" value="<zeroio:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" />">
+      <a href="javascript:popCalendar('addticket', 'resolutionDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
     </td>
   </tr>
   <tr class="containerBody">

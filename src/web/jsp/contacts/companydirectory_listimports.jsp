@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.base.Import,com.zeroio.iteam.base.FileItem" %>
 <jsp:useBean id="ImportList" class="org.aspcfs.modules.base.ImportList" scope="request"/>
 <jsp:useBean id="ExternalContactsImportListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -88,7 +89,7 @@ View Imports
   <tr class="row<%= rowid %>">
     <td nowrap>
      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-      <a href="javascript:displayMenu('menuImport','<%= thisImport.getId() %>', '<%= thisImport.getStatusId() == Import.RUNNING ? "1" : "0" %>','<%= thisImport.getStatusId() == Import.UNPROCESSED ? "1" : "0"%>','<%= thisImport.canDelete()? "1" : "0"%>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+      <a href="javascript:displayMenu('select<%= i %>','menuImport','<%= thisImport.getId() %>', '<%= thisImport.getStatusId() == Import.RUNNING ? "1" : "0" %>','<%= thisImport.getStatusId() == Import.UNPROCESSED ? "1" : "0"%>','<%= thisImport.canDelete()? "1" : "0"%>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuImport');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
     <td width="100%" nowrap>
       <a href="ExternalContactsImports.do?command=Details&importId=<%= thisImport.getId() %>"><%= toHtmlValue(thisImport.getName()) %></a>
@@ -109,10 +110,10 @@ View Imports
       <%= thisImport.getTotalFailedRecords() %>
     </td>
     <td align="center" nowrap>
-      <dhv:tz timestamp="<%= thisImport.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.SHORT %>"/>
+      <zeroio:tz timestamp="<%= thisImport.getEntered() %>" />
     </td>
     <td align="center" nowrap>
-      <dhv:tz timestamp="<%= thisImport.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.SHORT %>"/>
+      <zeroio:tz timestamp="<%= thisImport.getModified() %>" />
     </td>
   </tr>
 <%}

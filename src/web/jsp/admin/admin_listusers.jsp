@@ -3,6 +3,7 @@
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="UserListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="APP_SIZE" class="java.lang.String" scope="application"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -88,7 +89,7 @@ View Users
           <% int status = thisUser.getEnabled() ? 1 : 0; %>
           <dhv:permission name="admin-users-edit" none="true"><% status = -1; %></dhv:permission>
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-          <a href="javascript:displayMenu('menuUser', '<%= thisUser.getId() %>','<%= status %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+          <a href="javascript:displayMenu('select<%= count %>','menuUser', '<%= thisUser.getId() %>','<%= status %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuUser');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
         <td width="60%">
           <a href="Users.do?command=UserDetails&id=<%= thisUser.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.admin.base.*" %>
 <%@ include file="../initPage.jsp" %>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
@@ -44,7 +45,7 @@ Login History
 			<%= toHtml(thisLog.getIp()) %>
 		</td>
 		<td nowrap valign="top" class="row<%= rowid %>">
-      <dhv:tz timestamp="<%= thisLog.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= thisLog.getEntered() %>" />
 		</td>
 	</tr>
   <%}%>

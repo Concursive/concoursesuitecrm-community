@@ -9,10 +9,10 @@ import javax.servlet.http.*;
 import com.darkhorseventures.framework.beans.*;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.utils.*;
-import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import java.io.*;
 import java.text.*;
+import com.zeroio.iteam.base.FileItem;
 
 /**
  *  Description of the Class

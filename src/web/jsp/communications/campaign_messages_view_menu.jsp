@@ -3,13 +3,13 @@
   var thisMsgId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, msgId) {
+  function displayMenu(loc, id, msgId) {
     thisMsgId = msgId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuMsg", "down", 0, 0, 170, getHeight("menuMsgTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
   //Menu link functions
@@ -31,44 +31,44 @@
 </script>
 <div id="menuMsgContainer" class="menu">
   <div id="menuMsgContent">
-    <table id="menuMsgTable" class="pulldown" width="170">
+    <table id="menuMsgTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="campaign-campaigns-messages-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="campaign-campaigns-messages-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          Modify
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="campaign-campaigns-messages-add">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="clone()">
+        <th>
           <img src="images/icons/stock_copy-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:clone()">Clone</a>
+          Clone
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="campaign-campaigns-messages-delete">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteMsg()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteMsg()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

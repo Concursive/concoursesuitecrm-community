@@ -11,6 +11,11 @@ import org.aspcfs.modules.login.beans.LoginBean;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.system.base.ApplicationVersion;
+import java.util.HashMap;
+import org.aspcfs.modules.base.Constants;
+import com.zeroio.iteam.base.ProjectList;
+import java.util.TimeZone;
+import java.text.NumberFormat;
 
 /**
  *  Every request to the ServletController executes this code.
@@ -167,6 +172,11 @@ public class SecurityHook implements ControllerHook {
           ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).free(db);
         }
       }
+      // NOTE: Right now ALL users have the same currency and language as the system
+      // In a later version, this will be removed.
+      // This happens every request, just in case the application level preference changes
+      userSession.getUserRecord().setCurrency(applicationPrefs.get("SYSTEM.CURRENCY"));
+      userSession.getUserRecord().setLanguage(applicationPrefs.get("SYSTEM.LANGUAGE"));
     }
     return null;
   }
@@ -192,10 +202,15 @@ public class SecurityHook implements ControllerHook {
       ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute("applicationPrefs");
       newSystemStatus.setFileLibraryPath(prefs.get("FILELIBRARY") + ce.getDbName() + fs);
       newSystemStatus.queryRecord(db);
+      //Cache the role list for the RoleHandler taglib
+      newSystemStatus.getLookupList(db, "lookup_project_role");
       statusList.put(ce.getUrl(), newSystemStatus);
       if (System.getProperty("DEBUG") != null) {
         System.out.println("SecurityHook-> Added new System Status object: " + ce.getUrl());
       }
+      //Cache the project names, updated by hooks
+      HashMap projectNameCache = ProjectList.buildNameList(db);
+      newSystemStatus.getObjects().put(Constants.SYSTEM_PROJECT_NAME_LIST, projectNameCache);
     }
     return (SystemStatus) statusList.get(ce.getUrl());
   }

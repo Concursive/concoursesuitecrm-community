@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="org.aspcfs.modules.reports.base.*" %>
@@ -73,9 +74,9 @@ Queue
     ReportQueue thisQueue = (ReportQueue) cIterator.next();
 %>
   <tr class="row<%= rowid %>">
-    <td><a href="javascript:displayMenu('menu1<%= (thisQueue.getStatus() == ReportQueue.STATUS_PROCESSED ? "a" : "b") %>','<%= thisQueue.getId() %>');" onMouseOver="over(0, <%= thisQueue.getId() %>)" onmouseout="out(0, <%= thisQueue.getId() %>)"><img src="images/select.gif" name="select<%= thisQueue.getId() %>" align="absmiddle" border="0"></a></td>
+    <td><a href="javascript:displayMenu('select<%= thisQueue.getId() %>','menu1<%= (thisQueue.getStatus() == ReportQueue.STATUS_PROCESSED ? "a" : "b") %>','<%= thisQueue.getId() %>');" onMouseOver="over(0, <%= thisQueue.getId() %>)" onmouseout="out(0, <%= thisQueue.getId() %>); hideMenu('menu1<%= (thisQueue.getStatus() == ReportQueue.STATUS_PROCESSED ? "a" : "b") %>');"><img src="images/select.gif" name="select<%= thisQueue.getId() %>" id="select<%= thisQueue.getId() %>" align="absmiddle" border="0"></a></td>
     <td width="100%"><%= toHtml(thisQueue.getReport().getTitle()) %></td>
-    <td nowrap><dhv:tz timestamp="<%= thisQueue.getProcessed() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/></td>
+    <td nowrap><zeroio:tz timestamp="<%= thisQueue.getProcessed() %>" /></td>
     <td nowrap>
 <dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_QUEUED %>">Queued</dhv:evaluate>
 <dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_PROCESSING %>">Processing</dhv:evaluate>
@@ -125,9 +126,9 @@ Queue
     ReportQueue thisQueue = (ReportQueue) pIterator.next();
 %>
   <tr class="row<%= rowid %>">
-    <td><a href="javascript:displayMenu('menu2','<%= thisQueue.getId() %>',0);" onMouseOver="over(0, <%= thisQueue.getId() %>)" onmouseout="out(0, <%= thisQueue.getId() %>)"><img src="images/select.gif" name="select<%= thisQueue.getId() %>" align="absmiddle" border="0"></a></td>
+    <td><a href="javascript:displayMenu('select<%= thisQueue.getId() %>','menu2','<%= thisQueue.getId() %>',0);" onMouseOver="over(0, <%= thisQueue.getId() %>)" onmouseout="out(0, <%= thisQueue.getId() %>); hideMenu('menu2');"><img src="images/select.gif" name="select<%= thisQueue.getId() %>" id="select<%= thisQueue.getId() %>" align="absmiddle" border="0"></a></td>
     <td width="100%"><%= toHtml(thisQueue.getReport().getTitle()) %></td>
-    <td nowrap><dhv:tz timestamp="<%= thisQueue.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/></td>
+    <td nowrap><zeroio:tz timestamp="<%= thisQueue.getEntered() %>" /></td>
     <td nowrap>
 <dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_QUEUED %>">Queued</dhv:evaluate>
 <dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_PROCESSING %>">Processing</dhv:evaluate>

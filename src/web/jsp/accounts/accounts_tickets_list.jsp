@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.troubletickets.base.Ticket,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
@@ -75,7 +76,7 @@ Tickets
     <td rowspan="2" width="8" valign="top" nowrap>
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
       <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-      <a href="javascript:displayMenu('menuTic','<%= OrgDetails.getId() %>','<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+      <a href="javascript:displayMenu('select<%= i %>','menuTic','<%= OrgDetails.getId() %>','<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuTic');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
     <td width="15" valign="top" nowrap>
 			<a href="AccountTickets.do?command=TicketDetails&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
@@ -84,7 +85,7 @@ Tickets
 			<%= toHtml(thisTic.getPriorityName()) %>
 		</td>
 		<td width="15%" valign="top" nowrap>
-      <dhv:tz timestamp="<%=thisTic.getEstimatedResolutionDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=thisTic.getEstimatedResolutionDate()%>" dateOnly="true" default="&nbsp;"/>
 		</td>
 		<td width="8%" align="right" valign="top" nowrap>
 			<%= thisTic.getAgeOf() %>
@@ -94,9 +95,9 @@ Tickets
 		</td>
     <td width="150" nowrap valign="top">
       <% if (thisTic.getClosed() == null) { %>
-        <dhv:tz timestamp="<%= thisTic.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+        <zeroio:tz timestamp="<%= thisTic.getModified() %>" />
       <%} else {%>
-        <dhv:tz timestamp="<%= thisTic.getClosed() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%= thisTic.getClosed() %>" dateOnly="true" default="&nbsp;"/>
       <%}%>
     </td>
    </tr>

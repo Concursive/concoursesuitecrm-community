@@ -22,6 +22,7 @@ public class ClientType implements Serializable {
   public final static int POCKETIE = 3;
   public final static int OPERA = 4;
   public final static int MOZILLA = 5;
+  public final static int APPLEWEBKIT = 6;
   //Client Browser Types
   public final static int HTML_BROWSER = 1;
   public final static int WAP_BROWSER = 2;
@@ -97,6 +98,11 @@ public class ClientType implements Serializable {
         //Search for "msie x"
         version = parseVersion(header.substring(header.indexOf("msie ") + 5,
             header.indexOf(";", header.indexOf("msie "))));
+      } else if (header.indexOf("applewebkit") > -1) {
+        //User-Agent: mozilla/5.0 (macintosh; u; ppc mac os x; en) applewebkit/125.2 (khtml, like gecko) safari/125.7
+        //mozilla/5.0 (macintosh; u; ppc mac os x; en) applewebkit/125.2 (khtml, like gecko) safari/125.8
+        this.id = APPLEWEBKIT;
+        version = parseVersion(header.substring(header.indexOf("applewebkit") + 12, header.indexOf("(khtml")));
       } else if (header.indexOf("opera") > -1) {
         //Opera likes to impersonate other browsers
         //User-Agent: mozilla/4.0 (compatible; msie 6.0; msie 5.5; windows 98) opera 7.02  [en]
@@ -239,6 +245,9 @@ public class ClientType implements Serializable {
         case OPERA:
           thisId = "opera";
           break;
+        case APPLEWEBKIT:
+          thisId = "applewebkit";
+          break;
         default:
           thisId = "moz";
           break;
@@ -302,6 +311,21 @@ public class ClientType implements Serializable {
         }
       }
       return Double.parseDouble(sb.toString());
+    }
+  }
+  
+  
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean showApplet() {
+    if (id == APPLEWEBKIT ||
+        (id == IE && version >= 5 && version < 5.5)) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

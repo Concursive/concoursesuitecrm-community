@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Survey" class="org.aspcfs.modules.communications.base.Survey" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
@@ -58,7 +59,7 @@ Survey Details
         Date
       </td>
       <td>
-        <dhv:tz timestamp="<%= Survey.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+        <zeroio:tz timestamp="<%= Survey.getEntered() %>" />
       </td>
     </tr>
     <tr class="containerBody">
@@ -74,7 +75,7 @@ Survey Details
         Date
       </td>
       <td>
-        <dhv:tz timestamp="<%= Survey.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+        <zeroio:tz timestamp="<%= Survey.getModified() %>" />
       </td>
     </tr>
   </table>

@@ -5,7 +5,7 @@
   var thisCatId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, contactId, catId, recId) {
+  function displayMenu(loc, id, contactId, catId, recId) {
     thisContactId = contactId;
     thisRecId = recId;
     thisCatId = catId;
@@ -13,7 +13,7 @@
       menu_init = true;
       new ypSlideOutMenu("menuField", "down", 0, 0, 170, getHeight("menuFieldTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
   //Menu link functions
@@ -32,34 +32,34 @@
 </script>
 <div id="menuFieldContainer" class="menu">
   <div id="menuFieldContent">
-    <table id="menuFieldTable" class="pulldown" width="170">
+    <table id="menuFieldTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="contacts-external_contacts-folders-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="contacts-external_contacts-folders-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          Modify
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="contacts-external_contacts-folders-delete">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteContact()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteContact()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

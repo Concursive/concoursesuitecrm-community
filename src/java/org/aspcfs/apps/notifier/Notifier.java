@@ -19,11 +19,13 @@ import org.aspcfs.modules.actions.*;
 import org.aspcfs.apps.ReportBuilder;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
-import com.zeroio.iteam.base.*;
 import java.util.*;
 import java.util.zip.*;
 import java.lang.reflect.*;
 import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.modules.base.Constants;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.iteam.base.FileItem;
 
 /**
  *  Application that processes various kinds of Alerts in CFS, generating

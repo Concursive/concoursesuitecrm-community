@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.actionlist.base.ActionContact, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="ActionContacts" class="org.aspcfs.modules.actionlist.base.ActionContactsList" scope="request"/>
 <jsp:useBean id="ActionList" class="org.aspcfs.modules.actionlist.base.ActionList" scope="request"/>
@@ -103,10 +104,10 @@ Action Contacts
     <td valign="top">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
       <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-      <a href="javascript:displayMenu('menuContact',<%= thisContact.getActionId() %>,<%= thisContact.getContact().getId() %>,'<%= thisContact.getContact().getOrgId() %>', '<%= thisContact.getId() %>')"
+      <a href="javascript:displayMenu('select<%= i %>','menuContact',<%= thisContact.getActionId() %>,<%= thisContact.getContact().getId() %>,'<%= thisContact.getContact().getOrgId() %>', '<%= thisContact.getId() %>')"
          onMouseOver="over(0, <%= i %>)"
-         onmouseout="out(0, <%= i %>)"><img 
-        src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+         onmouseout="out(0, <%= i %>); hideMenu('menuContact');"><img 
+        src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
    </dhv:permission>
     <td nowrap valign="top">
@@ -137,7 +138,7 @@ Action Contacts
         <a href="javascript:toggleImage('<%= thisContact.getId() %>', 'history<%= thisContact.getId() %>', 'contact<%= thisContact.getId() %>', '<%= rowid %>','<%= thisContact.getContact().getId() %>');"><img src="images/arrowright.gif" name="hisImage<%= thisContact.getId() %>" id="1" border="0" title="Click To View History"></a>
       </td>
       <td width="100%" valign="top">
-        <%= toHtml(thisContact.getMostRecentItem().getTypeString()) %>: <a href="javascript:parent.location.href='<%= thisContact.getMostRecentItem().getItemLink(thisContact.getContact().getId()) %>';"  onMouseOver="this.style.color='blue';window.status='View Details';return true;"  onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisContact.getMostRecentItem().getDescription()) %></a> [<dhv:tz timestamp="<%= thisContact.getMostRecentItem().getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>]<br>
+        <%= toHtml(thisContact.getMostRecentItem().getTypeString()) %>: <a href="javascript:parent.location.href='<%= thisContact.getMostRecentItem().getItemLink(thisContact.getContact().getId()) %>';"  onMouseOver="this.style.color='blue';window.status='View Details';return true;"  onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisContact.getMostRecentItem().getDescription()) %></a> [<zeroio:tz timestamp="<%= thisContact.getMostRecentItem().getEntered() %>" />]<br>
         <span name="contact<%= thisContact.getId() %>" id="contact<%= thisContact.getId() %>" style="display:none">
           <iframe src="empty.html" name="history<%= thisContact.getId() %>" height="100" width="100%" frameborder="0" marginwidth="0" marginheight="0" ></iframe>
         </span>
@@ -149,7 +150,7 @@ Action Contacts
     <% } %>
     </td>
     <td nowrap align="center" valign="top">
-      <dhv:tz timestamp="<%= thisContact.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= thisContact.getModified() %>" />
     </td>
   </tr>
 <%}

@@ -3013,17 +3013,5 @@ public class Contact extends GenericBean {
     pst.close();
   }
 
-  
-  /**
-   *  Gets the properties that are TimeZone sensitive
-   *
-   *@return    The timeZoneParams value
-   */
-  public static ArrayList getTimeZoneParams() {
-    ArrayList thisList = new ArrayList();
-    thisList.add("expires");
-    return thisList;
-  }
-
 }
 

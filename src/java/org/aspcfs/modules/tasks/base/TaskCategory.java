@@ -13,7 +13,8 @@ import org.aspcfs.modules.base.Constants;
  *
  *@author     mrajkowski
  *@created    January 14, 2003
- *@version    $Id$
+ *@version    $Id: TaskCategory.java,v 1.4.124.1 2004/03/19 21:00:50 rvasista
+ *      Exp $
  */
 public class TaskCategory extends GenericBean {
 
@@ -27,6 +28,7 @@ public class TaskCategory extends GenericBean {
   private int linkItemId = -1;
   private int taskCount = 0;
   private java.sql.Timestamp lastTaskEntered = null;
+  private int lastTaskEnteredBy = -1;
 
 
   /**
@@ -150,6 +152,16 @@ public class TaskCategory extends GenericBean {
 
 
   /**
+   *  Sets the lastTaskEnteredBy attribute of the TaskCategory object
+   *
+   *@param  tmp  The new lastTaskEnteredBy value
+   */
+  public void setLastTaskEnteredBy(int tmp) {
+    this.lastTaskEnteredBy = tmp;
+  }
+
+
+  /**
    *  Sets the lastTaskEntered attribute of the TaskCategory object
    *
    *@param  tmp  The new lastTaskEntered value
@@ -250,6 +262,26 @@ public class TaskCategory extends GenericBean {
 
 
   /**
+   *  Gets the linkModuleId attribute of the TaskCategory object
+   *
+   *@return    The linkModuleId value
+   */
+  public int getLinkModuleId() {
+    return linkModuleId;
+  }
+
+
+  /**
+   *  Gets the linkItemId attribute of the TaskCategory object
+   *
+   *@return    The linkItemId value
+   */
+  public int getLinkItemId() {
+    return linkItemId;
+  }
+
+
+  /**
    *  Gets the taskCount attribute of the TaskCategory object
    *
    *@return    The taskCount value
@@ -266,6 +298,16 @@ public class TaskCategory extends GenericBean {
    */
   public java.sql.Timestamp getLastTaskEntered() {
     return lastTaskEntered;
+  }
+
+
+  /**
+   *  Gets the lastTaskEnteredBy attribute of the TaskCategory object
+   *
+   *@return    The lastTaskEnteredBy value
+   */
+  public int getLastTaskEnteredBy() {
+    return lastTaskEnteredBy;
   }
 
 
@@ -450,6 +492,68 @@ public class TaskCategory extends GenericBean {
     defaultItem = rs.getBoolean("default_item");
     level = rs.getInt("level");
     enabled = rs.getBoolean("enabled");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean delete(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("ID not specified");
+    }
+    boolean commit = db.getAutoCommit();
+    try {
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      PreparedStatement pst = null;
+      //Delete the project link
+      pst = db.prepareStatement(
+          "DELETE from tasklink_project " +
+          "WHERE task_id IN (SELECT task_id FROM task WHERE category_id = ?) ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      //Delete related tasks
+      pst = db.prepareStatement(
+          "DELETE from task " +
+          "WHERE category_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      //Delete the project link
+      pst = db.prepareStatement(
+          "DELETE from taskcategory_project " +
+          "WHERE category_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      //Delete the category
+      pst = db.prepareStatement(
+          "DELETE from lookup_task_category " +
+          "WHERE code = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return true;
   }
 }
 

@@ -1,8 +1,11 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="oppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <form name="componentDetails" action="ExternalContactsOpps.do?command=ModifyComponent&id=<%= oppComponentDetails.getId() %>" method="post">
@@ -89,7 +92,7 @@ Component Details
       Est. Close Date
     </td>
     <td>
-    <dhv:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -97,7 +100,7 @@ Component Details
       Low Estimate
     </td>
     <td>
-      $<%= oppComponentDetails.getLowCurrency() %>&nbsp;
+      <zeroio:currency value="<%= oppComponentDetails.getLow() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -105,7 +108,7 @@ Component Details
       Best Guess
     </td>
     <td>
-      $<%= oppComponentDetails.getGuessCurrency() %>&nbsp;
+      <zeroio:currency value="<%= oppComponentDetails.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -113,7 +116,7 @@ Component Details
       High Estimate
     </td>
     <td>
-      $<%= oppComponentDetails.getHighCurrency() %>&nbsp;
+      <zeroio:currency value="<%= oppComponentDetails.getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
   </tr>  
   <tr class="containerBody">
@@ -137,7 +140,7 @@ Component Details
       Current Stage Date
     </td>
     <td>
-      <dhv:tz timestamp="<%= oppComponentDetails.getStageDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= oppComponentDetails.getStageDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -164,7 +167,7 @@ Component Details
       Alert Date
     </td>
     <td>
-      <dhv:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
 </dhv:evaluate>  
@@ -174,8 +177,7 @@ Component Details
     </td>
     <td>
       <dhv:username id="<%= oppComponentDetails.getEnteredBy() %>"/>
-      -
-      <dhv:tz timestamp="<%= oppComponentDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= oppComponentDetails.getEntered() %>" />
     </td>
   </tr>
   <tr class="containerBody">
@@ -184,8 +186,7 @@ Component Details
     </td>
     <td>
       <dhv:username id="<%= oppComponentDetails.getModifiedBy() %>"/>
-      -
-      <dhv:tz timestamp="<%= oppComponentDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= oppComponentDetails.getModified() %>" />
     </td>
   </tr>
 </table>

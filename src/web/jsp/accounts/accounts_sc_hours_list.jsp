@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.utils.web.*,java.util.*,org.aspcfs.modules.assets.base.*,org.aspcfs.modules.servicecontracts.base.*,java.text.DateFormat" %>
 <jsp:useBean id="serviceContractHoursHistory" class="org.aspcfs.modules.servicecontracts.base.ServiceContractHoursList" scope="request"/>
 <jsp:useBean id="serviceContractHoursHistoryInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -47,7 +48,7 @@
       <%= toHtml(thisHours.getAdjustmentNotes()) %>
       </td>
       <td width="10%" valign="top">
-        <dhv:tz timestamp="<%=thisHours.getModified()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%= thisHours.getModified() %>" dateOnly="true" default="&nbsp;"/>
       </td>
     </tr>
     <%  

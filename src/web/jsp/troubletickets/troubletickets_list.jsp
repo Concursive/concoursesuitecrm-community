@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*,java.text.DateFormat" %>
 <jsp:useBean id="CreatedByMeList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="CreatedByMeInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -14,8 +15,8 @@
 <%@ include file="troubletickets_list_menu.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<%-- Preload image rollovers for drop-down menu --%>
 <script language="JavaScript" type="text/javascript">
-  <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
 <%-- Trails --%>
@@ -28,7 +29,8 @@ View Tickets
 </tr>
 </table>
 <%-- End Trails --%>
-<% if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
+<% int count = 0;
+if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Assigned to Me" object="AssignedToMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -48,16 +50,18 @@ View Tickets
 	Iterator k = AssignedToMeList.iterator();
 	if ( k.hasNext() ) {
 		int rowid = 0;
-    int i = 0;
 		while (k.hasNext()) {
-      i++;
+      ++count;
 		  rowid = (rowid != 1?1:2);
       Ticket assignedTic = (Ticket)k.next();
 %>   
 	<tr class="row<%= rowid %>">
     <td rowspan="2" width="8" valign="top" nowrap>
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('menuTicket', '<%= assignedTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayMenu('select<%= count %>','menuTicket','<%= assignedTic.getId() %>');" 
+          onMouseOver="over(0, <%= count %>)" 
+          onmouseout="out(0, <%= count %>); hideMenu('menuTicket');"><img 
+          src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
 		<td width="10%" valign="top" nowrap>
 			<a href="TroubleTickets.do?command=Details&id=<%= assignedTic.getId() %>"><%= assignedTic.getPaddedId() %></a>
@@ -66,7 +70,7 @@ View Tickets
 			<%= toHtml(assignedTic.getPriorityName()) %>
 		</td>
 		<td width="15%" valign="top" nowrap>
-      <dhv:tz timestamp="<%=assignedTic.getEstimatedResolutionDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=assignedTic.getEstimatedResolutionDate()%>" dateOnly="true" default="&nbsp;"/>
 		</td>
 		<td width="6%" align="right" valign="top" nowrap>
 			<%= assignedTic.getAgeOf() %>
@@ -136,17 +140,19 @@ View Tickets
 <%
 	Iterator n = OpenList.iterator();
 	if ( n.hasNext() ) {
-    int i = 0;
 		int rowid = 0;
 		while (n.hasNext()) {
-      i++;
+      ++count;
       rowid = (rowid != 1?1:2);
       Ticket openTic = (Ticket)n.next();
 %>   
 	<tr>
     <td rowspan="2" width="8" valign="top" nowrap class="row<%= rowid %>">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('menuTicket', '<%= openTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayMenu('select<%= count %>','menuTicket','<%= openTic.getId() %>');" 
+          onMouseOver="over(0, <%= count %>)" 
+          onmouseout="out(0, <%= count %>); hideMenu('menuTicket');"><img 
+          src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
 		<td width="10%" valign="top" nowrap class="row<%= rowid %>">
 			<a href="TroubleTickets.do?command=Details&id=<%= openTic.getId() %>"><%= openTic.getPaddedId() %></a>
@@ -155,7 +161,7 @@ View Tickets
 			<%= toHtml(openTic.getPriorityName()) %>
 		</td>
 		<td width="15%" valign="top" class="row<%= rowid %>">
-      <dhv:tz timestamp="<%=openTic.getEstimatedResolutionDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=openTic.getEstimatedResolutionDate()%>" dateOnly="true" default="&nbsp;"/>
 		</td>
 		<td width="6%" align="right" valign="top" nowrap class="row<%= rowid %>">
 			<%= openTic.getAgeOf() %>
@@ -232,16 +238,18 @@ View Tickets
 	Iterator j = CreatedByMeList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
-     int i = 0;
 		while (j.hasNext()) {
-      i++;
+      ++count;
       rowid = (rowid != 1?1:2);
       Ticket thisTic = (Ticket)j.next();
 %>   
 	<tr class="row<%= rowid %>">
     <td rowspan="2" width="8" valign="top" nowrap>
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('menuTicket', '<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayMenu('select<%= count %>','menuTicket','<%= thisTic.getId() %>');" 
+          onMouseOver="over(0, <%= count %>)" 
+          onmouseout="out(0, <%= count %>); hideMenu('menuTicket');"><img 
+          src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
 		<td width="10%" valign="top" nowrap>
 			<a href="TroubleTickets.do?command=Details&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
@@ -250,7 +258,7 @@ View Tickets
 			<%= toHtml(thisTic.getPriorityName()) %>
 		</td>
 		<td width="15%" valign="top" class="row<%= rowid %>">
-      <dhv:tz timestamp="<%=thisTic.getEstimatedResolutionDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=thisTic.getEstimatedResolutionDate()%>" dateOnly="true" default="&nbsp;"/>
 		</td>
 		<td width="6%" align="right" valign="top" nowrap>
 			<%= thisTic.getAgeOf() %>
@@ -327,16 +335,18 @@ View Tickets
 	Iterator j = AllTicketsList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
-     int i = 0;
 		while (j.hasNext()) {
-      i++;
+      ++count;
       rowid = (rowid != 1?1:2);
       Ticket thisTic = (Ticket)j.next();
 %>   
 	<tr class="row<%= rowid %>">
     <td rowspan="2" width="8" valign="top" nowrap>
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('menuTicket', '<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayMenu('select<%= count %>','menuTicket','<%= thisTic.getId() %>');" 
+          onMouseOver="over(0, <%= count %>)" 
+          onmouseout="out(0, <%= count %>); hideMenu('menuTicket');"><img 
+          src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
 		<td width="10%" valign="top" nowrap>
 			<a href="TroubleTickets.do?command=Details&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
@@ -345,7 +355,7 @@ View Tickets
 			<%= toHtml(thisTic.getPriorityName()) %>
 		</td>
 		<td width="15%" valign="top" class="row<%= rowid %>">
-      <dhv:tz timestamp="<%=thisTic.getEstimatedResolutionDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=thisTic.getEstimatedResolutionDate()%>" dateOnly="true" default="&nbsp;"/>
 		</td>
 		<td width="6%" align="right" valign="top" nowrap>
 			<%= thisTic.getAgeOf() %>

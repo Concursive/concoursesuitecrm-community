@@ -1,4 +1,4 @@
-#header, #footer, #rightcol, #menutabs, #topmenutabs {
+#header, #footer, #rightcol, #menutabs, #topmenutabs, #toptabs {
   display: none;
 }
 #menuFileContainer, #menucallContainer, #menuOppContainer, 
@@ -11,6 +11,9 @@
 #menuContactContainer, #menuEmployeeContainer, #menuNoteContainer,
 #menu1Container, #menu1aContainer, #menu1bContainer, #menu2Container,
 #menuTicketContainer, #menuServiceContractContainer, #menuAssetContainer,
-#menuTicketFormContainer,#menuProductContainer {
+#menuTicketFormContainer,#menuProductContainer,
+#menuItemContainer, #menuListItemContainer, 
+#menuActivityContainer, #menuFolderContainer,
+#menuRequirementContainer {
   display: none;
 }

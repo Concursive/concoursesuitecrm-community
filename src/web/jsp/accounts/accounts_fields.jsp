@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
@@ -100,8 +101,7 @@ Folder Record Details
     </td>
     <td>
       <dhv:username id="<%= Record.getEnteredBy() %>" />
-      -
-      <dhv:tz timestamp="<%= Record.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= Record.getEntered() %>" />
     </td>
   </tr>
   <tr class="containerBody">
@@ -110,8 +110,7 @@ Folder Record Details
     </td>
     <td>
       <dhv:username id="<%= Record.getModifiedBy() %>" />
-      -
-      <dhv:tz timestamp="<%= Record.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= Record.getModified() %>" />
     </td>
   </tr>
 </table>

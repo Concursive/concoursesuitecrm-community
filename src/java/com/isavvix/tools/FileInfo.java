@@ -29,8 +29,8 @@ import java.io.File;
  *@see        com.isavvix.tools.HttpMultiPartParser
  */
 public class FileInfo {
-  private String name = null, 
-      clientFileName = null, 
+  private String name = null,
+      clientFileName = null,
       fileContentType = null;
   private byte[] fileContents = null;
   private File file = null;
@@ -270,7 +270,6 @@ public class FileInfo {
     sb.setLength(0);
     sb.append("               name = " + name + "\n");
     sb.append("     clientFileName = " + clientFileName + "\n");
-
     if (file != null) {
       sb.append("      File.toString = " + file +
           " (size=" + file.length() + ")\n");
@@ -278,7 +277,6 @@ public class FileInfo {
       sb.append("fileContents.length = " + fileContents.length + "\n");
     }
     sb.append("            version = " + version + "\n");
-
     return sb.toString();
   }
 }

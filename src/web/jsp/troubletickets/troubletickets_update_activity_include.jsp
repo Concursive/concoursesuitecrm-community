@@ -162,9 +162,9 @@
       <tr valign="top" class="containerBody">
         <input type="hidden" name="activityId<%= icount %>" value="<%= thisDayDescription.getId() %>">
         <td nowrap>
-          <input type="text" size="10" name="activityDate<%=icount%>" value="<dhv:tz timestamp="<%=thisDayDescription.getActivityDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-          <a href="javascript:popCalendar('details', 'activityDate<%=icount%>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a><br />
-          (mm/dd/yyyy)
+          <input type="text" size="10" name="activityDate<%=icount%>" value="<zeroio:tz timestamp="<%=thisDayDescription.getActivityDate()%>" dateOnly="true" />">
+          <a href="javascript:popCalendar('details', 'activityDate<%=icount%>', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+          <br />
         </td >
         <td>
           <zeroio:durationSelect baseName="travel" count="<%=icount%>" hours="<%=thisDayDescription.getTravelHours()%>" minutes="<%=thisDayDescription.getTravelMinutes()%>" />
@@ -186,8 +186,8 @@
         <input type="hidden" name="activityId<%= icount %>" value="">
         <td nowrap>
           <input type="text" size="10" name="activityDate<%=icount%>" value="">
-          <a href="javascript:popCalendar('details', 'activityDate<%=icount%>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a><br />
-          (mm/dd/yyyy)
+          <a href="javascript:popCalendar('details', 'activityDate<%=icount%>', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+          <br />
         </td >
         <td>
           <zeroio:durationSelect baseName="travel" count="<%=icount%>" />
@@ -215,8 +215,8 @@
   <tr valign="top" class="containerBody">
     <td nowrap>
       <input type="text" size="10" name="activityDate<%=count%>">
-      <a href="javascript:popCalendar('details', 'activityDate<%=count%>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a><br />
-      (mm/dd/yyyy)
+      <a href="javascript:popCalendar('details', 'activityDate<%=count%>', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <br />
     </td>
     <td >
       <zeroio:durationSelect baseName="travel" count="<%=count%>" />
@@ -256,8 +256,8 @@
       Alert Date
     </td>
     <td>
-      <input type="text" size="10" name="alertDate" value="<dhv:tz timestamp="<%=activityDetails.getAlertDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" />">
-      <a href="javascript:popCalendar('details', 'alertDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" size="10" name="alertDate" value="<zeroio:tz timestamp="<%=activityDetails.getAlertDate()%>" dateOnly="true" />">
+      <a href="javascript:popCalendar('details', 'alertDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
     </td>
   </tr>
   <tr class="containerBody">

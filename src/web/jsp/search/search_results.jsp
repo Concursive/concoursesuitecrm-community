@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*" %> 
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
+<%@ page import="java.util.*" %>
 <%@ page import="org.aspcfs.modules.accounts.base.Organization" %>
 <%@ page import="org.aspcfs.modules.base.*" %> 
 <%@ page import="org.aspcfs.modules.contacts.base.Contact" %> 
@@ -16,6 +17,8 @@
 <jsp:useBean id="SearchSiteAccountInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="SearchSiteOppInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="SearchSiteTicketInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <!--b>Search Results</b-->
 Your search for <b><%= request.getParameter("search") %></b> returned:
@@ -275,7 +278,7 @@ Showing <strong><%= OpportunityList.size() %></strong> result(s) of <%= SearchSi
 %>        
       </td>
       <td valign="center" nowrap>
-        $<%= thisOpp.getComponent().getGuessCurrency() %>
+        <zeroio:currency value="<%= thisOpp.getComponent().getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
       <td valign="center" nowrap>
         <%= toHtml(thisOpp.getComponent().getCloseDateString()) %>

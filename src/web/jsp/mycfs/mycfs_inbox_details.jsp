@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.mycfs.base.*, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
 <jsp:useBean id="InboxInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -41,7 +42,7 @@ Message Details
       Received
     </td>
     <td>
-    <dhv:tz timestamp="<%= NoteDetails.getEntered() %>"  dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= NoteDetails.getEntered() %>" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">

@@ -3,13 +3,13 @@
   var thisGroupId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, groupId) {
+  function displayMenu(loc, id, groupId) {
     thisGroupId = groupId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuGroup", "down", 0, 0, 170, getHeight("menuGroupTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
   //Menu link functions
@@ -27,34 +27,34 @@
 </script>
 <div id="menuGroupContainer" class="menu">
   <div id="menuGroupContent">
-    <table id="menuGroupTable" class="pulldown" width="170">
+    <table id="menuGroupTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="campaign-campaigns-groups-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="campaign-campaigns-groups-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          Modify
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="campaign-campaigns-groups-delete">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteGroup()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteGroup()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

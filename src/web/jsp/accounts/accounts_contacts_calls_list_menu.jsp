@@ -4,14 +4,14 @@
   var thisCallId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, contactId, callId) {
+  function displayMenu(loc, id, contactId, callId) {
     thisContactId = contactId;
     thisCallId = callId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuCall", "down", 0, 0, 170, getHeight("menuCallTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   //Menu link functions
   function details() {
@@ -32,44 +32,44 @@
 </script>
 <div id="menuCallContainer" class="menu">
   <div id="menuCallContent">
-    <table id="menuCallTable" class="pulldown" width="170">
+    <table id="menuCallTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="accounts-accounts-contacts-calls-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-calls-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          Modify
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-calls-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="forward()">
+        <th>
           <img src="images/icons/stock_forward_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:forward()">Forward</a>
+          Forward
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-calls-delete">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteCall()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteCall()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

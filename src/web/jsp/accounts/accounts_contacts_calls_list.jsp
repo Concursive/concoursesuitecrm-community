@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
@@ -80,8 +81,8 @@ Calls
         <tr class="containerBody">
           <td width="8" valign="center" nowrap class="row<%= rowid %>">
             <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-             <a href="javascript:displayMenu('menuCall', '<%= ContactDetails.getId() %>', '<%= thisCall.getId() %>');"
-             onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+             <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= ContactDetails.getId() %>', '<%= thisCall.getId() %>');"
+             onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
           </td>
           <td width="100%" valign="center" class="row<%= rowid %>">
             <a href="AccountContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
@@ -95,7 +96,7 @@ Calls
             <%= toHtml(thisCall.getLengthText()) %>
           </td>
           <td valign="center" nowrap class="row<%= rowid %>">
-            <dhv:tz timestamp="<%= thisCall.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+            <zeroio:tz timestamp="<%= thisCall.getEntered() %>" />
           </td>
         </tr>
      <%}%>

@@ -1,8 +1,8 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
@@ -24,13 +24,17 @@ import org.aspcfs.utils.web.HtmlSelect;
  *@version    $Id$
  */
 public class IssueList extends ArrayList {
-
+  //filters
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
   private int lastIssues = -1;
   private Project project = null;
   private int projectId = -1;
   private int categoryId = -1;
+  private int forUser = -1;
+  //calendar
+  protected java.sql.Timestamp alertRangeStart = null;
+  protected java.sql.Timestamp alertRangeEnd = null;
 
 
   /**
@@ -100,6 +104,66 @@ public class IssueList extends ArrayList {
 
 
   /**
+   *  Sets the forUser attribute of the IssueList object
+   *
+   *@param  tmp  The new forUser value
+   */
+  public void setForUser(int tmp) {
+    this.forUser = tmp;
+  }
+
+
+  /**
+   *  Sets the forUser attribute of the IssueList object
+   *
+   *@param  tmp  The new forUser value
+   */
+  public void setForUser(String tmp) {
+    this.forUser = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the IssueList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(java.sql.Timestamp tmp) {
+    this.alertRangeStart = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the IssueList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(String tmp) {
+    this.alertRangeStart = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the IssueList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(java.sql.Timestamp tmp) {
+    this.alertRangeEnd = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the IssueList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(String tmp) {
+    this.alertRangeEnd = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
    *  Gets the htmlSelect attribute of the IssueList object
    *
    *@param  selectName  Description of the Parameter
@@ -144,35 +208,69 @@ public class IssueList extends ArrayList {
 
 
   /**
+   *  Gets the pagedListInfo attribute of the IssueList object
+   *
+   *@return    The pagedListInfo value
+   */
+  public PagedListInfo getPagedListInfo() {
+    return pagedListInfo;
+  }
+
+
+  /**
+   *  Gets the alertRangeStart attribute of the IssueList object
+   *
+   *@return    The alertRangeStart value
+   */
+  public java.sql.Timestamp getAlertRangeStart() {
+    return alertRangeStart;
+  }
+
+
+  /**
+   *  Gets the alertRangeEnd attribute of the IssueList object
+   *
+   *@return    The alertRangeEnd value
+   */
+  public java.sql.Timestamp getAlertRangeEnd() {
+    return alertRangeEnd;
+  }
+
+
+  /**
+   *  Gets the forUser attribute of the IssueList object
+   *
+   *@return    The forUser value
+   */
+  public int getForUser() {
+    return forUser;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM project_issues i " +
         "WHERE i.issue_id > -1 ");
-
     createFilter(sqlFilter);
-
     if (pagedListInfo == null) {
       pagedListInfo = new PagedListInfo();
       pagedListInfo.setItemsPerPage(lastIssues);
     }
-
     //Get the total number of records matching filter
     pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
     items = prepareFilter(pst);
@@ -181,9 +279,8 @@ public class IssueList extends ArrayList {
       int maxRecords = rs.getInt("recordcount");
       pagedListInfo.setMaxRecords(maxRecords);
     }
-    pst.close();
     rs.close();
-
+    pst.close();
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {
       pst = db.prepareStatement(sqlCount.toString() +
@@ -199,27 +296,21 @@ public class IssueList extends ArrayList {
       rs.close();
       pst.close();
     }
-
     //Determine column to sort by
     pagedListInfo.setDefaultSort("entered", "desc");
     pagedListInfo.appendSqlTail(db, sqlOrder);
-
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
-        "i.*, li.description " +
+        "i.* " +
         "FROM project_issues i " +
-        " LEFT JOIN lookup_project_issues li ON (i.type_id = li.code) " +
         "WHERE i.issue_id > -1 ");
-
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -234,12 +325,6 @@ public class IssueList extends ArrayList {
     }
     rs.close();
     pst.close();
-
-    Iterator i = this.iterator();
-    while (i.hasNext()) {
-      Issue thisIssue = (Issue) i.next();
-      thisIssue.buildReplyCount(db);
-    }
   }
 
 
@@ -256,7 +341,17 @@ public class IssueList extends ArrayList {
       sqlFilter.append("AND project_id = ? ");
     }
     if (categoryId > -1) {
-      sqlFilter.append("AND type_id = ? ");
+      sqlFilter.append("AND category_id = ? ");
+    }
+    if (alertRangeStart != null) {
+      sqlFilter.append("AND i.last_reply_date >= ? ");
+    }
+    if (alertRangeEnd != null) {
+      sqlFilter.append("AND i.last_reply_date < ? ");
+    }
+    if (forUser > -1) {
+      sqlFilter.append("AND (i.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
+          "AND status IS NULL )) ");
     }
   }
 
@@ -275,6 +370,15 @@ public class IssueList extends ArrayList {
     }
     if (categoryId > -1) {
       pst.setInt(++i, categoryId);
+    }
+    if (alertRangeStart != null) {
+      pst.setTimestamp(++i, alertRangeStart);
+    }
+    if (alertRangeEnd != null) {
+      pst.setTimestamp(++i, alertRangeEnd);
+    }
+    if (forUser > -1) {
+      pst.setInt(++i, forUser);
     }
     return i;
   }

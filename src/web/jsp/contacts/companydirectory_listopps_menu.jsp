@@ -4,7 +4,7 @@
   var thisHeaderId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, contactId, headerId, editPermission, deletePermission) {
+  function displayMenu(loc, id, contactId, headerId, editPermission, deletePermission) {
     thisContactId = contactId;
     thisHeaderId = headerId;
      updateMenu(editPermission, deletePermission);
@@ -12,7 +12,7 @@
       menu_init = true;
       new ypSlideOutMenu("menuOpp", "down", 0, 0, 170, getHeight("menuOppTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
   //Update menu for this Contact based on permissions
@@ -46,31 +46,31 @@
 </script>
 <div id="menuOppContainer" class="menu">
   <div id="menuOppContent">
-    <table id="menuOppTable" class="pulldown" width="170">
+    <table id="menuOppTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="contacts-external_contacts-opportunities-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
-      <tr id="menuEdit">
-        <td>
+      <tr id="menuEdit" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:modify()">Rename</a>
+          Rename
         </td>
       </tr>
-      <tr id="menuDelete">
-        <td>
+      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteOpp()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteOpp()">Delete</a>
+          Delete
         </td>
       </tr>
     </table>

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="campList" class="org.aspcfs.modules.communications.base.CampaignList" scope="request"/>
 <jsp:useBean id="CampaignDashboardListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -84,14 +85,14 @@ Dashboard
           }
       %>
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-      <a href="javascript:displayMenu('menuCampaign', '<%= campaign.getId() %>', '<%= cancelPermission %>', '<%= downloadAvailable %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+      <a href="javascript:displayMenu('select<%= count %>','menuCampaign', '<%= campaign.getId() %>', '<%= cancelPermission %>', '<%= downloadAvailable %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuCampaign');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td valign="center" width="100%" class="row<%= rowid %>">
       <a href="CampaignManager.do?command=Details&id=<%=campaign.getId()%>&reset=true"><%=toHtml(campaign.getName())%></a>
       <%= ("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id"))?" <font color=\"red\">(Added)</font>":"") %>
     </td>
     <td valign="center" align="center" nowrap class="row<%= rowid %>">
-      <dhv:tz timestamp="<%=  campaign.getActiveDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=  campaign.getActiveDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
     <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <%=campaign.getRecipientCount()%>

@@ -1,8 +1,8 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
@@ -12,7 +12,13 @@ import java.text.*;
 import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.troubletickets.base.TicketList;
+import org.aspcfs.modules.tasks.base.TaskCategoryList;
+import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.actions.*;
+import org.aspcfs.utils.StringUtils;
+import java.util.ArrayList;
 
 /**
  *  Represents a Project in iTeam
@@ -26,21 +32,25 @@ public class Project extends GenericBean {
   private int id = -1;
   private int groupId = -1;
   private int departmentId = -1;
+  private int categoryId = -1;
   private int templateId = -1;
   private String title = "";
   private String shortDescription = "";
   private String requestedBy = "";
   private String requestedByDept = "";
-  private java.sql.Date requestDate = new java.sql.Date(new java.util.Date().getTime());
+  private Timestamp requestDate = null;
   private boolean approved = false;
-  private java.sql.Timestamp approvalDate = null;
+  private Timestamp approvalDate = null;
   private boolean closed = false;
-  private java.sql.Timestamp closeDate = null;
+  private Timestamp closeDate = null;
+  private Timestamp estimatedCloseDate = null;
+  private double budget = -1;
+  private String budgetCurrency = null;
 
   private int owner = -1;
-  private java.sql.Timestamp entered = null;
+  private Timestamp entered = null;
   private int enteredBy = -1;
-  private java.sql.Timestamp modified = null;
+  private Timestamp modified = null;
   private int modifiedBy = -1;
 
   private int assignmentsForUser = -1;
@@ -51,8 +61,8 @@ public class Project extends GenericBean {
   private boolean buildRequirementAssignments = false;
   private String userRange = null;
 
-  private java.sql.Timestamp assignmentAlertRangeStart = null;
-  private java.sql.Timestamp assignmentAlertRangeEnd = null;
+  private Timestamp assignmentAlertRangeStart = null;
+  private Timestamp assignmentAlertRangeEnd = null;
 
   private RequirementList requirements = new RequirementList();
   private TeamMemberList team = new TeamMemberList();
@@ -60,6 +70,34 @@ public class Project extends GenericBean {
   private IssueCategoryList issueCategories = new IssueCategoryList();
   private IssueList issues = new IssueList();
   private FileItemList files = new FileItemList();
+
+  private NewsArticleList news = new NewsArticleList();
+  private int lastNews = -1;
+  private int currentNews = Constants.UNDEFINED;
+
+  private boolean portal = false;
+  private boolean allowGuests = false;
+  private boolean updateAllowGuests = false;
+
+  private boolean showNews = false;
+  private boolean showDetails = false;
+  private boolean showTeam = false;
+  private boolean showPlan = false;
+  private boolean showLists = false;
+  private boolean showDiscussion = false;
+  private boolean showTickets = false;
+  private boolean showDocuments = false;
+
+  private String labelNews = null;
+  private String labelDetails = null;
+  private String labelTeam = null;
+  private String labelPlan = null;
+  private String labelLists = null;
+  private String labelDiscussion = null;
+  private String labelTickets = null;
+  private String labelDocuments = null;
+
+  private PermissionList permissions = new PermissionList();
 
 
   /**
@@ -125,7 +163,8 @@ public class Project extends GenericBean {
       sql.append(
           "AND (project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id IN (" + userRange + ") " +
           "AND project_id = ?) " +
-          "OR p.enteredBy IN (" + userRange + ")) ");
+          "OR p.enteredBy IN (" + userRange + ") " +
+          "OR p.allow_guests = ?) ");
     }
 
     PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -133,6 +172,7 @@ public class Project extends GenericBean {
     pst.setInt(++i, thisId);
     if (userRange != null) {
       pst.setInt(++i, thisId);
+      pst.setBoolean(++i, true);
     }
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -207,6 +247,26 @@ public class Project extends GenericBean {
 
 
   /**
+   *  Sets the categoryId attribute of the Project object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(int tmp) {
+    categoryId = tmp;
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the Project object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(String tmp) {
+    categoryId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the templateId attribute of the Project object
    *
    *@param  tmp  The new templateId value
@@ -276,7 +336,7 @@ public class Project extends GenericBean {
    *@param  tmp  The new RequestDate value
    *@since
    */
-  public void setRequestDate(java.sql.Date tmp) {
+  public void setRequestDate(Timestamp tmp) {
     this.requestDate = tmp;
   }
 
@@ -287,7 +347,7 @@ public class Project extends GenericBean {
    *@param  tmp  The new requestDate value
    */
   public void setRequestDate(String tmp) {
-    requestDate = DatabaseUtils.parseDate(tmp);
+    requestDate = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
@@ -374,6 +434,56 @@ public class Project extends GenericBean {
 
 
   /**
+   *  Sets the estimatedCloseDate attribute of the Project object
+   *
+   *@param  tmp  The new estimatedCloseDate value
+   */
+  public void setEstimatedCloseDate(Timestamp tmp) {
+    this.estimatedCloseDate = tmp;
+  }
+
+
+  /**
+   *  Sets the estimatedCloseDate attribute of the Project object
+   *
+   *@param  tmp  The new estimatedCloseDate value
+   */
+  public void setEstimatedCloseDate(String tmp) {
+    this.estimatedCloseDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the budget attribute of the Project object
+   *
+   *@param  tmp  The new budget value
+   */
+  public void setBudget(double tmp) {
+    this.budget = tmp;
+  }
+
+
+  /**
+   *  Sets the budget attribute of the Project object
+   *
+   *@param  tmp  The new budget value
+   */
+  public void setBudget(String tmp) {
+    this.budget = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   *  Sets the budgetCurrency attribute of the Project object
+   *
+   *@param  tmp  The new budgetCurrency value
+   */
+  public void setBudgetCurrency(String tmp) {
+    this.budgetCurrency = tmp;
+  }
+
+
+  /**
    *  Sets the owner attribute of the Project object
    *
    *@param  tmp  The new owner value
@@ -414,6 +524,16 @@ public class Project extends GenericBean {
 
 
   /**
+   *  Sets the entered attribute of the Project object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(Timestamp tmp) {
+    entered = tmp;
+  }
+
+
+  /**
    *  Sets the enteredBy attribute of the Project object
    *
    *@param  tmp  The new enteredBy value
@@ -430,6 +550,16 @@ public class Project extends GenericBean {
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+  
+  /**
+   *  Sets the modified attribute of the Project object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(Timestamp tmp) {
+    modified = tmp;
   }
 
 
@@ -530,6 +660,26 @@ public class Project extends GenericBean {
 
 
   /**
+   *  Sets the lastNews attribute of the Project object
+   *
+   *@param  tmp  The new lastNews value
+   */
+  public void setLastNews(int tmp) {
+    this.lastNews = tmp;
+  }
+
+
+  /**
+   *  Sets the currentNews attribute of the Project object
+   *
+   *@param  tmp  The new currentNews value
+   */
+  public void setCurrentNews(int tmp) {
+    this.currentNews = tmp;
+  }
+
+
+  /**
    *  Sets the withAssignmentDaysComplete attribute of the Project object
    *
    *@param  tmp  The new withAssignmentDaysComplete value
@@ -580,6 +730,296 @@ public class Project extends GenericBean {
 
 
   /**
+   *  Sets the portal attribute of the Project object
+   *
+   *@param  tmp  The new portal value
+   */
+  public void setPortal(boolean tmp) {
+    this.portal = tmp;
+  }
+
+
+  /**
+   *  Sets the portal attribute of the Project object
+   *
+   *@param  tmp  The new portal value
+   */
+  public void setPortal(String tmp) {
+    this.portal = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the allowGuests attribute of the Project object
+   *
+   *@param  tmp  The new allowGuests value
+   */
+  public void setAllowGuests(boolean tmp) {
+    this.allowGuests = tmp;
+  }
+
+
+  /**
+   *  Sets the allowGuests attribute of the Project object
+   *
+   *@param  tmp  The new allowGuests value
+   */
+  public void setAllowGuests(String tmp) {
+    this.allowGuests = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the updateAllowGuests attribute of the Project object
+   *
+   *@param  tmp  The new updateAllowGuests value
+   */
+  public void setUpdateAllowGuests(boolean tmp) {
+    this.updateAllowGuests = tmp;
+  }
+
+
+  /**
+   *  Sets the showNews attribute of the Project object
+   *
+   *@param  tmp  The new showNews value
+   */
+  public void setShowNews(boolean tmp) {
+    this.showNews = tmp;
+  }
+
+
+  /**
+   *  Sets the showNews attribute of the Project object
+   *
+   *@param  tmp  The new showNews value
+   */
+  public void setShowNews(String tmp) {
+    this.showNews = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the showDetails attribute of the Project object
+   *
+   *@param  tmp  The new showDetails value
+   */
+  public void setShowDetails(boolean tmp) {
+    this.showDetails = tmp;
+  }
+
+
+  /**
+   *  Sets the showDetails attribute of the Project object
+   *
+   *@param  tmp  The new showDetails value
+   */
+  public void setShowDetails(String tmp) {
+    this.showDetails = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the showTeam attribute of the Project object
+   *
+   *@param  tmp  The new showTeam value
+   */
+  public void setShowTeam(boolean tmp) {
+    this.showTeam = tmp;
+  }
+
+
+  /**
+   *  Sets the showTeam attribute of the Project object
+   *
+   *@param  tmp  The new showTeam value
+   */
+  public void setShowTeam(String tmp) {
+    this.showTeam = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the showPlan attribute of the Project object
+   *
+   *@param  tmp  The new showPlan value
+   */
+  public void setShowPlan(boolean tmp) {
+    this.showPlan = tmp;
+  }
+
+
+  /**
+   *  Sets the showPlan attribute of the Project object
+   *
+   *@param  tmp  The new showPlan value
+   */
+  public void setShowPlan(String tmp) {
+    this.showPlan = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the showLists attribute of the Project object
+   *
+   *@param  tmp  The new showLists value
+   */
+  public void setShowLists(boolean tmp) {
+    this.showLists = tmp;
+  }
+
+
+  /**
+   *  Sets the showLists attribute of the Project object
+   *
+   *@param  tmp  The new showLists value
+   */
+  public void setShowLists(String tmp) {
+    this.showLists = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the showDiscussion attribute of the Project object
+   *
+   *@param  tmp  The new showDiscussion value
+   */
+  public void setShowDiscussion(boolean tmp) {
+    this.showDiscussion = tmp;
+  }
+
+
+  /**
+   *  Sets the showDiscussion attribute of the Project object
+   *
+   *@param  tmp  The new showDiscussion value
+   */
+  public void setShowDiscussion(String tmp) {
+    this.showDiscussion = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the showTickets attribute of the Project object
+   *
+   *@param  tmp  The new showTickets value
+   */
+  public void setShowTickets(boolean tmp) {
+    this.showTickets = tmp;
+  }
+
+
+  /**
+   *  Sets the showTickets attribute of the Project object
+   *
+   *@param  tmp  The new showTickets value
+   */
+  public void setShowTickets(String tmp) {
+    this.showTickets = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the showDocuments attribute of the Project object
+   *
+   *@param  tmp  The new showDocuments value
+   */
+  public void setShowDocuments(boolean tmp) {
+    this.showDocuments = tmp;
+  }
+
+
+  /**
+   *  Sets the showDocuments attribute of the Project object
+   *
+   *@param  tmp  The new showDocuments value
+   */
+  public void setShowDocuments(String tmp) {
+    this.showDocuments = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the labelNews attribute of the Project object
+   *
+   *@param  tmp  The new labelNews value
+   */
+  public void setLabelNews(String tmp) {
+    this.labelNews = tmp;
+  }
+
+
+  /**
+   *  Sets the labelDetails attribute of the Project object
+   *
+   *@param  tmp  The new labelDetails value
+   */
+  public void setLabelDetails(String tmp) {
+    this.labelDetails = tmp;
+  }
+
+
+  /**
+   *  Sets the labelTeam attribute of the Project object
+   *
+   *@param  tmp  The new labelTeam value
+   */
+  public void setLabelTeam(String tmp) {
+    this.labelTeam = tmp;
+  }
+
+
+  /**
+   *  Sets the labelPlan attribute of the Project object
+   *
+   *@param  tmp  The new labelPlan value
+   */
+  public void setLabelPlan(String tmp) {
+    this.labelPlan = tmp;
+  }
+
+
+  /**
+   *  Sets the labelLists attribute of the Project object
+   *
+   *@param  tmp  The new labelLists value
+   */
+  public void setLabelLists(String tmp) {
+    this.labelLists = tmp;
+  }
+
+
+  /**
+   *  Sets the labelDiscussion attribute of the Project object
+   *
+   *@param  tmp  The new labelDiscussion value
+   */
+  public void setLabelDiscussion(String tmp) {
+    this.labelDiscussion = tmp;
+  }
+
+
+  /**
+   *  Sets the labelTickets attribute of the Project object
+   *
+   *@param  tmp  The new labelTickets value
+   */
+  public void setLabelTickets(String tmp) {
+    this.labelTickets = tmp;
+  }
+
+
+  /**
+   *  Sets the labelDocuments attribute of the Project object
+   *
+   *@param  tmp  The new labelDocuments value
+   */
+  public void setLabelDocuments(String tmp) {
+    this.labelDocuments = tmp;
+  }
+
+
+  /**
    *  Gets the Id attribute of the Project object
    *
    *@return    The Id value
@@ -609,6 +1049,16 @@ public class Project extends GenericBean {
    */
   public int getDepartmentId() {
     return departmentId;
+  }
+
+
+  /**
+   *  Gets the categoryId attribute of the Project object
+   *
+   *@return    The categoryId value
+   */
+  public int getCategoryId() {
+    return categoryId;
   }
 
 
@@ -702,7 +1152,7 @@ public class Project extends GenericBean {
    *@return    The RequestDate value
    *@since
    */
-  public java.sql.Date getRequestDate() {
+  public Timestamp getRequestDate() {
     return requestDate;
   }
 
@@ -737,16 +1187,32 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the approvedDateString attribute of the Project object
+   *  Gets the estimatedCloseDate attribute of the Project object
    *
-   *@return    The approvedDateString value
+   *@return    The estimatedCloseDate value
    */
-  public String getApprovedDateString() {
-    try {
-      return DateFormat.getDateInstance(3).format(approvalDate);
-    } catch (NullPointerException e) {
-    }
-    return "";
+  public Timestamp getEstimatedCloseDate() {
+    return estimatedCloseDate;
+  }
+
+
+  /**
+   *  Gets the budget attribute of the Project object
+   *
+   *@return    The budget value
+   */
+  public double getBudget() {
+    return budget;
+  }
+
+
+  /**
+   *  Gets the budgetCurrency attribute of the Project object
+   *
+   *@return    The budgetCurrency value
+   */
+  public String getBudgetCurrency() {
+    return budgetCurrency;
   }
 
 
@@ -788,6 +1254,16 @@ public class Project extends GenericBean {
 
 
   /**
+   *  Gets the closed attribute of the Project object
+   *
+   *@return    The closed value
+   */
+  public boolean getClosed() {
+    return closed;
+  }
+
+
+  /**
    *  Gets the CloseDate attribute of the Project object
    *
    *@return    The CloseDate value
@@ -805,20 +1281,6 @@ public class Project extends GenericBean {
    */
   public String getEntered() {
     return entered.toString();
-  }
-
-
-  /**
-   *  Gets the enteredString attribute of the Project object
-   *
-   *@return    The enteredString value
-   */
-  public String getEnteredString() {
-    try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
-    } catch (NullPointerException e) {
-    }
-    return ("");
   }
 
 
@@ -847,22 +1309,18 @@ public class Project extends GenericBean {
    *
    *@return    The modified value
    */
-  public String getModified() {
-    return (modified.toString());
+  public Timestamp getModified() {
+    return modified;
   }
 
 
   /**
-   *  Gets the modifiedString attribute of the Project object
+   *  Gets the modified attribute of the Project object
    *
-   *@return    The modifiedString value
+   *@return    The modified value
    */
   public String getModifiedString() {
-    try {
-      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(modified);
-    } catch (NullPointerException e) {
-    }
-    return ("");
+    return (modified.toString());
   }
 
 
@@ -933,6 +1391,16 @@ public class Project extends GenericBean {
 
 
   /**
+   *  Gets the news attribute of the Project object
+   *
+   *@return    The news value
+   */
+  public NewsArticleList getNews() {
+    return news;
+  }
+
+
+  /**
    *  Gets the issueCategories attribute of the Project object
    *
    *@return    The issueCategories value
@@ -954,6 +1422,16 @@ public class Project extends GenericBean {
 
 
   /**
+   *  Gets the newsCount attribute of the Project object
+   *
+   *@return    The newsCount value
+   */
+  public int getNewsCount() {
+    return news.size();
+  }
+
+
+  /**
    *  Gets the Files attribute of the Project object
    *
    *@return    The Files value
@@ -961,6 +1439,210 @@ public class Project extends GenericBean {
    */
   public FileItemList getFiles() {
     return files;
+  }
+
+
+  /**
+   *  Gets the paddedId attribute of the Project object
+   *
+   *@return    The paddedId value
+   */
+  public String getPaddedId() {
+    String padded = (String.valueOf(id));
+    while (padded.length() < 6) {
+      padded = "0" + padded;
+    }
+    return padded;
+  }
+
+
+  /**
+   *  Gets the portal attribute of the Project object
+   *
+   *@return    The portal value
+   */
+  public boolean getPortal() {
+    return portal;
+  }
+
+
+  /**
+   *  Gets the allowGuests attribute of the Project object
+   *
+   *@return    The allowGuests value
+   */
+  public boolean getAllowGuests() {
+    return allowGuests;
+  }
+
+
+  /**
+   *  Gets the updateAllowGuests attribute of the Project object
+   *
+   *@return    The updateAllowGuests value
+   */
+  public boolean getUpdateAllowGuests() {
+    return updateAllowGuests;
+  }
+
+
+  /**
+   *  Gets the showNews attribute of the Project object
+   *
+   *@return    The showNews value
+   */
+  public boolean getShowNews() {
+    return showNews;
+  }
+
+
+  /**
+   *  Gets the showDetails attribute of the Project object
+   *
+   *@return    The showDetails value
+   */
+  public boolean getShowDetails() {
+    return showDetails;
+  }
+
+
+  /**
+   *  Gets the showTeam attribute of the Project object
+   *
+   *@return    The showTeam value
+   */
+  public boolean getShowTeam() {
+    return showTeam;
+  }
+
+
+  /**
+   *  Gets the showPlan attribute of the Project object
+   *
+   *@return    The showPlan value
+   */
+  public boolean getShowPlan() {
+    return showPlan;
+  }
+
+
+  /**
+   *  Gets the showLists attribute of the Project object
+   *
+   *@return    The showLists value
+   */
+  public boolean getShowLists() {
+    return showLists;
+  }
+
+
+  /**
+   *  Gets the showDiscussion attribute of the Project object
+   *
+   *@return    The showDiscussion value
+   */
+  public boolean getShowDiscussion() {
+    return showDiscussion;
+  }
+
+
+  /**
+   *  Gets the showTickets attribute of the Project object
+   *
+   *@return    The showTickets value
+   */
+  public boolean getShowTickets() {
+    return showTickets;
+  }
+
+
+  /**
+   *  Gets the showDocuments attribute of the Project object
+   *
+   *@return    The showDocuments value
+   */
+  public boolean getShowDocuments() {
+    return showDocuments;
+  }
+
+
+  /**
+   *  Gets the labelNews attribute of the Project object
+   *
+   *@return    The labelNews value
+   */
+  public String getLabelNews() {
+    return labelNews;
+  }
+
+
+  /**
+   *  Gets the labelDetails attribute of the Project object
+   *
+   *@return    The labelDetails value
+   */
+  public String getLabelDetails() {
+    return labelDetails;
+  }
+
+
+  /**
+   *  Gets the labelTeam attribute of the Project object
+   *
+   *@return    The labelTeam value
+   */
+  public String getLabelTeam() {
+    return labelTeam;
+  }
+
+
+  /**
+   *  Gets the labelPlan attribute of the Project object
+   *
+   *@return    The labelPlan value
+   */
+  public String getLabelPlan() {
+    return labelPlan;
+  }
+
+
+  /**
+   *  Gets the labelLists attribute of the Project object
+   *
+   *@return    The labelLists value
+   */
+  public String getLabelLists() {
+    return labelLists;
+  }
+
+
+  /**
+   *  Gets the labelDiscussion attribute of the Project object
+   *
+   *@return    The labelDiscussion value
+   */
+  public String getLabelDiscussion() {
+    return labelDiscussion;
+  }
+
+
+  /**
+   *  Gets the labelTickets attribute of the Project object
+   *
+   *@return    The labelTickets value
+   */
+  public String getLabelTickets() {
+    return labelTickets;
+  }
+
+
+  /**
+   *  Gets the labelDocuments attribute of the Project object
+   *
+   *@return    The labelDocuments value
+   */
+  public String getLabelDocuments() {
+    return labelDocuments;
   }
 
 
@@ -1020,6 +1702,22 @@ public class Project extends GenericBean {
   /**
    *  Description of the Method
    *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int buildNewsList(Connection db) throws SQLException {
+    news.setProjectId(this.getId());
+    news.setLastNews(lastNews);
+    news.setCurrentNews(currentNews);
+    news.buildList(db);
+    return news.size();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
@@ -1071,10 +1769,24 @@ public class Project extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public int buildFileItemList(Connection db) throws SQLException {
-    files.setLinkModuleId(Constants.DOCUMENTS_PROJECTS);
+    files.setLinkModuleId(Constants.PROJECTS_FILES);
     files.setLinkItemId(this.getId());
     files.buildList(db);
     return files.size();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int buildPermissionList(Connection db) throws SQLException {
+    permissions.setProjectId(this.getId());
+    permissions.buildList(db);
+    return permissions.size();
   }
 
 
@@ -1103,34 +1815,41 @@ public class Project extends GenericBean {
     if (!isValid()) {
       return false;
     }
-
     Exception errorMessage = null;
+    boolean autoCommit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (autoCommit) {
+        db.setAutoCommit(false);
+      }
       StringBuffer sql = new StringBuffer();
-      sql.append("INSERT INTO projects ");
-      sql.append("(group_id, department_id, owner, enteredBy, modifiedBy, template_id, ");
+      sql.append(
+          "INSERT INTO projects " +
+          "(group_id, department_id, category_id, owner, enteredBy, modifiedBy, template_id, ");
       if (entered != null) {
         sql.append("entered, ");
       }
       if (modified != null) {
         sql.append("modified, ");
       }
-      sql.append("title, shortDescription, requestedBy, ");
-      sql.append("requestedDept, requestDate, approvalDate, closeDate) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+      sql.append("title, shortDescription, requestedBy, requestedDept, requestDate, ");
+      sql.append("allow_guests, news_enabled, details_enabled, " +
+          "team_enabled, plan_enabled, lists_enabled, discussion_enabled, " +
+          "tickets_enabled, documents_enabled, ");
+      sql.append("approvalDate, closedate, est_closedate, budget, budget_currency) ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
       if (modified != null) {
         sql.append("?, ");
       }
-      sql.append("?, ?, ?, ?, ?, ?, ?) ");
+      sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       DatabaseUtils.setInt(pst, ++i, groupId);
       DatabaseUtils.setInt(pst, ++i, departmentId);
+      DatabaseUtils.setInt(pst, ++i, categoryId);
       DatabaseUtils.setInt(pst, ++i, owner);
       pst.setInt(++i, enteredBy);
       pst.setInt(++i, modifiedBy);
@@ -1148,9 +1867,17 @@ public class Project extends GenericBean {
       if (requestDate == null) {
         pst.setNull(++i, java.sql.Types.DATE);
       } else {
-        pst.setDate(++i, requestDate);
+        pst.setTimestamp(++i, requestDate);
       }
-
+      pst.setBoolean(++i, allowGuests);
+      pst.setBoolean(++i, showNews);
+      pst.setBoolean(++i, showDetails);
+      pst.setBoolean(++i, showTeam);
+      pst.setBoolean(++i, showPlan);
+      pst.setBoolean(++i, showLists);
+      pst.setBoolean(++i, showDiscussion);
+      pst.setBoolean(++i, showTickets);
+      pst.setBoolean(++i, showDocuments);
       if (approved && approvalDate == null) {
         java.util.Date tmpDate = new java.util.Date();
         approvalDate = new java.sql.Timestamp(tmpDate.getTime());
@@ -1161,59 +1888,69 @@ public class Project extends GenericBean {
         approvalDate.setNanos(0);
         pst.setTimestamp(++i, approvalDate);
       }
-
       if (closed) {
         java.util.Date tmpDate = new java.util.Date();
         closeDate = new java.sql.Timestamp(tmpDate.getTime());
         closeDate.setNanos(0);
       }
-      if (closeDate == null) {
-        pst.setNull(++i, java.sql.Types.DATE);
-      } else {
-        pst.setTimestamp(++i, closeDate);
-      }
-
+      DatabaseUtils.setTimestamp(pst, ++i, closeDate);
+      DatabaseUtils.setTimestamp(pst, ++i, estimatedCloseDate);
+      DatabaseUtils.setDouble(pst, ++i, budget);
+      pst.setString(++i, budgetCurrency);
       pst.execute();
       pst.close();
-
       id = DatabaseUtils.getCurrVal(db, "projects_project_id_seq");
-
-      if (templateId > -1) {
-        //Add team, requirements and activities from an existing project
-        Project previousProject = new Project(db, templateId, null);
-        previousProject.buildTeamMemberList(db);
-        previousProject.buildRequirementList(db);
-        previousProject.buildAssignmentList(db);
-
-        TeamMemberList prevTeam = previousProject.getTeam();
-        prevTeam.setProject(this);
-        prevTeam.setProjectId(this.getId());
-        prevTeam.setEnteredBy(this.enteredBy);
-        prevTeam.setModifiedBy(this.modifiedBy);
-        prevTeam.insert(db);
-
-        RequirementList prevRequirements = previousProject.getRequirements();
-        prevRequirements.setProject(this);
-        prevRequirements.setProjectId(this.getId());
-        prevRequirements.setEnteredBy(this.enteredBy);
-        prevRequirements.setModifiedBy(this.modifiedBy);
-        //prevRequirements.offsetDates();
-        prevRequirements.insert(db);
-
-        AssignmentList prevAssignments = previousProject.getAssignments();
-        prevAssignments.setProject(this);
-        prevAssignments.setProjectId(this.getId());
-        prevAssignments.setEnteredBy(this.enteredBy);
-        prevAssignments.setModifiedBy(this.modifiedBy);
-        prevAssignments.setOffsetDate(this.getRequestDate());
-        prevAssignments.insert(db);
+      //Insert the default permissions
+      PermissionList.insertDefaultPermissions(db, id);
+      TicketList.insertProjectTicketCount(db, id);
+      //Add team, requirements and activities from an existing project
+      /*
+       *  if (templateId > -1) {
+       *  ProjectList projectList = new ProjectList();
+       *  projectList.setGroupId(groupId);
+       *  projectList.setProjectsForUser(enteredBy);
+       *  projectList.setProjectId(templateId);
+       *  projectList.buildList(db);
+       *  if (projectList.size() == 1) {
+       *  Project previousProject = (Project) projectList.get(0);
+       *  previousProject.buildTeamMemberList(db);
+       *  previousProject.buildRequirementList(db);
+       *  previousProject.buildAssignmentList(db);
+       *  TeamMemberList prevTeam = previousProject.getTeam();
+       *  prevTeam.setProject(this);
+       *  prevTeam.setProjectId(this.getId());
+       *  prevTeam.setEnteredBy(this.enteredBy);
+       *  prevTeam.setModifiedBy(this.modifiedBy);
+       *  prevTeam.insert(db);
+       *  RequirementList prevRequirements = previousProject.getRequirements();
+       *  prevRequirements.setProject(this);
+       *  prevRequirements.setProjectId(this.getId());
+       *  prevRequirements.setEnteredBy(this.enteredBy);
+       *  prevRequirements.setModifiedBy(this.modifiedBy);
+       *  prevRequirements.insert(db);
+       *  /TODO: Assignments need new requirement id before insert
+       *  AssignmentList prevAssignments = previousProject.getAssignments();
+       *  prevAssignments.setProject(this);
+       *  prevAssignments.setProjectId(this.getId());
+       *  prevAssignments.setEnteredBy(this.enteredBy);
+       *  prevAssignments.setModifiedBy(this.modifiedBy);
+       *  prevAssignments.setOffsetDate(this.getRequestDate());
+       *  prevAssignments.insert(db);
+       *  }
+       *  }
+       */
+      if (autoCommit) {
+        db.commit();
       }
-      db.commit();
     } catch (Exception e) {
       errorMessage = e;
-      db.rollback();
+      if (autoCommit) {
+        db.rollback();
+      }
     } finally {
-      db.setAutoCommit(true);
+      if (autoCommit) {
+        db.setAutoCommit(true);
+      }
     }
     if (errorMessage != null) {
       throw new SQLException(errorMessage.getMessage());
@@ -1234,29 +1971,57 @@ public class Project extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("ID was not specified");
     }
-    buildFileItemList(db);
-    files.delete(db, basePath);
-
-    buildIssueCategoryList(db);
-    issueCategories.delete(db);
-
-    buildAssignmentList(db);
-    assignments.delete(db);
-
-    buildRequirementList(db);
-    requirements.delete(db);
-
-    buildTeamMemberList(db);
-    team.delete(db);
-
     int recordCount = 0;
-    PreparedStatement pst = db.prepareStatement(
-        "DELETE FROM projects " +
-        "WHERE project_id = ? ");
-    pst.setInt(1, id);
-    recordCount = pst.executeUpdate();
-    pst.close();
+    try {
+      db.setAutoCommit(false);
 
+      buildIssueCategoryList(db);
+      issueCategories.delete(db);
+
+      TicketList tickets = new TicketList();
+      tickets.setProjectId(id);
+      tickets.buildList(db);
+      tickets.delete(db, basePath);
+
+      TicketList.deleteProjectTicketCount(db, id);
+
+      TaskCategoryList taskCategories = new TaskCategoryList();
+      taskCategories.setProjectId(id);
+      taskCategories.buildList(db);
+      taskCategories.delete(db);
+
+      buildTeamMemberList(db);
+      team.delete(db);
+
+      buildRequirementList(db);
+      requirements.delete(db);
+
+      buildFileItemList(db);
+      files.delete(db, basePath);
+
+      FileFolderList folders = new FileFolderList();
+      folders.setLinkModuleId(Constants.PROJECTS_FILES);
+      folders.setLinkItemId(id);
+      folders.buildList(db);
+      folders.delete(db);
+
+      NewsArticleList.delete(db, id);
+      PermissionList.delete(db, id);
+
+      //Delete the actual project
+      PreparedStatement pst = db.prepareStatement(
+          "DELETE FROM projects " +
+          "WHERE project_id = ? ");
+      pst.setInt(1, id);
+      recordCount = pst.executeUpdate();
+      pst.close();
+      db.commit();
+    } catch (Exception e) {
+      db.rollback();
+      e.printStackTrace(System.out);
+    } finally {
+      db.setAutoCommit(true);
+    }
     if (recordCount == 0) {
       errors.put("actionError", "Project could not be deleted because it no longer exists.");
       return false;
@@ -1308,9 +2073,9 @@ public class Project extends GenericBean {
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      previousApprovalDate = rs.getTimestamp("approvalDate");
+      previousApprovalDate = rs.getTimestamp("approvaldate");
       previouslyApproved = (previousApprovalDate != null);
-      previousCloseDate = rs.getTimestamp("closeDate");
+      previousCloseDate = rs.getTimestamp("closedate");
       previouslyClosed = (previousCloseDate != null);
     }
     rs.close();
@@ -1318,24 +2083,21 @@ public class Project extends GenericBean {
 
     pst = db.prepareStatement(
         "UPDATE projects " +
-        "SET department_id = ?, title = ?, shortDescription = ?, requestedBy = ?, " +
+        "SET department_id = ?, category_id = ?, title = ?, shortDescription = ?, requestedBy = ?, " +
         "requestedDept = ?, requestDate = ?, " +
-        "approvalDate = ?, closeDate = ?, owner = ?, " +
+        "approvalDate = ?, closedate = ?, owner = ?, est_closedate = ?, budget = ?, " +
+        "budget_currency = ?, " +
         "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE project_id = ? " +
         "AND modified = ? ");
     int i = 0;
     DatabaseUtils.setInt(pst, ++i, departmentId);
+    DatabaseUtils.setInt(pst, ++i, categoryId);
     pst.setString(++i, title);
     pst.setString(++i, shortDescription);
     pst.setString(++i, requestedBy);
     pst.setString(++i, requestedByDept);
-    if (requestDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setDate(++i, requestDate);
-    }
-
+    DatabaseUtils.setTimestamp(pst, ++i, requestDate);
     if (previouslyApproved && approved) {
       pst.setTimestamp(++i, previousApprovalDate);
     } else if (!previouslyApproved && approved) {
@@ -1346,7 +2108,6 @@ public class Project extends GenericBean {
     } else if (!approved) {
       pst.setNull(++i, java.sql.Types.DATE);
     }
-
     if (previouslyClosed && closed) {
       pst.setTimestamp(++i, previousCloseDate);
     } else if (!previouslyClosed && closed) {
@@ -1357,16 +2118,85 @@ public class Project extends GenericBean {
     } else if (!closed) {
       pst.setNull(++i, java.sql.Types.DATE);
     }
-
     DatabaseUtils.setInt(pst, ++i, owner);
+    DatabaseUtils.setTimestamp(pst, ++i, estimatedCloseDate);
+    DatabaseUtils.setDouble(pst, ++i, budget);
+    pst.setString(++i, budgetCurrency);
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
-
     pst.setTimestamp(++i, modified);
-
     resultCount = pst.executeUpdate();
     pst.close();
+    return resultCount;
+  }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int updateFeatures(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("ID was not specified");
+    }
+    int resultCount = 0;
+    try {
+      db.setAutoCommit(false);
+      PreparedStatement pst = db.prepareStatement(
+          "UPDATE projects " +
+          "SET " + (updateAllowGuests ? "allow_guests = ?," : "") + "news_enabled = ?, details_enabled = ?, " +
+          "team_enabled = ?, plan_enabled = ?, lists_enabled = ?, discussion_enabled = ?, " +
+          "tickets_enabled = ?, documents_enabled = ?, " +
+          "news_label = ?, details_label = ?, team_label = ?, plan_label = ?, lists_label = ?, " +
+          "discussion_label = ?, tickets_label = ?, documents_label = ?, " +
+          "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
+          "WHERE project_id = ? " +
+          "AND modified = ? ");
+      int i = 0;
+      if (updateAllowGuests) {
+        pst.setBoolean(++i, allowGuests);
+      }
+      pst.setBoolean(++i, showNews);
+      pst.setBoolean(++i, showDetails);
+      pst.setBoolean(++i, showTeam);
+      pst.setBoolean(++i, showPlan);
+      pst.setBoolean(++i, showLists);
+      pst.setBoolean(++i, showDiscussion);
+      pst.setBoolean(++i, showTickets);
+      pst.setBoolean(++i, showDocuments);
+      pst.setString(++i, labelNews);
+      pst.setString(++i, labelDetails);
+      pst.setString(++i, labelTeam);
+      pst.setString(++i, labelPlan);
+      pst.setString(++i, labelLists);
+      pst.setString(++i, labelDiscussion);
+      pst.setString(++i, labelTickets);
+      pst.setString(++i, labelDocuments);
+      pst.setInt(++i, this.getModifiedBy());
+      pst.setInt(++i, this.getId());
+      pst.setTimestamp(++i, modified);
+      resultCount = pst.executeUpdate();
+      pst.close();
+      if (portal) {
+        pst = db.prepareStatement(
+            "UPDATE projects " +
+            "SET portal = ? " +
+            "WHERE portal = ? " +
+            "AND project_id <> ? ");
+        pst.setBoolean(1, false);
+        pst.setBoolean(2, true);
+        pst.setInt(3, id);
+        pst.execute();
+      }
+      db.commit();
+    } catch (Exception e) {
+      db.rollback();
+    } finally {
+      db.setAutoCommit(true);
+    }
     return resultCount;
   }
 
@@ -1377,19 +2207,15 @@ public class Project extends GenericBean {
    *@return    The valid value
    */
   private boolean isValid() {
-
     if (title.equals("")) {
       errors.put("titleError", "Title is required");
     }
-
     if (shortDescription.equals("")) {
       errors.put("shortDescriptionError", "Description is required");
     }
-
     if (requestDate == null) {
       errors.put("requestDate", "Request date is required");
     }
-
     if (hasErrors()) {
       return false;
     } else {
@@ -1410,26 +2236,158 @@ public class Project extends GenericBean {
     departmentId = DatabaseUtils.getInt(rs, "department_id");
     //templateId
     title = rs.getString("title");
-    shortDescription = rs.getString("shortDescription");
+    shortDescription = rs.getString("shortdescription");
     requestedBy = rs.getString("requestedBy");
     requestedByDept = rs.getString("requestedDept");
-    requestDate = rs.getDate("requestDate");
+    requestDate = rs.getTimestamp("requestDate");
     String projectRequestDateString = "--";
     try {
       projectRequestDateString = requestDate.toString();
     } catch (NullPointerException e) {
     }
-    approvalDate = rs.getTimestamp("approvalDate");
+    approvalDate = rs.getTimestamp("approvaldate");
     approved = (approvalDate != null);
-    closeDate = rs.getTimestamp("closeDate");
+    closeDate = rs.getTimestamp("closedate");
     closed = (closeDate != null);
     owner = DatabaseUtils.getInt(rs, "owner");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredBy");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedBy");
+    categoryId = DatabaseUtils.getInt(rs, "category_id");
+    portal = rs.getBoolean("portal");
+    allowGuests = rs.getBoolean("allow_guests");
+    showNews = rs.getBoolean("news_enabled");
+    showDetails = rs.getBoolean("details_enabled");
+    showTeam = rs.getBoolean("team_enabled");
+    showPlan = rs.getBoolean("plan_enabled");
+    showLists = rs.getBoolean("lists_enabled");
+    showDiscussion = rs.getBoolean("discussion_enabled");
+    showTickets = rs.getBoolean("tickets_enabled");
+    showDocuments = rs.getBoolean("documents_enabled");
+    labelNews = rs.getString("news_label");
+    labelDetails = rs.getString("details_label");
+    labelTeam = rs.getString("team_label");
+    labelPlan = rs.getString("plan_label");
+    labelLists = rs.getString("lists_label");
+    labelDiscussion = rs.getString("discussion_label");
+    labelTickets = rs.getString("tickets_label");
+    labelDocuments = rs.getString("documents_label");
+    estimatedCloseDate = rs.getTimestamp("est_closedate");
+    budget = DatabaseUtils.getDouble(rs, "budget");
+    budgetCurrency = rs.getString("budget_currency");
+    //Set the related objects
+    requirements.setProject(this);
+    requirements.setProjectId(this.getId());
+    assignments.setProject(this);
+    assignments.setProjectId(this.getId());
+    issues.setProject(this);
+    issues.setProjectId(this.getId());
+    issueCategories.setProject(this);
+    issueCategories.setProjectId(this.getId());
+    team.setProject(this);
+    team.setProjectId(this.getId());
+    files.setLinkModuleId(Constants.PROJECTS_FILES);
+    files.setLinkItemId(this.getId());
+    news.setProjectId(this.getId());
   }
 
-}
 
+  /**
+   *  Gets the accessUserLevel attribute of the Project object
+   *
+   *@param  permission  Description of the Parameter
+   *@return             The accessUserLevel value
+   */
+  public int getAccessUserLevel(String permission) {
+    return permissions.getAccessLevel(permission);
+  }
+
+
+  /**
+   *  Gets the label attribute of the Project object
+   *
+   *@param  name  Description of the Parameter
+   *@return       The label value
+   */
+  public String getLabel(String name) {
+    String value = name;
+    value = ObjectUtils.getParam(this, "Label" + name);
+    if (value != null && !"".equals(value)) {
+      return value;
+    }
+    return name;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  userId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void accept(Connection db, int userId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE project_team " +
+        "SET status = ? " +
+        "WHERE project_id = ? " +
+        "AND user_id = ? " +
+        "AND status = ? ");
+    DatabaseUtils.setInt(pst, 1, TeamMember.STATUS_ACCEPTED);
+    pst.setInt(2, id);
+    pst.setInt(3, userId);
+    pst.setInt(4, TeamMember.STATUS_PENDING);
+    pst.executeUpdate();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  userId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void reject(Connection db, int userId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE project_team " +
+        "SET status = ? " +
+        "WHERE project_id = ? " +
+        "AND user_id = ? " +
+        "AND status = ? ");
+    pst.setInt(1, TeamMember.STATUS_REFUSED);
+    pst.setInt(2, id);
+    pst.setInt(3, userId);
+    pst.setInt(4, TeamMember.STATUS_PENDING);
+    pst.executeUpdate();
+    pst.close();
+  }
+  
+  
+  /**
+   *  The following fields depend on a timezone preference
+   *
+   *@return    The timeZoneParams value
+   */
+  public static ArrayList getTimeZoneParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("requestDate");
+    thisList.add("estimatedCloseDate");
+    return thisList;
+  }
+
+
+  /**
+   *  Gets the numberParams attribute of the Project class
+   *
+   *@return    The numberParams value
+   */
+  public static ArrayList getNumberParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("budget");
+    return thisList;
+  }
+}
 

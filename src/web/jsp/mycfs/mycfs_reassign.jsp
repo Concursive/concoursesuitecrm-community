@@ -11,6 +11,7 @@
 <jsp:useBean id="SourceOpportunities" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
 <jsp:useBean id="SourceOpenOpportunities" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
 <jsp:useBean id="SourceAssignments" class="com.zeroio.iteam.base.AssignmentList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>

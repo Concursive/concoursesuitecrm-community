@@ -207,14 +207,8 @@ public class OpportunityHeader extends GenericBean {
    *@param  divisor  Description of the Parameter
    *@return          The totalValue value
    */
-  public String getTotalValue(int divisor) {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    double tempValue = (java.lang.Math.round(totalValue) / divisor);
-    if (tempValue < 1) {
-      return "<1";
-    } else {
-      return numberFormatter.format(tempValue);
-    }
+  public double getTotalValue(int divisor) {
+    return (java.lang.Math.round(totalValue) / divisor);
   }
 
 
@@ -239,18 +233,6 @@ public class OpportunityHeader extends GenericBean {
     } else {
       return description.substring(0, 40) + "...";
     }
-  }
-
-
-  /**
-   *  Gets the totalValueCurrency attribute of the OpportunityHeader object
-   *
-   *@return    The totalValueCurrency value
-   */
-  public String getTotalValueCurrency() {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    String amountOut = numberFormatter.format(totalValue);
-    return amountOut;
   }
 
 

@@ -12,6 +12,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
+
 /**
  *  Description of the Class
  *

@@ -1,14 +1,38 @@
+<%--
+ Portions Copyright 2000-2004 Matt Rajkowski
+ matt.rajkowski@teamelements.com
+ http://www.teamelements.com
+ This source code cannot be modified, distributed or used without
+ permission from Matt Rajkowski
+--%>
+<%--
+ Portions Copyright 2001-2004 Dark Horse Ventures
+ Use as licensed.
+--%>
 <%-- This jsp shows a calendar to the user and sends the selected date back
      to the calling form.
      NOTE: THIS JSP DOES NOT REQUIRE A USER TO BE LOGGED IN --%>
 <%@ page import="java.util.TimeZone,org.aspcfs.modules.mycfs.base.CalendarEvent"%>
-<jsp:useBean id="cal" class="org.aspcfs.utils.web.CalendarView" scope="page"/>
+<%@ page import="java.util.Calendar" %>
+<%@ page import="java.text.DateFormat" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.util.Locale" %>
+<jsp:useBean id="calendarView" class="org.aspcfs.utils.web.CalendarView" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <html>
 <head>
 <title>Calendar</title>
 <jsp:include page="templates/cssInclude.jsp" flush="true"/>
-<% String formName = request.getParameter("form"); %>
-<% String element = request.getParameter("element"); %>
+<% 
+   String formName = request.getParameter("form"); 
+   String element = request.getParameter("element"); 
+   String language = request.getParameter("language");
+   String country = request.getParameter("country");
+   if (language == null) {
+     language = "en";
+     country = "US";
+   }
+%>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
   function openWindow(month, day, year) {
     width = 600;
@@ -18,9 +42,12 @@
     Win = open(url, 'as_events', 'toolbar=0,location=0,directories=0,status=0,menubar=0,resizable=1,width=' + width + ',height=' + height + ',scrollbars=yes');
     Win.focus();
   }
-  function returnDate(dayVal, monVal, yearVal) {
-    opener.document.<%= formName %>.<%= element %>.value = monVal + '/' + dayVal + '/' + yearVal; 
+  function formatDate(val) {
+    opener.document.<%= formName %>.<%= element %>.value = val; 
     window.close();
+  }
+  function returnDate(dayVal, monthVal, yearVal) {
+    window.frames['server_commands'].location.href='month_format.jsp?month=' + monthVal + '&day=' + dayVal + '&year=' + yearVal + '&language=<%= language %>&country=<%= country %>';
   }
 </script>
 </head>
@@ -44,7 +71,7 @@
       int monthTmp = Integer.parseInt(month);
       if (request.getParameter("next.x") != null) { ++monthTmp; }
       if (request.getParameter("prev.x") != null) { monthTmp += -1; }
-      month = "" + monthTmp;
+      month = String.valueOf(monthTmp);
     } catch(NumberFormatException e) {
     }
   }
@@ -53,56 +80,41 @@
   String action = request.getParameter("action");
   if ((action != null) && (action.equals("popup"))) {
     out.println("<input type=\"hidden\" name=\"action\" value=\"popup\">");
-    cal.setPopup(true);
+    calendarView.setPopup(true);
+    calendarView.setBorderSize(0);
   } else {
-    cal.setHeaderSpace(true);
-    cal.setMonthArrows(true);
-    //cal.showWeekSelector(false);    //Not implemented yet
+    calendarView.setHeaderSpace(true);
+    calendarView.setMonthArrows(true);
+    calendarView.setBorderSize(1);
   }
+  
+  // Define the locale every time
+  Locale locale = new Locale(language, country);
+  calendarView.setLocale(locale);
+  
+  // Break apart String into fields, using locale (from input field)
+  if (dateString != null) {
+    try {
+      java.util.Date tmpDate = DateFormat.getDateInstance(DateFormat.SHORT, locale).parse(dateString);
+      Calendar parseCal = Calendar.getInstance();
+      parseCal.setTime(tmpDate);
+      month = String.valueOf(parseCal.get(Calendar.MONTH) + 1);
+      day = String.valueOf(parseCal.get(Calendar.DAY_OF_MONTH));
+      year = String.valueOf(parseCal.get(Calendar.YEAR));
+    } catch (Exception e) {
+    }
+  }
+  
+  // Set the calendar with appropriate values
+  calendarView.setYear(year);
+  calendarView.setMonth(month);
+  calendarView.setDay(day);
   
   //set the timezone if the user is logged in
   org.aspcfs.modules.login.beans.UserBean thisUser = (org.aspcfs.modules.login.beans.UserBean) request.getSession().getAttribute("User");
   if (thisUser != null) {
-    cal.setTimeZone(TimeZone.getTimeZone(thisUser.getUserRecord().getTimeZone()));
+    calendarView.setTimeZone(TimeZone.getTimeZone(thisUser.getUserRecord().getTimeZone()));
   }
-  
-  if (dateString != null) {
-    String tmp1;
-    String tmp2;
-    String tmp3;
-    if (dateString.indexOf("/") > 0) {
-      java.util.StringTokenizer ds = new java.util.StringTokenizer(dateString, "/");
-      if (ds.countTokens() == 3) {
-        tmp1 = ds.nextToken();
-        tmp2 = ds.nextToken();
-        tmp3 = ds.nextToken();
-        month = tmp1; 
-        day = tmp2;
-        year = tmp3;
-      }
-    } else if (dateString.indexOf("-") > 0) {
-      java.util.StringTokenizer ds = new java.util.StringTokenizer(dateString, "-");
-      if (ds.countTokens() == 3) {
-        tmp1 = ds.nextToken();
-        tmp2 = ds.nextToken();
-        tmp3 = ds.nextToken();
-        if (tmp1.length() == 4) {        
-          year = tmp1;
-          month = tmp2; 
-          day = tmp3;
-        } else {
-          month = tmp1;
-          day = tmp2;
-          year = tmp3;
-        }
-      }
-    }
-    
-  } 
-
-  cal.setYear(year);
-  cal.setMonth(month);
-  cal.setDay(day);
   
   //Configure the month to highlight a date that was passed in
   String origStatus = request.getParameter("origStatus");
@@ -116,11 +128,11 @@
   //other dates
   if ((origYear != null) && (origMonth != null) && (origDay != null)) {
   } else {
-    origYear = cal.getYear();
-    origMonth = cal.getMonth();
-    origDay = cal.getDay();
+    origYear = calendarView.getYear();
+    origMonth = calendarView.getMonth();
+    origDay = calendarView.getDay();
   }
-  cal.addEvent(origMonth + "/" + origDay + "/" + origYear, "", origStatus);
+  calendarView.addEvent(origMonth + "/" + origDay + "/" + origYear, "", origStatus);
 %>
 <input type="hidden" name="origYear" value="<%= origYear %>">
 <input type="hidden" name="origMonth" value="<%= origMonth %>">
@@ -128,7 +140,10 @@
 <input type="hidden" name="origStatus" value="<%= origStatus %>">
 <input type="hidden" name="form" value="<%= formName %>">
 <input type="hidden" name="element" value="<%= element %>">
-<%= cal.getHtml() %>
+<input type="hidden" name="language" value="<%= language %>">
+<input type="hidden" name="country" value="<%= country %>">
+<%= calendarView.getHtml() %>
 </form>
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </body>
 </html>

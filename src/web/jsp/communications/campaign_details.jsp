@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="ActiveSurvey" class="org.aspcfs.modules.communications.base.ActiveSurvey" scope="request"/>
@@ -73,8 +74,7 @@ Campaign Details
           </td>
           <td>
             <dhv:username id="<%= Campaign.getEnteredBy() %>" />
-            -
-            <dhv:tz timestamp="<%= Campaign.getEntered() %>"  dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+            <zeroio:tz timestamp="<%= Campaign.getEntered() %>" />
           </td>
         </tr>
         <tr class="containerBody">
@@ -83,8 +83,7 @@ Campaign Details
           </td>
           <td>
             <dhv:username id="<%= Campaign.getModifiedBy() %>" />
-            -
-            <dhv:tz timestamp="<%= Campaign.getModified() %>"  dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+            <zeroio:tz timestamp="<%= Campaign.getModified() %>" />
           </td>
         </tr>
       </table>

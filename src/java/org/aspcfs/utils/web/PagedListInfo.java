@@ -48,6 +48,7 @@ public class PagedListInfo implements Serializable {
   String parentFormName = "";
 
   boolean expandedSelection = false;
+  boolean scrollReload = false;
 
 
   /**
@@ -133,6 +134,26 @@ public class PagedListInfo implements Serializable {
   }
 
 
+  /**
+   *  Gets the scrollReload attribute of the PagedListInfo object
+   *
+   *@return    The scrollReload value
+   */
+  public boolean getScrollReload() {
+    return scrollReload;
+  }
+
+
+  /**
+   *  Sets the scrollReload attribute of the PagedListInfo object
+   *
+   *@param  tmp  The new scrollReload value
+   */
+  public void setScrollReload(boolean tmp) {
+    this.scrollReload = tmp;
+  }
+
+  
   /**
    *  Sets the ItemsPerPage attribute of the PagedListInfo object
    *
@@ -801,18 +822,23 @@ public class PagedListInfo implements Serializable {
 
     if (currentOffset > 0) {
       int newOffset = currentOffset - itemsPerPage;
-
+      //Handle scroll reload
+      String scrollStart = "";
+      String scrollEnd = "";
+      if (scrollReload) {
+        scrollStart = "javascript:scrollReload('";
+        scrollEnd = "');";
+      }
       if (!getEnableJScript()) {
-        result.append("<a href='" + link + "&pagedListInfoId=" + this.getId());
-
-        if (getExpandedSelection()) {
+        //Normal link
+        result.append("<a href=\"" + scrollStart + link + "&pagedListInfoId=" + this.getId());
+            if (getExpandedSelection()) {
           result.append("&pagedListSectionId=" + this.getId());
         }
-
-        result.append("&offset=" + (newOffset > 0 ? newOffset : 0) + "'>" + linkOn + "</a>");
-
+        result.append("&offset=" + (newOffset > 0 ? newOffset : 0) + scrollEnd + "\">" + linkOn + "</a>");
         return result.toString();
       } else {
+        //Use javascript for constructing the link
         result.append("<a href=\"javascript:offsetsubmit('" + (newOffset > 0 ? newOffset : 0) + "');\">" + linkOn + "</a>");
         return result.toString();
       }
@@ -859,17 +885,23 @@ public class PagedListInfo implements Serializable {
     StringBuffer result = new StringBuffer();
 
     if ((currentOffset + itemsPerPage) < maxRecords) {
+       //Handle scroll reload
+      String scrollStart = "";
+      String scrollEnd = "";
+      if (scrollReload) {
+        scrollStart = "javascript:scrollReload('";
+        scrollEnd = "');";
+      }
       if (!getEnableJScript()) {
-        result.append("<a href='" + link + "&pagedListInfoId=" + this.getId());
-
+        //Normal link
+        result.append("<a href=\"" + scrollStart + link + "&pagedListInfoId=" + this.getId());
         if (getExpandedSelection()) {
           result.append("&pagedListSectionId=" + this.getId());
         }
-
-        result.append("&offset=" + (currentOffset + itemsPerPage) + "'>" + linkOn + "</a>");
-
+        result.append("&offset=" + (currentOffset + itemsPerPage) + scrollEnd + "\">" + linkOn + "</a>");
         return result.toString();
       } else {
+        //Use javascript for constructing the link
         result.append("<a href=\"javascript:offsetsubmit('" + (currentOffset + itemsPerPage) + "');\">" + linkOn + "</a>");
         return result.toString();
       }
@@ -961,8 +993,20 @@ public class PagedListInfo implements Serializable {
     return ("value=\"" + tmp + "\"" + (tmp.equals(listView) ? " selected" : ""));
   }
 
+  
+/**
+   *  Gets the filterOption attribute of the PagedListInfo object
+   *
+   *@param  filterName  Description of the Parameter
+   *@param  tmp         Description of the Parameter
+   *@return             The filterOption value
+   */
+  public String getFilterOption(String filterName, String tmp) {
+    String current = (String) listFilters.get(filterName);
+    return ("value=\"" + tmp + "\"" + (tmp.equals(current) ? " selected" : ""));
+  }
 
-
+  
   /**
    *  Gets the filterValue attribute of the PagedListInfo object
    *
@@ -1037,12 +1081,7 @@ public class PagedListInfo implements Serializable {
    *@param  value  The feature to be added to the Filter attribute
    */
   public void addFilter(int param, String value) {
-    if (listFilters.get("listFilter" + param) == null) {
-      listFilters.put("listFilter" + param, value);
-    } else {
-      listFilters.remove("listFilter" + param);
-      listFilters.put("listFilter" + param, value);
-    }
+    listFilters.put("listFilter" + param, value);
   }
 
 
@@ -1195,7 +1234,26 @@ public class PagedListInfo implements Serializable {
     this.setCurrentLetter("");
     this.setCurrentOffset(0);
   }
-
+  
+  
+  /**
+   *  Gets the pageSize attribute of the PagedListInfo object
+   *
+   *@return    The pageSize value
+   */
+  public int getPageSize() {
+    if ((currentOffset + itemsPerPage) < maxRecords) {
+      // current = 0
+      // items = 10
+      // max = 17
+      // 0 + 10 < 17
+      return (currentOffset + itemsPerPage);
+    } else {
+      // current = 10
+      // items = 10
+      // max = 17
+      return (maxRecords);
+    }
+  }
 }
-
 

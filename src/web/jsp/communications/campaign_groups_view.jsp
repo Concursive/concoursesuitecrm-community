@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="CampaignGroupListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="sclList" class="org.aspcfs.modules.communications.base.SearchCriteriaListList" scope="request"/>
@@ -69,8 +70,8 @@ View Groups
 	<tr class="containerBody">
     <td width="8" valign="center" nowrap class="row<%= rowid %>">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-      <a href="javascript:displayMenu('menuGroup', '<%= thisList.getId() %>');"
-      onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+      <a href="javascript:displayMenu('select<%= count %>','menuGroup', '<%= thisList.getId() %>');"
+      onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuGroup');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td valign="center" class="row<%= rowid %>">
       <a href="CampaignManagerGroup.do?command=Details&id=<%= thisList.getId() %>"><%= toHtml(thisList.getGroupName()) %></a>
@@ -79,7 +80,7 @@ View Groups
       <dhv:username id="<%= thisList.getEnteredBy() %>" lastFirst="true"/>
     </td>
     <td valign="center" nowrap class="row<%= rowid %>">
-      <dhv:tz timestamp="<%= thisList.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= thisList.getModified() %>" />
     </td>
   </tr>
 	<%}%>

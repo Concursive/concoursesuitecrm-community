@@ -12,12 +12,13 @@ import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.pipeline.beans.*;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationReport;
-import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import java.io.*;
 import java.text.*;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.admin.base.UserList;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.iteam.base.FileItem;
 
 /**
  *  Takes a list of opportunities and formats them for output using the

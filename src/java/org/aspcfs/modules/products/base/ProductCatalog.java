@@ -70,7 +70,7 @@ public class ProductCatalog extends GenericBean {
   /**
    *  Sets the categoryId attribute of the ProductCatalog object
    *
-   * @param  tmp  The new categoryId value
+   *@param  tmp  The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -80,7 +80,7 @@ public class ProductCatalog extends GenericBean {
   /**
    *  Sets the categoryId attribute of the ProductCatalog object
    *
-   * @param  tmp  The new categoryId value
+   *@param  tmp  The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -90,7 +90,7 @@ public class ProductCatalog extends GenericBean {
   /**
    *  Gets the categoryId attribute of the ProductCatalog object
    *
-   * @return    The categoryId value
+   *@return    The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -858,12 +858,32 @@ public class ProductCatalog extends GenericBean {
 
 
   /**
+   *  Sets the startDate attribute of the ProductCatalog object
+   *
+   *@param  tmp  The new startDate value
+   */
+  public void setStartDate(String tmp) {
+    startDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
    *  Sets the expirationDate attribute of the ProductCatalog object
    *
    *@param  tmp  The new expirationDate value
    */
   public void setExpirationDate(Timestamp tmp) {
     this.expirationDate = tmp;
+  }
+
+
+  /**
+   *  Sets the expirationDate attribute of the ProductCatalog object
+   *
+   *@param  tmp  The new expirationDate value
+   */
+  public void setExpirationDate(String tmp) {
+    this.expirationDate = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
@@ -970,7 +990,7 @@ public class ProductCatalog extends GenericBean {
   /**
    *  Sets the hasCustomerProduct attribute of the ProductCatalog object
    *
-   * @param  tmp  The new hasCustomerProduct value
+   *@param  tmp  The new hasCustomerProduct value
    */
   public void setHasCustomerProduct(boolean tmp) {
     this.hasCustomerProduct = tmp;
@@ -980,7 +1000,7 @@ public class ProductCatalog extends GenericBean {
   /**
    *  Sets the hasCustomerProduct attribute of the ProductCatalog object
    *
-   * @param  tmp  The new hasCustomerProduct value
+   *@param  tmp  The new hasCustomerProduct value
    */
   public void setHasCustomerProduct(String tmp) {
     this.hasCustomerProduct = DatabaseUtils.parseBoolean(tmp);
@@ -990,7 +1010,7 @@ public class ProductCatalog extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @return    Description of the Return Value
+   *@return    Description of the Return Value
    */
   public boolean hasCustomerProduct() {
     return hasCustomerProduct;
@@ -1087,8 +1107,8 @@ public class ProductCatalog extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void determineActualCategory(Connection db) throws SQLException {
     //Product categories is a tree of categories and products can exist
@@ -1097,7 +1117,7 @@ public class ProductCatalog extends GenericBean {
     if (categoryId != -1) {
       StringBuffer sb = new StringBuffer();
       sb.append(this.getCategoryName());
-    
+
       ProductCategory category = new ProductCategory(db, this.categoryId);
       int ctgyParentId = category.getParentId();
       while (ctgyParentId != -1) {
@@ -1246,7 +1266,7 @@ public class ProductCatalog extends GenericBean {
     // product_category table
     this.setCategoryId(DatabaseUtils.getInt(rs, "category_id"));
     this.setCategoryName(rs.getString("category_name"));
-    
+
     // product_catalog_pricing table
     this.setMsrpAmount(rs.getFloat("msrp_amount"));
     this.setPriceAmount(rs.getFloat("price_amount"));

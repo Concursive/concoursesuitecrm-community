@@ -166,7 +166,7 @@ Add a Call
           </td>
           <td>
             <input type="text" size="10" name="alertDate" value="<%= toHtmlValue(CallDetails.getAlertDateString()) %>"> 
-            <a href="javascript:popCalendar('addCall', 'alertDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+            <a href="javascript:popCalendar('addCall', 'alertDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
           </td>
         </tr>
       </table>

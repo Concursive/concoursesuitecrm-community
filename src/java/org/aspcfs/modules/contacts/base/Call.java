@@ -189,7 +189,7 @@ public class Call extends GenericBean {
    *@param  tmp  The new alertDate value
    */
   public void setAlertDate(String tmp) {
-    this.alertDate = DateUtils.parseTimestampString(tmp);
+    this.alertDate = DatabaseUtils.parseDateToTimestamp(tmp);
 
   }
 

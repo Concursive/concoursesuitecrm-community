@@ -1,9 +1,12 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.admin.base.User" %>
 <jsp:useBean id="ShortChildList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="MyRevList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="RevenueTypeList" class="org.aspcfs.modules.accounts.base.RevenueTypeList" scope="request"/>
 <jsp:useBean id="YearList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Read in the image map for the graph --%>
 <% String includePage = "../graphs/" + (String) request.getAttribute("GraphFileName") + ".map"; %>          
@@ -102,7 +105,7 @@ Revenue Dashboard
             <dhv:evaluate exp="<%=!(thisRec.getEnabled())%>"><font color="red">*</font></dhv:evaluate>
           </td>
           <td width="55" nowrap class="row<%= rowid %>" valign="center">
-            $<%=toHtml(thisRec.getYTDCurrency())%>
+            <zeroio:currency value="<%= thisRec.getYTD() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
           </td>
         </tr>
       <%}
@@ -133,7 +136,7 @@ Revenue Dashboard
             <a href="RevenueManager.do?command=View&orgId=<%=thisOrg.getId()%>"><%= toHtml(thisOrg.getName()) %></a>
           </td>
           <td class="row<%= rowid %>" valign="center" width="50" nowrap>
-            $<%= thisOrg.getYTDCurrency() %>
+            <zeroio:currency value="<%= thisOrg.getYTD() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
           </td>
         </tr>
 <%    }

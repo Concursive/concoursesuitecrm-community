@@ -490,10 +490,8 @@ public class LookupList extends HtmlSelect implements SyncableList {
     thisSelect.setSelectStyle(selectStyle);
     thisSelect.setJsEvent(jsEvent);
     Iterator i = this.iterator();
-
     boolean keyFound = false;
     String lookupDefault = null;
-
     while (i.hasNext()) {
       LookupElement thisElement = (LookupElement) i.next();
       if (thisElement.isGroup()) {
@@ -503,11 +501,11 @@ public class LookupList extends HtmlSelect implements SyncableList {
         // Add the item
         if (thisElement.getEnabled() == true) {
           thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
-        } else if (defaultValue.equals(thisElement.getDescription())) {
+        } else if (thisElement.getDescription().equals(defaultValue)) {
           keyFound = true;
           thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
         }
-        if (defaultValue.equals(thisElement.getDescription())) {
+        if (thisElement.getDescription().equals(defaultValue)) {
           keyFound = true;
         }
         if (thisElement.getDefaultItem()) {
@@ -630,7 +628,6 @@ public class LookupList extends HtmlSelect implements SyncableList {
     }
   }
 
-
   /**
    *  Gets the SelectedValue attribute of the LookupList object
    *
@@ -641,8 +638,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
   public String getValueFromId(int selectedId) {
     return getSelectedValue(selectedId);
   }
-
-
+  
   /**
    *  Gets the selectedValue attribute of the LookupList object
    *
@@ -1053,4 +1049,3 @@ public class LookupList extends HtmlSelect implements SyncableList {
     return sb.toString();
   }
 }
-

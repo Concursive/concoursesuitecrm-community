@@ -55,7 +55,8 @@ CREATE TABLE task (
 
 CREATE TABLE tasklink_contact (
   task_id INT NOT NULL REFERENCES task,
-  contact_id INT NOT NULL REFERENCES contact(contact_id)
+  contact_id INT NOT NULL REFERENCES contact(contact_id),
+  notes TEXT
 );
 
 CREATE TABLE tasklink_ticket (

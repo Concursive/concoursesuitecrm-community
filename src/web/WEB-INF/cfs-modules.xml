@@ -422,11 +422,21 @@
   
   <menu>
     <action name="ProjectManagement"/>
+    <action name="ProjectManagementNews"/>
     <action name="ProjectManagementRequirements"/>
     <action name="ProjectManagementTeam"/>
+    <action name="ProjectManagementTeamList"/>
     <action name="ProjectManagementAssignments"/>
+    <action name="ProjectManagementAssignmentsFolder"/>
+    <action name="ProjectManagementIssueCategories"/>
     <action name="ProjectManagementIssues"/>
+    <action name="ProjectManagementIssueReply"/>
     <action name="ProjectManagementFiles"/>
+    <action name="ProjectManagementFileFolders"/>
+    <action name="ProjectManagementLists"/>
+    <action name="ProjectManagementListsCategory"/>
+    <action name="ProjectManagementTickets"/>
+    <action name="ProjectManagementSearch"/>
     <page title="Projects"/>
     <permission value="projects-view"/>
     <long_html value="Projects"/>
@@ -434,24 +444,39 @@
     <link value="ProjectManagement.do"/>
     <graphic width="83" height="36" on="menu-project-on.gif" off="menu-project-off.gif" rollover=""/>
     
+    <submenu name="PersonalView">
+      <permission value="projects-personal-view"/>
+      <long_html value="Dashboard"/>
+      <short_html value="Dashboard"/>
+      <link value="ProjectManagement.do?command=Overview"/>
+    </submenu>
+    
     <submenu name="AddProject">
       <permission value="projects-projects-add"/>
-      <long_html value="Add Project"/>
-      <short_html value="Add Project"/>
+      <long_html value="Add"/>
+      <short_html value="Add"/>
       <link value="ProjectManagement.do?command=AddProject"/>
     </submenu>
     
-    <submenu name="PersonalView">
-      <permission value="projects-personal-view"/>
-      <long_html value="Personal View"/>
-      <short_html value="Personal View"/>
-      <link value="ProjectManagement.do?command=PersonalView"/>
+    <submenu name="SearchProject">
+      <permission value="projects-projects-view"/>
+      <long_html value="Search"/>
+      <short_html value="Search"/>
+      <link value="ProjectManagementSearch.do?command=ShowForm"/>
     </submenu>
-    <submenu name="EnterpriseView">
+    
+        <submenu name="EnterpriseView">
       <permission value="projects-enterprise-view"/>
-      <long_html value="Enterprise View"/>
-      <short_html value="Enterprise View"/>
+      <long_html value="Projects"/>
+      <short_html value="Projects"/>
       <link value="ProjectManagement.do?command=EnterpriseView"/>
+    </submenu>
+    
+    <submenu name="Invitations">
+      <permission value="projects-projects-view"/>
+      <long_html value="Invitations"/>
+      <short_html value="Invitations"/>
+      <link value="ProjectManagement.do?command=RSVP"/>
     </submenu>
   </menu>
   <menu>

@@ -5,7 +5,7 @@
   var menu_init = false;
   var isPrimaryContact = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, orgId, contactId, isPrimary) {
+  function displayMenu(loc, id, orgId, contactId, isPrimary) {
     thisOrgId = orgId;
     thisContactId = contactId;
     isPrimaryContact = isPrimary;
@@ -13,7 +13,7 @@
       menu_init = true;
       new ypSlideOutMenu("menuContact", "down", 0, 0, 170, getHeight("menuContactTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   //Menu link functions
   function details() {
@@ -38,56 +38,61 @@
 </script>
 <div id="menuContactContainer" class="menu">
   <div id="menuContactContent">
-    <table id="menuContactTable" class="pulldown" width="170">
+    <table id="menuContactTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="accounts-accounts-contacts-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+           onclick="details()">
+        <th valign="top">
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+           onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          Modify
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-add">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+           onclick="clone()">
+        <th>
           <img src="images/icons/stock_copy-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:clone()">Clone</a>
+          Clone
         </td>
       </tr>
       </dhv:permission>
-      <!--
-       <dhv:permission name="accounts-accounts-contacts-edit">
-      <tr>
-        <td>
+      <%--
+      <dhv:permission name="accounts-accounts-contacts-edit">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+           onclick="move()">
+        <th>
           <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:move()">Move</a>
+          Move
         </td>
       </tr>
       </dhv:permission>
-      -->
+      --%>
       <dhv:permission name="accounts-accounts-contacts-delete">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+           onclick="deleteContact()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteContact()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

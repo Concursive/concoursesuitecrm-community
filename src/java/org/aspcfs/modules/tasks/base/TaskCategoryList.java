@@ -187,5 +187,13 @@ public class TaskCategoryList extends ArrayList {
     }
     return i;
   }
+   
+  public void delete(Connection db) throws SQLException {
+    Iterator categories = this.iterator();
+    while (categories.hasNext()) {
+      TaskCategory thisCategory = (TaskCategory) categories.next();
+      thisCategory.delete(db);
+    }
+  }
 }
 

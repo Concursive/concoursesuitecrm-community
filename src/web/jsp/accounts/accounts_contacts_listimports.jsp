@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.base.Import,com.zeroio.iteam.base.FileItem" %>
 <jsp:useBean id="ImportList" class="org.aspcfs.modules.base.ImportList" scope="request"/>
 <jsp:useBean id="AccountContactsImportListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -109,10 +110,10 @@ View Imports
       <%= thisImport.getTotalFailedRecords() %>
     </td>
     <td align="center" nowrap>
-      <dhv:tz timestamp="<%= thisImport.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.SHORT %>"/>
+      <zeroio:tz timestamp="<%= thisImport.getEntered() %>" />
     </td>
     <td align="center" nowrap>
-      <dhv:tz timestamp="<%= thisImport.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.SHORT %>"/>
+      <zeroio:tz timestamp="<%= thisImport.getModified() %>" />
     </td>
   </tr>
 <%}

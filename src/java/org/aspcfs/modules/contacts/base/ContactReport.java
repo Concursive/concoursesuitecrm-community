@@ -11,11 +11,11 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.accounts.base.OrganizationReport;
 import org.aspcfs.modules.accounts.base.Organization;
-import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import java.io.*;
 import java.text.*;
 import org.aspcfs.modules.admin.base.User;
+import com.zeroio.iteam.base.FileItem;
 
 /**
  *  Description of the Class

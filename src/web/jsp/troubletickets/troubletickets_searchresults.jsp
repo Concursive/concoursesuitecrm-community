@@ -52,7 +52,7 @@ Search Results
 	<tr>
     <td rowspan="2" width="8" valign="top" nowrap class="row<%= rowid %>">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('menuTicket', '<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayMenu('select<%= i %>','menuTicket', '<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuTicket');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
 		<td width="15" valign="top" nowrap class="row<%= rowid %>">
   			<a href="TroubleTickets.do?command=Details&id=<%= thisTic.getId() %>&return=searchResults"><%= thisTic.getPaddedId() %></a>

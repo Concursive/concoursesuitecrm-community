@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="CampaignSurveyListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="SurveyList" class="org.aspcfs.modules.communications.base.SurveyList" scope="request"/>
@@ -71,8 +72,8 @@ Surveys
       <tr>
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-          <a href="javascript:displayMenu('menuSurvey', '<%= thisSurvey.getId() %>');"
-          onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+          <a href="javascript:displayMenu('select<%= count %>','menuSurvey', '<%= thisSurvey.getId() %>');"
+          onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuSurvey');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
         <td class="row<%= rowid %>" width="100%" nowrap>
           <a href="CampaignManagerSurvey.do?command=Details&id=<%= thisSurvey.getId() %>"><%= toHtml(thisSurvey.getName()) %></a>
@@ -81,7 +82,7 @@ Surveys
           <dhv:username id="<%= thisSurvey.getEnteredBy() %>"/>
         </td>
         <td class="row<%= rowid %>" nowrap>
-          <dhv:tz timestamp="<%= thisSurvey.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+          <zeroio:tz timestamp="<%= thisSurvey.getModified() %>" />
         </td>
       </tr>
 <%

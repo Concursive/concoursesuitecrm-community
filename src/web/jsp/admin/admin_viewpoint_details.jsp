@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.text.DateFormat,org.aspcfs.modules.admin.base.User,java.util.*,org.aspcfs.modules.admin.base.Permission" %>
 <%@ include file="../initPage.jsp" %>
 <jsp:useBean id="Viewpoint" class="org.aspcfs.modules.admin.base.Viewpoint" scope="request"/>
@@ -46,7 +47,7 @@ Update Viewpoint
   </tr>
   <tr class="containerBody">
     <td class="formLabel">Entered</td>
-    <td><dhv:tz timestamp="<%= Viewpoint.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/></td>
+    <td><zeroio:tz timestamp="<%= Viewpoint.getEntered() %>" /></td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">Enabled</td>

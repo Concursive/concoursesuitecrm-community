@@ -1,18 +1,50 @@
+<%--
+ Copyright 2000-2004 Matt Rajkowski
+ matt.rajkowski@teamelements.com
+ http://www.teamelements.com
+ This source code cannot be modified, distributed or used without
+ permission from Matt Rajkowski
+--%>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="SKIN" class="java.lang.String" scope="application"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="projectRequirementsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
-
-<table border='0' width='100%'  bgcolor='#FFFFFF' cellspacing='0' cellpadding='0'>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="initPopupMenu.jsp" %>
+<%@ include file="projects_center_requirements_menu.jsp" %>
+<%-- Preload image rollovers --%>
+<script language="JavaScript" type="text/javascript">
+  loadImages('select_<%= SKIN %>');
+</script>
+<SCRIPT LANGUAGE="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<table border="0" cellpadding="1" cellspacing="0" width="100%">
+  <tr class="subtab">
+    <td>
+      <img border="0" src="images/icons/stock_list_bullet2-16.gif" align="absmiddle">
+      Outlines
+    </td>
+  </tr>
+</table>
+<br>
+<zeroio:permission name="project-plan-outline-add">
+<img border="0" src="images/icons/stock_new_bullet-16.gif" align="absmiddle">
+<a href="ProjectManagementRequirements.do?command=Add&pid=<%= Project.getId() %>">New Outline</a><br>
+&nbsp;<br>
+</zeroio:permission>
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
-    <form name="listView" method="post" action="ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>">
+    <form name="reqView" method="post" action="ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>">
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= projectRequirementsInfo.getOptionValue("open") %>>Open Requirements</option>
-        <option <%= projectRequirementsInfo.getOptionValue("closed") %>>Closed Requirements</option>
-        <option <%= projectRequirementsInfo.getOptionValue("all") %>>All Requirements</option>
+      <img alt="" src="images/icons/stock_filter-data-by-criteria-16.gif" align="absmiddle">
+      <select name="listView" onChange="javascript:document.forms['reqView'].submit();">
+        <option <%= projectRequirementsInfo.getOptionValue("open") %>>Open Outlines</option>
+        <option <%= projectRequirementsInfo.getOptionValue("closed") %>>Closed Outlines</option>
+        <option <%= projectRequirementsInfo.getOptionValue("all") %>>All Outlines</option>
       </select>
     </td>
     <td>
@@ -21,45 +53,86 @@
     </form>
   </tr>
 </table>
-
-<table border='0' width='100%'  bgcolor='#000000' cellspacing='0' cellpadding='0'>  
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-    <td width="100%" bgcolor="#FF9900" colspan="2">
-      <b><font color='#FFFFFF'>&nbsp;Requirements</font></b>
-    </td>
-  </tr>
-</table>
-   
-<table border='0' width='100%' cellpadding='0' cellspacing='0'>
-  <tr>
-    <td width='19' bgcolor='#808080'>&nbsp;</td>
-    <td width='86' bgcolor='#808080'><font color='#FFFFFF'>&lt;Submitted&gt;</font></td>
-    <td width='412' bgcolor='#808080'><font color='#FFFFFF'>&lt;Description&gt;</font></td>
-    <td width='118' bgcolor='#808080'><font color='#FFFFFF'>&lt;Effort&gt;</font></td>
+    <th width="8"><strong>Action</strong></th>
+    <th width="86" nowrap><strong>Start Date</strong></th>
+    <th width="100%"><strong>Description</strong></th>
+    <th><strong>Progress</strong></th>
+    <th width="118"><strong>Effort</strong></th>
   </tr>
 <%    
-  String bgColorVar = " bgColor='#E4E4E4'";
   RequirementList requirements = Project.getRequirements();
+  if (requirements.size() == 0) {
+%>
+  <tr class="row2">
+    <td colspan="5">No outlines to display.</td>
+  </tr>
+<%
+  }
+  int rowid = 0;
+  int count = 0;
   Iterator i = requirements.iterator();
-  
   while (i.hasNext()) {
-    Requirement thisRequirement = (Requirement)i.next();
+    rowid = (rowid != 1?1:2);
+    ++count;
+    Requirement thisRequirement = (Requirement) i.next();
 %>    
-  <tr<%= bgColorVar %>>
-    <td width='19' valign='top'>
-      <%= thisRequirement.getStatusGraphicTag() %>
+  <tr>
+    <td class="row<%= rowid %>" valign="top" align="center" nowrap>
+      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisRequirement.getId() %>, <%= Project.getId() %>);"
+         onMouseOver="over(0, <%= count %>)"
+         onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img 
+         src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>
     </td>
-    <td width='86' valign='top'>
-      <%= thisRequirement.getEnteredString() %>
+    <td class="row<%= rowid %>" valign="top" nowrap>
+      <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" dateOnly="true" default="&nbsp;" />
     </td>
-    <td width='412' valign='top'>
-      <%= thisRequirement.getAssignmentTag("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + Project.getId() + "&" + (thisRequirement.isTreeOpen()?"contract":"expand") + "=" + thisRequirement.getId()) %>
-      <a href="ProjectManagementRequirements.do?command=Modify&rid=<%= thisRequirement.getId() %>&pid=<%= Project.getId() %>"><%= toHtml(thisRequirement.getShortDescription()) %></a>
-      (<%= thisRequirement.getAssignments().size() %> activit<%= (thisRequirement.getAssignments().size() == 1?"y":"ies") %>)<br>
-      <%= ("".equals(thisRequirement.getSubmittedBy())?"":"<i>Requested By " + thisRequirement.getSubmittedBy() + "</i>") %>
+    <td class="row<%= rowid %>" valign="top">
+      <%-- <%= thisRequirement.getAssignmentTag("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + Project.getId() + "&" + (thisRequirement.isTreeOpen()?"contract":"expand") + "=" + thisRequirement.getId()) %> --%>
+      <%= thisRequirement.getStatusGraphicTag() %> 
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Assignments&rid=<%= thisRequirement.getId() %>&pid=<%= Project.getId() %>"><%= toHtml(thisRequirement.getShortDescription()) %></a>
+      <a href="javascript:popURL('ProjectManagementRequirements.do?command=Details&pid=<%= Project.getId() %>&rid=<%= thisRequirement.getId() %>&popup=true','Outline_Details','650','375','yes','yes');"><img src="images/icons/stock_insert-note-16.gif" border="0" align="absbottom"/></a><br>
+      <i>
+      <dhv:evaluate if="<%= hasText(thisRequirement.getSubmittedBy()) || hasText(thisRequirement.getDepartmentBy()) %>">
+        Requested By
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= hasText(thisRequirement.getSubmittedBy()) %>">
+        <%= toHtml(thisRequirement.getSubmittedBy()) %>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= hasText(thisRequirement.getSubmittedBy()) && hasText(thisRequirement.getDepartmentBy()) %>">
+        /
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= hasText(thisRequirement.getDepartmentBy()) %>">
+        <%= toHtml(thisRequirement.getDepartmentBy()) %>
+      </dhv:evaluate>
     </td>
-    <td width='118' valign='top'>
-      Due: <%= thisRequirement.getDeadlineString() %><br>
+    <td class="row<%= rowid %>" valign="top" align="right" nowrap>
+      <table cellpadding="1" cellspacing="1" class="empty">
+        <td>Progress:</td>
+        <dhv:evaluate if="<%= (thisRequirement.getPercentComplete() == 0 && thisRequirement.getPlanActivityCount() == 0) || thisRequirement.getPercentComplete() > 0 %>">
+          <dhv:evaluate if="<%= thisRequirement.getPlanActivityCount() == 0 %>">
+            <td width="<%= thisRequirement.getPercentComplete() %>" bgColor="#CCCCCC" nowrap></td>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= thisRequirement.getPlanActivityCount() > 0 %>">
+            <td width="<%= thisRequirement.getPercentComplete() %>" bgColor="green" nowrap></td>
+          </dhv:evaluate>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= (thisRequirement.getPercentComplete() == 0 && thisRequirement.getPlanActivityCount() > 0) || thisRequirement.getPlanActivityCount() != thisRequirement.getPlanClosedCount() %>">
+          <td width="<%= thisRequirement.getPercentIncomplete() %>" bgColor="red" nowrap></td>
+        </dhv:evaluate>
+      </table>
+      <dhv:evaluate if="<%= thisRequirement.getPlanActivityCount() == 0 %>">
+        (0 activities)
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= thisRequirement.getPlanActivityCount() > 0 %>">
+        (<%= thisRequirement.getPlanClosedCount() %> of <%= thisRequirement.getPlanActivityCount() %>
+        activit<%= (thisRequirement.getPlanActivityCount() == 1?"y":"ies") %>
+        <%= (thisRequirement.getPlanClosedCount() == 1?"is":"are") %> complete)
+      </dhv:evaluate>
+    </td>
+    <td class="row<%= rowid %>" valign="top" nowrap>
+      Due: <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" dateOnly="true"/><br />
       LOE: <%= thisRequirement.getEstimatedLoeString() %>
     </td>
   </tr>
@@ -69,39 +142,40 @@
       while (assignments.hasNext()) {
         Assignment thisAssignment = (Assignment)assignments.next();
 %>
-  <tr<%= bgColorVar %>>
-    <td valign="top" colspan="2">
+  <tr>
+    <td class="row<%= rowid %>" valign="top" colspan="2">
       &nbsp;
     </td>
-    <td valign="top">
-      &nbsp;<%= thisAssignment.getStatusGraphicTag() %>
-      <a href="javascript:popURL('ProjectManagementAssignments.do?command=Modify&pid=<%= Project.getId() %>&aid=<%= thisAssignment.getId() %>&popup=true&return=ProjectRequirements&param=<%= Project.getId() %>','CRM_Assignment','600','325','yes','yes');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Update this assignment';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisAssignment.getRole()) %></a>
+    <td class="row<%= rowid %>" valign="top">
+      <img border="0" src="images/treespace.gif" align="absmiddle">
+      <%= thisAssignment.getStatusGraphicTag() %>
+      <a href="javascript:popURL('ProjectManagementAssignments.do?command=Modify&pid=<%= Project.getId() %>&aid=<%= thisAssignment.getId() %>&popup=true&return=ProjectRequirements&param=<%= Project.getId() %>','CFS_Assignment','600','325','yes','no');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Update this assignment';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisAssignment.getRole()) %></a>
       (<dhv:username id="<%= thisAssignment.getUserAssignedId() %>"/>)
     </td>
-    <td valign="top" nowrap>
-      Due: <%= thisAssignment.getRelativeDueDateString() %><br>
+    <td class="row<%= rowid %>" valign="top" nowrap>
+      Due: <%= thisAssignment.getRelativeDueDateString(User.getTimeZone(), User.getLocale()) %><br />
       LOE: <%= thisAssignment.getEstimatedLoeString() %>
     </td>
   </tr>
 <%
       }
     }
-    if (bgColorVar.equals(" bgColor='#E4E4E4'")) {
-      bgColorVar = "";
-    } else {
-      bgColorVar = " bgColor='#E4E4E4'";
-    }
   }
 %>
 </table>
-&nbsp;<br><hr color='#000000' width='100%' noshade size='1'>
-<table border='0' width='100%'>
+<br>
+<dhv:pagedListControl object="projectRequirementsInfo"/>
+<br>
+<table border="0" width="100%">
   <tr>
-    <td width='100%'>
-      <img border='0' src='images/box.gif' alt='Incomplete'> Requirement is incomplete<br>
-      <img border='0' src='images/box-checked.gif' alt='Completed'> Requirement has been completed (or closed)<br>
-      <img border='0' src='images/box-hold.gif' alt='On Hold'> Requirement has not been approved
+    <td>
+      <img border="0" src="images/box.gif" alt="Incomplete" align="absmiddle" />
+      Item is incomplete<br />
+      <img border="0" src="images/box-checked.gif" alt="Completed" align="absmiddle" />
+      Item has been completed (or closed)<br />
+      <img border="0" src="images/box-hold.gif" alt="On Hold" align="absmiddle" />
+      Item has not been approved
     </td>
   </tr>
 </table>
-  
+

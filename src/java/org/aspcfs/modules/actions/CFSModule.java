@@ -17,12 +17,21 @@ import org.aspcfs.modules.beans.ModuleBean;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.controller.objectHookManager.*;
 import org.aspcfs.controller.*;
-
 import java.sql.*;
 import java.util.*;
 import java.text.*;
 import java.io.*;
 import java.lang.reflect.*;
+import com.zeroio.iteam.base.Project;
+import com.zeroio.iteam.base.TeamMember;
+import org.aspcfs.modules.base.Constants;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.index.Term;
+
 /**
  *  Base class for all modules
  *
@@ -1143,5 +1152,301 @@ public class CFSModule {
     }
     return -1;
   }
+
+
+  /**
+   *  Gets the userLevel attribute of the CFSModule object
+   *
+   *@param  context           Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@param  roleLevel         Description of the Parameter
+   *@return                   The userLevel value
+   *@exception  SQLException  Description of the Exception
+   */
+  protected int getUserLevel(ActionContext context, Connection db, int roleLevel) throws SQLException {
+    SystemStatus thisSystem = this.getSystemStatus(context);
+    LookupList roleList = thisSystem.getLookupList(db, "lookup_project_role");
+    if (roleList != null) {
+      return roleList.getIdFromLevel(roleLevel);
+    }
+    return -1;
+  }
+
+
+  /**
+   *  Gets the roleId attribute of the CFSModule object
+   *
+   *@param  context           Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@param  userlevel         Description of the Parameter
+   *@return                   The roleId value
+   *@exception  SQLException  Description of the Exception
+   */
+  protected int getRoleId(ActionContext context, Connection db, int userlevel) throws SQLException {
+    SystemStatus thisSystem = this.getSystemStatus(context);
+    LookupList roleList = thisSystem.getLookupList(db, "lookup_project_role");
+    if (roleList != null) {
+      return roleList.getLevelFromId(userlevel);
+    }
+    return -1;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@param  thisProject       Description of the Parameter
+   *@param  permission        Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  protected boolean hasProjectAccess(ActionContext context, Connection db, Project thisProject, String permission) throws SQLException {
+    // See if the team member has access to perform a project action
+    TeamMember thisMember = (TeamMember) context.getRequest().getAttribute("currentMember");
+    if (thisMember == null) {
+      try {
+        // Load from project
+        thisMember = new TeamMember(db, thisProject.getId(), this.getUserId(context));
+      } catch (Exception notValid) {
+        // Create a guest
+        thisMember = new TeamMember();
+        thisMember.setProjectId(thisProject.getId());
+        thisMember.setUserLevel(getUserLevel(context, db, TeamMember.GUEST));
+        thisMember.setRoleId(TeamMember.GUEST);
+      }
+      context.getRequest().setAttribute("currentMember", thisMember);
+    }
+    // Return the status of the permission
+    if (thisMember.getRoleId() == TeamMember.PROJECT_LEAD) {
+      return true;
+    }
+    // See what the minimum required is and see if user meets that
+    int code = thisProject.getAccessUserLevel(permission);
+    int roleId = getRoleId(context, db, code);
+    if (code == -1 || roleId == -1) {
+      return false;
+    }
+    return (thisMember.getRoleId() <= roleId);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@param  id       Description of the Parameter
+   *@param  name     Description of the Parameter
+   */
+  protected void updateUserCache(ActionContext context, int id, String name) {
+    /*
+     *  if (name != null) {
+     *  / Update the system status
+     *  ((Hashtable) getSystemStatus(context).get(Constants.SYSTEM_USER_LIST)).put(
+     *  new Integer(id), name);
+     *  } else {
+     *  / Delete the user from the cache
+     *  ((Hashtable) getSystemStatus(context).get(Constants.SYSTEM_USER_LIST)).remove(
+     *  new Integer(id));
+     *  }
+     */
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@param  id       Description of the Parameter
+   *@param  title    Description of the Parameter
+   */
+  protected void updateProjectCache(ActionContext context, int id, String title) {
+    if (title != null) {
+      // Update the system status
+      ((HashMap) getSystemStatus(context).getObject(Constants.SYSTEM_PROJECT_NAME_LIST)).put(
+          new Integer(id), title);
+    } else {
+      // Remove from cache
+      ((HashMap) getSystemStatus(context).getObject(Constants.SYSTEM_PROJECT_NAME_LIST)).remove(
+          new Integer(id));
+    }
+  }
+
+
+  /**
+   *  Gets the popup attribute of the CFSModule object
+   *
+   *@param  context  Description of the Parameter
+   *@return          The popup value
+   */
+  protected boolean isPopup(ActionContext context) {
+    return ("true".equals(context.getRequest().getParameter("popup")));
+  }
+
+
+  /**
+   *  Gets the directory attribute of the CFSModule object
+   *
+   *@param  context          Description of the Parameter
+   *@return                  The directory value
+   *@exception  IOException  Description of the Exception
+   */
+  protected synchronized Directory getDirectory(ActionContext context) throws IOException {
+    File path = new File(getDbNamePath(context) + "index");
+    boolean create = !path.exists();
+    return getDirectory(path, create);
+  }
+
+
+  /**
+   *  Gets the directory attribute of the CFSModule object
+   *
+   *@param  context          Description of the Parameter
+   *@param  create           Description of the Parameter
+   *@return                  The directory value
+   *@exception  IOException  Description of the Exception
+   */
+  protected synchronized Directory getDirectory(ActionContext context, boolean create) throws IOException {
+    File path = new File(getDbNamePath(context) + "index");
+    return getDirectory(path, create);
+  }
+
+
+  /**
+   *  Gets the directory attribute of the CFSModule object
+   *
+   *@param  create           Description of the Parameter
+   *@param  path             Description of the Parameter
+   *@return                  The directory value
+   *@exception  IOException  Description of the Exception
+   */
+  protected synchronized Directory getDirectory(File path, boolean create) throws IOException {
+    Directory index = FSDirectory.getDirectory(path, create);
+    if (create) {
+      IndexWriter writer = new IndexWriter(index, new StandardAnalyzer(), true);
+      writer.optimize();
+      writer.close();
+    }
+    return index;
+  }
+
+
+  /**
+   *  Adds an item to the index. Code licensed from teamelements.com
+   *
+   *@param  context          Description of the Parameter
+   *@param  item             Description of the Parameter
+   *@exception  IOException  Description of the Exception
+   */
+  protected synchronized void indexAddItem(ActionContext context, Object item) throws IOException {
+    // Delete the previous item from the index, by using a reader
+    IndexReader reader = null;
+    Directory index = null;
+    try {
+      index = getDirectory(context);
+      reader = IndexReader.open(index);
+      Class c = Class.forName(item.getClass().getName() + "Indexer");
+      Class[] argTypes = new Class[]{item.getClass()};
+      Method m = c.getDeclaredMethod("getSearchTerm", argTypes);
+      Object o = m.invoke(null, new Object[]{item});
+      if (o != null) {
+        reader.delete((Term) o);
+      }
+    } catch (Exception io) {
+      if (System.getProperty("DEBUG") != null) {
+        io.printStackTrace(System.out);
+      }
+      throw new IOException("Reader: " + io.getMessage());
+    } finally {
+      try {
+        if (reader != null) {
+          reader.close();
+        }
+        reader = null;
+      } catch (Exception ie) {
+      }
+      try {
+        if (index != null) {
+          index.close();
+        }
+        index = null;
+      } catch (Exception ie) {
+      }
+    }
+
+    // Add the item to the index, optimize, and close
+    IndexWriter writer = null;
+    try {
+      index = getDirectory(context, false);
+      writer = new IndexWriter(index, new StandardAnalyzer(), false);
+
+      Class c = Class.forName(item.getClass().getName() + "Indexer");
+      Class[] argTypes = new Class[]{writer.getClass(), item.getClass(), boolean.class};
+      Method m = c.getDeclaredMethod("add", argTypes);
+      Object o = m.invoke(null, new Object[]{writer, item, new Boolean(true)});
+      writer.optimize();
+    } catch (Exception io) {
+      throw new IOException("Writer: " + io.getMessage());
+    } finally {
+      try {
+        if (writer != null) {
+          writer.close();
+        }
+        writer = null;
+      } catch (Exception ie) {
+      }
+      try {
+        if (index != null) {
+          index.close();
+        }
+        index = null;
+      } catch (Exception ie) {
+      }
+    }
+  }
+
+
+  /**
+   *  Removes an item from the index. Code licensed from teamelements.com
+   *
+   *@param  context          Description of the Parameter
+   *@param  item             Description of the Parameter
+   *@exception  IOException  Description of the Exception
+   */
+  protected synchronized void indexDeleteItem(ActionContext context, Object item) throws IOException {
+    // Delete the previous item from the index, by using a reader
+    IndexReader reader = null;
+    Directory index = null;
+    try {
+      index = getDirectory(context);
+      reader = IndexReader.open(index);
+      Class c = Class.forName(item.getClass().getName() + "Indexer");
+      Class[] argTypes = new Class[]{item.getClass()};
+      Method m = c.getDeclaredMethod("getDeleteTerm", argTypes);
+      Object o = m.invoke(null, new Object[]{item});
+      if (o != null) {
+        reader.delete((Term) o);
+      }
+    } catch (Exception io) {
+      throw new IOException(io.getMessage());
+    } finally {
+      try {
+        if (reader != null) {
+          reader.close();
+        }
+        reader = null;
+      } catch (Exception ie) {
+      }
+      try {
+        if (index != null) {
+          index.close();
+        }
+        index = null;
+      } catch (Exception ie) {
+      }
+    }
+  }
+
 }
 

@@ -151,8 +151,8 @@
   <tr valign="top" class="containerBody">
     <td nowrap>
       <input type="text" size="10" name="activityDate<%=count%>">
-      <a href="javascript:popCalendar('details', 'activityDate<%=count%>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a><br />
-      (mm/dd/yyyy)
+      <a href="javascript:popCalendar('details', 'activityDate<%=count%>', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <br />
     </td>
     <td >
       <zeroio:durationSelect baseName="travel" count="<%=count%>" />
@@ -187,7 +187,7 @@
     </td>
     <td>
       <input type="text" size="10" name="alertDate">
-      <a href="javascript:popCalendar('details', 'alertDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <a href="javascript:popCalendar('details', 'alertDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
     </td>
   </tr>
   <tr class="containerBody">

@@ -5,6 +5,8 @@ import java.util.zip.*;
 import java.util.regex.*;
 import java.io.*;
 import java.util.*;
+import javax.servlet.ServletContext;
+import sun.misc.*;
 
 /**
  *  Variety of methods for Strings
@@ -165,6 +167,7 @@ public class StringUtils {
       htmlReady = replace(htmlReady, "&quot;", "\"");
       htmlReady = replace(htmlReady, "&lt;", "<");
       htmlReady = replace(htmlReady, "&gt;", ">");
+      htmlReady = replace(htmlReady, "&nbsp;", " ");
       htmlReady = replace(htmlReady, "<br>", "\r\n");
       htmlReady = replace(htmlReady, "<br />", "\r\n");
       return (htmlReady);
@@ -393,6 +396,26 @@ public class StringUtils {
     while ((line = in.readLine()) != null) {
       text.append(line);
       text.append(ls);
+    }
+    in.close();
+    return text.toString();
+  }
+
+
+  /**
+   *  Load text into a string from the context resource
+   *
+   *@param  context          Description of the Parameter
+   *@param  filename         Description of the Parameter
+   *@return                  Description of the Return Value
+   *@exception  IOException  Description of the Exception
+   */
+  public static String loadText(ServletContext context, String filename) throws IOException {
+    InputStream in = context.getResourceAsStream(filename);
+    StringBuffer text = new StringBuffer();
+    byte b[] = new byte[1];
+    while (in.read(b) != -1) {
+      text.append(new String(b));
     }
     in.close();
     return text.toString();
@@ -639,6 +662,22 @@ public class StringUtils {
       return (jsReady);
     } else {
       return ("");
+    }
+  }
+  
+  
+  /**
+   *  Description of the Method
+   *
+   *@param  inString  Description of the Parameter
+   *@return           Description of the Return Value
+   */
+  public static String toBase64(String inString) {
+    try {
+      BASE64Encoder encoder = new BASE64Encoder();
+      return (encoder.encode(inString.getBytes("UTF8")));
+    } catch (Exception e) {
+      return "";
     }
   }
 }

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="EstimatedLOETypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -22,7 +23,7 @@
       Due Date
     </td>
     <td>
-      <dhv:tz timestamp="<%= Task.getDueDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= Task.getDueDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">

@@ -212,25 +212,6 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the amountCurrency attribute of the Revenue object
-   *
-   *@return    The amountCurrency value
-   */
-  public String getAmountCurrency() {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    String amountOut = numberFormatter.format(amount);
-    if (amountOut.indexOf(".") > -1) {
-      if (amountOut.indexOf(".") == amountOut.length() - 2) {
-        return (amountOut + "0");
-      }
-    } else {
-      return (amountOut + ".00");
-    }
-    return amountOut;
-  }
-
-
-  /**
    *  Gets the valid attribute of the Revenue object
    *
    *@param  db                Description of the Parameter

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.troubletickets.base.*, org.aspcfs.modules.tasks.base.*,org.aspcfs.modules.base.EmailAddress, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
@@ -83,7 +84,7 @@ Tasks
           <td align="center" valign="top">
             <%-- Use the unique id for opening the menu, and toggling the graphics --%>
             <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-            <a href="javascript:displayMenu('menuTask',<%= OrgDetails.getId() %>,<%= TicketDetails.getId() %>,'<%= thisTask.getId() %>')" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+            <a href="javascript:displayMenu('select<%= count %>','menuTask',<%= OrgDetails.getId() %>,<%= TicketDetails.getId() %>,'<%= thisTask.getId() %>')" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuTask');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
           </td>
           <td nowrap align="center" valign="top">
             <%= thisTask.getPriority() == -1 ? "-NA-" : (new Integer(thisTask.getPriority())).toString() %>
@@ -187,10 +188,10 @@ Tasks
             <%}%>
           </td>
           <td nowrap align="center" valign="top">
-            <dhv:tz timestamp="<%= thisTask.getDueDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="-NA-"/>
+            <zeroio:tz timestamp="<%= thisTask.getDueDate() %>" dateOnly="true" default="-NA-"/>
           </td>
             <td nowrap align="center" valign="top">
-              <dhv:tz timestamp="<%= thisTask.getCompleteDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="-NA-"/>
+              <zeroio:tz timestamp="<%= thisTask.getCompleteDate() %>" dateOnly="true" default="-NA-"/>
             </td>
             <td nowrap align="center" valign="top">
               <%= thisTask.getAgeString() %>

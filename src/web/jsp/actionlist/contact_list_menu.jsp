@@ -6,7 +6,7 @@
   var thisItemId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, aId, cId, oId, itemId) {
+  function displayMenu(loc, id, aId, cId, oId, itemId) {
     thisActionId = aId;
     thisContactId = cId;
     thisOrgId = oId;
@@ -15,7 +15,7 @@
       menu_init = true;
       new ypSlideOutMenu("menuContact", "down", 0, 0, 170, getHeight("menuContactTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   //Menu link functions
   function showContact() {
@@ -52,65 +52,65 @@
 </script>
 <div id="menuContactContainer" class="menu">
   <div id="menuContactContent">
-    <table id="menuContactTable" class="pulldown" width="170">
+    <table id="menuContactTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="myhomepage-action-lists-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="showContact()">
+        <th>
           <img src="images/icons/stock_bcard-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:showContact()">Show Contact Record</a>
+          Show Contact Record
         </td>
       </tr>
       </dhv:permission>
       
       <dhv:permission name="contacts-external_contacts-calls-add">
-      <tr>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="addCall()">
         <td>
           <!-- <img src="images/doAction.gif" border="0" align="absmiddle" height="16" width="16"/> -->
           &nbsp;
         </td>
         <td width="100%">
-          <a href="javascript:addCall()">Add Call</a>
+          Add Call
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="contacts-external_contacts-opportunities-add">
-      <tr>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="addOpportunity()">
         <td>
           &nbsp;
         </td>
         <td>
-          <a href="javascript:addOpportunity()">Add Opportunity</a>
+          Add Opportunity
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="tickets-tickets-add">
-      <tr>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="addTicket()">
         <td>
           &nbsp;
         </td>
         <td>
-          <a href="javascript:addTicket()">Add Ticket</a>
+          Add Ticket
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="myhomepage-tasks-add">
-      <tr>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="addTask()">
         <td>
           &nbsp;
         </td>
         <td>
-          <a href="javascript:addTask()">Add Task</a>
+          Add Task
         </td>
       </tr>
       </dhv:permission>
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="sendMessage()">
+        <th>
           <img src="images/icons/stock_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td>
-          <a href="javascript:sendMessage()">Send Message</a>
+          Send Message
         </td>
       </tr>
     </table>

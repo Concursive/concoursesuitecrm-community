@@ -1,235 +1,138 @@
+<%--
+ Copyright 2000-2004 Matt Rajkowski
+ matt.rajkowski@teamelements.com
+ http://www.teamelements.com
+ This source code cannot be modified, distributed or used without
+ permission from Matt Rajkowski
+--%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
-<jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="CurrentTeam" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
-<jsp:useBean id="vector1" class="java.lang.String" scope="request"/>
-<jsp:useBean id="vector2" class="java.lang.String" scope="request"/>
-<jsp:useBean id="vector3" class="java.lang.String" scope="request"/>
-<jsp:useBean id="vector4" class="java.lang.String" scope="request"/>
-<jsp:useBean id="vector5" class="java.lang.String" scope="request"/>
-<jsp:useBean id="UserSize" class="java.lang.String" scope="request"/>
+<jsp:useBean id="currentTeam" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="vectorUserId" class="java.lang.String" scope="request"/>
+<jsp:useBean id="vectorState" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" type="text/javascript" src="javascript/spanDisplay.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/checkEmail.js"></script>
 <%
-  CurrentTeam.setSelectSize(10);
-  CurrentTeam.setJsEvent("onChange=\"switchList(this.form, 'remove')\"");
+  currentTeam.setSelectSize(10);
+  currentTeam.setSelectStyle("width: 160px");
+  currentTeam.setJsEvent("onClick=\"removeList(this.form)\"");
 %>
 <script language="JavaScript">
-  var vector1, vector2, vector3, vector4, vector5;
-  var arIndex = <%= UserSize %>;
-  var newIndex;
-  var newSubIndex;
-  vector1 = "<%= vector1 %>".split("|");<%-- First/Last name --%>
-  vector2 = "<%= vector2 %>".split("|");<%-- Department id --%>
-  vector3 = "<%= vector3 %>".split("|");<%-- User id --%>
-  vector4 = "<%= vector4 %>".split("|");<%-- Saved state of member on team --%>
-  vector5 = "<%= vector5 %>".split("|");<%-- Current state of member on team --%>
-  
-  var i; //counter var
-  var j; //counter var
-  
-  function changeDept(form) {
-    form.selTotalList.options.length = 0;
-  }
-  
-  function updateUserList() {
-    var sel = document.forms['projectMemberForm'].elements['selDepartment'];
-    var value = sel.options[sel.selectedIndex].value;
-    var url = "ProjectManagementTeam.do?command=UpdateUserList&deptId=" + escape(value);
-    window.frames['server_commands'].location.href=url;
-  }
-  
-  function switchList(form, thisAction) {
-    var index;
-    var copyValue;
-    var copyText;
-    var selProjectListLength;
-    var selTotalListLength;
-  
-  
-    if(thisAction == "add" && form.selTotalList.options.length > 0 && form.selTotalList.options.selectedIndex != -1) {
-      index = form.selTotalList.selectedIndex;
-      copyValue = form.selTotalList.options[index].value;
-      copyText = form.selTotalList.options[index].text;
-      checkListIntegrity(form, thisAction, index, copyValue, copyText);
-    }
-  
-    if(thisAction == "remove" && form.selProjectList.options.length > 0 && form.selProjectList.options.selectedIndex != -1) {
-      index = form.selProjectList.selectedIndex;
-      copyValue = form.selProjectList.options[index].value;
-      copyText = form.selProjectList.options[index].text;
-      checkListIntegrity(form, thisAction, index, copyValue, copyText);
-    }
-  }
-  
-  function checkListIntegrity(form, thisAction, index, copyValue, copyText) {
-    for(i = 0; i < arIndex; i++) {
-      if(thisAction == "add" && vector1[i] == copyText) {
-        if(vector5[i] == "0") {
-          selProjectListLength = form.selProjectList.options.length;
-          form.selTotalList.options[index] = null;
-          form.selProjectList.options.length += 1;
-          form.selProjectList.options[selProjectListLength] = new Option(copyText, copyValue);   
-          vector5[i] = "1";
-        }
-      }
-      if(thisAction == "remove" && vector1[i] == copyText) {
-        if(vector5[i] == "1") {
-          var thisUser = new getUser(buildUser(copyText));
-  
-          if(form.selDepartment.selectedIndex > -1 && form.selDepartment.options[form.selDepartment.selectedIndex].value == thisUser.deptName) {
-            selTotalListLength = form.selTotalList.options.length;
-            form.selProjectList.options[index] = null;
-            form.selTotalList.options.length += 1;
-            form.selTotalList.options[selTotalListLength] = new Option(copyText, copyValue);
-            vector5[i] = "0";
-            form.selProjectList.blur();
-          } else {
-            selTotalListLength = form.selTotalList.options.length;
-            form.selProjectList.options[index] = null;
-            vector5[i] = "0";
-            form.selProjectList.blur();
-          }
-        }
-      }
-    }
-  }
-  
-  function buildUser(userName) {
-    var x, i;
-    x = null;
-    for(i = 0; i < arIndex; i++) {
-      if(userName == vector1[i]) {
-        x = i;
-      }
-    }
-    return x;
-  }
-
-  function getUser(i) {
-    this.fullName = vector1[i];  //vector1-- UserFullName
-    this.deptName = vector2[i];  //vector2 -- Department Name
-    this.userID = vector3[i];  //vector3 -- userID
-    this.origConfig = vector4[i];  //vector4 -- Original List Config
-    this.newConfig = vector5[i];  //vector5 -- New/Updated List Config
-  }
-  
-  function resetValues(form) {
-    var x;
-    var newIndexTotal, newIndexProject; //counter values to find the appropriate size values for the lists.
-    newIndexTotal = 0;
-    newIndexProject = 0;
-  
-    for(x = 0; x < arIndex; x++) {
-      vector5[x] = vector4[x];  
-      if(vector5[x] == "1" && vector2[x] == "-2") {
-        newIndexProject++;
-      } else if(vector5[x] == "0" && vector2[x] == "-2") {
-        newIndexTotal++;
-      }
-    }
-  
-    form.selTotalList.length = 0;
-    form.selTotalList.length = newIndexTotal;
-    form.selProjectList.length = 0;
-    form.selProjectList.length = newIndexProject;
-   
-    var runningCtr1, runningCtr2;
-    runningCtr1 = 0;
-    runningCtr2 = 0;
-  
-    form.selDepartment.options[0].selected = true;
-    var thisUser;
-    for(x = 0; x < arIndex; x++) {
-      thisUser = new getUser(x);
-      if(thisUser.origConfig == "0" && thisUser.deptName == "-2") {
-        form.selTotalList.options[runningCtr1] = new Option(thisUser.fullName, thisUser.userID);
-        runningCtr1++;
-      } else if(thisUser.origConfig == "1") {
-        form.selProjectList.options[runningCtr2] = new Option(thisUser.fullName, thisUser.userID);
-        runningCtr2++;
-      }
-    }
-    form.insertMembers.value = "";
-    form.deleteMembers.value = "";
-    
-    updateUserList();
-  }
-  
-  function checkSubmit(form) {
-    var x;
-    var thisUser;
-    form.insertMembers.value = "";
-    form.deleteMembers.value = "";
-    for(x = 0; x < arIndex; x++) {
-      thisUser = new getUser(x);
-      if(thisUser.newConfig != thisUser.origConfig) {
-        if(thisUser.newConfig == "1") {
-          form.insertMembers.value += thisUser.userID + "|";
-        }
-        if(thisUser.newConfig == "0") {
-          form.deleteMembers.value += thisUser.userID + "|";
-        }
-      }
-    }
-  }
+  var items = "";<%-- Maintains users in the selected category --%>
+  var vectorUserId = "<%= vectorUserId %>".split("|");<%-- User ID --%>
+  var vectorState = "<%= vectorState %>".split("|");<%-- State --%>
 </script>
-<body bgcolor='#FFFFFF' onLoad="changeDept(document.all.projectMemberForm)">
-<table border="0" width="100%" cellpadding="0" cellspacing="0">
-  <form name="projectMemberForm" method="post" action="ProjectManagementTeam.do?command=Update&pid=<%= Project.getId() %>&auto-populate=true">
-    <tr>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <td width="100%" colspan="3" rowspan="2" bgcolor="#808080">
-        <font color='#FFFFFF'><b>&nbsp;Modify Team Members</b></font>
-      </td>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-    </tr>
-    <tr>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-    </tr>
-    <tr>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <td width='100%' colspan='3'>&nbsp;</td>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-    </tr>
-    <tr>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <td width="33%" align="center">Select a Department</td>
-      <td width="33%" align="center">Choose Team Members</td>
-      <td width="33%" align="center" valign="top">Added Team Members</td>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-    </tr>
-    <tr>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <td width="33%" align="center">
-  <% DepartmentList.setSelectSize(10); %>
-	<% DepartmentList.setJsEvent("onchange=\"updateUserList();\""); %>
-	<%= DepartmentList.getHtmlSelect("selDepartment", -1) %>
-      </td>
-      <td width="33%" align="center">
-        <select size='10' name='selTotalList' onChange="switchList(this.form, 'add')" style="width:150px">
-        </select>
-      </td>
-      <td width="33%" align="center"><font size="2"><%= CurrentTeam.getHtml("selProjectList", 0) %></font></td>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-    </tr>
-    <tr>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <td width='100%' colspan='3'>&nbsp;</td>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-    </tr>
-    <tr>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <td colspan="3" width="100%" align="center" bgcolor='#808080' height='30'>
-        <input type="hidden" name="insertMembers">
-        <input type="hidden" name="deleteMembers">
-        <input type="submit" value="Update Team" onClick="checkSubmit(this.form)"> &nbsp;
-        <input type="button" value="Restore Values" onClick="resetValues(this.form)"> &nbsp;
-        <input type="submit" value="Cancel" onClick="javascript:this.form.action='ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>'">
-      </td>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-    </tr>
-  </form>
+<script language="JavaScript" type="text/javascript" src="javascript/projects_center_team_modify.js"></script>
+<table border="0" cellpadding="1" cellspacing="0" width="100%">
+  <tr class="subtab">
+    <td>
+      <img src="images/icons/stock_new-bcard-16.gif" border="0" align="absmiddle">
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>">Team</a> >
+      Modify
+    </td>
+  </tr>
 </table>
-</body>
+<br>
+<form name="projectMemberForm" method="post" action="ProjectManagementTeam.do?command=Update&pid=<%= Project.getId() %>&auto-populate=true" onSubmit="return checkForm(this)">
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+    <tr>
+      <th>
+        <strong>Modify Team Members</strong>
+      </th>
+    </tr>
+    <tr bgColor="#EDEDED">
+      <td>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="empty">
+          <tr>
+            <td colspan="3">
+              &nbsp;
+            </td>
+            <td class="shade2">
+              &nbsp;
+            </td>
+          </tr>
+          <tr>
+            <td align="center">Add a contact from:</td>
+            <td align="center"><span id="select1SpanProject" name="select1SpanProject" style="display:none">Select a project:</span><span id="select1SpanDepartment" name="select1SpanDepartment" style="display:none">Select a department:</span></td>
+            <td align="center"><span id="select2Span" name="select2Span" style="display:none">Select a contact:</span></td>
+            <td align="center" class="shade2" valign="top">Team Members</td>
+          </tr>
+          <tr>
+            <td align="center" valign="top">
+              <select size='10' name='selDirectory' style='width: 160px' onChange="updateCategory();">
+                <option value="my|open">Open projects</option>
+                <option value="my|closed">Closed projects</option>
+                <option value="dept|all">Department list</option>
+                <%--<dhv:evaluate if="<%= "true".equals(applicationPrefs.get("INVITE")) || User.getAccessInvite() %>"><option value="email|one">Email address</option></dhv:evaluate> --%>
+                <%--<option value="groups|all">My custom groups</option>--%>
+              </select>
+            </td>
+            <td align="center" valign="top">
+              <span id="emailSpan" name="emailSpan" style="display:none">
+                <%-- Only show if permission to --%>
+                <%--<dhv:evaluate if="<%= "true".equals(applicationPrefs.get("INVITE")) || User.getAccessInvite() %>">---%>
+                Email Address of contact to add:<br>
+                <input type="text" name="email" maxlength="255" value="" style="width: 160px" />
+                <input type="button" name="Add >" value ="Add >" onClick="javascript:addEmail(form);" />
+                <br>
+                &nbsp;<br>
+                If the email address is not found in<br>
+                the system when the team is updated,<br>
+                an additional screen will appear<br>
+                with the option to invite the person<br>
+                to the project.
+                <%--</dhv:evaluate>--%>
+              </span>
+              <span id="listSpan" name="listSpan">
+                <select size='10' name='selDepartment' style='width: 160px' onChange="updateItemList();">
+                </select>
+              </span>
+            </td>
+            <td align="center" valign="top">
+              <span id="emailSpan2" name="emailSpan2" style="display:none">
+                &nbsp;
+              </span>
+              <span id="listSpan2" name="listSpan2">
+                <select size='10' name='selTotalList' style='width: 160px' onClick="addList(this.form)">
+                </select>
+              </span>
+            </td>
+            <td align="center" class="shade2" valign="top"><font size="2"><%= currentTeam.getHtml("selProjectList", 0) %></font></td>
+          </tr>
+          <tr>
+            <td align="center">
+              &nbsp;<%--(click to view categories)--%>
+            </td>
+            <td align="center">
+              &nbsp;<%--(click to view contacts)--%>
+            </td>
+            <td align="center">
+              <%--(click contact to add)--%>
+            </td>
+            <td align="center" class="shade2">
+              (click contact to remove)
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">&nbsp;</td>
+            <td class="shade2">&nbsp;</td>
+            <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0" width="0" border="0" frameborder="0"></iframe>
+          </tr>
+          <tr>
+            <td colspan="4" align="center" height='30'>
+              <input type="hidden" name="insertMembers">
+              <input type="hidden" name="deleteMembers">
+              <input type="submit" value="Update Team"> &nbsp;
+              <%--<input type="button" value="Revert Changes" onClick="resetValues(this.form)"> &nbsp;--%>
+              <input type="button" value="Cancel Changes" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>'">
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</form>

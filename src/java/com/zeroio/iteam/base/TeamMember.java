@@ -1,8 +1,8 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
@@ -17,14 +17,27 @@ import org.aspcfs.utils.DatabaseUtils;
  *
  *@author     matt rajkowski
  *@created    July 23, 2001
- *@version    $Id$
+ *@version    $Id: TeamMember.java,v 1.1.136.2 2004/04/08 14:55:53 rvasista Exp
+ *      $
  */
 public class TeamMember {
-
+//Constants that control permissions within a project
+  public final static int PROJECT_LEAD = 10;
+  public final static int PROJECT_DEVELOPER = 20;
+  public final static int OBSERVER = 30;
+  public final static int GUEST = 100;
+  //Constants that control invitations
+  public final static int STATUS_ADDED = -1;
+  public final static int STATUS_ACCEPTED = -1;
+  public final static int STATUS_INVITING = 1;
+  public final static int STATUS_MAILERROR = 2;
+  public final static int STATUS_PENDING = 3;
+  public final static int STATUS_REFUSED = 4;
+  //References
   private Project project = null;
   private Object contact = null;
   private Object user = null;
-
+  //Team Member Properties
   private int projectId = -1;
   private int userId = -1;
   private int userLevel = -1;
@@ -32,7 +45,9 @@ public class TeamMember {
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
-
+  private int roleId = -1;
+  private int status = STATUS_ADDED;
+  private java.sql.Timestamp lastAccessed = null;
 
 
   /**
@@ -60,16 +75,15 @@ public class TeamMember {
    *@param  db                Description of the Parameter
    *@param  projectId         Description of the Parameter
    *@param  teamId            Description of the Parameter
-   *@param  userRange         Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public TeamMember(Connection db, int projectId, int teamId, String userRange) throws SQLException {
-    String sql =
-        "SELECT t.* " +
-        "FROM project_team t " +
+  public TeamMember(Connection db, int projectId, int teamId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT t.*, r.level " +
+        "FROM project_team t, lookup_project_role r " +
         "WHERE t.project_id = ? " +
-        "  AND t.user_id = ? ";
-    PreparedStatement pst = db.prepareStatement(sql);
+        "AND t.user_id = ? " +
+        "AND t.userlevel = r.code ");
     pst.setInt(1, projectId);
     pst.setInt(2, teamId);
     ResultSet rs = pst.executeQuery();
@@ -92,13 +106,18 @@ public class TeamMember {
    *@exception  SQLException  Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
+    //project_team
     projectId = rs.getInt("project_id");
     userId = rs.getInt("user_id");
-    userLevel = rs.getInt("userLevel");
+    userLevel = DatabaseUtils.getInt(rs, "userLevel");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+    status = DatabaseUtils.getInt(rs, "status");
+    lastAccessed = rs.getTimestamp("last_accessed");
+    //lookup_project_role
+    roleId = rs.getInt("level");
   }
 
 
@@ -273,6 +292,56 @@ public class TeamMember {
 
 
   /**
+   *  Sets the roleId attribute of the TeamMember object
+   *
+   *@param  tmp  The new roleId value
+   */
+  public void setRoleId(int tmp) {
+    this.roleId = tmp;
+  }
+
+
+  /**
+   *  Sets the roleId attribute of the TeamMember object
+   *
+   *@param  tmp  The new roleId value
+   */
+  public void setRoleId(String tmp) {
+    this.roleId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the status attribute of the TeamMember object
+   *
+   *@param  tmp  The new status value
+   */
+  public void setStatus(int tmp) {
+    this.status = tmp;
+  }
+
+
+  /**
+   *  Sets the status attribute of the TeamMember object
+   *
+   *@param  tmp  The new status value
+   */
+  public void setStatus(String tmp) {
+    this.status = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the lastAccessed attribute of the TeamMember object
+   *
+   *@param  tmp  The new lastAccessed value
+   */
+  public void setLastAccessed(java.sql.Timestamp tmp) {
+    this.lastAccessed = tmp;
+  }
+
+
+  /**
    *  Gets the project attribute of the TeamMember object
    *
    *@return    The project value
@@ -401,6 +470,50 @@ public class TeamMember {
 
 
   /**
+   *  Gets the roleId attribute of the TeamMember object
+   *
+   *@return    The roleId value
+   */
+  public int getRoleId() {
+    return roleId;
+  }
+
+
+  /**
+   *  Gets the status attribute of the TeamMember object
+   *
+   *@return    The status value
+   */
+  public int getStatus() {
+    return status;
+  }
+
+
+  /**
+   *  Gets the lastAccessed attribute of the TeamMember object
+   *
+   *@return    The lastAccessed value
+   */
+  public java.sql.Timestamp getLastAccessed() {
+    return lastAccessed;
+  }
+
+
+  /**
+   *  Gets the lastAccessedString attribute of the TeamMember object
+   *
+   *@return    The lastAccessedString value
+   */
+  public String getLastAccessedString() {
+    try {
+      return DateFormat.getDateInstance(3).format(lastAccessed);
+    } catch (NullPointerException e) {
+    }
+    return ("--");
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -410,35 +523,45 @@ public class TeamMember {
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO project_team ");
-    sql.append("(project_id, user_id, ");
+    sql.append("(project_id, user_id, userlevel, ");
     if (entered != null) {
       sql.append("entered, ");
     }
     if (modified != null) {
       sql.append("modified, ");
     }
-    sql.append("enteredby, modifiedby) ");
-    sql.append("VALUES (?, ?, ");
+    if (lastAccessed != null) {
+      sql.append("last_accessed, ");
+    }
+    sql.append("enteredby, modifiedby, status) ");
+    sql.append("VALUES (?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
     }
     if (modified != null) {
       sql.append("?, ");
     }
-    sql.append("?, ?) ");
-
+    if (lastAccessed != null) {
+      sql.append("?, ");
+    }
+    sql.append("?, ?, ?) ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, projectId);
     pst.setInt(++i, userId);
+    DatabaseUtils.setInt(pst, ++i, userLevel);
     if (entered != null) {
       pst.setTimestamp(++i, entered);
     }
     if (modified != null) {
       pst.setTimestamp(++i, modified);
     }
+    if (lastAccessed != null) {
+      pst.setTimestamp(++i, lastAccessed);
+    }
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, modifiedBy);
+    DatabaseUtils.setInt(pst, ++i, status);
     pst.execute();
     pst.close();
     return true;
@@ -452,11 +575,116 @@ public class TeamMember {
    *@exception  SQLException  Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
-    String sql =
+    PreparedStatement pst = db.prepareStatement(
         "DELETE FROM project_team " +
         "WHERE project_id = ? " +
-        "AND user_id = ? ";
-    PreparedStatement pst = db.prepareStatement(sql);
+        "AND user_id = ? ");
+    pst.setInt(1, projectId);
+    pst.setInt(2, userId);
+    pst.execute();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  projectId         Description of the Parameter
+   *@param  userId            Description of the Parameter
+   *@param  userLevel         Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static boolean changeRole(Connection db, int projectId, int userId, int userLevel) throws SQLException {
+    //Check current level, if user is not a leader than it doesn't matter what the change is
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT level " +
+        "FROM lookup_project_role " +
+        "WHERE code IN (SELECT userlevel FROM project_team WHERE project_id = ? AND user_id = ?) ");
+    pst.setInt(1, projectId);
+    pst.setInt(2, userId);
+    ResultSet rs = pst.executeQuery();
+    int previousLevel = -1;
+    while (rs.next()) {
+      previousLevel = rs.getInt("level");
+      if (previousLevel <= TeamMember.PROJECT_LEAD) {
+        break;
+      }
+    }
+    rs.close();
+    pst.close();
+    if (previousLevel <= TeamMember.PROJECT_LEAD) {
+      //Make sure that there is at least 1 other user with lead status before changing
+      pst = db.prepareStatement(
+          "SELECT count(user_id) AS other " +
+          "FROM project_team " +
+          "WHERE project_id = ? " +
+          "AND userlevel IN (SELECT code FROM lookup_project_role WHERE level <= ?) " +
+          "AND user_id <> ? ");
+      pst.setInt(1, projectId);
+      pst.setInt(2, TeamMember.PROJECT_LEAD);
+      pst.setInt(3, userId);
+      rs = pst.executeQuery();
+      int otherCount = -1;
+      if (rs.next()) {
+        otherCount = rs.getInt("other");
+      }
+      rs.close();
+      pst.close();
+      if (otherCount == 0) {
+        return false;
+      }
+    }
+    //Now update the team
+    pst = db.prepareStatement(
+        "UPDATE project_team " +
+        "SET userlevel = ? " +
+        "WHERE project_id = ? " +
+        "AND user_id = ? ");
+    pst.setInt(1, userLevel);
+    pst.setInt(2, projectId);
+    pst.setInt(3, userId);
+    int count = pst.executeUpdate();
+    pst.close();
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void updateStatus(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE project_team " +
+        "SET status = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+        "WHERE project_id = ? " +
+        "AND user_id = ? ");
+    DatabaseUtils.setInt(pst, 1, status);
+    pst.setInt(2, projectId);
+    pst.setInt(3, userId);
+    pst.execute();
+    pst.close();
+  }
+  
+  
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  projectId         Description of the Parameter
+   *@param  userId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void updateLastAccessed(Connection db, int projectId, int userId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE project_team " +
+        "SET last_accessed = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+        "WHERE project_id = ? " +
+        "AND user_id = ? ");
     pst.setInt(1, projectId);
     pst.setInt(2, userId);
     pst.execute();

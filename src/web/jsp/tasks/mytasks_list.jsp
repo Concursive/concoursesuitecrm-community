@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.tasks.base.*,org.aspcfs.modules.base.EmailAddress, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="TaskList" class="org.aspcfs.modules.tasks.base.TaskList" scope="request"/>
 <jsp:useBean id="TaskListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -121,8 +122,8 @@ Tasks
   <tr class="row<%= rowid %>">
     <td align="center" valign="top">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-      <a href="javascript:displayMenu('menuTask', '<%= Constants.TASKS %>', '<%=  thisTask.getId() %>');"
-       onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+      <a href="javascript:displayMenu('select<%= count %>','menuTask', '<%= Constants.TASKS %>', '<%=  thisTask.getId() %>');"
+       onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuTask');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td nowrap align="center" valign="top">
       <%= thisTask.getPriority()==-1?"-NA-":(new Integer(thisTask.getPriority())).toString() %>
@@ -242,11 +243,11 @@ Tasks
     </td>
     <%}%>
     <td nowrap align="center" valign="top">
-      <dhv:tz timestamp="<%= thisTask.getDueDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="-NA-"/>
+      <zeroio:tz timestamp="<%= thisTask.getDueDate() %>" dateOnly="true" default="-NA-"/>
     </td>
     <% if(TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("true")){ %>
       <td nowrap align="center" valign="top">
-        <dhv:tz timestamp="<%= thisTask.getCompleteDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="-NA-"/>
+        <zeroio:tz timestamp="<%= thisTask.getCompleteDate() %>" dateOnly="true" default="-NA-"/>
       </td>
     <%}%>
       <td nowrap align="center" valign="top">

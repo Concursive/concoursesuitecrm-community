@@ -1,9 +1,12 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.pipeline.base.OpportunityComponent,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="ComponentList" class="org.aspcfs.modules.pipeline.base.OpportunityComponentList" scope="request"/>
 <jsp:useBean id="AccountsComponentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -91,7 +94,7 @@ Opportunity Details
     <td width="8" valign="top" align="center" nowrap>
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
       <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-      <a href="javascript:displayMenu('menuOpp','<%= OrgDetails.getId() %>','<%= oppComponent.getId() %>', '<%= opportunityHeader.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+      <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= OrgDetails.getId() %>','<%= oppComponent.getId() %>', '<%= opportunityHeader.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
     <td width="100%" valign="top">
       <a href="OpportunitiesComponents.do?command=DetailsComponent&orgId=<%= OrgDetails.getId() %>&id=<%=oppComponent.getId()%>">
@@ -101,10 +104,10 @@ Opportunity Details
       <%= oppComponent.getClosed() != null ? "<font color=\"red\">closed</font>" : "<font color=\"green\">open</font>" %>
     </td>
     <td valign="top" align="right" nowrap>
-      $<%= oppComponent.getGuessCurrency() %>
+      <zeroio:currency value="<%= oppComponent.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
     <td valign="top" align="center" nowrap>
-      <dhv:tz timestamp="<%= oppComponent.getCloseDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= oppComponent.getCloseDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
     <td valign="top" align="center" nowrap>
       <%= toHtml(oppComponent.getStageName()) %>

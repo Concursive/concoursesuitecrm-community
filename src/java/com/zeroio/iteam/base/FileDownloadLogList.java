@@ -1,8 +1,8 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
@@ -16,7 +16,8 @@ import java.sql.*;
  *
  *@author     matt rajkowski
  *@created    January 15, 2003
- *@version    $Id$
+ *@version    $Id: FileDownloadLogList.java,v 1.1 2003/01/15 15:52:57 mrajkowski
+ *      Exp $
  */
 public class FileDownloadLogList extends ArrayList {
 

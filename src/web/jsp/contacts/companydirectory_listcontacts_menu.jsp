@@ -3,14 +3,14 @@
   var thisContactId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, contactId, editPermission, deletePermission, clonePermission) {
+  function displayMenu(loc, id, contactId, editPermission, deletePermission, clonePermission) {
     thisContactId = contactId;
     updateMenu(editPermission, deletePermission, clonePermission);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuContact", "down", 0, 0, 170, getHeight("menuContactTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
   //Update menu for this Contact based on permissions
@@ -54,39 +54,39 @@
 </script>
 <div id="menuContactContainer" class="menu">
   <div id="menuContactContent">
-    <table id="menuContactTable" class="pulldown" width="170">
+    <table id="menuContactTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="contacts-external_contacts-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
-      <tr id="menuEdit">
-        <td>
+      <tr id="menuEdit" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          Modify
         </td>
       </tr>
-      <tr id="menuClone">
-        <td>
+      <tr id="menuClone" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="clone()">
+        <th>
           <img src="images/icons/stock_copy-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:clone()">Clone</a>
+          Clone
         </td>
       </tr>
-      <tr id="menuDelete">
-        <td>
+      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteContact()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteContact()">Delete</a>
+          Delete
         </td>
       </tr>
     </table>

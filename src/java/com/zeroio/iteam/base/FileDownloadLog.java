@@ -1,8 +1,8 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
@@ -17,7 +17,8 @@ import org.aspcfs.utils.DatabaseUtils;
  *
  *@author     matt rajkowski
  *@created    January 15, 2003
- *@version    $Id$
+ *@version    $Id: FileDownloadLog.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista
+ *      Exp $
  */
 public class FileDownloadLog extends GenericBean {
 
@@ -255,9 +256,10 @@ public class FileDownloadLog extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean updateCounter(Connection db) throws SQLException {
-    if (itemId < 0 || version < 0 || userId < 0) {
+    if (itemId < 0 || version < 0) {
       return false;
     }
+    //Record the raw number of downloads
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_files " +
         "SET downloads = (downloads + 1) " +
@@ -265,7 +267,6 @@ public class FileDownloadLog extends GenericBean {
     pst.setInt(1, itemId);
     pst.executeUpdate();
     pst.close();
-
     pst = db.prepareStatement(
         "UPDATE project_files_version " +
         "SET downloads = (downloads + 1) " +
@@ -275,32 +276,32 @@ public class FileDownloadLog extends GenericBean {
     pst.setDouble(2, version);
     pst.executeUpdate();
     pst.close();
-
-    //Track each download
+    //Track bandwidth used for downloads
     String sql =
+        "INSERT INTO usage_log " +
+        "(enteredby, action, record_id, record_size) VALUES (?, ?, ?, ?) ";
+    int i = 0;
+    pst = db.prepareStatement(sql);
+    DatabaseUtils.setInt(pst, ++i, userId);
+    pst.setInt(++i, 2);
+    pst.setInt(++i, itemId);
+    pst.setInt(++i, fileSize);
+    pst.execute();
+    pst.close();
+    //Track each download by user (if not a guest)
+    if (userId < 0) {
+      return false;
+    }
+    sql =
         "INSERT INTO project_files_download " +
         "(item_id, version, user_download_id) VALUES (?, ?, ?) ";
-    int i = 0;
+    i = 0;
     pst = db.prepareStatement(sql);
     pst.setInt(++i, itemId);
     pst.setDouble(++i, version);
     pst.setInt(++i, userId);
     pst.execute();
     pst.close();
-    
-    //Track bandwidth used for downloads
-    sql =
-        "INSERT INTO usage_log " +
-        "(enteredby, action, record_id, record_size) VALUES (?, ?, ?, ?) ";
-    i = 0;
-    pst = db.prepareStatement(sql);
-    pst.setInt(++i, userId);
-    pst.setInt(++i, 2);
-    pst.setInt(++i, itemId);
-    pst.setInt(++i, fileSize);
-    pst.execute();
-    pst.close();
-
     return true;
   }
 }

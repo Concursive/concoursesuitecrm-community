@@ -141,9 +141,10 @@
       Initial Contract Date
     </td>
     <td>
-      <input type="text" size="10" name="initialStartDate" maxlength="10" value="<dhv:tz timestamp="<%= serviceContract.getInitialStartDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('addServiceContract', 'initialStartDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
-      <font color="red">*</font> <%= showAttribute(request, "initialStartDateError") %>
+      <input type="text" size="10" name="initialStartDate" maxlength="10" value="<zeroio:tz timestamp="<%= serviceContract.getInitialStartDate() %>" dateOnly="true" />">
+      <a href="javascript:popCalendar('addServiceContract', 'initialStartDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <font color="red">*</font>
+      <%= showAttribute(request, "initialStartDateError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -151,8 +152,8 @@
       Current Contract Date
     </td>
     <td>
-      <input type="text" size="10" name="currentStartDate" maxlength="10" value="<dhv:tz timestamp="<%= serviceContract.getCurrentStartDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('addServiceContract', 'currentStartDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" size="10" name="currentStartDate" maxlength="10" value="<zeroio:tz timestamp="<%= serviceContract.getCurrentStartDate() %>" dateOnly="true" />">
+      <a href="javascript:popCalendar('addServiceContract', 'currentStartDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
     </td>
   </tr>
   <tr class="containerBody">
@@ -160,8 +161,8 @@
       Current End Date
     </td>
     <td>
-      <input type="text" size="10" name="currentEndDate" maxlength="10" value="<dhv:tz timestamp="<%= serviceContract.getCurrentEndDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('addServiceContract', 'currentEndDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" size="10" name="currentEndDate" maxlength="10" value="<zeroio:tz timestamp="<%= serviceContract.getCurrentEndDate() %>" dateOnly="true" />">
+      <a href="javascript:popCalendar('addServiceContract', 'currentEndDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
     </td>
   </tr>
   <tr class="containerBody">

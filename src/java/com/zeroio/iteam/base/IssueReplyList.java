@@ -1,8 +1,8 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
@@ -20,7 +20,8 @@ import org.aspcfs.utils.web.PagedListInfo;
  *
  *@author     matt rajkowski
  *@created    January 15, 2003
- *@version    $Id$
+ *@version    $Id: IssueReplyList.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista
+ *      Exp $
  */
 public class IssueReplyList extends ArrayList {
 
@@ -124,8 +125,8 @@ public class IssueReplyList extends ArrayList {
       int maxRecords = rs.getInt("recordcount");
       pagedListInfo.setMaxRecords(maxRecords);
     }
-    pst.close();
     rs.close();
+    pst.close();
 
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {

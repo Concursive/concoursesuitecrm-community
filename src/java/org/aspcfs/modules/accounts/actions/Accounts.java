@@ -6,7 +6,6 @@ import java.sql.*;
 import java.util.*;
 import java.text.*;
 import java.io.*;
-import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.utils.*;
@@ -24,6 +23,8 @@ import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.pipeline.base.OpportunityReport;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.iteam.base.FileItem;
 
 /**
  *  Actions for the Accounts module

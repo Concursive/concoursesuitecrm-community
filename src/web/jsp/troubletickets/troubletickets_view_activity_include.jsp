@@ -53,7 +53,7 @@
   %>
         <tr valign="top" class="containerBody">
           <td align="center" nowrap>
-            <dhv:tz timestamp="<%=thisDayDescription.getActivityDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+            <zeroio:tz timestamp="<%=thisDayDescription.getActivityDate()%>" dateOnly="true" default="&nbsp;"/>
           <td align="right" nowrap>
             <%= thisDayDescription.getTravelHours() %> hrs &nbsp <%= thisDayDescription.getTravelMinutes() %> min 
           </td>
@@ -111,10 +111,10 @@
   <dhv:evaluate if="<%= activityDetails.getAlertDate() != null %>">
     <tr class="containerBody">
       <td valign="top" class="formLabel">
-      Alert Date
+        Alert Date
       </td>
       <td>
-      <dhv:tz timestamp="<%=activityDetails.getAlertDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%=activityDetails.getAlertDate()%>" dateOnly="true" default="&nbsp;"/>
       </td>
     </tr>
   </dhv:evaluate>

@@ -20,7 +20,8 @@ import org.aspcfs.modules.base.Constants;
  *
  *@author     akhi_m
  *@created    August 15, 2002
- *@version    $Id$
+ *@version    $Id: TaskList.java,v 1.19.50.1 2004/07/06 19:13:37 mrajkowski Exp
+ *      $
  */
 public class TaskList extends ArrayList {
   protected int enteredBy = -1;
@@ -166,6 +167,7 @@ public class TaskList extends ArrayList {
    *  Return a mapping of number of alerts for each alert category.
    *
    *@param  db                Description of the Parameter
+   *@param  timeZone          Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
@@ -177,9 +179,8 @@ public class TaskList extends ArrayList {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlTail = new StringBuffer();
     createFilter(sqlFilter);
-    
     sqlSelect.append(
-        "SELECT duedate, count(*) as nocols " +
+        "SELECT duedate, count(*) AS nocols " +
         "FROM task t " +
         "WHERE t.task_id > -1 ");
     sqlFilter.append("AND duedate IS NOT NULL ");
@@ -192,7 +193,7 @@ public class TaskList extends ArrayList {
     }
     while (rs.next()) {
       String dueDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("duedate"));
-     int temp = rs.getInt("nocols");
+      int temp = rs.getInt("nocols");
       events.put(dueDate, new Integer(temp));
     }
     rs.close();
@@ -280,7 +281,7 @@ public class TaskList extends ArrayList {
         pst.close();
       }
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("t.priority", null);
+      pagedListInfo.setDefaultSort("t.priority, description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY t.priority, description ");
@@ -451,6 +452,21 @@ public class TaskList extends ArrayList {
     rs.close();
     pst.close();
     return toReturn;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+    Iterator tasks = this.iterator();
+    while (tasks.hasNext()) {
+      Task thisTask = (Task) tasks.next();
+      thisTask.delete(db);
+    }
   }
 }
 

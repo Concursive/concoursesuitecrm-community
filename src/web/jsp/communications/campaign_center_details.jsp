@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="fileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
@@ -107,7 +108,7 @@ Campaign Details
               <tr class="containerBody">
                 <td style="text-align: center;">
                   <% if(Campaign.hasDetails()){ %>
-                    <font color='green'>Scheduled for <br> <dhv:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/> <%= toHtml(Campaign.getDeliveryName()) %> </font><br>
+                    <font color='green'>Scheduled for <br> <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" default="&nbsp;"/> <%= toHtml(Campaign.getDeliveryName()) %></font><br>
                   <% }else{ %>
                     <font color='red'>Not Scheduled</font><br>&nbsp;<br>
                   <% } %>
@@ -180,19 +181,16 @@ Campaign Details
     </td>
     <td>
       <dhv:username id="<%= Campaign.getEnteredBy() %>" />
-      -
-      <dhv:tz timestamp="<%= Campaign.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= Campaign.getEntered() %>" />
     </td>
   </tr>
-  
   <tr class="containerBody">
     <td class="formLabel">
       Modified
     </td>
     <td>
       <dhv:username id="<%= Campaign.getModifiedBy() %>" />
-      -
-      <dhv:tz timestamp="<%= Campaign.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= Campaign.getModified() %>" />
     </td>
   </tr>
 </table>

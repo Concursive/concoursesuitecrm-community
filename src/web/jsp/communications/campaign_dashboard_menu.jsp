@@ -3,14 +3,14 @@
   var thisCampaignId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, campaignId, cancel, download) {
+  function displayMenu(loc, id, campaignId, cancel, download) {
     thisCampaignId = campaignId;
     updateMenu(cancel, download);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuCampaign", "down", 0, 0, 170, getHeight("menuCampaignTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
   //Update menu for this Contact based on permissions
@@ -37,33 +37,33 @@
 </script>
 <div id="menuCampaignContainer" class="menu">
   <div id="menuCampaignContent">
-    <table id="menuCampaignTable" class="pulldown" width="170">
+    <table id="menuCampaignTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="campaign-campaigns-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="campaign-campaigns-view">
-      <tr id="menuReport">
-        <td>
+      <tr id="menuReport" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="generateReport()">
+        <th>
           <img src="images/icons/stock_export-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:generateReport()">Export to Excel</a>
+          Export to Excel
         </td>
       </tr>
       </dhv:permission>
-      <tr id="menuCancel">
-        <td>
+      <tr id="menuCancel" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="cancel()">
+        <th>
           <img src="images/icons/stock_stop-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:cancel()">Cancel</a>
+          Cancel
         </td>
       </tr>
     </table>

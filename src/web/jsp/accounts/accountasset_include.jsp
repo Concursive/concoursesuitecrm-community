@@ -43,10 +43,6 @@
       message += "- Check that Purchase Date is entered correctly\r\n";
       formTest = false;
     }
-    if (!checkNumber(form.purchaseCost.value)) { 
-      message += "- Check that Purchase Cost is entered correctly\r\n";
-      formTest = false;
-    }
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
@@ -70,6 +66,7 @@
     </td>
     <td>
       <input type="text" size="20" name="vendor" maxlength="30" value="<%= toHtmlValue(asset.getVendor()) %>">
+      <%= showAttribute(request, "vendorError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -78,6 +75,7 @@
     </td>
     <td>
       <input type="text" size="20" name="manufacturer" maxlength="30" value="<%= toHtmlValue(asset.getManufacturer()) %>">
+      <%= showAttribute(request, "manufacturerError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -86,7 +84,8 @@
     </td>
     <td>
       <input type="text" size="20" name="serialNumber" maxlength="30" value="<%= toHtmlValue(asset.getSerialNumber()) %>">
-      &nbsp;<font color="red">*</font>
+      <font color="red">*</font>
+      <%= showAttribute(request, "serialNumberError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -95,6 +94,7 @@
     </td>
     <td>
       <input type="text" size="20" name="modelVersion" maxlength="30" value="<%= toHtmlValue(asset.getModelVersion()) %>">
+      <%= showAttribute(request, "modelVersionError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -103,6 +103,7 @@
     </td>
     <td>
       <textarea name="description" rows="3" cols="50"><%= toString(asset.getDescription()) %></textarea>
+      <%= showAttribute(request, "descriptionError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -113,10 +114,11 @@
       <%if (asset.getDateListed() == null){ %>
         <input type="text" size="10" name="dateListed" maxlength="10" value="<%=toHtml((String)request.getAttribute("currentDate"))%>">
       <%}else{%>
-        <input type="text" size="10" name="dateListed" maxlength="10" value="<dhv:tz timestamp="<%= asset.getDateListed() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
+        <input type="text" size="10" name="dateListed" maxlength="10" value="<zeroio:tz timestamp="<%= asset.getDateListed() %>" dateOnly="true" />">
       <%}%>
-      <a href="javascript:popCalendar('addAccountAsset', 'dateListed');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
-      &nbsp;<font color="red">*</font>
+      <a href="javascript:popCalendar('addAccountAsset', 'dateListed', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <%= showAttribute(request, "dateListedError") %>
+      <font color="red">*</font>
     </td>
   </tr>
   <tr class="containerBody">
@@ -125,6 +127,7 @@
     </td>
     <td>
       <input type="text" name="location"  size="50" maxlength="256" value="<%= toHtmlValue(asset.getLocation()) %>">
+      <%= showAttribute(request, "locationError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -133,6 +136,7 @@
     </td>
     <td>
       <input type="text" size="20" name="assetTag" maxlength="30" value="<%= toHtmlValue(asset.getAssetTag()) %>">
+      <%= showAttribute(request, "assetTagError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -140,7 +144,7 @@
       Status
     </td>
     <td>
-      <%= assetStatusList.getHtmlSelect("status",asset.getStatus()) %>
+      <%= assetStatusList.getHtmlSelect("status", asset.getStatus()) %>
     </td>
   </tr>
 </table>
@@ -264,8 +268,9 @@
       Expiration Date
     </td>
     <td>
-      <input type="text" size="10" name="expirationDate" maxlength="10" value="<dhv:tz timestamp="<%= asset.getExpirationDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('addAccountAsset', 'expirationDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" size="10" name="expirationDate" maxlength="10" value="<zeroio:tz timestamp="<%= asset.getExpirationDate() %>" dateOnly="true" />">
+      <a href="javascript:popCalendar('addAccountAsset', 'expirationDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <%= showAttribute(request, "expirationDateError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -297,8 +302,9 @@
       Purchase Date
     </td>
     <td>
-      <input type="text" size="10" name="purchaseDate" maxlength="10" value="<dhv:tz timestamp="<%= asset.getPurchaseDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('addAccountAsset', 'purchaseDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" size="10" name="purchaseDate" maxlength="10" value="<zeroio:tz timestamp="<%= asset.getPurchaseDate() %>" dateOnly="true" />">
+      <a href="javascript:popCalendar('addAccountAsset', 'purchaseDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <%= showAttribute(request, "purchaseDateError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -306,9 +312,10 @@
       Purchase Cost
     </td>
     <td>
-      <input type="text" size="10" name="purchaseCost" maxlength="10" value="<%= asset.getPurchaseCost() == -1 ? "" : "" + asset.getPurchaseCost() %>">
+      <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+      <input type="text" name="purchaseCost" size="15" value="<zeroio:number value="<%= asset.getPurchaseCost() %>" locale="<%= User.getLocale() %>" />">
       <%= showAttribute(request, "purchaseCostError") %>
-      </td>
+    </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
@@ -316,6 +323,7 @@
     </td>
     <td>
       <input type="text" size="20" name="poNumber" maxlength="30" value="<%= toHtmlValue(asset.getPoNumber()) %>">
+      <%= showAttribute(request, "poNumberError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -324,6 +332,7 @@
     </td>
     <td>
       <input type="text" size="20" name="purchasedFrom" maxlength="30" value="<%= toHtmlValue(asset.getPurchasedFrom()) %>">
+      <%= showAttribute(request, "purchasedFromError") %>
     </td>
   </tr>
 </table>

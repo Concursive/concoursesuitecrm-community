@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*"%>
 <jsp:useBean id="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request"/>
 <%@ include file="../initPage.jsp" %>

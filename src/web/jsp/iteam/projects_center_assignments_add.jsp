@@ -1,13 +1,37 @@
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.utils.web.*,org.aspcfs.modules.contacts.base.*" %>
+<%--
+ Copyright 2000-2004 Matt Rajkowski
+ matt.rajkowski@teamelements.com
+ http://www.teamelements.com
+ This source code cannot be modified, distributed or used without
+ permission from Matt Rajkowski
+--%>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*" %>
+<%@ page import="com.zeroio.iteam.base.*" %>
+<%@ page import="org.aspcfs.utils.web.*" %>
+<%@ page import="org.aspcfs.modules.contacts.base.*" %>
+<%@ page import="org.aspcfs.modules.admin.base.User" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="Assignment" class="com.zeroio.iteam.base.Assignment" scope="request"/>
-<jsp:useBean id="RequirementList" class="com.zeroio.iteam.base.RequirementList" scope="request"/>
-<jsp:useBean id="ActivityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="StatusList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="StatusPercentList" class="com.zeroio.iteam.base.HtmlPercentList" scope="request"/>
 <jsp:useBean id="LoeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<body bgcolor="#FFFFFF" onLoad="document.inputForm.role.focus();">
+<%
+  String onLoad = "";
+  if ("true".equals(request.getParameter("donew"))) {
+    onLoad = "window.opener.scrollReload('ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=" + Project.getId() + "&rid=" +  (Assignment.getId() == -1?request.getParameter("rid"):String.valueOf(Assignment.getRequirementId())) + "')";
+  }
+  //Only evaluate on an insert
+  int maxIndent = 0;
+  if (Assignment.getId() == -1) {
+    maxIndent = (Assignment.getPrevIndent() > -1 ? Assignment.getPrevIndent() + 1 : Integer.parseInt(request.getParameter("prevIndent")) + 1);
+  }
+%>
+<body onLoad="document.inputForm.role.focus();<%= onLoad %>">
 <script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
 <script language="JavaScript">
@@ -17,25 +41,18 @@
     }
     var formTest = true;
     var messageText = "";
-    
     //Check required field
-    if (form.role.value == "") {    
+    if (form.role.value == "") {
       messageText += "- Description field is required\r\n";
       formTest = false;
     }
-    if (form.userAssignedId.selectedIndex == 0) {
-      messageText += "- Assigned To is a required field\r\n";
+<dhv:evaluate if="<%= Assignment.getId() == -1 %>">
+    //Check max indent
+    if (form.indent.value > <%= maxIndent %>) {
+      messageText += "- Indent level must be between 0 and <%= maxIndent %>\r\n";
       formTest = false;
     }
-    if (form.activityId.selectedIndex == 0) {
-      messageText += "- Activity Type is a required field\r\n";
-      formTest = false;
-    }
-    if (form.statusId.selectedIndex == 0) {
-      messageText += "- Current Status is a required field\r\n";
-      formTest = false;
-    }
-  
+</dhv:evaluate>
     //Check number field
     var valid = "0123456789.";
     var ok = true;
@@ -51,13 +68,11 @@
         formTest = false;
       }
     }
-
     //Check date field
     if ((form.dueDate.value != "") && (!checkDate(form.dueDate.value))) {
       messageText += "- Due date was not properly entered\r\n";
       formTest = false;
     }
-      
     if (formTest == false) {
       messageText = "The activity form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
       form.dosubmit.value = "true";
@@ -68,133 +83,128 @@
     }
   }
 </script>
-<form method="POST" name="inputForm" action="ProjectManagementAssignments.do?command=Insert&auto-populate=true<%= ("Requirements".equals(request.getParameter("return"))?"&return=Requirements":"") %>" onSubmit="return checkForm(this);">
-  <% if (request.getAttribute("actionError") != null) { %>
-    <%= showError(request, "actionError") %>
-  <%}%>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0">
+<form method="POST" name="inputForm" action="ProjectManagementAssignments.do?command=Save&pid=<%= Project.getId() %>&rid=<%= (Assignment.getId() == -1?request.getParameter("rid"):String.valueOf(Assignment.getRequirementId())) %>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return checkForm(this);">
+  <input type="submit" value=" Save " onClick="javascript:this.form.donew.value='false'">
+<dhv:evaluate if="<%= Assignment.getId() == -1 %>">
+  <input type="submit" value="Save & New" onClick="javascript:this.form.donew.value='true'">
+</dhv:evaluate>
+  <input type="button" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';<%= (isPopup(request)?"window.close();":"window.location.href='ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=" + Project.getId()  + "&rid=" + String.valueOf(Assignment.getRequirementId()) + "';") %>">
+  <br>
+  <%= showError(request, "actionError") %>
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
-      <td width="100%" colspan="4" bgcolor="#000000" rowspan="2">
-      <font color="#FFFFFF">&nbsp;<b>New Activity</b></font>
-    </td>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
+      <th colspan="2">
+        <strong><%= Assignment.getId()==-1?"Add":"Update" %> Activity</strong>
+      </th>
     </tr>
-    <tr>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
+    <tr class="containerBody">
+      <td valign="top" nowrap class="formLabel">Description</td>
+      <td valign="top" nowrap>
+        <input type="text" name="role" size="57" maxlength="150" value="<%= toHtmlValue(Assignment.getRole()) %>"><font color=red>*</font>
+        <%= showAttribute(request, "roleError") %>
+      </td>
     </tr>
+<dhv:evaluate if="<%= Assignment.getId() == -1 %>">
     <tr>
-      <td width="2" bgcolor="#000000">
-        &nbsp;
+      <td class="formLabel" nowrap>
+        Indent Level
       </td>
-      <td width="100%" colspan="4">
-        &nbsp;<br>
-        &nbsp;Activity Description:<br>
-        &nbsp;
-        <input type="text" name="role" size="57" maxlength="150" value="<%= toHtmlValue(Assignment.getRole()) %>"><font color=red>*</font> <%= showAttribute(request, "roleError") %>
-        <br>
+      <td>
+        <zeroio:spinner name="indent" value="<%= Assignment.getIndent() > -1 ? Assignment.getIndent() : Integer.parseInt(request.getParameter("prevIndent")) %>" min="0" max="<%= maxIndent %>"/>
       </td>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
     </tr>
-    <tr>
-      <td width="2" bgcolor="#000000">
-        &nbsp;
+</dhv:evaluate>
+    <tr class="containerBody">
+      <td class="formLabel">Priority</td>
+      <td valign="top">
+        <%= PriorityList.getHtmlSelect("priorityId", Assignment.getPriorityId()) %>
       </td>
-      <td width="100%" colspan="4">
-        &nbsp;<br>
-        &nbsp;Link to Requirement:<br>
-        &nbsp;
-        <%= RequirementList.getHtmlSelect("requirementId", Assignment.getRequirementId()) %><font color=red>*</font> <%= showAttribute(request, "requirementIdError") %>
-        <br>
-        &nbsp;
-      </td>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
     </tr>
-    <tr>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
-      <td width="34%" nowrap>&nbsp;Assigned To:<br>
-        &nbsp; 
+    <tr class="containerBody">
+      <td nowrap class="formLabel">Assigned To</td>
+      <td valign="top">
 <% 
     TeamMemberList thisTeam = Project.getTeam();
     HtmlSelect team = new HtmlSelect();
-    team.addItem(0, "-- Select User --");
+    team.addItem(-1, "-- None Selected --");
     Iterator iTeam = thisTeam.iterator();
     while (iTeam.hasNext()) {
       TeamMember thisMember = (TeamMember)iTeam.next();
       team.addItem(thisMember.getUserId(), 
-           ((Contact)thisMember.getContact()).getNameLast() + ", " +
-           ((Contact)thisMember.getContact()).getNameFirst());
+        ((User) thisMember.getUser()).getContact().getNameLastFirst());
     }
 %>
-        <%= team.getHtml("userAssignedId", Assignment.getUserAssignedId()) %><font color=red>*</font> <%= showAttribute(request, "userAssignedIdError") %>
-        <br>&nbsp;
+        <%= team.getHtml("userAssignedId", Assignment.getUserAssignedId()) %>
+        <%= showAttribute(request, "userAssignedIdError") %>
       </td>
-      <td width="33%" colspan="2" nowrap>&nbsp;Activity
-        Type:<br>
-        &nbsp;
-        <%= ActivityList.getHtmlSelect("activityId", Assignment.getActivityId()) %><font color=red>*</font> <%= showAttribute(request, "activityIdError") %>
-        <br>
-        &nbsp;
-      </td>
-      <td width="33%">&nbsp;Priority:<br>
-        &nbsp;
-        <%= PriorityList.getHtmlSelect("priorityId", Assignment.getPriorityId()) %>
-        <br>
-        &nbsp;
-      </td>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
     </tr>
-    <tr>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
-      <td width="50%" colspan="2">&nbsp;Current
-        Status:<br>
-        &nbsp;<%--= Assignment.getStatusGraphic() --%><%= StatusList.getHtmlSelect("statusId", Assignment.getStatusId()) %><font color=red>*</font> <%= showAttribute(request, "statusIdError") %>
-        <br>
-        &nbsp;
+    <tr class="containerBody">
+      <td nowrap class="formLabel" rowspan="2" valign="top">Status</td>
+      <td>
+        <%= StatusList.getHtmlSelect("statusId", Assignment.getStatusId()) %><font color="red">*</font>
+        <%= showAttribute(request, "statusIdError") %>
       </td>
-      <td width="50%" colspan="2">&nbsp;Assigned
-        Technology:<br>
-        &nbsp;
+    </tr>
+    <tr class="containerBody">
+      <td>
+        <%= StatusPercentList.getHtml("percentComplete", Assignment.getPercentComplete()) %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">Keywords</td>
+      <td valign="top">
         <input type="text" name="technology" size="24" maxlength="50" value="<%= toHtmlValue(Assignment.getTechnology()) %>">
-        <br>
-        &nbsp;
       </td>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
     </tr>
-    <tr>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
-      <td width="50%" colspan="2">&nbsp;Level of Effort:<br>
-        &nbsp;
-        <input type="text" name="estimatedLoe" size="4" value="<%= Assignment.getEstimatedLoeValue() %>">
-        <%= LoeList.getHtmlSelect("estimatedLoeTypeId", Assignment.getEstimatedLoeTypeId()) %>
-        <br>
-        &nbsp;
+    <tr class="containerBody">
+      <td class="formLabel" valign="top" nowrap>Level of Effort</td>
+      <td>
+        <table border="0" cellspacing="0" cellpadding="0" class="empty">
+          <tr>
+            <td align="right">
+              Estimated:
+            </td>
+            <td>
+              <input type="text" name="estimatedLoe" size="4" value="<%= Assignment.getEstimatedLoeValue() %>">
+              <%= LoeList.getHtmlSelect("estimatedLoeTypeId", Assignment.getEstimatedLoeTypeId()) %>
+            </td>
+          </tr>
+          <tr>
+            <td align="right">
+              Actual:
+            </td>
+            <td>
+              <input type="text" name="actualLoe" size="4" value="<%= Assignment.getActualLoeValue() %>">
+              <%= LoeList.getHtmlSelect("actualLoeTypeId", Assignment.getActualLoeTypeId()) %>
+            </td>
+          </tr>
+        </table>
       </td>
-      <td width="50%" colspan="2">&nbsp;Activity Due:<br>
-        &nbsp;
-        <input type="text" name="dueDate" size="20" value="<%= Assignment.getDueDateValue() %>">
-        <a href="javascript:popCalendar('inputForm', 'dueDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
-        <br>
-        &nbsp;
-      </td>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
     </tr>
-    <tr>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
-      <td width="100%" bgcolor="#000000" height="30" colspan="4">
-        <p align="center">
-          &nbsp;
-          <input type="submit" value=" Save ">&nbsp;&nbsp;
-          &nbsp;&nbsp;
-          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&pid=<%= Project.getId() %><%= ("Requirements".equals(request.getParameter("return"))?"&section=Requirements":"&section=Assignments") %>';">
-          &nbsp;&nbsp;
-        </p>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">Due Date</td>
+      <td valign="top">
+        <zeroio:dateSelect form="inputForm" field="dueDate" timestamp="<%= Assignment.getDueDate() %>" />
       </td>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
     </tr>
   </table>
-  <input type="hidden" name="pid" value="<%= Project.getId() %>">
+  <br>
+  <input type="submit" value=" Save " onClick="javascript:this.form.donew.value='false'">
+<dhv:evaluate if="<%= Assignment.getId() == -1 %>">
+  <input type="submit" value="Save & New" onClick="javascript:this.form.donew.value='true'">
+</dhv:evaluate>
+  <input type="button" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';<%= (isPopup(request)?"window.close();":"window.location.href='ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=" + Project.getId()  + "&rid=" + String.valueOf(Assignment.getRequirementId()) + "';") %>">
+  <input type="hidden" name="id" value="<%= Assignment.getId() %>">
+  <input type="hidden" name="folderId" value="<%= (Assignment.getId() == -1?request.getParameter("folderId"):String.valueOf(Assignment.getFolderId())) %>">
+  <input type="hidden" name="projectId" value="<%= Project.getId() %>">
+  <input type="hidden" name="requirementId" value="<%= (Assignment.getId() == -1?request.getParameter("rid"):String.valueOf(Assignment.getRequirementId())) %>">
+  <input type="hidden" name="modified" value="<%= Assignment.getModifiedString() %>">
   <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="donew" value="false">
+  <input type="hidden" name="return" value="<%= request.getAttribute("return") %>">
+  <input type="hidden" name="param" value="<%= Project.getId() %>">
+  <input type="hidden" name="param2" value="<%= (Assignment.getId() == -1?request.getParameter("rid"):String.valueOf(Assignment.getRequirementId())) %>">
+  <input type="hidden" name="prevIndent" value="<%= Assignment.getPrevIndent() > -1 ? String.valueOf(Assignment.getPrevIndent()) : request.getParameter("prevIndent") %>">
+  <input type="hidden" name="prevMapId" value="<%= Assignment.getPrevMapId() > -1 ? String.valueOf(Assignment.getPrevMapId()) : request.getParameter("prevMapId") %>">
 </form>
 </body>

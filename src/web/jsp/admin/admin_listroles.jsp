@@ -55,7 +55,7 @@ View Roles
       <tr>
         <td nowrap class="row<%= rowid %>">
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-          <a href="javascript:displayMenu('menuRole', '<%= thisRole.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+          <a href="javascript:displayMenu('select<%= count %>','menuRole', '<%= thisRole.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuRole');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
         <td class="row<%= rowid %>">
           <a href="Roles.do?command=RoleDetails&id=<%= thisRole.getId() %>"><%= toHtml(thisRole.getRole()) %></a>

@@ -145,8 +145,7 @@
     </td>
     <td>
       <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
-      -
-      <dhv:tz timestamp="<%= ContactDetails.getEntered()  %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= ContactDetails.getEntered()  %>" />
     </td>
   </tr>
   <tr class="containerBody">
@@ -155,8 +154,7 @@
     </td>
     <td>
       <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
-      -
-      <dhv:tz timestamp="<%= ContactDetails.getModified()  %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= ContactDetails.getModified()  %>" />
     </td>
   </tr>
 </table>

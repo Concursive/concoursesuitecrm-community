@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
@@ -194,8 +195,7 @@ Contact Details
     </td>
     <td>
       <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
-      -
-      <dhv:tz timestamp="<%= ContactDetails.getEntered()  %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= ContactDetails.getEntered()  %>" />
     </td>
   </tr>
   <tr class="containerBody">
@@ -204,8 +204,7 @@ Contact Details
     </td>
     <td>
       <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
-      -
-      <dhv:tz timestamp="<%= ContactDetails.getModified()  %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= ContactDetails.getModified()  %>" />
     </td>
   </tr>
 </table>

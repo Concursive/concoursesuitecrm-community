@@ -124,16 +124,32 @@ public class DateUtils {
    *@return             The dateString value
    */
   public static String getUserToServerDateTimeString(TimeZone timeZone, int dateFormat, int timeFormat, String date) {
+    return getUserToServerDateTimeString(timeZone, dateFormat, timeFormat, date, Locale.getDefault());
+  }
+
+
+  /**
+   *  Gets the userToServerDateTimeString attribute of the DateUtils class
+   *
+   *@param  timeZone    Description of the Parameter
+   *@param  dateFormat  Description of the Parameter
+   *@param  timeFormat  Description of the Parameter
+   *@param  date        Description of the Parameter
+   *@param  locale      Description of the Parameter
+   *@return             The userToServerDateTimeString value
+   */
+  public static String getUserToServerDateTimeString(TimeZone timeZone, int dateFormat, int timeFormat, String date, Locale locale) {
     String convertedDate = null;
     try {
-      DateFormat localeFormatter = DateFormat.getDateInstance(dateFormat);
+      DateFormat localeFormatter = DateFormat.getDateInstance(dateFormat, locale);
       if (timeZone != null) {
         localeFormatter.setTimeZone(timeZone);
       }
       DateFormat serverFormatter = DateFormat.getDateTimeInstance(dateFormat, timeFormat);
-      convertedDate = serverFormatter.format(localeFormatter.parse(date));
+      //convertedDate = serverFormatter.format(localeFormatter.parse(date));
+      convertedDate = serverFormatter.format(new java.util.Date(localeFormatter.parse(date).getTime() + 1000 * 60 * 60 * 12));
     } catch (Exception e) {
-      System.err.println("EXCEPTION: DateTimeHandler-> Timestamp ");
+      System.err.println("EXCEPTION: DateUtils-> Timestamp ");
     }
     return convertedDate;
   }
@@ -157,7 +173,7 @@ public class DateUtils {
       }
       timestampValue = new java.sql.Timestamp(localFormatter.parse(date).getTime());
     } catch (Exception e) {
-      System.out.println("DateUtils -- > getUserToServerDateTime Exception" + e.toString());
+      System.out.println("DateUtils-> getUserToServerDateTime Exception" + e.toString());
     }
     return timestampValue;
   }
@@ -199,7 +215,9 @@ public class DateUtils {
     try {
       //TODO: combine the Locale when User Locale that has been implemented
       formatter = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance(dateFormat, timeFormat);
-      formatter.setTimeZone(timeZone);
+      if (timeZone != null) {
+        formatter.setTimeZone(timeZone);
+      }
     } catch (Exception e) {
       System.err.println("EXCEPTION: DateUtils -> Timestamp " + date);
     }
@@ -277,38 +295,53 @@ public class DateUtils {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
     return formatter.format(new java.util.Date());
   }
-  
+
+
   /**
- * Calculates the number of days between two calendar days in a manner
- * which is independent of the Calendar type used.
- *
- * @param d1    The first date.
- * @param d2    The second date.
- *
- * @return      The number of days between the two dates.  Zero is
- *              returned if the dates are the same, one if the dates are
- *              adjacent, etc.  The order of the dates
- *              does not matter, the value returned is always >= 0.
- *              If Calendar types of d1 and d2
- *              are different, the result may not be accurate.
- */
-  static int getDaysBetween (java.util.Calendar d1, java.util.Calendar d2) {
-      if (d1.after(d2)) {  // swap dates so that d1 is start and d2 is end
-          java.util.Calendar swap = d1;
-          d1 = d2;
-          d2 = swap;
-      }
-      int days = d2.get(java.util.Calendar.DAY_OF_YEAR) -
-                 d1.get(java.util.Calendar.DAY_OF_YEAR);
-      int y2 = d2.get(java.util.Calendar.YEAR);
-      if (d1.get(java.util.Calendar.YEAR) != y2) {
-          d1 = (java.util.Calendar) d1.clone();
-          do {
-              days += d1.getActualMaximum(java.util.Calendar.DAY_OF_YEAR);
-              d1.add(java.util.Calendar.YEAR, 1);
-          } while (d1.get(java.util.Calendar.YEAR) != y2);
-      }
-      return days;
-  } // getDaysBetween()
+   *  The HTML date/time selector works on 5's so round up to next 5
+   *
+   *@param  millis  Description of the Parameter
+   *@return         Description of the Return Value
+   */
+  public static Timestamp roundUpToNextFive(long millis) {
+    Calendar cal = Calendar.getInstance();
+    while (cal.get(Calendar.MINUTE) % 5 != 0) {
+      cal.set(Calendar.MINUTE, cal.get(Calendar.MINUTE) + 1);
+    }
+    return new Timestamp(cal.getTimeInMillis());
+  }
+
+
+  /**
+   *  Calculates the number of days between two calendar days in a manner which
+   *  is independent of the Calendar type used.
+   *
+   *@param  d1  The first date.
+   *@param  d2  The second date.
+   *@return     The number of days between the two dates. Zero is returned if
+   *      the dates are the same, one if the dates are adjacent, etc. The order
+   *      of the dates does not matter, the value returned is always >= 0. If
+   *      Calendar types of d1 and d2 are different, the result may not be
+   *      accurate.
+   */
+  static int getDaysBetween(java.util.Calendar d1, java.util.Calendar d2) {
+    if (d1.after(d2)) {
+      // swap dates so that d1 is start and d2 is end
+      java.util.Calendar swap = d1;
+      d1 = d2;
+      d2 = swap;
+    }
+    int days = d2.get(java.util.Calendar.DAY_OF_YEAR) -
+        d1.get(java.util.Calendar.DAY_OF_YEAR);
+    int y2 = d2.get(java.util.Calendar.YEAR);
+    if (d1.get(java.util.Calendar.YEAR) != y2) {
+      d1 = (java.util.Calendar) d1.clone();
+      do {
+        days += d1.getActualMaximum(java.util.Calendar.DAY_OF_YEAR);
+        d1.add(java.util.Calendar.YEAR, 1);
+      } while (d1.get(java.util.Calendar.YEAR) != y2);
+    }
+    return days;
+  }
 }
 

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
@@ -68,7 +69,7 @@ Documents
             <tr class="row<%= rowid %>">
               <td width="10" valign="middle" align="center" nowrap>
                 <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-                <a href="javascript:displayMenu('menuFile','<%= TicketDetails.getId() %>','<%= thisFile.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+                <a href="javascript:displayMenu('select<%= i %>','menuFile','<%= TicketDetails.getId() %>','<%= thisFile.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuFile');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
               </td>
               <td valign="middle" width="100%">
                 <a href="AccountTicketsDocuments.do?command=Details&tId=<%= TicketDetails.getId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getSubject()) %></a>
@@ -86,7 +87,7 @@ Documents
               </td>
             </dhv:permission>
               <td nowrap>
-                <dhv:tz timestamp="<%= thisFile.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/><br>
+                <zeroio:tz timestamp="<%= thisFile.getModified() %>" /><br>
                 <dhv:username id="<%= thisFile.getEnteredBy() %>"/>
               </td>
             </tr>

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.mycfs.base.*, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="CFSNoteList" class="org.aspcfs.modules.mycfs.base.CFSNoteList" scope="request"/>
 <jsp:useBean id="InboxInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -86,8 +87,8 @@ Mailbox
   <tr>
     <td valign="center" nowrap class="row<%= rowid %>">
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-        <a href="javascript:displayMenu('menuNote', '<%= Constants.CFSNOTE %>', '<%=  thisNote.getId() %>');"
-         onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+        <a href="javascript:displayMenu('select<%= count %>','menuNote', '<%= Constants.CFSNOTE %>', '<%=  thisNote.getId() %>');"
+         onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuNote');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
   <% if (InboxInfo.getListView().equalsIgnoreCase("new")){ %>
 		<td valign="center" nowrap class="row<%= rowid %>">
@@ -121,7 +122,7 @@ Mailbox
 		<td valign="center" class="row<%= rowid %>"><%= recipientList.toString() %></td>
                 <%
 		}%>
-		<td valign="center" class="row<%= rowid %>" nowrap><dhv:tz timestamp="<%= thisNote.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.SHORT %>"/></td>
+		<td valign="center" class="row<%= rowid %>" nowrap><zeroio:tz timestamp="<%= thisNote.getEntered() %>" /></td>
   </tr>
 <%}%>
 </table>

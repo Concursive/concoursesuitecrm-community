@@ -20,8 +20,9 @@ import org.aspcfs.modules.pipeline.base.OpportunityHeaderList;
 import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.base.*;
-import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.iteam.base.FileItem;
 
 /**
  *  Description of the Class
@@ -74,14 +75,6 @@ public final class ExternalContacts extends CFSModule {
     try {
       db = this.getConnection(context);
       files.buildList(db);
-      Iterator i = files.iterator();
-      while (i.hasNext()) {
-        FileItem thisItem = (FileItem) i.next();
-        Contact enteredBy = this.getUser(context, thisItem.getEnteredBy()).getContact();
-        Contact modifiedBy = this.getUser(context, thisItem.getModifiedBy()).getContact();
-        thisItem.setEnteredByString(enteredBy.getNameFirstLast());
-        thisItem.setModifiedByString(modifiedBy.getNameFirstLast());
-      }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

@@ -77,21 +77,21 @@ List of Folder Records
           <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
           <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-           <a href="javascript:displayMenu('menuFolders', '<%= OrgDetails.getOrgId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');"
-           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+           <a href="javascript:displayMenu('select<%= i %>','menuFolders', '<%= OrgDetails.getOrgId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');"
+           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuFolders');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
           </dhv:evaluate>
         </td>
         <td align="left" width="100%" nowrap class="row<%= rowid %>">
           <a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
         </td>
         <td nowrap class="row<%= rowid %>">
-          <dhv:tz timestamp="<%= thisRecord.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+          <zeroio:tz timestamp="<%= thisRecord.getEntered() %>" />
         </td>
         <td nowrap class="row<%= rowid %>">
           <dhv:username id="<%= thisRecord.getModifiedBy() %>" />
         </td>
         <td nowrap class="row<%= rowid %>">
-          <dhv:tz timestamp="<%= thisRecord.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+          <zeroio:tz timestamp="<%= thisRecord.getModified() %>" />
         </td>
       </tr>
 <%    

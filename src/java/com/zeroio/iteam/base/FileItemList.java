@@ -1,8 +1,8 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
@@ -21,10 +21,11 @@ import org.aspcfs.utils.web.HtmlSelect;
  *
  *@author     matt rajkowski
  *@created    February 8, 2002
- *@version    $Id$
+ *@version    $Id: FileItemList.java,v 1.2.66.1 2004/03/19 21:00:50 rvasista Exp
+ *      $
  */
 public class FileItemList extends ArrayList {
-
+  //filters
   private PagedListInfo pagedListInfo = null;
   private int linkModuleId = -1;
   private int linkItemId = -1;
@@ -32,8 +33,14 @@ public class FileItemList extends ArrayList {
   private int owner = -1;
   private String ownerIdRange = null;
   private String fileLibraryPath = null;
+  private boolean topLevelOnly = false;
+  //calendar
+  protected java.sql.Timestamp alertRangeStart = null;
+  protected java.sql.Timestamp alertRangeEnd = null;
+  //custom for projects, otherwise need to extend class
+  private int forProjectUser = -1;
 
-
+  
   /**
    *  Constructor for the FileItemList object
    */
@@ -111,6 +118,76 @@ public class FileItemList extends ArrayList {
 
 
   /**
+   *  Sets the topLevelOnly attribute of the FileItemList object
+   *
+   *@param  tmp  The new topLevelOnly value
+   */
+  public void setTopLevelOnly(boolean tmp) {
+    this.topLevelOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the FileItemList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(java.sql.Timestamp tmp) {
+    this.alertRangeStart = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the FileItemList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(String tmp) {
+    this.alertRangeStart = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the FileItemList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(java.sql.Timestamp tmp) {
+    this.alertRangeEnd = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the FileItemList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(String tmp) {
+    this.alertRangeEnd = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the forProjectUser attribute of the FileItemList object
+   *
+   *@param  tmp  The new forProjectUser value
+   */
+  public void setForProjectUser(int tmp) {
+    this.forProjectUser = tmp;
+  }
+
+
+  /**
+   *  Sets the forProjectUser attribute of the FileItemList object
+   *
+   *@param  tmp  The new forProjectUser value
+   */
+  public void setForProjectUser(String tmp) {
+    this.forProjectUser = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Gets the pagedListInfo attribute of the FileItemList object
    *
    *@return    The pagedListInfo value
@@ -176,30 +253,55 @@ public class FileItemList extends ArrayList {
 
 
   /**
+   *  Gets the alertRangeStart attribute of the FileItemList object
+   *
+   *@return    The alertRangeStart value
+   */
+  public java.sql.Timestamp getAlertRangeStart() {
+    return alertRangeStart;
+  }
+
+
+  /**
+   *  Gets the alertRangeEnd attribute of the FileItemList object
+   *
+   *@return    The alertRangeEnd value
+   */
+  public java.sql.Timestamp getAlertRangeEnd() {
+    return alertRangeEnd;
+  }
+
+
+  /**
+   *  Gets the forProjectUser attribute of the FileItemList object
+   *
+   *@return    The forProjectUser value
+   */
+  public int getForProjectUser() {
+    return forProjectUser;
+  }
+
+
+  /**
    *  Generates a list of matching FileItems
    *
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM project_files f " +
         "WHERE f.item_id > -1 ");
-
     createFilter(sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -209,9 +311,8 @@ public class FileItemList extends ArrayList {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
-
+      pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
@@ -227,32 +328,29 @@ public class FileItemList extends ArrayList {
         rs.close();
         pst.close();
       }
-
       //Determine column to sort by
       pagedListInfo.setDefaultSort("subject, client_filename", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY subject ");
     }
-
-    //Need to build a base SQL statement for returning records
+    //Build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     } else {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "f.* " +
+        "f.*, t.filename AS thumbnail " +
         "FROM project_files f " +
+        "LEFT JOIN project_files_thumbnail t ON (f.item_id = t.item_id AND f.version = t.version) " +
         "WHERE f.item_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -295,25 +393,33 @@ public class FileItemList extends ArrayList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
     if (linkModuleId > -1) {
-      sqlFilter.append("AND link_module_id = ? ");
+      sqlFilter.append("AND f.link_module_id = ? ");
     }
-
     if (linkItemId > -1) {
-      sqlFilter.append("AND link_item_id = ? ");
+      sqlFilter.append("AND f.link_item_id = ? ");
     }
-
     if (folderId > -1) {
-      sqlFilter.append("AND folder_id = ? ");
+      sqlFilter.append("AND f.folder_id = ? ");
     }
-
     if (owner != -1) {
-      sqlFilter.append("AND enteredby = ? ");
+      sqlFilter.append("AND f.enteredby = ? ");
     }
-
     if (ownerIdRange != null) {
-      sqlFilter.append("AND enteredby IN (" + ownerIdRange + ") ");
+      sqlFilter.append("AND f.enteredby IN (" + ownerIdRange + ") ");
+    }
+    if (topLevelOnly) {
+      sqlFilter.append("AND f.folder_id IS NULL ");
+    }
+    if (alertRangeStart != null) {
+      sqlFilter.append("AND f.modified >= ? ");
+    }
+    if (alertRangeEnd != null) {
+      sqlFilter.append("AND f.modified < ? ");
+    }
+    if (forProjectUser > -1) {
+      sqlFilter.append("AND (f.link_item_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
+          "AND status IS NULL )) ");
     }
   }
 
@@ -327,23 +433,27 @@ public class FileItemList extends ArrayList {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-
     if (linkModuleId > -1) {
       pst.setInt(++i, linkModuleId);
     }
-
     if (linkItemId > -1) {
       pst.setInt(++i, linkItemId);
     }
-
     if (folderId > -1) {
       pst.setInt(++i, folderId);
     }
-
     if (owner != -1) {
       pst.setInt(++i, owner);
     }
-
+    if (alertRangeStart != null) {
+      pst.setTimestamp(++i, alertRangeStart);
+    }
+    if (alertRangeEnd != null) {
+      pst.setTimestamp(++i, alertRangeEnd);
+    }
+    if (forProjectUser > -1) {
+      pst.setInt(++i, forProjectUser);
+    }
     return i;
   }
 
@@ -400,8 +510,8 @@ public class FileItemList extends ArrayList {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public int queryFileSize(Connection db) throws SQLException {
-    int recordSize = 0;
+  public long queryFileSize(Connection db) throws SQLException {
+    long recordSize = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
         "SELECT SUM(size) AS recordsize " +
@@ -412,10 +522,10 @@ public class FileItemList extends ArrayList {
     int items = prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      recordSize = DatabaseUtils.getInt(rs, "recordsize", 0);
+      recordSize = DatabaseUtils.getLong(rs, "recordsize", 0);
     }
-    pst.close();
     rs.close();
+    pst.close();
     return recordSize;
   }
 }

@@ -6,7 +6,6 @@ import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.*;
 import java.sql.*;
-import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.pipeline.base.*;
@@ -14,6 +13,8 @@ import java.text.*;
 import org.aspcfs.modules.contacts.base.Contact;
 import java.util.*;
 import org.aspcfs.utils.DateUtils;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.iteam.base.FileItem;
 
 /**
  *  Actions for working with Pipeline Management reports. Code originally from
@@ -67,16 +68,6 @@ public final class LeadsReports extends CFSModule {
         files.setOwner(userId);
       }
       files.buildList(db);
-      //TODO: REMOVE THIS
-      //Go through all the files and set the contact information associated
-      Iterator i = files.iterator();
-      while (i.hasNext()) {
-        FileItem thisItem = (FileItem) i.next();
-        Contact enteredBy = this.getUser(context, thisItem.getEnteredBy()).getContact();
-        Contact modifiedBy = this.getUser(context, thisItem.getModifiedBy()).getContact();
-        thisItem.setEnteredByString(enteredBy.getNameFirstLast());
-        thisItem.setModifiedByString(modifiedBy.getNameFirstLast());
-      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");

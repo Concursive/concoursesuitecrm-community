@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.text.DateFormat,org.aspcfs.modules.admin.base.PermissionCategory, java.util.*" %>
 <jsp:useBean id="rangeSelect" class="java.lang.String" scope="request"/>
 <%
@@ -9,6 +10,7 @@
 <jsp:useBean id="usageList2" class="java.util.ArrayList" scope="request"/>
 <jsp:useBean id="applicationVersion" class="java.lang.String" scope="request"/>
 <jsp:useBean id="databaseVersion" class="java.lang.String" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
@@ -111,9 +113,10 @@ Current Usage and Billing Usage Information<br>
       <td nowrap align="left">
         <span name="customFields" id="customFields" style="display:none">
           <input type="text" size="10" name="dateStart" value="<%= toDateString(dateStart) %>">
-          <a href="javascript:popCalendar('usage', 'dateStart');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)<br>
+          <a href="javascript:popCalendar('usage', 'dateStart', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+          <br />
           <input type="text" size="10" name="dateEnd" value="<%= toDateString(dateEnd) %>">
-          <a href="javascript:popCalendar('usage', 'dateEnd');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+          <a href="javascript:popCalendar('usage', 'dateEnd', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
         </span>
       </td>
       <td width="100%" align="left" valign="top" nowrap>
@@ -127,7 +130,7 @@ Current Usage and Billing Usage Information<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>
-      <strong>Usage for <dhv:tz timestamp="<%= dateStart %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/> - <dhv:tz timestamp="<%= dateEnd %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/></strong>
+      <strong>Usage for <zeroio:tz timestamp="<%= dateStart %>" dateOnly="true" /> - <zeroio:tz timestamp="<%= dateEnd %>" dateOnly="true" /></strong>
     </th>
   </tr>
 <%

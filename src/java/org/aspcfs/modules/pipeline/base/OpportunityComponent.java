@@ -11,7 +11,6 @@ import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.*;
-import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.LookupElement;
 import org.aspcfs.controller.SystemStatus;
@@ -212,7 +211,7 @@ public class OpportunityComponent extends GenericBean {
    *@param  tmp  The new alertDate value
    */
   public void setAlertDate(String tmp) {
-    this.alertDate = DateUtils.parseTimestampString(tmp);
+    this.alertDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -272,7 +271,7 @@ public class OpportunityComponent extends GenericBean {
    *@param  tmp  The new closeDate value
    */
   public void setCloseDate(String tmp) {
-    this.closeDate = DateUtils.parseTimestampString(tmp);
+    this.closeDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -282,7 +281,7 @@ public class OpportunityComponent extends GenericBean {
    *@param  tmp  The new stageDate value
    */
   public void setStageDate(String tmp) {
-    this.stageDate = DateUtils.parseTimestampString(tmp);
+    this.stageDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -314,7 +313,7 @@ public class OpportunityComponent extends GenericBean {
    *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
-    this.entered = DateUtils.parseTimestampString(tmp);
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
@@ -324,7 +323,7 @@ public class OpportunityComponent extends GenericBean {
    *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
-    this.modified = DateUtils.parseTimestampString(tmp);
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
@@ -483,48 +482,92 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the Low attribute of the Opportunity object
+   *  Gets the low attribute of the OpportunityComponent object
    *
-   *@param  low  The new Low value
-   *@since
+   *@return    The low value
    */
-  public void setLow(String low) {
-    low = StringUtils.replace(low, ",", "");
-    low = StringUtils.replace(low, "$", "");
-
-    this.low = Double.parseDouble(low);
+  public double getLow() {
+    return low;
   }
 
 
   /**
-   *  Sets the Guess attribute of the Opportunity object
+   *  Sets the low attribute of the OpportunityComponent object
    *
-   *@param  guess  The new Guess value
-   *@since
+   *@param  tmp  The new low value
    */
-  public void setGuess(String guess) {
-    guess = StringUtils.replace(guess, ",", "");
-    guess = StringUtils.replace(guess, "$", "");
-
-    try {
-      this.guess = Double.parseDouble(guess);
-    } catch (NumberFormatException ne) {
-      errors.put("guessError", guess + " is invalid input for this field");
-    }
+  public void setLow(double tmp) {
+    this.low = tmp;
   }
 
 
   /**
-   *  Sets the High attribute of the Opportunity object
+   *  Sets the low attribute of the OpportunityComponent object
    *
-   *@param  high  The new High value
-   *@since
+   *@param  tmp  The new low value
    */
-  public void setHigh(String high) {
-    high = StringUtils.replace(high, ",", "");
-    high = StringUtils.replace(high, "$", "");
+  public void setLow(String tmp) {
+    this.low = Double.parseDouble(tmp);
+  }
 
-    this.high = Double.parseDouble(high);
+
+  /**
+   *  Gets the guess attribute of the OpportunityComponent object
+   *
+   *@return    The guess value
+   */
+  public double getGuess() {
+    return guess;
+  }
+
+
+  /**
+   *  Sets the guess attribute of the OpportunityComponent object
+   *
+   *@param  tmp  The new guess value
+   */
+  public void setGuess(double tmp) {
+    this.guess = tmp;
+  }
+
+
+  /**
+   *  Sets the guess attribute of the OpportunityComponent object
+   *
+   *@param  tmp  The new guess value
+   */
+  public void setGuess(String tmp) {
+    this.guess = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   *  Gets the high attribute of the OpportunityComponent object
+   *
+   *@return    The high value
+   */
+  public double getHigh() {
+    return high;
+  }
+
+
+  /**
+   *  Sets the high attribute of the OpportunityComponent object
+   *
+   *@param  tmp  The new high value
+   */
+  public void setHigh(double tmp) {
+    this.high = tmp;
+  }
+
+
+  /**
+   *  Sets the high attribute of the OpportunityComponent object
+   *
+   *@param  tmp  The new high value
+   */
+  public void setHigh(String tmp) {
+    this.high = Double.parseDouble(tmp);
   }
 
 
@@ -1044,150 +1087,6 @@ public class OpportunityComponent extends GenericBean {
     } else {
       return description.substring(0, 40) + "...";
     }
-  }
-
-
-  /**
-   *  Gets the Low attribute of the Opportunity object
-   *
-   *@return    The Low value
-   *@since
-   */
-  public double getLow() {
-    return low;
-  }
-
-
-  /**
-   *  Gets the LowAmount attribute of the Opportunity object
-   *
-   *@return    The LowAmount value
-   *@since
-   */
-  public String getLowAmount() {
-    Double thisAmount = new Double(round(low, 2));
-    String toReturn = String.valueOf(thisAmount);
-    if (toReturn.endsWith(".0")) {
-      return (toReturn.substring(0, toReturn.length() - 2));
-    } else {
-      return toReturn;
-    }
-  }
-
-
-  /**
-   *  Gets the LowCurrency attribute of the Opportunity object
-   *
-   *@return    The LowCurrency value
-   *@since
-   */
-  public String getLowCurrency() {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    String amountOut = numberFormatter.format(low);
-    return amountOut;
-  }
-
-
-  /**
-   *  Gets the Guess attribute of the Opportunity object
-   *
-   *@return    The Guess value
-   *@since
-   */
-  public double getGuess() {
-    return guess;
-  }
-
-
-  /**
-   *  Gets the GuessAmount attribute of the Opportunity object
-   *
-   *@return    The GuessAmount value
-   *@since
-   */
-  public String getGuessAmount() {
-    Double thisAmount = new Double(round(guess, 2));
-    String toReturn = String.valueOf(thisAmount);
-    if (toReturn.endsWith(".0")) {
-      return (toReturn.substring(0, toReturn.length() - 2));
-    } else {
-      return toReturn;
-    }
-  }
-
-
-  /**
-   *  Gets the GuessCurrency attribute of the Opportunity object
-   *
-   *@return    The GuessCurrency value
-   *@since
-   */
-  public String getGuessCurrency() {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    String amountOut = numberFormatter.format(guess);
-    return amountOut;
-  }
-
-
-  /**
-   *  Gets the guessCurrency attribute of the Opportunity object
-   *
-   *@param  divisor  Description of the Parameter
-   *@return          The guessCurrency value
-   */
-  public String getGuessCurrency(int divisor) {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    double tempValue = (guess / divisor);
-    String amountOut = "";
-
-    if (tempValue < 1) {
-      amountOut = "<1";
-    } else {
-      amountOut = numberFormatter.format(tempValue);
-    }
-
-    return amountOut;
-  }
-
-
-  /**
-   *  Gets the High attribute of the Opportunity object
-   *
-   *@return    The High value
-   *@since
-   */
-  public double getHigh() {
-    return high;
-  }
-
-
-  /**
-   *  Gets the HighAmount attribute of the Opportunity object
-   *
-   *@return    The HighAmount value
-   *@since
-   */
-  public String getHighAmount() {
-    Double thisAmount = new Double(round(high, 2));
-    String toReturn = String.valueOf(thisAmount);
-    if (toReturn.endsWith(".0")) {
-      return (toReturn.substring(0, toReturn.length() - 2));
-    } else {
-      return toReturn;
-    }
-  }
-
-
-  /**
-   *  Gets the HighCurrency attribute of the Opportunity object
-   *
-   *@return    The HighCurrency value
-   *@since
-   */
-  public String getHighCurrency() {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    String amountOut = numberFormatter.format(high);
-    return amountOut;
   }
 
 
@@ -2076,6 +1975,20 @@ public class OpportunityComponent extends GenericBean {
     thisList.add("alertDate");
     thisList.add("stageDate");
     thisList.add("closeDate");
+    return thisList;
+  }
+
+
+  /**
+   *  Gets the numberParams attribute of the OpportunityComponent class
+   *
+   *@return    The numberParams value
+   */
+  public static ArrayList getNumberParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("low");
+    thisList.add("guess");
+    thisList.add("high");
     return thisList;
   }
 }

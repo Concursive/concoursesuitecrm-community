@@ -44,7 +44,9 @@ public final class Constants {
   public final static int DOCUMENTS_ACCOUNTS = 1;
   public final static int DOCUMENTS_CONTACTS = 2;
   public final static int DOCUMENTS_OPPORTUNITIES = 3;
+  // This item duplicated for source compatibility with project manager
   public final static int DOCUMENTS_PROJECTS = 4;
+  public final static int PROJECTS_FILES = 4;
   public final static int DOCUMENTS_COMMUNICATIONS_MAILMERGE = 5;
   public final static int DOCUMENTS_TICKETS = 6;
   public final static int DOCUMENTS_ACCOUNTS_REPORTS = 10;
@@ -110,7 +112,7 @@ public final class Constants {
   //User types
   //Users who use CRM with its complete license
   public final static int ROLETYPE_REGULAR = 0; 
-  
+
   // Restricted to access accounts of their organization
   public final static int ROLETYPE_CUSTOMER = 1; 
    
@@ -121,5 +123,8 @@ public final class Constants {
   public final static int IMPORT_CONTACTS = 33020041;
   public final static int IMPORT_LEADS = 33020042;
   public final static int IMPORT_ACCOUNT_CONTACTS = 33020043;
+
+  //System cache names
+  public static final String SYSTEM_PROJECT_NAME_LIST = "200401202226";
 }
 

@@ -259,6 +259,8 @@ public class ApplicationPrefs {
     if (this.has("DEBUGLEVEL")) {
       System.setProperty("DEBUG", this.get("DEBUGLEVEL"));
     }
+    // Set color scheme
+    context.setAttribute("SKIN", "blue");
     //Turn off Setup if setup is complete
     if (this.has("CONTROL")) {
       context.setAttribute("cfs.setup", "true");
@@ -309,6 +311,13 @@ public class ApplicationPrefs {
     if (!this.has("LAYOUT.JSP.LOGIN")) {
       this.add("LAYOUT.JSP.LOGIN", "login.jsp");
     }
+    // Default i18n
+    if (!this.has("SYSTEM.CURRENCY")) {
+      this.add("SYSTEM.CURRENCY", "USD");
+    }
+    if (!this.has("SYSTEM.LANGUAGE")) {
+      this.add("SYSTEM.LANGUAGE", "en_US");
+    }
     //Define whether the app requires SSL for browser clients
     addParameter(context, "ForceSSL", this.get("FORCESSL"), "false");
     //Define the developer's debug code
@@ -319,7 +328,6 @@ public class ApplicationPrefs {
     addParameter(context, "MailServer", this.get("MAILSERVER"));
     addParameter(context, "FaxServer", this.get("FAXSERVER"));
     addParameter(context, "FaxEnabled", this.get("FAXENABLED"));
-    addParameter(context, "SYSTEM.TIMEZONE", this.get("SYSTEM.TIMEZONE"));
     if (this.has("MAILSERVER")) {
       System.setProperty("MailServer", this.get("MAILSERVER"));
     }

@@ -1,13 +1,17 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.TimeZone;
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -16,33 +20,45 @@ import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Description of the Class
  *
  *@author     matt rajkowski
  *@created    August 9, 2002
- *@version    $Id$
+ *@version    $Id: ProjectList.java,v 1.3.50.2 2004/04/08 14:55:53 rvasista Exp
+ *      $
  */
 public class ProjectList extends ArrayList {
-
+  // main project filters
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
   private int groupId = -1;
+  private int projectId = -1;
   private int projectsForUser = -1;
+  private int enteredByUser = -1;
   private String enteredByUserRange = null;
   private String userRange = null;
   private boolean openProjectsOnly = false;
+  private boolean closedProjectsOnly = false;
   private int withProjectDaysComplete = -1;
   private boolean projectsWithAssignmentsOnly = false;
-
+  private boolean invitationPendingOnly = false;
+  private boolean invitationAcceptedOnly = false;
+  // filters that go into sub-objects
   private boolean openAssignmentsOnly = false;
   private int withAssignmentDaysComplete = -1;
   private boolean buildAssignments = false;
   private int assignmentsForUser = -1;
   private boolean buildIssues = false;
   private int lastIssues = -1;
-
+  private boolean buildNews = false;
+  private int lastNews = -1;
+  private int currentNews = Constants.UNDEFINED;
+  private boolean portalOnly = false;
+  private boolean publicOnly = false;
+  // calendar filters
   protected java.sql.Timestamp alertRangeStart = null;
   protected java.sql.Timestamp alertRangeEnd = null;
 
@@ -84,12 +100,42 @@ public class ProjectList extends ArrayList {
 
 
   /**
+   *  Sets the projectId attribute of the ProjectList object
+   *
+   *@param  tmp  The new projectId value
+   */
+  public void setProjectId(int tmp) {
+    this.projectId = tmp;
+  }
+
+
+  /**
    *  Sets the openProjectsOnly attribute of the ProjectList object
    *
    *@param  tmp  The new openProjectsOnly value
    */
   public void setOpenProjectsOnly(boolean tmp) {
     this.openProjectsOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the closedProjectsOnly attribute of the ProjectList object
+   *
+   *@param  tmp  The new closedProjectsOnly value
+   */
+  public void setClosedProjectsOnly(boolean tmp) {
+    this.closedProjectsOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the closedProjectsOnly attribute of the ProjectList object
+   *
+   *@param  tmp  The new closedProjectsOnly value
+   */
+  public void setClosedProjectsOnly(String tmp) {
+    this.closedProjectsOnly = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -110,6 +156,46 @@ public class ProjectList extends ArrayList {
    */
   public void setProjectsWithAssignmentsOnly(boolean tmp) {
     this.projectsWithAssignmentsOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the invitationPendingOnly attribute of the ProjectList object
+   *
+   *@param  tmp  The new invitationPendingOnly value
+   */
+  public void setInvitationPendingOnly(boolean tmp) {
+    this.invitationPendingOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the invitationAcceptedOnly attribute of the ProjectList object
+   *
+   *@param  tmp  The new invitationAcceptedOnly value
+   */
+  public void setInvitationAcceptedOnly(boolean tmp) {
+    this.invitationAcceptedOnly = tmp;
+  }
+
+
+  /**
+   *  Gets the invitationPendingOnly attribute of the ProjectList object
+   *
+   *@return    The invitationPendingOnly value
+   */
+  public boolean getInvitationPendingOnly() {
+    return invitationPendingOnly;
+  }
+
+
+  /**
+   *  Gets the invitationAcceptedOnly attribute of the ProjectList object
+   *
+   *@return    The invitationAcceptedOnly value
+   */
+  public boolean getInvitationAcceptedOnly() {
+    return invitationAcceptedOnly;
   }
 
 
@@ -140,6 +226,26 @@ public class ProjectList extends ArrayList {
    */
   public void setProjectsForUser(int tmp) {
     this.projectsForUser = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredByUser attribute of the ProjectList object
+   *
+   *@param  tmp  The new enteredByUser value
+   */
+  public void setEnteredByUser(int tmp) {
+    this.enteredByUser = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredByUser attribute of the ProjectList object
+   *
+   *@param  tmp  The new enteredByUser value
+   */
+  public void setEnteredByUser(String tmp) {
+    this.enteredByUser = Integer.parseInt(tmp);
   }
 
 
@@ -184,6 +290,16 @@ public class ProjectList extends ArrayList {
 
 
   /**
+   *  Sets the buildNews attribute of the ProjectList object
+   *
+   *@param  tmp  The new buildNews value
+   */
+  public void setBuildNews(boolean tmp) {
+    this.buildNews = tmp;
+  }
+
+
+  /**
    *  Sets the assignmentsForUser attribute of the ProjectList object
    *
    *@param  tmp  The new assignmentsForUser value
@@ -200,6 +316,66 @@ public class ProjectList extends ArrayList {
    */
   public void setLastIssues(int tmp) {
     this.lastIssues = tmp;
+  }
+
+
+  /**
+   *  Sets the lastNews attribute of the ProjectList object
+   *
+   *@param  tmp  The new lastNews value
+   */
+  public void setLastNews(int tmp) {
+    this.lastNews = tmp;
+  }
+
+
+  /**
+   *  Sets the currentNews attribute of the ProjectList object
+   *
+   *@param  tmp  The new currentNews value
+   */
+  public void setCurrentNews(int tmp) {
+    this.currentNews = tmp;
+  }
+
+
+  /**
+   *  Sets the portalOnly attribute of the ProjectList object
+   *
+   *@param  tmp  The new portalOnly value
+   */
+  public void setPortalOnly(boolean tmp) {
+    this.portalOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the portalOnly attribute of the ProjectList object
+   *
+   *@param  tmp  The new portalOnly value
+   */
+  public void setPortalOnly(String tmp) {
+    this.portalOnly = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the publicOnly attribute of the ProjectList object
+   *
+   *@param  tmp  The new publicOnly value
+   */
+  public void setPublicOnly(boolean tmp) {
+    this.publicOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the publicOnly attribute of the ProjectList object
+   *
+   *@param  tmp  The new publicOnly value
+   */
+  public void setPublicOnly(String tmp) {
+    this.publicOnly = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -303,8 +479,8 @@ public class ProjectList extends ArrayList {
       int maxRecords = rs.getInt("recordcount");
       pagedListInfo.setMaxRecords(maxRecords);
     }
-    pst.close();
     rs.close();
+    pst.close();
 
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {
@@ -336,11 +512,9 @@ public class ProjectList extends ArrayList {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -354,7 +528,6 @@ public class ProjectList extends ArrayList {
     }
     rs.close();
     pst.close();
-
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Project thisProject = (Project) i.next();
@@ -369,6 +542,11 @@ public class ProjectList extends ArrayList {
       if (buildIssues) {
         thisProject.setLastIssues(lastIssues);
         thisProject.buildIssueList(db);
+      }
+      if (buildNews) {
+        thisProject.setLastNews(lastNews);
+        thisProject.setCurrentNews(currentNews);
+        thisProject.buildNewsList(db);
       }
     }
   }
@@ -386,28 +564,44 @@ public class ProjectList extends ArrayList {
     if (groupId > -1) {
       sqlFilter.append("AND (group_id = ?) ");
     }
+    if (projectId > -1) {
+      sqlFilter.append("AND (project_id = ?) ");
+    }
     if (projectsWithAssignmentsOnly) {
       sqlFilter.append("AND (p.project_id IN (SELECT DISTINCT project_id FROM project_assignments)) ");
     }
     if (openProjectsOnly && withProjectDaysComplete > -1) {
-      sqlFilter.append("AND (closeDate IS NULL OR closeDate LIKE '' OR closeDate > ?) ");
+      sqlFilter.append("AND (closedate IS NULL OR closedate LIKE '' OR closedate > ?) ");
     } else {
       if (openProjectsOnly) {
-        sqlFilter.append("AND (closeDate IS NULL OR closeDate LIKE '') ");
+        sqlFilter.append("AND (closedate IS NULL OR closedate LIKE '') ");
       }
       if (withProjectDaysComplete > -1) {
         sqlFilter.append("AND (closeDate > ?) ");
       }
     }
+    if (closedProjectsOnly) {
+      sqlFilter.append("AND (closedate IS NOT NULL AND closedate NOT LIKE '') ");
+    }
     if (projectsForUser > -1) {
-      sqlFilter.append("AND (p.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ?)) ");
+      sqlFilter.append("AND (p.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
+          (invitationAcceptedOnly ? "AND status IS NULL " : "") + (invitationPendingOnly ? "AND status = ? " : "") + ")) ");
     }
     if (userRange != null) {
       sqlFilter.append("AND (p.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id IN (" + userRange + ")) " +
           "OR p.enteredBy IN (" + userRange + ")) ");
     }
+    if (enteredByUser > -1) {
+      sqlFilter.append("AND (p.enteredby = ?) ");
+    }
     if (enteredByUserRange != null) {
       sqlFilter.append("AND (p.enteredby IN (" + enteredByUserRange + ")) ");
+    }
+    if (portalOnly) {
+      sqlFilter.append("AND portal = ? ");
+    }
+    if (publicOnly) {
+      sqlFilter.append("AND allow_guests = ? ");
     }
   }
 
@@ -424,6 +618,9 @@ public class ProjectList extends ArrayList {
     if (groupId > -1) {
       pst.setInt(++i, groupId);
     }
+    if (projectId > -1) {
+      pst.setInt(++i, projectId);
+    }
     if (openProjectsOnly && withProjectDaysComplete > -1) {
       Calendar cal = Calendar.getInstance();
       cal.add(Calendar.DATE, -withProjectDaysComplete);
@@ -437,6 +634,18 @@ public class ProjectList extends ArrayList {
     }
     if (projectsForUser > -1) {
       pst.setInt(++i, projectsForUser);
+      if (invitationPendingOnly) {
+        pst.setInt(++i, TeamMember.STATUS_PENDING);
+      }
+    }
+    if (enteredByUser > -1) {
+      pst.setInt(++i, enteredByUser);
+    }
+    if (portalOnly) {
+      pst.setBoolean(++i, true);
+    }
+    if (publicOnly) {
+      pst.setBoolean(++i, true);
     }
     return i;
   }
@@ -446,6 +655,7 @@ public class ProjectList extends ArrayList {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  timeZone          Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
@@ -491,7 +701,7 @@ public class ProjectList extends ArrayList {
       String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("due_date"));
       int alertCount = rs.getInt("count");
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ProjectList --> Added Days Assignments " + alertDate + ":" + alertCount);
+        System.out.println("ProjectList-> Added Days Assignments " + alertDate + ":" + alertCount);
       }
       events.put(alertDate, new Integer(alertCount));
     }
@@ -518,5 +728,71 @@ public class ProjectList extends ArrayList {
     return tmp;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static HashMap buildNameList(Connection db) throws SQLException {
+    HashMap nameList = new HashMap();
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT project_id, title " +
+        "FROM projects");
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+      nameList.put(new Integer(rs.getInt("project_id")), rs.getString("title"));
+    }
+    rs.close();
+    pst.close();
+    return nameList;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int buildProjectCount(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM projects p " +
+        "WHERE project_id > -1 ");
+    ResultSet rs = pst.executeQuery();
+    rs.next();
+    int count = rs.getInt("recordcount");
+    rs.close();
+    pst.close();
+    return count;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  userId            Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int buildProjectCount(Connection db, int userId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM projects p " +
+        "WHERE project_id > -1 " +
+        "AND enteredby = ? ");
+    pst.setInt(1, userId);
+    ResultSet rs = pst.executeQuery();
+    rs.next();
+    int count = rs.getInt("recordcount");
+    rs.close();
+    pst.close();
+    return count;
+  }
 }
 

@@ -512,7 +512,7 @@ public class Organization extends GenericBean {
    *@param  tmp  The new ContractEndDate value
    */
   public void setContractEndDate(String tmp) {
-    this.contractEndDate = DateUtils.parseTimestampString(tmp);
+    this.contractEndDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -522,7 +522,7 @@ public class Organization extends GenericBean {
    *@param  tmp  The new alertDate value
    */
   public void setAlertDate(String tmp) {
-    this.alertDate = DateUtils.parseTimestampString(tmp);
+    this.alertDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -789,7 +789,7 @@ public class Organization extends GenericBean {
    *@param  tmp  The new Enabled value
    */
   public void setEnabled(String tmp) {
-    enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    enabled = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -904,18 +904,6 @@ public class Organization extends GenericBean {
     }
 
     return toReturn;
-  }
-
-
-  /**
-   *  Gets the YTDCurrency attribute of the Organization object
-   *
-   *@return    The YTDCurrency value
-   */
-  public String getYTDCurrency() {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    String amountOut = numberFormatter.format(YTD);
-    return amountOut;
   }
 
 
@@ -1352,19 +1340,6 @@ public class Organization extends GenericBean {
    */
   public double getRevenue() {
     return revenue;
-  }
-
-
-  /**
-   *  Gets the revenue attribute of the Organization object, formatted as US
-   *  currency
-   *
-   *@return    The revenueCurrency value
-   */
-  public String getRevenueCurrency() {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    String amountOut = numberFormatter.format(revenue);
-    return amountOut;
   }
 
 

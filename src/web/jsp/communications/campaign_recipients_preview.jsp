@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*,org.aspcfs.modules.contacts.base.Contact" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="RecipientList" class="org.aspcfs.modules.communications.base.RecipientList" scope="request"/>
@@ -69,7 +70,7 @@ Recipients
 	      <%= toHtml(thisContact.getCompany()) %>
 	    </td>
 	    <td align="center" nowrap>
-        <dhv:tz timestamp="<%= thisRecipient.getSentDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%= thisRecipient.getSentDate() %>" dateOnly="true" default="&nbsp;"/>
 	    </td>
 	    <td align="center" nowrap>
 	      <%= toHtml(thisRecipient.getStatus()) %>

@@ -3,7 +3,7 @@
   var thisOrgId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, orgId, status) {
+  function displayMenu(loc, id, orgId, status) {
     thisOrgId = orgId;
     if (!menu_init) {
       menu_init = true;
@@ -21,7 +21,7 @@
       hideSpan('menuArchiveAccount');
     }
 </dhv:permission>
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   //Menu link functions
   function details() {
@@ -47,47 +47,54 @@
 </script>
 <div id="menuAccountContainer" class="menu">
   <div id="menuAccountContent">
-    <table id="menuAccountTable" class="pulldown" width="170">
+    <table id="menuAccountTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="accounts-accounts-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          Modify
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-edit">
-      <tr>
-        <td>
+      <tr id="menuArchiveAccount" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="archive()">
+        <th>
           <img src="images/icons/stock_archive-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td>
+          Archive
         </td>
-        <td id="menuArchiveAccount">
-          <a href="javascript:archive()">Archive</a>
-        </td>
-        <td id="menuReEnableAccount">
-          <a href="javascript:enable()">Un-Archive</a>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-edit">
+      <tr id="menuReEnableAccount" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="enable()">
+        <th>
+          <img src="images/icons/stock_archive-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td>
+          Un-Archive
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-delete">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteAccount()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td>
-          <a href="javascript:deleteAccount()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

@@ -1,8 +1,8 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
@@ -19,19 +19,27 @@ import org.aspcfs.utils.DatabaseUtils;
  *
  *@author     mrajkowski
  *@created    January 15, 2003
- *@version    $Id$
+ *@version    $Id: IssueCategory.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista
+ *      Exp $
  */
 public class IssueCategory extends GenericBean {
-
+  //base properties
   private int id = -1;
-  private String description = null;
-  private Project project = null;
   private int projectId = -1;
-  private int issueCount = 0;
-  private int replyCount = 0;
-  private java.sql.Timestamp lastIssueDate = null;
-  private java.sql.Timestamp lastReplyDate = null;
-  private String modifiedBy = null;
+  private String subject = null;
+  private String description = null;
+  private boolean enabled = true;
+  private java.sql.Timestamp entered = null;
+  private int enteredBy = -1;
+  private java.sql.Timestamp modified = null;
+  private int modifiedBy = -1;
+  //referential speedups
+  private int topicsCount = 0;
+  private int postsCount = 0;
+  private java.sql.Timestamp lastPostDate = null;
+  private int lastPostBy = -1;
+  //other
+  private Project project = null;
 
 
   /**
@@ -49,26 +57,25 @@ public class IssueCategory extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public IssueCategory(Connection db, int categoryId, int projectId) throws SQLException {
-    String sql =
-        "SELECT type_id, l.description, i.project_id " +
-        "FROM lookup_project_issues l, project_issues i " +
-        "WHERE l.code = i.type_id " +
-        "AND i.type_id = ? " +
-        "AND i.project_id = ? ";
-    PreparedStatement pst = db.prepareStatement(sql);
+    if (categoryId == -1) {
+      throw new SQLException("Invalid Issue Category.");
+    }
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * " +
+        "FROM project_issues_categories c " +
+        "WHERE c.category_id = ? " +
+        "AND c.project_id = ? ");
     pst.setInt(1, categoryId);
     pst.setInt(2, projectId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Issue Category record not found.");
     }
     rs.close();
     pst.close();
-    this.buildCounts(db);
+    if (id == -1) {
+      throw new SQLException("Issue Category record not found.");
+    }
   }
 
 
@@ -84,70 +91,22 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  Sets the id attribute of the IssueCategory object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   *@param  tmp  The new id value
    */
-  private void buildRecord(ResultSet rs) throws SQLException {
-    id = rs.getInt("type_id");
-    description = rs.getString("description");
-    projectId = rs.getInt("project_id");
+  public void setId(int tmp) {
+    this.id = tmp;
   }
 
 
   /**
-   *  Description of the Method
+   *  Sets the id attribute of the IssueCategory object
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   *@param  tmp  The new id value
    */
-  public void buildCounts(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-    String sql = null;
-    sql =
-        "SELECT count(*) AS icount, max(i.modified) AS imodified " +
-        "FROM project_issues i " +
-        "WHERE i.project_id = ? " +
-        "AND i.type_id = ? ";
-    pst = db.prepareStatement(sql);
-    pst.setInt(1, projectId);
-    pst.setInt(2, id);
-    rs = pst.executeQuery();
-    if (rs.next()) {
-      issueCount = rs.getInt("icount");
-      lastIssueDate = rs.getTimestamp("imodified");
-    }
-    rs.close();
-    pst.close();
-
-    sql =
-        "SELECT count(*) AS rcount, max(r.modified) AS rmodified " +
-        "FROM project_issue_replies r " +
-        "LEFT JOIN project_issues i ON (i.issue_id = r.issue_id) " +
-        "WHERE i.project_id = ? " +
-        "AND i.type_id = ? ";
-    pst = db.prepareStatement(sql);
-    pst.setInt(1, projectId);
-    pst.setInt(2, id);
-    rs = pst.executeQuery();
-    if (rs.next()) {
-      replyCount = rs.getInt("rcount");
-      lastReplyDate = rs.getTimestamp("rmodified");
-    }
-    rs.close();
-    pst.close();
-  }
-
-
-  /**
-   *  Sets the project attribute of the IssueCategory object
-   *
-   *@param  tmp  The new project value
-   */
-  public void setProject(Project tmp) {
-    project = tmp;
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
   }
 
 
@@ -157,7 +116,227 @@ public class IssueCategory extends GenericBean {
    *@param  tmp  The new projectId value
    */
   public void setProjectId(int tmp) {
-    projectId = tmp;
+    this.projectId = tmp;
+  }
+
+
+  /**
+   *  Sets the projectId attribute of the IssueCategory object
+   *
+   *@param  tmp  The new projectId value
+   */
+  public void setProjectId(String tmp) {
+    this.projectId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the subject attribute of the IssueCategory object
+   *
+   *@param  tmp  The new subject value
+   */
+  public void setSubject(String tmp) {
+    this.subject = tmp;
+  }
+
+
+  /**
+   *  Sets the description attribute of the IssueCategory object
+   *
+   *@param  tmp  The new description value
+   */
+  public void setDescription(String tmp) {
+    this.description = tmp;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the IssueCategory object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(boolean tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the IssueCategory object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the entered attribute of the IssueCategory object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the IssueCategory object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the enteredBy attribute of the IssueCategory object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(int tmp) {
+    this.enteredBy = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredBy attribute of the IssueCategory object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the modified attribute of the IssueCategory object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the IssueCategory object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the modifiedBy attribute of the IssueCategory object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(int tmp) {
+    this.modifiedBy = tmp;
+  }
+
+
+  /**
+   *  Sets the modifiedBy attribute of the IssueCategory object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the topicsCount attribute of the IssueCategory object
+   *
+   *@param  tmp  The new topicsCount value
+   */
+  public void setTopicsCount(int tmp) {
+    this.topicsCount = tmp;
+  }
+
+
+  /**
+   *  Sets the topicsCount attribute of the IssueCategory object
+   *
+   *@param  tmp  The new topicsCount value
+   */
+  public void setTopicsCount(String tmp) {
+    this.topicsCount = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the postsCount attribute of the IssueCategory object
+   *
+   *@param  tmp  The new postsCount value
+   */
+  public void setPostsCount(int tmp) {
+    this.postsCount = tmp;
+  }
+
+
+  /**
+   *  Sets the postsCount attribute of the IssueCategory object
+   *
+   *@param  tmp  The new postsCount value
+   */
+  public void setPostsCount(String tmp) {
+    this.postsCount = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the lastPostDate attribute of the IssueCategory object
+   *
+   *@param  tmp  The new lastPostDate value
+   */
+  public void setLastPostDate(java.sql.Timestamp tmp) {
+    this.lastPostDate = tmp;
+  }
+
+
+  /**
+   *  Sets the lastPostDate attribute of the IssueCategory object
+   *
+   *@param  tmp  The new lastPostDate value
+   */
+  public void setLastPostDate(String tmp) {
+    this.lastPostDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the lastPostBy attribute of the IssueCategory object
+   *
+   *@param  tmp  The new lastPostBy value
+   */
+  public void setLastPostBy(int tmp) {
+    this.lastPostBy = tmp;
+  }
+
+
+  /**
+   *  Sets the lastPostBy attribute of the IssueCategory object
+   *
+   *@param  tmp  The new lastPostBy value
+   */
+  public void setLastPostBy(String tmp) {
+    this.lastPostBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the project attribute of the IssueCategory object
+   *
+   *@param  tmp  The new project value
+   */
+  public void setProject(Project tmp) {
+    this.project = tmp;
   }
 
 
@@ -182,6 +361,16 @@ public class IssueCategory extends GenericBean {
 
 
   /**
+   *  Gets the subject attribute of the IssueCategory object
+   *
+   *@return    The subject value
+   */
+  public String getSubject() {
+    return subject;
+  }
+
+
+  /**
    *  Gets the description attribute of the IssueCategory object
    *
    *@return    The description value
@@ -192,42 +381,42 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the issueCount attribute of the IssueCategory object
+   *  Gets the enabled attribute of the IssueCategory object
    *
-   *@return    The issueCount value
+   *@return    The enabled value
    */
-  public int getIssueCount() {
-    return issueCount;
+  public boolean getEnabled() {
+    return enabled;
   }
 
 
   /**
-   *  Gets the replyCount attribute of the IssueCategory object
+   *  Gets the entered attribute of the IssueCategory object
    *
-   *@return    The replyCount value
+   *@return    The entered value
    */
-  public int getReplyCount() {
-    return replyCount;
+  public java.sql.Timestamp getEntered() {
+    return entered;
   }
 
 
   /**
-   *  Gets the lastIssueDate attribute of the IssueCategory object
+   *  Gets the enteredBy attribute of the IssueCategory object
    *
-   *@return    The lastIssueDate value
+   *@return    The enteredBy value
    */
-  public java.sql.Timestamp getLastIssueDate() {
-    return lastIssueDate;
+  public int getEnteredBy() {
+    return enteredBy;
   }
 
 
   /**
-   *  Gets the lastReplyDate attribute of the IssueCategory object
+   *  Gets the modified attribute of the IssueCategory object
    *
-   *@return    The lastReplyDate value
+   *@return    The modified value
    */
-  public java.sql.Timestamp getLastReplyDate() {
-    return lastReplyDate;
+  public java.sql.Timestamp getModified() {
+    return modified;
   }
 
 
@@ -236,8 +425,81 @@ public class IssueCategory extends GenericBean {
    *
    *@return    The modifiedBy value
    */
-  public String getModifiedBy() {
+  public int getModifiedBy() {
     return modifiedBy;
+  }
+
+
+  /**
+   *  Gets the topicsCount attribute of the IssueCategory object
+   *
+   *@return    The topicsCount value
+   */
+  public int getTopicsCount() {
+    return topicsCount;
+  }
+
+
+  /**
+   *  Gets the postsCount attribute of the IssueCategory object
+   *
+   *@return    The postsCount value
+   */
+  public int getPostsCount() {
+    return postsCount;
+  }
+
+
+  /**
+   *  Gets the lastPostDate attribute of the IssueCategory object
+   *
+   *@return    The lastPostDate value
+   */
+  public java.sql.Timestamp getLastPostDate() {
+    return lastPostDate;
+  }
+
+
+  /**
+   *  Gets the lastPostBy attribute of the IssueCategory object
+   *
+   *@return    The lastPostBy value
+   */
+  public int getLastPostBy() {
+    return lastPostBy;
+  }
+
+
+  /**
+   *  Gets the project attribute of the IssueCategory object
+   *
+   *@return    The project value
+   */
+  public Project getProject() {
+    return project;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  private void buildRecord(ResultSet rs) throws SQLException {
+    id = rs.getInt("category_id");
+    projectId = rs.getInt("project_id");
+    subject = rs.getString("subject");
+    description = rs.getString("description");
+    enabled = rs.getBoolean("enabled");
+    entered = rs.getTimestamp("entered");
+    enteredBy = rs.getInt("enteredby");
+    modified = rs.getTimestamp("modified");
+    modifiedBy = rs.getInt("modifiedby");
+    topicsCount = rs.getInt("topics_count");
+    postsCount = rs.getInt("posts_count");
+    lastPostDate = rs.getTimestamp("last_post_date");
+    lastPostBy = DatabaseUtils.getInt(rs, "last_post_by");
   }
 
 
@@ -246,10 +508,10 @@ public class IssueCategory extends GenericBean {
    *
    *@return    The lastIssueDateString value
    */
-  public String getLastIssueDateString() {
+  public String getLastPostDateString() {
     String tmp = "";
     try {
-      return DateFormat.getDateInstance(3).format(lastIssueDate);
+      return DateFormat.getDateInstance(3).format(lastPostDate);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -261,10 +523,10 @@ public class IssueCategory extends GenericBean {
    *
    *@return    The lastIssueDateTimeString value
    */
-  public String getLastIssueDateTimeString() {
+  public String getLastPostDateTimeString() {
     String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(3, 3).format(lastIssueDate);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(lastPostDate);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -272,70 +534,112 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the lastReplyDateString attribute of the IssueCategory object
+   *  Gets the valid attribute of the IssueCategory object
    *
-   *@return    The lastReplyDateString value
+   *@return    The valid value
    */
-  public String getLastReplyDateString() {
-    String tmp = "";
-    try {
-      return DateFormat.getDateInstance(3).format(lastReplyDate);
-    } catch (NullPointerException e) {
+  private boolean isValid() {
+    if (projectId == -1) {
+      errors.put("actionError", "Project ID not specified");
     }
-    return tmp;
-  }
-
-
-  /**
-   *  Gets the lastReplyDateTimeString attribute of the IssueCategory object
-   *
-   *@return    The lastReplyDateTimeString value
-   */
-  public String getLastReplyDateTimeString() {
-    String tmp = "";
-    try {
-      return DateFormat.getDateTimeInstance(3, 3).format(lastReplyDate);
-    } catch (NullPointerException e) {
+    if (subject == null || subject.equals("")) {
+      errors.put("subjectError", "Required field");
     }
-    return tmp;
-  }
-
-
-  /**
-   *  Gets the threadCount attribute of the IssueCategory object
-   *
-   *@return    The threadCount value
-   */
-  public int getThreadCount() {
-    return issueCount;
-  }
-
-
-  /**
-   *  Gets the postCount attribute of the IssueCategory object
-   *
-   *@return    The postCount value
-   */
-  public int getPostCount() {
-    return (issueCount + replyCount);
-  }
-
-
-  /**
-   *  Gets the latestPostDateTimeString attribute of the IssueCategory object
-   *
-   *@return    The latestPostDateTimeString value
-   */
-  public String getLatestPostDateTimeString() {
-    if (lastReplyDate == null) {
-      return getLastIssueDateTimeString();
+    if (hasErrors()) {
+      return false;
     } else {
-      if (lastReplyDate.after(lastIssueDate)) {
-        return getLastReplyDateTimeString();
-      } else {
-        return getLastIssueDateTimeString();
-      }
+      return true;
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean insert(Connection db) throws SQLException {
+    if (!isValid()) {
+      return false;
+    }
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "INSERT INTO project_issues_categories " +
+        "(project_id, subject, description, enabled, ");
+    if (entered != null) {
+      sql.append("entered, ");
+    }
+    if (modified != null) {
+      sql.append("modified, ");
+    }
+    sql.append(
+        "enteredBy, modifiedBy, " +
+        "topics_count, posts_count, last_post_date, last_post_by) ");
+    sql.append("VALUES (?, ?, ?, ?, ");
+    if (entered != null) {
+      sql.append("?, ");
+    }
+    if (modified != null) {
+      sql.append("?, ");
+    }
+    sql.append("?, ?, ?, ?, ?, ?) ");
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, projectId);
+    pst.setString(++i, subject);
+    pst.setString(++i, description);
+    pst.setBoolean(++i, enabled);
+    if (entered != null) {
+      pst.setTimestamp(++i, entered);
+    }
+    if (modified != null) {
+      pst.setTimestamp(++i, modified);
+    }
+    pst.setInt(++i, enteredBy);
+    pst.setInt(++i, modifiedBy);
+    pst.setInt(++i, topicsCount);
+    pst.setInt(++i, postsCount);
+    DatabaseUtils.setTimestamp(pst, ++i, lastPostDate);
+    DatabaseUtils.setInt(pst, ++i, lastPostBy);
+    pst.execute();
+    pst.close();
+    id = DatabaseUtils.getCurrVal(db, "project_issue_cate_categ_id_seq");
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int update(Connection db) throws SQLException {
+    if (this.getId() == -1 || this.projectId == -1) {
+      throw new SQLException("ID was not specified");
+    }
+    if (!isValid()) {
+      return -1;
+    }
+    int resultCount = 0;
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE project_issues_categories " +
+        "SET subject = ?, description = ?, " +
+        "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
+        "WHERE category_id = ? " +
+        "AND modified = ? ");
+    pst.setString(++i, subject);
+    pst.setString(++i, description);
+    pst.setInt(++i, modifiedBy);
+    pst.setInt(++i, id);
+    pst.setTimestamp(++i, modified);
+    resultCount = pst.executeUpdate();
+    pst.close();
+    return resultCount;
   }
 
 
@@ -346,30 +650,49 @@ public class IssueCategory extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      //Delete the replies
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM project_issue_replies " +
           "WHERE issue_id IN (SELECT issue_id FROM project_issues WHERE " +
-          "type_id = ? AND project_id = ?) ");
+          "category_id = ? AND project_id = ?) ");
       pst.setInt(1, id);
       pst.setInt(2, projectId);
       pst.execute();
       pst.close();
-
+      //Delete the issues
       pst = db.prepareStatement(
           "DELETE FROM project_issues " +
-          "WHERE type_id = ? " +
+          "WHERE category_id = ? " +
           "AND project_id = ? ");
       pst.setInt(1, id);
       pst.setInt(2, projectId);
       pst.execute();
       pst.close();
-      db.commit();
+      //Delete this category
+      pst = db.prepareStatement(
+          "DELETE FROM project_issues_categories " +
+          "WHERE category_id = ? " +
+          "AND project_id = ? ");
+      pst.setInt(1, id);
+      pst.setInt(2, projectId);
+      pst.execute();
+      pst.close();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
   }
 }

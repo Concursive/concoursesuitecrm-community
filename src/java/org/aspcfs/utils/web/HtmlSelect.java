@@ -938,6 +938,45 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
+    *  Gets the selectedValue attribute of the HtmlSelect object
+   *
+    *@param  selectedId  Description of the Parameter
+   *@return             The selectedValue value
+  */
+ public String getSelectedValue(int selectedId) {
+    try {
+      return getSelectedValue(String.valueOf(selectedId));
+    } catch (Exception e) {
+      return "";
+    }
+  }
+
+
+  /**
+   *  Gets the selectedValue attribute of the HtmlSelect object
+   *
+   *@param  selectedId  Description of the Parameter
+   *@return             The selectedValue value
+   */
+  public String getSelectedValue(String selectedId) {
+    return getValueFromId(selectedId);
+  }
+  
+  /**
+   *  Gets the selectedValue attribute of the HtmlSelect object
+   *
+   *@param  selectedId  Description of the Parameter
+   *@return             The selectedValue value
+   */
+  public String getValueFromId(int selectedId) {
+    try {
+      return getValueFromId(String.valueOf(selectedId));
+    } catch (Exception e) {
+      return "";
+    }
+  }
+
+  /**
    *  Returns the text of the specified key
    *
    *@param  key  Description of the Parameter
@@ -952,6 +991,23 @@ public class HtmlSelect extends ArrayList {
       }
     }
     return key;
+  }
+  
+  /**
+   *  Checks whether the key exists
+   *
+   *@param  key  Description of the Parameter
+   *@return      Description of the Return Value
+   */
+  public boolean hasKey(String key) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      HtmlOption thisOption = (HtmlOption) i.next();
+      if (key.equals(thisOption.getValue())) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.utils.web.*, org.aspcfs.modules.troubletickets.base.* " %>
 <jsp:useBean id="ticketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="onsiteModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -72,11 +73,11 @@ Maintenance Notes
     </td>
     <td width="20%" nowrap>
       <b>Start Date:</b>
-      <dhv:tz timestamp="<%= ticketDetails.getContractStartDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= ticketDetails.getContractStartDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
     <td nowrap>
       <b>End Date:</b>
-      <dhv:tz timestamp="<%= ticketDetails.getContractEndDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= ticketDetails.getContractEndDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
 </table>
@@ -117,11 +118,11 @@ Maintenance Notes
         <% int status = -1;%>
         <% status = thisSun.getEnabled() ? 1 : 0; %>
       	<%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('menuTicketForm', '<%=ticketDetails.getId() %>', '<%= thisSun.getId() %>');"
-         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+         <a href="javascript:displayMenu('select<%= i %>','menuTicketForm', '<%=ticketDetails.getId() %>', '<%= thisSun.getId() %>');"
+         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuTicketForm');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
 		<td width="15%" nowrap>
-      <a href="TroubleTicketMaintenanceNotes.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%= thisSun.getId()%>"><dhv:tz timestamp="<%=thisSun.getEntered()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/></a>
+      <a href="TroubleTicketMaintenanceNotes.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%= thisSun.getId()%>"><zeroio:tz timestamp="<%=thisSun.getEntered()%>" dateOnly="true" default="&nbsp;"/></a>
 		</td>
 		<td width="15%" >
       <%= toHtml(thisSun.getDescriptionOfService()) %>

@@ -1,8 +1,8 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
@@ -22,25 +22,29 @@ import org.aspcfs.utils.web.HtmlSelect;
  *
  *@author     matt rajkowski
  *@created    January 3, 2003
- *@version    $Id$
+ *@version    $Id: AssignmentList.java,v 1.4.50.1 2004/03/19 21:00:50 rvasista
+ *      Exp $
  */
 public class AssignmentList extends ArrayList {
 
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
   private int assignmentsForUser = -1;
+  private int forProjectUser = -1;
   private Project project = null;
   private int projectId = -1;
   private boolean incompleteOnly = false;
   private boolean closedOnly = false;
   private int withDaysComplete = -1;
   private int requirementId = -1;
+  private int folderId = -1;
+  private boolean onlyIfRequirementOpen = false;
 
   private int enteredBy = -1;
   private int modifiedBy = -1;
 
   private java.sql.Date offsetDate = null;
-
+  //calendar
   protected java.sql.Timestamp alertRangeStart = null;
   protected java.sql.Timestamp alertRangeEnd = null;
 
@@ -58,6 +62,16 @@ public class AssignmentList extends ArrayList {
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
+  }
+
+
+  /**
+   *  Gets the pagedListInfo attribute of the AssignmentList object
+   *
+   *@return    The pagedListInfo value
+   */
+  public PagedListInfo getPagedListInfo() {
+    return pagedListInfo;
   }
 
 
@@ -102,6 +116,26 @@ public class AssignmentList extends ArrayList {
 
 
   /**
+   *  Sets the forProjectUser attribute of the AssignmentList object
+   *
+   *@param  tmp  The new forProjectUser value
+   */
+  public void setForProjectUser(int tmp) {
+    this.forProjectUser = tmp;
+  }
+
+
+  /**
+   *  Sets the forProjectUser attribute of the AssignmentList object
+   *
+   *@param  tmp  The new forProjectUser value
+   */
+  public void setForProjectUser(String tmp) {
+    this.forProjectUser = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the incompleteOnly attribute of the AssignmentList object
    *
    *@param  tmp  The new incompleteOnly value
@@ -138,6 +172,16 @@ public class AssignmentList extends ArrayList {
    */
   public void setRequirementId(int tmp) {
     this.requirementId = tmp;
+  }
+
+
+  /**
+   *  Sets the folderId attribute of the AssignmentList object
+   *
+   *@param  tmp  The new folderId value
+   */
+  public void setFolderId(int tmp) {
+    this.folderId = tmp;
   }
 
 
@@ -219,7 +263,7 @@ public class AssignmentList extends ArrayList {
       Assignment thisAssignment = (Assignment) i.next();
       listSelect.addItem(
           thisAssignment.getId(),
-          thisAssignment.getActivity());
+          thisAssignment.getRole());
     }
     return listSelect.getHtml(selectName, defaultKey);
   }
@@ -236,12 +280,42 @@ public class AssignmentList extends ArrayList {
 
 
   /**
+   *  Gets the closedOnly attribute of the AssignmentList object
+   *
+   *@return    The closedOnly value
+   */
+  public boolean getClosedOnly() {
+    return closedOnly;
+  }
+
+
+  /**
+   *  Gets the incompleteOnly attribute of the AssignmentList object
+   *
+   *@return    The incompleteOnly value
+   */
+  public boolean getIncompleteOnly() {
+    return incompleteOnly;
+  }
+
+
+  /**
    *  Gets the requirementId attribute of the AssignmentList object
    *
    *@return    The requirementId value
    */
   public int getRequirementId() {
     return requirementId;
+  }
+
+
+  /**
+   *  Gets the folderId attribute of the AssignmentList object
+   *
+   *@return    The folderId value
+   */
+  public int getFolderId() {
+    return folderId;
   }
 
 
@@ -388,8 +462,8 @@ public class AssignmentList extends ArrayList {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
+      pst.close();
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
@@ -408,10 +482,10 @@ public class AssignmentList extends ArrayList {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("la.level, due_date, assign_date", null);
+      pagedListInfo.setDefaultSort("due_date, assign_date, assignment_id", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY la.level, due_date, assign_date ");
+      sqlOrder.append("ORDER BY due_date, assign_date, assignment_id ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -422,10 +496,9 @@ public class AssignmentList extends ArrayList {
     }
     sqlSelect.append(
         "a.*, s.description as status, s.type as status_type, s.graphic as status_graphic, " +
-        "la.description as activity, la.level, loe_e.description as loe_estimated_type, loe_a.description as loe_actual_type " +
+        "loe_e.description as loe_estimated_type, loe_a.description as loe_actual_type " +
         "FROM project_assignments a " +
         " LEFT JOIN lookup_project_status s ON (a.status_id = s.code) " +
-        " LEFT JOIN lookup_project_activity la ON (a.activity_id = la.code) " +
         " LEFT JOIN lookup_project_loe loe_e ON (a.estimated_loetype = loe_e.code) " +
         " LEFT JOIN lookup_project_loe loe_a ON (a.actual_loetype = loe_a.code) " +
         "WHERE assignment_id > -1 ");
@@ -467,6 +540,10 @@ public class AssignmentList extends ArrayList {
     if (projectId > -1) {
       sqlFilter.append("AND a.project_id = ? ");
     }
+    if (forProjectUser > -1) {
+      sqlFilter.append("AND (a.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
+          "AND status IS NULL )) ");
+    }
     if (closedOnly) {
       sqlFilter.append("AND complete_date IS NOT NULL ");
     }
@@ -483,11 +560,21 @@ public class AssignmentList extends ArrayList {
     if (requirementId > -1) {
       sqlFilter.append("AND a.requirement_id = ? ");
     }
+    if (folderId > -1) {
+      if (folderId == 0) {
+        sqlFilter.append("AND folder_id IS NULL ");
+      } else {
+        sqlFilter.append("AND folder_id = ? ");
+      }
+    }
     if (alertRangeStart != null) {
       sqlFilter.append("AND a.due_date >= ? ");
     }
     if (alertRangeEnd != null) {
       sqlFilter.append("AND a.due_date < ? ");
+    }
+    if (onlyIfRequirementOpen) {
+      sqlFilter.append("AND a.requirement_id IN (SELECT requirement_id FROM project_requirements WHERE closedate IS NULL) ");
     }
   }
 
@@ -507,6 +594,9 @@ public class AssignmentList extends ArrayList {
     if (projectId > -1) {
       pst.setInt(++i, projectId);
     }
+    if (forProjectUser > -1) {
+      pst.setInt(++i, forProjectUser);
+    }
     if (incompleteOnly && withDaysComplete > -1) {
       Calendar cal = Calendar.getInstance();
       cal.add(Calendar.DATE, -withDaysComplete);
@@ -520,6 +610,10 @@ public class AssignmentList extends ArrayList {
     }
     if (requirementId > -1) {
       pst.setInt(++i, requirementId);
+    }
+    if (folderId > 0) {
+      //0 is the null case here
+      pst.setInt(++i, folderId);
     }
     if (alertRangeStart != null) {
       pst.setTimestamp(++i, alertRangeStart);
@@ -625,6 +719,32 @@ public class AssignmentList extends ArrayList {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  requirementId     Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void delete(Connection db, int requirementId) throws SQLException {
+    //Assignment status
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM project_assignments_status " +
+        "WHERE assignment_id IN " +
+        "(SELECT assignment_id FROM project_assignments WHERE requirement_id = ?) ");
+    pst.setInt(1, requirementId);
+    pst.execute();
+    pst.close();
+    //Delete the assignments
+    pst = db.prepareStatement(
+        "DELETE FROM project_assignments " +
+        "WHERE requirement_id = ? ");
+    pst.setInt(1, requirementId);
+    pst.execute();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
    *@param  newOwner          Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
@@ -639,6 +759,24 @@ public class AssignmentList extends ArrayList {
       }
     }
     return total;
+  }
+
+
+  /**
+   *  Gets the assignment attribute of the AssignmentList object
+   *
+   *@param  id  Description of the Parameter
+   *@return     The assignment value
+   */
+  public Assignment getAssignment(int id) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Assignment thisAssignment = (Assignment) i.next();
+      if (thisAssignment.getId() == id) {
+        return thisAssignment;
+      }
+    }
+    return null;
   }
 }
 

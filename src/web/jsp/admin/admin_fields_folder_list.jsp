@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,java.text.*,org.aspcfs.modules.admin.base.*,org.aspcfs.modules.base.*" %>
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
@@ -67,7 +68,7 @@ Custom Folders
           <dhv:permission name="admin-sysconfig-folders-edit"></a></dhv:permission>
       </td>
       <td align="center" nowrap>
-        <dhv:tz timestamp="<%= thisCategory.getStartDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%= thisCategory.getStartDate() %>" dateOnly="true" default="&nbsp;"/>
       </td>
     </tr>
 <%    

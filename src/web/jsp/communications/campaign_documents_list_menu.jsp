@@ -4,14 +4,14 @@
   var thisFileId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, campaignId, fileId) {
+  function displayMenu(loc, id, campaignId, fileId) {
     thisCampaignId = campaignId;
     thisFileId = fileId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuFile", "down", 0, 0, 170, getHeight("menuFileTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
   //Menu link functions
@@ -35,44 +35,44 @@
 </script>
 <div id="menuFileContainer" class="menu">
   <div id="menuFileContent">
-    <table id="menuFileTable" class="pulldown" width="170">
+    <table id="menuFileTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="campaign-campaigns-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="campaign-campaigns-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          Modify
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="campaign-campaigns-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="download()">
+        <th>
           <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:download()">Download</a>
+          Download
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="campaign-campaigns-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteFile()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteFile()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

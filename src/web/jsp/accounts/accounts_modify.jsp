@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.controller.*,org.aspcfs.utils.*,org.aspcfs.utils.web.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -467,8 +468,8 @@ Modify Account
       Contract End Date
     </td>
     <td>
-      <input type="text" size="10" name="contractEndDate" value="<dhv:tz timestamp="<%= OrgDetails.getContractEndDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('addAccount', 'contractEndDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" size="10" name="contractEndDate" value="<zeroio:tz timestamp="<%= OrgDetails.getContractEndDate() %>" dateOnly="true" />">
+      <a href="javascript:popCalendar('addAccount', 'contractEndDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
     </td>
   </tr>
   </dhv:include>
@@ -486,8 +487,8 @@ Modify Account
       Alert Date
     </td>
     <td>
-      <input type="text" size="10" name="alertDate" value="<dhv:tz timestamp="<%= OrgDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('addAccount', 'alertDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" size="10" name="alertDate" value="<zeroio:tz timestamp="<%= OrgDetails.getAlertDate() %>" dateOnly="true" />">
+      <a href="javascript:popCalendar('addAccount', 'alertDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
     </td>
   </tr>
   </dhv:include>

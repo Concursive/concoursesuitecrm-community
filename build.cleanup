@@ -35,3 +35,24 @@ pipeline/opportunity_form.jsp
 actionlist/action_lists_form.jsp
 communications/message_form.jsp
 communications/group_criteria_form.jsp
+
+## 2004-07-13 updated library, project management files
+WEB-INF/lib/jakarta-poi.jar
+iteam/projects_center_home.jsp
+iteam/projects_center_assignments_modify.jsp
+iteam/projects_center_file_upload_version.jsp
+iteam/projects_center_requirements_modify.jsp
+iteam/projects_center_team_invite.jsp
+iteam/projects_personalview.jsp
+
+## 2004-07-20 updated to new version of HTMLArea
+htmlarea/example-fully-loaded.html
+htmlarea/example-spell-checker.html
+htmlarea/example-table-operations.html
+htmlarea/example.html
+htmlarea/test.cgi
+
+## 2004-07-21 new version added
+WEB-INF/lib/jtds.jar
+
+

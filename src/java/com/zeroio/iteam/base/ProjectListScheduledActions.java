@@ -1,3 +1,10 @@
+/*
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
+ *  permission from Matt Rajkowski
+ */
 package com.zeroio.iteam.base;
 
 import org.aspcfs.utils.*;
@@ -14,17 +21,20 @@ import java.sql.*;
  *
  *@author     akhi_m
  *@created    October 2, 2002
- *@version    $Id$
+ *@version    $Id: ProjectListScheduledActions.java,v 1.13 2003/09/26 18:49:28
+ *      mrajkowski Exp $
  */
- 
+
 public class ProjectListScheduledActions extends ProjectList implements ScheduledActions {
 
   private int userId = -1;
+
 
   /**
    *  Constructor for the ProjectListScheduledActions object
    */
   public ProjectListScheduledActions() { }
+
 
   /**
    *  Sets the userId attribute of the CallListScheduledActions object
@@ -35,6 +45,7 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
     this.userId = userId;
   }
 
+
   /**
    *  Gets the userId attribute of the CallListScheduledActions object
    *
@@ -44,22 +55,23 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
     return userId;
   }
 
+
   /**
    *  Description of the Method
    *
-   *@param  companyCalendar  Description of the Parameter
-   *@param  db               Description of the Parameter
-   *@return                  Description of the Return Value
+   *@param  companyCalendar   Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
     try {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ProjectListScheduledActions --> Building Project Alerts ");
+        System.out.println("ProjectListScheduledActions-> Building Project Alerts ");
       }
-      
+
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
-      
+
       this.setGroupId(-1);
       this.setOpenProjectsOnly(true);
       this.setProjectsWithAssignmentsOnly(true);
@@ -69,7 +81,7 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
       this.setOpenAssignmentsOnly(true);
       this.setBuildIssues(false);
       this.buildList(db);
-      
+
       Iterator projectList = this.iterator();
       while (projectList.hasNext()) {
         com.zeroio.iteam.base.Project thisProject = (com.zeroio.iteam.base.Project) projectList.next();
@@ -89,18 +101,27 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
         }
       }
     } catch (SQLException e) {
+      e.printStackTrace(System.out);
       throw new SQLException("Error Building Project Calendar Alerts");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  companyCalendar   Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("ProjectListScheduledActions --> Building Alert Counts ");
+      System.out.println("ProjectListScheduledActions-> Building Alert Counts ");
     }
     try {
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
-      
+
       this.setGroupId(-1);
       this.setOpenProjectsOnly(true);
       this.setProjectsWithAssignmentsOnly(true);
@@ -116,7 +137,7 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
         String thisDay = (String) i.next();
         companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[8], thisDay, dayEvents.get(thisDay));
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("ProjectListScheduledActions --> Added Assignments for day " + thisDay + "- " + String.valueOf(dayEvents.get(thisDay)));
+          System.out.println("ProjectListScheduledActions-> Added Assignments for day " + thisDay + "- " + String.valueOf(dayEvents.get(thisDay)));
         }
       }
     } catch (SQLException e) {

@@ -97,6 +97,8 @@ public class Ticket extends GenericBean {
   private int ageHours = 0;
   private int campaignId = -1;
   private boolean hasEnabledOwnerAccount = true;
+  private int projectId = -1;
+  private int projectTicketCount = -1;
   //Resources
   private boolean buildFiles = false;
   private boolean buildTasks = false;
@@ -154,7 +156,6 @@ public class Ticket extends GenericBean {
     if (id == -1) {
       throw new SQLException("Invalid Ticket Number");
     }
-
     PreparedStatement pst = db.prepareStatement(
         "SELECT t.*, " +
         "o.name AS orgname, o.enabled AS orgenabled, " +
@@ -175,7 +176,8 @@ public class Ticket extends GenericBean {
         "a.location AS assetlocation, " +
         "a.onsite_service_model AS assetonsiteservicemodel, " +
         "pc.sku AS productsku , " +
-        "pc.product_name AS productname  " +
+        "pc.product_name AS productname, " +
+        "tlp.project_id " +
         "FROM ticket t " +
         "LEFT JOIN organization o ON (t.org_id = o.org_id) " +
         "LEFT JOIN lookup_department ld ON (t.department_code = ld.code) " +
@@ -186,6 +188,7 @@ public class Ticket extends GenericBean {
         "LEFT JOIN service_contract sc ON (t.link_contract_id = sc.contract_id) " +
         "LEFT JOIN asset a ON (t.link_asset_id = a.asset_id) " +
         "LEFT JOIN product_catalog pc ON (t.product_id = pc.product_id) " +
+        "LEFT JOIN ticketlink_project tlp ON (t.ticketid = tlp.ticket_id) " +
         "WHERE t.ticketid = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -488,7 +491,7 @@ public class Ticket extends GenericBean {
    *@param  tmp  The new assignedDate value
    */
   public void setAssignedDate(String tmp) {
-    this.assignedDate = DatabaseUtils.parseTimestamp(tmp);
+    this.assignedDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -837,7 +840,7 @@ public class Ticket extends GenericBean {
    *@param  tmp  The new contractStartDate value
    */
   public void setContractStartDate(String tmp) {
-    this.contractStartDate = DatabaseUtils.parseTimestamp(tmp);
+    this.contractStartDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -857,7 +860,7 @@ public class Ticket extends GenericBean {
    *@param  tmp  The new contractEndDate value
    */
   public void setContractEndDate(String tmp) {
-    this.contractEndDate = DatabaseUtils.parseTimestamp(tmp);
+    this.contractEndDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -1082,6 +1085,66 @@ public class Ticket extends GenericBean {
 
 
   /**
+   *  Sets the projectId attribute of the Ticket object
+   *
+   *@param  tmp  The new projectId value
+   */
+  public void setProjectId(int tmp) {
+    this.projectId = tmp;
+  }
+
+
+  /**
+   *  Sets the projectId attribute of the Ticket object
+   *
+   *@param  tmp  The new projectId value
+   */
+  public void setProjectId(String tmp) {
+    this.projectId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the projectId attribute of the Ticket object
+   *
+   *@return    The projectId value
+   */
+  public int getProjectId() {
+    return projectId;
+  }
+
+
+  /**
+   *  Sets the projectTicketCount attribute of the Ticket object
+   *
+   *@param  tmp  The new projectTicketCount value
+   */
+  public void setProjectTicketCount(int tmp) {
+    this.projectTicketCount = tmp;
+  }
+
+
+  /**
+   *  Sets the projectTicketCount attribute of the Ticket object
+   *
+   *@param  tmp  The new projectTicketCount value
+   */
+  public void setProjectTicketCount(String tmp) {
+    this.projectTicketCount = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the projectTicketCount attribute of the Ticket object
+   *
+   *@return    The projectTicketCount value
+   */
+  public int getProjectTicketCount() {
+    return projectTicketCount;
+  }
+
+
+  /**
    *  Sets the ContactId attribute of the Ticket object
    *
    *@param  tmp  The new ContactId value
@@ -1184,7 +1247,7 @@ public class Ticket extends GenericBean {
    *@param  tmp  The new estimatedResolutionDate value
    */
   public void setEstimatedResolutionDate(String tmp) {
-    this.estimatedResolutionDate = DatabaseUtils.parseTimestamp(tmp);
+    this.estimatedResolutionDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -1356,7 +1419,7 @@ public class Ticket extends GenericBean {
    *@param  tmp  The new resolutionDate value
    */
   public void setResolutionDate(String tmp) {
-    this.resolutionDate = DatabaseUtils.parseTimestamp(tmp);
+    this.resolutionDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
 
@@ -2184,10 +2247,13 @@ public class Ticket extends GenericBean {
     StringBuffer sql = new StringBuffer();
     try {
       db.setAutoCommit(false);
+      if (projectId > -1 && projectTicketCount == -1) {
+        updateProjectTicketCount(db, projectId);
+      }
       sql.append(
           "INSERT INTO ticket (contact_id, problem, pri_code, " +
           "department_code, cat_code, scode, org_id, link_contract_id, link_asset_id, expectation, product_id, ");
-      sql.append("customer_product_id, ");
+      sql.append("customer_product_id, key_count, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -2195,7 +2261,7 @@ public class Ticket extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       sql.append("?, ");
       if (entered != null) {
         sql.append("?, ");
@@ -2234,6 +2300,7 @@ public class Ticket extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, expectation);
       DatabaseUtils.setInt(pst, ++i, productId);
       DatabaseUtils.setInt(pst, ++i, customerProductId);
+      DatabaseUtils.setInt(pst, ++i, projectTicketCount);
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -2610,8 +2677,11 @@ public class Ticket extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Ticket ID not specified.");
     }
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       //delete any related action list items
       ActionItemLog.deleteLink(db, this.getId(), Constants.TICKET_OBJECT);
 
@@ -2638,6 +2708,13 @@ public class Ticket extends GenericBean {
       pst.execute();
       pst.close();
 
+      //Delete the related project link
+      pst = db.prepareStatement(
+          "DELETE FROM ticketlink_project " +
+          "WHERE ticket_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
       //delete related task links
       pst = db.prepareStatement(
           "DELETE FROM tasklink_ticket WHERE ticket_id = ?");
@@ -2673,17 +2750,24 @@ public class Ticket extends GenericBean {
       pst.execute();
       pst.close();
 
-      //delete the ticket
+      //Delete the ticket
       pst = db.prepareStatement(
           "DELETE FROM ticket WHERE ticketid = ?");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -2721,7 +2805,6 @@ public class Ticket extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
   public void updateEntry(Connection db) throws SQLException {
@@ -2814,6 +2897,7 @@ public class Ticket extends GenericBean {
     productId = DatabaseUtils.getInt(rs, "product_id");
     customerProductId = DatabaseUtils.getInt(rs, "customer_product_id");
     expectation = DatabaseUtils.getInt(rs, "expectation");
+    projectTicketCount = rs.getInt("key_count");
     //organization table
     companyName = rs.getString("orgname");
     companyEnabled = rs.getBoolean("orgenabled");
@@ -2851,6 +2935,9 @@ public class Ticket extends GenericBean {
     //product catalog
     productSku = rs.getString("productsku");
     productName = rs.getString("productname");
+
+    //ticketlink_project
+    projectId = DatabaseUtils.getInt(rs, "project_id");
 
     //Calculations
     if (entered != null) {
@@ -2896,6 +2983,81 @@ public class Ticket extends GenericBean {
     thisList.add("contractStartDate");
     thisList.add("contractEndDate");
     return thisList;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  projectId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void insertProjectLink(Connection db, int projectId) throws SQLException {
+    String sql = "INSERT INTO ticketlink_project " +
+        "(ticket_id, project_id) " +
+        "VALUES (?, ?) ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, this.getId());
+    pst.setInt(++i, projectId);
+    pst.execute();
+    pst.close();
+  }
+  
+  
+  /**
+   *  Each ticket in a project has its own unique count
+   *
+   *@param  db                Description of the Parameter
+   *@param  projectId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void updateProjectTicketCount(Connection db, int projectId) throws SQLException {
+    Exception errorMessage = null;
+    boolean autoCommit = db.getAutoCommit();
+    try {
+      if (autoCommit) {
+        db.setAutoCommit(false);
+      }
+      int i = 0;
+      // Lock the row with the new value
+      PreparedStatement pst = db.prepareStatement(
+          "UPDATE project_ticket_count " +
+          "SET key_count = key_count + 1 " +
+          "WHERE project_id = ? ");
+      pst.setInt(++i, projectId);
+      pst.execute();
+      pst.close();
+      // Retrieve the new value
+      i = 0;
+      pst = db.prepareStatement(
+          "SELECT key_count " +
+          "FROM project_ticket_count " +
+          "WHERE project_id = ? ");
+      pst.setInt(++i, projectId);
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        projectTicketCount = rs.getInt("key_count");
+      }
+      rs.close();
+      pst.close();
+      if (autoCommit) {
+        db.commit();
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+      if (autoCommit) {
+        db.rollback();
+      }
+    } finally {
+      if (autoCommit) {
+        db.setAutoCommit(true);
+      }
+    }
+    if (errorMessage != null) {
+      throw new SQLException(errorMessage.getMessage());
+    }
   }
 }
 

@@ -66,7 +66,7 @@ Object Events
   <tr class="row<%= rowid %>">
     <td align="center" valign="top">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-          <a href="javascript:displayMenu('menuProcess', '<%= PermissionCategory.getId() %>', '<%= thisAction.getProcessId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+          <a href="javascript:displayMenu('select<%= count %>','menuProcess', '<%= PermissionCategory.getId() %>', '<%= thisAction.getProcessId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuProcess');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td width="50%" valign="top">
       <%= toHtml(thisAction.getTypeText()) %>

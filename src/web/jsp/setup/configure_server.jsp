@@ -1,5 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="org.aspcfs.utils.web.HtmlSelectTimeZone" %>
+<%@ page import="org.aspcfs.utils.web.HtmlSelectLanguage" %>
+<%@ page import="org.aspcfs.utils.web.HtmlSelectCurrency" %>
 <%@ page import="org.aspcfs.utils.web.HtmlSelect" %>
 <jsp:useBean id="server" class="org.aspcfs.modules.setup.beans.ServerBean" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -27,7 +29,7 @@
   </tr>
   <tr>
     <td>
-      Every user in Dark Horse CRM can configure the time zone in which they are currently in.<br>
+      Each user in Dark Horse CRM can configure the time zone in which they are currently in.<br>
       What should the default time zone be set to for new users?<br>
       <ul>
       <li>Users will still be able to change their time zone, but for new users this setting 
@@ -42,6 +44,50 @@
           <td>
             <% HtmlSelect select = HtmlSelectTimeZone.getSelect("timeZone", server.getTimeZoneDefault());   
             select.addItem(-1, "None Selected", 0); %><%= select.getHtml() %><font color="red">*</font>
+          </td>
+        </tr>
+      </table>
+      <br>
+    </td>
+  </tr>
+  <%-- Locale --%>
+  <tr class="sectionTitle">
+    <th>Default Location/Locale</th>
+  </tr>
+  <tr>
+    <td>
+      All locale formatting in Dark Horse CRM is currently defaulted to a single locale.
+      Which locale should Dark Horse CRM use?
+      <table border="0" class="empty">
+        <tr>
+          <td class="formLabel">
+            Locale:
+          </td>
+          <td>
+            <% HtmlSelect selectLanguage = HtmlSelectLanguage.getSelect("language", server.getLanguageDefault());
+            selectLanguage.addItem(-1, "None Selected", 0); %><%= selectLanguage.getHtml() %><font color="red">*</font>
+          </td>
+        </tr>
+      </table>
+      <br>
+    </td>
+  </tr>
+  <%-- Currency --%>
+  <tr class="sectionTitle">
+    <th>Default Currency</th>
+  </tr>
+  <tr>
+    <td>
+      All money in Dark Horse CRM is currently defaulted to a single currency.
+      Which currency should Dark Horse CRM use?
+      <table border="0" class="empty">
+        <tr>
+          <td class="formLabel">
+            Currency:
+          </td>
+          <td>
+            <% HtmlSelect selectCurrency = HtmlSelectCurrency.getSelect("currency", server.getCurrencyDefault());
+            selectCurrency.addItem(-1, "None Selected", 0); %><%= selectCurrency.getHtml() %><font color="red">*</font>
           </td>
         </tr>
       </table>

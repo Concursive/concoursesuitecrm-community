@@ -3,13 +3,13 @@
   var thisCampaignId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, campaignId) {
+  function displayMenu(loc, id, campaignId) {
     thisCampaignId = campaignId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuCampaign", "down", 0, 0, 170, getHeight("menuCampaignTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
   //Menu link functions
@@ -27,34 +27,34 @@
 </script>
 <div id="menuCampaignContainer" class="menu">
   <div id="menuCampaignContent">
-    <table id="menuCampaignTable" class="pulldown" width="170">
+    <table id="menuCampaignTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="campaign-campaigns-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="campaign-campaigns-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          Modify
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="campaign-campaigns-delete">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteCampaign()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteCampaign()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

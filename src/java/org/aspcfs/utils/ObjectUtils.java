@@ -39,6 +39,28 @@ public class ObjectUtils {
 
 
   /**
+   *  Sets the param attribute of the ObjectUtils class
+   *
+   *@param  target  The new param value
+   *@param  param   The new param value
+   *@param  value   The new param value
+   *@return         Description of the Return Value
+   */
+  public static boolean setParam(Object target, String param, double value) {
+    try {
+      param = param.substring(0, 1).toUpperCase() + param.substring(1);
+      Class[] argTypes = new Class[]{double.class};
+      Method method = target.getClass().getMethod("set" + param, argTypes);
+      method.invoke(target, new Object[]{new Double(value)});
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      return false;
+    }
+    return true;
+  }
+
+
+  /**
    *  Gets the param attribute of the ObjectUtils class
    *
    *@param  target  Description of Parameter

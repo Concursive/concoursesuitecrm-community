@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*, org.aspcfs.modules.quotes.base.*, org.aspcfs.modules.base.EmailAddress" %>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="product" class="org.aspcfs.modules.products.base.ProductCatalog" scope="request"/>
@@ -251,8 +252,7 @@ Ticket Details
     </td>
 		<td>
       <dhv:username id="<%= TicketDetails.getEnteredBy() %>"/>
-      -
-      <dhv:tz timestamp="<%= TicketDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= TicketDetails.getEntered() %>" />
 		</td>
   </tr>
   <tr class="containerBody">
@@ -261,8 +261,7 @@ Ticket Details
     </td>
 		<td>
       <dhv:username id="<%= TicketDetails.getModifiedBy() %>"/>
-      -
-      <dhv:tz timestamp="<%= TicketDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= TicketDetails.getModified() %>" />
 		</td>
   </tr>
 </table>
@@ -306,7 +305,7 @@ Ticket Details
       Assignment Date
     </td>
     <td>
-      <dhv:tz timestamp="<%= TicketDetails.getAssignedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= TicketDetails.getAssignedDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -314,7 +313,7 @@ Ticket Details
       Estimated Resolution Date
     </td>
     <td>
-      <dhv:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -355,7 +354,7 @@ Ticket Details
       Resolution Date
     </td>
     <td>
-      <dhv:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">

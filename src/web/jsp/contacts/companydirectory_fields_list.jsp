@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
@@ -79,20 +80,20 @@ List of Folder Records
         <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-           <a href="javascript:displayMenu('menuField','<%= ContactDetails.getId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+           <a href="javascript:displayMenu('select<%= count %>','menuField','<%= ContactDetails.getId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuField');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
           </td>
         </dhv:evaluate>
         <td align="left" width="100%" nowrap class="row<%= rowid %>">
           <a href="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= thisRecord.getFieldData() != null ? thisRecord.getFieldData().getValueHtml(false) : "&nbsp;" %></a>
         </td>
         <td nowrap class="row<%= rowid %>">
-          <dhv:tz timestamp="<%= thisRecord.getEntered()  %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+          <zeroio:tz timestamp="<%= thisRecord.getEntered()  %>" />
         </td>
         <td nowrap class="row<%= rowid %>">
           <dhv:username id="<%= thisRecord.getModifiedBy() %>" />
         </td>
         <td nowrap class="row<%= rowid %>">
-          <dhv:tz timestamp="<%= thisRecord.getModified()  %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+          <zeroio:tz timestamp="<%= thisRecord.getModified()  %>" />
         </td>
       </tr>
 <%    

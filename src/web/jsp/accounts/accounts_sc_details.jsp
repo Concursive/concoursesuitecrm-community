@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*,org.aspcfs.modules.assets.base.*,org.aspcfs.modules.servicecontracts.base.*,java.text.DateFormat" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="serviceContract" class="org.aspcfs.modules.servicecontracts.base.ServiceContract" scope="request"/>
@@ -12,6 +13,7 @@
 <jsp:useBean id="onsiteModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="emailModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
@@ -63,7 +65,7 @@
     Contract Value
     </td>
     <td>
-      <%= (serviceContract.getContractValue() == -1) ? "" : "$" + serviceContract.getContractValueCurrency() %>&nbsp;
+      <zeroio:currency value="<%= serviceContract.getContractValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
   </tr>
    <tr class="containerBody">
@@ -71,7 +73,7 @@
       Initial Contract Date
     </td>
     <td>
-      <dhv:tz timestamp="<%=serviceContract.getInitialStartDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=serviceContract.getInitialStartDate()%>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -79,7 +81,7 @@
       Current Contract Date
     </td>
     <td>
-      <dhv:tz timestamp="<%=serviceContract.getCurrentStartDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=serviceContract.getCurrentStartDate()%>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -87,7 +89,7 @@
       Current End Date
     </td>
     <td>
-      <dhv:tz timestamp="<%=serviceContract.getCurrentEndDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= serviceContract.getCurrentEndDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">

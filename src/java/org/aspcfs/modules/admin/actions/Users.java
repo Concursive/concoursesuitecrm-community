@@ -15,6 +15,7 @@ import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.controller.ApplicationPrefs;
 
 /**
  *  Methods for managing users
@@ -271,6 +272,7 @@ public final class Users extends CFSModule {
     if (!hasPermission(context, "admin-users-add")) {
       return ("PermissionError");
     }
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     Connection db = null;
     boolean recordInserted = false;
     User insertedUser = null;
@@ -309,7 +311,10 @@ public final class Users extends CFSModule {
         }
         thisUser.setEnteredBy(getUserId(context));
         thisUser.setModifiedBy(getUserId(context));
-        thisUser.setTimeZone((String) context.getServletContext().getAttribute("SYSTEM.TIMEZONE"));
+        thisUser.setTimeZone(prefs.get("SYSTEM.TIMEZONE"));
+        thisUser.setCurrency(prefs.get("SYSTEM.CURRENCY"));
+        thisUser.setLanguage(prefs.get("SYSTEM.LANGUAGE"));
+        
         recordInserted = thisUser.insert(db, context);
         if (recordInserted) {
           insertedUser = new User();

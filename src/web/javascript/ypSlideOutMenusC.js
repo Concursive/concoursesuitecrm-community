@@ -9,6 +9,29 @@ ypSlideOutMenu.Registry = []
 ypSlideOutMenu.aniLen = 250
 ypSlideOutMenu.hideDelay = 500
 ypSlideOutMenu.minCPUResolution = 10
+//rollover
+function cmOver(thisRow) {
+  thisRow.className='hover';
+  for (i=0;i<thisRow.childNodes.length;i++) {
+    if (thisRow.childNodes[i].tagName == 'TH') {
+      thisRow.childNodes[i].className='hover';
+    }
+    if (thisRow.childNodes[i].tagName == 'TD') {
+      thisRow.childNodes[i].className='hover';
+    }
+  }
+}
+function cmOut(thisRow) {
+  thisRow.className='';
+  for (i=0;i<thisRow.childNodes.length;i++) {
+    if (thisRow.childNodes[i].tagName == 'TH') {
+      thisRow.childNodes[i].className='';
+    }
+    if (thisRow.childNodes[i].tagName == 'TD') {
+      thisRow.childNodes[i].className='';
+    }
+  }
+}
 //utils
 function getHeight(tbId) {
   this.ie = document.all ? 1 : 0;
@@ -22,10 +45,54 @@ function hideMenu(id) {
     ypSlideOutMenu.hideMenu(id);
   }
 }
+function getPageOffsetTop(el) {
+  var y;
+  y = el.offsetTop;
+  if (el.offsetParent != null)
+    y += getPageOffsetTop(el.offsetParent);
+  return y;
+}
+function getPageOffsetLeft(el) {
+  var x;
+  x = el.offsetLeft;
+  if (el.offsetParent != null)
+    x += getPageOffsetLeft(el.offsetParent);
+  return x;
+}
 function moveMenu(mid) {
   var x = document.getElementById(mid + 'Container');
   x.style.left = xMousePos - 5;
   x.style.top = yMousePos - 5;
+}
+function moveDropMenu(mid, id) {
+  var mel = document.getElementById(mid + 'Container');
+  var el = document.getElementById(id);
+  var x = getPageOffsetLeft(el);
+  var y = getPageOffsetTop(el) + el.offsetHeight;
+  var c = 0;
+  if (document.all) {
+    c = document.body.clientHeight;
+  } else {
+    c = window.innerHeight;
+  }
+  var d = null;
+  if (document.documentElement && document.documentElement.scrollTop) {
+    d = document.documentElement;
+  } else {
+    d = document.body;
+  }
+  if (window.scrollY) {
+    c = c + window.scrollY;
+  } else {
+    c = c + d.scrollTop;
+  }
+  // adjust if offscreen
+  var height = mel.offsetHeight;
+  if (y + height > c) {
+    y = y - ((y + height) - c);
+  }
+  mel.style.left = x;
+  mel.style.top = y;
 }
 // constructor
 function ypSlideOutMenu(id, dir, left, top, width, height)
@@ -77,6 +144,11 @@ this.endSlide()
 ypSlideOutMenu.displayMenu = function(id)
 {
 moveMenu(id);
+this.showMenu(id);
+}
+ypSlideOutMenu.displayDropMenu = function(id, id2)
+{
+moveDropMenu(id, id2);
 this.showMenu(id);
 }
 ypSlideOutMenu.showMenu = function(id)

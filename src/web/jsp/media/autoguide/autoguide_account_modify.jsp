@@ -7,6 +7,7 @@
 <jsp:useBean id="ModelSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="OptionList" class="org.aspcfs.modules.media.autoguide.base.OptionList" scope="request"/>
 <jsp:useBean id="adRunTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].stockNo.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
@@ -308,7 +309,7 @@ Modify Vehicle
     <td nowrap>
       <input type="hidden" name="adrun<%= runCount %>id" value="<%= adRun.getId() %>">
       Run Date <input type="text" size="10" name="adrun<%= runCount %>runDate" value="<%= toDateString(adRun.getRunDate()) %>">
-      <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
       &nbsp;&nbsp;
       Ad Type <%= adRunTypeList.getHtmlSelect("adrun" + runCount + "adType", adRun.getAdType()) %>
       &nbsp;&nbsp;
@@ -326,7 +327,7 @@ Modify Vehicle
     <td nowrap>
       <input type="hidden" name="adrun<%= runCount %>id" value="-1">
       Run Date <input type="text" size="10" name="adrun<%= runCount %>runDate">
-      <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
       &nbsp;&nbsp;
       Ad Type <%= adRunTypeList.getHtmlSelect("adrun" + runCount + "adType", -1) %>
       &nbsp;&nbsp;

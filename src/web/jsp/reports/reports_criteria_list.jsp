@@ -56,7 +56,7 @@ new criteria:</p>
     Criteria criteria = (Criteria) i.next();
 %>
   <tr class="row<%= ++row%2 == 0 ? "2" : "1" %>">
-    <td><a href="javascript:displayMenu('menu1','<%= criteria.getId() %>');" onMouseOver="over(0, <%= criteria.getId() %>)" onmouseout="out(0, <%= criteria.getId() %>)"><img src="images/select.gif" name="select<%= criteria.getId() %>" align="absmiddle" border="0"></a></td>
+    <td><a href="javascript:displayMenu('select<%= criteria.getId() %>','menu1','<%= criteria.getId() %>');" onMouseOver="over(0, <%= criteria.getId() %>)" onmouseout="out(0, <%= criteria.getId() %>); hideMenu('menu1');"><img src="images/select.gif" name="select<%= criteria.getId() %>" id="select<%= criteria.getId() %>" align="absmiddle" border="0"></a></td>
     <td><a href="Reports.do?command=ParameterList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=<%= criteria.getId() %>"><%= toHtml(criteria.getSubject()) %></a></td>
     <td nowrap><%= criteria.getModified() %></td>
   </tr>

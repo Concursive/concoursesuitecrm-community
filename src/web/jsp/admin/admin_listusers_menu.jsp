@@ -3,7 +3,7 @@
   var thisUserId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, userId, status) {
+  function displayMenu(loc, id, userId, status) {
     thisUserId = userId;
     if (!menu_init) {
       menu_init = true;
@@ -21,7 +21,7 @@
       }
       new ypSlideOutMenu("menuUser", "down", 0, 0, 170, getHeight("menuUserTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   //Menu link functions
   function details() {
@@ -42,37 +42,44 @@
 </script>
 <div id="menuUserContainer" class="menu">
   <div id="menuUserContent">
-    <table id="menuUserTable" class="pulldown" width="170">
+    <table id="menuUserTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="admin-users-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="admin-users-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          Modify
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="admin-users-delete">
-      <tr>
-        <td>
+      <tr id="menuDisable" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="disable()">
+        <th>
           <img src="images/icons/stock_toggle-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td>
+          Disable Login
         </td>
-        <td id="menuDisable">
-          <a href="javascript:disable()">Disable Login</a>
-        </td>
-        <td id="menuEnable">
-          <a href="javascript:enable()">Enable Login</a>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="admin-users-delete">
+      <tr id="menuEnable" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="enable()">
+        <th>
+          <img src="images/icons/stock_toggle-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>        
+        <td>
+          Enable Login
         </td>
       </tr>
       </dhv:permission>

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -32,5 +33,5 @@ Settings
   </dhv:permission>
 </table>
 <br>
-The time is currently <dhv:tz timestamp="<%= new java.util.Date() %>"/>
+The time is currently <zeroio:tz timestamp="<%= new java.util.Date() %>"/>
 

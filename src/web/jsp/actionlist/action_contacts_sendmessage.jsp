@@ -1,9 +1,22 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
+<%@ page import="org.aspcfs.utils.StringUtils" %>
 <%@ page import="java.util.*"%>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
-<%@ include file="../initPage.jsp" %>
 <jsp:useBean id="messageList" class="org.aspcfs.modules.communications.base.MessageList" scope="request"/>
+<jsp:useBean id="clientType" class="org.aspcfs.utils.web.ClientType" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
+<%@ include file="../initPage.jsp" %>
+<%-- Editor must go here, before the body onload --%>
+<dhv:evaluate if="<%= !clientType.showApplet() %>">
+<jsp:include page="../htmlarea_include.jsp" flush="true"/>
+<body onload="initEditor('messageText');document.sendMessage.name.focus();">
+</dhv:evaluate>
+<%-- Use applet instead --%>
+<dhv:evaluate if="<%= clientType.showApplet() %>">
+<body onload="document.sendMessage.name.focus();">
+</dhv:evaluate>
 <script language="JavaScript">
   function updateMessageList() {
     document.forms['sendMessage'].elements['messageId'].selectedIndex = 0;;
@@ -14,20 +27,17 @@
     document.forms['sendMessage'].action = 'MyActionContacts.do?command=PrepareMessage<%= addLinkParams(request, "popup|popupType|actionId") %>';
     document.forms['sendMessage'].submit();
   }
+  function checkForm(form) {
+    var formTest = true;
+    var messageText = "";
+<dhv:evaluate if="<%= clientType.showApplet() %>">
+    document.sendMessage.messageText.value = document.Kafenio.getDocumentBody();
+</dhv:evaluate>
+    return true;
+  }
+
 </script>
-<%
-  boolean enhancedEditor = false;
-  if (("ie".equals(User.getBrowserId()) && User.getBrowserVersion() >= 5.5) ||
-      ("moz".equals(User.getBrowserId()) && User.getBrowserVersion() >= 1.3)) {
-    enhancedEditor = true;
-%>
-<body onLoad="initEditor();document.forms[0].name.focus();">
-<% 
-  } else {
-%>
-<body onLoad="document.forms[0].name.focus();">
-<%}%>
-<form name="sendMessage" action="MyActionContacts.do?command=SendMessage&auto-populate=true&actionSource=MyActionContacts" method="post">
+<form name="sendMessage" action="MyActionContacts.do?command=SendMessage&auto-populate=true&actionSource=MyActionContacts" method="post" onSubmit="return checkForm(this);">
 <dhv:evaluate if="<%= hasText((String) request.getAttribute("actionError")) %>">
 <%= showError(request, "actionError") %>
 </dhv:evaluate>

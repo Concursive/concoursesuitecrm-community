@@ -3,13 +3,13 @@
   var thisTicketId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, ticId) {
+  function displayMenu(loc, id, ticId) {
     thisTicketId = ticId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuTicket", "down", 0, 0, 170, getHeight("menuTicketTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   //Menu link functions
   function details() {
@@ -27,34 +27,34 @@
 </script>
 <div id="menuTicketContainer" class="menu">
   <div id="menuTicketContent">
-    <table id="menuTicketTable" class="pulldown" width="170">
+    <table id="menuTicketTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="tickets-tickets-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="tickets-tickets-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          Modify
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="tickets-tickets-delete">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteTicket()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td>
-          <a href="javascript:deleteTicket()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

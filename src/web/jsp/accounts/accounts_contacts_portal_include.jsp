@@ -61,8 +61,8 @@
       Expiration Date
     </td>
     <td>
-      <input type="text" size="10" name="expires" maxlength="10" value="<dhv:tz timestamp="<%= portalUserDetails.getExpires() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-      <a href="javascript:popCalendar('contactPortal', 'expires');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+      <input type="text" size="10" name="expires" maxlength="10" value="<zeroio:tz timestamp="<%= portalUserDetails.getExpires() %>" dateOnly="true" />">
+      <a href="javascript:popCalendar('contactPortal', 'expires', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
     </td>
   </tr>
   <dhv:evaluate if="<%= (portalUserDetails.getUsername() != null) %>" >

@@ -1,19 +1,26 @@
+<%--
+ Copyright 2000-2004 Matt Rajkowski
+ matt.rajkowski@teamelements.com
+ http://www.teamelements.com
+ This source code cannot be modified, distributed or used without
+ permission from Matt Rajkowski
+--%>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="ProjectList" class="com.zeroio.iteam.base.ProjectList" scope="request"/>
-<jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="categoryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="currencyCodeList" class="org.aspcfs.utils.web.HtmlSelectCurrencyCode" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<body bgcolor="#FFFFFF" onLoad="document.inputForm.title.focus()">
 <script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
-    if (form.dosubmit.value == "false") {
-      return true;
-    }
     var formTest = true;
     var messageText = "";
-    
     //Check required fields
     if (form.title.value == "") {
       messageText += "- Title is a required field\r\n";
@@ -27,10 +34,8 @@
       messageText += "- Start Date is a required field\r\n";
       formTest = false;
     }
-  
     if (formTest == false) {
       messageText = "The form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
-      form.dosubmit.value = "true";
       alert(messageText);
       return false;
     } else {
@@ -38,131 +43,119 @@
     }
   }
 </script>
+<body onLoad="document.inputForm.title.focus()">
 <form method="post" name="inputForm" action="ProjectManagement.do?command=InsertProject&auto-populate=true" onSubmit="return checkForm(this);">
-  <center>
-  <% if (request.getAttribute("actionError") != null) { %>
-    <%= showError(request, "actionError") %>
-  <%}%>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0">
-    <tr>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-      <td width="100%" colspan="2" bgcolor="#808080" rowspan="2">
-        <font color="#FFFFFF">
-        &nbsp;<img border="0" src="images/task.gif">
-        <b>New Project Information</b>
-        </font>
-      </td>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-      <td width="100%" colspan="2">
-        &nbsp;<br>
-				&nbsp;Import Requirements, Assignments, and Team from an Existing Project<br>
-        &nbsp;
-				<%= ProjectList.getHtmlSelect("templateId", 0) %>
-      </td>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-      <td width="100%" colspan="2">
-        &nbsp;<br>
-        &nbsp;Project Title:<br>
-        &nbsp;
-        <input type="text" name="title" size="57" maxlength="100" value="<%= toHtmlValue(Project.getTitle()) %>"><font color=red>*</font> <%= showAttribute(request, "titleError") %><br>
-        &nbsp;
-      </td>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-      <td width="100%" colspan="2">
-        &nbsp;Project Short
-        Description:<br>
-        &nbsp;
-        <input type="text" name="shortDescription" size="57" maxlength="200" value="<%= toHtmlValue(Project.getShortDescription()) %>"><font color=red>*</font> <%= showAttribute(request, "shortDescriptionError") %><br>
-        &nbsp;
-      </td>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-      <td width="50%">
-        &nbsp;Project Requested By:<br>
-        &nbsp;
-        <input type="text" name="requestedBy" size="24" maxlength="50" value="<%= toHtmlValue(Project.getRequestedBy()) %>"><br>
-        &nbsp;
-      </td>
-      <td width="50%">
-        &nbsp;Department:<br>
-        &nbsp;
-        <input type="text" name="requestedByDept" size="24" maxlength="50" value="<%= toHtmlValue(Project.getRequestedByDept()) %>"><br>
-        &nbsp;
-      </td>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-    </tr>
-    
-    <tr>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-      <td width="50%">
-        &nbsp;Start Date:<br>
-        &nbsp;
-        <input type="text" name="requestDate" size="10" value="<%= Project.getRequestDateString() %>">
-        <a href="javascript:popCalendar('inputForm', 'requestDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
-        <font color=red>*</font> <%= showAttribute(request, "requestDateError") %><br>
-        &nbsp;
-      </td>
-      <td width="50%">
-        &nbsp;Category:<br>
-        &nbsp;
-        <%= DepartmentList.getHtmlSelect("departmentId", -1) %>
-        <br>&nbsp;
-      </td>    
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
+<%= showError(request, "actionError", false) %>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th colspan="2">
+      <strong>New Project Information</strong>
+    </th>
+  </tr>
+  <tr>
+    <td class="formLabel">
+      Title
+    </td>
+    <td>
+      <input type="text" name="title" size="57" maxlength="100" value="<%= toHtmlValue(Project.getTitle()) %>"><font color=red>*</font> <%= showAttribute(request, "titleError") %>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">Short Description</td>
+    <td>
+      <input type="text" name="shortDescription" size="57" maxlength="200" value="<%= toHtmlValue(Project.getShortDescription()) %>"><font color=red>*</font> <%= showAttribute(request, "shortDescriptionError") %>
+    </td>
+  </tr>
+<zeroio:debug value="Start Date"/>
+  <tr>
+    <td nowrap class="formLabel">Start Date</td>
+    <td>
+      <zeroio:dateSelect form="inputForm" field="requestDate" timestamp="<%= Project.getRequestDate() %>" />
+      at
+<zeroio:debug value="Start Date: Time"/>
+      <zeroio:timeSelect baseName="requestDate" value="<%= Project.getRequestDate() %>" timeZone="<%= User.getTimeZone() %>"/>
+<zeroio:debug value="Start Date: AMPM"/>
+      <zeroio:tz timestamp="<%= new java.util.Date() %>" pattern="z"/>
+      <font color="red">*</font>
+      <%= showAttribute(request, "requestDateError") %>
+    </td>
+  </tr>
+<zeroio:debug value="Est. Close Date"/>
+  <tr>
+    <td nowrap class="formLabel">Estimated Close Date</td>
+    <td>
+      <zeroio:dateSelect form="inputForm" field="estimatedCloseDate" timestamp="<%= Project.getEstimatedCloseDate() %>" />
+      at
+      <zeroio:timeSelect baseName="estimatedCloseDate" value="<%= Project.getEstimatedCloseDate() %>" timeZone="<%= User.getTimeZone() %>"/>
+      <zeroio:tz timestamp="<%= new java.util.Date() %>" pattern="z"/>
+      <%= showAttribute(request, "estimatedCloseDateError") %>
+    </td>
+  </tr>
+<zeroio:debug value="Requested By"/>
+  <tr>
+    <td nowrap class="formLabel">Requested By</td>
+    <td>
+      <input type="text" name="requestedBy" size="24" maxlength="50" value="<%= toHtmlValue(Project.getRequestedBy()) %>">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">Organization</td>
+    <td>
+      <input type="text" name="requestedByDept" size="24" maxlength="50" value="<%= toHtmlValue(Project.getRequestedByDept()) %>">
+    </td>
+  </tr>
+<zeroio:debug value="Budget"/>
+  <tr>
+    <td nowrap class="formLabel">Budget</td>
+    <td>
+      <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+      <input type="hidden" name="budgetCurrency" value="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" />
+      <input type="text" name="budget" size="15" value="<zeroio:number value="<%= Project.getBudget() %>" locale="<%= User.getLocale() %>" />">
+    </td>
+  </tr>
+  <%--
+  <tr>
+    <td nowrap class="formLabel">Category</td>
+    <td>
+      <%= categoryList.getHtmlSelect("categoryId", -1) %>
+      <a href="javascript:popURL('ProjectManagementCategories.do?command=Edit&popup=true','Category_Editor','400','375','yes','yes');">Edit List</a>
+    </td>
+  </tr>
+  --%>
+  <tr>
 <%
   String projectApprovedCheck = "";
   String projectClosedCheck = "";
 %>
-      <td width="100%" colspan="2">
-        &nbsp;<input type="checkbox" name="approved" value="ON"<%=projectApprovedCheck%>>
-        Project Approved <%= Project.getApprovedDateString() %>
-      </td>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-      <td width="100%" colspan="2">
-        &nbsp;<input type="checkbox" name="closed" value="ON"<%=projectClosedCheck%>>
-        Project Closed <%= Project.getCloseDateString() %><br>
-        &nbsp;
-      </td>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
-      <td width="50%" bgcolor="#808080" height="30">
-        <p align="right">
-          &nbsp;<input type="hidden" name="dosubmit" value="true">
-          <input type="submit" value=" Save ">
-          &nbsp;&nbsp;
-        </p>
+    <zeroio:debug value="Approved"/>
+    <td class="formLabel" valign="top" nowrap>Status</td>
+    <td>
+      <input type="checkbox" name="approved" value="ON"<%= projectApprovedCheck %>>
+      Approved <zeroio:tz timestamp="<%= Project.getApprovalDate() %>"/><br />
+      <input type="checkbox" name="closed" value="ON"<%= projectClosedCheck %>>
+      Closed <zeroio:tz timestamp="<%= Project.getCloseDate() %>"/>
     </td>
-      <td width="50%" bgcolor="#808080" height="30">
-        <p align="left">
-          &nbsp;&nbsp;<input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do'">
-        </p>
+  </tr>
+  <%--
+  <tr>
+   <td class="formLabel" valign="top" nowrap >Import Data</td>
+   <td>
+      Copy Requirements, Assignments, and Team from an existing project:<br />
+      &nbsp;<%= ProjectList.getHtmlSelect("templateId", 0) %>
     </td>
-    <td width="2" bgcolor="#808080">&nbsp;</td>
-    </tr>
-  </table>
-  </center>
+  </tr>
+  --%>
+</table>
+<br />
+<input type="hidden" name="showNews" value="true">
+<input type="hidden" name="showDetails" value="true">
+<input type="hidden" name="showTeam" value="true">
+<input type="hidden" name="showPlan" value="true">
+<input type="hidden" name="showLists" value="true">
+<input type="hidden" name="showDiscussion" value="true">
+<input type="hidden" name="showTickets" value="true">
+<input type="hidden" name="showDocuments" value="true">
+<input type="submit" value=" Save ">
+<input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagement.do?command=EnterpriseView'">
 </form>
 </body>

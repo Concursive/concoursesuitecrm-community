@@ -1,3 +1,10 @@
+/*
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
+ *  permission from Matt Rajkowski
+ */
 package com.zeroio.taglib;
 
 import javax.servlet.jsp.*;
@@ -12,7 +19,8 @@ import org.aspcfs.utils.web.HtmlSelectDurationMinutesFives;
  *
  *@author     kbhoopal
  *@created    March 2, 2004
- *@version    $Id$
+ *@version    $Id: HtmlSelectDuration.java,v 1.2 2004/04/01 16:14:05 mrajkowski
+ *      Exp $
  */
 public class HtmlSelectDuration extends TagSupport {
 

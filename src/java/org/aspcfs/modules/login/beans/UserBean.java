@@ -316,6 +316,36 @@ public class UserBean extends GenericBean {
 
 
   /**
+   *  Gets the locale attribute of the UserBean object
+   *
+   *@return    The locale value
+   */
+  public Locale getLocale() {
+    return getUserRecord().getLocale();
+  }
+
+
+  /**
+   *  Gets the timeZone attribute of the UserBean object
+   *
+   *@return    The timeZone value
+   */
+  public String getTimeZone() {
+    return getUserRecord().getTimeZone();
+  }
+
+
+  /**
+   *  Gets the currency attribute of the UserBean object
+   *
+   *@return    The currency value
+   */
+  public String getCurrency() {
+    return getUserRecord().getCurrency();
+  }
+
+
+  /**
    *  Gets the Template attribute of the User object
    *
    *@return    The Template value

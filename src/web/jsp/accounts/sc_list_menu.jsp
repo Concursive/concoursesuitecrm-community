@@ -4,7 +4,7 @@
   var thisContractId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, orgId, contractId) {
+  function displayMenu(loc, id, orgId, contractId) {
     thisOrgId = orgId;
     thisContractId = contractId;
     if (!menu_init) {
@@ -12,7 +12,7 @@
       new ypSlideOutMenu("menuServiceContract", "down", 0, 0, 170, getHeight("menuServiceContractTable"));
     }
 
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   //Menu link functions
   function details() {
@@ -30,34 +30,34 @@
 </script>
 <div id="menuServiceContractContainer" class="menu">
   <div id="menuServiceContractContent">
-    <table id="menuServiceContractTable" class="pulldown" width="170">
+    <table id="menuServiceContractTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="accounts-service-contracts-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-service-contracts-edit">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          Modify
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-service-contracts-delete">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteContract()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td>
-          <a href="javascript:deleteContract()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

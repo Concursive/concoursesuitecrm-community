@@ -1,8 +1,8 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
@@ -19,7 +19,8 @@ import org.aspcfs.utils.DatabaseUtils;
  *
  *@author     matt rajkowski
  *@created    January 15, 2003
- *@version    $Id$
+ *@version    $Id: IssueReply.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista Exp
+ *      $
  */
 public class IssueReply extends GenericBean {
 
@@ -33,10 +34,11 @@ public class IssueReply extends GenericBean {
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
-
   private int issueId = -1;
   private Issue issue = null;
-  private String user = "";
+  //helpers
+  private int projectId = -1;
+  private int categoryId = -1;
 
 
   /**
@@ -356,12 +358,42 @@ public class IssueReply extends GenericBean {
 
 
   /**
-   *  Sets the user attribute of the IssueReply object
+   *  Sets the categoryId attribute of the IssueReply object
    *
-   *@param  tmp  The new user value
+   *@param  tmp  The new categoryId value
    */
-  public void setUser(String tmp) {
-    this.user = tmp;
+  public void setCategoryId(int tmp) {
+    this.categoryId = tmp;
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the IssueReply object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(String tmp) {
+    this.categoryId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the projectId attribute of the IssueReply object
+   *
+   *@param  tmp  The new projectId value
+   */
+  public void setProjectId(int tmp) {
+    this.projectId = tmp;
+  }
+
+
+  /**
+   *  Sets the projectId attribute of the IssueReply object
+   *
+   *@param  tmp  The new projectId value
+   */
+  public void setProjectId(String tmp) {
+    this.projectId = Integer.parseInt(tmp);
   }
 
 
@@ -476,16 +508,6 @@ public class IssueReply extends GenericBean {
 
 
   /**
-   *  Gets the user attribute of the IssueReply object
-   *
-   *@return    The user value
-   */
-  public String getUser() {
-    return user;
-  }
-
-
-  /**
    *  Gets the enteredString attribute of the IssueReply object
    *
    *@return    The enteredString value
@@ -516,6 +538,27 @@ public class IssueReply extends GenericBean {
 
 
   /**
+   *  Gets the categoryId attribute of the IssueReply object
+   *
+   *@return    The categoryId value
+   */
+  public int getCategoryId() {
+    return categoryId;
+  }
+
+
+  /**
+   *  Gets the projectId attribute of the IssueReply object
+   *
+   *@return    The projectId value
+   */
+  public int getProjectId() {
+    return projectId;
+  }
+
+
+
+  /**
    *  Gets the valid attribute of the IssueReply object
    *
    *@return    The valid value
@@ -524,15 +567,12 @@ public class IssueReply extends GenericBean {
     if (issueId == -1) {
       errors.put("actionError", "Issue ID not specified");
     }
-
     if (subject == null || subject.equals("")) {
       errors.put("subjectError", "Required field");
     }
-
     if (body == null || body.equals("")) {
       errors.put("bodyError", "Required field");
     }
-
     if (hasErrors()) {
       return false;
     } else {
@@ -552,10 +592,10 @@ public class IssueReply extends GenericBean {
     if (!isValid()) {
       return false;
     }
-
     StringBuffer sql = new StringBuffer();
-    sql.append("INSERT INTO project_issue_replies ");
-    sql.append("(issue_id, reply_to, subject, message, importance, ");
+    sql.append(
+        "INSERT INTO project_issue_replies " +
+        "(issue_id, reply_to, subject, message, importance, ");
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -571,27 +611,61 @@ public class IssueReply extends GenericBean {
       sql.append("?, ");
     }
     sql.append("?, ?) ");
-
     int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, issueId);
-    pst.setInt(++i, replyToId);
-    pst.setString(++i, subject);
-    pst.setString(++i, body);
-    pst.setInt(++i, importance);
-    if (entered != null) {
-      pst.setTimestamp(++i, entered);
+    try {
+      db.setAutoCommit(false);
+      PreparedStatement pst = db.prepareStatement(sql.toString());
+      pst.setInt(++i, issueId);
+      pst.setInt(++i, replyToId);
+      pst.setString(++i, subject);
+      pst.setString(++i, body);
+      pst.setInt(++i, importance);
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
+      }
+      pst.setInt(++i, enteredBy);
+      pst.setInt(++i, modifiedBy);
+      pst.execute();
+      pst.close();
+      id = DatabaseUtils.getCurrVal(db, "project_issue_repl_reply_id_seq");
+      //Update the issue count
+      i = 0;
+      pst = db.prepareStatement(
+          "UPDATE project_issues " +
+          "SET reply_count = reply_count + 1, " +
+          "last_reply_date = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+          "last_reply_by = ? " +
+          "WHERE project_id = ? " +
+          "AND issue_id = ? ");
+      pst.setInt(++i, modifiedBy);
+      pst.setInt(++i, projectId);
+      pst.setInt(++i, issueId);
+      pst.executeUpdate();
+      pst.close();
+      //Update the category count
+      i = 0;
+      pst = db.prepareStatement(
+          "UPDATE project_issues_categories " +
+          "SET posts_count = posts_count + 1, " +
+          "last_post_date = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+          "last_post_by = ? " +
+          "WHERE project_id = ? " +
+          "AND category_id = ? ");
+      pst.setInt(++i, modifiedBy);
+      pst.setInt(++i, projectId);
+      pst.setInt(++i, categoryId);
+      pst.executeUpdate();
+      pst.close();
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      throw e;
+    } finally {
+      db.setAutoCommit(true);
     }
-    if (modified != null) {
-      pst.setTimestamp(++i, modified);
-    }
-    pst.setInt(++i, enteredBy);
-    pst.setInt(++i, modifiedBy);
-    pst.execute();
-    pst.close();
-
-    id = DatabaseUtils.getCurrVal(db, "project_issue_repl_reply_id_seq");
-
     return true;
   }
 
@@ -600,29 +674,68 @@ public class IssueReply extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean delete(Connection db, ActionContext context) throws SQLException {
-    if (this.getId() == -1 || this.issueId == -1) {
+  public synchronized boolean delete(Connection db) throws SQLException {
+    if (id == -1 || issueId == -1 || projectId == -1 || categoryId == -1) {
       throw new SQLException("ID was not specified");
     }
-
-    int recordCount = 0;
-    PreparedStatement pst = db.prepareStatement(
-        "DELETE FROM project_issue_replies " +
-        "WHERE reply_id = ? ");
-    pst.setInt(1, id);
-    recordCount = pst.executeUpdate();
-    pst.close();
-
-    if (recordCount == 0) {
-      errors.put("actionError", "Issue Reply could not be deleted because it no longer exists.");
+    boolean canDelete = false;
+    try {
+      PreparedStatement pst = null;
+      int i = 0;
+      //Make sure the reply exists, then delete all
+      pst = db.prepareStatement(
+          "SELECT count(reply_id) AS reply_count " +
+          "FROM project_issue_replies " +
+          "WHERE reply_id = ?");
+      pst.setInt(1, id);
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        canDelete = (rs.getInt("reply_count") == 1);
+      }
+      rs.close();
+      pst.close();
+      if (canDelete) {
+        db.setAutoCommit(false);
+        //Update the category count
+        pst = db.prepareStatement(
+            "UPDATE project_issues_categories " +
+            "SET posts_count = posts_count - 1 " +
+            "WHERE project_id = ? " +
+            "AND category_id = ? ");
+        pst.setInt(++i, projectId);
+        pst.setInt(++i, categoryId);
+        pst.executeUpdate();
+        pst.close();
+        //Update the issue count
+        i = 0;
+        pst = db.prepareStatement(
+            "UPDATE project_issues " +
+            "SET reply_count = reply_count - 1 " +
+            "WHERE project_id = ? " +
+            "AND issue_id = ? ");
+        pst.setInt(++i, projectId);
+        pst.setInt(++i, issueId);
+        pst.executeUpdate();
+        pst.close();
+        //Delete the reply
+        pst = db.prepareStatement(
+            "DELETE FROM project_issue_replies " +
+            "WHERE reply_id = ? ");
+        pst.setInt(1, id);
+        pst.execute();
+        pst.close();
+        db.commit();
+      }
+    } catch (SQLException e) {
+      db.rollback();
       return false;
-    } else {
-      return true;
+    } finally {
+      db.setAutoCommit(true);
     }
+    return true;
   }
 
 
@@ -630,31 +743,25 @@ public class IssueReply extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public int update(Connection db, ActionContext context) throws SQLException {
+  public int update(Connection db) throws SQLException {
     if (this.getId() == -1 || this.issueId == -1) {
       throw new SQLException("ID was not specified");
     }
-
     if (!isValid()) {
       return -1;
     }
-
     int resultCount = 0;
-
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-
     sql.append(
         "UPDATE project_issue_replies " +
         "SET subject = ?, message = ?, importance = ?, " +
         "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE reply_id = ? " +
         "AND modified = ? ");
-
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, subject);
@@ -663,13 +770,10 @@ public class IssueReply extends GenericBean {
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
     pst.setTimestamp(++i, modified);
-
     resultCount = pst.executeUpdate();
     pst.close();
-
     return resultCount;
   }
-
 }
 
 

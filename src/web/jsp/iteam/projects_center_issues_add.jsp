@@ -1,9 +1,17 @@
+<%--
+ Copyright 2000-2004 Matt Rajkowski
+ matt.rajkowski@teamelements.com
+ http://www.teamelements.com
+ This source code cannot be modified, distributed or used without
+ permission from Matt Rajkowski
+--%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="Issue" class="com.zeroio.iteam.base.Issue" scope="request"/>
-<jsp:useBean id="CategoryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="IssueCategory" class="com.zeroio.iteam.base.IssueCategory" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body bgcolor='#FFFFFF' onLoad="document.inputForm.subject.focus();">
+<body onLoad="document.inputForm.subject.focus();">
 <script language="JavaScript">
   function checkForm(form) {
     if (form.dosubmit.value == "false") {
@@ -11,23 +19,17 @@
     }
     var formTest = true;
     var messageText = "";
-    
     //Check required fields
-    if (form.categoryId.selectedIndex == 0) {
-      messageText += "- Category is a required field\r\n";
-      formTest = false;
-    }
     if (form.subject.value == "") {    
       messageText += "- Subject is a required field\r\n";
       formTest = false;
     }
     if (form.body.value == "") {    
-      messageText += "- Description is a required field\r\n";
+      messageText += "- Message is a required field\r\n";
       formTest = false;
     }
-  
     if (formTest == false) {
-      messageText = "The issue form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = "The message could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
@@ -36,74 +38,59 @@
     }
   }
 </script>
-<form method="POST" name="inputForm" action="ProjectManagementIssues.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
-  <% if (request.getAttribute("actionError") != null) { %>
-    <%= showError(request, "actionError") %>
-  <%}%>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0">
+<form method="POST" name="inputForm" action="ProjectManagementIssues.do?command=Save&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>&auto-populate=true" onSubmit="return checkForm(this);">
+<table border="0" cellpadding="1" cellspacing="0" width="100%">
+  <tr class="subtab">
+    <td>
+      <img border="0" src="images/icons/stock_data-explorer-16.gif" align="absmiddle">
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>">Forums</a> >
+      <img border="0" src="images/icons/stock_draw-callouts2-16.gif" align="absmiddle">
+      <%= toHtml(IssueCategory.getSubject()) %>
+    </td>
+  </tr>
+</table>
+<br>
+  <input type="submit" value=" Save ">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>';"><br>
+  <%= showError(request, "actionError") %>
+  <input type="hidden" name="categoryId" value="<%= IssueCategory.getId() %>">
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <td width='100%' colspan='2' bgcolor='#808080' rowspan='2'>
-        <font color='#FFFFFF'><b>&nbsp;New Issue</b></font>
-      </td>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
+      <th colspan="2">
+        <strong>Topic</strong>
+      </th>
     </tr>
-    <tr>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
+    <tr class="containerBody">
+      <td nowrap class="formLabel" valign="top">Subject</td>
+      <td>
+        <input type="text" name="subject" size="57" maxlength="50" value="<%= toHtmlValue(Issue.getSubject()) %>"><font color=red>*</font>
+        <%= showAttribute(request, "subjectError") %>
+      </td>
     </tr>
-    <tr>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <td width='100%' colspan='2' valign='center'>
-        &nbsp;<br>
-<%
-  String categoryId = request.getParameter("cid");
-  if (categoryId != null) Issue.setCategoryId(Integer.parseInt(categoryId));
-%>
-        &nbsp;Issue Category: <%= CategoryList.getHtmlSelect("categoryId", Issue.getCategoryId()) %><font color=red>*</font> <%= showAttribute(request, "categoryIdError") %><br>
-        &nbsp;
+    <tr class="containerBody">
+      <td nowrap class="formLabel" valign="top">Message</td>
+      <td>
+        <table border="0" cellpadding="0" cellspacing="0" class="empty">
+          <tr>
+            <td>
+              <textarea rows="10" name="body" cols="70"><%= Issue.getBody() %></textarea>
+            </td>
+            <td valign="top">
+              <font color=red>*</font>
+            </td>
+          </tr>
+        </table>
+        <%= showAttribute(request, "bodyError") %>
       </td>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-    </tr>
-    <tr>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <td width='100%' colspan='2'>
-        &nbsp;Issue
-        Subject:<br>
-        &nbsp;&nbsp;<input type="text" name="subject" size="57" maxlength="50" value="<%= toHtmlValue(Issue.getSubject()) %>"><font color=red>*</font> <%= showAttribute(request, "subjectError") %><br>
-        &nbsp;
-      </td>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-    </tr>
-    <tr>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <td width='100%' colspan='2'>
-        &nbsp;Issue
-        Description:<br>
-        &nbsp;
-        <textarea rows="8" name="body" cols="70"><%= toString(Issue.getBody()) %></textarea><font color=red>*</font> <%= showAttribute(request, "bodyError") %><br>
-        &nbsp;
-      </td>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-    </tr>
-    <tr>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
-      <td width='50%' bgcolor='#808080' height='30'>
-        <p align='right'>
-          &nbsp;
-          <input type="submit" value=" Save ">&nbsp;&nbsp;
-        </p>
-      </td>
-      <td width='50%' bgcolor='#808080' height='30'>
-        <p align='left'>
-          &nbsp;&nbsp;
-          <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues<%= ((Issue.getCategoryId() == -1)?"_Categories":"") %>&pid=<%= Project.getId() %>&cid=<%= Issue.getCategoryId() %>';">
-        </p>
-      </td>
-      <td width="2" bgcolor="#808080">&nbsp;</td>
     </tr>
   </table>
-  <input type="hidden" name="pid" value="<%= Project.getId() %>">
+  <br>
+  <input type="submit" value=" Save ">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>';"><br>
+  <input type="hidden" name="projectId" value="<%= Project.getId() %>">
+  <input type="hidden" name="id" value="<%= Issue.getId() %>">
+  <input type="hidden" name="modified" value="<%= Issue.getModified() %>">
   <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 </form>  
 </body>

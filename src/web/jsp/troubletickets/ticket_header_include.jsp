@@ -21,7 +21,7 @@
             Open
             <%}else{%>
             <font color="red">Closed on
-            <dhv:tz timestamp="<%= thisTicket.getClosed() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+            <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" />
             </font>
             <%}%>
           </td>

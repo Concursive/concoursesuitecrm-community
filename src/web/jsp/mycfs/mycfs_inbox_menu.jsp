@@ -4,14 +4,14 @@
   var thisNoteId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, typeId, noteId) {
+  function displayMenu(loc, id, typeId, noteId) {
     thisTypeId = typeId;
     thisNoteId = noteId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuNote", "down", 0, 0, 170, getHeight("menuNoteTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
   //Menu link functions
@@ -34,44 +34,44 @@
 </script>
 <div id="menuNoteContainer" class="menu">
   <div id="menuNoteContent">
-    <table id="menuNoteTable" class="pulldown" width="170">
+    <table id="menuNoteTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="myhomepage-inbox-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="myhomepage-inbox-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="reply()">
+        <th>
           <img src="images/icons/stock_reply_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:reply()">Reply</a>
+          Reply
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="myhomepage-inbox-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="forward()">
+        <th>
           <img src="images/icons/stock_forward_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:forward()">Forward</a>
+          Forward
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="myhomepage-inbox-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteNote()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteNote()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

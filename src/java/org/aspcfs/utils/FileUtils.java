@@ -2,6 +2,8 @@ package org.aspcfs.utils;
 
 import java.io.*;
 import java.util.StringTokenizer;
+import java.util.Locale;
+import java.text.NumberFormat;
 
 /**
  *  Helper methods for dealing with file operations
@@ -36,6 +38,11 @@ public class FileUtils {
     //Check to see if source exists
     if (!sourceFile.exists()) {
       return false;
+    }
+    //If destination is a directory then set it as a file
+    String fs = System.getProperty("file.separator");
+    if (destinationFile.isDirectory()) {
+      destinationFile = new File(destinationFile.getPath() + fs + sourceFile.getName());
     }
     //Check to see if source and destination file are the same
     if (sourceFile.equals(destinationFile)) {
@@ -115,6 +122,9 @@ public class FileUtils {
         }
         // On Windows NT, last line contains the available space
         if (line.endsWith("bytes free")) {
+          if (line.indexOf("Dir(s)") > -1) {
+            line = line.substring(line.indexOf("Dir(s)"));
+          }
           // The number is formatted with commas, so extract just the numeric portion
           StringBuffer sb = new StringBuffer();
           for (int i = 0; i < line.length(); i++) {
@@ -138,7 +148,7 @@ public class FileUtils {
           st.nextToken();
         }
         //Get the 3rd from the last token
-        free = Long.parseLong(st.nextToken()) * 1024;
+        free = Long.parseLong(st.nextToken()) * blockSize;
       }
     } catch (Exception e) {
       System.out.println(e.getMessage());
@@ -181,6 +191,44 @@ public class FileUtils {
   public static boolean fileExists(String fullPath) {
     File thisFile = new File(fullPath);
     return thisFile.exists();
+  }
+
+
+  /**
+   *  Gets the relativeSize attribute of the FileUtils class
+   *
+   *@param  size    Description of the Parameter
+   *@param  locale  Description of the Parameter
+   *@return         The relativeSize value
+   */
+  public static String getRelativeSize(float size, Locale locale) {
+    if (size == -1) {
+      return ("Could not be determined");
+    }
+    // Make the numbers look nice
+    NumberFormat formatter = null;
+    if (locale == null) {
+      formatter = NumberFormat.getInstance();
+    } else {
+      formatter = NumberFormat.getInstance(locale);
+    }
+    // GB
+    if (size > 1000000000) {
+      formatter.setMaximumFractionDigits(2);
+      return (formatter.format(size / 1000 / 1000 / 1000) + " GB");
+    }
+    // MB
+    if (size > 1000000) {
+      formatter.setMaximumFractionDigits(1);
+      return (formatter.format(size / 1000 / 1000) + " MB");
+    }
+    // KB
+    if (size > 1000) {
+      formatter.setMaximumFractionDigits(0);
+      return (formatter.format(size / 1000) + " KB");
+    }
+    // Bytes
+    return (formatter.format(size) + " bytes");
   }
 }
 

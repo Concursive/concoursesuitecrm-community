@@ -1,5 +1,6 @@
 <%-- Copyright 2004 Dark Horse Ventures, All rights reserved. --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page  import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.controller.*" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>
@@ -17,7 +18,6 @@
 <jsp:include page="cssInclude.jsp" flush="true"/>
 </head>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
-<script language="JavaScript" type="text/javascript" src="javascript/trackMouse.js"></script>
 <body leftmargin="0" rightmargin="0" margin="0" marginwidth="0" topmargin="0" marginheight="0">
 <div id="header">
 <table border="0" width="100%" cellpadding="2" cellspacing="0">
@@ -119,7 +119,14 @@
 <center><%= request.getAttribute("MainMenuSmall") %></center>
 <br>
 <center>Copyright (c) 2000-2004 Dark Horse Ventures.  All rights reserved.</center>
-<center><dhv:tz timestamp="<%= new java.util.Date() %>"/></center>
+<center><zeroio:tz timestamp="<%= new java.util.Date() %>"/></center>
 </div>
+<%-- Allow pages have to have a scrollTo... must be at end of html --%>
+<script language="JavaScript" type="text/javascript" src="javascript/scrollReload.js"></script>
+<dhv:evaluate if="<%= request.getParameter("scrollTop") != null %>">
+<script language="JavaScript" type="text/javascript">
+    if (window.scrollTo) window.scrollTo(<%= request.getParameter("scrollLeft") %>, <%= request.getParameter("scrollTop") %>);
+</script>
+</dhv:evaluate>
 </body>
 </html>

@@ -176,7 +176,7 @@ function resetAssignedDate(){
         <table border="0" cellspacing="0" cellpadding="0" class="empty">
           <tr>
             <td>
-              <textarea name="problem" cols="55" rows="3"><%= toString(TicketDetails.getProblem()) %></textarea>
+              <textarea name="problem" cols="55" rows="8"><%= toString(TicketDetails.getProblem()) %></textarea>
             </td>
             <td valign="top">
               <font color="red">*</font> <%= showAttribute(request, "problemError") %>
@@ -291,8 +291,8 @@ function resetAssignedDate(){
         Assignment Date
       </td>
       <td>
-        <input type="text" size="10" name="assignedDate" value="<dhv:tz timestamp="<%= TicketDetails.getAssignedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-        <a href="javascript:popCalendar('details', 'assignedDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+        <input type="text" size="10" name="assignedDate" value="<zeroio:tz timestamp="<%= TicketDetails.getAssignedDate() %>" dateOnly="true" />">
+        <a href="javascript:popCalendar('details', 'assignedDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
       </td>
     </tr>
     <tr class="containerBody">
@@ -300,8 +300,8 @@ function resetAssignedDate(){
         Estimated Resolution Date
       </td>
       <td>
-        <input type="text" size="10" name="estimatedResolutionDate" value="<dhv:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-        <a href="javascript:popCalendar('details', 'estimatedResolutionDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+        <input type="text" size="10" name="estimatedResolutionDate" value="<zeroio:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" />">
+        <a href="javascript:popCalendar('details', 'estimatedResolutionDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
       </td>
     </tr>
 		<tr class="containerBody">
@@ -312,10 +312,10 @@ function resetAssignedDate(){
         <table border="0" cellspacing="0" cellpadding="0" class="empty">
           <tr>
             <td valign="top">
-              <textarea name="comment" cols="55" rows="3"><%= toString(TicketDetails.getComment()) %></textarea>
+              <textarea name="comment" cols="55" rows="5"><%= toString(TicketDetails.getComment()) %></textarea>
             </td>
             <td valign="top">
-              (This note is added to the ticket history. Previous notes for this ticket are listed in the "Ticket Log History" section of the history tab.)
+              (This note is added to the ticket history. Previous notes for this ticket are listed under the history tab.)
             </td>
           </tr>
         </table>
@@ -334,7 +334,7 @@ function resetAssignedDate(){
         Cause
       </td>
       <td>
-        <textarea name="cause" cols="55" rows="3"><%= toString(TicketDetails.getCause()) %></textarea>
+        <textarea name="cause" cols="55" rows="8"><%= toString(TicketDetails.getCause()) %></textarea>
       </td>
 		</tr>
 		<tr class="containerBody">
@@ -342,11 +342,11 @@ function resetAssignedDate(){
         Resolution
       </td>
       <td>
-        <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
-        <input type="checkbox" name="closeNow">Close ticket
+        <textarea name="solution" cols="55" rows="8"><%= toString(TicketDetails.getSolution()) %></textarea><br>
+        <input type="checkbox" name="closeNow" value="true">Close ticket
         <%--
         <br>
-        <input type="checkbox" name="kbase">Add this solution to Knowledge Base
+        <input type="checkbox" name="kbase" value="true">Add this solution to Knowledge Base
         --%>
 <%-- Added for voice demo, will show a list of surveys that can be emailed... --%>
 <%--
@@ -374,8 +374,8 @@ function resetAssignedDate(){
         Resolution Date
       </td>
       <td>
-        <input type="text" size="10" name="resolutionDate" value="<dhv:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
-        <a href="javascript:popCalendar('details', 'resolutionDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+        <input type="text" size="10" name="resolutionDate" value="<zeroio:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" />">
+        <a href="javascript:popCalendar('details', 'resolutionDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
       </td>
     </tr>
   <tr class="containerBody">

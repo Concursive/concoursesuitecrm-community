@@ -1,14 +1,17 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
 
 import java.sql.*;
 import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.ArrayList;
+import java.util.Locale;
 import java.text.*;
 import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.framework.actions.*;
@@ -19,7 +22,8 @@ import org.aspcfs.utils.DatabaseUtils;
  *
  *@author     mrajkowski
  *@created    July 23, 2001
- *@version    $Id$
+ *@version    $Id: Assignment.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista Exp
+ *      $
  */
 public class Assignment extends GenericBean {
 
@@ -33,11 +37,9 @@ public class Assignment extends GenericBean {
   private int id = -1;
   private int projectId = -1;
   private int requirementId = -1;
+  private int folderId = -1;
   private int assignedBy = -1;
   private int userAssignedId = -1;
-  private String userAssigned = "";
-  private int activityId = -1;
-  private String activity = "";
   private String technology = "";
   private String role = "";
   private int estimatedLoe = -1;
@@ -55,6 +57,7 @@ public class Assignment extends GenericBean {
   private int statusTypeId = -1;
   private String status = "";
   private String statusGraphic = "";
+  private int percentComplete = -1;
   private java.sql.Timestamp statusDate = null;
   private int statusType = -1;
   private java.sql.Timestamp completeDate = null;
@@ -62,6 +65,12 @@ public class Assignment extends GenericBean {
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
+//Tree variables -- move into new object
+  private int displayLevel = 0;
+  private boolean levelOpen = false;
+  private int indent = -1;
+  private int prevIndent = -1;
+  private int prevMapId = -1;
 
 
   /**
@@ -118,10 +127,9 @@ public class Assignment extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT a.*, s.description as status, s.type as status_type, s.graphic as status_graphic, " +
-        "la.description as activity, la.level, loe_e.description as loe_estimated_type, loe_a.description as loe_actual_type " +
+        "loe_e.description as loe_estimated_type, loe_a.description as loe_actual_type " +
         "FROM projects p, project_assignments a " +
         " LEFT JOIN lookup_project_status s ON (a.status_id = s.code) " +
-        " LEFT JOIN lookup_project_activity la ON (a.activity_id = la.code) " +
         " LEFT JOIN lookup_project_loe loe_e ON (a.estimated_loetype = loe_e.code) " +
         " LEFT JOIN lookup_project_loe loe_a ON (a.actual_loetype = loe_a.code) " +
         "WHERE assignment_id = ? " +
@@ -138,13 +146,12 @@ public class Assignment extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Assignment record not found.");
     }
     rs.close();
     pst.close();
+    if (id == -1) {
+      throw new SQLException("Assignment record not found.");
+    }
     statusTypeId = lookupStatusIdType(db, statusId);
   }
 
@@ -162,7 +169,6 @@ public class Assignment extends GenericBean {
     requirementId = DatabaseUtils.getInt(rs, "requirement_id");
     assignedBy = DatabaseUtils.getInt(rs, "assignedBy");
     userAssignedId = DatabaseUtils.getInt(rs, "user_assign_id");
-    activityId = DatabaseUtils.getInt(rs, "activity_id");
     technology = rs.getString("technology");
     role = rs.getString("role");
     estimatedLoe = DatabaseUtils.getInt(rs, "estimated_loevalue");
@@ -181,14 +187,13 @@ public class Assignment extends GenericBean {
     enteredBy = rs.getInt("enteredBy");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedBy");
+    folderId = DatabaseUtils.getInt(rs, "folder_id");
+    percentComplete = DatabaseUtils.getInt(rs, "percent_complete");
 
     //lookup_project_status table
     status = rs.getString("status");
     statusType = DatabaseUtils.getInt(rs, "status_type");
     statusGraphic = rs.getString("status_graphic");
-
-    //lookup_project_activity table
-    activity = rs.getString("activity");
 
     //lookup_project_loe
     estimatedLoeType = rs.getString("loe_estimated_type");
@@ -267,6 +272,26 @@ public class Assignment extends GenericBean {
 
 
   /**
+   *  Sets the folderId attribute of the Assignment object
+   *
+   *@param  tmp  The new folderId value
+   */
+  public void setFolderId(int tmp) {
+    this.folderId = tmp;
+  }
+
+
+  /**
+   *  Sets the folderId attribute of the Assignment object
+   *
+   *@param  tmp  The new folderId value
+   */
+  public void setFolderId(String tmp) {
+    this.folderId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the assignedBy attribute of the Assignment object
    *
    *@param  tmp  The new assignedBy value
@@ -307,46 +332,6 @@ public class Assignment extends GenericBean {
 
 
   /**
-   *  Sets the userAssigned attribute of the Assignment object
-   *
-   *@param  tmp  The new userAssigned value
-   */
-  public void setUserAssigned(String tmp) {
-    this.userAssigned = tmp;
-  }
-
-
-  /**
-   *  Sets the activityId attribute of the Assignment object
-   *
-   *@param  tmp  The new activityId value
-   */
-  public void setActivityId(int tmp) {
-    this.activityId = tmp;
-  }
-
-
-  /**
-   *  Sets the activityId attribute of the Assignment object
-   *
-   *@param  tmp  The new activityId value
-   */
-  public void setActivityId(String tmp) {
-    this.activityId = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the activity attribute of the Assignment object
-   *
-   *@param  tmp  The new activity value
-   */
-  public void setActivity(String tmp) {
-    this.activity = tmp;
-  }
-
-
-  /**
    *  Sets the technology attribute of the Assignment object
    *
    *@param  tmp  The new technology value
@@ -382,7 +367,24 @@ public class Assignment extends GenericBean {
    *@param  tmp  The new estimatedLoe value
    */
   public void setEstimatedLoe(String tmp) {
-    this.estimatedLoe = Integer.parseInt(tmp);
+    try {
+      if (tmp.toLowerCase().endsWith("d")) {
+        setEstimatedLoe(tmp.substring(0, tmp.indexOf("d")));
+        setEstimatedLoeTypeId(3);
+      } else if (tmp.toLowerCase().endsWith("h")) {
+        setEstimatedLoe(tmp.substring(0, tmp.indexOf("h")));
+        setEstimatedLoeTypeId(2);
+      } else if (tmp.toLowerCase().endsWith("m")) {
+        setEstimatedLoe(tmp.substring(0, tmp.indexOf("m")));
+        setEstimatedLoeTypeId(1);
+      } else if (tmp.toLowerCase().endsWith("w")) {
+        setEstimatedLoe(tmp.substring(0, tmp.indexOf("w")));
+        setEstimatedLoeTypeId(4);
+      } else {
+        this.estimatedLoe = Integer.parseInt(tmp.trim());
+      }
+    } catch (Exception e) {
+    }
   }
 
 
@@ -628,6 +630,26 @@ public class Assignment extends GenericBean {
 
 
   /**
+   *  Sets the percentComplete attribute of the Assignment object
+   *
+   *@param  tmp  The new percentComplete value
+   */
+  public void setPercentComplete(int tmp) {
+    this.percentComplete = tmp;
+  }
+
+
+  /**
+   *  Sets the percentComplete attribute of the Assignment object
+   *
+   *@param  tmp  The new percentComplete value
+   */
+  public void setPercentComplete(String tmp) {
+    this.percentComplete = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the completeDate attribute of the Assignment object
    *
    *@param  tmp  The new completeDate value
@@ -728,6 +750,86 @@ public class Assignment extends GenericBean {
 
 
   /**
+   *  Sets the displayLevel attribute of the Assignment object
+   *
+   *@param  tmp  The new displayLevel value
+   */
+  public void setDisplayLevel(int tmp) {
+    this.displayLevel = tmp;
+  }
+
+
+  /**
+   *  Sets the levelOpen attribute of the Assignment object
+   *
+   *@param  tmp  The new levelOpen value
+   */
+  public void setLevelOpen(boolean tmp) {
+    this.levelOpen = tmp;
+  }
+
+
+  /**
+   *  Sets the indent attribute of the Assignment object
+   *
+   *@param  tmp  The new indent value
+   */
+  public void setIndent(int tmp) {
+    this.indent = tmp;
+  }
+
+
+  /**
+   *  Sets the indent attribute of the Assignment object
+   *
+   *@param  tmp  The new indent value
+   */
+  public void setIndent(String tmp) {
+    this.indent = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the prevIndent attribute of the Assignment object
+   *
+   *@param  tmp  The new prevIndent value
+   */
+  public void setPrevIndent(int tmp) {
+    this.prevIndent = tmp;
+  }
+
+
+  /**
+   *  Sets the prevIndent attribute of the Assignment object
+   *
+   *@param  tmp  The new prevIndent value
+   */
+  public void setPrevIndent(String tmp) {
+    this.prevIndent = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the prevMapId attribute of the Assignment object
+   *
+   *@param  tmp  The new prevMapId value
+   */
+  public void setPrevMapId(int tmp) {
+    this.prevMapId = tmp;
+  }
+
+
+  /**
+   *  Sets the prevMapId attribute of the Assignment object
+   *
+   *@param  tmp  The new prevMapId value
+   */
+  public void setPrevMapId(String tmp) {
+    this.prevMapId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Gets the project attribute of the Assignment object
    *
    *@return    The project value
@@ -768,6 +870,16 @@ public class Assignment extends GenericBean {
 
 
   /**
+   *  Gets the folderId attribute of the Assignment object
+   *
+   *@return    The folderId value
+   */
+  public int getFolderId() {
+    return folderId;
+  }
+
+
+  /**
    *  Gets the assignedBy attribute of the Assignment object
    *
    *@return    The assignedBy value
@@ -784,36 +896,6 @@ public class Assignment extends GenericBean {
    */
   public int getUserAssignedId() {
     return userAssignedId;
-  }
-
-
-  /**
-   *  Gets the userAssigned attribute of the Assignment object
-   *
-   *@return    The userAssigned value
-   */
-  public String getUserAssigned() {
-    return userAssigned;
-  }
-
-
-  /**
-   *  Gets the activityId attribute of the Assignment object
-   *
-   *@return    The activityId value
-   */
-  public int getActivityId() {
-    return activityId;
-  }
-
-
-  /**
-   *  Gets the activity attribute of the Assignment object
-   *
-   *@return    The activity value
-   */
-  public String getActivity() {
-    return activity;
   }
 
 
@@ -944,6 +1026,21 @@ public class Assignment extends GenericBean {
    */
   public java.sql.Timestamp getEstStartDate() {
     return estStartDate;
+  }
+
+
+  /**
+   *  Gets the estStartDateString attribute of the Assignment object
+   *
+   *@return    The estStartDateString value
+   */
+  public String getEstStartDateString() {
+    String estStartDateString = "--";
+    try {
+      return DateFormat.getDateInstance(3).format(estStartDate);
+    } catch (NullPointerException e) {
+    }
+    return estStartDateString;
   }
 
 
@@ -1080,8 +1177,8 @@ public class Assignment extends GenericBean {
    *
    *@return    The modified value
    */
-  public String getModified() {
-    return modified.toString();
+  public Timestamp getModified() {
+    return modified;
   }
 
 
@@ -1091,11 +1188,11 @@ public class Assignment extends GenericBean {
    *@return    The modifiedString value
    */
   public String getModifiedString() {
-    try {
-      return DateFormat.getDateInstance(DateFormat.SHORT).format(modified);
-    } catch (NullPointerException e) {
+    if (modified != null) {
+      return modified.toString();
+    } else {
+      return "";
     }
-    return ("");
   }
 
 
@@ -1180,16 +1277,30 @@ public class Assignment extends GenericBean {
   /**
    *  Gets the DueDateString attribute of the Assignment object
    *
-   *@return    The DueDateString value
+   *@param  timeZone  Description of the Parameter
+   *@return           The DueDateString value
    *@since
    */
-  public String getDueDateString() {
+  public String getDueDateString(String timeZone) {
     String dueDateString = "--";
     try {
-      return DateFormat.getDateInstance(3).format(dueDate);
+      SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(3);
+      TimeZone tz = TimeZone.getTimeZone(timeZone);
+      formatter.setTimeZone(tz);
+      return formatter.format(dueDate);
     } catch (NullPointerException e) {
     }
     return dueDateString;
+  }
+
+
+  /**
+   *  Gets the dueDateString attribute of the Assignment object
+   *
+   *@return    The dueDateString value
+   */
+  public String getDueDateString() {
+    return getDueDateString(null);
   }
 
 
@@ -1211,11 +1322,13 @@ public class Assignment extends GenericBean {
   /**
    *  Gets the RelativeDueDateString attribute of the Assignment object
    *
-   *@return    The RelativeDueDateString value
+   *@param  timeZone  Description of the Parameter
+   *@param  locale    Description of the Parameter
+   *@return           The RelativeDueDateString value
    *@since
    */
-  public String getRelativeDueDateString() {
-    String dueDateString = getDueDateString();
+  public String getRelativeDueDateString(String timeZone, Locale locale) {
+    String dueDateString = getDueDateString(timeZone);
     if (!dueDateString.equals("--")) {
       Calendar rightNow = Calendar.getInstance();
       rightNow.set(Calendar.HOUR_OF_DAY, 0);
@@ -1224,14 +1337,15 @@ public class Assignment extends GenericBean {
       assignDueDateTest.setTime(dueDate);
       assignDueDateTest.set(Calendar.HOUR_OF_DAY, 0);
       assignDueDateTest.set(Calendar.MINUTE, 0);
+      DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT, locale);
       if (!this.getComplete() && rightNow.after(assignDueDateTest)) {
-        return "<font color='red'>" + dueDateString + "</font>";
+        return "<font color='red'>" + formatter.format(dueDate) + "</font>";
       } else {
         assignDueDateTest.add(Calendar.DATE, -1);
         if (!this.getComplete() && rightNow.after(assignDueDateTest)) {
-          return "<font color='orange'>" + dueDateString + "</font>";
+          return "<font color='orange'>" + formatter.format(dueDate) + "</font>";
         } else {
-          return "<font color='darkgreen'>" + dueDateString + "</font>";
+          return "<font color='darkgreen'>" + formatter.format(dueDate) + "</font>";
         }
       }
     } else {
@@ -1291,12 +1405,86 @@ public class Assignment extends GenericBean {
 
 
   /**
+   *  Gets the percentComplete attribute of the Assignment object
+   *
+   *@return    The percentComplete value
+   */
+  public int getPercentComplete() {
+    return percentComplete;
+  }
+
+
+  /**
    *  Gets the complete attribute of the Assignment object
    *
    *@return    The complete value
    */
   public boolean getComplete() {
     return (completeDate != null);
+  }
+
+
+  /**
+   *  Gets the displayLevel attribute of the Assignment object
+   *
+   *@return    The displayLevel value
+   */
+  public int getDisplayLevel() {
+    return displayLevel;
+  }
+
+
+  /**
+   *  Gets the levelOpen attribute of the Assignment object
+   *
+   *@return    The levelOpen value
+   */
+  public boolean getLevelOpen() {
+    return levelOpen;
+  }
+
+
+  /**
+   *  Gets the indent attribute of the Assignment object
+   *
+   *@return    The indent value
+   */
+  public int getIndent() {
+    return indent;
+  }
+
+
+  /**
+   *  Gets the prevIndent attribute of the Assignment object
+   *
+   *@return    The prevIndent value
+   */
+  public int getPrevIndent() {
+    return prevIndent;
+  }
+
+
+  /**
+   *  Gets the prevMapId attribute of the Assignment object
+   *
+   *@return    The prevMapId value
+   */
+  public int getPrevMapId() {
+    return prevMapId;
+  }
+
+
+  /**
+   *  Gets the paddedId attribute of the Assignment object
+   *
+   *@return    The paddedId value
+   */
+  public String getPaddedId() {
+    String padded = (String.valueOf(id));
+    while (padded.length() < 6) {
+      padded = "0" + padded;
+    }
+    return padded;
   }
 
 
@@ -1309,28 +1497,16 @@ public class Assignment extends GenericBean {
     if (projectId == -1) {
       errors.put("actionError", "Project ID not specified");
     }
-
-    if (role.equals("")) {
+    if (role == null || role.trim().equals("")) {
       errors.put("roleError", "Required field");
     }
-
-    if (userAssignedId == -1) {
-      errors.put("userAssignedIdError", "Required field");
-    }
-
-    if (activityId < 1) {
-      errors.put("activityIdError", "Required field");
-    }
-
     if (statusId < 1) {
       errors.put("statusIdError", "Required field");
     }
-
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
+    if (requirementId == -1) {
+      errors.put("requirementIdError", "Required field");
     }
+    return (!hasErrors());
   }
 
 
@@ -1345,23 +1521,21 @@ public class Assignment extends GenericBean {
     if (!isValid()) {
       return false;
     }
-
     statusTypeId = lookupStatusIdType(db, statusId);
-
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO project_assignments " +
-        "(project_id, requirement_id, assignedBy, user_assign_id, activity_id, technology, " +
+        "(project_id, requirement_id, assignedBy, user_assign_id, technology, " +
         "role, estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, " +
         "priority_id, assign_date, est_start_date, start_date, " +
-        "due_date, status_id, status_date, complete_date, ");
+        "due_date, status_id, status_date, percent_complete, complete_date, ");
     if (entered != null) {
       sql.append("entered, ");
     }
     if (modified != null) {
       sql.append("modified, ");
     }
-    sql.append("enteredBy, modifiedBy ) ");
+    sql.append("enteredBy, modifiedBy, folder_id ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
@@ -1369,117 +1543,56 @@ public class Assignment extends GenericBean {
     if (modified != null) {
       sql.append("?, ");
     }
-    sql.append("?, ?) ");
+    sql.append("?, ?, ?) ");
 
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, projectId);
-    if (requirementId > -1) {
-      pst.setInt(++i, requirementId);
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
-
+    DatabaseUtils.setInt(pst, ++i, requirementId);
     if (userAssignedId > -1) {
       pst.setInt(++i, enteredBy);
     } else {
-      pst.setInt(++i, assignedBy);
-    }
-
-    if (userAssignedId > -1) {
-      pst.setInt(++i, userAssignedId);
-    } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
-    if (activityId > -1) {
-      pst.setInt(++i, activityId);
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
+    DatabaseUtils.setInt(pst, ++i, userAssignedId);
     pst.setString(++i, technology);
     pst.setString(++i, role);
-    pst.setInt(++i, estimatedLoe);
-    if (estimatedLoeTypeId > -1) {
-      pst.setInt(++i, estimatedLoeTypeId);
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
-    pst.setInt(++i, actualLoe);
-    if (actualLoeTypeId > -1) {
-      pst.setInt(++i, actualLoeTypeId);
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
-    if (priorityId > -1) {
-      pst.setInt(++i, priorityId);
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
-
+    DatabaseUtils.setInt(pst, ++i, estimatedLoe);
+    DatabaseUtils.setInt(pst, ++i, estimatedLoeTypeId);
+    DatabaseUtils.setInt(pst, ++i, actualLoe);
+    DatabaseUtils.setInt(pst, ++i, actualLoeTypeId);
+    DatabaseUtils.setInt(pst, ++i, priorityId);
     //Assigned?
     if (userAssignedId > -1 && assignDate == null) {
       java.util.Date tmpDate = new java.util.Date();
       assignDate = new java.sql.Timestamp(tmpDate.getTime());
       assignDate.setNanos(0);
     }
-    if (assignDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setTimestamp(++i, assignDate);
-    }
-
-    if (estStartDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setTimestamp(++i, estStartDate);
-    }
-
+    DatabaseUtils.setTimestamp(pst, ++i, assignDate);
+    DatabaseUtils.setTimestamp(pst, ++i, estStartDate);
     if (statusTypeId != NOTSTARTED && statusTypeId != ONHOLD && startDate == null) {
       java.util.Date tmpDate = new java.util.Date();
       startDate = new java.sql.Timestamp(tmpDate.getTime());
       startDate.setNanos(0);
     }
-    if (startDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setTimestamp(++i, startDate);
-    }
-
-    if (dueDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setTimestamp(++i, dueDate);
-    }
-
-    if (statusId > -1) {
-      pst.setInt(++i, statusId);
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
-
+    DatabaseUtils.setTimestamp(pst, ++i, startDate);
+    DatabaseUtils.setTimestamp(pst, ++i, dueDate);
+    DatabaseUtils.setInt(pst, ++i, statusId);
     //Status Date
     if (statusId > -1 && statusDate == null) {
       java.util.Date tmpDate = new java.util.Date();
       statusDate = new java.sql.Timestamp(tmpDate.getTime());
       statusDate.setNanos(0);
     }
-    if (statusDate != null) {
-      pst.setTimestamp(++i, statusDate);
-    } else {
-      pst.setNull(++i, java.sql.Types.DATE);
-    }
-
+    DatabaseUtils.setTimestamp(pst, ++i, statusDate);
+    DatabaseUtils.setInt(pst, ++i, percentComplete);
     //Handle assignment complete date
     if ((statusTypeId == COMPLETE || statusTypeId == CLOSED) && completeDate == null) {
       java.util.Date tmpDate = new java.util.Date();
       completeDate = new java.sql.Timestamp(tmpDate.getTime());
       completeDate.setNanos(0);
     }
-    if (completeDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setTimestamp(++i, completeDate);
-    }
+    DatabaseUtils.setTimestamp(pst, ++i, completeDate);
     if (entered != null) {
       pst.setTimestamp(++i, entered);
     }
@@ -1488,11 +1601,22 @@ public class Assignment extends GenericBean {
     }
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, modifiedBy);
+    DatabaseUtils.setInt(pst, ++i, folderId);
     pst.execute();
     pst.close();
-
     id = DatabaseUtils.getCurrVal(db, "project_assig_assignment_id_seq");
-
+    //Record the position of this entry
+    RequirementMapItem mapItem = new RequirementMapItem();
+    mapItem.setProjectId(projectId);
+    mapItem.setRequirementId(requirementId);
+    mapItem.setAssignmentId(id);
+    mapItem.setIndent(indent);
+    mapItem.setPrevIndent(prevIndent);
+    mapItem.setPrevMapId(prevMapId);
+    mapItem.append(db);
+    indent = mapItem.getIndent();
+    prevIndent = mapItem.getIndent();
+    prevMapId = mapItem.getId();
     return true;
   }
 
@@ -1506,17 +1630,47 @@ public class Assignment extends GenericBean {
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1 || this.projectId == -1) {
-      throw new SQLException("ID was not specified");
+      throw new SQLException("Assignment ID was not specified");
     }
-
+    boolean commit = db.getAutoCommit();
     int recordCount = 0;
-    PreparedStatement pst = db.prepareStatement(
-        "DELETE FROM project_assignments " +
-        "WHERE assignment_id = ? ");
-    pst.setInt(1, id);
-    recordCount = pst.executeUpdate();
-    pst.close();
-
+    try {
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      //Remove the mapped item
+      RequirementMapItem mapItem = new RequirementMapItem();
+      mapItem.setProjectId(projectId);
+      mapItem.setRequirementId(requirementId);
+      mapItem.setAssignmentId(id);
+      mapItem.remove(db);
+      //Delete related status items
+      PreparedStatement pst = db.prepareStatement(
+          "DELETE FROM project_assignments_status " +
+          "WHERE assignment_id = ? ");
+      pst.setInt(1, id);
+      pst.executeUpdate();
+      pst.close();
+      //Delete the actual assignment
+      pst = db.prepareStatement(
+          "DELETE FROM project_assignments " +
+          "WHERE assignment_id = ? ");
+      pst.setInt(1, id);
+      recordCount = pst.executeUpdate();
+      pst.close();
+      if (commit) {
+        db.commit();
+      }
+    } catch (Exception e) {
+      if (commit) {
+        db.rollback();
+      }
+      System.out.println(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
     if (recordCount == 0) {
       errors.put("actionError", "Assignment could not be deleted because it no longer exists.");
       return false;
@@ -1550,30 +1704,30 @@ public class Assignment extends GenericBean {
     if (this.getId() == -1 || this.projectId == -1) {
       throw new SQLException("ID was not specified");
     }
-
     if (!isValid()) {
       return -1;
     }
-
     int resultCount = 0;
     boolean newStatus = false;
     Assignment previousState = new Assignment(db, id);
     statusTypeId = lookupStatusIdType(db, statusId);
-
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_assignments " +
-        "SET requirement_id = ?, assignedBy = ?, user_assign_id = ?, activity_id = ?, technology = ?, " +
-        " role = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, " +
-        " actual_loetype = ?, priority_id = ?, assign_date = ?, est_start_date = ?, start_date = ?, " +
-        "due_date = ?, status_id = ?, status_date = ?, complete_date = ?, " +
-        "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+        "SET requirement_id = ?, assignedBy = ?, user_assign_id = ?, technology = ?, " +
+        "role = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, " +
+        "actual_loetype = ?, priority_id = ?, assign_date = ?, est_start_date = ?, start_date = ?, " +
+        "due_date = ?, status_id = ?, status_date = ?, percent_complete = ?, complete_date = ?, " +
+        "modifiedBy = ?, modified = CURRENT_TIMESTAMP, folder_id = ? " +
         "WHERE assignment_id = ? " +
         "AND modified = ? ");
     int i = 0;
     DatabaseUtils.setInt(pst, ++i, requirementId);
-    DatabaseUtils.setInt(pst, ++i, assignedBy);
+    if (userAssignedId > -1) {
+      DatabaseUtils.setInt(pst, ++i, assignedBy);
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     DatabaseUtils.setInt(pst, ++i, userAssignedId);
-    DatabaseUtils.setInt(pst, ++i, activityId);
     pst.setString(++i, technology);
     pst.setString(++i, role);
     DatabaseUtils.setInt(pst, ++i, estimatedLoe);
@@ -1584,7 +1738,6 @@ public class Assignment extends GenericBean {
     if (previousState.getPriorityId() != priorityId) {
       newStatus = true;
     }
-
     if (previousState.getUserAssignedId() != userAssignedId) {
       if (assignDate == null) {
         java.util.Date tmpDate = new java.util.Date();
@@ -1595,18 +1748,8 @@ public class Assignment extends GenericBean {
     } else {
       assignDate = previousState.getAssignDate();
     }
-    if (assignDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setTimestamp(++i, assignDate);
-    }
-
-    if (estStartDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setTimestamp(++i, estStartDate);
-    }
-
+    DatabaseUtils.setTimestamp(pst, ++i, assignDate);
+    DatabaseUtils.setTimestamp(pst, ++i, estStartDate);
     //Handle assignment start date
     startDate = previousState.getStartDate();
     if (statusTypeId == NOTSTARTED || statusTypeId == ONHOLD) {
@@ -1617,22 +1760,12 @@ public class Assignment extends GenericBean {
       startDate = new java.sql.Timestamp(tmpDate.getTime());
       startDate.setNanos(0);
     }
-    if (startDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setTimestamp(++i, startDate);
-    }
-
-    if (dueDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setTimestamp(++i, dueDate);
-    }
-
+    DatabaseUtils.setTimestamp(pst, ++i, startDate);
+    DatabaseUtils.setTimestamp(pst, ++i, dueDate);
     DatabaseUtils.setInt(pst, ++i, statusId);
-
     //Handle assignment status date
-    if (previousState.getStatusId() != statusId) {
+    if (previousState.getStatusId() != statusId ||
+        previousState.getPercentComplete() != percentComplete) {
       if (statusDate == null) {
         java.util.Date tmpDate = new java.util.Date();
         statusDate = new java.sql.Timestamp(tmpDate.getTime());
@@ -1640,15 +1773,6 @@ public class Assignment extends GenericBean {
       }
       newStatus = true;
     }
-
-    if ((dueDate != null && previousState.getDueDate() != null)) {
-      if (!previousState.getDueDate().equals(dueDate)) {
-        newStatus = true;
-      }
-    } else {
-      newStatus = true;
-    }
-
     if (newStatus) {
       java.util.Date tmpDate = new java.util.Date();
       statusDate = new java.sql.Timestamp(tmpDate.getTime());
@@ -1656,19 +1780,15 @@ public class Assignment extends GenericBean {
     } else {
       statusDate = previousState.getStatusDate();
     }
-    if (statusDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setTimestamp(++i, statusDate);
-    }
-
+    DatabaseUtils.setTimestamp(pst, ++i, statusDate);
+    DatabaseUtils.setInt(pst, ++i, percentComplete);
     //Handle assignment complete date
     //A date is saved when the assignment is saved, otherwise it is erased
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("PM-> Assignment previous status type id = " + previousState.getStatusTypeId());
+      System.out.println("Assignment-> Assignment previous status type id = " + previousState.getStatusTypeId());
     }
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("PM-> Assignment status type id = " + statusTypeId);
+      System.out.println("Assignment-> Assignment status type id = " + statusTypeId);
     }
     if (statusTypeId == COMPLETE || statusTypeId == CLOSED) {
       if (previousState.getStatusTypeId() != COMPLETE && previousState.getStatusTypeId() != CLOSED) {
@@ -1684,24 +1804,19 @@ public class Assignment extends GenericBean {
           System.out.println("     * EXISTING CLOSED DATE");
         }
       }
-
     } else {
       completeDate = null;
       if (System.getProperty("DEBUG") != null) {
         System.out.println("     * it's not finished");
       }
     }
-    if (completeDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setTimestamp(++i, completeDate);
-    }
+    DatabaseUtils.setTimestamp(pst, ++i, completeDate);
     pst.setInt(++i, this.getModifiedBy());
+    DatabaseUtils.setInt(pst, ++i, folderId);
     pst.setInt(++i, this.getId());
     pst.setTimestamp(++i, modified);
     resultCount = pst.executeUpdate();
     pst.close();
-
     return resultCount;
   }
 
@@ -1718,7 +1833,6 @@ public class Assignment extends GenericBean {
     if (this.getId() == -1 || this.projectId == -1 || this.getModifiedBy() == -1) {
       throw new SQLException("ID was not specified");
     }
-
     String sql =
         "UPDATE project_assignments " +
         "SET due_date = ? " +
@@ -1735,8 +1849,33 @@ public class Assignment extends GenericBean {
     pst.setInt(++i, this.getId());
     int resultCount = pst.executeUpdate();
     pst.close();
-
     return resultCount;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  newFolderId       Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void updateFolderId(Connection db, int newFolderId) throws SQLException {
+    if (this.getId() == -1 || newFolderId == -1) {
+      throw new SQLException("ID was not specified");
+    }
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE project_assignments " +
+        "SET folder_id = ? " +
+        "WHERE assignment_id = ? ");
+    if (newFolderId == 0) {
+      pst.setNull(1, java.sql.Types.INTEGER);
+    } else {
+      pst.setInt(1, newFolderId);
+    }
+    pst.setInt(2, id);
+    pst.executeUpdate();
+    pst.close();
   }
 
 
@@ -1781,6 +1920,18 @@ public class Assignment extends GenericBean {
       return false;
     }
     return true;
+  }
+  
+  
+  /**
+   *  The following fields depend on a timezone preference
+   *
+   *@return    The timeZoneParams value
+   */
+  public static ArrayList getTimeZoneParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("dueDate");
+    return thisList;
   }
 }
 

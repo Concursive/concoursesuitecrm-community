@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.utils.web.*, org.aspcfs.modules.troubletickets.base.* " %>
 <jsp:useBean id="ticketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="onsiteModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -92,14 +93,15 @@ Activity Log
         <% int status = -1;%>
         <% status = thisMaintenance.getEnabled() ? 1 : 0; %>
       	<%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('menuTicketForm', '<%=ticketDetails.getId() %>', '<%= thisMaintenance.getId() %>');"
-         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+         <a href="javascript:displayMenu('select<%= i %>','menuTicketForm', '<%=ticketDetails.getId() %>', '<%= thisMaintenance.getId() %>');"
+         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuTicketForm');">
+         <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
     <td width="12%" >
-    <dhv:tz timestamp="<%=thisMaintenance.getFirstActivityDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=thisMaintenance.getFirstActivityDate()%>" dateOnly="true" default="&nbsp;"/>
 		</td>
 		<td width="12%" >
-    <dhv:tz timestamp="<%=thisMaintenance.getLastActivityDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=thisMaintenance.getLastActivityDate()%>" dateOnly="true" default="&nbsp;"/>
 		</td>
 		<td width="12%" >
     <%if (thisMaintenance.getFollowUpRequired()) { %>
@@ -109,7 +111,7 @@ Activity Log
     <%}%>
 		</td>
 		<td width="10%" >
-    <dhv:tz timestamp="<%=thisMaintenance.getAlertDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+    <zeroio:tz timestamp="<%=thisMaintenance.getAlertDate()%>" dateOnly="true" default="&nbsp;"/>
 		</td>
 		<td width="48%" >
     <%if (thisMaintenance.getFollowUpRequired() == false) { %>
@@ -119,7 +121,7 @@ Activity Log
     <%}%>
 		</td>
 		<td width="10%" >
-      <dhv:tz timestamp="<%=thisMaintenance.getModified()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=thisMaintenance.getModified()%>" dateOnly="true" default="&nbsp;"/>
 		</td>
    </tr>
     <%  

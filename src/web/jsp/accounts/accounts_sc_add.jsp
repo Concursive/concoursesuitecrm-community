@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*,org.aspcfs.modules.assets.base.*,org.aspcfs.modules.servicecontracts.base.*, java.text.DateFormat" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="contactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
@@ -11,6 +12,7 @@
 <jsp:useBean id="phoneModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="onsiteModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="emailModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].serviceContractNumber.focus();" >
 <form name="addServiceContract" action="AccountsServiceContracts.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post" >

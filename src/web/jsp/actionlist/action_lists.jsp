@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.actionlist.base.*, org.aspcfs.modules.base.Constants"%>
 <jsp:useBean id="ActionLists" class="org.aspcfs.modules.actionlist.base.ActionLists" scope="request"/>
 <jsp:useBean id="ActionListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -79,7 +80,7 @@ Action Lists
   <tr class="row<%= rowid %>">
     <td nowrap>
      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-      <a href="javascript:displayMenu('menuAction','<%= thisList.getId() %>','<%=  toHtmlValue(request.getParameter("linkModuleId")) %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+      <a href="javascript:displayMenu('select<%= i %>','menuAction','<%= thisList.getId() %>','<%=  toHtmlValue(request.getParameter("linkModuleId")) %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuAction');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
     <td width="100%">
       <a href="MyActionContacts.do?command=List&actionId=<%= thisList.getId() %>&reset=true"><%= toHtmlValue(thisList.getDescription()) %></a>
@@ -91,7 +92,7 @@ Action Lists
       <%= thisList.getTotal() %>
     </td>
     <td nowrap align="center">
-      <dhv:tz timestamp="<%= thisList.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= thisList.getModified() %>" />
     </td>
   </tr>
 <%}

@@ -50,10 +50,8 @@ public class TicketLogList extends ArrayList {
     int i = 0;
     if (request.getParameter("newticketlogentry") != null) {
       TicketLog thisEntry = new TicketLog();
-
       thisEntry.setEnteredBy(userId);
       thisEntry.buildRecord(request);
-
       if (thisEntry.isValid()) {
         this.add(thisEntry);
       }
@@ -361,9 +359,7 @@ public class TicketLogList extends ArrayList {
         "SELECT COUNT(*) AS recordcount " +
         "FROM ticketlog t " +
         "WHERE t.id > 0 ");
-
     createFilter(sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() +
@@ -376,7 +372,6 @@ public class TicketLogList extends ArrayList {
       }
       rs.close();
       pst.close();
-
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
@@ -401,7 +396,6 @@ public class TicketLogList extends ArrayList {
       //NOTE: Do not change the order due to the system message method
       sqlOrder.append("ORDER BY t.entered ");
     }
-
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);

@@ -111,6 +111,12 @@ public final class AdminConfig extends CFSModule {
     if ("SYSTEM.TIMEZONE".equals(module)) {
       return "ModifyTimeZoneOK";
     }
+    if ("SYSTEM.CURRENCY".equals(module)) {
+      return "ModifyCurrencyOK";
+    }
+    if ("SYSTEM.LANGUAGE".equals(module)) {
+      return "ModifyLanguageOK";
+    }
     if ("LICENSE".equals(module)) {
       return "ModifyLicenseOK";
     }
@@ -157,6 +163,16 @@ public final class AdminConfig extends CFSModule {
     String timeZone = context.getRequest().getParameter("timeZone");
     if (timeZone != null) {
       prefs.add("SYSTEM.TIMEZONE", timeZone);
+    }
+    //Process the request
+    String currency = context.getRequest().getParameter("currency");
+    if (currency != null) {
+      prefs.add("SYSTEM.CURRENCY", currency);
+    }
+    //Process the request
+    String language = context.getRequest().getParameter("language");
+    if (language != null) {
+      prefs.add("SYSTEM.LANGUAGE", language);
     }
     //Save the prefs...
     prefs.save();

@@ -1,8 +1,8 @@
 /*
- *  Copyright 2000-2003 Matt Rajkowski
- *  matt@zeroio.com
- *  http://www.mavininteractive.com
- *  This class cannot be modified, distributed or used without
+ *  Copyright 2000-2004 Matt Rajkowski
+ *  matt.rajkowski@teamelements.com
+ *  http://www.teamelements.com
+ *  This source code cannot be modified, distributed or used without
  *  permission from Matt Rajkowski
  */
 package com.zeroio.iteam.base;
@@ -23,9 +23,6 @@ import org.aspcfs.utils.DatabaseUtils;
  */
 public class FileItem extends GenericBean {
 
-  /**
-   *  Description of the Field
-   */
   public final static String fs = System.getProperty("file.separator");
 
   private int linkModuleId = -1;
@@ -38,7 +35,7 @@ public class FileItem extends GenericBean {
   private String directory = "";
   private int size = 0;
   private double version = 0;
-  private String image = "file.gif";
+  private String image = null;
   private boolean enabled = false;
 
   private boolean doVersionInsert = true;
@@ -46,13 +43,13 @@ public class FileItem extends GenericBean {
 
   private java.sql.Timestamp entered = null;
   private int enteredBy = -1;
-  private String enteredByString = "";
 
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
-  private String modifiedByString = "";
 
   private FileItemVersionList versionList = null;
+
+  private String thumbnailFilename = null;
 
 
   /**
@@ -115,17 +112,18 @@ public class FileItem extends GenericBean {
   private void queryRecord(Connection db, int itemId) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT f.* " +
+        "SELECT f.*, t.filename AS thumbnail " +
         "FROM project_files f " +
+        "LEFT JOIN project_files_thumbnail t ON (f.item_id = t.item_id AND f.version = t.version) " +
         "WHERE f.item_id > 0 ");
     if (itemId > -1) {
       sql.append("AND f.item_id = ? ");
     }
     if (linkModuleId > -1) {
-      sql.append("AND link_module_id = ? ");
+      sql.append("AND f.link_module_id = ? ");
     }
     if (linkItemId > -1) {
-      sql.append("AND link_item_id = ? ");
+      sql.append("AND f.link_item_id = ? ");
     }
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
@@ -314,7 +312,7 @@ public class FileItem extends GenericBean {
 
 
   /**
-   *  Sets the filename that the client will see when the file is downloaded
+   *  Sets the clientFilename attribute of the FileItem object
    *
    *@param  tmp  The new clientFilename value
    */
@@ -324,7 +322,7 @@ public class FileItem extends GenericBean {
 
 
   /**
-   *  Sets the filename that the server uses to save and load the file
+   *  Sets the filename attribute of the FileItem object
    *
    *@param  tmp  The new filename value
    */
@@ -434,16 +432,6 @@ public class FileItem extends GenericBean {
 
 
   /**
-   *  Sets the enteredByString attribute of the FileItem object
-   *
-   *@param  tmp  The new enteredByString value
-   */
-  public void setEnteredByString(String tmp) {
-    this.enteredByString = tmp;
-  }
-
-
-  /**
    *  Sets the modified attribute of the FileItem object
    *
    *@param  tmp  The new modified value
@@ -480,16 +468,6 @@ public class FileItem extends GenericBean {
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the modifiedByString attribute of the FileItem object
-   *
-   *@param  tmp  The new modifiedByString value
-   */
-  public void setModifiedByString(String tmp) {
-    this.modifiedByString = tmp;
   }
 
 
@@ -554,6 +532,16 @@ public class FileItem extends GenericBean {
 
 
   /**
+   *  Sets the thumbnailFilename attribute of the FileItem object
+   *
+   *@param  tmp  The new thumbnailFilename value
+   */
+  public void setThumbnailFilename(String tmp) {
+    this.thumbnailFilename = tmp;
+  }
+
+
+  /**
    *  Gets the doVersionInsert attribute of the FileItem object
    *
    *@return    The doVersionInsert value
@@ -614,7 +602,7 @@ public class FileItem extends GenericBean {
 
 
   /**
-   *  Gets the filename that the client will see when the file is downloaded
+   *  Gets the clientFilename attribute of the FileItem object
    *
    *@return    The clientFilename value
    */
@@ -629,6 +617,17 @@ public class FileItem extends GenericBean {
    *@return    The extension value
    */
   public String getExtension() {
+    return getExtension(clientFilename);
+  }
+
+
+  /**
+   *  Gets the extension attribute of the FileItem class
+   *
+   *@param  clientFilename  Description of the Parameter
+   *@return                 The extension value
+   */
+  public static String getExtension(String clientFilename) {
     if (clientFilename.indexOf(".") > 0) {
       return clientFilename.substring(clientFilename.lastIndexOf(".")).toLowerCase();
     } else {
@@ -638,7 +637,7 @@ public class FileItem extends GenericBean {
 
 
   /**
-   *  Gets the filename that the server uses to save and load the file
+   *  Gets the filename attribute of the FileItem object
    *
    *@return    The filename value
    */
@@ -780,7 +779,120 @@ public class FileItem extends GenericBean {
    *@return    The imageTag value
    */
   public String getImageTag() {
-    return "<img border=\"0\" src=\"images/" + image + "\" align=\"absmiddle\" alt=\"" + "" + "\">";
+    return getImageTag("");
+  }
+
+
+  /**
+   *  Gets the imageTag attribute of the FileItem object
+   *
+   *@param  imageExt  Description of the Parameter
+   *@return           The imageTag value
+   */
+  public String getImageTag(String imageExt) {
+    return getImageTag(image, imageExt, getExtension());
+  }
+
+
+  /**
+   *  Gets the imageTag attribute of the FileItem object
+   *
+   *@param  imageExt  Description of the Parameter
+   *@param  image     Description of the Parameter
+   *@param  ext       Description of the Parameter
+   *@return           The imageTag value
+   */
+  public static String getImageTag(String image, String imageExt, String ext) {
+    if (image == null) {
+      if (".bmp".equals(ext)) {
+        image = "gnome-image-bmp";
+      } else if (".dia".equals(ext)) {
+        image = "gnome-application-x-dia-diagram";
+      } else if (".doc".equals(ext)) {
+        image = "gnome-application-msword";
+      } else if (".eps".equals(ext)) {
+        image = "gnome-application-encapsulated_postscript";
+      } else if (".gif".equals(ext)) {
+        image = "gnome-image-gif";
+      } else if (".gz".equals(ext)) {
+        image = "gnome-compressed";
+      } else if (".gzip".equals(ext)) {
+        image = "gnome-compressed";
+      } else if (".html".equals(ext)) {
+        image = "gnome-text-html";
+      } else if (".jar".equals(ext)) {
+        image = "gnome-application-x-jar";
+      } else if (".java".equals(ext)) {
+        image = "gnome-application-x-java-source";
+      } else if (".jpeg".equals(ext)) {
+        image = "gnome-image-jpeg";
+      } else if (".jpg".equals(ext)) {
+        image = "gnome-image-jpeg";
+      } else if (".midi".equals(ext)) {
+        image = "gnome-audio-midi";
+      } else if (".mp3".equals(ext)) {
+        image = "gnome-audio-mpg";
+      } else if (".mpeg".equals(ext)) {
+        image = "gnome-video-mpeg";
+      } else if (".mpg".equals(ext)) {
+        image = "gnome-video-mpeg";
+      } else if (".pdf".equals(ext)) {
+        image = "gnome-application-pdf";
+      } else if (".png".equals(ext)) {
+        image = "gnome-image-png";
+      } else if (".ppt".equals(ext)) {
+        image = "gnome-application-vnd.ms-powerpoint";
+      } else if (".psd".equals(ext)) {
+        image = "gnome-image-psd";
+      } else if (".ps".equals(ext)) {
+        image = "gnome-application-postscript";
+      } else if (".sql".equals(ext)) {
+        image = "gnome-text-x-sql";
+      } else if (".tgz".equals(ext)) {
+        image = "gnome-compressed";
+      } else if (".tif".equals(ext)) {
+        image = "gnome-image-tiff";
+      } else if (".tiff".equals(ext)) {
+        image = "gnome-image-tiff";
+      } else if (".wav".equals(ext)) {
+        image = "gnome-audio-x-wav";
+      } else if (".xls".equals(ext)) {
+        image = "gnome-application-vnd.ms-excel";
+      } else if (".zip".equals(ext)) {
+        image = "gnome-compressed";
+      } else {
+        image = "gnome-text-plain";
+      }
+    }
+    return "<img border=\"0\" src=\"images/mime/" + image + imageExt + ".gif\" align=\"absmiddle\" alt=\"" + "" + "\">";
+  }
+
+
+  /**
+   *  Gets the thumbnail attribute of the FileItem object
+   *
+   *@return    The thumbnail value
+   */
+  public String getThumbnail() {
+    if (hasThumbnail()) {
+      return "<img border=\"0\" src=\"ProjectManagementFiles.do?command=ShowThumbnail&p=" + linkItemId + "&i=" + id + "&v=" + version + "\" align=\"absmiddle\" alt=\"\">";
+    } else {
+      return getImageTag();
+    }
+  }
+
+
+  /**
+   *  Gets the fullImage attribute of the FileItem object
+   *
+   *@return    The fullImage value
+   */
+  public String getFullImage() {
+    if (isImageFormat()) {
+      return "<img border=\"0\" src=\"ProjectManagementFiles.do?command=ShowThumbnail&p=" + linkItemId + "&i=" + id + "&v=" + version + "&s=full" + "\" align=\"absmiddle\" alt=\"\">";
+    } else {
+      return getImageTag();
+    }
   }
 
 
@@ -833,16 +945,6 @@ public class FileItem extends GenericBean {
 
 
   /**
-   *  Gets the enteredByString attribute of the FileItem object
-   *
-   *@return    The enteredByString value
-   */
-  public String getEnteredByString() {
-    return enteredByString;
-  }
-
-
-  /**
    *  Gets the modified attribute of the FileItem object
    *
    *@return    The modified value
@@ -872,11 +974,12 @@ public class FileItem extends GenericBean {
    *@return    The modifiedDateTimeString value
    */
   public String getModifiedDateTimeString() {
+    String tmp = "";
     try {
-      return DateFormat.getDateTimeInstance(3, 3).format(modified);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
     } catch (NullPointerException e) {
     }
-    return "";
+    return tmp;
   }
 
 
@@ -887,16 +990,6 @@ public class FileItem extends GenericBean {
    */
   public int getModifiedBy() {
     return modifiedBy;
-  }
-
-
-  /**
-   *  Gets the modifiedByString attribute of the FileItem object
-   *
-   *@return    The modifiedByString value
-   */
-  public String getModifiedByString() {
-    return modifiedByString;
   }
 
 
@@ -927,6 +1020,16 @@ public class FileItem extends GenericBean {
    */
   public FileItemVersionList getVersionList() {
     return versionList;
+  }
+
+
+  /**
+   *  Gets the thumbnailFilename attribute of the FileItem object
+   *
+   *@return    The thumbnailFilename value
+   */
+  public String getThumbnailFilename() {
+    return thumbnailFilename;
   }
 
 
@@ -1011,9 +1114,7 @@ public class FileItem extends GenericBean {
         thisVersion.setModifiedBy(modifiedBy);
         thisVersion.insert(db);
       }
-
       logUpload(db);
-
       db.commit();
       result = true;
     } catch (Exception e) {
@@ -1117,6 +1218,44 @@ public class FileItem extends GenericBean {
   /**
    *  Description of the Method
    *
+   *@param  db                Description of the Parameter
+   *@param  thisVersion       Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean updateVersion(Connection db, FileItemVersion thisVersion) throws SQLException {
+    // Set the master record
+    subject = thisVersion.getSubject();
+    clientFilename = thisVersion.getClientFilename();
+    filename = thisVersion.getFilename();
+    version = thisVersion.getVersion();
+    size = thisVersion.getSize();
+    enteredBy = thisVersion.getEnteredBy();
+    modifiedBy = thisVersion.getModifiedBy();
+    // Update the master record
+    String sql =
+        "UPDATE project_files " +
+        "SET subject = ?, client_filename = ?, filename = ?, version = ?, " +
+        "size = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+        "WHERE item_id = ? ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setString(++i, subject);
+    pst.setString(++i, clientFilename);
+    pst.setString(++i, filename);
+    pst.setDouble(++i, version);
+    pst.setInt(++i, size);
+    pst.setInt(++i, modifiedBy);
+    pst.setInt(++i, this.getId());
+    pst.execute();
+    pst.close();
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
@@ -1163,9 +1302,7 @@ public class FileItem extends GenericBean {
     if (!isValid()) {
       return false;
     }
-
     this.buildVersionList(db);
-
     //Need to delete the actual files
     Iterator versions = this.getVersionList().iterator();
     while (versions.hasNext()) {
@@ -1175,51 +1312,61 @@ public class FileItem extends GenericBean {
       if (!fileToDelete.delete()) {
         System.err.println("FileItem-> Tried to delete file: " + filePath);
       }
+      java.io.File thumbnailToDelete = new java.io.File(filePath + "TH");
+      thumbnailToDelete.delete();
     }
-
     boolean result = false;
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
-
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       //Delete the log of downloads
-      String sql =
-          "DELETE FROM project_files_download " +
-          "WHERE item_id = ? ";
       int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql);
+      PreparedStatement pst = db.prepareStatement(
+          "DELETE FROM project_files_download " +
+          "WHERE item_id = ? ");
       pst.setInt(++i, this.getId());
-      pst.executeUpdate();
+      pst.execute();
       pst.close();
-
+      //Delete the thumbnail
+      i = 0;
+      pst = db.prepareStatement(
+          "DELETE FROM project_files_thumbnail " +
+          "WHERE item_id = ? ");
+      pst.setInt(++i, this.getId());
+      pst.execute();
+      pst.close();
       //Delete all of the versions
-      sql =
+      i = 0;
+      pst = db.prepareStatement(
           "DELETE FROM project_files_version " +
-          "WHERE item_id = ? ";
-      i = 0;
-      pst = db.prepareStatement(sql);
+          "WHERE item_id = ? ");
       pst.setInt(++i, this.getId());
-      pst.executeUpdate();
+      pst.execute();
       pst.close();
-
       //Delete the master record
-      sql =
-          "DELETE FROM project_files " +
-          "WHERE item_id = ? ";
       i = 0;
-      pst = db.prepareStatement(sql);
+      pst = db.prepareStatement(
+          "DELETE FROM project_files " +
+          "WHERE item_id = ? ");
       pst.setInt(++i, this.getId());
-      pst.executeUpdate();
+      pst.execute();
       pst.close();
-
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
       result = true;
     } catch (Exception e) {
       System.err.println("FileItem-> Delete All Error: " + e.toString());
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
-
     return result;
   }
 
@@ -1230,7 +1377,7 @@ public class FileItem extends GenericBean {
    *@return    The valid value
    */
   private boolean isValid() {
-    if ((linkModuleId == -1 || linkItemId == -1)) {
+    if (linkModuleId == -1 || linkItemId == -1) {
       errors.put("actionError", "Id not specified");
     }
 
@@ -1262,7 +1409,7 @@ public class FileItem extends GenericBean {
     if (!isVersion) {
       linkModuleId = rs.getInt("link_module_id");
       linkItemId = rs.getInt("link_item_id");
-      folderId = DatabaseUtils.getInt(rs, "folder_id");
+      folderId = DatabaseUtils.getInt(rs, "folder_id", 0);
     }
     clientFilename = rs.getString("client_filename");
     filename = rs.getString("filename");
@@ -1275,6 +1422,9 @@ public class FileItem extends GenericBean {
     enteredBy = rs.getInt("enteredBy");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedBy");
+    if (!isVersion) {
+      thumbnailFilename = rs.getString("thumbnail");
+    }
   }
 
 
@@ -1295,6 +1445,57 @@ public class FileItem extends GenericBean {
     pst.setInt(++i, size);
     pst.execute();
     pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  newFolderId       Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void updateFolderId(Connection db, int newFolderId) throws SQLException {
+    if (id == -1) {
+      throw new SQLException("ID not specified");
+    }
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE project_files " +
+        "SET folder_id = ? " +
+        "WHERE item_id = ?");
+    int i = 0;
+    if (newFolderId > 0) {
+      pst.setInt(++i, newFolderId);
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    pst.setInt(++i, id);
+    pst.execute();
+    pst.close();
+  }
+
+
+  /**
+   *  Gets the imageFormat attribute of the FileItem object
+   *
+   *@return    The imageFormat value
+   */
+  public boolean isImageFormat() {
+    String extension = getExtension();
+    return (".gif".equals(extension) ||
+        ".jpg".equals(extension) ||
+        ".png".equals(extension)
+        );
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean hasThumbnail() {
+    return thumbnailFilename != null;
   }
 }
 
