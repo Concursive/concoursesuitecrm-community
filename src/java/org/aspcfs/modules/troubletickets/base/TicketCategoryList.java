@@ -429,5 +429,23 @@ public class TicketCategoryList extends Vector {
     }
     return catListSelect;
   }
+
+
+  /**
+   *  Gets the idFromValue attribute of the TicketCategoryList object
+   *
+   *@param  value  Description of the Parameter
+   *@return        The idFromValue value
+   */
+  public int getIdFromValue(String value) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      TicketCategory thisCategory = (TicketCategory) i.next();
+      if (value.equals(thisCategory.getDescription())) {
+        return thisCategory.getId();
+      }
+    }
+    return -1;
+  }
 }
 
