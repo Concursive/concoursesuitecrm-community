@@ -57,7 +57,6 @@ public class HtmlSelect extends ArrayList {
    *  stateSelect.build(); <br>
    *  context.getRequest().setAttribute("StateSelect", stateSelect); <br>
    *
-   *
    *@since    1.0
    */
 
@@ -165,6 +164,26 @@ public class HtmlSelect extends ArrayList {
    */
   public void setSelectSize(int tmp) {
     this.selectSize = tmp;
+  }
+
+
+  /**
+   *  Sets the built attribute of the HtmlSelect object
+   *
+   *@param  built  The new built value
+   */
+  public void setBuilt(boolean built) {
+    this.built = built;
+  }
+
+
+  /**
+   *  Gets the built attribute of the HtmlSelect object
+   *
+   *@return    The built value
+   */
+  public boolean getBuilt() {
+    return built;
   }
 
 

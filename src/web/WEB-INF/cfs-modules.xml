@@ -535,6 +535,7 @@
     <action name="AdminFields"/>
     <action name="AdminFieldsFolder"/>
     <action name="AdminFieldsGroup"/>
+    <action name="AdminCategories"/>
     <action name="Users"/>
     <action name="Roles"/>
     <action name="Viewpoints"/>
