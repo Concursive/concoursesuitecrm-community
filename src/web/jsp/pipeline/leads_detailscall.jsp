@@ -107,7 +107,7 @@ Call Details<br>
           </td>
         </tr>
       </table>
-      <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" value="Modify" onClick="javascript:window.location.href='LeadsCalls.do?command=Modify&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>';"></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-calls-edit"><br><input type="button" value="Modify" onClick="javascript:window.location.href='LeadsCalls.do?command=Modify&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>';"></dhv:permission>
       <dhv:permission name="pipeline-opportunities-calls-delete"><input type="button" value="Delete" onClick="javascript:return confirmDelete('LeadsCalls.do?command=Delete&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>')"></dhv:permission>
       <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='LeadsCallsForward.do?command=ForwardMessage&forwardType=<%= Constants.PIPELINE_CALLS %>&headerId=<%= opportunityHeader.getId() %>&id=<%=CallDetails.getId()%>&return='+escape('LeadsCalls.do?command=Details&id=<%=CallDetails.getId()%>&headerId=<%= opportunityHeader.getId() %>') + '&sendUrl=' + escape('LeadsCallsForward.do?command=SendMessage&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %>');"></dhv:permission>
     </td>
