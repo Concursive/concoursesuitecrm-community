@@ -11,6 +11,7 @@ import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.controller.objectHookManager.*;
 import org.aspcfs.controller.SessionManager;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.admin.base.CategoryEditor;
 import java.io.File;
 import org.w3c.dom.*;
 import javax.servlet.ServletContext;
@@ -56,6 +57,9 @@ public class SystemStatus {
   //Session Manager
   private SessionManager sessionManager = new SessionManager();
 
+  //Category Editor
+  private CategoryEditor categoryEditor = new CategoryEditor();
+
 
   /**
    *  Constructor for the SystemStatus object
@@ -87,6 +91,7 @@ public class SystemStatus {
     buildHierarchyList(db);
     buildPreferences();
     buildRolePermissions(db);
+    buildCategoryLists(db);
   }
 
 
@@ -149,6 +154,26 @@ public class SystemStatus {
    */
   public void setSessionTimeout(int sessionTimeout) {
     this.sessionTimeout = sessionTimeout;
+  }
+
+
+  /**
+   *  Sets the categoryEditor attribute of the SystemStatus object
+   *
+   * @param  categoryEditor  The new categoryEditor value
+   */
+  public void setCategoryEditor(CategoryEditor categoryEditor) {
+    this.categoryEditor = categoryEditor;
+  }
+
+
+  /**
+   *  Gets the categoryEditor attribute of the SystemStatus object
+   *
+   * @return    The categoryEditor value
+   */
+  public CategoryEditor getCategoryEditor() {
+    return categoryEditor;
   }
 
 
@@ -315,6 +340,17 @@ public class SystemStatus {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("SystemStatus-> Top Level Users added : " + hierarchyList.size());
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void buildCategoryLists(Connection db) throws SQLException {
+    categoryEditor.build(db);
   }
 
 
@@ -509,6 +545,18 @@ public class SystemStatus {
       }
     }
     return (LookupList) lookups.get(listName);
+  }
+
+
+
+  /**
+   *  Gets the categoryEditor attribute of the SystemStatus object
+   *
+   * @param  db  Description of the Parameter
+   * @return     The categoryEditor value
+   */
+  public CategoryEditor getCategoryEditor(Connection db) {
+    return categoryEditor;
   }
 
 
