@@ -68,7 +68,7 @@ Modify Ticket<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(TicketDetails.getCompanyName()) %> - Ticket # <%=TicketDetails.getPaddedId()%></strong>
+      <strong><%= toHtml(TicketDetails.getCompanyName()) %></strong>
       <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
     </td>
   </tr>
@@ -87,18 +87,12 @@ Modify Ticket<br>
   </tr>
   <tr>
     <td class="containerBack">
-    <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-      <tr class="containerMenu">
-        <td>
           <% String param2 = "id=" + TicketDetails.getId(); %>
-          <dhv:container name="accountstickets" selected="details" param="<%= param2 %>"/>
+          <strong>Ticket # <%=TicketDetails.getPaddedId()%>:</strong>&nbsp;[ <dhv:container name="accountstickets" selected="details" param="<%= param2 %>"/> ]
           <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
           <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
           </dhv:evaluate>
-       </td>
-      </tr>
-      <tr>
-        <td>
+          <br><br>
         <form name="details" action="AccountTickets.do?command=UpdateTicket&auto-populate=true" onSubmit="return checkForm(this);" method="post">    
         <% if (TicketDetails.getClosed() != null) { %>
               <input type="submit" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
@@ -299,9 +293,6 @@ Modify Ticket<br>
               <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
             <%}%>
         <%}%>
-        </td>
-       </tr>
-      </table>
      </td>
  </tr>
 <input type="hidden" name="modified" value="<%= TicketDetails.getModified() %>">

@@ -12,7 +12,7 @@ History<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%=toHtml(TicketDetails.getCompanyName())%> - Ticket # <%=TicketDetails.getPaddedId()%></strong>
+      <strong><%=toHtml(TicketDetails.getCompanyName())%></strong>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -24,61 +24,51 @@ History<br>
   </tr>
   <tr>
   	<td class="containerBack">
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="containerMenu">
-          <td>
-            <%-- submenu for tickets --%>
-            <% String param2 = "id=" + TicketDetails.getId(); %>
-            <dhv:container name="accountstickets" selected="history" param="<%= param2 %>"/>
-            <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-            <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
-            </dhv:evaluate>
-         </td>
-        </tr>
-        <tr>
-          <td>
-            <%-- display history --%>
-            <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-              <tr class="title">
-                <td colspan="4">
-                  <strong>Ticket Log History</strong>
-                </td>     
-              </tr>
-            <%  
-                Iterator hist = TicketDetails.getHistory().iterator();
-                if (hist.hasNext()) {
-                  while (hist.hasNext()) {
-                    TicketLog thisEntry = (TicketLog)hist.next();
-            %>    
-            <% if (thisEntry.getSystemMessage() == true) {%>
-              <tr bgColor="#F1F0E0">
-            <% } else { %>
-              <tr class="containerBody">
-            <%}%>
-                <td nowrap valign="top" class="formLabel">
-                  <%= toHtml(thisEntry.getEnteredByName()) %>
-                </td>
-                <td nowrap valign="top">
-                  <%= thisEntry.getEnteredString() %>
-                </td>
-                <td valign="top" width="100%">
-                  <%= toHtml(thisEntry.getEntryText()) %>
-                </td>
-              </tr>
-            <%    
-                }
-              } else {
-            %>
-              <tr class="containerBody">
-                <td>
-                  <font color="#9E9E9E" colspan="3">No Log Entries.</font>
-                </td>
-              </tr>
-            <%}%>
-           </table>
-          </td>
-        </tr>
-        <%-- ticket container end --%>
+        <% String param2 = "id=" + TicketDetails.getId(); %>
+        <strong>Ticket # <%=TicketDetails.getPaddedId()%>:</strong>&nbsp;[ <dhv:container name="accountstickets" selected="history" param="<%= param2 %>"/> ]
+        <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
+        <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
+        </dhv:evaluate>
+        <br><br>
+        <%-- display history --%>
+        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+          <tr class="title">
+            <td colspan="4">
+              <strong>Ticket Log History</strong>
+            </td>     
+          </tr>
+        <%  
+            Iterator hist = TicketDetails.getHistory().iterator();
+            if (hist.hasNext()) {
+              while (hist.hasNext()) {
+                TicketLog thisEntry = (TicketLog)hist.next();
+        %>    
+        <% if (thisEntry.getSystemMessage() == true) {%>
+          <tr bgColor="#F1F0E0">
+        <% } else { %>
+          <tr class="containerBody">
+        <%}%>
+            <td nowrap valign="top" class="formLabel">
+              <%= toHtml(thisEntry.getEnteredByName()) %>
+            </td>
+            <td nowrap valign="top">
+              <%= thisEntry.getEnteredString() %>
+            </td>
+            <td valign="top" width="100%">
+              <%= toHtml(thisEntry.getEntryText()) %>
+            </td>
+          </tr>
+        <%    
+            }
+          } else {
+        %>
+          <tr class="containerBody">
+            <td>
+              <font color="#9E9E9E" colspan="3">No Log Entries.</font>
+            </td>
+          </tr>
+        <%}%>
+       <%-- ticket container end --%>
       </table>
     </td>
   </tr>

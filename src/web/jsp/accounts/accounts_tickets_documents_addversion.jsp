@@ -16,7 +16,7 @@ Add Version<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%=toHtml(TicketDetails.getCompanyName())%> - Ticket # <%=TicketDetails.getPaddedId()%></strong>
+      <strong><%=toHtml(TicketDetails.getCompanyName())%></strong>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -28,34 +28,23 @@ Add Version<br>
   </tr>
   <tr>
   	<td class="containerBack">
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="containerMenu">
-          <td>
-            <%-- submenu for tickets --%>
-            <% String param2 = "id=" + TicketDetails.getId(); %>
-            <dhv:container name="accountstickets" selected="history" param="<%= param2 %>"/>
-            <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-            <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
-            </dhv:evaluate>
-         </td>
-        </tr>
-        <tr>
-          <td>
-              <%-- include add version form --%>
-              <%@ include file="../troubletickets/documents_addversion_include.jsp" %>
-              <p align="center">
-                    * Large files may take a while to upload.<br>
-                    Wait for file completion message when upload is complete.
-              </p>
-              <input type="submit" value=" Upload " name="upload">
-              <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>';">
-              <input type="hidden" name="dosubmit" value="true">
-              <input type="hidden" name="id" value="<%= TicketDetails.getId() %>">
-              <input type="hidden" name="fid" value="<%= FileItem.getId() %>">
-          </td>
-         </tr>
-        <%-- ticket container end --%>
-      </table>
+      <% String param2 = "id=" + TicketDetails.getId(); %>
+      <strong>Ticket # <%=TicketDetails.getPaddedId()%>:</strong>&nbsp;[ <dhv:container name="accountstickets" selected="documents" param="<%= param2 %>"/> ]
+      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
+      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
+      </dhv:evaluate>
+      <br><br>
+      <%-- include add version form --%>
+      <%@ include file="../troubletickets/documents_addversion_include.jsp" %>
+      <p align="center">
+            * Large files may take a while to upload.<br>
+            Wait for file completion message when upload is complete.
+      </p>
+      <input type="submit" value=" Upload " name="upload">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>';">
+      <input type="hidden" name="dosubmit" value="true">
+      <input type="hidden" name="id" value="<%= TicketDetails.getId() %>">
+      <input type="hidden" name="fid" value="<%= FileItem.getId() %>">
     </td>
   </tr>
   <%-- account container end --%>

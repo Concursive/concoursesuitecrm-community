@@ -1,6 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
+<jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="document.inputForm.subject.focus();">
 <a href="Accounts.do">Account Management</a> > 
@@ -14,7 +15,7 @@ Modify Document<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%=toHtml(TicketDetails.getCompanyName())%> - Ticket # <%=TicketDetails.getPaddedId()%></strong>
+      <strong><%=toHtml(TicketDetails.getCompanyName())%></strong>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -26,30 +27,24 @@ Modify Document<br>
   </tr>
   <tr>
   	<td class="containerBack">
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="containerMenu">
-          <td>
-            <%-- submenu for tickets --%>
-            <% String param2 = "id=" + TicketDetails.getId(); %>
-            <dhv:container name="accountstickets" selected="history" param="<%= param2 %>"/>
-            <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-            <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
-            </dhv:evaluate>
-         </td>
-        </tr>
-        <tr>
-          <td>
-          <form method="post" name="inputForm" action="TroubleTicketsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
-          <%-- include modify form --%>
-          <%@ include file="../troubletickets/documents_modify_include.jsp" %>
-          </form>
-          </td>
-         </tr>
-        <%-- ticket container end --%>
-      </table>
+      <% String param2 = "id=" + TicketDetails.getId(); %>
+      <strong>Ticket # <%=TicketDetails.getPaddedId()%>:</strong>&nbsp;[ <dhv:container name="accountstickets" selected="documents" param="<%= param2 %>"/> ]
+      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
+      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
+      </dhv:evaluate>
+      <br><br>
+      <form method="post" name="inputForm" action="AccountTicketsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
+      <%-- include modify form --%>
+      <%@ include file="../troubletickets/documents_modify_include.jsp" %>
+      &nbsp;<br>
+  <input type="submit" value=" Update " name="update">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>';">
+  <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="tId" value="<%= TicketDetails.getId() %>">
+	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
+      </form>
     </td>
   </tr>
   <%-- account container end --%>
 </table>
-</form>
 </body>
