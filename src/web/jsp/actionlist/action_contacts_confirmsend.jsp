@@ -6,13 +6,15 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td>
-      Your message is in the queue to be sent to the following: 
+      Your message has been queued and will be sent to the following contacts:
     </td>
   </tr>
   <tr class="row2">
     <td>
-      <%= Recipient.getNameLastFirst() %> at <%= Recipient.getEmailAddress("Business") %>
+      <%= Recipient.getNameLastFirst() %> (<%= Recipient.getEmailAddress("Business") %>)
     </td>
   </tr>
 </table>
+<p>
+<input type="button" value="Close" onClick="javascript:window.close()">
 </body>
