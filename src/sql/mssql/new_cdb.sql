@@ -39,7 +39,7 @@ CREATE TABLE lookup_industry (
 );
 
 CREATE TABLE access_log (
-  id INT IDENTITY(0,0) PRIMARY KEY,
+  id INT IDENTITY(0,1) PRIMARY KEY,
   user_id INT NOT NULL REFERENCES access(user_id),
   username VARCHAR(80) NOT NULL,
   ip VARCHAR(15),
