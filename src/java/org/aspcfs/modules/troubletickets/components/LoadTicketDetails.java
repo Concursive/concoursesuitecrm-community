@@ -45,7 +45,7 @@ public class LoadTicketDetails extends ObjectHookComponent implements ComponentI
   public final static String SUBCATEGORY3_LOOKUP = "ticketSubCategory3Lookup";
   public final static String SEVERITY_LOOKUP = "ticketSeverityLookup";
   public final static String PRIORITY_LOOKUP = "ticketPriorityLookup";
-  public final static String ENTERED_BY_CONTACT = "ticketModifiedByContact";
+  public final static String ENTERED_BY_CONTACT = "ticketEnteredByContact";
   public final static String MODIFIED_BY_CONTACT = "ticketModifiedByContact";
 
 
