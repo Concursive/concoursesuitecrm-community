@@ -1,6 +1,8 @@
 package com.darkhorseventures.utils;
 
 import java.sql.*;
+import java.text.*;
+import java.util.*;
 
 /**
  *  Database server specific sql
@@ -120,5 +122,52 @@ public class DatabaseUtils {
     return id;
   }
 
+  public static java.sql.Date parseDate(String tmp) {
+    java.sql.Date dateValue = null;
+    try {
+      java.util.Date tmpDate = DateFormat.getDateInstance(DateFormat.SHORT).parse(tmp);
+      dateValue = new java.sql.Date(new java.util.Date().getTime());
+      dateValue.setTime(tmpDate.getTime());
+      return dateValue;
+    } catch (Exception e) {
+      try {
+        return java.sql.Date.valueOf(tmp);
+      } catch (Exception e2) {
+      }
+    }
+    return null;
+  }
+  
+  public static java.sql.Timestamp parseTimestamp(String tmp) {
+    java.sql.Timestamp timestampValue = null;
+    try {
+      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.LONG).parse(tmp);
+      timestampValue = new java.sql.Timestamp(new java.util.Date().getTime());
+      timestampValue.setTime(tmpDate.getTime());
+      return timestampValue;
+    } catch (Exception e) {
+      try {
+        return java.sql.Timestamp.valueOf(tmp);
+      } catch (Exception e2) {
+      }
+    }
+    return null;
+  }
+  
+  public static int getInt(ResultSet rs, String column) throws SQLException {
+    int fieldValue = rs.getInt(column);
+    if (rs.wasNull()) {
+      fieldValue = -1;
+    }
+    return fieldValue;
+  }
+  
+  public static void setInt(PreparedStatement pst, int paramCount, int value) throws SQLException {
+    if (value == -1) {
+      pst.setNull(paramCount, java.sql.Types.INTEGER);
+    } else {
+      pst.setInt(paramCount, value);
+    }
+  }
 }
 
