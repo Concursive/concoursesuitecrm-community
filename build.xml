@@ -624,6 +624,8 @@
     <!-- Copy the database files (Common) -->
     <copy file="${src.sql.dir}/upgrade/2004-06-15.bsh" 
           todir="${dist.dir}/cfs/WEB-INF/setup"/>
+    <copy file="${src.sql.dir}/init/help.xml" 
+          todir="${dist.dir}/cfs/WEB-INF/setup"/>
     <!-- Copy and compile the reports -->
     <mkdir dir="${dist.dir}/cfs/WEB-INF/reports"/>
     <copy todir="${dist.dir}/cfs/WEB-INF/reports">
