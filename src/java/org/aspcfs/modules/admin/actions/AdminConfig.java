@@ -225,8 +225,8 @@ public final class AdminConfig extends CFSModule {
               return "LicenseCheckERROR";
             }
             StringUtils.saveText(context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt", updatedLicense);
-            //TODO: Reset the APP_TEXT
-            
+            context.getServletContext().setAttribute("APP_TEXT", XMLUtils.getNodeText(xml2.getFirstChild("edition")));
+            context.getServletContext().setAttribute("APP_SIZE", String.valueOf(XMLUtils.getNodeText(xml2.getFirstChild("text2")).length()));
             return "LicenseUpdatedOK";
           }
         }

@@ -269,6 +269,7 @@ public class ApplicationPrefs {
     //Verify the license
     if (this.has("FILELIBRARY")) {
       String edition = null;
+      String crc = null;
       try {
         File zlib = new File(this.get("FILELIBRARY") + "init" + fs + "zlib.jar");
         File input = new File(this.get("FILELIBRARY") + "init" + fs + "input.txt");
@@ -278,9 +279,10 @@ public class ApplicationPrefs {
           org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText(this.get("FILELIBRARY") + "init" + fs + "input.txt")));
           //The edition will be shown
           edition = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("edition"));
+          crc = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
           if (edition != null) {
             context.setAttribute("APP_TEXT", edition);
-            context.setAttribute("APP_SIZE", "5");
+            context.setAttribute("APP_SIZE", String.valueOf(crc.length()));
           }
           //The licensed organization will be shown
           String organization = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("company"));
