@@ -1051,6 +1051,21 @@
     <forward name="DeleteFieldERROR" resource="/AdminFieldsGroup.do?command=ListGroups"/>
     <forward name="MoveFieldOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
   </action>
+  <action name="AdminCategories" class="org.aspcfs.modules.admin.actions.AdminCategories">
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/admin/admin_viewcategories.jsp" layout="nav"/>
+    <forward name="ViewActiveOK" resource="/admin/admin_view_activecategories.jsp" layout="nav"/>
+    <forward name="CategoryJSListOK" resource="/admin/admin_js_categorylist.jsp"/>
+    <forward name="ActiveCategoryJSListOK" resource="/admin/admin_js_activecategorylist.jsp"/>
+    <forward name="ModifyOK" resource="/admin/admin_modifycategory.jsp" layout="style"/>
+    <forward name="SaveOK" resource="/admin/admin_savecategory.jsp"/>
+    <forward name="ConfirmSaveOK" resource="/dialog.jsp"/>
+    <forward name="ResetOK" resource="/AdminCategories.do?command=View"/>
+    <forward name="ActivateOK" resource="/AdminCategories.do?command=ViewActive"/>
+  </action>
+  
   <action name="Users" class="org.aspcfs.modules.admin.actions.Users">
     <bean name="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request" />
     <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
