@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.utils.web.*,org.aspcfs.modules.contacts.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.utils.web.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -37,12 +37,12 @@
       message += "- Check that Alert Date is entered correctly\r\n";
       formTest = false;
     }
-    <dhv:include name="organization.contractEndDate" none="true">
+  <dhv:include name="organization.contractEndDate" none="true">
     if ((!form.contractEndDate.value == "") && (!checkDate(form.contractEndDate.value))) { 
       message += "- Check that Contract End Date is entered correctly\r\n";
       formTest = false;
     }
-    </dhv:include>
+  </dhv:include>
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
       message += "- Please specify an alert date\r\n";
       formTest = false;
@@ -51,24 +51,28 @@
       message += "- Please specify an alert description\r\n";
       formTest = false;
     }
+  <dhv:include name="organization.phoneNumbers" none="true">
     if ((!checkPhone(form.phone1number.value)) || (!checkPhone(form.phone2number.value))) { 
       message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
       formTest = false;
     }
-    if ((!checkEmail(form.email1address.value)) || (!checkPhone(form.email2address.value))) { 
+  </dhv:include>
+  <dhv:include name="organization.emailAddresses" none="true">
+    if ((!checkEmail(form.email1address.value)) || (!checkEmail(form.email2address.value))) { 
       message += "- At least one entered email address is invalid.  Make sure there are no invalid characters\r\n";
       formTest = false;
     }
+  </dhv:include>
     if (!checkURL(form.url.value)) { 
       message += "- URL entered is invalid.  Make sure there are no invalid characters\r\n";
       formTest = false;
     }
-    <dhv:include name="organization.revenue" none="true">
+  <dhv:include name="organization.revenue" none="true">
     if (!checkNumber(form.revenue.value)) { 
       message += "- Revenue entered is invalid\r\n";
       formTest = false;
     }
-    </dhv:include>
+  </dhv:include>
     if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
       alertMessage += "Alert Date is before today's date\r\n";
     }
@@ -285,7 +289,7 @@ Add Account
       Last Name
     </td>
     <td>
-      <input onFocus="if (orgSelected == 1) { tabNext(this) }" type=text size=35 name="nameLast" value="<%= toHtmlValue(OrgDetails.getNameLast()) %>"><font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
+      <input onFocus="if (orgSelected == 1) { tabNext(this) }" type="text" size="35" name="nameLast" value="<%= toHtmlValue(OrgDetails.getNameLast()) %>"><font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>  
   <tr>
@@ -293,7 +297,7 @@ Add Account
       <dhv:label name="organization.accountNumber">Account Number</dhv:label>
     </td>
     <td>
-      <input type="text" size="50" name="accountNumber" maxlength=50 value="<%= OrgDetails.getAccountNumber() != null ? OrgDetails.getAccountNumber() : ""%>">
+      <input type="text" size="50" name="accountNumber" maxlength="50" value="<%= toHtmlValue(OrgDetails.getAccountNumber()) %>">
     </td>
   </tr>
   <tr>
@@ -350,7 +354,7 @@ Add Account
       Contract End Date
     </td>
     <td>
-      <input type="text" size="10" name="contractEndDate" value="<%= toHtmlValue(OrgDetails.getContractEndDateString()) %>">
+      <input type="text" size="10" name="contractEndDate" value="<dhv:tz timestamp="<%= OrgDetails.getContractEndDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
       <a href="javascript:popCalendar('addAccount', 'contractEndDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
     </td>
   </tr>
@@ -360,7 +364,7 @@ Add Account
       Alert Description
     </td>
     <td>
-      <input type="text" size="50" name="alertText" value="<%= toHtmlValue(OrgDetails.getAlertText()) %>"><br>
+      <input type="text" size="50" name="alertText" value="<%= toHtmlValue(OrgDetails.getAlertText()) %>">
     </td>
   </tr>
    <tr>
@@ -368,21 +372,23 @@ Add Account
       Alert Date
     </td>
     <td>
-      <input type="text" size="10" name="alertDate" value="<%= toHtmlValue(OrgDetails.getAlertDateString()) %>">
+      <input type="text" size="10" name="alertDate" value="<dhv:tz timestamp="<%= OrgDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
       <a href="javascript:popCalendar('addAccount', 'alertDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
     </td>
   </tr>
 </table>
-&nbsp;<br>
+<br>
+<%
+  boolean noneSelected = false;
+%>
+<dhv:include name="organization.phoneNumbers" none="true">
+<%-- Phone Numbers --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
 	    <strong>Phone Numbers</strong>
 	  </th>
   </tr>
-<%
-  boolean noneSelected = false;
-%>
   <dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() == null) %>">    
 <%  
   int icount = 0;
@@ -460,7 +466,7 @@ Add Account
    }
 %>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= noneSelected %>">
+<dhv:evaluate if="<%= noneSelected %>">
   <tr>
     <td class="formLabel">
       Phone 1
@@ -477,24 +483,25 @@ Add Account
     </td>
     <td>
       <%= OrgPhoneTypeList.getHtmlSelect("phone2type", "Fax") %>
-      <input type="text" size="20" name="phone2number">&nbsp;ext.
-      <input type="text" size="5" name="phone2ext" maxlength="10">
+      <input type="text" size="20" name="phone2number" />&nbsp;ext.
+      <input type="text" size="5" name="phone2ext" maxlength="10" />
     </td>
   </tr>
 </dhv:evaluate>
 </table>
-&nbsp;<br>  
+<br />
+</dhv:include>
+<dhv:include name="organization.addresses" none="true">
+<%-- Addresses --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
       <strong>Addresses</strong>
     </th>
   </tr>
-  
   <%
     noneSelected = false;
   %>
-  
   <dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() == null) %>">  
 <%  
   int acount = 0;
@@ -836,7 +843,7 @@ Add Account
   }
 %>
   </dhv:evaluate>
-<dhv:evaluate exp="<%= noneSelected %>">  
+<dhv:evaluate if="<%= noneSelected %>">
   <tr>
     <td class="formLabel">
       Type
@@ -982,7 +989,10 @@ Add Account
   </tr>
  </dhv:evaluate>
 </table>
-&nbsp;<br>  
+<br />
+</dhv:include>
+<dhv:include name="organization.emailAddresses" none="true">
+<%-- Email Addresses --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -1068,7 +1078,6 @@ Add Account
   }
 %>
 </dhv:evaluate>
-
 <dhv:evaluate exp="<%= noneSelected %>">
   <tr>
     <td class="formLabel">
@@ -1090,7 +1099,8 @@ Add Account
   </tr>
   </dhv:evaluate>
 </table>
-&nbsp;<br>
+<br>
+</dhv:include>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -1102,11 +1112,16 @@ Add Account
     <td><TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(OrgDetails.getNotes()) %></TEXTAREA></td>
   </tr>
 </table>
-<br>
-<input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
-<input type="hidden" name="dosubmit" value="true">
+<br />
+Where do you want to go after this action is complete?<br />
+<input type="radio" name="target" value="return" <%= request.getParameter("target") == null || "return".equals(request.getParameter("target")) ? " checked" : "" %> /> View this account's details<br />
+<%--<input type="radio" name="target" value="loop" <%= "loop".equals(request.getParameter("target")) ? " checked" : "" %> /> Add another account&nbsp;<br />--%>
+<input type="radio" name="target" value="add_contact" <%= "add_contact".equals(request.getParameter("target")) ? " checked" : "" %> /> Add a contact to this account<br />
+<br />
+<input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';" />
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';" />
+<input type="reset" value="Reset" />
+<input type="hidden" name="dosubmit" value="true" />
 </form>
 </body>
 
