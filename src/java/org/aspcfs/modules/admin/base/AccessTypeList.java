@@ -28,7 +28,7 @@ public class AccessTypeList extends LookupList {
    *Constructor for the AccessTypeList object
    *
    *@param  db                Description of the Parameter
-   *@param  linkModuleId        Description of the Parameter
+   *@param  linkModuleId      Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public AccessTypeList(Connection db, int linkModuleId) throws SQLException {
@@ -39,8 +39,9 @@ public class AccessTypeList extends LookupList {
   /**
    *  Description of the Method
    *
-   *@param  db          Description of the Parameter
-   *@param  linkModuleId  Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@param  linkModuleId      Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int linkModuleId) throws SQLException {
     this.linkModuleId = linkModuleId;
@@ -227,6 +228,24 @@ public class AccessTypeList extends LookupList {
     while (i.hasNext()) {
       AccessType thisType = (AccessType) i.next();
       if (thisType.getDefaultItem()) {
+        return thisType.getCode();
+      }
+    }
+    return -1;
+  }
+
+
+  /**
+   *  Gets the code for a specified rule in a access list
+   *
+   *@param  ruleId  Description of the Parameter
+   *@return         The code value
+   */
+  public int getCode(int ruleId) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      AccessType thisType = (AccessType) i.next();
+      if (thisType.getRuleId() == ruleId) {
         return thisType.getCode();
       }
     }

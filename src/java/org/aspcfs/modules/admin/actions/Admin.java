@@ -351,6 +351,11 @@ public final class Admin extends CFSModule {
           thisElement.setNewOrder(db, tblName);
         }
       }
+      
+      //invalidate the cache for this list
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      systemStatus.removeLookup(tblName);
+      
     } catch (Exception e) {
       errorMessage = e;
     } finally {
