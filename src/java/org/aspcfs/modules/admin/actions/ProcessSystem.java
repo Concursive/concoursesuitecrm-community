@@ -25,24 +25,16 @@ import org.jcrontab.data.CrontabEntryDAO;
 public final class ProcessSystem extends CFSModule {
 
   /**
-   *  For every cached system, the preferences are rebuilt
+   *  For every cached system, the preferences are reloaded
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandReloadSystemPrefs(ActionContext context) {
-    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     Iterator i = this.getSystemIterator(context);
     while (i.hasNext()) {
       SystemStatus systemStatus = (SystemStatus) i.next();
-      Connection db = null;
-      try {
-        db = sqlDriver.getConnection(systemStatus.getConnectionElement());
-        systemStatus.buildPreferences(db);
-      } catch (SQLException e) {
-      } finally {
-        sqlDriver.free(db);
-      }
+      systemStatus.buildPreferences();
     }
     return "ProcessOK";
   }
