@@ -78,13 +78,17 @@ Replaceable parameter   typical value / description
       <param-value>2</param-value>
     </init-param>
     <init-param>
+      <param-name>ForceSSL</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
       <param-name>SiteCode</param-name>
       <param-value>ds21</param-value>
     </init-param>
     <!-- Gatekeeper configuration -->
     <init-param>
       <param-name>GKHOST</param-name>
-      <param-value>jdbc:postgresql://216.54.81.101:5432/cfs2gk</param-value>
+      <param-value>jdbc:postgresql://127.0.0.1:5432/cfs2gk</param-value>
     </init-param>
     <init-param>
       <param-name>GKUSER</param-name>

@@ -10,103 +10,131 @@
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
 %>
 <html>
-<HEAD>
-<title>Customer Facing Systems Login</title>
-<STYLE TYPE="text/css">
-<!--
-H1 {
-      font-weight: bold;
-      font-size: 18pt;
-      line-height: 18pt;
-      font-family: arial,helvetica,sans-serif;
-      font-variant: normal;
-      font-style: normal;
-  }
-table, body, p,td,li{font-family:arial,helvetica,sans-serif;font-size=10pt;}
-th{font-family:arial,helvetica,sans-serif;font-size=10pt; background-color:#3366cc; color:#ffffff;}
-
-.th2{font-family:arial,helvetica,sans-serif;font-size=12pt; background-color:#8888ff; color:#ffffff;}
-
-.flat{border:0;background-color:#cccccc;color:#000066;}
-.flat2{border:0;background-color:#ffffee;color:#000066;}
--->
-</STYLE>
-</HEAD>
-<SCRIPT language="JavaScript">
+<head>
+<title>Dark Horse Ventures L.L.C. ASPCFS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+<script language="JavaScript">
   function focusForm(form) {
       form.username.focus();
       return false;
   }
-</SCRIPT>
-<body bgcolor="white" onLoad="<%
+</script>
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onLoad="<%
   if (LoginBean.getUsername().equals("")) {
     out.println("document.login.username.focus()");
   } else {
     out.println("document.login.password.focus()");
   }
 %>">
-<!-- XX MAIN HEADER -->
-<table width=98% align=center cellspacing=0 cellpadding=0 border=0>
-	<tr rowspan=3>
-    <!-- LOGO COLUMN -->
-    <td valign=center width=150 align=center bgcolor="#eeeeee">
-      <a href="./main.html"><img src="images/horsetry.gif" width="70" height="88" border=0></a>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+  <tr>
+    <td height="10%" valign="top"> 
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td rowspan="3" valign="top"><img src="images/dhv.gif" width="339" height="106"></td>
+          <td width="61%"><img src="images/spaceb1.gif" width="100%" height="65"></td>
+          <td width="39%" background="images/spaceb1.gif"><img src="images/keys.gif" width="445" height="65"></td>
+        </tr>
+        <tr> 
+          <td width="61%"><img src="images/spaceb2.gif" width="100%" height="30"></td>
+          <td width="39%" background="images/spaceb2.gif"><img src="images/textspace.gif" width="18" height="30"><img src="images/textspace.gif" width="18" height="30"><img src="images/textspace.gif" width="18" height="30"><img src="images/textspace.gif" width="18" height="30"><img src="images/textspace.gif" width="18" height="30"><img src="images/textspace.gif" width="18" height="30"></td>
+        </tr>
+        <tr> 
+          <td width="61%"><img src="images/spaceg1.gif" width="100%" height="11"></td>
+          <td width="39%"><img src="images/green.gif" width="446" height="11"></td>
+        </tr>
+      </table>
     </td>
-    <td valign=bottom align=left width=60%>
-      &nbsp;&nbsp;<H1>&nbsp;Login</H1>
+  </tr>
+  <tr valign="top"> 
+    <td height="85%"> 
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td width="9%" height="26"><img src="images/sidespace.gif" width="97" height="1"></td>
+          <td width="1%" height="26">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="9%">&nbsp;</td>
+          <td width="1%">&nbsp;</td>
+          <td width="15%" valign="top">&nbsp;</td>
+          <td width="30%">&nbsp;</td>
+        </tr>
+        <tr> 
+          <form name="login" method="POST" action="Login.do?command=Login&auto-populate=true">
+            <table width="100%" align="left" cellspacing="1" cellpadding="3" border="0">
+              <tr>
+                <td valign="center" colspan="4">&nbsp;</td>
+              </tr>
+              <tr>
+                <td align="center" valign="center" colspan="4">
+                  <font face="Arial, Helvetica, sans-serif" size="2"><strong>ASPCFS <%= ("https".equals(request.getScheme())?"Secure ":"") %>Login</strong></font>
+                </td>
+              </tr>
+<%
+  String scheme = request.getScheme();
+  if ("true".equals((String)getServletConfig().getServletContext().getAttribute("ForceSSL")) && 
+     scheme.equals("http")) {
+%>              
+              <tr> 
+                <td align="center" colspan="4">
+                  <font face="Arial, Helvetica, sans-serif" size="2">This site is configured for secure connections only</font><br>
+                  <font face="Arial, Helvetica, sans-serif" size="2"><a href="https://<%= request.getServerName() %>">Go to Secure Login</a></font>
+                </td>
+              </tr>
+<%} else {%>
+              <tr>
+                <td valign="center" colspan="4">&nbsp;</td>
+              </tr>
+              <tr>
+                <td width="33%">&nbsp;</td>
+                <td valign="top" align="right" width="100">
+                  <font face="Arial, Helvetica, sans-serif" size="2">Username:</font>
+                </td>
+                <td valign="top" align="left" width="200">
+                  <font face="Arial, Helvetica, sans-serif" size="2"><input type="text" name="username" value="<%= LoginBean.getUsername() %>" size="20">&nbsp;<font color='red'><%= LoginBean.getMessage() %></font></font>
+                </td>
+                <td width="33%">&nbsp;</td>
+              </tr>
+              <tr>
+                <td width="33%">&nbsp;</td>
+                <td valign="top" align="right" width="100">
+                  <font face="Arial, Helvetica, sans-serif" size="2">Password:</font>
+                </td>
+                <td valign="top" align="left" width="200">
+                  <font face="Arial, Helvetica, sans-serif" size="2"><input type="password" name="password" size="20"></font>
+                </td>
+                <td width="33%">&nbsp;</td>
+              </tr>
+              <tr>
+                <td width="23%">&nbsp;</td>
+                <td valign="center" align="right" width="100">&nbsp;</td>
+                <td valign="center" align="left">
+                  <input type="submit" value="Login" name="action">
+                  <input type="submit" value="Clear" name="action">
+                </td>
+                <td width="43%">&nbsp;</td>
+              </tr>
+<%}%>
+            </table>
+          </form>
+        </tr>
+      </table>
     </td>
-    <td valign=bottom align=right>
-      <a href="/login.html?action=Logout" style="background-color:#ffffff;"></a>&nbsp;&nbsp;<p>
+  </tr>
+  <tr> 
+    <td height="5%" valign="bottom"> 
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="33%"><img src="images/bottom.gif" width="339" height="35"></td>
+          <td width="34%"><img src="images/bottomspace.gif" width="100%" height="35"></td>
+          <td width="33%"><div align="right"><img src="images/bottomcopyright.gif" width="339" height="35"></div></td>
+        </tr>
+      </table>
     </td>
-	</tr>
-</table>
-<!-- XX BAR -->
-<table width=98% align=center cellspacing=0 cellpadding=0 border=0>
-  <tr bgcolor="#000066">
-    <td align=right valign=center><font color=white><%= getLongDate(new java.util.Date()) %></font>&nbsp;</td>
   </tr>
 </table>
-<!-- END BAR -->
-<table width=98% align=center cellspacing=1 cellpadding=0 border=0>
-<form name="login" method="POST" action="Login.do?command=Login&auto-populate=true">
-	<tr rowspan=2>
-    <td width=150 valign=top bgcolor="#eeeeee">&nbsp;
-  </td>
-	<td valign=center>
-    <table width=100% align=left cellspacing=1 cellpadding=3 border=0>
-      <tr>
-        <td valign=center>&nbsp;</td><td valign=center>&nbsp;</td></tr>
-      <tr>
-        <td valign=center align=right width="100">
-          Username:
-        </td>
-        <td valign=center align=left>
-          <input type="text" name="username" value = "<%= LoginBean.getUsername() %>" size="20">&nbsp;<font color='red'><%= LoginBean.getMessage() %></font>
-        </td>
-      </tr>
-      <tr>
-        <td valign=center align=right width="100">
-          Password:
-        </td>
-        <td valign=center align=left>
-          <input type="password" name="password" size="20">
-        </td>
-      </tr>
-      <tr>
-        <td valign=center align=right width="100">
-        </td>
-        <td valign=center align=left>
-          <input type="submit" value="Login" name="action">
-          <input type="submit" value="Clear" name="action">
-        </td>
-      </tr>
-    </table>
-	</td>
-  </tr>
-</form>
-</table>
-
 </body>
-
 </html>
+
 

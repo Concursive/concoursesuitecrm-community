@@ -44,6 +44,13 @@ public class SecurityHook implements ControllerHook {
       request.setAttribute("LoginBean", failedSession);
       return "SecurityCheck";
     } else {
+      if ("true".equals((String)servlet.getServletConfig().getServletContext().getAttribute("ForceSSL")) &&
+        "http".equals(request.getScheme())) {
+        LoginBean failedSession = new LoginBean();
+        failedSession.setMessage("* A secure connection is required");
+        return "SecurityCheck";
+      }
+      
       if (userSession != null) {
         request.setAttribute("moduleAction", action);
         ConnectionElement ce = (ConnectionElement)request.getSession().getAttribute("ConnectionElement");

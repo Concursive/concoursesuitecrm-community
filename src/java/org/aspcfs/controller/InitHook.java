@@ -48,6 +48,14 @@ public class InitHook implements ControllerInitHook {
       config.getServletContext().setAttribute("GKUSERPW", config.getInitParameter("GKUSERPW"));
     }
     
+    if (config.getInitParameter("ForceSSL") != null) {
+      if ("true".equals(config.getInitParameter("ForceSSL"))) {
+        config.getServletContext().setAttribute("ForceSSL", "true");
+      } else {
+        config.getServletContext().setAttribute("ForceSSL", "false");
+      }
+    }
+    
     if (config.getInitParameter("GlobalPWInfo") != null) {
       config.getServletContext().setAttribute("GlobalPWInfo", config.getInitParameter("GlobalPWInfo"));
     } else {
