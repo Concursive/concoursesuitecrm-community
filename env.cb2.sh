@@ -5,7 +5,7 @@
 # Common shell environment settings
 #
 export CFS_HOME=/usr/local/cfs2
-export JAVA_HOME=/usr/local/java/jdk1.3.1_01
+export JAVA_HOME=/usr/local/java/jdk1.3.1_02
 export APACHE_HOME=/etc/httpd
 export TOMCAT_HOME=/usr/local/java/jakarta-tomcat-3.2.3
 export ANT_HOME=/usr/local/java/jakarta-ant-1.4
