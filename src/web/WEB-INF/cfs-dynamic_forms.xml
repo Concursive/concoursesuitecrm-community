@@ -22,7 +22,7 @@
         </column>
       </row>
       <row class="containerBody">
-       <column valign="top"  class="formLabel" width="80" nowrap="true">
+       <column valign="top" class="formLabel" width="80" nowrap="true">
           <field display="Description" type="label" width="80" isStatic="yes"/>
        </column>
         <column valign="top" class="formLabel" align="left">
@@ -34,7 +34,8 @@
           <field display="Introduction text" type="label" width="80" isStatic="yes"/>
         </column>
         <column width="80" valign="top" class="formLabel" align="left">
-          <field name="intro" display="Introduction text" type="textarea" parameters="rows=6^columns=40"/>
+          <field display="This is the text the user sees first when they click on the link to take a survey:" type="label" isStatic="yes"/>
+          <field name="intro" display="Introduction text" type="htmlarea" parameters="rows=6^columns=40"/>
         </column>
       </row>
       <row class="containerBody">
@@ -42,7 +43,8 @@
           <field display="Thank You Text" type="label" width="80" isStatic="yes"/>
        </column>
         <column valign="top" class="formLabel" align="left">
-          <field name="outro" type="textarea" parameters="rows=6^columns=40"/>
+          <field display="This is the text the user sees after they have submitted a survey:/&amp;lt;br/&amp;gt;" type="label" isStatic="yes"/>
+          <field name="outro" type="htmlarea" parameters="rows=6^columns=40"/>
       </column>
       </row>
       <row type="hidden">
@@ -57,7 +59,7 @@
     <tab id="1" name="Page 2"
          returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;Communications Manager&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true');&quot;&gt;Survey Details&lt;/a&gt; &gt; Survey Questions  &lt;hr color=&quot;#BFBFBB&quot; noshade&gt;">
       <buttonGroup>
-        <button type="2" name="prev" display="&lt; Back"      onclick="javascript:this.form.clickFrom.value='back';this.form.action='CampaignManagerSurvey.do?command=Add&amp;auto-populate=true'"/>
+        <button type="2" name="prev" display="&lt; Back" onclick="javascript:this.form.clickFrom.value='back';this.form.action='CampaignManagerSurvey.do?command=Add&amp;auto-populate=true'"/>
         <button type="2" display="Next &gt;" enabled="no"/>
         <button type="2" display="Done" onclick="this.form.action='CampaignManagerSurvey.do?command=Details&amp;auto-populate=true'"/>
       </buttonGroup>
