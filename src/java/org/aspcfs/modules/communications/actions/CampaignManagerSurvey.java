@@ -482,7 +482,9 @@ public final class CampaignManagerSurvey extends CFSModule {
       if (recordInserted || recordsModified > 0) {
         context.getRequest().setAttribute("SurveyDetails", newSurvey);
       } else {
-        System.out.println("CmapaignManagerSurvey -- > Insert Errors " + newSurvey.getErrors());
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("CampaignManagerSurvey -- > Insert Errors " + newSurvey.getErrors());
+        }
         processErrors(context, newSurvey.getErrors());
       }
     } catch (SQLException e) {
