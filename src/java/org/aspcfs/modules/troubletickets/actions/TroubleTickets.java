@@ -79,6 +79,9 @@ public final class TroubleTickets extends CFSModule {
     }
     if (errorCode == 0) {
       addModuleBean(context, "AddTicket", "Ticket Add");
+      if (context.getRequest().getParameter("actionSource") != null) {
+        return "AddTicketOK";
+      }
       return ("AddOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -851,7 +854,7 @@ public final class TroubleTickets extends CFSModule {
         processInsertHook(context, newTic);
       } else {
         processErrors(context, newTic.getErrors());
-        if(newTic.getOrgId() != -1){
+        if (newTic.getOrgId() != -1) {
           Organization thisOrg = new Organization(db, newTic.getOrgId());
           newTic.setCompanyName(thisOrg.getName());
         }
@@ -865,6 +868,9 @@ public final class TroubleTickets extends CFSModule {
     if (errorMessage == null) {
       addModuleBean(context, "ViewTickets", "Ticket Insert ok");
       if (recordInserted) {
+        if (context.getRequest().getParameter("actionSource") != null) {
+          return "InsertTicketOK";
+        }
         return ("InsertOK");
       } else {
         return (executeCommandAdd(context));
@@ -1034,6 +1040,55 @@ public final class TroubleTickets extends CFSModule {
   /**
    *  Description of the Method
    *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandConfirmDelete(ActionContext context) {
+    if (!(hasPermission(context, "tickets-tickets-delete"))) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+    Ticket ticket = null;
+    String id = context.getRequest().getParameter("id");
+    String contactId = context.getRequest().getParameter("contactId");
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      Contact thisContact = new Contact(db, contactId);
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return "PermissionError";
+      }
+      ticket = new Ticket(db, Integer.parseInt(id));
+      DependencyList dependencies = ticket.processDependencies(db);
+      htmlDialog.setTitle("CFS: Confirm Delete");
+      if (dependencies.size() == 0) {
+        htmlDialog.setShowAndConfirm(false);
+        htmlDialog.setDeleteUrl("javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+      } else {
+        htmlDialog.addMessage(dependencies.getHtmlString());
+        htmlDialog.setHeader("This object has the following dependencies within CFS:");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    */
@@ -1068,6 +1123,7 @@ public final class TroubleTickets extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
         deleteRecentItem(context, thisTic);
+        context.getRequest().setAttribute("refreshUrl", "TroubleTickets.do?command=Home" + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
         return ("DeleteOK");
       } else {
         return (executeCommandHome(context));
