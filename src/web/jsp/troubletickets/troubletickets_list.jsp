@@ -204,25 +204,25 @@ View Tickets<br>
       rowid = (rowid != 1?1:2);
       Ticket thisTic = (Ticket)j.next();
 %>   
-	<tr>
+	<tr class="row<%= rowid %>">
 	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
-    <td rowspan="2" width="8" valign="top" nowrap class="row<%= rowid %>">
+    <td rowspan="2" width="8" valign="top" nowrap>
       <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= thisTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('TroubleTickets.do?command=Delete&id=<%= thisTic.getId() %>');">Del</a></dhv:permission>
     </td>
     	</dhv:permission>
-		<td width="50" valign="top" nowrap class="row<%= rowid %>">
+		<td width="15" valign="top" nowrap>
 			<a href="TroubleTickets.do?command=Details&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
 		</td>
-		<td width="10" valign="top" nowrap class="row<%= rowid %>">
+		<td width="10" valign="top" nowrap>
 			<%= toHtml(thisTic.getPriorityName()) %>
 		</td>
-		<td width="30" align="right" valign="top" nowrap class="row<%= rowid %>">
+		<td width="8%" align="right" valign="top" nowrap>
 			<%= thisTic.getAgeOf() %>
 		</td>
-		<td width="90%" valign="top" class="row<%= rowid %>">
+		<td width="90%" valign="top">
 			<%= toHtml(thisTic.getCompanyName()) %><dhv:evaluate exp="<%= !(thisTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
-		<td width="150" nowrap valign="top" class="row<%= rowid %>">
+		<td width="150" nowrap valign="top">
       <dhv:evaluate exp="<%= thisTic.isAssigned() %>">
         <%= toHtml(thisTic.getOwnerName()) %>
       </dhv:evaluate>
@@ -232,8 +232,8 @@ View Tickets<br>
       </dhv:evaluate>
 		</td>
 	</tr>
-  <tr>
-    <td colspan="6" valign="top" class="row<%= rowid %>">
+  <tr class="row<%= rowid %>">
+    <td colspan="6" valign="top">
 <%
   if (1==1) {
     Iterator files = thisTic.getFiles().iterator();
