@@ -5,7 +5,8 @@
 <jsp:useBean id="AccessLog" class="com.darkhorseventures.cfsbase.AccessLogList" scope="request"/>
 <a href="Admin.do">Setup</a> >
 <a href="Users.do?command=ListUsers">View Users</a> >
-User Details<br>
+<a href="Users.do?command=UserDetails&id=<%=UserRecord.getId()%>">User Details</a> >
+Login History<br>
 <hr color="#BFBFBB" noshade>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
