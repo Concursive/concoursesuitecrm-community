@@ -48,26 +48,27 @@ var categoryId = -1;
         <% 
         TopCategoryList.getCatListSelect().setSelectSize(10);
         TopCategoryList.setHtmlJsEvent("onChange=\"javascript:loadCategories('0');\"");
+        TopCategoryList.getCatListSelect().addAttribute("style", "width: 150px");
         %>
         
         <%= TopCategoryList.getHtmlSelect("level0", -1) %>
       </td>
       <td align="center">
         Level 2 <br>
-        <select name="level1" id="level1" size="10" onChange="javascript:loadCategories('1');">
-          <option value="-1">--None--</option>
+        <select name="level1" id="level1" size="10" onChange="javascript:loadCategories('1');" style="width: 150px">
+          <option value="-1">---------None---------</option>
         </select>
       </td>
       <td align="center">
         Level 3<br>
-        <select name="level2" id="level2" size="10" onChange="javascript:loadCategories('2');">
-          <option value="-1">--None--</option>
+        <select name="level2" id="level2" size="10" onChange="javascript:loadCategories('2');" style="width: 150px">
+          <option value="-1">---------None---------</option>
         </select>
       </td>
       <td align="center">
         Level 4<br>
-        <select name="level3" id="level3" size="10" onChange="javascript:loadCategories('3');">
-          <option value="-1">--None--</option>
+        <select name="level3" id="level3" size="10" onChange="javascript:loadCategories('3');" style="width: 150px">
+          <option value="-1">---------None---------</option>
         </select>
       </td>
     </tr>

@@ -12,7 +12,7 @@
 <a href="Admin.do">Setup</a> > 
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
-<%= toHtml(PermissionCategory.getCategory()) %> Categories
+Categories
 <br>
 <hr color="#BFBFBB" noshade>
 
@@ -92,6 +92,7 @@ function activate(){
         <% int value = ((selectedCategories.get(new Integer(0)) != null) ? ((Integer) selectedCategories.get(new Integer(0))).intValue() : -1); 
         CategoryEditor.getTopCategoryList().getCatListSelect().setSelectSize(10);
         CategoryEditor.getTopCategoryList().setHtmlJsEvent("onChange=\"javascript:loadCategories('0');\"");
+        CategoryEditor.getTopCategoryList().getCatListSelect().addAttribute("style", "width: 150px");
         %>
         
         <%= CategoryEditor.getTopCategoryList().getHtmlSelect("level0", value) %>
@@ -102,6 +103,7 @@ function activate(){
         Level 2 <br>
         <% value = ((selectedCategories.get(new Integer(1)) != null) ? ((Integer) selectedCategories.get(new Integer(1))).intValue() : -1);
         SubList1.getCatListSelect().setSelectSize(10);
+        SubList1.getCatListSelect().addAttribute("style", "width: 150px");
         %>
         <%= SubList1.getHtmlSelect("level1", value) %><br>
         <input type="button" value="Edit" id="edit1" onClick="javascript:editCategory('1');" disabled>
@@ -110,13 +112,17 @@ function activate(){
         Level 3<br>
         <% value = ((selectedCategories.get(new Integer(2)) != null) ? ((Integer) selectedCategories.get(new Integer(2))).intValue() : -1);
         SubList2.getCatListSelect().setSelectSize(10);
+        SubList2.getCatListSelect().addAttribute("style", "width: 150px");
         %>
         <%= SubList2.getHtmlSelect("level2", value) %><br>
         <input type="button" value="Edit" id="edit2" onClick="javascript:editCategory('2');" disabled>
       </td>
       <td align="center">
         Level 4<br>
-        <% SubList3.getCatListSelect().setSelectSize(10); %>
+        <%
+          SubList3.getCatListSelect().setSelectSize(10);
+          SubList3.getCatListSelect().addAttribute("style", "width: 150px");
+        %>
         <%= SubList3.getHtmlSelect("level3", -1) %><br>
         <input type="button" value="Edit" id="edit3" onClick="javascript:editCategory('3');" disabled>
       </td>
