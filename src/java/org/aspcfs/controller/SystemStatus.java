@@ -11,6 +11,7 @@ import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.controller.objectHookManager.*;
 import org.aspcfs.controller.SessionManager;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.admin.base.CategoryEditor;
 import java.io.File;
 import org.w3c.dom.*;
 import javax.servlet.ServletContext;
@@ -23,9 +24,9 @@ import javax.servlet.ServletContext;
  *  changes user or role data then the user's permissions and hierarchies will
  *  be read in during the Security Check.
  *
- *@author     mrajkowski
- *@created    October 10, 2001
- *@version    $Id$
+ * @author     mrajkowski
+ * @created    October 10, 2001
+ * @version    $Id$
  */
 public class SystemStatus {
   //Unique to this system
@@ -56,11 +57,14 @@ public class SystemStatus {
   //Session Manager
   private SessionManager sessionManager = new SessionManager();
 
+  //Category Editor
+  private CategoryEditor categoryEditor = new CategoryEditor();
+
 
   /**
    *  Constructor for the SystemStatus object
    *
-   *@since    1.1
+   * @since    1.1
    */
   public SystemStatus() { }
 
@@ -68,9 +72,9 @@ public class SystemStatus {
   /**
    *  Constructor for the SystemStatus object
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.3
+   * @param  db                Description of Parameter
+   * @exception  SQLException  Description of Exception
+   * @since                    1.3
    */
   public SystemStatus(Connection db) throws SQLException {
     queryRecord(db);
@@ -80,21 +84,22 @@ public class SystemStatus {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db) throws SQLException {
     buildHierarchyList(db);
     buildPreferences();
     buildRolePermissions(db);
+    buildCategoryLists(db);
   }
 
 
   /**
    *  Sets the PermissionCheck attribute of the SystemStatus object
    *
-   *@param  tmp  The new PermissionCheck value
-   *@since       1.1
+   * @param  tmp  The new PermissionCheck value
+   * @since       1.1
    */
   public void setPermissionCheck(Date tmp) {
     this.permissionCheck = tmp;
@@ -104,8 +109,8 @@ public class SystemStatus {
   /**
    *  Sets the HierarchyCheck attribute of the SystemStatus object
    *
-   *@param  tmp  The new HierarchyCheck value
-   *@since       1.1
+   * @param  tmp  The new HierarchyCheck value
+   * @since       1.1
    */
   public void setHierarchyCheck(Date tmp) {
     this.hierarchyCheck = tmp;
@@ -115,7 +120,7 @@ public class SystemStatus {
   /**
    *  Sets the connectionElement attribute of the SystemStatus object
    *
-   *@param  tmp  The new connectionElement value
+   * @param  tmp  The new connectionElement value
    */
   public void setConnectionElement(ConnectionElement tmp) {
     this.connectionElement = tmp;
@@ -125,7 +130,7 @@ public class SystemStatus {
   /**
    *  Sets the fileLibraryPath attribute of the SystemStatus object
    *
-   *@param  tmp  The new fileLibraryPath value
+   * @param  tmp  The new fileLibraryPath value
    */
   public void setFileLibraryPath(String tmp) {
     this.fileLibraryPath = tmp;
@@ -135,7 +140,7 @@ public class SystemStatus {
   /**
    *  SessionManager manages the sessions active in the system
    *
-   *@param  sessionManager  The new sessionManager value
+   * @param  sessionManager  The new sessionManager value
    */
   public void setSessionManager(SessionManager sessionManager) {
     this.sessionManager = sessionManager;
@@ -145,7 +150,7 @@ public class SystemStatus {
   /**
    *  Sets the sessionTimeout attribute of the SystemStatus object
    *
-   *@param  sessionTimeout  The new sessionTimeout value
+   * @param  sessionTimeout  The new sessionTimeout value
    */
   public void setSessionTimeout(int sessionTimeout) {
     this.sessionTimeout = sessionTimeout;
@@ -153,9 +158,29 @@ public class SystemStatus {
 
 
   /**
+   *  Sets the categoryEditor attribute of the SystemStatus object
+   *
+   * @param  categoryEditor  The new categoryEditor value
+   */
+  public void setCategoryEditor(CategoryEditor categoryEditor) {
+    this.categoryEditor = categoryEditor;
+  }
+
+
+  /**
+   *  Gets the categoryEditor attribute of the SystemStatus object
+   *
+   * @return    The categoryEditor value
+   */
+  public CategoryEditor getCategoryEditor() {
+    return categoryEditor;
+  }
+
+
+  /**
    *  Gets the sessionTimeout attribute of the SystemStatus object
    *
-   *@return    The sessionTimeout value
+   * @return    The sessionTimeout value
    */
   public int getSessionTimeout() {
     return sessionTimeout;
@@ -165,7 +190,7 @@ public class SystemStatus {
   /**
    *  Gets the sessionManager attribute of the SystemStatus object
    *
-   *@return    The sessionManager value
+   * @return    The sessionManager value
    */
   public SessionManager getSessionManager() {
     return sessionManager;
@@ -175,8 +200,8 @@ public class SystemStatus {
   /**
    *  Gets the PermissionCheck attribute of the SystemStatus object
    *
-   *@return    The PermissionCheck value
-   *@since     1.1
+   * @return    The PermissionCheck value
+   * @since     1.1
    */
   public Date getPermissionCheck() {
     while (permissionUpdating) {
@@ -188,8 +213,8 @@ public class SystemStatus {
   /**
    *  Gets the HierarchyCheck attribute of the SystemStatus object
    *
-   *@return    The HierarchyCheck value
-   *@since     1.1
+   * @return    The HierarchyCheck value
+   * @since     1.1
    */
   public Date getHierarchyCheck() {
     while (hierarchyUpdating) {
@@ -201,7 +226,7 @@ public class SystemStatus {
   /**
    *  Gets the hierarchyList attribute of the SystemStatus object
    *
-   *@return    The hierarchyList value
+   * @return    The hierarchyList value
    */
   public UserList getHierarchyList() {
     while (hierarchyUpdating) {
@@ -213,7 +238,7 @@ public class SystemStatus {
   /**
    *  Gets the userList attribute of the SystemStatus object
    *
-   *@return    The userList value
+   * @return    The userList value
    */
   public Hashtable getUserList() {
     while (hierarchyUpdating) {
@@ -225,8 +250,8 @@ public class SystemStatus {
   /**
    *  Gets the label attribute of the SystemStatus object
    *
-   *@param  thisLabel  Description of Parameter
-   *@return            The label value
+   * @param  thisLabel  Description of Parameter
+   * @return            The label value
    */
   public String getLabel(String thisLabel) {
     return this.getValue("system.fields.label", thisLabel);
@@ -236,7 +261,7 @@ public class SystemStatus {
   /**
    *  Gets the connectionElement attribute of the SystemStatus object
    *
-   *@return    The connectionElement value
+   * @return    The connectionElement value
    */
   public ConnectionElement getConnectionElement() {
     return connectionElement;
@@ -246,7 +271,7 @@ public class SystemStatus {
   /**
    *  Gets the fileLibraryPath attribute of the SystemStatus object
    *
-   *@return    The fileLibraryPath value
+   * @return    The fileLibraryPath value
    */
   public String getFileLibraryPath() {
     return fileLibraryPath;
@@ -256,7 +281,7 @@ public class SystemStatus {
   /**
    *  Gets the hookManager attribute of the SystemStatus object
    *
-   *@return    The hookManager value
+   * @return    The hookManager value
    */
   public ObjectHookManager getHookManager() {
     return hookManager;
@@ -267,9 +292,9 @@ public class SystemStatus {
    *  Generates a list of all users in the system for the given database
    *  connection
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.3
+   * @param  db                Description of Parameter
+   * @exception  SQLException  Description of Exception
+   * @since                    1.3
    */
   public void buildHierarchyList(Connection db) throws SQLException {
     //NOTE: The UserList does a joined query that gets the user and contact
@@ -319,11 +344,22 @@ public class SystemStatus {
 
 
   /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void buildCategoryLists(Connection db) throws SQLException {
+    categoryEditor.build(db);
+  }
+
+
+  /**
    *  A method to reload the user hierarchy, typically used when a user is added
    *  or changed in the hierarchy.
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param  db                Description of Parameter
+   * @exception  SQLException  Description of Exception
    */
   public void updateHierarchy(Connection db) throws SQLException {
     java.util.Date checkDate = new java.util.Date();
@@ -349,8 +385,8 @@ public class SystemStatus {
    *  Reloads role permissions that have been cached. Typically used when roles
    *  are modified or created.
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void updateRolePermissions(Connection db) throws SQLException {
     java.util.Date checkDate = new java.util.Date();
@@ -456,8 +492,8 @@ public class SystemStatus {
   /**
    *  Initializes the permissions cache.
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void buildRolePermissions(Connection db) throws SQLException {
     rolePermissions.clear();
@@ -492,10 +528,10 @@ public class SystemStatus {
   /**
    *  Builds the lookupList on demand and caches it in the lookups HashTable.
    *
-   *@param  db                Description of the Parameter
-   *@param  listName          DB Table name.
-   *@return                   The lookupList value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  listName          DB Table name.
+   * @return                   The lookupList value
+   * @exception  SQLException  Description of the Exception
    */
   public LookupList getLookupList(Connection db, String listName) throws SQLException {
     if (!(lookups.containsKey(listName))) {
@@ -514,11 +550,22 @@ public class SystemStatus {
 
 
   /**
+   *  Gets the categoryEditor attribute of the SystemStatus object
+   *
+   * @param  db  Description of the Parameter
+   * @return     The categoryEditor value
+   */
+  public CategoryEditor getCategoryEditor(Connection db) {
+    return categoryEditor;
+  }
+
+
+  /**
    *  A presentation object (.jsp) can see if a field should be ignored in the
    *  output
    *
-   *@param  thisField  Description of Parameter
-   *@return            Description of the Returned Value
+   * @param  thisField  Description of Parameter
+   * @return            Description of the Returned Value
    */
   public boolean hasField(String thisField) {
     Map ignoredFieldsGroup = (Map) preferences.get("system.fields.ignore");
@@ -532,8 +579,8 @@ public class SystemStatus {
   /**
    *  Adds a feature to the ChildUsers attribute of the SystemStatus object
    *
-   *@param  thisUser  The feature to be added to the ChildUsers attribute
-   *@param  addFrom   The feature to be added to the ChildUsers attribute
+   * @param  thisUser  The feature to be added to the ChildUsers attribute
+   * @param  addFrom   The feature to be added to the ChildUsers attribute
    */
   private void addChildUsers(User thisUser, UserList addFrom) {
     if (thisUser.getShortChildList() == null) {
@@ -556,12 +603,12 @@ public class SystemStatus {
    *  Activates the object hook manager with the specified objects to see if a
    *  business process can execute
    *
-   *@param  context         Description of the Parameter
-   *@param  action          Description of the Parameter
-   *@param  previousObject  Description of the Parameter
-   *@param  object          Description of the Parameter
-   *@param  sqlDriver       Description of the Parameter
-   *@param  ce              Description of the Parameter
+   * @param  context         Description of the Parameter
+   * @param  action          Description of the Parameter
+   * @param  previousObject  Description of the Parameter
+   * @param  object          Description of the Parameter
+   * @param  sqlDriver       Description of the Parameter
+   * @param  ce              Description of the Parameter
    */
   public void processHook(ActionContext context, int action, Object previousObject, Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
     hookManager.process(context, action, previousObject, object, sqlDriver, ce);
@@ -571,10 +618,10 @@ public class SystemStatus {
   /**
    *  Activates the specified business process through the object hook manager
    *
-   *@param  context      Description of the Parameter
-   *@param  processName  Description of the Parameter
-   *@param  sqlDriver    Description of the Parameter
-   *@param  ce           Description of the Parameter
+   * @param  context      Description of the Parameter
+   * @param  processName  Description of the Parameter
+   * @param  sqlDriver    Description of the Parameter
+   * @param  ce           Description of the Parameter
    */
   public void processEvent(ServletContext context, String processName, ConnectionPool sqlDriver, ConnectionElement ce) {
     if (System.getProperty("DEBUG") != null) {
@@ -587,8 +634,8 @@ public class SystemStatus {
   /**
    *  Gets the user attribute of the SystemStatus object
    *
-   *@param  id  Description of the Parameter
-   *@return     The user value
+   * @param  id  Description of the Parameter
+   * @return     The user value
    */
   public User getUser(int id) {
     while (hierarchyUpdating) {
@@ -601,9 +648,9 @@ public class SystemStatus {
    *  Method checks the cached role permissions to see if the user has the
    *  specified permission.
    *
-   *@param  userId          Description of the Parameter
-   *@param  thisPermission  Description of the Parameter
-   *@return                 Description of the Return Value
+   * @param  userId          Description of the Parameter
+   * @param  thisPermission  Description of the Parameter
+   * @return                 Description of the Return Value
    */
   public boolean hasPermission(int userId, String thisPermission) {
     while (permissionUpdating) {
@@ -620,7 +667,7 @@ public class SystemStatus {
   /**
    *  Returns whether this system has any permissions loaded
    *
-   *@return    Description of the Return Value
+   * @return    Description of the Return Value
    */
   public boolean hasPermissions() {
     return rolePermissions.size() > 0;
@@ -630,9 +677,9 @@ public class SystemStatus {
   /**
    *  Forces the cached contact information to reload from the database
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  id                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void updateUserContact(Connection db, int id) throws SQLException {
     synchronized (this) {
@@ -648,9 +695,9 @@ public class SystemStatus {
    *  Gets the preferences value for this SystemStatus object. If the value is
    *  not found, then null is returned.
    *
-   *@param  section    Description of the Parameter
-   *@param  parameter  Description of the Parameter
-   *@return            The value value
+   * @param  section    Description of the Parameter
+   * @param  parameter  Description of the Parameter
+   * @return            The value value
    */
   public String getValue(String section, String parameter) {
     Map prefGroup = (Map) preferences.get(section);
@@ -668,9 +715,9 @@ public class SystemStatus {
    *  Gets the preferences value for this SystemStatus object. If the value is
    *  not found, then -1 is returned.
    *
-   *@param  section    Description of the Parameter
-   *@param  parameter  Description of the Parameter
-   *@return            The valueAsInt value
+   * @param  section    Description of the Parameter
+   * @param  parameter  Description of the Parameter
+   * @return            The valueAsInt value
    */
   public int getValueAsInt(String section, String parameter) {
     String intValue = this.getValue(section, parameter);
