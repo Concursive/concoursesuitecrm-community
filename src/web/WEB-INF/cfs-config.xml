@@ -62,7 +62,6 @@
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="HomeOK" resource="/mycfs.jsp" layout="nav"/>
-    <forward name="HomeVerifyOK" resource="/mycfs_verify.jsp" layout="nav"/>
     <forward name="CalendarOK" resource="/calendar.jsp"/>
     <forward name="CalendarDetailsOK" resource="/calendar_details.jsp" layout="style"/>
     <forward name="DeleteOK" resource="/MyCFS.do?command=Headline"/>

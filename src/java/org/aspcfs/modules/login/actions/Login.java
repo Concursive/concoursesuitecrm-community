@@ -6,7 +6,7 @@ import java.sql.*;
 import org.theseus.actions.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.utils.*;
-import com.darkhorseventures.controller.SystemStatus;
+import com.darkhorseventures.controller.*;
 import java.util.Hashtable;
 
 /**
@@ -19,7 +19,8 @@ import java.util.Hashtable;
 public final class Login extends CFSModule {
 
   public final static String fs = System.getProperty("file.separator");
-  
+
+
   /**
    *  Processes the user login
    *
@@ -28,20 +29,18 @@ public final class Login extends CFSModule {
    *@since           1.0
    */
   public String executeCommandLogin(ActionContext context) {
-
-    LoginBean loginBean = (LoginBean)context.getFormBean();
+    LoginBean loginBean = (LoginBean) context.getFormBean();
     String username = loginBean.getUsername();
     String password = loginBean.getPassword();
     String serverName = context.getRequest().getServerName();
-    String gkDriver = (String)context.getServletContext().getAttribute("GKDRIVER");
-    String gkHost = (String)context.getServletContext().getAttribute("GKHOST");
-    String gkUser = (String)context.getServletContext().getAttribute("GKUSER");
-    String gkUserPw = (String)context.getServletContext().getAttribute("GKUSERPW");
-    String siteCode = (String)context.getServletContext().getAttribute("SiteCode");
+    String gkDriver = (String) context.getServletContext().getAttribute("GKDRIVER");
+    String gkHost = (String) context.getServletContext().getAttribute("GKHOST");
+    String gkUser = (String) context.getServletContext().getAttribute("GKUSER");
+    String gkUserPw = (String) context.getServletContext().getAttribute("GKUSERPW");
+    String siteCode = (String) context.getServletContext().getAttribute("SiteCode");
     String sql;
-    
+
     java.util.Date now = new java.util.Date();
-    
 
     ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
     gk.setDriver(gkDriver);
@@ -51,12 +50,11 @@ public final class Login extends CFSModule {
     ResultSet rs = null;
 
     ConnectionPool sqlDriver =
-        (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
+        (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     if (sqlDriver == null) {
       loginBean.setMessage("Connection pool missing!");
       return "LoginRetry";
     }
-    
 
     ///////////////////////////////////////////////////////////
     //	Get connected to gatekeeper database,
@@ -83,7 +81,7 @@ public final class Login extends CFSModule {
         ce.setDriver(siteDriver);
       } else {
         loginBean.setMessage("* Access denied: Host does not exist (" +
-             serverName + ")");
+            serverName + ")");
       }
       rs.close();
       pst.close();
@@ -92,8 +90,10 @@ public final class Login extends CFSModule {
       loginBean.setMessage("* Gatekeeper: " + e.getMessage());
     }
 
-    if (db != null) sqlDriver.free(db);
-    
+    if (db != null) {
+      sqlDriver.free(db);
+    }
+
     if (ce == null) {
       return "LoginRetry";
     }
@@ -103,21 +103,22 @@ public final class Login extends CFSModule {
     //	Validate this user.
     //
     UserBean thisUser = null;
+    int userId = -1;
+    int aliasId = -1;
     try {
-      int userId = -1;
       db = sqlDriver.getConnection(ce);
-      
+
       //A good place to initialize this SystemStatus, must be done before getting a user
       SystemStatus thisSystem = this.retrieveSystemStatus(context, db, ce);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("Login-> Getting SystemStatus from memory : " + ((thisSystem == null)?"false":"true"));
+        System.out.println("Login-> Getting SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
       }
-      
+
       pst = db.prepareStatement(
-        "SELECT * " +
-        "FROM access " +
-        "WHERE lower(username) = ? " +
-        "AND enabled = ? ");
+          "SELECT * " +
+          "FROM access " +
+          "WHERE lower(username) = ? " +
+          "AND enabled = ? ");
       pst.setString(1, username.toLowerCase());
       pst.setBoolean(2, true);
       rs = pst.executeQuery();
@@ -125,19 +126,15 @@ public final class Login extends CFSModule {
         loginBean.setMessage("* Access denied: Invalid login information.");
       } else {
         String pw = rs.getString("password");
-        if (pw == null || pw.trim().equals("") || (!pw.equals(password) && !context.getServletContext().getAttribute("GlobalPWInfo").equals(password))   ) {
+        if (pw == null || pw.trim().equals("") || (!pw.equals(password) && !context.getServletContext().getAttribute("GlobalPWInfo").equals(password))) {
           loginBean.setMessage("* Access denied: Invalid login information.");
         } else {
           java.sql.Date expDate = rs.getDate("expires");
-          if ( expDate != null && now.after(expDate) ) {
+          if (expDate != null && now.after(expDate)) {
             loginBean.setMessage("* Access denied: Account Expired.");
           } else {
-            int aliasId = rs.getInt("alias");
-            if ( aliasId > 0 ) {
-              userId = aliasId;
-            } else {
-              userId = rs.getInt("user_id");
-            }
+            aliasId = rs.getInt("alias");
+            userId = rs.getInt("user_id");
           }
         }
       }
@@ -148,9 +145,14 @@ public final class Login extends CFSModule {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Login-> Getting user " + userId + " from memory");
         }
-        thisUser = new UserBean(thisSystem, userId);
+
+        thisUser = new UserBean(thisSystem, (aliasId > 0 ? aliasId : userId));
         if (thisUser != null) {
-          if (System.getProperty("DEBUG") != null) System.out.println("Login-> updating user");
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("Login-> updating user");
+          }
+
+          thisUser.setActualUserId(userId);
           thisUser.getUserRecord().setIp(context.getIpAddress());
           thisUser.getUserRecord().updateLogin(db);
           //thisUser.setClientType(context.getBrowser());
@@ -160,6 +162,7 @@ public final class Login extends CFSModule {
           thisUser.getUserRecord().setBuildHierarchy(false);
           thisUser.getUserRecord().setBuildPermissions(true);
           thisUser.getUserRecord().buildResources(db);
+          thisUser.setConnectionElement(ce);
         }
       }
     } catch (Exception e) {
@@ -168,7 +171,9 @@ public final class Login extends CFSModule {
       thisUser = null;
     }
 
-    if (db != null) sqlDriver.free(db);
+    if (db != null) {
+      sqlDriver.free(db);
+    }
 
     if (thisUser == null) {
       return "LoginRetry";
@@ -185,6 +190,50 @@ public final class Login extends CFSModule {
     context.getSession().setAttribute("User", thisUser);
     context.getSession().setAttribute("ConnectionElement", ce);
 
+    //Check to see if user is already logged in . If not then add him to the valid users list
+    SessionManager sessionManager = ((SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl())).getSessionManager();
+    if (sessionManager.isUserLoggedIn(userId)) {
+      UserSession thisSession = sessionManager.getUserSession(userId);
+      context.getSession().setMaxInactiveInterval(300);
+      context.getRequest().setAttribute("Session", thisSession);
+      return "LoginVerifyOK";
+    }
+    sessionManager.addUser(context, userId);
+
+    return "LoginOK";
+  }
+
+
+  /**
+   *  Confirms if the user wants to ovreride previous session or not.<br>
+   *  and informs Session Manager accordingly.
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandLoginConfirm(ActionContext context) {
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+    if (thisUser == null) {
+      return executeCommandLogout(context);
+    }
+    String action = context.getRequest().getParameter("override");
+    if ("yes".equals(action)) {
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(thisUser.getConnectionElement().getUrl());
+      context.getSession().setMaxInactiveInterval(systemStatus.getSessionTimeout());
+      //replace userSession in SessionManager HashMap & reset timeout
+      SessionManager sessionManager = systemStatus.getSessionManager();
+      UserSession oldSession = sessionManager.getUserSession(thisUser.getActualUserId());
+      if (!oldSession.getId().equals(context.getRequest().getSession().getId())) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Login -- > Invalidating old Session");
+        }
+        UserSession currentSession = sessionManager.replaceUserSession(context, thisUser.getActualUserId());
+        context.getSession().setMaxInactiveInterval(systemStatus.getSessionTimeout());
+      }
+    } else {
+      //logout user from current session
+      return executeCommandLogout(context);
+    }
     return "LoginOK";
   }
 
@@ -203,6 +252,6 @@ public final class Login extends CFSModule {
     }
     return "LoginRetry";
   }
-  
+
 }
 

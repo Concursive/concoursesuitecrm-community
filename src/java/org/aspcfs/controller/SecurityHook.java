@@ -31,7 +31,7 @@ public class SecurityHook implements ControllerHook {
    *@since           1.1
    */
   public String securityCheck(Servlet servlet, HttpServletRequest request) {
-    UserBean userSession = (UserBean)request.getSession().getAttribute("User");
+    UserBean userSession = (UserBean) request.getSession().getAttribute("User");
 
     // Get the intended action, if going to the login module, then let it proceed
     String action = request.getServletPath();
@@ -44,8 +44,8 @@ public class SecurityHook implements ControllerHook {
       request.setAttribute("LoginBean", failedSession);
       return "SecurityCheck";
     } else {
-      if (!action.toUpperCase().startsWith("PROCESS") && "true".equals((String)servlet.getServletConfig().getServletContext().getAttribute("ForceSSL")) &&
-        "http".equals(request.getScheme())) {
+      if (!action.toUpperCase().startsWith("PROCESS") && "true".equals((String) servlet.getServletConfig().getServletContext().getAttribute("ForceSSL")) &&
+          "http".equals(request.getScheme())) {
         LoginBean failedSession = new LoginBean();
         failedSession.setMessage("* A secure connection is required");
         request.setAttribute("LoginBean", failedSession);
@@ -54,31 +54,48 @@ public class SecurityHook implements ControllerHook {
         }
         return "SecurityCheck";
       }
-      
+
       if (userSession != null) {
-        request.setAttribute("moduleAction", action);
-        ConnectionElement ce = (ConnectionElement)request.getSession().getAttribute("ConnectionElement");
+        ConnectionElement ce = userSession.getConnectionElement();
         if (ce == null) {
           System.out.println("SecurityHook-> Fatal: CE is null");
         }
-        SystemStatus systemStatus = (SystemStatus)((Hashtable)servlet.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-        
+        SystemStatus systemStatus = (SystemStatus) ((Hashtable) servlet.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+        SessionManager thisManager = systemStatus.getSessionManager();
+        UserSession sessionInfo = thisManager.getUserSession(userSession.getActualUserId());
+        if (sessionInfo != null && !sessionInfo.getId().equals(request.getSession().getId()) && !action.toUpperCase().startsWith("LOGIN")) {
+          if (request.getSession(false) != null) {
+            request.getSession(false).invalidate();
+          }
+          LoginBean failedSession = new LoginBean();
+          failedSession.setMessage("* Please login, your session expired because you logged in from " + sessionInfo.getIpAddress());
+          request.setAttribute("LoginBean", failedSession);
+          return "SecurityCheck";
+        }
+        request.setAttribute("moduleAction", action);
+
         if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck()) ||
             userSession.getPermissionCheck().before(systemStatus.getPermissionCheck())) {
           Connection db = null;
           try {
-            db = ((ConnectionPool)servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).getConnection(ce);
-            
+            db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).getConnection(ce);
+
             if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
-              if (System.getProperty("DEBUG") != null) System.out.println("SecurityHook-> ** Getting you a new user record");
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("SecurityHook-> ** Getting you a new user record");
+              }
               User updatedUser = systemStatus.getHierarchyList().getUser(userSession.getUserId());
               userSession.setUserRecord(updatedUser);
               userSession.setHierarchyCheck(new java.util.Date());
-              System.out.println("SecurityHook-> Updating user session with new user record");
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("SecurityHook-> Updating user session with new user record");
+              }
             }
-        
+
             User updatedUser = userSession.getUserRecord();
-            if (System.getProperty("DEBUG") != null) System.out.println("SecurityHook-> ** Getting you new permissions");
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("SecurityHook-> ** Getting you new permissions");
+            }
             if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
               updatedUser.setBuildContact(true);
             } else {
@@ -88,10 +105,12 @@ public class SecurityHook implements ControllerHook {
             updatedUser.setBuildHierarchy(false);
             updatedUser.buildResources(db);
             userSession.setPermissionCheck(new java.util.Date());
-            System.out.println("SecurityHook-> Updating user session with new permissions");
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("SecurityHook-> Updating user session with new permissions");
+            }
           } catch (SQLException e) {
           } finally {
-            ((ConnectionPool)servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).free(db);
+            ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).free(db);
           }
         }
       }

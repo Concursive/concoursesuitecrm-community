@@ -35,13 +35,13 @@ Replaceable parameter  typical value / description
      com.darkhorseventures.controller.ContextListener
     </listener-class>
   </listener>
-<!--  
+  
   <listener>
     <listener-class>
-     com.darkhorseventures.controller.ContextAttributeListener
+     com.darkhorseventures.controller.ContextSessionListener
     </listener-class>
   </listener>
--->
+
   <servlet>
     <servlet-name>Controller</servlet-name>
     <display-name>Controller</display-name>

@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 package com.darkhorseventures.controller;
 
 import java.util.Date;
@@ -33,7 +33,11 @@ public class SystemStatus {
   private ObjectHookManager hookManager = new ObjectHookManager();
   private ConnectionElement connectionElement = null;
   private String fileLibraryPath = null;
-  Hashtable lookups = new Hashtable();
+  private SessionManager sessionManager = new SessionManager();
+  private Hashtable lookups = new Hashtable();
+  private int sessionTimeout = 5400;
+
+
 
   /**
    *  Constructor for the SystemStatus object
@@ -54,10 +58,18 @@ public class SystemStatus {
     queryRecord(db);
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void queryRecord(Connection db) throws SQLException {
     buildHierarchyList(db);
     buildPreferences(db);
   }
+
 
   /**
    *  Sets the PermissionCheck attribute of the SystemStatus object
@@ -80,8 +92,66 @@ public class SystemStatus {
     this.hierarchyCheck = tmp;
   }
 
-  public void setConnectionElement(ConnectionElement tmp) { this.connectionElement = tmp; }
-  public void setFileLibraryPath(String tmp) { this.fileLibraryPath = tmp; }
+
+  /**
+   *  Sets the connectionElement attribute of the SystemStatus object
+   *
+   *@param  tmp  The new connectionElement value
+   */
+  public void setConnectionElement(ConnectionElement tmp) {
+    this.connectionElement = tmp;
+  }
+
+
+  /**
+   *  Sets the fileLibraryPath attribute of the SystemStatus object
+   *
+   *@param  tmp  The new fileLibraryPath value
+   */
+  public void setFileLibraryPath(String tmp) {
+    this.fileLibraryPath = tmp;
+  }
+
+
+  /**
+   *  SessionManager manages the sessions active in the system
+   *
+   *@param  sessionManager  The new sessionManager value
+   */
+  public void setSessionManager(SessionManager sessionManager) {
+    this.sessionManager = sessionManager;
+  }
+
+
+  /**
+   *  Sets the sessionTimeout attribute of the SystemStatus object
+   *
+   *@param  sessionTimeout  The new sessionTimeout value
+   */
+  public void setSessionTimeout(int sessionTimeout) {
+    this.sessionTimeout = sessionTimeout;
+  }
+
+
+  /**
+   *  Gets the sessionTimeout attribute of the SystemStatus object
+   *
+   *@return    The sessionTimeout value
+   */
+  public int getSessionTimeout() {
+    return sessionTimeout;
+  }
+
+
+  /**
+   *  Gets the sessionManager attribute of the SystemStatus object
+   *
+   *@return    The sessionManager value
+   */
+  public SessionManager getSessionManager() {
+    return sessionManager;
+  }
+
 
   /**
    *  Gets the PermissionCheck attribute of the SystemStatus object
@@ -128,12 +198,36 @@ public class SystemStatus {
   public String getLabel(String thisLabel) {
     return ((String) fieldLabels.get(thisLabel));
   }
-  
-  public ConnectionElement getConnectionElement() { return connectionElement; }
-  public String getFileLibraryPath() { return fileLibraryPath; }
 
 
-  public ObjectHookManager getHookManager() { return hookManager; }
+  /**
+   *  Gets the connectionElement attribute of the SystemStatus object
+   *
+   *@return    The connectionElement value
+   */
+  public ConnectionElement getConnectionElement() {
+    return connectionElement;
+  }
+
+
+  /**
+   *  Gets the fileLibraryPath attribute of the SystemStatus object
+   *
+   *@return    The fileLibraryPath value
+   */
+  public String getFileLibraryPath() {
+    return fileLibraryPath;
+  }
+
+
+  /**
+   *  Gets the hookManager attribute of the SystemStatus object
+   *
+   *@return    The hookManager value
+   */
+  public ObjectHookManager getHookManager() {
+    return hookManager;
+  }
 
 
   /**
@@ -286,7 +380,7 @@ public class SystemStatus {
     hookManager.initializeBusinessProcessList(hookData);
   }
 
-  
+
   /**
    *  Builds the lookupList on demand and caches it in the lookups HashTable.
    *
@@ -308,12 +402,12 @@ public class SystemStatus {
     }
     return (LookupList) lookups.get(listName);
   }
-  
-  
+
+
 
   /**
-   *  A presentation object (.jsp) can see if a field should be ignored
-   *  in the output
+   *  A presentation object (.jsp) can see if a field should be ignored in the
+   *  output
    *
    *@param  thisField  Description of Parameter
    *@return            Description of the Returned Value
@@ -347,6 +441,17 @@ public class SystemStatus {
     }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context         Description of the Parameter
+   *@param  action          Description of the Parameter
+   *@param  previousObject  Description of the Parameter
+   *@param  object          Description of the Parameter
+   *@param  sqlDriver       Description of the Parameter
+   *@param  ce              Description of the Parameter
+   */
   public void processHook(ActionContext context, int action, Object previousObject, Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
     hookManager.process(context, action, previousObject, object, sqlDriver, ce);
   }

@@ -5,6 +5,7 @@ import java.util.*;
 import java.sql.*;
 import com.darkhorseventures.controller.*;
 import com.darkhorseventures.webutils.*;
+import com.darkhorseventures.utils.ConnectionElement;
 import javax.servlet.http.*;
 import javax.servlet.*;
 
@@ -26,6 +27,8 @@ public class UserBean extends GenericBean {
   private java.util.Date hierarchyCheck = new java.util.Date();
   private String idRange = "";
   private ClientType clientType = null;
+  private ConnectionElement connectionElement = null;
+  private int actualUserId = -1;
 
 
   /**
@@ -119,6 +122,66 @@ public class UserBean extends GenericBean {
    */
   public void setClientType(HttpServletRequest request) {
     this.clientType = new ClientType(request);
+  }
+
+
+  /**
+   *  Sets the connectionElement attribute of the UserBean object
+   *
+   *@param  connectionElement  The new connectionElement value
+   */
+  public void setConnectionElement(ConnectionElement connectionElement) {
+    this.connectionElement = connectionElement;
+  }
+
+
+  /**
+   *  Sets the systemStatus attribute of the UserBean object
+   *
+   *@param  systemStatus  The new systemStatus value
+   */
+  public void setSystemStatus(SystemStatus systemStatus) {
+    this.systemStatus = systemStatus;
+  }
+
+
+  /**
+   *  Sets the actualUserId attribute of the UserBean object
+   *
+   *@param  actualUserId  The new aliasId value
+   */
+  public void setActualUserId(int actualUserId) {
+    this.actualUserId = actualUserId;
+  }
+
+
+  /**
+   *  Gets the actualUserId which would be different in case of an aliased user.
+   *
+   *@return    The actualUserId value
+   */
+  public int getActualUserId() {
+    return actualUserId;
+  }
+
+
+  /**
+   *  Gets the systemStatus attribute of the UserBean object
+   *
+   *@return    The systemStatus value
+   */
+  public SystemStatus getSystemStatus() {
+    return systemStatus;
+  }
+
+
+  /**
+   *  Gets the connectionElement attribute of the UserBean object
+   *
+   *@return    The connectionElement value
+   */
+  public ConnectionElement getConnectionElement() {
+    return connectionElement;
   }
 
 
