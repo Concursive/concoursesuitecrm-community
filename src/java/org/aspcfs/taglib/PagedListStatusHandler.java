@@ -204,7 +204,7 @@ public class PagedListStatusHandler extends TagSupport {
         out.write("<tr>");
         //Display the title
         if (!showControlOnly) {
-          out.write("<td width=\"50%\" valign=\"bottom\" " +
+          out.write("<td width=\"100%\" valign=\"bottom\" " +
               "align=\"left\"" +
               ((bgColor != null) ? " bgColor=\"" + bgColor + "\"" : "") +
               ((tdClass != null) ? " class=\"" + tdClass + "\"" : "") +
