@@ -250,7 +250,8 @@ public class XMLUtils {
     NodeList nodeList = element.getChildNodes();
     for (int i = 0; i < nodeList.getLength(); i++) {
       Node thisNode = nodeList.item(i);
-      if (thisNode.getNodeType() == Node.TEXT_NODE) {
+      if (thisNode.getNodeType() == Node.TEXT_NODE ||
+          thisNode.getNodeType() == Node.CDATA_SECTION_NODE) {
         nodeText = thisNode.getNodeValue();
       }
     }
