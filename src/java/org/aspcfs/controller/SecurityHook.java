@@ -48,13 +48,19 @@ public class SecurityHook implements ControllerHook {
         "http".equals(request.getScheme())) {
         LoginBean failedSession = new LoginBean();
         failedSession.setMessage("* A secure connection is required");
-        if (System.getProperty("DEBUG") != null) System.out.println("A secure connection is required");
+        request.setAttribute("LoginBean", failedSession);
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("A secure connection is required");
+        }
         return "SecurityCheck";
       }
       
       if (userSession != null) {
         request.setAttribute("moduleAction", action);
         ConnectionElement ce = (ConnectionElement)request.getSession().getAttribute("ConnectionElement");
+        if (ce == null) {
+          System.out.println("SecurityHook-> Fatal: CE is null");
+        }
         SystemStatus systemStatus = (SystemStatus)((Hashtable)servlet.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
         
         if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck()) ||

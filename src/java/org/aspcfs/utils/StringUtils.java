@@ -132,6 +132,12 @@ public class StringUtils {
       return ("");
     }
   }
+  
+  public static String toPseudoHtmlValue(String s) {
+    String htmlReady = toHtmlValue(s);
+    htmlReady = replace(htmlReady, "<br>", "\r\n");
+    return htmlReady;  
+  }
 
 
   /**

@@ -54,7 +54,7 @@ public class ObjectUtils {
         return ObjectUtils.getParam(innerObject, param.substring(dotPos + 1));
       } else {
         param = param.substring(0, 1).toUpperCase() + param.substring(1);
-        Method method = target.getClass().getDeclaredMethod("get" + param, null);
+        Method method = target.getClass().getMethod("get" + param, null);
         Object result = method.invoke(target, null);
         if (result == null) {
           return null;
@@ -80,7 +80,7 @@ public class ObjectUtils {
   public static Object getObject(Object target, String param) {
     try {
       param = param.substring(0, 1).toUpperCase() + param.substring(1);
-      Method method = target.getClass().getDeclaredMethod("get" + param, null);
+      Method method = target.getClass().getMethod("get" + param, null);
       Object result = method.invoke(target, null);
       return result;
     } catch (Exception e) {

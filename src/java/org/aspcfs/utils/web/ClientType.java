@@ -2,6 +2,7 @@ package com.darkhorseventures.webutils;
 
 import javax.servlet.http.*;
 import javax.servlet.*;
+import java.io.*;
 
 /**
  *  Utility to determine the client browser type.<br>
@@ -12,7 +13,7 @@ import javax.servlet.*;
  *@created    March 5, 2002
  *@version    $Id$
  */
-public class ClientType {
+public class ClientType implements Serializable {
   
   public static final int NETSCAPE = 1;
   public static final int IE = 2;
@@ -30,6 +31,8 @@ public class ClientType {
   private int id = -1;
   private double version = -1;
   private int os = 1;
+  
+  final static long serialVersionUID = 8345658414124283569L;
   
   public ClientType() { }
   

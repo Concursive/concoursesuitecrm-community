@@ -29,3 +29,7 @@ INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES 
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (2, 'number', 'is not null', 'exist');
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (2, 'number', 'is null', 'does not exist');
 
+INSERT INTO lookup_survey_types (description) VALUES ('Open-Ended');
+INSERT INTO lookup_survey_types (description) VALUES ('Quantitative (no comments)');
+INSERT INTO lookup_survey_types (description) VALUES ('Quantitative (with comments)');
+                                              

@@ -594,7 +594,7 @@ public class TransactionItem {
   private Object doExecute(Connection db, String executeMethod) throws Exception {
     Class[] dbClass = new Class[]{Class.forName("java.sql.Connection")};
     Object[] dbObject = new Object[]{db};
-    Method method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
+    Method method = object.getClass().getMethod(executeMethod, dbClass);
     return (method.invoke(object, dbObject));
   }
 
@@ -606,7 +606,7 @@ public class TransactionItem {
     try {
       Class[] theClass = new Class[]{pagedListInfo.getClass()};
       Object[] theObject = new Object[]{pagedListInfo};
-      Method method = object.getClass().getDeclaredMethod("setPagedListInfo", theClass);
+      Method method = object.getClass().getMethod("setPagedListInfo", theClass);
       method.invoke(object, theObject);
     } catch (Exception e) {
       //This class must not support the pagedListInfo
@@ -634,13 +634,13 @@ public class TransactionItem {
     Object[] dbObject = new Object[]{db, pst};
     String executeMethod = "queryList";
     ObjectUtils.setParam(object, "syncType", String.valueOf(syncType));
-    Method method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
+    Method method = object.getClass().getMethod(executeMethod, dbClass);
     Object result = method.invoke(object, dbObject);
     while (((ResultSet) result).next()) {
       String objectMethod = "getObject";
       Class[] rsClass = new Class[]{Class.forName("java.sql.ResultSet")};
       Object[] rsObject = new Object[]{result};
-      Method getObject = object.getClass().getDeclaredMethod(objectMethod, rsClass);
+      Method getObject = object.getClass().getMethod(objectMethod, rsClass);
       Object thisObject = getObject.invoke(object, rsObject);
       String recordAction = null;
       switch (syncType) {
