@@ -714,7 +714,7 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-add"))) {
+    if (!hasPermission(context, "accounts-accounts-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -744,9 +744,7 @@ public final class Accounts extends CFSModule {
         //don't want to populate the addresses, etc. if this is an individual account
         newOrg.setRequestItems(context.getRequest());
       }
-
       recordInserted = newOrg.insert(db);
-
       if (recordInserted) {
         insertedOrg = new Organization(db, newOrg.getOrgId());
         context.getRequest().setAttribute("OrgDetails", insertedOrg);
@@ -762,7 +760,12 @@ public final class Accounts extends CFSModule {
     }
     addModuleBean(context, "View Accounts", "Accounts Insert ok");
     if (recordInserted) {
-      return ("InsertOK");
+      String target = context.getRequest().getParameter("target");
+      if (target != null && "add_contact".equals(target)) {
+        return ("InsertAndAddContactOK");
+      } else {
+        return ("InsertOK");
+      }
     } else {
       return (executeCommandAdd(context));
     }
@@ -1508,6 +1511,8 @@ public final class Accounts extends CFSModule {
     this.deletePagedListInfo(context, "AutoGuideAccountInfo");
     this.deletePagedListInfo(context, "RevenueListInfo");
     this.deletePagedListInfo(context, "AccountDocumentInfo");
+    this.deletePagedListInfo(context, "ServiceContractListInfo");
+    this.deletePagedListInfo(context, "AssetListInfo");
   }
 
 
