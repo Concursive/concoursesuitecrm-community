@@ -2224,7 +2224,7 @@ public class Organization extends GenericBean {
         "AND org_name NOT LIKE ? ");
     pst.setString(1, name);
     pst.setInt(2, orgId);
-    pst.setString(1, name);
+    pst.setString(3, name);
     pst.executeUpdate();
     pst.close();
 
