@@ -1,6 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
-//The createFilter method and the prepareFilter method need to have the same
-//number of parameters if modified.
+//Copyright 2001-2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -12,7 +10,8 @@ import com.darkhorseventures.webutils.HtmlSelect;
 import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
- *  Description of the Class
+ *  Contains a list of Survey objects. The list can be built by setting
+ *  parameters and then calling buildList
  *
  *@author     chris price
  *@created    August 7, 2002
@@ -28,6 +27,7 @@ public class SurveyList extends Vector {
   private String jsEvent = null;
   private int enabled = Constants.TRUE;
 
+
   /**
    *  Constructor for the SurveyList object
    */
@@ -35,7 +35,8 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Description of the Method
+   *  Queries the database and adds Survey objects to this collection based on
+   *  any specified parameters.
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
@@ -160,8 +161,25 @@ public class SurveyList extends Vector {
     return type;
   }
 
-  public int getEnabled() { return enabled; }
-  public void setEnabled(int tmp) { this.enabled = tmp; }
+
+  /**
+   *  Gets the enabled attribute of the SurveyList object
+   *
+   *@return    The enabled value
+   */
+  public int getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the SurveyList object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(int tmp) {
+    this.enabled = tmp;
+  }
 
 
   /**
@@ -265,7 +283,7 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Description of the Method
+   *  Appends any list filters that were specified to the SQL statement
    *
    *@param  sqlFilter  Description of the Parameter
    */
@@ -287,7 +305,7 @@ public class SurveyList extends Vector {
 
 
   /**
-   *  Description of the Method
+   *  Sets the PreparedStatement parameters that were added in createFilter
    *
    *@param  pst               Description of the Parameter
    *@return                   Description of the Return Value
@@ -349,5 +367,23 @@ public class SurveyList extends Vector {
     }
   }
 
+
+  /**
+   *  Checks to see if the specified surveyId is in this collection of Survey
+   *  objects
+   *
+   *@param  surveyId  Survey ID to look for
+   *@return           Returns true if found, else false
+   */
+  public boolean hasId(int surveyId) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Survey thisSurvey = (Survey) i.next();
+      if (thisSurvey.getId() == surveyId) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 

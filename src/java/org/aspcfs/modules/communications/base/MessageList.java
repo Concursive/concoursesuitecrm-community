@@ -1,10 +1,8 @@
-//Copyright 2001 Dark Horse Ventures
-// The createFilter method and the prepareFilter method need to have the same
-// number of parameters if modified.
+//Copyright 2001-2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
@@ -12,13 +10,14 @@ import com.darkhorseventures.webutils.HtmlSelect;
 import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
- *  Description of the Class
+ *  Contains a list of Campaign Message objects. The list can be built by
+ *  setting parameters and then calling buildList.
  *
  *@author     Wesley_S_Gillette
  *@created    November 14, 2001
  *@version    MessageList
  */
-public class MessageList extends Vector {
+public class MessageList extends ArrayList {
 
   private PagedListInfo pagedListInfo = null;
   private String name = "";
@@ -30,8 +29,6 @@ public class MessageList extends Vector {
 
   /**
    *  Constructor for the MessageList object
-   *
-   *@since
    */
   public MessageList() { }
 
@@ -40,7 +37,6 @@ public class MessageList extends Vector {
    *  Sets the pagedListInfo attribute of the MessageList object
    *
    *@param  tmp  The new pagedListInfo value
-   *@since
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -51,7 +47,6 @@ public class MessageList extends Vector {
    *  Sets the name attribute of the MessageList object
    *
    *@param  tmp  The new name value
-   *@since
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -62,7 +57,6 @@ public class MessageList extends Vector {
    *  Sets the description attribute of the MessageList object
    *
    *@param  tmp  The new description value
-   *@since
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -103,7 +97,6 @@ public class MessageList extends Vector {
    *  Gets the pagedListInfo attribute of the MessageList object
    *
    *@return    The pagedListInfo value
-   *@since
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -114,7 +107,6 @@ public class MessageList extends Vector {
    *  Gets the name attribute of the MessageList object
    *
    *@return    The name value
-   *@since
    */
   public String getName() {
     return name;
@@ -125,7 +117,6 @@ public class MessageList extends Vector {
    *  Gets the description attribute of the MessageList object
    *
    *@return    The description value
-   *@since
    */
   public String getDescription() {
     return description;
@@ -138,7 +129,6 @@ public class MessageList extends Vector {
    *
    *@param  selectName  Description of Parameter
    *@return             The htmlSelect value
-   *@since
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -152,7 +142,6 @@ public class MessageList extends Vector {
    *@param  selectName  Description of Parameter
    *@param  defaultKey  Description of Parameter
    *@return             The htmlSelect value
-   *@since
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect messageListSelect = new HtmlSelect();
@@ -187,13 +176,13 @@ public class MessageList extends Vector {
 
 
   /**
-   *  Description of the Method
+   *  Queries the database and adds Message objects to this collection based on
+   *  any specified parameters.
    *
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
@@ -245,7 +234,7 @@ public class MessageList extends Vector {
     } else {
       sqlOrder.append("ORDER BY name ");
     }
-    
+
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
@@ -261,11 +250,11 @@ public class MessageList extends Vector {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    
+
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
+
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -275,7 +264,7 @@ public class MessageList extends Vector {
       }
       ++count;
       Message thisMessage = new Message(rs);
-      this.addElement(thisMessage);
+      this.add(thisMessage);
     }
     rs.close();
     pst.close();
@@ -283,7 +272,7 @@ public class MessageList extends Vector {
 
 
   /**
-   *  Description of the Method
+   *  Appends any list filters that were specified to the SQL statement
    *
    *@param  sqlFilter  Description of Parameter
    */
@@ -303,15 +292,33 @@ public class MessageList extends Vector {
 
 
   /**
-   *  Description of the Method
+   *  Sets the PreparedStatement parameters that were added in createFilter 
    *
    *@param  pst  Description of Parameter
    *@return      Description of the Returned Value
    */
   private int prepareFilter(PreparedStatement pst) {
     int i = 0;
-
     return i;
+  }
+
+
+  /**
+   *  Checks to see if the specified messageId is in this collection of
+   *  Message objects
+   *
+   *@param  messageId  Message ID to look for
+   *@return            Returns true if found, else false
+   */
+  public boolean hasId(int messageId) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Message thisMessage = (Message) i.next();
+      if (thisMessage.getId() == messageId) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }
