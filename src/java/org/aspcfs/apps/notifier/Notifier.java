@@ -77,7 +77,9 @@ public class Notifier extends ReportBuilder {
     }
     Notifier thisNotifier = new Notifier();
     thisNotifier.execute(args);
-    System.out.println("ExitValue: 0");
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("ExitValue: 0");
+    }
   }
 
 
@@ -109,81 +111,85 @@ public class Notifier extends ReportBuilder {
         System.out.println("Notifier-> WEBSERVER.ASPMODE: " + (String) config.get("WEBSERVER.ASPMODE"));
       }
     }
-    this.baseName = (String) this.config.get("GATEKEEPER.URL");
-    this.dbUser = (String) this.config.get("GATEKEEPER.USER");
-    this.dbPass = (String) this.config.get("GATEKEEPER.PASSWORD");
-    try {
-      SiteList siteList = new SiteList();
-      if ("true".equals((String) this.config.get("WEBSERVER.ASPMODE"))) {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("Notifier-> Processing site list: " + (String) this.config.get("GATEKEEPER.DRIVER"));
+    if (config.containsKey("FILELIBRARY")) {
+      this.baseName = (String) this.config.get("GATEKEEPER.URL");
+      this.dbUser = (String) this.config.get("GATEKEEPER.USER");
+      this.dbPass = (String) this.config.get("GATEKEEPER.PASSWORD");
+      try {
+        SiteList siteList = new SiteList();
+        if ("true".equals((String) this.config.get("WEBSERVER.ASPMODE"))) {
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("Notifier-> Processing site list: " + (String) this.config.get("GATEKEEPER.DRIVER"));
+          }
+          //Build list of sites to process
+          Class.forName((String) this.config.get("GATEKEEPER.DRIVER"));
+          Connection dbSites = DriverManager.getConnection(
+              this.baseName, this.dbUser, this.dbPass);
+          siteList.setEnabled(Constants.TRUE);
+          siteList.buildList(dbSites);
+          dbSites.close();
+        } else {
+          //This setup only allows one site so process it
+          Site thisSite = new Site();
+          thisSite.setDatabaseDriver((String) this.config.get("GATEKEEPER.DRIVER"));
+          thisSite.setDatabaseUrl((String) this.config.get("GATEKEEPER.URL"));
+          thisSite.setDatabaseUsername((String) this.config.get("GATEKEEPER.USER"));
+          thisSite.setDatabasePassword((String) this.config.get("GATEKEEPER.PASSWORD"));
+          thisSite.setSiteCode((String) this.config.get("GATEKEEPER.APPCODE"));
+          thisSite.setVirtualHost((String) this.config.get("WEBSERVER.URL"));
+          siteList.add(thisSite);
         }
-        //Build list of sites to process
-        Class.forName((String) this.config.get("GATEKEEPER.DRIVER"));
-        Connection dbSites = DriverManager.getConnection(
-            this.baseName, this.dbUser, this.dbPass);
-        siteList.setEnabled(Constants.TRUE);
-        siteList.buildList(dbSites);
-        dbSites.close();
-      } else {
-        //This setup only allows one site so process it
-        Site thisSite = new Site();
-        thisSite.setDatabaseDriver((String) this.config.get("GATEKEEPER.DRIVER"));
-        thisSite.setDatabaseUrl((String) this.config.get("GATEKEEPER.URL"));
-        thisSite.setDatabaseUsername((String) this.config.get("GATEKEEPER.USER"));
-        thisSite.setDatabasePassword((String) this.config.get("GATEKEEPER.PASSWORD"));
-        thisSite.setSiteCode((String) this.config.get("GATEKEEPER.APPCODE"));
-        thisSite.setVirtualHost((String) this.config.get("WEBSERVER.URL"));
-        siteList.add(thisSite);
-      }
-      //Process each site
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Notifier-> Processing each site");
-      }
-      Iterator i = siteList.iterator();
-      while (i.hasNext()) {
-        Site thisSite = (Site) i.next();
-        Class.forName(thisSite.getDatabaseDriver());
-        Connection db = DriverManager.getConnection(
-            thisSite.getDatabaseUrl(),
-            thisSite.getDatabaseUsername(),
-            thisSite.getDatabasePassword());
-        this.baseName = thisSite.getSiteCode();
-        //TODO: The intent is to move these all out as separate tasks and
-        //have a TaskContext with an interface
-        if (this.getTaskList().size() == 1) {
-          Iterator classes = this.getTaskList().iterator();
-          while (classes.hasNext()) {
-            try {
-              //Construct the object, which executes the task
-              Class thisClass = Class.forName((String) classes.next());
-              Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), HashMap.class, HashMap.class};
-              Constructor constructor = thisClass.getConstructor(paramClass);
-              Object[] paramObject = new Object[]{db, thisSite, this.getConfig()};
-              Object theTask = constructor.newInstance(paramObject);
-              theTask = null;
-            } catch (Exception e) {
-              e.printStackTrace(System.out);
+        //Process each site
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Notifier-> Processing each site");
+        }
+        Iterator i = siteList.iterator();
+        while (i.hasNext()) {
+          Site thisSite = (Site) i.next();
+          Class.forName(thisSite.getDatabaseDriver());
+          Connection db = DriverManager.getConnection(
+              thisSite.getDatabaseUrl(),
+              thisSite.getDatabaseUsername(),
+              thisSite.getDatabasePassword());
+          this.baseName = thisSite.getSiteCode();
+          //TODO: The intent is to move these all out as separate tasks and
+          //have a TaskContext with an interface
+          if (this.getTaskList().size() == 1) {
+            Iterator classes = this.getTaskList().iterator();
+            while (classes.hasNext()) {
+              try {
+                //Construct the object, which executes the task
+                Class thisClass = Class.forName((String) classes.next());
+                Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), HashMap.class, HashMap.class};
+                Constructor constructor = thisClass.getConstructor(paramClass);
+                Object[] paramObject = new Object[]{db, thisSite, this.getConfig()};
+                Object theTask = constructor.newInstance(paramObject);
+                theTask = null;
+              } catch (Exception e) {
+                e.printStackTrace(System.out);
+              }
             }
           }
+          if (this.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyOpportunityOwners")) {
+            this.output.append(this.buildOpportunityAlerts(db, thisSite));
+          }
+          if (this.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients")) {
+            this.output.append(this.buildCommunications(db, thisSite));
+          }
+          if (this.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyCallOwners")) {
+            this.output.append(this.buildCallAlerts(db, thisSite));
+          }
+          db.close();
         }
-        if (this.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyOpportunityOwners")) {
-          this.output.append(this.buildOpportunityAlerts(db, thisSite));
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println(this.output.toString());
         }
-        if (this.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients")) {
-          this.output.append(this.buildCommunications(db, thisSite));
-        }
-        if (this.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyCallOwners")) {
-          this.output.append(this.buildCallAlerts(db, thisSite));
-        }
-        db.close();
+        //this.sendAdminReport(this.output.toString());
+        java.util.Date end = new java.util.Date();
+      } catch (Exception exc) {
+        exc.printStackTrace(System.out);
+        System.err.println("Notifier-> BuildReport Error: " + exc.toString());
       }
-      System.out.println(this.output.toString());
-      //this.sendAdminReport(this.output.toString());
-      java.util.Date end = new java.util.Date();
-    } catch (Exception exc) {
-      exc.printStackTrace(System.out);
-      System.err.println("Notifier-> BuildReport Error: " + exc.toString());
     }
   }
 
@@ -210,10 +216,12 @@ public class Notifier extends ReportBuilder {
         thisCalendar.get(Calendar.YEAR) + "-" +
         (thisCalendar.get(Calendar.MONTH) + 1) + "-" +
         thisCalendar.get(Calendar.DAY_OF_MONTH));
-    System.out.println("Notifier-> " +
-        thisCalendar.get(Calendar.YEAR) + "-" +
-        (thisCalendar.get(Calendar.MONTH) + 1) + "-" +
-        thisCalendar.get(Calendar.DAY_OF_MONTH));
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Notifier-> " +
+          thisCalendar.get(Calendar.YEAR) + "-" +
+          (thisCalendar.get(Calendar.MONTH) + 1) + "-" +
+          thisCalendar.get(Calendar.DAY_OF_MONTH));
+    }
     thisList.setAlertDate(thisDate);
     thisList.buildList(db);
 
@@ -270,7 +278,9 @@ public class Notifier extends ReportBuilder {
       }
       if (thisNotification.hasErrors()) {
         System.out.println("Notifier Error-> " + thisNotification.getErrorMessage());
-        System.out.println("Notifier-> Opportunity Component: " + thisComponent.getId());
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Notifier-> Opportunity Component: " + thisComponent.getId());
+        }
       }
     }
     thisReport.setHeader("Opportunity Alerts Report for " + start.toString() + lf + "Total Records: " + notifyCount);
@@ -367,7 +377,9 @@ public class Notifier extends ReportBuilder {
     thisList.setReady(CampaignList.TRUE);
     thisList.setEnabled(CampaignList.TRUE);
     thisList.buildList(db);
-    System.out.println("Notifier-> Active Campaigns: " + thisList.size());
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Notifier-> Active Campaigns: " + thisList.size());
+    }
 
     //Get this database's key
     String filePath = (String) config.get("FILELIBRARY") + fs + dbName + fs + "keys" + fs;
@@ -399,7 +411,9 @@ public class Notifier extends ReportBuilder {
       fileItemList.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       fileItemList.setLinkItemId(thisCampaign.getId());
       fileItemList.buildList(db);
-      System.out.println("Notifier-> Campaign file attachments: " + fileItemList.size());
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Notifier-> Campaign file attachments: " + fileItemList.size());
+      }
       Iterator files = fileItemList.iterator();
       while (files.hasNext()) {
         FileItem thisItem = (FileItem) files.next();
@@ -482,7 +496,9 @@ public class Notifier extends ReportBuilder {
           thisRecipient.setStatusDate(new java.sql.Timestamp(System.currentTimeMillis()));
           thisRecipient.setStatusId(1);
           thisRecipient.setStatus(thisNotification.getStatus());
-          System.out.println("Notifier-> Notification status: " + thisNotification.getStatus());
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("Notifier-> Notification status: " + thisNotification.getStatus());
+          }
           thisRecipient.update(db);
         }
         if (thisNotification.hasErrors()) {
@@ -514,7 +530,9 @@ public class Notifier extends ReportBuilder {
    *@exception  Exception  Description of the Exception
    */
   private boolean outputFaxLog(ArrayList faxLog, Connection db, Site siteInfo) throws Exception {
-    System.out.println("Notifier-> Outputting fax log");
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Notifier-> Outputting fax log");
+    }
     if (faxLog == null || faxLog.size() == 0) {
       return false;
     }
@@ -625,7 +643,9 @@ public class Notifier extends ReportBuilder {
    *@exception  Exception  Description of Exception
    */
   private boolean outputLetterLog(Campaign thisCampaign, ContactReport contactReport, String dbName, Connection db) throws Exception {
-    System.out.println("Notifier-> Outputting letter log");
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Notifier-> Outputting letter log");
+    }
     if (contactReport == null || contactReport.size() == 0) {
       return false;
     }
