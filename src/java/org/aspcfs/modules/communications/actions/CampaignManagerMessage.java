@@ -464,7 +464,7 @@ public final class CampaignManagerMessage extends CFSModule {
       if (!hasAuthority(db, context, thisMessage)) {
         return ("PermissionError");
       }
-      htmlDialog.setTitle("CFS: Campaign Manager");
+      htmlDialog.setTitle("Dark Horse CRM: Campaign Manager");
 
       DependencyList dependencies = thisMessage.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());

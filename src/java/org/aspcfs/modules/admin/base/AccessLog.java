@@ -263,7 +263,7 @@ public class AccessLog extends GenericBean {
    */
   public void insert(Connection db) throws SQLException {
     if (userId == -1) {
-      throw new SQLException("Log Entry must be associated to a CFS User");
+      throw new SQLException("Log Entry must be associated to a Dark Horse CRM user");
     }
     StringBuffer sql = new StringBuffer();
     try {

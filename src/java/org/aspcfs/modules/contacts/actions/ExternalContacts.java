@@ -1297,13 +1297,13 @@ public final class ExternalContacts extends CFSModule {
           htmlDialog.addButton("OK", "javascript:parent.window.close()");
         } else {
           if (dependencies.canDelete()) {
-            htmlDialog.setTitle("CFS: Confirm Delete");
-            htmlDialog.setHeader("The contact you are requesting to delete has the following dependencies within CFS:");
+            htmlDialog.setTitle("Dark Horse CRM: Confirm Delete");
+            htmlDialog.setHeader("The contact you are requesting to delete has the following dependencies within Dark Horse CRM:");
             htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContacts.do?command=DeleteContact&id=" + id + "'");
             htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
           } else {
-            htmlDialog.setTitle("CFS: Alert");
-            htmlDialog.setHeader("This contact cannot be deleted because it has the following dependencies within CFS:");
+            htmlDialog.setTitle("Dark Horse CRM: Alert");
+            htmlDialog.setHeader("This contact cannot be deleted because it has the following dependencies within Dark Horse CRM:");
             htmlDialog.addButton("OK", "javascript:parent.window.close()");
           }
         }

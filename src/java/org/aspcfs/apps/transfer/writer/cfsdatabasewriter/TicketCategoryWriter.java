@@ -150,7 +150,7 @@ public class TicketCategoryWriter implements DataWriter {
    *@return    The description value
    */
   public String getDescription() {
-    return "Inserts data directly into a CFS database";
+    return "Inserts data directly into a Dark Horse CRM database";
   }
 
 

@@ -97,13 +97,13 @@ public class Zlib {
     mail.setHost("127.0.0.1");
     mail.setType("text/html");
     mail.addTo(email);
-    mail.setFrom("CFS Registration <info@darkhorseventures.com>");
+    mail.setFrom("Dark Horse CRM Registration <info@darkhorseventures.com>");
     mail.addReplyTo("info@darkhorseventures.com");
-    mail.setSubject("CFS Registration");
+    mail.setSubject("Dark Horse CRM Registration");
     mail.setBody(
-        "Thanks for your interest in CFS.<br>" +
+        "Thanks for your interest in Dark Horse CRM.<br>" +
         "<br>" +
-        "Paste the complete registation code that follows into the CFS validation field:<br>" +
+        "Paste the complete registation code that follows into the Dark Horse CRM validation field:<br>" +
         "<br>" +
         "&lt;license&gt;" + theCode + "&lt;/license&gt;");
     if (mail.send() == 2) {

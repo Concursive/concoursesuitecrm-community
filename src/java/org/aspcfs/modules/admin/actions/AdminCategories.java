@@ -260,13 +260,13 @@ public final class AdminCategories extends CFSModule {
         htmlDialog.setDeleteUrl("javascript:window.location.href='AdminCategories.do?command=Save&categories=' + escape('" + categories + "') + '&parentCode=" + parentCatId + "&level=" + level + "'");
       } else {
         if (dependencies.canDelete()) {
-          htmlDialog.setTitle("CFS: Confirm Delete");
-          htmlDialog.setHeader("The following categories have dependencies within CFS:");
+          htmlDialog.setTitle("Dark Horse CRM: Confirm Delete");
+          htmlDialog.setHeader("The following categories have dependencies within Dark Horse CRM:");
           htmlDialog.addButton("Delete All", "javascript:window.location.href='AdminCategories.do?command=Save&categories=' + escape('" + categories + "') + '&parentCode=" + parentCatId + "&level=" + level + "'");
           htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
         } else {
-          htmlDialog.setTitle("CFS: Alert");
-          htmlDialog.setHeader("The list cannot be updated since the following categories have dependencies within CFS:");
+          htmlDialog.setTitle("Dark Horse CRM: Alert");
+          htmlDialog.setHeader("The list cannot be updated since the following categories have dependencies within Dark Horse CRM:");
           htmlDialog.addButton("OK", "javascript:parent.window.close()");
         }
       }

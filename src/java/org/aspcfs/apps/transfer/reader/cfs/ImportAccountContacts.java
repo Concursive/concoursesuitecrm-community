@@ -74,7 +74,7 @@ public class ImportAccountContacts extends CSVReader {
    *@return    The name value
    */
   public String getName() {
-    return "CFS Account Contacts Importer";
+    return "Dark Horse CRM Account Contacts Importer";
   }
 
 

@@ -274,7 +274,7 @@ public final class MyActionLists extends CFSModule {
         htmlDialog.setDeleteUrl("javascript:window.location.href='MyActionLists.do?command=Delete&id=" + actionId + "&linkModuleId=" + linkModuleId + "'");
       } else {
         htmlDialog.setTitle("Confirm");
-        htmlDialog.setHeader("This list has the following dependencies within CFS:");
+        htmlDialog.setHeader("This list has the following dependencies within Dark Horse CRM:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='MyActionLists.do?command=Delete&id=" + actionId + "&linkModuleId=" + linkModuleId + "'");
         htmlDialog.addButton("No", "javascript:parent.window.close()");
       }

@@ -565,8 +565,8 @@ public final class ExternalContactsOpps extends CFSModule {
       OpportunityHeader thisOpp = new OpportunityHeader(db, headerId);
       DependencyList dependencies = thisOpp.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
-      htmlDialog.setTitle("CFS: Confirm Delete");
-      htmlDialog.setHeader("This object has the following dependencies within CFS:");
+      htmlDialog.setTitle("Dark Horse CRM: Confirm Delete");
+      htmlDialog.setHeader("This object has the following dependencies within Dark Horse CRM:");
       htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContactsOpps.do?command=DeleteOpp&contactId=" + contactId + "&id=" + headerId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {
@@ -610,7 +610,7 @@ public final class ExternalContactsOpps extends CFSModule {
       if (!(hasAuthority(db, context, thisContact) || hasAuthority(context, thisComponent.getOwner()))) {
         return "PermissionError";
       }
-      htmlDialog.setTitle("CFS: General Contacts Opportunities");
+      htmlDialog.setTitle("Dark Horse CRM: General Contacts Opportunities");
       htmlDialog.setShowAndConfirm(false);
       htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContactsOppComponents.do?command=DeleteComponent&contactId=" + contactId + "&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");

@@ -405,8 +405,8 @@ public final class Leads extends CFSModule {
       thisOpp = new OpportunityHeader(db, id);
       DependencyList dependencies = thisOpp.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
-      htmlDialog.setTitle("CFS: Confirm Delete");
-      htmlDialog.setHeader("This object has the following dependencies within CFS:");
+      htmlDialog.setTitle("Dark Horse CRM: Confirm Delete");
+      htmlDialog.setHeader("This object has the following dependencies within Dark Horse CRM:");
       htmlDialog.addButton("Delete All", "javascript:window.location.href='Leads.do?command=DeleteOpp&id=" + id + "'");
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {
@@ -797,7 +797,7 @@ public final class Leads extends CFSModule {
     try {
       db = this.getConnection(context);
       thisComponent = new OpportunityComponent(db, id);
-      htmlDialog.setTitle("CFS: Pipeline Management");
+      htmlDialog.setTitle("Dark Horse CRM: Pipeline Management");
       htmlDialog.setShowAndConfirm(false);
       htmlDialog.setDeleteUrl("javascript:window.location.href='LeadsComponents.do?command=DeleteComponent&id=" + id + "&return=" + context.getRequest().getParameter("return") + "'");
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");

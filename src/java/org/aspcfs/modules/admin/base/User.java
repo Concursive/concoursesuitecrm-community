@@ -290,10 +290,10 @@ public class User extends GenericBean {
       mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
       mail.setType("text/html");
       mail.setTo(targetContact.getEmailAddress("Business"));
-      mail.setSubject("CFS password changed");
-      mail.setBody("Your CFS User account password has been changed by " + modUser.getContact().getNameLastFirst() + ".<br><br>" +
-          "Your new CFS password is the following:<br>" + newPassword + "<br><br>" +
-          "It is recomended that you change your password the next time you login to CFS.");
+      mail.setSubject("Dark Horse CRM password changed");
+      mail.setBody("Your Dark Horse CRM user account password has been changed by " + modUser.getContact().getNameLastFirst() + ".<br><br>" +
+          "Your new Dark Horse CRM password is the following:<br>" + newPassword + "<br><br>" +
+          "It is recomended that you change your password the next time you login to Dark Horse CRM.");
       if (mail.send() == 2) {
         System.err.println(mail.getErrorMsg());
       }

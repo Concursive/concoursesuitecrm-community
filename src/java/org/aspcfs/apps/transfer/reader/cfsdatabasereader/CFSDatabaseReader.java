@@ -158,7 +158,7 @@ public class CFSDatabaseReader implements DataReader {
    *@return    The name value
    */
   public String getName() {
-    return "CFS 2.x Database Reader";
+    return "Dark Horse CRM 2.x Database Reader";
   }
 
 

@@ -483,7 +483,7 @@ public final class MyCFS extends CFSModule {
             mail.setType("text/html");
             mail.setTo(email);
             mail.setSubject(thisNote.getSubject());
-            mail.setBody("The following message was sent to your CFS Inbox by " + thisRecord.getContact().getNameFirstLast() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + StringUtils.toHtml(thisNote.getBody()));
+            mail.setBody("The following message was sent to your Dark Horse CRM inbox by " + thisRecord.getContact().getNameFirstLast() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + StringUtils.toHtml(thisNote.getBody()));
             if (System.getProperty("DEBUG") != null) {
               System.out.println("Sending Mail .. " + thisNote.getBody());
             }

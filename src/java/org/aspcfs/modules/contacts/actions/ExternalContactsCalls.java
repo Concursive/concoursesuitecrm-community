@@ -170,7 +170,7 @@ public final class ExternalContactsCalls extends CFSModule {
         htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       } else {
         htmlDialog.addMessage(dependencies.getHtmlString());
-        htmlDialog.setHeader("This object has the following dependencies within CFS:");
+        htmlDialog.setHeader("This object has the following dependencies within Dark Horse CRM:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
       }

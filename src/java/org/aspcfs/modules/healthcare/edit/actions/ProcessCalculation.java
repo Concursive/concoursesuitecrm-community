@@ -215,17 +215,17 @@ public final class ProcessCalculation extends CFSModule {
         //error checking!
         if (providerOrgMapping.get(thisRec.getTaxId()) == null) {
           hasErrors = true;
-          errors.put(new Integer(thisRec.getId()), new String("Error: Provider with tax ID = " + thisRec.getTaxId() + " not found in CFS!"));
+          errors.put(new Integer(thisRec.getId()), new String("Error: Provider with tax ID = " + thisRec.getTaxId() + " not found in Dark Horse CRM!"));
         } else if (!payorOrgMapping.containsKey(thisRec.getPayerId())) {
           hasErrors = true;
-          errors.put(new Integer(thisRec.getId()), new String("Error: Payor with ID = " + thisRec.getPayerId() + " not found in CFS!"));
+          errors.put(new Integer(thisRec.getId()), new String("Error: Payor with ID = " + thisRec.getPayerId() + " not found in Dark Horse CRM!"));
         }
         if (!hasErrors) {
           //error checking
           ArrayList tempArray = (ArrayList) payorOrgMapping.get(thisRec.getPayerId());
           if (!(tempArray.contains(((Integer) providerOrgMapping.get(thisRec.getTaxId()))))) {
             hasErrors = true;
-            errors.put(new Integer(thisRec.getId()), new String("Error: Payor with ID = " + thisRec.getPayerId() + " not associated with Provider " + thisRec.getTaxId() + " in CFS!"));
+            errors.put(new Integer(thisRec.getId()), new String("Error: Payor with ID = " + thisRec.getPayerId() + " not associated with Provider " + thisRec.getTaxId() + " in Dark Horse CRM!"));
           }
         }
         if (!hasErrors) {

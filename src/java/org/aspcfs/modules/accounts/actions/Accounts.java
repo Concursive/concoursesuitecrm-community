@@ -965,14 +965,14 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisOrg = new Organization(db, Integer.parseInt(id));
-      htmlDialog.setTitle("CFS: Account Management");
+      htmlDialog.setTitle("Dark Horse CRM: Account Management");
       DependencyList dependencies = thisOrg.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
       if (thisOrg.getHasOpportunities()) {
         htmlDialog.setHeader("Please re-assign or delete any opportunities associated with this account first.");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
       } else {
-        htmlDialog.setHeader("The account you are requesting to delete has the following dependencies within CFS:");
+        htmlDialog.setHeader("The account you are requesting to delete has the following dependencies within Dark Horse CRM:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='Accounts.do?command=Delete&action=delete&orgId=" + thisOrg.getOrgId() + "'");
         htmlDialog.addButton("Disable Only", "javascript:window.location.href='Accounts.do?command=Delete&orgId=" + thisOrg.getOrgId() + "&action=disable'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");

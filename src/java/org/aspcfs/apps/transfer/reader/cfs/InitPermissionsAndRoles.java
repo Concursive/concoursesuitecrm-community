@@ -27,7 +27,7 @@ public class InitPermissionsAndRoles implements DataReader {
 
 
   public String getName() {
-    return "CFS Permissions and Roles XML Reader";
+    return "Dark Horse CRM Permissions and Roles XML Reader";
   }
 
 

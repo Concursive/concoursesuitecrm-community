@@ -73,7 +73,7 @@ public class ImportGeneralContacts extends CSVReader {
    *@return    The name value
    */
   public String getName() {
-    return "CFS General Contacts Importer";
+    return "Dark Horse CRM General Contacts Importer";
   }
 
 

@@ -29,7 +29,7 @@ public class TicketReport extends TicketList {
   protected Report rep = new Report();
   //default delimiter is comma
   protected String delimiter = ",";
-  protected String header = "CFS Tickets";
+  protected String header = "Dark Horse CRM Tickets";
   protected String tdFormat = "";
   protected String filePath = "";
   protected String filenameToUse = "";

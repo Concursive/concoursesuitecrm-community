@@ -311,8 +311,8 @@ public final class CompanyDirectory extends CFSModule {
       htmlDialog.addMessage(dependencies.getHtmlString());
 
       if (!thisContact.hasAccount()) {
-        htmlDialog.setTitle("CFS: Confirm Delete");
-        htmlDialog.setHeader("The employee you are requesting to delete has the following dependencies within CFS:");
+        htmlDialog.setTitle("Dark Horse CRM: Confirm Delete");
+        htmlDialog.setHeader("The employee you are requesting to delete has the following dependencies within Dark Horse CRM:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='CompanyDirectory.do?command=DeleteEmployee&empid=" + id + "&popup=true'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
       } else {
