@@ -9,21 +9,20 @@ use CGI qw(:standard);
 # Chris S. Price, Dark Horse Ventures
 # 1-10-2001
 #
-# grab.pl <company_id_name> <dbname>
+# usage: grab.pl <sitecode>
 #
-# file <company_id_name>.conf must be present in directory
+# dbname assumed as cdb_<sitecode>
 # 
 # $LOGFILE == log destination
 ##########################################################
 ##########################################################
 # 3-15-01 dcw.
-# grab2.pl
+#
 # modified to get company names from the site database
 # argument is the site code.
 ##########################################################
 
 $LOGFILE = "/home/chris/grab.log";
-####$DBNAME = $ARGV[1]; 
 $DBNAME = '';
 $SITE_CODE = '';
 
@@ -89,24 +88,6 @@ sub main () {
 
 open LOG, ">>$LOGFILE" or die "Cannot open $LOGFILE for write :$!";
         
-#	while (<CONF>) {
-#		chomp;
-#		next if (/^#/);
-#		s/^[ \t]*//;
-#		s/[ \t\r\n]*$//;
-#		next if (/^$/);
-
-#		if ( /^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/ ) {
-#			$key = $1;
-#			$val = $2;
-#			print LOG "Processing Entry: '$key'\n";
-
-#			$SITE_CODE = $val if ($key =~ /SITE_CODE/);	
-#			$DBNAME = $val if ($key =~ /DB/);	
-
-#		}
-#	} 
-
 	$DBNAME = 'cdb_' . $ARGV[0];
 	$SITE_CODE = $ARGV[0];
 
