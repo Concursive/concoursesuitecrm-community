@@ -215,6 +215,7 @@ public class AuthenticationItem {
    *@exception  SQLException  Description of the Exception
    */
   public ConnectionElement getConnectionElement(ActionContext context) throws SQLException {
+    //Query the gatekeeper for the connectionElement info
     String gkHost = (String) context.getServletContext().getAttribute("GKHOST");
     String gkUser = (String) context.getServletContext().getAttribute("GKUSER");
     String gkUserPw = (String) context.getServletContext().getAttribute("GKUSERPW");
@@ -230,7 +231,6 @@ public class AuthenticationItem {
     ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
     gk.setDriver(gkDriver);
     ConnectionElement ce = null;
-
     String sql =
         "SELECT * FROM sites " +
         "WHERE sitecode = ? " +

@@ -178,7 +178,7 @@ public class SecurityHook implements ControllerHook {
       newSystemStatus.queryRecord(db);
       statusList.put(ce.getUrl(), newSystemStatus);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("CFSModule-> Added new System Status object: " + ce.getUrl());
+        System.out.println("SecurityHook-> Added new System Status object: " + ce.getUrl());
       }
     }
     return (SystemStatus) statusList.get(ce.getUrl());
