@@ -763,14 +763,14 @@
       <!-- opportunities -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_opportunity.sql"/>
       <transaction src="${build.sql.dir}/opportunity.sql"/>
+      <!-- service contracts and assets -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_service_contract.sql"/>
+      <transaction src="${build.sql.dir}/service_contract.sql"/>
       <!-- project management -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_project.sql"/>
       <transaction src="${build.sql.dir}/project.sql"/>
       <!-- product catalog -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_product.sql"/>
-      <!-- service contracts and assets -->
-      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_service_contract.sql"/>
-      <transaction src="${build.sql.dir}/service_contract.sql"/>
       <!-- tickets -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_tms.sql"/>
       <transaction src="${build.sql.dir}/tms.sql"/>
@@ -800,8 +800,9 @@
       <transaction src="${build.sql.dir}/task.sql"/>
       <!-- framework data -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_workflow.sql"/>
-      <!-- additional ticket fields -->
+      <!-- additional fields -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_tms_append_fields.sql"/>
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_quote_adjustment.sql" />
     </sql>
     <delete dir="${build.sql.dir}" failonerror="false"/>
   </target>
