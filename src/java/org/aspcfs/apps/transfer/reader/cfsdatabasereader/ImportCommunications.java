@@ -53,13 +53,11 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
       return false;
     }
 
-    /**
     logger.info("ImportCommunications-> Inserting Search Field Elements");
     processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "searchFieldElement");
     if (!processOK) {
       return false;
     }
-    */
     
     /**
     processOK = writer.commit();
