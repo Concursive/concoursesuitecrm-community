@@ -15,8 +15,8 @@
   <property name="bin.dir" value="${base.dir}${file.separator}bin"/>
   <property name="lib.dir" value="${base.dir}${file.separator}lib"/>
   <property name="src.dir" value="${base.dir}${file.separator}src"/>
-  <property name="classes.dir" value="${src.dir}${file.separator}java"/>
-  <property name="web.dir" value="${src.dir}${file.separator}web"/>
+  <property name="src.classes.dir" value="${src.dir}${file.separator}java"/>
+  <property name="src.web.dir" value="${src.dir}${file.separator}web"/>
   <property name="build.dir" value="${base.dir}${file.separator}build"/>
   <property name="build.lib.dir" value="${build.dir}${file.separator}lib"/>
   <property name="build.classes.dir" value="${build.dir}${file.separator}classes"/>
@@ -26,7 +26,7 @@
 
   <!-- classpath as both object and a property -->
   <path id="cfs2.classpath">
-    <!-- <pathelement path="${classes.dir}"/> -->
+    <!-- <pathelement path="${src.classes.dir}"/> -->
     <fileset dir="${env.CATALINA_HOME}/common/lib">
       <include name="**/*.jar"/>
     </fileset>
@@ -60,7 +60,7 @@
   
   <!-- Load the properties for this system, stop here if not found -->
   <target name="init.loadproperties" depends="init.buildfile.create">
-    <!-- IF cvs build.env is newer than CFS_HOME build.env, so abort now and have user update -->
+    <!-- IF cvs build.env is newer than CFS_HOME build.env, abort now and have user update -->
     <uptodate property="build.config.uptodate"
             srcfile="${base.dir}/build.env"
             targetfile="${CFS_HOME}/WEB-INF/build.env"/>
@@ -81,6 +81,7 @@
     <record name="${CFS_HOME}/WEB-INF/logs/build-${date.short}.log" append="no"/>
   </target>
   
+  <!-- Prepare ant for processing -->
   <target name="init" depends="init.loadproperties">
     <!-- Default properties if not set in file above -->
     <property name="SITEHOME" value="/home"/>
@@ -113,15 +114,15 @@
   
   <target name="classes-check" depends="init">
     <!-- See if files are up-to-date so only new files are installed during development -->
-    <uptodate property="classes-uptodate">
-      <srcfiles dir="${classes.dir}" includes="**/*.java"/>
+    <uptodate property="classes.uptodate">
+      <srcfiles dir="${src.classes.dir}" includes="**/*.java"/>
       <mapper type="merge" to="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
     </uptodate>
   </target>
   
-  <target name="site-check" depends="init">
-    <uptodate property="site-uptodate" >
-      <srcfiles dir="${web.dir}" >
+  <target name="site.check" depends="init">
+    <uptodate property="site.uptodate" >
+      <srcfiles dir="${src.web.dir}" >
         <include name="css/**" />
         <include name="html/**" />
         <include name="images/**" />
@@ -141,14 +142,14 @@
   <target name="compile" 
           description="Compile source"
           depends="init"
-          unless="classes-uptodate">
+          unless="classes.uptodate">
     <!-- Get rid of any classes in the source dir that shouldn't be there -->
     <delete>
-        <fileset dir= "${classes.dir}" includes="**/*.class"/>
+        <fileset dir= "${src.classes.dir}" includes="**/*.class"/>
     </delete>
     <delete dir="${build.classes.dir}"/>
     <mkdir dir="${build.classes.dir}"/>
-    <javac srcdir="${classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on">
+    <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on">
       <classpath>
         <path refid="cfs2.classpath"/>
         <pathelement location="${lib.dir}/jfreechart.jar"/>
@@ -159,40 +160,11 @@
     </javac>
   </target>
   
-  <!-- Try to generate .java/.class files out of the .jsps -->
-  <target name="test" depends="init,deploy">
-    <delete dir="${build.jsp.dir}"/>
-    <delete dir="${build.jspclasses.dir}"/>
-    <mkdir dir="${build.jsp.dir}"/>
-    <java classname="org.apache.jasper.JspC" fork="yes" failonerror="yes">
-      <classpath>
-        <path refid="cfs2.classpath"/>
-        <pathelement location="${env.ANT_HOME}/lib/ant.jar"/>
-      </classpath>
-      <arg line="-v -d ${build.jsp.dir} -p org.apache.jsp
-                -uriroot ${CFS_HOME}
-                -webinc ${build.jsp.dir}/webinc.xml
-                -webapp ${CFS_HOME} "/>
-    </java>
-    <mkdir dir="${build.jspclasses.dir}"/>
-    <javac srcdir="${build.jsp.dir}" destdir="${build.jspclasses.dir}"
-           verbose="off" deprecation="on">
-     <classpath>
-       <path refid="cfs2.classpath"/>
-       <pathelement location="${CFS_HOME}/WEB-INF/lib"/>
-       <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
-       <pathelement location="${CFS_HOME}/WEB-INF/lib/zeroio-iteam.jar"/>
-       <pathelement location="${CFS_HOME}/WEB-INF/lib/isavvix.jar"/>
-     </classpath>
-     <include name="**/*.java"/>
-    </javac>
-  </target>
-  
   <!-- Generate the .jar files -->
   <target name="jar" 
           description="Create .jar files"
           depends="init"
-          unless="classes-uptodate">
+          unless="classes.uptodate">
     <delete dir="${build.lib.dir}"/>
     <mkdir dir="${build.lib.dir}"/>
     <!-- darkhorseventures.jar -->
@@ -219,45 +191,109 @@
     <mkdir dir="${build.lib.dir}"/>
   </target>
   
-  <target name="deploy"
-          description="Build all data and copy to CFS_HOME"
-          depends="log,init,classes-check,build">
+  <target name="deploy.copy">
     <!-- Copy the .jars, only if new -->
     <copy todir="${CFS_HOME}/WEB-INF/lib">
       <fileset dir="${build.lib.dir}">
         <include name="*.jar"/>
       </fileset>
     </copy>
-    <!-- Copy the web data, ownly if new -->
+    <!-- Copy the web data, only if new -->
     <copy todir="${CFS_HOME}">
-      <fileset dir="${web.dir}/jsp">
+      <fileset dir="${src.web.dir}/jsp">
         <include name="**/*.jsp"/>
       </fileset>
     </copy>
     <copy todir="${CFS_HOME}">
-      <fileset dir="${web.dir}/html">
+      <fileset dir="${src.web.dir}/html">
         <include name="**/*.*"/>
       </fileset>
     </copy>
-    <!-- Copy the meta-data, only if new -->
+    <!-- Copy the configuration files -->
     <copy todir="${CFS_HOME}/WEB-INF">
-      <fileset dir="${web.dir}/WEB-INF">
-        <include name="*.*"/>
+      <fileset dir="${src.web.dir}/WEB-INF">
+        <include name="*.xml"/>
+        <include name="*.tld"/>
+        <exclude name="web.xml"/>
       </fileset>
     </copy>
-    
-    
-    <!-- Merge meta-data with build.env, only if 1 of the following -->
+  </target>
+  
+  <!-- See if there is an updated file to merge -->
+  <target name="deploy.merge.prepare">
     <!-- cvs web.xml is newer than CFS_HOME web.xml, so generate new CFS_HOME web.xml -->
     <!-- CFS_HOME build.env is newer than CFS_HOME web.xml, so generate new CFS_HOME web.xml -->
+    <condition property="deploy.merge.uptodate">
+      <and>
+        <available file="${CFS_HOME}/WEB-INF/web.xml"/>
+        <available file="${CFS_HOME}/WEB-INF/build.env"/>
+        <uptodate srcfile="${CFS_HOME}/WEB-INF/web.xml"
+                  targetfile="${src.web.dir}/WEB-INF/web.xml"/>
+        <uptodate srcfile="${CFS_HOME}/WEB-INF/web.xml"
+                  targetfile="${CFS_HOME}/WEB-INF/build.env"/>
+      </and>
+    </condition>
+  </target>
+  
+  <!-- Merge meta-data with build.env, only if changed so reload doesn't kick in -->
+  <target name="deploy.merge" depends="deploy.merge.prepare" unless="deploy.merge.uptodate">
+    
     
   </target>
   
-    <target name="clean"
+  <!-- Copy all data to the web-app folder -->
+  <target name="deploy"
+          description="Build all data and copy to CFS_HOME"
+          depends="log,init,classes-check,build,deploy.copy,deploy.merge">
+    
+  </target>
+  
+  
+  <!-- Try to generate .java/.class files out of the web-app .jsps -->
+  <target name="test" depends="init,deploy">
+    <delete dir="${build.jsp.dir}"/>
+    <delete dir="${build.jspclasses.dir}"/>
+    <mkdir dir="${build.jsp.dir}"/>
+    <java classname="org.apache.jasper.JspC" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <pathelement location="${env.ANT_HOME}/lib/ant.jar"/>
+      </classpath>
+      <arg line="-v -d ${build.jsp.dir} -p org.apache.jsp
+                -uriroot ${CFS_HOME}
+                -webinc ${build.jsp.dir}/webinc.xml
+                -webapp ${CFS_HOME} "/>
+    </java>
+    <mkdir dir="${build.jspclasses.dir}"/>
+    <javac srcdir="${build.jsp.dir}" destdir="${build.jspclasses.dir}"
+           verbose="off" deprecation="on">
+     <classpath>
+       <path refid="cfs2.classpath"/>
+       <pathelement location="${CFS_HOME}/WEB-INF/lib/darkhorseventures.jar"/>
+       <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
+       <pathelement location="${CFS_HOME}/WEB-INF/lib/zeroio-iteam.jar"/>
+       <pathelement location="${CFS_HOME}/WEB-INF/lib/isavvix.jar"/>
+     </classpath>
+     <include name="**/*.java"/>
+    </javac>
+  </target>
+  
+  <!-- Remove the build folder -->
+  <target name="clean"
           description="Delete all files generated by build"
           depends="init">
     <delete dir="${build.dir}"/>
   </target>
+  
+  
+  
+  
+  
+  
+  
+  <!-- MISC STUFF TO GO THROUGH -->
+  
+  
   
   
   <!-- separate app installation stuff -->
@@ -289,7 +325,7 @@
   
   <target name="apps" description="Java applications that get installed."
       depends="compile,apps-configuration"
-      unless="classes-uptodate">
+      unless="classes.uptodate">
     
     <echo message="Installing Apps"/>
     <echo message=" Site code: ${SITECODE}"/>
@@ -340,14 +376,14 @@
   </target>
   
   <target name="check-site-configuration">
-     <uptodate property="webxml-uptodate" 
+     <uptodate property="webxml.uptodate" 
                srcfile="${SRC_APP}/WEB-INF/web.xml"
                targetfile="${CFS_HOME}/WEB-INF/web.xml" >
      </uptodate>
   </target>
   
   <target name="site-configuration" depends="check-site-configuration"
-          unless="webxml-uptodate">
+          unless="webxml.uptodate">
     <echo message="Installing web.xml configuration file"/>
     <copy todir="${CFS_HOME}">
       <fileset dir="${SRC_APP}">
@@ -397,7 +433,7 @@
   <!-- Deploy rest of site files to CFS_HOME -->
   <target name="deploy-site" 
           description="Install files to site" 
-          depends="init,site-configuration" unless="site-uptodate">
+          depends="init,site-configuration" unless="site.uptodate">
     <echo message="Installing site"/>
     <echo message=" Source: ${SRC_APP}"/>
     <echo message=" Destination: ${CFS_HOME}"/>
