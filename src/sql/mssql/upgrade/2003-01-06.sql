@@ -823,6 +823,44 @@ CREATE TABLE saved_criteriaelement (
 
 GO
 
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('company', 'Company Name', 1, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('namefirst', 'Contact First Name', 1, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('namelast', 'Contact Last Name', 1, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('entered', 'Entered Date', 1, 1);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('zip', 'Zip Code', 1, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('areacode', 'Area Code', 1, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('city', 'City', 1, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('typeId', 'Contact Type', 1, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('contactId', 'Contact ID', 0, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('title', 'Contact Title', 0, 0);
+
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', '=', 'is');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', '!=', 'is not');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', '= | or field_name is null', 'is empty');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', '!= | and field_name is not null', 'is not empty');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', 'like %search_value%', 'contains');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', 'not like %search_value%', 'does not contain');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', '<', 'before');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', '>', 'after');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', 'between', 'between');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', '<=', 'on or before');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', '>=', 'on or after');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (2, 'number', '>', 'greater than');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (2, 'number', '<', 'less than');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (2, 'number', '=', 'equals');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (2, 'number', '>=', 'greater than or equal to');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (2, 'number', '<=', 'less than or equal to');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (2, 'number', 'is not null', 'exist');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (2, 'number', 'is null', 'does not exist');
+
+INSERT INTO lookup_survey_types (description) VALUES ('Open-Ended');
+INSERT INTO lookup_survey_types (description) VALUES ('Quantitative (no comments)');
+INSERT INTO lookup_survey_types (description) VALUES ('Quantitative (with comments)');
+
+GO
+
+
+
 CREATE TABLE lookup_revenue_types (
   code INT IDENTITY PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
@@ -877,21 +915,46 @@ CREATE TABLE revenue_detail (
 
 GO
 
+INSERT INTO lookup_revenue_types (description) VALUES ('Technical');
+
+GO
+
+CREATE TABLE lookup_task_priority (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+)
+
+GO
+
+CREATE TABLE lookup_task_loe (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+)
+
+GO
+
 CREATE TABLE task (
   task_id INT IDENTITY PRIMARY KEY,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
-  priority INT NOT NULL,
+  priority INTEGER NOT NULL REFERENCES lookup_task_priority,
   description VARCHAR(80),
   duedate DATETIME,
   reminderid INT,
-  notes VARCHAR(255),
+  notes TEXT,
   sharing INT NOT NULL,
   complete BIT DEFAULT 0 NOT NULL,
   enabled BIT DEFAULT 0 NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT REFERENCES access(user_id),
-  estimatedloe INTEGER DEFAULT -1,
+  estimatedloe FLOAT,
+  estimatedloetype INTEGER REFERENCES lookup_task_loe,
   owner INTEGER NOT NULL,
   completedate DATETIME
   )
@@ -910,4 +973,18 @@ CREATE TABLE tasklink_ticket (
   task_id INT NOT NULL REFERENCES task,
   ticket_id INT NOT NULL  REFERENCES ticket(ticketid)
   )
+  
+GO
+
+INSERT INTO lookup_task_loe (level, description, default_item) VALUES (1, 'Minute(s)', 0);
+INSERT INTO lookup_task_loe (level, description, default_item) VALUES (1, 'Hour(s)', 1);
+INSERT INTO lookup_task_loe (level, description, default_item) VALUES (1, 'Day(s)', 0);
+INSERT INTO lookup_task_loe (level, description, default_item) VALUES (1, 'Week(s)', 0);
+INSERT INTO lookup_task_loe (level, description, default_item) VALUES (1, 'Month(s)', 0);
+
+INSERT INTO lookup_task_priority (level, description, default_item) VALUES (1, '1', 1);
+INSERT INTO lookup_task_priority (level, description) VALUES (2, '2');
+INSERT INTO lookup_task_priority (level, description) VALUES (3, '3');
+INSERT INTO lookup_task_priority (level, description) VALUES (4, '4');
+INSERT INTO lookup_task_priority (level, description) VALUES (5, '5');
 

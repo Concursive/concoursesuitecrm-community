@@ -119,6 +119,7 @@ _ SQL: ALL campaign tables... DROP table and CREATE table
 _ SQL: campaign.init
 
 _ SQL: All revenue tables
+_ SQL: revenue.init
 _ SQL: All task tables
-
+_ SQL: task.init
 
