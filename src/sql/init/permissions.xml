@@ -1,4 +1,4 @@
-<CFSPermissions>
+<DarkHorseModules>
   <!-- Every individual permission has a unique name -->
   <!-- Permission Categories can be arranged in any order, but they must have a unique sequntial id that
        matches the id used in the CFS code -->
@@ -103,12 +103,12 @@
       <permission name="projects-enterprise" attributes="v---" description="Enterprise View"/>
       <permission name="projects-projects" attributes="vaed" description="Project Records"/>
     </category>
-    <category id="8" name="Tickets" folders="true" lookups="true" reports="true" scheduledEvents="true" objectEvents="true" categories="true">
-      <folder constantId="11072003" description="Tickets"/>
+    <category id="8" name="Help Desk" folders="true" lookups="true" reports="true" scheduledEvents="true" objectEvents="true" categories="true">
+      <folder constantId="11072003" description="Help Desk"/>
       <lookup constantId="1" class="lookupList" table="lookup_ticketsource" description="Ticket Source"/>
       <lookup constantId="2" class="lookupList" table="ticket_severity" description="Ticket Severity"/>
       <lookup constantId="3" class="lookupList" table="ticket_priority" description="Ticket Priority"/>
-      <permission name="tickets" attributes="v---" description="Access to Ticket module"/>
+      <permission name="tickets" attributes="v---" description="Access to Help Desk module"/>
       <permission name="tickets-tickets" attributes="vaed" description="Ticket Records"/>
       <permission name="tickets-reports" attributes="vaed" description="Export Ticket Data"/>
       <permission name="tickets-tickets-tasks" attributes="vaed" description="Tasks"/>
@@ -596,4 +596,4 @@
     </role>
     -->
   </roles>
-</CFSPermissions>
+</DarkHorseModules>

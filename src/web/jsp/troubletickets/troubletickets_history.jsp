@@ -6,7 +6,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="TroubleTickets.do">Tickets</a> > 
+<a href="TroubleTickets.do">Help Desk</a> > 
 <a href="TroubleTickets.do?command=Home">View Tickets</a> >
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>">Ticket Details</a> >
 History

@@ -43,7 +43,7 @@ Settings: This feature allows you to modify the information about yourself and y
 <action>MyCFSInbox.do</action>
 <section>Inbox</section>
 <subSection/>
-<title>My Mailbox</title>
+<title>Mailbox</title>
 <description>The messaging feature is designed to support INTERNAL business messaging needs and to prepare OUTGOING emails to addresses who are already in the system. Messaging is NOT a normal email replacement. It will not send email to address assigned &quot;on-the-fly&quot; and it will not receive OUTSIDE email.</description>
 <features>
 <featureDescription>The select button can be used to view the details, reply, forward or delete a particular message.</featureDescription>
@@ -128,7 +128,7 @@ Settings: This feature allows you to modify the information about yourself and y
 <action>MyTasks.do</action>
 <section/>
 <subSection/>
-<title>My Tasks</title>
+<title>Tasks</title>
 <description>Tasks created can be assigned to the owner/creator of the task or an employee working in the system. This page lists the tasks present along with their priorities, their due dates and age.</description>
 <features>
 <featureDescription>You can add a quick task. This task would have just the description and whether the task is personal or not</featureDescription>
@@ -192,7 +192,7 @@ Settings: This feature allows you to modify the information about yourself and y
 <action>MyActionLists.do</action>
 <section>List</section>
 <subSection/>
-<title>My Action Lists</title>
+<title>Action Lists</title>
 <description>Action Lists allow you to create new Action Lists and assign contacts to the Action Lists created. For each of the contacts in a list, you can add a call, opportunity, ticket, task or send a message, which would correspondingly show up in their respective tabs. For example, adding a ticket to the contact would be reflected in the Ticket module.</description>
 <features>
 <featureDescription>You can also view all the in progress Action Lists, completed lists, or both together.</featureDescription>
@@ -337,12 +337,9 @@ Settings: This feature allows you to modify the information about yourself and y
 </features>
 <notes/>
 <rules/>
-<tips>
-<tipDescription>USABILITY: If my Task list has, say 10 items out of which 6 are already complete and I wish to delete all of them. I will have delete each one. Could we have an option of deleting all at once? </tipDescription>
-</tips>
 </pageDescription>
 <pageDescription contentLevel="0">
-<action>MyTasks.do </action>
+<action>MyTasks.do</action>
 <section/>
 <subSection/>
 <title/>
@@ -3149,9 +3146,9 @@ Once activated, today&apos;s campaigns will begin processing in under 5 minutes 
 </pageDescription>
 </module>
 <module contentLevel="2" name="Tickets">
-<briefDescription>You are looking at the Tickets module home page. The dashboard shows the most recent tickets that have been assigned to you, as well as tickets that are in your department, and tickets that have been created by you. You can add new tickets, search for existing tickets based on different filters and export ticket data in different formats.
+<briefDescription>You are looking at the Help Desk module home page. The dashboard shows the most recent tickets that have been assigned to you, as well as tickets that are in your department, and tickets that have been created by you. You can add new tickets, search for existing tickets based on different filters and export ticket data.
 </briefDescription>
-<detailDescription>The Tickets module has four main features.
+<detailDescription>The Help Desk module has four main features.
 
 View: Lists all the tickets assigned to you and the tickets assigned in your department. Details such as the ticket number, priority, age, i.e. how old the ticket is, the company and the tickets assignment are displayed.
 
@@ -3509,9 +3506,9 @@ The data can be exported in different formats. The exported data can be viewed w
 </features>
 <notes/>
 <rules>
-<ruleDescription>Other Tickets in My Department: These are records that are assigned to anyone in your department, are unassigned in your department, and are open.</ruleDescription>
-<ruleDescription>Tickets Assigned to Me: These are records that are assigned to you and are open</ruleDescription>
-<ruleDescription>Tickets Created by Me: These are records that have been entered by you and are open</ruleDescription>
+<ruleDescription>Other tickets in my Department: These are records that are assigned to anyone in your department, are unassigned in your department, and are open.</ruleDescription>
+<ruleDescription>Tickets assigned to me: These are records that are assigned to you and are open</ruleDescription>
+<ruleDescription>Tickets created by me: These are records that have been entered by you and are open</ruleDescription>
 </rules>
 <tips>
 <tipDescription>Make sure to resolve your tickets as soon as possible so they don&apos;t appear here!</tipDescription>
@@ -3896,12 +3893,9 @@ This page lists the different roles present in the system, their role descriptio
 <section>Config</section>
 <subSection/>
 <title>Configure Modules</title>
-<description>This page lets you configure modules that meet the needs of your organization, including configuration of lookup lists and custom fields. There are four types of modules. Each module has a different number of configure options. The changes in the module affect all the users.</description>
+<description>This page lets you configure modules that meet the needs of your organization, including configuration of lookup lists and custom fields. Depending on permissions, each module that you can configure is listed and each module has a different number of configure options. The changes typically affect all users immediately.</description>
 <features>
-<featureDescription>Clicking on Tickets configures Categories, Lookup Lists, Object Events, and Scheduled Events.</featureDescription>
-<featureDescription>Clicking on Pipeline Management configures only Lookup Lists.</featureDescription>
-<featureDescription>Clicking on Account Management configures Custom Folders &amp; Fields and also Lookup Lists.</featureDescription>
-<featureDescription>Clicking on General contacts configures Custom Folders &amp; Fields and also Lookup Lists.</featureDescription>
+<featureDescription>Clicking on the module name will display a list of module items that can be configured.</featureDescription>
 </features>
 <notes/>
 <rules/>
@@ -3916,9 +3910,9 @@ This page lists the different roles present in the system, their role descriptio
 <features>
 <featureDescription>Scheduled Events: A timer triggers a customizable workflow process.</featureDescription>
 <featureDescription>Object Events: An Action triggers customizable workflow process. For example, when an object is inserted, updated, deleted or selected, a process is triggered.</featureDescription>
-<featureDescription>Categories: This lets you create categories for tickets.</featureDescription>
-<featureDescription>Lookup Lists: You can view the List&apos;s name and edit it by clicking on the &quot;Look up Lists&quot; link.</featureDescription>
-<featureDescription>Custom Folders and Fields: For each of the contacts Custom Folders and Fields can be added, which lets you enable or disable the folders. You can do this by clicking on the &quot;Custom Folders &amp; Fields&quot; link.</featureDescription>
+<featureDescription>Categories: This lets you create hierarchical categories for a specific feature in the module.</featureDescription>
+<featureDescription>Lookup Lists: You can view the drop-down lists used in the module and make changes.</featureDescription>
+<featureDescription>Custom Folders and Fields: Custom folders allows you to create forms that will be present within each module, essentially custom fields.</featureDescription>
 </features>
 <notes/>
 <rules/>

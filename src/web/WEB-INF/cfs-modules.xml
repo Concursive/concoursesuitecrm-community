@@ -336,10 +336,10 @@
     <action name="TroubleTicketTasks"/>
     <action name="TroubleTicketsFolders"/>
     <action name="TroubleTicketsDocuments"/>
-    <page title="Tickets"/>
+    <page title="Help Desk"/>
     <permission value="tickets-view"/>
-    <long_html value="Tickets"/>
-    <short_html value="&amp;nbsp;Tickets&amp;nbsp;"/>
+    <long_html value="Help Desk"/>
+    <short_html value="&amp;nbsp;Help Desk&amp;nbsp;"/>
     <link value="TroubleTickets.do?command=Home"/>
     <graphic width="83" height="36" on="menu-tickets-on.gif" off="menu-tickets-off.gif" rollover=""/>
     <submenu name="ViewTickets">

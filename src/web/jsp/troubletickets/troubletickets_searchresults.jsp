@@ -16,7 +16,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="TroubleTickets.do">Tickets</a> > 
+<a href="TroubleTickets.do">Help Desk</a> > 
 <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
 Search Results
 </td>
