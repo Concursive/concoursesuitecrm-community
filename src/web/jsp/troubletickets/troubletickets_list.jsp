@@ -13,23 +13,15 @@
 <%= showAttribute(request, "actionError") %>
 
 
-<table width="100%" border="0">
-  <tr>
-    <!--form name="listView" action="/TroubleTickets.do?command=Home" method="post"-->
-    <td align="left">
-    Tickets Assigned to Me
-      <!--select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-      <option <%= AssignedToMeInfo.getOptionValue("assignedToMe") %>>Tickets Assigned to Me</option>
-  
-        <% if (!(AssignedToMeInfo.getSavedCriteria().isEmpty())) { %>
-          <option <%= AssignedToMeInfo.getOptionValue("search") %>>Search Results</option>
-        <%}%>
-      </select-->
-      <%= showAttribute(request, "actionError") %>
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="containerHeader">
+    <td>
+      <strong>Tickets Assigned to Me</strong>
     </td>
-    <!--/form-->
   </tr>
-</table>
+
+    <tr>
+    <td>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -96,26 +88,21 @@
 		<tr bgcolor="white"><td colspan="7" valign="center">No tickets found.</td></tr>
 		</table>
 	<%}%>
+  
+  </td></tr>
+  </table>
 
 <br>
 
-<table width="100%" border="0">
-  <tr>
-    <!--form name="listView1" action="/TroubleTickets.do?command=Home" method="post"-->
-    <td align="left">
-    Open/Unassigned Tickets
-      <!--select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-      <option <%= OpenInfo.getOptionValue("unassigned") %>>Open/Unassigned Tickets</option>
-  
-        <% if (!(OpenInfo.getSavedCriteria().isEmpty())) { %>
-          <option <%= OpenInfo.getOptionValue("search") %>>Search Results</option>
-        <%}%>
-      </select-->
-      <%= showAttribute(request, "actionError") %>
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="containerHeader">
+    <td>
+      <strong>Open/Unassigned Tickets</strong>
     </td>
-    <!--/form-->
   </tr>
-</table>
+
+    <tr>
+    <td>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -182,16 +169,21 @@
 		<tr bgcolor="white"><td colspan="7" valign="center">No tickets found.</td></tr>
 		</table>
 	<%}%>
+  
+  </td></tr>
+  </table>
 
 <br>
 
-<table width="100%" border="0">
-  <tr>
-    <td align="left">
-    Tickets Created by Me
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="containerHeader">
+    <td>
+      <strong>Tickets Created by Me</strong>
     </td>
   </tr>
-</table>
+
+    <tr>
+    <td>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -258,4 +250,7 @@
 		<tr bgcolor="white"><td colspan="7" valign="center">No tickets found.</td></tr>
 		</table>
 	<%}%>
+  
+  </td></tr>
+  </table>
   
