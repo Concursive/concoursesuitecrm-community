@@ -1,6 +1,7 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
 import java.util.*;
+
 
 /**
  *  Description of the Class

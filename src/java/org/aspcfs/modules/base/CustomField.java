@@ -14,12 +14,12 @@ package org.aspcfs.modules.base;
 import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
-import java.util.*;
-import java.text.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.controller.SystemStatus;
-
+import com.darkhorseventures.database.*;
+import java.util.*;
+import java.text.*;
 
 /**
  *  Represents a CustomField, used for both the definition of a custom field and

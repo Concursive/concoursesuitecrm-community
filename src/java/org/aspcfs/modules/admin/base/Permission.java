@@ -5,9 +5,8 @@ package org.aspcfs.modules.admin.base;
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.database.Connection;
 import com.darkhorseventures.framework.beans.*;
-import org.aspcfs.modules.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 

@@ -1,10 +1,14 @@
 //Copyright 2001-2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
 import java.sql.*;
 import java.text.*;
 import org.aspcfs.utils.*;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.controller.SystemStatus;
+
 
 /**
  *  Represents all of the data that is entered for a CustomFieldCategory

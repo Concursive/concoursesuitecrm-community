@@ -1,16 +1,15 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.admin.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.database.Connection;
-import org.aspcfs.modules.utils.web.*;
-import org.aspcfs.modules.modules.admin.base.*;
-import org.aspcfs.modules.utils.DatabaseUtils;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Description of the Class

@@ -12,6 +12,8 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.web.LookupElement;
 import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.modules.base.*;
+
 
 /**
  *  Represents a Contact in CFS
@@ -38,8 +40,6 @@ public class Contact extends GenericBean {
   private String nameMiddle = "";
   private String nameLast = "";
   private String nameSuffix = "";
-  //private int typeId = -1;
-  //private String typeName = "";
   private String site = "";
   private String notes = "";
   private String imName = "";
@@ -1917,7 +1917,6 @@ public class Contact extends GenericBean {
       try {
         db.setAutoCommit(false);
 
-
         CustomFieldRecordList folderList = new CustomFieldRecordList();
         folderList.setLinkModuleId(Constants.CONTACTS);
         folderList.setLinkItemId(this.getId());
@@ -2165,7 +2164,7 @@ public class Contact extends GenericBean {
    *@exception  SQLException  Description of Exception
    *@since                    1.35
    */
-  protected boolean isValid(Connection db) throws SQLException {
+  public boolean isValid(Connection db) throws SQLException {
     errors.clear();
 
     if (company == null || company.trim().equals("")) {

@@ -17,6 +17,7 @@ import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.*;
 
 
+
 /**
  *  Represents a user access record <p>
  *
