@@ -25,7 +25,7 @@
 %>
 <table width="100%" border="0">
   <tr>
-    <td><b>Dark Horse CRM Installation</b></td>
+    <td><b>Centric CRM Installation</b></td>
   </tr>
 </table>
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
@@ -71,7 +71,7 @@
   <tr>
     <td>
       Acquire, retain, and service your customers with
-      Dark Horse CRM.<br>
+      Centric CRM.<br>
       <br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
       <a href="http://www.darkhorsecrm.com" target="_blank">Learn more about our products</a><br>
@@ -161,13 +161,13 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      Dark Horse CRM Resources
+      Centric CRM Resources
     </th>
   </tr>
   <tr>
     <td>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.darkhorsecrm.com/Website.do?topic=Resources" target="_blank">Dark Horse CRM Help</a><br>
+      <a href="http://www.centriccrm.com" target="_blank">Centric CRM Help</a><br>
       &nbsp;
     </td>
   </tr>

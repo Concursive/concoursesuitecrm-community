@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Dark Horse CRM</title>
+<title>Centric CRM</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <%@ include file="initPage.jsp" %>
 </head>
@@ -66,7 +66,7 @@
               </tr>
               <tr> 
                 <td valign="center">
-                  <font size="2">Welcome to Dark Horse CRM!</font><br />
+                  <font size="2">Welcome to Centric CRM!</font><br />
                   <img border=0 src="images/prline.gif" width="200" height="5">
                 </td>
               </tr>

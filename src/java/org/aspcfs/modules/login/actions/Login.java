@@ -36,7 +36,7 @@ import org.aspcfs.modules.system.base.ApplicationVersion;
 import java.text.NumberFormat;
 
 /**
- *  The CFS Login module.
+ *  The Login module.
  *
  *@author     mrajkowski
  *@created    July 9, 2001

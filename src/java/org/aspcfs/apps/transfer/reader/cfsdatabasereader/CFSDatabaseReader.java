@@ -173,7 +173,7 @@ public class CFSDatabaseReader implements DataReader {
    *@return    The name value
    */
   public String getName() {
-    return "Dark Horse CRM 2.x Database Reader";
+    return "Centric CRM 2.x Database Reader";
   }
 
 
@@ -183,7 +183,7 @@ public class CFSDatabaseReader implements DataReader {
    *@return    The description value
    */
   public String getDescription() {
-    return "Reads data from an ASPCFS version 2.x database";
+    return "Reads data from a Centric CRM version 2.x database";
   }
 
 

@@ -20,8 +20,8 @@ import javax.servlet.http.*;
 import java.util.prefs.*;
 
 /**
- *  A class for loading CFS preferences, only called when the initHook does not
- *  find any prefs in web.xml. Used for the CFS initial setup code.
+ *  A class for loading preferences, only called when the initHook does not
+ *  find any prefs in web.xml. Used for the initial setup code.
  *
  *@author     matt rajkowski
  *@created    August 12, 2003

@@ -23,7 +23,7 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Dark Horse CRM Configuration (Step 4 of 4)<br>
+      Centric CRM Configuration (Step 4 of 4)<br>
       User Settings
     </th>
   </tr>
@@ -31,13 +31,13 @@
     <td>
       Login account created!<br>
       <br>
-      Installation is complete and you can now begin to use Dark Horse CRM.<br>
+      Installation is complete and you can now begin to use Centric CRM.<br>
       <br>
-      Further configuration can be completed by clicking on the System Administration tab in Dark Horse CRM.<br>
+      Further configuration can be completed by clicking on the System Administration tab in Centric CRM.<br>
       <br>
       Since the JavaServerPages have not yet been compiled, you should choose to precompile the
       JSPs first so that the application works without compile delays.
-      Precompiling will occur in the background and you can continue to use Dark Horse CRM.<br>
+      Precompiling will occur in the background and you can continue to use Centric CRM.<br>
       <br>
       <input type="button" value="Precompile JSPs" onClick="javascript:popURL('setup/precompile.html','CRM_Precompile','500','325','yes','yes')"/><br>
       <br>

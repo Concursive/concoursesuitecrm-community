@@ -42,15 +42,15 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Dark Horse CRM Configuration (Step 3 of 4)<br>
+      Centric CRM Configuration (Step 3 of 4)<br>
       Database Settings &amp; Installation
     </th>
   </tr>
   <tr>
     <td>
-      Dark Horse CRM stores and retrieves data using a database.<br>
+      Centric CRM stores and retrieves data using a database.<br>
       <br>
-      Dark Horse CRM works best with the Open Source database server <a href="http://www.postgresql.org" target="_new">PostgreSQL</a>.
+      Centric CRM works best with the Open Source database server <a href="http://www.postgresql.org" target="_new">PostgreSQL</a>.
       You can also use <a href="http://www.microsoft.com/sql" target="_new">Microsoft SQL Server</a>.
       <ul>
       <li>Before continuing, the database server must be installed and functional</li>

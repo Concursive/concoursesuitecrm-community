@@ -24,7 +24,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 /**
- *  Represent a list of Business Rules on a page in CFS
+ *  Represent a list of Business Rules on a page
  *
  *@author     akhi_m
  *@created    July 9, 2003

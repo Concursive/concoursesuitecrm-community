@@ -21,7 +21,7 @@
 <jsp:useBean id="Help" class="org.aspcfs.modules.help.base.HelpItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <html>
-<head><title>Dark Horse CRM: Help</title></head>
+<head><title>Centric CRM: Help</title></head>
 <FRAMESET COLS="25%,75%">
 	<FRAME SRC="Help.do?command=ViewTableOfContents" name="contents">
 	<FRAMESET ROWS="30%,70%">

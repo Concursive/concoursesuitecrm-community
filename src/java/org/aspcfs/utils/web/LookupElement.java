@@ -349,7 +349,7 @@ public class LookupElement {
 
   /**
    *  Gets the id attribute of the LookupElement object, id is a required name
-   *  for some CFS reflection parsing
+   *  for some reflection parsing
    *
    *@return    The id value
    */

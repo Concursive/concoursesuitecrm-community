@@ -65,23 +65,23 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Dark Horse CRM Configuration (Step 4 of 4)<br>
+      Centric CRM Configuration (Step 4 of 4)<br>
       User Settings
     </th>
   </tr>
   <tr>
     <td>
-      An administrative user is required to manage Dark Horse CRM.  The administrator
+      An administrative user is required to manage Centric CRM.  The administrator
       is primarily responsible for adding users, configuring user permissions,
-      and tailoring Dark Horse CRM to your organization.<br>
+      and tailoring Centric CRM to your organization.<br>
       <br>
-      The following information will appear in Dark Horse CRM under Employees and can
+      The following information will appear in Centric CRM under Employees and can
       be modified later if necessary.<br>
       &nbsp;<br>
     </td>
   </tr>
   <tr class="sectionTitle">
-    <th>Create a Dark Horse CRM administrator account</th>
+    <th>Create a Centric CRM administrator account</th>
   </tr>
   <tr>
     <td nowrap>

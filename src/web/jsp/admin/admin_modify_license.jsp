@@ -37,11 +37,11 @@ License
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
     <td><b>Have
 you upgraded your license?</b><br />
-Every Dark Horse CRM application requires a license agreement from Dark Horse Ventures.
+Every Centric CRM application instance requires a license agreement from Dark Horse Ventures.
 If changes have been made to the license, for example, 
 additional seats have been purchased, then the installed license should be updated to
 reflect those changes.
-Contact <a href="http://www.darkhorsecrm.com" target="_blank">www.darkhorsecrm.com</a> for
+Contact <a href="http://www.centriccrm.com" target="_blank">www.centriccrm.com</a> for
 upgrade information
 </td></tr></table>
 <dhv:permission name="admin-sysconfig-view">

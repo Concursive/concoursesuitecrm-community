@@ -41,20 +41,20 @@
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td>The installed version of Dark Horse CRM needs to be upgraded.</td>
+    <td>The installed version of Centric CRM needs to be upgraded.</td>
   </tr>
 </table>
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Dark Horse CRM Upgrade
+      Centric CRM Upgrade
     </th>
   </tr>
   <tr>
     <td>
       You are receiving this message for one of several reasons:
       <ul>
-        <li>You are an administrator in the process of upgrading Dark Horse CRM and you are ready
+        <li>You are an administrator in the process of upgrading Centric CRM and you are ready
             to proceed with the upgrade.</li>
         <li>You are a user expecting to be able to login, however, at this time
             it appears the software is being upgraded by an administrator. If
@@ -69,8 +69,8 @@
       proceed with the upgrade process. To protect your data, you should perform
       the following steps before continuing:
       <ul>
-        <li>Backup the Dark Horse CRM database</li>
-        <li>Backup the Dark Horse CRM file library</li>
+        <li>Backup the Centric CRM database</li>
+        <li>Backup the Centric CRM file library</li>
       </ul>
     </td>
   </tr>

@@ -23,7 +23,7 @@ import java.util.*;
 import java.text.*;
 
 /**
- *  Represents a Help Tip on a page in CFS
+ *  Represents a Help Tip on a page
  *
  *@author     akhi_m
  *@created    July 9, 2003

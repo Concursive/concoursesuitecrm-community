@@ -36,11 +36,11 @@
   </tr>
   <tr>
     <td>
-      If you have already registered for Dark Horse CRM, you should have received a
+      If you have already registered for Centric CRM, you should have received a
       license file by email.<br>
       <ul>
       <li>The license can only be used on the system that requested it</li>
-      <li>If you have misplaced your license or you are installing Dark Horse CRM on a different server, then you can
+      <li>If you have misplaced your license or you are installing Centric CRM on a different server, then you can
       <a href="Setup.do?command=Register">request a new license</a>
       to be sent by email</li>
       </ul>

@@ -39,7 +39,7 @@ public class OrganizationReport extends OrganizationList {
   protected Report rep = new Report();
   //default delimiter is comma
   protected String delimiter = ",";
-  protected String header = "Dark Horse CRM Accounts";
+  protected String header = "Centric CRM Accounts";
   protected String tdFormat = "";
   protected String filePath = "";
   protected String filenameToUse = "";

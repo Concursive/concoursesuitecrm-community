@@ -112,7 +112,7 @@ public class ContextListener implements ServletContextListener {
       systemStatusList.clear();
     }
     context.removeAttribute("SystemStatus");
-    //Remove the dynamic CFS items, forcing them to rebuild
+    //Remove the dynamic items, forcing them to rebuild
     context.removeAttribute("DynamicFormList");
     context.removeAttribute("DynamicFormConfig");
     context.removeAttribute("ContainerMenu");

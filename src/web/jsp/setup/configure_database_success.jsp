@@ -30,7 +30,7 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Dark Horse CRM Configuration (Step 3 of 4)<br>
+      Centric CRM Configuration (Step 3 of 4)<br>
       Database Settings &amp; Installation
     </th>
   </tr>
@@ -38,7 +38,7 @@
     <td>
       Database Connection Successful!<br>
       <br>
-      Dark Horse CRM will now create all of the necessary database tables
+      Centric CRM will now create all of the necessary database tables
       and initial data in the following database:<br>
       <br>
       <b><%= toHtmlValue(database.getUrl()) %></b><br>

@@ -32,7 +32,7 @@
 <head>
 <%@ include file="../initPage.jsp" %>
 <META HTTP-EQUIV="refresh" content="<%= User.getSystemStatus(getServletConfig()).getSessionTimeout() + 60 %>;URL=<%= request.getScheme() %>://<%= getServerUrl(request) %>/MyCFS.do?command=Home">
-<title>Dark Horse CRM<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
+<title>Centric CRM<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
 <jsp:include page="cssInclude.jsp" flush="true"/>
 </head>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>

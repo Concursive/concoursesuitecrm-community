@@ -48,8 +48,8 @@ Disable User Account
   </tr>
   <tr class="containerBack">
     <td align="left">
-      You have requested to disable the Dark Horse CRM user account <b><%=User.getUsername()%></b> (<%=User.getContact().getNameLastFirst()%>).<p>
-      Nearly every object within Dark Horse CRM ultimately depends on a user account, so it is imperative that 
+      You have requested to disable the user account <b><%=User.getUsername()%></b> (<%=User.getContact().getNameLastFirst()%>).<p>
+      Nearly every object within ultimately depends on a user account, so it is imperative that 
       any data directly associated with the user account you wish to disable gets re-assigned to an active user within the system.
       <p>
       If you click "Proceed", the following actions will occur:

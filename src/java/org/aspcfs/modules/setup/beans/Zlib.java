@@ -398,19 +398,19 @@ public class Zlib {
     mail.setHost("127.0.0.1");
     mail.setType("text/plain");
     mail.addTo(email);
-    mail.setFrom("Dark Horse CRM Registration <registration@darkhorsecrm.com>");
-    mail.addReplyTo("registration@darkhorsecrm.com");
-    mail.setSubject("Dark Horse CRM Registration");
+    mail.setFrom("Centric CRM Registration <registration@centriccrm.com>");
+    mail.addReplyTo("registration@centriccrm.com");
+    mail.setSubject("Centric CRM Registration");
     mail.setBody(
-        "Thank you for registering Dark Horse CRM." + CRLF +
+        "Thank you for registering Centric CRM." + CRLF +
         CRLF +
         "Paste the complete registation code from the attached file " +
-        "(including the <license> tags) into the Dark Horse CRM license validation field." + CRLF +
+        "(including the <license> tags) into the Centric CRM license validation field." + CRLF +
         CRLF +
         "Some mail programs may have a problem with the attachment, if so please report " +
-        "the client mail application name and the mail server software name to Dark Horse CRM." + CRLF +
+        "the client mail application name and the mail server software name to Centric CRM." + CRLF +
         CRLF +
-        "The Dark Horse CRM Team"
+        "The Centric CRM Team"
         );
     mail.addByteArrayAttachment("license.txt", theLicense, "text/plain");
     if (mail.send() == 2) {

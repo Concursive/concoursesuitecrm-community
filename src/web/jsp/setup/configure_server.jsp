@@ -32,13 +32,13 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Dark Horse CRM Configuration (Step 2 of 4)<br>
+      Centric CRM Configuration (Step 2 of 4)<br>
       Server Settings
     </th>
   </tr>
   <tr>
     <td>
-      Dark Horse CRM interacts with various servers and services that must be defined.<br>
+      Centric CRM interacts with various servers and services that must be defined.<br>
       &nbsp;<br>
     </td>
   </tr>
@@ -48,7 +48,7 @@
   </tr>
   <tr>
     <td>
-      Each user in Dark Horse CRM can configure the time zone in which they are currently in.<br>
+      Each user in Centric CRM can configure the time zone in which they are currently in.<br>
       What should the default time zone be set to for new users?<br>
       <ul>
       <li>Users will still be able to change their time zone, but for new users this setting 
@@ -75,8 +75,8 @@
   </tr>
   <tr>
     <td>
-      All locale formatting in Dark Horse CRM is currently defaulted to a single locale.
-      Which locale should Dark Horse CRM use?
+      All locale formatting in Centric CRM is currently defaulted to a single locale.
+      Which locale should Centric CRM use?
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
@@ -97,7 +97,7 @@
   </tr>
   <tr>
     <td>
-      Which country should Dark Horse CRM use as the default for mailing addresses?
+      Which country should Centric CRM use as the default for mailing addresses?
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
@@ -117,8 +117,8 @@
   </tr>
   <tr>
     <td>
-      All money in Dark Horse CRM is currently defaulted to a single currency.
-      Which currency should Dark Horse CRM use?
+      All money in Centric CRM is currently defaulted to a single currency.
+      Which currency should Centric CRM use?
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
@@ -139,9 +139,9 @@
   </tr>
   <tr>
     <td>
-      Dark Horse CRM sends various notifications to users by email.  Dark Horse CRM can also be used
-      to send email to contacts that have been entered into Dark Horse CRM.<br>
-      Which email server should Dark Horse CRM use?<br>
+      Centric CRM sends various notifications to users by email.  Centric CRM can also be used
+      to send email to contacts that have been entered into Centric CRM.<br>
+      Which email server should Centric CRM use?<br>
       <ul>
       <li>The specified server must allow this server to relay email</li>
       </ul>
@@ -193,15 +193,15 @@
       <ul>
       <li>The URL must exist in your DNS so that users can connect</li>
       <li>Optionally, you can specify the IP address</li>
-      <li>Include the full URL path to get to the Dark Horse CRM web application, 
+      <li>Include the full URL path to get to the Centric CRM web application, 
       excluding HTTP:// or HTTPS://</li>
-      <li>Clicking the Test button will attempt to bring up a Dark Horse CRM confirmation
+      <li>Clicking the Test button will attempt to bring up a Centric CRM confirmation
       page located on this server</li>
       </ul>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            Dark Horse CRM URL:
+            Centric CRM URL:
           </td>
           <td>
             <input type="text" size="40" name="url" value="<%= toHtmlValue(server.getUrl()) %>"/><font color="red">*</font>
@@ -222,10 +222,10 @@
   <tr>
     <td>
       <font color="red">* </font><b>The HylaFax server application requires Linux or Unix and has further software and hardware requirements.</b><br>
-      Users may have the capability to send faxes using Dark Horse CRM.<br>
+      Users may have the capability to send faxes using Centric CRM.<br>
       The faxing component requires a properly configured
       <a href="http://www.hylafax.org" target="_new">HylaFax</a> server including fax hardware.<br>
-      Which fax server should Dark Horse CRM use?<br>
+      Which fax server should Centric CRM use?<br>
       <ul>
       <li>The specified server must allow this server to send faxes</li>
       <li>Leave blank if faxing will not be used</li>

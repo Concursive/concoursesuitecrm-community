@@ -46,7 +46,7 @@ public class OpportunityReport extends OpportunityList {
   protected Report rep = new Report();
   //default delimiter is comma
   protected String delimiter = ",";
-  protected String header = "Dark Horse CRM Pipeline Management";
+  protected String header = "Centric CRM Pipeline Management";
   protected String tdFormat = "";
   protected String filePath = "";
   protected String filenameToUse = "";

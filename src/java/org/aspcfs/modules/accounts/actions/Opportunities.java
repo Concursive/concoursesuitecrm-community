@@ -546,7 +546,7 @@ public final class Opportunities extends CFSModule {
       if (!hasAuthority(context, thisComponent.getOwner())) {
         return "PermissionError";
       }
-      htmlDialog.setTitle("Dark Horse CRM: Account Management Opportunities");
+      htmlDialog.setTitle("Centric CRM: Account Management Opportunities");
       htmlDialog.setShowAndConfirm(false);
       htmlDialog.setDeleteUrl("javascript:window.location.href='OpportunitiesComponents.do?command=DeleteComponent&orgId=" + orgId + "&id=" + id + "'");
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
@@ -674,8 +674,8 @@ public final class Opportunities extends CFSModule {
       }
       DependencyList dependencies = thisOpp.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
-      htmlDialog.setTitle("Dark Horse CRM: Confirm Delete");
-      htmlDialog.setHeader("This object has the following dependencies within Dark Horse CRM:");
+      htmlDialog.setTitle("Centric CRM: Confirm Delete");
+      htmlDialog.setHeader("This object has the following dependencies within Centric CRM:");
       htmlDialog.addButton("Delete All", "javascript:window.location.href='Opportunities.do?command=Delete&orgId=" + orgId + "&id=" + headerId + "'");
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {

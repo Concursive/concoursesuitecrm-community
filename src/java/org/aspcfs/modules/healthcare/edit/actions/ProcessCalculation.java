@@ -38,9 +38,9 @@ import org.aspcfs.controller.SecurityHook;
 import org.aspcfs.controller.SystemStatus;
 
 /**
- *  This class processes EDIT transactions and stores them into a remote CFS
+ *  This class processes EDIT transactions and stores them into a remote CRM
  *  system. This process is intended to run on the transaction server each
- *  night, summarizing the transactions, and then storing them in CFS folders.
+ *  night, summarizing the transactions, and then storing them in folders.
  *
  *@author     chris
  *@created    February 11, 2003
@@ -74,9 +74,9 @@ public final class ProcessCalculation extends CFSModule {
     fullCategoryList.setLinkModuleId(Constants.ACCOUNTS);
     fullCategoryList.setIncludeEnabled(Constants.TRUE);
     fullCategoryList.setIncludeScheduled(Constants.TRUE);
-    //Prepare map to store valid provider IDs with their respective OrgIds in CFS
+    //Prepare map to store valid provider IDs with their respective OrgIds
     HashMap providerOrgMapping = new HashMap();
-    //Prepare map to store valid payor IDs with an ArrayList of Accounts to which they belong in CFS
+    //Prepare map to store valid payor IDs with an ArrayList of Accounts to which they belong
     HashMap payorOrgMapping = new HashMap();
     //More maps to store transactions for summary report
     HashMap providerTransactions = new HashMap();
@@ -228,17 +228,17 @@ public final class ProcessCalculation extends CFSModule {
         //error checking
         if (providerOrgMapping.get(thisRec.getTaxId()) == null) {
           hasErrors = true;
-          errors.put(new Integer(thisRec.getId()), new String("Error: Provider with tax ID = " + thisRec.getTaxId() + " not found in Dark Horse CRM!"));
+          errors.put(new Integer(thisRec.getId()), new String("Error: Provider with tax ID = " + thisRec.getTaxId() + " not found in Centric CRM!"));
         } else if (!payorOrgMapping.containsKey(thisRec.getPayerId())) {
           hasErrors = true;
-          errors.put(new Integer(thisRec.getId()), new String("Error: Payor with ID = " + thisRec.getPayerId() + " not found in Dark Horse CRM!"));
+          errors.put(new Integer(thisRec.getId()), new String("Error: Payor with ID = " + thisRec.getPayerId() + " not found in Centric CRM!"));
         }
         if (!hasErrors) {
           //error checking
           ArrayList tempArray = (ArrayList) payorOrgMapping.get(thisRec.getPayerId());
           if (!(tempArray.contains(((Integer) providerOrgMapping.get(thisRec.getTaxId()))))) {
             hasErrors = true;
-            errors.put(new Integer(thisRec.getId()), new String("Error: Payor with ID = " + thisRec.getPayerId() + " not associated with Provider " + thisRec.getTaxId() + " in Dark Horse CRM!"));
+            errors.put(new Integer(thisRec.getId()), new String("Error: Payor with ID = " + thisRec.getPayerId() + " not associated with Provider " + thisRec.getTaxId() + " in Centric CRM!"));
           }
         }
         if (!hasErrors) {
@@ -385,7 +385,7 @@ public final class ProcessCalculation extends CFSModule {
         boolean payorIsValid = false;
         String key = (String) it.next();
         FolderInsertRecord val = (FolderInsertRecord) providerTransactions.get(key);
-        //this gets us the CFS org_id of the Office to which this provider belongs
+        //this gets us the org_id of the Office to which this provider belongs
         //if the provider belongs to an Account/Office, insert it
         providerTransDetails.setLinkItemId(((Integer) providerOrgMapping.get(key)).intValue());
         //ID must be first on form!

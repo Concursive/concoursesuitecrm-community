@@ -142,7 +142,7 @@ public class SharingHandler extends TagSupport {
 
 
   /**
-   *  Creates permission based on the CFS Business Object<br>
+   *  Creates permission based on the Business Object<br>
    *  Can be expanded to use for other Business Objects like Opportunities as
    *  well
    *

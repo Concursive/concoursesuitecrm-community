@@ -290,18 +290,18 @@ public class User extends GenericBean {
       mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
       mail.setType("text/html");
       mail.setTo(targetContact.getEmailAddress("Business"));
-      mail.setSubject("Dark Horse CRM Account Information");
+      mail.setSubject("Centric CRM Account Information");
       mail.setBody(
-          "This message details information about your Dark Horse CRM account.<br />" +
+          "This message details information about your Centric CRM account.<br />" +
           "<br />" +
-          "Your Dark Horse CRM user account password has been reset by " + modUser.getContact().getNameLastFirst() + ".<br />" +
+          "Your Centric CRM user account password has been reset by " + modUser.getContact().getNameLastFirst() + ".<br />" +
           "<br />" +
           "Please login with the following information:<br />" +
           "<br />" +
           "User Name: " + this.username + "<br />" +
           "Password: " + newPassword + "<br />" +
           "<br />" +
-          "It is recomended that you change your password the next time you login to Dark Horse CRM.<br />" +
+          "It is recomended that you change your password the next time you login to Centric CRM.<br />" +
           "<br />");
       if (mail.send() == 2) {
         System.err.println(mail.getErrorMsg());

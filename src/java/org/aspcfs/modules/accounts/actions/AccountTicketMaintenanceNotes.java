@@ -332,9 +332,9 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       thisTicket.queryRecord(db, Integer.parseInt(ticketId));
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       // Prepare the HTML Dialog
-      htmlDialog.setTitle("Dark Horse CRM: Confirm Delete");
+      htmlDialog.setTitle("Centric CRM: Confirm Delete");
       htmlDialog.addMessage("\nAre you sure you want to delete this form?");
-      htmlDialog.setHeader("The form you are requesting to delete may have dependencies within Dark Horse CRM:");
+      htmlDialog.setHeader("The form you are requesting to delete may have dependencies within Centric CRM:");
       htmlDialog.addButton("Delete", "javascript:window.location.href='AccountTicketMaintenanceNotes.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {

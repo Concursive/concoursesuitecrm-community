@@ -33,8 +33,8 @@ public class DatabaseBean extends GenericBean {
   private String driver = null;
   private String ip = "127.0.0.1";
   private int port = 5432;
-  private String name = "darkhorse_crm";
-  private String user = "darkhorse_crm";
+  private String name = "centric_crm";
+  private String user = "centric_crm";
   private String password = null;
 
 

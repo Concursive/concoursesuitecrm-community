@@ -2305,7 +2305,7 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Renames the CFS organization running this database
+   *  Renames the organization running this database
    *
    *@param  db                Description of the Parameter
    *@param  newName           Description of the Parameter

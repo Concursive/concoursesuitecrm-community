@@ -444,7 +444,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Add: Displays the form used for adding a new Account to CFS
+   *  Add: Displays the form used for adding a new Account
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -759,7 +759,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Insert: Inserts a new Account into the CFS database.
+   *  Insert: Inserts a new Account into the database.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -1019,7 +1019,7 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisOrg = new Organization(db, Integer.parseInt(id));
-      htmlDialog.setTitle("Dark Horse CRM: Account Management");
+      htmlDialog.setTitle("Centric CRM: Account Management");
       DependencyList dependencies = thisOrg.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
       if (thisOrg.getHasOpportunities() || thisOrg.getHasPortalUsers()) {
@@ -1033,7 +1033,7 @@ public final class Accounts extends CFSModule {
         htmlDialog.setHeader(headerMessage);
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
       } else {
-        htmlDialog.setHeader("The account you are requesting to delete has the following dependencies within Dark Horse CRM:");
+        htmlDialog.setHeader("The account you are requesting to delete has the following dependencies within Centric CRM:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='Accounts.do?command=Delete&action=delete&orgId=" + thisOrg.getOrgId() + "'");
         htmlDialog.addButton("Disable Only", "javascript:window.location.href='Accounts.do?command=Delete&orgId=" + thisOrg.getOrgId() + "&action=disable'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");

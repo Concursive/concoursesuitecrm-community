@@ -1113,13 +1113,13 @@ public final class TroubleTickets extends CFSModule {
       db = this.getConnection(context);
       ticket = new Ticket(db, Integer.parseInt(id));
       DependencyList dependencies = ticket.processDependencies(db);
-      htmlDialog.setTitle("Dark Horse CRM: Confirm Delete");
+      htmlDialog.setTitle("Centric CRM: Confirm Delete");
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       } else if (dependencies.canDelete()) {
         htmlDialog.addMessage(dependencies.getHtmlString());
-        htmlDialog.setHeader("This object has the following dependencies within Dark Horse CRM:");
+        htmlDialog.setHeader("This object has the following dependencies within Centric CRM:");
 
         String returnType = (String) context.getRequest().getParameter("return");
         if ("searchResults".equals(returnType)) {

@@ -80,7 +80,7 @@ public class InitPermissionsAndRoles implements DataReader {
    *@return    The name value
    */
   public String getName() {
-    return "Dark Horse CRM Permissions and Roles XML Reader";
+    return "Centric CRM Permissions and Roles XML Reader";
   }
 
 

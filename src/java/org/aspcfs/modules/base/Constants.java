@@ -39,7 +39,7 @@ public final class Constants {
   public final static int TRUE = 1;
   public final static int FALSE = 0;
 
-  //Basic Objects in CFS
+  //Basic Objects
   public final static int TICKET_OBJECT = 42420030;
   public final static int CALL_OBJECT = 42420031;
   public final static int OPPORTUNITY_OBJECT = 42420032;

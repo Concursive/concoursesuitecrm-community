@@ -30,11 +30,11 @@
 <form name="register" action="Setup.do?command=Register" method="post" onSubmit="return checkForm(this)">
 <table border="0" width="100%">
   <tr class="sectionTitle">
-    <th>Welcome to Dark Horse CRM</th>
+    <th>Welcome to Centric CRM</th>
   </tr>
   <tr>
     <td>
-      In order to begin using Dark Horse CRM, the setup process will guide you through
+      In order to begin using Centric CRM, the setup process will guide you through
       several steps.<br />
       <br />
       Although installation can be completed in just a few minutes, you will
@@ -45,10 +45,10 @@
       so we have made the registration process very simple.<br />
       <ul>
       <li>An internet connection is required before continuing</li>
-      <li>The freely available version of Dark Horse CRM
+      <li>The freely available version of Centric CRM
       will entitle this system to a maximum of five (5) users</li>
-      <li>You must agree to the Dark Horse CRM License Agreement</li>
-      <li>The Dark Horse CRM administrator will receive information about software updates
+      <li>You must agree to the Centric CRM License Agreement</li>
+      <li>The Centric CRM administrator will receive information about software updates
       as they become available</li>
       </ul>
     </td>

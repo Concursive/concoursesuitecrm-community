@@ -33,7 +33,7 @@ else{%>
         <td>
           <center>
            <strong>
-           <%= (Dialog.getHeader() != null && !"".equals(Dialog.getHeader())) ? Dialog.getHeader() : "Are you sure you wish to permanently delete this information from Dark Horse CRM?" %>
+           <%= (Dialog.getHeader() != null && !"".equals(Dialog.getHeader())) ? Dialog.getHeader() : "Are you sure you wish to permanently delete this information?" %>
           </strong>
          </center>
         </td>

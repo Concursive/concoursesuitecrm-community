@@ -211,7 +211,7 @@ public final class CampaignManagerGroup extends CFSModule {
       if (!hasAuthority(context, thisSCL.getOwner())) {
         return "PermissionError";
       }
-      htmlDialog.setTitle("Dark Horse CRM: Campaign Manager");
+      htmlDialog.setTitle("Centric CRM: Campaign Manager");
       DependencyList dependencies = thisSCL.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
       if (dependencies.size() == 0) {

@@ -31,7 +31,7 @@ import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
 
 /**
- *  The CFS Company Directory module.
+ *  The Company Directory module.
  *
  *@author     mrajkowski
  *@created    July 9, 2001
@@ -325,8 +325,8 @@ public final class CompanyDirectory extends CFSModule {
       htmlDialog.addMessage(dependencies.getHtmlString());
 
       if (!thisContact.hasAccount()) {
-        htmlDialog.setTitle("Dark Horse CRM: Confirm Delete");
-        htmlDialog.setHeader("The employee you are requesting to delete has the following dependencies within Dark Horse CRM:");
+        htmlDialog.setTitle("Centric CRM: Confirm Delete");
+        htmlDialog.setHeader("The employee you are requesting to delete has the following dependencies within Centric CRM:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='CompanyDirectory.do?command=DeleteEmployee&empid=" + id + "&popup=true'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
       } else {

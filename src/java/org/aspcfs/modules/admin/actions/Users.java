@@ -423,7 +423,7 @@ public final class Users extends CFSModule {
       if (recordDisabled) {
         thisTicket = new Ticket();
         thisTicket.setProblem(
-            "Dark Horse CRM user " + thisUser.getUsername() + " has been disabled by " + thisRec.getUsername() +
+            "Centric CRM user " + thisUser.getUsername() + " has been disabled by " + thisRec.getUsername() +
             ".  Since you are the direct manager of " + thisUser.getUsername() + ", you have been notified.  It is essential that " +
             "any data still directly associated with this disabled user gets re-assigned as soon as possible.");
         thisTicket.setEnteredBy(thisRec.getId());

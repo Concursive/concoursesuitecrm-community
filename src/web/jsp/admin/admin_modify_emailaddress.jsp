@@ -34,7 +34,7 @@ Modify Setting
 <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
     <td><b>What
-email address should be in the FROM field of all emails sent by Dark Horse CRM?</b>
+email address should be in the FROM field of all emails sent by Centric CRM?</b>
 </td></tr></table>
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">

@@ -28,7 +28,7 @@ import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.controller.ImportManager;
 
 /**
- *  Represents a base CFS Import
+ *  Represents a base Import
  *
  *@author     Mathur
  *@created    March 30, 2004

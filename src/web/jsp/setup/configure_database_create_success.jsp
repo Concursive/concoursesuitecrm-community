@@ -22,7 +22,7 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Dark Horse CRM Configuration (Step 3 of 4)<br>
+      Centric CRM Configuration (Step 3 of 4)<br>
       Database Settings &amp; Installation
     </th>
   </tr>
@@ -30,7 +30,7 @@
     <td>
       Database Creation Successful!<br>
       <br>
-      Dark Horse CRM now has all of the necessary database tables as well
+      Centric CRM now has all of the necessary database tables as well
       as initial data installed.<br>
       <br>
       The final step is to create an administrative user login.<br>

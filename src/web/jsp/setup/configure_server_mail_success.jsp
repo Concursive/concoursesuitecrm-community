@@ -20,7 +20,7 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Dark Horse CRM Mail Test
+      Centric CRM Mail Test
     </th>
   </tr>
   <tr>

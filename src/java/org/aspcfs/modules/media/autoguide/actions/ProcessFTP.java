@@ -36,7 +36,7 @@ import java.text.SimpleDateFormat;
 
 /**
  *  Auto Guide FTP module which processes uploaded pictures and moves them into
- *  CFS web site
+ *  web site
  *
  *@author     matt rajkowski
  *@created    June 23, 2002

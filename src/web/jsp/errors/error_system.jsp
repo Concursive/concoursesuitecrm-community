@@ -20,7 +20,7 @@
 <img src="images/error.gif" border="0" align="absmiddle"/>
 <font color='red'>An Error Has Occurred</font>
 <hr color="#BFBFBB" noshade>
-Please report the following error to <a href="http://www.darkhorsecrm.com" target="_blank">Dark Horse CRM</a><p>
+Please report the following error to <a href="http://www.centriccrm.com" target="_blank">Centric CRM</a><p>
 You may be able to hit the back button on your browser, review your selection, and try your request again.<p>
 <pre>
 <%

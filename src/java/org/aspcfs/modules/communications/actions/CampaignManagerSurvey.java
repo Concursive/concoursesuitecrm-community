@@ -606,7 +606,7 @@ public final class CampaignManagerSurvey extends CFSModule {
       if (!hasAuthority(context, thisSurvey.getEnteredBy())) {
         return ("PermissionError");
       }
-      htmlDialog.setTitle("Dark Horse CRM: Campaign Manager");
+      htmlDialog.setTitle("Centric CRM: Campaign Manager");
 
       DependencyList dependencies = thisSurvey.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());

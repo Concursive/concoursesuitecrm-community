@@ -352,7 +352,7 @@ public class ApplicationPrefs {
     addParameter(context, "GlobalPWInfo", this.get("WEBSERVER.PASSWORD"), "#notspecified");
     //Define the web server operation mode
     addParameter(context, "WEBSERVER.ASPMODE", this.get("WEBSERVER.ASPMODE"));
-    //Define the mail server to be used within CFS
+    //Define the mail server to be used
     addParameter(context, "MailServer", this.get("MAILSERVER"));
     addParameter(context, "FaxServer", this.get("FAXSERVER"));
     addParameter(context, "FaxEnabled", this.get("FAXENABLED"));

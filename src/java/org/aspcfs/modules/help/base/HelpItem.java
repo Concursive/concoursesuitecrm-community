@@ -21,7 +21,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import java.io.*;
 
 /**
- *  Represents help for a page in CFS
+ *  Represents help for a page
  *
  *@author     matt rajkowski
  *@created    January 21, 2002

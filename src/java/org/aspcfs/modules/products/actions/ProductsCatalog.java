@@ -628,15 +628,15 @@ public final class ProductsCatalog extends CFSModule {
       int id = Integer.parseInt((String) context.getRequest().getParameter("productId"));
       productDetails = new ProductCatalog(db, id);
 
-      htmlDialog.setTitle("Dark Horse CRM: Products - Product");
+      htmlDialog.setTitle("Centric CRM: Products - Product");
       DependencyList dependencies = productDetails.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
       if (dependencies.canDelete()) {
-        htmlDialog.setHeader("The product you are requesting to delete has the following dependencies within Dark Horse CRM:");
+        htmlDialog.setHeader("The product you are requesting to delete has the following dependencies within Centric CRM:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='ProductsCatalog.do?command=DeleteProduct&action=delete&productId=" + id + "&moduleId=" + moduleId + "'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
       } else {
-        htmlDialog.setHeader("This product cannot be deleted because it has the following dependencies within Dark Horse CRM:");
+        htmlDialog.setHeader("This product cannot be deleted because it has the following dependencies within Centric CRM:");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
       }
     } catch (Exception e) {

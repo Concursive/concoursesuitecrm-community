@@ -24,7 +24,7 @@ import java.util.logging.*;
 
 /**
  *  This application is responsible for processing a .csv textfile and importing
- *  into a CFS database.<p>
+ *  into a database.<p>
  *
  *  The file is in either format:<br>
  *  model,make,year1,year2,year3<br>

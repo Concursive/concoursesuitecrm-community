@@ -34,9 +34,9 @@ Modify Setting
 <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
     <td><b>Which 
-fax server should Dark Horse CRM use?</b><br />
+fax server should Centric CRM use?</b><br />
 Users will have the
-capability to send faxes using Dark Horse CRM.<br />
+capability to send faxes using Centric CRM.<br />
 <font color="red">* </font>The HylaFax server application requires Linux or Unix.<br />
 The faxing component requires a properly configured
 <a href="http://www.hylafax.org" target="_new">HylaFax</a> server including fax hardware.<br />

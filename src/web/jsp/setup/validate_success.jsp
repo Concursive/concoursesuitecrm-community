@@ -27,7 +27,7 @@
       License accepted!<br>
       <br>
       Now it's time to configure some of the system settings before you
-      can begin using Dark Horse CRM.<br>
+      can begin using Centric CRM.<br>
       <br>
       Configuration includes the following steps:<br>
       <br>
@@ -61,7 +61,7 @@
             Step 4:
           </td>
           <td>
-            Setup the Dark Horse CRM administrative user account
+            Setup the Centric CRM administrative user account
           </td>
         </tr>
       </table>

@@ -34,7 +34,7 @@ import com.isavvix.tools.*;
 import java.io.*;
 
 /**
- *  Auto Guide CFS Module
+ *  Auto Guide Module
  *
  *@author     matt rajkowski
  *@created    April 30, 2002

@@ -33,7 +33,7 @@ import org.aspcfs.modules.accounts.base.Organization;
 import com.darkhorseventures.framework.actions.ActionContext;
 
 /**
- *  Represents a Contact in CFS
+ *  Represents a Contact
  *
  *@author     mrajkowski
  *@created    August 29, 2001

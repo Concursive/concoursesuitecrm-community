@@ -35,7 +35,7 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Dark Horse CRM Upgrade Failed!
+      Centric CRM Upgrade Failed!
     </th>
   </tr>
   <tr>
@@ -57,7 +57,7 @@
     <td>
       If you are in a hurry to get the system working, you could restore the database 
       to your last backup and then
-      put the previous version of Dark Horse CRM back online.
+      put the previous version of Centric CRM back online.
     </td>
   </tr>
 </table>

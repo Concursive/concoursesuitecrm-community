@@ -16,7 +16,7 @@
 package org.aspcfs.modules.mycfs.base;
 
 /**
- *  Represents an Alert in CFS.
+ *  Represents an Alert.
  *
  *@author     Mathur
  *@created    January 20, 2003

@@ -23,7 +23,7 @@ import java.util.*;
 import java.text.*;
 
 /**
- *  Represents a Help Business Rule in CFS
+ *  Represents a Help Business Rule
  *
  *@author     akhi_m
  *@created    July 9, 2003

@@ -23,7 +23,7 @@ import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.base.*;
 
 /**
- *  Contains the links to CFS components
+ *  Contains the links to components
  *
  *@author     akhi_m
  *@created    May 20, 2003
@@ -97,7 +97,7 @@ public class CFSLinks {
 
 
   /**
-   *  Gets the link of a CFS component
+   *  Gets the link of a component
    *
    *@param  tailParams  Description of the Parameter
    *@return             The link value

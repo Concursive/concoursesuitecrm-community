@@ -365,13 +365,13 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisTicket.queryRecord(db, Integer.parseInt(ticketId));
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       // Prepare the HTML Dialog
-      htmlDialog.setTitle("Dark Horse CRM: Confirm Delete");
+      htmlDialog.setTitle("Centric CRM: Confirm Delete");
       TicketActivityLog thisMaintenance = new TicketActivityLog();
       thisMaintenance.queryRecord(db, Integer.parseInt(formId));
       DependencyList dependencies = new DependencyList();
       dependencies = thisMaintenance.processDependencies();
       htmlDialog.addMessage(dependencies.getHtmlString());
-      htmlDialog.setHeader("The form you are requesting to delete may have dependencies within Dark Horse CRM:");
+      htmlDialog.setHeader("The form you are requesting to delete may have dependencies within Centric CRM:");
       htmlDialog.addButton("Delete", "javascript:window.location.href='AccountTicketActivityLog.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {

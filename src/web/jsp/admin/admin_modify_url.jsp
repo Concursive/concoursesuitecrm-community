@@ -35,12 +35,12 @@ Modify Setting
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
     <td><b>Which
-Dark Horse CRM URL should be included in emails to allow the user to return back to the site?</b>
+Centric URL should be included in emails to allow the user to return back to the site?</b>
 <ul>
 <li>Typically this is used when a survey is sent to a contact</li>
 <li>The URL must be specific and must exist in your DNS</li>
 <li>If a domain name is not configured, you can specify the IP address, include the full path to
-get to the Dark Horse CRM web application.</li>
+get to the Centric CRM web application.</li>
 </ul>
 </td></tr></table>
 <dhv:permission name="admin-sysconfig-view">
@@ -52,7 +52,7 @@ get to the Dark Horse CRM web application.</li>
     </tr>
     <tr class="containerBody">
       <td class="formLabel">
-        Dark Horse CRM URL
+        Centric CRM URL
       </td>
       <td>
          <input type="text" size="40" name="url" value="<%= toHtmlValue(getPref(getServletContext(), "WEBSERVER.URL")) %>"/><font color="red">*</font>

@@ -30,7 +30,7 @@ import com.isavvix.tools.*;
 import java.io.*;
 
 /**
- *  CFS Campaign/Document actions
+ * Campaign/Document actions
  *
  *@author     mrajkowski
  *@created    January 15, 2003

@@ -88,7 +88,7 @@ public class ImportGeneralContacts extends CSVReader {
    *@return    The name value
    */
   public String getName() {
-    return "Dark Horse CRM General Contacts Importer";
+    return "Centric CRM General Contacts Importer";
   }
 
 
@@ -98,7 +98,7 @@ public class ImportGeneralContacts extends CSVReader {
    *@return    The description value
    */
   public String getDescription() {
-    return "Reads general contacts from a text file based on CFS specifications";
+    return "Reads general contacts from a text file based on specifications";
   }
 
 

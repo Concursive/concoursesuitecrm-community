@@ -157,7 +157,7 @@ public class PermissionsAndRolesWriter implements DataWriter {
    *@return    The description value
    */
   public String getDescription() {
-    return "Inserts data directly into a Dark Horse CRM database";
+    return "Inserts data directly into a Centric CRM database";
   }
 
 

@@ -24,7 +24,7 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Dark Horse CRM Upgrade Complete!
+      Centric CRM Upgrade Complete!
     </th>
   </tr>
   <tr>
@@ -76,11 +76,11 @@ String step = (String) installs.next();
     <td>
       Since the JavaServerPages have not yet been compiled, you should choose to precompile the
       JSPs first so that the application works without compile delays.
-      Precompiling will occur in the background and you can continue to use Dark Horse CRM.<br>
+      Precompiling will occur in the background and you can continue to use Centric CRM.<br>
       <br>
       <input type="button" value="Precompile JSPs" onClick="javascript:popURL('setup/precompile.html','CRM_Precompile','500','325','yes','yes')"/><br>
       <br>
-      <input type="button" value="Continue to Dark Horse CRM >" onClick="window.location.href='MyCFS.do?command=Home'" />
+      <input type="button" value="Continue to Centric CRM >" onClick="window.location.href='MyCFS.do?command=Home'" />
     </td>
   </tr>
 </table>

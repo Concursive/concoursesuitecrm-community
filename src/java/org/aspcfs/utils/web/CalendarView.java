@@ -943,7 +943,7 @@ public class CalendarView {
         "<table width='98%' valign='top' cellspacing='0' cellpadding='0' border='0' bgcolor='#ffffff'>" +
         "<tr><td>");
 
-    //Space at top to match CFS
+    //Space at top to match
     if (headerSpace) {
       html.append(
           "<table width=100% align=center cellspacing=0 cellpadding=0 border=0>" +

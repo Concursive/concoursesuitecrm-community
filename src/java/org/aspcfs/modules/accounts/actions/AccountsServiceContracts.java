@@ -310,10 +310,10 @@ public class AccountsServiceContracts extends CFSModule {
       db = this.getConnection(context);
       ServiceContract thisContract = new ServiceContract(db, id);
       //Find depedencies for the service contract
-      htmlDialog.setTitle("Dark Horse CRM: Account Management - Service Contract");
+      htmlDialog.setTitle("Centric CRM: Account Management - Service Contract");
       DependencyList dependencies = thisContract.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
-      htmlDialog.setHeader("The service contract you are requesting to delete has the following dependencies within Dark Horse CRM:");
+      htmlDialog.setHeader("The service contract you are requesting to delete has the following dependencies within Centric CRM:");
       htmlDialog.addButton("Delete All", "javascript:window.location.href='AccountsServiceContracts.do?command=Delete&action=delete&orgId=" + orgId + "&id=" + id + "'");
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {

@@ -22,7 +22,7 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      Dark Horse CRM Upgrade
+      Centric CRM Upgrade
     </th>
   </tr>
   <tr>

@@ -28,7 +28,7 @@ import org.aspcfs.modules.service.base.TransactionStatus;
 import org.aspcfs.modules.service.base.Record;
 
 /**
- *  This Ant Task registers this application with the Dark Horse CRM
+ *  This Ant Task registers this application with the Centric CRM
  *  registration server.
  *
  *@author     matt rajkowski
@@ -135,9 +135,9 @@ public class RegisterTask extends Task {
       //Transmit
       String response = null;
       if (bean.getSsl()) {
-        response = HTTPUtils.sendPacket("https://registration.darkhorsecrm.com/LicenseServer.do?command=SubmitRegistration&ent1source=ent1source", bean.toXmlString());
+        response = HTTPUtils.sendPacket("https://registration.centriccrm.com/LicenseServer.do?command=SubmitRegistration&ent1source=ent1source", bean.toXmlString());
       } else {
-        response = HTTPUtils.sendPacket("http://registration.darkhorsecrm.com/LicenseServer.do?command=SubmitRegistration&ent1source=ent1source", bean.toXmlString());
+        response = HTTPUtils.sendPacket("http://registration.centriccrm.com/LicenseServer.do?command=SubmitRegistration&ent1source=ent1source", bean.toXmlString());
       }
       XMLUtils responseXML = new XMLUtils(response);
       Element responseNode = responseXML.getFirstChild("response");
@@ -149,7 +149,7 @@ public class RegisterTask extends Task {
         String text = (String) record.get("license");
         if (text != null) {
           StringUtils.saveText(webPath + "input.txt", text);
-          System.out.println("Registration sent.  A license was installed for Dark Horse CRM.");
+          System.out.println("Registration sent.  A license was installed for Centric CRM.");
         }
       } else {
         System.out.println("Registration failed... A license was not obtained from Dark Horse Ventures");

@@ -23,11 +23,11 @@
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td>The installed Dark Horse CRM license limits this system to <%= APP_SIZE %> active users.
+    <td>The installed license limits this system to <%= APP_SIZE %> active users.
     <ul>
       <li>Either disable a user that is not using the system so an additional user can be added, or</li>
       <li>Purchase a license that increases the maximum number of users</li>
-      <li>For more information see <a href="http://www.darkhorsecrm.com" target="_blank">Dark Horse CRM.com</a></li>
+      <li>For more information see <a href="http://www.centriccrm.com" target="_blank">www.centriccrm.com</a></li>
     </ul>
   </td></tr>
 </table>

@@ -27,7 +27,7 @@ import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 
 /**
- *  Writes CFS data using an HTTP connection and passing objects as XML to a CFS
+ *  Writes data using an HTTP connection and passing objects as XML to a
  *  web server.
  *
  *@author     matt rajkowski

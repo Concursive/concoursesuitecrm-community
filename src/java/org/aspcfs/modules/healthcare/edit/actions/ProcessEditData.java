@@ -287,7 +287,7 @@ public final class ProcessEditData extends CFSModule {
                     if (!(notFoundIds.contains(t))) {
                       notFoundIds.add(t);
                     }
-                    testBuffer.append("Skipping ID " + t + "- could not locate in Dark Horse CRM!\n");
+                    testBuffer.append("Skipping ID " + t + "- could not locate in Centric CRM!\n");
                   }
                 } else if (sub.indexOf("TOTAL TRANSACTIONS") > -1) {
                   break;
@@ -387,7 +387,7 @@ public final class ProcessEditData extends CFSModule {
       }
       testBuffer.append(totalsCount + " office transaction records (totals) were successfully inserted.\n\n");
       if (notFoundIds.size() > 0) {
-        testBuffer.append("The following " + notFoundIds.size() + " provider IDs were not found in Dark Horse CRM:\n\n");
+        testBuffer.append("The following " + notFoundIds.size() + " provider IDs were not found in Centric CRM:\n\n");
         for (int z = 0; z < notFoundIds.size(); z++) {
           testBuffer.append(notFoundIds.get(z) + "\n");
         }

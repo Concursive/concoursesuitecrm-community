@@ -24,7 +24,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 /**
- *  Represents a list of Help Notes for a page in CFS
+ *  Represents a list of Help Notes for a page
  *
  *@author     akhi_m
  *@created    July 9, 2003

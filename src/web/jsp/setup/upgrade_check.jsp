@@ -41,7 +41,7 @@
 <form name="configure" method="POST" action="Upgrade.do?command=PerformUpgrade" onSubmit="return checkForm(this)">
 <table border="0" width="100%">
   <tr class="sectionTitle">
-    <th>Dark Horse CRM Upgrade</th>
+    <th>Centric CRM Upgrade</th>
   </tr>
   <tr>
     <td nowrap>
@@ -82,7 +82,7 @@
         <input type="submit" value="Upgrade >"/>
       </span>
       <span id="progress" name="progress" style="display:none">
-        <font color="blue"><b>Please Wait... upgrading Dark Horse CRM!</b></font>
+        <font color="blue"><b>Please Wait... upgrading Centric CRM!</b></font>
       </span>
     </td>
   </tr>

@@ -19,7 +19,7 @@ import com.darkhorseventures.framework.beans.*;
 import java.util.*;
 
 /**
- *  Signifies a dependency of a item in CFS with the other.<br>
+ *  Signifies a dependency of an item with the other.<br>
  *  e.g Accounts -- Contacts; Tickets -- Contacts .
  *
  *@author     Mathur

@@ -37,7 +37,7 @@ import org.aspcfs.modules.actionlist.base.ActionItemLogList;
 import org.aspcfs.modules.base.CustomFieldRecordList;
 
 /**
- *  Represents a Ticket in CFS
+ *  Represents a Ticket
  *
  *@author     chris
  *@created    November 8, 2001

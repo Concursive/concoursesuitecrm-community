@@ -39,14 +39,14 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Dark Horse CRM Configuration (Step 1 of 4)<br>
+      Centric CRM Configuration (Step 1 of 4)<br>
       File Library Settings
     </th>
   </tr>
   <tr>
     <td>
       Users will have the capability to upload and create files on the server.<br>
-      Where should Dark Horse CRM store files that get created?<br>
+      Where should Centric CRM store files that get created?<br>
       <ul>
       <li>If the target directory does not exist it will be created</li>
       <li>The target directory should have plenty of free storage space for uploads</li>

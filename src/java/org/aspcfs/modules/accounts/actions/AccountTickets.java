@@ -333,13 +333,13 @@ public final class AccountTickets extends CFSModule {
       DependencyList dependencies = ticket.processDependencies(db);
       //Prepare the dialog based on the dependencies
       HtmlDialog htmlDialog = new HtmlDialog();
-      htmlDialog.setTitle("Dark Horse CRM: Confirm Delete");
+      htmlDialog.setTitle("Centric CRM: Confirm Delete");
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       } else if (dependencies.canDelete()){
         htmlDialog.addMessage(dependencies.getHtmlString());
-        htmlDialog.setHeader("This object has the following dependencies within Dark Horse CRM:");
+        htmlDialog.setHeader("This object has the following dependencies within Centric CRM:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
       } else {

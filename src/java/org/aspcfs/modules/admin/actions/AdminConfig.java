@@ -234,20 +234,20 @@ public final class AdminConfig extends CFSModule {
         String response = null;
         boolean ssl = true;
         if (ssl) {
-          response = HTTPUtils.sendPacket("https://registration.darkhorsecrm.com/LicenseServer.do?command=RequestLicense", bean.toXmlString());
+          response = HTTPUtils.sendPacket("https://registration.centriccrm.com/LicenseServer.do?command=RequestLicense", bean.toXmlString());
         } else {
-          response = HTTPUtils.sendPacket("http://registration.darkhorsecrm.com/LicenseServer.do?command=RequestLicense", bean.toXmlString());
+          response = HTTPUtils.sendPacket("http://registration.centriccrm.com/LicenseServer.do?command=RequestLicense", bean.toXmlString());
         }
         if (response == null) {
           context.getRequest().setAttribute("actionError",
-              "Unspecified Error: Dark Horse CRM Server did not respond ");
+              "Unspecified Error: Centric CRM Server did not respond ");
           return "LicenseCheckERROR";
         }
         XMLUtils responseXML = new XMLUtils(response);
         TransactionStatus thisStatus = new TransactionStatus(responseXML.getFirstChild("response"));
         if (thisStatus.getStatusCode() != 0) {
           context.getRequest().setAttribute("actionError",
-              "Unspecified Error: Dark Horse CRM Server rejected request " +
+              "Unspecified Error: Centric CRM Server rejected request " +
               thisStatus.getMessage());
           return "LicenseCheckERROR";
         }

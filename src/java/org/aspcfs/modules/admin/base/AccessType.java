@@ -21,7 +21,7 @@ import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.communications.base.Message;
 
 /**
- *  Represents Access Type for a CFS component
+ *  Represents Access Type for a component
  *
  *@author     Mathur
  *@created    June 25, 2003
