@@ -45,6 +45,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     
 
     //Copy Accounts
+    /**
     logger.info("ImportBaseData-> Inserting accounts");
     writer.setAutoCommit(false);
     OrganizationList accounts = new OrganizationList();
@@ -53,10 +54,21 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     accounts.buildList(db);
     mappings.saveList(writer, accounts, "insert");
     writer.commit();
+    */
+    
+    logger.info("ImportBaseData-> Inserting accounts");
+    OrganizationList accounts = new OrganizationList();
+    accounts.setShowMyCompany(true);
+    accounts.setIncludeEnabled(-1);
+    accounts.buildList(db);
+    writer.setAutoCommit(false);
+    saveOrgList(db, accounts, mappings);
+    writer.commit();
     
     //Iterate and get emails, addresses
     
     //Copy Contacts
+    /**
     logger.info("ImportBaseData-> Inserting contacts");
     writer.setAutoCommit(true);
     ContactList contacts = new ContactList();
@@ -66,6 +78,16 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     mappings.saveList(writer, contacts, "insert");
     writer.commit();
     writer.setAutoCommit(true);
+    */
+    
+    logger.info("ImportBaseData-> Inserting contacts");
+    ContactList contacts = new ContactList();
+    contacts.setIncludeEnabled(-1);
+    contacts.setPersonalId(-2);
+    contacts.buildList(db);
+    writer.setAutoCommit(false);
+    saveContactList(db, contacts, mappings);
+    writer.commit();
     
     return true;
   }
@@ -89,5 +111,41 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       saveUserList(db, newUserList);
     }
   }
+  
+  
+  private void saveOrgList(Connection db, OrganizationList orgList, PropertyMapList mappings) throws SQLException {
+          Iterator orgs = orgList.iterator();
+        
+            while (orgs.hasNext()) {
+              Organization thisOrg = (Organization)orgs.next();
+              DataRecord thisRecord = mappings.createDataRecord(thisOrg, "insert");
+              writer.save(thisRecord);
+              
+              logger.info("ImportBaseData-> Inserting Organization Calls");
+              
+              CallList callList = new CallList();
+              callList.setOrgId(thisOrg.getId());
+              callList.buildList(db);
+              mappings.saveList(writer, callList, "insert");
+            }
+  }
+  
+  private void saveContactList(Connection db, ContactList contactList, PropertyMapList mappings) throws SQLException {
+          Iterator contacts = contactList.iterator();
+        
+            while (contacts.hasNext()) {
+              Contact thisContact = (Contact)contacts.next();
+              DataRecord thisRecord = mappings.createDataRecord(thisContact, "insert");
+              writer.save(thisRecord);
+              
+              logger.info("ImportBaseData-> Inserting Contact Calls");
+              
+              CallList callList = new CallList();
+              callList.setContactId(thisContact.getId());
+              callList.buildList(db);
+              mappings.saveList(writer, callList, "insert");
+            }
+  }
+  
 }
 
