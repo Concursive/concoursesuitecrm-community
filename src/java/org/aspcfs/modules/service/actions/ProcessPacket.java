@@ -36,6 +36,9 @@ public final class ProcessPacket extends CFSModule {
         if (errorText == null && cfsObjects.size() > 0) {
           statusCode = 0;
         }
+        if (errorText == null && cfsObjects.size() == 0) {
+          errorText = "No object elements found";
+        }
       } catch (Exception e) {
         errorMessage = e;
         e.printStackTrace(System.out);
