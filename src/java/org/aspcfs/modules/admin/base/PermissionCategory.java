@@ -90,7 +90,9 @@ public class PermissionCategory extends GenericBean {
   public boolean getLookups() { return lookups; }
   public boolean getFolders() { return folders; }
   public void setLookups(boolean tmp) { this.lookups = tmp; }
+  public void setLookups(String tmp) { this.lookups = DatabaseUtils.parseBoolean(tmp); }
   public void setFolders(boolean tmp) { this.folders = tmp; }
+  public void setFolders(String tmp) { this.folders = DatabaseUtils.parseBoolean(tmp); }
 
 
   public boolean insert(Connection db) throws SQLException {
