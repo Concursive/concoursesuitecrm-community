@@ -1,0 +1,9 @@
+Ticket Category Editor Business Rules:
+
+- No two categories under the same category as their immediate parent can have the same descriptions
+- Removing an active category only disables it
+- Only one draft can be maintained at any given time
+- Reverting to Active list will delete the draft version
+- Deleting/Disabling a category will recursively delete/disable categories below it
+- No categories can be added under a disabled category
+
