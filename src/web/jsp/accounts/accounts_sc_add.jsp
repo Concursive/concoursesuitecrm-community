@@ -32,22 +32,21 @@
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
     <tr>
       <td class="containerBack">
-      <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
-      <input type="button" value="Cancel" onClick="window.location.href='AccountsServiceContracts.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
-      <input type="reset" value="Reset" />
-      <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
-      <br>
+        <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
+        <input type="button" value="Cancel" onClick="window.location.href='AccountsServiceContracts.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+        <input type="reset" value="Reset" />
+        <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
+        <br />
 <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 <%--  include basic contact form --%>
 <%@ include file="servicecontract_include.jsp" %>
-<br />
-  <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
-  <input type="button" value="Cancel" onClick="window.location.href='AccountsServiceContracts.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
-  <input type="reset" value="Reset" />
-  <input type="hidden" name="dosubmit" value="true" />
-  </td>
-  </tr>
-</table>
+        <br />
+        <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
+        <input type="button" value="Cancel" onClick="window.location.href='AccountsServiceContracts.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+        <input type="reset" value="Reset" />
+        <input type="hidden" name="dosubmit" value="true" />
+      </td>
+    </tr>
+  </table>
 </form>
 </body>

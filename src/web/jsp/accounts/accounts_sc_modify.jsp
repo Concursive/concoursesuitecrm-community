@@ -42,12 +42,11 @@
       <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
       <input type="hidden" name="id" value="<%= serviceContract.getId() %>" />
       <input type="hidden" name="return" value="<%= request.getParameter("return") %>" />
-      <br>
+      <br />
 <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 <%--  include basic service contract form --%>
 <%@ include file="servicecontract_include.jsp" %>
-<br>
+  <br />
   <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />
   <%if ("list".equals(request.getParameter("return"))) { %>
     <input type="button" value="Cancel" onClick="window.location.href='AccountsServiceContracts.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
