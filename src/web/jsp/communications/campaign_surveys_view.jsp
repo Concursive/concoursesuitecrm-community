@@ -19,7 +19,7 @@ Surveys
         <option <%= CampaignSurveyListInfo.getOptionValue("my") %>>My Surveys</option>
         <option <%= CampaignSurveyListInfo.getOptionValue("all") %>>All Surveys</option>
       </select>
-      <%= showAttribute(request, "actionError") %>
+      <%= showError(request, "actionError") %>
     </td>
     </form>
   </tr>

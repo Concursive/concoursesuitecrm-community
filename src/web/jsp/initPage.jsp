@@ -127,6 +127,10 @@ public static String replace(String str, String o, String n) {
     return "<font color='#006699'>" + toHtml((String)request.getAttribute(errorEntry)) + "</font>";
   }
   
+  public static String showError(HttpServletRequest request, String errorEntry) {
+    return "<font color='red'>" + toHtml((String)request.getAttribute(errorEntry)) + "</font>";
+  }
+  
   public static boolean hasText(String in) {
     return (in != null && !("".equals(in)));
   }
