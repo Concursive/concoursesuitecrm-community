@@ -579,7 +579,7 @@ public class Notification extends Thread {
         //Determine the method...
         if (type == EMAILFAXLETTER) {
           if (thisContact.getEmailAddress("Business").equals("") &&
-              thisContact.getPhoneNumber("Demo Fax").equals("") &&
+              thisContact.getPhoneNumber("Business Fax").equals("") &&
               thisContact.getAddress("Business") != null) {
             type = LETTER;
           } else {
@@ -589,7 +589,7 @@ public class Notification extends Thread {
         //2nd level
         if (type == EMAILFAX) {
           if (thisContact.getEmailAddress("Business").equals("") &&
-              !thisContact.getPhoneNumber("Demo Fax").equals("")) {
+              !thisContact.getPhoneNumber("Business Fax").equals("")) {
             type = FAX;
           } else {
             type = EMAIL;
@@ -639,8 +639,8 @@ public class Notification extends Thread {
 
           status = "IM Sent";
         } else if (type == FAX) {
-          System.out.println("Notification-> To: " + thisContact.getPhoneNumber("Business Fax"));
           String phoneNumber = thisContact.getPhoneNumber("Business Fax");
+          System.out.println("Notification-> To: " + phoneNumber);
           if (!phoneNumber.equals("") && phoneNumber.length() > 0) {
             phoneNumber = PhoneNumber.convertToNumber(phoneNumber);
             if (phoneNumber.startsWith("1")) {
