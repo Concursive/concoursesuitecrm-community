@@ -38,8 +38,9 @@ public class SearchOperatorList extends ArrayList {
 		StringBuffer sqlSelect = new StringBuffer();
 		sqlSelect.append(
 				"SELECT id, data_typeid, data_type, operator, display_text " +
-				"FROM field_types");
+				"FROM field_types WHERE enabled = ? ");
 		pst = db.prepareStatement(sqlSelect.toString());
+    pst.setBoolean(1, true);
 		rs = pst.executeQuery();
 		while (rs.next()) {
 			SearchOperator thisSearchOperator = new SearchOperator(rs);
@@ -49,7 +50,6 @@ public class SearchOperatorList extends ArrayList {
 		pst.close();
 	
 	}
-
 
 	/**
 	 *  Description of the Method
@@ -68,8 +68,10 @@ public class SearchOperatorList extends ArrayList {
 		sqlSelect.append(
 				"SELECT id, data_typeid, data_type, operator, display_text " +
 				"FROM field_types " +
-				"WHERE data_typeid = " + typeID);
+				"WHERE data_typeid = ? and enabled = ? ");
 		pst = db.prepareStatement(sqlSelect.toString());
+    pst.setInt(1, typeID);
+    pst.setBoolean(2, true);    
 		rs = pst.executeQuery();
 		while (rs.next()) {
 			SearchOperator thisSearchOperator = new SearchOperator(rs);

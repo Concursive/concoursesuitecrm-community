@@ -1223,25 +1223,38 @@ public class ContactList extends Vector {
         if (companyHash != null && companyHash.size() > 0) {
           Iterator outer = companyHash.keySet().iterator();
           
+          termsProcessed = 0;
+          String previousKey = null;
+          
           while(outer.hasNext()) {
-            
-            termsProcessed = 0;
             String key1 = (String)outer.next();
             HashMap innerHash = (HashMap)companyHash.get(key1);
-            
             Iterator inner = innerHash.keySet().iterator();
             
                while(inner.hasNext()) {
                   String key2 = (String)inner.next();
                   int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
                   
-                  //equals is the only operator supported right now
-                  if (elementType == y && key1.equals("=")) {
-                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
-                     if (termsProcessed == 0) {
+                  //equals and != are the only operators supported right now
+                  if (elementType == y && (key1.equals("=") || key1.equals("!="))) {
+                    if (termsProcessed > 0 && !(previousKey.equals(key1))) {
+                      newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                    } else {
+                      if (termsProcessed > 0 && key1.equals("!=") && previousKey.equals(key1)) {
+                        //if you're doing multiple != terms in a row, what you really want is an AND not an OR
+                        newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                      } else {
+                        newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                      }
+                    }
+                     
+                    if (termsProcessed == 0) {
                       sqlFilter.append("(");
                     }
-                    sqlFilter.append(" (lower(o.name) = '" + key2 + "' OR lower(c.company) = '" + key2 + "' ) ");
+                    
+                    sqlFilter.append(" (lower(o.name) " + key1 + " '" + key2 + "' OR lower(c.company) " + key1 + " '" + key2 + "' ) ");
+                    
+                    previousKey = key1;
                     processElementType(sqlFilter, elementType);
                     termsProcessed++;
                   }
@@ -1256,25 +1269,37 @@ public class ContactList extends Vector {
         if (nameFirstHash != null && nameFirstHash.size() > 0) {
           Iterator outer = nameFirstHash.keySet().iterator();
           
+          termsProcessed = 0;
+          String previousKey = null;
+          
           while(outer.hasNext()) {
-            
-            termsProcessed = 0;
             String key1 = (String)outer.next();
             HashMap innerHash = (HashMap)nameFirstHash.get(key1);
-            
             Iterator inner = innerHash.keySet().iterator();
             
                while(inner.hasNext()) {
                   String key2 = (String)inner.next();
                   int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
                   
-                  //equals is the only operator supported right now
-                  if (elementType == y && key1.equals("=")) {
-                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
-                     if (termsProcessed == 0) {
+                  //equals and != are the only operators supported right now
+                  if (elementType == y && (key1.equals("=") || key1.equals("!="))) {
+                    if (termsProcessed > 0 && !(previousKey.equals(key1))) {
+                      newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                    } else {
+                      if (termsProcessed > 0 && key1.equals("!=") && previousKey.equals(key1)) {
+                        //if you're doing multiple != terms in a row, what you really want is an AND not an OR
+                        newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                      } else {
+                        newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                      }
+                    }
+                    
+                    if (termsProcessed == 0) {
                       sqlFilter.append("(");
                     }
-                    sqlFilter.append(" (lower(c.namefirst) = '" + key2 + "' )");
+                    
+                    sqlFilter.append(" (lower(c.namefirst) " + key1 + " '" + key2 + "' )");
+                    previousKey = key1;
                     processElementType(sqlFilter, elementType);
                     termsProcessed++;
                   }
@@ -1288,26 +1313,38 @@ public class ContactList extends Vector {
         //last names
         if (nameLastHash != null && nameLastHash.size() > 0) {
           Iterator outer = nameLastHash.keySet().iterator();
+
+          termsProcessed = 0;
+          String previousKey = null;
           
           while(outer.hasNext()) {
-            
-            termsProcessed = 0;
             String key1 = (String)outer.next();
             HashMap innerHash = (HashMap)nameLastHash.get(key1);
-            
             Iterator inner = innerHash.keySet().iterator();
             
                while(inner.hasNext()) {
                   String key2 = (String)inner.next();
                   int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
                   
-                  //equals is the only operator supported right now
-                  if (elementType == y && key1.equals("=")) {
-                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
-                     if (termsProcessed == 0) {
+                  //equals and != are the only operators supported right now
+                  if (elementType == y && (key1.equals("=") || key1.equals("!="))) {
+                    if (termsProcessed > 0 && !(previousKey.equals(key1))) {
+                      newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                    } else {
+                      if (termsProcessed > 0 && key1.equals("!=") && previousKey.equals(key1)) {
+                        //if you're doing multiple != terms in a row, what you really want is an AND not an OR
+                        newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                      } else {
+                        newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                      }
+                    }
+                     
+                    if (termsProcessed == 0) {
                       sqlFilter.append("(");
                     }
-                    sqlFilter.append(" (lower(c.namelast) = '" + key2 + "' )");
+                    
+                    sqlFilter.append(" (lower(c.namelast) " + key1 + " '" + key2 + "' )");
+                    previousKey = key1;
                     processElementType(sqlFilter, elementType);
                     termsProcessed++;
                   }
@@ -1350,15 +1387,7 @@ public class ContactList extends Vector {
                       sqlFilter.append("(");
                     }
                     
-                    if (key1.equals("<")) {
-                      sqlFilter.append(" (c.entered < '" + key2 + "') ");
-                    } else if (key1.equals(">")) {
-                      sqlFilter.append(" (c.entered > '" + key2 + "') ");
-                    } else if (key1.equals("<=")) {
-                      sqlFilter.append(" (c.entered <= '" + key2 + "') ");
-                    } else if (key1.equals(">=")) {
-                      sqlFilter.append(" (c.entered >= '" + key2 + "') ");
-                    }
+                    sqlFilter.append(" (c.entered " + key1 + " '" + key2 + "') ");
                     
                     previousKey = key1;
                     processElementType(sqlFilter, elementType);
@@ -1375,26 +1404,38 @@ public class ContactList extends Vector {
         //zip codes
         if (zipHash != null && zipHash.size() > 0) {
           Iterator outer = zipHash.keySet().iterator();
+
+          termsProcessed = 0;
+          String previousKey = null;
           
           while(outer.hasNext()) {
-            
-            termsProcessed = 0;
             String key1 = (String)outer.next();
             HashMap innerHash = (HashMap)zipHash.get(key1);
-            
             Iterator inner = innerHash.keySet().iterator();
             
                while(inner.hasNext()) {
                   String key2 = (String)inner.next();
                   int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
                   
-                  //equals is the only operator supported right now
-                  if (elementType == y && key1.equals("=")) {
-                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
-                     if (termsProcessed == 0) {
+                  //equals and != are the only operators supported right now
+                  if (elementType == y && (key1.equals("=") || key1.equals("!="))) {
+                    if (termsProcessed > 0 && !(previousKey.equals(key1))) {
+                      newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                    } else {
+                      if (termsProcessed > 0 && key1.equals("!=") && previousKey.equals(key1)) {
+                        //if you're doing multiple != terms in a row, what you really want is an AND not an OR
+                        newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                      } else {
+                        newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                      }
+                    }
+                     
+                    if (termsProcessed == 0) {
                       sqlFilter.append("(");
                     }
-                    sqlFilter.append(" (c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and postalcode = '" + key2 + "' )) ");
+                    
+                    sqlFilter.append(" (c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and postalcode " + key1 + " '" + key2 + "' )) ");
+                    previousKey = key1;
                     processElementType(sqlFilter, elementType);
                     termsProcessed++;
                   }
@@ -1403,31 +1444,43 @@ public class ContactList extends Vector {
               if (termsProcessed > 0) {
                 sqlFilter.append(")");
               }
-            }
+        }
             
         //contact types
         if (typeIdHash != null && typeIdHash.size() > 0) {
           Iterator outer = typeIdHash.keySet().iterator();
           
+          termsProcessed = 0;
+          String previousKey = null;
+          
           while(outer.hasNext()) {
-            
-            termsProcessed = 0;
             String key1 = (String)outer.next();
             HashMap innerHash = (HashMap)typeIdHash.get(key1);
-            
             Iterator inner = innerHash.keySet().iterator();
             
                while(inner.hasNext()) {
                   String key2 = (String)inner.next();
                   int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
                   
-                  //equals is the only operator supported right now
-                  if (elementType == y && key1.equals("=")) {
-                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
-                     if (termsProcessed == 0) {
+                  //equals and != are the only operators supported right now
+                  if (elementType == y && (key1.equals("=") || key1.equals("!="))) {
+                    if (termsProcessed > 0 && !(previousKey.equals(key1))) {
+                      newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                    } else {
+                      if (termsProcessed > 0 && key1.equals("!=") && previousKey.equals(key1)) {
+                        //if you're doing multiple != terms in a row, what you really want is an AND not an OR
+                        newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                      } else {
+                        newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                      }
+                    }
+                     
+                    if (termsProcessed == 0) {
                       sqlFilter.append("(");
                     }
-                    sqlFilter.append(" (c.type_id  = '" + key2 + "' ) ");
+                    
+                    sqlFilter.append(" (c.type_id  " + key1 + " '" + key2 + "' ) ");
+                    previousKey = key1;
                     processElementType(sqlFilter, elementType);
                     termsProcessed++;
                   }
@@ -1444,25 +1497,37 @@ public class ContactList extends Vector {
       if (accountTypeIdHash != null && accountTypeIdHash.size() > 0) {
         Iterator outer = accountTypeIdHash.keySet().iterator();
         
-        while(outer.hasNext()) {
+        termsProcessed = 0;
+        String previousKey = null;
           
-          termsProcessed = 0;
+        while(outer.hasNext()) {
           String key1 = (String)outer.next();
           HashMap innerHash = (HashMap)accountTypeIdHash.get(key1);
-          
           Iterator inner = innerHash.keySet().iterator();
           
              while(inner.hasNext()) {
                 String key2 = (String)inner.next();
                 int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
                 
-                //equals is the only operator supported right now
-                if (elementType == y && key1.equals("=")) {
-                  newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
-                   if (termsProcessed == 0) {
+                //equals and != are the only operators supported right now
+                if (elementType == y && (key1.equals("=") || key1.equals("!="))) {
+                  if (termsProcessed > 0 && !(previousKey.equals(key1))) {
+                    newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                  } else {
+                    if (termsProcessed > 0 && key1.equals("!=") && previousKey.equals(key1)) {
+                      //if you're doing multiple != terms in a row, what you really want is an AND not an OR
+                      newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                    } else {
+                      newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                    }
+                  }
+                  
+                  if (termsProcessed == 0) {
                     sqlFilter.append("(");
                   }
-                  sqlFilter.append(" (c.org_id in (SELECT org_id FROM account_type_levels WHERE type_id = '" + key2 + "')) ");
+                  
+                  sqlFilter.append(" (c.org_id in (SELECT org_id FROM account_type_levels WHERE type_id " + key1 + " '" + key2 + "')) ");
+                  previousKey = key1;
                   processElementType(sqlFilter, elementType);
                   termsProcessed++;
                 }
@@ -1477,26 +1542,37 @@ public class ContactList extends Vector {
         //area codes
         if (areaCodeHash != null && areaCodeHash.size() > 0) {
           Iterator outer = areaCodeHash.keySet().iterator();
+          termsProcessed = 0;
+          String previousKey = null;
           
           while(outer.hasNext()) {
-            
-            termsProcessed = 0;
             String key1 = (String)outer.next();
             HashMap innerHash = (HashMap)areaCodeHash.get(key1);
-            
             Iterator inner = innerHash.keySet().iterator();
             
                while(inner.hasNext()) {
                   String key2 = (String)inner.next();
                   int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
                   
-                  //equals is the only operator supported right now
-                  if (elementType == y && key1.equals("=")) {
-                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
-                     if (termsProcessed == 0) {
+                  //equals and != are the only operators supported right now
+                  if (elementType == y && (key1.equals("=") || key1.equals("!="))) {
+                    if (termsProcessed > 0 && !(previousKey.equals(key1))) {
+                      newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                    } else {
+                      if (termsProcessed > 0 && key1.equals("!=") && previousKey.equals(key1)) {
+                        //if you're doing multiple != terms in a row, what you really want is an AND not an OR
+                        newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                      } else {
+                        newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                      }
+                    }
+                    
+                    if (termsProcessed == 0) {
                       sqlFilter.append("(");
                     }
-                    sqlFilter.append(" (c.contact_id in (select distinct contact_id from contact_phone where phone_type = 1 and substr(number,2,3) = '" + key2 + "' )) ");
+                    
+                    sqlFilter.append(" (c.contact_id in (select distinct contact_id from contact_phone where phone_type = 1 and substr(number,2,3) " + key1 + " '" + key2 + "' )) ");
+                    previousKey = key1;
                     processElementType(sqlFilter, elementType);
                     termsProcessed++;
                   }
@@ -1510,26 +1586,37 @@ public class ContactList extends Vector {
         //cities
         if (cityHash != null && cityHash.size() > 0) {
           Iterator outer = cityHash.keySet().iterator();
+          termsProcessed = 0;
+          String previousKey = null;
           
           while(outer.hasNext()) {
-            
-            termsProcessed = 0;
             String key1 = (String)outer.next();
             HashMap innerHash = (HashMap)cityHash.get(key1);
-            
             Iterator inner = innerHash.keySet().iterator();
             
                while(inner.hasNext()) {
                   String key2 = (String)inner.next();
                   int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
                   
-                  //equals is the only operator supported right now
-                  if (elementType == y && key1.equals("=")) {
-                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                  //equals and != are the only operators supported right now
+                  if (elementType == y && (key1.equals("=") || key1.equals("!="))) {
+                    if (termsProcessed > 0 && !(previousKey.equals(key1))) {
+                      newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                    } else {
+                      if (termsProcessed > 0 && key1.equals("!=") && previousKey.equals(key1)) {
+                        //if you're doing multiple != terms in a row, what you really want is an AND not an OR
+                        newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                      } else {
+                        newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                      }
+                    }
+                    
                     if (termsProcessed == 0) {
                       sqlFilter.append("(");
                     }
-                    sqlFilter.append(" (c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and lower(city) = '" + key2 + "' )) ");
+                    
+                    sqlFilter.append(" (c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and lower(city) " + key1 + " '" + key2 + "' )) ");
+                    previousKey = key1;
                     processElementType(sqlFilter, elementType);
                     termsProcessed++;
                   }

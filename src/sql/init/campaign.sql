@@ -13,13 +13,13 @@ INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES 
 
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', '=', 'is');
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', '!=', 'is not');
-INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', '= | or field_name is null', 'is empty');
-INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', '!= | and field_name is not null', 'is not empty');
-INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', 'like %search_value%', 'contains');
-INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', 'not like %search_value%', 'does not contain');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text, enabled) VALUES (0, 'string', '= | or field_name is null', 'is empty', false);
+INSERT INTO field_types (data_typeID, data_type, operator, display_text, enabled) VALUES (0, 'string', '!= | and field_name is not null', 'is not empty', false);
+INSERT INTO field_types (data_typeID, data_type, operator, display_text, enabled) VALUES (0, 'string', 'like %search_value%', 'contains', false);
+INSERT INTO field_types (data_typeID, data_type, operator, display_text, enabled) VALUES (0, 'string', 'not like %search_value%', 'does not contain', false);
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', '<', 'before');
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', '>', 'after');
-INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', 'between', 'between');
+INSERT INTO field_types (data_typeID, data_type, operator, display_text, enabled) VALUES (1, 'date', 'between', 'between', false);
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', '<=', 'on or before');
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', '>=', 'on or after');
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (2, 'number', '>', 'greater than');

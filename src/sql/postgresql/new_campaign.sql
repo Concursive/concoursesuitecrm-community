@@ -203,7 +203,8 @@ CREATE TABLE field_types (
   data_typeid int NOT NULL DEFAULT -1,
 	data_type VARCHAR(20),
   operator VARCHAR(50),
-  display_text varchar(50)
+  display_text varchar(50),
+  enabled boolean not null default true
 );
 
 CREATE TABLE search_fields (
@@ -253,6 +254,7 @@ CREATE TABLE saved_criteriaelement (
   field INTEGER NOT NULL references search_fields(id),
   operator VARCHAR(50) NOT NULL,
   operatorid INTEGER NOT NULL references field_types(id),
-  value VARCHAR(80) NOT NULL
+  value VARCHAR(80) NOT NULL,
+  source int not null default -1
 );
 
