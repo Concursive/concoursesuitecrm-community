@@ -229,7 +229,7 @@ public class CFSDatabaseReader implements DataReader {
             }
             
             String value = ((Element) n).getAttribute("value");
-            if (value != null) {
+            if (value != null && !"".equals(value)) {
               thisProperty.setValue(value);
             }
 
