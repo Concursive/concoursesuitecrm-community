@@ -34,13 +34,24 @@ public class OpportunityBean extends GenericBean {
     boolean headerInserted = false;
     boolean componentInserted = false;
     
-    headerInserted = header.insert(db, context);
-    component.setOppId(header.getOppId());
-    componentInserted = component.insert(db, context);
-    
-    if (!headerInserted || !componentInserted) {
+    if (!component.isValid(db) || !header.isValid(db)) {
       return false;
+    }    
+    try {
+      db.setAutoCommit(false);
+      headerInserted = header.insert(db, context);
+      component.setOppId(header.getOppId());
+      componentInserted = component.insert(db, context);
+      
+      db.commit();
+    } catch (SQLException e) {
+        db.rollback();
+        db.setAutoCommit(true);
+        throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
+    
     return true;
   }  
 }
