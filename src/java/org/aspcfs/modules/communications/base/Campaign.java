@@ -60,7 +60,7 @@ public class Campaign extends GenericBean {
   private int sendMethodId = -1;
   private String deliveryName = null;
   private int files = 0;
-  
+
   private int surveyId = -1;
   private String serverName = "";
 
@@ -83,15 +83,36 @@ public class Campaign extends GenericBean {
   public Campaign(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-public int getSurveyId() {
-	return surveyId;
-}
-public void setSurveyId(int surveyId) {
-	this.surveyId = surveyId;
-}
-public void setSurveyId(String surveyId) {
-	this.surveyId = Integer.parseInt(surveyId);
-}
+
+
+  /**
+   *  Gets the surveyId attribute of the Campaign object
+   *
+   *@return    The surveyId value
+   */
+  public int getSurveyId() {
+    return surveyId;
+  }
+
+
+  /**
+   *  Sets the surveyId attribute of the Campaign object
+   *
+   *@param  surveyId  The new surveyId value
+   */
+  public void setSurveyId(int surveyId) {
+    this.surveyId = surveyId;
+  }
+
+
+  /**
+   *  Sets the surveyId attribute of the Campaign object
+   *
+   *@param  surveyId  The new surveyId value
+   */
+  public void setSurveyId(String surveyId) {
+    this.surveyId = Integer.parseInt(surveyId);
+  }
 
 
   /**
@@ -191,13 +212,26 @@ public void setSurveyId(String surveyId) {
   public void setMessageName(String messageName) {
     this.messageName = messageName;
   }
-  
-public String getServerName() {
-	return serverName;
-}
-public void setServerName(String serverName) {
-	this.serverName = serverName;
-}
+
+
+  /**
+   *  Gets the serverName attribute of the Campaign object
+   *
+   *@return    The serverName value
+   */
+  public String getServerName() {
+    return serverName;
+  }
+
+
+  /**
+   *  Sets the serverName attribute of the Campaign object
+   *
+   *@param  serverName  The new serverName value
+   */
+  public void setServerName(String serverName) {
+    this.serverName = serverName;
+  }
 
 
   /**
@@ -504,7 +538,7 @@ public void setServerName(String serverName) {
    */
   public void setGroups(HttpServletRequest request) {
     StringBuffer sb = new StringBuffer();
-    
+
     int selectCount = 0;
     String item = null;
     while ((item = request.getParameter("select" + (++selectCount))) != null) {
@@ -515,20 +549,19 @@ public void setServerName(String serverName) {
         sb.append(item);
       }
     }
-    
-/* 
-    Enumeration parameters = request.getParameterNames();
-    while (parameters.hasMoreElements()) {
-      String param = (String) parameters.nextElement();
 
-      if (request.getParameter(param).equalsIgnoreCase("on")) {
-        if (sb != null || sb.length() > 0) {
-          sb.append("*");
-        }
-        sb.append(param);
-      }
-    }
- */
+    /*
+     *  Enumeration parameters = request.getParameterNames();
+     *  while (parameters.hasMoreElements()) {
+     *  String param = (String) parameters.nextElement();
+     *  if (request.getParameter(param).equalsIgnoreCase("on")) {
+     *  if (sb != null || sb.length() > 0) {
+     *  sb.append("*");
+     *  }
+     *  sb.append(param);
+     *  }
+     *  }
+     */
     groupList = sb.toString();
   }
 
@@ -1058,7 +1091,13 @@ public void setServerName(String serverName) {
   public boolean hasMessage() {
     return (messageId > 0);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean hasSurvey() {
     return (surveyId > 0);
   }
@@ -1184,6 +1223,8 @@ public void setServerName(String serverName) {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@param  userId            Description of the Parameter
+   *@param  userRangeId       Description of the Parameter
    *@exception  SQLException  Description of Exception
    */
   public void insertRecipients(Connection db, int userId, String userRangeId) throws SQLException {
@@ -1300,7 +1341,7 @@ public void setServerName(String serverName) {
   public boolean insertGroups(Connection db) throws SQLException {
     try {
       db.setAutoCommit(false);
-      
+
       deleteAllGroups(db);
 
       if (this.getGroupList() != null && !this.getGroupList().equals("")) {
@@ -1309,7 +1350,7 @@ public void setServerName(String serverName) {
           String tmpString = (String) strt.nextToken();
 
           PreparedStatement pstx = null;
-          String groupSql = 
+          String groupSql =
               "INSERT INTO campaign_list_groups " +
               "(campaign_id, group_id ) " +
               "VALUES (?, ?) ";
@@ -1340,9 +1381,17 @@ public void setServerName(String serverName) {
     return true;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean deleteAllGroups(Connection db) throws SQLException {
     PreparedStatement pstx = null;
-    String groupSql = 
+    String groupSql =
         "DELETE FROM campaign_list_groups " +
         "WHERE campaign_id = ? ";
     int j = 0;
@@ -1352,6 +1401,7 @@ public void setServerName(String serverName) {
     pstx.close();
     return true;
   }
+
 
   /**
    *  Description of the Method
@@ -1449,15 +1499,20 @@ public void setServerName(String serverName) {
     try {
       db.setAutoCommit(false);
       st.executeUpdate(
-        "DELETE FROM campaign_list_groups WHERE campaign_id = " + this.getId());
+          "DELETE FROM campaign_list_groups WHERE campaign_id = " + this.getId());
       st.executeUpdate(
-        "DELETE FROM scheduled_recipient WHERE campaign_id = " + this.getId());
+          "DELETE FROM scheduled_recipient WHERE campaign_id = " + this.getId());
       st.executeUpdate(
-        "DELETE FROM campaign_run WHERE campaign_id = " + this.getId());
+          "DELETE FROM campaign_run WHERE campaign_id = " + this.getId());
       st.executeUpdate(
-        "DELETE FROM excluded_recipient WHERE campaign_id = " + this.getId());
+          "DELETE FROM excluded_recipient WHERE campaign_id = " + this.getId());
       st.executeUpdate(
-        "DELETE FROM campaign WHERE id = " + this.getId());
+          "DELETE FROM campaign WHERE id = " + this.getId());
+      //After the campaign is deleted, check to see if the attached survey can be deleted
+      Survey thisSurvey = new Survey(db, this.getSurveyId());
+      if (!thisSurvey.getEnabled()) {
+        thisSurvey.delete(db);
+      }
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1519,6 +1574,8 @@ public void setServerName(String serverName) {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@param  userId            Description of the Parameter
+   *@param  userRangeId       Description of the Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    *@since                    1.17
@@ -1548,11 +1605,11 @@ public void setServerName(String serverName) {
     }
     rs.close();
     pst.close();
-    
-	Template template = new Template();
-	template.setText(thisMessageText);
-	template.addParseElement("${survey_url}", "<a href=\"http://" + this.getServerName() + "/ProcessSurvey.do?id=" + this.getSurveyId() + "\">http://" + this.getServerName() + "/ProcessSurvey.do?id=" + this.getSurveyId() + "</a>");
-	  
+
+    Template template = new Template();
+    template.setText(thisMessageText);
+    template.addParseElement("${survey_url}", "<a href=\"http://" + this.getServerName() + "/ProcessSurvey.do?id=" + this.getSurveyId() + "\">http://" + this.getServerName() + "/ProcessSurvey.do?id=" + this.getSurveyId() + "</a>");
+
     pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET status_id = ?, " +
@@ -1612,7 +1669,7 @@ public void setServerName(String serverName) {
     pst.close();
 
     returnCode = DatabaseUtils.getCurrVal(db, "campaign_run_id_seq");
-    
+
     return returnCode;
   }
 
@@ -1829,10 +1886,10 @@ public void setServerName(String serverName) {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     surveyId = rs.getInt("survey_id");
-    
+
     //message table
     messageName = rs.getString("messageName");
-    
+
     //lookup_delivery_options table
     deliveryName = rs.getString("delivery");
   }

@@ -11,6 +11,13 @@ import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
 import com.darkhorseventures.utils.DatabaseUtils;
 
+/**
+ *  Description of the Class
+ *
+ *@author     chris price
+ *@created    August 7, 2002
+ *@version    $Id$
+ */
 public class SurveyList extends Vector {
 
   private PagedListInfo pagedListInfo = null;
@@ -19,9 +26,20 @@ public class SurveyList extends Vector {
   private int enteredBy = -1;
   private String enteredByIdRange = null;
   private String jsEvent = null;
+  private int enabled = Constants.TRUE;
 
+  /**
+   *  Constructor for the SurveyList object
+   */
   public SurveyList() { }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildList(Connection db) throws SQLException {
 
     PreparedStatement pst = null;
@@ -35,11 +53,11 @@ public class SurveyList extends Vector {
 
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-      "SELECT COUNT(*) AS recordcount " +
+        "SELECT COUNT(*) AS recordcount " +
         "FROM survey s " +
         "LEFT JOIN contact ct_eb ON (s.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (s.modifiedby = ct_mb.user_id) " +
-	"LEFT JOIN lookup_survey_types st ON (s.type = st.code) " +
+        "LEFT JOIN lookup_survey_types st ON (s.type = st.code) " +
         "WHERE s.id > -1 ");
 
     createFilter(sqlFilter);
@@ -92,7 +110,7 @@ public class SurveyList extends Vector {
         "FROM survey s " +
         "LEFT JOIN contact ct_eb ON (s.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (s.modifiedby = ct_mb.user_id) " +
-	"LEFT JOIN lookup_survey_types st ON (s.type = st.code) " +
+        "LEFT JOIN lookup_survey_types st ON (s.type = st.code) " +
         "WHERE s.id > -1 ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -119,49 +137,195 @@ public class SurveyList extends Vector {
 
     //buildResources(db);
   }
-public PagedListInfo getPagedListInfo() { return pagedListInfo; }
-public int getItemLength() { return itemLength; }
-public int getType() { return type; }
-public void setPagedListInfo(PagedListInfo tmp) { this.pagedListInfo = tmp; }
-public void setItemLength(int tmp) { this.itemLength = tmp; }
-public void setType(int tmp) { this.type = tmp; }
-public void setEnteredBy(int tmp) { this.enteredBy = tmp; }
-public void setEnteredByIdRange(String tmp) { this.enteredByIdRange = tmp; }
-public int getEnteredBy() { return enteredBy; }
-public String getEnteredByIdRange() { return enteredByIdRange; }
-public void setEnteredBy(String tmp) { this.enteredBy = Integer.parseInt(tmp); }
 
-public String getJsEvent() {
-	return jsEvent;
-}
-public void setJsEvent(String jsEvent) {
-	this.jsEvent = jsEvent;
-}
 
+  /**
+   *  Gets the pagedListInfo attribute of the SurveyList object
+   *
+   *@return    The pagedListInfo value
+   */
+  public PagedListInfo getPagedListInfo() {
+    return pagedListInfo;
+  }
+
+
+  /**
+   *  Gets the itemLength attribute of the SurveyList object
+   *
+   *@return    The itemLength value
+   */
+  public int getItemLength() {
+    return itemLength;
+  }
+
+
+  /**
+   *  Gets the type attribute of the SurveyList object
+   *
+   *@return    The type value
+   */
+  public int getType() {
+    return type;
+  }
+
+  public int getEnabled() { return enabled; }
+  public void setEnabled(int tmp) { this.enabled = tmp; }
+
+
+  /**
+   *  Sets the pagedListInfo attribute of the SurveyList object
+   *
+   *@param  tmp  The new pagedListInfo value
+   */
+  public void setPagedListInfo(PagedListInfo tmp) {
+    this.pagedListInfo = tmp;
+  }
+
+
+  /**
+   *  Sets the itemLength attribute of the SurveyList object
+   *
+   *@param  tmp  The new itemLength value
+   */
+  public void setItemLength(int tmp) {
+    this.itemLength = tmp;
+  }
+
+
+  /**
+   *  Sets the type attribute of the SurveyList object
+   *
+   *@param  tmp  The new type value
+   */
+  public void setType(int tmp) {
+    this.type = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredBy attribute of the SurveyList object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(int tmp) {
+    this.enteredBy = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredByIdRange attribute of the SurveyList object
+   *
+   *@param  tmp  The new enteredByIdRange value
+   */
+  public void setEnteredByIdRange(String tmp) {
+    this.enteredByIdRange = tmp;
+  }
+
+
+  /**
+   *  Gets the enteredBy attribute of the SurveyList object
+   *
+   *@return    The enteredBy value
+   */
+  public int getEnteredBy() {
+    return enteredBy;
+  }
+
+
+  /**
+   *  Gets the enteredByIdRange attribute of the SurveyList object
+   *
+   *@return    The enteredByIdRange value
+   */
+  public String getEnteredByIdRange() {
+    return enteredByIdRange;
+  }
+
+
+  /**
+   *  Sets the enteredBy attribute of the SurveyList object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the jsEvent attribute of the SurveyList object
+   *
+   *@return    The jsEvent value
+   */
+  public String getJsEvent() {
+    return jsEvent;
+  }
+
+
+  /**
+   *  Sets the jsEvent attribute of the SurveyList object
+   *
+   *@param  jsEvent  The new jsEvent value
+   */
+  public void setJsEvent(String jsEvent) {
+    this.jsEvent = jsEvent;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  sqlFilter  Description of the Parameter
+   */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-    
-      if (enteredBy != -1) {
-        sqlFilter.append("AND s.enteredby = ? ");
-      }
-      if (enteredByIdRange != null) {
-        sqlFilter.append("AND s.enteredby IN (" + enteredByIdRange + ") ");
-      }
-      
+
+    if (enteredBy != -1) {
+      sqlFilter.append("AND s.enteredby = ? ");
+    }
+    if (enteredByIdRange != null) {
+      sqlFilter.append("AND s.enteredby IN (" + enteredByIdRange + ") ");
+    }
+    if (enabled != -1) {
+      sqlFilter.append("AND s.enabled = ? ");
+    }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-      
-      if (enteredBy != -1) {
-        pst.setInt(++i, enteredBy);
+
+    if (enteredBy != -1) {
+      pst.setInt(++i, enteredBy);
+    }
+    if (enabled != -1) {
+      if (enabled == Constants.FALSE) {
+        pst.setBoolean(++i, false);
+      } else {
+        pst.setBoolean(++i, true);
       }
-      
+    }
+
     return i;
   }
 
+
+  /**
+   *  Gets the htmlSelect attribute of the SurveyList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelect value
+   */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect surveyListSelect = new HtmlSelect();
     surveyListSelect.setJsEvent(jsEvent);
@@ -175,6 +339,13 @@ public void setJsEvent(String jsEvent) {
     return surveyListSelect.getHtml(selectName, defaultKey);
   }
 
+
+  /**
+   *  Adds a feature to the Item attribute of the SurveyList object
+   *
+   *@param  key   The feature to be added to the Item attribute
+   *@param  name  The feature to be added to the Item attribute
+   */
   public void addItem(int key, String name) {
     Survey thisSurvey = new Survey();
     thisSurvey.setId(key);

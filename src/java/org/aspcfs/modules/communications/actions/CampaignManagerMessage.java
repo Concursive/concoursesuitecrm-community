@@ -403,7 +403,7 @@ public final class CampaignManagerMessage extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      Survey thisSurvey = new Survey(db, surveyId);
+      Survey thisSurvey = new Survey(db, Integer.parseInt(surveyId));
 
       if (thisSurvey == null) {
         thisSurvey = new Survey();

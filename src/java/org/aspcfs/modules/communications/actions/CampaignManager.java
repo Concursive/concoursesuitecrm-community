@@ -1143,7 +1143,7 @@ public final class CampaignManager extends CFSModule {
       context.getRequest().setAttribute("Campaign", campaign);
 
       if (campaign.getSurveyId() > 0) {
-        thisSurvey = new Survey(db, campaign.getSurveyId() + "");
+        thisSurvey = new Survey(db, campaign.getSurveyId());
       }
 
       context.getRequest().setAttribute("Survey", thisSurvey);
