@@ -31,13 +31,17 @@
   - Turn on port 80 and 443 during install or in iptables later
     - iptables must be edited later to allow DNS using lokkit
 
+[root user]
+    
 - Install Java2 SDK 1.4.1_03 RPM for Linux
   Purpose: Programming language just-in-time compiler, 
     required for executing Java applications
   http://java.sun.com
-  file: 2sdk-1_4_1_03-fcs-linux-i586.rpm
+  file: 2sdk-1_4_1_03-fcs-linux-i586.rpm.bin
   destination: /usr/java/j2sdk1.4.1_03
-  $ rpm --install [file]
+  $ chmod a+x 2sdk-1_4_1_03-fcs-linux-i586.rpm.bin
+  $ ./2sdk-1_4_1_03-fcs-linux-i586.rpm.bin
+  $ rpm --Uvh 2sdk-1_4_1_03-fcs-linux-i586.rpm
   $ ln -s /usr/java/j2sdk1.4.1_03 /usr/java/j2se
 
 - Install Apache Tomcat 4.1.24 binary
@@ -48,13 +52,13 @@
   $ tar -xvzf jakarta-tomcat-4.1.24-LE-jdk14.tar.gz
   $ ln -s /usr/java/jakarta-tomcat-4.1.24-LE-jdk14 /usr/java/tomcat
   
-- Install Apache Ant 1.5.1 binary
+- Install Apache Ant 1.5.3 binary
   Purpose: Deployment utility for compiling and deploying ASPCFS
   http://jakarta.apache.org
-  file: jakarta-ant-1.5.1-bin.tar.gz
-  destination: /usr/java/jakarta-ant-1.5.1
-  $ tar -xvzf jakarta-ant-1.5.1-bin.tar.gz
-  $ ln -s /usr/java/jakarta-ant-1.5.1 /usr/java/ant
+  file: jakarta-ant-1.5.3-bin.tar.gz
+  destination: /usr/java/jakarta-ant-1.5.3
+  $ tar -xvzf jakarta-ant-1.5.3-bin.tar.gz
+  $ ln -s /usr/java/jakarta-ant-1.5.3 /usr/java/ant
 
 - Install HtmlDoc 1.8.23 from source code
   Purpose: Converts HTML pages to Postscript for ASPCFS
@@ -73,7 +77,7 @@
     $ rpm --install [file]
   # If error about conflicting mgetty-sendfax, issue the following command:
     $ rpm --erase mgetty-sendfax
-  # If error about failed dependency sharutils, insert Red Hat CD1 and issue the 
+  # If error about failed dependency sharutils, insert Red Hat CD3 and issue the 
     following command:
     $ rpm --install /mnt/cdrom/RedHat/RPMS/sharutils-4.2.1-14.i386.rpm
   # NOTE: On the FAX SERVER, the ip and domain name must be added to:
@@ -84,7 +88,9 @@
 
 *** Software Configuration ***
 
-- Configure OS environment (as root)
+[root user]
+
+- Configure OS environment
   # Create a group called "cfs"
     $ vigr
       cfs:x:101:
@@ -148,12 +154,12 @@
   # Start the server
     $ service postgresql start
 
-  # Create the initial user
+  # Create the initial users
     $ su postgres
-  # Respond y,y
+  # Add the following users and respond "y" to each question asked
     $ createuser cfsdba
     $ createuser [your name]
-  # Respond n,n
+  # Add the following user and respond "n" to each question asked
     $ createuser gatekeeper
     $ exit
 
@@ -162,34 +168,47 @@
   # Make sure sendmail is running on startup
     $ chkconfig --level 2345 sendmail on
   # Edit sendmail configuration to allow emails to be sent from any domain user.
-  # The default already allows localhost to RELAY, do not put other domains or
-  # mail will be used by spammers.
-    TODO: ADD DETAILS REGARDING REDHAT 9
+  # The default already allows localhost to RELAY
+    $ cd /etc/mail
+    $ vi access
+      # Add a line with any of your e-mail domains... the part after the @
+      darkhorseventures.com  RELAY
 
+[user]
+      
 - Install ASPCFS
   # Login as your own username
+  
+  # Get a copy of the CFS source code or download from cvs
+    $ cd ~
+    $ tar -xvjf cfs2.tar.bz2
+    $ cd cfs2
+    -- OR --
     $ cvs -d :pserver:username@216.54.81.126:/usr/local/cvs login
     $ cvs -d :pserver:username@216.54.81.126:/usr/local/cvs checkout cfs2
     $ cd ~/cfs2
   
-  # Configure the web server
+  # Configure the web server with default settings
     $ sudo cp pref/apache/tomcat4.1/conf/web.xml ${CATALINA_HOME}/conf/
     $ sudo cp pref/apache/tomcat4.1/conf/server.xml ${CATALINA_HOME}/conf/
     $ sudo cp pref/apache/tomcat4.1/init.d/tomcat /etc/init.d/tomcat
     $ sudo chmod a+x /etc/init.d/tomcat
   
   # Setup tomcat to start when server starts up
-    $ chkconfig --level 2345 tomcat on
+    $ sudo /sbin/chkconfig --level 2345 tomcat on
     
   # Make sure Apache Web Server is not installed or running
-    $ service httpd stop
-    $ chkconfig --level 2345 httpd off
+  # If stopping shows an error, then it's probably not installed
+    $ sudo /sbin/service httpd stop
+    $ sudo /sbin/chkconfig --level 2345 httpd off
     
-  # Test the web server, Tomcat welcome page should show in browser:
-    $ service tomcat start
-    $ elinks http://127.0.0.1:8080
-  
-  # Install the software (Follow on-screen messages until BUILD SUCCESSFUL)
+  # Install the CFS software, make sure to follow on-screen messages until 
+  # "BUILD SUCCESSFUL" message is shown
+    $ ant deploy
+  # First time setup will show an error, but now the base files are in place,
+  # so edit the properties file to configure CFS for this server
+    $ vi ${CFS_HOME}/WEB-INF/build.properties
+  # Try deploying again and see if "BUILD SUCCESSFUL" message is shown
     $ ant deploy
   
   # Install the gatekeeper
@@ -198,20 +217,48 @@
 
   # Create the initial cfs database
     $ createdb -E UNICODE cdb_[company abbreviation]
-  # Install the database
+  # Install the database, answer the database question with the
+  # same cdb_[company abbreviation] that was used to create the database
     $ ant installdb
   
-  # Reload tomcat, must call stop and then start
-    $ sudo /sbin/service tomcat stop
+  # Load tomcat, must call stop and then start
     $ sudo /sbin/service tomcat start
   
   # Test ASPCFS, should see login prompt or message to use secure login
-    $ links http://127.0.0.1
+    $ lynx http://127.0.0.1
   # Test SSL ASPCFS, should see Security Alert due to not having a signed cert,
   # choose to proceed, then you should see login prompt
-    $ links https://127.0.0.1
+    $ lynx https://127.0.0.1
     
+  # INSTALLATION IS COMPLETE... restart the server and make sure everything
+  # loads on startup.  You can log into the server and try accessing the
+  # home page again to make sure.
+  
+  
+  
+*** Creating an initial user account ***
+  *** NOT IMPLEMENTED YET ***
+  # Now that the database is installed, add a CFS user by executing the following
+  # command, and answering the questions that appear:
+    $ ant adduser
+  *** NOT IMPLEMENTED YET ***
 
+Temporary solution:
+  # CFS is installed with a default user called 'dhvadmin' that is solely responsible
+  # for inserting the default table data for referential integrity.  This account
+  # is also used for creating a single new user that will be the administrator of the
+  # system.
+  
+  # A password for this user can be changed by typing the following, change the word test of course:
+  $ java -cp .:/home/webapps/ROOT/WEB-INF/lib/aspcfs.jar org.aspcfs.utils.PasswordHash test
+  
+  # Now update the database with the encrypted password that was generated... 
+  $ psql cdb_[company abbreviation] -c "UPDATE access SET password = '098f6bcd4621d373cade4e832627b4f6' WHERE username = 'dhvadmin';
+  
+  # The dhvadmin user can be disabled by setting the password to any word, or even null, once done.
+  
+  
+  
 *** Software Maintenace ***
 
 Even though the production server uses RAID, it is important that the database 
@@ -219,16 +266,22 @@ is remotely backed up, as well as the file library.  There are several ways to
 handle this, the simplest being a download of the database that can be restored
 to the same server or other servers fairly easily.
 
-# Copy the postgres backup script
-  $ cp cfs2/bin/postgres-backup.sh /var/lib/pgsql/
-  $ chown .postgres /var/lib/pgsql/postgres-backup.sh
-  $ chmod a+x /var/lib/pgsql/postgres-backup.sh
+[user]
 
-  
-  
+# Copy the postgres backup script
+  $ cd ~/cfs2
+  $ sudo cp cfs2/bin/postgres-backup.sh /var/lib/pgsql/
+  $ sudo chown .postgres /var/lib/pgsql/postgres-backup.sh
+  $ sudo chmod a+x /var/lib/pgsql/postgres-backup.sh
+
+[root user]
+
 # On this server make a cron entry to run postgres-backup.sh,
 # the resulting backup will be in /home/backup/DB_BACKUP
+  $ crontab -e
 37 4 * * * su postgres -c "/var/lib/pgsql/postgres-backup.sh '' 127.0.0.1 all `date +%a`"
+
+/* ALTERNATIVE CONFIGURATION: Run on a remote server */
 
 # This script could also be installed on another server,
 # just change the domain name/ip and make sure that
@@ -254,9 +307,6 @@ to the same server or other servers fairly easily.
   $ vi pg_dump723
   $ vi pg_dumpall723
   
-  
-  
-  
 - Then you need to setup a cron task with the following
 
 # Backup all the remote datebases for a server, and keep a 7 day rolling backup
@@ -265,9 +315,15 @@ to the same server or other servers fairly easily.
 37 4 * * * su postgres -c "/var/lib/pgsql/postgres-backup.sh 723 aspcfs.darkhorseventures.com all `date +%a`"
 
 
+
+
 *** System Failure Recovery ***
 
-# Postgres
-  - if the server is reset without shutting down, PostgreSQL might fail to startup
-  $ rm /var/lib/pgsql/data/postmaster.pid
+[root user]
 
+# Postgres
+  # If the server is reset without shutting down, PostgreSQL might fail to startup,
+  # use the following command to reset the process id:
+  $ rm /var/lib/pgsql/data/postmaster.pid
+  $ service postgresql start
+  
