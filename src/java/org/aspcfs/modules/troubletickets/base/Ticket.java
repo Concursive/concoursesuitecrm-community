@@ -2024,8 +2024,13 @@ public class Ticket extends GenericBean {
     ownerName = Contact.getNameLastFirst(rs.getString("owner_namelast"), rs.getString("owner_namefirst"));
 
     if (entered != null) {
-      float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
-      ageOf = java.lang.Math.round(ageCheck);
+      if (closed != null) {
+        float ageCheck = ((closed.getTime() - entered.getTime()) / 86400000);
+        ageOf = java.lang.Math.round(ageCheck);
+      } else {
+        float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
+        ageOf = java.lang.Math.round(ageCheck);
+      }
     }
   }
 
