@@ -28,7 +28,7 @@
   <tr>
     <td class="containerBack">
 <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
-<input type="hidden" name="modified" value="<%= ContactDetails.getModified() %>">
+<input type="hidden" name="modified" value="<%= ContactDetails.getModified().toString() %>">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Contacts.do?command=Details&id=<%= ContactDetails.getId() %>'">
 <input type="reset" value="Reset">
@@ -42,7 +42,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td valign=center>
+    <td nowrap class="formLabel">
       Contact Type
     </td>
     <td valign=center>
@@ -50,7 +50,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td valign=center>
+    <td nowrap class="formLabel">
       First Name
     </td>
     <td valign=center>
@@ -58,7 +58,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td valign=center>
+    <td nowrap class="formLabel">
       Middle Name
     </td>
     <td valign=center>
@@ -66,7 +66,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td valign=center>
+    <td nowrap class="formLabel">
       Last Name
     </td>
     <td valign=center>
@@ -75,7 +75,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td valign=center>
+    <td nowrap class="formLabel">
       Title
     </td>
     <td valign=center>

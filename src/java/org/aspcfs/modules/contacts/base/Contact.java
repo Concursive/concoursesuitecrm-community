@@ -161,9 +161,12 @@ public class Contact extends GenericBean {
 
 public java.sql.Timestamp getEntered() { return entered; }
 public java.sql.Timestamp getModified() { return modified; }
+
 public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
 public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 
+public void setEntered(String tmp) { this.entered = java.sql.Timestamp.valueOf(tmp); }
+public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf(tmp);; }
   /**
    *  Sets the Owner attribute of the Opportunity object
    *

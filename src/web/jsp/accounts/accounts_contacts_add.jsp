@@ -39,7 +39,7 @@
     </td>     
   </tr>
   <tr class="containerBody">
-    <td valign=center>
+    <td nowrap class="formLabel">
       Contact Type
     </td>
     <td valign=center>
@@ -47,7 +47,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td valign=center>
+    <td nowrap class="formLabel">
       First Name
     </td>
     <td valign=center>
@@ -55,7 +55,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td valign=center>
+    <td nowrap class="formLabel">
     Middle Name
     </td>
     <td valign=center>
@@ -63,7 +63,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td valign=center>
+    <td nowrap class="formLabel">
       Last Name
     </td>
     <td valign=center>
@@ -72,7 +72,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td valign=center>
+    <td nowrap class="formLabel">
       Title
     </td>
     <td valign=center>
