@@ -56,8 +56,7 @@
 
 </script>
 <form name="sendMessage" action="MyActionContacts.do?command=SendMessage&auto-populate=true&actionSource=MyActionContacts" method="post" onSubmit="return checkForm(this);">
-<dhv:formMessage showSpace="false" />
-<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<dhv:formMessage showSpace="false"/>
 Start by choosing an existing message or create a new one:<br>
 <SELECT SIZE="1" name="listView" onChange="javascript:updateMessageList();">
   <OPTION VALUE="my"<dhv:evaluate if="<%= "my".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>My Messages</OPTION>
@@ -85,5 +84,6 @@ Start by choosing an existing message or create a new one:<br>
 <br>
 <input type="hidden" name="contactId" value="<%= request.getParameter("contactId") %>">
 </form>
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </body>
 
