@@ -17,6 +17,7 @@ public class DatabaseBean extends GenericBean {
 
   private int configured = -1;
   private String type = "PostgreSQL";
+  private String driver = null;
   private String ip = "127.0.0.1";
   private int port = 5432;
   private String name = "darkhorse_crm";
@@ -140,13 +141,15 @@ public class DatabaseBean extends GenericBean {
    *@return    The driver value
    */
   public String getDriver() {
-    if ("PostgreSQL".equals(type)) {
-      return "org.postgresql.Driver";
+    if (driver == null) {
+      if ("PostgreSQL".equals(type)) {
+        driver = "org.postgresql.Driver";
+      }
+      if ("MSSQL".equals(type)) {
+        driver = "net.sourceforge.jtds.jdbc.Driver";
+      }
     }
-    if ("MSSQL".equals(type)) {
-      return "net.sourceforge.jtds.jdbc.Driver";
-    }
-    return null;
+    return driver;
   }
 
 
@@ -250,8 +253,7 @@ public class DatabaseBean extends GenericBean {
   public void setConnection(String tmp) {
     StringTokenizer st = new StringTokenizer(tmp, "|");
     type = st.nextToken();
-    //driver = //user currently cannot choose the driver
-    st.nextToken();
+    driver = st.nextToken();
     ip = st.nextToken();
     port = Integer.parseInt(st.nextToken());
     name = st.nextToken();
@@ -267,7 +269,7 @@ public class DatabaseBean extends GenericBean {
    */
   public String getConnection() {
     return type + "|" +
-        this.getDriver() + "|" +
+        driver + "|" +
         ip + "|" +
         port + "|" +
         name + "|" +
