@@ -179,7 +179,7 @@ CREATE TABLE lookup_contactphone_types (
 ;
 
 CREATE TABLE organization (
-  org_id INT IDENTITY PRIMARY KEY,
+  org_id id INT IDENTITY(0,1) PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
   account_number VARCHAR(50),
   account_group INT,

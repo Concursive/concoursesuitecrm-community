@@ -183,8 +183,9 @@ CREATE TABLE lookup_contactphone_types (
 )
 ;
 
+CREATE SEQUENCE organization_org_id_seq MINVALUE 0 START 0;
 CREATE TABLE organization (
-  org_id serial PRIMARY KEY,
+  org_id INTEGER DEFAULT nextval('organization_org_id_seq') NOT NULL PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
   account_number VARCHAR(50),
   account_group INT,
