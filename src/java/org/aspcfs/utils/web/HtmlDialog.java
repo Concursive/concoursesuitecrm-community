@@ -283,7 +283,7 @@ public class HtmlDialog {
     while (i.hasNext()) {
       Object id = i.next();
       Object st = buttons.get(id);
-      buttonString.append("<input type=button name=\"" + id.toString() + "\" value=\"" + id.toString() + "\" onClick=\"" + st.toString() + "\">");
+      buttonString.append("<input type=\"button\" name=\"" + id.toString() + "\" value=\"" + id.toString() + "\" onClick=\"" + st.toString() + "\" />");
     }
     return buttonString.toString();
   }
@@ -303,7 +303,7 @@ public class HtmlDialog {
       Object name = i.next();
       linkString.append("- ");
       linkString.append(name + " (" + links.get(name) + ")");
-      linkString.append("<br>");
+      linkString.append("<br />");
     }
     return linkString.toString();
   }
@@ -335,9 +335,9 @@ public class HtmlDialog {
           break;
         case HtmlDialog.MIDDLE:
           if (this.getMessage() != null) {
-            htmlString.append("<table align=center cellpadding=2 cellspacing=0 border=0 width=94%");
-            htmlString.append("<tr><td valign=center>");
-            htmlString.append("The following Relationships depend on this object:");
+            htmlString.append("<table align=\"center\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" width=\"94%\"");
+            htmlString.append("<tr><td valign=\"center\">");
+            htmlString.append("Please review carefully...");
             htmlString.append(this.getMessage().toString());
             htmlString.append("</td></tr></table>");
           }
