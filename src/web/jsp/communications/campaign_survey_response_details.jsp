@@ -44,8 +44,8 @@ Response Details
             }
             ActiveSurveyQuestion thisItem = (ActiveSurveyQuestion)z.next();
             int type = thisItem.getType();
-            int border = (thisItem.getType == ITEMLIST || thisItem.getType() == QUANT_COMMENTS ? 1 : 0);
-            SurveyAnswerList answers = thisItem.getAnswerList();
+            int border = (thisItem.getType() == SurveyQuestion.ITEMLIST || thisItem.getType() == SurveyQuestion.QUANT_COMMENTS ? 1 : 0);
+            SurveyAnswerList answerList = thisItem.getAnswerList();
              
 %>
           <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -66,7 +66,7 @@ Response Details
                     <dhv:evaluate exp="<%= (type == SurveyQuestion.ITEMLIST) %>">
                       <tr><td width="100%" align="left">Item</td><td align="left">Selection</td></tr>
                       <% 
-                        HashMap itemListResponse = thisItem.getItemListResponse();
+                        HashMap itemListResponse = thisItem.getItemListResponse(answerList);
                         Iterator i = itemListResponse.keySet().iterator();
                         if(i.hasNext()){
                         while(i.hasNext()){
