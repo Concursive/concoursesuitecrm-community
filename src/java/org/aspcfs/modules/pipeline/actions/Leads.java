@@ -457,8 +457,7 @@ public final class Leads extends CFSModule {
       return (executeCommandViewOpp(context));
     }
     addModuleBean(context, "Dashboard", "Dashboard");
-    int errorCode = 0;
-    String errorMessage = "";
+    String errorMessage = null;
 
     //Prepare the user id to base all data on
     int idToUse = 0;
@@ -469,9 +468,9 @@ public final class Leads extends CFSModule {
     //Check if the list is being reset
     if (context.getRequest().getParameter("reset") != null) {
       overrideId = -1;
-      context.getSession().setAttribute("leadsoverride", null);
-      context.getSession().setAttribute("leadsothername", null);
-      context.getSession().setAttribute("leadspreviousId", null);
+      context.getSession().removeAttribute("leadsoverride");
+      context.getSession().removeAttribute("leadsothername");
+      context.getSession().removeAttribute("leadspreviousId");
     }
     //Determine the user whose data is being shown, by default it's the current user
     if (overrideId > -1) {
@@ -563,8 +562,8 @@ public final class Leads extends CFSModule {
       if (checkFileName == null) {
         fullChildList = thisRec.getFullChildList(shortChildList, new UserList());
         String range = fullChildList.getUserListIds(idToUse);
-  
         //All of the opportunities that make up this graph calculation
+        //TODO: Set a max date for less records
         realFullOppList.setUnits("M");
         realFullOppList.setOwnerIdRange(range);
         realFullOppList.buildList(db);
@@ -573,7 +572,6 @@ public final class Leads extends CFSModule {
       //ShortChildList is used for showing user list, under graph
       shortChildList.buildPipelineValues(db);
     } catch (Exception e) {
-      errorCode = 1;
       errorMessage = e.toString();
       e.printStackTrace(System.out);
     } finally {
@@ -659,7 +657,6 @@ public final class Leads extends CFSModule {
       try {
         String realPath = context.getServletContext().getRealPath("/");
         String filePath = realPath + "graphs" + fs;
-
         java.util.Date testDate = new java.util.Date();
         String fileName = new String(idToUse + testDate.getTime() + context.getSession().getCreationTime() + ".jpg");
         FileOutputStream foutstream = new FileOutputStream(filePath + fileName);
@@ -687,7 +684,7 @@ public final class Leads extends CFSModule {
       }
     }
 
-    if (errorCode == 0) {
+    if (errorMessage == null) {
       context.getRequest().setAttribute("ShortChildList", shortChildList);
       context.getRequest().setAttribute("GraphTypeList", graphTypeSelect);
       return ("DashboardOK");
@@ -696,7 +693,6 @@ public final class Leads extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-
   }
 
 
@@ -1418,13 +1414,13 @@ public final class Leads extends CFSModule {
    */
   private UserList prepareLines(User pertainsTo, OpportunityList oppList, UserList usersToGraph) {
     java.util.Date myDate = null;
-    java.util.Calendar readDate = java.util.Calendar.getInstance();
-    java.util.Calendar readDateAdjusted = java.util.Calendar.getInstance();
+    Calendar readDate = Calendar.getInstance();
+    Calendar readDateAdjusted = Calendar.getInstance();
     java.util.Date d = new java.util.Date();
 
-    java.util.Calendar rightNow = java.util.Calendar.getInstance();
-    java.util.Calendar rightNowAdjusted = java.util.Calendar.getInstance();
-    java.util.Calendar twelveMonths = java.util.Calendar.getInstance();
+    Calendar rightNow = Calendar.getInstance();
+    Calendar rightNowAdjusted = Calendar.getInstance();
+    Calendar twelveMonths = Calendar.getInstance();
 
     int passedDay = 0;
     int passedYear = 0;
@@ -1444,11 +1440,8 @@ public final class Leads extends CFSModule {
     d.setDate(1);
 
     rightNow.setTime(d);
-    //rightNow.add(java.util.Calendar.MONTH, +1);
-
     rightNowAdjusted.setTime(d);
-    //rightNowAdjusted.add(java.util.Calendar.MONTH, +1);
-    rightNowAdjusted.add(java.util.Calendar.DATE, -1);
+    rightNowAdjusted.add(Calendar.DATE, -1);
 
     //twelve months
     twelveMonths.setTime(d);
@@ -1459,9 +1452,8 @@ public final class Leads extends CFSModule {
       if (pertainsTo.getIsValid() == false) {
         try {
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("(RE)BUILDING DATA FOR " + pertainsTo.getId());
+            System.out.println("Leads-> (RE)BUILDING DATA FOR " + pertainsTo.getId());
           }
-
           pertainsTo.setGmr(new GraphSummaryList());
           pertainsTo.setRamr(new GraphSummaryList());
           pertainsTo.setCgmr(new GraphSummaryList());
