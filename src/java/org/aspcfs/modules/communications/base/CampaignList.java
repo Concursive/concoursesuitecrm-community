@@ -13,7 +13,8 @@ import org.aspcfs.modules.base.Constants;
  *
  *@author     Wesley_S_Gillette
  *@created    November 16, 2001
- *@version    $Id$
+ *@version    $Id: CampaignList.java,v 1.12.22.2 2003/05/14 17:41:56 akhi_m Exp
+ *      $
  */
 public class CampaignList extends Vector {
 
@@ -30,6 +31,7 @@ public class CampaignList extends Vector {
   private boolean incompleteOnly = false;
   private boolean completeOnly = false;
   private int owner = -1;
+  private int type = -1;
   private String ownerIdRange = null;
   private String idRange = null;
   private int ready = -1;
@@ -314,6 +316,26 @@ public class CampaignList extends Vector {
 
 
   /**
+   *  Sets the type attribute of the CampaignList object
+   *
+   *@param  type  The new type value
+   */
+  public void setType(int type) {
+    this.type = type;
+  }
+
+
+  /**
+   *  Gets the type attribute of the CampaignList object
+   *
+   *@return    The type value
+   */
+  public int getType() {
+    return type;
+  }
+
+
+  /**
    *  Gets the pagedListInfo attribute of the CampaignList object
    *
    *@return    The pagedListInfo value
@@ -468,9 +490,7 @@ public class CampaignList extends Vector {
         "SELECT COUNT(*) AS recordcount " +
         "FROM campaign c " +
         "WHERE c.campaign_id > -1 ");
-
     createFilter(sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() +
@@ -483,7 +503,6 @@ public class CampaignList extends Vector {
       }
       rs.close();
       pst.close();
-
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
@@ -570,13 +589,16 @@ public class CampaignList extends Vector {
       sqlFilter.append("AND c.active = ? ");
     }
     if (incompleteOnly) {
-      sqlFilter.append("AND ( c.message_id < 1 OR c.campaign_id NOT IN (SELECT DISTINCT campaign_id FROM campaign_list_groups) OR active_date IS NULL OR active = ?) ");
+      sqlFilter.append("AND (active_date IS NULL OR active = ?) ");
     }
     if (completeOnly) {
-      sqlFilter.append("AND ( c.message_id > 0 AND c.campaign_id IN (SELECT DISTINCT campaign_id FROM campaign_list_groups) AND active_date IS NOT NULL AND active = ?) ");
+      sqlFilter.append("AND active_date IS NOT NULL AND active = ? ");
     }
     if (owner > -1) {
       sqlFilter.append("AND c.enteredby = ? ");
+    }
+    if (type > -1) {
+      sqlFilter.append("AND c.type = ? ");
     }
     if (ownerIdRange != null) {
       sqlFilter.append("AND c.enteredBy IN (" + ownerIdRange + ") ");
@@ -637,6 +659,9 @@ public class CampaignList extends Vector {
     if (owner > -1) {
       pst.setInt(++i, owner);
     }
+    if (type > -1) {
+      pst.setInt(++i, type);
+    }
     if (contactId > -1) {
       pst.setInt(++i, contactId);
     }
@@ -695,8 +720,8 @@ public class CampaignList extends Vector {
     if (rs.next()) {
       recordCount = DatabaseUtils.getInt(rs, "recordcount", 0);
     }
-    pst.close();
     rs.close();
+    pst.close();
     return recordCount;
   }
 }
