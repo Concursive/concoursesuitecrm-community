@@ -599,12 +599,12 @@ public class ConnectionPool implements Runnable {
       System.out.println("ConnectionPool-> Closing available connections");
     }
     closeConnections(AVAILABLE_CONNECTION, availableConnections);
-    availableConnections = new Hashtable();
+    availableConnections.clear();
     if (debug) {
       System.out.println("ConnectionPool-> Closing busy connections");
     }
     closeConnections(BUSY_CONNECTION, busyConnections);
-    busyConnections = new Hashtable();
+    busyConnections.clear();
   }
 
 
@@ -832,18 +832,21 @@ public class ConnectionPool implements Runnable {
     try {
       Enumeration e = connections.elements();
       while (e.hasMoreElements()) {
-        Connection connection = null;
-        if (connectionType == AVAILABLE_CONNECTION) {
-          connection = (Connection) e.nextElement();
-        } else {
-          ConnectionElement ce = (ConnectionElement) e.nextElement();
-          connection = (Connection) connections.get(ce);
-        }
-        if (!connection.isClosed()) {
+        //For each connection, attempt to close
+        try {
+          Connection connection = null;
+          if (connectionType == AVAILABLE_CONNECTION) {
+            connection = (Connection) e.nextElement();
+          } else {
+            ConnectionElement ce = (ConnectionElement) e.nextElement();
+            connection = (Connection) connections.get(ce);
+          }
           connection.close();
+        } catch (SQLException sqle) {
+          //Ignore close error
         }
       }
-    } catch (SQLException sqle) {
+    } catch (Exception sqle) {
       // Ignore errors; garbage collect anyhow
     }
   }
