@@ -121,8 +121,8 @@ public final class ProcessCalculation extends CFSModule {
       providerTransDetails.setIncludeEnabled(Constants.TRUE);
       providerTransDetails.setIncludeScheduled(Constants.TRUE);
       providerTransDetails.setBuildResources(true);
-      providerTransDetails.setEnteredBy(1);
-      providerTransDetails.setModifiedBy(1);
+      providerTransDetails.setEnteredBy(getValueAsInt(context, ce, "ENTERED_BY"));
+      providerTransDetails.setModifiedBy(getValueAsInt(context, ce, "ENTERED_BY"));
       providerTransDetails.buildResources(prodDb);
       //Get list of Accounts folders categories (Office Transaction Details)
       officeTransDetails = new CustomFieldCategory(prodDb, getValueAsInt(context, ce, "OFFICE_TRANSACTION_DETAILS"));
@@ -130,8 +130,8 @@ public final class ProcessCalculation extends CFSModule {
       officeTransDetails.setIncludeEnabled(Constants.TRUE);
       officeTransDetails.setIncludeScheduled(Constants.TRUE);
       officeTransDetails.setBuildResources(true);
-      officeTransDetails.setEnteredBy(1);
-      officeTransDetails.setModifiedBy(1);
+      officeTransDetails.setEnteredBy(getValueAsInt(context, ce, "ENTERED_BY"));
+      officeTransDetails.setModifiedBy(getValueAsInt(context, ce, "ENTERED_BY"));
       officeTransDetails.buildResources(prodDb);
       //build a list of all the accounts custom categories
       fullCategoryList.buildList(prodDb);
