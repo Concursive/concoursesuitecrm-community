@@ -143,7 +143,12 @@
 			<%=toHtml(openTic.getCompanyName())%><dhv:evaluate exp="<%=!(openTic.getCompanyEnabled())%>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 		<td width=150 nowrap valign="top" class="row<%= rowid %>">
-        <%= toHtml(openTic.getOwnerName()) %>
+        <dhv:evaluate exp="<%= openTic.isAssigned() %>">
+          <%= toHtml(openTic.getOwnerName()) %>
+        </dhv:evaluate>
+        <dhv:evaluate exp="<%= (!openTic.isAssigned()) %>">
+          <font color="red"><%= toHtml(openTic.getOwnerName()) %></font>
+        </dhv:evaluate>
 		</td>
 	</tr>
   
@@ -220,7 +225,12 @@
 			<%=toHtml(thisTic.getCompanyName())%><dhv:evaluate exp="<%=!(thisTic.getCompanyEnabled())%>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 		<td width=150 nowrap valign="top" class="row<%= rowid %>">
-			<%=toHtml(thisTic.getOwnerName())%>
+      <dhv:evaluate exp="<%= thisTic.isAssigned() %>">
+        <%= toHtml(thisTic.getOwnerName()) %>
+      </dhv:evaluate>
+      <dhv:evaluate exp="<%= (!thisTic.isAssigned()) %>">
+        <font color="red"><%= toHtml(thisTic.getOwnerName()) %></font>
+      </dhv:evaluate>
 		</td>
 	</tr>
   
