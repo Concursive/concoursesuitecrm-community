@@ -1,0 +1,185 @@
+<CFSPermissions>
+  <!-- Current max category id: 12 -->
+  <!-- Every individual permission has a unique name -->
+  <!-- Permission Categories can be arranged in any order, but they must have a unique sequntial id that
+       matches the id used in the CFS code -->
+  <!-- Permissions within a Category are in the order to appear on-screen, and can be changed without
+       concerns about the code-->
+  <!-- Permission attributes include: View, Add, Edit, Delete (vaed) and can be in any order -->
+  <permissions>
+    <category id="11" name="System" folders="false" lookups="false">
+      <permission name="globalitems-search" attributes="v---" description="Access to Global Search"/>
+      <permission name="globalitems-myitems" attributes="v---" description="Access to My Items"/>
+      <permission name="globalitems-recentitems" attributes="v---" description="Access to Recent Items"/>
+    </category>
+    <category id="12" name="My Home Page" folders="false" lookups="false">
+      <permission name="myhomepage" attributes="v---" description="Access to My Home Page module"/>
+      <permission name="myhomepage-dashboard" attributes="v---" description="View Performance Dashboard"/>
+      <permission name="myhomepage-miner" attributes="va-d" description="Industry News records"/>
+      <permission name="myhomepage-profile" attributes="v---" description="My Profile"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-" description="Personal Information"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" description="Settings"/>
+      <permission name="myhomepage-profile-password" attributes="--e-" description="Password"/>
+      <permission name="myhomepage-inbox" attributes="v---" description="My Inbox"/>
+    </category>
+    <category id="2" name="Contacts &amp; Resources" folders="true" lookups="true">
+      <permission name="contacts" attributes="v---" description="Access to Contacts &amp; Resources module"/>
+      <permission name="contacts-external_contacts" attributes="vaed" description="External Contact Records"/>
+      <permission name="contacts-internal_contacts" attributes="vaed" description="Internal Contact Records"/>
+      <permission name="contacts-external_contacts-reports" attributes="va-d" description="Reports"/>
+      <permission name="contacts-external_contacts-folders" attributes="vaed" description="Folders"/>
+      <permission name="contacts-external_contacts-calls" attributes="vaed" description="Calls"/>
+      <permission name="contacts-external_contacts-messages" attributes="v---" description="Messages"/>
+      <permission name="contacts-external_contacts-opportunities" attributes="vaed" description="Opportunities"/>
+    </category>
+    <category id="3" name="Pipeline Management" folders="false" lookups="true">
+      <permission name="pipeline" attributes="v---" description="Access to Pipeline Management module"/>
+      <permission name="pipeline-opportunities" attributes="vaed" description="Opportunity Records"/>
+      <permission name="pipeline-dashboard" attributes="v---" description="Dashboard"/>
+      <permission name="pipeline-reports" attributes="va-d" description="Reports"/>
+      <permission name="pipeline-opportunities-calls" attributes="vaed" description="Calls"/>
+      <permission name="pipeline-opportunities-documents" attributes="vaed" description="Documents"/>
+    </category>
+    <category id="1" name="Account Management" folders="true" lookups="true">
+      <permission name="accounts" attributes="v---" description="Access to Account Management module"/>
+      <permission name="accounts-accounts" attributes="vaed" description="Account Records"/>
+      <permission name="accounts-accounts-folders" attributes="vae-" description="Folders"/>
+      <permission name="accounts-accounts-contacts" attributes="vaed" description="Contacts"/>
+      <permission name="accounts-accounts-opportunities" attributes="vaed" description="Opportunities"/>
+      <permission name="accounts-accounts-tickets" attributes="vaed" description="Tickets"/>
+      <permission name="accounts-accounts-documents" attributes="vaed" description="Documents"/>
+      <permission name="accounts-accounts-reports" attributes="va-d" description="Reports"/>
+      <permission name="accounts-dashboard" attributes="v---" description="Dashboard"/>
+      <permission name="accounts-accounts-revenue" attributes="vaed" description="Revenue"/>
+      <permission name="accounts-autoguide-inventory" attributes="vaed" description="Auto Guide Vehicle Inventory" enabled="false"/>
+    </category>
+    <category id="9" name="Auto Guide" folders="false" lookups="false" enabled="false">
+      <permission name="autoguide" attributes="v---" description="Access to the Auto Guide module"/>
+      <permission name="autoguide-adruns" attributes="--e-" description="Ad Run complete status"/>
+    </category>
+    <category id="4" name="Campaign Management" folders="false" lookups="false">
+      <permission name="campaign" attributes="v---" description="Access to Campaign Manager module"/>
+      <permission name="campaign-dashboard" attributes="v---" description="Dashboard"/>
+      <permission name="campaign-campaigns" attributes="vaed" description="Campaign Records"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed" description="Campaign Group Records"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed" description="Campaign Message Records"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed" description="Campaign Survey Records"/>
+    </category>
+    <category id="5" name="Project Management" folders="false" lookups="false">
+      <permission name="projects" attributes="v---" description="Access to Project Management module"/>
+      <permission name="projects-personal" attributes="v---" description="Personal View"/>
+      <permission name="projects-enterprise" attributes="v---" description="Enterprise View"/>
+      <permission name="projects-projects" attributes="vaed" description="Project Records"/>
+    </category>
+    <category id="6" name="Tickets" folders="false" lookups="true">
+      <permission name="tickets" attributes="v---" description="Access to Ticket module"/>
+      <permission name="tickets-tickets" attributes="vaed" description="Ticket Records"/>
+    </category>
+    <category id="7" name="Admin" folders="false" lookups="false">
+      <permission name="admin" attributes="v---" description="Access to Admin module"/>
+      <permission name="admin-users" attributes="vaed" description="Users"/>
+      <permission name="admin-reassign" attributes="v-e-" description="Re-assign Items"/>
+      <permission name="admin-roles" attributes="vaed" description="Roles"/>
+      <permission name="admin-sysconfig" attributes="v-e-" description="System Configuration"/>
+      <permission name="admin-sysconfig-lists" attributes="v-e-" description="Configure Lookup Lists"/>
+      <permission name="admin-sysconfig-folders" attributes="vaed" description="Configure Custom Folders &amp; Fields"/>
+    </category>
+    <category id="8" name="Help" folders="false" lookups="false">
+      <permission name="help" attributes="v---" description="Access to Help System"/>
+    </category>
+    <category id="10" name="Demo" folders="false" lookups="false" enabled="false">
+      <permission name="demo" attributes="vaed" description="Access to Demo/Non-working features"/>
+    </category>
+  </permissions>
+  <roles>
+    <role name="Administrator" description="Performs system configuration and maintenance">
+      <permission name="myhomepage" attributes="v---"/>
+      <permission name="myhomepage-dashboard" attributes="v---"/>
+      <permission name="myhomepage-miner" attributes="va-d"/>
+      <permission name="myhomepage-profile" attributes="v---"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-"/>
+      <permission name="myhomepage-profile-password" attributes="--e-"/>
+      <permission name="myhomepage-inbox" attributes="v---"/>
+      
+      <permission name="contacts" attributes="v---"/>
+      <permission name="contacts-external_contacts" attributes="vaed"/>
+      <permission name="contacts-internal_contacts" attributes="vaed"/>
+      
+      <permission name="admin" attributes="v---"/>
+      <permission name="admin-users" attributes="vaed"/>
+      <permission name="admin-reassign" attributes="v-e-"/>
+      <permission name="admin-roles" attributes="vaed"/>
+      <permission name="admin-sysconfig" attributes="v-e-"/>
+      <permission name="admin-sysconfig-lists" attributes="v-e-"/>
+      <permission name="admin-sysconfig-folders" attributes="vaed"/>
+      
+      <permission name="help" attributes="v---"/>
+      
+      <permission name="globalitems-search" attributes="v---"/>
+      <permission name="globalitems-myitems" attributes="v---"/>
+      <permission name="globalitems-recentitems" attributes="v---"/>
+    </role>
+    <role name="Default Role" description="Sample user role">
+      <permission name="myhomepage" attributes="v---"/>
+      <permission name="myhomepage-dashboard" attributes="v---"/>
+      <permission name="myhomepage-miner" attributes="va-d"/>
+      <permission name="myhomepage-profile" attributes="v---"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-"/>
+      <permission name="myhomepage-profile-password" attributes="--e-"/>
+      <permission name="myhomepage-inbox" attributes="v---"/>
+      
+      <permission name="accounts" attributes="v---" />
+      <permission name="accounts-accounts" attributes="vae-"/>
+      <permission name="accounts-accounts-folders" attributes="vae-"/>
+      <permission name="accounts-accounts-contacts" attributes="vae-"/>
+      <permission name="accounts-accounts-opportunities" attributes="vae-"/>
+      <permission name="accounts-accounts-tickets" attributes="vae-"/>
+      <permission name="accounts-accounts-documents" attributes="vae-"/>
+      <permission name="accounts-accounts-reports" attributes="va-d"/>
+      <permission name="accounts-dashboard" attributes="v---"/>
+      <permission name="accounts-accounts-revenue" attributes="vaed"/>
+      
+      <permission name="contacts" attributes="v---"/>
+      <permission name="contacts-external_contacts" attributes="vaed"/>
+      <permission name="contacts-internal_contacts" attributes="vaed"/>
+      <permission name="contacts-external_contacts-reports" attributes="va-d"/>
+      <permission name="contacts-external_contacts-folders" attributes="vaed"/>
+      <permission name="contacts-external_contacts-calls" attributes="vaed"/>
+      <permission name="contacts-external_contacts-messages" attributes="v---"/>
+      <permission name="contacts-external_contacts-opportunities" attributes="vaed"/>
+      
+      <permission name="pipeline" attributes="v---"/>
+      <permission name="pipeline-opportunities" attributes="vaed"/>
+      <permission name="pipeline-dashboard" attributes="v---"/>
+      <permission name="pipeline-reports" attributes="va-d"/>
+      <permission name="pipeline-opportunities-calls" attributes="vaed"/>
+      <permission name="pipeline-opportunities-documents" attributes="vaed"/>
+      
+      <permission name="campaign" attributes="v---"/>
+      <permission name="campaign-dashboard" attributes="v---"/>
+      <permission name="campaign-campaigns" attributes="vaed"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed"/>
+      
+      <permission name="projects" attributes="v---"/>
+      <permission name="projects-personal" attributes="v---"/>
+      <permission name="projects-enterprise" attributes="v---"/>
+      <permission name="projects-projects" attributes="vaed"/>
+      
+      <permission name="tickets" attributes="v---"/>
+      <permission name="tickets-tickets" attributes="vaed"/>
+      
+      <permission name="admin" attributes="v---" description="Access to Admin module"/>
+      <permission name="admin-reassign" attributes="v-e-" description="Re-assign Items"/>
+      
+      <permission name="help" attributes="v---"/>
+      
+      <permission name="globalitems-search" attributes="v---"/>
+      <permission name="globalitems-myitems" attributes="v---"/>
+      <permission name="globalitems-recentitems" attributes="v---"/>
+    </role>
+  </roles>
+</CFSPermissions>
