@@ -95,11 +95,7 @@ Add Ticket<br>
   <tr>
     <td class="containerBack">
 <form name="addticket" action="AccountTickets.do?command=InsertTicket&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<% if (request.getParameter("contact") != null) {%>
-  <input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
-<%} else {%>
   <input type="submit" value="Insert" name="Save">
-<%}%>
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
   <input type="reset" value="Reset">	
   <%= showAttribute(request, "closedError") %>
@@ -283,11 +279,7 @@ Add Ticket<br>
 	</tr>
 </table>
 <br>
-<% if (request.getParameter("contact") != null) {%>
-<input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
-<%} else {%>
 <input type="submit" value="Insert" name="Save">
-<%}%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
