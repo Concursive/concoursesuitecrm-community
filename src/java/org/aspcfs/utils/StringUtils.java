@@ -132,24 +132,52 @@ public class StringUtils {
       return ("");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  s  Description of the Parameter
+   *@return    Description of the Return Value
+   */
   public static String toPseudoHtmlValue(String s) {
     String htmlReady = toHtmlValue(s);
     htmlReady = replace(htmlReady, "<br>", "\r\n");
-    return htmlReady;  
+    return htmlReady;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  s  Description of the Parameter
+   *@return    Description of the Return Value
+   */
   public static String toHtmlText(String s) {
     String htmlReady = replace(s, "\r\n", "<br>");
-    return htmlReady;  
+    return htmlReady;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  s  Description of the Parameter
+   *@return    Description of the Return Value
+   */
   public static String toHtmlTextValue(String s) {
     String htmlReady = replace(s, "<br>", "\r\n");
     return htmlReady;
   }
-  
-   public static String toHtmlTextBlank(String s) {
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  s  Description of the Parameter
+   *@return    Description of the Return Value
+   */
+  public static String toHtmlTextBlank(String s) {
     String htmlReady = replace(s, "<br>", "");
     return htmlReady;
   }
@@ -168,7 +196,14 @@ public class StringUtils {
     }
     return "";
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  inDate  Description of the Parameter
+   *@return         Description of the Return Value
+   */
   public static String toDateTimeString(java.util.Date inDate) {
     try {
       return java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.LONG).format(inDate);
@@ -289,7 +324,15 @@ public class StringUtils {
     }
     return sb.toString();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  filename                 Description of the Parameter
+   *@return                          Description of the Return Value
+   *@exception  java.io.IOException  Description of the Exception
+   */
   public static String loadText(String filename) throws java.io.IOException {
     String ls = System.getProperty("line.separator");
     StringBuffer text = new StringBuffer();
@@ -302,6 +345,13 @@ public class StringUtils {
     return text.toString();
   }
 
+
+  /**
+   *  Adds a feature to the S attribute of the StringUtils class
+   *
+   *@param  count  The feature to be added to the S attribute
+   *@return        Description of the Return Value
+   */
   public static String addS(long count) {
     if (count == 1) {
       return "";
@@ -309,12 +359,36 @@ public class StringUtils {
       return "s";
     }
   }
-  
+
+
+  /**
+   *  Adds a feature to the ES attribute of the StringUtils class
+   *
+   *@param  count  The feature to be added to the ES attribute
+   *@return        Description of the Return Value
+   */
   public static String addES(long count) {
     if (count == 1) {
       return "";
     } else {
       return "es";
+    }
+  }
+
+
+  /**
+   *  Convert the string to an int, or if not an int, return the specified
+   *  default value
+   *
+   *@param  tmp           Description of the Parameter
+   *@param  defaultValue  Description of the Parameter
+   *@return               Description of the Return Value
+   */
+  public static int parseInt(String tmp, int defaultValue) {
+    try {
+      return Integer.parseInt(tmp);
+    } catch (Exception e) {
+      return defaultValue;
     }
   }
 }
