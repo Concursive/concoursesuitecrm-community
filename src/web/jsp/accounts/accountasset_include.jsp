@@ -43,6 +43,10 @@
       message += "- Check that Purchase Date is entered correctly\r\n";
       formTest = false;
     }
+    if (!checkNumber(form.purchaseCost.value)) { 
+      message += "- Check that Purchase Cost is entered correctly\r\n";
+      formTest = false;
+    }
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;

@@ -160,10 +160,12 @@ public class ServiceContract extends GenericBean {
     tmp = StringUtils.replace(tmp, ",", "");
     tmp = StringUtils.replace(tmp, "$", "");
 
-    try {
-      this.contractValue = Double.parseDouble(tmp);
-    } catch (NumberFormatException ne) {
-      errors.put("contractValueError", tmp + " is invalid input for this field");
+    if (!"".equals(tmp)){
+      try {
+        this.contractValue = Double.parseDouble(tmp);
+      } catch (NumberFormatException ne) {
+        errors.put("contractValueError", tmp + " is invalid input for this field");
+      }
     }
   }
 

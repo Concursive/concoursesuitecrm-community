@@ -24,6 +24,10 @@
       message += "- Service Contract Number is required\r\n";
       formTest = false;
     }
+    if (!checkNumber(form.contractValue.value)) { 
+      message += "- Check that Contract Value is entered correcttly\r\n";
+      formTest = false;
+    }
     if (form.initialStartDate.value == "") { 
       message += "- Initial Contract Date is required\r\n";
       formTest = false;
@@ -96,11 +100,13 @@
   function clearAdjustment(){
     <%if (serviceContract.getId() == -1){%>
       document.getElementById('hoursRemaining').value = '';
+      document.getElementById('totalHoursRemaining').value = '';
     <%}else{%>
+      document.getElementById('adjustmentHours').value = '';
       changeDivContent('hours','No adjustment');
       changeDivContent('netRemainingHours','No adjustment');
     <%}%>
-    document.getElementById('adjustmentReason').value = '';
+    document.getElementById('adjustmentReason').value = '-1';
     changeDivContent('reason','No adjustment');
     document.getElementById('adjustmentNotes').value = '';
     changeDivContent('notes','No adjustment');
