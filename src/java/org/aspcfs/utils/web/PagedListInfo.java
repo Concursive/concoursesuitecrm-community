@@ -1094,9 +1094,6 @@ public class PagedListInfo {
     if (this.getItemsPerPage() > 0 &&
         DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
       for (int skipCount = 0; skipCount < this.getCurrentOffset(); skipCount++) {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("PagedListInfo-> Skipping record");
-        }
         rs.next();
       }
     }
