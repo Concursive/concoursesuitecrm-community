@@ -579,7 +579,9 @@ public class DatabaseUtils {
     String line = null;
     Statement st = db.createStatement();
     int tCount = 0;
+    int lineCount = 0;
     while ((line = in.readLine()) != null) {
+      ++lineCount;
       // SQL Comment
       if (line.startsWith("//")) {
         continue;
@@ -593,12 +595,22 @@ public class DatabaseUtils {
       if (line.endsWith(";")) {
         // Got a transaction, so execute it
         ++tCount;
-        st.execute(sql.substring(0, sql.length() - 1));
+        try {
+          st.execute(sql.substring(0, sql.length() - 1));
+        } catch (SQLException e) {
+          System.out.println("DatabaseUtils-> ERROR(1), line: " + lineCount + " message: " + e.getMessage());
+          throw new SQLException(e.getMessage());
+        }
         sql.setLength(0);
       } else if (line.equals("GO")) {
         // Got a transaction, so execute it
         ++tCount;
-        st.execute(sql.substring(0, sql.length() - 2));
+        try {
+          st.execute(sql.substring(0, sql.length() - 2));
+        } catch (SQLException e) {
+          System.out.println("DatabaseUtils-> ERROR(2), line: " + lineCount + " message: " + e.getMessage());
+          throw new SQLException(e.getMessage());
+        }
         sql.setLength(0);
       } else {
         // Continue with another line
@@ -608,7 +620,12 @@ public class DatabaseUtils {
     // Statement didn't end with a delimiter
     if (sql.toString().trim().length() > 0 && !CRLF.equals(sql.toString().trim())) {
       ++tCount;
-      st.execute(sql.toString());
+      try {
+        st.execute(sql.toString());
+      } catch (SQLException e) {
+        System.out.println("DatabaseUtils-> ERROR(3), line: " + lineCount + " message: " + e.getMessage());
+        throw new SQLException(e.getMessage());
+      }
     }
     st.close();
     if (System.getProperty("DEBUG") != null) {
