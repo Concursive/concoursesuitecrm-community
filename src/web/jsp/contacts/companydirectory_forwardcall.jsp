@@ -5,6 +5,8 @@
 <a href="ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>&id=<%= request.getParameter("id") %>">Call Details</a> >
 Forward Call<br>
 <hr color="#BFBFBB" noshade>
+<input type="submit" value="Send">
+<input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>'"><br>
 <form name="newMessageForm" action="ExternalContactsCallsForward.do?command=SendMessage&contactId=<%= request.getParameter("contactId") %>&id=<%= request.getParameter("id") %>" method="post" onSubmit="return sendMessage();">
 <%@ include file="../newmessage.jsp" %>
 <br>
