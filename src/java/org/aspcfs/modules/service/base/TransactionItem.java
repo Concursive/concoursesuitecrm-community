@@ -325,7 +325,7 @@ public class TransactionItem {
       ObjectUtils.setParam(object, "anchor", auth.getNextAnchor());
       ((SyncClient) object).updateSyncAnchor(db);
       Record thisRecord = new Record("syncEnd");
-      thisRecord.put("dateTime", String.valueOf(new java.sql.Timestamp(new java.util.Date().getTime())));
+      thisRecord.put("endDateTime", String.valueOf(new java.sql.Timestamp(new java.util.Date().getTime())));
       recordList.add(thisRecord);
     } else if (action == SYNC) {
       ObjectUtils.setParam(object, "lastAnchor", auth.getLastAnchor());
