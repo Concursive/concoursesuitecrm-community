@@ -356,8 +356,13 @@ public class ApplicationPrefs {
     }
     
     //initialize the import manager
-    ImportManager importManager = new ImportManager(cp, Integer.parseInt(this.get("IMPORT_QUEUE_MAX")));
-    context.setAttribute("ImportManager", importManager);
+    if (this.has("IMPORT_QUEUE_MAX")) {
+      ImportManager importManager = new ImportManager(cp, Integer.parseInt(this.get("IMPORT_QUEUE_MAX")));
+      context.setAttribute("ImportManager", importManager);
+    } else {
+      ImportManager importManager = new ImportManager(cp, 1);
+      context.setAttribute("ImportManager", importManager);
+    }
     
     //Start the cron last
     if ("true".equals(this.get("CRON.ENABLED"))) {
