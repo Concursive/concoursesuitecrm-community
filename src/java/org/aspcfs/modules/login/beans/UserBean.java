@@ -154,13 +154,17 @@ public class UserBean extends GenericBean {
     return browserType;
   }
 	
-  public String getBrowserAbbr() {
+  public String getBrowserId() {
     if (browserType.indexOf("Gecko") > 0 || browserType.indexOf("Netscape") > 0)  {
       return ("ns");
     } else {
 			return ("ie");
     }
   }
+	
+	public double getBrowserVersion() {
+		return 5.5;
+	}
 
 
   /**

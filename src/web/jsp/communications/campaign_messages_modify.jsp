@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
 <%@ include file="initPage.jsp" %>
@@ -6,9 +7,11 @@
 <script type="text/javascript" src="/javascript/coolbuttons.js"></script>
 <script>
   function save() {
+	<dhv:browser id="ie" minVersion="5.5" include="true">
     var edit = document.all.edit;
     document.all.messageText.value = edit.getHTML();
     edit.focus();
+  </dhv:browser>
   }
 </script>
 <style>
@@ -23,7 +26,6 @@
 <form name="modMessage" action="/CampaignManagerMessage.do?command=Update&auto-populate=true" method="post">
 <input type="hidden" name="id" value="<%= Message.getId() %>">
 <input type="hidden" name="modified" value="<%= Message.getModified() %>">
-<input type="hidden" name="messageText" value="">
 <input type="submit" value="Update" name="Save" onclick="javascript:save();">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>'">
 <input type="reset" value="Reset">
@@ -41,6 +43,7 @@
     </td>
     <td valign=center width="100%">
       <input type=text size=50 maxlength=80 name="name" value="<%= toHtmlValue(Message.getName()) %>">
+			<font color="red">*</font> <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
   
@@ -57,7 +60,12 @@
       Text
     </td>
     <td valign=center>
-      <!--textarea name="messageText" rows=10 cols=75 wrap="physical"><%= Message.getMessageText() %></textarea-->
+		<dhv:browser id="ie" minVersion="5.5" include="false">
+		  HTML tags allowed in text entry<br>
+      <textarea name="messageText" rows="10" cols="75" wrap="physical"><%= Message.getMessageText() %></textarea>
+    </dhv:browser>
+		<dhv:browser id="ie" minVersion="5.5" include="true">
+		  <input type="hidden" name="messageText" value="">
       <table cellspacing="0" id="toolBar" class="coolBar">
         <tr>
           <td class="coolButton" onclick="document.all.edit.setBold(); document.all.edit.frameWindow.focus();">
@@ -82,6 +90,7 @@
            <%= Message.getMessageText() %>
          </body>
       </iframe>
+			</dhv:browser>
     </td>
   </tr>
   
@@ -100,6 +109,7 @@
     </td>
     <td valign=center>
       <input type=text size=50 name="replyTo" value="<%= toHtmlValue(Message.getReplyTo()) %>">
+			<font color="red">*</font> <%= showAttribute(request, "replyToError") %>
     </td>
   </tr>
 	

@@ -531,6 +531,10 @@ public class Message extends GenericBean {
     if (name == null || name.trim().equals("")) {
       errors.put("nameError", "Message name is required");
     }
+		
+		if (replyTo == null || replyTo.trim().equals("")) {
+      errors.put("replyToError", "Email address is required");
+    }
 
     if (hasErrors()) {
       return false;

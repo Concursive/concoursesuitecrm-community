@@ -15,6 +15,31 @@
   <!-- The name to use in titles, etc. for the taglib -->
   <info>Darkhorse Ventures Tag Library</info>
 
+	<tag>
+    <name>browser</name> 
+    <tagclass>com.darkhorseventures.taglib.BrowserHandler</tagclass>
+    <bodycontent>JSP</bodycontent>
+    <info>
+      Access the User session and determine if browser matches id.
+    </info>
+    <attribute>
+      <name>id</name>
+      <required>yes</required>
+    </attribute>
+		<attribute>
+      <name>minVersion</name>
+      <required>no</required>
+    </attribute>
+		<attribute>
+      <name>maxVersion</name>
+      <required>no</required>
+    </attribute>
+		<attribute>
+      <name>include</name>
+      <required>no</required>
+    </attribute>
+  </tag>
+	
   <tag>
     <name>permission</name> 
     <tagclass>com.darkhorseventures.taglib.PermissionHandler</tagclass>
