@@ -59,7 +59,7 @@ public class CalendarView {
   protected boolean sortEvents = false;
   //NOTE: DO NOT USE THIS LIST DIRECTLY BECAUSE OF LEAP YEARS
   public final static int[] DAYSINMONTH = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-  public final static String[] MONTHS = {"JANUARY", "FEBRUARY", "MARCH", "ARPIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"};
+  public final static String[] MONTHS = {"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"};
   //parameter for synchronization of session object
   private int synchFrameCounter = 1;
   CalendarBean calendarInfo = null;
@@ -1191,7 +1191,7 @@ public class CalendarView {
     html.append("<select size=\"1\" name=\"month\" onChange=\"document.forms[0].submit();\">");
     for (int month = 1; month <= 12; month++) {
       String selected = (this.getMonth().equals(String.valueOf(month))) ? " selected" : "";
-      html.append("<option value=\"" + month + "\"" + selected + ">" + MONTHS[month - 1] + "</option>");
+      html.append("<option value=\"" + month + "\"" + selected + ">" + monthNames[month-1] + "</option>");
     }
     html.append("</select>");
     return html.toString();
