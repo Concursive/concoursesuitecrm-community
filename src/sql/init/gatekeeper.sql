@@ -10,7 +10,7 @@ VALUES
 ('*/5',
  'org.aspcfs.apps.notifier.Notifier#doTask',
  '@CFS_HOME@/WEB-INF/notifier.xml',
- @FALSE@
+ @TRUE@
 );
 
 /* Cron entry for cleaning up the server, every day at 12:00am */
