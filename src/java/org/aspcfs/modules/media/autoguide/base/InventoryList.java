@@ -117,6 +117,18 @@ public class InventoryList extends ArrayList {
   public void setOrgId(int tmp) {
     this.orgId = tmp;
   }
+  
+  public void setAccountId(int tmp) {
+    setOrgId(tmp);
+  }
+  
+  public void setOrgId(String tmp) {
+    this.orgId = Integer.parseInt(tmp);
+  }
+  
+  public void setAccountId(String tmp) {
+    setOrgId(tmp);
+  }
 
 
   /**
@@ -126,6 +138,11 @@ public class InventoryList extends ArrayList {
    */
   public void setBuildOrganizationInfo(boolean tmp) {
     this.buildOrganizationInfo = tmp;
+  }
+  
+  public void setBuildOrganizationInfo(String tmp) {
+    this.buildOrganizationInfo = 
+     ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 

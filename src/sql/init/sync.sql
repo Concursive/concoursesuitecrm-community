@@ -359,7 +359,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'adRunList', 'com.darkhorseventures.autoguide.base.adRunList', 390,
+ VALUES (2, 'adRunList', 'com.darkhorseventures.autoguide.base.AdRunList', 390,
 'CREATE TABLE ad_run (
        ad_run_id            int NOT NULL,
        record_status_id     int NULL,

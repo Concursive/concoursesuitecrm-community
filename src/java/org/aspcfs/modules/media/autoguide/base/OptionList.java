@@ -131,6 +131,10 @@ public class OptionList extends ArrayList {
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
   }
+  
+  public void setInventoryId(String tmp) {
+    this.inventoryId = Integer.parseInt(tmp);
+  }
 
 
   /**

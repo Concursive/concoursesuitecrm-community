@@ -752,6 +752,10 @@ public class Inventory {
   public Organization getOrganization() {
     return organization;
   }
+  
+  public Organization getAccount() {
+    return organization;
+  }
 
 
   /**

@@ -20,15 +20,25 @@ public class ObjectUtils {
   
   public static String getParam(Object target, String param) {
     try {
-      param = param.substring(0, 1).toUpperCase() + param.substring(1);
-      Method method = target.getClass().getDeclaredMethod("get" + param, null);
-      Object result = method.invoke(target, null);
-      if (result == null) {
-        return null;
-      } else if (result instanceof String) {
-        return (String) result;
+      int dotPos = param.indexOf(".");
+      if (dotPos < 1) {
+        dotPos = param.indexOf("_");
+      }
+      
+      if (dotPos > 0) {
+        Object innerObject = ObjectUtils.getObject(target, param.substring(0, dotPos));
+        return ObjectUtils.getParam(innerObject, param.substring(dotPos + 1));
       } else {
-        return String.valueOf(result);
+        param = param.substring(0, 1).toUpperCase() + param.substring(1);
+        Method method = target.getClass().getDeclaredMethod("get" + param, null);
+        Object result = method.invoke(target, null);
+        if (result == null) {
+          return null;
+        } else if (result instanceof String) {
+          return (String) result;
+        } else {
+          return String.valueOf(result);
+        }
       }
     } catch (Exception e) {
       return null;

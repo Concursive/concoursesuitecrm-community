@@ -182,7 +182,7 @@ and limit.
     <code>BZTST27A</code>
     <systemId>2</systemId>
     <clientId>*INSERT CLIENT ID*</clientId>
-    <lastAnchor>*INSERT LAST ANCHOR OR NULL</lastAnchor>
+    <lastAnchor>*INSERT LAST ANCHOR OR NULL*</lastAnchor>
     <nextAnchor>*INSERT NEXT ANCHOR HERE*</nextAnchor>
   </authentication>
   <transaction id="10">
@@ -247,6 +247,21 @@ Client #1 Ends Synchronization
   
   <transaction id="1">
     <meta>
+      <property>id</property>
+      <property>name</property>
+      <property>orderId</property>
+      <property>syncItem</property>
+    </meta>
+    <tableList action="select">
+      <systemId>2</systemId>
+      <buildSyncElementsOnly>true</buildSyncElementsOnly>
+    </tableList>
+  </transaction>
+  
+  ** TODO: users **
+  
+  <transaction id="3">
+    <meta>
       <property>guid</property>
       <property>name</property>
       <property>enteredBy</property>
@@ -256,7 +271,9 @@ Client #1 Ends Synchronization
     <accountList action="sync" identity="1"/>
   </transaction>
   
-  <transaction id="2">
+  ** TODO: user_account **
+  
+  <transaction id="5">
     <meta>
       <property>guid</property>
       <property>name</property>
@@ -265,7 +282,7 @@ Client #1 Ends Synchronization
     <optionList action="sync" identity="1"/>
   </transaction>
   
-  <transaction id="3">
+  <transaction id="6">
     <meta>
       <property>guid</property>
       <property>name</property>
@@ -276,7 +293,7 @@ Client #1 Ends Synchronization
     <makeList action="sync"/>
   </transaction>
 
-  <transaction id="4">
+  <transaction id="7">
     <meta>
       <property>guid</property>
       <property>name</property>
@@ -288,7 +305,7 @@ Client #1 Ends Synchronization
     <modelList action="sync"/>
   </transaction>
   
-  <transaction id="5">
+  <transaction id="8">
     <meta>
       <property>guid</property>
       <property>year</property>
@@ -302,7 +319,72 @@ Client #1 Ends Synchronization
       <year>*Optionally specify a specific year to receive, or remove this attribute*</year>
     </vehicleList>
   </transaction>
-
+  
+  ** NOT IMPLEMENTED **
+  <transaction id="9">
+    <meta>
+      <property>code</property>
+      <property>description</property>
+      <property>modified</property>
+    </meta>
+    <adTypeList action="sync">
+      <table>autoguide_ad_run_types</table>
+    </adTypeList>
+  </transaction>
+  
+  <transaction id="10">
+    <meta>
+      <property>guid</property>
+      <property>vehicleGuid</property>
+      <property>accountGuid</property>
+      <property>enteredBy</property>
+      <property>stockNo</property>
+      <property>mileage</property>
+      <property>vin</property>
+      <property>sellingPrice</property>
+      <property>exteriorColor</property>
+      <property>condition</property>
+      <property>comments</property>
+      <property>sold</property>
+      <property>modified</property>
+    </meta>
+    <accountInventoryList action="sync">
+      <accountGuid>*OPTIONAL: SPECIFY AN ACCOUNT ID OR YOU GET ALL ACCOUNTS*</accountGuid>
+    </accountInventoryList>
+  </transaction>
+  
+  Under development... since Inventory is related to adRunList and optionList
+  I may need to add some fields on the server. Otherwise,
+  everytime an inventory item is inserted or updated, the client must sync the 
+   options and adruns for this inventory item.
+   
+  <transaction id="11">
+    <meta>
+      <property>guid</property>
+      <property>inventoryGuid</property>
+      <property>runDate</property>
+      <property>adTypeGuid</property>
+      <property>includePhoto</property>
+      <property>completeDate</property>
+      <property>modified</property>
+    </meta>
+    <adRunList action="sync">
+      <inventoryGuid>*REQUIRED: MUST SPECIFY INVENTORY GUID*</inventoryGuid>
+    </adRunList>
+  </transaction>
+  
+  <transaction id="12">
+    <meta>
+      <property>guid</property>
+      <property>inventoryGuid</property>
+    </meta>
+    <optionList action="sync">
+      <inventoryGuid>*REQUIRED: MUST SPECIFY INVENTORY GUID*</inventoryGuid>
+    </optionList>
+  </transaction>
+  
+  ** TODO: inventory_pictures **
+  
 
 ...Client inserts a vehicle with options and ad runs (MUST HAVE
 SYNC'D ALL TABLES FIRST):

@@ -52,7 +52,7 @@ public class Organization extends GenericBean {
   private String ownerName = "";
   private String enteredByName = "";
   private String modifiedByName = "";
-  
+
   private LookupList types = new LookupList();
   private ArrayList typeList = null;
 
@@ -127,102 +127,32 @@ public class Organization extends GenericBean {
     emailAddressList.setOrgId(this.getOrgId());
     emailAddressList.buildList(db);
   }
-  
-  public ArrayList getTypeList() {
-	return typeList;
-}
-public void setTypeList(ArrayList typeList) {
-	this.typeList = typeList;
-}
 
-public void setTypeList(String[] criteriaString) {
-	if (criteriaString != null) {
-		String[] params = criteriaString;
-		typeList = new ArrayList(Arrays.asList(params));
-	} else {
-		typeList = new ArrayList();
-	}
 
-	this.typeList = typeList;
-}
-
-  public void buildTypes (Connection db) throws SQLException {
-	types.setSelectSize(3);
-	types.setMultiple(true);
-	  
-	Statement st = null;
-	ResultSet rs = null;
-	
-	StringBuffer sql = new StringBuffer();
-	sql.append(
-        "SELECT atl.*, la.description as type_name " +
-        "FROM account_type_levels atl " +
-        "LEFT JOIN lookup_account_types la ON (atl.type_id = la.code) " +
-        "WHERE atl.id = " + orgId + " ORDER BY atl.level ");
-	
-	st = db.createStatement();
-	rs = st.executeQuery(sql.toString());
-	
-	while(rs.next()) {
-		types.appendItem(rs.getInt("type_id"), rs.getString("type_name")); 
-	}
-	
-	rs.close();
-	st.close();
+  /**
+   *  Sets the typeList attribute of the Organization object
+   *
+   *@param  typeList  The new typeList value
+   */
+  public void setTypeList(ArrayList typeList) {
+    this.typeList = typeList;
   }
-  
-  public boolean insertType(Connection db, int type_id, int level) throws SQLException {
-    if (orgId == -1) {
-      throw new SQLException("No Organization ID Specified");
+
+
+  /**
+   *  Sets the typeList attribute of the Organization object
+   *
+   *@param  criteriaString  The new typeList value
+   */
+  public void setTypeList(String[] criteriaString) {
+    if (criteriaString != null) {
+      String[] params = criteriaString;
+      typeList = new ArrayList(Arrays.asList(params));
+    } else {
+      typeList = new ArrayList();
     }
 
-    StringBuffer sql = new StringBuffer();
-    
-    try {
-      db.setAutoCommit(false);
-      
-      sql.append(
-          "INSERT INTO account_type_levels " +
-          "(id, type_id, level) " +
-          "VALUES (?, ?, ?) ");
-
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setInt(++i, this.getOrgId());
-      pst.setInt(++i, type_id);
-      pst.setInt(++i, level);
-      pst.execute();
-      pst.close();
-      
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
-    }
-    return true;
-  }
-  
-  public boolean resetType(Connection db) throws SQLException {
-    if (this.getOrgId() == -1) {
-      throw new SQLException("Organization ID not specified");
-    }
-
-    Statement st = db.createStatement();
-
-    try {
-      db.setAutoCommit(false);
-      st.executeUpdate("DELETE FROM account_type_levels WHERE id = " + this.getOrgId());
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-    } finally {
-      db.setAutoCommit(true);
-      st.close();
-    }
-    return true;
+    this.typeList = typeList;
   }
 
 
@@ -265,21 +195,16 @@ public void setTypeList(String[] criteriaString) {
     this.errorMessage = tmp;
   }
 
-public LookupList getTypes() {
-	return types;
-}
-public void setTypes(LookupList types) {
-	this.types = types;
-}
 
-
-  public void listTypes ()     {        
-  	for (int i = 0; i < typeList.size(); i++) {
-		String val = (String)typeList.get(i);  
-	        System.out.println(val);        
-  	}
+  /**
+   *  Sets the types attribute of the Organization object
+   *
+   *@param  types  The new types value
+   */
+  public void setTypes(LookupList types) {
+    this.types = types;
   }
-  
+
 
   /**
    *  Sets the Owner attribute of the Organization object
@@ -626,6 +551,26 @@ public void setTypes(LookupList types) {
 
 
   /**
+   *  Gets the typeList attribute of the Organization object
+   *
+   *@return    The typeList value
+   */
+  public ArrayList getTypeList() {
+    return typeList;
+  }
+
+
+  /**
+   *  Gets the types attribute of the Organization object
+   *
+   *@return    The types value
+   */
+  public LookupList getTypes() {
+    return types;
+  }
+
+
+  /**
    *  Gets the alertDate attribute of the Organization object
    *
    *@return    The alertDate value
@@ -930,7 +875,13 @@ public void setTypes(LookupList types) {
   public int getOrgId() {
     return orgId;
   }
-  
+
+
+  /**
+   *  Gets the id attribute of the Organization object
+   *
+   *@return    The id value
+   */
   public int getId() {
     return orgId;
   }
@@ -1103,6 +1054,121 @@ public void setTypes(LookupList types) {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void buildTypes(Connection db) throws SQLException {
+    types.setSelectSize(3);
+    types.setMultiple(true);
+
+    Statement st = null;
+    ResultSet rs = null;
+
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT atl.*, la.description as type_name " +
+        "FROM account_type_levels atl " +
+        "LEFT JOIN lookup_account_types la ON (atl.type_id = la.code) " +
+        "WHERE atl.id = " + orgId + " ORDER BY atl.level ");
+
+    st = db.createStatement();
+    rs = st.executeQuery(sql.toString());
+
+    while (rs.next()) {
+      types.appendItem(rs.getInt("type_id"), rs.getString("type_name"));
+    }
+
+    rs.close();
+    st.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  type_id           Description of Parameter
+   *@param  level             Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public boolean insertType(Connection db, int type_id, int level) throws SQLException {
+    if (orgId == -1) {
+      throw new SQLException("No Organization ID Specified");
+    }
+
+    StringBuffer sql = new StringBuffer();
+
+    try {
+      db.setAutoCommit(false);
+
+      sql.append(
+          "INSERT INTO account_type_levels " +
+          "(id, type_id, level) " +
+          "VALUES (?, ?, ?) ");
+
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql.toString());
+      pst.setInt(++i, this.getOrgId());
+      pst.setInt(++i, type_id);
+      pst.setInt(++i, level);
+      pst.execute();
+      pst.close();
+
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public boolean resetType(Connection db) throws SQLException {
+    if (this.getOrgId() == -1) {
+      throw new SQLException("Organization ID not specified");
+    }
+
+    Statement st = db.createStatement();
+
+    try {
+      db.setAutoCommit(false);
+      st.executeUpdate("DELETE FROM account_type_levels WHERE id = " + this.getOrgId());
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+    } finally {
+      db.setAutoCommit(true);
+      st.close();
+    }
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   */
+  public void listTypes() {
+    for (int i = 0; i < typeList.size(); i++) {
+      String val = (String) typeList.get(i);
+      System.out.println(val);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
    *@param  checkName         Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
@@ -1246,7 +1312,6 @@ public void setTypes(LookupList types) {
         thisEmailAddress.process(db, this.getOrgId(), this.getEnteredBy(), this.getModifiedBy());
       }
 
-
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1324,25 +1389,25 @@ public void setTypes(LookupList types) {
 
     resultCount = pst.executeUpdate();
     pst.close();
-    
+
     if (this.getMiner_only() == false) {
-    
-	resetType(db);
-	int lvlcount = 0;
-	
-	for (int k = 0; k < typeList.size(); k++) {
-		String val = (String)typeList.get(k);
-		
-		if ( val != null && !(val.equals("")) ) {
-			int type_id = Integer.parseInt((String)typeList.get(k));  
-			lvlcount++;
-			insertType(db, type_id, lvlcount);    
-		} else {
-			lvlcount--;
-		}
-	}
+
+      resetType(db);
+      int lvlcount = 0;
+
+      for (int k = 0; k < typeList.size(); k++) {
+        String val = (String) typeList.get(k);
+
+        if (val != null && !(val.equals(""))) {
+          int type_id = Integer.parseInt((String) typeList.get(k));
+          lvlcount++;
+          insertType(db, type_id, lvlcount);
+        } else {
+          lvlcount--;
+        }
+      }
     }
-    
+
     return resultCount;
   }
 
@@ -1403,13 +1468,13 @@ public void setTypes(LookupList types) {
 
       Statement st = db.createStatement();
       st.executeUpdate(
-        "DELETE FROM organization_phone WHERE org_id = " + this.getOrgId());
+          "DELETE FROM organization_phone WHERE org_id = " + this.getOrgId());
       st.executeUpdate(
-        "DELETE FROM organization_emailaddress WHERE org_id = " + this.getOrgId());
+          "DELETE FROM organization_emailaddress WHERE org_id = " + this.getOrgId());
       st.executeUpdate(
-        "DELETE FROM organization_address WHERE org_id = " + this.getOrgId());
+          "DELETE FROM organization_address WHERE org_id = " + this.getOrgId());
       st.executeUpdate(
-        "DELETE FROM organization WHERE org_id = " + this.getOrgId());
+          "DELETE FROM organization WHERE org_id = " + this.getOrgId());
       st.close();
       db.commit();
     } catch (SQLException e) {
@@ -1437,11 +1502,11 @@ public void setTypes(LookupList types) {
       db.setAutoCommit(false);
       Statement st = db.createStatement();
       st.executeUpdate(
-        "DELETE FROM news WHERE org_id = " + this.getOrgId());
+          "DELETE FROM news WHERE org_id = " + this.getOrgId());
       st.executeUpdate(
-        "DELETE FROM organization " +
-        "WHERE org_id = " + this.getOrgId() + " " +
-        "AND miner_only = " + DatabaseUtils.getTrue(db) + " ");
+          "DELETE FROM organization " +
+          "WHERE org_id = " + this.getOrgId() + " " +
+          "AND miner_only = " + DatabaseUtils.getTrue(db) + " ");
       st.close();
       db.commit();
     } catch (SQLException e) {
@@ -1515,12 +1580,12 @@ public void setTypes(LookupList types) {
     contractEndDate = rs.getDate("contract_end");
     alertDate = rs.getDate("alertdate");
     alertText = rs.getString("alert");
-    
+
     //contact table
     ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));
     enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
     modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
-    
+
     //industry_temp table
     industryName = rs.getString("industry_name");
   }

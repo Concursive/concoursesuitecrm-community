@@ -148,6 +148,10 @@ public class AdRunList extends ArrayList {
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
   }
+  
+  public void setInventoryId(String tmp) {
+    this.inventoryId = Integer.parseInt(tmp);
+  }
 
   public void setIncompleteOnly(boolean tmp) { this.incompleteOnly = tmp; }
 
