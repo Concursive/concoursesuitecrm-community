@@ -92,6 +92,9 @@
       <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed" description="Ticket Maintenance Notes"/>
       <permission name="accounts-accounts-tickets-activity-log" attributes="vaed" description="Ticket Activities"/>
       <permission name="portal-user" attributes="vaed" description="Customer Portal User"/>
+      <permission name="accounts-quotes" attributes="vaed" description="Quotes" enabled="false"/>
+      <permission name="accounts-orders" attributes="vaed" description="Orders" enabled="false"/>
+      <permission name="accounts-products" attributes="vaed" description="Products and Services" enabled="false"/>
       <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Accounts by Type" description="What are my accounts by type?"/>
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Accounts by Date Added" description="What are my recent accounts?"/>
       <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="Which accounts are expiring?"/>
@@ -103,10 +106,10 @@
       <permission name="autoguide" attributes="v---" description="Access to the Auto Guide module"/>
       <permission name="autoguide-adruns" attributes="--e-" description="Ad Run complete status"/>
     </category>
-    <category id="420041017" name="Quotes" folders="false" lookups="false" reports="false" enabled="false">
+    <category id="420041017" name="Quotes" folders="false" lookups="false" reports="false">
       <permission name="quotes" attributes="vaed" description="Access to Quotes module"/>
     </category>
-    <category id="420041018" name="Orders" folders="false" lookups="false" reports="false" enabled="false">
+    <category id="420041018" name="Orders" folders="false" lookups="false" reports="true">
       <permission name="orders" attributes="vaed" description="Access to Orders module"/>
     </category>
     <category id="330041409" name="Product Catalog" folders="true" lookups="false" reports="false" categories="false">
