@@ -323,6 +323,16 @@ public class Campaign extends GenericBean {
   public void setId(int tmp) {
     this.id = tmp;
   }
+  
+  /**
+   *  Sets the id attribute of the Campaign object
+   *
+   *@param  tmp  The new id value
+   *@since       1.1
+   */
+  public void setId(String tmp) {
+    this.setId(Integer.parseInt(tmp));
+  }
 
 
   /**
@@ -343,18 +353,15 @@ public class Campaign extends GenericBean {
    *@since       1.1
    */
   public void setActive(String tmp) {
-    active = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    active = DatabaseUtils.parseBoolean(tmp);;
   }
 
-
-  /**
-   *  Sets the id attribute of the Campaign object
-   *
-   *@param  tmp  The new id value
-   *@since       1.1
-   */
-  public void setId(String tmp) {
-    this.setId(Integer.parseInt(tmp));
+  public void setReplyTo(String tmp) { this.replyTo = tmp; }
+  public void setSubject(String tmp) { this.subject = tmp; }
+  public void setMessage(String tmp) { this.message = tmp; }
+  public void setSendMethodId(int tmp) { this.sendMethodId = tmp; }
+  public void setSendMethodId(String tmp) { 
+    this.sendMethodId = Integer.parseInt(tmp); 
   }
 
 
@@ -492,27 +499,7 @@ public class Campaign extends GenericBean {
    *@param  tmp  The new statusId value
    */
   public void setStatusId(String tmp) {
-    this.statusId = Integer.parseInt(tmp);
-
-    switch (statusId) {
-        case IDLE:
-          status = IDLE_TEXT;
-          break;
-        case QUEUE:
-          status = QUEUE_TEXT;
-          break;
-        case STARTED:
-          status = STARTED_TEXT;
-          break;
-        case ERROR:
-          status = "Unspecified error";
-          break;
-        case FINISHED:
-          status = FINISHED_TEXT;
-          break;
-        default:
-          break;
-    }
+    this.setStatusId(Integer.parseInt(tmp));
   }
 
 
@@ -666,7 +653,7 @@ public class Campaign extends GenericBean {
    *@since       1.1
    */
   public void setEnabled(String tmp) {
-    enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    enabled = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -719,8 +706,7 @@ public class Campaign extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "SELECT group_id " +
         "FROM campaign_list_groups " +
-        "WHERE campaign_id = ? "
-        );
+        "WHERE campaign_id = ? ");
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
@@ -737,26 +723,6 @@ public class Campaign extends GenericBean {
 
     rs.close();
     pst.close();
-  }
-
-
-  /**
-   *  Sets the sendMethodId attribute of the Campaign object
-   *
-   *@param  tmp  The new sendMethodId value
-   */
-  public void setSendMethodId(int tmp) {
-    sendMethodId = tmp;
-  }
-
-
-  /**
-   *  Sets the sendMethodId attribute of the Campaign object
-   *
-   *@param  tmp  The new sendMethodId value
-   */
-  public void setSendMethodId(String tmp) {
-    sendMethodId = Integer.parseInt(tmp);
   }
 
 
@@ -1436,7 +1402,7 @@ public class Campaign extends GenericBean {
           "INSERT INTO campaign " +
           "(enteredby, modifiedby, name, message_id, " +
           "reply_addr, subject, message, send_method_id, " +
-          "inactive_date, approval_date");
+          "inactive_date, approval_date, ");
       if (entered != null) {
         sql.append("entered, ");
       }
