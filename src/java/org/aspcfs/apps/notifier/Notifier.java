@@ -79,6 +79,7 @@ public class Notifier extends ReportBuilder {
           "<br>" +
           thisOpportunity.getDescription() + "<br>");
         thisNotification.setType(Notification.EMAIL);
+				thisNotification.setTypeText(Notification.EMAIL_TEXT);
         thisNotification.notifyUser(db);
         ++notifyCount;
       } else {
@@ -130,6 +131,7 @@ public class Notifier extends ReportBuilder {
           thisCall.getNotes() + "<br>" +
           "<br>");
         thisNotification.setType(Notification.EMAIL);
+				thisNotification.setTypeText(Notification.EMAIL_TEXT);
         thisNotification.notifyUser(db);
         ++notifyCount;
       } else {
@@ -181,9 +183,6 @@ public class Notifier extends ReportBuilder {
       Vector faxLog = new Vector();
       System.out.println("  Getting campaign ...");
       Campaign thisCampaign = (Campaign)i.next();
-      System.out.println("  Getting message ...");
-      Message thisMessage = new Message(db, "" + thisCampaign.getMessageId());
-
       System.out.println("  Getting recipient list ...");
       RecipientList recipientList = new RecipientList();
       recipientList.setCampaignId(thisCampaign.getId());
@@ -217,12 +216,13 @@ public class Notifier extends ReportBuilder {
         //thisNotification.setItemModified(thisCampaign.getActiveDate());
         if (thisNotification.isNew(db)) {
           System.out.println("Sending message ...");
-          thisNotification.setFrom(thisMessage.getReplyTo());
-          thisNotification.setSubject(thisMessage.getDescription());
-          thisNotification.setMessageIdToSend(thisMessage.getId());
-          thisNotification.setMessageToSend(thisMessage.getMessageText());
+          thisNotification.setFrom(thisCampaign.getReplyTo());
+          thisNotification.setSubject(thisCampaign.getSubject());
+          thisNotification.setMessageIdToSend(thisCampaign.getMessageId());
+          thisNotification.setMessageToSend(thisCampaign.getMessage());
           //TODO: Check campaign for email vs. fax
           thisNotification.setType(Notification.EMAILFAX);
+					thisNotification.setTypeText(Notification.EMAILFAX_TEXT);
           thisNotification.notifyContact(db);
           if (thisNotification.getFaxLogEntry() != null) {
             faxLog.add(thisNotification.getFaxLogEntry());

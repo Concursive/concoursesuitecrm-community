@@ -24,7 +24,8 @@ public class Notification {
   private String subject = null;
   private int messageIdToSend = -1;
   private String messageToSend = null;
-  private String type = null;
+  private int type = -1;
+	private String typeText = null;
   private String siteCode = null;
   private java.sql.Timestamp attempt = null;
   private int result = 0;
@@ -32,10 +33,15 @@ public class Notification {
   private String errorMessage = null;
   String faxLogEntry = null;
 
-  public final static String EMAIL = "Email";
-  public final static String EMAILFAX = "Email first, try Fax";
-  public final static String IM = "Instant Message";
-  public final static String FAX = "Fax";
+	public final static int EMAIL = 1;
+	public final static int EMAILFAX = 2;
+	public final static int IM = 3;
+	public final static int FAX = 4;
+	
+  public final static String EMAIL_TEXT = "Email";
+  public final static String EMAILFAX_TEXT = "Email first, try Fax";
+  public final static String IM_TEXT = "Instant Message";
+  public final static String FAX_TEXT = "Fax";
 
 
   /**
@@ -110,6 +116,9 @@ public class Notification {
     this.messageToSend = tmp;
   }
 
+	public void setType(int tmp) {
+		this.type = tmp;
+	}
 
   /**
    *  Sets the Type attribute of the Notification object
@@ -117,8 +126,8 @@ public class Notification {
    *@param  tmp  The new Type value
    *@since
    */
-  public void setType(String tmp) {
-    this.type = tmp;
+  public void setTypeText(String tmp) {
+    this.typeText = tmp;
   }
 
 
@@ -283,7 +292,7 @@ public class Notification {
       } else {
         pst.setTimestamp(++i, itemModified);
       }
-      pst.setString(++i, type);
+      pst.setString(++i, typeText);
       pst.setString(++i, subject);
       pst.setString(++i, messageToSend);
       pst.setInt(++i, result);
@@ -304,12 +313,12 @@ public class Notification {
    *@since
    */
   public void notifyUser(Connection db) {
-    if (type != null) {
+    if (type > -1) {
       try {
         User thisUser = new User();
         thisUser.setBuildContact(true);
         thisUser.buildRecord(db, userToNotify);
-        if (type.equals(EMAIL)) {
+        if (type == EMAIL) {
           System.out.println("Notification-> To: " + thisUser.getContact().getEmailAddress("Business"));
           SMTPMessage mail = new SMTPMessage();
           mail.setHost("127.0.0.1");
@@ -329,10 +338,10 @@ public class Notification {
           } else {
             insertNotification(db);
           }
-        } else if (type.equals(IM)) {
+        } else if (type == IM) {
 
 
-        } else if (type.equals(FAX)) {
+        } else if (type == FAX) {
 
 
         }
@@ -346,10 +355,10 @@ public class Notification {
   }
   
   public void notifyContact(Connection db) {
-    if (type != null) {
+    if (type > -1) {
       try {
         Contact thisContact = new Contact(db, "" + contactToNotify);
-        if (type.equals(EMAILFAX)) {
+        if (type == EMAILFAX) {
           if (thisContact.getEmailAddress("Business").equals("") &&
               !thisContact.getPhoneNumber("Demo Fax").equals("")) {
             type = FAX;
@@ -357,7 +366,7 @@ public class Notification {
             type = EMAIL;
           }
         }
-        if (type.equals(EMAIL)) {
+        if (type == EMAIL) {
           System.out.println("Notification-> To: " + thisContact.getEmailAddress("Business"));
           SMTPMessage mail = new SMTPMessage();
           mail.setHost("127.0.0.1");
@@ -385,10 +394,10 @@ public class Notification {
             status = "Email Sent";
             insertNotification(db);
           }
-        } else if (type.equals(IM)) {
+        } else if (type == IM) {
 
           status = "IM Sent";
-        } else if (type.equals(FAX)) {
+        } else if (type == FAX) {
 					System.out.println("Notification-> To: " + thisContact.getPhoneNumber("Demo Fax"));
           String phoneNumber = thisContact.getPhoneNumber("Demo Fax");
           if (!phoneNumber.equals("") && phoneNumber.length() > 0) {
