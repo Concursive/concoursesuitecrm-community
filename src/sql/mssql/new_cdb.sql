@@ -210,7 +210,12 @@ CREATE TABLE organization (
   contract_end DATETIME default null,
   alertdate DATETIME default null,
   alert varchar(100) default null,
-  custom_data TEXT
+  custom_data TEXT,
+  namesalutation varchar(80),
+  namelast varchar(80),
+  namefirst varchar(80),
+  namemiddle varchar(80),
+  namesuffix varchar(80)
 );
 
 

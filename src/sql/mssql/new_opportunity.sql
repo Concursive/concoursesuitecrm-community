@@ -10,8 +10,8 @@ CREATE TABLE opportunity (
   opp_id INT IDENTITY PRIMARY KEY,
   owner INT not null REFERENCES access(user_id),
   description VARCHAR(80),
-  acctlink INT not null default -1,
-  contactlink INT not null default -1,
+  acctlink INT default -1,
+  contactlink INT default -1,
   closedate DATETIME not null,
   closeprob float,
   terms float,
@@ -46,6 +46,15 @@ CREATE TABLE lookup_call_types (
 )
 ;
 
+CREATE TABLE lookup_opportunity_types (
+  code INT IDENTITY PRIMARY KEY,
+  order_id INT,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
 CREATE TABLE call_log (
   call_id INT IDENTITY PRIMARY KEY,
   org_id INT REFERENCES organization(org_id),
@@ -67,3 +76,56 @@ CREATE TABLE call_log (
 
 CREATE INDEX "call_log_cidx" ON "call_log" ("alertdate", "enteredby");
 
+CREATE TABLE opportunity_header (
+  opp_id INT IDENTITY PRIMARY KEY,
+  description VARCHAR(80),
+	acctlink INT default -1,
+	contactlink INT default -1,
+	entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	enteredby INT NOT NULL REFERENCES access(user_id),
+	modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	modifiedby INT NOT NULL REFERENCES access(user_id)
+);
+
+CREATE TABLE opportunity_component (
+  id INT IDENTITY PRIMARY KEY,
+  opp_id int references opportunity_header(opp_id),
+	owner INT NOT NULL REFERENCES access(user_id),
+	description VARCHAR(80),
+	closedate date not null,
+	closeprob float,
+	terms float,
+	units char(1),
+	lowvalue float,
+	guessvalue float,
+	highvalue float,
+	stage INT references lookup_stage(code),
+	stagedate date NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	commission float,
+	type char(1),
+	alertdate date,
+	entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	enteredby INT NOT NULL REFERENCES access(user_id),
+	modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	modifiedby INT NOT NULL REFERENCES access(user_id),  
+  closed DATETIME,
+  alert varchar(100) default null,
+  enabled BIT NOT NULL DEFAULT 1,
+  notes TEXT
+);  
+
+CREATE TABLE opportunity_type_levels (
+  opp_id INT NOT NULL REFERENCES opportunity(opp_id),
+  type_id INT NOT NULL REFERENCES lookup_opportunity_types(code),
+  level INTEGER not null,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE opportunity_component_levels (
+  opp_id INT NOT NULL REFERENCES opportunity_component(id),
+  type_id INT NOT NULL REFERENCES lookup_opportunity_types(code),
+  level INTEGER not null,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

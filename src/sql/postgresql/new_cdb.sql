@@ -4,8 +4,6 @@
  *@version    $Id$
  */
  
- 
- 
 CREATE TABLE access (
   user_id SERIAL PRIMARY KEY,
   username VARCHAR(80) NOT NULL, 
@@ -212,7 +210,12 @@ CREATE TABLE organization (
   contract_end date default null,
   alertdate date default null,
   alert varchar(100) default null,
-  custom_data TEXT
+  custom_data TEXT,
+  namesalutation varchar(80),
+  namelast varchar(80),
+  namefirst varchar(80),
+  namemiddle varchar(80),
+  namesuffix varchar(80)
 );
 
 DROP SEQUENCE organization_org_id_seq;
@@ -459,22 +462,6 @@ CREATE TABLE cfsinbox_messagelink (
 CREATE TABLE account_type_levels (
   org_id INT NOT NULL REFERENCES organization(org_id),
   type_id INT NOT NULL REFERENCES lookup_account_types(code),
-  level INTEGER not null,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE opportunity_type_levels (
-  opp_id INT NOT NULL REFERENCES opportunity(opp_id),
-  type_id INT NOT NULL REFERENCES lookup_opportunity_types(code),
-  level INTEGER not null,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE opportunity_component_levels (
-  opp_id INT NOT NULL REFERENCES opportunity_component(id),
-  type_id INT NOT NULL REFERENCES lookup_opportunity_types(code),
   level INTEGER not null,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
