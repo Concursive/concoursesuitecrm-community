@@ -41,8 +41,8 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     if (systemStatus.hasPermission(userId, "globalitems-search-view")) {
       items.append(
           "<!-- Quick Action -->" +
-          "<script language='javascript' type='text/javascript' src='javascript/popURL.js'/>" +
-          "<script language='javascript' type='text/javascript' src='javascript/quickAction.js'/>" +
+          "<script language='javascript' type='text/javascript' src='javascript/popURL.js'></script>" +
+          "<script language='javascript' type='text/javascript' src='javascript/quickAction.js'></script>" +
           "<table class='globalItem'>" +
           "<tr><th>Quick Actions</th></tr>" +
           "<tr>" +

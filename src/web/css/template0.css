@@ -49,10 +49,10 @@ A:visited:hover{color:#FF3300;}
   height: 20px;
   width: 150px;
   padding-left: 4px;
+  background-color: #5e9cd3;
   background-repeat: repeat-x;
   background-position: top left;
   background-image: url(../images/global_item.gif);
-	background-color: #fefffc;
   border-right: 1px solid #000;
 	border-left: 1px solid #000;
   border-top: 1px solid #000;
