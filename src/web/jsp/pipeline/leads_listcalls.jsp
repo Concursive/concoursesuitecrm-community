@@ -13,7 +13,45 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="addCall" action="/LeadsCalls.do?command=Insert&auto-populate=true" method="post">
+
+<script language="JavaScript">
+  function doCheck(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    } else {
+      return(checkForm(form));
+    }
+  }
+  function checkForm(form) {
+      formTest = true;
+      message = "";
+      
+      if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
+        message += "- Check that Alert Date is entered correctly\r\n";
+        formTest = false;
+      }
+      if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
+        message += "- Check that Alert Date is on or after today's date\r\n";
+        formTest = false;
+      }
+      if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
+        message += "- Please specify an alert date\r\n";
+        formTest = false;
+      }
+      if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
+        message += "- Please specify an alert description\r\n";
+        formTest = false;
+      }
+      if (formTest == false) {
+        alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+        return false;
+      } else {
+        return true;
+      }
+    }
+</script>
+
+<form name="addCall" action="/LeadsCalls.do?command=Insert&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 
 <a href="/Leads.do">Pipeline Management</a> > 
 <a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
@@ -104,6 +142,15 @@ Calls<br>
   
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      Alert Description
+    </td>
+    <td valign=center colspan=1>
+      <input type=text size=50 name="alertText" value="<%= toHtmlValue(CallDetails.getAlertText()) %>"><br>
+    </td>
+  </tr>
+  
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       Alert Date
     </td>
     <td>
@@ -113,8 +160,9 @@ Calls<br>
   </tr>
 </table>
     
-<input type="submit" value="Save">
+<input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="reset" value="Reset">
+<input type="hidden" name="dosubmit" value="true">
 <br>
 &nbsp;
 </dhv:permission>

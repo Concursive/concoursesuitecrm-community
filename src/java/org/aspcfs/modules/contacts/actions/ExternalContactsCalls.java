@@ -85,10 +85,10 @@ public final class ExternalContactsCalls extends CFSModule {
     Exception errorMessage = null;
     boolean recordInserted = false;
     
-    String contactId = context.getRequest().getParameter("contactId");
     Contact thisContact = null;
-
-    Call thisCall = (Call)context.getRequest().getAttribute("CallDetails");
+    //Call thisCall = (Call)context.getRequest().getAttribute("CallDetails");
+    
+    Call thisCall = (Call) context.getFormBean();
     thisCall.setEnteredBy(getUserId(context));
     thisCall.setModifiedBy(getUserId(context));
     

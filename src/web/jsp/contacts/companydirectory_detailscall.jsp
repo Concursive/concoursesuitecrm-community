@@ -74,6 +74,16 @@ Call Details
       <%= toHtml(CallDetails.getNotes()) %>
     </td>
   </tr>
+  
+  <tr class="containerBody">
+    <td nowrap class="formLabel" width=100%>
+      Alert Description
+    </td>
+    <td>
+      <%= toHtml(CallDetails.getAlertText()) %>
+    </td>
+  </tr>
+  
   <tr class="containerBody">
     <td nowrap class="formLabel" width=100%>
       Alert Date

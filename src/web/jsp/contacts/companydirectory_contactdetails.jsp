@@ -24,7 +24,9 @@ Contact Details<br>
   </tr>
   <tr>
     <td class="containerBack">
-<dhv:permission name="contacts-external_contacts-edit"><input type="button" value='Modify' onClick="javascript:this.form.action='/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>&action=modify';submit();"></dhv:permission>
+    
+
+<dhv:permission name="contacts-external_contacts-edit"><input type=button name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-delete"><input type="button" name="action" value="Delete" onClick="javascript:popURLReturn('/ExternalContacts.do?command=ConfirmDelete&id=<%=ContactDetails.getId()%>','ExternalContacts.do?command=ListContacts', 'Delete_contact','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete"><br>&nbsp;</dhv:permission>
 
@@ -188,8 +190,9 @@ Contact Details<br>
   </tr>
 </table>
 <dhv:permission name="contacts-external_contacts-delete,contacts-external_contacts-edit"><br></dhv:permission>
-<dhv:permission name="contacts-external_contacts-edit"><input type="button" value='Modify' onClick="javascript:this.form.action='/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>&action=modify';submit();"></dhv:permission>
+<dhv:permission name="contacts-external_contacts-edit"><input type=button name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-delete"><input type="button" name="action" value="Delete" onClick="javascript:popURLReturn('/ExternalContacts.do?command=ConfirmDelete&id=<%=ContactDetails.getId()%>','ExternalContacts.do?command=ListContacts', 'Delete_contact','320','200','yes','no');"></dhv:permission>
 </td></tr>
 </table>
+<input type=hidden name="command" value="">
 </form>

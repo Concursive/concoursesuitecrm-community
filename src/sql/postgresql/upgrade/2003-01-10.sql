@@ -32,4 +32,5 @@ update search_fields set enabled = 't';
 
 //9-25-2002 (post-data migration)
 update permission set permission_add = 't' where permission = 'pipeline-opportunities';
+alter table call_log add column alert varchar(100) default null;
 

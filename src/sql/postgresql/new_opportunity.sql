@@ -60,7 +60,8 @@ CREATE TABLE call_log (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL references access(user_id)
+  modifiedby INT NOT NULL references access(user_id),
+  alert varchar(100) default null
 );
 
 CREATE INDEX "call_log_cidx" ON "call_log" USING btree ("alertdate", "enteredby");

@@ -1033,9 +1033,9 @@ public final class MyCFS extends CFSModule {
       while (m.hasNext()) {
         Call thisCall = (Call) m.next();
         if (thisCall.getOppId() == -1 && thisCall.getContactId() > -1) {
-          companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), "Contact Call", thisCall.getContactId(), thisCall.getId());
+          companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getAlertText(), "Contact Call", thisCall.getContactId(), thisCall.getId());
         } else {
-          companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), "Opportunity Call", thisCall.getOppId(), thisCall.getId());
+          companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getAlertText(), "Opportunity Call", thisCall.getOppId(), thisCall.getId());
         }
 
       }

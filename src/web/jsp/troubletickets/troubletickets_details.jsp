@@ -214,7 +214,7 @@
 		} else {
 	%>
     <tr>
-      <td>
+      <td bgcolor="white">
         <font color="#9E9E9E" colspan="3">No Log Entries.</font>
 			</td>
     </tr>

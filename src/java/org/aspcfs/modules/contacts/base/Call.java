@@ -31,6 +31,7 @@ public class Call extends GenericBean {
   private int modifiedBy = -1;
   private String modifiedName = "";
   private String contactName = "";
+  private String alertText = "";
 
   private java.sql.Date alertDate = null;
   private java.sql.Timestamp entered = null;
@@ -243,6 +244,12 @@ public class Call extends GenericBean {
     this.orgId = tmp;
   }
 
+public String getAlertText() {
+	return alertText;
+}
+public void setAlertText(String alertText) {
+	this.alertText = alertText;
+}
 
   /**
    *  Sets the OrgId attribute of the Call object
@@ -675,7 +682,7 @@ public class Call extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
       "INSERT INTO call_log " +
-      "(org_id, contact_id, opp_id, call_type_id, length, subject, notes, alertdate, ");
+      "(org_id, contact_id, opp_id, call_type_id, length, subject, notes, alertdate, alert, ");
                 if (entered != null) {
                         sql.append("entered, ");
                 }
@@ -683,7 +690,7 @@ public class Call extends GenericBean {
                         sql.append("modified, ");
                 }      
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
                 if (entered != null) {
                         sql.append("?, ");
                 }
@@ -723,6 +730,7 @@ public class Call extends GenericBean {
     } else {
       pst.setDate(++i, this.getAlertDate());
     }
+    pst.setString(++i, this.getAlertText());
         if (entered != null) {
                 pst.setTimestamp(++i, entered);
         }
@@ -795,7 +803,7 @@ public class Call extends GenericBean {
     sql.append(
         "UPDATE call_log " +
         "SET call_type_id = ?, length = ?, subject = ?, notes = ?, " +
-        "modifiedby = ?, alertdate = ?, " +
+        "modifiedby = ?, alertdate = ?, alert = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE call_id = ? " +
         "AND modified = ? ");
@@ -818,6 +826,7 @@ public class Call extends GenericBean {
     } else {
       pst.setDate(++i, this.getAlertDate());
     }
+    pst.setString(++i, this.getAlertText());
     pst.setInt(++i, this.getId());
     pst.setTimestamp(++i, this.getModified());
 
@@ -890,6 +899,7 @@ public class Call extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+    alertText = rs.getString("alert");
     //lookup_call_types table
     callTypeId = rs.getInt("code");
     if (rs.wasNull()) {
