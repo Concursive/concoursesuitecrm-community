@@ -456,7 +456,6 @@
     </map>
     <map class="org.aspcfs.modules.contacts.base.ContactEmailAddress" id="contactEmailAddress">
       <property alias="guid">id</property>
-      <property lookup="account">orgId</property>
       <property lookup="contact">contactId</property>
       <property lookup="lookupContactEmailTypes">type</property>
       <property>email</property>
@@ -468,7 +467,6 @@
     </map>
     <map class="org.aspcfs.modules.contacts.base.ContactAddress" id="contactAddress">
       <property alias="guid">id</property>
-      <property lookup="account">orgId</property>
       <property lookup="contact">contactId</property>
       <property>streetAddressLine1</property>
       <property>streetAddressLine2</property>
@@ -486,7 +484,6 @@
     </map>
     <map class="org.aspcfs.modules.contacts.base.ContactPhoneNumber" id="contactPhoneNumber">
       <property alias="guid">id</property>
-      <property lookup="account">orgId</property>
       <property lookup="contact">contactId</property>
       <property>number</property>
       <property>extension</property>
