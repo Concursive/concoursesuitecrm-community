@@ -1,0 +1,122 @@
+/*
+ *  Copyright 2002 Dark Horse Ventures
+ *  Uses iteam objects from matt@zeroio.com http://www.mavininteractive.com
+ */
+package com.darkhorseventures.cfsmodule;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import org.theseus.actions.*;
+import java.sql.*;
+import java.util.*;
+import com.darkhorseventures.cfsbase.*;
+import com.darkhorseventures.webutils.*;
+import com.zeroio.iteam.base.*;
+
+/**
+ *  Handles web actions for the Project Management Lists sub module
+ *
+ *@author     matt rajkowski
+ *@created    November 17, 2002
+ *@version    $Id$
+ */
+public final class ProjectManagementLists extends CFSModule {
+
+  /**
+   *  Prepare form for adding or updating a list item
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandAdd(ActionContext context) {
+    /*
+     *  if (!(hasPermission(context, "projects-issues-add"))) {
+     *  return ("PermissionError");
+     *  }
+     */
+    Exception errorMessage = null;
+    String projectId = (String) context.getRequest().getParameter("pid");
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      context.getRequest().setAttribute("Project", thisProject);
+      context.getRequest().setAttribute("IncludeSection", ("lists_add").toLowerCase());
+
+      String categoryId = context.getRequest().getParameter("cid");
+      if (categoryId == null) {
+        categoryId = context.getRequest().getParameter("categoryId");
+      }
+      LookupElement thisCategory = new LookupElement(db, Integer.parseInt(categoryId), "lookup_task_category");
+      context.getRequest().setAttribute("category", thisCategory);
+
+      LookupList priorityList = new LookupList(db, "lookup_task_priority");
+      context.getRequest().setAttribute("PriorityList", priorityList);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "AddItem", "");
+    if (errorMessage == null) {
+      return ("ProjectCenterOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Action to insert a new list item
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandInsert(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    boolean recordInserted = false;
+    /*
+     *  if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+     *  return ("DefaultError");
+     *  }
+     */
+    String projectId = (String) context.getRequest().getParameter("pid");
+
+    try {
+      db = this.getConnection(context);
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      context.getRequest().setAttribute("Project", thisProject);
+      context.getRequest().setAttribute("IncludeSection", ("lists_add").toLowerCase());
+
+      Task newTask = (Task) context.getFormBean();
+      newTask.setEnteredBy(getUserId(context));
+      recordInserted = newTask.insert(db);
+      if (!recordInserted) {
+        processErrors(context, newTask.getErrors());
+      } else {
+        newTask.insertProjectLink(db, thisProject.getId());
+        context.getRequest().setAttribute("pid", projectId);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (recordInserted) {
+        return ("AddOK");
+      } else {
+        return executeCommandAdd(context);
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+}
+
