@@ -34,7 +34,7 @@
   <property name="build.pref.dir" value="${build.dir}${fs}pref"/>
   <property name="pref.dir" value="${base.dir}${fs}pref"/>
   <property name="dist.dir" value="${base.dir}${fs}dist"/>
-
+  
   <!-- Typical usage -->
   <target name="usage">
     <echo message="Further instructions will appear if settings are missing"/>
@@ -111,6 +111,9 @@
       <fileset dir="${env.CATALINA_HOME}/common/lib">
         <include name="**/*.jar"/>
       </fileset>
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
     </path>
     <property name="CLASSPATH" refid="cfs2.classpath" />
   </target>
@@ -170,10 +173,6 @@
     <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on">
       <classpath>
         <path refid="cfs2.classpath"/>
-        <pathelement location="${lib.dir}/jfreechart.jar"/>
-        <pathelement location="${lib.dir}/utils.jar"/>
-        <pathelement location="${lib.dir}/ccp_integration.jar"/>
-        <pathelement location="${lib.dir}/jakarta-poi.jar"/>
       </classpath>
     </javac>
   </target>
@@ -603,8 +602,32 @@
     </copy>
   </target>
   
+  <!-- Installs a new database -->
   <target name="installdb" depends="install.database,install.permissions,install.addsite,install.copyprefs">
   
+  </target>
+  
+  <!-- Programmatically upgrades installed databases for
+       the specified appcode -->
+  <target name="upgradedb" depends="build">
+    <taskdef name="upgradeDatabase" 
+        classname="org.aspcfs.ant.tasks.UpgradeDatabaseTask">
+        <classpath>
+          <fileset dir="${build.lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+          <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+        </classpath>
+    </taskdef>
+    <upgradeDatabase
+        sitecode="${GATEKEEPER.APPCODE}"
+        driver="${GATEKEEPER.DRIVER}"
+        url="${GATEKEEPER.URL}"
+        user="${GATEKEEPER.USER}"
+        password="${GATEKEEPER.PASSWORD}"
+        source="${src.sql.dir}/${SITE.DBTYPE}/upgrade"/>
   </target>
   
   <!-- Generate Java Docs -->
@@ -769,25 +792,4 @@
       <arg value="${arg2}"/>
     </java>
   </target>
-  
-  
-  
-  
-  <!-- Test code -->
-  <target name="upgradedb" description="Upgrades an existing database">
-    <echo message="Upgrading database"/>
-    <sql
-        driver="com.microsoft.jdbc.sqlserver.SQLServerDriver"
-        url="jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs;SelectMethod=cursor"
-        userid="dhv_appuser"
-        password="@pus3r">
-        <!--driver="org.postgresql.Driver"-->
-      <classpath>
-        <path refid="cfs2.classpath"/>
-      </classpath>
-        
-      <transaction src="database/${DBTYPE}/upgrade.sql"/>
-    </sql>
-  </target>
-  
 </project>
