@@ -10,6 +10,7 @@ CREATE TABLE ticket_level (
   code serial PRIMARY KEY,
   description VARCHAR(300) NOT NULL UNIQUE,
   default_item BOOLEAN DEFAULT false,
+  level INT DEFAULT 0,
   enabled BOOLEAN DEFAULT true
 );
 

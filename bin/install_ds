@@ -85,7 +85,6 @@ if [ -n "`grep -i ERROR ${LOG}`" ] ; then echo "Database error"; exit 2; fi
 echo -n "Initializing database tables and data... "
 (
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_cdb.sql "
-
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/cdb.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/code_tables.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/access.init " 
@@ -118,7 +117,14 @@ su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_revenue.sql "
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/revenue.init "
 
 ) >>${LOG} 2>&1 
-echo "finished"
+
+#grep -q "^${APACHE_HOOK}" ${APACHE_CONF}
+grep -q "ERROR" ${LOG}
+if [ "0" == "$?" ] ; then
+	echo "finished"
+else
+	echo "ERROR occurred"
+fi
 
 # Additional initializations
 echo -n "Inserting permissions and roles... "

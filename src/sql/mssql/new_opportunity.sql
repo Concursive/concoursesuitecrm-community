@@ -55,25 +55,6 @@ CREATE TABLE lookup_opportunity_types (
   enabled BIT DEFAULT 1
 );
 
-CREATE TABLE call_log (
-  call_id INT IDENTITY PRIMARY KEY,
-  org_id INT REFERENCES organization(org_id),
-  contact_id INT REFERENCES contact(contact_id),
-  opp_id INT REFERENCES opportunity_header(opp_id),
-  call_type_id INT REFERENCES lookup_call_types(code),
-  length INTEGER,
-  subject VARCHAR(255),
-  notes TEXT,
-  followup_date DATETIME,
-  alertdate DATETIME,
-  followup_notes TEXT,
-  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL REFERENCES access(user_id),
-  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id),
-  alert varchar(100) default null
-);
-
 CREATE INDEX "call_log_cidx" ON "call_log" ("alertdate", "enteredby");
 
 CREATE TABLE opportunity_header (
@@ -128,4 +109,23 @@ CREATE TABLE opportunity_component_levels (
   level INTEGER not null,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE call_log (
+  call_id INT IDENTITY PRIMARY KEY,
+  org_id INT REFERENCES organization(org_id),
+  contact_id INT REFERENCES contact(contact_id),
+  opp_id INT REFERENCES opportunity_header(opp_id),
+  call_type_id INT REFERENCES lookup_call_types(code),
+  length INTEGER,
+  subject VARCHAR(255),
+  notes TEXT,
+  followup_date DATETIME,
+  alertdate DATETIME,
+  followup_notes TEXT,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  alert varchar(100) default null
 );

@@ -1,10 +1,3 @@
-INSERT INTO system_prefs (category, data, enteredby, modifiedby, enabled) VALUES ('system.objects.hooks', '<config><hook id="com.darkhorseventures.cfsbase.Ticket" class="com.darkhorseventures.cfs.troubletickets.hook.TicketHook"/></config>', 0, 0, true);
-INSERT INTO system_prefs (category, data, enteredby, modifiedby, enabled) VALUES ('system.fields.labels', '<config><label><replace>logo</replace><with>&lt;img border=&quot;0&quot; src=&quot;images/dev21.jpg&quot;&gt;</with></label><label><replace>tickets-problem</replace><with>Message</with></label></config>', 0, 0, false);
-INSERT INTO system_prefs (category, data, enteredby, modifiedby, enabled) VALUES ('system.fields.ignore', '<config><ignore>tickets-code</ignore><ignore>tickets-subcat1</ignore><ignore>tickets-subcat2</ignore><ignore>tickets-subcat3</ignore><ignore>tickets-severity</ignore><ignore>tickets-priority</ignore></config>', 0, 0, false);
-
-INSERT INTO system_modules (description) VALUES ('Account Management');
-INSERT INTO system_modules (description) VALUES ('Contacts & Resources');
-
 INSERT INTO lookup_contact_types (description) VALUES ('Employee');
 INSERT INTO lookup_contact_types (description) VALUES ('Personal');
 INSERT INTO lookup_contact_types (description) VALUES ('Sales');
@@ -15,6 +8,8 @@ INSERT INTO lookup_account_types (description) VALUES ('Customer');
 INSERT INTO lookup_account_types (description) VALUES ('Competitor');
 INSERT INTO lookup_account_types (description) VALUES ('Partner');
 INSERT INTO lookup_account_types (description) VALUES ('Vendor');
+INSERT INTO lookup_account_types (description) VALUES ('Investor');
+INSERT INTO lookup_account_types (description) VALUES ('Prospect');
 
 INSERT INTO lookup_orgaddress_types (description) VALUES ('Primary');
 INSERT INTO lookup_orgaddress_types (description) VALUES ('Auxiliary');
@@ -51,10 +46,6 @@ insert into lookup_delivery_options (description,level) values ('Letter only',3)
 insert into lookup_delivery_options (description,level) values ('Email then Fax',4);
 insert into lookup_delivery_options (description,level) values ('Email then Letter',5);
 insert into lookup_delivery_options (description,level) values ('Email, Fax, then Letter',6);
-
-INSERT INTO lookup_call_types (description, default_item, level) VALUES ('Phone Call', true, 10);
-INSERT INTO lookup_call_types (description, default_item, level) VALUES ('Fax', false, 20);
-INSERT INTO lookup_call_types (description, default_item, level) VALUES ('In-Person', false, 30);
 
 insert into lookup_industry (description) values ('Automotive');
 insert into lookup_industry (description) values ('Biotechnology');

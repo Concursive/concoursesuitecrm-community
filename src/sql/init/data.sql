@@ -1,24 +1,11 @@
 /*
-#	Initial Site data (Base site)
+#	Initial Site data
 #
 #	$Id$
 #	$Log#
 #
 */
 	
-/*
-DELETE FROM org_type;
-INSERT INTO org_type (org_type_code, org_type) values ('CU','Customer');
-INSERT INTO org_type (org_type_code, org_type) values ('CO','Competitor');
-INSERT INTO org_type (org_type_code, org_type) values ('PA','Partner');
-INSERT INTO org_type (org_type_code, org_type) values ('VE','Vendor');
-INSERT INTO org_type (org_type_code, org_type) values ('IN','Investor');
-INSERT INTO org_type (org_type_code, org_type) values ('PR','Prospect');
-INSERT INTO org_type (org_type_code, org_type) values ('ME','Us');
-INSERT INTO org_type (org_type_code, org_type) values ('OT','Other');
-*/
-
-DELETE FROM lookup_department;
 INSERT INTO lookup_department (description) values ('Customer Relations');
 INSERT INTO lookup_department (description) values ('Engineering');
 INSERT INTO lookup_department (description) values ('Billing');
@@ -27,17 +14,7 @@ INSERT INTO lookup_department (description) values ('Purchasing');
 INSERT INTO lookup_department (description) values ('Accounting');
 INSERT INTO lookup_department (description) values ('Human Resources');
 
-
-INSERT INTO config (name,textkey,textvalue) VALUES('IndustrySelection','ISP','Internet Service Provider');
-INSERT INTO config (name,textkey,textvalue) VALUES('IndustrySelection','ASP','Application Service Provider');
-INSERT INTO config (name,textkey,textvalue) VALUES('IndustrySelection','NSP','Nada Service Provider');
-
-
-
-INSERT INTO config (name,textkey,textvalue) VALUES('InsuranceSelection','M','Medical');
-INSERT INTO config (name,textkey,textvalue) VALUES('InsuranceSelection','D','Dental');
-
-INSERT INTO config (name,textkey,textvalue) VALUES('LocationTypeSelection','P','Primary');
-INSERT INTO config (name,textkey,textvalue) VALUES('LocationTypeSelection','B','Billing');
-INSERT INTO config (name,textkey,textvalue) VALUES('LocationTypeSelection','S','Satellite');
+INSERT INTO system_prefs (category, data, enteredby, modifiedby, enabled) VALUES ('system.objects.hooks', '<config><hook id="com.darkhorseventures.cfsbase.Ticket" class="com.darkhorseventures.cfs.troubletickets.hook.TicketHook"/></config>', 0, 0, true);
+INSERT INTO system_prefs (category, data, enteredby, modifiedby, enabled) VALUES ('system.fields.labels', '<config><label><replace>logo</replace><with>&lt;img border=&quot;0&quot; src=&quot;images/dev21.jpg&quot;&gt;</with></label><label><replace>tickets-problem</replace><with>Message</with></label></config>', 0, 0, false);
+INSERT INTO system_prefs (category, data, enteredby, modifiedby, enabled) VALUES ('system.fields.ignore', '<config><ignore>tickets-code</ignore><ignore>tickets-subcat1</ignore><ignore>tickets-subcat2</ignore><ignore>tickets-subcat3</ignore><ignore>tickets-severity</ignore><ignore>tickets-priority</ignore></config>', 0, 0, false);
 

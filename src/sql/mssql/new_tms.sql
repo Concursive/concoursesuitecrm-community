@@ -10,6 +10,7 @@ CREATE TABLE ticket_level (
   code INT IDENTITY PRIMARY KEY,
   description VARCHAR(300) NOT NULL UNIQUE,
   default_item BIT DEFAULT 0,
+  level INT DEFAULT 0,
   enabled BIT DEFAULT 1
 );
 
