@@ -188,6 +188,7 @@ public String executeCommandDetails(ActionContext context) {
 	String ticketId = null;
 	
 	PagedListInfo ticListInfo = this.getPagedListInfo(context, "TicketDetails");
+	
 	ticListInfo.setColumnToSortBy("entered");
 
 	try {
@@ -232,6 +233,7 @@ public String executeCommandDetails(ActionContext context) {
 		UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
 		
 		PagedListInfo ticListInfo = this.getPagedListInfo(context, "TicListInfo");
+		ticListInfo.setLink("/TroubleTickets.do?command=Home");
 		
 		String searchString = context.getRequest().getParameter("search");
 		
