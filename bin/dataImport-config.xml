@@ -1,14 +1,14 @@
 <data-import-config>
   <description>
-    All the data from a CFS2.x system will be read and written to a destination CFS system.  
+    All the data from a CFS2.x system will be read and written to a destination CFS system.
   </description>
-  <reader class="com.darkhorseventures.apps.dataimport.CFSReader">
+  <reader class="com.darkhorseventures.apps.dataimport.CFSDatabaseReader">
     <driver>org.postgresql.Driver</driver>
     <url>jdbc:postgresql://127.0.0.1:5432/cdb_matt</url>
     <user>postgres</user>
     <password/>
   </reader>
-  <writer class="com.darkhorseventures.apps.dataimport.CFSWriter">
+  <writer class="com.darkhorseventures.apps.dataimport.CFSHttpXMLWriter">
     <url>http://127.0.0.1/ProcessPacket.do</url>
     <id>127.0.0.1</id>
     <code>BZTST27A</code>
