@@ -2,113 +2,8 @@
   <!-- Add or Modify a Survey Form -->
   <form name="survey" 
         action="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" 
-        cancel="CampaignManagerSurvey.do?command=ViewReturn&amp;auto-populate=true" 
-        returnLinkText="Communications Manager &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details&lt;hr color=&quot;#BFBFBB&quot; noshade&gt;" 
         scripts="survey.js^popURL.js"> 
     <button text="Save" link="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true"/>
-    <tab id="0" name="Page 1" defaultField="name">
-      <buttonGroup> <!-- TODO: add header & footer attribs !-->
-        <button type="2" name="prev" display="&lt; Back" enabled="no"/>
-        <button type="2" name="Next" display="Next &gt;" onclick="javascript:this.form.clickFrom.value='next';this.form.action='CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true&amp;pg=1';"/>
-      </buttonGroup>
-      <group name="Survey Details">
-          <row elementClass="containerBody">
-             <column width="125" valign="top" elementClass="formLabel">
-              <field name="namelabel" display="Name" type="label"/>
-             </column>
-             <column valign="top">
-              <field name="name" display="Name" type="text" parameters="size=50^maxlength=80" required="true"/>
-             </column>
-          </row>
-          <row elementClass="containerBody">
-             <column width="125" valign="top" elementClass="formLabel">
-              <field name="descriptionlabel" display="Description" type="label"/>
-             </column>
-             <column valign="top">
-              <field name="description" display="Description" type="text" parameters="size=50^maxlength=80"/>
-             </column>
-          </row>
-          <row elementClass="containerBody">
-             <column width="125" valign="top" elementClass="formLabel">
-              <field name="introlabel" display="Introduction Text" type="label"/>
-             </column>
-             <column>
-              <field name="intro" display="Introduction text" type="textarea" parameters="rows=6^columns=40"/>
-            </column>
-          </row>
-          <row type="hidden">
-            <column type="hidden">
-              <field name="id" display="id" type="hidden"/>
-              <field name="modified" display="modified" type="hidden"/>
-            </column>
-          </row>
-      </group>
-    </tab>
-    <tab id="1" name="Page 2">
-      <buttonGroup> <!-- TODO: add header & footer attribs !-->
-        <button type="2" name="prev" display="&lt; Back" enabled="yes" onclick="javascript:this.form.clickFrom.value='back';this.form.action='CampaignManagerSurvey.do?command=Add&amp;auto-populate=true'"/>
-        <button type="2" name="Next" display="Next &gt;" onclick="javascript:this.form.clickFrom.value='next';this.form.action='CampaignManagerSurvey.do?command=Add&amp;auto-populate=true&amp;pg=2';"/>
-      </buttonGroup>
-      <group name="Survey Questions">
-        <row multiple="true" listName="questions" listId="id"> <!-- listName is the method called on the parent object which holds the list i.e "getQuestions" method called on Survey and  listId is the id which seperates the list i.e "id" in case of SurveyQuestion!-->
-           <column width="8%">
-            <field name="itemEditButton" display="Edit" type="button" jsEvent="CampaignManagerSurvey.do?command=Modify&amp;id=" dynamicAttr="jsEvent"/>
-            <field name="itemDelButton" display="Del" type="button" jsEvent="CampaignManagerSurvey.do?command=Delete&amp;id=" dynamicAttr="jsEvent"/>
-           </column>
-           <column>
-              <field name="description" type="displaytext"/>
-           </column>
-        </row>
-        <row type="hidden">
-            <column type="hidden">
-              <field name="intro" display="id" type="hidden"/>
-             <field name="description" display="id" type="hidden"/>
-             <field name="name" display="id" type="hidden"/>
-            </column>
-        </row>
-      </group>
-    </tab>
-    <tab id="2" name="Page 3">
-      <buttonGroup> <!-- TODO: add header & footer attribs  ; also add type of button i.e submit/button !-->
-        <button type="2" name="prev" display="&lt; Back"      onclick="javascript:this.form.clickFrom.value='back';this.form.action='CampaignManagerSurvey.do?command=Add&amp;auto-populate=true&amp;pg=1'"/>
-        <button type="2" name="next" display="Next &gt;" onclick="javascript:this.form.clickFrom.value='next';this.form.action='CampaignManagerSurvey.do?command=Add&amp;auto-populate=true&amp;pg=1';"/>
-      </buttonGroup>
-      <group name="Add Question">
-        <row elementClass="containerBody">
-            <column width="125" valign="top" elementClass="formLabel">
-              <field name="questionlabel" display="Question" type="label"/>
-            </column>
-            <column valign="top">
-              <field name="questiontext" display="Question" type="text" required="true"/>
-            </column>
-        </row>
-        <row elementClass="containerBody">
-            <column width="125" valign="top" elementClass="formLabel">
-              <field name="itemlabel" display="Type" type="label"/>
-            </column>
-            <column valign="top">
-              <field name="type" display="Type" type="select" lookupList="Open-Ended^Quantitative (no comments)^Quantitative (with comments)^Item List" required="true" onChange="javascript:processButton('survey',document.forms['survey'].type.selectedIndex);"/>
-              <field name="itemsButton" display="Edit Items" type="button" jsEvent="javascript:popItems(document.forms['survey'].questionid.value,document.forms['survey'].items.value);" enabled="no"/>
-            </column>
-        </row>
-        <row elementClass="containerBody">
-           <column width="125" valign="top" elementClass="formLabel">
-              <field name="requiredlabel" display="Requried" type="label"/>
-            </column>
-           <column valign="top">
-            <field name="required" display="Required" type="checkbox"/>
-           </column>
-        </row>
-        <row type="hidden">
-            <column type="hidden">
-             <field name="questionid" display="questionid" type="hidden"/>
-             <field name="items" display="addeditems" type="hidden"/>
-             <field name="intro" display="addeditems" type="hidden"/>
-             <field name="description" display="addeditems" type="hidden"/>
-             <field name="name" display="addeditems" type="hidden"/>
-            </column>
-        </row>
-=======
     <tab id="0" name="Page 1" defaultField="name"
          returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;Communications Manager&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details&lt;hr color=&quot;#BFBFBB&quot; noshade&gt;">
       <buttonGroup> <!-- TODO: add header & footer attribs !-->
@@ -245,7 +140,6 @@
           <field name="modified" type="hidden"/>
         </column>
       </row>
->>>>>>> 1.6.6.3
       </group>
     </tab>
   </form>
@@ -305,12 +199,3 @@
   </form>
   
 </application>
-<<<<<<< cfs-dynamic_forms.xml
-
-=======
-
-
-
-
-
->>>>>>> 1.6.6.3
