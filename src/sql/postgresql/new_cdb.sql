@@ -650,7 +650,8 @@ CREATE TABLE saved_criterialist (
   modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INTEGER NOT NULL,
   owner INTEGER NOT NULL,
-  name VARCHAR(80) NOT NULL
+  name VARCHAR(80) NOT NULL,
+  contact_source INTEGER NOT NULL DEFAULT -1
 );
 
 
