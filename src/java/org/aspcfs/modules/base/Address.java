@@ -63,6 +63,10 @@ public class Address {
   public void setOrgId(int orgId) {
     this.orgId = orgId;
   }
+  
+  public void setOrgId(String orgId) {
+    this.orgId = Integer.parseInt(orgId);
+  }
 
 
   /**
@@ -73,6 +77,10 @@ public class Address {
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
+  }
+  
+  public void setContactId(String tmp) {
+    this.contactId = Integer.parseInt(tmp);
   }
 
 
@@ -192,6 +200,10 @@ public class Address {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
+  
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -202,6 +214,10 @@ public class Address {
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
+  }
+  
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
   }
 
 
@@ -441,10 +457,19 @@ public class Address {
     this.setId(rs.getInt("address_id"));
     if (!isContact) {
       this.setOrgId(rs.getInt("org_id"));
+      if (rs.wasNull()) {
+              this.setOrgId(-1);
+      }
     } else {
       this.setContactId(rs.getInt("contact_id"));
+      if (rs.wasNull()) {
+              this.setContactId(-1);
+      }
     }
     this.setType(rs.getInt("address_type"));
+    if (rs.wasNull()) {
+            this.setType(-1);
+    }
     this.setTypeName(rs.getString("description"));
     this.setStreetAddressLine1(rs.getString("addrline1"));
     this.setStreetAddressLine2(rs.getString("addrline2"));
@@ -453,7 +478,14 @@ public class Address {
     this.setZip(rs.getString("postalcode"));
     this.setCountry(rs.getString("country"));
     this.setEnteredBy(rs.getInt("enteredby"));
+    if (this.getEnteredBy() == -1) {
+            this.setEnteredBy(0);
+    }
+    
     this.setModifiedBy(rs.getInt("modifiedby"));
+    if (this.getModifiedBy() == -1) {
+            this.setModifiedBy(0);
+    }
   }
 
 

@@ -232,5 +232,21 @@
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
     </map>
+    <map class="com.darkhorseventures.cfsbase.ContactAddress" id="contactAddress">
+      <property alias="guid">id</property>
+      <property lookup="account">orgId</property>
+      <property lookup="contact">contactId</property>
+      <property>streetAddressLine1</property>
+      <property>streetAddressLine2</property>
+      <property>city</property>
+      <property>state</property>
+      <property>zip</property>
+      <property>country</property>
+      <property lookup="lookupContactAddressTypes">type</property>
+      <property>email</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+    </map>
   </mappings>
 </CFSDatabaseReader>

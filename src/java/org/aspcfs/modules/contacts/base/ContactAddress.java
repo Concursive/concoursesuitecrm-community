@@ -46,6 +46,14 @@ public class ContactAddress extends Address {
    *@since                    1.1
    */
   public ContactAddress(Connection db, String addressId) throws SQLException {
+          queryRecord(db, Integer.parseInt(addressId));
+  }
+          
+  public ContactAddress(Connection db, int addressId) throws SQLException {
+          queryRecord(db, addressId);
+  }
+          
+  public void queryRecord(Connection db, int addressId) throws SQLException {
     isContact = true;
     Statement st = null;
     ResultSet rs = null;
@@ -79,6 +87,10 @@ public class ContactAddress extends Address {
       this.delete(db);
     }
   }
+  
+  public void insert(Connection db) throws SQLException {
+          insert(db, this.getContactId(), this.getEnteredBy());
+  }
 
 
   public void insert(Connection db, int contactId, int enteredBy) throws SQLException {
@@ -88,8 +100,16 @@ public class ContactAddress extends Address {
         "VALUES " +
         "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
-    pst.setInt(++i, contactId);
-    pst.setInt(++i, this.getType());
+    if (this.getContactId() > -1) {
+      pst.setInt(++i, this.getContactId());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    if (this.getType() > -1) {
+      pst.setInt(++i, this.getType());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getStreetAddressLine1());
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getCity());
@@ -120,7 +140,11 @@ public class ContactAddress extends Address {
         "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE address_id = ? ");
     int i = 0;
-    pst.setInt(++i, this.getType());
+    if (this.getType() > -1) {
+      pst.setInt(++i, this.getType());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getStreetAddressLine1());
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getCity());

@@ -138,6 +138,22 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
               writer.commit();
       }
       
+      ContactAddressList addressList = new ContactAddressList();
+      addressList.setContactId(thisContact.getId());
+      addressList.buildList(db);
+      
+      logger.info("ImportBaseData-> Inserting " + contactList.size() + " Contact addresses");
+      
+      Iterator addresses = addressList.iterator();
+      while (addresses.hasNext()) {
+              ContactAddress streetAddress = (ContactAddress)addresses.next();
+              DataRecord addressRecord = mappings.createDataRecord(streetAddress, "insert");
+              writer.save(addressRecord);
+              
+              writer.commit();
+      }
+      
+      
     }
   }
   
