@@ -79,18 +79,17 @@ public final class RevenueManager extends CFSModule {
     try {
       db = this.getConnection(context);
       buildFormElements(context, db);
-      System.out.println("Leads-> Got user record of" + idToUse);
       
 	RevenueTypeList rtl = new RevenueTypeList(db);
 	rtl.addItem(0, "--All--");
 	rtl.setJsEvent("onChange=\"document.forms[0].submit();\"");
 	context.getRequest().setAttribute("RevenueTypeList", rtl);
       
-      //CHANGE THIS LATER
       PagedListInfo revenueInfo = this.getPagedListInfo(context, "DBRevenueListInfo");
       revenueInfo.setLink("/RevenueManager.do?command=Dashboard");
+      
+      //sort by amount on the dashboard screen
       revenueInfo.setDefaultSort("r.amount desc", null);
-      //END
       
       shortChildList = thisRec.getShortChildList();
       context.getRequest().setAttribute("ShortChildList", shortChildList);
@@ -108,10 +107,15 @@ public final class RevenueManager extends CFSModule {
       realFullRevList.setYear(y);
       displayList.setYear(y);
       
+      System.out.println("here is the session variable: " + context.getSession().getAttribute("RevenueGraphType"));
+      
       if (context.getRequest().getParameter("type") != null) {
 	      realFullRevList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
 	      displayList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
-	      //thisRec.setRevenueIsValid(false, true);
+	      context.getSession().setAttribute("RevenueGraphType", context.getRequest().getParameter("type"));
+      }  else if (context.getSession().getAttribute("RevenueGraphType") != null) {
+	      realFullRevList.setType(Integer.parseInt((String)context.getSession().getAttribute("RevenueGraphType")));
+	      displayList.setType(Integer.parseInt((String)context.getSession().getAttribute("RevenueGraphType")));
       }
       
       realFullRevList.setOwnerIdRange(range);
@@ -193,7 +197,7 @@ public final class RevenueManager extends CFSModule {
       Stroke gridStroke = new BasicStroke(0.25f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0.0f, new float[]{2.0f, 2.0f}, 0.0f);
       Paint gridPaint = Color.gray;
 
-      System.out.println("Trying to use " + (d.getYear() + 1900) + " " + d.getMonth() + " " + d.getDay());
+      //System.out.println("Trying to use " + (d.getYear() + 1900) + " " + d.getMonth() + " " + d.getDay());
 
       try {
         Axis myHorizontalDateAxis = new HorizontalDateAxis(hnAxis.getLabel(), hnAxis.getLabelFont(),
@@ -689,7 +693,7 @@ public final class RevenueManager extends CFSModule {
 	      
               //case: amount date within 12 month range
               if ( passedYear == rightNow.get(java.util.Calendar.YEAR) ) {
-		System.out.println("adding in " + revenueAddTerm + " at " + valKey);
+		//System.out.println("adding in " + revenueAddTerm + " at " + valKey);
                 pertainsTo.setRevenueGraphValues(valKey, revenueAddTerm);
               }
 
@@ -750,7 +754,7 @@ public final class RevenueManager extends CFSModule {
 
     for (count = 0; count < 12; count++) {
       thisLine.getRevenue().setValue(valKeys[count], new Double(primaryNode.getRevenue().getValue(valKeys[count]).doubleValue() + (addToMe.getRevenue().getValue(valKeys[count])).doubleValue()));
-      System.out.println("VK: " + valKeys[count]);
+      //System.out.println("VK: " + valKeys[count]);
     }
 
     currentLines.addElement(thisLine);
@@ -826,7 +830,7 @@ public final class RevenueManager extends CFSModule {
 
 	data[x][count][1] = thisUser.getRevenue().getValue(valKeys[count]);
 	
-	System.out.println("Check from data: " + valKeys[count] + "=" + data[x][count][0] + ", " + data[x][count][1]);
+	//System.out.println("Check from data: " + valKeys[count] + "=" + data[x][count][0] + ", " + data[x][count][1]);
       }
 
       x++;

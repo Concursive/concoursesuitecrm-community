@@ -85,7 +85,7 @@ public class RevenueList extends Vector {
     }
     
     
-    System.out.println(sqlOrder.toString());
+    //System.out.println(sqlOrder.toString());
 
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -107,7 +107,7 @@ public class RevenueList extends Vector {
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    System.out.println(pst.toString());
+    //System.out.println(pst.toString());
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
