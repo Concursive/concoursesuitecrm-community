@@ -1687,6 +1687,9 @@ public final class CampaignManager extends CFSModule {
     Connection db = null;
     String questionId = context.getRequest().getParameter("questionId");
     String type = context.getRequest().getParameter("type");
+    if ("true".equals(context.getRequest().getParameter("reset"))) {
+      context.getSession().removeAttribute("CommentListInfo");
+    }
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CommentListInfo");
     pagedListInfo.setLink("/CampaignManager.do?command=ShowComments&questionId=" + questionId + "&type=" + type);
     try {
@@ -1697,13 +1700,13 @@ public final class CampaignManager extends CFSModule {
       db = getConnection(context);
       answerList.buildList(db);
       context.getRequest().setAttribute("SurveyAnswerList", answerList);
+      context.getRequest().setAttribute("SurveyContactList", answerList.getContacts());
     } catch (Exception e) {
       errorMessage = e;
       e.printStackTrace(System.out);
     } finally {
       this.freeConnection(context, db);
     }
-
     return ("PopupCommentsOK");
   }
 
