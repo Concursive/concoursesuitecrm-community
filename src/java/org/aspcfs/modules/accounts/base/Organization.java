@@ -108,14 +108,10 @@ public class Organization extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public Organization(Connection db, int org_id) throws SQLException {
-
     if (org_id == -1) {
       throw new SQLException("Invalid Account");
     }
-
-    PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-    sql.append(
+    PreparedStatement pst = db.prepareStatement(
         "SELECT o.*, " +
         "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
@@ -126,28 +122,22 @@ public class Organization extends GenericBean {
         "LEFT JOIN contact ct_eb ON (o.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (o.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN lookup_industry i ON (o.industry_temp_code = i.code) " +
-        "WHERE o.org_id = " + org_id + " ");
-
-    Statement st = null;
-    ResultSet rs = null;
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
-
+        "WHERE o.org_id = ? ");
+    pst.setInt(1, org_id);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-      buildTypes(db);
-      //if this is an individual account, populate the primary contact record
-      if (this.getNameLast() != null) {
-        this.populatePrimaryContact(db);
-      }
-    } else {
-      rs.close();
-      st.close();
+    } 
+    rs.close();
+    pst.close();
+    if (orgId == -1) {
       throw new SQLException("Account not found");
     }
-    rs.close();
-    st.close();
-
+    buildTypes(db);
+    //if this is an individual account, populate the primary contact record
+    if (this.getNameLast() != null) {
+      this.populatePrimaryContact(db);
+    }
     phoneNumberList.setOrgId(this.getOrgId());
     phoneNumberList.buildList(db);
     addressList.setOrgId(this.getOrgId());
