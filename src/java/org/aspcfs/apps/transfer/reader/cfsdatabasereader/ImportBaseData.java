@@ -84,25 +84,19 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       return false;
     }    
     
-    /**
-    logger.info("ImportBaseData-> Inserting accounts");
+    //Organization address
+    logger.info("ImportBaseData-> Inserting account addresses");
     writer.setAutoCommit(false);
-    OrganizationList accounts = new OrganizationList();
-    accounts.setShowMyCompany(true);
-    accounts.setIncludeEnabled(-1);
-    accounts.buildList(db);
-    this.saveOrgList(db, accounts);
-    
+    OrganizationAddressList addrList = new OrganizationAddressList();
+    addrList.buildList(db);
+    mappings.saveList(writer, addrList, "insert");
     processOK = writer.commit();
     if (!processOK) {
       return false;
-    }
-    */
+    }    
     
-    //Iterate and get emails, addresses
     
     //Copy Contacts
-    /**
     logger.info("ImportBaseData-> Inserting contacts");
     writer.setAutoCommit(false);
     ContactList contacts = new ContactList();
@@ -110,20 +104,44 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     contacts.setPersonalId(-2);
     contacts.buildList(db);
     mappings.saveList(writer, contacts, "insert");
-    */
-    
-    logger.info("ImportBaseData-> Inserting contacts");
-    writer.setAutoCommit(false);
-    ContactList contacts = new ContactList();
-    contacts.setIncludeEnabled(-1);
-    contacts.setPersonalId(-2);
-    contacts.buildList(db);
-    this.saveContactList(db, contacts);
     
     processOK = writer.commit();
     if (!processOK) {
       return false;
     }
+    
+    //Contact Phone?
+    logger.info("ImportBaseData-> Inserting contact phone numbers");
+    writer.setAutoCommit(false);
+    ContactPhoneNumberList phoneList2 = new ContactPhoneNumberList();
+    phoneList2.buildList(db);
+    mappings.saveList(writer, phoneList2, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+    
+    //Contact email
+    logger.info("ImportBaseData-> Inserting contact emails");
+    writer.setAutoCommit(false);
+    ContactEmailAddressList emailList2 = new ContactEmailAddressList();
+    emailList2.buildList(db);
+    mappings.saveList(writer, emailList2, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }    
+    
+    //Contact address
+    logger.info("ImportBaseData-> Inserting contact addresses");
+    writer.setAutoCommit(false);
+    ContactAddressList addrList2 = new ContactAddressList();
+    addrList2.buildList(db);
+    mappings.saveList(writer, addrList2, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }    
     
     return true;
   }

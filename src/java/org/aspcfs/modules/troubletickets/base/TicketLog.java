@@ -721,7 +721,7 @@ public class TicketLog extends GenericBean {
   public void insert(Connection db) throws SQLException {
 
     if (ticketId == -1) {
-      throw new SQLException("Log Entry must be associated to a Ticket");
+      throw new SQLException("Log Entry must be associated to a Ticket " + this.getId());
     }
 
     StringBuffer sql = new StringBuffer();
