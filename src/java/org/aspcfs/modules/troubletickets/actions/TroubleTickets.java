@@ -837,11 +837,11 @@ public final class TroubleTickets extends CFSModule {
     String newContact = context.getRequest().getParameter("contact");
 
     Ticket newTic = (Ticket) context.getFormBean();
-
     newTic.setEnteredBy(getUserId(context));
     newTic.setModifiedBy(getUserId(context));
 
     if (newContact != null && newContact.equals("on")) {
+      //If there are any changes here, also check AccountTickets where a new contact is created
       nc = new Contact();
       nc.setNameFirst(context.getRequest().getParameter("thisContact_nameFirst"));
       nc.setNameLast(context.getRequest().getParameter("thisContact_nameLast"));
