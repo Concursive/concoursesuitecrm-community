@@ -1,16 +1,10 @@
 <!--
  $Id$
 
- Notes. On unix, root privileges are required to handle file permissions
-        properly (as required by the nature of the installation).
-        Consequently, since this script is intended for developers to use,
-        and the source is expected to be in the user's home directory, 
-        the Java VM's concept of the current user (user.home} cannot be used.
-        Instead, the source is assumed to be relative to the build script's
-        location. This uses the "basedir" attribute of the project tag,
-        which is *NOT* set here so that it is possible to override the 
-        ant default if needed. The ant default is  the parent directory
-        of the build.xml (this file).
+ Notes: 
+   Make sure to override all preferences for the current system.
+   Sudo may be needed to deploy files to the webapp folder.
+ 
 -->
 <project name="cfs2" default="" basedir="">
 
@@ -53,52 +47,31 @@
       <include name="**/*.jar"/>
     </fileset>
   </path>
+  
   <property name="CLASSPATH" refid="cfs2.classpath" />
-
   <property name="DEST" value="${SITEHOME}/${SITECODE}"/>
   <property name="DEST_DOCROOT" value="${DEST}/html"/>
   <property name="DEST_BIN" value="${DEST}/bin"/>
   <property name="DEST_LOGS" value="${DEST}/logs"/>
-  
-  <target name="showuser" >
-    <echo message="Username: ${USER}"/>
-  </target>
 
-  <target name="winuser" description="get real user" unless="USER">
-    <property name="USER" value="${env.USERNAME}"/>
-  </target>
-
-  <target name="user" description="get real user" if="is.logname">
-    <property name="USER" value="${env.LOGNAME}"/>
-  </target>
-
-  <target name="sudouser" description="get real user" if="is.sudoer">
-    <property name="USER" value="${env.SUDO_USER}"/>
-  </target>
-
-  <target name="realuser" description="set props">
-    <available file="/home/${env.SUDO_USER}/cfs2/build.xml" property="is.sudoer" />
-    <available file="/home/${env.LOGNAME}/cfs2/build.xml" property="is.logname" />
-  </target>
-
-  <target name="init" depends="realuser,sudouser,user,winuser,showuser">
-    <tstamp/>
-    <tstamp ><format property="NOW" pattern="yyyy-MM-dd hh:mm:ss" /></tstamp>
-    <tstamp ><format property="NOW2" pattern="yyyy-MMM-dd hh:mm:ss" /></tstamp>
-    <tstamp ><format property="NOW3" pattern="yyyy-MMMMMMMMM-dd hh:mm:ss" /></tstamp>
-
+  <target name="init">
+    <tstamp><format property="NOW" pattern="yyyy-MM-dd hh:mm:ss" /></tstamp>
+    <echo message="System: ${os.name}"/>
+    <echo message="Date: ${NOW}"/>
+    <echo message="Ant version: ${ant.version}"/>
+    <echo message="Java version: ${ant.java.version}"/>
+    <echo message="Source: ${SRC}"/>
+    <echo message=""/>
+    <echo message="Classpath: ${CLASSPATH}"/>
     <uptodate property="theseus-jar-uptodate" targetfile="${SRC_LIB}/theseus.jar">
         <srcfiles dir="${SRC_CLASSES}/org" includes="**/*.java"/>
     </uptodate>
-
     <uptodate property="darkhorseventures-jar-uptodate" targetfile="${SRC_LIB}/darkhorseventures.jar">
         <srcfiles dir="${SRC_CLASSES}/com/darkhorseventures" includes="**/*.java"/>
     </uptodate>
-    
     <uptodate property="isavvix-jar-uptodate" targetfile="${SRC_LIB}/isavvix.jar">
         <srcfiles dir="${SRC_CLASSES}/com/isavvix" includes="**/*.java"/>
     </uptodate>
-    
     <uptodate property="apps-jar-uptodate" targetfile="${DEST_BIN}/Notifier.jar">
         <srcfiles dir="${SRC}">
           <include name="bin/com/darkhorseventures/**/*.java" />
@@ -128,25 +101,6 @@
         </srcfiles>
         <mapper type="glob" from="*" to="${DEST_DOCROOT}/*"/>
      </uptodate>
-  </target>
-
-  <target name="" description="a target with a blank name." depends="init">
-    <echo >
-The date is ${TODAY}.
-NOW is ${NOW}.
-NOW2 is ${NOW2}.
-NOW3 is ${NOW3}.
-user home is ${user.home}
-environment user is ${env.USER}
-environment logname is ${env.LOGNAME}
-determined user is ${USER}
-    </echo>
-    <echo message="Date: ${DSTAMP}"  />
-    <echo message="System: ${os.name}"  />
-    <echo message="Java version: ${ant.java.version}"  />
-    <echo message="Source: ${SRC}" />
-    <echo message="" />
-    <echo message="Classpath: ${CLASSPATH}" />
   </target>
 
   <target name="theseus" description="compile theseus classes into JAR"
