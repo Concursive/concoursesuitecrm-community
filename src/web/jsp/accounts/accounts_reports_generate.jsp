@@ -109,7 +109,7 @@ function HideSpan(thisID)
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
-    <td colspan=4 valign=center align=left>
+    <td colspan=5 valign=center align=left>
       <strong>Generate a New Report</strong>
     </td>     
   </tr>
@@ -118,7 +118,7 @@ function HideSpan(thisID)
     <td nowrap class="formLabel">
       Type
     </td>
-    <td colspan=3>
+    <td colspan=4>
       <select name="type" onchange='update();'>
       <option value="1">All Accounts</option>
       <option value="2">Accounts w/Contacts</option>
@@ -140,7 +140,7 @@ function HideSpan(thisID)
     <td nowrap class="formLabel">
       Subject
     </td>
-    <td colspan=3>
+    <td colspan=4>
       <input type=text size=35 name="subject" maxlength=50>
     </td>
   </tr>
@@ -149,7 +149,7 @@ function HideSpan(thisID)
     <td nowrap class="formLabel">
       Criteria
     </td>
-    <td colspan=3>
+    <td colspan=4>
       <select name="criteria1">
       <option value="all">All Accounts</option>
       <option value="my">My Accounts</option>
@@ -162,7 +162,7 @@ function HideSpan(thisID)
     <td nowrap valign=top class="formLabel">
       Select fields to include
     </td>
-    <td width=40%>
+    <td width=50%>
       <select size=5 multiple name="fields">
       <option value="accountNumber" >Account No.</option>
       <option value="url" >URL</option>
@@ -193,11 +193,22 @@ function HideSpan(thisID)
       </table>
       </td>
       
-      <td width=60%>
+      <td align=right width=50%>
       <select size=5 name="selectedList" multiple>
       <option value="id" >Account ID</option>
       <option value="accountName" >Account Name</option>
       </select>
+      </td>
+      
+      <td width=25>
+	<table width=100% cellspacing=0 cellpadding=2 border=0>
+	<tr><td valign=center>
+	<input type=button value="Up" onclick="javascript:moveOptionUp(document.generate.selectedList)">
+	</td></tr>
+	<tr><td valign=center>
+	<input type=button value="Down" onclick="javascript:moveOptionDown(document.generate.selectedList)">
+	</td></tr>
+	</table>
       </td>
   </tr>
   

@@ -30,28 +30,6 @@ public class ContactReport extends ContactList {
 	protected ArrayList criteria = null;
 	String[] params = null;
 	
-	protected boolean displayId = true;
-	protected boolean displayType = true;
-	protected boolean displayNameLast = true;
-	protected boolean displayNameMiddle = true;
-	protected boolean displayNameFirst = true;
-	protected boolean displayCompany = true;
-	protected boolean displayTitle = true;
-	protected boolean displayDepartment = true;
-	protected boolean displayEntered = true;
-	protected boolean displayEnteredBy = true;
-	protected boolean displayModified = true;
-	protected boolean displayModifiedBy = true;
-	protected boolean displayOwner = true;
-	protected boolean displayBusinessEmail = true;
-	protected boolean displayBusinessPhone = true;
-	protected boolean displayBusinessAddress = true;
-	protected boolean displayCity = true;
-	protected boolean displayState = true;
-	protected boolean displayZip = true;
-	protected boolean displayCountry = true;
-	protected boolean displayNotes = true;
-	
 	protected OrganizationReport orgReportJoin = new OrganizationReport();
 	protected boolean joinOrgs = false;
 	
@@ -75,46 +53,6 @@ public class ContactReport extends ContactList {
 	public void setSubject(String tmp) { this.subject = tmp; }
 	public void setEnteredBy(int tmp) { this.enteredBy = tmp; }
 	public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
-	public boolean getDisplayType() { return displayType; }
-	public boolean getDisplayNameLast() { return displayNameLast; }
-	public boolean getDisplayNameMiddle() { return displayNameMiddle; }
-	public boolean getDisplayNameFirst() { return displayNameFirst; }
-	public boolean getDisplayCompany() { return displayCompany; }
-	public boolean getDisplayTitle() { return displayTitle; }
-	public boolean getDisplayDepartment() { return displayDepartment; }
-	public boolean getDisplayEntered() { return displayEntered; }
-	public boolean getDisplayEnteredBy() { return displayEnteredBy; }
-	public boolean getDisplayModified() { return displayModified; }
-	public boolean getDisplayModifiedBy() { return displayModifiedBy; }
-	public boolean getDisplayOwner() { return displayOwner; }
-	public boolean getDisplayBusinessEmail() { return displayBusinessEmail; }
-	public boolean getDisplayBusinessPhone() { return displayBusinessPhone; }
-	public boolean getDisplayBusinessAddress() { return displayBusinessAddress; }
-	public boolean getDisplayCity() { return displayCity; }
-	public boolean getDisplayState() { return displayState; }
-	public boolean getDisplayZip() { return displayZip; }
-	public boolean getDisplayCountry() { return displayCountry; }
-	public boolean getDisplayNotes() { return displayNotes; }
-	public void setDisplayType(boolean tmp) { this.displayType = tmp; }
-	public void setDisplayNameLast(boolean tmp) { this.displayNameLast = tmp; }
-	public void setDisplayNameMiddle(boolean tmp) { this.displayNameMiddle = tmp; }
-	public void setDisplayNameFirst(boolean tmp) { this.displayNameFirst = tmp; }
-	public void setDisplayCompany(boolean tmp) { this.displayCompany = tmp; }
-	public void setDisplayTitle(boolean tmp) { this.displayTitle = tmp; }
-	public void setDisplayDepartment(boolean tmp) { this.displayDepartment = tmp; }
-	public void setDisplayEntered(boolean tmp) { this.displayEntered = tmp; }
-	public void setDisplayEnteredBy(boolean tmp) { this.displayEnteredBy = tmp; }
-	public void setDisplayModified(boolean tmp) { this.displayModified = tmp; }
-	public void setDisplayModifiedBy(boolean tmp) { this.displayModifiedBy = tmp; }
-	public void setDisplayOwner(boolean tmp) { this.displayOwner = tmp; }
-	public void setDisplayBusinessEmail(boolean tmp) { this.displayBusinessEmail = tmp; }
-	public void setDisplayBusinessPhone(boolean tmp) { this.displayBusinessPhone = tmp; }
-	public void setDisplayBusinessAddress(boolean tmp) { this.displayBusinessAddress = tmp; }
-	public void setDisplayCity(boolean tmp) { this.displayCity = tmp; }
-	public void setDisplayState(boolean tmp) { this.displayState = tmp; }
-	public void setDisplayZip(boolean tmp) { this.displayZip = tmp; }
-	public void setDisplayCountry(boolean tmp) { this.displayCountry = tmp; }
-	public void setDisplayNotes(boolean tmp) { this.displayNotes = tmp; }
 	public OrganizationReport getOrgReportJoin() { return orgReportJoin; }
 	public boolean getJoinOrgs() { return joinOrgs; }
 	public void setOrgReportJoin(OrganizationReport tmp) { this.orgReportJoin = tmp; }
@@ -127,13 +65,6 @@ public class ContactReport extends ContactList {
 		this.limitId = limitId;
 	}
 
-	public boolean getDisplayId() {
-		return displayId;
-	}
-	public void setDisplayId(boolean displayId) {
-		this.displayId = displayId;
-	}
-
 	public ArrayList getCriteria() {
 		return criteria;
 	}
@@ -141,39 +72,11 @@ public class ContactReport extends ContactList {
 		if (criteriaString != null) {
 			params = criteriaString;
 			criteria = new ArrayList(Arrays.asList(params));
-			setCriteriaVars();
 		} else {
 			criteria = new ArrayList();
 		}
 	
 		this.criteria = criteria;
-	}
-	
-	public void setCriteriaVars() {
-		if ( !(criteria.contains("id")) ) { displayId = false; }
-		if ( !(criteria.contains("type")) ) { displayType = false; }
-		if ( !(criteria.contains("nameLast")) ) { displayNameLast = false; }
-		if ( !(criteria.contains("nameFirst")) ) { displayNameFirst = false; }
-		if ( !(criteria.contains("nameMiddle")) ) { displayNameMiddle = false; }
-		if ( !(criteria.contains("company")) ) { displayCompany = false; }
-		
-		if ( !(criteria.contains("title")) ) { displayTitle = false; }
-		if ( !(criteria.contains("department")) ) { displayDepartment = false; }
-		if ( !(criteria.contains("entered")) ) { displayEntered = false; }
-		if ( !(criteria.contains("enteredBy")) ) { displayEnteredBy = false; }
-		if ( !(criteria.contains("modified")) ) { displayModified = false; }
-		
-		if ( !(criteria.contains("modifiedBy")) ) { displayModifiedBy = false; }
-		if ( !(criteria.contains("owner")) ) { displayOwner = false; }
-		if ( !(criteria.contains("businessEmail")) ) { displayBusinessEmail = false; }
-		if ( !(criteria.contains("businessPhone")) ) { displayBusinessPhone = false; }
-		if ( !(criteria.contains("businessAddress")) ) { displayBusinessAddress = false; }
-		
-		if ( !(criteria.contains("city")) ) { displayCity = false; }
-		if ( !(criteria.contains("state")) ) { displayState = false; }
-		if ( !(criteria.contains("zip")) ) { displayZip = false; }
-		if ( !(criteria.contains("country")) ) { displayCountry = false; }
-		if ( !(criteria.contains("notes")) ) { displayNotes = false; }
 	}
 	
 	public String[] getParams() {
@@ -187,6 +90,7 @@ public class ContactReport extends ContactList {
 	public String getFilenameToUse() {
 		return filenameToUse;
 	}
+	
 	public void setFilenameToUse(String filenameToUse) {
 		this.filenameToUse = filenameToUse;
 	}
@@ -199,30 +103,36 @@ public class ContactReport extends ContactList {
 	public void buildReportHeaders() {
 		if (joinOrgs) { orgReportJoin.buildReportHeaders(rep); }
 		
-		if (displayId) { rep.addColumn("Contact Id"); }
-		if (displayType) { rep.addColumn("Type"); }
-		if (displayNameLast) { rep.addColumn("Last Name", "Last Name"); }
-		if (displayNameFirst) { rep.addColumn("First Name", "First Name"); }
-		if (displayNameMiddle) { rep.addColumn("Middle Name", "Middle Name"); }
-		if (displayCompany) { rep.addColumn("Company"); }
-		if (displayTitle) { rep.addColumn("Title"); }
-		if (displayDepartment) { rep.addColumn("Department"); }
-		if (displayEntered) { rep.addColumn("Entered"); }
-		if (displayEnteredBy) { rep.addColumn("Entered By"); }
-		if (displayModified) { rep.addColumn("Modified"); }
-		if (displayModifiedBy) { rep.addColumn("Modified By"); }
-		if (displayOwner) { rep.addColumn("Owner"); }
-		if (displayBusinessEmail) { rep.addColumn("Business Email"); }
-		if (displayBusinessPhone) { rep.addColumn("Business Phone"); }
-		if (displayBusinessAddress) { 
-			rep.addColumn("Business Address Line 1"); 
-			rep.addColumn("Business Address Line 2"); 
+		Iterator y = criteria.iterator();
+		while (y.hasNext()) {
+			String param = (String) y.next();
+		
+			if (param.equals("id")) { rep.addColumn("Contact Id"); }
+			if (param.equals("type")) { rep.addColumn("Type"); }
+			if (param.equals("nameLast")) { rep.addColumn("Last Name", "Last Name"); }
+			if (param.equals("nameFirst")) { rep.addColumn("First Name", "First Name"); }
+			if (param.equals("nameMiddle")) { rep.addColumn("Middle Name", "Middle Name"); }
+			if (param.equals("company")) { rep.addColumn("Company"); }
+			if (param.equals("title")) { rep.addColumn("Title"); }
+			if (param.equals("department")) { rep.addColumn("Department"); }
+			if (param.equals("entered")) { rep.addColumn("Entered"); }
+			if (param.equals("enteredBy")) { rep.addColumn("Entered By"); }
+			if (param.equals("modified")) { rep.addColumn("Modified"); }
+			if (param.equals("modifiedBy")) { rep.addColumn("Modified By"); }
+			if (param.equals("owner")) { rep.addColumn("Owner"); }
+			if (param.equals("businessEmail")) { rep.addColumn("Business Email"); }
+			if (param.equals("businessPhone")) { rep.addColumn("Business Phone"); }
+			if (param.equals("businessAddress")) { 
+				rep.addColumn("Business Address Line 1"); 
+				rep.addColumn("Business Address Line 2"); 
+			}
+			if (param.equals("city")) { rep.addColumn("City"); }
+			if (param.equals("state")) { rep.addColumn("State"); }
+			if (param.equals("zip")) { rep.addColumn("Zip"); }
+			if (param.equals("country")) { rep.addColumn("Country"); }
+			if (param.equals("notes")) { rep.addColumn("Notes"); }
+		
 		}
-		if (displayCity) { rep.addColumn("City"); }
-		if (displayState) { rep.addColumn("State"); }
-		if (displayZip) { rep.addColumn("Zip"); }
-		if (displayCountry) { rep.addColumn("Country"); }
-		if (displayNotes) { rep.addColumn("Notes"); }
 	}
   
   public void buildData(Connection db) throws SQLException {
@@ -254,30 +164,35 @@ public class ContactReport extends ContactList {
 			}
 			
 			if (!joinOrgs || writeOut == true) {
-				if (displayId) { thisRow.addCell(thisContact.getId()); }
-				if (displayType) { thisRow.addCell(thisContact.getTypeName()); }
-				if (displayNameLast) { thisRow.addCell(thisContact.getNameLast()); }
-				if (displayNameFirst) { thisRow.addCell(thisContact.getNameFirst()); }
-				if (displayNameMiddle) { thisRow.addCell(thisContact.getNameMiddle()); }
-				if (displayCompany) { thisRow.addCell(thisContact.getCompany()); }
-				if (displayTitle) { thisRow.addCell(thisContact.getTitle()); }
-				if (displayDepartment) { thisRow.addCell(thisContact.getDepartmentName()); }
-				if (displayEntered) { thisRow.addCell(thisContact.getEnteredString()); }
-				if (displayEnteredBy) { thisRow.addCell(thisContact.getEnteredByName()); }
-				if (displayModified) { thisRow.addCell(thisContact.getModifiedString()); }
-				if (displayModifiedBy) { thisRow.addCell(thisContact.getModifiedByName()); }
-				if (displayOwner) { thisRow.addCell(thisContact.getOwnerName()); }
-				if (displayBusinessEmail) { thisRow.addCell(thisContact.getEmailAddress("Business")); }
-				if (displayBusinessPhone) { thisRow.addCell(thisContact.getPhoneNumber("Business")); }
-				if (displayBusinessAddress) { 
-					thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine1());
-					thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine2()); 
+				Iterator y = criteria.iterator();
+				while (y.hasNext()) {
+					String param = (String) y.next();
+			
+					if (param.equals("id")) { thisRow.addCell(thisContact.getId()); }
+					if (param.equals("type")) { thisRow.addCell(thisContact.getTypeName()); }
+					if (param.equals("nameLast")) { thisRow.addCell(thisContact.getNameLast()); }
+					if (param.equals("nameFirst")) { thisRow.addCell(thisContact.getNameFirst()); }
+					if (param.equals("nameMiddle")) { thisRow.addCell(thisContact.getNameMiddle()); }
+					if (param.equals("company")) { thisRow.addCell(thisContact.getCompany()); }
+					if (param.equals("title")) { thisRow.addCell(thisContact.getTitle()); }
+					if (param.equals("department")) { thisRow.addCell(thisContact.getDepartmentName()); }
+					if (param.equals("entered")) { thisRow.addCell(thisContact.getEnteredString()); }
+					if (param.equals("enteredBy")) { thisRow.addCell(thisContact.getEnteredByName()); }
+					if (param.equals("modified")) { thisRow.addCell(thisContact.getModifiedString()); }
+					if (param.equals("modifiedBy")) { thisRow.addCell(thisContact.getModifiedByName()); }
+					if (param.equals("owner")) { thisRow.addCell(thisContact.getOwnerName()); }
+					if (param.equals("businessEmail")) { thisRow.addCell(thisContact.getEmailAddress("Business")); }
+					if (param.equals("businessPhone")) { thisRow.addCell(thisContact.getPhoneNumber("Business")); }
+					if (param.equals("businessAddress")) { 
+						thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine1());
+						thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine2()); 
+					}
+					if (param.equals("city")) { thisRow.addCell(thisContact.getAddress("Business").getCity()); }
+					if (param.equals("state")) { thisRow.addCell(thisContact.getAddress("Business").getState()); }
+					if (param.equals("zip")) { thisRow.addCell(thisContact.getAddress("Business").getZip()); }
+					if (param.equals("country")) { thisRow.addCell(thisContact.getAddress("Business").getCountry()); }
+					if (param.equals("notes")) { thisRow.addCell(thisContact.getNotes()); }
 				}
-				if (displayCity) { thisRow.addCell(thisContact.getAddress("Business").getCity()); }
-				if (displayState) { thisRow.addCell(thisContact.getAddress("Business").getState()); }
-				if (displayZip) { thisRow.addCell(thisContact.getAddress("Business").getZip()); }
-				if (displayCountry) { thisRow.addCell(thisContact.getAddress("Business").getCountry()); }
-				if (displayNotes) { thisRow.addCell(thisContact.getNotes()); }
 				
 				rep.addRow(thisRow);
 			}

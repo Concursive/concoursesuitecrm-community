@@ -30,7 +30,7 @@
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
-    <td colspan=4 valign=center align=left>
+    <td colspan=5 valign=center align=left>
       <strong>Generate a New Report</strong>
     </td>     
   </tr>
@@ -39,7 +39,7 @@
     <td nowrap class="formLabel">
       Type
     </td>
-    <td colspan=3>
+    <td colspan=4>
       <select name="type">
       <option value=1>Contact Listing</option>
       </select>
@@ -50,7 +50,7 @@
     <td nowrap class="formLabel">
       Subject
     </td>
-    <td colspan=3>
+    <td colspan=4>
       <input type=text size=35 name="subject" maxlength=50>
     </td>
   </tr>
@@ -59,7 +59,7 @@
     <td nowrap class="formLabel">
       Criteria
     </td>
-    <td colspan=3>
+    <td colspan=4>
       <select name="criteria1">
       <option value="my">My Contacts</option>
       <option value="all">All Contacts</option>
@@ -71,7 +71,7 @@
     <td nowrap class="formLabel">
       Sorting
     </td>
-    <td colspan=3>
+    <td colspan=4>
       <select name="sort">
       <option value="c.namelast">Last Name</option>
       <option value="c.contact_id">Contact ID</option>
@@ -90,7 +90,7 @@
     <td nowrap valign=top class="formLabel">
       Select fields to include
     </td>
-    <td width=40%>
+    <td width=50%>
       <select size=5 name="fields">
       <option value="type" >Contact Type</option>
       <option value="nameMiddle" >Middle Name</option>
@@ -127,7 +127,7 @@
       </table>
       </td>
       
-      <td width=60%>
+      <td align=right width=50%>
       <select size=5 name="selectedList" multiple>
       <option value="id" >Contact ID</option>
       <option value="nameLast" >Last Name</option>
@@ -136,6 +136,18 @@
       </select>
       
     </td>
+    
+        <td width=25>
+	<table width=100% cellspacing=0 cellpadding=2 border=0>
+	<tr><td valign=center>
+	<input type=button value="Up" onclick="javascript:moveOptionUp(document.generate.selectedList)">
+	</td></tr>
+	<tr><td valign=center>
+	<input type=button value="Down" onclick="javascript:moveOptionDown(document.generate.selectedList)">
+	</td></tr>
+	</table>
+      </td>
+      
   </tr>
   
 </table>

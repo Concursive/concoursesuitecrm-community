@@ -29,20 +29,6 @@ public class OrganizationReport extends OrganizationList {
 	protected ArrayList criteria = null;
 	String[] params = null;
 	
-	protected boolean displayId = true;
-	protected boolean displayAccountName = true;
-	protected boolean displayAccountNumber = true;
-	protected boolean displayURL = true;
-	protected boolean displayTicker = true;
-	protected boolean displayEmployees = true;
-	protected boolean displayEntered = true;
-	protected boolean displayEnteredBy = true;
-	protected boolean displayModified = true;
-	protected boolean displayModifiedBy = true;
-	protected boolean displayOwner = true;
-	protected boolean displayContractEndDate = true;
-	protected boolean displayNotes = true;
-	
 	protected boolean includeFolders = false;
 	protected int folderId = -1;
 
@@ -66,30 +52,6 @@ public class OrganizationReport extends OrganizationList {
 	public void setSubject(String tmp) { this.subject = tmp; }
 	public void setEnteredBy(int tmp) { this.enteredBy = tmp; }
 	public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
-	public boolean getDisplayAccountName() { return displayAccountName; }
-	public boolean getDisplayAccountNumber() { return displayAccountNumber; }
-	public boolean getDisplayURL() { return displayURL; }
-	public boolean getDisplayTicker() { return displayTicker; }
-	public boolean getDisplayEmployees() { return displayEmployees; }
-	public boolean getDisplayEntered() { return displayEntered; }
-	public boolean getDisplayEnteredBy() { return displayEnteredBy; }
-	public boolean getDisplayModified() { return displayModified; }
-	public boolean getDisplayModifiedBy() { return displayModifiedBy; }
-	public boolean getDisplayOwner() { return displayOwner; }
-	public boolean getDisplayContractEndDate() { return displayContractEndDate; }
-	public boolean getDisplayNotes() { return displayNotes; }
-	public void setDisplayAccountName(boolean tmp) { this.displayAccountName = tmp; }
-	public void setDisplayAccountNumber(boolean tmp) { this.displayAccountNumber = tmp; }
-	public void setDisplayURL(boolean tmp) { this.displayURL = tmp; }
-	public void setDisplayTicker(boolean tmp) { this.displayTicker = tmp; }
-	public void setDisplayEmployees(boolean tmp) { this.displayEmployees = tmp; }
-	public void setDisplayEntered(boolean tmp) { this.displayEntered = tmp; }
-	public void setDisplayEnteredBy(boolean tmp) { this.displayEnteredBy = tmp; }
-	public void setDisplayModified(boolean tmp) { this.displayModified = tmp; }
-	public void setDisplayModifiedBy(boolean tmp) { this.displayModifiedBy = tmp; }
-	public void setDisplayOwner(boolean tmp) { this.displayOwner = tmp; }
-	public void setDisplayContractEndDate(boolean tmp) { this.displayContractEndDate = tmp; }
-	public void setDisplayNotes(boolean tmp) { this.displayNotes = tmp; }
 	
 	public int getFolderId() {
 		return folderId;
@@ -98,13 +60,6 @@ public class OrganizationReport extends OrganizationList {
 		this.folderId = folderId;
 	}
 
-	public boolean getDisplayId() {
-		return displayId;
-	}
-	public void setDisplayId(boolean displayId) {
-		this.displayId = displayId;
-	}
-	
 	public void setIncludeFolders(boolean includeFolders) {
 		this.includeFolders = includeFolders;
 	}
@@ -119,28 +74,11 @@ public class OrganizationReport extends OrganizationList {
 		if (criteriaString != null) {
 			params = criteriaString;
 			criteria = new ArrayList(Arrays.asList(params));
-			setCriteriaVars();
 		} else {
 			criteria = new ArrayList();
 		}
 	
 		this.criteria = criteria;
-	}
-	
-	public void setCriteriaVars() {
-		if ( !(criteria.contains("id")) ) { displayId = false; }
-		if ( !(criteria.contains("accountName")) ) { displayAccountName = false; }
-		if ( !(criteria.contains("accountNumber")) ) { displayAccountNumber = false; }
-		if ( !(criteria.contains("url")) ) { displayURL = false; }
-		if ( !(criteria.contains("ticker")) ) { displayTicker = false; }
-		if ( !(criteria.contains("employees")) ) { displayEmployees = false; }
-		if ( !(criteria.contains("entered")) ) { displayEntered = false; }
-		if ( !(criteria.contains("enteredBy")) ) { displayEnteredBy = false; }
-		if ( !(criteria.contains("modified")) ) { displayModified = false; }
-		if ( !(criteria.contains("modifiedBy")) ) { displayModifiedBy = false; }
-		if ( !(criteria.contains("owner")) ) { displayOwner = false; }
-		if ( !(criteria.contains("contractEndDate")) ) { displayContractEndDate = false; }
-		if ( !(criteria.contains("notes")) ) { displayNotes = false; }
 	}
 	
 	public String[] getParams() {
@@ -164,19 +102,24 @@ public class OrganizationReport extends OrganizationList {
 	}
 	
 	public void buildReportHeaders() {
-		if (displayId) { rep.addColumn("Account ID"); }
-		if (displayAccountName) { rep.addColumn("Account Name"); }
-		if (displayAccountNumber) { rep.addColumn("Account No."); }
-		if (displayURL) { rep.addColumn("URL"); }
-		if (displayTicker) { rep.addColumn("Ticker"); }
-		if (displayEmployees) { rep.addColumn("Employees"); }
-		if (displayEntered) { rep.addColumn("Entered"); }
-		if (displayEnteredBy) { rep.addColumn("Entered By"); }
-		if (displayModified) { rep.addColumn("Modified"); }
-		if (displayModifiedBy) { rep.addColumn("Modified By"); }
-		if (displayOwner) { rep.addColumn("Owner"); }
-		if (displayContractEndDate) { rep.addColumn("Contract End Date"); }
-		if (displayNotes) { rep.addColumn("Notes"); }
+		Iterator y = criteria.iterator();
+		while (y.hasNext()) {
+			String param = (String) y.next();
+
+			if (param.equals("id")) { rep.addColumn("Account ID"); }
+			if (param.equals("accountName")) { rep.addColumn("Account Name"); }
+			if (param.equals("accountNumber")) { rep.addColumn("Account No."); }
+			if (param.equals("url")) { rep.addColumn("URL"); }
+			if (param.equals("ticker")) { rep.addColumn("Ticker"); }
+			if (param.equals("employees")) { rep.addColumn("Employees"); }
+			if (param.equals("entered")) { rep.addColumn("Entered"); }
+			if (param.equals("enteredBy")) { rep.addColumn("Entered By"); }
+			if (param.equals("modified")) { rep.addColumn("Modified"); }
+			if (param.equals("modifiedBy")) { rep.addColumn("Modified By"); }
+			if (param.equals("owner")) { rep.addColumn("Owner"); }
+			if (param.equals("contractEndDate")) { rep.addColumn("Contract End Date"); }
+			if (param.equals("notes")) { rep.addColumn("Notes"); }
+		}
 		
 		if (includeFolders) {
 			rep.addColumn("Folder Name");
@@ -195,19 +138,23 @@ public class OrganizationReport extends OrganizationList {
 	
 	
 	public void buildReportHeaders(Report passedReport) {
-		if (displayId) { passedReport.addColumn("Account ID"); }
-		if (displayAccountName) { passedReport.addColumn("Account Name"); }
-		if (displayAccountNumber) { passedReport.addColumn("Account No."); }
-		if (displayURL) { passedReport.addColumn("URL"); }
-		if (displayTicker) { passedReport.addColumn("Ticker"); }
-		if (displayEmployees) { passedReport.addColumn("Employees"); }
-		if (displayEntered) { passedReport.addColumn("Entered"); }
-		if (displayEnteredBy) { passedReport.addColumn("Entered By"); }
-		if (displayModified) { passedReport.addColumn("Modified"); }
-		if (displayModifiedBy) { passedReport.addColumn("Modified By"); }
-		if (displayOwner) { passedReport.addColumn("Owner"); }
-		if (displayContractEndDate) { passedReport.addColumn("Contract End Date"); }
-		if (displayNotes) { passedReport.addColumn("Notes"); }
+		Iterator y = criteria.iterator();
+		while (y.hasNext()) {
+			String param = (String) y.next();
+			if (param.equals("id")) { passedReport.addColumn("Account ID"); }
+			if (param.equals("accountName")) { passedReport.addColumn("Account Name"); }
+			if (param.equals("accountNumber")) { passedReport.addColumn("Account No."); }
+			if (param.equals("url")) { passedReport.addColumn("URL"); }
+			if (param.equals("ticker")) { passedReport.addColumn("Ticker"); }
+			if (param.equals("employees")) { passedReport.addColumn("Employees"); }
+			if (param.equals("entered")) { passedReport.addColumn("Entered"); }
+			if (param.equals("enteredBy")) { passedReport.addColumn("Entered By"); }
+			if (param.equals("modified")) { passedReport.addColumn("Modified"); }
+			if (param.equals("modifiedBy")) { passedReport.addColumn("Modified By"); }
+			if (param.equals("owner")) { passedReport.addColumn("Owner"); }
+			if (param.equals("contractEndDate")) { passedReport.addColumn("Contract End Date"); }
+			if (param.equals("notes")) { passedReport.addColumn("Notes"); }
+		}
 	}
 	
 	public void buildReportData(Connection db) throws SQLException {
@@ -341,19 +288,24 @@ public class OrganizationReport extends OrganizationList {
 			} else {
 				ReportRow thisRow = new ReportRow();
 				
-				if (displayId) { thisRow.addCell(thisOrg.getOrgId());	}
-				if (displayAccountName) { thisRow.addCell(thisOrg.getName());	}
-				if (displayAccountNumber) { thisRow.addCell(thisOrg.getAccountNumber()); }
-				if (displayURL) {	thisRow.addCell(thisOrg.getUrl()); }
-				if (displayTicker) {	thisRow.addCell(thisOrg.getTicker()); }
-				if (displayEmployees) {	thisRow.addCell(thisOrg.getEmployees());}
-				if (displayEntered) {	thisRow.addCell(thisOrg.getEnteredString());}
-				if (displayEnteredBy) {	thisRow.addCell(thisOrg.getEnteredByName());}
-				if (displayModified) {	thisRow.addCell(thisOrg.getModifiedString());}
-				if (displayModifiedBy) {	thisRow.addCell(thisOrg.getModifiedByName());}
-				if (displayOwner) { thisRow.addCell(thisOrg.getOwnerName());}
-				if (displayContractEndDate) { thisRow.addCell(thisOrg.getContractEndDateString());}
-				if (displayNotes) { thisRow.addCell(thisOrg.getNotes());}
+				Iterator y = criteria.iterator();
+				while (y.hasNext()) {
+					String param = (String) y.next();
+				
+					if (param.equals("id")) { thisRow.addCell(thisOrg.getOrgId());	}
+					if (param.equals("accountName")) { thisRow.addCell(thisOrg.getName());	}
+					if (param.equals("accountNumber")) { thisRow.addCell(thisOrg.getAccountNumber()); }
+					if (param.equals("url")) {	thisRow.addCell(thisOrg.getUrl()); }
+					if (param.equals("ticker")) {	thisRow.addCell(thisOrg.getTicker()); }
+					if (param.equals("employees")) {	thisRow.addCell(thisOrg.getEmployees());}
+					if (param.equals("entered")) {	thisRow.addCell(thisOrg.getEnteredString());}
+					if (param.equals("enteredBy")) {	thisRow.addCell(thisOrg.getEnteredByName());}
+					if (param.equals("modified")) {	thisRow.addCell(thisOrg.getModifiedString());}
+					if (param.equals("modifiedBy")) {	thisRow.addCell(thisOrg.getModifiedByName());}
+					if (param.equals("owner")) { thisRow.addCell(thisOrg.getOwnerName());}
+					if (param.equals("contractEndDate")) { thisRow.addCell(thisOrg.getContractEndDateString());}
+					if (param.equals("notes")) { thisRow.addCell(thisOrg.getNotes());}
+				}
 				
 				rep.addRow(thisRow);
 			}
@@ -361,19 +313,24 @@ public class OrganizationReport extends OrganizationList {
 	}
 	
 	public void addDataRow(ReportRow thisRow, Organization thisOrg) throws SQLException {
-		if (displayId) { thisRow.addCell(thisOrg.getOrgId());	}
-		if (displayAccountName) { thisRow.addCell(thisOrg.getName());	}
-		if (displayAccountNumber) { thisRow.addCell(thisOrg.getAccountNumber()); }
-		if (displayURL) {	thisRow.addCell(thisOrg.getUrl()); }
-		if (displayTicker) {	thisRow.addCell(thisOrg.getTicker()); }
-		if (displayEmployees) {	thisRow.addCell(thisOrg.getEmployees());}
-		if (displayEntered) {	thisRow.addCell(thisOrg.getEnteredString());}
-		if (displayEnteredBy) {	thisRow.addCell(thisOrg.getEnteredByName());}
-		if (displayModified) {	thisRow.addCell(thisOrg.getModifiedString());}
-		if (displayModifiedBy) {	thisRow.addCell(thisOrg.getModifiedByName());}
-		if (displayOwner) { thisRow.addCell(thisOrg.getOwnerName());}
-		if (displayContractEndDate) { thisRow.addCell(thisOrg.getContractEndDateString());}
-		if (displayNotes) { thisRow.addCell(thisOrg.getNotes());}
+			Iterator y = criteria.iterator();
+			while (y.hasNext()) {
+				String param = (String) y.next();
+			
+				if (param.equals("id")) { thisRow.addCell(thisOrg.getOrgId());	}
+				if (param.equals("accountName")) { thisRow.addCell(thisOrg.getName());	}
+				if (param.equals("accountNumber")) { thisRow.addCell(thisOrg.getAccountNumber()); }
+				if (param.equals("url")) {	thisRow.addCell(thisOrg.getUrl()); }
+				if (param.equals("ticker")) {	thisRow.addCell(thisOrg.getTicker()); }
+				if (param.equals("employees")) {	thisRow.addCell(thisOrg.getEmployees());}
+				if (param.equals("entered")) {	thisRow.addCell(thisOrg.getEnteredString());}
+				if (param.equals("enteredBy")) {	thisRow.addCell(thisOrg.getEnteredByName());}
+				if (param.equals("modified")) {	thisRow.addCell(thisOrg.getModifiedString());}
+				if (param.equals("modifiedBy")) {	thisRow.addCell(thisOrg.getModifiedByName());}
+				if (param.equals("owner")) { thisRow.addCell(thisOrg.getOwnerName());}
+				if (param.equals("contractEndDate")) { thisRow.addCell(thisOrg.getContractEndDateString());}
+				if (param.equals("notes")) { thisRow.addCell(thisOrg.getNotes());}
+			}
 	}
 		
 

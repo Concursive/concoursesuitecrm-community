@@ -30,36 +30,10 @@ public class OpportunityReport extends OpportunityList {
 	protected ArrayList criteria = null;
 	String[] params = null;
 	
-	protected boolean displayId = true;
-	protected boolean displayDescription = true;
-	protected boolean displayContact = true;
-	protected boolean displayOwner = true;
-	protected boolean displayAmount1 = true;
-	protected boolean displayAmount2 = true;
-	protected boolean displayAmount3 = true;
-	protected boolean displayStageName = true;
-	protected boolean displayStageDate = true;
-	protected boolean displayProbability = true;
-	protected boolean displayRevenueStart = true;
-	protected boolean displayTerms = true;
-	protected boolean displayAlertDate = true;
-	protected boolean displayCommission = true;
-	protected boolean displayEntered = true;
-	protected boolean displayEnteredBy = true;
-	protected boolean displayModified = true;
-	protected boolean displayModifiedBy = true;
-	
 	protected OrganizationReport orgReportJoin = new OrganizationReport();
 	protected boolean joinOrgs = false;
 	
 	public OpportunityReport() { }
-	
-	public boolean getDisplayAmount1() { return displayAmount1; }
-	public boolean getDisplayAmount2() { return displayAmount2; }
-	public boolean getDisplayAmount3() { return displayAmount3; }
-	public void setDisplayAmount1(boolean tmp) { this.displayAmount1 = tmp; }
-	public void setDisplayAmount2(boolean tmp) { this.displayAmount2 = tmp; }
-	public void setDisplayAmount3(boolean tmp) { this.displayAmount3 = tmp; }
 
 	public void setRep(Report tmp) { this.rep = tmp; }
 	public void setDelimiter(String tmp) { this.delimiter = tmp; }
@@ -79,32 +53,6 @@ public class OpportunityReport extends OpportunityList {
 	public void setSubject(String tmp) { this.subject = tmp; }
 	public void setEnteredBy(int tmp) { this.enteredBy = tmp; }
 	public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
-	public void setDisplayDescription(boolean tmp) { this.displayDescription = tmp; }
-	public void setDisplayContact(boolean tmp) { this.displayContact = tmp; }
-	public void setDisplayOwner(boolean tmp) { this.displayOwner = tmp; }
-	public void setDisplayStageName(boolean tmp) { this.displayStageName = tmp; }
-	public void setDisplayStageDate(boolean tmp) { this.displayStageDate = tmp; }
-	public void setDisplayProbability(boolean tmp) { this.displayProbability = tmp; }
-	public void setDisplayRevenueStart(boolean tmp) { this.displayRevenueStart = tmp; }
-	public void setDisplayTerms(boolean tmp) { this.displayTerms = tmp; }
-	public void setDisplayAlertDate(boolean tmp) { this.displayAlertDate = tmp; }
-	public void setDisplayCommission(boolean tmp) { this.displayCommission = tmp; }
-	public void setDisplayEnteredBy(boolean tmp) { this.displayEnteredBy = tmp; }
-	public void setDisplayModified(boolean tmp) { this.displayModified = tmp; }
-	public void setDisplayModifiedBy(boolean tmp) { this.displayModifiedBy = tmp; }
-	public boolean getDisplayDescription() { return displayDescription; }
-	public boolean getDisplayContact() { return displayContact; }
-	public boolean getDisplayOwner() { return displayOwner; }
-	public boolean getDisplayStageName() { return displayStageName; }
-	public boolean getDisplayStageDate() { return displayStageDate; }
-	public boolean getDisplayProbability() { return displayProbability; }
-	public boolean getDisplayRevenueStart() { return displayRevenueStart; }
-	public boolean getDisplayTerms() { return displayTerms; }
-	public boolean getDisplayAlertDate() { return displayAlertDate; }
-	public boolean getDisplayCommission() { return displayCommission; }
-	public boolean getDisplayEnteredBy() { return displayEnteredBy; }
-	public boolean getDisplayModified() { return displayModified; }
-	public boolean getDisplayModifiedBy() { return displayModifiedBy; }
 
 	public OrganizationReport getOrgReportJoin() { return orgReportJoin; }
 	public boolean getJoinOrgs() { return joinOrgs; }
@@ -118,21 +66,6 @@ public class OpportunityReport extends OpportunityList {
 		this.limitId = limitId;
 	}
 
-	public boolean getDisplayId() {
-		return displayId;
-	}
-	public void setDisplayId(boolean displayId) {
-		this.displayId = displayId;
-	}
-
-	public boolean getDisplayEntered() {
-		return displayEntered;
-	}
-	public void setDisplayEntered(boolean displayEntered) {
-		this.displayEntered = displayEntered;
-	}
-	
-
 	public ArrayList getCriteria() {
 		return criteria;
 	}
@@ -140,33 +73,11 @@ public class OpportunityReport extends OpportunityList {
 		if (criteriaString != null) {
 			params = criteriaString;
 			criteria = new ArrayList(Arrays.asList(params));
-			setCriteriaVars();
 		} else {
 			criteria = new ArrayList();
 		}
 	
 		this.criteria = criteria;
-	}
-	
-	public void setCriteriaVars() {
-		if ( !(criteria.contains("id")) ) { displayId = false; }
-		if ( !(criteria.contains("description")) ) { displayDescription = false; }
-		if ( !(criteria.contains("contact")) ) { displayContact = false; }
-		if ( !(criteria.contains("owner")) ) { displayOwner = false; }
-		if ( !(criteria.contains("amount1")) ) { displayAmount1 = false; }
-		if ( !(criteria.contains("amount2")) ) { displayAmount2 = false; }
-		if ( !(criteria.contains("amount3")) ) { displayAmount3 = false; }
-		if ( !(criteria.contains("stageName")) ) { displayStageName = false; }
-		if ( !(criteria.contains("stageDate")) ) { displayStageDate = false; }
-		if ( !(criteria.contains("probability")) ) { displayProbability = false; }
-		if ( !(criteria.contains("revenueStart")) ) { displayRevenueStart = false; }
-		if ( !(criteria.contains("terms")) ) { displayTerms = false; }
-		if ( !(criteria.contains("alertDate")) ) { displayAlertDate = false; }
-		if ( !(criteria.contains("commission")) ) { displayCommission = false; }
-		if ( !(criteria.contains("entered")) ) { displayEntered = false; }
-		if ( !(criteria.contains("enteredBy")) ) { displayEnteredBy = false; }
-		if ( !(criteria.contains("modified")) ) { displayModified = false; }
-		if ( !(criteria.contains("modifiedBy")) ) { displayModifiedBy = false; }
 	}
 	
 	public String[] getParams() {
@@ -192,24 +103,29 @@ public class OpportunityReport extends OpportunityList {
 	public void buildReportHeaders() {
 		if (joinOrgs) { orgReportJoin.buildReportHeaders(rep); }
 		
-		if (displayId) { rep.addColumn("Opportunity ID"); }
-		if (displayDescription) { rep.addColumn("Description"); }
-		if (displayContact) { rep.addColumn("Contact/Organization"); }
-		if (displayOwner) { rep.addColumn("Owner"); }
-		if (displayAmount1) { rep.addColumn("Low Amount"); }
-		if (displayAmount2) { rep.addColumn("Best Guess Amount"); }
-		if (displayAmount3) { rep.addColumn("High Amount"); }
-		if (displayStageName) { rep.addColumn("Stage"); }
-		if (displayStageDate) { rep.addColumn("Stage Date"); }
-		if (displayProbability) { rep.addColumn("Prob. of Close"); }
-		if (displayRevenueStart) { rep.addColumn("Revenue Start"); }
-		if (displayTerms) { rep.addColumn("Terms"); }
-		if (displayAlertDate) { rep.addColumn("Alert Date"); }
-		if (displayCommission) { rep.addColumn("Commission"); }
-		if (displayEntered) { rep.addColumn("Entered"); }
-		if (displayEnteredBy) { rep.addColumn("Entered By"); }
-		if (displayModified) { rep.addColumn("Modified"); }
-		if (displayModifiedBy) { rep.addColumn("Modified By"); }
+		Iterator y = criteria.iterator();
+		while (y.hasNext()) {
+			String param = (String) y.next();
+			
+			if ( param.equals("id") ) { rep.addColumn("Opportunity ID"); }
+			if ( param.equals("description")) { rep.addColumn("Description"); }
+			if ( param.equals("contact") )  { rep.addColumn("Contact/Organization"); }
+			if ( param.equals("owner") )   { rep.addColumn("Owner"); }
+			if ( param.equals("amount1") )  { rep.addColumn("Low Amount"); }
+			if ( param.equals("amount2") )  { rep.addColumn("Best Guess Amount"); }
+			if ( param.equals("amount3") )  { rep.addColumn("High Amount"); }
+			if ( param.equals("stageName"))  { rep.addColumn("Stage"); }
+			if ( param.equals("stageDate"))  { rep.addColumn("Stage Date"); }
+			if ( param.equals("probability")) { rep.addColumn("Prob. of Close"); }
+			if ( param.equals("revenueStart")) { rep.addColumn("Revenue Start"); }
+			if ( param.equals("terms"))  { rep.addColumn("Terms"); }
+			if ( param.equals("alertDate")) { rep.addColumn("Alert Date"); }
+			if ( param.equals("commission")) { rep.addColumn("Commission"); }
+			if ( param.equals("entered"))  { rep.addColumn("Entered"); }
+			if ( param.equals("enteredBy")) { rep.addColumn("Entered By"); }
+			if ( param.equals("modified"))  { rep.addColumn("Modified"); }
+			if ( param.equals("modifiedBy")) { rep.addColumn("Modified By"); }
+		}
 	}
 	
 	public void buildReportData(Connection db) throws SQLException {
@@ -238,24 +154,29 @@ public class OpportunityReport extends OpportunityList {
 			}
 			
 			if (!joinOrgs || writeOut == true) {
-				if (displayId) { thisRow.addCell(thisOpp.getId());	}
-				if (displayDescription) { thisRow.addCell(thisOpp.getDescription());	}
-				if (displayContact) { thisRow.addCell(thisOpp.getAccountName()); }
-				if (displayOwner) {	thisRow.addCell(thisOpp.getOwnerName()); }
-				if (displayAmount1) {	thisRow.addCell("$" + thisOpp.getLowCurrency()); }
-				if (displayAmount2) {	thisRow.addCell("$" + thisOpp.getGuessCurrency()); }
-				if (displayAmount3) {	thisRow.addCell("$" + thisOpp.getHighCurrency()); }
-				if (displayStageName) {	thisRow.addCell(thisOpp.getStageName());}
-				if (displayStageDate) {	thisRow.addCell(thisOpp.getStageDateString());}
-				if (displayProbability) {	thisRow.addCell(thisOpp.getCloseProbValue());}
-				if (displayRevenueStart) {	thisRow.addCell(thisOpp.getCloseDateString());}
-				if (displayTerms) {	thisRow.addCell(thisOpp.getTermsString());}
-				if (displayAlertDate) { thisRow.addCell(thisOpp.getAlertDateString()); }
-				if (displayCommission) { thisRow.addCell(thisOpp.getCommissionPercent()); }
-				if (displayEntered) { thisRow.addCell(thisOpp.getEnteredString()); }
-				if (displayEnteredBy) { thisRow.addCell(thisOpp.getEnteredByName()); }
-				if (displayModified) { thisRow.addCell(thisOpp.getModifiedString()); }
-				if (displayModifiedBy) { thisRow.addCell(thisOpp.getModifiedByName()); }
+				Iterator y = criteria.iterator();
+				while (y.hasNext()) {
+					String param = (String) y.next();
+					
+					if ( param.equals("id") ) {  thisRow.addCell(thisOpp.getId());	}
+					if ( param.equals("description")) { thisRow.addCell(thisOpp.getDescription());	}
+					if ( param.equals("contact") )  { thisRow.addCell(thisOpp.getAccountName()); }
+					if ( param.equals("owner") )   {	thisRow.addCell(thisOpp.getOwnerName()); }
+					if ( param.equals("amount1") )  {	thisRow.addCell("$" + thisOpp.getLowCurrency()); }
+					if ( param.equals("amount2") )  {	thisRow.addCell("$" + thisOpp.getGuessCurrency()); }
+					if ( param.equals("amount3") )  {	thisRow.addCell("$" + thisOpp.getHighCurrency()); }
+					if ( param.equals("stageName"))  {	thisRow.addCell(thisOpp.getStageName());}
+					if ( param.equals("stageDate"))  {	thisRow.addCell(thisOpp.getStageDateString());}
+					if ( param.equals("probability")) {	thisRow.addCell(thisOpp.getCloseProbValue());}
+					if ( param.equals("revenueStart")) {	thisRow.addCell(thisOpp.getCloseDateString());}
+					if ( param.equals("terms"))  {	thisRow.addCell(thisOpp.getTermsString());}
+					if ( param.equals("alertDate")) { thisRow.addCell(thisOpp.getAlertDateString()); }
+					if ( param.equals("commission")) { thisRow.addCell(thisOpp.getCommissionPercent()); }
+					if ( param.equals("entered"))  { thisRow.addCell(thisOpp.getEnteredString()); }
+					if ( param.equals("enteredBy")) { thisRow.addCell(thisOpp.getEnteredByName()); }
+					if ( param.equals("modified"))  { thisRow.addCell(thisOpp.getModifiedString()); }
+					if ( param.equals("modifiedBy")) { thisRow.addCell(thisOpp.getModifiedByName()); }
+				}
 				
 				rep.addRow(thisRow);
 			}
