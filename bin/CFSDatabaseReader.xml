@@ -10,11 +10,11 @@
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCalls</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportProjects</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportFolders</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCommunications</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunityReports</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportAccountReports</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportRevenue</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportDocuments</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCommunications</module>
   </processes>
   <mappings>
     <map class="com.darkhorseventures.webutils.LookupList" id="lookupIndustry" table="lookup_industry"/>
