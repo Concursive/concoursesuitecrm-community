@@ -9,7 +9,8 @@ import javax.servlet.http.*;
 import org.theseus.actions.*;
 
 /**
- *  Description of the Class
+ *  A logged message sent to a person using 1 of several transports:
+ *  SMTP, Fax, Letter, IM
  *
  *@author     mrajkowski
  *@created    October 15, 2001
@@ -34,6 +35,9 @@ public class Notification extends Thread {
   public static final String EMAILFAXLETTER_TEXT = "Email first, try Fax, then Letter";
   public static final String IM_TEXT = "Instant Message";
   public static final String SSL_TEXT = "SSL Message";
+  
+  public static final String lf = System.getProperty("line.separator");
+  
   String faxLogEntry = null;
   Contact contact = null;
 
@@ -649,6 +653,21 @@ public class Notification extends Thread {
     }
     return tmp;
   }
-
+  
+  public String toString() {
+    
+    StringBuffer text = new StringBuffer();
+    text.append("==[ NOTIFICATION ]============================" + lf);
+    text.append("User to notify: " + userToNotify + lf);
+    text.append("Module: " + module + lf);
+    text.append("Item Id: " + itemId + lf);
+    text.append("Item Modified: " + itemModified + lf);
+    text.append("Subject: " + subject + lf);
+    text.append("From: " + from + lf);
+    text.append("Message: " + messageToSend + lf);
+    text.append("Type: " + type + lf);
+    text.append("==============================================");
+    return text.toString();
+  }
 }
 
