@@ -32,7 +32,7 @@ import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.jcrontab.datasource.Event;
 
 /**
- *  Actions for setting up CFS the first time
+ *  Actions for setting up Dark Horse CRM the first time
  *
  *@author     matt rajkowski
  *@created    August 12, 2003
@@ -103,7 +103,7 @@ public class Setup extends CFSModule {
 
   /**
    *  The user has filled out the registration form and it needs to be
-   *  transmitted to the CFS server
+   *  transmitted to the Dark Horse CRM server
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -165,7 +165,7 @@ public class Setup extends CFSModule {
       }
       if (response == null) {
         context.getRequest().setAttribute("actionError",
-            "Unspecified Error: CFS Server did not respond ");
+            "Unspecified Error: Dark Horse CRM Server did not respond ");
         return "SendRegERROR";
       }
       XMLUtils responseXML = new XMLUtils(response);
@@ -173,7 +173,7 @@ public class Setup extends CFSModule {
       Element responseNode = responseXML.getFirstChild("response");
       if (!"0".equals(XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "status")))) {
         context.getRequest().setAttribute("actionError",
-            "Unspecified Error: CFS Server rejected registration " +
+            "Unspecified Error: Dark Horse CRM Server rejected registration " +
             XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "errorText")));
         return "SendRegERROR";
       }
@@ -656,8 +656,8 @@ public class Setup extends CFSModule {
     message.setHost(context.getRequest().getParameter("server"));
     message.setFrom(context.getRequest().getParameter("from"));
     message.setTo(context.getRequest().getParameter("to"));
-    message.setSubject("Test message from CFS");
-    message.setBody("Congratulations, mail from CFS is working.");
+    message.setSubject("Test message from Dark Horse CRM");
+    message.setBody("Congratulations, mail from Dark Horse CRM is working.");
     int result = message.send();
     if (result == 0) {
       return "SendMailOK";

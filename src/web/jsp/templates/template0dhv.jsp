@@ -8,7 +8,7 @@
 <!-- (C) 2001-2003 Dark Horse Ventures -->
 <html>
 <head>
-<title>CFS<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
+<title>Dark Horse CRM<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <jsp:include page="cssInclude.jsp" flush="true"/>
 </head>

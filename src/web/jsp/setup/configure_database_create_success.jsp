@@ -4,7 +4,7 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      CFS Configuration (Step 3 of 4)<br>
+      Dark Horse CRM Configuration (Step 3 of 4)<br>
       Database Settings &amp; Installation
     </th>
   </tr>
@@ -12,7 +12,7 @@
     <td>
       Database Creation Successful!<br>
       <br>
-      CFS now has all of the necessary database tables as well
+      Dark Horse CRM now has all of the necessary database tables as well
       as initial data installed.<br>
       <br>
       The final step is to create an administrative user login.<br>

@@ -47,23 +47,23 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      CFS Configuration (Step 4 of 4)<br>
+      Dark Horse CRM Configuration (Step 4 of 4)<br>
       User Settings
     </th>
   </tr>
   <tr>
     <td>
-      An administrative user is required to manage CFS.  The administrator
+      An administrative user is required to manage Dark Horse CRM.  The administrator
       is primarily responsible for adding users, configuring user permissions,
-      and tailoring CFS to your organization.<br>
+      and tailoring Dark Horse CRM to your organization.<br>
       <br>
-      The following information will appear in CFS under Employees and can
+      The following information will appear in Dark Horse CRM under Employees and can
       be modified later if necessary.<br>
       &nbsp;<br>
     </td>
   </tr>
   <tr class="sectionTitle">
-    <th>Create a CFS administrator account</th>
+    <th>Create a Dark Horse CRM administrator account</th>
   </tr>
   <tr>
     <td nowrap>

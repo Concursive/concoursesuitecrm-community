@@ -9,13 +9,13 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      CFS Configuration (Step 2 of 4)<br>
+      Dark Horse CRM Configuration (Step 2 of 4)<br>
       Server Settings
     </th>
   </tr>
   <tr>
     <td>
-      CFS interacts with various servers that must be defined.<br>
+      Dark Horse CRM interacts with various servers that must be defined.<br>
       &nbsp;<br>
     </td>
   </tr>
@@ -25,9 +25,9 @@
   </tr>
   <tr>
     <td>
-      CFS sends various notifications to users by email.  CFS can also be used
-      to send email to contacts that have been entered into CFS.<br>
-      Which email server should CFS use?<br>
+      Dark Horse CRM sends various notifications to users by email.  Dark Horse CRM can also be used
+      to send email to contacts that have been entered into Dark Horse CRM.<br>
+      Which email server should Dark Horse CRM use?<br>
       - The specified server must allow this server to relay email<br>
       <br>
       <table border="0" class="empty">
@@ -61,7 +61,7 @@
           <td>
             <input type="text" size="40" name="emailAddress" value="<%= toHtmlValue(server.getEmailAddress()) %>"/><font color="red">*</font>
             <%= showAttribute(request, "emailAddressError") %><br>
-            (ex: cfs_system@yourcompany.com)
+            (ex: crm_system@yourcompany.com)
           </td>
         </tr>
       </table>
@@ -77,19 +77,19 @@
       For system emails, what URL should be included to allow the user to return back to the site?<br>
       The URL must be specific and must exist in your DNS.<br>
       If a domain name is not configured, you can specify the IP address, include the full URL to
-      get to the CFS web application.<br>
+      get to the Dark Horse CRM web application.<br>
       <br>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            CFS URL:
+            Dark Horse CRM URL:
           </td>
           <td>
             <input type="text" size="40" name="url" value="<%= toHtmlValue(server.getUrl()) %>"/><font color="red">*</font>
-            <input type="button" value="Test" onClick="javascript:popURL('<%= request.getScheme() %>://' + document.forms[0].url.value + '/setup/testpage_ok.jsp','CFS_UrlTest','500','325','yes','yes');"/>
+            <input type="button" value="Test" onClick="javascript:popURL('<%= request.getScheme() %>://' + document.forms[0].url.value + '/setup/testpage_ok.jsp','CRM_UrlTest','500','325','yes','yes');"/>
             <%= showAttribute(request, "urlError") %>
             <br>
-            (ex: cfs.yourcompany.com<%= request.getContextPath() %>)
+            (ex: crm.yourcompany.com<%= request.getContextPath() %>)
           </td>
         </tr>
       </table>
@@ -103,10 +103,10 @@
   <tr>
     <td>
       <font color="red">* </font><b>The HylaFax server application requires Linux or Unix.</b><br>
-      Users will have the capability to send faxes using CFS.<br>
+      Users will have the capability to send faxes using Dark Horse CRM.<br>
       The faxing component requires a properly configured
       <a href="http://www.hylafax.org" target="_new">HylaFax</a> server including fax hardware.<br>
-      Which fax server should CFS use?<br>
+      Which fax server should Dark Horse CRM use?<br>
       - The specified server must allow this server to send faxes<br>
       - Leave blank if faxing will not be used<br>
       <br>

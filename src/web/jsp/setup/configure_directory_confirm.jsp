@@ -3,7 +3,7 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      CFS Configuration (Step 1 of 4)<br>
+      Dark Horse CRM Configuration (Step 1 of 4)<br>
       File Library Settings
     </th>
   </tr>

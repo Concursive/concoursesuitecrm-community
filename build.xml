@@ -514,7 +514,7 @@
     <!--<copy file="${base.dir}/MANIFEST.MF" 
           todir="${dist.dir}/cfs/META-INF"/>-->
     <!-- Archive the folder -->
-    <war destfile="${dist.dir}/cfs.war"
+    <war destfile="${dist.dir}/crm.war"
          webxml="${src.web.dir}/WEB-INF/web.xml"
          basedir="${dist.dir}/cfs"
          compress="true"

@@ -2,7 +2,7 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      CFS Mail Test
+      Dark Horse CRM Mail Test
     </th>
   </tr>
   <tr>

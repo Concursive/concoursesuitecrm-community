@@ -5,7 +5,7 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      CFS Configuration (Step 2 of 4)<br>
+      Dark Horse CRM Configuration (Step 2 of 4)<br>
       Server Settings
     </th>
   </tr>
@@ -44,9 +44,9 @@
         </tr>
       </table>
       <br>
-      <input type="button" value="Test Email" onClick="javascript:popURL('SetupServer.do?command=TestEmail&from=<%= toHtml(server.getEmailAddress()) %>&to=<%= userAddress %>&server=<%= toHtml(server.getEmail()) %>','CFS_EmailTest','275','325','yes','no')"><br>
+      <input type="button" value="Test Email" onClick="javascript:popURL('SetupServer.do?command=TestEmail&from=<%= toHtml(server.getEmailAddress()) %>&to=<%= userAddress %>&server=<%= toHtml(server.getEmail()) %>','CRM_EmailTest','275','325','yes','no')"><br>
       <br>
-      The next step is to configure and verify the CFS database connection.<br>
+      The next step is to configure and verify the Dark Horse CRM database connection.<br>
       <br>
       <input type="button" value="< Back" onClick="javascript:window.location.href='SetupServer.do?command=ConfigureServerCheck'"/>
       <input type="button" value="Continue >" onClick="javascript:window.location.href='SetupDatabase.do?command=ConfigureDatabaseCheck'"/>

@@ -21,20 +21,21 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      CFS Configuration (Step 1 of 4)<br>
+      Dark Horse CRM Configuration (Step 1 of 4)<br>
       File Library Settings
     </th>
   </tr>
   <tr>
     <td>
       Users will have the capability to upload and create files on the server.<br>
-      Where should CFS store files that get created?<br>
+      Where should Dark Horse CRM store files that get created?<br>
       <br>
+      - If the target directory does not exist it will be created
       - The target directory should have plenty of free storage space for uploads<br>
       - The target directory must have write permissions<br>
       - The target directory should be backed up often to prevent data loss<br>
-      - The target directory should not be located in the servlet path to make
-      upgrades easier<br>
+      - The target directory should not be located in the servlet path to make upgrades easier<br>
+      <br>
       <br>
       <table border="0" class="empty">
         <tr>
@@ -43,7 +44,7 @@
           </td>
           <td nowrap>
             <input type="text" name="fileLibrary" value="<%= toHtmlValue(fileLibrary) %>" size="50"/><br>
-            (ex: Linux <b>/var/lib/cfs/fileLibrary</b> -- Windows <b>c:\cfs\fileLibrary</b>)
+            (ex: Linux <b>/var/lib/dh_crm/fileLibrary</b> -- Windows <b>c:\dh_crm\fileLibrary</b>)
           </td>
         </tr>
       </table>

@@ -15,17 +15,19 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      CFS Configuration (Step 3 of 4)<br>
+      Dark Horse CRM Configuration (Step 3 of 4)<br>
       Database Settings &amp; Installation
     </th>
   </tr>
   <tr>
     <td>
-      CFS stores and retrieves data using a database.<br>
+      Dark Horse CRM stores and retrieves data using a database.<br>
       <br>
-      CFS is intended to work with the Open Source database <a href="http://www.postgresql.org" target="_new">PostgreSQL</a>.
-      Once PostgreSQL has been installed, have the database administrator create a database for cfs
-      called "cdb_cfs" and then enter the database connection information below:<br>
+      Dark Horse CRM is intended to work with the Open Source database <a href="http://www.postgresql.org" target="_new">PostgreSQL</a>.
+      Before continuing, PostgreSQL must be installed.  Have the database administrator
+      create a database for Dark Horse CRM called "darkhorse_crm" and a database user
+      called "darkhorse_crm" then
+      enter the database connection information below:<br>
       &nbsp;
     </td>
   </tr>

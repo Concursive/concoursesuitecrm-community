@@ -7,7 +7,7 @@
 %>
 <html>
 <head>
-<title>CFS<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
+<title>Dark Horse CRM<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
 <jsp:include page="cssInclude.jsp" flush="true"/>
 </head>
 

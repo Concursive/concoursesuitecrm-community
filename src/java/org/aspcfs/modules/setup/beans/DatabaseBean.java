@@ -20,8 +20,8 @@ public class DatabaseBean extends GenericBean {
   private String driver = "org.postgresql.Driver";
   private String ip = "127.0.0.1";
   private int port = 5432;
-  private String name = "cdb_cfs";
-  private String user = "cfs_user";
+  private String name = "darkhorse_crm";
+  private String user = "darkhorse_crm";
   private String password = null;
 
 

@@ -10,7 +10,7 @@
 <head>
 <%@ include file="../initPage.jsp" %>
 <META HTTP-EQUIV="refresh" content="<%= User.getSystemStatus(getServletConfig()).getSessionTimeout() + 60 %>;URL=<%= request.getScheme() %>://<%= getServerUrl(request) %>/MyCFS.do?command=Home">
-<title>CFS<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
+<title>Dark Horse CRM<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
 <jsp:include page="cssInclude.jsp" flush="true"/>
 </head>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
@@ -48,10 +48,10 @@
       <a href="javascript:window.print()" class="s">Print</a>
       |
       <img src="images/icons/stock_help-agent-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-      <a href="javascript:popURL('Help.do?module=<%= request.getAttribute("moduleAction") %><%= request.getParameter("command") != null ? "&section=" + request.getParameter("command") : ""%> <%= request.getParameter("section") != null ? "&sub=" + request.getParameter("section") : "" %>&popup=true','CFS_Help','790','500','yes','yes');" class="s" onMouseOver="window.status='Pop-up Help';return true;" onMouseOut="window.status='';return true;">Help</a>
+      <a href="javascript:popURL('Help.do?module=<%= request.getAttribute("moduleAction") %><%= request.getParameter("command") != null ? "&section=" + request.getParameter("command") : ""%> <%= request.getParameter("section") != null ? "&sub=" + request.getParameter("section") : "" %>&popup=true','CRM_Help','790','500','yes','yes');" class="s" onMouseOver="window.status='Pop-up Help';return true;" onMouseOut="window.status='';return true;">Help</a>
       |<dhv:permission name="qa-edit">
       <img src="images/icons/stock_glue-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-      <a href="javascript:popURL('QA.do?module=<%= request.getAttribute("moduleAction") %><%= request.getParameter("command") != null ? "&section=" + request.getParameter("command") : ""%><%= request.getParameter("section") != null ? "&sub=" + request.getParameter("section") : "" %>&popup=true','CFS_QA','450','550','yes','yes');" class="s" onMouseOver="window.status='Pop-up QA';return true;" onMouseOut="window.status='';return true;">QA</a>
+      <a href="javascript:popURL('QA.do?module=<%= request.getAttribute("moduleAction") %><%= request.getParameter("command") != null ? "&section=" + request.getParameter("command") : ""%><%= request.getParameter("section") != null ? "&sub=" + request.getParameter("section") : "" %>&popup=true','CRM_QA','450','550','yes','yes');" class="s" onMouseOver="window.status='Pop-up QA';return true;" onMouseOut="window.status='';return true;">QA</a>
       |</dhv:permission>
       <img src="images/icons/stock_exit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
       <a href="Login.do?command=Logout" class="s">Logout</a>
