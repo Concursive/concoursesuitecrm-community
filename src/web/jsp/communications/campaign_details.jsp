@@ -129,7 +129,7 @@
     <td width="24" nowrap>
     
     <% if (Survey.getType() == 3) {%>
-    <a href="javascript:popURLReturn('/CampaignManager.do?command=ShowComments&surveyId=<%=Survey.getId()%>&questionId=<%=thisItem.getId()%>&popup=true','CampaignManager.do?command=Details&id=27&reset=true','Survey_Comments','600','450','yes','no');">
+    <a href="javascript:popURLReturn('/CampaignManager.do?command=ShowComments&surveyId=<%=Survey.getId()%>&questionId=<%=thisItem.getId()%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','600','450','yes','no');">
     <%}%>
     <%= toHtml(thisItem.getAverageValue()) %>
     <% if (Survey.getType() == 3) {%>

@@ -77,17 +77,22 @@
 									</td>
 									</tr>
 									
-									<tr class="containerBack">
-									<% for(int z=1; z<8; z++) {%>
-										<td valign=center align=center><%=z%></td>
-									<%}%>
-									</tr>
 									
-									<tr class="containerBody">
-									<% for(int z=1; z<8; z++) {%>
-									<td valign=center align=center><input name="ans<%=k%>" type="radio"></td>
+									<% if (request.getParameter("type") != null) {
+										if (Integer.parseInt(request.getParameter("type")) != 1) {%>
+											<tr class="containerBack">
+											<% for(int z=1; z<8; z++) {%>
+												<td valign=center align=center><%=z%></td>
+											<%}%>
+											</tr>
+											
+											<tr class="containerBody">
+											<% for(int z=1; z<8; z++) {%>
+											<td valign=center align=center><input name="ans<%=k%>" type="radio"></td>
+											<%}%>
+											</tr>
+										<%}%>
 									<%}%>
-									</tr>
 									
 									<% if (request.getParameter("type") != null) {
 										if (Integer.parseInt(request.getParameter("type")) == 3) {%>
@@ -95,7 +100,14 @@
 											<td width=15% valign=center align=right>
 											Comments
 											</td>
-											<td colspan=6 valign=center><input type="text" size=40 name="comments<%=k%>"></td>
+											<td colspan=6 valign=center><textarea name="comments<%=k%>" rows=2 cols=80></textarea></td>
+											</tr>
+										<%} else if (Integer.parseInt(request.getParameter("type")) == 1) {%>
+											<tr class="containerBody">
+											<td width=15% valign=center align=right>
+											Response
+											</td>
+											<td colspan=6 valign=center><textarea name="response<%=k%>" rows=2 cols=80></textarea></td>
 											</tr>
 										<%}%>
 									<%}%>

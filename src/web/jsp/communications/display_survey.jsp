@@ -120,6 +120,8 @@ function validateRadio (field) {
 									</td>
 									</tr>
 									
+									<% if (Survey.getType() != 1) { %>
+										
 									<tr class="containerBack">
 									<% for(int z=1; z<8; z++) {%>
 										<td valign=center align=center><%=z%></td>
@@ -132,14 +134,25 @@ function validateRadio (field) {
 									<%}%>
 									</tr>
 									
+									<%}%>
 									
-									<%if (Survey.getType() == 3) {%>
+									
+									<% if (Survey.getType() == 3) {%>
 									<tr class="containerBody">
 									<td width=15% valign=center align=right>
 									Comments
 									</td>
-									<td colspan=6 valign=center><input type="text" size=40 name="quest<%=k%>comments"></td>
+									<td colspan=6 valign=center>
+									<textarea name="quest<%=k%>comments" rows=2 cols=80></textarea>
+									<!--input type="text" size=80 name="quest<%=k%>comments"></td-->
 									</tr>
+									<%} else if (Survey.getType() == 1) {%>
+											<tr class="containerBody">
+											<td width=15% valign=center align=right>
+											Response
+											</td>
+											<td colspan=6 valign=center><textarea name="quest<%=k%>response" rows=2 cols=80></textarea></td>
+											</tr>
 									<%}%>
 									
 									</table>
