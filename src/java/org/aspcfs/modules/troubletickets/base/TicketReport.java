@@ -15,6 +15,8 @@ import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationReport;
 import java.io.*;
 import java.text.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.admin.base.UserList;
 
 /**
  *  Description of the Class
@@ -931,7 +933,7 @@ public class TicketReport extends TicketList {
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void buildReportData(Connection db) throws SQLException {
+  public void buildReportData(Connection db, ActionContext context) throws SQLException {
     this.buildList(db);
 
     boolean writeOut = false;
@@ -996,25 +998,23 @@ public class TicketReport extends TicketList {
             thisRow.addCell(thisTic.getEnteredString());
           }
           if (param.equals("enteredBy")) {
-            thisRow.addCell(thisTic.getEnteredByName());
+            thisRow.addCell(UserList.retrieveUserContact(context, thisTic.getEnteredBy()).getNameLastFirst());
           }
           if (param.equals("modified")) {
             thisRow.addCell(thisTic.getModifiedString());
           }
           if (param.equals("modifiedBy")) {
-            thisRow.addCell(thisTic.getModifiedByName());
+            thisRow.addCell(UserList.retrieveUserContact(context, thisTic.getModifiedBy()).getNameLastFirst());
           }
           if (param.equals("assignedTo")) {
-            thisRow.addCell(thisTic.getOwnerName());
+            thisRow.addCell(UserList.retrieveUserContact(context, thisTic.getAssignedTo()).getNameLastFirst());
           }
           if (param.equals("organization")) {
             thisRow.addCell(thisTic.getCompanyName());
           }
         }
-
         rep.addRow(thisRow);
       }
-
       writeOut = false;
     }
   }
@@ -1026,10 +1026,10 @@ public class TicketReport extends TicketList {
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void buildReportFull(Connection db) throws SQLException {
+  public void buildReportFull(Connection db, ActionContext context) throws SQLException {
     buildReportBaseInfo();
     buildReportHeaders();
-    buildReportData(db);
+    buildReportData(db, context);
   }
 
 

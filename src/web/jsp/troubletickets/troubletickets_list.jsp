@@ -55,7 +55,7 @@ View Tickets<br>
 			<%= toHtml(assignedTic.getCompanyName()) %><dhv:evaluate exp="<%= !(assignedTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 		<td width="150" nowrap valign="top">
-			<%= toHtml(assignedTic.getOwnerName()) %><dhv:evaluate exp="<%= !(assignedTic.getHasEnabledOwnerAccount()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
+			<dhv:username id="<%= assignedTic.getAssignedTo() %>" default="-- unassigned --"/><dhv:evaluate exp="<%= !(assignedTic.getHasEnabledOwnerAccount()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 	</tr>
   <tr class="row<%= rowid %>">
@@ -142,11 +142,11 @@ View Tickets<br>
 		</td>
 		<td width="150" nowrap valign="top" class="row<%= rowid %>">
       <dhv:evaluate if="<%= openTic.isAssigned() %>">
-        <%= toHtml(openTic.getOwnerName()) %>
+        <dhv:username id="<%= openTic.getAssignedTo() %>" default="-- unassigned --"/>
       </dhv:evaluate>
       <dhv:evaluate if="<%= !(openTic.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
       <dhv:evaluate if="<%= (!openTic.isAssigned()) %>">
-        <font color="red"><%= toHtml(openTic.getOwnerName()) %></font>
+        <font color="red"><dhv:username id="<%= openTic.getAssignedTo() %>" default="-- unassigned --"/></font>
       </dhv:evaluate>
 		</td>
 	</tr>
@@ -234,11 +234,11 @@ View Tickets<br>
 		</td>
 		<td width="150" nowrap valign="top">
       <dhv:evaluate exp="<%= thisTic.isAssigned() %>">
-        <%= toHtml(thisTic.getOwnerName()) %>
+        <dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/>
       </dhv:evaluate>
       <dhv:evaluate exp="<%= !(thisTic.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
       <dhv:evaluate exp="<%= (!thisTic.isAssigned()) %>">
-        <font color="red"><%= toHtml(thisTic.getOwnerName()) %></font>
+        <font color="red"><dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/></font>
       </dhv:evaluate>
 		</td>
 	</tr>

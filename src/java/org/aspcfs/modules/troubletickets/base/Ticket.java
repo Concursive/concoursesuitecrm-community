@@ -37,7 +37,6 @@ public class Ticket extends GenericBean {
   private int id = -1;
   private int orgId = -1;
   private int contactId = -1;
-  private int owner = -1;
   private int assignedTo = -1;
 
   private String problem = "";
@@ -61,10 +60,6 @@ public class Ticket extends GenericBean {
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp closed = null;
 
-  private String ownerName = "";
-  private String enteredByName = "";
-  private String modifiedByName = "";
-
   private String companyName = "";
   private String categoryName = "";
   private String departmentName = "";
@@ -74,7 +69,6 @@ public class Ticket extends GenericBean {
 
   private boolean closeIt = false;
   private boolean companyEnabled = true;
-  private boolean sendNotification = true;
 
   private int ageDays = 0;
   private int ageHours = 0;
@@ -145,19 +139,13 @@ public class Ticket extends GenericBean {
         "tp.description AS ticpri, " +
         "ts.description AS ticsev, " +
         "tc.description AS catname, " +
-        "lu_ts.description AS sourcename, " +
-        "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst, " +
-        "ct_mb.namelast AS mb_namelast, ct_mb.namefirst AS mb_namefirst, " +
-        "ct_owner.namelast AS owner_namelast, ct_owner.namefirst AS owner_namefirst " +
+        "lu_ts.description AS sourcename " +
         "FROM ticket t " +
         "LEFT JOIN organization o ON (t.org_id = o.org_id) " +
         "LEFT JOIN lookup_department ld ON (t.department_code = ld.code) " +
         "LEFT JOIN ticket_priority tp ON (t.pri_code = tp.code) " +
         "LEFT JOIN ticket_severity ts ON (t.scode = ts.code) " +
         "LEFT JOIN ticket_category tc ON (t.cat_code = tc.id) " +
-        "LEFT JOIN contact ct_owner ON (t.assigned_to = ct_owner.user_id) " +
-        "LEFT JOIN contact ct_eb ON (t.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (t.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN lookup_ticketsource lu_ts ON (t.source_code = lu_ts.code) " +
         "WHERE t.ticketid = ? ");
     pst.setInt(1, id);
@@ -167,17 +155,14 @@ public class Ticket extends GenericBean {
     }
     rs.close();
     pst.close();
-
     if (this.id == -1) {
       throw new SQLException("Ticket not found");
     }
-
     if (this.getContactId() > 0 && checkContactRecord(db, this.getContactId())) {
       thisContact = new Contact(db, this.getContactId());
     } else {
       thisContact = null;
     }
-
     if (buildHistory) {
       this.buildHistory(db);
     }
@@ -225,36 +210,6 @@ public class Ticket extends GenericBean {
   public void buildTasks(Connection db) throws SQLException {
     tasks.setTicketId(this.getId());
     tasks.buildList(db);
-  }
-
-
-  /**
-   *  Gets the sendNotification attribute of the Ticket object
-   *
-   *@return    The sendNotification value
-   */
-  public boolean getSendNotification() {
-    return sendNotification;
-  }
-
-
-  /**
-   *  Sets the sendNotification attribute of the Ticket object
-   *
-   *@param  sendNotification  The new sendNotification value
-   */
-  public void setSendNotification(boolean sendNotification) {
-    this.sendNotification = sendNotification;
-  }
-
-
-  /**
-   *  Sets the sendNotification attribute of the Ticket object
-   *
-   *@param  tmp  The new sendNotification value
-   */
-  public void setSendNotification(String tmp) {
-    sendNotification = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -812,28 +767,6 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the Owner attribute of the Ticket object
-   *
-   *@param  tmp  The new Owner value
-   *@since
-   */
-  public void setOwner(int tmp) {
-    this.owner = tmp;
-  }
-
-
-  /**
-   *  Sets the Owner attribute of the Ticket object
-   *
-   *@param  tmp  The new Owner value
-   *@since
-   */
-  public void setOwner(String tmp) {
-    this.owner = Integer.parseInt(tmp);
-  }
-
-
-  /**
    *  Sets the CategoryName attribute of the Ticket object
    *
    *@param  categoryName  The new CategoryName value
@@ -1049,39 +982,6 @@ public class Ticket extends GenericBean {
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the OwnerName attribute of the Ticket object
-   *
-   *@param  tmp  The new OwnerName value
-   *@since
-   */
-  public void setOwnerName(String tmp) {
-    this.ownerName = tmp;
-  }
-
-
-  /**
-   *  Sets the EnteredByName attribute of the Ticket object
-   *
-   *@param  tmp  The new EnteredByName value
-   *@since
-   */
-  public void setEnteredByName(String tmp) {
-    this.enteredByName = tmp;
-  }
-
-
-  /**
-   *  Sets the ModifiedByName attribute of the Ticket object
-   *
-   *@param  tmp  The new ModifiedByName value
-   *@since
-   */
-  public void setModifiedByName(String tmp) {
-    this.modifiedByName = tmp;
   }
 
 
@@ -1452,17 +1352,6 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the Owner attribute of the Ticket object
-   *
-   *@return    The Owner value
-   *@since
-   */
-  public int getOwner() {
-    return owner;
-  }
-
-
-  /**
    *  Gets the Problem attribute of the Ticket object
    *
    *@return    The Problem value
@@ -1497,7 +1386,6 @@ public class Ticket extends GenericBean {
     if (this.getAssignedTo() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
-
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM access " +
@@ -1637,43 +1525,6 @@ public class Ticket extends GenericBean {
    */
   public int getModifiedBy() {
     return modifiedBy;
-  }
-
-
-  /**
-   *  Gets the OwnerName attribute of the Ticket object
-   *
-   *@return    The OwnerName value
-   *@since
-   */
-  public String getOwnerName() {
-    if (ownerName == null || ownerName.equals("")) {
-      return "--unassigned--";
-    } else {
-      return ownerName;
-    }
-  }
-
-
-  /**
-   *  Gets the EnteredByName attribute of the Ticket object
-   *
-   *@return    The EnteredByName value
-   *@since
-   */
-  public String getEnteredByName() {
-    return enteredByName;
-  }
-
-
-  /**
-   *  Gets the ModifiedByName attribute of the Ticket object
-   *
-   *@return    The ModifiedByName value
-   *@since
-   */
-  public String getModifiedByName() {
-    return modifiedByName;
   }
 
 
@@ -1869,7 +1720,11 @@ public class Ticket extends GenericBean {
     } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
-    DatabaseUtils.setInt(pst, ++i, assignedTo);
+    if (assignedTo > 0) {
+      pst.setInt(++i, assignedTo);
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     if (this.getSubCat1() > 0) {
       pst.setInt(++i, this.getSubCat1());
     } else {
@@ -2164,13 +2019,11 @@ public class Ticket extends GenericBean {
   protected void buildRecord(ResultSet rs) throws SQLException {
     //ticket table
     this.setId(rs.getInt("ticketid"));
-
     orgId = DatabaseUtils.getInt(rs, "org_id");
     contactId = DatabaseUtils.getInt(rs, "contact_id");
     problem = rs.getString("problem");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
-    owner = enteredBy;
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     closed = rs.getTimestamp("closed");
@@ -2205,10 +2058,7 @@ public class Ticket extends GenericBean {
     //lookup_ticket_source table
     sourceName = rs.getString("sourcename");
 
-    //contact table
-    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
-    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
-    ownerName = Contact.getNameLastFirst(rs.getString("owner_namelast"), rs.getString("owner_namefirst"));
+    //Calculations
     if (entered != null) {
       if (closed != null) {
         //float ageCheck = ((closed.getTime() - entered.getTime()) / 86400000);

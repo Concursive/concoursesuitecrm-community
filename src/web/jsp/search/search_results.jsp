@@ -260,7 +260,7 @@ if (i.hasNext()) {
       <%= toHtml(thisTic.getCompanyName()) %>
 		</td>
     <td width="150" nowrap valign="top">
-      <%= toHtml(thisTic.getOwnerName()) %>
+      <dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/>
     </td>
   </tr>
   <tr class="row<%= rowid %>">

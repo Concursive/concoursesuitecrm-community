@@ -22,7 +22,7 @@ Search Results
     <td><b>Priority</b></td>
     <td><b>Age</b></td>
     <td><b>Company</b></td>
-		<td><b>Assigned&nbsp;To</b></td>
+		<td nowrap><b>Assigned To</b></td>
   </tr>
   
   <%
@@ -52,7 +52,7 @@ Search Results
 			<%= toHtml(thisTic.getCompanyName()) %><dhv:evaluate exp="<%= !(thisTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 		<td width="150" nowrap valign="top" class="row<%= rowid %>">
-			<%= toHtml(thisTic.getOwnerName()) %>
+      <dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/>
 		</td>
 	</tr>
   <tr>

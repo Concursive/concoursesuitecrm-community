@@ -241,42 +241,36 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandExportReport(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-reports-add"))) {
+    if (!hasPermission(context, "accounts-accounts-reports-add")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordInserted = false;
     Connection db = null;
-
+    //Parameters
     String subject = context.getRequest().getParameter("subject");
     String type = context.getRequest().getParameter("type");
     String ownerCriteria = context.getRequest().getParameter("criteria1");
-
+    //File path
     String filePath = this.getPath(context, "account-reports");
     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
     String datePathToUse1 = formatter1.format(new java.util.Date());
     SimpleDateFormat formatter2 = new SimpleDateFormat("MMdd");
     String datePathToUse2 = formatter2.format(new java.util.Date());
     filePath += datePathToUse1 + fs + datePathToUse2 + fs;
-
-    //new
+    //Populate the report criteria
     OrganizationReport orgReport = new OrganizationReport();
     orgReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
     orgReport.setFilePath(filePath);
     orgReport.setSubject(subject);
     orgReport.setMinerOnly(false);
-
     if (ownerCriteria.equals("my")) {
       orgReport.setOwnerId(this.getUserId(context));
     } else if (ownerCriteria.equals("levels")) {
       orgReport.setOwnerIdRange(this.getUserRange(context));
     }
-
     try {
       db = this.getConnection(context);
-
       //Accounts with opportunities report
       if (type.equals("5")) {
         OpportunityReport oppReport = new OpportunityReport();
@@ -307,14 +301,12 @@ public final class Accounts extends CFSModule {
         contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         contactReport.setCriteria(null);
         contactReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
-
         if (ownerCriteria.equals("my")) {
           contactReport.setLimitId(this.getUserId(context));
           contactReport.setOwner(this.getUserId(context));
         } else if (ownerCriteria.equals("levels")) {
           contactReport.setAccountOwnerIdRange(this.getUserRange(context));
         }
-
         contactReport.setJoinOrgs(true);
         contactReport.buildReportFull(db);
         contactReport.saveAndInsert(db);
@@ -326,17 +318,14 @@ public final class Accounts extends CFSModule {
         ticReport.setSubject(subject);
         ticReport.setHeader("CFS Accounts");
         ticReport.setJoinOrgs(true);
-
         if (ownerCriteria.equals("my")) {
           ticReport.setLimitId(this.getUserId(context));
         } else if (ownerCriteria.equals("levels")) {
           ticReport.setAccountOwnerIdRange(this.getUserRange(context));
         }
-
         ticReport.setCriteria(null);
         ticReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
-
-        ticReport.buildReportFull(db);
+        ticReport.buildReportFull(db, context);
         ticReport.saveAndInsert(db);
       } else {
         int folderId = Integer.parseInt(context.getRequest().getParameter("catId"));
@@ -345,19 +334,16 @@ public final class Accounts extends CFSModule {
         } else if (type.equals("4") && folderId > 0) {
           orgReport.setFolderId(folderId);
         }
-
         orgReport.setEnteredBy(getUserId(context));
         orgReport.setModifiedBy(getUserId(context));
         orgReport.buildReportFull(db);
         orgReport.saveAndInsert(db);
       }
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       return executeCommandReports(context);
     } else {

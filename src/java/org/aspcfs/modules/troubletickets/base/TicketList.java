@@ -47,8 +47,6 @@ public class TicketList extends ArrayList implements SyncableList {
   private int minutesOlderThan = -1;
   //search filters
   private String searchText = "";
-  private boolean sendNotification = true;
-
 
   /**
    *  Constructor for the TicketList object
@@ -216,26 +214,6 @@ public class TicketList extends ArrayList implements SyncableList {
    */
   public void setUnassignedToo(boolean unassignedToo) {
     this.unassignedToo = unassignedToo;
-  }
-
-
-  /**
-   *  Gets the sendNotification attribute of the TicketList object
-   *
-   *@return    The sendNotification value
-   */
-  public boolean getSendNotification() {
-    return sendNotification;
-  }
-
-
-  /**
-   *  Sets the sendNotification attribute of the TicketList object
-   *
-   *@param  sendNotification  The new sendNotification value
-   */
-  public void setSendNotification(boolean sendNotification) {
-    this.sendNotification = sendNotification;
   }
 
 
@@ -655,29 +633,21 @@ public class TicketList extends ArrayList implements SyncableList {
         "tp.description AS ticpri, " +
         "ts.description AS ticsev, " +
         "tc.description AS catname, " +
-        "lu_ts.description AS sourcename, " +
-        "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst, " +
-        "ct_mb.namelast AS mb_namelast, ct_mb.namefirst AS mb_namefirst, " +
-        "ct_owner.namelast AS owner_namelast, ct_owner.namefirst AS owner_namefirst " +
+        "lu_ts.description AS sourcename " +
         "FROM ticket t " +
         "LEFT JOIN organization o ON (t.org_id = o.org_id) " +
         "LEFT JOIN lookup_department ld ON (t.department_code = ld.code) " +
         "LEFT JOIN ticket_priority tp ON (t.pri_code = tp.code) " +
         "LEFT JOIN ticket_severity ts ON (t.scode = ts.code) " +
         "LEFT JOIN ticket_category tc ON (t.cat_code = tc.id) " +
-        "LEFT JOIN contact ct_owner ON (t.assigned_to = ct_owner.user_id) " +
-        "LEFT JOIN contact ct_eb ON (t.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (t.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN lookup_ticketsource lu_ts ON (t.source_code = lu_ts.code) " +
         "WHERE t.ticketid > 0 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -687,16 +657,11 @@ public class TicketList extends ArrayList implements SyncableList {
       }
       ++count;
       Ticket thisTicket = new Ticket(rs);
-
-      if (!getSendNotification()) {
-        thisTicket.setSendNotification(false);
-      }
-
       this.add(thisTicket);
     }
     rs.close();
     pst.close();
-
+    //Build resources
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Ticket thisTicket = (Ticket) i.next();
@@ -763,10 +728,10 @@ public class TicketList extends ArrayList implements SyncableList {
         sqlFilter.append("AND lower(t.problem) = lower(?) ");
       }
     }
-    if (onlyOpen == true) {
+    if (onlyOpen) {
       sqlFilter.append("AND t.closed IS NULL ");
     }
-    if (onlyClosed == true) {
+    if (onlyClosed) {
       sqlFilter.append("AND t.closed IS NOT NULL ");
     }
     if (id > -1) {
@@ -776,7 +741,7 @@ public class TicketList extends ArrayList implements SyncableList {
       sqlFilter.append("AND t.org_id = ? ");
     }
     if (department > -1) {
-      if (unassignedToo == true) {
+      if (unassignedToo) {
         sqlFilter.append("AND (t.department_code in (?, 0, -1) OR (t.department_code IS NULL)) ");
       } else {
         sqlFilter.append("AND t.department_code = ? ");
@@ -786,7 +751,7 @@ public class TicketList extends ArrayList implements SyncableList {
       sqlFilter.append("AND t.assigned_to = ? ");
     }
     if (excludeAssignedTo > -1) {
-      sqlFilter.append("AND t.assigned_to <> ? ");
+      sqlFilter.append("AND (t.assigned_to <> ? OR t.assigned_to IS NULL) ");
     }
     if (onlyAssigned) {
       sqlFilter.append("AND t.assigned_to > 0 AND t.assigned_to IS NOT NULL ");

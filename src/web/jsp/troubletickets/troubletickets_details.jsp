@@ -113,7 +113,7 @@ Ticket Details<br>
       Assigned To
 		</td>
 		<td>
-      <%= toHtml(TicketDetails.getOwnerName()) %>
+      <dhv:username id="<%= TicketDetails.getAssignedTo() %>" default="-- unassigned --"/>
       <dhv:evaluate if="<%= !(TicketDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
 		</td>
   </tr>
@@ -130,7 +130,9 @@ Ticket Details<br>
       Entered
     </td>
 		<td>
-      <%= toHtml(TicketDetails.getEnteredByName()) %> - <%= TicketDetails.getEnteredString() %>
+      <dhv:username id="<%= TicketDetails.getEnteredBy() %>"/>
+      -
+      <%= TicketDetails.getEnteredString() %>
 		</td>
   </tr>
   <tr class="containerBody">
@@ -138,7 +140,9 @@ Ticket Details<br>
       Modified
     </td>
 		<td>
-      <%= toHtml(TicketDetails.getModifiedByName()) %> - <%= TicketDetails.getModifiedString() %>
+      <dhv:username id="<%= TicketDetails.getModifiedBy() %>"/>
+      -
+      <%= TicketDetails.getModifiedString() %>
 		</td>
   </tr>
 </table>

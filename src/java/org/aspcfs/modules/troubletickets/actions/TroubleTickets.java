@@ -117,11 +117,9 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandExportReport(ActionContext context) {
-
-    if (!(hasPermission(context, "tickets-tickets-reports-add"))) {
+    if (!hasPermission(context, "tickets-tickets-reports-add")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordInserted = false;
     Connection db = null;
@@ -161,9 +159,7 @@ public final class TroubleTickets extends CFSModule {
 
     try {
       db = this.getConnection(context);
-
-      //builds list also
-      ticketReport.buildReportFull(db);
+      ticketReport.buildReportFull(db, context);
       ticketReport.setEnteredBy(getUserId(context));
       ticketReport.setModifiedBy(getUserId(context));
       ticketReport.saveAndInsert(db);
@@ -172,7 +168,6 @@ public final class TroubleTickets extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       return executeCommandReports(context);
     } else {
@@ -189,33 +184,22 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandShowReportHtml(ActionContext context) {
-
-    if (!(hasPermission(context, "tickets-tickets-reports-view"))) {
+    if (!hasPermission(context, "tickets-tickets-reports-view")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
-
-    String projectId = (String) context.getRequest().getParameter("pid");
+    //Parameters
     String itemId = (String) context.getRequest().getParameter("fid");
-
     Connection db = null;
-
     try {
       db = getConnection(context);
-
-      //-1 is the project ID for non-projects
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
-
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId));
       String filePath = this.getPath(context, "ticket-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
       String textToShow = this.includeFile(filePath);
       context.getRequest().setAttribute("ReportText", textToShow);
     } catch (Exception e) {
-      errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     return ("ReportHtmlOK");
   }
 
@@ -227,57 +211,44 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandReports(ActionContext context) {
-
-    if (!(hasPermission(context, "tickets-tickets-reports-view"))) {
+    if (!hasPermission(context, "tickets-tickets-reports-view")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
-
+    //Build the list of report files
     FileItemList files = new FileItemList();
     files.setLinkModuleId(Constants.DOCUMENTS_TICKETS_REPORTS);
     files.setLinkItemId(-1);
-
+    //Have a paged list
     PagedListInfo rptListInfo = this.getPagedListInfo(context, "TicketRptListInfo");
     rptListInfo.setLink("TroubleTickets.do?command=Reports");
-
     try {
       db = this.getConnection(context);
       files.setPagedListInfo(rptListInfo);
-
       if ("all".equals(rptListInfo.getListView())) {
         files.setOwnerIdRange(this.getUserRange(context));
       } else {
         files.setOwner(this.getUserId(context));
       }
-
       files.buildList(db);
-
       Iterator i = files.iterator();
       while (i.hasNext()) {
         FileItem thisItem = (FileItem) i.next();
+        //TODO: Remove these and replace in JSP with user cache
         Contact enteredBy = this.getUser(context, thisItem.getEnteredBy()).getContact();
         Contact modifiedBy = this.getUser(context, thisItem.getModifiedBy()).getContact();
         thisItem.setEnteredByString(enteredBy.getNameFirstLast());
         thisItem.setModifiedByString(modifiedBy.getNameFirstLast());
       }
-
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "Reports", "TicketReports");
-      context.getRequest().setAttribute("FileList", files);
-      return ("ReportsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
-
+    addModuleBean(context, "Reports", "TicketReports");
+    context.getRequest().setAttribute("FileList", files);
+    return ("ReportsOK");
   }
 
 
@@ -288,56 +259,40 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDeleteReport(ActionContext context) {
-
-    if (!(hasPermission(context, "tickets-tickets-reports-delete"))) {
+    if (!hasPermission(context, "tickets-tickets-reports-delete")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     boolean recordDeleted = false;
-
-    String projectId = (String) context.getRequest().getParameter("pid");
+    //Parameters
     String itemId = (String) context.getRequest().getParameter("fid");
-
     Connection db = null;
     try {
       db = getConnection(context);
-
-      //-1 is the project ID for non-projects
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
-
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId));
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
         recordDeleted = thisItem.delete(db, this.getPath(context, "ticket-reports"));
-
         String filePath1 = this.getPath(context, "ticket-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
         java.io.File fileToDelete1 = new java.io.File(filePath1);
         if (!fileToDelete1.delete()) {
           System.err.println("FileItem-> Tried to delete file: " + filePath1);
         }
-
         String filePath2 = this.getPath(context, "ticket-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
         java.io.File fileToDelete2 = new java.io.File(filePath2);
         if (!fileToDelete2.delete()) {
           System.err.println("FileItem-> Tried to delete file: " + filePath2);
         }
       }
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "Reports", "Reports delete");
-
-    if (errorMessage == null) {
-      if (recordDeleted) {
-        return ("DeleteReportOK");
-      } else {
-        return ("DeleteReportERROR");
-      }
+    if (recordDeleted) {
+      return ("DeleteReportOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("DeleteReportERROR");
     }
   }
 
@@ -349,19 +304,15 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandModify(ActionContext context) {
-
-    if (!(hasPermission(context, "tickets-tickets-edit"))) {
+    if (!hasPermission(context, "tickets-tickets-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     Ticket newTic = null;
-
     try {
       String ticketId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
-
       if (context.getRequest().getParameter("companyName") == null) {
         newTic = new Ticket(db, Integer.parseInt(ticketId));
       } else {
@@ -659,10 +610,6 @@ public final class TroubleTickets extends CFSModule {
       openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       openList.setExcludeAssignedTo(this.getUserId(context));
       openList.setOnlyOpen(true);
-      if ("unassigned".equals(openInfo.getListView())) {
-        openList.setUnassignedToo(true);
-        openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
-      }
     }
     //Tickets Created By Me
     PagedListInfo createdByMeInfo = this.getPagedListInfo(context, "CreatedByMeInfo", "t.entered", "desc");
