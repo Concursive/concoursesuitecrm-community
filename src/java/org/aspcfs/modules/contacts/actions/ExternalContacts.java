@@ -464,8 +464,16 @@ public final class ExternalContacts extends CFSModule {
     }
     Exception errorMessage = null;
     boolean search = false;
-
-    PagedListInfo searchContactsInfo = this.getPagedListInfo(context, "SearchContactsInfo");
+    
+    PagedListInfo searchContactsInfo = this.getPagedListInfo(context, "SearchContactsInfo", false);
+    if("searchForm".equals(context.getRequest().getParameter("source"))){
+      searchContactsInfo.setParameters(context);
+    }else{
+      String listView = searchContactsInfo.getListView();
+      searchContactsInfo.setParameters(context);
+      searchContactsInfo.setListView(listView);
+    }
+    
     PagedListInfo externalContactsInfo = this.getPagedListInfo(context, "ExternalContactsInfo");
     externalContactsInfo.setLink("ExternalContacts.do?command=ListContacts");
 
