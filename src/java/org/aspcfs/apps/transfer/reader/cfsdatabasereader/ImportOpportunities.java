@@ -30,16 +30,20 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
     oppList.buildList(db);
     
     writer.setAutoCommit(false);
-    saveOppList(db, oppList, mappings);
+    saveOppList(db, oppList);
     //mappings.saveList(writer, oppList, "insert");
-    writer.commit();
+    
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
     
     //update owners
     //writer.setAutoCommit(true);
     return true;
   }
   
-  private void saveOppList(Connection db, OpportunityList oppList, PropertyMapList mappings) throws SQLException {
+  private void saveOppList(Connection db, OpportunityList oppList) throws SQLException {
           Iterator opps = oppList.iterator();
         
             while (opps.hasNext()) {
@@ -52,7 +56,13 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
               CallList callList = new CallList();
               callList.setOppId(thisOpp.getId());
               callList.buildList(db);
-              mappings.saveList(writer, callList, "insert");
+              Iterator calls = callList.iterator();
+              
+                      while(calls.hasNext()) {
+                              Call thisCall = (Call)calls.next();
+                              DataRecord anotherRecord = mappings.createDataRecord(thisCall, "insert");
+                              writer.save(anotherRecord);
+                      }
             }
   }
 }

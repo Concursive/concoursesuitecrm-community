@@ -138,7 +138,13 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
               CallList callList = new CallList();
               callList.setOrgId(thisOrg.getId());
               callList.buildList(db);
-              mappings.saveList(writer, callList, "insert");
+              Iterator calls = callList.iterator();
+              
+                      while(calls.hasNext()) {
+                              Call thisCall = (Call)calls.next();
+                              DataRecord anotherRecord = mappings.createDataRecord(thisCall, "insert");
+                              writer.save(anotherRecord);
+                      }
             }
   }
   
