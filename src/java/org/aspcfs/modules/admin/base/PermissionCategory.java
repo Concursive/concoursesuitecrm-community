@@ -29,6 +29,7 @@ public class PermissionCategory extends GenericBean {
   private boolean lookups = false;
   private boolean folders = false;
   private boolean viewpoints = false;
+  private boolean categories = false;
 
   public final static int PERMISSION_CAT_LEADS = 4;
   public final static int LOOKUP_LEADS_STAGE = 1;
@@ -210,6 +211,36 @@ public class PermissionCategory extends GenericBean {
 
 
   /**
+   *  Sets the categories attribute of the PermissionCategory object
+   *
+   *@param  categories  The new categories value
+   */
+  public void setCategories(boolean categories) {
+    this.categories = categories;
+  }
+
+
+  /**
+   *  Sets the categories attribute of the PermissionCategory object
+   *
+   *@param  categories  The new categories value
+   */
+  public void setCategories(String categories) {
+    this.categories = DatabaseUtils.parseBoolean(categories);
+  }
+
+
+  /**
+   *  Gets the categories attribute of the PermissionCategory object
+   *
+   *@return    The categories value
+   */
+  public boolean getCategories() {
+    return categories;
+  }
+
+
+  /**
    *  Gets the id attribute of the PermissionCategory object
    *
    *@return    The id value
@@ -370,8 +401,8 @@ public class PermissionCategory extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO permission_category (category, description, " +
-        "level, enabled, active, lookups, folders, viewpoints) " +
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) ");
+        "level, enabled, active, lookups, folders, viewpoints, categories) " +
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,? ) ");
     int i = 0;
     pst.setString(++i, category);
     pst.setString(++i, description);
@@ -381,6 +412,7 @@ public class PermissionCategory extends GenericBean {
     pst.setBoolean(++i, lookups);
     pst.setBoolean(++i, folders);
     pst.setBoolean(++i, viewpoints);
+    pst.setBoolean(++i, categories);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "permission_cate_category_id_seq");
@@ -404,6 +436,7 @@ public class PermissionCategory extends GenericBean {
     folders = rs.getBoolean("folders");
     lookups = rs.getBoolean("lookups");
     viewpoints = rs.getBoolean("viewpoints");
+    categories = rs.getBoolean("categories");
   }
 
 }
