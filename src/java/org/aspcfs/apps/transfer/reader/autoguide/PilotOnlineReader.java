@@ -7,7 +7,8 @@ import java.util.logging.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.autoguide.base.*;
-import java.io.File;
+import java.io.*;
+import com.darkhorseventures.apps.dataimport.writer.TextWriter;
 
 /**
  *  Description of the Class
@@ -24,6 +25,9 @@ public class PilotOnlineReader implements DataReader {
   private String password = null;
   private String pictureSourcePath = null;
   private String pictureDestinationPath = null;
+  private String ftpData = null;
+  private String ftpPictures = null;
+  
   private ArrayList picturesToProcess = new ArrayList();
   
   public void setDriver(String tmp) { this.driver = tmp; }
@@ -44,6 +48,9 @@ public class PilotOnlineReader implements DataReader {
       this.pictureDestinationPath = tmp + fs;
     }
   }
+  public void setFtpData(String tmp) { this.ftpData = tmp; }
+  public void setFtpPictures(String tmp) { this.ftpPictures = tmp; }
+
 
   public String getDriver() { return driver; }
   public String getUrl() { return url; }
@@ -51,7 +58,10 @@ public class PilotOnlineReader implements DataReader {
   public String getPassword() { return password; }
   public String getPictureSourcePath() { return pictureSourcePath; }
   public String getPictureDestinationPath() { return pictureDestinationPath; }
-  
+  public String getFtpData() { return ftpData; }
+  public String getFtpPictures() { return ftpPictures; }
+
+
   /**
    *  Gets the version attribute of the PilotOnlineReader object
    *
@@ -90,12 +100,44 @@ public class PilotOnlineReader implements DataReader {
    *@return    The configured value
    */
   public boolean isConfigured() {
-    if (driver == null || url == null || user == null || 
-        pictureSourcePath == null || pictureDestinationPath == null) {
-      logger.info("Check params: driver, url, user, pictureSourcePath, pictureDestinationPath");
-      return false;
+    boolean configOK = true;
+    
+    if (driver == null) {
+      logger.info("PilotOnlineReader-> Config: driver (db) not set");
+      configOK = false;
     }
-    return true;
+    
+    if (url == null) {
+      logger.info("PilotOnlineReader-> Config: url (db) not set");
+      configOK = false;
+    }
+    
+    if (user == null) {
+      logger.info("PilotOnlineReader-> Config: user (db) not set");
+      configOK = false;
+    }
+    
+    if (pictureSourcePath == null) {
+      logger.info("PilotOnlineReader-> Config: pictureSourcePath not set");
+      configOK = false;
+    }
+    
+    if (pictureDestinationPath == null) {
+      logger.info("PilotOnlineReader-> Config: pictureDestinationPath not set");
+      configOK = false;
+    }
+    
+    if (ftpData == null) {
+      logger.info("PilotOnlineReader-> Config: ftpData not set");
+      configOK = false;
+    }
+    
+    if (ftpPictures == null) {
+      logger.info("PilotOnlineReader-> Config: ftpPictures not set");
+      configOK = false;
+    }
+    
+    return configOK;
   }
 
 
@@ -107,6 +149,8 @@ public class PilotOnlineReader implements DataReader {
    *@return         Description of the Return Value
    */
   public boolean execute(DataWriter writer) {
+    boolean processOK = true;
+    
     //Connect to database
     ConnectionPool sqlDriver = null;
     Connection db = null;
@@ -124,6 +168,7 @@ public class PilotOnlineReader implements DataReader {
       return false;
     }
     
+    //Process the vehicle data
     try {
       OrganizationList organizationList = new OrganizationList();
       organizationList.buildList(db);
@@ -189,33 +234,92 @@ public class PilotOnlineReader implements DataReader {
           writer.save(thisRecord);
           //logger.info(writer.getLastResponse());
         }
-        if (picturesToProcess.size() > 0) {
-          Iterator pictures = picturesToProcess.iterator();
-          while (pictures.hasNext()) {
-            String thisPicture = (String)pictures.next();
-            File sourcePicture = new File(
-              pictureSourcePath + 
-              thisPicture.substring(0,4) + fs +
-              thisPicture.substring(4,8) + fs +
-              thisPicture);
-            File destinationPicture = new File(pictureDestinationPath + thisPicture + ".jpg");
-            if (sourcePicture.exists()) {
-              ImageUtils.saveThumbnail(sourcePicture, destinationPicture, 285.0, -1.0);
-            }
-          }
-          picturesToProcess.clear();
-        }
       }
     } catch (Exception ex) {
       ex.printStackTrace(System.out);
-      //logger.info(ex.toString());
-      //logger.info(writer.getLastResponse());
+      processOK = false;
     } finally {
       sqlDriver.free(db);
       sqlDriver.destroy();
       sqlDriver = null;
     }
-    return true;
+    
+    //Process the vehicle pictures
+    if (processOK && picturesToProcess.size() > 0) {
+      try {
+        Iterator pictures = picturesToProcess.iterator();
+        while (pictures.hasNext()) {
+          String thisPicture = (String)pictures.next();
+          File sourcePicture = new File(
+            pictureSourcePath + 
+            thisPicture.substring(0,4) + fs +
+            thisPicture.substring(4,8) + fs +
+            thisPicture);
+          File destinationPicture = new File(pictureDestinationPath + thisPicture + ".jpg");
+          if (sourcePicture.exists()) {
+            ImageUtils.saveThumbnail(sourcePicture, destinationPicture, 285.0, -1.0);
+          }
+        }
+        picturesToProcess.clear();
+      } catch (Exception e) {
+        e.printStackTrace(System.out);
+        processOK = false;
+      }
+    }
+    
+    Process process;
+    Runtime runtime = Runtime.getRuntime();
+    java.io.InputStream input;
+    byte buffer[];
+    int bytes;
+    StringBuffer error = new StringBuffer();
+    try {
+      if (processOK) {
+        //FTP the data
+        String command[] = {
+          "ncftpput", "-u", this.getFtpUser(ftpData), "-p", this.getFtpPassword(ftpData), "-Z", "-S", "tmp", "-DD", this.getFtpHost(ftpData), this.getFtpRemoteDir(ftpData), ((TextWriter)writer).getFilename()
+        };
+        process = runtime.exec(command);
+        BufferedReader br
+            = new BufferedReader(
+                  new InputStreamReader(process.getErrorStream()));
+        String tmp = null;
+        while ((tmp = br.readLine()) != null) {
+          error.append(tmp);
+        }
+        process.waitFor();
+        processOK = (process.exitValue() == 0);
+        logger.info("FTP Process Result: " + String.valueOf(processOK) + " " + error.toString());
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      processOK = false;
+    }
+     
+    try {
+      if (processOK) {
+        //FTP the pictures
+        String command[] = {
+          "ncftpput", "-u", this.getFtpUser(ftpPictures), "-p", this.getFtpPassword(ftpPictures), "-Z", "-S", "tmp", "-DD", this.getFtpHost(ftpPictures), this.getFtpRemoteDir(ftpPictures), pictureDestinationPath + "*.jpg"
+        };
+        
+        process = runtime.exec(command);
+        BufferedReader br
+            = new BufferedReader(
+                  new InputStreamReader(process.getErrorStream()));
+        String tmp = null;
+        while ((tmp = br.readLine()) != null) {
+          error.append(tmp);
+        }
+        process.waitFor();
+        processOK = (process.exitValue() == 0);
+        logger.info("FTP Process Result: " + String.valueOf(processOK) + " " + error.toString());
+      }
+    } catch (Exception e) {
+      processOK = false;
+    }
+    
+    return processOK;
   }
   
   private static String toOneLine(String in) {
@@ -226,6 +330,43 @@ public class PilotOnlineReader implements DataReader {
       return out;
     } else {
       return "";
+    }
+  }
+  
+  private static String getFtpUser(String ftpUrl) {
+    String tmp = ftpUrl.substring(
+      ftpUrl.indexOf("ftp://") + 6, ftpUrl.indexOf("@"));
+    if (tmp.indexOf(":") > -1) {
+      return tmp.substring(0, tmp.indexOf(":"));
+    } else {
+      return tmp;
+    }
+  }
+  
+  private static String getFtpPassword(String ftpUrl) {
+    String tmp = ftpUrl.substring(ftpUrl.indexOf("ftp://") + 6, ftpUrl.indexOf("@"));
+    if (tmp.indexOf(":") > -1) {
+      return tmp.substring(tmp.indexOf(":") + 1);
+    } else {
+      return null;
+    }
+  }
+  
+  private static String getFtpHost(String ftpUrl) {
+    String tmp = ftpUrl.substring(ftpUrl.indexOf("@") + 1);
+    if (tmp.indexOf(":") > -1) {
+      return tmp.substring(0, tmp.indexOf(":"));
+    } else {
+      return tmp;
+    }
+  }
+  
+  private static String getFtpRemoteDir(String ftpUrl) {
+    String tmp = ftpUrl.substring(ftpUrl.lastIndexOf(":") + 1);
+    if (tmp.indexOf("@") > -1) {
+      return null;
+    } else {
+      return tmp;
     }
   }
 }
