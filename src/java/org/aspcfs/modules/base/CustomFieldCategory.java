@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -1002,7 +1002,7 @@ public class CustomFieldCategory extends ArrayList {
 
       //Delete CustomFields and CustomFieldRecords that use this folder (associated data)
       CustomFieldRecord thisRecord = new CustomFieldRecord();
-      thisRecord.setLinkModuleId(linkModuleId);
+      thisRecord.setLinkModuleId(moduleId);
       thisRecord.setCategoryId(id);
       thisRecord.delete(db);
 
