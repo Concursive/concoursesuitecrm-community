@@ -7,19 +7,24 @@ import java.security.*;
 import javax.security.cert.X509Certificate;
 
 /**
- *  Creates an SSLSocket connection to a remote SSL server, on the 
- *  specified port.
+ *  Wrapper for a secure request and response to an SSL Server. Either p2p can
+ *  be used by supplying a keystore with private and server keys, or the key can
+ *  be retrieved from the server if it is signed by a trusted authority.
  *
  *@author     Matt Rajkowski
  *@created    March 15, 2002
+ *@version    $Id$
  */
 public class SSLMessage {
 
   private String url = null;
   private int port = -1;
   private String message = null;
+  private String keystoreAlias = "aspcfs";
   private String keystoreLocation = null;
   private String keystorePassword = null;
+  private StringBuffer response = null;
+
 
   /**
    *  Constructor for the SSLMessage object
@@ -46,10 +51,36 @@ public class SSLMessage {
     port = tmp;
   }
 
-  public void setKeystoreLocation(String tmp) { this.keystoreLocation = tmp; }
-  public void setKeystorePassword(String tmp) { this.keystorePassword = tmp; }
-  public String getKeystoreLocation() { return keystoreLocation; }
-  public String getKeystorePassword() { return keystorePassword; }
+
+  /**
+   *  When using peer2peer encryption, the local private key is used to identify
+   *  and encrypt data for the server.
+   *
+   *@param  tmp  The new keystoreAlias value
+   */
+  public void setKeystoreAlias(String tmp) {
+    keystoreAlias = tmp;
+  }
+
+
+  /**
+   *  Sets the keystoreLocation attribute of the SSLMessage object
+   *
+   *@param  tmp  The new keystoreLocation value
+   */
+  public void setKeystoreLocation(String tmp) {
+    this.keystoreLocation = tmp;
+  }
+
+
+  /**
+   *  Sets the keystorePassword attribute of the SSLMessage object
+   *
+   *@param  tmp  The new keystorePassword value
+   */
+  public void setKeystorePassword(String tmp) {
+    this.keystorePassword = tmp;
+  }
 
 
   /**
@@ -63,9 +94,48 @@ public class SSLMessage {
 
 
   /**
-   *  Description of the Method
+   *  Gets the keystoreLocation attribute of the SSLMessage object
    *
-   *@return                Description of the Returned Value
+   *@return    The keystoreLocation value
+   */
+  public String getKeystoreLocation() {
+    return keystoreLocation;
+  }
+
+
+  /**
+   *  Gets the keystorePassword attribute of the SSLMessage object
+   *
+   *@return    The keystorePassword value
+   */
+  public String getKeystorePassword() {
+    return keystorePassword;
+  }
+
+
+  /**
+   *  Gets the response attribute of the SSLMessage object
+   *
+   *@return    The response value
+   */
+  public String getResponse() {
+    return response.toString();
+  }
+
+
+  /**
+   *  Sends a message to an SSL Server and receives a response if there is one.
+   *  <p>
+   *
+   *  This method will instantiate the connection, send data, receive data, and
+   *  close the connection. If the server doesn't respond, then a timeout will
+   *  occur, closing the connection.<p>
+   *
+   *  This method will only connect to servers that have a trusted certificate
+   *  -- either signed by a trusted authority or a certificate that has been
+   *  stored locally in the keystore and trusted.
+   *
+   *@return                0=OK, 1=Fatal Error
    *@exception  Exception  Description of Exception
    */
   public int send() throws Exception {
@@ -74,44 +144,49 @@ public class SSLMessage {
       return 1;
     }
 
+    SSLSocket socket = null;
+
     try {
-      System.setProperty("java.protocol.handler.pkgs", 
-        "com.sun.net.ssl.internal.www.protocol");
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("SSLMessage-> Keystore: " + keystoreLocation + ":" + keystorePassword);
+      SSLSocketFactory factory;
+      if (keystoreLocation != null && keystorePassword != null) {
+        System.setProperty("java.protocol.handler.pkgs",
+            "com.sun.net.ssl.internal.www.protocol");
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("SSLMessage-> Keystore: " + keystoreLocation + ":" + keystorePassword);
+        }
+
+        char[] passphrase = keystorePassword.toCharArray();
+        KeyStore keyStore = KeyStore.getInstance("JKS");
+        keyStore.load(new FileInputStream(keystoreLocation), passphrase);
+
+        if (keyStore.containsAlias(keystoreAlias) == false) {
+          System.out.println("Cannot locate identity: local private key not found.");
+        }
+
+        //Holds this peer's private key
+        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+        keyManagerFactory.init(keyStore, passphrase);
+        KeyManager[] arKeyManager = keyManagerFactory.getKeyManagers();
+
+        //Holds other peers' certificates
+        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+        trustManagerFactory.init(keyStore);
+        TrustManager[] arTrustManager = trustManagerFactory.getTrustManagers();
+
+        SSLContext sslContext = SSLContext.getInstance("SSL");
+        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+        sslContext.init(arKeyManager, arTrustManager, secureRandom);
+
+        factory = sslContext.getSocketFactory();
+      } else {
+        factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
       }
-      
-      char[] passphrase = keystorePassword.toCharArray();
-      KeyStore keyStore = KeyStore.getInstance("JKS");
-      keyStore.load(new FileInputStream(keystoreLocation), passphrase);
-      
-      if (keyStore.containsAlias("aspcfs") == false) {
-        System.out.println("Cannot locate identity: local private key not found.");
-      }
 
-      //Holds this peer's private key
-      KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
-      keyManagerFactory.init(keyStore, passphrase);
-      KeyManager[] arKeyManager = keyManagerFactory.getKeyManagers();
-
-      
-      //Holds other peers' certificates
-      TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
-      trustManagerFactory.init(keyStore);
-      TrustManager[] arTrustManager = trustManagerFactory.getTrustManagers();
-
-      SSLContext sslContext = SSLContext.getInstance("SSL");
-      SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-      sslContext.init(arKeyManager, arTrustManager, secureRandom);
-
-      SSLSocketFactory factory = sslContext.getSocketFactory();
-      
-      /* SSLSocketFactory factory =
-          (SSLSocketFactory) SSLSocketFactory.getDefault(); */
       if (System.getProperty("DEBUG") != null) {
         System.out.println("SSLMessage-> Opening SSLSocket");
       }
-      SSLSocket socket = (SSLSocket) factory.createSocket(url, port);
+      socket = (SSLSocket) factory.createSocket(url, port);
+      socket.setSoTimeout(30000);
       socket.startHandshake();
       if (System.getProperty("DEBUG") != null) {
         System.out.println("SSLMessage-> Sending Data");
@@ -122,25 +197,39 @@ public class SSLMessage {
       out.println();
       out.flush();
 
-      //Receive response
-      /*
-       *  BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-       *  String inputLine;
-       *  while ((inputLine = in.readLine()) != null && inputLine.indexOf("") == -1) {
-       *  System.out.println(inputLine);
-       *  }
-       *  if (inputLine != null) {
-       *  System.out.println(inputLine);
-       *  }
-       *  in.close();
-       */
-      out.close();
+      //Receive response - will timeout if server doesn't close connection
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("SSLMessage-> Receiving Data");
+      }
+      BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      String inputLine;
+      while ((inputLine = in.readLine()) != null) {
+        appendResponseLine(inputLine);
+      }
       socket.close();
+      return 0;
+    } catch (java.net.SocketTimeoutException toe) {
+      if (socket != null) {
+        socket.close();
+      }
       return 0;
     } catch (IOException io) {
       io.printStackTrace(System.out);
       return 1;
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  in  Description of Parameter
+   */
+  private void appendResponseLine(String in) {
+    if (response == null) {
+      response = new StringBuffer();
+    }
+    response.append(in + System.getProperty("line.separator"));
   }
 }
 

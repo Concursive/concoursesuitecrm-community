@@ -170,7 +170,7 @@ public class ExternalHttpRequest {
     BufferedReader inStream = new BufferedReader(input);
     String inputLine;
     while ((inputLine = inStream.readLine()) != null) {
-      htmlOutput.append(inputLine + "\r\n");
+      htmlOutput.append(inputLine + System.getProperty("line.separator"));
     }
     inStream.close();
   }

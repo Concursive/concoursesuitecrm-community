@@ -9,6 +9,10 @@ import java.util.*;
  *  Taken from Core Servlets and JavaServer Pages http://www.coreservlets.com/.
  *  &copy; 2000 Marty Hall; may be freely used or adapted. <P>
  *
+ *  The ConnectionPool class can either be configured once so that all
+ *  calls to getConnection() use the same database URL, or a ConnectionElement
+ *  can be supplied to request a specic database.<P>
+ *
  *  Store busy connections with a connection key and conn element value
  *  .free(connection) removes the connection from busy and then puts it on the
  *  avail list with a new conn element. <P>
@@ -175,11 +179,15 @@ public class ConnectionPool implements Runnable {
   public void setMaxConnections(int tmp) {
     this.maxConnections = tmp;
   }
+  
+  public void setRequireParameters(boolean tmp) {
+    this.requireParameters = tmp;
+  }
 
 
   /**
    *  Gets the Connection attribute of the ConnectionPool object when the
-   *  ConnectionPool was created with a default connection
+   *  ConnectionPool was created with default connection information.
    *
    *@return                   The Connection value
    *@exception  SQLException  Description of Exception
@@ -190,6 +198,7 @@ public class ConnectionPool implements Runnable {
       throw new SQLException("Connection information not specified and no default exists");
     } else {
       ConnectionElement thisElement = new ConnectionElement(url, username, password);
+      thisElement.setDriver(driver);
       return (getConnection(thisElement));
     }
   }
