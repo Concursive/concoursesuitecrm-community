@@ -23,7 +23,8 @@ import org.xml.sax.*;
  *@version    $Id$
  */
 public class Zlib {
-
+  public static final String CRLF = System.getProperty("line.separator");
+  
   private Key key = null;
   private String keyText = null;
   private String nameFirst = null;
@@ -375,17 +376,17 @@ public class Zlib {
     String theCode = getCode();
     SMTPMessage mail = new SMTPMessage();
     mail.setHost("127.0.0.1");
-    mail.setType("text/html");
+    mail.setType("text/plain");
     mail.addTo(email);
     mail.setFrom("Dark Horse CRM Registration <registration@darkhorsecrm.com>");
     mail.addReplyTo("registration@darkhorsecrm.com");
     mail.setSubject("Dark Horse CRM Registration");
     mail.setBody(
-        "Thank you for your interest in Dark Horse CRM.<br>" +
-        "<br>" +
-        "Paste the complete registation code that follows into the Dark Horse CRM license validation field:<br>" +
-        "<br>" +
-        "&lt;license&gt;" + theCode + "&lt;/license&gt;");
+        "Thank you for your interest in Dark Horse CRM." + CRLF +
+        CRLF +
+        "Paste the complete registation code that follows into the Dark Horse CRM license validation field:" + CRLF +
+        CRLF +
+        "<license>" + theCode + "</license>" + CRLF);
     if (mail.send() == 2) {
       mailError = mail.getErrorMsg();
       return false;
