@@ -248,7 +248,7 @@ CREATE TABLE contact (
   primary_contact BOOLEAN DEFAULT false,
   employee boolean NOT NULL DEFAULT false,
   personal boolean NOT NULL DEFAULT false,
-  org_name VARCHAR(80)
+  org_name VARCHAR(255)
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" USING btree ("user_id");

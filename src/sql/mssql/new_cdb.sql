@@ -242,7 +242,7 @@ CREATE TABLE contact (
   primary_contact BIT DEFAULT 0,
   employee BIT DEFAULT 0,
   personal BIT DEFAULT 0,
-  org_name VARCHAR(80)
+  org_name VARCHAR(255)
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" ("user_id");
