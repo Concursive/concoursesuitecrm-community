@@ -97,7 +97,7 @@
   <tr>
     <td valign="top" width="100%">
 <!-- The module goes here -->
-<% String includeModule = (String) request.getAttribute("IncludeModule"); %>          
+<% String includeModule = (String) request.getAttribute("IncludeModule"); %>
 <jsp:include page="<%= includeModule %>" flush="true"/>
 <!-- End module -->
     </td>

@@ -333,6 +333,7 @@
   <menu>
     <action name="TroubleTickets"/>
     <action name="TroubleTicketTasks"/>
+    <action name="TroubleTicketsFolders"/>
     <action name="TroubleTicketsDocuments"/>
     <page title="Tickets"/>
     <permission value="tickets-view"/>

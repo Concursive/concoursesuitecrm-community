@@ -33,7 +33,8 @@ public final class Constants {
   //Folders
   public final static int FOLDERS_ACCOUNTS = 1;
   public final static int FOLDERS_CONTACTS = 2;
-
+  public final static int FOLDERS_TICKETS = 11072003;
+  
   //Documents (Migrate the unsorted to this format)
   public final static int DOCUMENTS_ACCOUNTS = 1;
   public final static int DOCUMENTS_CONTACTS = 2;

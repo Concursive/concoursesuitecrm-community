@@ -828,6 +828,16 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
+  <action name="TroubleTicketsFolders" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketsFolders">
+    <forward name="FieldRecordListOK" resource="/troubletickets/troubletickets_fields_list.jsp" layout="nav"/>
+    <forward name="AddFolderRecordOK" resource="/troubletickets/troubletickets_fields_add.jsp" layout="nav"/>
+    <forward name="FieldsEmptyOK" resource="/troubletickets/troubletickets_nofields.jsp" layout="nav"/>
+    <forward name="FieldsOK" resource="/troubletickets/troubletickets_fields.jsp" layout="nav"/>
+    <forward name="ModifyFieldsOK" resource="/troubletickets/troubletickets_fields_modify.jsp" layout="nav"/>
+    <forward name="UpdateFieldsOK" resource="/troubletickets/troubletickets_fields.jsp" layout="nav"/>
+    <forward name="DeleteFieldsOK" resource="TroubleTickets.do?command=Fields"/>
+  </action>
+  <!-- End Ticket Module -->
   <!-- Reports Module -->
   <action name="Reports" class="org.aspcfs.modules.reports.actions.Reports">
     <forward name="ReportQueueOK" resource="/reports/reports_queue.jsp" layout="nav"/>
@@ -841,7 +851,7 @@
     <forward name="CancelReportOK" resource="/Reports.do?command=ViewQueue"/>
     <forward name="DeleteCriteriaOK" resource="/Reports.do?command=CriteriaList"/>
   </action>
-  <!-- Admin Module -->
+  <!-- Setup Module -->
   <action name="Admin" class="org.aspcfs.modules.admin.actions.Admin">
     <forward name="HomeOK" resource="/admin/admin.jsp" layout="nav"/>
     <forward name="ConfigurationOK" resource="/admin/admin_configuration.jsp" layout="nav"/>

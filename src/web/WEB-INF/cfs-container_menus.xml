@@ -221,6 +221,11 @@
       <permission value="tickets-tickets-tasks-view"/>
       <link value="TroubleTicketTasks.do?command=List&amp;ticketId=${id}"/>
     </submenu>
+    <submenu name="folders">
+      <long_html value="Folders"/>
+      <permission value=""/>
+      <link value="TroubleTicketsFolders.do?command=Fields&amp;ticketId=${id}"/>
+    </submenu>
     <submenu name="documents">
       <long_html value="Documents"/>
       <permission value=""/>
