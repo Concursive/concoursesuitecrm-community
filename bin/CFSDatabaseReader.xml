@@ -156,7 +156,7 @@
       <property lookup="account">accountLink</property>
       <property lookup="contact">contactLink</property>
       <property>closeDate</property>
-      <property>closeProbPercent</property>
+      <property alias="closeProb">closeProbPercent</property>
       <property>terms</property>
       <property>units</property>
       <property>low</property>
@@ -164,7 +164,7 @@
       <property>high</property>
       <property lookup="lookupStage">stage</property>
       <property>stageDate</property>
-      <property>commissionPercent</property>
+      <property alias="commission">commissionPercent</property>
       <property>type</property>
       <property>alertDate</property>
       <property lookup="user">enteredBy</property>
