@@ -118,14 +118,31 @@ Campaign Details
   if (Campaign.isReadyToActivate()) {
 %>  
   <dhv:permission name="campaign-campaigns-edit">
-  <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="containerBack">
-      <td class="formLabel" colspan="4">
+      <td>
         <center>
           This campaign has been configured and can now be activated.<br>
           Once active, today's campaigns will begin processing in under 5 minutes and cannot be cancelled.<br>
           Verify the campaign then
           <a href="javascript:confirmForward('/CampaignManager.do?command=Activate&id=<%= Campaign.getId() %>&notify=true&modified=<%= Campaign.getModified() %>');"><font color="red">click to Activate</font></a>.
+        </center>
+      </td>
+    </tr>
+  </table>
+  &nbsp;
+  </dhv:permission>
+<%
+  } else {
+%>  
+  <dhv:permission name="campaign-campaigns-edit">
+  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+    <tr class="containerBack">
+      <td>
+        <center>
+          This campaign is not ready to be activated.<br>
+          Once all of the required items have been selected, 
+          the activate button will appear here.
         </center>
       </td>
     </tr>
