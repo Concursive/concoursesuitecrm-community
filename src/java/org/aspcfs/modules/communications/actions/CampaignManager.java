@@ -34,14 +34,6 @@ public final class CampaignManager extends CFSModule {
   public String executeCommandDefault(ActionContext context) {
     //Check to see if the user has a preference
     return "DefaultOK";
-    //Otherwise go to the specified module...
-    /*
-     *  if (hasPermission(context, "campaign-dashboard-view")) {
-     *  return executeCommandDashboard(context);
-     *  } else {
-     *  return executeCommandView(context);
-     *  }
-     */
   }
 
 
@@ -337,7 +329,8 @@ public final class CampaignManager extends CFSModule {
     }
 
     Exception errorMessage = null;
-    addModuleBean(context, "ManageCampaigns", "Build New Campaign");
+    //addModuleBean(context, "ManageCampaigns", "Build New Campaign");
+    addModuleBean(context, "Dashboard", "View Groups");
     Connection db = null;
 
     String campaignId = context.getRequest().getParameter("id");
@@ -347,10 +340,10 @@ public final class CampaignManager extends CFSModule {
       Campaign campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
 
-      SearchCriteriaListList sclList = new SearchCriteriaListList();
-      sclList.setCampaignId(campaign.getId());
-      sclList.buildList(db);
-      context.getRequest().setAttribute("sclList", sclList);
+      //SearchCriteriaListList sclList = new SearchCriteriaListList();
+      //sclList.setCampaignId(campaign.getId());
+      //sclList.buildList(db);
+      //context.getRequest().setAttribute("sclList", sclList);
 
     } catch (Exception e) {
       errorMessage = e;
@@ -393,9 +386,8 @@ public final class CampaignManager extends CFSModule {
 
       if ("true".equals(context.getRequest().getParameter("reset"))) {
         context.getSession().removeAttribute("CampaignCenterPreviewInfo");
-        this.deletePagedListInfo(context, "CampaignCenterPreviewInfo");
       }
-      
+      this.deletePagedListInfo(context, "CampaignCenterPreviewInfo");
       PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignCenterPreviewInfo");
       pagedListInfo.setLink("CampaignManager.do?command=PreviewGroups&id=" + campaign.getId() + "&scl=" + thisSCL.getId());
 
@@ -520,6 +512,146 @@ public final class CampaignManager extends CFSModule {
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
+  public String executeCommandPreviewMessage(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    addModuleBean(context, "Dashboard", "Build New Campaign");
+    Connection db = null;
+
+    String campaignId = context.getRequest().getParameter("id");
+
+    try {
+      db = this.getConnection(context);
+      Campaign campaign = new Campaign(db, campaignId);
+      Message thisMessage = new Message(db, campaign.getMessageId());
+      FileItemList documents = new FileItemList();
+      documents.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
+      documents.setLinkItemId(Integer.parseInt(campaignId));
+      documents.buildList(db);
+      context.getRequest().setAttribute("FileItemList", documents);
+      context.getRequest().setAttribute("Campaign", campaign);
+      context.getRequest().setAttribute("Message", thisMessage);
+
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("PreviewMessageOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandDownloadMessage(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-dashboard-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+
+    String itemId = (String) context.getRequest().getParameter("fid");
+    String version = (String) context.getRequest().getParameter("ver");
+    String campaignId = context.getRequest().getParameter("id");
+    FileItem thisItem = null;
+
+    Connection db = null;
+    int id = -1;
+    try {
+      db = getConnection(context);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS_DOCUMENTS);
+      if (version != null) {
+        thisItem.buildVersionList(db);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    //Start the download
+
+    try {
+      if (version == null) {
+        FileItem itemToDownload = thisItem;
+        itemToDownload.setEnteredBy(this.getUserId(context));
+        String filePath = this.getPath(context, "campaign", id) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        FileDownload fileDownload = new FileDownload();
+        fileDownload.setFullPath(filePath);
+        fileDownload.setDisplayName(itemToDownload.getClientFilename());
+        if (fileDownload.fileExists()) {
+          fileDownload.sendFile(context);
+          //Get a db connection now that the download is complete
+          db = getConnection(context);
+          itemToDownload.updateCounter(db);
+        } else {
+          db = null;
+          System.err.println("CampaignDocuments-> Trying to send a file that does not exist");
+          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          return (executeCommandView(context));
+        }
+      } else {
+        FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
+        itemToDownload.setEnteredBy(this.getUserId(context));
+        String filePath = this.getPath(context, "campaign", id) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        FileDownload fileDownload = new FileDownload();
+        fileDownload.setFullPath(filePath);
+        fileDownload.setDisplayName(itemToDownload.getClientFilename());
+        if (fileDownload.fileExists()) {
+          fileDownload.sendFile(context);
+          //Get a db connection now that the download is complete
+          db = getConnection(context);
+          itemToDownload.updateCounter(db);
+        } else {
+          db = null;
+          System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
+          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          return (executeCommandView(context));
+        }
+      }
+    } catch (java.net.SocketException se) {
+      //User either cancelled the download or lost connection
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(se.toString());
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+    } finally {
+      if (db != null) {
+        this.freeConnection(context, db);
+      }
+    }
+    if (errorMessage == null) {
+      return ("-none-");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      addModuleBean(context, "Dashboard", "");
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandViewAttachment(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-campaigns-view"))) {
@@ -601,6 +733,92 @@ public final class CampaignManager extends CFSModule {
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandPreviewSchedule(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    addModuleBean(context, "Dashboard", "Build New Campaign");
+    Connection db = null;
+
+    String campaignId = context.getRequest().getParameter("id");
+
+    try {
+      db = this.getConnection(context);
+      Campaign campaign = new Campaign(db, campaignId);
+      context.getRequest().setAttribute("Campaign", campaign);
+
+      LookupList deliveryList = new LookupList(db, "lookup_delivery_options");
+      context.getRequest().setAttribute("DeliveryList", deliveryList);
+
+      SearchCriteriaListList sclList = new SearchCriteriaListList();
+      sclList.setCampaignId(campaign.getId());
+      sclList.buildList(db);
+      context.getRequest().setAttribute("sclList", sclList);
+
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("PreviewScheduleOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandPreviewSurvey(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-surveys-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    addModuleBean(context, "ManageCampaigns", "Build New Campaign");
+    Connection db = null;
+    Survey thisSurvey = null;
+
+    try {
+      db = this.getConnection(context);
+      int surveyId = Integer.parseInt(context.getRequest().getParameter("id"));
+      if (surveyId > 0) {
+        thisSurvey = new Survey(db, surveyId);
+      } else {
+        thisSurvey = new Survey();
+      }
+      context.getRequest().setAttribute("Survey", thisSurvey);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("PreviewSurveyOK");
+    } else {
+      return ("PreviewSurveyMISSING");
     }
   }
 
@@ -1144,12 +1362,6 @@ public final class CampaignManager extends CFSModule {
 
     String id = context.getRequest().getParameter("id");
 
-    if ("true".equals(context.getRequest().getParameter("reset"))) {
-      context.getSession().removeAttribute("CampaignDashboardRecipientInfo");
-    }
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignDashboardRecipientInfo");
-    pagedListInfo.setLink("/CampaignManager.do?command=Details&id=" + id);
-
     try {
       db = this.getConnection(context);
       Campaign campaign = new Campaign(db, id);
@@ -1160,6 +1372,100 @@ public final class CampaignManager extends CFSModule {
         ActiveSurvey thisSurvey = new ActiveSurvey(db, surveyId);
         context.getRequest().setAttribute("ActiveSurvey", thisSurvey);
       }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      addModuleBean(context, "Dashboard", "Campaign: Details");
+      return ("DetailsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandViewResults(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    Connection db = null;
+    String id = context.getRequest().getParameter("id");
+    if ("true".equals(context.getRequest().getParameter("reset"))) {
+      context.getSession().removeAttribute("SurveyQuestionListInfo");
+    }
+    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "SurveyQuestionListInfo");
+    pagedListInfo.setLink("/CampaignManager.do?command=ViewResults&id=" + id);
+    try {
+      db = this.getConnection(context);
+      Campaign campaign = new Campaign(db, id);
+      context.getRequest().setAttribute("Campaign", campaign);
+
+      int surveyId = -1;
+      if ((surveyId = ActiveSurvey.getId(db, campaign.getId())) > 0) {
+        ActiveSurveyQuestionList thisList = new ActiveSurveyQuestionList();
+        thisList.setActiveSurveyId(surveyId);
+        thisList.setPagedListInfo(pagedListInfo);
+        thisList.buildList(db);
+        context.getRequest().setAttribute("SurveyQuestionList", thisList);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      addModuleBean(context, "Dashboard", "Campaign: Details");
+      return ("ResultsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandPreviewRecipients(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    Connection db = null;
+
+    String id = context.getRequest().getParameter("id");
+
+    if ("true".equals(context.getRequest().getParameter("reset"))) {
+      context.getSession().removeAttribute("CampaignDashboardRecipientInfo");
+    }
+    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignDashboardRecipientInfo");
+    pagedListInfo.setLink("/CampaignManager.do?command=PreviewRecipients&id=" + id);
+
+    try {
+      db = this.getConnection(context);
+      Campaign campaign = new Campaign(db, id);
+      context.getRequest().setAttribute("Campaign", campaign);
+
+      int surveyId = -1;
 
       RecipientList recipients = new RecipientList();
       recipients.setCampaignId(campaign.getId());
@@ -1176,7 +1482,7 @@ public final class CampaignManager extends CFSModule {
 
     if (errorMessage == null) {
       addModuleBean(context, "Dashboard", "Campaign: Details");
-      return ("DetailsOK");
+      return ("PreviewRecipientsOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

@@ -4,8 +4,10 @@ import com.darkhorseventures.cfsbase.CustomFieldCategory;
 import com.darkhorseventures.cfsbase.CustomField;
 import com.darkhorseventures.controller.*;
 import java.util.*;
+import java.sql.*;
 import com.darkhorseventures.utils.ObjectUtils;
 import com.darkhorseventures.utils.StringUtils;
+import org.theseus.actions.ActionContext;
 
 /**
  *  Represents an HTML Form in which items are dynamically added in code
@@ -25,6 +27,7 @@ public class CustomForm extends CustomFieldCategory {
   private StringBuffer jsFormCheck = new StringBuffer();
   private StringBuffer jsTabCheck = new StringBuffer();
   private LinkedHashMap buttonList = new LinkedHashMap();
+  private ActionContext context = null;
 
 
 
@@ -126,6 +129,26 @@ public class CustomForm extends CustomFieldCategory {
         jScripts.append("<script language=\"JavaScript\" TYPE=\"text/javascript\" SRC=\"/javascript/" + st.nextToken() + "\"></script>");
       }
     }
+  }
+
+
+  /**
+   *  Sets the context attribute of the CustomForm object
+   *
+   *@param  context  The new context value
+   */
+  public void setContext(ActionContext context) {
+    this.context = context;
+  }
+
+
+  /**
+   *  Gets the context attribute of the CustomForm object
+   *
+   *@return    The context value
+   */
+  public ActionContext getContext() {
+    return context;
   }
 
 
@@ -354,10 +377,11 @@ public class CustomForm extends CustomFieldCategory {
    *  from the Survey object.<br>
    *  CustomForm heirarchy : tabs --> groups --> rows --> columns --> fields
    *
-   *@param  tmp  Description of the Parameter
-   *@return      Description of the Return Value
+   *@param  tmp      Object used for populating the form
+   *@param  db       Db connection m used for populating LookupLists
+   *@return          Description of the Return Value
    */
-  public int populate(Object tmp) {
+  public int populate(Connection db, Object tmp) throws SQLException{
     int updatedFields = 0;
     jsFormCheck = new StringBuffer();
     jsTabCheck = new StringBuffer();
@@ -407,6 +431,7 @@ public class CustomForm extends CustomFieldCategory {
                   } else {
                     thisField.setSelectedItemId(ObjectUtils.getParam(tmp, thisField.getName()));
                   }
+                  thisField.buildLookupList(db, this.getContext());
                 }
                 //Add required fields to javascript code... for this tab
                 if (this.getSelectedTabId() == thisTab.getId()) {

@@ -23,6 +23,7 @@ public class SurveyAnswer {
   private String textAns = "";
   private int responseId = -1;
   private ArrayList itemList = null;
+  private int contactId = -1;
 
 
   /**
@@ -35,11 +36,10 @@ public class SurveyAnswer {
    *  Constructor for the SurveyAnswer object
    *
    *@param  rs                Description of the Parameter
-   *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public SurveyAnswer(Connection db, ResultSet rs) throws SQLException {
-    buildRecord(db, rs);
+  public SurveyAnswer(ResultSet rs) throws SQLException {
+    buildRecord(rs);
   }
 
 
@@ -60,7 +60,7 @@ public class SurveyAnswer {
     if (request.getParameter(question + "qans") != null) {
       this.setQuantAns(request.getParameter(question + "qans"));
     }
-    
+
     if (request.getParameter(question + "text") != null) {
       this.setTextAns(request.getParameter(question + "text"));
     }
@@ -127,6 +127,26 @@ public class SurveyAnswer {
 
 
   /**
+   *  Sets the contactId attribute of the SurveyAnswer object
+   *
+   *@param  contactId  The new contactId value
+   */
+  public void setContactId(int contactId) {
+    this.contactId = contactId;
+  }
+
+
+  /**
+   *  Gets the contactId attribute of the SurveyAnswer object
+   *
+   *@return    The contactId value
+   */
+  public int getContactId() {
+    return contactId;
+  }
+
+
+  /**
    *  Sets the id attribute of the SurveyAnswer object
    *
    *@param  id  The new id value
@@ -140,17 +160,15 @@ public class SurveyAnswer {
    *  Description of the Method
    *
    *@param  rs                Description of the Parameter
-   *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  protected void buildRecord(Connection db, ResultSet rs) throws SQLException {
+  protected void buildRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("answer_id"));
     this.setResponseId(rs.getInt("response_id"));
     this.setQuestionId(rs.getInt("question_id"));
     this.setComments(rs.getString("comments"));
     this.setQuantAns(rs.getInt("quant_ans"));
     this.setTextAns(rs.getString("text_ans"));
-    buildItems(db, id);
   }
 
 
@@ -186,6 +204,31 @@ public class SurveyAnswer {
 
 
   /**
+   *  Builds the contactId of the person who responded to this Question
+   *
+   *@param  db                The new contactId value
+   *@exception  SQLException  Description of the Exception
+   */
+  public void setContactId(Connection db) throws SQLException {
+    try {
+      PreparedStatement pst = db.prepareStatement(
+          "SELECT sr.contact_id as contactid " +
+          "FROM active_survey_answers sa, active_survey_responses sr " +
+          "WHERE sa.answer_id = ? AND (sa.response_id = sr.response_id) ");
+      pst.setInt(1, this.getId());
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        setContactId(rs.getInt("contactid"));
+      }
+      rs.close();
+      pst.close();
+    } catch (SQLException e) {
+      throw new SQLException(e.getMessage());
+    }
+  }
+
+
+  /**
    *  Constructor for the SurveyAnswer object
    *
    *@param  db                Description of the Parameter
@@ -207,7 +250,7 @@ public class SurveyAnswer {
     pst.setInt(1, passedId);
     rs = pst.executeQuery();
     if (rs.next()) {
-      buildRecord(db, rs);
+      buildRecord(rs);
     } else {
       rs.close();
       pst.close();
@@ -215,6 +258,7 @@ public class SurveyAnswer {
     }
     rs.close();
     pst.close();
+    buildItems(db, passedId);
   }
 
 

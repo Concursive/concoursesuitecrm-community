@@ -433,7 +433,6 @@
     <forward name="AddOK" resource="/accounts_opportunities_add.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/accounts_opportunities_modify.jsp" layout="nav"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
-    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
   <action name="AccountTickets" class="com.darkhorseventures.cfsmodule.AccountTickets">
     <bean name="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>

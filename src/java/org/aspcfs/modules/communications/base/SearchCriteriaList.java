@@ -535,12 +535,24 @@ public class SearchCriteriaList extends HashMap {
   public String getHtmlSelect(String selectName) {
     HtmlSelect selectList = new HtmlSelect();
     selectList.setSelectSize(10);
-    String fromString = "";
 
     if (this.getHtmlSelectIdName() != null) {
       selectList.setIdName(this.getHtmlSelectIdName());
     }
+    
+    LinkedHashMap criteriaList = getCriteriaTextArray();
+    Iterator i = criteriaList.keySet().iterator();
+    while (i.hasNext()) {
+       String key = (String)i.next();
+       selectList.addItem(key, (String)criteriaList.get(key));
+    }
+    return selectList.getHtml(selectName, -1);
+  }
 
+
+  public LinkedHashMap getCriteriaTextArray(){
+    String fromString = "";
+    LinkedHashMap criteriaList = new LinkedHashMap();
     Iterator i = this.keySet().iterator();
     while (i.hasNext()) {
       SearchCriteriaGroup thisGroup = (SearchCriteriaGroup) this.get(i.next());
@@ -587,13 +599,12 @@ public class SearchCriteriaList extends HashMap {
           valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText() + fromString;
         }
 
-        selectList.addItem(keyString, valueString);
+        criteriaList.put(keyString, valueString);
       }
     }
-    return selectList.getHtml(selectName, -1);
+    return criteriaList;
   }
-
-
+  
   /**
    *  Populate this object by querying its record in the database
    *

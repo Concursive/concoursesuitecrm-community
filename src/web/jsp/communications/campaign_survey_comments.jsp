@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="SurveyAnswerList" class="com.darkhorseventures.cfsbase.SurveyAnswerList" scope="request"/>
 <%@ include file="initPage.jsp" %>
@@ -6,7 +7,7 @@
 %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="2">
+    <td colspan="<%=openEnded?"2":"3"%>">
       <strong>Survey Comments</strong>
     </td>
   </tr>
@@ -16,8 +17,11 @@
         Answer Provided
       </td>
     <%}%>
-    <td width="100%" valign="center" align="left">
+    <td width="85%" valign="center" align="left">
       Comment Provided
+    </td>
+    <td valign="center" align="left">
+      User
     </td>
   </tr>
 <%    
@@ -32,17 +36,22 @@
 			}
       SurveyAnswer thisAnswer = (SurveyAnswer)i.next();
 %>      
-  <tr>
+  <tr class="row<%= rowid %>">
     <%if(!openEnded){%>
       <td valign="top" align="center" class="row<%= rowid %>" nowrap>
         <%=thisAnswer.getQuantAns()%>
       </td>
     <%}%>
     
-    <td class="row<%= rowid %>">
-      <%=toHtml(thisAnswer.getComments())%>
+      <td width="80%">
+        <%=toHtml(thisAnswer.getComments())%>
+      </td>
+      <td align="center" nowrap>
+        <dhv:username id="<%=thisAnswer.getContactId()%>"/>
+        
       </td>
     </tr>
+      
 <%
     }
   } else {%>  

@@ -278,6 +278,25 @@ public class SurveyQuestion {
 
 
   /**
+   *  Gets the typeString attribute of the SurveyQuestion object
+   *
+   *@return    The typeString value
+   */
+  public String getTypeString() {
+    if (type == SurveyQuestion.OPEN_ENDED) {
+      return "Open Ended";
+    } else if (type == SurveyQuestion.QUANT_NOCOMMENTS) {
+      return "Quantitative";
+    } else if (type == SurveyQuestion.QUANT_COMMENTS) {
+      return "Quantitative with Comments";
+    } else if (type == SurveyQuestion.ITEMLIST) {
+      return "Item List";
+    }
+    return "-";
+  }
+
+
+  /**
    *  Sets the surveyId attribute of the SurveyQuestion object
    *
    *@param  tmp  The new surveyId value
@@ -307,17 +326,17 @@ public class SurveyQuestion {
   public void insert(Connection db, int surveyId) throws SQLException {
     try {
       db.setAutoCommit(false);
-      
+
       int i = 0;
       //calculate the next position for this question
       PreparedStatement pst = db.prepareStatement(
           "SELECT max(position) as maxPosition " +
           "FROM survey_questions " +
           "WHERE survey_id = ? ");
-      pst.setInt(++i,surveyId);
+      pst.setInt(++i, surveyId);
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
-         position = rs.getInt("maxPosition") + 1;
+        position = rs.getInt("maxPosition") + 1;
       }
       pst.close();
       rs.close();
@@ -382,8 +401,8 @@ public class SurveyQuestion {
   public void update(Connection db, int thisSurveyId) throws SQLException {
     try {
       db.setAutoCommit(false);
-      
-      checkDependency(db,thisSurveyId);
+
+      ItemList.delete(db, this.getId());
       PreparedStatement pst = db.prepareStatement(
           "UPDATE survey_questions " +
           "SET survey_id = ?, type = ?, description = ?, required = ?, position = ? " +
@@ -399,11 +418,11 @@ public class SurveyQuestion {
       pst.close();
 
       if (this.getType() == ITEMLIST) {
-          Iterator y = this.getItemList().iterator();
-          while (y.hasNext()) {
-            Item thisItem = (Item) y.next();
-            thisItem.insert(db, this.getId());
-          }
+        Iterator y = this.getItemList().iterator();
+        while (y.hasNext()) {
+          Item thisItem = (Item) y.next();
+          thisItem.insert(db, this.getId());
+        }
       }
     } catch (SQLException e) {
       db.rollback();
@@ -411,52 +430,6 @@ public class SurveyQuestion {
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
-    }
-  }
-
-
-  /**
-   *  Check for any items related to question and if any delete them
-   *
-   *@param  db                Description of the Parameter
-   *@param  thisSurveyId      Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  private void checkDependency(Connection db, int thisSurveyId) throws SQLException {
-    boolean commit = true;
-    try {
-      commit = db.getAutoCommit();
-      if (commit) {
-        db.setAutoCommit(false);
-      }
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(
-          "SELECT type " +
-          "FROM survey_questions " +
-          "WHERE survey_id = ? AND question_id = ? ");
-
-      pst.setInt(++i, thisSurveyId);
-      pst.setInt(++i, this.getId());
-      pst.close();
-      ResultSet rs = pst.executeQuery();
-      if (rs.next()) {
-        if (rs.getInt("type") == ITEMLIST) {
-          ItemList.delete(db, this.getId());
-        }
-      }
-      rs.close();
-      if (commit) {
-        db.commit();
-      }
-    } catch (SQLException e) {
-      if (commit) {
-        db.rollback();
-      }
-      throw new SQLException(e.toString());
-    } finally {
-      if (commit) {
-        db.setAutoCommit(true);
-      }
     }
   }
 
@@ -478,7 +451,7 @@ public class SurveyQuestion {
         db.setAutoCommit(false);
       }
       //check for related items
-      checkDependency(db, thisSurveyId);
+      ItemList.delete(db, this.getId());
 
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM survey_questions " +

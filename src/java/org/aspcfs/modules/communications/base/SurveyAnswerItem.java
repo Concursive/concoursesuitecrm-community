@@ -222,8 +222,6 @@ public class SurveyAnswerItem {
     int i = 0;
     try {
       PreparedStatement pst = null;
-      //TODO: eliminate race condition
-
       i = 0;
       pst = db.prepareStatement(
           "UPDATE active_survey_answer_itemavg " +

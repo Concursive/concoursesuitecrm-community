@@ -266,17 +266,22 @@ public class SurveyQuestionList extends ArrayList {
     ResultSet rs = queryList(db, pst);
     while (rs.next()) {
       SurveyQuestion thisItem = this.getObject(rs);
-      if (thisItem.getType() == SurveyQuestion.ITEMLIST) {
-        ItemList itemList = new ItemList();
-        itemList.setQuestionId(thisItem.getId());
-        itemList.buildList(db);
-        thisItem.setItemList(itemList);
-      }
       this.add(thisItem);
     }
     rs.close();
     if (pst != null) {
       pst.close();
+    }
+    //build items
+    Iterator thisList = this.iterator();
+    while (thisList.hasNext()) {
+      SurveyQuestion thisQuestion = (SurveyQuestion) thisList.next();
+      if (thisQuestion.getType() == SurveyQuestion.ITEMLIST) {
+        ItemList itemList = new ItemList();
+        itemList.setQuestionId(thisQuestion.getId());
+        itemList.buildList(db);
+        thisQuestion.setItemList(itemList);
+      }
     }
   }
 

@@ -2,8 +2,7 @@ package com.darkhorseventures.cfsbase;
 
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  *  Description of the Class
@@ -23,6 +22,7 @@ public class ActiveSurveyQuestion {
   private ActiveSurveyQuestionItemList itemList = null;
 
   private ArrayList responseTotals = new ArrayList();
+  LinkedHashMap comments = null;
 
 
   /**
@@ -73,6 +73,26 @@ public class ActiveSurveyQuestion {
    */
   public String getDescription() {
     return description;
+  }
+
+
+  /**
+   *  Sets the comments attribute of the ActiveSurveyQuestion object
+   *
+   *@param  comments  The new comments value
+   */
+  public void setComments(LinkedHashMap comments) {
+    this.comments = comments;
+  }
+
+
+  /**
+   *  Gets the comments attribute of the ActiveSurveyQuestion object
+   *
+   *@return    The comments value
+   */
+  public LinkedHashMap getComments() {
+    return comments;
   }
 
 
@@ -183,6 +203,25 @@ public class ActiveSurveyQuestion {
    */
   public int getType() {
     return type;
+  }
+
+
+  /**
+   *  Gets the typeString attribute of the ActiveSurveyQuestion object
+   *
+   *@return    The typeString value
+   */
+  public String getTypeString() {
+    if (type == SurveyQuestion.OPEN_ENDED) {
+      return "Open Ended";
+    } else if (type == SurveyQuestion.QUANT_NOCOMMENTS) {
+      return "Quantitative";
+    } else if (type == SurveyQuestion.QUANT_COMMENTS) {
+      return "Quantitative with Comments";
+    } else if (type == SurveyQuestion.ITEMLIST) {
+      return "Item List";
+    }
+    return "-";
   }
 
 
@@ -350,6 +389,58 @@ public class ActiveSurveyQuestion {
         }
       }
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  numberOfComments  Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildComments(Connection db, int numberOfComments) throws SQLException {
+    PreparedStatement pst = null;
+    comments = new LinkedHashMap();
+    int count = numberOfComments;
+    ResultSet rs = queryAnswerList(db, pst);
+    while (rs.next() && count > 0) {
+      ArrayList commentList = null;
+      Integer contactId = new Integer(rs.getInt("contactid"));
+      if (comments.containsKey(contactId)) {
+        commentList = (ArrayList) comments.get(contactId);
+      } else {
+        commentList = new ArrayList();
+        comments.put(contactId, commentList);
+      }
+      commentList.add(rs.getString("comments"));
+      count--;
+    }
+    rs.close();
+    if (pst != null) {
+      pst.close();
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public ResultSet queryAnswerList(Connection db, PreparedStatement pst) throws SQLException {
+    pst = db.prepareStatement(
+        "SELECT sa.comments as comments, sr.contact_id as contactid " +
+        "FROM active_survey_answers sa, active_survey_responses sr " +
+        "WHERE question_id = ? AND (sa.response_id = sr.response_id) AND sa.comments <> '' " +
+        "ORDER BY sr.entered DESC ");
+    int i = 0;
+    pst.setInt(++i, this.getId());
+    ResultSet rs = pst.executeQuery();
+    return rs;
   }
 
 

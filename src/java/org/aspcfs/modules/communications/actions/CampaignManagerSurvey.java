@@ -86,20 +86,27 @@ public final class CampaignManagerSurvey extends CFSModule {
     try {
       int pg = 0;
       int updateResult = 0;
+      Exception errorMessage = null;
+      Connection db = null;
       if (context.getRequest().getParameter("pg") != null) {
         pg = Integer.parseInt(context.getRequest().getParameter("pg"));
       }
 
-      CustomForm thisForm = getDynamicForm(context, "survey");
-      thisForm.setSelectedTabId(pg);
-
-      Survey thisSurvey = (Survey) context.getFormBean();
-      thisSurvey.setRequestItems(context.getRequest());
-      updateResult = thisForm.populate(thisSurvey);
-
-      context.getRequest().setAttribute("Survey", thisSurvey);
-      context.getRequest().setAttribute("CustomFormInfo", thisForm);
-
+      try {
+        db = this.getConnection(context);
+        CustomForm thisForm = getDynamicForm(context, "survey");
+        thisForm.setSelectedTabId(pg);
+        Survey thisSurvey = (Survey) context.getFormBean();
+        thisSurvey.setRequestItems(context.getRequest());
+        thisForm.setContext(context);
+        updateResult = thisForm.populate(db, thisSurvey);
+        context.getRequest().setAttribute("Survey", thisSurvey);
+        context.getRequest().setAttribute("CustomFormInfo", thisForm);
+      } catch (Exception e) {
+        errorMessage = e;
+      } finally {
+        this.freeConnection(context, db);
+      }
       String submenu = context.getRequest().getParameter("submenu");
       if (submenu == null) {
         submenu = (String) context.getRequest().getAttribute("submenu");
@@ -190,7 +197,8 @@ public final class CampaignManagerSurvey extends CFSModule {
       }
       thisSurvey.getQuestions().setQuestionId(questionId);
       thisForm.setSelectedTabId(pg);
-      thisForm.populate(thisSurvey);
+      thisForm.setContext(context);
+      thisForm.populate(db, thisSurvey);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -508,7 +516,8 @@ public final class CampaignManagerSurvey extends CFSModule {
       db = this.getConnection(context);
       thisSurvey = new Survey(db, ((Survey) context.getRequest().getAttribute("SurveyDetails")).getId());
       thisForm.setSelectedTabId(pg);
-      thisForm.populate(thisSurvey);
+      thisForm.setContext(context);
+      thisForm.populate(db, thisSurvey);
     } catch (Exception e) {
       errorMessage = e;
     } finally {

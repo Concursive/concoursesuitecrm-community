@@ -66,6 +66,7 @@ public class RecipientList extends Vector {
     sqlCount.append(
       "SELECT COUNT(*) AS recordcount " +
       "FROM scheduled_recipient r " +
+      "LEFT JOIN contact c ON (r.contact_id = c.contact_id) " +
       "WHERE r.id > -1 ");
         
     createFilter(sqlFilter);

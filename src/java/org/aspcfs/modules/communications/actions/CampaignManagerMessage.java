@@ -378,9 +378,9 @@ public final class CampaignManagerMessage extends CFSModule {
     }
 
     if (errorMessage == null) {
-      return ("PreviewOK");
-    } else {
-      return ("PreviewOK");
+	 return "PreviewOK";
+      } else {
+	 return "PreviewOK";
     }
   }
 
@@ -435,49 +435,5 @@ public final class CampaignManagerMessage extends CFSModule {
       return ("SystemError");
     }
   }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandPreviewSurvey(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-surveys-view"))) {
-      return ("PermissionError");
-    }
-
-    Exception errorMessage = null;
-    addModuleBean(context, "ManageCampaigns", "Build New Campaign");
-    Connection db = null;
-
-    try {
-      CustomForm thisForm = getDynamicForm(context, "surveyview");
-      String surveyId = context.getRequest().getParameter("id");
-      db = this.getConnection(context);
-      Survey thisSurvey = null;
-      if (Integer.parseInt(surveyId) > 0) {
-        thisSurvey = new Survey(db, Integer.parseInt(surveyId));
-      } else {
-        thisSurvey = new Survey();
-      }
-      thisForm.populate(thisSurvey);
-      context.getRequest().setAttribute("CustomFormInfo", thisForm);
-      context.getRequest().setAttribute("Survey", thisSurvey);
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
-      return ("PreviewSurveyOK");
-    } else {
-      return ("PreviewSurveyMISSING");
-    }
-  }
-
 }
 

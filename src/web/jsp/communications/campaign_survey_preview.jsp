@@ -45,6 +45,13 @@ function validateRadio (field) {
 <body>
 &nbsp;<br>
 &nbsp;<br>
+<% 
+  boolean surveyBlank = false;
+  if(request.getParameter("preview") != null && Integer.parseInt(request.getParameter("preview")) == 0){
+    surveyBlank = true;
+  }
+%> 
+<dhv:evaluate exp="<%=!surveyBlank%>">
 <center>
 <table cellpadding="4" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="row1">
@@ -148,10 +155,10 @@ function validateRadio (field) {
       <%}%>
     </table><br>
     <input type=hidden name="id" value="<%=request.getParameter("id")%>">
-    <input type="submit" value="Submit Survey">
-<br>
+    <input type="submit" value="Submit Survey"><br>
     </form>
   </center>
+</dhv:evaluate>
  </body>
 </html>
 

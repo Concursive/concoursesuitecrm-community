@@ -28,6 +28,10 @@ public class SurveyAnswerList extends Vector {
    */
   public SurveyAnswerList() { }
 
+  public SurveyAnswerList(Connection db, int questionId) throws SQLException {
+    this.questionId = questionId;
+    buildList(db);
+  }
 
   /**
    *  Constructor for the SurveyAnswerList object
@@ -104,6 +108,12 @@ public class SurveyAnswerList extends Vector {
     if (pst != null) {
       pst.close();
     }
+    Iterator ans = this.iterator();
+    while (ans.hasNext()) {
+      SurveyAnswer thisAnswer = (SurveyAnswer) ans.next();
+      thisAnswer.setContactId(db);
+      thisAnswer.buildItems(db, thisAnswer.getId());
+    }
   }
 
 
@@ -116,7 +126,8 @@ public class SurveyAnswerList extends Vector {
    *@exception  SQLException  Description of the Exception
    */
   public SurveyAnswer getObject(Connection db, ResultSet rs) throws SQLException {
-    SurveyAnswer thisAnswer = new SurveyAnswer(db, rs);
+    SurveyAnswer thisAnswer = new SurveyAnswer(rs);
+    thisAnswer.buildItems(db, thisAnswer.getId());
     return thisAnswer;
   }
 
@@ -145,7 +156,6 @@ public class SurveyAnswerList extends Vector {
     sql.append("ORDER BY response_id, question_id ");
     pst = db.prepareStatement(sql.toString());
     pst.setInt(1, questionId);
-    System.out.println("SurveyAnswerList -- > QueryList " + pst.toString());
     ResultSet rs = pst.executeQuery();
     return rs;
   }

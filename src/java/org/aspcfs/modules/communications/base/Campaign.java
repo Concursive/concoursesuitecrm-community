@@ -60,6 +60,7 @@ public class Campaign extends GenericBean {
   private String deliveryName = null;
   private ContactList contactList = null;
   private int recipientCount = -1;
+  private int responseCount = -1;
   private int sentCount = -1;
   private String messageName = "";
   private int surveyId = -1;
@@ -68,6 +69,9 @@ public class Campaign extends GenericBean {
   private int groupCount = -1;
   private int approvedBy = -1;
   private java.sql.Timestamp approvalDate = null;
+  private LinkedHashMap groups = null;
+  private java.sql.Timestamp lastResponse = null;
+
 
   /**
    *  Constructor for the Campaign object
@@ -134,6 +138,60 @@ public class Campaign extends GenericBean {
 
 
   /**
+   *  Sets the groups attribute of the Campaign object
+   *
+   *@param  groups  The new groups value
+   */
+  public void setGroups(LinkedHashMap groups) {
+    this.groups = groups;
+  }
+
+
+  /**
+   *  Sets the responseCount attribute of the Campaign object
+   *
+   *@param  responseCount  The new responseCount value
+   */
+  public void setResponseCount(int responseCount) {
+    this.responseCount = responseCount;
+  }
+
+public void setLastResponse(java.sql.Timestamp lastResponse) {
+	this.lastResponse = lastResponse;
+}
+public java.sql.Timestamp getLastResponse() {
+	return lastResponse;
+}
+public String getLastResponseString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(lastResponse);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+
+  /**
+   *  Gets the responseCount attribute of the Campaign object
+   *
+   *@return    The responseCount value
+   */
+  public int getResponseCount() {
+    return responseCount;
+  }
+
+
+  /**
+   *  Gets the groups attribute of the Campaign object
+   *
+   *@return    The groups value
+   */
+  public LinkedHashMap getGroups() {
+    return groups;
+  }
+
+
+  /**
    *  Constructor for the Campaign object
    *
    *@param  db                Description of Parameter
@@ -193,9 +251,12 @@ public class Campaign extends GenericBean {
     pst.close();
 
     buildRecipientCount(db);
+    buildResponseCount(db);
+    buildLastResponse(db);
     buildSurveyId(db);
     setGroupList(db);
     buildFileCount(db);
+    buildGroups(db);
   }
 
 
@@ -324,7 +385,8 @@ public class Campaign extends GenericBean {
   public void setId(int tmp) {
     this.id = tmp;
   }
-  
+
+
   /**
    *  Sets the id attribute of the Campaign object
    *
@@ -354,15 +416,58 @@ public class Campaign extends GenericBean {
    *@since       1.1
    */
   public void setActive(String tmp) {
-    active = DatabaseUtils.parseBoolean(tmp);;
+    active = DatabaseUtils.parseBoolean(tmp);
+    ;
   }
 
-  public void setReplyTo(String tmp) { this.replyTo = tmp; }
-  public void setSubject(String tmp) { this.subject = tmp; }
-  public void setMessage(String tmp) { this.message = tmp; }
-  public void setSendMethodId(int tmp) { this.sendMethodId = tmp; }
-  public void setSendMethodId(String tmp) { 
-    this.sendMethodId = Integer.parseInt(tmp); 
+
+  /**
+   *  Sets the replyTo attribute of the Campaign object
+   *
+   *@param  tmp  The new replyTo value
+   */
+  public void setReplyTo(String tmp) {
+    this.replyTo = tmp;
+  }
+
+
+  /**
+   *  Sets the subject attribute of the Campaign object
+   *
+   *@param  tmp  The new subject value
+   */
+  public void setSubject(String tmp) {
+    this.subject = tmp;
+  }
+
+
+  /**
+   *  Sets the message attribute of the Campaign object
+   *
+   *@param  tmp  The new message value
+   */
+  public void setMessage(String tmp) {
+    this.message = tmp;
+  }
+
+
+  /**
+   *  Sets the sendMethodId attribute of the Campaign object
+   *
+   *@param  tmp  The new sendMethodId value
+   */
+  public void setSendMethodId(int tmp) {
+    this.sendMethodId = tmp;
+  }
+
+
+  /**
+   *  Sets the sendMethodId attribute of the Campaign object
+   *
+   *@param  tmp  The new sendMethodId value
+   */
+  public void setSendMethodId(String tmp) {
+    this.sendMethodId = Integer.parseInt(tmp);
   }
 
 
@@ -545,12 +650,26 @@ public class Campaign extends GenericBean {
     this.activeDate = DateUtils.parseDateString(tmp);
   }
 
+
+  /**
+   *  Sets the inactiveDate attribute of the Campaign object
+   *
+   *@param  tmp  The new inactiveDate value
+   */
   public void setInactiveDate(java.sql.Date tmp) {
     this.inactiveDate = tmp;
   }
+
+
+  /**
+   *  Sets the inactiveDate attribute of the Campaign object
+   *
+   *@param  tmp  The new inactiveDate value
+   */
   public void setInactiveDate(String tmp) {
     this.inactiveDate = DateUtils.parseDateString(tmp);
   }
+
 
   /**
    *  Sets the Entered attribute of the Campaign object
@@ -1249,13 +1368,52 @@ public class Campaign extends GenericBean {
    */
   public void buildRecipientCount(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "SELECT count(id) " +
-      "FROM scheduled_recipient sr " +
-      "WHERE campaign_id = ? ");
+        "SELECT count(id) " +
+        "FROM scheduled_recipient sr " +
+        "WHERE campaign_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       this.setRecipientCount(rs.getInt(1));
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
+   *  Builds the total number of people who responded to the survey 
+   *  Note : counts a person only once.
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildResponseCount(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT distinct(sr.contact_id) " +
+        "FROM active_survey_responses sr, active_survey sa " +
+        "WHERE campaign_id = ? AND (sr.active_survey_id = sa.active_survey_id) ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
+    int count = 0;
+    while (rs.next()) {
+      count++;
+    }
+    rs.close();
+    pst.close();
+    this.setResponseCount(count);
+  }
+  
+  
+  public void buildLastResponse(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT max(sr.entered) as lastresponse " +
+        "FROM active_survey_responses sr, active_survey sa " +
+        "WHERE campaign_id = ? AND (sr.active_survey_id = sa.active_survey_id) ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
+    int count = 0;
+    if (rs.next()) {
+      this.setLastResponse(rs.getTimestamp("lastresponse"));
     }
     rs.close();
     pst.close();
@@ -1277,6 +1435,36 @@ public class Campaign extends GenericBean {
 
 
   /**
+   *  Builds all groups associated with the campaign.
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildGroups(Connection db) throws SQLException {
+    ArrayList criteriaList = null;
+    groups = new LinkedHashMap();
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT groupname, groupcriteria " +
+        "FROM active_campaign_groups " +
+        "WHERE campaign_id = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+      String groupName = rs.getString("groupName");
+      if (groups.containsKey(groupName)) {
+        criteriaList = (ArrayList) groups.get(groupName);
+      } else {
+        criteriaList = new ArrayList();
+        groups.put(groupName, criteriaList);
+      }
+      criteriaList.add(rs.getString("groupcriteria"));
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -1291,27 +1479,6 @@ public class Campaign extends GenericBean {
   }
 
 
-  /*
-   *  public void buildContactList(Connection db, String range) throws SQLException {
-   *  StringBuffer searchCriteriaText = new StringBuffer();
-   *  Statement st = db.createStatement();
-   *  ResultSet rs = st.executeQuery(
-   *  "SELECT s.field, s.operatorid, s.value " +
-   *  "FROM saved_criteriaelement s " +
-   *  "WHERE s.id IN ( " + range + " )");
-   *  while (rs.next()) {
-   *  searchCriteriaText.append(
-   *  rs.getString("field") + "|" +
-   *  rs.getInt("operatorid") + "|" +
-   *  rs.getString("value") + "^");
-   *  }
-   *  rs.close();
-   *  st.close();
-   *  SearchCriteriaList scl = new SearchCriteriaList(searchCriteriaText.toString());
-   *  contactList.setScl(scl);
-   *  contactList.buildList(db);
-   *  }
-   */
   /**
    *  Gets the ContactList attribute of the Campaign object
    *
@@ -1821,6 +1988,12 @@ public class Campaign extends GenericBean {
         //Lock in the message
         Message thisMessage = new Message(db, this.getMessageId());
 
+        //Lock in the groups & criteria
+        SearchCriteriaListList thisList = new SearchCriteriaListList();
+        thisList.setCampaignId(id);
+        thisList.buildList(db);
+        lockGroupCriteria(thisList, db);
+
         //Replace tags
         Template template = new Template();
         if (this.surveyId > -1) {
@@ -1871,6 +2044,36 @@ public class Campaign extends GenericBean {
       throw new SQLException(message.getMessage());
     }
     return resultCount;
+  }
+
+
+  /**
+   *  Makes a copy of the groups associated with this Campaign.
+   *
+   *@param  groups            Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  private void lockGroupCriteria(SearchCriteriaListList groups, Connection db) throws SQLException {
+    Iterator i = groups.iterator();
+    while (i.hasNext()) {
+      SearchCriteriaList thisList = (SearchCriteriaList) i.next();
+      HashMap thisArray = thisList.getCriteriaTextArray();
+      Iterator j = thisArray.keySet().iterator();
+      while (j.hasNext()) {
+        String criteria = (String) thisArray.get(j.next());
+        int k = 0;
+        PreparedStatement pst =
+            db.prepareStatement("INSERT INTO active_campaign_groups " +
+            "(campaign_id, groupname, groupcriteria )" +
+            "VALUES (?, ?, ?) ");
+        pst.setInt(++k, id);
+        pst.setString(++k, thisList.getGroupName());
+        pst.setString(++k, criteria);
+        pst.execute();
+        pst.close();
+      }
+    }
   }
 
 
@@ -2178,7 +2381,7 @@ public class Campaign extends GenericBean {
     subject = rs.getString("subject");
     message = rs.getString("message");
     sendMethodId = rs.getInt("send_method_id");
-    
+
     //message table
     messageName = rs.getString("messageName");
 

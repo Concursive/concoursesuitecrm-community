@@ -16,6 +16,7 @@ import org.theseus.actions.*;
 import java.sql.*;
 import com.darkhorseventures.webutils.*;
 import com.darkhorseventures.utils.*;
+import com.darkhorseventures.controller.SystemStatus;
 import java.util.*;
 import java.text.*;
 
@@ -25,7 +26,6 @@ import java.text.*;
  *
  *@author     mrajkowski
  *@created    December 27, 2001
- *@version    $Id$
  *@version    $Id$
  */
 public class CustomField extends GenericBean implements Cloneable {
@@ -86,9 +86,8 @@ public class CustomField extends GenericBean implements Cloneable {
   private int enteredNumber = 0;
   private double enteredDouble = 0;
   private Object elementData = null;
-
-  //is used along with ITEMLIST type & is the name of the method applied on object
-  //i.e "questions" in case of Survey object
+  private String lookupList = null;
+  //used if field needs to be populated from a particular item of a list e.g SurveyQuestion of SurveyQuestionList
   private String listName = null;
   private String listItemName = null;
 
@@ -772,33 +771,21 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Sets the LookupList attribute of the CustomField object
+   *  Builds the lookupList from using the System Status.
    *
-   *@param  tmp  The new LookupList value
-   *@since
+   *@param  context           The new lookupList value
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
-  public void setLookupList(String tmp) {
+  public boolean buildLookupList(Connection db, ActionContext context) throws SQLException {
+    Exception errorMessage = null;
     elementData = new LookupList();
-    int count = 0;
-    StringTokenizer st = new StringTokenizer(tmp, delimiter);
-    while (st.hasMoreTokens()) {
-      String listField = st.nextToken();
-      if (!listField.trim().equals("")) {
-        ++count;
-        LookupElement thisElement = new LookupElement();
-        thisElement.setDescription(listField.trim());
-
-        if (textAsCode) {
-          thisElement.setCode(Integer.parseInt(thisElement.getDescription()));
-        } else {
-          thisElement.setCode(count);
-        }
-
-        thisElement.setLevel(count);
-        thisElement.setDefaultItem(false);
-        ((LookupList) elementData).add(thisElement);
-      }
+    if (lookupList != null && !lookupList.equals("")) {
+      ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+      elementData = ((SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl())).getLookupList(db, lookupList);
     }
+    return true;
   }
 
 
@@ -878,6 +865,26 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
+   *  Sets the lookupList attribute of the CustomField object
+   *
+   *@param  lookupList  The new lookupList value
+   */
+  public void setLookupList(String lookupList) {
+    this.lookupList = lookupList;
+  }
+
+
+  /**
+   *  Gets the lookupList attribute of the CustomField object
+   *
+   *@return    The lookupList value
+   */
+  public String getLookupList() {
+    return lookupList;
+  }
+
+
+  /**
    *  Gets the isStatic attribute of the CustomField object
    *
    *@return    The isStatic value
@@ -913,7 +920,7 @@ public class CustomField extends GenericBean implements Cloneable {
    *@return    The LookupList value
    *@since
    */
-  public String getLookupList() {
+  /*public String getLookupList() {
     StringBuffer sb = new StringBuffer();
     if (elementData != null) {
       Iterator i = ((LookupList) elementData).iterator();
@@ -926,7 +933,7 @@ public class CustomField extends GenericBean implements Cloneable {
       }
     }
     return sb.toString();
-  }
+  }*/
 
 
   /**
@@ -1320,7 +1327,7 @@ public class CustomField extends GenericBean implements Cloneable {
     }
     switch (type) {
         case TEXTAREA:
-          return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.toHtmlTextBlank(toString(enteredValue)) + "</textarea>");
+          return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + toString(enteredValue) + "</textarea>");
         case SELECT:
           if (!(((LookupList) elementData).containsKey(-1))) {
             ((LookupList) elementData).addItem(-1, "-- None --");
@@ -1581,12 +1588,11 @@ public class CustomField extends GenericBean implements Cloneable {
     }
 
     try {
-      level = retrieveNextLevel(db);
       db.setAutoCommit(false);
       String sql =
           "INSERT INTO custom_field_info " +
-          "(group_id, field_name, field_type, required, parameters, additional_text, level ) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?) ";
+          "(group_id, field_name, field_type, required, parameters, additional_text ) " +
+          "VALUES (?, ?, ?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(++i, groupId);
@@ -1595,7 +1601,6 @@ public class CustomField extends GenericBean implements Cloneable {
       pst.setBoolean(++i, required);
       pst.setString(++i, this.getParameterData());
       pst.setString(++i, additionalText);
-      pst.setInt(++i, level);
       pst.execute();
       pst.close();
 
@@ -1950,25 +1955,6 @@ public class CustomField extends GenericBean implements Cloneable {
   private void buildPopulatedRecord(ResultSet rs) throws SQLException {
     selectedItemId = rs.getInt("selected_item_id");
     enteredValue = rs.getString("entered_value");
-  }
-  
-  private int retrieveNextLevel(Connection db) throws SQLException {
-    int returnLevel = 0;
-    PreparedStatement pst = db.prepareStatement(
-      "SELECT MAX(level) as level " +
-      "FROM custom_field_info " +
-      "WHERE group_id = ? ");
-    pst.setInt(1, groupId);
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      returnLevel = rs.getInt("level");
-      if (rs.wasNull()) {
-        returnLevel = 0;
-      }
-    }
-    rs.close();
-    pst.close();
-    return ++returnLevel;
   }
 
 }

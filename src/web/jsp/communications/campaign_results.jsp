@@ -3,11 +3,11 @@
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
 <jsp:useBean id="SurveyQuestionList" class="com.darkhorseventures.cfsbase.ActiveSurveyQuestionList" scope="request"/>
 <jsp:useBean id="SurveyQuestionListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
-<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <%@ include file="initPage.jsp" %>
 <a href="CampaignManager.do">Communications Manager</a> >
-<a href="/CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="/CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
+<a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
+<a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
 Results
 <hr color="#BFBFBB" noshade>
 
@@ -36,9 +36,15 @@ Results
               </tr>
               <tr class="containerBody">
                 <td align="left" nowrap>
-                  <%= Campaign.getRecipientCount() %>  Total Recipients<br>
-                  <%= Campaign.getResponseCount() %>  Total Responses<br>
-                  Last Response Received : <%= Campaign.getLastResponseString() %>
+                  <%= Campaign.getRecipientCount() %> Total Recipient<%= Campaign.getRecipientCount()==1?"":"s" %><br>
+                  <%= Campaign.getResponseCount() %> Total Response<%= Campaign.getResponseCount()==1?"":"s" %><br>
+                  Last Response Received:
+                  <dhv:evaluate if="<%= "".equals(Campaign.getLastResponseString()) %>">
+                  --
+                  </dhv:evaluate>
+                  <dhv:evaluate if="<%= !"".equals(Campaign.getLastResponseString()) %>">
+                  <%= Campaign.getLastResponseString() %>
+                  </dhv:evaluate>
                 </td>
               </tr>
             </table>
@@ -47,7 +53,7 @@ Results
         
         <tr>
             <td>
-        <%
+<%
         Iterator z = SurveyQuestionList.iterator();
         
         if ( z.hasNext() ) {
@@ -62,7 +68,7 @@ Results
             }
             ActiveSurveyQuestion thisItem = (ActiveSurveyQuestion)z.next();
             int type = thisItem.getType();
-      %>
+%>
           <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
             <%if(type != SurveyQuestion.ITEMLIST){%>
              <tr class="containerHeader">
@@ -94,7 +100,7 @@ Results
              <dhv:evaluate exp="<%=((type != SurveyQuestion.QUANT_NOCOMMENTS))%>">
                 <tr class="title">
                   <td colspan="8" valign="center" align="left">
-                    Most recent user comments &nbsp; <a href="javascript:popURLReturn('/CampaignManager.do?command=ShowComments&surveyId=<%=SurveyQuestionList.getId()%>&questionId=<%=thisItem.getId()%>&type=<%=thisItem.getType()==1?"open":"quant"%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','500','240','yes','no');">Show All...</a>
+                    Most recent user comments &nbsp; <a href="javascript:popURLReturn('CampaignManager.do?command=ShowComments&surveyId=<%=SurveyQuestionList.getId()%>&questionId=<%=thisItem.getId()%>&type=<%=thisItem.getType()==1?"open":"quant"%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','500','240','yes','no');">Show All...</a>
                   </td>
                 </tr>
                 <%
@@ -130,15 +136,14 @@ Results
                </dhv:evaluate>
             </dhv:evaluate>
             <%}else{%>
-             <tr containerHeader>
+             <tr class="containerHeader">
                <td align="left" nowrap><%=count%>. <%= toHtml(thisItem.getDescription()) %> </td>
              </tr>
              <tr>
                   <td valign="center" align="left" width="100%">
-                    <a href="javascript:popURLReturn('/CampaignManager.do?command=ShowItems&questionId=<%=thisItem.getId()%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Items','600','450','yes','no');">View Item Details</a>
+                    <a href="javascript:popURLReturn('CampaignManager.do?command=ShowItems&questionId=<%=thisItem.getId()%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Items','600','450','yes','no');">View Item Details</a>
                   </td>
              </tr>
-            
             <%}%>
          </table><br>
       <%

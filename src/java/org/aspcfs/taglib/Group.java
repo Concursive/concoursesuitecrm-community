@@ -5,7 +5,7 @@ import javax.servlet.jsp.tagext.*;
 import com.darkhorseventures.controller.*;
 import com.darkhorseventures.cfsbase.*;
 import java.util.*;
-import com.darkhorseventures.utils.ObjectUtils;
+import com.darkhorseventures.utils.*;
 
 /**
  *  Description of the Class
@@ -108,7 +108,7 @@ public class Group extends TagSupport {
               //TODO : make a Table Class and get header from object attributes
               if (!thisGroup.getName().equals("")) {
                 out.write("<tr class=\"title\">");
-                out.write("<td colspan=\"2\" valign=\"center\" align=\"left\">");
+                out.write("<td colspan=\"3\" valign=\"center\" align=\"left\">");
                 out.write("<strong> " + thisGroup.getName() + "</strong>");
                 out.write("</td>");
                 out.write("</tr>");
@@ -156,7 +156,10 @@ public class Group extends TagSupport {
                     Iterator fields = thisColumn.iterator();
                     while (fields.hasNext()) {
                       CustomField thisField = (CustomField) fields.next();
-                      out.write(thisField.getHtmlElement() + (thisField.getRequired() ? "<font color=\"red\">*</font>" : ""));
+                      if (System.getProperty("DEBUG") != null) {
+                        System.out.println("Group --> Printing Field " + thisField.getHtmlElement());
+                      }
+                      out.write(StringUtils.toHtmlTextBlank(thisField.getHtmlElement()) + (thisField.getRequired() ? "<font color=\"red\">*</font>" : ""));
                     }
                     if (!hiddenColumn) {
                       out.write(thisColumn.getEndTag());

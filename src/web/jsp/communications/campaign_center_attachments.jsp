@@ -3,6 +3,16 @@
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
 <jsp:useBean id="SurveyList" class="com.darkhorseventures.cfsbase.SurveyList" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<script language="JavaScript">
+function fillFrame(object){
+  if(object.options[object.selectedIndex].value != -1){
+    window.frames['edit'].location.href='CampaignManager.do?command=PreviewSurvey&preview=1&id=' + object.options[object.selectedIndex].value;
+  }else{
+    window.frames['edit'].location.href='CampaignManager.do?command=PreviewSurvey&preview=0&id=' + object.options[object.selectedIndex].value;
+  }
+}
+</script>
+<body onLoad="javascript:fillFrame(document.forms['modForm'].surveyId);">
 <form name="modForm" action="CampaignManager.do?command=InsertAttachment&id=<%= Campaign.getId() %>" method="post">
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=View">Campaign List</a> >
@@ -38,7 +48,7 @@ Interactive Response
       Survey
     </td>
     <td width="100%" valign="center">
-    <% SurveyList.setJsEvent("onChange=\"javascript:window.frames['edit1'].location.href='/CampaignManagerMessage.do?command=PreviewSurvey&preview=1&id=' + this.options[this.selectedIndex].value;\""); %>
+    <% SurveyList.setJsEvent("onChange=\"javascript:fillFrame(this);\""); %>
       <%= SurveyList.getHtmlSelect("surveyId", Campaign.getSurveyId()) %>
     </td>
   </tr>
@@ -47,7 +57,7 @@ Interactive Response
       Preview
     </td>
     <td width="100%" valign="center">
-      <iframe id="edit" name="edit" frameborder="0" <dhv:browser id="ns">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 100%;"</dhv:browser> onblur="return false" src="CampaignManagerMessage.do?command=PreviewSurvey&preview=1&id=<%= Campaign.getSurveyId() %>">
+      <iframe id="edit" name="edit" frameborder="0" <dhv:browser id="ns">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 100%;"</dhv:browser> onblur="return false" src="">
       </iframe>
     </td>
   </tr>
