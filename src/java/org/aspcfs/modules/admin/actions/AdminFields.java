@@ -82,7 +82,7 @@ public final class AdminFields extends CFSModule {
     try {
       db = this.getConnection(context);
       constantId = this.queryConstantId(db, Integer.parseInt(moduleId));
-      permCat = new PermissionCategory(db, constantId);
+      permCat = new PermissionCategory(db, Integer.parseInt(moduleId));
     } catch (Exception e) {
       errorMessage = e;
       e.printStackTrace(System.out);
@@ -743,7 +743,7 @@ public final class AdminFields extends CFSModule {
       moduleId = Integer.parseInt(context.getRequest().getParameter("modId"));
       int constantId = this.queryConstantId(db, moduleId);
       //to get the module name on the jsp
-      permCat = new PermissionCategory(db, Integer.parseInt(context.getRequest().getParameter("modId")));
+      permCat = new PermissionCategory(db, moduleId);
       categoryList.setLinkModuleId(constantId);
       categoryList.setBuildResources(false);
       categoryList.buildList(db);
@@ -1080,13 +1080,22 @@ public final class AdminFields extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  moduleId          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private static int queryConstantId(Connection db, int moduleId) throws SQLException {
     int constantId = -1;
     PreparedStatement pst = db.prepareStatement(
-      "SELECT category_id " +
-      "FROM module_field_categorylink " +
-      "WHERE module_id = ? ");
+        "SELECT category_id " +
+        "FROM module_field_categorylink " +
+        "WHERE module_id = ? ");
     pst.setInt(1, moduleId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
