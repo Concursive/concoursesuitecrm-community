@@ -213,7 +213,6 @@ CREATE TABLE organization (
   enabled BOOLEAN DEFAULT true,
   industry_temp_code SMALLINT,
   owner INT references access(user_id),
-  duplicate boolean default 'f',
   duplicate_id int default -1,
   custom1 int default -1,
   custom2 int default -1,

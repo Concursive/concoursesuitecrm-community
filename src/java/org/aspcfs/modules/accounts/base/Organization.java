@@ -28,7 +28,7 @@ public class Organization extends GenericBean {
   private String notes = "";
   private int industry = 0;
   private String industryName = null;
-  private boolean miner_only = false;
+  private boolean minerOnly = false;
   private int enteredBy = -1;
 
   private java.sql.Timestamp entered = null;
@@ -532,6 +532,10 @@ public void setYTD(double YTD) {
   public void setModifiedBy(int modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
+  
+  public void setModifiedBy(String modifiedBy) {
+    this.modifiedBy = Integer.parseInt(modifiedBy);
+  }
 
 
   /**
@@ -630,19 +634,19 @@ public void setYTD(double YTD) {
    *@param  tmp  The new Miner_only value
    */
   public void setMiner_only(boolean tmp) {
-    this.miner_only = tmp;
+    this.minerOnly = tmp;
   }
   
   public void setMiner_only(String tmp) {
-    this.miner_only = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+    this.minerOnly = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
   }
 
   public void setMinerOnly(boolean tmp) {
-    this.miner_only = tmp;
+    this.minerOnly = tmp;
   }
   
   public void setMinerOnly(String tmp) {
-    this.miner_only = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+    this.minerOnly = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
   }
 
   /**
@@ -1171,16 +1175,11 @@ public boolean getEnabled() {
   }
 
 
-  /**
-   *  Gets the Miner_only attribute of the Organization object
-   *
-   *@return    The Miner_only value
-   */
   public boolean getMiner_only() {
-    return miner_only;
+    return minerOnly;
   }
   public boolean getMinerOnly() {
-    return miner_only;
+    return minerOnly;
   }
 
   /**
@@ -1455,7 +1454,7 @@ public boolean getEnabled() {
       pst.setString(++i, this.getName());
       pst.setInt(++i, this.getIndustry());
       pst.setString(++i, this.getUrl());
-      pst.setBoolean(++i, this.getMiner_only());
+      pst.setBoolean(++i, this.getMinerOnly());
       if (owner > -1) {
 	      pst.setInt(++i, this.getOwner());
       } else {
@@ -1642,7 +1641,7 @@ public boolean getEnabled() {
     pst.close();
     
     //Remove all account types, add new list
-    if (this.getMiner_only() == false && typeList != null) {
+    if (this.getMinerOnly() == false && typeList != null) {
       resetType(db);
       int lvlcount = 0;
       for (int k = 0; k < typeList.size(); k++) {
@@ -1831,7 +1830,10 @@ public boolean getEnabled() {
     revenue = rs.getDouble("revenue");
     employees = rs.getInt("employees");
     notes = rs.getString("notes");
+    //sicCode = rs.getString("sic_code");
     ticker = rs.getString("ticker_symbol");
+    //taxId = rs.getString("taxid");
+    minerOnly = rs.getBoolean("miner_only");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
@@ -1839,11 +1841,9 @@ public boolean getEnabled() {
     enabled = rs.getBoolean("enabled");
     industry = rs.getInt("industry_temp_code");
     owner = rs.getInt("owner");
-    
     if (rs.wasNull()) {
 	    owner = -1; 
     }
-    
     duplicateId = rs.getInt("duplicate_id");
     contractEndDate = rs.getDate("contract_end");
     alertDate = rs.getDate("alertdate");
