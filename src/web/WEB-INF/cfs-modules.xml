@@ -156,6 +156,7 @@
   <menu>
     <action name="Leads"/>
     <action name="LeadsCalls"/>
+    <action name="LeadsCallsForward"/>
     <action name="LeadsComponents"/>
     <action name="LeadsDocuments"/>
     <action name="LeadsPrototype"/>
