@@ -99,14 +99,11 @@ public class Ticket extends GenericBean {
    *@since
    */
   public Ticket(Connection db, int id) throws SQLException {
-
     if (id == -1) {
       throw new SQLException("Invalid Ticket Number");
     }
 
-    PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-    sql.append(
+    PreparedStatement pst = db.prepareStatement(
         "SELECT t.*, " +
         "o.name AS orgname, o.enabled AS orgenabled, " +
         "ld.description AS dept, " +
@@ -127,25 +124,21 @@ public class Ticket extends GenericBean {
         "LEFT JOIN contact ct_eb ON (t.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (t.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN lookup_ticketsource lu_ts ON (t.source_code = lu_ts.code) " +
-        "WHERE t.ticketid = " + id + " ");
-
-    Statement st = null;
-    ResultSet rs = null;
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
-
+        "WHERE t.ticketid = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
-      throw new SQLException("Ticket not found");
     }
     rs.close();
-    st.close();
+    pst.close();
+
+    if (this.id == -1) {
+      throw new SQLException("Ticket not found");
+    }
 
     if (this.getContactId() > 0 && checkContactRecord(db, this.getContactId())) {
-      thisContact = new Contact(db, "" + this.getContactId());
+      thisContact = new Contact(db, this.getContactId());
     } else {
       thisContact = null;
     }
@@ -194,30 +187,20 @@ public class Ticket extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean checkContactRecord(Connection db, int id) throws SQLException {
+    boolean contactFound = false;
     if (id != -1) {
-      PreparedStatement pst = null;
-      StringBuffer sql = new StringBuffer();
-      sql.append(
+      PreparedStatement pst = db.prepareStatement(
           "SELECT contact_id from contact c " +
-          "WHERE c.contact_id = " + id + " ");
-
-      Statement st = null;
-      ResultSet rs = null;
-      st = db.createStatement();
-      rs = st.executeQuery(sql.toString());
-
+          "WHERE c.contact_id = ? ");
+      pst.setInt(1, id);
+      ResultSet rs = pst.executeQuery();
       if (rs.next()) {
-        rs.close();
-        st.close();
-        return true;
-      } else {
-        rs.close();
-        st.close();
-        return false;
+        contactFound = true;
       }
-    } else {
-      return false;
+      rs.close();
+      pst.close();
     }
+    return contactFound;
   }
 
 
@@ -1057,6 +1040,16 @@ public class Ticket extends GenericBean {
 
 
   /**
+   *  Gets the assigned attribute of the Ticket object
+   *
+   *@return    The assigned value
+   */
+  public boolean isAssigned() {
+    return (assignedTo > 0);
+  }
+
+
+  /**
    *  Gets the CloseIt attribute of the Ticket object
    *
    *@return    The CloseIt value
@@ -1493,13 +1486,13 @@ public class Ticket extends GenericBean {
         thisNotification.setModule("Tickets");
         thisNotification.setItemId(this.getId());
         thisNotification.setItemModified(null);
-        thisNotification.setSubject("New Ticket Assigned: " + this.getId());
+        thisNotification.setSubject("New Ticket Assigned: " + this.getPaddedId());
         thisNotification.setFrom("cfs-root@darkhorseventures.com");
         thisNotification.setMessageToSend(
             "A new ticket has been added to CFS and assigned to you:<br><br>" +
             "--- Ticket Details ---<br><br>" +
-            "Ticket # " + this.getId() + "<br>" +
-            "Problem: " + this.getProblem() + "<br><br>" +
+            "Ticket # " + this.getPaddedId() + "<br>" +
+            "Issue: " + this.getProblem() + "<br><br>" +
             "Comment: " + this.getComment() + "<br><br>");
         thisNotification.setType(Notification.EMAIL);
         thisNotification.notifyUser(db);
