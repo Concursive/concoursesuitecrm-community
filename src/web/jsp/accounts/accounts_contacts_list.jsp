@@ -4,10 +4,10 @@
 <jsp:useBean id="ContactList" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
 <jsp:useBean id="ContactListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 Contacts<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -65,11 +65,11 @@ Contacts<br>
 		<tr class="containerBody">
       <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete">
       <td width=8 valign=center nowrap class="row<%= rowid %>">
-        <dhv:permission name="accounts-accounts-contacts-edit"><a href="/Contacts.do?command=Modify&orgId=<%= OrgDetails.getOrgId()%>&id=<%=thisContact.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-contacts-delete"><a href="javascript:confirmDelete('/Contacts.do?command=Delete&orgId=<%= OrgDetails.getOrgId() %>&id=<%=thisContact.getId()%>');">Del</a></dhv:permission>
+        <dhv:permission name="accounts-accounts-contacts-edit"><a href="Contacts.do?command=Modify&orgId=<%= OrgDetails.getOrgId()%>&id=<%=thisContact.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-contacts-delete"><a href="javascript:confirmDelete('Contacts.do?command=Delete&orgId=<%= OrgDetails.getOrgId() %>&id=<%=thisContact.getId()%>');">Del</a></dhv:permission>
       </td>
       </dhv:permission>
       <td width=30% valign=center class="row<%= rowid %>">
-        <a href="/Contacts.do?command=Details&id=<%=thisContact.getId()%>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
+        <a href="Contacts.do?command=Details&id=<%=thisContact.getId()%>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
       </td>
       <td width=20% valign=center class="row<%= rowid %>">
         <%= toHtml(thisContact.getTitle()) %>

@@ -5,9 +5,9 @@
 <jsp:useBean id="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<script type="text/javascript" src="/javascript/stringbuilder.js"></script>
-<script type="text/javascript" src="/javascript/richedit.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script type="text/javascript" src="javascript/stringbuilder.js"></script>
+<script type="text/javascript" src="javascript/richedit.js"></script>
 <script>
   function save() {
 	<dhv:browser id="ie" minVersion="5.5" include="true">
@@ -17,8 +17,7 @@
   </dhv:browser>
   }
 </script>
-<form name="addCall" action="/ExternalContactsCalls.do?command=Forward&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>" method="post">
-<a href="/ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>">Back to Call List</a><br>&nbsp;
+<form name="addCall" action="ExternalContactsCalls.do?command=Forward&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>" method="post">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -34,7 +33,7 @@
   <tr>
     <td class="containerBack">
     <input type="submit" value="Forward" onclick="javascript:save();">
-    <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'">
+    <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'">
 <br>
 <%= showError(request, "actionError") %>
 
@@ -158,7 +157,7 @@
 </table>
 <br>
 <input type="submit" value="Forward" onclick="javascript:save();">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'">
 </td>
 </tr>
 </table>

@@ -4,16 +4,13 @@
 <jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form name="details" action="/ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>" method="post">
-
-<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
-<a href="/ExternalContacts.do?command=ListContacts">View Contacts</a> >
-<a href="/ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
-<a href="/ExternalContacts.do?command=Fields&contactId=<%=ContactDetails.getId()%>">Folders</a> >
+<form name="details" action="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>" method="post">
+<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
+<a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
+<a href="ExternalContacts.do?command=Fields&contactId=<%=ContactDetails.getId()%>">Folders</a> >
 Record Details<br>
 <hr color="#BFBFBB" noshade>
-
-<a href="/ExternalContacts.do?command=ListContacts">Back to Contact List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>

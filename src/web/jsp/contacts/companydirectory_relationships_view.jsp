@@ -3,14 +3,11 @@
 <jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <jsp:useBean id="relationshipTypeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
-
-<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
-<a href="/ExternalContacts.do?command=ListContacts">View Contacts</a> >
-<a href="/ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
+<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
+<a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 Relationships
 <hr color="#BFBFBB" noshade>
-
-<a href="/ExternalContacts.do?command=ListContacts">Back to Contact List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -54,7 +51,7 @@ Relationship Type: <%= relationshipTypeSelect.getHtml() %><br>
   <tr class="containerBody">
     <dhv:permission name="demo-edit,demo-delete">
       <td width="8" valign="center" nowrap class="row1">
-        <dhv:permission name="demo-edit"><a href="/ExternalContactsPrototype.do?module=ExternalContacts&contactId=<%= ContactDetails.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="demo-edit,demo-delete" all="true">|</dhv:permission><dhv:permission name="demo-delete"><a href="javascript:confirmDelete('/ExternalContactsPrototype.do?contactId=<%= ContactDetails.getId() %>');">Del</a></dhv:permission>
+        <dhv:permission name="demo-edit"><a href="ExternalContactsPrototype.do?module=ExternalContacts&contactId=<%= ContactDetails.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="demo-edit,demo-delete" all="true">|</dhv:permission><dhv:permission name="demo-delete"><a href="javascript:confirmDelete('ExternalContactsPrototype.do?contactId=<%= ContactDetails.getId() %>');">Del</a></dhv:permission>
       </td>
     </dhv:permission>
     <td width="40%" valign="center" class="row1">
@@ -70,7 +67,7 @@ Relationship Type: <%= relationshipTypeSelect.getHtml() %><br>
   <tr class="containerBody">
     <dhv:permission name="demo-edit,demo-delete">
       <td width="8" valign="center" nowrap class="row2">
-        <dhv:permission name="demo-edit"><a href="/ExternalContactsPrototype.do?module=ExternalContacts&contactId=<%= ContactDetails.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="demo-edit,demo-delete" all="true">|</dhv:permission><dhv:permission name="demo-delete"><a href="javascript:confirmDelete('/ExternalContactsPrototype.do?contactId=<%= ContactDetails.getId() %>');">Del</a></dhv:permission>
+        <dhv:permission name="demo-edit"><a href="ExternalContactsPrototype.do?module=ExternalContacts&contactId=<%= ContactDetails.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="demo-edit,demo-delete" all="true">|</dhv:permission><dhv:permission name="demo-delete"><a href="javascript:confirmDelete('ExternalContactsPrototype.do?contactId=<%= ContactDetails.getId() %>');">Del</a></dhv:permission>
       </td>
     </dhv:permission>
     <td width="40%" valign="center" class="row2">
