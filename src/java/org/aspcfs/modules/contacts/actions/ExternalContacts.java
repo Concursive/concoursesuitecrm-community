@@ -833,9 +833,8 @@ public final class ExternalContacts extends CFSModule {
 
     Exception errorMessage = null;
     String id = context.getRequest().getParameter("id");
-
+    
     Contact thisContact = (Contact) context.getFormBean();
-
     if (context.getRequest().getParameter("primaryContact") != null) {
       if (context.getRequest().getParameter("primaryContact").equalsIgnoreCase("true")) {
         thisContact.setPrimaryContact(true);
@@ -846,6 +845,7 @@ public final class ExternalContacts extends CFSModule {
     int resultCount = 0;
 
     try {
+      db = this.getConnection(context);
       Contact oldContact = new Contact(db, id);
       if (!hasAuthority(context, oldContact.getOwner())) {
         return ("PermissionError");
@@ -854,7 +854,6 @@ public final class ExternalContacts extends CFSModule {
       thisContact.setTypeList(context.getRequest().getParameterValues("selectedList"));
       thisContact.setEnteredBy(getUserId(context));
       thisContact.setModifiedBy(getUserId(context));
-      db = this.getConnection(context);
       resultCount = thisContact.update(db);
       if (resultCount == -1) {
         processErrors(context, thisContact.getErrors());
