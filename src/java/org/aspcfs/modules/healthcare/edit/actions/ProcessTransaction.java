@@ -40,6 +40,7 @@ public final class ProcessTransaction extends CFSModule {
     boolean recordInserted = false;
     XMLUtils xml = null;
     ConnectionElement ce = null;
+    SystemStatus thisSystem = null;
     try {
       //This is a custom DTD that won't be used by any other processes, so
       //populate the object here
@@ -52,6 +53,11 @@ public final class ProcessTransaction extends CFSModule {
       
       // The connection element is needed to retrieve the systemSystem object later
       ce = auth.getConnectionElement(context);
+      thisSystem = this.getSystemStatus(context, ce);
+      if (thisSystem == null) {
+        //Since typical login was bypassed, make sure the system status is in memory
+        thisSystem = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
+      }
       
       //Insert the record
       recordInserted = thisRecord.insert(db);
@@ -101,12 +107,12 @@ public final class ProcessTransaction extends CFSModule {
     }
     // This project is phasing out so all requests are being forwarded
     try {
-      if (xml != null && ce != null) {
+      if (xml != null && ce != null && thisSystem != null) {
         System.out.println("ProcessTransaction-> CE: " + ce.getUrl());
-        System.out.println("ProcessTransaction-> Trying to forward to: " + getValue(context, ce, "FORWARD.URL"));
+        System.out.println("ProcessTransaction-> Trying to forward to: " + getValue(thisSystem, "FORWARD.URL"));
         System.out.println("ProcessTransaction-> The message: " + xml.toString());
-        HTTPUtils.sendPacket(getValue(context, ce, "FORWARD.URL"), xml.toString());
-        System.out.println("ProcessTransaction-> Forwarded to: " + getValue(context, ce, "FORWARD.URL"));
+        HTTPUtils.sendPacket(getValue(thisSystem, "FORWARD.URL"), xml.toString());
+        System.out.println("ProcessTransaction-> Forwarded to: " + getValue(thisSystem, "FORWARD.URL"));
       } else {
         System.out.println("ProcessTransaction-> DID NOT FORWARD");
       }
@@ -116,8 +122,8 @@ public final class ProcessTransaction extends CFSModule {
     return ("PacketOK");
   }
   
-  private String getValue(ActionContext context, ConnectionElement ce, String param) {
-    return this.getSystemStatus(context, ce).getValue("org.aspcfs.modules.healthcare.edit.actions.ProcessTransaction", param);
+  private String getValue(SystemStatus thisSystem, String param) {
+    return thisSystem.getValue("org.aspcfs.modules.healthcare.edit.actions.ProcessTransaction", param);
   }
 }
 
