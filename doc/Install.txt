@@ -1,0 +1,85 @@
+/**
+ *  Server Installation (not tested)
+ *
+ *@author     matt rajkowski
+ *@created    October 9, 2002
+ *@version    $Id$
+ */
+
+
+## Install and configure applications (root user)
+- Install java into /usr/java/
+- Make a soft link to /usr/java/j2sdk
+
+- Install tomcat into /usr/java/
+- Make a soft link to /usr/java/tomcat
+- Make a soft link from /usr/java/tomcat/bin/catalina.sh to /etc/init.d/tomcat
+- Modify /etc/init.d/tomcat, adding the following switch to the "START" section:
+  -Djava.awt.headless="true" \
+- Modify /etc/init.d/tomcat, adding the following after the CATALINA_HOME is set:
+  CATALINA_HOME=/usr/java/tomcat
+- Make sure tomcat is enabled on restart:
+  $ chkconfig --list tomcat # Make necessary changes for the current runlevel
+- Backup the server configure and add a new service, connector, host, and context
+  $ cd /usr/java/tomcat/conf
+  $ cp server.xml server.xml.bak
+  $ vi server.xml # Add the new server information
+
+- Install ant into /usr/java/
+- Make a soft link to /usr/java/ant
+
+- Modify postgres to allow connections
+  $ vi /var/lib/pgsql/data/pg_hba.conf # Uncomment host 127.0.0.1
+  $ vi /var/lib/pgsql/data/postgresql.conf # Turn on tcp_ip connections
+  $ service postgresql restart
+
+## Configure application environment
+- Modify /etc/bashrc, adding the following:
+  export JAVA_HOME=/usr/java/j2sdk
+  export TOMCAT_HOME=/usr/java/tomcat
+  export ANT_HOME=/usr/java/ant
+  PATH=${PATH}:${JAVA_HOME}/bin:${ANT_HOME}/bin
+
+## Configure users
+- As root user, perform the following:
+  $ adduser cfsdba
+  $ adduser <yourname>
+  $ mkdir /home/cfs
+  $ visudo #Add <yourname> to the list of allowed users
+- As postgres user, perform the following:
+  $ createuser gatekeeper #Respond n,n,n
+  $ createuser cfsdba #Respond y,y,y
+  $ createuser <yourname> #Respond y,y,y
+
+## Configure personal environment
+- Login as yourself, check the commands: java, ant
+- From your home directory, add the following to .bashrc and execute:
+  export CVSROOT=:pserver:216.54.81.126:/usr/local/cvs
+
+## Download the source code
+- From your home directory, checkout the source:
+  $ cvs checkout cfs2
+
+## Configure this system's default cfs application
+- Run the compile script to see what environment file is needed:
+  $ cd cfs2
+  $ sudo sh upgrade_ds
+- Create a new environment file if an error stated it was missing
+  $ cp scripts/env.aspcfs.darkhorseventures.com scripts/env.${thishost}
+- Modify the defaults to match this host
+  $ vi scripts/env.${thishost}
+- Run the compile script again, this time should be a success
+  $ sudo sh upgrade_ds
+
+## Build the gatekeeper database (if cfs2gk doesn't already exist)
+- Execute the following:
+  $ sudo sh gatekeeper.init
+
+## Build a customer database
+- Build the first database:
+  $ sudo sh install_ds [databasename]
+
+## Verification
+- Start the tomcat server:
+  $ sudo /sbin/service tomcat start
+
