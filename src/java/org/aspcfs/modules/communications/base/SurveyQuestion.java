@@ -17,6 +17,7 @@ public class SurveyQuestion {
   public final static int OPEN_ENDED = 1;
   public final static int QUANT_NOCOMMENTS = 2;
   public final static int QUANT_COMMENTS = 3;
+  public final static int QUANTITATIVE_SELECT_SIZE = 7;
   public final static int ITEMLIST = 4;
 
   private int id = -1;

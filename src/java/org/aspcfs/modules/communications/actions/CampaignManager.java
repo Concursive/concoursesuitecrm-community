@@ -6,7 +6,7 @@ import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.util.*;
 import java.io.*;
-import java.text.DateFormat;
+import java.text.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.communications.base.*;
@@ -18,6 +18,12 @@ import org.aspcfs.utils.web.*;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
+
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.hssf.record.*;
+import org.apache.poi.hssf.model.*;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hssf.util.*;
 
 /**
  *  Actions for dealing with Campaigns in the Communications Module, including
@@ -184,7 +190,7 @@ public final class CampaignManager extends CFSModule {
 
     try {
       context.getSession().removeAttribute("CampaignCenterGroupInfo");
-      
+
     } catch (Exception e) {
       errorMessage = e;
     }
@@ -2154,6 +2160,41 @@ public final class CampaignManager extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+  }
+
+
+  /**
+   *  Export a Campaign Report
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandExportReport(ActionContext context) {
+    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+      return ("PermissionError");
+    }
+
+    String campaignId = (String) context.getRequest().getParameter("id");
+    //setup file stuff
+    String filePath = this.getPath(context, "campaign") + getDatePath(new java.util.Date());
+    CampaignReport thisReport = new CampaignReport();
+    thisReport.setFilePath(filePath);
+    thisReport.setCampaignId(Integer.parseInt(campaignId));
+    thisReport.setEnteredBy(getUserId(context));
+    thisReport.setModifiedBy(getUserId(context));
+
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      thisReport.build(db);
+      thisReport.saveAndInsert(db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      freeConnection(context, db);
+    }
+    return "ExportReportOK";
   }
 
 

@@ -37,6 +37,10 @@
     window.location.href='CampaignManager.do?command=PrepareDownload&id=' + thisCampaignId;
   }
   
+  function generateReport() {
+    window.location.href='CampaignManager.do?command=ExportReport&id=' + thisCampaignId;
+  }
+  
   function cancel() {
     confirmForward('CampaignManager.do?command=Cancel&id=' + thisCampaignId + '&notify=true');
   }
@@ -62,6 +66,16 @@
           <a href="javascript:download()">Download Mail Merge</a>
         </td>
       </tr>
+      <dhv:permission name="campaign-campaigns-view">
+      <tr id="menuReport">
+        <td>
+          <img src="images/icons/stock_export-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </td>
+        <td width="100%">
+          <a href="javascript:generateReport()">Export to Excel</a>
+        </td>
+      </tr>
+      </dhv:permission>
       <tr id="menuCancel">
         <td>
           <img src="images/icons/stock_stop-16.gif" border="0" align="absmiddle" height="16" width="16"/>

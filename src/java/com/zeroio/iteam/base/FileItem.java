@@ -298,7 +298,7 @@ public class FileItem extends GenericBean {
 
 
   /**
-   *  Sets the clientFilename attribute of the FileItem object
+   *  Sets the filename that the client will see when the file is downloaded
    *
    *@param  tmp  The new clientFilename value
    */
@@ -308,7 +308,7 @@ public class FileItem extends GenericBean {
 
 
   /**
-   *  Sets the filename attribute of the FileItem object
+   *  Sets the filename that the server uses to save and load the file
    *
    *@param  tmp  The new filename value
    */
@@ -598,7 +598,7 @@ public class FileItem extends GenericBean {
 
 
   /**
-   *  Gets the clientFilename attribute of the FileItem object
+   *  Gets the filename that the client will see when the file is downloaded
    *
    *@return    The clientFilename value
    */
@@ -622,7 +622,7 @@ public class FileItem extends GenericBean {
 
 
   /**
-   *  Gets the filename attribute of the FileItem object
+   *  Gets the filename that the server uses to save and load the file
    *
    *@return    The filename value
    */

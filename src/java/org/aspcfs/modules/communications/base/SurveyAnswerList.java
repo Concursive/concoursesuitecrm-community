@@ -208,9 +208,54 @@ public class SurveyAnswerList extends Vector {
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
+
+    ResultSet rs = queryList(db, pst);
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
+
+    int count = 0;
+    while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          count >= pagedListInfo.getItemsPerPage()) {
+        break;
+      }
+      ++count;
+      SurveyAnswer thisAnswer = new SurveyAnswer(rs);
+      this.add(thisAnswer);
+      if (contacts == null) {
+        contacts = new HashMap();
+      }
+      String contactName = Contact.getNameLastFirst(rs.getString("lastname"), rs.getString("firstname"));
+      contacts.put(new Integer(rs.getInt("contactid")), contactName);
+    }
+    rs.close();
+    if(pst != null){
+      pst.close();
+    }
+
+    Iterator ans = this.iterator();
+    while (ans.hasNext()) {
+      SurveyAnswer thisAnswer = (SurveyAnswer) ans.next();
+      thisAnswer.setContactId(db);
+      thisAnswer.buildItems(db, thisAnswer.getId());
+    }
+  }
+
+
+  /**
+   *  Returns SQL ResultSet after executing the query 
+   *
+   *@param  db                Description of the Parameter
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+
     ResultSet rs = null;
     int items = -1;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
@@ -278,35 +323,7 @@ public class SurveyAnswerList extends Vector {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
-
-    int count = 0;
-    while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
-      SurveyAnswer thisAnswer = new SurveyAnswer(rs);
-      this.add(thisAnswer);
-      if (contacts == null) {
-        contacts = new HashMap();
-      }
-      String contactName = Contact.getNameLastFirst(rs.getString("lastname"), rs.getString("firstname"));
-      contacts.put(new Integer(rs.getInt("contactid")), contactName);
-    }
-    rs.close();
-    pst.close();
-
-    Iterator ans = this.iterator();
-    while (ans.hasNext()) {
-      SurveyAnswer thisAnswer = (SurveyAnswer) ans.next();
-      thisAnswer.setContactId(db);
-      thisAnswer.buildItems(db, thisAnswer.getId());
-    }
+    return rs;
   }
 
 
