@@ -66,11 +66,16 @@ public class LookupElement {
   public void build(ResultSet rs) throws java.sql.SQLException {
     code = rs.getInt("code");
     description = rs.getString("description");
+    
     defaultItem = rs.getBoolean("default_item");
     level = rs.getInt("level");
     //startDate = rs.getTimestamp("start_date");
     //endDate = rs.getTimestamp("end_date");
     enabled = rs.getBoolean("enabled");
+    
+    if (!(this.getEnabled())) {
+      description += " (X)";
+    }
     
     //not guaranteed to be here
     //entered = rs.getTimestamp("entered");
@@ -344,6 +349,7 @@ public class LookupElement {
     i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getDescription());
+    
     pst.setInt(++i, this.getLevel());
     pst.setBoolean(++i, true);
     if (fieldId > -1) {

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.*;
 import com.darkhorseventures.cfsbase.Constants;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  A generic class that contains a list of LookupElement objects.
@@ -26,6 +27,7 @@ public class LookupList extends HtmlSelect {
   protected java.sql.Timestamp nextAnchor = null;
   protected int syncType = Constants.NO_SYNC;
   protected boolean showDisabledFlag = true;
+  protected PagedListInfo pagedListInfo = null;
 
 
   /**
@@ -74,7 +76,13 @@ public class LookupList extends HtmlSelect {
       this.add(thisElement);
     }
   }
-
+  
+  public PagedListInfo getPagedListInfo() {
+    return pagedListInfo;
+  }
+  public void setPagedListInfo(PagedListInfo pagedListInfo) {
+    this.pagedListInfo = pagedListInfo;
+  }
 
   /**
    *  Constructor for the LookupList object
@@ -302,7 +310,7 @@ public class LookupList extends HtmlSelect {
           lookupDefault = thisElement.getCode();
         }
       } else if (thisElement.getCode() == defaultKey) {
-          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription() + " (X)");
+          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
       }
 
       if (thisElement.getCode() == defaultKey) {
@@ -341,7 +349,7 @@ public class LookupList extends HtmlSelect {
         thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
       } else if (defaultValue.equals(thisElement.getDescription())) {
         keyFound = true;
-        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription() + " (X)");
+        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
       }
 
       if (defaultValue.equals(thisElement.getDescription())) {
@@ -493,40 +501,89 @@ public class LookupList extends HtmlSelect {
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
-    while (rs.next()) {
-      LookupElement thisElement = this.getObject(rs);
-      this.add(thisElement);
-    }
-    rs.close();
-    if (pst != null) {
-      pst.close();
-    }
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of Parameter
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    ResultSet rs = null;
     int items = -1;
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT * " +
+    
+    StringBuffer sqlCount = new StringBuffer();
+    StringBuffer sqlOrder = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlSelect = new StringBuffer();
+    
+    sqlCount.append(
+      "SELECT COUNT(*) AS recordcount " +
+      "FROM " + tableName + " " +
+      "WHERE code > -1 ");
+      
+    createFilter(sqlFilter);  
+      
+    if (pagedListInfo != null) {
+      //Get the total number of records matching filter
+      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
+      items = prepareFilter(pst);
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        int maxRecords = rs.getInt("recordcount");
+        pagedListInfo.setMaxRecords(maxRecords);
+      }
+      pst.close();
+      rs.close();
+      
+      //Determine the offset, based on the filter, for the first record to show
+      if (!pagedListInfo.getCurrentLetter().equals("")) {
+        pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString() +
+        "AND description < ? ");
+        items = prepareFilter(pst);
+        pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
+        rs = pst.executeQuery();
+        if (rs.next()) {
+          int offsetCount = rs.getInt("recordcount");
+          pagedListInfo.setCurrentOffset(offsetCount);
+        }
+        rs.close();
+        pst.close();
+      }
+      
+      //Determine column to sort by
+      pagedListInfo.setDefaultSort("description ", null);
+      pagedListInfo.appendSqlTail(db, sqlOrder);
+    } else {
+      sqlOrder.append("ORDER BY description ");
+    }  
+    
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    
+    sqlSelect.append(
+        "* " +
         "FROM " + tableName + " " +
         "WHERE code > -1 ");
-    createFilter(sql);
-    sql.append(
-        "ORDER BY level, description ");
-    pst = db.prepareStatement(sql.toString());
+    
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    ResultSet rs = pst.executeQuery();
-    return rs;
+    rs = pst.executeQuery();
+    
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
+    
+    
+    int count = 0;
+    while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
+      DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+      count >= pagedListInfo.getItemsPerPage()) {
+        break;
+      }
+      ++count;
+      LookupElement thisElement = new LookupElement(rs);
+      this.add(thisElement);
+    }
+    
+    rs.close();
+    pst.close();
   }
 
 
