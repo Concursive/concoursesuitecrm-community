@@ -1306,7 +1306,7 @@ public boolean getEnabled() {
     Statement st = db.createStatement();
     st.executeUpdate(
       "DELETE FROM account_type_levels " +
-      "WHERE id = " + this.getOrgId());
+      "WHERE org_id = " + this.getOrgId());
     st.close();
     return true;
   }
