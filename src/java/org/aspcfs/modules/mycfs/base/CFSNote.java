@@ -30,6 +30,10 @@ public class CFSNote extends GenericBean {
   private java.sql.Timestamp modified = null;
   
   public final static int CALL = 1;
+  
+  public final static int NEW = 0;
+  public final static int READ = 1;
+  public final static int OLD = 2;
 
   public CFSNote() { }
 
@@ -76,6 +80,16 @@ public class CFSNote extends GenericBean {
 }
 public void setSentName(String sentName) {
 	this.sentName = sentName;
+}
+
+public String getStatusText () {
+	if (status == 0) {
+		return ("Unread");
+	} else if (status == 1) {
+		return ("Read");
+	} else {
+		return ("Trashed");
+	}
 }
 
   public CFSNote(Connection db, int noteId) throws SQLException {
@@ -172,6 +186,9 @@ public int getSentTo() {
 }
 public void setSentTo(int sentTo) {
 	this.sentTo = sentTo;
+}
+public void setSentTo(String sentTo) {
+	this.sentTo = Integer.parseInt(sentTo);
 }
 
   public String getModified() { 

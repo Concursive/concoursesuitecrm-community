@@ -48,11 +48,13 @@ public final class MyCFS extends CFSModule {
 			db = this.getConnection(context);
 			noteList.setPagedListInfo(inboxInfo);
 			noteList.setSentTo(getUserId(context));
+			
+			if (context.getRequest().getParameter("return") != null) {
+				inboxInfo.setListView("new");
+			}
 	
 			if ("old".equals(inboxInfo.getListView())) {
-				noteList.setStatus(1);
-			} else {
-				noteList.setStatus(0);
+				noteList.setOldMessagesOnly(true);
 			}
 	
 			noteList.buildList(db);
@@ -145,82 +147,44 @@ public final class MyCFS extends CFSModule {
 		}
 	}
 	
-	public String executeCommandForward(ActionContext context) {
-		Exception errorMessage = null;
-		boolean recordInserted = false;
-	
-		CFSNote thisNote = new CFSNote();
-		thisNote.setEnteredBy(getUserId(context));
-		thisNote.setModifiedBy(getUserId(context));
-		thisNote.setBody(context.getRequest().getParameter("msgBody"));
-		thisNote.setSubject(context.getRequest().getParameter("fwdsubject"));
-		thisNote.setReplyId(getUserId(context));
-		thisNote.setType(CFSNote.CALL);
-		thisNote.setSentTo(Integer.parseInt(context.getRequest().getParameter("sentTo")));
-	
+ 	public String executeCommandCFSNoteTrash(ActionContext context) {
 		Connection db = null;
+		Exception errorMessage = null;
+		
 		try {
 			db = this.getConnection(context);
-			recordInserted = thisNote.insert(db);
-	
-		if (!recordInserted) {
-			processErrors(context, thisNote.getErrors());
-		}
-		} catch (SQLException e) {
-			errorMessage = e;
-		} finally {
-			this.freeConnection(context, db);
-		}
-	
-		if (errorMessage == null) {
-		if (!recordInserted) {
-	    		return (executeCommandForwardForm(context));
-		} else {
-			context.getRequest().setAttribute("NoteDetails", thisNote);
-	   		return (executeCommandCFSNoteDetails(context));
-		}
-		} else {
-			context.getRequest().setAttribute("Error", errorMessage);
-			return ("SystemError");
-		}
-	}
-	
-	public String executeCommandForwardForm(ActionContext context) {
-		Exception errorMessage = null;
-		CFSNote thisNote = (CFSNote)context.getFormBean();
-		addModuleBean(context, "MyInbox", "Inbox Fwd");
-	
-		Connection db = null;
-		UserList list = new UserList();
-		list.setEnabled(UserList.TRUE);
-		list.setBuildContact(false);
-		list.setBuildHierarchy(false);
-		list.setBuildPermissions(false);
-	
-		try {
-			db = this.getConnection(context);
+			int noteId = Integer.parseInt(context.getRequest().getParameter("id"));
+			CFSNote newNote = new CFSNote(db, noteId);
 			
-			if (thisNote.getId() == -1) {
-				thisNote = new CFSNote(db, context.getRequest().getParameter("id"));
+			System.out.println("Status before: " + newNote.getStatus());
+			
+			if (newNote.getStatus() == 2) {
+				newNote.setStatus(CFSNote.READ);
+			} else {
+				newNote.setStatus(CFSNote.OLD);
 			}
-			
-			list.buildList(db);
-		} catch (Exception e) {
+
+			newNote.updateStatus(db);
+			System.out.println("Status after: " + newNote.getStatus());
+
+		}
+		catch (SQLException e) {
 			errorMessage = e;
-		} finally {
+		}
+		finally {
 			this.freeConnection(context, db);
 		}
-	
+
 		if (errorMessage == null) {
-			context.getRequest().setAttribute("UserList", list);
-			context.getRequest().setAttribute("NoteDetails", thisNote);
-			return ("InboxForwardFormOK");
-		} else {
+			addModuleBean(context, "MyInbox", "Inbox Home");
+			return (executeCommandInbox(context));
+		}
+		else {
 			context.getRequest().setAttribute("Error", errorMessage);
 			return ("SystemError");
 		}
 	}
-
+	
 	/**
 	 *  Takes a look at the User Session Object and prepares the MyCFSBean for the
 	 *  JSP. The bean will contain all the information that the JSP can see.
@@ -322,10 +286,12 @@ public final class MyCFS extends CFSModule {
 			int msgId = Integer.parseInt(context.getRequest().getParameter("id"));
 			db = this.getConnection(context);
 			newNote = new CFSNote(db, msgId);
-			if (newNote.getStatus() == 0) {
-				newNote.setStatus(1);
+			
+			if (newNote.getStatus() == CFSNote.NEW) {
+				newNote.setStatus(CFSNote.READ);
 				newNote.updateStatus(db);
 			}
+			
 			//addRecentItem(context, newOrg);
 		} catch (Exception e) {
 			errorMessage = e;

@@ -3,6 +3,7 @@
 <jsp:useBean id="InboxInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <form name="listView" method="post" action="/MyCFSInbox.do?command=Inbox">
 <br>
 <center><%= InboxInfo.getAlphabeticalPageLinks() %></center>
@@ -12,7 +13,7 @@
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= InboxInfo.getOptionValue("new") %>>New Messages</option>
-        <option <%= InboxInfo.getOptionValue("old") %>>Read Messages</option>
+        <option <%= InboxInfo.getOptionValue("old") %>>Trashed Messages</option>
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>
@@ -23,6 +24,9 @@
   <tr class="title">
     <td valign=center align=left class="title">
       <strong>Action</strong>
+    </td>
+    <td valign=center align=left class="title">
+      <strong>Status</strong>
     </td>
     <td width=40% valign=center align=left>
       <strong><a href="/MyCFSInbox.do?command=Inbox&column=m.subject">Subject</a></strong>
@@ -52,8 +56,11 @@
 %>      
   <tr>
           <td width=4 valign=center nowrap class="row<%= rowid %>">
-          <a href="/MyCFSInbox.do?command=ForwardForm&id=<%= thisNote.getId() %>&type=<%= thisNote.getType() %>">Fwd</a>|<a href="javascript:confirmDelete('/MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
+          <a href="javascript:popURL('/ForwardNote.do?command=ShowForm&linkRecordId=<%=thisNote.getId()%>&linkModuleId=9&popup=true','Forward_Note','600','290','yes','yes');">Fwd</a>|<a href="javascript:confirmDelete('/MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
         </td>
+	        <td width=4 valign=center nowrap class="row<%= rowid %>">
+		<%=toHtml(thisNote.getStatusText())%>
+        	</td>
 		<td width="40%" class="row<%= rowid %>">
       		<a href="/MyCFSInbox.do?command=CFSNoteDetails&id=<%=thisNote.getId()%>"><%= toHtml(thisNote.getSubject()) %></a>
 		</td>
@@ -66,7 +73,7 @@
 <br>
 [<%= InboxInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= InboxInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= InboxInfo.getNumericalPageLinks() %>
 <%} else {%>
-  <tr bgcolor="white"><td colspan=4 valign=center>No messages found.</td></tr>
+  <tr bgcolor="white"><td colspan=5 valign=center>No messages found.</td></tr>
 </table>
 <%}%>
 </form>

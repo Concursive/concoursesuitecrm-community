@@ -10,62 +10,127 @@ import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
 
-
+/**
+ *  Description of the Class
+ *
+ *@author     chris
+ *@created    February 21, 2002
+ */
 public class CFSNoteList extends Vector {
 
 	private PagedListInfo pagedListInfo = null;
-  	private int status = -1;
 	private int sentTo = -1;
+	private boolean oldMessagesOnly = false;
 
 
+	/**
+	 *  Constructor for the CFSNoteList object
+	 *
+	 *@since
+	 */
 	public CFSNoteList() { }
 
+
+	/**
+	 *  Sets the PagedListInfo attribute of the CFSNoteList object
+	 *
+	 *@param  tmp  The new PagedListInfo value
+	 *@since
+	 */
 	public void setPagedListInfo(PagedListInfo tmp) {
 		this.pagedListInfo = tmp;
 	}
 
+
+	/**
+	 *  Sets the SentTo attribute of the CFSNoteList object
+	 *
+	 *@param  sentTo  The new SentTo value
+	 *@since
+	 */
+	public void setSentTo(int sentTo) {
+		this.sentTo = sentTo;
+	}
+
+
+	/**
+	 *  Sets the OldMessagesOnly attribute of the CFSNoteList object
+	 *
+	 *@param  oldMessagesOnly  The new OldMessagesOnly value
+	 *@since
+	 */
+	public void setOldMessagesOnly(boolean oldMessagesOnly) {
+		this.oldMessagesOnly = oldMessagesOnly;
+	}
+
+
+	/**
+	 *  Gets the PagedListInfo attribute of the CFSNoteList object
+	 *
+	 *@return    The PagedListInfo value
+	 *@since
+	 */
 	public PagedListInfo getPagedListInfo() {
 		return pagedListInfo;
 	}
-	public void setStatus(int status) {
-	this.status = status;
-}
-public int getStatus() {
-	return status;
-}
-public void setSentTo(int sentTo) {
-	this.sentTo = sentTo;
-}
-public int getSentTo() {
-	return sentTo;
-}
 
+
+	/**
+	 *  Gets the SentTo attribute of the CFSNoteList object
+	 *
+	 *@return    The SentTo value
+	 *@since
+	 */
+	public int getSentTo() {
+		return sentTo;
+	}
+	// end buildList
+
+
+	/**
+	 *  Gets the OldMessagesOnly attribute of the CFSNoteList object
+	 *
+	 *@return    The OldMessagesOnly value
+	 *@since
+	 */
+	public boolean getOldMessagesOnly() {
+		return oldMessagesOnly;
+	}
+
+
+	/**
+	 *  Description of the Method
+	 *
+	 *@param  db                Description of Parameter
+	 *@exception  SQLException  Description of Exception
+	 *@since
+	 */
 	public void buildList(Connection db) throws SQLException {
-		
+
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		int items = -1;
-		
+
 		StringBuffer sqlSelect = new StringBuffer();
 		StringBuffer sqlCount = new StringBuffer();
 		StringBuffer sqlFilter = new StringBuffer();
 		StringBuffer sqlOrder = new StringBuffer();
-		
+
 		sqlSelect.append(
-		      "SELECT m.*, ml.*, ct_sent.namefirst as sent_namefirst, ct_sent.namelast as sent_namelast " +
-		      "FROM cfsinbox_message m " +
-		      "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
-		      "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
-		      "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
-		      "LEFT JOIN cfsinbox_messagelink ml ON (m.id = ml.id) " +
-		      "WHERE m.id > -1 ");
-		
+				"SELECT m.*, ml.*, ct_sent.namefirst as sent_namefirst, ct_sent.namelast as sent_namelast " +
+				"FROM cfsinbox_message m " +
+				"LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
+				"LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
+				"LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
+				"LEFT JOIN cfsinbox_messagelink ml ON (m.id = ml.id) " +
+				"WHERE m.id > -1 ");
+
 		sqlCount.append(
-		      "SELECT COUNT(*) AS recordcount " +
-		      "FROM cfsinbox_message m " +
-		      "WHERE m.id > -1 ");
-      
-    		createFilter(sqlFilter);
+				"SELECT COUNT(*) AS recordcount " +
+				"FROM cfsinbox_message m " +
+				"WHERE m.id > -1 ");
+
+		createFilter(sqlFilter);
 
 		if (pagedListInfo != null) {
 			//Get the total number of records matching filter
@@ -97,13 +162,13 @@ public int getSentTo() {
 			}
 
 			//Determine column to sort by
-		      if (pagedListInfo.getColumnToSortBy() == null || pagedListInfo.getColumnToSortBy().equals("")) {
-			pagedListInfo.setColumnToSortBy("subject");
-		      }
-		      sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + " ");
-		      if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
-			sqlOrder.append(pagedListInfo.getSortOrder() + " ");
-		      }
+			if (pagedListInfo.getColumnToSortBy() == null || pagedListInfo.getColumnToSortBy().equals("")) {
+				pagedListInfo.setColumnToSortBy("subject");
+			}
+			sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + " ");
+			if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
+				sqlOrder.append(pagedListInfo.getSortOrder() + " ");
+			}
 
 			//Determine items per page
 			if (pagedListInfo.getItemsPerPage() > 0) {
@@ -117,11 +182,11 @@ public int getSentTo() {
 		}
 
 		pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-		
+
 		items = prepareFilter(pst);
 		System.out.println(pst.toString());
 		rs = pst.executeQuery();
-		
+
 		while (rs.next()) {
 			CFSNote thisNote = new CFSNote(rs);
 			this.addElement(thisNote);
@@ -129,36 +194,49 @@ public int getSentTo() {
 		rs.close();
 		pst.close();
 
-	
-	} // end buildList
+	}
 
-	private void createFilter(StringBuffer sqlFilter){
+
+	/**
+	 *  Description of the Method
+	 *
+	 *@param  sqlFilter  Description of Parameter
+	 *@since
+	 */
+	private void createFilter(StringBuffer sqlFilter) {
 		if (sqlFilter == null) {
 			sqlFilter = new StringBuffer();
 		}
-		
-		if (status > -1) {
-			sqlFilter.append("AND m.id in (select distinct id from cfsinbox_messagelink where status = ?) ");
-		}
-		
+
 		if (sentTo > -1) {
 			sqlFilter.append("AND m.id in (select distinct id from cfsinbox_messagelink where sent_to = ?) ");
 		}
-		
+
+		if (oldMessagesOnly == true) {
+			sqlFilter.append("AND m.id in (select distinct id from cfsinbox_messagelink where status = 2) ");
+		}
+		else {
+			sqlFilter.append("AND m.id in (select distinct id from cfsinbox_messagelink where status in (0,1)) ");
+		}
+
 	}
-	
+
+
+	/**
+	 *  Description of the Method
+	 *
+	 *@param  pst               Description of Parameter
+	 *@return                   Description of the Returned Value
+	 *@exception  SQLException  Description of Exception
+	 *@since
+	 */
 	private int prepareFilter(PreparedStatement pst) throws SQLException {
 		int i = 0;
-	
-		if (status > -1) {
-			pst.setInt(++i, status);
-		}
-		
-		
+
 		if (sentTo > -1) {
 			pst.setInt(++i, sentTo);
 		}
-	
+
 		return i;
 	}
 }

@@ -8,6 +8,8 @@ public final class Constants {
   public static final int COMMUNICATIONS = 5;
   public static final int TICKETS = 6;
   public static final int ADMIN = 7;
+  public static final int CONTACTS_CALLS = 8;
+  public static final int CFSNOTE = 9;
   
   public static final int TRUE = 1;
   public static final int FALSE = 0;

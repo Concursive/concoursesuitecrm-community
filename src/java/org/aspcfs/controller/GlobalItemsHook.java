@@ -170,7 +170,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           }
           rs.close();
           pst.close();
-          items.append("<a href='/MyCFSInbox.do?command=Inbox' class='s'>Inbox</a> (" + inboxCount + " new)<br>");
+          items.append("<a href='/MyCFSInbox.do?command=Inbox&return=1' class='s'>Inbox</a> (" + inboxCount + " new)<br>");
           ++myItems;
         }
       

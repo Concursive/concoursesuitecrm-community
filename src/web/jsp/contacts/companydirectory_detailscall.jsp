@@ -3,6 +3,7 @@
 <jsp:useBean id="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <form name="addCall" action="/ExternalContactsCalls.do?id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>" method="post">
 <a href="/ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>">Back to Call List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -23,14 +24,12 @@
   <tr>
     <td class="containerBack">
 <input type="submit" name="command" value="Modify">
-<input type="submit" name="command" value="Forward" onClick="javascript:form.action='/ExternalContactsCalls.do?command=ForwardForm&contactId=<%= ContactDetails.getId() %>&id=<%=CallDetails.getId()%>'">
 <input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()">
-
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
-      <strong>Call Details</strong>
+      <strong>Call Details</strong> [ <a href="javascript:popURL('/ForwardNote.do?command=ShowForm&linkRecordId=<%=CallDetails.getId()%>&linkModuleId=8&popup=true','Forward_Call','600','290','yes','yes');">Forward</a> ]
     </td>
   </tr>
   <tr class="containerBody">
@@ -91,17 +90,9 @@
       <%= toHtml(CallDetails.getModifiedName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getModifiedString()) %>
     </td>
   </tr>
-  
-  <!--tr class="containerBody">
-    <td align=center colspan=2>
-      <i>Created <%= toHtml(CallDetails.getEnteredString()) %> by <%= toHtml(CallDetails.getEnteredName()) %><br>
-      Modifed <%= toHtml(CallDetails.getModifiedString()) %> by <%= toHtml(CallDetails.getModifiedName()) %></i>
-    </td>
-  </tr-->
 </table>
 <br>
 <input type="submit" name="command" value="Modify">
-<input type="submit" name="command" value="Forward" onClick="javascript:form.action='/ExternalContactsCalls.do?command=ForwardForm&contactId=<%= ContactDetails.getId() %>&id=<%=CallDetails.getId()%>'">
 <input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()">
 </td>
 </tr>
