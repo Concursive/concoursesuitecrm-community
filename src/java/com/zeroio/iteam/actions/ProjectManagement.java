@@ -32,7 +32,13 @@ public final class ProjectManagement extends CFSModule {
    */
   public String executeCommandDefault(ActionContext context) {
     //based on user settings...go to their default page
-    return executeCommandPersonalView(context);
+    if (this.hasPermission(context, "projects-personal-view")) {
+      return executeCommandPersonalView(context);
+    } else if (this.hasPermission(context, "projects-enterprise-view")) {
+      return executeCommandEnterpriseView(context);
+    } else {
+      return "PermissionError";
+    }
   }
 
 
