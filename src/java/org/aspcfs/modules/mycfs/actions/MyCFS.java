@@ -154,7 +154,7 @@ public final class MyCFS extends CFSModule {
 			
 			db = this.getConnection(context);
 			
-			//existsAlready = newOrg.checkIfExists(db,name);
+			existsAlready = newOrg.checkIfExists(db,name);
 			newOrg.insert(db);
 		}
 		catch (SQLException e) {
@@ -261,12 +261,15 @@ public final class MyCFS extends CFSModule {
 			if (industryCheck == null && headlines > 0) { industryCheck = "1"; }
 			
 			if (industryCheck != null && !(industryCheck.equals("0"))) {
-				whereClause = " WHERE organization.industry_temp_code = " + Integer.parseInt(industryCheck) +
-						" AND organization.org_id = news.org_id ";
+				whereClause = " WHERE organization.industry_temp_code = " + Integer.parseInt(industryCheck) + " ";
 
 				if (industryCheck.equals("1")) {
-					whereClause = whereClause + "AND organization.enteredby = "
-							 + getUserId(context) + "AND organization.miner_only = 't' ";
+					//whereClause += "OR (organization.duplicate_id = news.org_id AND organization.duplicate_id > -1) AND organization.enteredby = "
+					//		 + getUserId(context) + "AND organization.miner_only = 't' ";
+					
+					whereClause += " AND news.org_id in ( organization.org_id, organization.duplicate_id ) AND organization.enteredby = " + getUserId(context) + "AND organization.miner_only = 't' ";
+				} else {
+					whereClause += " AND organization.org_id = news.org_id ";
 				}
 
 				sql.append(whereClause);
@@ -281,6 +284,7 @@ public final class MyCFS extends CFSModule {
 			
 			sql.append(" ORDER BY dateentered desc limit 10 ");
 
+			System.out.println(sql.toString());
 			st = db.createStatement();
 
 			//Execute the main query

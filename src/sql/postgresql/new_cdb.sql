@@ -280,6 +280,7 @@ CREATE TABLE organization (
   enabled BOOLEAN DEFAULT true,
   industry_temp_code SMALLINT,
   owner INT NOT NULL,
+  duplicate_id int default -1,
   custom_data TEXT
 );
 
