@@ -199,7 +199,16 @@
       </fileset>
     </copy>
     <!-- Copy the web data, ownly if new -->
-    
+    <copy todir="${CFS_HOME}">
+      <fileset dir="${web.dir}/jsp">
+        <include name="**/*.jsp"/>
+      </fileset>
+    </copy>
+    <copy todir="${CFS_HOME}">
+      <fileset dir="${web.dir}/html">
+        <include name="**/*.*"/>
+      </fileset>
+    </copy>
     <!-- Copy the meta-data, only if new -->
     
     
