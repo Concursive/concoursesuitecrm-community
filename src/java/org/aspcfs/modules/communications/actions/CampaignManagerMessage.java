@@ -29,19 +29,14 @@ public final class CampaignManagerMessage extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandView(ActionContext context) {
-
     if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignMessageListInfo");
     pagedListInfo.setLink("/CampaignManagerMessage.do?command=View");
-
     Connection db = null;
     MessageList messageList = new MessageList();
-
     try {
       db = this.getConnection(context);
       messageList.setPagedListInfo(pagedListInfo);
@@ -56,7 +51,6 @@ public final class CampaignManagerMessage extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
       submenu = (String) context.getRequest().getAttribute("submenu");
@@ -66,7 +60,6 @@ public final class CampaignManagerMessage extends CFSModule {
     }
     context.getRequest().setAttribute("submenu", submenu);
     addModuleBean(context, submenu, "View Messages");
-
     if (errorMessage == null) {
       context.getRequest().setAttribute("MessageList", messageList);
       return ("ViewOK");
@@ -82,30 +75,24 @@ public final class CampaignManagerMessage extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandModify(ActionContext context) {
-
     if (!(hasPermission(context, "campaign-campaigns-messages-edit"))) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "View Messages", "Modify Message");
     Exception errorMessage = null;
-
-    String passedId = context.getRequest().getParameter("id");
-
+    String messageId = context.getRequest().getParameter("id");
     Connection db = null;
     Message newMessage = null;
     try {
       db = this.getConnection(context);
-      newMessage = new Message(db, passedId);
+      newMessage = new Message(db, messageId);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
       submenu = (String) context.getRequest().getAttribute("submenu");
@@ -115,13 +102,10 @@ public final class CampaignManagerMessage extends CFSModule {
     }
     context.getRequest().setAttribute("submenu", submenu);
     addModuleBean(context, submenu, "Modify Message");
-
     if (errorMessage == null) {
-
       if (!hasAuthority(context, newMessage.getEnteredBy())) {
         return ("PermissionError");
       }
-
       context.getRequest().setAttribute("Message", newMessage);
       return ("ModifyOK");
     } else {
@@ -136,22 +120,17 @@ public final class CampaignManagerMessage extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandUpdate(ActionContext context) {
-
     if (!(hasPermission(context, "campaign-campaigns-messages-edit"))) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "ManageMessages", "Message Details");
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
-
     String id = (String) context.getRequest().getParameter("id");
     Message newMessage = (Message) context.getFormBean();
-
     try {
       db = this.getConnection(context);
       Message oldMessage = new Message(db, Integer.parseInt(id));
@@ -159,12 +138,11 @@ public final class CampaignManagerMessage extends CFSModule {
         return ("PermissionError");
       }
       newMessage.setModifiedBy(getUserId(context));
-      //IE5.0+ uses an HTML Editor, all others use a Text Editor
-      UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-      if (!("ie".equals(thisUser.getBrowserId()) && thisUser.getBrowserVersion() >= 5.0)) {
-        newMessage.setMessageText(StringUtils.toHtmlText(newMessage.getMessageText()));
+      //If the user chooses to format the text then format it... this will convert
+      //their linefeeds into <br> html tags
+      if (newMessage.getFormatLineFeeds()) {
+        newMessage.setMessageText(StringUtils.toHtmlValue(newMessage.getMessageText()));
       }
-
       resultCount = newMessage.update(db);
       if (resultCount == -1) {
         processErrors(context, newMessage.getErrors());
@@ -174,7 +152,6 @@ public final class CampaignManagerMessage extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (resultCount == -1) {
         context.getRequest().setAttribute("MessageDetails", newMessage);
@@ -278,24 +255,20 @@ public final class CampaignManagerMessage extends CFSModule {
     if (!(hasPermission(context, "campaign-campaigns-messages-add"))) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "BuildNew", "Add New Message");
     Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
-
     Message newMessage = (Message) context.getFormBean();
-
     try {
       newMessage.setEnteredBy(getUserId(context));
       newMessage.setModifiedBy(getUserId(context));
-      //IE5.0+ uses an HTML Editor, all others use a Text Editor
-      UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-      if (!("ie".equals(thisUser.getBrowserId()) && thisUser.getBrowserVersion() >= 5.0)) {
-        newMessage.setMessageText(StringUtils.toHtmlText(newMessage.getMessageText()));
+      //If the user chooses to format the text then format it... this will convert
+      //their linefeeds into <br> html tags
+      if (newMessage.getFormatLineFeeds()) {
+        newMessage.setMessageText(StringUtils.toHtmlValue(newMessage.getMessageText()));
       }
       db = this.getConnection(context);
-
       recordInserted = newMessage.insert(db);
       if (recordInserted) {
         newMessage = new Message(db, newMessage.getId());
@@ -308,7 +281,6 @@ public final class CampaignManagerMessage extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (recordInserted) {
         return ("InsertOK");
@@ -321,7 +293,7 @@ public final class CampaignManagerMessage extends CFSModule {
     }
   }
 
-
+  
   /**
    *  Description of the Method
    *
@@ -330,11 +302,9 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
-
     if (!(hasPermission(context, "campaign-campaigns-messages-delete"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Message thisMessage = null;
@@ -351,7 +321,6 @@ public final class CampaignManagerMessage extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (recordDeleted) {
         context.getRequest().setAttribute("refreshUrl", "CampaignManagerMessage.do?command=View");
