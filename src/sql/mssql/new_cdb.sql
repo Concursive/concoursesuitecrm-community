@@ -251,7 +251,9 @@ CREATE TABLE contact (
   custom2 int default -1,
   custom_data TEXT,
   url VARCHAR(100),
-  primary_contact BIT DEFAULT 0
+  primary_contact BIT DEFAULT 0,
+  employee BIT DEFAULT 0,
+  personal BIT DEFAULT 0
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" ("user_id");
@@ -342,6 +344,7 @@ CREATE TABLE organization_address (
   address_type INT references lookup_orgaddress_types(code),
   addrline1 VARCHAR(80),
   addrline2 VARCHAR(80),
+  addrline3 VARCHAR(80),
   city VARCHAR(80),
   state VARCHAR(80),
   country VARCHAR(80),
@@ -384,6 +387,7 @@ CREATE TABLE contact_address (
   address_type INT references lookup_contactaddress_types(code),
   addrline1 VARCHAR(80),
   addrline2 VARCHAR(80),
+  addrline3 VARCHAR(80),
   city VARCHAR(80),
   state VARCHAR(80),
   country VARCHAR(80),
