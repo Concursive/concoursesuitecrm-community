@@ -38,21 +38,21 @@ public final class Roles extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandListRoles(ActionContext context) {
-
-    if (!(hasPermission(context, "admin-roles-view"))) {
+    if (!hasPermission(context, "admin-roles-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
+    Connection db = null;
+    //Setup the pagedList
     PagedListInfo roleInfo = this.getPagedListInfo(context, "RoleListInfo");
     roleInfo.setLink("Roles.do?command=ListRoles");
-
-    Connection db = null;
     RoleList roleList = new RoleList();
     try {
       db = this.getConnection(context);
+      //Prepare the list of roles
       roleList.setPagedListInfo(roleInfo);
+      roleList.setBuildUsers(false);
+      roleList.setBuildUserCount(true);
       roleList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;

@@ -50,7 +50,7 @@ View Roles<br>
           <%= toHtml(thisRole.getDescription()) %>
         </td>
         <td align="center" class="row<%= rowid %>">
-          <%= thisRole.getUserList().size() %>
+          <%= thisRole.getUserCount() %>
         </td>
       </tr>
 <%      

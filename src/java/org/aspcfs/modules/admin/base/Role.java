@@ -20,19 +20,21 @@ import org.aspcfs.utils.web.*;
  *@version    $Id$
  */
 public class Role extends GenericBean {
+  //Role Properties
   protected int id = -1;
   protected String role = null;
   protected String description = null;
-
   protected java.sql.Timestamp entered = null;
   protected java.sql.Timestamp modified = null;
-
   protected int enteredBy = -1;
   protected int modifiedBy = -1;
   protected boolean enabled = true;
+  //Helper Properties
+  protected int userCount = -1;
+  //Related Collections
   protected RolePermissionList permissionList = new RolePermissionList();
   protected UserList userList = new UserList();
-
+  //Rules for building object
   protected boolean buildHierarchy = false;
 
 
@@ -231,6 +233,26 @@ public class Role extends GenericBean {
 
 
   /**
+   *  Sets the userCount attribute of the Role object
+   *
+   *@param  tmp  The new userCount value
+   */
+  public void setUserCount(int tmp) {
+    this.userCount = tmp;
+  }
+
+
+  /**
+   *  Sets the userCount attribute of the Role object
+   *
+   *@param  tmp  The new userCount value
+   */
+  public void setUserCount(String tmp) {
+    this.userCount = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Gets the Entered attribute of the Role object
    *
    *@return    The Entered value
@@ -361,6 +383,16 @@ public class Role extends GenericBean {
 
 
   /**
+   *  Gets the userCount attribute of the Role object
+   *
+   *@return    The userCount value
+   */
+  public int getUserCount() {
+    return userCount;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of Parameter
@@ -393,10 +425,9 @@ public class Role extends GenericBean {
       pst.setInt(++i, id);
       resultCount = pst.executeUpdate();
       pst.close();
-
+      //Re-insert the permissions for this role
       deletePermissions(db);
       insertPermissions(db);
-
       db.commit();
     } catch (Exception e) {
       db.rollback();
@@ -487,7 +518,6 @@ public class Role extends GenericBean {
       pst.setBoolean(++i, enabled);
       pst.execute();
       pst.close();
-
       id = DatabaseUtils.getCurrVal(db, "role_role_id_seq");
       insertPermissions(db);
       db.commit();
@@ -513,18 +543,15 @@ public class Role extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("ID was not specified");
     }
-
-    if (hasUsers(db, true)) {
+    if (buildUserCount(db, true)) {
       errors.put("actionError", "Role cannot be deleted... there are active users assigned to this role.");
       return false;
     }
-
     int recordCount = 0;
-
     try {
       db.setAutoCommit(false);
       Statement st = db.createStatement();
-      if (hasUsers(db, false)) {
+      if (buildUserCount(db, false)) {
         recordCount = st.executeUpdate(
             "UPDATE role " +
             "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
@@ -597,7 +624,6 @@ public class Role extends GenericBean {
    */
   protected boolean isValid(Connection db) throws SQLException {
     errors.clear();
-
     if (role == null || role.trim().equals("")) {
       errors.put("roleError", "Role cannot be left blank");
     } else {
@@ -605,11 +631,9 @@ public class Role extends GenericBean {
         errors.put("roleError", "Role name is already in use");
       }
     }
-
     if (description == null || description.trim().equals("")) {
       errors.put("descriptionError", "Description cannot be left blank");
     }
-
     if (hasErrors()) {
       return false;
     } else {
@@ -675,21 +699,21 @@ public class Role extends GenericBean {
    */
   private boolean isDuplicate(Connection db) throws SQLException {
     boolean duplicate = false;
-
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
         "FROM role " +
         "WHERE lower(role) = lower(?)  " +
         "AND enabled = ? ");
-
     if (id > -1) {
-      sql.append("AND role_id <> " + id + " ");
+      sql.append("AND role_id <> ? ");
     }
-
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setString(1, getRole());
     pst.setBoolean(2, true);
+    if (id > -1) {
+      pst.setInt(3, id);
+    }
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       duplicate = true;
@@ -709,19 +733,24 @@ public class Role extends GenericBean {
    *@exception  SQLException  Description of Exception
    *@since
    */
-  private boolean hasUsers(Connection db, boolean activeUsers) throws SQLException {
+  public boolean buildUserCount(Connection db, boolean activeUsersOnly) throws SQLException {
     int resultCount = -1;
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
+    PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) AS count " +
         "FROM access " +
-        "WHERE role_id = " + id + " " +
-        (activeUsers ? "AND enabled = " + DatabaseUtils.getTrue(db) + " " : ""));
+        "WHERE role_id = ? " +
+        "AND contact_id > 0 " +
+        "AND (alias = -1 OR alias IS NULL) " +
+        (activeUsersOnly ? "AND enabled = ? " : ""));
+    pst.setInt(1, id);
+    pst.setBoolean(2, true);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       resultCount = rs.getInt("count");
     }
     rs.close();
-    st.close();
+    pst.close();
+    userCount = resultCount;
     if (resultCount > 0) {
       return true;
     } else {

@@ -12,7 +12,7 @@ import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.*; 
+import org.aspcfs.utils.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -28,6 +28,8 @@ public class RoleList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
   private int enabledState = Constants.TRUE;
+  private boolean buildUsers = false;
+  private boolean buildUserCount = false;
 
 
   /**
@@ -63,6 +65,26 @@ public class RoleList extends ArrayList {
    */
   public void setEnabledState(int booleanInt) {
     enabledState = booleanInt;
+  }
+
+
+  /**
+   *  Sets the buildUsers attribute of the RoleList object
+   *
+   *@param  tmp  The new buildUsers value
+   */
+  public void setBuildUsers(boolean tmp) {
+    this.buildUsers = tmp;
+  }
+
+
+  /**
+   *  Sets the buildUserCount attribute of the RoleList object
+   *
+   *@param  tmp  The new buildUserCount value
+   */
+  public void setBuildUserCount(boolean tmp) {
+    this.buildUserCount = tmp;
   }
 
 
@@ -107,23 +129,19 @@ public class RoleList extends ArrayList {
    *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM role r " +
         "WHERE r.role_id > -1 ");
     createFilter(sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() +
@@ -136,7 +154,6 @@ public class RoleList extends ArrayList {
       }
       rs.close();
       pst.close();
-
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
@@ -152,14 +169,12 @@ public class RoleList extends ArrayList {
         rs.close();
         pst.close();
       }
-
       //Determine column to sort by
       pagedListInfo.setDefaultSort("role", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY role ");
     }
-
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
         "SELECT * " +
@@ -168,11 +183,9 @@ public class RoleList extends ArrayList {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -186,13 +199,19 @@ public class RoleList extends ArrayList {
     }
     rs.close();
     pst.close();
-
-    Iterator i = this.iterator();
-    while (i.hasNext()) {
-      Role thisRole = (Role) i.next();
-      thisRole.buildUserList(db);
+    //Build resources
+    if (buildUsers || buildUserCount) {
+      Iterator i = this.iterator();
+      while (i.hasNext()) {
+        Role thisRole = (Role) i.next();
+        if (buildUsers) {
+          thisRole.buildUserList(db);
+        }
+        if (buildUserCount) {
+          thisRole.buildUserCount(db, true);
+        }
+      }
     }
-
   }
 
 

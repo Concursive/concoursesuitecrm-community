@@ -206,34 +206,34 @@ public final class Users extends CFSModule {
       return ("PermissionError");
     }
     Exception errorMessage = null;
-    addModuleBean(context, "Add User", "Add New User");
     Connection db = null;
+    addModuleBean(context, "Add User", "Add New User");
     try {
+      //Process the request items
       String typeId = context.getRequest().getParameter("typeId");
       if (typeId == null || typeId.equals("")) {
         typeId = String.valueOf(Contact.EMPLOYEE_TYPE);
       }
       String contactId = context.getRequest().getParameter("contactId");
       db = this.getConnection(context);
-
+      //Prepare the role drop-down
       RoleList roleList = new RoleList();
+      roleList.setBuildUsers(false);
       roleList.setEmptyHtmlSelectRecord("-- Please Select --");
       roleList.buildList(db);
       context.getRequest().setAttribute("RoleList", roleList);
-
+      //Prepare the user drop-down
       UserList userList = new UserList();
       userList.setEmptyHtmlSelectRecord("-- None --");
-      userList.setBuildContact(true);
+      userList.setBuildContact(false);
       userList.setBuildContactDetails(false);
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       return ("UserInsertFormOK");
     } else {
@@ -563,35 +563,32 @@ public final class Users extends CFSModule {
    *@since           1.12
    */
   public String executeCommandModifyUser(ActionContext context) {
-
-    if (!(hasPermission(context, "admin-users-edit"))) {
+    if (!hasPermission(context, "admin-users-edit")) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "View Users", "Modify User");
     Exception errorMessage = null;
-
-    String userId = context.getRequest().getParameter("id");
-
     Connection db = null;
     User newUser = null;
-
+    //Process the request items
+    String userId = context.getRequest().getParameter("id");
     try {
       db = this.getConnection(context);
+      //Prepare the user
       newUser = new User();
       newUser.setBuildContact(true);
       newUser.buildRecord(db, Integer.parseInt(userId));
-
+      //Prepare the user list
       UserList userList = new UserList();
       userList.setEmptyHtmlSelectRecord("-- None --");
       userList.setBuildContact(false);
       userList.setBuildContactDetails(false);
       userList.setExcludeDisabledIfUnselected(true);
       userList.buildList(db);
-
       context.getRequest().setAttribute("UserList", userList);
-
+      //Prepare the role list
       RoleList roleList = new RoleList();
+      roleList.setBuildUsers(false);
       roleList.setEmptyHtmlSelectRecord("-- None --");
       roleList.buildList(db);
       context.getRequest().setAttribute("RoleList", roleList);
@@ -631,14 +628,17 @@ public final class Users extends CFSModule {
       newUser.setModifiedBy(getUserId(context));
       resultCount = newUser.update(db, context);
       if (resultCount == -1) {
+        //Prepare the form again
+        //Prepare the user list
         UserList userList = new UserList();
         userList.setEmptyHtmlSelectRecord("-- None --");
-        userList.setBuildContact(true);
+        userList.setBuildContact(false);
         userList.setBuildContactDetails(false);
         userList.buildList(db);
         context.getRequest().setAttribute("UserList", userList);
-
+        //Prepare the role list
         RoleList roleList = new RoleList();
+        roleList.setBuildUsers(false);
         roleList.setEmptyHtmlSelectRecord("-- None --");
         roleList.buildList(db);
         context.getRequest().setAttribute("RoleList", roleList);
@@ -648,7 +648,7 @@ public final class Users extends CFSModule {
         }
         updateSystemHierarchyCheck(db, context);
         //NOTE: I believe this is no longer required since permissions are
-        //cached an are no longer part of the user object
+        //cached and are no longer part of the user object
         //updateSystemPermissionCheck(db, context);
       }
     } catch (SQLException e) {
@@ -656,14 +656,12 @@ public final class Users extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (resultCount == -1) {
         processErrors(context, newUser.getErrors());
         return ("UserModifyOK");
       } else if (resultCount == 1) {
         context.getRequest().setAttribute("id", context.getRequest().getParameter("id"));
-
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
           return (executeCommandListUsers(context));
         } else {

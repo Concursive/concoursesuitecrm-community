@@ -48,7 +48,7 @@ public class UserList extends Vector {
   private boolean buildRevenueYTD = false;
   private int revenueYear = -1;
   private int revenueType = 0;
-  private boolean buildGrossPipelineValue = true;
+  private boolean buildGrossPipelineValue = false;
 
   private boolean includeMe = false;
   private String myValue = "";
