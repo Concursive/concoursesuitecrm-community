@@ -85,19 +85,17 @@ public class Survey extends SurveyBase {
    *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int surveyId) throws SQLException {
-    Statement st = null;
-    ResultSet rs = null;
-    String sql =
+    PreparedStatement pst = db.prepareStatement(
         "SELECT s.* " +
         "FROM survey s " +
-        "WHERE s.survey_id = " + surveyId;
-    st = db.createStatement();
-    rs = st.executeQuery(sql);
+        "WHERE s.survey_id = ? ");
+    pst.setInt(1, surveyId);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     }
     rs.close();
-    st.close();
+    pst.close();
     if (id == -1) {
       throw new SQLException("Survey record not found.");
     }
