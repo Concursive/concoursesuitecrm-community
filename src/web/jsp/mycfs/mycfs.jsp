@@ -1,6 +1,6 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="NewsList" class="java.util.ArrayList" scope="request"/>
+<jsp:useBean id="NewsList" class="com.darkhorseventures.cfsbase.NewsArticleList" scope="request"/>
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <jsp:useBean id="NewUserList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="IndSelect" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -88,9 +88,10 @@
 %>
 	<form name="miner_select" type="get" action="MyCFS.do">
 	<input type=hidden name="command" value="Home">
-	<table cellpadding="3" cellspacing="0" border="0" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	<tr bgcolor="#DEE0FA"><td valign=center colspan=2>
-
+	
+  <table cellpadding="3" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+	<tr bgcolor="#DEE0FA">
+  <td valign=center colspan=2>
 	<table bgcolor="#DEE0FA" width=100% cellspacing="0" cellpadding="0" border="0">
 	<tr><td width=60% valign=center>
 	<strong>Personalized Industry News &amp; Events</strong>
@@ -106,8 +107,9 @@
 	</td>
 	</tr>
 	</table>
-	</td>
-</tr>
+	
+  </td>
+  </tr>
 <%
 	if ( j.hasNext() ) {
 		while (j.hasNext()) {
@@ -126,16 +128,17 @@
 	<%}%>
 			
 	</table>
-	</form>
+
 
 <%  
 %>
 <!-- end ZZ:row two -->
+</td>
 </tr>
 
 </dhv:permission>
 
 <!-- End Table ZZ -->
 </table>
-
+	</form>
 
