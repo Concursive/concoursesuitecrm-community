@@ -25,7 +25,7 @@ View Accounts<br>
       </select>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="OrgListInfo"/>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OrgListInfo"/>
     </td>
     </form>
   </tr>
