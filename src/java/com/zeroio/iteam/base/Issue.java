@@ -140,7 +140,6 @@ public class Issue extends GenericBean {
     //project_issues table
     id = rs.getInt("issue_id");
     projectId = rs.getInt("project_id");
-    categoryId = DatabaseUtils.getInt(rs, "category_id");
     subject = rs.getString("subject");
     body = rs.getString("message");
     importance = DatabaseUtils.getInt(rs, "importance");
@@ -149,6 +148,7 @@ public class Issue extends GenericBean {
     enteredBy = rs.getInt("enteredBy");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedBy");
+    categoryId = DatabaseUtils.getInt(rs, "category_id");
     replyCount = rs.getInt("reply_count");
     replyDate = rs.getTimestamp("last_reply_date");
     if (replyDate == null) {
