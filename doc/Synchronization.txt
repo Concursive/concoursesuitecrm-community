@@ -104,6 +104,8 @@ Client #1 Registers its device
   </transaction>
 </app>
 
+Client #1 Requests table definitions for first time device setup
+
 Client #1 Prepares for Synchronization
 - Client reads local Sync Anchor (Last Anchor) from internal database
   Initially the anchor is null, but will be a date/time in future syncs
@@ -388,7 +390,7 @@ Client #1 Ends Synchronization
   <transaction id="11">
     <meta>
       <property>guid</property>
-      <property>inventoryGuid</property>
+      <property>accountInventoryGuid</property>
       <property>runDate</property>
       <property>adTypeGuid</property>
       <property>includePhoto</property>
@@ -396,7 +398,7 @@ Client #1 Ends Synchronization
       <property>modified</property>
     </meta>
     <adRunList action="sync" identity="1">
-      <inventoryGuid>*REQUIRED: MUST SPECIFY INVENTORY GUID*</inventoryGuid>
+      <accountInventoryGuid>*REQUIRED: MUST SPECIFY INVENTORY GUID*</accountInventoryGuid>
     </adRunList>
   </transaction>
   
@@ -406,7 +408,7 @@ Client #1 Ends Synchronization
       <property>inventoryGuid</property>
     </meta>
     <inventoryOptionList action="sync" identity="1">
-      <inventoryGuid>*REQUIRED: MUST SPECIFY INVENTORY GUID*</inventoryGuid>
+      <accountInventoryGuid>*REQUIRED: MUST SPECIFY INVENTORY GUID*</accountInventoryGuid>
     </inventoryOptionList>
   </transaction>
   

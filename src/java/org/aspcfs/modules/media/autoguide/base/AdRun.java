@@ -72,6 +72,11 @@ public class AdRun {
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
   }
+  
+  public void setAccountInventoryId(int tmp) {
+    setInventoryId(tmp);
+  }
+  
 
 
   /**
@@ -81,6 +86,10 @@ public class AdRun {
    */
   public void setInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
+  }
+  
+  public void setAccountInventoryId(String tmp) {
+    setInventoryId(tmp);
   }
 
 
@@ -330,6 +339,10 @@ public class AdRun {
    *@return    The inventoryId value
    */
   public int getInventoryId() {
+    return inventoryId;
+  }
+  
+  public int getAccountInventoryId() {
     return inventoryId;
   }
 
