@@ -149,7 +149,9 @@ public class ComponentContext extends HashMap {
    *@param  value          The new parameter value
    */
   public void setParameter(String parameterName, String value) {
-    this.put(parameterName, value);
+    if (value != null) {
+      this.put(parameterName, value);
+    }
   }
 
 
@@ -338,11 +340,24 @@ public class ComponentContext extends HashMap {
     //Return it with the specified encoding, default to plain text
     String value = null;
     if (param.indexOf(".") > -1) {
-      if (param.indexOf("this.") == 0) {
+      if (param.indexOf("process.") == 0) {
+        //process.[name] is a special case in which the process has defined parameters
+        value = (String) this.getAttribute(param);
+      } else if (param.indexOf("objects.size") == 0) {
+        //built in parameter cases
+        if (objects != null) {
+          value = String.valueOf(objects.size());
+        } else {
+          value = "0";
+        }
+      } else if (param.indexOf("this.") == 0) {
+        //this.[name] means the current object
         value = ObjectUtils.getParam(thisObject, param.substring(5));
       } else if (param.indexOf("previous.") == 0) {
+        //previous.[name] means the previous object
         value = ObjectUtils.getParam(previousObject, param.substring(9));
       } else {
+        //otherwise, try to return the property of the specified object
         Object paramObject = this.getAttribute(param.substring(0, param.indexOf(".")));
         value = ObjectUtils.getParam(paramObject, param.substring(param.indexOf(".") + 1));
       }
