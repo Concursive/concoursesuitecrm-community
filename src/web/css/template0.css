@@ -359,8 +359,9 @@ A:visited:hover{color:#FF3300;}
 .menu { visibility:hidden; left:0px; top:0px; position:absolute }
 .note {
   width: 100%;
-  border-spacing: 0px;
-  padding-bottom: 10px;
+  margin: 0;
+  padding-left: 0px;
+  border-bottom: 6px solid #FFF;
 }
 .note th {
   vertical-align: top;
