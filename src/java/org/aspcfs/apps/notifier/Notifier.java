@@ -443,7 +443,7 @@ public class Notifier extends ReportBuilder {
           template.setText(thisCampaign.getMessage());
           String value = template.getValue("surveyId");
           if (value != null) {
-            template.addParseElement("${surveyId=" + value + "}", java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "id=" + value + ",cid=" + thisContact.getId())));
+            template.addParseElement("${surveyId=" + value + "}", java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "id=" + value + ",cid=" + thisContact.getId()), "UTF-8"));
           }
           //NOTE: The following items are the same as the ProcessMessage.java items
           template.addParseElement("${name}", StringUtils.toHtml(thisContact.getNameFirstLast()));
@@ -653,7 +653,7 @@ public class Notifier extends ReportBuilder {
     template.setText(thisCampaign.getMessage());
     String value = template.getValue("surveyId");
     if (value != null) {
-      template.addParseElement("${surveyId=" + value + "}", java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "id=" + value)));
+      template.addParseElement("${surveyId=" + value + "}", java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "id=" + value), "UTF-8"));
     }
     ZipUtils.addTextEntry(zip, "letter-" + baseFilename + ".txt", template.getParsedText());
     zip.close();
