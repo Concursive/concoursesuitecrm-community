@@ -86,7 +86,7 @@ CREATE TABLE quote_product (
   estimated_delivery_date DATETIME,
   -- quote status
 	status_id INTEGER REFERENCES lookup_quote_status(code),
-  status_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  status_date DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each quote_product can have configurable options
@@ -117,7 +117,7 @@ CREATE TABLE quote_product_option_float (
 
 CREATE TABLE quote_product_option_timestamp (
 	quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
-	value TIMESTAMP NOT NULL
+	value DATETIME NOT NULL
 );
 
 CREATE TABLE quote_product_option_integer (

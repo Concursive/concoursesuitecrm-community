@@ -296,7 +296,7 @@ CREATE TABLE product_option_float (
 
 CREATE TABLE product_option_timestamp (
   product_option_id INTEGER NOT NULL REFERENCES product_option(option_id),
-  value TIMESTAMP NOT NULL
+  value DATETIME NOT NULL
 );
 
 CREATE TABLE product_option_integer (
