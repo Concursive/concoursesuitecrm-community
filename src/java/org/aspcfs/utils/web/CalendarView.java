@@ -530,7 +530,6 @@ public class CalendarView {
   public ArrayList getEvents(String tmp1, String tmp2, String tmp3) {
     String key = tmp1 + "/" + tmp2 + "/" + tmp3;
     if (eventList.containsKey(key)) {
-      System.out.println("Events for key are " + eventList.toString());
       return (ArrayList) eventList.get(key);
     } else {
       return new ArrayList();
