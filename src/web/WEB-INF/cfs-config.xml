@@ -91,6 +91,28 @@
     <forward name="MakeUserListOK" resource="/forwardnote_makeuserlist.jsp"/>
   </action>
   
+  
+  <action name="MyTasks" class="com.darkhorseventures.cfsmodule.MyTasks">
+    <bean name="Task" class="com.darkhorseventures.cfsbase.Task" scope="request" />
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="TaskListOK" resource="/mytasks_list.jsp" layout="nav"/>
+    <forward name="NewTaskOK" resource="/mytasks_new.jsp" layout="nav"/>
+    <forward name="InsertTaskOK" resource="/MyTasks.do?command=ListTasks"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp" layout="style"/>
+    <forward name="DeleteOK" resource="/mytasks_delete_details.jsp" layout="style"/>
+  </action>
+  
+  <action name="MyTasksForward" class="com.darkhorseventures.cfsmodule.MyCFS">
+    <bean name="NoteDetails" class="com.darkhorseventures.cfsbase.CFSNote" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="SendMessageOK" resource="/mycfs_confirmsend.jsp" layout="nav"/>
+    <forward name="ForwardMessageOK" resource="/mycfs_newmessage.jsp" layout="nav"/>
+  </action>
+  
   <action name="MyCFSPassword" class="com.darkhorseventures.cfsmodule.MyCFS">
     <bean name="User" class="com.darkhorseventures.cfsbase.User" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>

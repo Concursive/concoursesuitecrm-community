@@ -41,6 +41,10 @@ public class PagedListInfo {
   String alternateSort = null;
   HashMap savedCriteria = new HashMap();
 
+  //specifically for modules using the contactsList
+  String parentFieldType = "";
+  String parentFormName = "";
+
 
   /**
    *  Constructor for the PagedListInfo object
@@ -69,7 +73,6 @@ public class PagedListInfo {
    */
   public void setEnableJavaScript(boolean enableJavaScript) {
     this.enableJavaScript = enableJavaScript;
-
   }
 
 
@@ -124,6 +127,47 @@ public class PagedListInfo {
 public void setSavedCriteria(HashMap savedCriteria) {
 	this.savedCriteria = savedCriteria;
 }
+
+
+
+  /**
+   *  Sets the parentFieldType attribute of the PagedListInfo object
+   *
+   *@param  parentFieldType  The new parentFieldType value
+   */
+  public void setParentFieldType(String parentFieldType) {
+    this.parentFieldType = parentFieldType;
+  }
+
+
+  /**
+   *  Sets the parentFormName attribute of the PagedListInfo object
+   *
+   *@param  parentFormName  The new parentFormName value
+   */
+  public void setParentFormName(String parentFormName) {
+    this.parentFormName = parentFormName;
+  }
+
+
+  /**
+   *  Gets the parentFormName attribute of the PagedListInfo object
+   *
+   *@return    The parentFormName value
+   */
+  public String getParentFormName() {
+    return parentFormName;
+  }
+
+
+  /**
+   *  Gets the parentFieldType attribute of the PagedListInfo object
+   *
+   *@return    The parentFieldType value
+   */
+  public String getParentFieldType() {
+    return parentFieldType;
+  }
 
 
   /**
@@ -610,17 +654,18 @@ public void setSavedCriteria(HashMap savedCriteria) {
    *  Gets the AlphebeticalPageLinks attribute of the PagedListInfo object
    *
    *@param  javaScript  Description of the Parameter
+   *@param  formName    Description of the Parameter
    *@return             The AlphebeticalPageLinks value
    *@since              1.1
    */
-  public String getAlphabeticalPageLinks(String javaScript,String formName) {
+  public String getAlphabeticalPageLinks(String javaScript, String formName) {
     StringBuffer links = new StringBuffer();
     for (int i = 0; i < lettersArray.length; i++) {
       String thisLetter = lettersArray[i];
       if (thisLetter.equals(currentLetter)) {
         links.append(" <b>" + thisLetter + "</b> ");
       } else {
-        links.append("<a href=\"javascript:" + javaScript + "('letter','" + thisLetter + "','"+ formName +"');\"> " + thisLetter + " </a>");
+        links.append("<a href=\"javascript:" + javaScript + "('letter','" + thisLetter + "','" + formName + "');\"> " + thisLetter + " </a>");
       }
     }
     return links.toString();
@@ -968,12 +1013,10 @@ public void setSavedCriteria(HashMap savedCriteria) {
    *  Description of the Method
    */
   private void resetList() {
-    System.out.println("resettin..");
     this.setCurrentLetter("");
     this.setCurrentOffset(0);
   }
 
 }
-
 
 

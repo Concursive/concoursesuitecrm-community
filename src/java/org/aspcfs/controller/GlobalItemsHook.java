@@ -168,6 +168,13 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           ++myItems;
         }
       
+      //Tasks Items
+      if (thisUser.hasPermission("myhomepage-inbox-view")) {
+          int taskCount = TaskList.pendingCount(db,contactId);
+          items.append("<a href='/MyTasks.do?command=ListTasks' class='s'>Tasks</a> (" + paint(taskCount) + " pending)<br>");
+          ++myItems;
+        }
+        
         //Default no items
         if (myItems == 0) {
           items.append("No Items Found<br>&nbsp;<br>");

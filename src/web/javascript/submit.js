@@ -22,23 +22,52 @@
     }
   }
   
-  function setParentList(a){
-    opener.deleteOptions();
-	  if(a.length == 0){
-		    createOption("None Selected","");
-	  }
-    var i = 0;
-    for(i=0; i < a.length; i++) {
-        opener.insertOption(a[i],"");
-	   }
+  function validateTask() {
+    formTest = true;
+    message = "";
+    if(document.forms[0].description.value == ""){
+		    message += "- Enter a title\r\n";
+        formTest = false;
+    }
+    
+    if (formTest) {
+      return true;
+    } else {
+      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      return false;
+    }
   }
   
   
-   function deleteOptions(){
-     
-   while (document.newMessageForm.listView.options.length>0){
-      deleteIndex=document.newMessageForm.listView.options.length-1;
-      document.newMessageForm.listView.options[deleteIndex]=null;
+  function setParentList(recipientEmails,recipientIds,formName,field){
+	  if(recipientEmails.length == 0 && field == "list"){
+      opener.deleteOptions(formName);
+		  opener.insertOption("None Selected","",formName);
+	  }
+    var i = 0;
+    if(field == "list"){
+      opener.deleteOptions(formName);
+      for(i=0; i < recipientEmails.length; i++) {
+          opener.insertOption(recipientEmails[i],"",formName);
+      }
+    }
+    else if(field == "contactsingle"){
+        opener.document.forms[formName].contact.value = recipientIds[i];
+        opener.changeDivContent('changecontact',recipientEmails[i]);
+    }
+    else{
+        opener.document.forms[formName].owner.value = recipientIds[i];
+        opener.changeDivContent('changeowner',recipientEmails[i]);
+    }
+  }
+  
+  
+  
+   function deleteOptions(thisForm){
+   var frm = document.forms[thisForm];
+   while (frm.listView.options.length>0){
+      deleteIndex=frm.listView.options.length-1;
+      frm.listView.options[deleteIndex]=null;
    }
   }
   
@@ -74,6 +103,7 @@
       return false;
     }
 
+    
     
     function highlight(E,browser){
       if(E.checked){
@@ -115,12 +145,74 @@
       E.className = E.className.substr(0,4);
     }
 
-    function insertOption(text,value){
-     if (document.forms[0].listView.selectedIndex>0){
-       insertIndex=opener.document.newMessageForm.listView.selectedIndex;
+    
+    
+    
+    function insertOption(text,value,thisForm){
+      var frm = document.forms[thisForm];
+     if (frm.listView.selectedIndex>0){
+       insertIndex=frm.listView.selectedIndex;
      }
      else{
-       insertIndex= document.forms[0].listView.options.length;
+       insertIndex= frm.listView.options.length;
      }
-     document.forms[0].listView.options[insertIndex] = new Option(text,value);
+     frm.listView.options[insertIndex] = new Option(text,value);
     }
+    
+    
+function keepCount(chkName,thisForm) {
+var NewCount = 0;
+var frm = document.forms[thisForm];
+var len = document.forms[thisForm].elements.length;
+      var i=0;
+      for( i=0 ; i<len ; i++) {
+        if ((frm.elements[i].name.indexOf(chkName)!=-1)){
+          if(frm.elements[i].checked==1){
+            NewCount++;
+          }
+        }
+      }
+  if (NewCount == 2){
+    alert('Pick just one please')
+    frm; return false;
+  }
+}
+
+
+function setField(formField,thisValue,thisForm) {
+        var frm = document.forms[thisForm];
+        var len = document.forms[thisForm].elements.length;
+        var i=0;
+        for( i=0 ; i<len ; i++) {
+                if (frm.elements[i].name.indexOf(formField)!=-1) {
+                  if(thisValue){
+                    frm.elements[i].value = "1";
+                  }
+                  else {
+                    frm.elements[i].value = "0";
+                  }
+              }
+        }
+}
+  
+  
+function changeDivContent(divName, divContents) {
+		if(document.layers){
+			// Netscape 4 or equiv.
+			divToChange = document.layers[divName];
+			divToChange.document.open();
+			divToChange.document.write(divContents);
+			divToChange.document.close();
+		} else if(document.all){
+			// MS IE or equiv.
+			divToChange = document.all[divName];
+			divToChange.innerHTML = divContents;
+		} else if(document.getElementById){
+			// Netscape 6 or equiv.
+      divToChange = document.getElementById(divName);
+      divToChange.innerHTML = divContents;
+		}
+	}
+  
+  
+  

@@ -15,6 +15,7 @@ BODY  { font-family: verdana, arial, sans-serif; font-size: 8pt; background: whi
   .row1hl { background: #FFFDED; }
   .row2 { background: #FFFFFF; }
   .row2hl { background: #FFFDED; }
+  .strike { text-decoration: line-through; }
   .columntext1 { color: #000080; }
   .error { color: #006699; }
   

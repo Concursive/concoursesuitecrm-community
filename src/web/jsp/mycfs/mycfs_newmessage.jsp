@@ -17,14 +17,14 @@
   </tr>
   
   <tr class="containerBody">
-    <td nowrap valign="top" class="formLabel">
-      Recipients
+    <td nowrap valign="center" class="formLabel">
+      Recipient(s)
       </td>
     <td align="left">
-      <select size="1" name="listView">
-        <option value = "none" selected>None Selected</option>
+      <select size="3" name="listView" multiple>
+        <option  value = "none" selected>None Selected</option>
       </select>
-      <a href="javascript:popURLReturn('/MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true', 'MyCFSInbox.do?command=NewMessage', 'Inbox_message','700','450','yes','no');">Add Recipients</a>
+      <a href="javascript:popURLReturn('/MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=list&parentFormName=newMessageForm', 'MyCFSInbox.do?command=NewMessage', 'Inbox_message','700','450','yes','no');">Add Recipients</a>
      </td>
  </tr>
   

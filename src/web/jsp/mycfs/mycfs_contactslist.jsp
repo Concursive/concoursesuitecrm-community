@@ -94,10 +94,14 @@
    %>      
   <tr class="row<%= rowid+((selectedContacts.get(new Integer(thisContact.getId()))!= null)?"hl":"") %>">
     <td align="center" nowrap width=8>
-    
+  <%if(ContactListInfo.getParentFieldType().equalsIgnoreCase("list")){%>  
 	<input type=checkbox name="checkcontact<%=count%>" value=<%=thisContact.getId()%><%=((selectedContacts.get(new Integer(thisContact.getId()))!= null)?" checked":"")%> onClick="highlight(this,'<%=User.getBrowserId()%>');">
+  <%}
+  else{%>
+  <input type=checkbox name="checkcontact<%=count%>" value=<%=thisContact.getId()%><%=((selectedContacts.get(new Integer(thisContact.getId()))!= null)?" checked":"")%> onClick="return keepCount('checkcontact','contactListView')">
+  <%}%>
 	<input type=hidden name="hiddencontactid<%=count%>" value=<%=thisContact.getId()%>>
-    
+  <input type=hidden name="hiddenname<%=count%>" value="<%=toHtml(thisContact.getNameLastFirst())%>">
     </td>
     <td nowrap>
       <%= toHtml(thisContact.getNameLastFirst()) %>
@@ -119,7 +123,7 @@ if(!email.equals("")){
     else{
     %>
 <td align=left nowrap>None</td>
-<input type=hidden name="hiddenname<%=count%>" value="<%=toHtml(thisContact.getNameLastFirst())%>">
+
     <%}
 }
 else{%>
@@ -168,8 +172,10 @@ else{%>
     
     <input type='button' value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','contactListView');">
     <input type="button" value="Cancel" onClick="javascript:window.close()">
+    <%if(ContactListInfo.getParentFieldType().equalsIgnoreCase("list")){%>
     <a href="javascript:SetChecked(1,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Check All</a>
     <a href="javascript:SetChecked(0,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Clear All</a>
+    <%}%>
     <dhv:pagedListControl object="ContactListInfo" showForm="false" resetList="false"/>
     <br>
     <br>
@@ -177,23 +183,24 @@ else{%>
     <%}
       else {
       %>
-      <body OnLoad="javascript:setParentList(recipients);window.close()">
-      
-      <script>recipients = new Array();</script>
+      <body OnLoad="javascript:setParentList(recipientEmails,recipientIds,'<%=ContactListInfo.getParentFormName()%>','<%=ContactListInfo.getParentFieldType()%>');window.close()">
+      <script>recipientEmails = new Array();recipientIds = new Array();</script>
       <%
         Set s = selectedContacts.keySet();
         Iterator i = s.iterator();
         int count = -1;
         while (i.hasNext()) {
           count++;
-          Object st = selectedContacts.get(i.next());
+          Object id = i.next();
+          Object st = selectedContacts.get(id);
           String email = st.toString();
           if(email.startsWith("P:")){
             email = email.substring(2);
           }
           %>
           <script>
-            recipients[<%=count%>] = "<%=email%>";
+            recipientEmails[<%=count%>] = "<%=email%>";
+            recipientIds[<%=count%>] = "<%=id%>";
           </script>
           <%	
           }%>

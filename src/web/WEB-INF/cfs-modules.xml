@@ -21,6 +21,8 @@
     <action name="MyCFSPassword"/>
     <action name="MyCFSSettings"/>
     <action name="MyCFSInbox"/>
+    <action name="MyTasks"/>
+    <action name="MyTasksForward"/>
     <page title="My Home Page"/>
     <permission value="myhomepage-view"/>
     <long_html value="My Home Page"/>
@@ -62,12 +64,12 @@
       <link value="/MyCFS.do?command=Headline"/>
     </submenu>
     
-    <!--submenu name="Manage Tasks">
-      <permission value="pipeline-managetasks-view"/>
-      <long_html value="Manage Tasks"/>
-      <short_html value="Manage&lt;br&gt;Tasks"/>
-      <link value="/Leads.do?module=Manage%20Tasks&amp;include=pipeline_managetasks.htm"/>
-    </submenu-->
+    <submenu name="My Tasks">
+     <permission value="myhomepage-miner-view"/>
+      <long_html value="My Tasks"/>
+      <short_html value="My&lt;br&gt;Tasks"/>
+      <link value="/MyTasks.do"/>
+    </submenu>
   </menu>
   
   <menu>

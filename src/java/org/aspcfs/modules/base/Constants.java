@@ -1,5 +1,5 @@
 package com.darkhorseventures.cfsbase;
-
+ 
 public final class Constants {
   public static final int ACCOUNTS = 1;
   public static final int CONTACTS = 2;
@@ -15,6 +15,7 @@ public final class Constants {
   public static final int LEADS_REPORTS = 12;
   public static final int TICKETS_REPORTS = 13;
   public static final int AUTOGUIDE = 14;
+  public static final int TASKS = 15;
   
   public static final int TRUE = 1;
   public static final int FALSE = 0;

@@ -592,7 +592,7 @@ public void setRevenueType(int revenueType) {
     return thisUser;
   }
 
-
+ 
   /**
    *  Description of the Method
    *
@@ -685,7 +685,7 @@ public void setRevenueType(int revenueType) {
       pst.close();
       rs.close();
 
-      //Determine the offset, based on the filter, for the first record to show
+        //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
             sqlFilter.toString() +
