@@ -705,6 +705,7 @@ public final class TroubleTickets extends CFSModule {
 
     TicketList ticList = new TicketList();
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+    String type = context.getRequest().getParameter("type");
 
     ticListInfo.setLink("TroubleTickets.do?command=SearchTickets");
     ticList.setPagedListInfo(ticListInfo);
@@ -725,6 +726,13 @@ public final class TroubleTickets extends CFSModule {
         if ("createdByMe".equals(ticListInfo.getListView())) {
           ticList.setEnteredBy(getUserId(context));
         }
+      }
+
+      //set the status
+      if ("1".equals(type)) {
+        ticList.setOnlyOpen(true);
+      } else if ("2".equals(type)) {
+        ticList.setOnlyClosed(true);
       }
 
       ticList.buildList(db);
