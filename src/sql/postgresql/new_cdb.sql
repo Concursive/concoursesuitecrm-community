@@ -59,6 +59,12 @@ INSERT INTO lookup_contact_types (description) VALUES ('Billing');
 INSERT INTO lookup_contact_types (description) VALUES ('Technical');
 
 
+CREATE TABLE state (
+  state_code CHAR(2) PRIMARY KEY NOT NULL,
+  state VARCHAR(80) NOT NULL
+);
+
+
 CREATE TABLE lookup_department (
   code SERIAL PRIMARY KEY,
   description VARCHAR(50) NOT NULL UNIQUE,
