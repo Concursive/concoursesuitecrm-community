@@ -370,11 +370,8 @@ public final class ProcessEditData extends CFSModule {
 
 			while(firstIterator.hasNext()) {
 				Integer tempKey = (Integer)firstIterator.next();
-				System.out.println("Organization: " + tempKey);
 				HashMap secondMap = (HashMap)orgTotalsMap.get(tempKey);
 				
-				System.out.println(secondMap.size());
-
 				Iterator secondIterator = secondMap.keySet().iterator();
 
 				while(secondIterator.hasNext()) {
