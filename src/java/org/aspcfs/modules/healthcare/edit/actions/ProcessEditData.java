@@ -162,7 +162,7 @@ public String executeCommandDefault(ActionContext context) {
 	
       while ((t = shredder.nextValue()) != null) {
 	      if (t.indexOf("PROVIDER") > -1) {
-		      t = t.substring(10);
+		      t = t.substring(10).trim();
 		      if (t.length() > 0) {
 			      
 			      for (int k=0; k<5; k++) {
