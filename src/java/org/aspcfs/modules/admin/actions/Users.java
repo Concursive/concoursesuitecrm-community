@@ -216,11 +216,14 @@ public final class Users extends CFSModule {
       //Check the license
       PreparedStatement pst = db.prepareStatement(
           "SELECT count(*) AS user_count " +
-          "FROM access " +
-          "WHERE user_id > 0 " +
-          "AND role_id > 0 " +
-          "AND enabled = ? ");
-      pst.setBoolean(1, true);
+          "FROM access a, role r " +
+          "WHERE a.user_id > 0 " +
+          "AND a.role_id > 0 " +
+          "AND a.role_id = r.role_id " +
+          "AND r.role_type = ? " +
+          "AND a.enabled = ? ");
+      pst.setInt(1, Constants.ROLETYPE_REGULAR);
+      pst.setBoolean(2, true);
       ResultSet rs = pst.executeQuery();
       int current = 0;
       if (rs.next()) {
@@ -278,11 +281,14 @@ public final class Users extends CFSModule {
         //Check the license
         PreparedStatement pst = db.prepareStatement(
             "SELECT count(*) AS user_count " +
-            "FROM access " +
-            "WHERE user_id > 0 " +
-            "AND role_id > 0 " +
-            "AND enabled = ? ");
-        pst.setBoolean(1, true);
+            "FROM access a, role r " +
+            "WHERE a.user_id > 0 " +
+            "AND a.role_id > 0 " +
+            "AND a.role_id = r.role_id " +
+            "AND r.role_type = ? " +
+            "AND a.enabled = ? ");
+        pst.setInt(1, Constants.ROLETYPE_REGULAR);
+        pst.setBoolean(2, true);
         ResultSet rs = pst.executeQuery();
         int current = 0;
         if (rs.next()) {
@@ -456,11 +462,14 @@ public final class Users extends CFSModule {
         //Check the license
         PreparedStatement pst = db.prepareStatement(
             "SELECT count(*) AS user_count " +
-            "FROM access " +
-            "WHERE user_id > 0 " +
-            "AND role_id > 0 " +
-            "AND enabled = ? ");
-        pst.setBoolean(1, true);
+            "FROM access a, role r " +
+            "WHERE a.user_id > 0 " +
+            "AND a.role_id > 0 " +
+            "AND a.role_id = r.role_id " +
+            "AND r.role_type = ? " +
+            "AND a.enabled = ? ");
+        pst.setInt(1, Constants.ROLETYPE_REGULAR);
+        pst.setBoolean(2, true);
         ResultSet rs = pst.executeQuery();
         int current = 0;
         if (rs.next()) {

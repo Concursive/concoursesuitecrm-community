@@ -121,11 +121,14 @@ public final class Login extends CFSModule {
           String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
           PreparedStatement pst = db.prepareStatement(
               "SELECT count(*) AS user_count " +
-              "FROM access " +
-              "WHERE user_id > 0 " +
-              "AND role_id > 0 " +
-              "AND enabled = ? ");
-          pst.setBoolean(1, true);
+              "FROM access a, role r " +
+              "WHERE a.user_id > 0 " +
+              "AND a.role_id > 0 " +
+              "AND a.role_id = r.role_id " +
+              "AND r.role_type = ? " +
+              "AND a.enabled = ? ");
+          pst.setInt(1, Constants.ROLETYPE_REGULAR);
+          pst.setBoolean(2, true);
           ResultSet rs = pst.executeQuery();
           if (rs.next()) {
             if (rs.getInt("user_count") <= Integer.parseInt(lpd.substring(7)) || "-1".equals(lpd.substring(7))) {
@@ -236,9 +239,10 @@ public final class Login extends CFSModule {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Login-> Session Size: " + sessionManager.size());
     }
-    if (userId2 != null && !userId2.equals("-1") && sessionManager.size() > Integer.parseInt(userId2)) {
-      return "LicenseError";
-    }
+    // NOTE: This check is no longer valid until portal users are tracked
+    //if (userId2 != null && !userId2.equals("-1") && sessionManager.size() > Integer.parseInt(userId2)) {
+    //  return "LicenseError";
+    //}
     context.getSession().setMaxInactiveInterval(thisSystem.getSessionTimeout());
     sessionManager.addUser(context, userId);
     // TODO: Replace this so it does not need to be maintained
