@@ -78,8 +78,8 @@ CREATE TABLE lookup_contact_types (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  category INT NOT NULL DEFAULT 0,
-  user_id INT references access(user_id)
+  user_id INT references access(user_id),
+  category INT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE lookup_account_types (
