@@ -499,6 +499,9 @@ determined user is ${USER}
       
       <transaction src="database/${DBTYPE}/new_revenue.sql"/>
       <transaction src="${SRC}/tmp/revenue.init"/>
+      
+      <transaction src="database/${DBTYPE}/new_task.sql"/>
+      <transaction src="${SRC}/tmp/task.init"/>
     </sql>
     <delete dir="${SRC}/tmp" failonerror="false"/>
   </target>

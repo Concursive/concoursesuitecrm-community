@@ -6,21 +6,38 @@
  *@version    $Id$
  */
 
+CREATE TABLE lookup_task_priority (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
+CREATE TABLE lookup_task_loe (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
 CREATE TABLE task (
   task_id INT IDENTITY PRIMARY KEY,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
-  priority INT NOT NULL,
+  priority INTEGER NOT NULL REFERENCES lookup_task_priority,
   description VARCHAR(80),
   duedate DATETIME,
   reminderid INT,
-  notes VARCHAR(255),
+  notes TEXT,
   sharing INT NOT NULL,
   complete BIT DEFAULT 0 NOT NULL,
   enabled BIT DEFAULT 0 NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT REFERENCES access(user_id),
-  estimatedloe INTEGER DEFAULT -1,
+  estimatedloe FLOAT,
+  estimatedloetype INTEGER REFERENCES lookup_task_loe,
   owner INTEGER NOT NULL,
   completedate DATETIME
   );
