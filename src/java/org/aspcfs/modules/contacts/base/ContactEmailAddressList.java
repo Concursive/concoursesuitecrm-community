@@ -8,6 +8,8 @@ import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.modules.base.EmailAddressList;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Contains a list of email addresses... currently used to build the list from

@@ -1,3 +1,6 @@
+/*
+ *  Developed in partnership with Matt Rajkowski
+ */
 package org.aspcfs.utils;
 
 import java.sql.*;
@@ -206,6 +209,28 @@ public class DatabaseUtils {
       }
     }
     return null;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  tmp  Description of the Parameter
+   *@return      Description of the Return Value
+   */
+  public static java.sql.Timestamp parseDateToTimestamp(String tmp) {
+    java.sql.Timestamp timestampValue = DatabaseUtils.parseTimestamp(tmp);
+    if (timestampValue == null) {
+      try {
+        java.util.Date tmpDate = DateFormat.getDateInstance(DateFormat.SHORT).parse(tmp);
+        timestampValue = new java.sql.Timestamp(System.currentTimeMillis());
+        timestampValue.setTime(tmpDate.getTime());
+        timestampValue.setNanos(0);
+        return timestampValue;
+      } catch (Exception e) {
+      }
+    }
+    return timestampValue;
   }
 
 

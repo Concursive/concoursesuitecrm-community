@@ -379,7 +379,7 @@ public class EmailAddress {
    *@exception  SQLException  Description of Exception
    *@since                    1.4
    */
-  protected void buildRecord(ResultSet rs) throws SQLException {
+  public void buildRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("emailaddress_id"));
     if (!isContact) {
       this.setOrgId(rs.getInt("org_id"));
@@ -421,7 +421,7 @@ public class EmailAddress {
    *@param  parseItem  Description of Parameter
    *@since             1.4
    */
-  protected void buildRecord(HttpServletRequest request, int parseItem) {
+  public void buildRecord(HttpServletRequest request, int parseItem) {
     this.setType(request.getParameter("email" + parseItem + "type"));
     if (request.getParameter("email" + parseItem + "id") != null) {
       this.setId(request.getParameter("email" + parseItem + "id"));
