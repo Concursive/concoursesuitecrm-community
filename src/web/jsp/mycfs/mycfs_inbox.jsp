@@ -23,9 +23,8 @@ Mailbox
 </tr>
 </table>
 <%-- End Trails --%>
-<a href="javascript:window.location.href='MyCFSInbox.do?command=NewMessage';">New Message</a>
-<br>
-<center><%= InboxInfo.getAlphabeticalPageLinks() %></center>
+<a href="javascript:window.location.href='MyCFSInbox.do?command=NewMessage';">New Message</a><br />
+<br />
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="MyCFSInbox.do?command=Inbox">
