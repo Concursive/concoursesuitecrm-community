@@ -54,7 +54,7 @@
   <tr>
     <td width="150">Expire Date</td>
     <td>
-    <input type=text size=10 name="expires" value="<%=toHtmlValue(UserRecord.getExpires())%>">
+    <input type=text size=10 name="expires" value="<%=toHtmlValue(UserRecord.getExpiresString())%>">
     <a href="javascript:popCalendar('details', 'expires');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>

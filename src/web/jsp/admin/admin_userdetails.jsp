@@ -33,11 +33,11 @@
   </tr>
   <tr>
     <td width="150">Last Login</td>
-    <td><%= (UserRecord.getLastLogin()) %></td>
+    <td><%= (UserRecord.getLastLoginString()) %></td>
   </tr>
     <tr>
     <td width="150">Account Expires On</td>
-    <td><%= toHtml(UserRecord.getExpires()) %></td>
+    <td><%= toHtml(UserRecord.getExpiresString()) %></td>
   </tr>
 </table>
 <br>

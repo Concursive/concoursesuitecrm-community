@@ -42,20 +42,22 @@ public class User extends GenericBean {
 	protected int managerId = -1;
 	protected String manager = null;
 	protected User managerUser = null;
-	protected String lastLogin = null;
 	protected String ip = null;
 	protected String timeZone = null;
 	protected int startOfDay = -1;
 	protected int endOfDay = -1;
-	protected String entered = "";
 	protected int enteredBy = -1;
-	protected String modified = null;
-	protected String expires = null;
 	protected int modifiedBy = -1;
 	protected boolean enabled = true;
 	protected Contact contact = new Contact();
 	protected Vector permissions = new Vector();
 	protected UserList childUsers = null;
+	
+	protected java.sql.Timestamp entered = null;
+	protected java.sql.Timestamp modified = null;
+	protected java.sql.Timestamp lastLogin = null;
+	
+	protected java.sql.Date expires = null;
 	
 	protected String aliasName = null;
 
@@ -106,7 +108,32 @@ public class User extends GenericBean {
 		buildRecord(db, Integer.parseInt(userId));
 		buildResources(db);
 	}
-
+	
+	public java.sql.Date getExpires() {
+		return expires;
+	}
+	public void setExpires(java.sql.Date expires) {
+		this.expires = expires;
+	}
+	
+	public String getExpiresString() {
+		String tmp = "";
+	try {
+		return DateFormat.getDateInstance(3).format(expires);
+	} catch (NullPointerException e) {
+	}
+		return tmp;
+	}
+	
+	public void setExpires(String tmp) {
+	try {
+		java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
+		expires = new java.sql.Date(new java.util.Date().getTime());
+		expires.setTime(tmpDate.getTime());
+	} catch (Exception e) {
+		expires = null;
+	}
+	}
 
 	/**
 	 *  Constructor for the User object
@@ -175,22 +202,11 @@ public class User extends GenericBean {
 	 *@since
 	 */
 	public void setAlias(int tmp) {
-		this.alias = tmp;
+		alias = tmp;
 	}
 	
 	public void setAlias(String tmp) {
-		this.alias = Integer.parseInt(tmp);
-	}
-
-
-	/**
-	 *  Sets the Expires attribute of the User object
-	 *
-	 *@param  expires  The new Expires value
-	 *@since
-	 */
-	public void setExpires(String expires) {
-		this.expires = expires;
+		alias = Integer.parseInt(tmp);
 	}
 
 
@@ -366,6 +382,41 @@ public void setAliasName(String aliasName) {
 		this.password2 = tmp;
 	}
 
+public java.sql.Timestamp getEntered() { return entered; }
+public java.sql.Timestamp getModified() { return modified; }
+public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
+public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
+
+
+	public void setEntered(String tmp) {
+		this.entered = java.sql.Timestamp.valueOf(tmp);
+	}
+
+
+	public void setModified(String tmp) {
+		this.modified = java.sql.Timestamp.valueOf(tmp);
+	}
+	
+		public String getModifiedString() {
+		String tmp = "";
+		try {
+			return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+		}
+		catch (NullPointerException e) {
+		}
+		return tmp;
+	}
+
+
+	public String getEnteredString() {
+		String tmp = "";
+		try {
+			return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+		}
+		catch (NullPointerException e) {
+		}
+		return tmp;
+	}
 
 	/**
 	 *  Sets the ContactId attribute of the User object
@@ -463,17 +514,6 @@ public void setAliasName(String aliasName) {
 
 
 	/**
-	 *  Sets the Entered attribute of the User object
-	 *
-	 *@param  tmp  The new Entered value
-	 *@since       1.1
-	 */
-	public void setEntered(String tmp) {
-		this.entered = tmp;
-	}
-
-
-	/**
 	 *  Sets the EnteredBy attribute of the User object
 	 *
 	 *@param  tmp  The new EnteredBy value
@@ -495,18 +535,6 @@ public void setAliasName(String aliasName) {
 			this.enteredBy = Integer.parseInt(tmp);
 		}
 	}
-
-
-	/**
-	 *  Sets the Modified attribute of the User object
-	 *
-	 *@param  tmp  The new Modified value
-	 *@since       1.1
-	 */
-	public void setModified(String tmp) {
-		this.modified = tmp;
-	}
-
 
 	/**
 	 *  Sets the ModifiedBy attribute of the User object
@@ -555,7 +583,22 @@ public void setAliasName(String aliasName) {
 			this.enabled = true;
 		}
 	}
+public java.sql.Timestamp getLastLogin() { return lastLogin; }
+public void setLastLogin(java.sql.Timestamp tmp) { this.lastLogin = tmp; }
 
+	public void setLastLogin(String tmp) {
+		this.lastLogin = java.sql.Timestamp.valueOf(tmp);
+	}
+	
+	public String getLastLoginString() {
+		String tmp = "";
+		try {
+			return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(lastLogin);
+		}
+		catch (NullPointerException e) {
+		}
+		return tmp;
+	}
 
 	/**
 	 *  Sets the Ip attribute of the User object
@@ -664,17 +707,6 @@ public void setAliasName(String aliasName) {
 	 */
 	public int getAlias() {
 		return alias;
-	}
-
-
-	/**
-	 *  Gets the Expires attribute of the User object
-	 *
-	 *@return    The Expires value
-	 *@since
-	 */
-	public String getExpires() {
-		return expires;
 	}
 
 
@@ -871,18 +903,6 @@ public void setAliasName(String aliasName) {
 		return role;
 	}
 
-
-	/**
-	 *  Gets the Entered attribute of the User object
-	 *
-	 *@return    The Entered value
-	 *@since     1.1
-	 */
-	public String getEntered() {
-		return entered;
-	}
-
-
 	/**
 	 *  Gets the EnteredBy attribute of the User object
 	 *
@@ -891,33 +911,6 @@ public void setAliasName(String aliasName) {
 	 */
 	public int getEnteredBy() {
 		return enteredBy;
-	}
-
-
-	/**
-	 *  Gets the Modified attribute of the User object
-	 *
-	 *@return    The Modified value
-	 *@since     1.1
-	 */
-	public String getModified() {
-		return modified;
-	}
-
-
-	/**
-	 *  Gets the LastLogin attribute of the User object
-	 *
-	 *@return    The LastLogin value
-	 *@since     1.23
-	 */
-	public String getLastLogin() {
-		if (lastLogin != null && lastLogin.equals(entered)) {
-			return ("None");
-		}
-		else {
-			return lastLogin;
-		}
 	}
 
 
@@ -1165,12 +1158,11 @@ public void setAliasName(String aliasName) {
 			pst.setInt(++i, getRoleId());
 			pst.setInt(++i, getEnteredBy());
 			pst.setInt(++i, getModifiedBy());
-
-			if (expires == null || expires.equals("")) {
+			
+			if (expires == null) {
 				pst.setNull(++i, java.sql.Types.DATE);
-			}
-			else {
-				pst.setDate(++i, convertStringToSqlDate(this.getExpires(), DateFormat.SHORT));
+			} else {
+				pst.setDate(++i, this.getExpires());
 			}
 
 			pst.execute();
@@ -1439,7 +1431,7 @@ public void setAliasName(String aliasName) {
 
 		//No circular allowed -- check hierarchy context
 		//Get id of the user being modified, see if the managerId is in their hierarchy
-		if (managerId > 0 && id > -1) {
+		if (managerId > 0 && id > -1 && alias == -1) {
 			if (managerId == id) {
 				errors.put("managerIdError", "User cannot report to itself");
 			}
@@ -1494,42 +1486,16 @@ public void setAliasName(String aliasName) {
 			this.aliasName = aliasNameLast + ", " + aliasNameFirst;
 		}
 
-		java.sql.Timestamp tmpDateCreated = rs.getTimestamp("entered");
-		if (tmpDateCreated != null) {
-			entered = shortDateTimeFormat.format(tmpDateCreated);
-		}
-		else {
-			entered = "";
-		}
+		entered = rs.getTimestamp("entered");
 
 		enteredBy = rs.getInt("enteredby");
 
-		java.sql.Timestamp tmpLastModified = rs.getTimestamp("modified");
-		if (tmpLastModified != null) {
-			modified = shortDateTimeFormat.format(tmpLastModified);
-		}
-		else {
-			modified = "";
-		}
+		modified = rs.getTimestamp("modified");
 
 		modifiedBy = rs.getInt("modifiedby");
 
-		java.sql.Timestamp tmpExpires = rs.getTimestamp("expires");
-
-		if (tmpExpires != null) {
-			this.expires = shortDateFormat.format(tmpExpires);
-		}
-		else {
-			this.expires = "";
-		}
-
-		java.sql.Timestamp tmpLastLogin = rs.getTimestamp("last_login");
-		if (tmpLastLogin != null) {
-			lastLogin = shortDateTimeFormat.format(tmpLastLogin);
-		}
-		else {
-			lastLogin = "";
-		}
+		expires = rs.getDate("expires");
+		lastLogin = rs.getTimestamp("last_login");
 
 		enabled = rs.getBoolean("enabled");
 		ip = rs.getString("last_ip");
@@ -1623,6 +1589,7 @@ public void setAliasName(String aliasName) {
 	 */
 	private int update(Connection db, ActionContext context, boolean override) throws SQLException {
 		int resultCount = 0;
+		int defaultManager = -1;
 
 		if (!isValidNoPass(db, context)) {
 			return -1;
@@ -1651,35 +1618,27 @@ public void setAliasName(String aliasName) {
 		pst = db.prepareStatement(sql.toString());
 		pst.setString(++i, username);
 		//pst.setInt(++i, contact.getId());
-		if (alias > -1) {
-			pst.setInt(++i, -1);
+		if (this.getAlias() > -1) {
+			pst.setInt(++i, defaultManager);
 		} else {
-			pst.setInt(++i, managerId);
+			pst.setInt(++i, this.getManagerId());
 		}
 		
 		pst.setInt(++i, roleId);
 
-		if (expires == null || expires.equals("")) {
+		if (expires == null) {
 			pst.setNull(++i, java.sql.Types.DATE);
-		}
-		else {
-			pst.setDate(++i, convertStringToSqlDate(this.getExpires(), DateFormat.SHORT));
+		} else {
+			pst.setDate(++i, this.getExpires());
 		}
 		
 		pst.setInt(++i, alias);
 
-		//pst.setBoolean(++i, getEnabled());
 		if (password1 != null) {
 			pst.setString(++i, encryptPassword(password1));
 		}
 
-		//pst.setInt(++i, getModifiedBy());
-
 		pst.setInt(++i, getId());
-
-		//if (!override) {
-		//	pst.setTimestamp(++i, java.sql.Timestamp.valueOf(getModified()));
-		//}
 
 		resultCount = pst.executeUpdate();
 		pst.close();

@@ -46,6 +46,7 @@ public final class Users extends CFSModule {
       } 
       else if ("aliases".equals(listInfo.getListView())) {
 	      list.setIncludeAliases(true);
+	      list.setEnabled(UserList.TRUE);
       } 
       else {
         list.setEnabled(UserList.TRUE);

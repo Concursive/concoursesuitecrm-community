@@ -129,7 +129,7 @@ public final class Login extends GenericAction {
         if (pw == null || pw.trim().equals("") || (!pw.equals(password) && !context.getServletContext().getAttribute("GlobalPWInfo").equals(password))   ) {
           loginBean.setMessage("* Access denied: Invalid password.");
         } else {
-	  java.sql.Timestamp expDate = rs.getTimestamp("expires");
+	  java.sql.Date expDate = rs.getDate("expires");
 	  
 	  if ( expDate != null && now.after(expDate) ) {
 		  loginBean.setMessage("* Access denied: Account Expired.");
