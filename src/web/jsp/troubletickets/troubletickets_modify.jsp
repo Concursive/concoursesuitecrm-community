@@ -310,6 +310,7 @@ Modify Ticket<br>
         <input type="checkbox" name="closeNow">Close ticket<br>
         <input type="checkbox" name="kbase">Add this solution to Knowledge Base
 <%-- Added for voice demo, will show a list of surveys that can be emailed... --%>
+<%--
 <%
         CampaignList campaignList = (CampaignList) request.getAttribute("CampaignList");
         if (campaignList != null && campaignList.size() > 0) {
@@ -325,6 +326,7 @@ Modify Ticket<br>
 <%
         }
 %>
+--%>
 <%-- End voice demo --%>
       </td>
 		</tr>
