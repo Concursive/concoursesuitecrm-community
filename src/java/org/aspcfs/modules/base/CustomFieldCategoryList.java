@@ -19,11 +19,6 @@ import com.darkhorseventures.webutils.HtmlSelect;
  */
 public class CustomFieldCategoryList extends Vector {
   
-  public static final int TRUE = 1;
-  public static final int FALSE = 0;
-  
-  public static final int ACCOUNTS = 1; 
-  
   private PagedListInfo pagedListInfo = null;
 
   //Properties for building the list
@@ -253,15 +248,15 @@ public class CustomFieldCategoryList extends Vector {
       sqlFilter = new StringBuffer();
     }
 
-    if (includeScheduled == TRUE) {
+    if (includeScheduled == Constants.TRUE) {
       sqlFilter.append("AND CURRENT_TIMESTAMP > cfc.start_date AND (CURRENT_TIMESTAMP < cfc.end_date OR cfc.end_date IS NULL) ");
-    } else if (includeScheduled == FALSE) {
+    } else if (includeScheduled == Constants.FALSE) {
       sqlFilter.append("AND (CURRENT_TIMESTAMP < cfc.start_date OR (CURRENT_TIMESTAMP > cfc.end_date AND cfc.end_date IS NOT NULL)) ");
     }
 
-    if (includeEnabled == TRUE) {
+    if (includeEnabled == Constants.TRUE) {
       sqlFilter.append("AND cfc.enabled = true ");
-    } else if (includeEnabled == FALSE) {
+    } else if (includeEnabled == Constants.FALSE) {
       sqlFilter.append("AND cfc.enabled = false ");
     }
   }

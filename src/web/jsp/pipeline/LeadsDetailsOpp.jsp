@@ -20,9 +20,9 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="/Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>"><font color="#0000FF">Details</font></a> | 
-      <a href="/LeadsCalls.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#000000">Calls</font></a> |
-      <a href="#"><font color="#000000">Documents</font></a>
+      <a href="Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>"><font color="#0000FF">Details</font></a> | 
+      <a href="LeadsCalls.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#000000">Calls</font></a> |
+      <a href="LeadsDocuments.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#000000">Documents</font></a>
     </td>
   </tr>
   <tr>

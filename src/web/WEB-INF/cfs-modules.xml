@@ -137,6 +137,7 @@
   <menu>
     <action name="Leads"/>
     <action name="LeadsCalls"/>
+    <action name="LeadsDocuments"/>
     <page title="Pipeline Management"/>
     <permission value="pipeline-view"/>
     <long_html value="Pipeline"/>

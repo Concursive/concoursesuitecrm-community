@@ -121,18 +121,6 @@
     <forward name="UpdateOK" resource="/ExternalContactsCalls.do?command=Details"/>
     <forward name="DeleteOK" resource="/ExternalContactsCalls.do?command=View"/>
   </action>
-  
-  <action name="LeadsCalls" class="com.darkhorseventures.cfsmodule.LeadsCalls">
-    <bean name="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
-    <forward name="SecurityCheck" resource="/login.jsp"/>
-    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
-    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="ViewOK" resource="/leads_listcalls.jsp" layout="nav"/>
-    <forward name="DetailsOK" resource="/leads_detailscall.jsp" layout="nav"/>
-    <forward name="ModifyOK" resource="/leads_modifycall.jsp" layout="nav"/>
-    <forward name="UpdateOK" resource="/LeadsCalls.do?command=Details"/>
-    <forward name="DeleteOK" resource="/LeadsCalls.do?command=View"/>
-  </action>
   <!-- End Contacts & Resources Module -->
   
   
@@ -152,6 +140,29 @@
     <forward name="OppListOK" resource="/LeadsViewOpp.jsp" layout="nav"/>
     <forward name="OppDetailsOK" resource="/LeadsDetailsOpp.jsp" layout="nav"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
+  </action>
+  <action name="LeadsCalls" class="com.darkhorseventures.cfsmodule.LeadsCalls">
+    <bean name="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/leads_listcalls.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/leads_detailscall.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/leads_modifycall.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/LeadsCalls.do?command=Details"/>
+    <forward name="DeleteOK" resource="/LeadsCalls.do?command=View"/>
+  </action>
+  <action name="LeadsDocuments" class="com.darkhorseventures.cfsmodule.LeadsDocuments">
+    <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/leads_documents_list.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/leads_documents_upload.jsp" layout="nav"/>
+    <forward name="UploadOK" resource="/LeadsDocuments.do?command=View"/>
+    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="DeleteERROR" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
   </action>
   <!-- End Pipeline Management Module -->
   

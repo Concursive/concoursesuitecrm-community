@@ -517,9 +517,9 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
-      thisList.setLinkModuleId(CustomFieldCategoryList.ACCOUNTS);
-      thisList.setIncludeEnabled(CustomFieldCategoryList.TRUE);
-      thisList.setIncludeScheduled(CustomFieldCategoryList.TRUE);
+      thisList.setLinkModuleId(Constants.ACCOUNTS);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
       thisList.setBuildResources(false);
       thisList.buildList(db);
       context.getRequest().setAttribute("CategoryList", thisList);
@@ -537,28 +537,28 @@ public final class Accounts extends CFSModule {
       
       if (recordId == null) {
         CustomFieldCategory thisCategory = thisList.getCategory(Integer.parseInt(selectedCatId));
-        //thisCategory.setLinkModuleId(CustomFieldCategoryList.ACCOUNTS);
+        //thisCategory.setLinkModuleId(Constants.ACCOUNTS);
         //thisCategory.setLinkItemId(thisOrganization.getOrgId());
         //thisCategory.setRecordId(Integer.parseInt(recordId));
-        //thisCategory.setIncludeEnabled(CustomFieldCategory.TRUE);
-        //thisCategory.setIncludeScheduled(CustomFieldCategory.TRUE);
+        //thisCategory.setIncludeEnabled(Constants.TRUE);
+        //thisCategory.setIncludeScheduled(Constants.TRUE);
         //thisCategory.setBuildResources(true);
         //thisCategory.buildResources(db);
         context.getRequest().setAttribute("Category", thisCategory);
         
         CustomFieldRecordList recordList = new CustomFieldRecordList();
-        recordList.setLinkModuleId(CustomFieldCategoryList.ACCOUNTS);
+        recordList.setLinkModuleId(Constants.ACCOUNTS);
         recordList.setLinkItemId(thisOrganization.getOrgId());
         recordList.setCategoryId(thisCategory.getId());
         recordList.buildList(db);
         context.getRequest().setAttribute("Records", recordList);
       } else {
         CustomFieldCategory thisCategory = thisList.getCategory(Integer.parseInt(selectedCatId));
-        thisCategory.setLinkModuleId(CustomFieldCategoryList.ACCOUNTS);
+        thisCategory.setLinkModuleId(Constants.ACCOUNTS);
         thisCategory.setLinkItemId(thisOrganization.getOrgId());
         thisCategory.setRecordId(Integer.parseInt(recordId));
-        thisCategory.setIncludeEnabled(CustomFieldCategory.TRUE);
-        thisCategory.setIncludeScheduled(CustomFieldCategory.TRUE);
+        thisCategory.setIncludeEnabled(Constants.TRUE);
+        thisCategory.setIncludeScheduled(Constants.TRUE);
         thisCategory.setBuildResources(true);
         thisCategory.buildResources(db);
         context.getRequest().setAttribute("Category", thisCategory);
@@ -597,10 +597,10 @@ public final class Accounts extends CFSModule {
       String selectedCatId = (String)context.getRequest().getParameter("catId");
       CustomFieldCategory thisCategory = new CustomFieldCategory(db, 
         Integer.parseInt(selectedCatId));
-      thisCategory.setLinkModuleId(CustomFieldCategoryList.ACCOUNTS);
+      thisCategory.setLinkModuleId(Constants.ACCOUNTS);
       thisCategory.setLinkItemId(thisOrganization.getOrgId());
-      thisCategory.setIncludeEnabled(CustomFieldCategory.TRUE);
-      thisCategory.setIncludeScheduled(CustomFieldCategory.TRUE);
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
       thisCategory.setBuildResources(true);
       thisCategory.buildResources(db);
       context.getRequest().setAttribute("Category", thisCategory);
@@ -636,11 +636,11 @@ public final class Accounts extends CFSModule {
       
       CustomFieldCategory thisCategory = new CustomFieldCategory(db, 
         Integer.parseInt(selectedCatId));
-      thisCategory.setLinkModuleId(CustomFieldCategoryList.ACCOUNTS);
+      thisCategory.setLinkModuleId(Constants.ACCOUNTS);
       thisCategory.setLinkItemId(thisOrganization.getOrgId());
       thisCategory.setRecordId(Integer.parseInt(recordId));
-      thisCategory.setIncludeEnabled(CustomFieldCategory.TRUE);
-      thisCategory.setIncludeScheduled(CustomFieldCategory.TRUE);
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
       thisCategory.setBuildResources(true);
       thisCategory.buildResources(db);
       context.getRequest().setAttribute("Category", thisCategory);
@@ -673,9 +673,9 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
-      thisList.setLinkModuleId(CustomFieldCategoryList.ACCOUNTS);
-      thisList.setIncludeEnabled(CustomFieldCategoryList.TRUE);
-      thisList.setIncludeScheduled(CustomFieldCategoryList.TRUE);
+      thisList.setLinkModuleId(Constants.ACCOUNTS);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
       thisList.setBuildResources(false);
       thisList.buildList(db);
       context.getRequest().setAttribute("CategoryList", thisList);
@@ -686,11 +686,11 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("catId", selectedCatId);
       CustomFieldCategory thisCategory = new CustomFieldCategory(db, 
         Integer.parseInt(selectedCatId));
-      thisCategory.setLinkModuleId(CustomFieldCategoryList.ACCOUNTS);
+      thisCategory.setLinkModuleId(Constants.ACCOUNTS);
       thisCategory.setLinkItemId(thisOrganization.getOrgId());
       thisCategory.setRecordId(Integer.parseInt(recordId));
-      thisCategory.setIncludeEnabled(CustomFieldCategory.TRUE);
-      thisCategory.setIncludeScheduled(CustomFieldCategory.TRUE);
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
       thisCategory.setBuildResources(true);
       thisCategory.buildResources(db);
       thisCategory.setParameters(context);
@@ -740,9 +740,9 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
-      thisList.setLinkModuleId(CustomFieldCategoryList.ACCOUNTS);
-      thisList.setIncludeEnabled(CustomFieldCategoryList.TRUE);
-      thisList.setIncludeScheduled(CustomFieldCategoryList.TRUE);
+      thisList.setLinkModuleId(Constants.ACCOUNTS);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
       thisList.setBuildResources(false);
       thisList.buildList(db);
       context.getRequest().setAttribute("CategoryList", thisList);
@@ -751,10 +751,10 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("catId", selectedCatId);
       CustomFieldCategory thisCategory = new CustomFieldCategory(db, 
         Integer.parseInt(selectedCatId));
-      thisCategory.setLinkModuleId(CustomFieldCategoryList.ACCOUNTS);
+      thisCategory.setLinkModuleId(Constants.ACCOUNTS);
       thisCategory.setLinkItemId(thisOrganization.getOrgId());
-      thisCategory.setIncludeEnabled(CustomFieldCategory.TRUE);
-      thisCategory.setIncludeScheduled(CustomFieldCategory.TRUE);
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
       thisCategory.setBuildResources(true);
       thisCategory.buildResources(db);
       thisCategory.setParameters(context);
