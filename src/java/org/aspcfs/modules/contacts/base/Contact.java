@@ -1427,6 +1427,24 @@ public class Contact extends GenericBean {
     this.id = -1;
     this.notes = null;
     this.title = null;
+    
+    Iterator i = emailAddressList.iterator();
+    while(i.hasNext()){
+      ContactEmailAddress thisAddress = (ContactEmailAddress) i.next();
+      thisAddress.setId(-1);
+    }
+    
+    Iterator j = phoneNumberList.iterator();
+    while(j.hasNext()){
+      ContactPhoneNumber thisNumber = (ContactPhoneNumber) j.next();
+      thisNumber.setId(-1);
+    }
+    
+    Iterator k = addressList.iterator();
+    while(k.hasNext()){
+      ContactAddress thisAddress = (ContactAddress) k.next();
+      thisAddress.setId(-1);
+    }
   }
 
 
