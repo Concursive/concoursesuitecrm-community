@@ -1119,8 +1119,12 @@ public class Inventory {
    *@exception  SQLException  Description of Exception
    */
   public void buildPictureId(Connection db) throws SQLException {
-    FileItem fileItem = new FileItem(db, -1, id, Constants.AUTOGUIDE);
-    pictureId = fileItem.getId();
+    try {
+      FileItem fileItem = new FileItem(db, -1, id, Constants.AUTOGUIDE);
+      pictureId = fileItem.getId();
+    } catch (SQLException e) {
+      pictureId = -1;
+    }
   }
 
 
@@ -1131,9 +1135,13 @@ public class Inventory {
    *@exception  SQLException  Description of Exception
    */
   public void buildPicture(Connection db) throws SQLException {
-    picture = new FileItem(db, -1, id, Constants.AUTOGUIDE);
-    picture.buildVersionList(db);
-    pictureId = picture.getId();
+    try {
+      picture = new FileItem(db, -1, id, Constants.AUTOGUIDE);
+      picture.buildVersionList(db);
+      pictureId = picture.getId();
+    } catch (SQLException e) {
+      pictureId = -1;
+    }
     if (pictureId == -1) {
       picture = null;
     }
