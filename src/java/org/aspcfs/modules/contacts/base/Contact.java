@@ -2512,11 +2512,11 @@ public class Contact extends GenericBean {
     DependencyList dependencyList = new DependencyList();
     try {
       db.setAutoCommit(false);
-      String sql = "SELECT count(*) as oppcount " +
-          "FROM opportunity_header " +
-          "WHERE opportunity_header.contactlink = ? ";
       int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql);
+      PreparedStatement pst = db.prepareStatement(
+                                "SELECT count(*) as oppcount " +
+                                "FROM opportunity_header " +
+                                "WHERE opportunity_header.contactlink = ? ");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
