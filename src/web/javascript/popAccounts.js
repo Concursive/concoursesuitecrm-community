@@ -23,6 +23,45 @@ function popAccountsListSingle(hiddenFieldId, displayFieldId, params) {
   }
 }
 
+function popAccountsListSingleAlert(functionName, orgId, itemId, params) {
+	title  = 'Accounts';
+	width  =  '575';
+	height =  '400';
+	resize =  'yes';
+	bars   =  'no';
+	var posx = (screen.width - width)/2;
+	var posy = (screen.height - height)/2;
+	var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+	if(params != ''){
+		params = '&' + params;
+	}
+	url = 'AccountSelector.do?command=ListAccounts&listType=singleAlert&reset=true&previousSelection=' + orgId ;
+	url += '&functionName=' + functionName ;
+	url += '&orgId=' + orgId ;
+	url += '&itemId=' + itemId ;
+	url += params ;
+	var newwin=window.open(url, title, windowParams);
+	newwin.focus();
+	if (newwin != null) {
+		if (newwin.opener == null)
+			newwin.opener = self;
+	}
+}
+
+function singleAlert(functionName, orgId, itemId, newOrgId, orgName) {
+	if (orgId == newOrgId) {
+		alert("Your current selection matches the previous selection. Select a different account.");
+		return ;
+	}
+	var msg = opener.executeFunction(functionName, orgName) ;
+	if(confirm(msg)) {
+		document.acctListView.finalsubmit.value = true;
+		opener.executeFunction(functionName, itemId, orgId, newOrgId);
+		window.close();
+	} else {
+		document.acctListView.finalsubmit.value = false;
+	}
+}
 
 function setParentList(acctIds, acctNames, listType, displayFieldId, hiddenFieldId){
   if(acctNames.length == 0 && listType == "list"){

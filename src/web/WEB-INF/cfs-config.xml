@@ -466,6 +466,8 @@
     <forward name="PrepareAddOK" resource="/accounts/accounts_contacts_add.jsp" layout="nav"/>
     <forward name="PrepareModifyOK" resource="/accounts/accounts_contacts_modify.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/Contacts.do?command=View"/>
+    <forward name="MoveERROR" resource="/move_dialog.jsp" layout="style"/>
+    <forward name="MoveOK" resource="/Contacts.do?command=View"/>
     <forward name="ModifyOK" resource="/contacts/companydirectory_contactmodifyform.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/Contacts.do?command=Details"/>
     <forward name="DetailsOK" resource="/accounts/accounts_contacts_details.jsp" layout="nav"/>

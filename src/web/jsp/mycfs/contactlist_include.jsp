@@ -73,7 +73,7 @@
   if ("list".equals(request.getParameter("listType"))) { %>  
       <input type="checkbox" name="checkcontact<%= count %>" value=<%= thisContactId %><%= ((selectedContacts.get(new Integer(thisContactId))!= null)?" checked":"") %> onClick="highlight(this,'<%=User.getBrowserId()%>');">
 <%} else {%>
-      <a href="javascript:document.contactListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%= count %>','contactListView');">Add</a>
+      <a href="javascript:document.contactListView.finalsubmit.value = 'true';setFieldSubmit('rowcount','<%= count %>','contactListView');">Select</a>
 <%}%>
       <input type="hidden" name="hiddencontactid<%= count %>" value="<%= thisContactId %>">
       <input type="hidden" name="hiddenname<%= count %>" value="<%= toHtml(thisContact.getValidName()) %>">

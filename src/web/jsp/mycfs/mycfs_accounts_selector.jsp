@@ -109,20 +109,22 @@
       <td align="center" nowrap width="8">
 <% 
   if ("list".equals(request.getParameter("listType"))) { 
-  %>  
-        <input type="checkbox" name="account<%= count %>" value="<%= thisAcct.getOrgId() %>" <%= (SelectedAccounts.indexOf(orgId) != -1 ? " checked" : "") %> onClick="highlight(this,'<%=User.getBrowserId()%>');">
+%>
+     <input type="checkbox" name="account<%= count %>" value="<%= thisAcct.getOrgId() %>" <%= (SelectedAccounts.indexOf(orgId) != -1 ? " checked" : "") %> onClick="highlight(this,'<%= User.getBrowserId() %>');">
+<%} else if ("singleAlert".equals(request.getParameter("listType"))) {%>
+		<a href="javascript:singleAlert('<%= request.getParameter("functionName") %>','<%= request.getParameter("orgId") %>','<%= request.getParameter("itemId") %>','<%= thisAcct.getOrgId() %>','<%= thisAcct.getName() %>');">Select</a>
 <%} else {%>
-        <a href="javascript:document.acctListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%= count %>','acctListView');">Add</a>
+     <a href="javascript:document.acctListView.finalsubmit.value = 'true';setFieldSubmit('rowcount','<%= count %>','acctListView');">Select</a>
 <%}%>
         <input type="hidden" name="hiddenAccountId<%= count %>" value="<%= thisAcct.getOrgId() %>">
       </td>
       <td nowrap>
           <%= toHtml(thisAcct.getName()) %>
       </td>
-      <dhv:evaluate exp="<%=(thisAcct.getPrimaryContact() == null)%>">
+      <dhv:evaluate if="<%= (thisAcct.getPrimaryContact() == null) %>">
         <td nowrap> <%= (!"".equals(thisAcct.getPhoneNumber("Main")) ? toHtml(thisAcct.getPhoneNumber("Main")) : "None") %></td> 
       </dhv:evaluate>
-      <dhv:evaluate exp="<%=(thisAcct.getPrimaryContact() != null)%>">
+      <dhv:evaluate if="<%= (thisAcct.getPrimaryContact() != null) %>">
         <td nowrap> <%= (!"".equals(thisAcct.getPrimaryContact().getPhoneNumber("Business")) ? toHtml(thisAcct.getPrimaryContact().getPhoneNumber("Business")) : "None") %></td> 
       </dhv:evaluate>
     </tr>
@@ -136,6 +138,9 @@
       </td>
     </tr>
 <%}%>
+    <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
+    <input type="hidden" name="itemId" value="<%= request.getParameter("itemId") %>">
+    <input type="hidden" name="functionName" value="<%= request.getParameter("functionName") %>">
     <input type="hidden" name="finalsubmit" value="false">
     <input type="hidden" name="rowcount" value="0">
     <input type="hidden" name="displayFieldId" value="<%= toHtmlValue(request.getParameter("displayFieldId")) %>">
@@ -146,15 +151,15 @@
 <% if("list".equals(request.getParameter("listType"))){ %>
   <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','acctListView');">
   <input type="button" value="Cancel" onClick="javascript:window.close()">
-  <a href="javascript:SetChecked(1,'account','acctListView','<%=User.getBrowserId()%>');">Check All</a>
-  <a href="javascript:SetChecked(0,'account','acctListView','<%=User.getBrowserId()%>');">Clear All</a>
+  <a href="javascript:SetChecked(1,'account','acctListView','<%= User.getBrowserId() %>');">Check All</a>
+  <a href="javascript:SetChecked(0,'account','acctListView','<%= User.getBrowserId() %>');">Clear All</a>
 <%}else{%>
   <input type="button" value="Cancel" onClick="javascript:window.close()">
 <%}%>
 </form>
 <%} else { %>
 <%-- The final submit --%>
-  <body OnLoad="javascript:setParentList(acctIds, acctNames, '<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= User.getBrowserId() %>');window.close()">
+  <body onLoad="javascript:setParentList(acctIds, acctNames, '<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= User.getBrowserId() %>');window.close()">
   <script>acctIds = new Array();acctNames = new Array();</script>
 <%
   Iterator i = FinalAccounts.iterator();

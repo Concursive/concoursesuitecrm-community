@@ -19,7 +19,7 @@ import org.aspcfs.modules.base.*;
 import org.aspcfs.utils.web.*;
 
 /**
- *  Description of the Class
+ *  Web actions for the Accounts->Contacts module
  *
  *@author     chris
  *@created    August 29, 2001
@@ -346,6 +346,44 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandMove(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-contacts-edit")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Contact thisContact = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+    int contactId = Integer.parseInt(context.getRequest().getParameter("id"));
+    try {
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      if (thisContact.getPrimaryContact()) {
+        htmlDialog.setHeader("This contact cannot be moved because it is also an individual account.");
+        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+        context.getSession().setAttribute("Dialog", htmlDialog);
+        return ("MoveERROR");
+      } else if (thisContact.getOrgId() > 0) {
+        int orgId = Integer.parseInt(context.getRequest().getParameter("neworgId"));
+        Contact.move(db, contactId, orgId);
+      } else {
+        return ("PermissionError");
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("MoveOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    *@since
@@ -491,7 +529,13 @@ public final class Contacts extends CFSModule {
 
     return this.getReturn(context, "ViewMessages");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   */
   private void resetPagedListInfo(ActionContext context) {
     this.deletePagedListInfo(context, "AccountContactCallsListInfo");
     this.deletePagedListInfo(context, "AccountContactOppsPagedListInfo");

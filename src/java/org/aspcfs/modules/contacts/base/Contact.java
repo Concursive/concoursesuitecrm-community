@@ -2592,6 +2592,26 @@ public class Contact extends GenericBean {
 
 
   /**
+   *  Updates the contact record with a new organization id
+   *
+   *@param  db                Description of the Parameter
+   *@param  contactId         Description of the Parameter
+   *@param  orgId             Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void move(Connection db, int contactId, int orgId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE contact " +
+        "SET org_id = ? " +
+        "WHERE contact_id = ?");
+    pst.setInt(1, orgId);
+    pst.setInt(2, contactId);
+    pst.executeUpdate();
+    pst.close();
+  }
+
+
+  /**
    *  Combines the first and last name of a contact, depending on the length of
    *  the strings
    *

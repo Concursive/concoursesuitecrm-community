@@ -9,7 +9,10 @@
 <%@ include file="accounts_contacts_list_menu.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
-<script language="JavaScript" type="text/javascript">
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/executeFunction.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/moveContact.js"></script>
+<SCRIPT LANGUAGE="JavaScript" type="text/javascript">
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
@@ -66,7 +69,7 @@ Contacts
 		<tr class="containerBody">
       <td valign="center" nowrap class="row<%= rowid %>">
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('menuContact', '<%= OrgDetails.getOrgId() %>', '<%= thisContact.getId() %>');"
+         <a href="javascript:displayMenu('menuContact', '<%= OrgDetails.getOrgId() %>', '<%= thisContact.getId() %>', '<%= thisContact.getPrimaryContact() %>');"
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td valign="center" width="50%" class="row<%= rowid %>">

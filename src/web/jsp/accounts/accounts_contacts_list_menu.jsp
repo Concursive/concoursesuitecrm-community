@@ -3,10 +3,12 @@
   var thisOrgId = -1;
   var thisContactId = -1;
   var menu_init = false;
+  var isPrimaryContact = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, orgId, contactId) {
+  function displayMenu(id, orgId, contactId, isPrimary) {
     thisOrgId = orgId;
     thisContactId = contactId;
+    isPrimaryContact = isPrimary;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuContact", "down", 0, 0, 170, getHeight("menuContactTable"));
@@ -20,6 +22,10 @@
   
   function modify() {
     window.location.href='Contacts.do?command=Modify&orgId=' + thisOrgId + '&id=' + thisContactId + '&return=list';
+  }
+
+  function move() {
+    check('moveContact', thisOrgId, thisContactId, '&filters=all|my|disabled', isPrimaryContact);
   }
   
   function clone() {
@@ -60,6 +66,16 @@
         </td>
         <td width="100%">
           <a href="javascript:clone()">Clone</a>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-edit">
+      <tr>
+        <td>
+          <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </td>
+        <td width="100%">
+          <a href="javascript:move()">Move</a>
         </td>
       </tr>
       </dhv:permission>
