@@ -20,6 +20,7 @@
   <!-- overridable -->
   <property name="SITEHOME" value="/home"/>
   <property name="SITECODE" value="cfs"/>
+  <property name="DBSITECODE" value="ds21"/>
   <property name="WEBUSER" value="apache"/>
   <property name="CFSGRP" value="cfs"/>
   <property name="GKDRIVER" value="org.postgresql.Driver"/>
@@ -39,11 +40,6 @@
   <!-- classpath as both object and a property -->
   <path id="cfs2.classpath">
     <pathelement path="${SRC_CLASSES}"/>
-<!-- No longer needed with latest Tomcat
-    <fileset dir="${env.TOMCAT_HOME}/lib">
-      <include name="**/*.jar"/>
-    </fileset>
--->
     <fileset dir="${env.TOMCAT_HOME}/common/lib">
       <include name="**/*.jar"/>
     </fileset>
@@ -356,7 +352,7 @@ determined user is ${USER}
       </fileset>
     </copy>
     <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
-             token="@SiteCode@" value="${SITECODE}"/>
+             token="@SiteCode@" value="${DBSITECODE}"/>
     <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
              token="@GKDRIVER@" value="${GKDRIVER}"/>
     <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"

@@ -15,6 +15,7 @@ export CLASSPATH=.:${TOMCAT_HOME}/common/lib/servlet.jar:${TOMCAT_HOME}/common/l
 GKDRIVER="org.postgresql.Driver"
 GKHOST="jdbc:postgresql://127.0.0.1:5432/cfs2gk"
 SITECODE="cfs"
+DBSITECODE="ds21"
 SITEHOME="/home"
 FORCESSL="true"
 
