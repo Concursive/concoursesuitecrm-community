@@ -1469,12 +1469,13 @@ public class CFSModule {
       Class[] argTypes = new Class[]{item.getClass()};
       Method m = c.getDeclaredMethod("getDeleteTerm", argTypes);
       Object o = m.invoke(null, new Object[]{item});
+      int deleteCount = 0;
       if (o != null) {
-        reader.delete((Term) o);
+        deleteCount = reader.delete((Term) o);
       }
-      // Update the shared searcher
-      IndexSearcher searcher = new IndexSearcher(index);
-      context.getServletContext().setAttribute("indexSearcher", searcher);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("GenericAction-> Deleted " + deleteCount + " terms, index: " + index);
+      }
     } catch (Exception io) {
       throw new IOException(io.getMessage());
     } finally {
@@ -1483,6 +1484,34 @@ public class CFSModule {
           reader.close();
         }
         reader = null;
+      } catch (Exception ie) {
+      }
+      try {
+        if (index != null) {
+          index.close();
+        }
+        index = null;
+      } catch (Exception ie) {
+      }
+    }
+    
+    // Optimize the cache
+    IndexWriter writer = null;
+    try {
+      index = getDirectory(context, false);
+      writer = new IndexWriter(index, new StandardAnalyzer(), false);
+      writer.optimize();
+      // Update the shared searcher
+      IndexSearcher searcher = new IndexSearcher(index);
+      context.getServletContext().setAttribute("indexSearcher", searcher);
+    } catch (Exception io) {
+      throw new IOException("Writer: " + io.getMessage());
+    } finally {
+      try {
+        if (writer != null) {
+          writer.close();
+        }
+        writer = null;
       } catch (Exception ie) {
       }
       try {
