@@ -30,6 +30,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     this.writer = writer; 
     this.mappings = mappings;
     boolean processOK = true;
+    boolean contactOK = true;
     
     //Copy Users
     logger.info("ImportBaseData-> Inserting users");
@@ -113,10 +114,14 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
   
   private void saveContactList(Connection db, ContactList contactList) throws SQLException{
     Iterator contacts = contactList.iterator();
+    
     while (contacts.hasNext()) {
       Contact thisContact = (Contact)contacts.next();
       DataRecord thisRecord = mappings.createDataRecord(thisContact, "insert");
       writer.save(thisRecord);
+      
+      writer.commit();
+
       
       ContactEmailAddressList emailList = new ContactEmailAddressList();
       emailList.setContactId(thisContact.getId());
@@ -129,6 +134,8 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
               ContactEmailAddress thisAddress = (ContactEmailAddress)emails.next();
               DataRecord anotherRecord = mappings.createDataRecord(thisAddress, "insert");
               writer.save(anotherRecord);
+              
+              writer.commit();
       }
       
     }
