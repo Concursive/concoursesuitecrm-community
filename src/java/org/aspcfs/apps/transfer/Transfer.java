@@ -2,21 +2,22 @@ package org.aspcfs.apps.transfer;
 
 import java.util.*;
 import java.util.logging.*;
-import com.darkhorseventures.utils.*;
 import java.io.*;
+import org.aspcfs.utils.XMLUtils;
+import org.aspcfs.utils.StringUtils;
 
 /**
  *  Begins the process of migrating data from a DataReader to a DataWriter.
- *  DataImport is responsible for loading configuration data, instantiating
+ *  Transfer is responsible for loading configuration data, instantiating
  *  objects, and executing and monitoring the data import process.
  *
  *@author     matt rajkowski
  *@created    September 3, 2002
  *@version    $Id$
  */
-public class DataImport {
+public class Transfer {
 
-  public static Logger logger = Logger.getLogger(DataImport.class.getName());
+  public static Logger logger = Logger.getLogger(Transfer.class.getName());
 
 
   /**
@@ -27,12 +28,12 @@ public class DataImport {
   public static void main(String args[]) {
     //Initialize app from the config file
     if (args.length == 0) {
-      System.out.println("Usage: DataImport [config file]");
+      System.out.println("Usage: Transfer [config file]");
       System.exit(0);
     }
 
-    DataImport dataImport = new DataImport();
-    dataImport.execute(args[0]);
+    Transfer transfer = new Transfer();
+    transfer.execute(args[0]);
     System.exit(0);
   }
 
@@ -106,7 +107,7 @@ public class DataImport {
     } catch (Exception e) {
       logger.info("Error: " + e.toString());
     }
-    logger.info("DataImport-> All done.");
+    logger.info("Transfer-> All done.");
   }
 
 

@@ -1,9 +1,8 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.utils;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
-
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
@@ -435,7 +434,14 @@ public class XMLUtils {
   public Element getFirstChild(String name) {
     return this.getFirstChild(this.document, name);
   }
-  
+
+
+  /**
+   *  Gets the firstElement attribute of the XMLUtils object
+   *
+   *@param  name  Description of the Parameter
+   *@return       The firstElement value
+   */
   public Element getFirstElement(String name) {
     return this.getFirstElement(this.getDocumentElement(), name);
   }

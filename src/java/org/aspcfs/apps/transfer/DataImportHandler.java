@@ -10,7 +10,7 @@ import java.util.logging.*;
  *@version    $Id$
  */
 public interface DataImportHandler {
-  public static Logger logger = Logger.getLogger(DataImport.class.getName());
+  public static Logger logger = Logger.getLogger(Transfer.class.getName());
 
 
   /**

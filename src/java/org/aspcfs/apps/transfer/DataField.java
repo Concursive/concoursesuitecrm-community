@@ -10,7 +10,7 @@ import java.util.logging.*;
  *@version    $Id$
  */
 public class DataField {
-  public static Logger logger = Logger.getLogger(DataImport.class.getName());
+  public static Logger logger = Logger.getLogger(Transfer.class.getName());
 
   protected String name = null;
   protected String alias = null;
