@@ -72,7 +72,7 @@
     <uptodate property="isavvix-jar-uptodate" targetfile="${SRC_LIB}/isavvix.jar">
         <srcfiles dir="${SRC_CLASSES}/com/isavvix" includes="**/*.java"/>
     </uptodate>
-    <uptodate property="apps-jar-uptodate" targetfile="${DEST_BIN}/Notifier.jar">
+    <uptodate property="apps-jar-uptodate" targetfile="${SRC_BIN}/Notifier.jar">
         <srcfiles dir="${SRC}">
           <include name="bin/com/darkhorseventures/**/*.java" />
           <include name="bin/notifier" />
@@ -241,8 +241,8 @@
         <pathelement location="${SRC_LIB}/ccp_integration.jar"/>
       </classpath>
     </javac>
-    <delete file="${DEST_BIN}/Notifier.jar"/>
-    <jar jarfile="${DEST_BIN}/Notifier.jar" 
+    <delete file="${SRC_BIN}/Notifier.jar"/>
+    <jar jarfile="${SRC_BIN}/Notifier.jar" 
           basedir="${SRC_BIN}"
           includes="com/darkhorseventures/**/*.class"
           manifest="${SRC_BIN}/com/darkhorseventures/apps/notifier.mf"/>
@@ -251,6 +251,7 @@
     </delete>
     <copy todir="${DEST_BIN}" >
       <fileset dir="${SRC_BIN}">
+        <include name="Notifier.jar" />
         <include name="notifier" />
         <include name="html2ps" />
         <include name="dataImport" />
