@@ -963,11 +963,10 @@ public class UserList extends Vector implements SyncableList {
         "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
         "r.role, " +
         "m_usr.enabled as mgr_enabled, " +
-        "c.*, d.description as departmentname, t.description as type_name, " +
+        "c.*, d.description as departmentname, " +
         "o.name as org_name, o.enabled as orgenabled " +
         "FROM access a " +
         "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
-        "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
         "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "LEFT JOIN lookup_department d ON (c.department = d.code) " +
         "LEFT JOIN access m_usr ON (a.manager_id = m_usr.user_id) " +
