@@ -3,7 +3,7 @@
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="/ExternalContacts.do">General Contacts</a> > 
 <a href="/ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="/ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 <a href="/ExternalContacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%>">Messages</a> >

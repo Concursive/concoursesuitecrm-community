@@ -5,7 +5,7 @@
 <jsp:useBean id="ExternalContactsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
-<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="ExternalContacts.do">General Contacts</a> > 
 View Contacts<br>
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="contacts-external_contacts-add">

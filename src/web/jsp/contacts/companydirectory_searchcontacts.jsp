@@ -6,7 +6,7 @@
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].searchFirstName.focus();">
 <form name="searchContact" action="/ExternalContacts.do?command=ListContacts&auto-populate=true" method="post">
-<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="/ExternalContacts.do">General Contacts</a> > 
 Search Contacts<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

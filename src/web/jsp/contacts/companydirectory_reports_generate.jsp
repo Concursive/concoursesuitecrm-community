@@ -24,7 +24,7 @@
 
 <body onLoad="javascript:document.forms[0].subject.focus();">
 <form name="generate" action="ExternalContacts.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
-<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=Reports">Reports</a> >
 Generate New Report<br>
 <hr color="#BFBFBB" noshade>

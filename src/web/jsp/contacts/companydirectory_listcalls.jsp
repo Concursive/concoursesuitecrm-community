@@ -49,7 +49,7 @@
     }
 </script>
 <form name="addCall" action="ExternalContactsCalls.do?command=Insert&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 Calls<br>

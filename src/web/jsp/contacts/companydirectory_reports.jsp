@@ -6,7 +6,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <form name="listView" method="post" action="/ExternalContacts.do?command=Reports">
-<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="ExternalContacts.do">General Contacts</a> > 
 Reports<br>
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="contacts-external_contacts-reports-add"><a href="ExternalContacts.do?command=GenerateForm">Generate new report</a></dhv:permission>
