@@ -252,7 +252,7 @@ public class CalendarEvent implements Comparable {
    *@param  link  The feature to be added to the RelatedLink attribute
    */
   public void addRelatedLink(String link) {
-    if(relatedLinks == null){
+    if (relatedLinks == null) {
       relatedLinks = new ArrayList();
     }
     relatedLinks.add(link);
@@ -308,7 +308,7 @@ public class CalendarEvent implements Comparable {
 
     if (category.equalsIgnoreCase("Opportunity")) {
       return "<a href=\"javascript:popURL('LeadsComponents.do?command=ModifyComponent&id=" + id + "&popup=true&return=Calendar','CFS_Opportunity','500','475','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Opportunity';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
-    } else if (category.equalsIgnoreCase("Accounts")) {
+    } else if (category.equalsIgnoreCase("Account Alerts") || category.equalsIgnoreCase("Account Contract Alerts")) {
       return "<a href=\"javascript:popURL('Accounts.do?command=Modify&orgId=" + id + "&popup=true&return=Calendar','CFS_Account','500','475','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Account';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
     } else if (category.equalsIgnoreCase("Assignments")) {
       return "<a href=\"javascript:popURL('ProjectManagementAssignments.do?command=Modify&aid=" + idsub + "&pid=" + id + "&popup=true&return=Calendar','CFS_Assignment','600','325','yes','no');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Assignment';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
@@ -364,7 +364,7 @@ public class CalendarEvent implements Comparable {
       return "<img border=0 src=\"images/alertcall.gif\" alt=\"Call:" + this.getSubject() + "\" align=texttop>";
     } else if (category.equalsIgnoreCase("Assignments")) {
       return "<img border=0 src=\"images/alertassignment.gif\" alt=\"Assignment:" + this.getSubject() + "\" align=texttop>";
-    } else if (category.equalsIgnoreCase("Accounts")) {
+    } else if (category.equalsIgnoreCase("Account Alerts") || category.equalsIgnoreCase("Account Contract Alerts")) {
       return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" alt=\"Account:" + this.getSubject() + "\" align=texttop>";
     } else if (category.equalsIgnoreCase("Tasks")) {
       if (this.getStatus() == Task.DONE) {
@@ -394,7 +394,7 @@ public class CalendarEvent implements Comparable {
       return "<img border=0 src=\"images/alertcall.gif\" align=texttop title=\"Calls\">";
     } else if (thisCategory.equalsIgnoreCase("Assignments")) {
       return "<img border=0 src=\"images/alertassignment.gif\" align=texttop title=\"Assignments\">";
-    } else if (thisCategory.equalsIgnoreCase("Accounts")) {
+    } else if (thisCategory.equalsIgnoreCase("Account Alerts") || thisCategory.equalsIgnoreCase("Account Contract Alerts")){
       return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" align=texttop title=\"Accounts\">";
     } else if (thisCategory.equalsIgnoreCase("Tasks")) {
       return "<img src=\"images/box.gif\" border=0 align=texttop width=\"14\" height=\"14\" title=\"Tasks\">";
@@ -420,7 +420,7 @@ public class CalendarEvent implements Comparable {
       return "Calls";
     } else if (thisCategory.equalsIgnoreCase("Assignments")) {
       return "Assignments";
-    } else if (thisCategory.equalsIgnoreCase("Accounts")) {
+    } else if (thisCategory.equalsIgnoreCase("Account Alerts") || thisCategory.equalsIgnoreCase("Account Contract Alerts")){
       return "Accounts";
     } else if (thisCategory.equalsIgnoreCase("Tasks")) {
       return "Tasks";

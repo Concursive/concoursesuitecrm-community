@@ -13,7 +13,7 @@ public class CalendarEventList extends ArrayList {
 
   private java.util.Date date = null;
   private HashMap eventTypes = null;
-  public final static String[] EVENT_TYPES = {"Tasks", "Calls", "Opportunity", "Accounts", "Assignments", "Contact Calls", "Opportunity Calls", "Holiday"};
+  public final static String[] EVENT_TYPES = {"Tasks", "Calls", "Opportunity", "Account Alerts", "Account Contract Alerts", "Assignments", "Contact Calls", "Opportunity Calls", "Holiday"};
 
 
   /**
