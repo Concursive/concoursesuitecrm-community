@@ -787,7 +787,7 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAlerts(ActionContext context) {
-    if (!(hasPermission(context, "myhomepage-profile-view"))) {
+    if (!(hasPermission(context, "myhomepage-dashboard-view"))) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -852,7 +852,7 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandMonthView(ActionContext context) {
-    if (!(hasPermission(context, "myhomepage-profile-view"))) {
+    if (!(hasPermission(context, "myhomepage-dashboard-view"))) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -918,7 +918,7 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDayView(ActionContext context) {
-    if (!(hasPermission(context, "myhomepage-profile-view"))) {
+    if (!(hasPermission(context, "myhomepage-dashboard-view"))) {
       return ("PermissionError");
     }
     CalendarBean calendarInfo = null;
@@ -939,7 +939,7 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandTodaysView(ActionContext context) {
-    if (!(hasPermission(context, "myhomepage-profile-view"))) {
+    if (!(hasPermission(context, "myhomepage-dashboard-view"))) {
       return ("PermissionError");
     }
     CalendarBean calendarInfo = null;
@@ -984,7 +984,7 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAgendaView(ActionContext context) {
-    if (!(hasPermission(context, "myhomepage-profile-view"))) {
+    if (!(hasPermission(context, "myhomepage-dashboard-view"))) {
       return ("PermissionError");
     }
     addModuleBean(context, "Home", "");

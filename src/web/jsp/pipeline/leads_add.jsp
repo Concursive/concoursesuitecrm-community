@@ -14,6 +14,7 @@
 <SCRIPT LANGUAGE="JavaScript" type="text/javascript" src="javascript/popContacts.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" type="text/javascript" src="javascript/popAccounts.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <%
   OpportunityHeader opportunityHeader = OppDetails.getHeader();
 	OpportunityComponent ComponentDetails = OppDetails.getComponent();
@@ -29,6 +30,7 @@ function doCheck(form) {
 function checkForm(form) {
   formTest = true;
   message = "";
+  alertMessage = "";
   selected = -1;
   for (i=0; i<form.opp_type.length; i++) {
     if (form.opp_type[i].checked) {
@@ -47,10 +49,6 @@ function checkForm(form) {
     message += "- Check that Alert Date is entered correctly\r\n";
     formTest = false;
   }
-  if ((!form.component_alertDate.value == "") && (!checkAlertDate(form.component_alertDate.value))) { 
-    message += "- Check that Alert Date is on or after today's date\r\n";
-    formTest = false;
-  }
   if ((!form.component_alertText.value == "") && (form.component_alertDate.value == "")) { 
     message += "- Please specify an alert date\r\n";
     formTest = false;
@@ -63,13 +61,21 @@ function checkForm(form) {
       message += "- Commission entered is invalid\r\n";
       formTest = false;
     }
+  if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
+      alertMessage += "Alert Date is before today's date\r\n";
+  }
+      
   if (formTest == false) {
     alert("Form could not be saved, please check the following:\r\n\r\n" + message);
     return false;
   } else {
-    var test = document.opportunityForm.selectedList;
-    if (test != null) {
-      return selectAllOptions(document.opportunityForm.selectedList);
+    if(alertMessage != ""){
+       return confirmAction(alertMessage);
+    }else{
+      var test = document.opportunityForm.selectedList;
+      if (test != null) {
+        return selectAllOptions(document.opportunityForm.selectedList);
+      }
     }
   }
 }

@@ -20,12 +20,9 @@
   function checkForm(form) {
     formTest = true;
     message = "";
+    alertMessage = "";
     if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
       message += "- Check that Alert Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is on or after today's date\r\n";
       formTest = false;
     }
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
@@ -36,13 +33,21 @@
       message += "- Please specify an alert description\r\n";
       formTest = false;
     }
-    if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
-      return false;
-    } else {
+    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
+      alertMessage += "Alert Date is before today's date\r\n";
+  }
+      
+  if (formTest == false) {
+    alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+    return false;
+  } else {
+    if(alertMessage != ""){
+       return confirmAction(alertMessage);
+    }else{
       return true;
     }
   }
+}
 </script>
 <form name="addCall" action="LeadsCalls.do?command=Update&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %><%= (request.getParameter("popup") != null?"&popup=true":"") %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%

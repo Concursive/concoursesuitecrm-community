@@ -28,3 +28,13 @@ function checkPhone(phonein) {
 	
 }
 
+
+/**
+ *  Code for doing a regular expression validation (TODO: Integrate it later)
+    j.compile("[0-9]{3}-[0-9]{3}-[0-9]{4}");
+    if (!j.test(form["Phone-Number"].value)) {
+      alert("You must supply a valid US phone number.");
+      return false;
+    }
+ *
+**/

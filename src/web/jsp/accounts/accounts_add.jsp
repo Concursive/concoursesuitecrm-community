@@ -16,6 +16,8 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkURL.js"></script>
 <script language="JavaScript">
   indSelected = 0;
   orgSelected = 1;
@@ -30,12 +32,9 @@
   function checkForm(form) {
     formTest = true;
     message = "";
+    alertMessage = "";
     if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
       message += "- Check that Alert Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is on or after today's date\r\n";
       formTest = false;
     }
     if ((!form.contractEndDate.value == "") && (!checkDate(form.contractEndDate.value))) { 
@@ -58,18 +57,30 @@
       message += "- At least one entered email address is invalid.  Make sure there are no invalid characters\r\n";
       formTest = false;
     }
+    if (!checkURL(form.url.value)) { 
+      message += "- URL entered is invalid.  Make sure there are no invalid characters\r\n";
+      formTest = false;
+    }
     if (!checkNumber(form.revenue.value)) { 
       message += "- Revenue entered is invalid\r\n";
       formTest = false;
+    }
+    
+    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
+      alertMessage += "Alert Date is before today's date\r\n";
     }
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
     } else {
+      if(alertMessage != ""){
+        return confirmAction(alertMessage);
+      }else{
       var test = document.addAccount.selectedList;
       if (test != null) {
         return selectAllOptions(document.addAccount.selectedList);
       }
+     }
     }
   }
   function resetFormElements() {
@@ -1114,3 +1125,4 @@ Add Account<br>
 <input type="hidden" name="dosubmit" value="true">
 </form>
 </body>
+

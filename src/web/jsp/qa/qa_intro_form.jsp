@@ -5,14 +5,10 @@
 <body bgcolor='#FFFFFF' onLoad="document.inputForm.description.focus();">
 <script language="JavaScript">
   function checkForm(form) {
-    if (form.dosubmit.value == "false") {
-      return true;
-    }
     var formTest = true;
   
     //Check required fields
     if (form.description.value == "") {    
-      form.dosubmit.value = "true";
       alert("Description is required.");
       formTest = false;
     }

@@ -6,6 +6,7 @@ import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
 import org.aspcfs.utils.web.*;
+import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.base.Constants;
@@ -633,13 +634,8 @@ public class UserList extends Vector implements SyncableList {
       User thisUser = (User) i.next();
       String elementText = null;
 
-      //userListSelect.addItem(
-      //thisUser.getId(),
-      //Contact.getNameLastFirst(thisUser.getContact().getNameLast(),
-      //thisUser.getContact().getNameFirst()));
-
-      elementText = Contact.getNameLastFirst(thisUser.getContact().getNameLast(), thisUser.getContact().getNameFirst());
-
+      elementText = thisUser.getContact().getValidName();
+      
       if (!(thisUser.getEnabled())) {
         elementText += " *";
       }
@@ -675,7 +671,7 @@ public class UserList extends Vector implements SyncableList {
     while (i.hasNext()) {
       User thisUser = (User) i.next();
       String elementText = null;
-      elementText = Contact.getNameLastFirst(thisUser.getContact().getNameLast(), thisUser.getContact().getNameFirst());
+      elementText = thisUser.getContact().getValidName();
       if (!(thisUser.getEnabled())) {
         elementText += " *";
       }

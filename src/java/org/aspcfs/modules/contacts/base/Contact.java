@@ -10,6 +10,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.web.LookupElement;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.modules.base.*;
@@ -369,6 +370,20 @@ public class Contact extends GenericBean {
    */
   public boolean getPrimaryContact() {
     return primaryContact;
+  }
+
+
+  /**
+   *  Returns a name for the contact checking (last,first) name and company name in that order 
+   *
+   *@return    The validName value
+   */
+  public String getValidName() {
+    String validName = StringUtils.toString(getNameLastFirst());
+    if ("".equals(validName) && !"".equals(StringUtils.toString(company))) {
+      validName = company;
+    }
+    return validName;
   }
 
 

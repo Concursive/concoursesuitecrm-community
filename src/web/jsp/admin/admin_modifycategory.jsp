@@ -115,6 +115,10 @@
   
   function editValues(){
    var tmpList = document.getElementById("itemSelect");
+   if(tmpList.selectedIndex == -1){
+     alert('An item needs to be selected');
+     return;
+   }
     if(tmpList.options[0].value != "-1"){
       document.getElementById("addButton").value  = "Update >";
       document.getElementById("newitem").value = itemList[tmpList.selectedIndex].description;
@@ -163,6 +167,10 @@
     window.location.href = 'AdminCategories.do?command=Save&' + params;
   }
   
+  function reset(){
+    document.getElementById("addButton").value  = "Add >";
+    document.getElementById("newitem").value = "";
+  }
 </SCRIPT>
 <script>var itemList = new Array();</script>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details" id="viewTable">
@@ -204,7 +212,7 @@
      <% 
         count++;
      }%>
-        <% CategoryList.setHtmlJsEvent(""); %>
+        <% CategoryList.setHtmlJsEvent("onChange=\"javascript:reset();\""); %>
         <%= CategoryList.getHtmlSelect("itemSelect", -1) %>
     <%}else{%>
       <select name="itemSelect" id="itemSelect" size="10">

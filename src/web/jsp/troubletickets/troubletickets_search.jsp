@@ -36,7 +36,7 @@ Search Form<br>
   </tr>
   <tr>
     <td class="formLabel">
-      Organization
+      Account
     </td>
     <td>
       <table cellspacing="0" cellpadding="0" border="0" class="empty">
@@ -89,7 +89,7 @@ Search Form<br>
       <table class="empty">
         <tr>
           <td>
-            <div id="changeowner">&nbsp;None&nbsp;</div>
+            <div id="changeowner">&nbsp;None Selected&nbsp;</div>
           </td>
           <td>
             <input type="hidden" name="searchcodeAssignedTo" id="ownerid">

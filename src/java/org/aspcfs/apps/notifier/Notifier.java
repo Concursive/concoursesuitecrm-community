@@ -113,9 +113,12 @@ public class Notifier extends ReportBuilder {
         today = new java.sql.Timestamp(calToday.getTimeInMillis());
         
         Calendar calYesterday = Calendar.getInstance();
-        calYesterday.set(Calendar.DAY_OF_MONTH, -1);
+        calYesterday.set(Calendar.HOUR_OF_DAY, -25);
         yesterday = new java.sql.Timestamp(calYesterday.getTimeInMillis());
         
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Notifier-> Start Date: " + today.toString() + "\nAlert End Date: " + yesterday.toString());
+        }
         //Process each site
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Notifier-> Processing each site");

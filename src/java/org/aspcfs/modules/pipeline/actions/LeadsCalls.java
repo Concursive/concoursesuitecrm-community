@@ -5,12 +5,14 @@ import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.io.*;
+import java.text.DateFormat;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.pipeline.base.*;
 import org.aspcfs.modules.pipeline.beans.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.mycfs.base.CFSNote;
 
 /**
  *  Description of the Class
@@ -98,7 +100,7 @@ public final class LeadsCalls extends CFSModule {
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
 
-      if(oppHeader.getAccountLink() > -1){
+      if (oppHeader.getAccountLink() > -1) {
         ContactList contactList = new ContactList();
         contactList.setOwner(userId);
         contactList.setBuildDetails(false);
@@ -367,6 +369,95 @@ public final class LeadsCalls extends CFSModule {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return "UserError";
     }
+  }
+
+
+  /**
+   *  Forward an Opportunity Call
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandForwardCall(ActionContext context) {
+    if (!(hasPermission(context, "pipeline-opportunities-calls-view"))) {
+      return ("PermissionError");
+    }
+
+    String msgId = context.getRequest().getParameter("id");
+    CFSNote newNote = null;
+    addModuleBean(context, "View Opportunities", "Opportunity Calls");
+
+    //Get Viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+
+      Call thisCall = new Call(db, msgId);
+      if (!hasViewpointAuthority(db, context, "pipeline", thisCall.getEnteredBy(), userId)) {
+        return "PermissionError";
+      }
+      newNote = new CFSNote();
+      newNote.setBody(
+          "Contact Name: " + StringUtils.toString(thisCall.getContactName()) + "\n" +
+          "Type: " + StringUtils.toString(thisCall.getCallType()) + "\n" +
+          "Length: " + StringUtils.toString(thisCall.getLengthText()) + "\n" +
+          "Subject: " + StringUtils.toString(thisCall.getSubject()) + "\n" +
+          "Notes: " + StringUtils.toString(thisCall.getNotes()) + "\n" +
+          "Entered: " + StringUtils.toString(thisCall.getEnteredName()) + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getEntered()) + "\n" +
+          "Modified: " + StringUtils.toString(thisCall.getModifiedName()) + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getModified()));
+
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    context.getRequest().setAttribute("Note", newNote);
+    return ("ForwardCallOK");
+  }
+
+
+  /**
+   *  Send an Opportunity Call
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandSendCall(ActionContext context) {
+    if (!(hasPermission(context, "pipeline-opportunities-calls-view"))) {
+      return ("PermissionError");
+    }
+
+    String msgId = context.getRequest().getParameter("id");
+    CFSNote newNote = null;
+    addModuleBean(context, "View Opportunities", "Opportunity Calls");
+
+    //Get Viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+
+      Call thisCall = new Call(db, msgId);
+      if (!hasViewpointAuthority(db, context, "pipeline", thisCall.getEnteredBy(), userId)) {
+        return "PermissionError";
+      }
+
+      //add the call
+      context.getRequest().setAttribute("CallDetails", thisCall);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    context.getRequest().setAttribute("Note", newNote);
+    return ("SendCallOK");
   }
 }
 

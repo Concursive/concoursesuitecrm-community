@@ -193,6 +193,9 @@ public final class AccountContactsCalls extends CFSModule {
     }
 
     if (recordInserted) {
+      if (context.getRequest().getParameter("actionSource") != null) {
+        return this.getReturn(context, "InsertCall");
+      }
       return (executeCommandView(context));
     } else if (resultCount == 1) {
       if ("list".equals(context.getRequest().getParameter("return"))) {

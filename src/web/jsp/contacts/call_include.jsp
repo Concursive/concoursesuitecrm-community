@@ -3,6 +3,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -14,6 +15,7 @@
   function checkForm(form) {
     formTest = true;
     message = "";
+    alertMessage = "";
     
     if (form.notes.value == "" && form.subject.value == "") { 
       message += "- Blank records cannot be saved\r\n";
@@ -21,10 +23,6 @@
     }
     if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
       message += "- Check that Alert Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is on or after today's date\r\n";
       formTest = false;
     }
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
@@ -35,11 +33,18 @@
       message += "- Please specify an alert description\r\n";
       formTest = false;
     }
+    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
+      alertMessage += "Alert Date is before today's date\r\n";
+    }
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
     } else {
-      return true;
+      if(alertMessage != ""){
+        return confirmAction(alertMessage);
+      }else{
+        return true;
+      }
     }
   }
 </script>
@@ -62,7 +67,7 @@
       Subject
     </td>
     <td>
-      <input type="text" size="50" name="subject" value="<%= toHtmlValue(CallDetails.getSubject()) %>">
+      <input type="text" size="50" name="subject" value="<%= toHtmlValue(CallDetails.getSubject()) %>"><font color="red">*</font><%= showAttribute(request, "actionError") %>
     </td>
   </tr>
   <tr class="containerBody">

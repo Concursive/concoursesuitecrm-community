@@ -2,6 +2,7 @@
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <body onLoad="javascript:document.forms[0].searchDescription.focus();">
 <form name="searchLeads" action="Leads.do?command=Search" method="post">
@@ -27,7 +28,17 @@ Search Opportunities<br>
       Account
     </td>
     <td>
-      <%= OrgList.getHtmlSelectDefaultNone("searchcodeOrgId") %>
+      <table cellspacing="0" cellpadding="0" border="0" class="empty">
+        <tr>
+          <td>
+            <div id="changeaccount">None Selected</div>
+          </td>
+          <td>
+            <input type="hidden" name="searchcodeOrgId" id="searchcodeOrgId">
+            &nbsp;[<a href="javascript:popAccountsListSingle('searchcodeOrgId','changeaccount', 'filters=all|my|disabled');">Select</a>]
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
   <tr class="containerBody">

@@ -25,7 +25,7 @@
   }
   
   function forward() {
-    window.location.href = 'LeadsCallsForward.do?command=ForwardMessage&forwardType=<%= Constants.PIPELINE_CALLS %>&headerId=' + thisHeaderId + '&id=' + thisCallId + '&return=list';
+    window.location.href = 'LeadsCallsForward.do?command=ForwardCall&forwardType=<%= Constants.PIPELINE_CALLS %>&headerId=' + thisHeaderId + '&id=' + thisCallId + '&return=list';
   }
   
   function deleteCall() {

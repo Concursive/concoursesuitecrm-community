@@ -35,9 +35,14 @@ User Details<br>
 </dhv:permission>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
-    <th colspan="2">
-      <strong>Primary Information</strong>
-    </th>
+    <td class="title" colspan="2">
+      <strong>Primary Information</strong>&nbsp;
+      <% if(UserRecord.getContact().getEmployee()){ %>
+        [ <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= UserRecord.getContact().getId() %>">Employee Link</a> ]
+      <% }else{ %>
+        [ <a href="Contacts.do?command=Details&id=<%= UserRecord.getContact().getId() %>">Account Contact Link</a> ]
+      <% } %>
+    </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">Username</td>

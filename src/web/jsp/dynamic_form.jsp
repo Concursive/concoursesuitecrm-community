@@ -17,20 +17,10 @@
   }
 %>
 <script language="JavaScript">
-function check(form) {
-  if (form.clickFrom.value == "next") {
-    return checkTab(form);
-  } else if (form.clickFrom.value == "save" || form.clickFrom.value == "update") {
-    return checkForm(form);
-  } else {
-    return true;
-  }
-}
-<%= CustomFormInfo.getJsFormCheck() %>
 <%= CustomFormInfo.getJsTabCheck() %>
 <%= CustomFormInfo.getJsFormOnLoad() %>
 </script>
-<form name="<%= CustomFormInfo.getName() %>" method="post" action="<%= CustomFormInfo.getAction() %>"<%= (CustomFormInfo.hasJsFormCheck()?" onSubmit=\"return check(this);\"":"") %>>
+<form name="<%= CustomFormInfo.getName() %>" method="post" action="<%= CustomFormInfo.getAction() %>"<%= (!"".equals(CustomFormInfo.getJsTabCheck())  ? " onSubmit=\"return checkTab(this);\"" : "") %>>
 <input type="hidden" name="return" value="<%= returnType %>">
 <input type="hidden" name="clickFrom" value="none">
 <%

@@ -14,8 +14,8 @@ function confirmForward(url) {
   }
 }
 
-function confirmAction() {
-  if (confirm('Are you sure?')) {
+function confirmAction(msg) {
+  if (confirm(msg)) {
     return true;
   } else {
     return false;

@@ -2,6 +2,7 @@
 Communications Manager
 <hr color="#BFBFBB" noshade>
 Review and manage campaigns with the following options:<br>
+<dhv:permission name="campaign-campaigns-add">
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
@@ -21,6 +22,8 @@ Review and manage campaigns with the following options:<br>
     </td>
   </tr>
 </table>
+</dhv:permission>
+<dhv:permission name="campaign-campaigns-view">
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
@@ -43,6 +46,8 @@ Review and manage campaigns with the following options:<br>
     </td>
   </tr>
 </table>
+</dhv:permission>
+<dhv:permission name="campaign-campaigns-groups-view">
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
@@ -61,6 +66,8 @@ Review and manage campaigns with the following options:<br>
     </td>
   </tr>
 </table>
+</dhv:permission>
+<dhv:permission name="campaign-campaigns-messages-view">
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
@@ -79,6 +86,8 @@ Review and manage campaigns with the following options:<br>
     </td>
   </tr>
 </table>
+</dhv:permission>
+<dhv:permission name="campaign-campaigns-surveys-view">
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
@@ -88,11 +97,11 @@ Review and manage campaigns with the following options:<br>
   </tr>
   <tr class="containerBody">
     <td>
-      Provoke your recipients.<br>
+      Interact with your recipients.<br>
       &nbsp;<br>
       Attachments can include interactive items, like surveys, or
       provide additional materials like files.
     </td>
   </tr>
 </table>
-
+</dhv:permission>

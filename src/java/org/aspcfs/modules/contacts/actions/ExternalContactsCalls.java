@@ -98,7 +98,10 @@ public final class ExternalContactsCalls extends CFSModule {
     if (context.getRequest().getParameter("actionSource") != null) {
       return this.getReturn(context, "InsertCall");
     }
-    return this.getReturn(context, "Insert");
+    if (recordInserted){
+      return this.getReturn(context, "Insert");
+    }
+    return this.getReturn(context, "InsertRetry");
   }
 
 

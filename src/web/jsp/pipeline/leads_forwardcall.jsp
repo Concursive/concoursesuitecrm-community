@@ -15,7 +15,7 @@ Call Forward<br>
   <input type="button" value="Cancel" onClick="javascript:window.location.href='LeadsCalls.do?command=Details&id=<%= request.getParameter("id")%>&headerId=<%= request.getParameter("headerId") %>'">
 <%}%>
 <br><br>
-<form name="newMessageForm" action="LeadsCallsForward.do?command=SendMessage&headerId=<%= request.getParameter("headerId") %>&id=<%= request.getParameter("id") %>" method="post" onSubmit="return sendMessage();">
+<form name="newMessageForm" action="LeadsCallsForward.do?command=SendCall&headerId=<%= request.getParameter("headerId") %>&id=<%= request.getParameter("id") %>" method="post" onSubmit="return sendMessage();">
 <%@ include file="../newmessage.jsp" %>
 <br>
 <input type="submit" value="Send">

@@ -7,7 +7,7 @@
 <% if(ContactDetails.getOrgId() == -1){ %>
 <form name="addCall" action="ExternalContactsCalls.do?command=Insert&auto-populate=true&actionSource=MyActionContacts" onSubmit="return doCheck(this);" method="post">
 <% }else{ %>
-<form name="addCall" action="AccountContactsCalls.do?command=Insert&auto-populate=true&actionSource=MyActionContacts" onSubmit="return doCheck(this);" method="post">
+<form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true&actionSource=MyActionContacts" onSubmit="return doCheck(this);" method="post">
 <% } %>
 <dhv:evaluate if="<%= hasText((String) request.getAttribute("actionError")) %>">
 <%= showError(request, "actionError") %>

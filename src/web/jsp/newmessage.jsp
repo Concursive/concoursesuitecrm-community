@@ -55,7 +55,7 @@ function sendMessage() {
             </select>
           </td>
           <td valign="top">
-            [<a href="javascript:popContactsListMultiple('listViewId','1', 'reset=true');">Add Recipients</a>]
+            [<a href="javascript:popContactsListMultiple('listViewId','1', 'reset=true');">Add Recipients</a>]<font color="red">*</font>
           </td>
         </tr>
       </table>

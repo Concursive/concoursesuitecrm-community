@@ -76,10 +76,10 @@
       <a href="javascript:document.contactListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%= count %>','contactListView');">Add</a>
 <%}%>
       <input type="hidden" name="hiddencontactid<%= count %>" value="<%= thisContactId %>">
-      <input type="hidden" name="hiddenname<%= count %>" value="<%= toHtml(thisContact.getNameLastFirst()) %>">
+      <input type="hidden" name="hiddenname<%= count %>" value="<%= toHtml(thisContact.getValidName()) %>">
     </td>
     <td nowrap>
-      <%= toHtml(thisContact.getNameLastFirst()) %>
+      <%= toHtml(thisContact.getValidName()) %>
     </td>
 <%
       String email ="",emailType ="";

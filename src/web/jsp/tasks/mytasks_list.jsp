@@ -15,7 +15,9 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
-<body onLoad="javascript:document.forms['addTask'].description.focus();">
+<dhv:permission name="myhomepage-tasks-add">
+ <body onLoad="javascript:document.forms['addTask'].description.focus();">
+</dhv:permission>
 <form name="addTask" action="MyTasks.do?command=Insert&auto-populate=true" method="post" onSubmit="return validateTask();">
 <a href="MyCFS.do?command=Home">My Home Page</a> > My Tasks<br>
 <hr color="#BFBFBB" noshade>
@@ -165,7 +167,14 @@
 %>
         </td>
         <td valign="top">
-          <a href="MyTasks.do?command=Modify&id=<%= thisTask.getId() %>"><%= thisTask.getDescription()!=null?thisTask.getDescription():"" %></a>&nbsp; <%=(thisTask.getContactId()==-1)?"":"[<a href=\"ExternalContacts.do?command=ContactDetails&id="+ thisTask.getContact().getId() +"\" title=\""+ thisTask.getContact().getNameLastFirst() +"\"><font color=\"green\">Contact</font></a>]"%>
+          <a href="MyTasks.do?command=Modify&id=<%= thisTask.getId() %>"><%= thisTask.getDescription()!=null?thisTask.getDescription():"" %></a>&nbsp; 
+          <dhv:evaluate if="<%= thisTask.getContact() != null%>">
+          <% if(!thisTask.getContact().getEmployee()){ %>
+            [<a href="ExternalContacts.do?command=ContactDetails&id=<%= thisTask.getContact().getId() %>" title="<%=  thisTask.getContact().getValidName() %>"><font color="green">Contact</font></a>]
+          <% }else{ %>
+            [<a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisTask.getContact().getId() %>" title="<%=  thisTask.getContact().getValidName() %>"><font color="green">Contact</font></a>]
+        <% } %>
+        </dhv:evaluate>
         </td>
         <dhv:evaluate if="<%= thisTask.getType() != Task.GENERAL %>">
           <td valign="top">
@@ -250,5 +259,7 @@
   </form>
   &nbsp;<br>
   <dhv:pagedListControl object="TaskListInfo" tdClass="row1"/>
-</body>
+<dhv:permission name="myhomepage-tasks-add">
+  </body>
+</dhv:permission>
 

@@ -228,7 +228,9 @@ public final class CampaignManager extends CFSModule {
       campaign.setEnteredBy(getUserId(context));
       campaign.setModifiedBy(getUserId(context));
       recordInserted = campaign.insert(db);
-      campaign = new Campaign(db, "" + campaign.getId());
+      if (recordInserted) {
+        campaign = new Campaign(db, campaign.getId());
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -242,6 +244,7 @@ public final class CampaignManager extends CFSModule {
         context.getRequest().setAttribute("Campaign", campaign);
         return ("InsertOK");
       } else {
+        processErrors(context, campaign.getErrors());
         return (executeCommandAdd(context));
       }
     } else {

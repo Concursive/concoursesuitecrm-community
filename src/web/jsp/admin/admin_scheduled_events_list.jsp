@@ -28,6 +28,7 @@ Scheduled Events<br>
   </tr>
 <%
     Iterator i = processList.values().iterator();
+    if(i.hasNext()) {
     while (i.hasNext()) {
       BusinessProcess thisProcess = (BusinessProcess) i.next();
 %>
@@ -69,5 +70,14 @@ Scheduled Events<br>
   </tr>
 <%
     }
+  }else{
+%>
+   <tr class="containerBody">
+    <td align="left" colspan="5">
+      No Scheduled Events found. 
+    </td>
+   </tr>
+<%
+  }
 %>
 </table>

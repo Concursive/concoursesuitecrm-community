@@ -142,7 +142,11 @@ public final class MyTasks extends CFSModule {
     }
 
     if (errorMessage == null) {
+      //make sure that either the task is owned by the user or that it was entered by the user(view mode applies in this case)
       if (!hasAuthority(context, thisTask.getOwner())) {
+        if (hasAuthority(context, thisTask.getEnteredBy())) {
+          return this.getReturn(context, "TaskDetails");
+        }
         return ("PermissionError");
       }
       context.getRequest().setAttribute("Task", thisTask);

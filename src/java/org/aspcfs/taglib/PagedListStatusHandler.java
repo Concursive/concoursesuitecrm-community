@@ -253,7 +253,7 @@ public class PagedListStatusHandler extends TagSupport {
         out.write("<td valign=\"bottom\" align=\"" + (showControlOnly ? "center" : "right") + "\" nowrap>");
 
         //Display record count
-        if (pagedListInfo.getMaxRecords() > 0) {
+        if (pagedListInfo.getMaxRecords() > 0 && (pagedListInfo.getMaxRecords() - pagedListInfo.getCurrentOffset() > 0)) {
           out.write("Records " + (pagedListInfo.getCurrentOffset() + 1) + " to ");
           if ((pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()) < pagedListInfo.getMaxRecords()) {
             out.write(String.valueOf(pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()));

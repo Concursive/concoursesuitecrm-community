@@ -100,7 +100,7 @@
       <table cellspacing="0" cellpadding="0" border="0" class="empty">
           <tr>
               <td>
-                <input type="radio" name="<%= opportunityHeader.getId() > 0 ? "type" : "opp_type" %>" value="org"  onclick=<%= "\"javascript:document.forms['opportunityForm']." + (opportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink")  + ".value = '-1';\" " %><dhv:evaluate exp="<%=(opportunityHeader.getAccountLink() > -1)%>">checked</dhv:evaluate>>
+                <input type="radio" name="<%= opportunityHeader.getId() > 0 ? "type" : "opp_type" %>" value="org"  onclick=<%= "\"javascript:document.forms['opportunityForm']." + (opportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink")  + ".value = '-1';\" " %><dhv:evaluate exp="<%=opportunityHeader.getAccountLink() > -1 || "org".equals(request.getParameter(opportunityHeader.getId() > 0 ? "type" : "opp_type")) %>">checked</dhv:evaluate>>
               </td>
               <td>
                 Account:&nbsp;
@@ -117,7 +117,7 @@
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td>
-            <input type="radio" name="<%= opportunityHeader.getId() > 0 ? "type" : "opp_type"%>" value="contact" onclick=<%= "\"javascript:document.forms['opportunityForm']." + (opportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink")  + ".value = '-1';\" " %> <dhv:evaluate if="<%= opportunityHeader.getContactLink() > -1 %>">checked</dhv:evaluate>>
+            <input type="radio" name="<%= opportunityHeader.getId() > 0 ? "type" : "opp_type"%>" value="contact" onclick=<%= "\"javascript:document.forms['opportunityForm']." + (opportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink")  + ".value = '-1';\" " %> <dhv:evaluate if="<%= opportunityHeader.getContactLink() > -1 || "contact".equals(request.getParameter(opportunityHeader.getId() > 0 ? "type" : "opp_type"))%>">checked</dhv:evaluate>>
           </td>
           <td>
             Contact:&nbsp;

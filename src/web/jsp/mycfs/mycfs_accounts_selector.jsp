@@ -123,7 +123,7 @@
 %>
   <script>
     acctIds[<%= count %>] = "<%= thisOrg.getOrgId() %>";
-    acctNames[<%= count %>] = "<%= thisOrg.getName() %>";
+    acctNames[<%= count %>] = "<%= toJavaScript(thisOrg.getName()) %>";
   </script>
 <%	
   }

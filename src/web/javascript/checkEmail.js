@@ -19,3 +19,15 @@ function checkEmail(emailin) {
   }
   return true;
 }
+
+/**
+ *  Code for doing a regular expression validation (TODO: Integrate it later)
+    var j = new RegExp();
+    j.compile("[A-Za-z0-9._-]+@[^.]+\..+");
+    if (!j.test(form["Email-Address"].value)) {
+            alert("You must supply a valid email address.");
+            return false;
+    } 
+**/
+        
+        

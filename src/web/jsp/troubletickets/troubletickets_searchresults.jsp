@@ -3,7 +3,15 @@
 <jsp:useBean id="TicList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="TicListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="troubletickets_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="TroubleTickets.do">Tickets</a> > 
 <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
 Search Results
@@ -27,17 +35,18 @@ Search Results
 <%
 	Iterator j = TicList.iterator();
 	if ( j.hasNext() ) {
-		int rowid = 0;
+		int i = 0;
+    int rowid = 0;
 		while (j.hasNext()) {
+      i++;
       rowid = (rowid != 1?1:2);
       Ticket thisTic = (Ticket)j.next();
 %>   
 	<tr>
-	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
     <td rowspan="2" width="8" valign="top" nowrap class="row<%= rowid %>">
-      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= thisTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('TroubleTickets.do?command=Delete&id=<%= thisTic.getId() %>');">Del</a></dhv:permission>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+       <a href="javascript:displayMenu('menuTicket', '<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-  </dhv:permission>
 		<td width="15" valign="top" nowrap class="row<%= rowid %>">
 			<a href="TroubleTickets.do?command=Details&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
 		</td>

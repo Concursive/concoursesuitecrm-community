@@ -70,7 +70,12 @@ public static String replace(String str, String o, String n) {
   public static String toJavaScript(String s) {
     if (s != null) {
       String jsReady = s.trim();
+      jsReady = replace(jsReady, ", ", ",");
+      jsReady = replace(jsReady, " ,", ",");
+      jsReady = replace(jsReady, " , ", ",");
       jsReady = replace(jsReady, "\\", "\\\\");
+      jsReady = replace(jsReady, "'", "\\'");
+      jsReady = replace(jsReady, "\"", "\\\"");
       return(jsReady);
     } else {
       return("");

@@ -33,7 +33,7 @@
 <%
     }
     
-    for (int i=1; i<=(ContactDetails.getEmailAddressList().size()+1); i++) {
+    for (int i=1; i<=(ContactDetails.getEmailAddressList().size()); i++) {
 %>
   <dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkEmail(form.email<%=i%>address.value)) { 
       message += "- At least one entered email address is invalid.  Make sure there are no invalid characters\r\n";

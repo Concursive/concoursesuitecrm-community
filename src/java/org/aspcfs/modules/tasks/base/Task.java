@@ -1045,8 +1045,8 @@ public class Task extends GenericBean {
       pst.execute();
       this.id = DatabaseUtils.getCurrVal(db, "task_task_id_seq");
       pst.close();
-      if (this.getContactId() != -1) {
-        insertContacts(db);
+      if (this.getContactId() > -1) {
+        processContacts(db, true);
       }
       if (actionId > 0) {
         updateLog(db);
@@ -1154,8 +1154,10 @@ public class Task extends GenericBean {
       pst.setTimestamp(++i, this.getModified());
       count = pst.executeUpdate();
       pst.close();
-      if (this.getContactId() != -1) {
-        insertContacts(db);
+      if (contactId == -1) {
+        processContacts(db, false);
+      } else {
+        processContacts(db, true);
       }
       db.commit();
     } catch (SQLException e) {
@@ -1172,14 +1174,12 @@ public class Task extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  linkContacts      Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean insertContacts(Connection db) throws SQLException {
+  public boolean processContacts(Connection db, boolean linkContacts) throws SQLException {
     String sql = null;
-    if (contactId == -1) {
-      throw new SQLException("Contact ID incorrect");
-    }
     if (this.getId() == -1) {
       throw new SQLException("Task ID not specified");
     }
@@ -1196,15 +1196,20 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
-      sql = "INSERT INTO tasklink_contact " +
-          "(task_id, contact_id) " +
-          "VALUES (?, ?) ";
-      i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      pst.setInt(++i, this.getContactId());
-      pst.execute();
-      pst.close();
+      if (linkContacts) {
+        if (contactId == -1) {
+          throw new SQLException("Contact ID incorrect");
+        }
+        sql = "INSERT INTO tasklink_contact " +
+            "(task_id, contact_id) " +
+            "VALUES (?, ?) ";
+        i = 0;
+        pst = db.prepareStatement(sql);
+        pst.setInt(++i, this.getId());
+        pst.setInt(++i, this.getContactId());
+        pst.execute();
+        pst.close();
+      }
       if (commit) {
         db.commit();
       }
@@ -1428,7 +1433,7 @@ public class Task extends GenericBean {
 
       if (contactId > 0) {
         contact = new Contact(db, contactId);
-        contactName = contact.getNameLastFirst();
+        contactName = contact.getValidName();
       }
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
@@ -1512,7 +1517,13 @@ public class Task extends GenericBean {
     pst.execute();
     pst.close();
   }
-  
+
+
+  /**
+   *  Gets the timeZoneParams attribute of the Task class
+   *
+   *@return    The timeZoneParams value
+   */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
     thisList.add("dueDate");

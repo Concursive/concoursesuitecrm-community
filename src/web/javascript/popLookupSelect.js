@@ -69,7 +69,7 @@ function popContactTypeSelectMultiple(displayFieldId, category, contactId) {
   function setParentList(selectedValues,selectedIds,listType,displayFieldId){
 	  if(selectedValues.length == 0 && listType == "list"){
       opener.deleteOptions(displayFieldId);
-		  opener.insertOption("None Selected","",displayFieldId);
+		  opener.insertOption("None Selected","-1",displayFieldId);
       return true;
 	  }
     var i = 0;

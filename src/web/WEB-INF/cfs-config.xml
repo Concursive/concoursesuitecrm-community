@@ -117,6 +117,8 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="NewTaskPopupOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=MyTasks"/>
     <forward name="PrepareTaskPopupOK" resource="/tasks/mytasks_new.jsp" layout="style"/>
+    <forward name="TaskDetailsPopupOK" resource="/tasks/mytasks_details.jsp" layout="style"/>
+    <forward name="TaskDetailsOK" resource="/tasks/mytasks_details.jsp" layout="style"/>
     <forward name="InsertTaskPopupOK" resource="/closepopupandreload.jsp"/>
   </action>
   
@@ -285,6 +287,7 @@
     <forward name="DetailsOK" resource="/contacts/companydirectory_detailscall.jsp" layout="nav"/>
     <forward name="AddOK" resource="/contacts/companydirectory_addcall.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/ExternalContactsCalls.do?command=View"/>
+    <forward name="InsertRetryOK" resource="/ExternalContactsCalls.do?command=Add"/>
     <forward name="ModifyOK" resource="/contacts/companydirectory_modifycall.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/ExternalContactsCalls.do?command=Details"/>
     <forward name="ModifyPopupOK" resource="/contacts/companydirectory_modifycall.jsp" layout="style"/>
@@ -297,6 +300,7 @@
     <forward name="DetailsPopupOK" resource="/contacts/companydirectory_detailscall.jsp" layout="style"/>
     <forward name="AddPopupOK" resource="/contacts/companydirectory_addcall.jsp" layout="style"/>
     <forward name="InsertPopupOK" resource="/ExternalContactsCalls.do?command=View"/>
+    <forward name="InsertRetryPopupOK" resource="/ExternalContactsCalls.do?command=Add"/>
     <forward name="ModifyPopupOK" resource="/contacts/companydirectory_modifycall.jsp" layout="style"/>
     
   </action>
@@ -387,10 +391,12 @@
     <forward name="DeleteOK" resource="/LeadsCalls.do?command=View"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
-  <action name="LeadsCallsForward" class="org.aspcfs.modules.mycfs.actions.MyCFS">
+  
+  <action name="LeadsCallsForward" class="org.aspcfs.modules.pipeline.actions.LeadsCalls">
     <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
+    <forward name="SendCallOK" resource="/MyCFS.do?command=SendMessage&amp;actionSource=LeadsCallsForward"/>
     <forward name="SendMessageOK" resource="/pipeline/leads_confirmsend.jsp" layout="nav"/>
-    <forward name="ForwardMessageOK" resource="/pipeline/leads_forwardcall.jsp" layout="nav"/>
+    <forward name="ForwardCallOK" resource="/pipeline/leads_forwardcall.jsp" layout="nav"/>
    </action>
   <action name="LeadsDocuments" class="org.aspcfs.modules.pipeline.actions.LeadsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />

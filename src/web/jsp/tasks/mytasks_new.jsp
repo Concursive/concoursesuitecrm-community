@@ -15,7 +15,6 @@
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
 <input type="submit" value="<%= Task.getId()==-1?"Save":"Update" %>">
-<input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 <input type="button" value="Cancel" onClick="<%=popUp?"javascript:window.close();":"javascript:window.location.href='MyTasks.do?command=ListTasks';"%>"><br>
 <%= showError(request, "actionError") %>
 <%@ include file="task_include.jsp" %>

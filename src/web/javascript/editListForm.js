@@ -79,6 +79,8 @@ function removeValues(){
 // -------------------------------------------------------------------
 function swapOptions(obj,i,j) {
   var o = obj.options;
+  if(o.selectedIndex > -1){
+    
   var i_selected = o[i].selected;
   var j_selected = o[j].selected;
   var temp = new Option(o[i].text, o[i].value, o[i].defaultSelected, o[i].selected);
@@ -87,6 +89,9 @@ function swapOptions(obj,i,j) {
   o[j] = temp;
   o[i].selected = j_selected;
   o[j].selected = i_selected;
+  }else{
+    alert("An item needs to be selected");
+  }
 }
 	
 // -------------------------------------------------------------------
@@ -121,7 +126,7 @@ function moveOptionUp(obj) {
             selectedCount++;
     }
   }
-  if (selectedCount > 1) {
+  if (selectedCount != 1) {
     return;
   }
   // If this is the first item in the list, do nothing
@@ -145,7 +150,7 @@ function moveOptionDown(obj) {
       selectedCount++;
     }
   }
-  if (selectedCount > 1) {
+  if (selectedCount != 1) {
     return;
   }
   // If this is the last item in the list, do nothing

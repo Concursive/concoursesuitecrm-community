@@ -24,7 +24,6 @@ public class CustomForm extends CustomFieldCategory {
   private String selectedTabName = "";
   private int selectedTabId = 0;
   private StringBuffer jScripts = new StringBuffer();
-  private StringBuffer jsFormCheck = new StringBuffer();
   private StringBuffer jsTabCheck = new StringBuffer();
   private LinkedHashMap buttonList = new LinkedHashMap();
   private ActionContext context = null;
@@ -213,26 +212,6 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Gets the jsCheckInfo attribute of the CustomForm object
-   *
-   *@return    The jsCheckInfo value
-   */
-  public String getJsFormCheck() {
-    return jsFormCheck.toString();
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Return Value
-   */
-  public boolean hasJsFormCheck() {
-    return (this.getJsFormCheck() != null && !"".equals(this.getJsFormCheck()));
-  }
-
-
-  /**
    *  Gets the jsTabCheck attribute of the CustomForm object
    *
    *@return    The jsTabCheck value
@@ -279,23 +258,6 @@ public class CustomForm extends CustomFieldCategory {
    */
   public LinkedHashMap getButtonList() {
     return buttonList;
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  thisField  Description of the Parameter
-   */
-  public void buildJsFormCheck(CustomField thisField) {
-    if (thisField.getRequired() == true) {
-      if (jsFormCheck.length() == 0) {
-        jsFormCheck.append("function checkForm(form) {\n");
-        jsFormCheck.append("    formTest = true;\n");
-        jsFormCheck.append("    message = \"\";\n");
-      }
-      appendJsField(thisField, jsFormCheck);
-    }
   }
 
 
@@ -383,7 +345,6 @@ public class CustomForm extends CustomFieldCategory {
    */
   public int populate(Connection db, Object tmp) throws SQLException{
     int updatedFields = 0;
-    jsFormCheck = new StringBuffer();
     jsTabCheck = new StringBuffer();
 
     Iterator tabs = this.iterator();
@@ -438,7 +399,6 @@ public class CustomForm extends CustomFieldCategory {
                   buildJsTabCheck(thisField);
                 }
                 //Add required fields to javascript code... for whole form
-                buildJsFormCheck(thisField);
                 updatedFields++;
               }
             }
@@ -452,19 +412,10 @@ public class CustomForm extends CustomFieldCategory {
       }
     }
 
-    if (jsFormCheck.length() != 0) {
-      jsFormCheck.append("    if (formTest == false) {\n");
-      jsFormCheck.append("        alert(\"Form could not be saved, please check the following:\\r\\n\\r\\n\" + message);\n");
-      jsFormCheck.append("        return false;\n");
-      jsFormCheck.append("    } else {\n");
-      jsFormCheck.append("        return true;\n");
-      jsFormCheck.append("    }\n");
-      jsFormCheck.append("}\n");
-    }
 
     if (jsTabCheck.length() != 0) {
       jsTabCheck.append("    if (formTest == false) {\n");
-      jsTabCheck.append("        alert(\"Before going to the next page, please check the following:\\r\\n\\r\\n\" + message);\n");
+      jsTabCheck.append("        alert(\"Please check the following fields:\\r\\n\\r\\n\" + message);\n");
       jsTabCheck.append("        return false;\n");
       jsTabCheck.append("    } else {\n");
       jsTabCheck.append("        return true;\n");

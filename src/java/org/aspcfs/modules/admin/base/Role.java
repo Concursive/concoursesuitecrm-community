@@ -540,6 +540,7 @@ public class Role extends GenericBean {
    *@since
    */
   public boolean delete(Connection db) throws SQLException {
+    PreparedStatement pst = null;
     if (this.getId() == -1) {
       throw new SQLException("ID was not specified");
     }
@@ -550,19 +551,20 @@ public class Role extends GenericBean {
     int recordCount = 0;
     try {
       db.setAutoCommit(false);
-      Statement st = db.createStatement();
       if (buildUserCount(db, false)) {
-        recordCount = st.executeUpdate(
+        pst = db.prepareStatement(
             "UPDATE role " +
             "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
             "WHERE role_id = " + id + " ");
+        recordCount = pst.executeUpdate();
       } else {
         deletePermissions(db);
-        recordCount = st.executeUpdate(
+        pst = db.prepareStatement(
             "DELETE FROM role " +
             "WHERE role_id = " + id + " ");
+        recordCount = pst.executeUpdate();
       }
-      st.close();
+      pst.close();
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -743,7 +745,9 @@ public class Role extends GenericBean {
         "AND (alias = -1 OR alias IS NULL) " +
         (activeUsersOnly ? "AND enabled = ? " : ""));
     pst.setInt(1, id);
-    pst.setBoolean(2, true);
+    if(activeUsersOnly){
+      pst.setBoolean(2, true);
+    }
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       resultCount = rs.getInt("count");
@@ -767,11 +771,12 @@ public class Role extends GenericBean {
    *@since
    */
   private void deletePermissions(Connection db) throws SQLException {
-    Statement st = db.createStatement();
-    st.execute(
+    PreparedStatement pst = null;
+    pst = db.prepareStatement(
         "DELETE FROM role_permission " +
         "WHERE role_id = " + id);
-    st.close();
+    pst.execute();
+    pst.close();
   }
 
 

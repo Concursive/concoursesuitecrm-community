@@ -369,7 +369,7 @@ public final class ExternalContacts extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      //return if no criteria is selected 
+      //return if no criteria is selected
       if ((searchContactsInfo.getListView() == null || "".equals(searchContactsInfo.getListView())) && !"searchForm".equals(source)) {
         return "ListContactsOK";
       }
@@ -676,7 +676,7 @@ public final class ExternalContacts extends CFSModule {
     try {
       PagedListInfo searchContactsInfo = this.getPagedListInfo(context, "SearchContactsInfo");
       db = this.getConnection(context);
-      
+
       contactTypeList.setShowPersonal(true);
       contactTypeList.setIncludeDefinedByUser(this.getUserId(context));
       contactTypeList.addItem(-1, "All Contact Types");
@@ -756,6 +756,16 @@ public final class ExternalContacts extends CFSModule {
       if (!(hasAuthority(db, context, thisContact) || OpportunityHeaderList.isComponentOwner(db, getUserId(context)))) {
         return ("PermissionError");
       }
+
+      //add access types
+      AccessTypeList accessTypeList = null;
+      if (thisContact.getOrgId() > 0) {
+        accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.ACCOUNT_CONTACTS);
+      } else {
+        accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
+      }
+      context.getRequest().setAttribute("AccessTypeList", accessTypeList);
+
       //check whether or not the owner is an active User
       thisContact.checkEnabledOwnerAccount(db);
       addRecentItem(context, thisContact);
@@ -785,7 +795,7 @@ public final class ExternalContacts extends CFSModule {
       if (!(hasPermission(context, "contacts-external_contacts-add"))) {
         return ("PermissionError");
       }
-      addModuleBean(context, "External Contacts", "Add Contact to Account");
+      addModuleBean(context, "Add Contact", "Add Contact to Account");
     }
     try {
       db = this.getConnection(context);
@@ -814,14 +824,16 @@ public final class ExternalContacts extends CFSModule {
 
       //add access types
       AccessTypeList accessTypeList = null;
-      if (thisContact.getOrgId() > 0) {
-        accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.ACCOUNT_CONTACTS);
-      } else if (addUser) {
-        accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.EMPLOYEES);
-      } else {
-        accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
+      if (context.getRequest().getAttribute("AccessTypeList") == null) {
+        if (thisContact.getOrgId() > 0) {
+          accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.ACCOUNT_CONTACTS);
+        } else if (addUser) {
+          accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.EMPLOYEES);
+        } else {
+          accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
+        }
+        context.getRequest().setAttribute("AccessTypeList", accessTypeList);
       }
-      context.getRequest().setAttribute("AccessTypeList", accessTypeList);
 
       //prepare organization if needed
       if (thisContact.getOrgId() > -1) {
@@ -858,6 +870,15 @@ public final class ExternalContacts extends CFSModule {
       cloneContact = new Contact(db, contactId);
       cloneContact.resetBaseInfo();
       context.getRequest().setAttribute("ContactDetails", cloneContact);
+
+      //add access types
+      AccessTypeList accessTypeList = null;
+      if (cloneContact.getOrgId() > 0) {
+        accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.ACCOUNT_CONTACTS);
+      } else {
+        accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
+      }
+      context.getRequest().setAttribute("AccessTypeList", accessTypeList);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -948,6 +969,17 @@ public final class ExternalContacts extends CFSModule {
         context.getRequest().setAttribute("TypeList", thisContact.getTypeList());
         processErrors(context, thisContact.getErrors());
       }
+
+      //add access types
+      if ("true".equals((String) context.getRequest().getParameter("saveAndNew")) || (!recordInserted && resultCount != 1)) {
+        AccessTypeList accessTypeList = null;
+        if ("true".equals((String) context.getRequest().getParameter("saveAndNew")) || thisContact.getOrgId() == -1) {
+          accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
+        } else {
+          accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.ACCOUNT_CONTACTS);
+        }
+        context.getRequest().setAttribute("AccessTypeList", accessTypeList);
+      }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -1015,7 +1047,7 @@ public final class ExternalContacts extends CFSModule {
     addModuleBean(context, "External Contacts", "Delete a contact");
     if (recordDeleted) {
       context.getSession().removeAttribute("ContactMessageListInfo");
-      context.getRequest().setAttribute("refreshUrl", "ExternalContacts.do?command=ListContacts");
+      context.getRequest().setAttribute("refreshUrl", "ExternalContacts.do?command=SearchContacts");
       deleteRecentItem(context, thisContact);
       return ("ContactDeleteOK");
     } else {
@@ -1453,7 +1485,13 @@ public final class ExternalContacts extends CFSModule {
     }
     return this.getReturn(context, "AccessTypeJSList");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   */
   private void resetPagedListInfo(ActionContext context) {
     this.deletePagedListInfo(context, "ExternalOppsPagedListInfo");
     this.deletePagedListInfo(context, "CallListInfo");

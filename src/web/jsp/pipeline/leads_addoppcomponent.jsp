@@ -12,6 +12,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -23,16 +24,13 @@
   function checkForm(form) {
     formTest = true;
     message = "";
+    alertMessage = "";
     if ((!form.closeDate.value == "") && (!checkDate(form.closeDate.value))) { 
       message += "- Check that Est. Close Date is entered correctly\r\n";
       formTest = false;
     }
     if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
       message += "- Check that Alert Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is on or after today's date\r\n";
       formTest = false;
     }
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
@@ -47,16 +45,24 @@
       message += "- Commission entered is invalid\r\n";
       formTest = false;
     }
-    if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
-      return false;
-    } else {
+    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
+      alertMessage += "Alert Date is before today's date\r\n";
+  }
+      
+  if (formTest == false) {
+    alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+    return false;
+  } else {
+    if(alertMessage != ""){
+       return confirmAction(alertMessage);
+    }else{
       var test = document.opportunityForm.selectedList;
       if (test != null) {
         return selectAllOptions(document.opportunityForm.selectedList);
       }
     }
   }
+}
 </script>
 <form name="opportunityForm" action="LeadsComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="Leads.do">Pipeline Management</a> > 
