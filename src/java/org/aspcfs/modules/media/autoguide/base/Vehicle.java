@@ -6,6 +6,7 @@ import org.theseus.beans.*;
 import org.theseus.actions.*;
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.utils.ObjectUtils;
 
 public class Vehicle extends GenericBean {
 
