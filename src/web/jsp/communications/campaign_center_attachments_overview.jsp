@@ -31,8 +31,9 @@ Attachments
   <tr>
     <th colspan="2">
       <strong>Configured attachments for this campaign</strong>
-    </th>     
+    </th>
   </tr>
+<dhv:permission name="campaign-campaigns-surveys-view">
   <tr class="containerBody">
     <td valign="top" nowrap class="formLabel">
       Surveys
@@ -44,6 +45,7 @@ Attachments
       [<a href="CampaignManager.do?command=ViewAttachment&id=<%= Campaign.getId() %>">Change survey</a>]
     </td>
   </tr>
+</dhv:permission>
   <tr class="containerBody">
     <td valign="top" nowrap class="formLabel">
       File Attachments

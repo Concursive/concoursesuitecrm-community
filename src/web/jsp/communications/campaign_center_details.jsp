@@ -62,7 +62,7 @@ Campaign Details
                 <td style="text-align: center;">
                   <%= (Campaign.hasMessage()?"<font color='green'>" + Campaign.getMessageName() + "</font>":"<font color='red'>No Message Selected</font>") %><br>
                   &nbsp;<br>
-                  <dhv:permission name="campaign-campaigns-edit"><a href="CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>">Choose Message</a><br>&nbsp;</dhv:permission>
+                  <dhv:permission name="campaign-campaigns-messages-view"><a href="CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>">Choose Message</a><br>&nbsp;</dhv:permission>
                 </td>
               </tr>
             </table>
