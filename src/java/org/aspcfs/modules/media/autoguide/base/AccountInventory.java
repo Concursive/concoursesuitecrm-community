@@ -7,6 +7,7 @@ import org.theseus.actions.*;
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.ObjectUtils;
+import com.darkhorseventures.cfsbase.Organization;
 
 public class AccountInventory {
 
@@ -30,6 +31,7 @@ public class AccountInventory {
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
   private Vehicle vehicle = null;
+  private Organization organization = null;
   
   public AccountInventory() { }
 
@@ -77,6 +79,7 @@ public class AccountInventory {
   public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
   public void setModifiedBy(String tmp) { this.modifiedBy = Integer.parseInt(tmp); }
   public void setVehicle(Vehicle tmp) { this.vehicle = tmp; }
+  public void setOrganization(Organization tmp) { this.organization = tmp; }
 
   public int getId() { return id; }
   public int getVehicleId() { return vehicleId; }
@@ -101,6 +104,7 @@ public class AccountInventory {
     return ObjectUtils.generateGuid(entered, enteredBy, id);
   }
   public Vehicle getVehicle() { return vehicle; }
+  public Organization getOrganization() { return organization; }
 
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -131,6 +135,7 @@ public class AccountInventory {
     pst.close();
 
     id = DatabaseUtils.getCurrVal(db, "autoguide_acco_inventory_id_seq");
+    //vehicle = new Vehicle(db, vehicleId);
     return true;
   }
 
@@ -179,13 +184,27 @@ public class AccountInventory {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE autoguide_account_inventory " +
-        "SET vehicle_id = ?, modifiedby = ?, " +
+        "SET vehicle_id = ?, account_id = ?, vin = ?, adtype = ?, is_new = ?, " +
+        "condition = ?, comments = ?, stock_no = ?, ext_color = ?, int_color = ?, " +
+        "invoice_price = ?, selling_price = ?, status = ?, modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        "WHERE vehicle_id = ? " +
+        "WHERE inventory_id = ? " +
         "AND modified = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, vehicleId);
+    pst.setInt(++i, accountId);
+    pst.setString(++i, vin);
+    pst.setInt(++i, adType);
+    pst.setBoolean(++i, isNew);
+    pst.setString(++i, condition);
+    pst.setString(++i, comments);
+    pst.setString(++i, stockNo);
+    pst.setString(++i, exteriorColor);
+    pst.setString(++i, interiorColor);
+    pst.setDouble(++i, invoicePrice);
+    pst.setDouble(++i, sellingPrice);
+    pst.setString(++i, status);
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, id);
     pst.setTimestamp(++i, this.getModified());
@@ -197,12 +216,28 @@ public class AccountInventory {
 
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("inventory_id");
-    vehicleId = rs.getInt("vehicle_id");
-    entered = rs.getTimestamp("vehicle_entered");
-    enteredBy = rs.getInt("vehicle_enteredby");
-    modified = rs.getTimestamp("vehicle_modified");
-    modifiedBy = rs.getInt("vehicle_modifiedby");
+    vehicleId = rs.getInt("inventory_vehicle_id");
+    accountId = rs.getInt("account_id");
+    vin = rs.getString("vin");
+    adType = rs.getInt("adtype");
+    mileage = rs.getInt("mileage");
+    isNew = rs.getBoolean("is_new");
+    condition = rs.getString("condition");
+    comments = rs.getString("comments");
+    stockNo = rs.getString("stock_no");
+    exteriorColor = rs.getString("ext_color");
+    interiorColor = rs.getString("int_color");
+    invoicePrice = rs.getDouble("invoice_price");
+    sellingPrice = rs.getDouble("selling_price");
+    status = rs.getString("status");
+    entered = rs.getTimestamp("entered");
+    enteredBy = rs.getInt("enteredby");
+    modified = rs.getTimestamp("modified");
+    modifiedBy = rs.getInt("modifiedby");
   }
 
+  public void buildOrganizationInfo(Connection db) throws SQLException {
+    organization = new Organization(db, accountId);
+  }
 }
 

@@ -165,6 +165,14 @@
   </action>
   <!-- End Contacts & Resources Module -->
   
+  <!-- Auto Guide Module -->
+  <action name="AutoGuide" class="com.darkhorseventures.autoguide.module.AutoGuide">
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/autoguide-list.jsp" layout="nav"/>
+  </action>
   
   <!-- Pipeline Management Module -->
   <action name="Leads" class="com.darkhorseventures.cfsmodule.Leads">
