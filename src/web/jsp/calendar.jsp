@@ -7,7 +7,7 @@
    String returnPage = (String)request.getParameter("return");
    CalendarBean CalendarInfo = (CalendarBean) session.getAttribute(returnPage!=null?returnPage + "CalendarInfo" :"CalendarInfo");
 %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/images.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/images.js"></SCRIPT>
 <script type="text/javascript">
   function showDayEvents(month,day){
     window.parent.frames['calendardetails'].location.href='MyCFS.do?command=DayView&inline=true&month='+month+'&day='+day+'&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
@@ -23,48 +23,44 @@
     if(rowOrCell == "cell"){
       tdToChange = E;
     }
-      if (browser=="ie"){
-          while (E.tagName!="TR"){
-            E=E.parentElement;
-          }
-          E.className = className;
-      }
-      else{
+    if (browser=="ie"){
         while (E.tagName!="TR"){
-          E=E.parentNode;
-          }
-          rowToChange = E;
-          resetCalendar();
-          if(rowOrCell == "cell"){
-            tdToChange.className = className;
-            return;
-          }
-          for(i=0;i<rowToChange.childNodes.length;i++){
-            if(rowToChange.childNodes.item(i).tagName == "TD"){
-              rowToChange.childNodes.item(i).className = className;
-            }
-          }
+          E=E.parentElement;
+        }
+        E.className = className;
+    } else {
+      while (E.tagName!="TR") {
+        E=E.parentNode;
+      }
+      rowToChange = E;
+      resetCalendar();
+      if (rowOrCell == "cell") {
+        tdToChange.className = className;
+        return;
+      }
+      for (i=0;i<rowToChange.childNodes.length;i++) {
+        if (rowToChange.childNodes.item(i).tagName == "TD") {
+          rowToChange.childNodes.item(i).className = className;
+        }
       }
     }
-    
-    
-    function resetCalendar(){
-      tableElement = document.getElementById('calendarTable');
-      E = tableElement.childNodes.item(0);
-          for(i=0;i<E.childNodes.length;i++){
-            if(E.childNodes.item(i).tagName == "TR" && ! (E.childNodes.item(i).getAttribute('name') == "staticrow")){
-              tmpTR = E.childNodes.item(i);
-              for(j=0;j<tmpTR.childNodes.length;j++){
-                if(tmpTR.childNodes.item(j).tagName == "TD"){
-                  tmpTR.childNodes.item(j).className = tmpTR.childNodes.item(j).getAttribute('name');
-                }
-             }
-           }
+  }
+  function resetCalendar() {
+    tableElement = document.getElementById('calendarTable');
+    E = tableElement.childNodes.item(0);
+    for (i=0;i<E.childNodes.length;i++) {
+      if (E.childNodes.item(i).tagName == "TR" && ! (E.childNodes.item(i).getAttribute('name') == "staticrow")) {
+        tmpTR = E.childNodes.item(i);
+        for (j=0;j<tmpTR.childNodes.length;j++) {
+          if (tmpTR.childNodes.item(j).tagName == "TD") {
+            tmpTR.childNodes.item(j).className = tmpTR.childNodes.item(j).getAttribute('name');
+          }
         }
+      }
     }
+  }
 </script>
-
-<form name="monthBean" action="MyCFS.do?command=MonthView&source=calendar<%=returnPage!=null?"&return="+returnPage:""%>" method="post">
+<form name="monthBean" action="MyCFS.do?command=MonthView&source=calendar<%= returnPage!=null?"&return="+returnPage:"" %>" method="post">
 <%
       CompanyCalendar.setBorderSize(1);
       CompanyCalendar.setCellPadding(4);
@@ -76,8 +72,6 @@
       CompanyCalendar.setShowSubject(false);
 %>
 <%= CompanyCalendar.getHtml() %>
-
-  
 <table bgcolor="#FFFFFF" width="98%" border="0" cellpadding="4" cellspacing="0" border="0">
   <tr>
     <td>
@@ -108,5 +102,4 @@
     </td>
   </tr>
 </table>
-
 </form>

@@ -30,7 +30,7 @@ function check(form) {
 <%= CustomFormInfo.getJsTabCheck() %>
 <%= CustomFormInfo.getJsFormOnLoad() %>
 </script>
-<form name="<%=CustomFormInfo.getName()%>" method="post" action="<%=CustomFormInfo.getAction()%>"<%= (CustomFormInfo.hasJsFormCheck()?" onSubmit=\"return check(this);\"":"") %>>
+<form name="<%= CustomFormInfo.getName() %>" method="post" action="<%= CustomFormInfo.getAction() %>"<%= (CustomFormInfo.hasJsFormCheck()?" onSubmit=\"return check(this);\"":"") %>>
 <input type="hidden" name="return" value="<%= returnType %>">
 <input type="hidden" name="clickFrom" value="none">
 <%
@@ -38,26 +38,26 @@ function check(form) {
   while (tabs.hasNext()) {
     CustomFormTab thisTab = (CustomFormTab)tabs.next();
     if (pg == thisTab.getId()) {
-    		CustomFormInfo.setSelectedTabName(thisTab.getName());
-        if (thisTab.getReturnLinkText() != null && !(thisTab.getReturnLinkText().equals(""))) {
-    %>
+      CustomFormInfo.setSelectedTabName(thisTab.getName());
+      if (thisTab.getReturnLinkText() != null && !(thisTab.getReturnLinkText().equals(""))) {
+%>
         <%-- Draw Trails --%>
-        <%=thisTab.getReturnLinkText()%>
+        <%= thisTab.getReturnLinkText() %>
         
-   <%}%>
-    
+<%
+      }
+%>
         <%-- 1st set of buttons --%>
-        <%=thisTab.getButtonString()%>
-      
+        <%= thisTab.getButtonString() %>
         <br>&nbsp;
-          <%-- Draw the form --%>
-          <dhv:group object="CustomFormInfo" page="<%= pg %>" />
+        <%-- Draw the form --%>
+        <dhv:group object="CustomFormInfo" page="<%= pg %>" />
         <br>
-        
         <%-- 2nd set of buttons --%>
-        <%=thisTab.getButtonString()%>
-    
-    <%}%>
- <%}%>
+        <%= thisTab.getButtonString() %>
+<%
+    }
+  }
+%>
 </form>
 

@@ -4,11 +4,11 @@
   if ("true".equals((String)getServletConfig().getServletContext().getAttribute("ForceSSL")) && 
      scheme.equals("http")) {
 %>
-<jsp:include page="/welcome.jsp" flush="true"/>
+<jsp:include page="welcome.jsp" flush="true"/>
 <%
   } else {
 %>
-<jsp:include page="/login.jsp" flush="true"/>
+<jsp:include page="login.jsp" flush="true"/>
 <%  
   }
 %>

@@ -5,28 +5,31 @@
 <a href="<%= request.getParameter("return") %>">Back</a>
 <p>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" >
-  <tr>
-    <td colspan=2 valign=center align=left>
-      Your message has been sent to the following recipients :
-      <br><br>
-      	<%
+  <tr class="title">
+    <td>
+      Your message has been sent to the following recipients:
+    </td>
+  </tr>
+<%
 	Set s = finalContacts.keySet();
 	Iterator i = s.iterator();
-	int count = -1;
+	int rowid = 0;
 	while (i.hasNext()) {
-		count++;
+		rowid = (rowid != 1?1:2);
 		Object st = finalContacts.get(i.next());
 		String email = st.toString();
-		if(email.startsWith("P:")){
+		if(email.startsWith("P:")) {
 			email = email.substring(2);
 		}
-	%>
-		--> <strong><%=email%></strong><br>
-	<%
+%>
+  <tr class="row<%= rowid %>">
+    <td>
+      <%= email %>
+    </td>
+  </tr>
+<%
 	}
 	session.removeAttribute("finalContacts");
   session.removeAttribute("selectedContacts");
-	%>
-      </td>
-  </tr>
+%>
 </table>
