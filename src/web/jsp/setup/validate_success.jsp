@@ -9,7 +9,7 @@
       License accepted!<br>
       <br>
       Now it's time to configure some of the system settings before you
-      can begin using CFS.<br>
+      can begin using Dark Horse CRM.<br>
       <br>
       Configuration includes the following steps:<br>
       <br>
@@ -43,7 +43,7 @@
             Step 4:
           </td>
           <td>
-            Setup the CFS administrative user account
+            Setup the Dark Horse CRM administrative user account
           </td>
         </tr>
       </table>
