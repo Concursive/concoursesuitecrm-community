@@ -190,7 +190,12 @@ public final class Admin extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return "UsageOK";
+    if (errorMessage == null) {
+      return "UsageOK";
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
 
 
@@ -295,9 +300,10 @@ public final class Admin extends CFSModule {
     addModuleBean(context, "Configuration", "Configuration");
     if (errorMessage == null) {
       return ("EditListsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return "SystemError";
     }
-    context.getRequest().setAttribute("Error", errorMessage);
-    return "SystemError";
   }
 
 
@@ -312,7 +318,6 @@ public final class Admin extends CFSModule {
     if (!(hasPermission(context, "admin-sysconfig-lists-edit"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     String tblName = context.getRequest().getParameter("tableName");
@@ -325,7 +330,6 @@ public final class Admin extends CFSModule {
     int j = 0;
 
     StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("selectNames"), "^");
-
     while (st.hasMoreTokens()) {
       names[j] = (String) st.nextToken();
       j++;
@@ -371,10 +375,14 @@ public final class Admin extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
-    context.getRequest().setAttribute("moduleId", context.getRequest().getParameter("module"));
-    addModuleBean(context, "Configuration", "Configuration");
-    return (executeCommandEditLists(context));
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("moduleId", context.getRequest().getParameter("module"));
+      addModuleBean(context, "Configuration", "Configuration");
+      return (executeCommandEditLists(context));
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
 
 
@@ -395,7 +403,6 @@ public final class Admin extends CFSModule {
     int j = 0;
 
     StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("selectNames"), "^");
-
     while (st.hasMoreTokens()) {
       names[j] = (String) st.nextToken();
       j++;
@@ -418,7 +425,6 @@ public final class Admin extends CFSModule {
       Iterator i = compareList.iterator();
       while (i.hasNext()) {
         ContactType thisType = (ContactType) i.next();
-
         //not there, disable it, leave it
         if (newList.getElement(thisType.getId()) == null) {
           thisType.setEnabled(db, false);
@@ -435,16 +441,19 @@ public final class Admin extends CFSModule {
           thisType.setNewOrder(db);
         }
       }
-      //end
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
-    context.getRequest().setAttribute("moduleId", context.getRequest().getParameter("module"));
-    addModuleBean(context, "Configuration", "Configuration");
-    return (executeCommandEditLists(context));
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("moduleId", context.getRequest().getParameter("module"));
+      addModuleBean(context, "Configuration", "Configuration");
+      return (executeCommandEditLists(context));
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
 
 
@@ -461,88 +470,37 @@ public final class Admin extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
-    int module = -1;
-    int sublist = -1;
-
-    if (context.getRequest().getParameter("module") != null) {
-      module = Integer.parseInt(context.getRequest().getParameter("module"));
-    }
-
-    if (context.getRequest().getParameter("sublist") != null) {
-      sublist = Integer.parseInt(context.getRequest().getParameter("sublist"));
-    }
-
+    int moduleId = -1;
+    int lookupId = -1;
     LookupList selectedList = null;
-    String subTitle = null;
 
     try {
       db = this.getConnection(context);
+      
+      moduleId = Integer.parseInt(context.getRequest().getParameter("module"));
+      lookupId = Integer.parseInt(context.getRequest().getParameter("sublist"));
+      
+      LookupListElement thisList = new LookupListElement(db, moduleId, lookupId);
+      thisList.buildLookupList(db, this.getUserId(context));
+      selectedList = thisList.getLookupList();
 
-      if (module == PermissionCategory.PERMISSION_CAT_LEADS) {
-        if (sublist == PermissionCategory.LOOKUP_LEADS_STAGE) {
-          selectedList = new LookupList(db, "lookup_stage");
-          subTitle = "Pipeline Management: Stage";
-        }
-        if (sublist == PermissionCategory.LOOKUP_LEADS_TYPE) {
-          selectedList = new LookupList(db, "lookup_opportunity_types");
-          subTitle = "Pipeline Management: Opportunity Type";
-        }
+      switch (thisList.getCategoryId()) {
+        case PermissionCategory.PERMISSION_CAT_CONTACTS:
+          if (lookupId == PermissionCategory.LOOKUP_CONTACTS_TYPE) {
+            context.getRequest().setAttribute("category", String.valueOf(ContactType.GENERAL));
+          }
+          break;
+        case PermissionCategory.PERMISSION_CAT_ACCOUNTS:
+          if (lookupId == PermissionCategory.LOOKUP_ACCOUNTS_CONTACTS_TYPE) {
+            context.getRequest().setAttribute("category", String.valueOf(ContactType.ACCOUNT));
+          }
+          break;
+        default: break;
       }
-
-      if (module == PermissionCategory.PERMISSION_CAT_CONTACTS) {
-        if (sublist == PermissionCategory.LOOKUP_CONTACTS_TYPE) {
-          ContactTypeList contactTypeList = new ContactTypeList();
-          contactTypeList.setCategory(ContactType.GENERAL);
-          contactTypeList.setShowPersonal(true);
-          contactTypeList.buildList(db);
-          selectedList = contactTypeList.getLookupList("contacttype", 0);
-          subTitle = "Contacts &amp; Resources: Type";
-          context.getRequest().setAttribute("category", String.valueOf(ContactType.GENERAL));
-        } else if (sublist == PermissionCategory.LOOKUP_CONTACTS_EMAIL) {
-          selectedList = new LookupList(db, "lookup_contactemail_types");
-          subTitle = "Contacts &amp; Resources: Email Type";
-        } else if (sublist == PermissionCategory.LOOKUP_CONTACTS_ADDRESS) {
-          selectedList = new LookupList(db, "lookup_contactaddress_types");
-          subTitle = "Contacts &amp; Resources: Address Type";
-        } else if (sublist == PermissionCategory.LOOKUP_CONTACTS_PHONE) {
-          selectedList = new LookupList(db, "lookup_contactphone_types");
-          subTitle = "Contacts &amp; Resources: Phone Type";
-        } else if (sublist == PermissionCategory.LOOKUP_CONTACTS_DEPT) {
-          selectedList = new LookupList(db, "lookup_department");
-          subTitle = "Contacts &amp; Resources: Department";
-        }
-      }
-
-      if (module == PermissionCategory.PERMISSION_CAT_ACCOUNTS) {
-        if (sublist == PermissionCategory.LOOKUP_ACCOUNTS_TYPE) {
-          selectedList = new LookupList(db, "lookup_account_types");
-          subTitle = "Account Management: Type";
-        } else if (sublist == PermissionCategory.LOOKUP_ACCOUNTS_REVENUE_TYPE) {
-          selectedList = new LookupList(db, "lookup_revenue_types");
-          subTitle = "Account Management: Revenue Type";
-        } else if (sublist == PermissionCategory.LOOKUP_ACCOUNTS_CONTACTS_TYPE) {
-          ContactTypeList contactTypeList = new ContactTypeList();
-          contactTypeList.setCategory(ContactType.ACCOUNT);
-          contactTypeList.setShowPersonal(true);
-          contactTypeList.buildList(db);
-          selectedList = contactTypeList.getLookupList("contacttype", 0);
-          subTitle = "Account Management: Contact Type";
-          context.getRequest().setAttribute("category", String.valueOf(ContactType.ACCOUNT));
-        }
-      }
-
-      if (module == PermissionCategory.PERMISSION_CAT_TICKETS) {
-        if (sublist == PermissionCategory.LOOKUP_TICKETS_SOURCE) {
-          selectedList = new LookupList(db, "lookup_ticketsource");
-          subTitle = "Tickets: Source";
-        } else if (sublist == PermissionCategory.LOOKUP_TICKETS_SEVERITY) {
-          selectedList = new LookupList(db, "ticket_severity");
-          subTitle = "Tickets: Severity";
-        } else if (sublist == PermissionCategory.LOOKUP_TICKETS_PRIORITY) {
-          selectedList = new LookupList(db, "ticket_priority");
-          subTitle = "Tickets: Priority";
-        }
-      }
+      
+      context.getRequest().setAttribute("moduleId", String.valueOf(moduleId));
+      context.getRequest().setAttribute("SelectedList", selectedList);
+      context.getRequest().setAttribute("SubTitle", thisList.getDescription());
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -553,12 +511,13 @@ public final class Admin extends CFSModule {
       selectedList.setSelectSize(8);
       selectedList.setMultiple(true);
     }
-
-    context.getRequest().setAttribute("SelectedList", selectedList);
-    context.getRequest().setAttribute("SubTitle", subTitle);
-    context.getRequest().setAttribute("moduleId", context.getRequest().getParameter("module"));
     addModuleBean(context, "Configuration", "Configuration");
-    return ("ModifyListOK");
+    if (errorMessage == null) {
+      return ("ModifyListOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
 
 
