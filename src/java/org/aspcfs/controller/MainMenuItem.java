@@ -1,6 +1,7 @@
 package org.aspcfs.controller;
 
 import java.util.*;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Represents a main menu item, along with any submenu items.
@@ -15,7 +16,9 @@ public class MainMenuItem {
   String pageTitle = "";
   String permission = "";
   String longHtml = "";
+  boolean longHtmlRollover = false;
   String shortHtml = "";
+  boolean shortHtmlRollover = false;
   String link = "";
   String classNormal = null;
   String classSelected = null;
@@ -80,6 +83,27 @@ public class MainMenuItem {
 
 
   /**
+   *  Sets the longHtmlRollover attribute of the MainMenuItem object
+   *
+   *@param  tmp  The new longHtmlRollover value
+   */
+  public void setLongHtmlRollover(boolean tmp) {
+    this.longHtmlRollover = tmp;
+  }
+
+
+  /**
+   *  Sets the longHtmlRollover attribute of the MainMenuItem object
+   *
+   *@param  tmp  The new longHtmlRollover value
+   */
+  public void setLongHtmlRollover(String tmp) {
+    this.longHtmlRollover = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+
+  /**
    *  Sets the ShortHtml attribute of the MainMenuItem object
    *
    *@param  tmp  The new ShortHtml value
@@ -88,6 +112,27 @@ public class MainMenuItem {
   public void setShortHtml(String tmp) {
     this.shortHtml = tmp;
   }
+
+
+  /**
+   *  Sets the shortHtmlRollover attribute of the MainMenuItem object
+   *
+   *@param  tmp  The new shortHtmlRollover value
+   */
+  public void setShortHtmlRollover(boolean tmp) {
+    this.shortHtmlRollover = tmp;
+  }
+
+
+  /**
+   *  Sets the shortHtmlRollover attribute of the MainMenuItem object
+   *
+   *@param  tmp  The new shortHtmlRollover value
+   */
+  public void setShortHtmlRollover(String tmp) {
+    this.shortHtmlRollover = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
 
   /**
@@ -233,6 +278,16 @@ public class MainMenuItem {
 
 
   /**
+   *  Gets the longHtmlRollover attribute of the MainMenuItem object
+   *
+   *@return    The longHtmlRollover value
+   */
+  public boolean getLongHtmlRollover() {
+    return longHtmlRollover;
+  }
+
+
+  /**
    *  Gets the ShortHtml attribute of the MainMenuItem object
    *
    *@return    The ShortHtml value
@@ -241,6 +296,17 @@ public class MainMenuItem {
   public String getShortHtml() {
     return shortHtml;
   }
+
+
+  /**
+   *  Gets the shortHtmlRollover attribute of the MainMenuItem object
+   *
+   *@return    The shortHtmlRollover value
+   */
+  public boolean getShortHtmlRollover() {
+    return shortHtmlRollover;
+  }
+
 
 
   /**
@@ -379,7 +445,7 @@ public class MainMenuItem {
    *
    *@return    Description of the Return Value
    */
-  public boolean hasRollover() {
+  public boolean hasGraphicRollover() {
     return (graphicRollover != null && !graphicRollover.equals(""));
   }
 
