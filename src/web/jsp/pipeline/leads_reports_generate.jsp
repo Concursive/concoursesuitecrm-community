@@ -1,7 +1,7 @@
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/reportSelect.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/reportSelect.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
   	var test = document.generate.selectedList;
@@ -31,6 +31,7 @@ Generate New Report <br>
 <hr color="#BFBFBB" noshade>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+  &nbsp;<br>
 </dhv:evaluate>
 <input type="submit" value="Generate">
 <input type="button" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Reports';javascript:this.form.submit();">

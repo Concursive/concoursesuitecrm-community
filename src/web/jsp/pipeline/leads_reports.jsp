@@ -11,28 +11,27 @@
 Reports<br>
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="pipeline-reports-add"><a href="Leads.do?command=GenerateForm">Generate new report</a></dhv:permission>
-<dhv:permission name="pipeline-reports-add" none="true"><br></dhv:permission>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>
     <td align="left" width="30%" nowrap>
       <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>&nbsp;&nbsp;
     </td>
-    <td align="center" width="30%" nowrap>
+    <td align="center" width="40%" nowrap>
       <%= LeadRptListInfo.getAlphabeticalPageLinks() %>
     </td>
-    <td align="right" width="40%">
+    <td align="right" width="30%">
       &nbsp;
     </td>
-    </tr>
+  </tr>
 </table>
 </dhv:evaluate>
 <dhv:evaluate exp="<%= !(PipelineViewpointInfo.isVpSelected(User.getUserId())) %>">
   <center><%= LeadRptListInfo.getAlphabeticalPageLinks() %></center>
 </dhv:evaluate>
-<form name="listView" method="post" action="Leads.do?command=Reports">
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="Leads.do?command=Reports">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= LeadRptListInfo.getOptionValue("my") %>>My Reports</option>
@@ -42,9 +41,9 @@ Reports<br>
     <td>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadRptListInfo"/>
     </td>
+    </form>
   </tr>
 </table>
-</form>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="pipeline-reports-view,pipeline-reports-delete">
