@@ -239,6 +239,7 @@ public final class Accounts extends CFSModule {
     	OrganizationList organizationList = new OrganizationList();
 	ContactList contactList = new ContactList();
 	TicketList ticList = new TicketList();
+	OpportunityList oppList = new OpportunityList();
 	Organization ctOrg = null;
 	
 	CustomFieldCategoryList thisList = new CustomFieldCategoryList();
@@ -253,8 +254,66 @@ public final class Accounts extends CFSModule {
 	try {
 		db = this.getConnection(context);
 		
+		//Accounts with opportunities report
+		if (type.equals("5")) {
+			rep.addColumn("Description");
+			rep.addColumn("Contact/Organization");
+			rep.addColumn("Owner");
+			rep.addColumn("Amount");
+			rep.addColumn("Stage");
+			rep.addColumn("Stage Date");
+			rep.addColumn("Prob. of Close");
+			rep.addColumn("Revenue Start");
+			rep.addColumn("Terms");
+			rep.addColumn("Alert Date");
+			rep.addColumn("Commission");
+			rep.addColumn("Entered");
+			rep.addColumn("Entered By");
+			rep.addColumn("Modified");
+			rep.addColumn("Modified By");
+					
+			oppList.setOwnerIdRange(this.getUserRange(context));
+			//oppList.setOwner(this.getUserId(context));
+			oppList.buildList(db);
+			
+			Iterator opp = oppList.iterator();
+			while (opp.hasNext()) {
+				Opportunity thisOpp = (Opportunity) opp.next();
+				
+				if (thisOpp.getAccountLink() > -1) {
+					if (thisOpp.getAccountLink() != lastId) {
+						ctOrg = new Organization(db, thisOpp.getAccountLink());
+					}
+				
+					ReportRow thisRow = new ReportRow();
+					
+					setBaseAccountReportInfo( newList, thisRow, ctOrg, tdNumStart);
+					
+					thisRow.addCell(thisOpp.getDescription(), tdNumStart);
+					thisRow.addCell(thisOpp.getAccountName());
+					thisRow.addCell(thisOpp.getOwnerName());
+					thisRow.addCell("$" + thisOpp.getGuessCurrency());
+					thisRow.addCell(thisOpp.getStageName());
+					thisRow.addCell(thisOpp.getStageDateString());
+					thisRow.addCell(thisOpp.getCloseProbValue());
+					thisRow.addCell(thisOpp.getCloseDateString());
+					thisRow.addCell(thisOpp.getTermsString());
+					thisRow.addCell(thisOpp.getAlertDateString());
+					thisRow.addCell(thisOpp.getCommissionPercent());
+					thisRow.addCell(thisOpp.getEnteredString());
+					thisRow.addCell(thisOpp.getEnteredByName());
+					thisRow.addCell(thisOpp.getModifiedString());
+					thisRow.addCell(thisOpp.getModifiedByName());
+						
+					rep.addRow(thisRow);
+					lastId = thisOpp.getAccountLink();
+				}
+			}
+			
+	 	}
+		
 		//Accounts with Folders
-		if (type.equals("4")) {
+		else if (type.equals("4")) {
 			
 			rep.addColumn("Folder Name");
 			rep.addColumn("Record Name");
