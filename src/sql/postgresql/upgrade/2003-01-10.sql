@@ -32,5 +32,25 @@ CREATE TABLE sync_table (
 
 /* RUN sync.init as well */
 
+CREATE TABLE lookup_account_types (
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
 
+INSERT INTO lookup_account_types (description) VALUES ('Customer');
+INSERT INTO lookup_account_types (description) VALUES ('Competitor');
+INSERT INTO lookup_account_types (description) VALUES ('Partner');
+INSERT INTO lookup_account_types (description) VALUES ('Vendor');
+
+CREATE TABLE account_type_levels (
+  id int not null,
+  type_id int not null,
+  level INTEGER not null,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+)
+;
 

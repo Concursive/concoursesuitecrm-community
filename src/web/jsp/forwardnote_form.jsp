@@ -24,6 +24,15 @@
     </td>
   </tr>
   
+    <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Email Copy to Recipient
+    </td>
+    <td width=100%>
+      <input type=checkbox name="email1">
+    </td>
+  </tr>
+
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Subject

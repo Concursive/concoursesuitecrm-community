@@ -14,7 +14,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
-      <strong><%=toHtml(NoteDetails.getSubject())%></strong> [ <a href="javascript:popURL('/ForwardNote.do?command=ShowForm&linkRecordId=<%=NoteDetails.getId()%>&linkModuleId=9&popup=true','Forward_Note','600','290','yes','yes');">Forward</a> ]
+      <strong><%=toHtml(NoteDetails.getSubject())%></strong> [ <a href="javascript:popURL('/ForwardNote.do?command=ShowForm&linkRecordId=<%=NoteDetails.getId()%>&linkModuleId=9&popup=true','Forward_Note','600','310','yes','yes');">Forward</a> ]
     </td>     
   </tr>
   <tr class="containerBody">

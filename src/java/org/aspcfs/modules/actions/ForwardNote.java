@@ -103,7 +103,35 @@ public final class ForwardNote extends CFSModule {
 	
 			if (!recordInserted) {
 				processErrors(context, thisNote.getErrors());
+			} else if (recordInserted && context.getRequest().getParameter("email1") != null) {
+				String replyAddr = ((UserBean)context.getSession().getAttribute("User")).getUserRecord().getContact().getEmailAddress("Business");
+				User tempUser = new User(db, thisNote.getSentTo());
+				tempUser.setBuildContact(true);
+				tempUser.buildResources(db);
+				
+				SMTPMessage mail = new SMTPMessage();
+				mail.setHost("127.0.0.1");
+				
+				if (replyAddr != null && !(replyAddr.equals("")))
+					mail.setFrom(replyAddr);
+				else
+					mail.setFrom(thisNote.getSentName());
+				
+				mail.setType("text/html");
+				mail.setTo(tempUser.getContact().getEmailAddress("Business"));
+				
+				mail.setSubject(thisNote.getSubject());
+				mail.setBody(thisNote.getBody());
+				
+				if (mail.send() == 2) {
+					System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
+					System.err.println(mail.getErrorMsg());
+				} else {
+					System.out.println("Sending message to " + tempUser.getContact().getEmailAddress("Business"));
+				}
 			}
+				
+				
 		} catch (SQLException e) {
 			errorMessage = e;
 		} finally {
