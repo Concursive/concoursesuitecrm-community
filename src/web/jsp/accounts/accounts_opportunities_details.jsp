@@ -134,7 +134,7 @@ Opportunity Details<br>
 <%}%>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan=5 valign=center>
+    <td colspan="6" valign=center>
       No opportunity components found.
     </td>
   </tr>
