@@ -2245,6 +2245,14 @@ public class Contact extends GenericBean {
         pst.executeUpdate();
         pst.close();
 
+        // delete all inbox message links associated with this contact
+        pst = db.prepareStatement(
+            "DELETE FROM cfsinbox_messagelink " +
+            "WHERE sent_to = ? ");
+        pst.setInt(1, this.getId());
+        pst.executeUpdate();
+        pst.close();
+        
         // finally, delete the contact
         pst = db.prepareStatement(
             "DELETE FROM contact " +
