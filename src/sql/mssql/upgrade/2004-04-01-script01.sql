@@ -1,11 +1,6 @@
-/**
- *  MSSQL Table Creation
- *
- *@author       matt rajkowski
- *@created      February 2, 2004
- *@version      $Id$
- */
- 
+
+-- Service contracts and assets 
+
 CREATE TABLE lookup_asset_status(
  code INT IDENTITY PRIMARY KEY,
  description VARCHAR(300),
@@ -106,7 +101,7 @@ CREATE TABLE service_contract_hours (
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id)
-); 
+);
 
 CREATE TABLE asset_category ( 
   id INT IDENTITY PRIMARY KEY,
@@ -166,3 +161,69 @@ CREATE TABLE asset   (
   enabled BIT DEFAULT 1,
   purchase_cost FLOAT
 );
+
+-- Tickets
+
+CREATE TABLE ticket_csstm_form(
+  form_id INT IDENTITY PRIMARY KEY,
+  link_ticket_id INT REFERENCES ticket(ticketid), 
+  form_type VARCHAR (20),
+  phone_response_time VARCHAR(10),
+  engineer_response_time VARCHAR(10),
+  follow_up_required BIT DEFAULT 0,
+  follow_up_description VARCHAR(2048),
+  alert_date DATETIME,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  enabled BIT DEFAULT 1,
+  travel_towards_sc BIT DEFAULT 1,
+  labor_towards_sc BIT DEFAULT 1
+);
+
+CREATE TABLE ticket_activity_item(
+  item_id INT IDENTITY PRIMARY KEY,
+  link_form_id INT REFERENCES ticket_csstm_form(form_id),
+  activity_date DATETIME,
+  description TEXT,
+  travel_time FLOAT,
+  labor_time FLOAT,
+  travel_hours INT,
+  travel_minutes INT,
+  labor_hours INT,
+  labor_minutes INT
+);
+
+CREATE TABLE ticket_sun_form(
+  form_id INT IDENTITY PRIMARY KEY,
+  link_ticket_id INT REFERENCES ticket(ticketid), 
+  description_of_service TEXT,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  enabled BIT DEFAULT 1
+);
+
+CREATE TABLE trouble_asset_replacement(
+  replacement_id INT IDENTITY PRIMARY KEY,
+  link_form_id INT REFERENCES ticket_sun_form(form_id),
+  part_number VARCHAR(256),
+  part_description TEXT
+);
+
+-- Category editor
+
+CREATE TABLE category_editor_lookup (
+  id INT IDENTITY PRIMARY KEY,
+  module_id INTEGER NOT NULL REFERENCES permission_category(category_id),
+  constant_id INT NOT NULL,
+  table_name VARCHAR(60),
+  level INTEGER DEFAULT 0,
+  description TEXT,
+  entered DATETIME DEFAULT CURRENT_TIMESTAMP,
+  category_id INT NOT NULL,
+  max_levels INT NOT NULL
+);
+
