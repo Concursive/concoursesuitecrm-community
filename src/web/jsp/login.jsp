@@ -76,8 +76,12 @@
               </tr>
               <tr>
                 <td align="center" valign="center" colspan="4">
+                <table style="border:1px #EFEFEF solid;background: #EFEFEF" align="center" width="50%">
+                <tr><td align="center">
                   <font size="2"><strong>Dark Horse CRM <%= ("https".equals(request.getScheme())?"Secure ":"") %>Login</strong><br />
                   <%= toHtml(APP_TEXT) %><dhv:evaluate if="<%= hasText(APP_ORGANIZATION) %>"><br />Licensed To: <%= toHtml(APP_ORGANIZATION) %></dhv:evaluate></font>
+                </td></tr>
+                </table>
                 </td>
               </tr>
 <%
