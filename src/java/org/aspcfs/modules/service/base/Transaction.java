@@ -120,6 +120,9 @@ public class Transaction extends ArrayList {
     while (i.hasNext()) {
       Element objectElement = (Element) i.next();
       TransactionItem thisItem = new TransactionItem(objectElement, mapping);
+      thisItem.setClientManager(clientManager);
+      thisItem.setMapping(mapping);
+      thisItem.setAuth(auth);
       if (thisItem.getName().equals("meta")) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Transaction-> Meta data found");
@@ -174,9 +177,6 @@ public class Transaction extends ArrayList {
       while (items.hasNext()) {
         TransactionItem thisItem = (TransactionItem) items.next();
         thisItem.setMeta(meta);
-        thisItem.setClientManager(clientManager);
-        thisItem.setMapping(mapping);
-        thisItem.setAuth(auth);
         thisItem.execute(db, dbLookup);
         if (thisItem.hasError()) {
           appendErrorMessage(thisItem.getErrorMessage());

@@ -223,6 +223,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
        phone                nvarchar(20) NULL,
        contact              nvarchar(20) NULL,
        dmv_number           nvarchar(20) NULL,
+       owner_id             int NULL,
        entered              datetime NULL,
        enteredby            int NULL,
        modifiedby           int NULL,

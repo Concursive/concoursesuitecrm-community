@@ -263,6 +263,12 @@ public class XMLUtils {
             if (System.getProperty("DEBUG") != null) {
               System.out.println("XMLUtils-> set" + param + "(" + value + ")");
             }
+            //For synchronization, if an object is populated and a lookup will need
+            //to be done for the client id, then the lookup attribute will exist
+            String lookup = ((Element)theObject).getAttribute("lookup");
+            if (lookup != null) {
+              ignoredProperties.put(param + "^" + lookup + "Guid", value);
+            }
           } else {
             ignoredProperties.put(param, value);
             if (System.getProperty("DEBUG") != null) {

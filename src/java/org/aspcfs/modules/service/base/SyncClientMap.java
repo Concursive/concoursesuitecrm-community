@@ -320,14 +320,15 @@ public class SyncClientMap {
    */
   public int lookupServerId(SyncClientManager clientManager, int referenceTable, String clientCuid) {
     int resultId = -1;
-    if (clientManager.containsKey(new Integer(clientId))) {
+    if (clientManager.containsKey(new Integer(clientId)) && clientCuid != null) {
       Hashtable clientLookup = (Hashtable) clientManager.get(new Integer(clientId));
       Hashtable tableLookup = (Hashtable) clientLookup.get(new Integer(referenceTable));
 
       Iterator i = tableLookup.keySet().iterator();
+      System.out.println("SyncClientMap-> Table count: " + tableLookup.size());
       while (i.hasNext()) {
         Integer serverNum = (Integer) i.next();
-        if (((Integer) tableLookup.get(serverNum)) == new Integer(clientCuid)) {
+        if (((Integer) tableLookup.get(serverNum)).intValue() == Integer.parseInt(clientCuid)) {
           return serverNum.intValue();
         }
       }
