@@ -648,6 +648,20 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'callList', 'com.darkhorseventures.cfsbase.CallList');
 
- 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'customFieldCategory', 'com.darkhorseventures.cfsbase.CustomFieldCategory');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'customFieldCategoryList', 'com.darkhorseventures.cfsbase.CustomFieldCategoryList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'customFieldGroup', 'com.darkhorseventures.cfsbase.CustomFieldGroup');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'customFieldGroupList', 'com.darkhorseventures.cfsbase.CustomFieldGroupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'customField', 'com.darkhorseventures.cfsbase.CustomField');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'customFieldList', 'com.darkhorseventures.cfsbase.CustomFieldList');
+
  
  

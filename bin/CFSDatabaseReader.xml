@@ -149,7 +149,7 @@
       <property lookup="user">modifiedBy</property>
       <property>closed</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.CustomFieldCategory" id="category">
+    <map class="com.darkhorseventures.cfsbase.CustomFieldCategory" id="customFieldCategory">
       <property alias="guid">id</property>
       <property lookup="systemModules">moduleId</property>
       <property>name</property>
@@ -166,9 +166,9 @@
       <property>allowMultipleRecords</property>
       <property>readOnly</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.CustomFieldGroup" id="group">
+    <map class="com.darkhorseventures.cfsbase.CustomFieldGroup" id="customFieldGroup">
       <property alias="guid">id</property>
-      <property lookup="category">categoryId</property>
+      <property lookup="customFieldCategory">categoryId</property>
       <property>name</property>
       <property>description</property>
       <property>level</property>
@@ -177,9 +177,9 @@
       <property>entered</property>
       <property>enabled</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.CustomField" id="field">
+    <map class="com.darkhorseventures.cfsbase.CustomField" id="customField">
       <property alias="guid">id</property>
-      <property lookup="group">groupId</property>
+      <property lookup="customFieldGroup">groupId</property>
       <property>name</property>
       <property>additionalText</property>
       <property>level</property>
