@@ -1,30 +1,35 @@
 /*
-	Data records for gatekeeper database
+  CRON entries can be used to execute the specified java class, the method
+  is specified with a "#"
 */
 
-DELETE FROM sites;
+/* Sample cron entry for running the notifier, every day every 5 minutes */
+INSERT INTO events
+(minute, task, extrainfo, enabled)
+VALUES
+('*/5',
+ 'org.aspcfs.apps.notifier.Notifier#doTask',
+ '@CFS_HOME@/WEB-INF/notifier.xml',
+ @FALSE@
+);
 
-INSERT INTO sites 
-(sitecode,vhost,dbhost,dbname,dbport,dbuser,dbpw,driver) 
-VALUES 
-('ds21',
- '127.0.0.1',
- 'jdbc:postgresql://127.0.0.1:5432/cdb_ds21',
- 'cdb_ds21',
- 5432,
- 'postgres','',
- 'org.postgresql.Driver');
+/* Sample cron entry for running auto guide maintenance, every day at 2am */
+INSERT INTO events
+(minute, hour, task, extrainfo, enabled)
+VALUES
+('0', '2',
+ 'org.aspcfs.apps.notifier.Notifier#doTask',
+ '@CFS_HOME@/WEB-INF/notifier.xml org.aspcfs.modules.media.autoguide.tasks.AutoGuideMaintenance',
+ @FALSE@
+);
 
-INSERT INTO sites 
-(sitecode,vhost,dbhost,dbname,dbport,dbuser,dbpw,driver) 
-VALUES 
-('cfs2',
- '127.0.0.1',
- 'jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs;SelectMethod=cursor',
- 'cdb_cfs',
- 1433,
- 'postgres',
- 'p0stgres',
- 'com.microsoft.jdbc.sqlserver.SQLServerDriver');
-
+/* Sample cron entry for running pilot online process, every tuesday at 3:05pm */
+INSERT INTO events
+(minute, hour, dayofweek, task, extrainfo, enabled)
+VALUES
+('5', '15', '2',
+ 'org.aspcfs.apps.transfer.Transfer#doTask',
+ '@CFS_HOME@/WEB-INF/dataImport-pilotonline.xml',
+ @FALSE@
+);
 
