@@ -26,7 +26,7 @@
   <input type="hidden" name="letter">
   <table width="100%" border="0">
     <tr>
-      <td nowrap>
+      <td>
         <select size="1" name="listView" onChange="javascript:setFieldSubmit('listFilter1','-1','contactListView');">
         <%
           Iterator filters = Filters.iterator();
@@ -37,7 +37,7 @@
         <%}%>
          </select>
       </td>
-      <td nowrap>
+      <td>
 <% 
   if (ContactListInfo.getListView().equals("employees")) {
     DepartmentList.setSelectSize(1); 
@@ -56,8 +56,8 @@
         </select>
 <%}%>
       </td>
-      <td width="100%">
-        <%--<dhv:pagedListStatus object="ContactListInfo"/>--%>
+      <td>
+        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactListInfo" showHiddenParams="true" enableJScript="true"/>
       </td>
     </tr>
   </table>
@@ -177,7 +177,6 @@
   <input type="button" value="Cancel" onClick="javascript:window.close();">
 <%}%>
   &nbsp;<br>
-  <dhv:pagedListControl object="ContactListInfo" showForm="false" resetList="false"/>
 </form>
 <%} else {%>
 <%-- The final submit --%>
