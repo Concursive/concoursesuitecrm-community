@@ -9,6 +9,7 @@
       menu_init = true;
       new ypSlideOutMenu("menuAccount", "down", 0, 0, 170, getHeight("menuAccountTable"));
     }
+<dhv:permission name="accounts-accounts-edit">
     if(status == 0){
       hideSpan('menuArchiveAccount');
       showSpan('menuReEnableAccount');
@@ -19,6 +20,7 @@
       hideSpan('menuReEnableAccount');
       hideSpan('menuArchiveAccount');
     }
+</dhv:permission>
     return ypSlideOutMenu.displayMenu(id);
   }
   //Menu link functions
@@ -66,6 +68,7 @@
         </td>
       </tr>
       </dhv:permission>
+      <dhv:permission name="accounts-accounts-edit">
       <tr>
         <td>
           <img src="images/icons/stock_archive-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -77,6 +80,7 @@
           <a href="javascript:enable()">Un-Archive</a>
         </td>
       </tr>
+      </dhv:permission>
       <dhv:permission name="accounts-accounts-delete">
       <tr>
         <td>
