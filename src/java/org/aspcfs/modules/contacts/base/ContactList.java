@@ -1611,6 +1611,18 @@ public class ContactList extends Vector {
     return i;
   }
   
+  public int reassignElements(Connection db, int newOwner) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Contact thisContact = (Contact) i.next();
+      if (thisContact.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }  
+  
   public void processElementType(StringBuffer sqlFilter, int type) {
         switch(type) {
         case SearchCriteriaList.SOURCE_MY_CONTACTS:

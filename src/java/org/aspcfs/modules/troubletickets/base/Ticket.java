@@ -1648,6 +1648,18 @@ public class Ticket extends GenericBean {
     return resultCount;
   }
   
+  public boolean reassign(Connection db, int newOwner) throws SQLException {
+    int result = -1;
+    this.setAssignedTo(newOwner);
+    result = this.update(db);
+    
+    if (result == -1) {
+      return false;
+    }
+    
+    return true;
+  }
+  
   //reopen a ticket
   public int reopen(Connection db) throws SQLException {
     int resultCount = 0;
@@ -1729,8 +1741,13 @@ public class Ticket extends GenericBean {
 
     try {
       db.setAutoCommit(false);
-      i = this.update(db, false);
-    
+      
+      if (entered != null) {
+        i = this.update(db, false);
+      } else {
+        i = this.update(db, true);
+      }
+      
       TicketLog thisEntry = new TicketLog();
       thisEntry.setEnteredBy(this.getModifiedBy());
       thisEntry.setDepartmentCode(this.getDepartmentCode());

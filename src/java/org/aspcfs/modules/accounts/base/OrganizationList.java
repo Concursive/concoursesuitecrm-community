@@ -746,7 +746,18 @@ public void setAlertRangeStart(java.sql.Date alertRangeStart) {
       thisOrg.getEmailAddressList().buildList(db);
     }
   }
-
+  
+  public int reassignElements(Connection db, int newOwner) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Organization thisOrg = (Organization) i.next();
+      if (thisOrg.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }    
 
   /**
    *  Sets the parameters for the preparedStatement - these items must

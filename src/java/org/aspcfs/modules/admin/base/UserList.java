@@ -631,6 +631,17 @@ public class UserList extends Vector {
     buildList(db);
   }
   
+  public int reassignElements(Connection db, int newOwner) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      User thisUser = (User) i.next();
+      if (thisUser.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }
   
   /**
    *  Generates the user list from the database

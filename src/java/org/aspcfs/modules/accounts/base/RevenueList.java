@@ -187,6 +187,18 @@ public class RevenueList extends Vector {
     this.owner = owner;
   }
   
+  public int reassignElements(Connection db, int newOwner) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Revenue thisRevenue = (Revenue) i.next();
+      if (thisRevenue.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  } 
+  
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();

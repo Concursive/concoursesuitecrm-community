@@ -319,6 +319,18 @@ public class Revenue extends GenericBean {
     }
   }
   
+  public boolean reassign(Connection db, int newOwner) throws SQLException {
+    int result = -1;
+    this.setOwner(newOwner);
+    result = this.update(db);
+    
+    if (result == -1) {
+      return false;
+    }
+    
+    return true;
+  }
+  
   public boolean insert(Connection db) throws SQLException {
     if (!isValid(db)) {
       return false;

@@ -51,6 +51,7 @@ public class OpportunityList extends Vector {
   protected java.sql.Date closeDateStart = null;
   protected java.sql.Date closeDateEnd = null;
   protected int stage = -1;
+  private boolean queryOpenOnly = false;
 
   /**
    *  Constructor for the ContactList object
@@ -174,7 +175,13 @@ public void setStage(String stage) {
   
   public java.sql.Date getAlertRangeStart() { return alertRangeStart; }
   public java.sql.Date getAlertRangeEnd() { return alertRangeEnd; }
-
+  
+  public boolean getQueryOpenOnly() {
+    return queryOpenOnly;
+  }
+  public void setQueryOpenOnly(boolean queryOpenOnly) {
+    this.queryOpenOnly = queryOpenOnly;
+  }
 
   /**
    *  Sets the HasAlertDate attribute of the OpportunityList object
@@ -461,7 +468,18 @@ public void setCloseDateEnd(String tmp) {
   public void addIgnoreTypeId(int tmp) {
     ignoreTypeIdList.addElement("" + tmp);
   }
-
+  
+  public int reassignElements(Connection db, int newOwner) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Opportunity thisOpp = (Opportunity) i.next();
+      if (thisOpp.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }    
 
   /**
    *  Description of the Method
@@ -567,6 +585,10 @@ public void setCloseDateEnd(String tmp) {
     
     if (stage != -1) {
       sqlFilter.append("AND x.stage = ? ");
+    }
+    
+    if (queryOpenOnly) {
+      sqlFilter.append("AND x.closed IS NULL ");
     }
 	
   }

@@ -2031,6 +2031,18 @@ public class Opportunity extends GenericBean {
   public void invalidateUserData(ActionContext context) {
     invalidateUserData(context, owner);
   }
+  
+  public boolean reassign(Connection db, int newOwner) throws SQLException {
+    int result = -1;
+    this.setOwner(newOwner);
+    result = this.update(db);
+    
+    if (result == -1) {
+      return false;
+    }
+    
+    return true;
+  }
 
 
   /**

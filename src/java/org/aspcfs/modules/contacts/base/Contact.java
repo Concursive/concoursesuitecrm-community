@@ -2088,7 +2088,18 @@ public class Contact extends GenericBean {
     pst.close();
     return (recordCount > 0);
   }
-
+  
+  public boolean reassign(Connection db, int newOwner) throws SQLException {
+    int result = -1;
+    this.setOwner(newOwner);
+    result = this.update(db);
+    
+    if (result == -1) {
+      return false;
+    }
+    
+    return true;
+  }
 
   /**
    *  Combines the first and last name of a contact, depending on the

@@ -494,7 +494,18 @@ public String getUniqueField() { return uniqueField; }
       thisTicket.delete(db);
     }
   }
-
+  
+  public int reassignElements(Connection db, int newOwner) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Ticket thisTicket = (Ticket) i.next();
+      if (thisTicket.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }      
 
   /**
    *  Builds a base SQL where statement for filtering records to be used by

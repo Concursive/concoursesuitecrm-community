@@ -630,6 +630,17 @@ public class User extends GenericBean {
     this.roleId = tmp;
   }
 
+  public boolean reassign(Connection db, int newManager) throws SQLException {
+    int result = -1;
+    this.setManagerId(newManager);
+    result = this.update(db);
+    
+    if (result == -1) {
+      return false;
+    }
+    
+    return true;
+  }
 
   /**
    *  Sets the RoleId attribute of the User object
@@ -1644,12 +1655,35 @@ public class User extends GenericBean {
     pst.close();
 
     if (resultCount == 0) {
-      errors.put("actionError", "User could not be deleted because it no longer exists.");
+      errors.put("actionError", "User could not be disabled because it no longer exists.");
       return false;
     } else {
       return true;
     }
   }
+  
+  public boolean enable(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("ID not specified.");
+    }
+
+    int resultCount = 0;
+    PreparedStatement pst = db.prepareStatement(
+      "UPDATE access " +
+      "SET enabled = ? " +
+      "WHERE user_id = ? ");
+    pst.setBoolean(1, true);
+    pst.setInt(2, this.getId());
+    resultCount = pst.executeUpdate();
+    pst.close();
+
+    if (resultCount == 0) {
+      errors.put("actionError", "User could not be enabled.");
+      return false;
+    } else {
+      return true;
+    }
+  }  
 
 
   /**

@@ -1681,7 +1681,17 @@ public class Organization extends GenericBean {
     return i;
   }
 
-
+  public boolean reassign(Connection db, int newOwner) throws SQLException {
+    int result = -1;
+    this.setOwner(newOwner);
+    result = this.update(db);
+    
+    if (result == -1) {
+      return false;
+    }
+    
+    return true;
+  }
 
   /**
    *  Description of the Method
