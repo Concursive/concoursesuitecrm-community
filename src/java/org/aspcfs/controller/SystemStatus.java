@@ -203,7 +203,7 @@ public class SystemStatus {
 
 
   /**
-   *  Description of the Method
+   *  This method loads all of the preference data for this system.
    *
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
@@ -243,7 +243,7 @@ public class SystemStatus {
         System.out.println("SystemStatus-> Error: " + e.getMessage());
       }
     }
-    
+
     fieldLabels.clear();
     if (labelsToUse != null) {
       try {
@@ -274,7 +274,8 @@ public class SystemStatus {
 
 
   /**
-   *  Description of the Method
+   *  A presentation object (.jsp) can see if a field should be ignored
+   *  in the output
    *
    *@param  thisField  Description of Parameter
    *@return            Description of the Returned Value
@@ -309,12 +310,56 @@ public class SystemStatus {
   }
 
 
+  /**
+   *  Returns whether an object hook exists for the given object
+   *
+   *@param  object                                Description of the Parameter
+   *@return                                       Description of the Return
+   *      Value
+   *@exception  java.lang.ClassNotFoundException  Description of the Exception
+   */
   public boolean hasHook(Object object) throws java.lang.ClassNotFoundException {
     return (hooks.has(object));
   }
-  
-  public boolean processHook(Object object, Connection db) {
-    return (hooks.processInsert(object, db));
+
+
+  /**
+   *  Executes a hook when an object is being inserted, called by the XML API or
+   *  CFSModule
+   *
+   *@param  object     Description of the Parameter
+   *@param  sqlDriver  Description of the Parameter
+   *@param  ce         Description of the Parameter
+   */
+  public void processInsertHook(Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
+    hooks.processInsert(object, sqlDriver, ce);
+  }
+
+
+  /**
+   *  Executes a hook when an object is being updated, called by the XML API or
+   *  CFSModule
+   *
+   *@param  previousObject  Description of the Parameter
+   *@param  object          Description of the Parameter
+   *@param  sqlDriver       Description of the Parameter
+   *@param  ce              Description of the Parameter
+   */
+  public void processUpdateHook(Object previousObject, Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
+    hooks.processUpdate(object, previousObject, sqlDriver, ce);
+  }
+
+
+  /**
+   *  Executes a hook when an object is being deleted, called by the XML API or
+   *  CFSModule
+   *
+   *@param  previousObject  Description of the Parameter
+   *@param  sqlDriver       Description of the Parameter
+   *@param  ce              Description of the Parameter
+   */
+  public void processDeleteHook(Object previousObject, ConnectionPool sqlDriver, ConnectionElement ce) {
+    hooks.processDelete(previousObject, sqlDriver, ce);
   }
 
 }
