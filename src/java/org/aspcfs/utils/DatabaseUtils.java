@@ -380,6 +380,7 @@ public class DatabaseUtils {
     BufferedReader in = new BufferedReader(new FileReader(filename));
     String line = null;
     Statement st = db.createStatement();
+    int tCount = 0;
     while ((line = in.readLine()) != null) {
       // SQL Comment
       if (line.startsWith("//")) {
@@ -391,21 +392,31 @@ public class DatabaseUtils {
       }
       sql.append(line);
       // check for delimeter
-      if (line.trim().endsWith(";")) {
+      if (line.trim().endsWith(";") || line.trim().equals("GO")) {
         // Got a transaction, so execute it
+        ++tCount;
         st.execute(sql.toString());
         sql.setLength(0);
       } else {
         // Continue with another line
         sql.append(CRLF);
       }
+      if (System.getProperty("DEBUG") != null) {
+        if (tCount%10 == 0) {
+          System.out.println("Up to " + tCount + " statements");
+        }
+      }
     }
     // Statement didn't end with a delimiter
     if (sql.length() > 0) {
+      ++tCount;
       st.execute(sql.toString());
     }
     st.close();
     in.close();
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Executed " + tCount + " total statements");
+    }
   }
 }
 
