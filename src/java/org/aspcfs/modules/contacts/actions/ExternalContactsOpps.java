@@ -50,7 +50,6 @@ public final class ExternalContactsOpps extends CFSModule {
 
     addModuleBean(context, "External Contacts", "Opportunities");
 
-    
     PagedListInfo oppPagedListInfo = this.getPagedListInfo(context, "ExternalOppsPagedListInfo");
     oppPagedListInfo.setLink("/ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId);
 
@@ -69,7 +68,7 @@ public final class ExternalContactsOpps extends CFSModule {
       } else if ("closed".equals(oppPagedListInfo.getListView())) {
         oppList.setOwnerIdRange(this.getUserRange(context));
         oppList.setQueryClosedOnly(true);
-      }else{
+      } else {
         oppList.setOwner(this.getUserId(context));
         oppList.setQueryOpenOnly(true);
       }
@@ -921,6 +920,19 @@ public final class ExternalContactsOpps extends CFSModule {
         context.getRequest().setAttribute("OppComponentDetails", component);
       }
 
+      if (resultCount == -1) {
+        UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+        User thisRec = thisUser.getUserRecord();
+        UserList shortChildList = thisRec.getShortChildList();
+        UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+        userList.setMyId(getUserId(context));
+        userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+        userList.setIncludeMe(true);
+        userList.setExcludeDisabledIfUnselected(true);
+        context.getRequest().setAttribute("UserList", userList);
+        buildAddFormElements(db, context);
+      }
+
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
     } catch (SQLException e) {
@@ -932,7 +944,7 @@ public final class ExternalContactsOpps extends CFSModule {
     if (errorMessage == null) {
       if (resultCount == -1) {
         processErrors(context, component.getErrors());
-        return executeCommandModifyComponent(context);
+        return "ComponentModifyOK";
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
           return (executeCommandDetailsOpp(context));

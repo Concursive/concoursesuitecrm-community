@@ -70,14 +70,14 @@ public final class Opportunities extends CFSModule {
       if ("all".equals(oppPagedInfo.getListView())) {
         oppList.setOwnerIdRange(this.getUserRange(context));
         oppList.setQueryOpenOnly(true);
-      } else if("closed".equals(oppPagedInfo.getListView())){
+      } else if ("closed".equals(oppPagedInfo.getListView())) {
         oppList.setOwnerIdRange(this.getUserRange(context));
         oppList.setQueryClosedOnly(true);
-      }else{
+      } else {
         oppList.setOwner(this.getUserId(context));
         oppList.setQueryOpenOnly(true);
       }
-      
+
       oppList.buildList(db);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
@@ -128,7 +128,7 @@ public final class Opportunities extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      
+
       recordInserted = newComponent.insert(db, context);
 
       if (recordInserted) {
@@ -825,7 +825,7 @@ public final class Opportunities extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      OpportunityComponent oldComponent = new OpportunityComponent(db, component.getId()); 
+      OpportunityComponent oldComponent = new OpportunityComponent(db, component.getId());
       if (!hasAuthority(context, oldComponent.getOwner())) {
         return ("PermissionError");
       }
@@ -834,6 +834,18 @@ public final class Opportunities extends CFSModule {
       if (resultCount == 1) {
         component.queryRecord(db, component.getId());
         context.getRequest().setAttribute("OppComponentDetails", component);
+      }
+      if (resultCount == -1) {
+        UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+        User thisRec = thisUser.getUserRecord();
+        UserList shortChildList = thisRec.getShortChildList();
+        UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+        userList.setMyId(getUserId(context));
+        userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+        userList.setIncludeMe(true);
+        userList.setExcludeDisabledIfUnselected(true);
+        context.getRequest().setAttribute("UserList", userList);
+        buildFormElements(db, context);
       }
       thisOrg = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrg);
@@ -846,7 +858,7 @@ public final class Opportunities extends CFSModule {
     if (errorMessage == null) {
       if (resultCount == -1) {
         processErrors(context, component.getErrors());
-        return executeCommandModifyComponent(context);
+        return "ComponentModifyOK";
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
           return (executeCommandDetails(context));
