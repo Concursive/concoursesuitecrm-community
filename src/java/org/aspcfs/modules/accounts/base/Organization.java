@@ -1250,7 +1250,7 @@ public boolean getEnabled() {
         "SELECT atl.*, la.description as type_name " +
         "FROM account_type_levels atl " +
         "LEFT JOIN lookup_account_types la ON (atl.type_id = la.code) " +
-        "WHERE atl.id = " + orgId + " ORDER BY atl.level ");
+        "WHERE atl.org_id = " + orgId + " ORDER BY atl.level ");
 
     st = db.createStatement();
     rs = st.executeQuery(sql.toString());
