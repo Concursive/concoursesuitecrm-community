@@ -126,6 +126,7 @@ public class ImportAccountContacts extends CSVReader {
       newContactRecord.setName("contact");
       newContactRecord.setAction("insert");
       newContactRecord.addField("guid", contactId);
+      newContactRecord.addField("accessType", "2");
       newContactRecord.addField("userId", userId, "user", null);
       newContactRecord.addField("nameFirst", "");
       newContactRecord.addField("nameLast", "Electronic Import");
@@ -155,15 +156,15 @@ public class ImportAccountContacts extends CSVReader {
           MIDDLE_NAME = findColumn(thisRecord, "Middle Name");
           LAST_NAME = findColumn(thisRecord, new String[]{"LastName", "Last Name"});
           SUFFIX = findColumn(thisRecord, "Suffix");
-          COMPANY_NAME = findColumn(thisRecord, new String[]{"Company Name", "Company"});
+          COMPANY_NAME = findColumn(thisRecord, new String[]{"Company", "Company Name", "Account Name"});
           TITLE = findColumn(thisRecord, "Title");
-          BUSINESS_ADDRESS_1 = findColumn(thisRecord, "Business Address Line 1");
-          BUSINESS_ADDRESS_2 = findColumn(thisRecord, "Business Address Line 2");
-          BUSINESS_ADDRESS_3 = findColumn(thisRecord, "Business Address Line 3");
-          BUSINESS_CITY = findColumn(thisRecord, new String[]{"BusinessCity", "Business City"});
-          BUSINESS_STATE = findColumn(thisRecord, new String[]{"Business State/Province", "Business State"});
-          BUSINESS_ZIP = findColumn(thisRecord, "Business Postal Code");
-          BUSINESS_COUNTRY = findColumn(thisRecord, "Business Country");
+          BUSINESS_ADDRESS_1 = findColumn(thisRecord, new String[]{"Business Address Line 1", "Mailing Street"});
+          BUSINESS_ADDRESS_2 = findColumn(thisRecord, new String[]{"Business Address Line 2", "Mailing Address Line2"});
+          BUSINESS_ADDRESS_3 = findColumn(thisRecord, new String[]{"Business Address Line 3", "Mailing Address Line3"});
+          BUSINESS_CITY = findColumn(thisRecord, new String[]{"BusinessCity", "Business City", "Mailing City"});
+          BUSINESS_STATE = findColumn(thisRecord, new String[]{"Business State", "Business State/Province", "Mailing State"});
+          BUSINESS_ZIP = findColumn(thisRecord, new String[]{"Business Zip", "Business Postal Code", "Mailing Zip/Postal Code"});
+          BUSINESS_COUNTRY = findColumn(thisRecord, new String[]{"Business Country", "Mailing Country"});
           HOME_ADDRESS_1 = findColumn(thisRecord, "Home Address Line 1");
           HOME_ADDRESS_2 = findColumn(thisRecord, "Home Address Line 2");
           HOME_ADDRESS_3 = findColumn(thisRecord, "Home Address Line 3");
@@ -171,13 +172,13 @@ public class ImportAccountContacts extends CSVReader {
           HOME_STATE = findColumn(thisRecord, "Home State/Province");
           HOME_ZIP = findColumn(thisRecord, "Home Postal Code");
           HOME_COUNTRY = findColumn(thisRecord, "Home Country");
-          BUSINESS_PHONE = findColumn(thisRecord, new String[]{"BusinessPhone", "Business Phone"});
+          BUSINESS_PHONE = findColumn(thisRecord, new String[]{"BusinessPhone", "Business Phone", "Phone"});
           BUSINESS_2_PHONE = findColumn(thisRecord, "Business2 Phone");
-          BUSINESS_FAX = findColumn(thisRecord, new String[]{"BusinessFax", "Business Fax"});
+          BUSINESS_FAX = findColumn(thisRecord, new String[]{"BusinessFax", "Business Fax", "Fax"});
           HOME_PHONE = findColumn(thisRecord, "Home Phone");
           HOME_2_PHONE = findColumn(thisRecord, "Home2 Phone");
           HOME_FAX = findColumn(thisRecord, "Home Fax");
-          MOBILE_PHONE = findColumn(thisRecord, "Mobile Phone");
+          MOBILE_PHONE = findColumn(thisRecord, new String[]{"Mobile Phone", "Mobile"});
           OTHER_PHONE = findColumn(thisRecord, "Other Phone");
           PAGER = findColumn(thisRecord, "Pager");
           BUSINESS_EMAIL = findColumn(thisRecord, "Business Email");
@@ -195,6 +196,7 @@ public class ImportAccountContacts extends CSVReader {
         ContactPhoneNumberList phoneNumberList = thisContact.getPhoneNumberList();
         ContactAddressList addressList = thisContact.getAddressList();
 
+        thisContact.setAccessType(2);
         thisContact.setId(contactId);
         thisContact.setEnteredBy(userId);
         if (OWNER > 0) {
