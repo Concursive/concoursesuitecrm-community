@@ -146,6 +146,16 @@
   </menu>
   
   <menu>
+    <action name="AutoGuide"/>
+    <page title="Auto Guide"/>
+    <permission value="autoguide-view"/>
+    <long_html value="Auto Guide"/>
+    <short_html value="Auto Guide"/>
+    <link value="AutoGuide.do"/>
+    <graphic width="83" height="36" on="menu-none-on.gif" off="menu-none-off.gif" rollover=""/>
+  </menu>
+  
+  <menu>
     <action name="Leads"/>
     <action name="LeadsCalls"/>
     <action name="LeadsDocuments"/>

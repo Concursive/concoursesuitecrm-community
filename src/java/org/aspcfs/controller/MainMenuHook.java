@@ -60,6 +60,9 @@ public class MainMenuHook implements ControllerMainMenuHook {
    *@since    1.1
    */
   public void load() {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("MainMenuHook-> Loading menu configuration");
+    }
     if (file == null) {
       return;
     }
