@@ -10,8 +10,14 @@
 <script type="text/javascript">
 function loadFrames(){
      if(document.getElementById){
-        parent.frames["middleframe"].document.location.href = "loadmiddleframe.jsp";
-        parent.frames["bottomframe"].document.location.href = "loadbottomframe.jsp";
+     
+        <% if ("true".equals((String)getServletConfig().getServletContext().getAttribute("ForceSSL"))) { %>
+            parent.frames["middleframe"].document.location.href = "https://<%= request.getServerName() %>/loadmiddleframe.jsp";
+            parent.frames["bottomframe"].document.location.href = "https://<%= request.getServerName() %>/loadbottomframe.jsp";
+        <%} else {%>
+            parent.frames["middleframe"].document.location.href = "loadmiddleframe.jsp";
+            parent.frames["bottomframe"].document.location.href = "loadbottomframe.jsp";
+        <%}%>
      }
    }
 </script>

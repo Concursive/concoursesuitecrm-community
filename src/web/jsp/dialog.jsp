@@ -8,12 +8,17 @@
 %>
   <html>
    <title><%=Dialog.getTitle()%></title>
-    <!--frameset rows="29%,42%,29%" frameborder="0">
-      <frame name="topframe" src="loadframes.jsp">
+    <frameset rows="29%,42%,29%" frameborder="0">
+    
+        <% if ("true".equals((String)getServletConfig().getServletContext().getAttribute("ForceSSL"))) { %>
+          <frame name="topframe" src="https://<%= request.getServerName() %>/loadframes.jsp">
+        <%} else {%>
+          <frame name="topframe" src="loadframes.jsp">
+        <%}%>
+        
       <frame marginheight="0" name="middleframe" src="">
       <frame name="bottomframe" src="">
-    </frameset-->
-    ASD
+    </frameset>
   </html>
 <%}
 else{%>
