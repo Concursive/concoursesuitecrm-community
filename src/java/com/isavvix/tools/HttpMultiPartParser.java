@@ -341,6 +341,7 @@ public class HttpMultiPartParser {
     String paramName = null;
     boolean saveFiles = (saveInDir != null && saveInDir.trim().length() > 0);
     boolean isFile = false;
+    boolean validFile = false;
     int fileCount = 0;
     //First line should be the boundary
     line = getLine(is);
@@ -539,6 +540,7 @@ public class HttpMultiPartParser {
           } else {
             //current line is not a boundary, write previous line
             os.write(previousLine, 0, read);
+            validFile = true;
             os.flush();
             //reposition previousLine to be currentLine
             temp = currentLine;
@@ -557,11 +559,17 @@ public class HttpMultiPartParser {
           fileInfo.setFileContents(baos.toByteArray());
         } else {
           File thisFile = new File(path);
-          fileInfo.setLocalFile(thisFile);
-          fileInfo.setSize((int) thisFile.length());
-          os = null;
+          if (validFile){
+            fileInfo.setLocalFile(thisFile);
+            fileInfo.setSize((int) thisFile.length());
+            os = null;
+          }else{
+            thisFile.delete();
+          }
         }
-        dataTable.put(paramName, fileInfo);
+        if (validFile){
+          dataTable.put(paramName, fileInfo);
+        }
       } catch (Exception e) {
         e.printStackTrace();
       }
