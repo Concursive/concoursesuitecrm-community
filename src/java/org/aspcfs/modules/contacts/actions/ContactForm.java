@@ -46,12 +46,16 @@ public final class ContactForm extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      if ("true".equals(context.getRequest().getParameter("popup"))) {
-        return "PreparePopupAddOK";
-      }
+      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
       if (newContact != null && newContact.getId() > 0) {
+        if (popup) {
+          return "PrepareModifyPopupOK";
+        }
         return "PrepareModifyOK";
       } else {
+        if (popup) {
+          return "PrepareAddPopupOK";
+        }
         return "PrepareAddOK";
       }
     } else {
