@@ -24,9 +24,9 @@ public class CustomLookupElement extends HashMap {
   }
   
   public CustomLookupElement(Connection db, int code, String tableName, String uniqueField) throws java.sql.SQLException {
-    if (System.getProperty("DEBUG") != null) {
+    //if (System.getProperty("DEBUG") != null) {
       System.out.println("CustomLookupElement-> Retrieving ID: " + code + " from table: " + tableName);
-    }
+    //}
     String sql =
       "SELECT " + uniqueField + " " +
       "FROM " + tableName + " " +
