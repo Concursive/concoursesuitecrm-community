@@ -130,8 +130,8 @@ public final class RevenueManager extends CFSModule {
       
       if (context.getRequest().getParameter("type") != null) {
 	      shortChildList.setRevenueType(Integer.parseInt(context.getRequest().getParameter("type")));
-      }  else if (context.getSession().getAttribute("RevenueGraphType") != null) {
-	      shortChildList.setRevenueType(Integer.parseInt((String)context.getSession().getAttribute("RevenueGraphType")));
+      }  else if (context.getSession().getAttribute("type") != null) {
+	      shortChildList.setRevenueType(Integer.parseInt((String)context.getSession().getAttribute("type")));
       }
       
       shortChildList.buildRevenueYTD(db);
@@ -148,15 +148,15 @@ public final class RevenueManager extends CFSModule {
       displayList.setRevenueYear(y);
       displayList.setBuildRevenueYTD(true);
       
-      //System.out.println("here is the session variable: " + context.getSession().getAttribute("RevenueGraphType"));
+      System.out.println("here is the session variable: " + context.getSession().getAttribute("type"));
       
       if (context.getRequest().getParameter("type") != null) {
 	      realFullRevList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
 	      displayList.setRevenueType(Integer.parseInt(context.getRequest().getParameter("type")));
-	      context.getSession().setAttribute("RevenueGraphType", context.getRequest().getParameter("type"));
-      }  else if (context.getSession().getAttribute("RevenueGraphType") != null) {
-	      realFullRevList.setType(Integer.parseInt((String)context.getSession().getAttribute("RevenueGraphType")));
-	      displayList.setRevenueType(Integer.parseInt((String)context.getSession().getAttribute("RevenueGraphType")));
+	      context.getSession().setAttribute("type", context.getRequest().getParameter("type"));
+      }  else if (context.getSession().getAttribute("type") != null) {
+	      realFullRevList.setType(Integer.parseInt((String)context.getSession().getAttribute("type")));
+	      displayList.setRevenueType(Integer.parseInt((String)context.getSession().getAttribute("type")));
       }
       
       realFullRevList.setOwnerIdRange(range);

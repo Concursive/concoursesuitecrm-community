@@ -50,8 +50,8 @@
 	    Type&nbsp;
 	    <% if (request.getParameter("type") != null) { %>
 	    <%=RevenueTypeList.getHtmlSelect("type", Integer.parseInt(request.getParameter("type")))%>&nbsp;
-	    <%} else if ((String)request.getSession().getAttribute("RevenueGraphType") != null) {%>
-	    <%=RevenueTypeList.getHtmlSelect("type", Integer.parseInt((String)request.getSession().getAttribute("RevenueGraphType")))%>&nbsp;
+	    <%} else if ((String)request.getSession().getAttribute("type") != null) {%>
+	    <%=RevenueTypeList.getHtmlSelect("type", Integer.parseInt((String)request.getSession().getAttribute("type")))%>&nbsp;
 	    <%} else {%>
             <%=RevenueTypeList.getHtmlSelect("type", 0)%>&nbsp;
 	    <%}%>
