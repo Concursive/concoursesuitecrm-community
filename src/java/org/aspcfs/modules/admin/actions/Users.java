@@ -225,7 +225,7 @@ public final class Users extends CFSModule {
       if (rs.next()) {
         current = rs.getInt("user_count");
       }
-      if (current >= lpd.length()) {
+      if (!"-1".equals(lpd.substring(7)) || current >= Integer.parseInt(lpd.substring(7))) {
         return ("LicenseError");
       }
       rs.close();
@@ -287,7 +287,7 @@ public final class Users extends CFSModule {
         if (rs.next()) {
           current = rs.getInt("user_count");
         }
-        if (current >= lpd.length()) {
+        if (!"-1".equals(lpd.substring(7)) || current >= Integer.parseInt(lpd.substring(7))) {
           return ("LicenseError");
         }
         rs.close();
@@ -465,7 +465,7 @@ public final class Users extends CFSModule {
         if (rs.next()) {
           current = rs.getInt("user_count");
         }
-        if (current >= lpd.length()) {
+        if (!"-1".equals(lpd.substring(7)) || current >= Integer.parseInt(lpd.substring(7))) {
           return ("LicenseError");
         }
         rs.close();
