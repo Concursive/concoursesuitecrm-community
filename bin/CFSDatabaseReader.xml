@@ -16,6 +16,23 @@
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCommunications</module>
   </processes>
   <mappings>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupIndustry"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="systemModules"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactTypes"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupAccountTypes"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupDepartment"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupOrgAddressTypes"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupOrgEmailTypes"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupOrgPhoneTypes"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupInstantMessengerTypes"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupEmploymentTypes"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupLocale"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactAddressTypes"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactEmailTypes"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactPhoneTypes"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupStage"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupDeliveryOptions"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupCallTypes"/>
     <map class="com.darkhorseventures.cfsbase.Contact" id="contact">
       <property>guid</property>
       <property lookup="account">orgId</property>

@@ -19,13 +19,13 @@ public class LookupList extends HtmlSelect {
   public static String uniqueField = "code";
   public String tableName = null;
 
-  private String jsEvent = null;
-  private int selectSize = 1;
-  private boolean multiple = false;
-  private java.sql.Timestamp lastAnchor = null;
-  private java.sql.Timestamp nextAnchor = null;
-  private int syncType = Constants.NO_SYNC;
-  private boolean showDisabledFlag = true;
+  protected String jsEvent = null;
+  protected int selectSize = 1;
+  protected boolean multiple = false;
+  protected java.sql.Timestamp lastAnchor = null;
+  protected java.sql.Timestamp nextAnchor = null;
+  protected int syncType = Constants.NO_SYNC;
+  protected boolean showDisabledFlag = true;
 
 
   /**

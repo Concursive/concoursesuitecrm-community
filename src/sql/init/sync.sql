@@ -484,6 +484,93 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 
 
 /* CFSWriter */
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupIndustry', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupIndustryList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'systemModules', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'systemModulesList', 'com.darkhorseventures.webutils.LookupList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupContactTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupContactTypesList', 'com.darkhorseventures.webutils.LookupList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupAccountTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupAccountTypesList', 'com.darkhorseventures.webutils.LookupList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupDepartment', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupDepartmentList', 'com.darkhorseventures.webutils.LookupList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupOrgAddressTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupOrgAddressTypesList', 'com.darkhorseventures.webutils.LookupList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupOrgEmailTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupOrgEmailTypesList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupOrgPhoneTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupOrgPhoneTypesList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupInstantMessengerTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupInstantMessengerTypesList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupEmploymentTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupEmploymentTypesList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupLocale', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupLocaleList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupContactAddressTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupContactAddressTypesList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupContactEmailTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupContactEmailTypesList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupContactPhoneTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupContactPhoneTypesList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupStage', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupStageList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupDeliveryOptions', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupDeliveryOptionsList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupCallTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupCallTypesList', 'com.darkhorseventures.webutils.LookupList');
+ 
+ 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'syncClient', 'com.darkhorseventures.cfsbase.SyncClient');
 

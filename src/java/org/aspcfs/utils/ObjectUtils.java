@@ -106,6 +106,17 @@ public class ObjectUtils {
       Object[] paramObject = new Object[]{db, new Integer(objectId)};
       return constructor.newInstance(paramObject);
     } catch (Exception e) {
+      return null;
+    }
+  }
+  
+  public static Object constructObject(Class theClass, Connection db, int objectId, String tableName) {
+    try {
+      Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), int.class, Class.forName("java.lang.String")};
+      Constructor constructor = theClass.getConstructor(paramClass);
+      Object[] paramObject = new Object[]{db, new Integer(objectId), tableName};
+      return constructor.newInstance(paramObject);
+    } catch (Exception e) {
       if (System.getProperty("DEBUG") != null) {
         e.printStackTrace(System.out);
       }

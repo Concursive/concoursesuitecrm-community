@@ -4,6 +4,7 @@ package com.darkhorseventures.webutils;
 
 import java.sql.*;
 import java.util.*;
+import com.darkhorseventures.utils.*;
 
 /**
  *  Represents an item from a Lookup table, to be used primarily with HtmlSelect
@@ -15,15 +16,15 @@ import java.util.*;
  */
 public class LookupElement {
 
+  private String tableName = null;
   private int code = 0;
   private String description = "";
   private boolean defaultItem = false;
   private int level = 0;
-  //private java.sql.Timestamp startDate = null;
-  //private java.sql.Timestamp endDate = null;
   private boolean enabled = true;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
+  private int fieldId = -1;
 
 
   /**
@@ -33,6 +34,23 @@ public class LookupElement {
    */
   public LookupElement() { }
 
+  public LookupElement(Connection db, int code, String tableName) throws java.sql.SQLException {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("LookupElement-> Retrieving ID: " + code + " from table: " + tableName);
+    }
+    String sql =
+      "SELECT code, description, default_item, level, enabled " +
+      "FROM " + tableName + " " +
+      "WHERE code = ? ";
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, code);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      build(rs);
+    } else {
+      throw new java.sql.SQLException("ID not found");
+    }
+  }
 
   /**
    *  Constructor for the LookupElement object
@@ -42,6 +60,10 @@ public class LookupElement {
    *@since                             1.1
    */
   public LookupElement(ResultSet rs) throws java.sql.SQLException {
+    build(rs);
+  }
+    
+  public void build(ResultSet rs) throws java.sql.SQLException {
     code = rs.getInt("code");
     description = rs.getString("description");
     defaultItem = rs.getBoolean("default_item");
@@ -55,6 +77,7 @@ public class LookupElement {
     //modified = rs.getTimestamp("modified");
   }
 
+  public void setTableName(String tmp) { this.tableName = tmp; }
 
   /**
    *  Sets the newOrder attribute of the LookupElement object
@@ -101,6 +124,15 @@ public class LookupElement {
   public void setCode(int tmp) {
     this.code = tmp;
   }
+  public void setCode(String tmp) {
+    this.code = Integer.parseInt(tmp);
+  }
+  public void setId(int tmp) {
+    this.code = tmp;
+  }
+  public void setId(String tmp) {
+    this.code = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -123,6 +155,9 @@ public class LookupElement {
   public void setDefaultItem(boolean tmp) {
     this.defaultItem = tmp;
   }
+  public void setDefaultItem(String tmp) {
+    this.defaultItem = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+  }
 
 
   /**
@@ -133,6 +168,9 @@ public class LookupElement {
    */
   public void setLevel(int tmp) {
     this.level = tmp;
+  }
+  public void setLevel(String tmp) {
+    this.level = Integer.parseInt(tmp);
   }
 
 
@@ -146,6 +184,14 @@ public class LookupElement {
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
   }
+  public void setEnabled(String tmp) {
+    this.enabled = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+  }
+  
+  public void setFieldId(int tmp) { this.fieldId = tmp; }
+  public void setFieldId(String tmp) { this.fieldId = Integer.parseInt(tmp); }
+
+  public String getTableName() { return tableName; }
 
 
   /**
@@ -214,7 +260,15 @@ public class LookupElement {
     return enabled;
   }
   
-  public java.sql.Timestamp getModified() { return modified; }
+  public java.sql.Timestamp getModified() { 
+    if (modified == null) {
+      return (new java.sql.Timestamp(new java.util.Date().getTime()));
+    } else {
+      return modified;
+    }
+  }
+
+  public int getFieldId() { return fieldId; }
 
 
 
@@ -274,6 +328,12 @@ public class LookupElement {
    *@exception  SQLException  Description of Exception
    */
   public boolean insertElement(Connection db, String tableName, int fieldId) throws SQLException {
+    this.tableName = tableName;
+    this.fieldId = fieldId;
+    return insert(db);
+  }
+
+  public boolean insert(Connection db) throws SQLException {  
     StringBuffer sql = new StringBuffer();
     int i = 0;
 
@@ -292,6 +352,14 @@ public class LookupElement {
     pst.execute();
     pst.close();
 
+    String seqName = null;
+    if (tableName.length() > 22) {
+      seqName = tableName.substring(0,22);
+    } else {
+      seqName = tableName;
+    }
+    code = DatabaseUtils.getCurrVal(db, seqName + "_code_seq");
+    
     return true;
   }
 

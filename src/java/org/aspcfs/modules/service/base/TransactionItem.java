@@ -440,6 +440,10 @@ public class TransactionItem {
             //Need to log the date/time of the new record for later approval of updates
             //Reload the newly inserted object to get its insert/modified date
             Object insertedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
+            if (insertedObject == null) {
+              //Might be a lookupElement
+              insertedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")), ObjectUtils.getParam(object, "tableName"));
+            }
             syncClientMap.insert(db, ObjectUtils.getParam(insertedObject, "modified"));
           }
           addRecords(object, recordList, "processed");
