@@ -6,37 +6,6 @@
  *@version    $Id$
  */
  
-CREATE TABLE opportunity (
-  opp_id INT IDENTITY PRIMARY KEY,
-  owner INT NOT NULL REFERENCES access(user_id),
-  description VARCHAR(80),
-  acctlink INT DEFAULT -1,
-  contactlink INT DEFAULT -1,
-  closedate DATETIME NOT NULL,
-  closeprob FLOAT,
-  terms FLOAT,
-  units CHAR(1),
-  lowvalue FLOAT,
-  guessvalue FLOAT,
-  highvalue FLOAT,
-  stage INT REFERENCES lookup_stage(code),
-  stagedate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  commission FLOAT,
-  type CHAR(1),
-  alertdate DATETIME,
-  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL REFERENCES access(user_id),
-  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id),
-  custom1 int default -1,
-  custom2 int default -1,
-  closed DATETIME,
-  custom_data TEXT,
-  alert varchar(100) DEFAULT NULL,
-  enabled BIT NOT NULL DEFAULT 1,
-  notes TEXT
-);
- 
 CREATE TABLE lookup_call_types (
   code INT IDENTITY PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
@@ -92,14 +61,6 @@ CREATE TABLE opportunity_component (
   enabled BIT NOT NULL DEFAULT 1,
   notes TEXT
 );  
-
-CREATE TABLE opportunity_type_levels (
-  opp_id INT NOT NULL REFERENCES opportunity(opp_id),
-  type_id INT NOT NULL REFERENCES lookup_opportunity_types(code),
-  level INTEGER not null,
-  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
 
 CREATE TABLE opportunity_component_levels (
   opp_id INT NOT NULL REFERENCES opportunity_component(id),
