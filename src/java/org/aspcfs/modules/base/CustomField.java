@@ -1374,6 +1374,7 @@ public void setMaxRowItems(String maxRowItems) {
       if (type == CURRENCY) {
         try {
           String testString = replace(this.getEnteredValue(), ",", "");
+          testString = replace(testString, "$", "");
           double testNumber = Double.parseDouble(testString);
           this.setEnteredValue(testString);
           enteredDouble = testNumber;

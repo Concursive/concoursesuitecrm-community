@@ -4,7 +4,7 @@
 <jsp:useBean id="Revenue" class="com.darkhorseventures.cfsbase.Revenue" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="listRevenue" action="/RevenueManager.do?command=Modify&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>" method="post">
+<form name="listRevenue" action="/RevenueManager.do" method="post">
 <a href="RevenueManager.do?command=View&orgId=<%= Revenue.getOrgId() %>">Back to Revenue List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -20,8 +20,8 @@
   </tr>
   <tr>
     <td class="containerBack">
-<input type='submit' value="Modify" name="Modify">
-<input type='submit' value="Delete" onClick="javascript:this.form.action='/RevenueManager.do?command=Delete&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>'">
+<input type='button' value="Modify" onClick="javascript:this.form.action='/RevenueManager.do?command=Modify&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';submit();">
+<input type='button' value="Delete" onClick="javascript:this.form.action='/RevenueManager.do?command=Delete&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';confirmSubmit(this.form);">
 <br>&nbsp;
 <input type=hidden name="type" value="<%=Revenue.getType()%>">
 
@@ -90,8 +90,8 @@
 
 </table>
 <br>
-<input type='submit' value="Modify" name="Modify">
-<input type='submit' value="Delete" onClick="javascript:this.form.action='/RevenueManager.do?command=Delete&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>'">
+<input type='button' value="Modify" onClick="javascript:this.form.action='/RevenueManager.do?command=Modify&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';submit();">
+<input type='button' value="Delete" onClick="javascript:this.form.action='/RevenueManager.do?command=Delete&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';confirmSubmit(this.form);">
   </td>
   </tr>
 </table>

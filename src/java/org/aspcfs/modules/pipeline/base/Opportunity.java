@@ -431,6 +431,8 @@ public class Opportunity extends GenericBean {
    *@since
    */
   public void setLow(String low) {
+    low = replace(low, ",", "");
+    low = replace(low, "$", "");
     this.low = Double.parseDouble(low);
   }
 
@@ -442,6 +444,8 @@ public class Opportunity extends GenericBean {
    *@since
    */
   public void setGuess(String guess) {
+    guess = replace(guess, ",", "");
+    guess = replace(guess, "$", "");
     this.guess = Double.parseDouble(guess);
   }
 
@@ -453,6 +457,8 @@ public class Opportunity extends GenericBean {
    *@since
    */
   public void setHigh(String high) {
+    high = replace(high, ",", "");
+    high = replace(high, "$", "");
     this.high = Double.parseDouble(high);
   }
 

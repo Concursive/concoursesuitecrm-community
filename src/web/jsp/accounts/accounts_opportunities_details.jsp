@@ -21,8 +21,8 @@
   <tr>
     <td class="containerBack">
 <input type=hidden name="command" value="<%= OppDetails.getId() %>">
-<dhv:permission name="accounts-accounts-opportunities-edit"><input type=button name="action" value="Modify" onClick="document.oppdet.command.value='Modify';document.oppdet.submit()"></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-delete"><input type=button name="action" value="Delete" onClick="document.oppdet.command.value='Delete';document.oppdet.submit()"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" name="action" value="Modify" onClick="document.oppdet.command.value='Modify';document.oppdet.submit()"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='Delete';confirmSubmit(this.form);"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -128,8 +128,8 @@
   </tr>
 </table>
 <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">&nbsp;<br></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-edit"><input type=button name="action" value="Modify" onClick="document.oppdet.command.value='Modify';document.oppdet.submit()"></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-delete"><input type=button name="action" value="Delete" onClick="document.oppdet.command.value='Delete';document.oppdet.submit()"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" name="action" value="Modify" onClick="document.oppdet.command.value='Modify';document.oppdet.submit()"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='Delete';confirmSubmit(this.form);"></dhv:permission>
 </td>
   </tr>
 </table>
