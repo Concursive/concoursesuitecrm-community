@@ -31,7 +31,7 @@ function switchStyle(E){
 <table bgcolor="#FFFFFF" width="100%" border="0" cellpadding="0" cellspacing="0" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <%-- Display header label --%>
   <tr>
-    <td align="center" valign="top" nowrap>
+    <td align="center" valign="top" width="100%" nowrap>
       <strong><%= CalendarInfo.isAgendaView()?"Next 7 Days View": Character.toUpperCase(CalendarInfo.getCalendarView().charAt(0)) + CalendarInfo.getCalendarView().substring(1) + " View " + (CalendarInfo.getCalendarView().equalsIgnoreCase("week")?" : " + toMediumDateString(CompanyCalendar.getStartOfWeekDate()) + " - " + toMediumDateString(CompanyCalendar.getEndOfWeekDate()):"")%></strong>
       <dhv:evaluate if="<%= CalendarInfo.isAgendaView() %>"><br>&nbsp;</dhv:evaluate>
     </td>
@@ -39,7 +39,7 @@ function switchStyle(E){
 <%-- Display back link --%>
 <dhv:evaluate exp="<%= !CalendarInfo.isAgendaView() %>">
   <tr>
-    <td valign="top" align="center" nowrap>
+    <td valign="top" align="center" width="100%" nowrap>
       <a href="javascript:window.parent.frames['calendar'].resetCalendar();javascript:window.location.href='MyCFS.do?command=AgendaView&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';">Back To Next 7 Days View</a>
     </td>
     <table style="visibility:none" border="0" height="6"><tr height='2' style="visibility:none"><td></td></tr></table>
@@ -51,7 +51,7 @@ function switchStyle(E){
       <table width="100%" cellspacing="0" cellpadding="0" border="0">
 <dhv:evaluate exp="<%= CalendarInfo.isAgendaView() %>">      
         <tr class="weekSelector">
-          <td colspan="2">
+          <td colspan="2" width="100%">
             <strong><%= toFullDateString(Calendar.getInstance().getTime()) %> <font color="#006699">(Today)</font></strong>
           </td>
         </tr>
@@ -88,7 +88,7 @@ function switchStyle(E){
     </dhv:evaluate>
     <dhv:evaluate exp="<%= !isToday %>">
         <tr class="weekSelector">
-          <td colspan="2">
+          <td colspan="2" width="100%">
             <strong><%= toFullDateString(thisDay.getDate()) %></strong>
           </td>
         </tr>
@@ -106,7 +106,7 @@ function switchStyle(E){
              firstTime = false;
 %>
       <tr>
-        <td colspan="2">
+        <td colspan="2" width="100%">
           <table cellspacing="0" cellpadding="0" border="0" marginheight="0" marginwidth="0">
             <tr>
               <td><%= thisEvent.getIcon(CalendarEventList.EVENT_TYPES[i])%><a href="javascript:changeImages('detailsimage<%=toFullDateString(thisDay.getDate()) + i%>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertdetails<%=toFullDateString(thisDay.getDate()) + i%>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%=count==0?"images/arrowdown.gif":"images/arrowright.gif"%>" name="detailsimage<%=toFullDateString(thisDay.getDate()) + i%>" id="<%=count==0?"0":"1"%>" border=0 title="Click To View Details"><%=CalendarEvent.getNamePlural(CalendarEventList.EVENT_TYPES[i]) %></a>&nbsp;(<%= categoryCount %>)</td>
@@ -117,7 +117,7 @@ function switchStyle(E){
            }
 %>
             <tr>
-              <td style="visibility:hidden" width="18">i</td>
+              <td style="visibility:hidden" width="18">&nbsp;</td>
               <td>
                 <li><%=thisEvent.getCategory().equalsIgnoreCase("task")?thisEvent.getIcon():""%>&nbsp;<%= thisEvent.getLink() %><%= thisEvent.getSubject() %></a></li>
               </td>
