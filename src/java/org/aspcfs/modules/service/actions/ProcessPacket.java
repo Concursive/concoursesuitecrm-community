@@ -141,7 +141,6 @@ public final class ProcessPacket extends CFSModule {
   }
   
   public String executeCommandReloadSyncMap(ActionContext context) {
-    context.getServletContext().setAttribute("SyncObjectMap", null);
     context.getServletContext().removeAttribute("SyncObjectMap");
     return ("PacketOK");
   }

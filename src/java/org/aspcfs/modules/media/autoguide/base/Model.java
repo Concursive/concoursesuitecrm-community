@@ -16,6 +16,7 @@ public class Model extends GenericBean {
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
+  private Make make = null;
   
   public Model() { }
   
@@ -45,6 +46,7 @@ public class Model extends GenericBean {
   }
   public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
   public void setModifiedBy(String tmp) { this.modifiedBy = Integer.parseInt(tmp); }
+  public void setMake(Make tmp) { this.make = tmp; }
   
   public int getId() { return id; }
   public int getMakeId() { return makeId; }
@@ -53,6 +55,10 @@ public class Model extends GenericBean {
   public int getEnteredBy() { return enteredBy; }
   public java.sql.Timestamp getModified() { return modified; }
   public int getModifiedBy() { return modifiedBy; }
+  public Make getMake() { return make; }
+  public String getGuid() {
+    return String.valueOf(entered.getTime());
+  }
 
   public boolean exists(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -152,12 +158,16 @@ public class Model extends GenericBean {
 
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("model_id");
-    makeId = rs.getInt("make_id");
+    makeId = rs.getInt("model_make_id");
     name = rs.getString("model_name");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+  }
+  
+  public void buildResources(Connection db) throws SQLException {
+    make = new Make(db, makeId);
   }
 
 }

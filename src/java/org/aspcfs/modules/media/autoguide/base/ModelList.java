@@ -23,10 +23,14 @@ public class ModelList extends ArrayList {
     
     StringBuffer sql = new StringBuffer(); 
     sql.append(  
-      "SELECT model_id, make_id, model_name, entered, enteredby, " + 
-      "modified, modifiedby " +
-      "FROM autoguide_model ");
-    sql.append("WHERE model_id > -1 ");
+      "SELECT model.model_id, model.make_id AS model_make_id, model.model_name, " +
+      "model.entered, model.enteredby, " + 
+      "model.modified, model.modifiedby, " +
+      "make.make_id, make.make_name, " +
+      "make.entered AS make_entered, make.enteredby AS make_enteredby, " +
+      "make.modified AS make_modified, make.modifiedby AS make_modifiedby " +
+      "FROM autoguide_model model LEFT JOIN autoguide_make make ON model.make_id = make.make_id ");
+    sql.append("WHERE model.model_id > -1 ");
     createFilter(sql);
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
@@ -34,9 +38,16 @@ public class ModelList extends ArrayList {
     while (rs.next()) {
       Model thisModel = new Model(rs);
       this.add(thisModel);
+      thisModel.setMake(new Make(rs));
     }
     rs.close();
     pst.close();
+    
+    /* Iterator modelList = this.iterator();
+    while (modelList.hasNext()) {
+      Model thisModel = (Model)modelList.next();
+      thisModel.buildResources(db);
+    } */
   }
   
   private void createFilter(StringBuffer sqlFilter) {

@@ -25,6 +25,24 @@ public class Make extends GenericBean {
   public Make(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
+  
+  public Make(Connection db, int thisMakeId) throws SQLException {
+    StringBuffer sql = new StringBuffer(); 
+    sql.append(  
+      "SELECT make.make_id, make.make_name, " +
+      "make.entered as make_entered, make.enteredby as make_enteredby, " +
+      "make.modified as make_modified, make.modifiedby as make_modifiedby " +
+      "FROM autoguide_make make ");
+    sql.append("WHERE make_id = ? ");
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(1, thisMakeId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      this.buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
+  }
 
   public void setId(int tmp) { this.id = tmp; }
   public void setId(String tmp) { this.id = Integer.parseInt(tmp); }
@@ -149,10 +167,10 @@ public class Make extends GenericBean {
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("make_id");
     name = rs.getString("make_name");
-    entered = rs.getTimestamp("entered");
-    enteredBy = rs.getInt("enteredby");
-    modified = rs.getTimestamp("modified");
-    modifiedBy = rs.getInt("modifiedby");
+    entered = rs.getTimestamp("make_entered");
+    enteredBy = rs.getInt("make_enteredby");
+    modified = rs.getTimestamp("make_modified");
+    modifiedBy = rs.getInt("make_modifiedby");
   }
 
 }

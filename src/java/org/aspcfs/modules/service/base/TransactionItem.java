@@ -77,11 +77,17 @@ public class TransactionItem {
       Iterator fields = thisMeta.getFields().iterator();
       while (fields.hasNext()) {
         String thisField = (String) fields.next();
-        String thisValue = ObjectUtils.getParam(thisObject, thisField);
+        String thisValue = null;
+        int dotPos = thisField.indexOf(".");
+        if (dotPos > 0) {
+          Object innerObject = ObjectUtils.getObject(thisObject, thisField.substring(0, dotPos));
+          thisValue = ObjectUtils.getParam(innerObject, thisField.substring(dotPos + 1));
+        } else {
+          thisValue = ObjectUtils.getParam(thisObject, thisField);
+        }
         if (thisValue == null) {
           thisValue = "";
         }
-        //System.out.println("Setting-> " + thisField + "  ...  " + thisValue);
         thisRecord.put(thisField, thisValue);
       }
     }

@@ -38,8 +38,10 @@ public class MakeList extends ArrayList {
     
     StringBuffer sql = new StringBuffer(); 
     sql.append(  
-      "SELECT make_id, make_name, entered, enteredby, modified, modifiedby " +
-      "FROM autoguide_make ");
+      "SELECT make.make_id, make.make_name, " +
+      "make.entered as make_entered, make.enteredby as make_enteredby, " +
+      "make.modified as make_modified, make.modifiedby as make_modifiedby " +
+      "FROM autoguide_make make ");
     sql.append("WHERE make_id > -1 ");
     createFilter(sql);
     pst = db.prepareStatement(sql.toString());
@@ -59,14 +61,14 @@ public class MakeList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND entered > ? ");
+        sqlFilter.append("AND make_entered > ? ");
       }
-      sqlFilter.append("AND entered < ? ");
+      sqlFilter.append("AND make_entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND modified > ? ");
-      sqlFilter.append("AND entered < ? ");
-      sqlFilter.append("AND modified < ? ");
+      sqlFilter.append("AND make_modified > ? ");
+      sqlFilter.append("AND make_entered < ? ");
+      sqlFilter.append("AND make_modified < ? ");
     }
   }
   
