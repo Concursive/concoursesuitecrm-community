@@ -722,8 +722,7 @@ public void setStageDate(java.sql.Date tmp) { this.stageDate = tmp; }
 	 *@since
 	 */
 	public String getTermsString() {
-		Double thisVal = new Double(terms);
-		Float tmp = new Float(round(thisVal.floatValue(), 2));
+		Double tmp = new Double(round(terms, 2));
 		return tmp.toString();
 	}
 
@@ -866,7 +865,12 @@ public void setStageDate(java.sql.Date tmp) { this.stageDate = tmp; }
 	 */
 	public String getLowAmount() {
 		Double thisAmount = new Double(round(low, 2));
-		return thisAmount.toString();
+		String toReturn = "" + thisAmount;
+		if (toReturn.endsWith(".0")) {
+			return (toReturn.substring(0, toReturn.length()-2));
+		} else {
+			return toReturn;
+		}
 	}
 
 
@@ -902,7 +906,12 @@ public void setStageDate(java.sql.Date tmp) { this.stageDate = tmp; }
 	 */
 	public String getGuessAmount() {
 		Double thisAmount = new Double(round(guess, 2));
-		return thisAmount.toString();
+		String toReturn = "" + thisAmount;
+		if (toReturn.endsWith(".0")) {
+			return (toReturn.substring(0, toReturn.length()-2));
+		} else {
+			return toReturn;
+		}
 	}
 
 
@@ -938,7 +947,12 @@ public void setStageDate(java.sql.Date tmp) { this.stageDate = tmp; }
 	 */
 	public String getHighAmount() {
 		Double thisAmount = new Double(round(high, 2));
-		return thisAmount.toString();
+		String toReturn = "" + thisAmount;
+		if (toReturn.endsWith(".0")) {
+			return (toReturn.substring(0, toReturn.length()-2));
+		} else {
+			return toReturn;
+		}
 	}
 
 
