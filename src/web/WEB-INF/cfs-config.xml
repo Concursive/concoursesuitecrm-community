@@ -18,6 +18,11 @@
 	<action name="ProcessMessage" class="com.darkhorseventures.cfsmodule.ProcessMessage">
     <forward name="PreviewOK" resource="/campaign_messages_preview.jsp"/>
   </action>
+	
+	<action name="ProcessPacket" class="com.darkhorseventures.cfsmodule.ProcessPacket">
+    <forward name="PacketOK" resource="/error_system.jsp"/>
+		<forward name="PacketError" resource="/error_system.jsp"/>
+  </action>
   
   <action name="Login" class="com.darkhorseventures.cfsmodule.Login">
     <bean name="LoginBean" class="com.darkhorseventures.cfsmodule.LoginBean" scope="request"/>
