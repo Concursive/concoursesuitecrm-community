@@ -6,7 +6,7 @@
 <form name="componentDetails" action="Leads.do?command=ModifyComponent&id=<%=LeadsComponentDetails.getId()%>" method="post">
 <a href="Leads.do">Pipeline Management</a> > 
 <a href="Leads.do?command=ViewOpp">View Opportunities</a> >
-<a href="Leads.do?command=DetailsOpp&oppId=<%=LeadsComponentDetails.getOppId()%>">Opportunity Details</a> > 
+<a href="Leads.do?command=DetailsOpp&oppId=<%=LeadsComponentDetails.getOppId()%>&reset=true">Opportunity Details</a> > 
 Component Details<br>
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='LeadsComponents.do?command=ModifyComponent&id=<%=LeadsComponentDetails.getId()%>';submit();"></dhv:permission>
