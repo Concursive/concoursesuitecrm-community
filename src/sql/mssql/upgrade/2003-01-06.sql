@@ -402,6 +402,28 @@ CREATE TABLE ticketlog (
 )
 GO
 
+INSERT INTO ticket_severity (description,style,default_item,level,enabled) VALUES 
+  ('Normal','background-color:lightgreen;color:black;',0,0,1);
+INSERT INTO ticket_severity (description,style,default_item,level,enabled) VALUES 
+  ('Important','background-color:yellow;color:black;',0,1,1);
+INSERT INTO ticket_severity (description,style,default_item,level,enabled) VALUES 
+  ('Critical','background-color:red;color:black;font-weight:bold;',0,2,1);
+  
+INSERT INTO ticket_priority (description,style,default_item,level,enabled) VALUES 
+  ('Scheduled','background-color:lightgreen;color:black;',0,0,1);
+INSERT INTO ticket_priority (description,style,default_item,level,enabled) VALUES 
+  ('Next','background-color:yellow;color:black;',0,1,1);
+INSERT INTO ticket_priority (description,style,default_item,level,enabled) VALUES 
+  ('Immediate','background-color:red;color:black;font-weight:bold;',0,2,1);
+
+INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Sales','',0,1,1);
+INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Billing','',0,2,1);
+INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Technical','',0,3,1);
+INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Order','',0,4,1);
+INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Other','',0,5,1);
+
+
+
 
 CREATE TABLE module_field_categorylink (
   id INTEGER IDENTITY PRIMARY KEY,
@@ -781,6 +803,7 @@ CREATE TABLE survey (
   itemLength INT DEFAULT -1,
   type INT DEFAULT -1,
   enabled BIT NOT NULL DEFAULT 1,
+  status INT NOT NULL DEFAULT -1,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -1111,15 +1134,6 @@ WHERE department = 0
 OR department = -1
 GO
 
-INSERT INTO lookup_stage (level, order_id,description) VALUES (1, 1, 'Prospecting');
-INSERT INTO lookup_stage (level, order_id,description) VALUES (2, 2, 'Qualification');
-INSERT INTO lookup_stage (level, order_id,description) VALUES (3, 3, 'Needs Analysis');
-INSERT INTO lookup_stage (level, order_id,description) VALUES (4, 4, 'Value Proposition');
-INSERT INTO lookup_stage (level, order_id,description) VALUES (5, 5, 'Perception Analysis');
-INSERT INTO lookup_stage (level, order_id,description) VALUES (6, 6, 'Proposal/Price Quote');
-INSERT INTO lookup_stage (level, order_id,description) VALUES (7, 7, 'Negotiation/Review');
-INSERT INTO lookup_stage (level, order_id,description) VALUES (8, 8, 'Closed Won');
-INSERT INTO lookup_stage (level, order_id,description) VALUES (9, 9, 'Closed Lost');
 
 INSERT INTO lookup_call_types (description, default_item, level) VALUES ('Phone Call', 1, 10);
 INSERT INTO lookup_call_types (description, default_item, level) VALUES ('Fax', 0, 20);
@@ -1203,6 +1217,12 @@ UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.media.autoguide.ba
 UPDATE sync_table SET mapped_class_name = 'org.aspcfs.utils.web.LookupElement' WHERE mapped_class_name = 'com.darkhorseventures.webutils.LookupElement'
 UPDATE sync_table SET mapped_class_name = 'org.aspcfs.utils.web.CustomLookupElement' WHERE mapped_class_name = 'com.darkhorseventures.webutils.CustomLookupElement'
 UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.troubletickets.base.Ticket' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.Ticket'
+
+INSERT INTO lookup_ticketsource (level,description) VALUES (1,'Phone');
+INSERT INTO lookup_ticketsource (level,description) VALUES (2,'Email');
+INSERT INTO lookup_ticketsource (level,description) VALUES (3,'Letter');
+INSERT INTO lookup_ticketsource (level,description) VALUES (4,'Other');
+
 
 
 /* Foreign Keys */
