@@ -71,24 +71,24 @@ CREATE TABLE opportunity_component (
   opp_id int references opportunity_header(opp_id),
   owner INT NOT NULL REFERENCES access(user_id),
   description VARCHAR(80),
-  closedate date not null,
-  closeprob float,
-  terms float,
-  units char(1),
-  lowvalue float,
-  guessvalue float,
-  highvalue float,
-  stage INT references lookup_stage(code),
+  closedate DATETIME NOT NULL,
+  closeprob FLOAT,
+  terms FLOAT,
+  units CHAR(1),
+  lowvalue FLOAT,
+  guessvalue FLOAT,
+  highvalue FLOAT,
+  stage INT REFERENCES lookup_stage(code),
   stagedate date NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  commission float,
-  type char(1),
-  alertdate date,
+  commission FLOAT,
+  type CHAR(1),
+  alertdate DATETIME,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),  
   closed DATETIME,
-  alert varchar(100) default null,
+  alert VARCHAR(100) DEFAULT NULL,
   enabled BIT NOT NULL DEFAULT 1,
   notes TEXT
 );  
@@ -104,7 +104,7 @@ CREATE TABLE opportunity_type_levels (
 CREATE TABLE opportunity_component_levels (
   opp_id INT NOT NULL REFERENCES opportunity_component(id),
   type_id INT NOT NULL REFERENCES lookup_opportunity_types(code),
-  level INTEGER not null,
+  level INTEGER NOT NULL,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -125,7 +125,7 @@ CREATE TABLE call_log (
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
-  alert varchar(100) default null
+  alert VARCHAR(100) DEFAULT NULL
 );
 
 CREATE INDEX "call_log_cidx" ON "call_log" ("alertdate", "enteredby");
