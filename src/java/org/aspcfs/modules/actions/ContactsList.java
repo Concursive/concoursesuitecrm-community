@@ -56,6 +56,7 @@ public final class ContactsList extends CFSModule {
     if(context.getRequest().getParameter("hiddenFieldId")!=null){
       hiddenFieldId = context.getRequest().getParameter("hiddenFieldId");
     }
+    
     listType = context.getRequest().getParameter("listType");
     displayFieldId = context.getRequest().getParameter("displayFieldId");
     
@@ -197,6 +198,11 @@ public final class ContactsList extends CFSModule {
       context.getRequest().setAttribute("DisplayFieldId", displayFieldId);
       context.getRequest().setAttribute("ListType", listType);
       context.getRequest().setAttribute("ContactList", contactList);
+      
+        if(context.getRequest().getParameter("campaign")!=null){
+                context.getRequest().setAttribute("Campaign", (String)context.getRequest().getParameter("campaign"));
+        }
+    
       context.getSession().setAttribute("selectedContacts", selectedList);
       if (listDone) {
         context.getSession().setAttribute("finalContacts", finalContactList);

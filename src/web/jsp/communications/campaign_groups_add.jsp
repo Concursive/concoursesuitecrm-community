@@ -62,6 +62,8 @@ function checkForm(form) {
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript" type="text/javascript" src="/javascript/searchForm.js"></script>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
 <script language="JavaScript" type="text/javascript">
 var searchCriteria = new Array();
 
@@ -209,12 +211,13 @@ Add a Group
 		<% if (SCL.size() > 0) {%>
 			<%= SCL.getHtmlSelect("searchCriteria") %>
 		<%} else {%>
-			<select name="searchCriteria" size="10">
+			<select name="searchCriteria" id="listViewId" size="10">
         <option value="-1">----------------Search Criteria----------------</option>
 			</select>
 		<%}%>
       <br>
-      <a href="javascript:popURLCampaign('/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true','Contacts','600','290','yes','yes');">Add Contacts</a><br>
+      <!--a href="javascript:popURLCampaign('/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true','Contacts','600','290','yes','yes');">Add Contacts</a><br-->
+      <a href="javascript:popContactsListMultipleCampaign('listViewId','1');">Add Contacts</a><br>
       &nbsp;<br>
       <input type="button" value="Remove" onclick="removeValues()">
 		</td>

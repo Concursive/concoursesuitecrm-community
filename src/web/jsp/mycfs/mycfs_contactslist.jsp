@@ -10,6 +10,7 @@
 <jsp:useBean id="DisplayFieldId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="HiddenFieldId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="ListType" class="java.lang.String" scope="request"/>
+<jsp:useBean id="Campaign" class="java.lang.String" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popContacts.js"></script>
@@ -188,7 +189,12 @@ else{%>
     <%}
       else {
       %>
+      
+      <% if (Campaign != null) {%>
+      <body OnLoad="javascript:setParentListCampaign(recipientEmails,recipientIds,'<%=ListType%>','<%=DisplayFieldId%>','<%=HiddenFieldId%>','<%=User.getBrowserId()%>');window.close()">
+      <%} else {%>
       <body OnLoad="javascript:setParentList(recipientEmails,recipientIds,'<%=ListType%>','<%=DisplayFieldId%>','<%=HiddenFieldId%>','<%=User.getBrowserId()%>');window.close()">
+      <%}%>
       <script>recipientEmails = new Array();recipientIds = new Array();</script>
       <%
         Set s = selectedContacts.keySet();

@@ -142,7 +142,7 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM saved_criterialist scl " +
-        "WHERE scl.id > -1 ");
+        "WHERE scl.id > -1 AND enabled = " + DatabaseUtils.getTrue(db) + " ");
 
     createFilter(sqlFilter);
 
@@ -191,7 +191,7 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     sqlSelect.append(
         "scl.* " +
         "FROM saved_criterialist scl " +
-        "WHERE scl.id > -1 ");
+        "WHERE scl.id > -1 AND enabled = " + DatabaseUtils.getTrue(db) + " ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();

@@ -329,7 +329,7 @@ public class HtmlDialog {
           if (this.getRelationships().size() != 0) {
             htmlString.append("<table align=center cellpadding=2 cellspacing=0 border=0 width=94%");
             htmlString.append("<tr><td valign=center>");
-            htmlString.append("The following Relationships will be deleted ");
+            htmlString.append("The following Relationships depend on this object:");
             htmlString.append(this.getRelationshipString());
             htmlString.append("</td></tr></table>");
           }

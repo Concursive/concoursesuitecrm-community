@@ -474,11 +474,12 @@
     <forward name="ModifyOK" resource="/campaign_groups_modify.jsp" layout="nav"/>
     <forward name="AddOK" resource="/campaign_groups_add.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/campaign_groups_preview.jsp" layout="nav"/>
-    <forward name="DeleteOK" resource="/CampaignManagerGroup.do?command=View"/>
     <forward name="UpdateOK" resource="/campaign_groups_preview.jsp" layout="nav"/>
     <forward name="PreviewOK" resource="/campaign_groups_preview.jsp" layout="nav"/>
     <forward name="PopupOK" resource="/campaign_contacts_form.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
   <action name="CampaignManagerMessage" class="com.darkhorseventures.cfsmodule.CampaignManagerMessage">
     <bean name="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>

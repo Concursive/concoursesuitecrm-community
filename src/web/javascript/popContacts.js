@@ -33,6 +33,23 @@ function popContactsListMultiple(displayFieldId,highLightedId) {
   }
 }
 
+function popContactsListMultipleCampaign(displayFieldId,highLightedId) {
+  title  = 'Contacts';
+  width  =  '700';
+  height =  '450';
+  resize =  'yes';
+  bars   =  'no';
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  
+  var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  var newwin=window.open('/ContactsList.do?command=ContactList&listType=list&campaign=true&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId, title, params);
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
 function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hiddenFieldId){
 	  if(recipientEmails.length == 0 && listType == "list"){
       opener.deleteOptions(displayFieldId);
@@ -49,6 +66,41 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
         opener.document.getElementById(hiddenFieldId).value = recipientIds[i];
         opener.changeDivContent(displayFieldId,recipientEmails[i]);
     }
+  }
+  
+  function setParentListCampaign(recipientEmails,recipientIds,listType,displayFieldId,hiddenFieldId){
+	  //if(recipientEmails.length == 0 && listType == "list"){
+    //  opener.deleteOptions(displayFieldId);
+		//  opener.insertOption("None Selected","",displayFieldId);
+	  //}
+    
+    var i = 0;
+    var searchList = opener.document.searchForm.searchCriteria;
+
+    if(listType == "list"){
+      if (searchList.length == 0 || searchList.options[0].value == "-1") {
+              opener.deleteOptions(displayFieldId);
+      } else {
+        if (opener.searchCriteria.length == 0) {
+                for (count=0; count<(searchList.length); count++) {
+                        opener.searchCriteria[count] = searchList.options[count].value;
+                }
+        }
+      }
+      
+      for(i=0; i < recipientEmails.length; i++) {
+          var newCriteria = "9|1|" + recipientIds[i];
+          opener.insertOption("Contact Name (is) " + recipientEmails[i],"",displayFieldId);
+          opener.searchCriteria[opener.searchCriteria.length] = newCriteria;
+			}
+      
+		}
+		
+    else if(listType == "single"){
+        opener.document.getElementById(hiddenFieldId).value = recipientIds[i];
+        opener.changeDivContent(displayFieldId,recipientEmails[i]);
+    }
+    
   }
   
   

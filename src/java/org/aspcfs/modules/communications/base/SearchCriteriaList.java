@@ -755,7 +755,38 @@ public java.sql.Timestamp getModified() {
     return (errors.size() > 0);
   }
 
+public HashMap processDependencies(Connection db) throws SQLException {
+    ResultSet rs = null;
+    String sql = "";
+    HashMap dependencyList = new HashMap();
+    try {
+      db.setAutoCommit(false);
+      sql = "SELECT COUNT(*) AS group_count " +
+        "FROM campaign " +
+        "WHERE status_id <> " + Campaign.FINISHED + " " +
+        "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = ?)";
 
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        if (rs.getInt("group_count") != 0) {
+                dependencyList.put("Campaigns", new Integer(rs.getInt("group_count")));
+        }
+      }
+
+      pst.close();
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return dependencyList;
+  }
 
   /**
    *  Description of the Method
@@ -824,6 +855,7 @@ public java.sql.Timestamp getModified() {
           "AND enabled = " + DatabaseUtils.getTrue(db));
       } else {
         st.executeUpdate("DELETE FROM saved_criteriaelement WHERE id = " + this.getId() + " ");
+        st.executeUpdate("DELETE FROM campaign_list_groups WHERE group_id = " + this.getId());
         st.executeUpdate("DELETE FROM saved_criterialist WHERE id = " + this.getId());
       }
       if (commit) {
