@@ -1,14 +1,12 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <%@ include file="initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <jsp:useBean id="UserRecord" class="com.darkhorseventures.cfsbase.User" scope="request"/>
 <jsp:useBean id="AccessLog" class="com.darkhorseventures.cfsbase.AccessLogList" scope="request"/>
 <a href="Admin.do">Setup</a> >
 <a href="Users.do?command=ListUsers">View Users</a> >
 User Details<br>
 <hr color="#BFBFBB" noshade>
-<input type=hidden name="id" value="<%= UserRecord.getId() %>">
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -69,3 +67,6 @@ User Details<br>
   </table>
   <br>
   <dhv:pagedListControl object="AccessLogInfo" tdClass="row1"/>
+</td>
+</tr>
+</table>  
