@@ -35,7 +35,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
  VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 30, false);
  
 /* 
-THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
+  THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
  VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 30, false,
 'CREATE TABLE sync_table (
@@ -49,6 +49,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
 );
 */
 
+/* 
+  THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
  VALUES (2, 'status_master', null, 40,
 'CREATE TABLE status_master (
@@ -57,6 +59,10 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
        PRIMARY KEY (record_status_id)
 )'
 );
+*/
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
+ VALUES (2, 'status_master', null, 40);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
  VALUES (2, 'makeList', 'com.darkhorseventures.autoguide.base.MakeList', 50, true, 
@@ -86,7 +92,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'system', null, 70);
 
 /* 
-THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
+  THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
  VALUES (2, 'system', null, 70,
 'CREATE TABLE system (
@@ -181,7 +187,29 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'accountList', 'com.darkhorseventures.cfsbase.OrganizationList', 150, true, 
+ VALUES (2, 'userList', 'com.darkhorseventures.cfsbase.UserList', 150, true, 
+'CREATE TABLE users (
+       user_id              int NOT NULL,
+       record_status_id     int NULL,
+       user_name            nvarchar(20) NULL,
+       pin                  nvarchar(20) NULL,
+       modified             datetime NULL,
+       PRIMARY KEY (user_id), 
+       FOREIGN KEY (record_status_id)
+                             REFERENCES status_master (record_status_id)
+)'
+);
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
+ VALUES (2, 'XIF18users', null, 160,
+'CREATE INDEX XIF18users ON users
+(
+       record_status_id
+)'
+);
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'accountList', 'com.darkhorseventures.cfsbase.OrganizationList', 170, true, 
 'CREATE TABLE account (
        account_id           int NOT NULL,
        account_name         nvarchar(20) NULL,
@@ -204,30 +232,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF16account', null, 160,
+ VALUES (2, 'XIF16account', null, 180,
 'CREATE INDEX XIF16account ON account
-(
-       record_status_id
-)'
-);
-
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'userList', 'com.darkhorseventures.cfsbase.UserList', 170, true, 
-'CREATE TABLE users (
-       user_id              int NOT NULL,
-       record_status_id     int NULL,
-       user_name            nvarchar(20) NULL,
-       pin                  nvarchar(20) NULL,
-       modified             datetime NULL,
-       PRIMARY KEY (user_id), 
-       FOREIGN KEY (record_status_id)
-                             REFERENCES status_master (record_status_id)
-)'
-);
-
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF18users', null, 180,
-'CREATE INDEX XIF18users ON users
 (
        record_status_id
 )'
