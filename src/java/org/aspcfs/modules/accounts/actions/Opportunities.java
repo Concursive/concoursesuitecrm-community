@@ -586,11 +586,14 @@ public final class Opportunities extends CFSModule {
     String orgId = context.getRequest().getParameter("orgId");
     Connection db = null;
     OpportunityHeader thisHeader = null;
+    Organization thisOrganization = null;
     try {
       db = this.getConnection(context);
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
       thisHeader.queryRecord(db, headerId);
+      thisOrganization = new Organization(db, Integer.parseInt(orgId));
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -602,7 +605,7 @@ public final class Opportunities extends CFSModule {
         return "PermissionError";
       }
       addRecentItem(context, thisHeader);
-      return executeCommandPrepare(context);
+      return "PrepareModifyOK";
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -684,6 +687,59 @@ public final class Opportunities extends CFSModule {
       context.getRequest().setAttribute("ComponentDetails", component);
       addRecentItem(context, component);
       return executeCommandPrepare(context);
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandUpdate(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-opportunities-edit")) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    Connection db = null;
+    int resultCount = 0;
+    String headerId = context.getRequest().getParameter("headerId");
+
+    try {
+      db = this.getConnection(context);
+      OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
+      if (!hasAuthority(context, oppHeader.getEnteredBy())) {
+        return ("PermissionError");
+      }
+      oppHeader.setModifiedBy(getUserId(context));
+      oppHeader.setDescription(context.getRequest().getParameter("description"));
+      resultCount = oppHeader.update(db);
+      if (resultCount == -1) {
+        processErrors(context, oppHeader.getErrors());
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (resultCount == -1) {
+        return executeCommandModify(context);
+      } else if (resultCount == 1) {
+        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+          return (executeCommandView(context));
+        } else {
+          return (executeCommandDetails(context));
+        }
+      } else {
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+        return ("UserError");
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
