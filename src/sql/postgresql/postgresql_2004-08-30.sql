@@ -77,14 +77,13 @@ ALTER TABLE call_log ADD COLUMN result_id integer;
 ALTER TABLE call_log ADD COLUMN priority_id integer;
 
 ALTER TABLE call_log ADD COLUMN status_id INT;
+UPDATE call_log SET status_id = 2;
 ALTER TABLE call_log ADD CONSTRAINT call_status_not_null CHECK(status_id IS NOT NULL);
 ALTER TABLE call_log ALTER status_id SET DEFAULT 1;
-
 
 ALTER TABLE call_log ADD COLUMN reminder_value integer;
 ALTER TABLE call_log ADD COLUMN reminder_type_id integer;
 UPDATE call_log SET result_id = 1;
-UPDATE call_log SET status_id = 2;
 
 ALTER table call_log ADD COLUMN alertdate_timezone VARCHAR(255);
 ALTER table call_log ALTER alertdate_timezone set default 'America/New_York';
@@ -242,8 +241,6 @@ CREATE TABLE project_issues_categories (
     last_post_date timestamp(3) without time zone,
     last_post_by integer
 );
-
-
 
 ALTER TABLE project_issues DROP COLUMN type_id;
 ALTER TABLE project_issues ADD COLUMN category_id integer;
