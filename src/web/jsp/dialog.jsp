@@ -7,16 +7,13 @@
 %>
   <html>
    <title><%=Dialog.getTitle()%></title>
-    <frameset rows="29%,42%,29%" frameborder="0">
-    
+    <frameset rows="50,100%,50" frameborder="0">
         <% if ("true".equals((String)getServletConfig().getServletContext().getAttribute("ForceSSL"))) { %>
           <frame name="topframe" src="https://<%= request.getServerName() %>/loadframes.jsp">
-          
           <frame marginheight="0" name="middleframe" src="https://<%= request.getServerName() %>/loadmiddleframe.jsp">
           <frame name="bottomframe" src="https://<%= request.getServerName() %>/loadbottomframe.jsp">          
         <%} else {%>
           <frame name="topframe" src="loadframes.jsp">
-          
           <frame marginheight="0" name="middleframe" src="loadmiddleframe.jsp">
           <frame name="bottomframe" src="loadbottomframe.jsp">
         <%}%>
@@ -47,7 +44,7 @@ else{%>
       
       <tr align="center">
       <td>
-        <input type="button" value="Yes" onClick="<%=toHtml(Dialog.getDeleteUrl())%>">
+        <input type="button" value="Ok" onClick="<%=toHtml(Dialog.getDeleteUrl())%>">
         <input type="button" value="Cancel" onClick="javascript:window.close();">
         </td>
       </tr>
