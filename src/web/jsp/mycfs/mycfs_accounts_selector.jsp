@@ -29,7 +29,7 @@
             while(filters.hasNext()){
             Filter thisFilter = (Filter) filters.next();
           %>
-            <option <%= AccountListInfo.getOptionValue(thisFilter.getValue()) %>><%= thisFilter.getDisplayName() %></option>
+            <option <%= AccountListInfo.getOptionValue(thisFilter.getValue()) %>><%= toHtml(thisFilter.getDisplayName()) %></option>
           <%}%>
          </select>
         <% TypeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
@@ -68,11 +68,11 @@
 <% 
   if ("list".equals(request.getParameter("listType"))) { 
   %>  
-        <input type="checkbox" name="account<%= count %>" value=<%= thisAcct.getOrgId() %><%= (SelectedAccounts.indexOf(orgId) != -1 ? " checked" : "") %> onClick="highlight(this,'<%=User.getBrowserId()%>');">
+        <input type="checkbox" name="account<%= count %>" value="<%= thisAcct.getOrgId() %>" <%= (SelectedAccounts.indexOf(orgId) != -1 ? " checked" : "") %> onClick="highlight(this,'<%=User.getBrowserId()%>');">
 <%} else {%>
         <a href="javascript:document.acctListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%= count %>','acctListView');">Add</a>
 <%}%>
-        <input type="hidden" name="hiddenAccountId<%= count %>" value=<%= thisAcct.getOrgId() %>>
+        <input type="hidden" name="hiddenAccountId<%= count %>" value="<%= thisAcct.getOrgId() %>">
       </td>
       <td nowrap>
           <%= toHtml(thisAcct.getName()) %>
@@ -96,9 +96,9 @@
 <%}%>
     <input type="hidden" name="finalsubmit" value="false">
     <input type="hidden" name="rowcount" value="0">
-    <input type="hidden" name="displayFieldId" value="<%= request.getParameter("displayFieldId") %>">
-    <input type="hidden" name="hiddenFieldId" value="<%= request.getParameter("hiddenFieldId") %>">
-    <input type="hidden" name="listType" value="<%= (request.getParameter("listType") != null ? request.getParameter("listType") : "") %>">
+    <input type="hidden" name="displayFieldId" value="<%= toHtmlValue(request.getParameter("displayFieldId")) %>">
+    <input type="hidden" name="hiddenFieldId" value="<%= toHtmlValue(request.getParameter("hiddenFieldId")) %>">
+    <input type="hidden" name="listType" value="<%= toHtmlValue(request.getParameter("listType")) %>">
   </table>
 <% if("list".equals(request.getParameter("listType"))){ %>
   <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','acctListView');">
