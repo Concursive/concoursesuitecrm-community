@@ -11,9 +11,17 @@ ALTER TABLE contact_address ADD [primary_address] [bit] NULL;
 UPDATE contact_address SET primary_address = 0;
 ALTER TABLE contact_address ALTER COLUMN [primary_address] [bit] NOT NULL;
 
+ALTER TABLE [contact_address] WITH NOCHECK ADD 
+	CONSTRAINT [DF__contact_a__prima__43D61337] DEFAULT (0) FOR [primary_address]
+GO
+
 ALTER TABLE contact_phone ADD [primary_number] [bit] NULL;
 UPDATE contact_phone SET primary_number = 0;
 ALTER TABLE contact_phone ALTER COLUMN [primary_number] [bit] NOT NULL;
+
+ALTER TABLE [dbo].[contact_phone] WITH NOCHECK ADD 
+	CONSTRAINT [DF__contact_p__prima__55009F39] DEFAULT (0) FOR [primary_number]
+GO
 
 
 CREATE TABLE [lookup_call_priority] (

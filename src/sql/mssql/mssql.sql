@@ -4947,16 +4947,16 @@ ALTER TABLE [business_process_log] WITH NOCHECK ADD
 GO
 
 ALTER TABLE [business_process_parameter_library] WITH NOCHECK ADD 
-	CONSTRAINT [DF__business___enabl__70499252] DEFAULT (1) FOR [enabled]
+	CONSTRAINT [DF__business___enabl__69B1A35C] DEFAULT (1) FOR [enabled]
 GO
 
 ALTER TABLE [database_version] WITH NOCHECK ADD 
-	CONSTRAINT [DF__database___enter__4D2A7347] DEFAULT (getdate()) FOR [entered]
+	CONSTRAINT [DF__database___enter__3EDC53F0] DEFAULT (getdate()) FOR [entered]
 GO
 
 ALTER TABLE [field_types] WITH NOCHECK ADD 
-	CONSTRAINT [DF__field_typ__data___5CACADF9] DEFAULT ((-1)) FOR [data_typeid],
-	CONSTRAINT [DF__field_typ__enabl__5DA0D232] DEFAULT (1) FOR [enabled]
+	CONSTRAINT [DF__field_typ__data___5708E33C] DEFAULT ((-1)) FOR [data_typeid],
+	CONSTRAINT [DF__field_typ__enabl__57FD0775] DEFAULT (1) FOR [enabled]
 GO
 
 ALTER TABLE [lookup_access_types] WITH NOCHECK ADD 
@@ -5917,7 +5917,8 @@ GO
 
 ALTER TABLE [contact_address] WITH NOCHECK ADD 
 	CONSTRAINT [DF__contact_a__enter__3F115E1A] DEFAULT (getdate()) FOR [entered],
-	CONSTRAINT [DF__contact_a__modif__40F9A68C] DEFAULT (getdate()) FOR [modified]
+	CONSTRAINT [DF__contact_a__modif__40F9A68C] DEFAULT (getdate()) FOR [modified],
+  CONSTRAINT [DF__contact_a__prima__43D61337] DEFAULT (0) FOR [primary_address]
 GO
 
 ALTER TABLE [contact_emailaddress] WITH NOCHECK ADD 
@@ -5928,7 +5929,8 @@ GO
 
 ALTER TABLE [contact_phone] WITH NOCHECK ADD 
 	CONSTRAINT [DF__contact_p__enter__4E53A1AA] DEFAULT (getdate()) FOR [entered],
-	CONSTRAINT [DF__contact_p__modif__503BEA1C] DEFAULT (getdate()) FOR [modified]
+	CONSTRAINT [DF__contact_p__modif__503BEA1C] DEFAULT (getdate()) FOR [modified],
+  CONSTRAINT [DF__contact_p__prima__55009F39] DEFAULT (0) FOR [primary_number]
 GO
 
 ALTER TABLE [contact_type_levels] WITH NOCHECK ADD 
