@@ -1058,7 +1058,7 @@
     <forward name="SendMailERROR" resource="/setup/configure_server_mail_error.jsp" layout="style"/>
   </action>
   <action name="SetupUser" class="org.aspcfs.modules.setup.actions.Setup">
-    <bean name="user" class="org.aspcfs.modules.setup.beans.UserBean" scope="request" />
+    <bean name="user" class="org.aspcfs.modules.setup.beans.UserSetupBean" scope="request" />
     <forward name="ConfigureUserCheckOK" resource="/setup/configure_user.jsp" layout="dhv"/>
     <forward name="ConfigureUserERROR" resource="/setup/configure_user.jsp" layout="dhv"/>
     <forward name="ConfigureUserOK" resource="/setup/configure_user_success.jsp" layout="dhv"/>
