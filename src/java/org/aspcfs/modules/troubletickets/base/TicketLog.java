@@ -786,7 +786,7 @@ public class TicketLog extends GenericBean {
     try {
       db.setAutoCommit(false);
       sql.append(
-          "INSERT INTO TICKETLOG (pri_code, level_code, department_code, cat_code, scode, ticketid, comment, closed, ");
+          "INSERT INTO ticketlog (pri_code, level_code, department_code, cat_code, scode, ticketid, comment, closed, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -794,7 +794,7 @@ public class TicketLog extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
