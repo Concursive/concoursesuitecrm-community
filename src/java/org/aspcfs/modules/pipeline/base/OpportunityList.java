@@ -7,6 +7,8 @@ package com.darkhorseventures.cfsbase;
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
+import java.util.*;
+import java.text.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.ObjectUtils;
@@ -40,6 +42,8 @@ public class OpportunityList extends Vector {
   private String accountOwnerIdRange = null;
   private java.sql.Date alertRangeStart = null;
   private java.sql.Date alertRangeEnd = null;
+  private java.sql.Date closeDateStart = null;
+  private java.sql.Date closeDateEnd = null;
   private int stage = -1;
 
   /**
@@ -171,7 +175,6 @@ public void setStage(String stage) {
     this.hasAlertDate = tmp;
   }
 
-
   /**
    *  Sets the AlertDate attribute of the OpportunityList object
    *
@@ -181,7 +184,31 @@ public void setStage(String stage) {
     this.alertDate = tmp;
   }
 
+public java.sql.Date getCloseDateStart() { return closeDateStart; }
+public java.sql.Date getCloseDateEnd() { return closeDateEnd; }
+public void setCloseDateStart(java.sql.Date tmp) { this.closeDateStart = tmp; }
 
+public void setCloseDateStart(String tmp) {
+    try {
+      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
+      closeDateStart = new java.sql.Date(new java.util.Date().getTime());
+      closeDateStart.setTime(tmpDate.getTime());
+    } catch (Exception e) {
+      closeDateStart = null;
+    }
+}
+    
+public void setCloseDateEnd(java.sql.Date tmp) { this.closeDateEnd = tmp; }
+
+public void setCloseDateEnd(String tmp) {
+    try {
+      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
+      closeDateEnd = new java.sql.Date(new java.util.Date().getTime());
+      closeDateEnd.setTime(tmpDate.getTime());
+    } catch (Exception e) {
+      closeDateEnd = null;
+    }
+}
 
   /**
    *  Sets the owner attribute of the OpportunityList object
@@ -486,6 +513,13 @@ public void setStage(String stage) {
     if (alertRangeEnd != null) {
       sqlFilter.append("AND x.alertdate <= ? ");
     }
+    
+    if (closeDateStart != null) {
+      sqlFilter.append("AND x.closedate >= ? ");
+    }
+    if (closeDateEnd != null) {
+      sqlFilter.append("AND x.closedate <= ? ");
+    }
 
     if (owner != -1) {
       sqlFilter.append("AND x.owner = ? ");
@@ -559,6 +593,14 @@ public void setStage(String stage) {
     
     if (alertRangeEnd != null) {
       pst.setDate(++i, alertRangeEnd);
+    }
+    
+    if (closeDateStart != null) {
+      pst.setDate(++i, closeDateStart);
+    }
+    
+    if (closeDateEnd != null) {
+      pst.setDate(++i, closeDateEnd);
     }
 
     if (owner != -1) {

@@ -1,5 +1,6 @@
 <jsp:useBean id="OrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
 <jsp:useBean id="StageList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <body onLoad="javascript:document.forms[0].searchDescription.focus();">
 <form name="searchLeads" action="/Leads.do?command=ViewOpp" method="post">
 <a href="/Leads.do">Pipeline Management</a> > 
@@ -38,6 +39,19 @@ Description
 	<%=StageList.getHtmlSelectDefaultNone("searchcodeStage")%>
 	</td>
     </tr>
+    
+      <tr>
+      <td width="125" valign="top" class="formLabel">
+Est. Close Date between
+</td>
+<td colspan=1 valign=center>
+<input type=text size=10 name="searchdateCloseDateStart" value="">
+<a href="javascript:popCalendar('searchLeads', 'searchdateCloseDateStart');">Date</a> (mm/dd/yyyy)
+&nbsp;and<br>
+<input type=text size=10 name="searchdateCloseDateEnd" value="">
+<a href="javascript:popCalendar('searchLeads', 'searchdateCloseDateEnd');">Date</a> (mm/dd/yyyy)
+</td>
+</tr>
     
 </table>
 &nbsp;<br>

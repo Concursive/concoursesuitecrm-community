@@ -408,7 +408,6 @@ public void setSavedCriteria(HashMap savedCriteria) {
 			}
 			
 			this.getSavedCriteria().put(param, context.getRequest().getParameter(param));
-			//System.out.println("putting " + context.getRequest().getParameter(param) + " @ " + param);
 		}
 		
 	}
@@ -426,7 +425,7 @@ public void setSavedCriteria(HashMap savedCriteria) {
 			if (this.getCriteriaValue(tempKey) != null && !(this.getCriteriaValue(tempKey).trim().equals(""))) {
 				
 				//its an int
-				if (tempKey.startsWith("searchcode")) {
+				if (tempKey.startsWith("searchcode") || tempKey.startsWith("searchdate") ) {
 					ObjectUtils.setParam(obj, tempKey.substring(10), this.getCriteriaValue(tempKey));
 				} else {
 					ObjectUtils.setParam(obj, tempKey.substring(6), "%" + this.getCriteriaValue(tempKey) + "%");

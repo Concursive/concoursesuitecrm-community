@@ -128,7 +128,6 @@ public final class Leads extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      System.out.println("here it is " + newOpp.getDescription() + " " + newOpp.getAccountLink() + ", " + newOpp.getContactLink());
       recordInserted = newOpp.insert(db, context);
       if (recordInserted) {
         newOpp = new Opportunity(db, "" + newOpp.getId());
@@ -463,8 +462,6 @@ public final class Leads extends CFSModule {
       //Axis hAxis = bPlot.getAxis(Plot.HORIZONTAL_AXIS);
       //hAxis.setLabel("Months Out");
 
-      System.out.println("Trying to use " + (d.getYear() + 1900) + " " + d.getMonth() + " " + d.getDay());
-
       try {
         Axis myHorizontalDateAxis = new HorizontalDateAxis(hnAxis.getLabel(), hnAxis.getLabelFont(),
             hnAxis.getLabelPaint(), hnAxis.getLabelInsets(), true, hnAxis.getTickLabelFont(),
@@ -715,7 +712,7 @@ public final class Leads extends CFSModule {
       
       oppList.setPagedListInfo(oppListInfo);
       oppListInfo.setSearchCriteria(oppList);
-
+      
       if ("my".equals(oppListInfo.getListView())) {
 	oppList.setOwner(this.getUserId(context));
       } else {
