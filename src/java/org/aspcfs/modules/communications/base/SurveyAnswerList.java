@@ -149,12 +149,26 @@ public class SurveyAnswerList extends Vector {
     this.responseId = responseId;
   }
 
-public void setContactId(int contactId) {
-	this.contactId = contactId;
-}
-public int getContactId() {
-	return contactId;
-}
+
+  /**
+   *  Sets the contactId attribute of the SurveyAnswerList object
+   *
+   *@param  contactId  The new contactId value
+   */
+  public void setContactId(int contactId) {
+    this.contactId = contactId;
+  }
+
+
+  /**
+   *  Gets the contactId attribute of the SurveyAnswerList object
+   *
+   *@return    The contactId value
+   */
+  public int getContactId() {
+    return contactId;
+  }
+
 
   /**
    *  Gets the responseId attribute of the SurveyAnswerList object
@@ -316,10 +330,10 @@ public int getContactId() {
       sqlFilter.append("AND sa.response_id = sr.response_id ");
     }
 
-    if(contactId != -1){
+    if (contactId != -1) {
       sqlFilter.append("AND sr.contact_id = ? ");
     }
-    
+
     if (hasComments > -1) {
       if (hasComments == Constants.TRUE) {
         sqlFilter.append("AND sa.comments <> '' ");
@@ -347,11 +361,11 @@ public int getContactId() {
     if (responseId != -1) {
       pst.setInt(++i, responseId);
     }
-    
-    if(contactId != -1){
+
+    if (contactId != -1) {
       pst.setInt(++i, contactId);
     }
-    
+
     return i;
   }
 
