@@ -12,6 +12,8 @@ import org.aspcfs.modules.actions.CFSModule;
 import java.util.*;
 import java.io.File;
 import java.sql.*;
+import org.jcrontab.data.CrontabEntryBean;
+import org.jcrontab.data.CrontabEntryDAO;
 
 /**
  *  Perform system level maintenance, typically setup on a cron
@@ -122,6 +124,31 @@ public final class ProcessSystem extends CFSModule {
         }
       }
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandViewCron(ActionContext context) {
+    try {
+      CrontabEntryBean[] entryList = CrontabEntryDAO.getInstance().findAll();
+      //ArrayList entries = (ArrayList)Arrays.asList(entryList);
+      ArrayList entries = new ArrayList();
+      for (int i = 0; i < entryList.length; i++) {
+			  entries.add(entryList[i]);
+      }
+      context.getRequest().setAttribute("entries", entries);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("ProcessSystem-> List OK");
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+    }
+    return "ViewCronOK";
   }
 
 
