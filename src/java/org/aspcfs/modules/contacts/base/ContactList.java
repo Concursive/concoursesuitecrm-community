@@ -13,6 +13,7 @@ import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.modules.accounts.base.Organization;
 /**
  *  Contains a list of contacts... currently used to build the list from the
  *  database with any of the parameters to limit the results.
@@ -2111,6 +2112,24 @@ public class ContactList extends Vector {
     rs.close();
     pst.close();
     return count;
+  }
+  
+  /**
+   *  Updates the organization name of all contacts linked to this organization
+   *
+   *@param  db                Description of the Parameter
+   *@param  thisOrg           Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void updateOrgName(Connection db, Organization thisOrg) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE contact " +
+        "SET org_name = ? " +
+        "WHERE org_id = ?");
+    pst.setBoolean(1, true);
+    pst.setInt(2, thisOrg.getOrgId());
+    pst.executeUpdate();
+    pst.close();
   }
 
 }
