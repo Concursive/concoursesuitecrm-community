@@ -1503,6 +1503,9 @@ public void setEnabled(boolean enabled) {
       sql.append(
         "INSERT INTO opportunity " +
         "(acctlink, contactlink, owner, closedate, stage, description, ");
+              if (stageDate != null) {
+                      sql.append("stagedate, ");
+              }
               if (entered != null) {
                       sql.append("entered, ");
               }
@@ -1538,7 +1541,9 @@ public void setEnabled(boolean enabled) {
       pst.setDate(++i, this.getCloseDate());
       pst.setInt(++i, this.getStage());
       pst.setString(++i, this.getDescription());
-      
+        if (stageDate != null) {
+                pst.setTimestamp(++i, stageDate);
+        }      
         if (entered != null) {
                 pst.setTimestamp(++i, entered);
         }
