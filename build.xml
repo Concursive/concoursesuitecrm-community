@@ -86,6 +86,11 @@
 				targetfile="${SRC_LIB}/darkhorseventures.jar">
 			<srcfiles dir="${SRC_CLASSES}/com/darkhorseventures" includes="**/*.java"/>
 		</uptodate>
+		
+		<uptodate property="isavvix-jar-uptodate" 
+				targetfile="${SRC_LIB}/isavvix.jar">
+			<srcfiles dir="${SRC_CLASSES}/com/isavvix" includes="**/*.java"/>
+		</uptodate>
     
     <uptodate property="apps-jar-uptodate" 
 				targetfile="${DEST_BIN}/Notifier.jar">
@@ -193,7 +198,8 @@ determined user is ${USER}
 		</delete>
 	</target>
   
-  <target name="isavvix" description="compile isavvix into JAR">
+  <target name="isavvix" description="compile isavvix into JAR" 
+	  unless="isavvix-jar-uptodate">
     <echo message=" Source: ${SRC_CLASSES}"/>
 		<javac srcdir="${SRC_CLASSES}/com/isavvix" verbose="off">
 			<classpath>

@@ -357,7 +357,7 @@ public class CFSModule {
       } else {
         thisItem = new RecentItem(
             RecentItem.CONTACT,
-            thisContact.getNameFirstLast(),
+            thisContact.getNameFull(),
             "/ExternalContacts.do?command=ContactDetails&id=" + thisContact.getId());
       }
 
