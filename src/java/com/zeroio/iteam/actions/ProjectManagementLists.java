@@ -1,24 +1,32 @@
 /*
- *  Copyright 2002 Dark Horse Ventures
- *  Uses iteam objects from matt@zeroio.com http://www.mavininteractive.com
+ *  Copyright 2000-2003 Matt Rajkowski
+ *  matt@zeroio.com
+ *  http://www.mavininteractive.com
+ *  This class cannot be modified, distributed or used without
+ *  permission from Matt Rajkowski
  */
-package com.darkhorseventures.cfsmodule;
+package com.zeroio.iteam.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.actions.*;
 import com.zeroio.iteam.base.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.tasks.base.*;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.HtmlSelect;
 
 /**
  *  Handles web actions for the Project Management Lists sub module
  *
  *@author     matt rajkowski
  *@created    November 17, 2002
- *@version    $Id$
+ *@version    $Id: ProjectManagementLists.java,v 1.4 2002/12/20 14:07:55
+ *      mrajkowski Exp $
  */
 public final class ProjectManagementLists extends CFSModule {
 
@@ -52,7 +60,7 @@ public final class ProjectManagementLists extends CFSModule {
 
       LookupList priorityList = new LookupList(db, "lookup_task_priority");
       context.getRequest().setAttribute("PriorityList", priorityList);
-      
+
       String id = context.getParameter("id");
       if (id != null && !"".equals(id)) {
         Task thisTask = new Task(db, Integer.parseInt(id));
@@ -125,7 +133,14 @@ public final class ProjectManagementLists extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUpdate(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -171,6 +186,13 @@ public final class ProjectManagementLists extends CFSModule {
     }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandAddCategory(ActionContext context) {
     /*
      *  if (!(hasPermission(context, "projects-issues-add"))) {
@@ -185,7 +207,7 @@ public final class ProjectManagementLists extends CFSModule {
       Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", "lists_categories_add");
-      
+
       String categoryId = context.getParameter("cid");
       if (categoryId != null && !"".equals(categoryId)) {
         TaskCategory thisCategory = new TaskCategory(db, Integer.parseInt(categoryId));
@@ -256,7 +278,14 @@ public final class ProjectManagementLists extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUpdateCategory(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;

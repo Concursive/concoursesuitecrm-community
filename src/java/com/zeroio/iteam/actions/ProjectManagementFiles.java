@@ -1,20 +1,23 @@
 /*
- *  Copyright 2001 Dark Horse Ventures
- *  Uses iteam objects from matt@zeroio.com http://www.mavininteractive.com
+ *  Copyright 2000-2003 Matt Rajkowski
+ *  matt@zeroio.com
+ *  http://www.mavininteractive.com
+ *  This class cannot be modified, distributed or used without
+ *  permission from Matt Rajkowski
  */
-package com.darkhorseventures.cfsmodule;
+package com.zeroio.iteam.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.actions.*;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import java.io.*;
+import org.aspcfs.modules.actions.CFSModule;
 
 /**
  *  Description of the Class
@@ -342,7 +345,7 @@ public final class ProjectManagementFiles extends CFSModule {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "projects", thisItem.getProjectId()) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "projects") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -357,7 +360,7 @@ public final class ProjectManagementFiles extends CFSModule {
       } else {
         FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "projects", thisItem.getProjectId()) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "projects") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -501,7 +504,7 @@ public final class ProjectManagementFiles extends CFSModule {
       
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId());
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
-        recordDeleted = thisItem.delete(db, this.getPath(context, "projects", thisItem.getProjectId()));
+        recordDeleted = thisItem.delete(db, this.getPath(context, "projects"));
       }
 
     } catch (Exception e) {

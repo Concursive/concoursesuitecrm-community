@@ -1,22 +1,28 @@
 /*
- *  Copyright 2001 Dark Horse Ventures
- *  Uses iteam objects from matt@zeroio.com http://www.mavininteractive.com
+ *  Copyright 2000-2003 Matt Rajkowski
+ *  matt@zeroio.com
+ *  http://www.mavininteractive.com
+ *  This class cannot be modified, distributed or used without
+ *  permission from Matt Rajkowski
  */
-package com.darkhorseventures.cfsmodule;
+package com.zeroio.iteam.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
 import java.sql.*;
-import java.util.Vector;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import java.util.ArrayList;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.actions.*;
 import com.zeroio.iteam.base.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.modules.admin.base.User;
 
 /**
  *  Description of the Class
  *
- *@author     mrajkowski
+ *@author     matt rajkowski
  *@created    November 28, 2001
  *@version    $Id$
  */
