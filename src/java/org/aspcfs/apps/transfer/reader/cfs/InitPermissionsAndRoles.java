@@ -46,7 +46,7 @@ public class InitPermissionsAndRoles implements DataReader {
     
     File configFile = new File(processConfigFile);
     if (!configFile.exists()) {
-      logger.info("InitPermissionsAndRoles-> Config: process config file not found");
+      logger.info("InitPermissionsAndRoles-> Config: process config file not found: " + processConfigFile);
       configOK = false;
     }
 
