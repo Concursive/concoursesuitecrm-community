@@ -115,7 +115,7 @@ sub main () {
 			exit(2);
 		}
 		
-		$query = "SELECT org_id,name,ticker_symbol from organization where duplicate_id = -1 and ticker_symbol is not null ";
+		$query = "SELECT org_id,name,ticker_symbol from organization where duplicate_id = -1 and ticker_symbol is not null and miner_only = 't' ";
 		$result = $conn->exec($query);
 		if ($result->resultStatus != PGRES_TUPLES_OK)
 		{
