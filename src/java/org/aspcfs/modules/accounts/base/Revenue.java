@@ -37,7 +37,6 @@ public class Revenue extends GenericBean {
   private String ownerNameLast = "";
   
   private String typeName = "";
-  private String monthName = "";
   private String orgName = "";
 
   public Revenue() { }
@@ -54,14 +53,13 @@ public class Revenue extends GenericBean {
     sql.append(
         "SELECT r.*, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, ct_own.namelast as own_namelast, ct_own.namefirst as own_namefirst, rt.description as typename, lm.description as monthname, o.name as orgname " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, ct_own.namelast as own_namelast, ct_own.namefirst as own_namefirst, rt.description as typename, o.name as orgname " +
         "FROM revenue r " +
         "LEFT JOIN contact ct_eb ON (r.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (r.modifiedby = ct_mb.user_id) " +
 	"LEFT JOIN contact ct_own ON (r.owner = ct_own.user_id) " +
 	"LEFT JOIN organization o ON (r.org_id = o.org_id) " +
 	"LEFT JOIN lookup_revenue_types rt ON (r.type = rt.code) " +
-	"LEFT JOIN lookup_months lm ON (r.month = lm.code) " +
         "WHERE r.id > -1 ");
 
     if (revenueId != null && !revenueId.equals("")) {
@@ -98,12 +96,6 @@ public class Revenue extends GenericBean {
     }
     return ("");
   }
-  public String getMonthName() {
-	return monthName;
-}
-public void setMonthName(String monthName) {
-	this.monthName = monthName;
-}
 
   public String getModifiedString() {
     try {
@@ -125,10 +117,13 @@ public void setMonthName(String monthName) {
     double value_2dp = (double) Math.round(amount * 100.0) / 100.0;
     String toReturn = "" + value_2dp;
     if (toReturn.endsWith(".0")) {
-      return (toReturn.substring(0, toReturn.length() - 2));
-    } else {
-      return toReturn;
-    }
+      toReturn = toReturn.substring(0, toReturn.length() - 2);
+    } 
+    
+    if (Integer.parseInt(toReturn) == 0) 
+        toReturn = "";
+	
+    return toReturn;
   }
   
   public String getAmountCurrency() {
@@ -148,10 +143,6 @@ public void setMonthName(String monthName) {
       errors.put("amountError", "Amount needs to be entered");
     }
     
-    if (year < 1900) {
-      errors.put("yearError", "Invalid year");
-    }
-
     if (hasErrors()) {
       return false;
     } else {
@@ -189,8 +180,17 @@ public void setMonth(int tmp) { this.month = tmp; }
 public void setMonth(String tmp) { this.month = Integer.parseInt(tmp); }
 public void setYear(int tmp) { this.year = tmp; }
 public void setYear(String tmp) { this.year = Integer.parseInt(tmp); }
-public void setAmount(double tmp) { this.amount = tmp; }
-public void setAmount(String tmp) { this.amount = Double.parseDouble(tmp); }
+
+public void setAmount(double tmp) { 
+	this.amount=tmp;
+}
+
+public void setAmount(String tmp) { 
+	tmp = replace(tmp, ",", "");
+	tmp = replace(tmp, "$", "");
+	this.amount = Double.parseDouble(tmp);
+}
+
 public void setDescription(String tmp) { this.description = tmp; }
 public void setEnteredBy(int tmp) { this.enteredBy = tmp; }
 public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
@@ -401,7 +401,6 @@ public String getOwnerNameAbbr() {
 	ownerNameLast = rs.getString("own_namelast");
 	
 	typeName = rs.getString("typename");
-	monthName = rs.getString("monthname");
 	orgName = rs.getString("orgname");
   }
   

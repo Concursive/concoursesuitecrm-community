@@ -52,7 +52,7 @@
       Month
     </td>
     <td>
-      <%= Revenue.getMonthName() %>
+      <%= Revenue.getMonth() %>
     </td>
   </tr>
       <tr class="containerBody">

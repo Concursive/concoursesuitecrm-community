@@ -577,8 +577,21 @@ public final class RevenueManager extends CFSModule {
     rtl.addItem(0, "--None--");
     context.getRequest().setAttribute("RevenueTypeList", rtl);
 
-    LookupList monthList = new LookupList(db, "lookup_months");
+    //LookupList monthList = new LookupList(db, "lookup_months");
+    //context.getRequest().setAttribute("MonthList", monthList);
+    
+    HtmlSelect monthList = new HtmlSelect();
+    monthList.setTypeUSMonths();
+    monthList.setSelectName("month");
     context.getRequest().setAttribute("MonthList", monthList);
+    
+    HtmlSelect yearList = new HtmlSelect();
+    yearList.setTypeYears(1990);
+    yearList.setSelectName("year");
+    context.getRequest().setAttribute("YearList", yearList);
+    
+    //LookupList yearList = new LookupList(db, "lookup_years");
+    //context.getRequest().setAttribute("YearList", yearList);
 
 /**
     LookupList emailTypeList = new LookupList(db, "lookup_contactemail_types");

@@ -293,8 +293,34 @@ public class HtmlSelect extends ArrayList {
 		this.addItem("AM");
 		this.addItem("PM");
 	}
-
-
+	
+	public void setTypeUSMonths() {
+		this.addItem(1, "January");
+		this.addItem(2, "February");
+		this.addItem(3, "March");
+		this.addItem(4, "April");
+		this.addItem(5, "May");
+		this.addItem(6, "June");
+		this.addItem(7, "July");
+		this.addItem(8, "August");
+		this.addItem(9, "September");
+		this.addItem(10, "October");
+		this.addItem(11, "November");
+		this.addItem(12, "December");
+	}
+	
+	public void setTypeYears(int bottomLimitYear) {
+		java.util.Date d = new java.util.Date();
+		java.util.Calendar iteratorDate = java.util.Calendar.getInstance();
+		
+		while (bottomLimitYear<=iteratorDate.get(java.util.Calendar.YEAR)) {
+			this.addItem("" + bottomLimitYear);
+			bottomLimitYear++;
+		}
+		
+		this.setDefaultValue("" + iteratorDate.get(java.util.Calendar.YEAR));
+	}
+	
 	/**
 	 *  Sets the JsEvent attribute of the HtmlSelect object
 	 *

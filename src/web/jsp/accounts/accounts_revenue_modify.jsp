@@ -3,7 +3,8 @@
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="Revenue" class="com.darkhorseventures.cfsbase.Revenue" scope="request"/>
 <jsp:useBean id="RevenueTypeList" class="com.darkhorseventures.cfsbase.RevenueTypeList" scope="request"/>
-<jsp:useBean id="MonthList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="MonthList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
+<jsp:useBean id="YearList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <form name="modify" action="/RevenueManager.do?command=Update&auto-populate=true&orgId=<%=Revenue.getOrgId()%>" method="post">
@@ -79,15 +80,15 @@
       Month
     </td>
     <td valign=center>
-      <%= MonthList.getHtmlSelect("month", Revenue.getMonth()) %>
+      <%= MonthList.getHtml() %>
     </td>
   </tr>
   <tr class="containerBody">
     <td width=125 nowrap class="formLabel">
-      4-digit Year
+      Year
     </td>
     <td valign=center>
-      <input maxlength=4 type=text size=5 name="year" value="<%=Revenue.getYear()%>">
+      <%= YearList.getHtml() %>
       <font color="red">*</font> <%= showAttribute(request, "yearError") %>
     </td>
   </tr>
