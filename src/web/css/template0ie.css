@@ -3,6 +3,7 @@ BODY  { font-family: verdana, arial, sans-serif; font-size: 8pt; background: whi
   .pagedlist { background: #D4D4D4; }
   
   .title { background: #DEE0FA; }
+  .warning { background: #FF3300; font-weight: bold; color: #FFFFFF }
   
   .containerHeader { background: #FFFF95; }
   .containerMenu { background: #F1F0E0; }
