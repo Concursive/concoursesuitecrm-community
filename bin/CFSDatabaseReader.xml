@@ -465,7 +465,7 @@
       <property lookup="account">orgId</property>
       <property>transactionId</property>
       <property>month</property>
-      <property>yeat</property>
+      <property>year</property>
       <property>amount</property>
       <property lookup="lookupRevenueTypes">type</property>
       <property lookup="user">owner</property>
