@@ -100,7 +100,9 @@ x.description asc, oc.closedate asc]]></queryString>
 	<field name="owner_first_name" class="java.lang.String"/>
 	<field name="owner_last_name" class="java.lang.String"/>
 	<variable name="groupcount" class="java.lang.Integer" resetType="Group" resetGroup="stagename" calculation="Nothing">
-		<variableExpression><![CDATA[new Integer( ($V{groupcount}.intValue() + 1) )]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
+		<variableExpression><![CDATA[($V{groupcount} != null ? 
+new Integer( ($V{groupcount}.intValue() + 1) ) :
+new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
 		<group  name="stagename" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="49" >
 			<groupExpression><![CDATA[$F{stagename}]]></groupExpression>
 			<groupHeader>
@@ -360,7 +362,7 @@ $P{user_name} + "\r\n" +
 						mode="Transparent"
 						x="360"
 						y="1"
-						width="54"
+						width="62"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -369,14 +371,14 @@ $P{user_name} + "\r\n" +
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[(new SimpleDateFormat("M/dd/yyyy")).format($F{closedate})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
-						x="425"
+						x="437"
 						y="1"
 						width="43"
 						height="15"
@@ -387,7 +389,7 @@ $P{user_name} + "\r\n" +
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[($F{closeprob}.doubleValue() * 100) + "%"]]></textFieldExpression>

@@ -46,7 +46,9 @@ ORDER BY type_desc, o.name]]></queryString>
 	<field name="org_entered" class="java.util.Date"/>
 	<field name="type_desc" class="java.lang.String"/>
 	<variable name="namecount" class="java.lang.Integer" resetType="Group" resetGroup="type_desc" calculation="Nothing">
-		<variableExpression><![CDATA[new Integer( ($V{namecount}.intValue() + 1) )]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
+		<variableExpression><![CDATA[($V{count} != null ? 
+new Integer( ($V{namecount}.intValue() + 1) ) :
+new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
 		<group  name="type_desc" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="52" >
 			<groupExpression><![CDATA[$F{type_desc}]]></groupExpression>
 			<groupHeader>

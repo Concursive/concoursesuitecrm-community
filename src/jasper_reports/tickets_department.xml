@@ -70,7 +70,9 @@ ORDER BY dept,t.entered]]></queryString>
 	<field name="fname" class="java.lang.String"/>
 	<field name="lname" class="java.lang.String"/>
 	<variable name="count" class="java.lang.Integer" resetType="Group" resetGroup="department" calculation="Nothing">
-		<variableExpression><![CDATA[new Integer($V{count}.intValue() + 1)]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
+		<variableExpression><![CDATA[($V{count} != null ? 
+new Integer($V{count}.intValue() + 1) :
+new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
 		<group  name="department" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="53" >
 			<groupExpression><![CDATA[$F{dept}]]></groupExpression>
 			<groupHeader>
