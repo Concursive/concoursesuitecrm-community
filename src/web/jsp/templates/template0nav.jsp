@@ -79,7 +79,7 @@
     Iterator i = ModuleBean.getMenuItems().iterator();
     while (i.hasNext()) {
     	SubmenuItem thisItem = (SubmenuItem)i.next();
-    	if (User.getSystemStatus(getServletConfig()).hasPermission(User.getUserId(), thisItem.getPermission())) {
+    	if ("".equals(thisItem.getPermission()) || User.getSystemStatus(getServletConfig()).hasPermission(User.getUserId(), thisItem.getPermission())) {
 %>
           <td height="25" align="center" valign="middle" width="0"><b><font color="#FFFFFF" size="1"><%= (thisItem.getAlternateHtml()) %></font></b></td>
           <td width="20">&nbsp;</td>
