@@ -15,13 +15,24 @@
 		 topMargin="20"
 		 bottomMargin="20"
 		 whenNoDataType="AllSectionsNoDetail"
+		 scriptletClass="org.aspcfs.utils.JasperScriptletUtils"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="2" />
 	<parameter name="ticketid" isForPrompting="true" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA[new Integer(7)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="path" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression><![CDATA["/home/ananth/source/crm/src/jasper_reports/"]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA["/home/esther/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="language" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["en"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="country" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="currency" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["USD"]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT t.ticketid, 
 t.problem AS issue, t.location, 
@@ -96,7 +107,8 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 	<field name="assgfirstname" class="java.lang.String"/>
 	<field name="dept" class="java.lang.String"/>
 	<variable name="res_assg" class="java.lang.String" resetType="Report" calculation="Nothing">
-		<variableExpression><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{assglastname}, $F{assgfirstname})]]></variableExpression>	</variable>
+		<variableExpression><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{assglastname}, $F{assgfirstname})]]></variableExpression>
+	</variable>
 		<group  name="primarycontact" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[null]]></groupExpression>
 			<groupHeader>
@@ -109,12 +121,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{lastname}, $F{firstname})]]></textFieldExpression>
@@ -127,12 +141,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{title}]]></textFieldExpression>
@@ -141,11 +157,13 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="4"
-						y="4"
+						y="6"
 						width="566"
-						height="15"
+						height="13"
 						forecolor="#000000"
 						backcolor="#000000"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -157,17 +175,19 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="6"
-						y="19"
+						y="21"
 						width="114"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Name]]></text>
@@ -176,17 +196,19 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="121"
-						y="19"
+						y="21"
 						width="93"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Title]]></text>
@@ -195,17 +217,19 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="216"
-						y="19"
+						y="21"
 						width="164"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Email]]></text>
@@ -219,6 +243,8 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -233,18 +259,20 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="6"
-						y="4"
-						width="148"
-						height="13"
+						x="4"
+						y="6"
+						width="566"
+						height="16"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Primary Contact]]></text>
@@ -253,17 +281,19 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="386"
-						y="19"
+						y="21"
 						width="181"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Phone]]></text>
@@ -277,6 +307,8 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -297,6 +329,8 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="48"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="rectangle"
+						stretchType="RelativeToBandHeight"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -324,6 +358,8 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="91"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -340,6 +376,8 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="111"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -353,9 +391,11 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						x="4"
 						y="5"
 						width="276"
-						height="15"
+						height="13"
 						forecolor="#000000"
 						backcolor="#000000"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -371,12 +411,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{location}]]></textFieldExpression>
@@ -389,12 +431,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ticpri}]]></textFieldExpression>
@@ -407,12 +451,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ticsev}]]></textFieldExpression>
@@ -425,12 +471,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{catname}]]></textFieldExpression>
@@ -443,12 +491,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{sourcename}]]></textFieldExpression>
@@ -461,12 +511,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{contractnumber}]]></textFieldExpression>
@@ -479,12 +531,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{serialnumber}]]></textFieldExpression>
@@ -492,18 +546,20 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="6"
-						y="4"
-						width="148"
-						height="13"
+						x="4"
+						y="5"
+						width="276"
+						height="16"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Ticket Information]]></text>
@@ -517,12 +573,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Ticket Source]]></text>
@@ -536,12 +594,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Service Contract #]]></text>
@@ -555,12 +615,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Asset Serial #]]></text>
@@ -574,12 +636,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Location]]></text>
@@ -593,12 +657,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Category]]></text>
@@ -612,12 +678,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Severity]]></text>
@@ -631,12 +699,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Priority]]></text>
@@ -650,12 +720,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Dept/Resource]]></text>
@@ -669,12 +741,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Assignment Date]]></text>
@@ -688,12 +762,14 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						height="26"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Estimated
@@ -707,12 +783,14 @@ Resolution Date]]></text>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[($F{dept} != null ? $F{dept} : "") + (($F{dept} != null && $V{res_assg} != null) ?  " / "  : "" ) + ($V{res_assg} != null ? $V{res_assg} : "")]]></textFieldExpression>
@@ -725,15 +803,17 @@ Resolution Date]]></text>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[(new SimpleDateFormat("M/dd/yyyy")).format($F{assigned_date})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLocaleFormat($F{assigned_date})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
@@ -743,25 +823,29 @@ Resolution Date]]></text>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[(new SimpleDateFormat("M/dd/yyyy")).format($F{est_resolution_date})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLocaleFormat($F{est_resolution_date})]]></textFieldExpression>
 				</textField>
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
-						x="4"
+						x="5"
 						y="119"
 						width="276"
-						height="15"
+						height="13"
 						forecolor="#000000"
 						backcolor="#000000"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -772,18 +856,20 @@ Resolution Date]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="6"
-						y="119"
-						width="148"
-						height="13"
+						x="5"
+						y="118"
+						width="276"
+						height="14"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Assignment Information]]></text>
@@ -797,6 +883,8 @@ Resolution Date]]></text>
 						height="16"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -811,12 +899,14 @@ Resolution Date]]></text>
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
-						x="284"
-						y="4"
+						x="283"
+						y="1"
 						width="287"
-						height="15"
+						height="13"
 						forecolor="#000000"
 						backcolor="#000000"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -827,18 +917,20 @@ Resolution Date]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="286"
-						y="4"
-						width="168"
-						height="13"
+						x="283"
+						y="1"
+						width="287"
+						height="16"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Documents]]></text>
@@ -852,6 +944,8 @@ Resolution Date]]></text>
 						height="16"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -860,6 +954,12 @@ Resolution Date]]></text>
 					<subreportParameter  name="ticketid">
 						<subreportParameterExpression><![CDATA[$F{ticketid}]]></subreportParameterExpression>
 					</subreportParameter>
+					<subreportParameter  name="country">
+						<subreportParameterExpression><![CDATA[$P{country}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="language">
+						<subreportParameterExpression><![CDATA[$P{language}]]></subreportParameterExpression>
+					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "ticket_tasks_subreport.jasper"]]></subreportExpression>
 				</subreport>
@@ -867,11 +967,13 @@ Resolution Date]]></text>
 					<reportElement
 						mode="Opaque"
 						x="284"
-						y="43"
+						y="42"
 						width="287"
-						height="15"
+						height="13"
 						forecolor="#000000"
 						backcolor="#000000"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -882,18 +984,20 @@ Resolution Date]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="286"
-						y="43"
-						width="168"
-						height="13"
+						x="283"
+						y="42"
+						width="287"
+						height="16"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="true"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Tasks]]></text>
@@ -913,11 +1017,13 @@ Resolution Date]]></text>
 					<reportElement
 						mode="Opaque"
 						x="5"
-						y="2"
+						y="4"
 						width="565"
-						height="15"
+						height="13"
 						forecolor="#000000"
 						backcolor="#000000"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -928,18 +1034,20 @@ Resolution Date]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="7"
-						y="2"
-						width="145"
-						height="13"
+						x="6"
+						y="4"
+						width="564"
+						height="16"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Issue]]></text>
@@ -948,17 +1056,19 @@ Resolution Date]]></text>
 					<reportElement
 						mode="Transparent"
 						x="8"
-						y="18"
+						y="21"
 						width="93"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Issue]]></text>
@@ -966,17 +1076,19 @@ Resolution Date]]></text>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="109"
-						y="18"
+						y="21"
 						width="457"
-						height="14"
+						height="11"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="false"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{issue}]]></textFieldExpression>
@@ -990,6 +1102,8 @@ Resolution Date]]></text>
 						height="30"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="RelativeToBandHeight"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1006,6 +1120,8 @@ Resolution Date]]></text>
 						height="30"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="RelativeToTallestObject"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1023,7 +1139,7 @@ Resolution Date]]></text>
 		<group  name="cause" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[null]]></groupExpression>
 			<groupHeader>
-			<band height="23"  isSplitAllowed="true" >
+			<band height="21"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						mode="Transparent"
@@ -1033,12 +1149,14 @@ Resolution Date]]></text>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="true"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Cause]]></text>
@@ -1051,12 +1169,14 @@ Resolution Date]]></text>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="false"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="true"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{cause}]]></textFieldExpression>
@@ -1070,6 +1190,8 @@ Resolution Date]]></text>
 						height="19"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="RelativeToTallestObject"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1086,6 +1208,8 @@ Resolution Date]]></text>
 						height="19"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="RelativeToTallestObject"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1102,6 +1226,8 @@ Resolution Date]]></text>
 						height="0"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1126,9 +1252,11 @@ Resolution Date]]></text>
 						x="6"
 						y="3"
 						width="565"
-						height="15"
+						height="13"
 						forecolor="#000000"
 						backcolor="#000000"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1145,6 +1273,8 @@ Resolution Date]]></text>
 						height="30"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="RelativeToBandHeight"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1161,6 +1291,8 @@ Resolution Date]]></text>
 						height="30"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="RelativeToTallestObject"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1177,12 +1309,14 @@ Resolution Date]]></text>
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Resolution]]></text>
@@ -1195,12 +1329,14 @@ Resolution Date]]></text>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="false"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{solution}]]></textFieldExpression>
@@ -1208,18 +1344,20 @@ Resolution Date]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="8"
+						x="6"
 						y="3"
-						width="145"
-						height="13"
+						width="565"
+						height="16"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Resolution]]></text>
@@ -1244,12 +1382,14 @@ Resolution Date]]></text>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="true"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Resoultion Date]]></text>
@@ -1262,15 +1402,17 @@ Resolution Date]]></text>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="false"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="true"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[(new SimpleDateFormat("M/dd/yyyy")).format($F{resolution_date})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLocaleFormat($F{resolution_date})]]></textFieldExpression>
 				</textField>
 				<line direction="TopDown">
 					<reportElement
@@ -1281,6 +1423,8 @@ Resolution Date]]></text>
 						height="19"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="RelativeToTallestObject"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1297,6 +1441,8 @@ Resolution Date]]></text>
 						height="19"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="RelativeToTallestObject"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1313,6 +1459,8 @@ Resolution Date]]></text>
 						height="0"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1340,6 +1488,8 @@ Resolution Date]]></text>
 						height="15"
 						forecolor="#000000"
 						backcolor="#000000"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1351,11 +1501,13 @@ Resolution Date]]></text>
 					<reportElement
 						mode="Opaque"
 						x="4"
-						y="3"
+						y="5"
 						width="565"
-						height="71"
+						height="69"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="rectangle"
+						stretchType="RelativeToTallestObject"
 						positionType="Float"
 						isPrintRepeatedValues="false"
 						isRemoveLineWhenBlank="false"
@@ -1366,18 +1518,20 @@ Resolution Date]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="5"
-						y="4"
+						x="4"
+						y="3"
 						width="565"
 						height="14"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Acceptance of Work Completed]]></text>
@@ -1391,12 +1545,14 @@ Resolution Date]]></text>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Have our services met or exceeded your expectations ?]]></text>
@@ -1410,12 +1566,14 @@ Resolution Date]]></text>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="true"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Customer Signature:]]></text>
@@ -1429,12 +1587,14 @@ Resolution Date]]></text>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="true"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Engineer Signature:]]></text>
@@ -1448,12 +1608,14 @@ Resolution Date]]></text>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="true"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Date:]]></text>
@@ -1467,12 +1629,14 @@ Resolution Date]]></text>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="true"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Date:]]></text>
@@ -1486,6 +1650,8 @@ Resolution Date]]></text>
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1493,27 +1659,11 @@ Resolution Date]]></text>
 						isPrintWhenDetailOverflows="false">
 							<printWhenExpression><![CDATA[new Boolean($F{expectation} == null ||($F{expectation}).intValue() == 1 || ($F{expectation}).intValue() == -1)]]></printWhenExpression>
 						</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Yes]]></text>
 				</staticText>
-				<line direction="TopDown">
-					<reportElement
-						mode="Opaque"
-						x="683"
-						y="57"
-						width="1"
-						height="0"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
-				</line>
 				<staticText>
 					<reportElement
 						mode="Opaque"
@@ -1523,6 +1673,8 @@ Resolution Date]]></text>
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1530,7 +1682,7 @@ Resolution Date]]></text>
 						isPrintWhenDetailOverflows="false">
 							<printWhenExpression><![CDATA[new Boolean($F{expectation} == null ||($F{expectation}).intValue() == 0 || ($F{expectation}).intValue() == -1)]]></printWhenExpression>
 						</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[No]]></text>
@@ -1544,6 +1696,8 @@ Resolution Date]]></text>
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1551,7 +1705,7 @@ Resolution Date]]></text>
 						isPrintWhenDetailOverflows="false">
 							<printWhenExpression><![CDATA[new Boolean($F{expectation} == null ||($F{expectation}).intValue() == -1)]]></printWhenExpression>
 						</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Undecided]]></text>
@@ -1576,6 +1730,8 @@ Resolution Date]]></text>
 						height="19"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="false"
 						isRemoveLineWhenBlank="false"
@@ -1588,6 +1744,12 @@ Resolution Date]]></text>
 					</subreportParameter>
 					<subreportParameter  name="path">
 						<subreportParameterExpression><![CDATA[$P{path}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="country">
+						<subreportParameterExpression><![CDATA[$P{country}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="language">
+						<subreportParameterExpression><![CDATA[$P{language}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "ticket_activity_log_subreport.jasper"]]></subreportExpression>
@@ -1612,6 +1774,8 @@ Resolution Date]]></text>
 						height="19"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1624,6 +1788,12 @@ Resolution Date]]></text>
 					</subreportParameter>
 					<subreportParameter  name="path">
 						<subreportParameterExpression><![CDATA[$P{path}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="country">
+						<subreportParameterExpression><![CDATA[$P{country}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="language">
+						<subreportParameterExpression><![CDATA[$P{language}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "ticket_maintenance_log_subreport.jasper"]]></subreportExpression>
@@ -1648,6 +1818,8 @@ Resolution Date]]></text>
 						height="19"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1658,6 +1830,12 @@ Resolution Date]]></text>
 					</subreportParameter>
 					<subreportParameter  name="path">
 						<subreportParameterExpression><![CDATA[$P{path}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="country">
+						<subreportParameterExpression><![CDATA[$P{country}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="language">
+						<subreportParameterExpression><![CDATA[$P{language}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "ticket_history_subreport.jasper"]]></subreportExpression>
@@ -1683,12 +1861,14 @@ Resolution Date]]></text>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{ticketid}]]></textFieldExpression>
@@ -1701,12 +1881,14 @@ Resolution Date]]></text>
 						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="14" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{myorgname}]]></textFieldExpression>
@@ -1719,12 +1901,14 @@ Resolution Date]]></text>
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{customername}]]></textFieldExpression>
@@ -1738,12 +1922,14 @@ Resolution Date]]></text>
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Ticket #]]></text>
@@ -1757,12 +1943,14 @@ Resolution Date]]></text>
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Account Name]]></text>
@@ -1771,17 +1959,19 @@ Resolution Date]]></text>
 					<reportElement
 						mode="Transparent"
 						x="7"
-						y="50"
+						y="51"
 						width="92"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Account #]]></text>
@@ -1789,17 +1979,19 @@ Resolution Date]]></text>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="108"
-						y="50"
+						y="51"
 						width="107"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{accountnumber}]]></textFieldExpression>
@@ -1810,9 +2002,11 @@ Resolution Date]]></text>
 						x="4"
 						y="36"
 						width="276"
-						height="15"
+						height="13"
 						forecolor="#000000"
 						backcolor="#000000"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1823,18 +2017,20 @@ Resolution Date]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="5"
+						x="4"
 						y="36"
-						width="148"
-						height="13"
+						width="276"
+						height="16"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Account Information]]></text>
@@ -1847,12 +2043,14 @@ Resolution Date]]></text>
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst(null, $F{modifiedbyfirstname}) + " " + ((java.text.SimpleDateFormat) java.text.SimpleDateFormat.getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.LONG)).format($F{modified})]]></textFieldExpression>
@@ -1866,12 +2064,14 @@ Resolution Date]]></text>
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Last Modified]]></text>
@@ -1880,17 +2080,19 @@ Resolution Date]]></text>
 					<reportElement
 						mode="Transparent"
 						x="287"
-						y="50"
+						y="51"
 						width="68"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Date Entered]]></text>
@@ -1898,17 +2100,19 @@ Resolution Date]]></text>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="357"
-						y="50"
+						y="51"
 						width="209"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst(null, $F{enteredbyfirstname}) + " " + ((java.text.SimpleDateFormat) java.text.SimpleDateFormat.getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.LONG)).format($F{entered})]]></textFieldExpression>
@@ -1919,9 +2123,11 @@ Resolution Date]]></text>
 						x="284"
 						y="36"
 						width="286"
-						height="15"
+						height="13"
 						forecolor="#000000"
 						backcolor="#000000"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -1932,18 +2138,20 @@ Resolution Date]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="285"
+						x="284"
 						y="36"
-						width="148"
-						height="13"
+						width="286"
+						height="16"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Record Information]]></text>
@@ -1957,12 +2165,14 @@ Resolution Date]]></text>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Call Status:]]></text>
@@ -1975,12 +2185,14 @@ Resolution Date]]></text>
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[($F{closed} != null ? "Closed" : "Open")]]></textFieldExpression>
@@ -1994,6 +2206,8 @@ Resolution Date]]></text>
 						height="45"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -2010,6 +2224,8 @@ Resolution Date]]></text>
 						height="45"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -2040,7 +2256,7 @@ Resolution Date]]></text>
 			</band>
 		</pageFooter>
 		<summary>
-			<band height="0"  isSplitAllowed="true" >
+			<band height="7"  isSplitAllowed="true" >
 			</band>
 		</summary>
 </jasperReport>

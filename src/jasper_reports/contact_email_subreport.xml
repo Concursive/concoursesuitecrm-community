@@ -17,8 +17,9 @@
 		 whenNoDataType="NoPages"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="2" />
 	<parameter name="contact_id" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(25497)]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA[new Integer(25497)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT 
 c_email.*,
@@ -54,12 +55,14 @@ AND c_email.contact_id = $P{contact_id}]]></queryString>
 						height="14"
 						forecolor="#3333FF"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{email_type}]]></textFieldExpression>
@@ -72,12 +75,14 @@ AND c_email.contact_id = $P{contact_id}]]></queryString>
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{email}]]></textFieldExpression>

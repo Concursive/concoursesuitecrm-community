@@ -17,6 +17,7 @@
 		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="2" />
 	<parameter name="acct_id" isForPrompting="false" class="java.lang.Integer"/>
 	<queryString><![CDATA[SELECT
 lat.description as type_desc,
@@ -30,7 +31,9 @@ WHERE o.org_id = $P{acct_id}]]></queryString>
 	<variable name="acct_type" class="java.lang.String" resetType="Group" resetGroup="account" calculation="Nothing">
 		<variableExpression><![CDATA[$V{acct_type} != null ?
 $V{acct_type} + ($V{acct_type}.length() > 0 ? ", " : "") + ($F{type_desc} != null ? $F{type_desc} : "") :
-""]]></variableExpression>		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
+""]]></variableExpression>
+		<initialValueExpression><![CDATA[""]]></initialValueExpression>
+	</variable>
 		<group  name="account" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$F{org_id}]]></groupExpression>
 			<groupHeader>
@@ -47,12 +50,14 @@ $V{acct_type} + ($V{acct_type}.length() > 0 ? ", " : "") + ($F{type_desc} != nul
 						height="18"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$V{acct_type}]]></textFieldExpression>

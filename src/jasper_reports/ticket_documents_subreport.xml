@@ -17,11 +17,12 @@
 		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="2" />
 	<parameter name="ticketid" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(6)]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA[new Integer(6)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="moduleid" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(org.aspcfs.modules.base.Constants.DOCUMENTS_TICKETS)]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA[new Integer(org.aspcfs.modules.base.Constants.DOCUMENTS_TICKETS)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT link_item_id, link_module_id, client_filename, subject, size
 FROM project_files
@@ -55,12 +56,14 @@ AND link_item_id = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Item]]></text>
@@ -74,12 +77,14 @@ AND link_item_id = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Subject]]></text>
@@ -93,12 +98,14 @@ AND link_item_id = $P{ticketid}]]></queryString>
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Size]]></text>
@@ -112,6 +119,8 @@ AND link_item_id = $P{ticketid}]]></queryString>
 						height="0"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -131,12 +140,14 @@ AND link_item_id = $P{ticketid}]]></queryString>
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{client_filename}]]></textFieldExpression>
@@ -149,12 +160,14 @@ AND link_item_id = $P{ticketid}]]></queryString>
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{subject}]]></textFieldExpression>
@@ -167,12 +180,14 @@ AND link_item_id = $P{ticketid}]]></queryString>
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{size}]]></textFieldExpression>
@@ -186,6 +201,8 @@ AND link_item_id = $P{ticketid}]]></queryString>
 						height="0"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"

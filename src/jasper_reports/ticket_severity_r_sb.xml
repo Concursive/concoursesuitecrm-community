@@ -17,21 +17,21 @@
 		 whenNoDataType="NoPages"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="2" />
 	<reportFont name="Arial_Normal" isDefault="true" fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 	<reportFont name="Arial_Bold" isDefault="false" fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 	<reportFont name="Arial_Italic" isDefault="false" fontName="Arial" size="12" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 	<parameter name="date_start" isForPrompting="true" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Entered Date from]]></parameterDescription>
-		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2002-10-01 00:00:00")]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA[java.sql.Timestamp.valueOf("2002-10-01 00:00:00")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="date_end" isForPrompting="true" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Entered Date to]]></parameterDescription>
-		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2003-10-01 00:00:00")]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA[java.sql.Timestamp.valueOf("2003-10-01 00:00:00")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="lookup_department" isForPrompting="true" class="java.lang.Integer"/>
 	<parameter name="path" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression><![CDATA["/home/aravind/jasper/sb1/"
-]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA["/home/esther/"]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[select code as ticket_severity, 
 description as ticket_description 
@@ -61,6 +61,8 @@ from ticket_severity;]]></queryString>
 						height="15"
 						forecolor="#CCCCCC"
 						backcolor="#CCCCCC"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -77,12 +79,14 @@ from ticket_severity;]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Total]]></text>
@@ -96,12 +100,14 @@ from ticket_severity;]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Closed]]></text>
@@ -115,12 +121,14 @@ from ticket_severity;]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Ticket Severity]]></text>
@@ -134,12 +142,14 @@ from ticket_severity;]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Opened]]></text>
@@ -156,12 +166,14 @@ from ticket_severity;]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font reportFont="Arial_Bold" pdfFontName="Helvetica" size="10" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ticket_description}]]></textFieldExpression>
@@ -175,6 +187,8 @@ from ticket_severity;]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -204,6 +218,8 @@ from ticket_severity;]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -233,6 +249,8 @@ from ticket_severity;]]></queryString>
 						height="0"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"

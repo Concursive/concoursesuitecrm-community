@@ -15,10 +15,18 @@
 		 topMargin="0"
 		 bottomMargin="0"
 		 whenNoDataType="AllSectionsNoDetail"
+		 scriptletClass="org.aspcfs.utils.JasperScriptletUtils"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="2" />
 	<parameter name="ticketid" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA[new Integer(1)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="country" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="language" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["en"]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT t.task_id,
 priority, description, 
@@ -55,12 +63,14 @@ WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Task]]></text>
@@ -74,12 +84,14 @@ WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Assigned To]]></text>
@@ -93,12 +105,14 @@ WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Due Date]]></text>
@@ -112,6 +126,8 @@ WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id
 						height="0"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -131,12 +147,14 @@ WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id
 						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{description}]]></textFieldExpression>
@@ -149,12 +167,14 @@ WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id
 						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{lastname}, $F{firstname})]]></textFieldExpression>
@@ -167,15 +187,17 @@ WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id
 						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[(new SimpleDateFormat("M/dd/yyyy")).format($F{duedate})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLocaleFormat($F{duedate})]]></textFieldExpression>
 				</textField>
 				<line direction="TopDown">
 					<reportElement
@@ -186,6 +208,8 @@ WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id
 						height="0"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"

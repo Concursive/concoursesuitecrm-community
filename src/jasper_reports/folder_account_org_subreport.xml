@@ -17,14 +17,15 @@
 		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="2" />
 	<parameter name="user_name" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression><![CDATA["Matt Rajkowski"]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA["Matt Rajkowski"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="org_id" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression><![CDATA["86"]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA["86"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="path" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression><![CDATA["/home/ananth/source/cfs2/src/jasper_reports/"]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA["/home/ananth/source/cfs2/src/jasper_reports/"]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[select cfc.category_name AS category_name, cfr.record_id AS record_id 
 	 FROM custom_field_record cfr
@@ -62,6 +63,8 @@
 						height="15"
 						forecolor="#8080FF"
 						backcolor="#CCCCCC"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -77,12 +80,14 @@
 						height="15"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{category_name}]]></textFieldExpression>
@@ -96,6 +101,8 @@
 						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -116,6 +123,8 @@
 						height="0"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -132,6 +141,8 @@
 						height="14"
 						forecolor="#8080FF"
 						backcolor="#DFDDDD"
+						key="rectangle"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -148,12 +159,14 @@
 						height="13"
 						forecolor="#000000"
 						backcolor="#000000"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Field name]]></text>
@@ -166,12 +179,14 @@
 						height="13"
 						forecolor="#000000"
 						backcolor="#000000"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Helvetica-Bold" size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[" :"]]></textFieldExpression>
@@ -185,12 +200,14 @@
 						height="13"
 						forecolor="#000000"
 						backcolor="#000000"
+						key="staticText"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="9" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Value]]></text>

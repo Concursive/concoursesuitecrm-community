@@ -17,11 +17,12 @@
 		 whenNoDataType="NoPages"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="2" />
 	<parameter name="org_id" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(2)]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA[new Integer(2)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="path" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression><![CDATA["/home/matt/source/dhv/cfs2/src/jasper_reports/new/"]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA["/home/esther/"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="WhereClause" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT 
@@ -39,11 +40,37 @@ AND (con.status_id IS NULL OR con.status_id = 7)]]></queryString>
 	<field name="contact_id" class="java.lang.Integer"/>
 	<field name="title" class="java.lang.String"/>
 	<variable name="address" class="java.lang.String" resetType="Page" calculation="Nothing">
-		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
+		<initialValueExpression><![CDATA[""]]></initialValueExpression>
+	</variable>
+	<variable name="cont_types" class="java.lang.String" resetType="Group" resetGroup="contactName" calculation="Nothing">
+		<variableExpression><![CDATA[($V{cont_types} != null ? ($V{cont_types} + ($V{cont_types}.length() > 0 ? ", " : "") + ($F{contact_type} != null ? $F{contact_type} : "")) : "")]]></variableExpression>
+		<initialValueExpression><![CDATA[""]]></initialValueExpression>
+	</variable>
 		<group  name="contactName" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$F{contact_id}]]></groupExpression>
 			<groupHeader>
 			<band height="38"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="contactName"  hyperlinkType="None" >					<reportElement
+						mode="Opaque"
+						x="232"
+						y="0"
+						width="106"
+						height="35"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						printWhenGroupChanges="contactName"
+						isPrintWhenDetailOverflows="true"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{cont_types}]]></textFieldExpression>
+				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="contactName"  hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="4"
@@ -52,13 +79,15 @@ AND (con.status_id IS NULL OR con.status_id = 7)]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						printWhenGroupChanges="contactName"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{namelast}, $F{namefirst})]]></textFieldExpression>
@@ -72,6 +101,8 @@ AND (con.status_id IS NULL OR con.status_id = 7)]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -92,6 +123,8 @@ AND (con.status_id IS NULL OR con.status_id = 7)]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -111,13 +144,15 @@ AND (con.status_id IS NULL OR con.status_id = 7)]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						printWhenGroupChanges="contactName"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{title}]]></textFieldExpression>
@@ -131,6 +166,8 @@ AND (con.status_id IS NULL OR con.status_id = 7)]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -151,6 +188,8 @@ AND (con.status_id IS NULL OR con.status_id = 7)]]></queryString>
 						height="0"
 						forecolor="#999999"
 						backcolor="#FFFFFF"
+						key="line"
+						stretchType="NoStretch"
 						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
@@ -167,6 +206,8 @@ AND (con.status_id IS NULL OR con.status_id = 7)]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="subreport"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"

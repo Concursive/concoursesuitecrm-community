@@ -17,8 +17,9 @@
 		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="2" />
 	<parameter name="contact_id" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(2)]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA[new Integer(2)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT  con.contact_id as contact,
 lct.description as contact_type
@@ -29,7 +30,9 @@ WHERE con.contact_id = $P{contact_id}]]></queryString>
 	<field name="contact" class="java.lang.Integer"/>
 	<field name="contact_type" class="java.lang.String"/>
 	<variable name="cont_types" class="java.lang.String" resetType="Group" resetGroup="contact" calculation="Nothing">
-		<variableExpression><![CDATA[($V{cont_types} != null ? ($V{cont_types} + ($V{cont_types}.length() > 0 ? ", " : "") + ($F{contact_type} != null ? $F{contact_type} : "")) : "")]]></variableExpression>		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
+		<variableExpression><![CDATA[($V{cont_types} != null ? ($V{cont_types} + ($V{cont_types}.length() > 0 ? ", " : "") + ($F{contact_type} != null ? $F{contact_type} : "")) : "")]]></variableExpression>
+		<initialValueExpression><![CDATA[""]]></initialValueExpression>
+	</variable>
 		<group  name="contact" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$F{contact}]]></groupExpression>
 			<groupHeader>
@@ -46,12 +49,14 @@ WHERE con.contact_id = $P{contact_id}]]></queryString>
 						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$V{cont_types}]]></textFieldExpression>

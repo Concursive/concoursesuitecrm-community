@@ -164,13 +164,9 @@ public class ParameterList extends ArrayList {
         }
         if (param.getName().startsWith("date_")) {
           Timestamp tmpTimestamp = DateUtils.getUserToServerDateTime(TimeZone.getTimeZone(UserUtils.getUserTimeZone(request)), DateFormat.SHORT, DateFormat.LONG, param.getValue(), UserUtils.getUserLocale(request));
-          Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(UserUtils.getUserTimeZone(request)), UserUtils.getUserLocale(request));
-          cal.setTime(tmpTimestamp);
-          String month = String.valueOf(cal.get(Calendar.MONTH) + 1);
-          String day = String.valueOf(cal.get(Calendar.DATE));
-          String date = (month.length() == 1 ? ("0" + month) : month) + "/" +
-              (day.length() == 1 ? ("0" + day) : day) + "/" +
-              String.valueOf(cal.get(Calendar.YEAR));
+          SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+              DateFormat.SHORT, Locale.getDefault());
+          String date = formatter.format(tmpTimestamp);
           param.setValue(date);
         }
       }

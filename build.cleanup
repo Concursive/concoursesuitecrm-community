@@ -58,3 +58,6 @@ WEB-INF/lib/jtds.jar
 ## 2004-08-05 i18n and validation fixes
 troubletickets/troubletickets_add_activity_include.jsp
 
+## 2004-09-01 updated reports to 0.5.3
+WEB-INF/lib/jasperreports.jar
+

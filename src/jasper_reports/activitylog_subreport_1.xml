@@ -17,8 +17,9 @@
 		 whenNoDataType="NoPages"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="2" />
 	<parameter name="service_contract_id" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA[new Integer(1)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT 
 sch.adjustment_hours AS hours_purch
@@ -26,7 +27,9 @@ FROM service_contract_hours sch
 where sch.link_contract_id = $P{service_contract_id}]]></queryString>
 	<field name="hours_purch" class="java.lang.Double"/>
 	<variable name="hrs_pos" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{hours_purch} == null || $F{hours_purch}.doubleValue() == 0.0 ? new Double(0.0) : $F{hours_purch} ]]></variableExpression>		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>	</variable>
+		<variableExpression><![CDATA[$F{hours_purch} == null || $F{hours_purch}.doubleValue() == 0.0 ? new Double(0.0) : $F{hours_purch} ]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+	</variable>
 		<background>
 			<band height="0"  isSplitAllowed="true" >
 			</band>
@@ -65,12 +68,14 @@ where sch.link_contract_id = $P{service_contract_id}]]></queryString>
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{hrs_pos}]]></textFieldExpression>

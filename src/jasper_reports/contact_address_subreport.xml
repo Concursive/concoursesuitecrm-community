@@ -17,6 +17,7 @@
 		 whenNoDataType="NoPages"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="2" />
 	<parameter name="contact_id" isForPrompting="false" class="java.lang.Integer"/>
 	<queryString><![CDATA[SELECT 
 c_addr.*,
@@ -38,8 +39,10 @@ AND c_addr.contact_id = $P{contact_id}]]></queryString>
 (($F{addrline3} != null && !$F{addrline3}.equals("")) ? "\n" + $F{addrline3}:"") +  
 (($F{city} != null && !$F{city}.equals("")) ? "\n" + $F{city}:"") +
 (($F{state} != null && !$F{state}.equals("")) ? ", " + $F{state}:"") +
-(($F{postalcode} != null && !$F{postalcode}.equals("")) ? " " + $F{postalcode}:"") +
-(($F{country} != null && !$F{country}.equals("")) ? "\n" + $F{country}:"")]]></variableExpression>		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
+(($F{postalcode} != null && !$F{postalcode}.equals("")) ? " - " + $F{postalcode}:"") +
+(($F{country} != null && !$F{country}.equals("")) ? "\n" + $F{country}:"")]]></variableExpression>
+		<initialValueExpression><![CDATA[""]]></initialValueExpression>
+	</variable>
 		<background>
 			<band height="0"  isSplitAllowed="true" >
 			</band>
@@ -66,12 +69,14 @@ AND c_addr.contact_id = $P{contact_id}]]></queryString>
 						height="12"
 						forecolor="#3333FF"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[(($F{addr_type} != null && !$F{addr_type}.equals("")) ? $F{addr_type} + " address " : "")]]></textFieldExpression>
@@ -84,12 +89,14 @@ AND c_addr.contact_id = $P{contact_id}]]></queryString>
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
+						key="textField"
+						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$V{address}]]></textFieldExpression>
