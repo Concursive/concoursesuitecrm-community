@@ -79,6 +79,7 @@ function updateOperators(){
 	} else if (document.searchForm.fieldSelect.selectedIndex == 3) {
 		javascript:HideSpan('new0');
 		javascript:ShowSpan('new1');
+		document.searchForm.searchValue.value = "";
 	} else {
 		javascript:HideSpan('new0');
 		javascript:HideSpan('new1');
@@ -108,11 +109,10 @@ function addValues(){
 	operatorID = operatorList.options[operatorList.selectedIndex].value
 	searchText = document.searchForm.searchValue.value;
 	
-	typeValue = document.searchForm.typeId.value;
-	
+	var typeValue = document.searchForm.typeId.value;
 	var newOption = fieldName + " (" + operatorName + ") " + searchText;
 	
-	if (typeValue == "") {
+	if (document.searchForm.fieldSelect.selectedIndex != 7) {
 		var newCriteria = fieldID  + "|" + operatorID + "|" + searchText;
 	} else {
 		var newCriteria = fieldID + "|" + operatorID + "|" + typeValue;
@@ -132,8 +132,8 @@ function addValues(){
 		
 	searchCriteria[searchCriteria.length] = newCriteria;
 	//reset(this.form)
-  document.searchForm.searchValue.value = document.searchForm.searchValue.defaultValue;
-  document.searchForm.searchValue.focus();
+	document.searchForm.searchValue.value = document.searchForm.searchValue.defaultValue;
+	document.searchForm.searchValue.focus();
 }
 
 function removeValues(){
