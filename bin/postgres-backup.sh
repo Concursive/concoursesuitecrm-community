@@ -1,31 +1,33 @@
 #!/bin/sh
 
-GZIP=/bin/gzip
+DATA_BASE=$1
+
 BKUP_DIR=/home/backup/DB_BACKUP
 
-DB_VERSION=$1
-DATA_HOST=$2
-DATA_BASE=$3
-WEEK_DAY=$4
+BZIP2=/usr/bin/bzip2
+GZIP=/bin/gzip
+PG_DUMP=/usr/bin/pg_dump
+PG_DUMPALL=/usr/bin/pg_dumpall
 
-# Options for PostgreSQL 7.3+
+DATE=`date +%Y%m%d`
+MONTH=`date +%Y%m`
+WEEK_DAY=`date +%a`
+ 
 PG_OPTS=-D
-# Options for older versions...
-if [ "$DATA_BASE" == '723' ] ; then
-  PG_OPTS=-NOD
+
+if [ -z $DATA_BASE ] ; then
+  echo "Usage: postgres-backup [all|database name]"
+  exit
 fi
 
-
-/bin/mkdir -p ${BKUP_DIR}/${DATA_HOST}
+/bin/mkdir -p ${BKUP_DIR}
 
 # All databases
 if [ "$DATA_BASE" == 'all' ] ; then
-  PG_DUMP=/var/lib/pgsql/pg_dumpall${DB_VERSION}
-  $PG_DUMP $PG_OPTS --ignore-version -h $DATA_HOST| $GZIP > ${BKUP_DIR}/${DATA_HOST}/database_${WEEK_DAY}.gz 
+  $PG_DUMPALL $PG_OPTS | $BZIP2 > ${BKUP_DIR}/database_all_${WEEK_DAY}.bz2
 fi
 
 # Specific database
 if [ "$DATA_BASE" != 'all' ] ; then
-  PG_DUMP=/var/lib/pgsql/pg_dump${DB_VERSION}
-  $PG_DUMP $PG_OPTS --ignore-version -h $DATA_HOST $DATA_BASE | $GZIP > ${BKUP_DIR}/${DATA_HOST}/${DATA_BASE}_${WEEK_DAY}.gz 
+  $PG_DUMP $PG_OPTS $DATA_BASE | $BZIP2 > ${BKUP_DIR}/${DATA_BASE}_${WEEK_DAY}.bz2
 fi
