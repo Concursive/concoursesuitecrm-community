@@ -50,13 +50,9 @@
       <permission name="pipeline-reports" attributes="va-d" description="Export Opportunity Data"/>
       <permission name="pipeline-opportunities-calls" attributes="vaed" description="Calls"/>
       <permission name="pipeline-opportunities-documents" attributes="vaed" description="Documents"/>
-      <report file="opportunity_pipeline.xml" type="user" permission="pipeline-opportunities" title="Opportunity Pipeline" description="What are my upcoming opportunities by stage?"/>
-      <!--
-      <report file="opportunity_types.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Type" description="What types of opportunities are available?"/>
-      <report file="opportunity_types.xml" type="admin" permission="pipeline-opportunities" title="Opportunities by Type" description="What types of opportunities are available?"/>
-      -->
+      <report file="opportunity_pipeline.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Stage" description="What are my upcoming opportunities by stage?"/>
     </category>
-    <category id="1" name="Account Management" folders="true" lookups="true">
+    <category id="1" name="Account Management" folders="true" lookups="true" reports="true">
       <folder constantId="1" description="Accounts"/>
       <lookup constantId="1" class="lookupList" table="lookup_account_types" description="Account Types"/>
       <lookup constantId="2" class="lookupList" table="lookup_revenue_types" description="Revenue Types"/>
@@ -77,6 +73,9 @@
       <permission name="accounts-autoguide-inventory" attributes="vaed" description="Auto Guide Vehicle Inventory" enabled="false"/>
       <permission name="accounts-accounts-tickets-documents" attributes="vaed" description="Ticket Documents"/>
       <permission name="accounts-accounts-tickets-tasks" attributes="vaed" description="Ticket Tasks"/>
+      <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Accounts by Type" description="What are my accounts by type?"/>
+      <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Accounts by Date Added" description="What are my recent accounts?"/>
+      <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="What accounts are expiring?"/>
     </category>
     <category id="3" name="Auto Guide" folders="false" lookups="false" enabled="false">
       <permission name="autoguide" attributes="v---" description="Access to the Auto Guide module"/>
@@ -104,6 +103,7 @@
       <permission name="tickets-tickets" attributes="vaed" description="Ticket Records"/>
       <permission name="tickets-reports" attributes="vaed" description="Export Ticket Data"/>
       <permission name="tickets-tickets-tasks" attributes="vaed" description="Tasks"/>
+      <report file="tickets_department.xml" type="user" permission="tickets-tickets" title="Tickets by Department" description="What tickets are there in each department?"/>
     </category>
     <category id="16" name="Reports" folders="false" lookups="false">
       <permission name="reports" attributes="v---" description="Access to Reports module"/>

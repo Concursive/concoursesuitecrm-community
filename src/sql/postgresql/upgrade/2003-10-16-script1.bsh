@@ -1,0 +1,41 @@
+/* Install a jasper report script
+ * - The .xml will be copied by ant
+ * - This script inserts the report into the database so users can use it
+ */
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.reports.base.Report;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.admin.base.Permission;
+
+//Set these and the rest will insert the new report
+String filename = "accounts_type.xml";
+String moduleName = "Account Management";
+String permissionName = "accounts-accounts";
+int typeId = 1;//not implemented as of this date
+String title = "Accounts by Type";
+String description = "What are my accounts by type?";
+
+//Check to see if report already exists
+int reportId = Report.lookupId(db, filename);
+if (reportId == -1) {
+  //Get the report category id for which this report will be listed as
+  int categoryId = PermissionCategory.lookupId(db, moduleName);
+  //Update the category report capability
+  PermissionCategory.updateReportAttribute(db, categoryId, true);
+  //Get the permission id for accessing this report
+  int permissionId = Permission.lookupId(db, permissionName);
+  //Insert the report
+  Report report = new Report();
+  report.setCategoryId(categoryId);
+  report.setPermissionId(permissionId);
+  report.setFilename(filename);
+  report.setType(typeId);
+  report.setTitle(title);
+  report.setDescription(description);
+  report.setEnteredBy(0);
+  report.setModifiedBy(0);
+  report.insert(db);
+  print("Report inserted: " + filename);
+} else {
+  print("Report already exists: " + filename);
+}
