@@ -439,4 +439,18 @@
       <required>no</required>
     </attribute>
   </tag>
+  
+  <tag>
+    <name>filesize</name> 
+    <tag-class>org.aspcfs.taglib.FileSizeHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Display bytes in a user-friendly way
+    </display-name>
+    <attribute>
+      <name>bytes</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
 </taglib>
