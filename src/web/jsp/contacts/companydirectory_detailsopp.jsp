@@ -69,23 +69,26 @@ Opportunity Details<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
-    <td valign=center align=left>
+    <td valign=center align=left nowrap>
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td valign=center align=left>
+    <td valign=center align=left nowrap>
 	<strong><a href="ExternalContactsOpps.do?command=DetailsOpp&oppId=<%=HeaderDetails.getId()%>&contactId=<%=ContactDetails.getId()%>&column=description">Component</a></strong>
 	<%= ComponentListInfo.getSortIcon("description") %>
     </td>
-    <td valign=center align=left>
+    <td valign=center align=left nowrap>
+      <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&oppId=<%=HeaderDetails.getId()%>&contactId=<%=ContactDetails.getId()%>&column=closed">Status</a></strong>
+    </td>
+    <td valign=center align=left nowrap>
 	<strong><a href="ExternalContactsOpps.do?command=DetailsOpp&oppId=<%=HeaderDetails.getId()%>&contactId=<%=ContactDetails.getId()%>&column=guessvalue">Guess Amount</a></strong>
 	<%= ComponentListInfo.getSortIcon("guessvalue") %>
     </td>
-    <td valign=center align=left>
+    <td valign=center align=left nowrap>
       	<strong><a href="ExternalContactsOpps.do?command=DetailsOpp&oppId=<%=HeaderDetails.getId()%>&contactId=<%=ContactDetails.getId()%>&column=closedate">Close Date</a></strong>
 	<%= ComponentListInfo.getSortIcon("closedate") %>
     </td>
-    <td valign=center align=left>
+    <td valign=center align=left nowrap>
       	<strong><a href="ExternalContactsOpps.do?command=DetailsOpp&oppId=<%=HeaderDetails.getId()%>&contactId=<%=ContactDetails.getId()%>&column=stage">Current Stage</a></strong>
 	<%= ComponentListInfo.getSortIcon("stage") %>
     </td>  
@@ -115,6 +118,9 @@ Opportunity Details<br>
     <td width=100% valign=center class="row<%= rowid %>">
       <a href="ExternalContactsOppComponents.do?command=DetailsComponent&contactId=<%=ContactDetails.getId()%>&id=<%=thisOpp.getId()%>">
       <%= toHtml(thisOpp.getDescription()) %></a>
+    </td>
+    <td width=100% valign=center class="row<%= rowid %>">
+      <%= thisOpp.getClosed() != null ? "<font color=\"red\">closed</font>" : "<font color=\"green\">open</font>" %>
     </td>
     <td width=125 valign=center nowrap class="row<%= rowid %>">
       $<%= thisOpp.getGuessCurrency() %>
