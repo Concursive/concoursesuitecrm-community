@@ -1,15 +1,12 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="UserInfo" class="com.darkhorseventures.cfsbase.User" scope="request"/>
 <jsp:useBean id="ShortChildList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
-<jsp:useBean id="FullChildList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
-<jsp:useBean id="FullOppList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
 <jsp:useBean id="OppList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
 <jsp:useBean id="GraphTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 
-<form name=Dashboard action="/Leads.do?command=Dashboard" method=POST>
-<a href="/Leads.do">Pipeline Management</a> > 
+<form name=Dashboard action="Leads.do?command=Dashboard" method=POST>
+<a href="Leads.do">Pipeline Management</a> > 
 Dashboard<br>
 <hr color="#BFBFBB" noshade>
 <table width=100% border=0 cellspacing=0 cellpadding=3>
@@ -29,24 +26,13 @@ Dashboard<br>
         </tr>
         <tr>
           <td>
-            <img border="0" width="275" height="200" src="/graphs/<%=request.getAttribute("GraphFileName")%>">
+            <img border="0" width="275" height="200" src="graphs/<%=request.getAttribute("GraphFileName")%>">
           </td>
         </tr>
         <tr>
           <td align="center">
-	  
-	  <% if (request.getParameter("whichGraph") != null) { %>
-		  <% GraphTypeList.setDefaultKey(request.getParameter("whichGraph")); %>
-		  <%= GraphTypeList.getHtml() %>&nbsp;
-		  
-	  <%} else if ((String)request.getSession().getAttribute("whichGraph") != null) {%>
-	  	<% GraphTypeList.setDefaultKey((String)request.getSession().getAttribute("whichGraph")); %>
-		<%= GraphTypeList.getHtml() %>&nbsp;
-	  <%} else {%>
-          	<%=GraphTypeList.getHtml()%>&nbsp;
-	  <%}%>
-          
-	  </td>
+            <%= GraphTypeList.getHtml() %>&nbsp;
+          </td>
         </tr>
       </table>
       
@@ -54,7 +40,7 @@ Dashboard<br>
 	<% if (!(((String)request.getSession().getAttribute("leadsoverride")) == null)) {%>
 	
 	<div margintop=5 align=center width=285>
-	<input type=hidden name="oid" value="<%=((String)request.getSession().getAttribute("leadsoverride"))%>">
+	<input type="hidden" name="oid" value="<%=((String)request.getSession().getAttribute("leadsoverride"))%>">
 	<a href="Leads.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("leadspreviousId"))%>">Up One Level</a> |
 	<a href="Leads.do?command=Dashboard&reset=1">Back to My Dashboard</a>
 	</div>
@@ -84,7 +70,7 @@ Dashboard<br>
 %>
         <tr>
           <td class="row<%= rowid %>" valign=center nowrap>
-            <a href="/Leads.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLastFirst()) %></a>
+            <a href="Leads.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLastFirst()) %></a>
             ($<%=thisRec.getGrossPipelineCurrency(1000)%>K)
             <dhv:evaluate exp="<%=!(thisRec.getEnabled())%>"><font color="red">*</font></dhv:evaluate>
           </td>
