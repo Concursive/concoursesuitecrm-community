@@ -42,7 +42,6 @@ public class ControllerServlet extends HttpServlet
   private boolean useXSLCache = false;
   private String populateAttribute = null;
   private Populate populateClassInstance = null;
-  private int debug = 0;
   private ControllerInitHook initHook = null;
   private ControllerHook hook = null;
   private ControllerMainMenuHook mainMenuHook = null;
@@ -257,15 +256,6 @@ public class ControllerServlet extends HttpServlet
 
     String populateClassName = config.getInitParameter("PopulateClassName");
     populateAttribute = config.getInitParameter("PopulateAttributeName");
-    if (config.getInitParameter("Debug") != null) {
-      try {
-        debug = Integer.parseInt(config.getInitParameter("Debug"));
-      } catch (Exception e) {
-        debug = 0;
-      }
-
-      System.setProperty("DEBUG", String.valueOf(debug));
-    }
 
     // if a bean utils class is not specified, use the default one packages in this
     // framework. If this parameter exists, the class must implement the Populate interface
@@ -369,12 +359,10 @@ public class ControllerServlet extends HttpServlet
   public void service(HttpServletRequest request, HttpServletResponse response) {
     String actionPath = getActionPath(request);
     Object beanRef = null;
-
     if (System.getProperty("DEBUG") != null) {
       System.out.println("");
       System.out.println("** Requested action: " + actionPath);
     }
-
     // we have the action name derived from the action path passed in, so now we need to
     // look it up in our list of Actions to see if there is a Action for this action.
     // If so, we get the Action class name, and see if there is a class already
@@ -391,7 +379,6 @@ public class ControllerServlet extends HttpServlet
       // This method returns null (or an empty string), where as if there is a problem
       // the method flags, it returns a string that is used to indicate the resource
       // lookup when forwarding (or transforming xsl) to.
-
       String res = hook.securityCheck(this, request);
       if (res != null && res.length() > 0) {
         if (System.getProperty("DEBUG") != null) {
@@ -406,10 +393,8 @@ public class ControllerServlet extends HttpServlet
       Iterator i = action.getBeans().values().iterator();
       ActionContext context = null;
       Object contextBeanRef = null;
-
       while (i.hasNext()) {
         Beans beans = (Beans) i.next();
-
         // next, we get the bean reference from the scope the
         // bean is stored in.
         switch (beans.getBeanScope()) {
@@ -474,16 +459,13 @@ public class ControllerServlet extends HttpServlet
           }
         }
       }
-
       context = new ActionContext(this, contextBeanRef, action, request, response);
 
       // at this point, we have a newly created ActionContext and an auto-populated
       // javabean (if the request attribute was passed in to indicate so). We are now ready to
       // attempt to get the class instance if it exists (already loaded), or if not, we
       // will dynamically load it (one time only) and store it in our lists of classes.
-
       Object classRef = null;
-
       if (classes.containsKey(actionPath) && cacheModules) {
         classRef = classes.get(actionPath);
       } else {
@@ -500,7 +482,6 @@ public class ControllerServlet extends HttpServlet
       }
 
       String result = null;
-
       try {
         // now we are ready for the next to last step..to call upon the method in the
         // action class instance we have.
@@ -511,7 +492,7 @@ public class ControllerServlet extends HttpServlet
           System.out.println("Class ref is null");
         }
         //Debug performance
-        if (debug == 2) {
+        if ("2".equals(System.getProperty("DEBUG"))) {
           long actionStartTime = System.currentTimeMillis();
           if (request.getAttribute("debug.action.startTime") != null) {
             actionStartTime = Long.parseLong((String) request.getAttribute("debug.action.startTime"));
@@ -534,7 +515,6 @@ public class ControllerServlet extends HttpServlet
         e.printStackTrace(System.out);
         System.out.println("Exception. MESSAGE = " + e.getMessage());
       }
-
       // finally we will attempt to forward (or transform) to the resource
       if (!"-none-".equals(result)) {
         forward(result, action, request, response);
@@ -594,7 +574,6 @@ public class ControllerServlet extends HttpServlet
         StreamSource xslStream = null;
         StreamSource xmlStream = null;
         Templates templates = null;
-
         if (!useXSLCache) {
           try {
             templates = tFactory.newTemplates(getXSLDocument(resource.getXSL()));
@@ -625,11 +604,9 @@ public class ControllerServlet extends HttpServlet
         // Transform the xml output using the xsl stylesheet and the XALAN XSLT
         // engine, placing the output stream of the transformation in the
         // HttpServletResponse output stream.
-
-//        response.setBufferSize(8192);
+        //        response.setBufferSize(8192);
         response.setContentType(getResponseOutput(templates));
         // always assume HTML output from this controller
-
         try {
           StringBuffer link = new StringBuffer();
           link.append(request.getScheme());
@@ -798,15 +775,12 @@ public class ControllerServlet extends HttpServlet
    */
   private String getActionPath(HttpServletRequest request) {
     String s = request.getServletPath();
-
     // For extension matching, we want to strip the extension (if any)
     int slash = s.lastIndexOf("/");
     int period = s.lastIndexOf(".");
-
     if ((period >= 0) && (slash >= 0) && (period > slash)) {
       return s.substring(slash + 1, period);
     }
-
     return s;
   }
 }

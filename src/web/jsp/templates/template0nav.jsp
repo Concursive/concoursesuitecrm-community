@@ -2,6 +2,7 @@
 <%@ page  import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.controller.*" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>
+<jsp:useBean id="GlobalItems" class="java.lang.String" scope="request"/>
 <%
   response.setHeader("Pragma", "no-cache"); // HTTP 1.0
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
@@ -26,20 +27,16 @@
             <dhv:label name="logo"/>
           </td>
           <td valign="top" nowrap>
-<%
-  if (!User.getUserRecord().getContact().getNameFirstLast().equals("")) {
-%>  
-    <%= User.getActualUserId() != User.getUserId() ? "User Aliased To:":"User:" %> <b class="highlight"><%= User.getUserRecord().getContact().getNameFirstLast() %></b> /
-<%}%>      
-      <b class="highlight"><%= User.getRole() %></b>
-<%
-  if (User.getUserRecord().getManagerUser() != null && User.getUserRecord().getManagerUser().getContact() != null) {
-%>      
-      <br>Manager: <b class="highlight"><%= User.getUserRecord().getManagerUser().getContact().getNameFull() %></b>
-      <dhv:evaluate if="<%= System.getProperty("DEBUG") != null && "2".equals(System.getProperty("DEBUG")) && request.getAttribute("debug.action.time") != null %>">
-        <br>Action took: <b class="highlight"><%= request.getAttribute("debug.action.time") %> ms</b>
-      </dhv:evaluate>
-<%}%>
+            <dhv:evaluate if="<%= !User.getUserRecord().getContact().getNameFirstLast().equals("") %>">
+              <%= User.getActualUserId() != User.getUserId() ? "User Aliased To:":"User:" %> <b class="highlight"><%= User.getUserRecord().getContact().getNameFirstLast() %></b> /
+            </dhv:evaluate>
+              <b class="highlight"><%= User.getRole() %></b>
+            <dhv:evaluate if="<%= User.getUserRecord().getManagerUser() != null && User.getUserRecord().getManagerUser().getContact() != null %>">
+              <br>Manager: <b class="highlight"><%= User.getUserRecord().getManagerUser().getContact().getNameFull() %></b>
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= System.getProperty("DEBUG") != null && "2".equals(System.getProperty("DEBUG")) && request.getAttribute("debug.action.time") != null %>">
+              <br>Action took: <b class="highlight"><%= request.getAttribute("debug.action.time") %> ms</b>
+            </dhv:evaluate>
           </td>
         </tr>
       </table>
@@ -97,20 +94,18 @@
 </div>
 <table border="0" width="100%">
   <tr>
-    <td valign="top">
-      <table border="0" width="100%">
-        <tr>
-          <td>
+    <td valign="top" width="100%">
 <!-- The module goes here -->
 <% String includeModule = (String) request.getAttribute("IncludeModule"); %>          
 <jsp:include page="<%= includeModule %>" flush="true"/>
 <!-- End module -->
-          </td>
-        </tr>
-      </table>
     </td>
     <!-- Global Items -->
-    <jsp:include page="../globalItems.jsp" flush="true"/>
+    <dhv:evaluate if="<%= GlobalItems.length() > 0 %>">
+    <td width="150" valign="top" id="rightcol">
+      <%= GlobalItems %>
+    </td>
+    </dhv:evaluate>
     <!-- End Global Items -->
   </tr>
 </table>
