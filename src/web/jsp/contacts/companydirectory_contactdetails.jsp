@@ -23,7 +23,6 @@ Contact Details<br>
   </tr>
   <tr>
     <td class="containerBack">
-    
 <dhv:evaluate exp="<%= (ContactDetails.getEnabled()) %>">
 <dhv:permission name="contacts-external_contacts-edit"><input type=button name="cmd" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="Clone"	onClick="javascript:this.form.action='ExternalContacts.do?command=Clone&id=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
@@ -47,57 +46,52 @@ Contact Details<br>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Company
     </td>
-    <td width="100%">
+    <td>
       <%= toHtml(ContactDetails.getCompanyOnly()) %><dhv:evaluate exp="<%= (!(ContactDetails.getOrgEnabled()) && ContactDetails.getOrgId() > 0)%>">&nbsp;<font color="red">(account disabled)</font></dhv:evaluate>
     </td>
   </tr>
-  
   <dhv:evaluate exp="<%= (ContactDetails.getOrgId() > -1) %>">
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Associated with Account
     </td>
-    <td valign=center>
-    <%=toHtml(ContactDetails.getOrgName())%>
+    <td>
+      <%=toHtml(ContactDetails.getOrgName())%>
     </td>
   </tr>  
   </dhv:evaluate>  
-  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Title
     </td>
     <td>
       <%= toHtml(ContactDetails.getTitle()) %>&nbsp; &nbsp;
     </td>
   </tr>
-  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Entered
     </td>
     <td>
       <%= ContactDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= ContactDetails.getEnteredString() %>
     </td>
   </tr>
-  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Modified
     </td>
     <td>
       <%= ContactDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= ContactDetails.getModifiedString() %>
     </td>
   </tr>
-  
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Email Addresses</strong>
 	  </td>
   </tr>
@@ -108,10 +102,10 @@ Contact Details<br>
       ContactEmailAddress thisEmailAddress = (ContactEmailAddress)iemail.next();
 %>    
     <tr class="containerBody">
-      <td nowrap class="formLabel">
+      <td class="formLabel" nowrap>
         <%= toHtml(thisEmailAddress.getTypeName()) %>
       </td>
-      <td width="100%">
+      <td>
         <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>
       </td>
     </tr>
@@ -129,7 +123,7 @@ Contact Details<br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Phone Numbers</strong>
 	  </td>
   </tr>
@@ -140,10 +134,10 @@ Contact Details<br>
       ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)inumber.next();
 %>    
     <tr class="containerBody">
-      <td nowrap class="formLabel">
+      <td class="formLabel" nowrap>
         <%= toHtml(thisPhoneNumber.getTypeName()) %>
       </td>
-      <td width="100%">
+      <td>
         <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>
       </td>
     </tr>
@@ -161,7 +155,7 @@ Contact Details<br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Addresses</strong>
 	  </td>
   </tr>
@@ -172,11 +166,11 @@ Contact Details<br>
       ContactAddress thisAddress = (ContactAddress)iaddress.next();
 %>    
     <tr class="containerBody">
-      <td nowrap class="formLabel">
+      <td class="formLabel" valign="top" nowrap>
         <%= toHtml(thisAddress.getTypeName()) %>
       </td>
-      <td width="100%">
-        <%= toHtml(thisAddress.toString()) %>
+      <td>
+        <%= toHtml(thisAddress.toString()) %>&nbsp;
       </td>
     </tr>
 <%    
@@ -193,13 +187,13 @@ Contact Details<br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Additional Details</strong>
 	  </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Notes</td>
-    <td width="100%"><%= toHtml(ContactDetails.getNotes()) %>&nbsp;</td>
+    <td class="formLabel" nowrap>Notes</td>
+    <td><%= toHtml(ContactDetails.getNotes()) %>&nbsp;</td>
   </tr>
 </table>
 <dhv:evaluate exp="<%= (ContactDetails.getEnabled()) %>">
@@ -211,5 +205,5 @@ Contact Details<br>
 
 </td></tr>
 </table>
-<input type=hidden name="command" value="">
+<input type="hidden" name="command" value="">
 </form>
