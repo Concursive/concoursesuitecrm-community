@@ -27,34 +27,29 @@ import java.util.*;
  *      $
  */
 public class ConnectionPool implements Runnable {
+  //Useful Constants
   public final static int BUSY_CONNECTION = 1;
   public final static int AVAILABLE_CONNECTION = 2;
-
-  //5 minutes then connection is closed
-
-  private String url = "";
-  private String username = "";
-  private String password = "";
-  private String driver = "org.postgresql.Driver";
-
+  //Thread properties for creating a new connection
+  private String url = null;
+  private String username = null;
+  private String password = null;
+  private String driver = null;
+  //Connection Pool Properties
   private java.util.Date startDate = new java.util.Date();
   private Hashtable availableConnections;
   private Hashtable busyConnections;
   private boolean connectionPending = false;
-  private boolean requireParameters = true;
+  //Connection Pool Settings
   private boolean debug = false;
-
   private int maxConnections = 10;
   private boolean waitIfBusy = true;
   private boolean allowShrinking = false;
   private boolean testConnections = false;
   private boolean forceClose = false;
   private Timer cleanupTimer = null;
-  //60 seconds then connection is closed and no longer available
   private int maxIdleTime = 60000;
-  //5 minutes then connection is shutdown and is no longer busy
   private int maxDeadTime = 300000;
-
 
 
   /**
@@ -67,49 +62,11 @@ public class ConnectionPool implements Runnable {
    *@since                    1.2
    */
   public ConnectionPool() throws SQLException {
-    this.requireParameters = true;
     availableConnections = new Hashtable();
     busyConnections = new Hashtable();
     initializeCleanupTimer();
   }
 
-
-  /**
-   *  Standard constructor that specifies the url, username, password, the
-   *  number of inital connections, and the number of max connections allowed
-   *
-   *@param  min               Description of Parameter
-   *@param  max               Description of Parameter
-   *@param  thisUrl           Description of Parameter
-   *@param  thisUsername      Description of Parameter
-   *@param  thisPassword      Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.0
-   */
-  public ConnectionPool(String thisUrl, String thisUsername,
-      String thisPassword, int min, int max) throws SQLException {
-
-    this.url = thisUrl;
-    this.username = thisUsername;
-    this.password = thisPassword;
-    this.requireParameters = false;
-    this.maxConnections = max;
-
-    if (min > max) {
-      min = max;
-    }
-    availableConnections = new Hashtable(min);
-    busyConnections = new Hashtable();
-    ConnectionElement thisElement = new ConnectionElement(this.url,
-        this.username, this.password);
-    for (int i = 0; i < min; i++) {
-      Connection thisConnection = makeNewConnection(thisElement);
-      if (thisConnection != null) {
-        availableConnections.put(new ConnectionElement(), thisConnection);
-      }
-    }
-    initializeCleanupTimer();
-  }
 
 
   /**
@@ -209,26 +166,6 @@ public class ConnectionPool implements Runnable {
 
 
   /**
-   *  Sets the requireParameters attribute of the ConnectionPool object
-   *
-   *@param  tmp  The new requireParameters value
-   */
-  public void setRequireParameters(boolean tmp) {
-    this.requireParameters = tmp;
-  }
-
-
-  /**
-   *  Sets the requireParameters attribute of the ConnectionPool object
-   *
-   *@param  tmp  The new requireParameters value
-   */
-  public void setRequireParameters(String tmp) {
-    requireParameters = "true".equalsIgnoreCase(tmp);
-  }
-
-
-  /**
    *  Gets the url attribute of the ConnectionPool object
    *
    *@return    The url value
@@ -269,25 +206,6 @@ public class ConnectionPool implements Runnable {
 
 
   /**
-   *  Gets the Connection attribute of the ConnectionPool object when the
-   *  ConnectionPool was created with default connection information.
-   *
-   *@return                   The Connection value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.2
-   */
-  public Connection getConnection() throws SQLException {
-    if (requireParameters) {
-      throw new SQLException("Connection information not specified and no default exists");
-    } else {
-      ConnectionElement thisElement = new ConnectionElement(url, username, password);
-      thisElement.setDriver(driver);
-      return (getConnection(thisElement));
-    }
-  }
-
-
-  /**
    *  When a connection is needed, ask the class for the next available, if the
    *  max connections has been reached then a thread will be spawned to wait for
    *  the next available connection.
@@ -304,15 +222,20 @@ public class ConnectionPool implements Runnable {
         ConnectionElement thisElement = (ConnectionElement) e.nextElement();
         if (thisElement.getUrl().equals(requestElement.getUrl())) {
           try {
-            Connection existingConnection =
-                (Connection) availableConnections.get(thisElement);
-            availableConnections.remove(thisElement);
+            //Try to get the connection from the pool, it may have been
+            //recycled before it could be retrieved
+            Connection existingConnection = this.getAvailableConnection(thisElement);
+            if (existingConnection == null) {
+              notifyAll();
+              return (getConnection(requestElement));
+            }
+            //See if connection is open, else recycle it
             if (existingConnection.isClosed()) {
               existingConnection = null;
               notifyAll();
-              // Freed up a spot for anybody waiting
               return (getConnection(requestElement));
             } else if (testConnections) {
+              //See if connection is good, else recycle it
               try {
                 PreparedStatement pst = existingConnection.prepareStatement(
                     "SELECT CURRENT_TIMESTAMP");
@@ -337,20 +260,26 @@ public class ConnectionPool implements Runnable {
           }
         }
       }
-
       // A matching connection was not found so make a new connection, or
       // remove an idle available connection then try again...
       if (!connectionPending && (totalConnections() == maxConnections)) {
         e = availableConnections.keys();
         if (e.hasMoreElements()) {
           ConnectionElement thisElement = (ConnectionElement) e.nextElement();
-          availableConnections.remove(thisElement);
+          try {
+            Connection oldConnection = this.getAvailableConnection(thisElement);
+            if (oldConnection != null) {
+              oldConnection.close();
+            }
+            oldConnection = null;
+          } catch (SQLException se) {
+            //just don't want to return an error to the app just yet
+          }
         }
         e = null;
         return (getConnection(requestElement));
       }
     }
-
     // Three possible cases a connection wasn't found:
     // 1) You haven't reached maxConnections limit. So
     //    establish one in the background if there isn't
@@ -362,7 +291,6 @@ public class ConnectionPool implements Runnable {
     // 3) You reached maxConnections limit and waitIfBusy
     //    flag is true. Then do the same thing as in second
     //    part of step 1: wait for next available connection.
-
     if ((totalConnections() < maxConnections) && !connectionPending) {
       makeBackgroundConnection(requestElement);
     } else if (!waitIfBusy) {
@@ -381,12 +309,29 @@ public class ConnectionPool implements Runnable {
 
 
   /**
+   *  Prevents multiple methods from getting the same connection
+   *
+   *@param  thisElement       Description of the Parameter
+   *@return                   The availableConnection value
+   *@exception  SQLException  Description of the Exception
+   */
+  private synchronized Connection getAvailableConnection(ConnectionElement thisElement) throws SQLException {
+    Connection existingConnection =
+        (Connection) availableConnections.get(thisElement);
+    if (existingConnection != null) {
+      availableConnections.remove(thisElement);
+    }
+    return existingConnection;
+  }
+
+
+  /**
    *  Returns whether max connections has been reached for debugging
    *
    *@return    The MaxStatus value
    *@since     1.5
    */
-  public synchronized boolean getMaxStatus() {
+  public boolean getMaxStatus() {
     if (busyConnections.size() == maxConnections) {
       return (true);
     } else {
@@ -417,24 +362,27 @@ public class ConnectionPool implements Runnable {
   public void run() {
     // Make the connection
     try {
-      ConnectionElement thisElement = new ConnectionElement(this.url,
-          this.username, this.password);
+      ConnectionElement thisElement = new ConnectionElement();
+      thisElement.setUrl(this.url);
+      thisElement.setUsername(this.username);
+      thisElement.setPassword(this.password);
       thisElement.setDriver(this.driver);
       Connection connection = makeNewConnection(thisElement);
       synchronized (this) {
-
         if (connection != null) {
-          if (debug) {
-            System.out.println("ConnectionPool-> Thread made a new database connection: " + connection.getClass().getName());
-          }
           availableConnections.put(thisElement, connection);
+          if (debug) {
+            System.out.println("ConnectionPool-> New: " + thisElement.getUrl() + " " + this.toString());
+          }
         } else {
           if (debug) {
-            System.out.println("ConnectionPool-> Database connection could not be created");
+            System.out.println("ConnectionPool-> Database connection could not be created: " + thisElement.getUrl() + " " + this.toString());
           }
+          //NOTE: This is currently here because the getConnection() would be broken
+          //without it.  When getConnection() grabs this it will just recycle it right
+          //away.  Needs to be fixed some day.
           availableConnections.put(thisElement, "Database Error");
         }
-
         connectionPending = false;
         notifyAll();
       }
@@ -459,7 +407,7 @@ public class ConnectionPool implements Runnable {
     if (connection != null) {
       ConnectionElement thisElement = (ConnectionElement) busyConnections.get(connection);
       if (thisElement == null) {
-        System.out.println("Connection has already been returned to pool");
+        System.out.println("ConnectionPool-> Connection has already been returned to pool");
       } else {
         busyConnections.remove(connection);
         try {
@@ -467,7 +415,7 @@ public class ConnectionPool implements Runnable {
             if (!connection.isClosed()) {
               connection.close();
               if (!forceClose) {
-                System.out.println("Removed a possibly dead busy connection");
+                System.out.println("ConnectionPool-> Removed a possibly dead busy connection");
               }
             }
           }
@@ -522,11 +470,13 @@ public class ConnectionPool implements Runnable {
    */
   public synchronized void closeAllConnections() {
     if (debug) {
+      System.out.println("ConnectionPool-> Status: " + this.toString());
+    }
+    if (debug) {
       System.out.println("ConnectionPool-> Closing available connections");
     }
     closeConnections(AVAILABLE_CONNECTION, availableConnections);
     availableConnections = new Hashtable();
-
     if (debug) {
       System.out.println("ConnectionPool-> Closing busy connections");
     }
@@ -555,7 +505,7 @@ public class ConnectionPool implements Runnable {
    */
   public String toString() {
     String info =
-        "ConnectionPool(available=" + availableConnections.size() +
+        "(avail=" + availableConnections.size() +
         ", busy=" + busyConnections.size() +
         ", max=" + maxConnections + ")";
     return (info);
@@ -574,7 +524,7 @@ public class ConnectionPool implements Runnable {
       cleanupTimer.cancel();
       cleanupTimer = null;
       if (debug) {
-        System.out.println("Connection Pool: Timer shut down");
+        System.out.println("Connection Pool-> Timer shut down");
         try {
           Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -582,7 +532,7 @@ public class ConnectionPool implements Runnable {
       }
     }
     if (debug) {
-      System.out.println("Connection Pool: Stopped");
+      System.out.println("Connection Pool-> Stopped");
     }
   }
 
@@ -636,18 +586,21 @@ public class ConnectionPool implements Runnable {
         java.util.Date testDate = thisElement.getActiveDate();
         Connection connection = (Connection) availableConnections.get(thisElement);
         if (connection.isClosed() || (testDate.getTime() < (currentDate.getTime() - maxIdleTime))) {
-          //TODO: Removing needs to be synchronized
-          availableConnections.remove(thisElement);
-          connection.close();
-          if (debug) {
-            System.out.println("Removed an idle available connection");
+          Connection expiredConnection = this.getAvailableConnection(thisElement);
+          if (expiredConnection != null) {
+            expiredConnection.close();
+            if (debug) {
+              System.out.println("ConnectionPool-> Removed: " + thisElement.getUrl() + " " + this.toString());
+            }
+            notify();
           }
-          notify();
+          expiredConnection = null;
         }
+        connection = null;
       } catch (Exception sqle) {
         if (thisElement != null) {
           availableConnections.remove(thisElement);
-          //if (debug) System.out.println("Removed a null available connection");
+          //if (debug) System.out.println("ConnectionPool-> Removed a null available connection");
         }
         notify();
         //Ignore errors; garbage collect anyhow
@@ -676,7 +629,6 @@ public class ConnectionPool implements Runnable {
           if (connection.isClosed() ||
               (thisElement.getAllowCloseOnIdle() &&
               testDate.getTime() < (currentDate.getTime() - maxDeadTime))) {
-            System.out.println("ConnectionPool-> CE allowCloseOnIdle: " + thisElement.getAllowCloseOnIdle());
             //TODO: This is not synchronized and could error if this isn't really a closed connection
             busyConnections.remove(connection);
             connection.close();

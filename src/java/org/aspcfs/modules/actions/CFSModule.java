@@ -125,21 +125,6 @@ public class CFSModule {
 
 
   /**
-   *  Gets the defaultConnection attribute of the CFSModule object
-   *
-   *@param  context           Description of the Parameter
-   *@return                   The defaultConnection value
-   *@exception  SQLException  Description of the Exception
-   */
-  protected Connection getDefaultConnection(ActionContext context) throws SQLException {
-    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
-    System.out.println(sqlDriver.toString());
-    System.out.println(sqlDriver.getUsername() + " " + sqlDriver.getPassword() + " " + sqlDriver.getUrl());
-    return sqlDriver.getConnection();
-  }
-
-
-  /**
    *  Gets the UserId attribute of the CFSModule object
    *
    *@param  context  Description of Parameter
