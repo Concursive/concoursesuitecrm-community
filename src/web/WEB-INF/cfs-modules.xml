@@ -84,6 +84,22 @@
   </menu>
   
   <menu>
+    <action name="CompanyDirectory"/>
+    <page title="Employees"/>
+    <permission value="employees-view"/>
+    <long_html value="Employees"/>
+    <short_html value="Employees"/>
+    <link value="CompanyDirectory.do?command=ListEmployees"/>
+    <graphic width="83" height="36" on="menu-myhome-on.gif" off="menu-myhome-off.gif" rollover=""/>
+    <submenu name="Internal Contacts">
+      <permission value="contacts-internal_contacts-view"/>
+      <long_html value="View"/>
+      <short_html value="View"/>
+      <link value="CompanyDirectory.do?command=ListEmployees"/>
+    </submenu>
+  </menu>
+  
+  <menu>
     <action name="ExternalContacts"/>
     <action name="ExternalContactsOpps"/>
     <action name="ExternalContactsOppComponents"/>
@@ -365,22 +381,6 @@
       <long_html value="Export"/>
       <short_html value="Export"/>
       <link value="TroubleTickets.do?command=Reports"/>
-    </submenu>
-  </menu>
-  
-  <menu>
-    <action name="CompanyDirectory"/>
-    <page title="Employees"/>
-    <permission value="employees-view"/>
-    <long_html value="Employees"/>
-    <short_html value="Employees"/>
-    <link value="CompanyDirectory.do?command=ListEmployees"/>
-    <graphic width="83" height="36" on="menu-myhome-on.gif" off="menu-myhome-off.gif" rollover=""/>
-    <submenu name="Internal Contacts">
-      <permission value="contacts-internal_contacts-view"/>
-      <long_html value="View"/>
-      <short_html value="View"/>
-      <link value="CompanyDirectory.do?command=ListEmployees"/>
     </submenu>
   </menu>
   
