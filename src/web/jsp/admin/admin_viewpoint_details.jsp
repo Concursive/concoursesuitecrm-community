@@ -36,9 +36,9 @@ Update Viewpoint
 <dhv:permission name="admin-roles-edit">
   <input type="submit" value="Update" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
-  <br>
+  <br />
 </dhv:permission>
-<%= showError(request, "actionError") %>
+<dhv:formMessage />
 <input type="hidden" name="userId" value="<%= UserRecord.getId() %>">
 <input type="hidden" name="vpUserId" value="<%= Viewpoint.getVpUserId() %>">
 <input type="hidden" name="id" value="<%= Viewpoint.getId() %>">
@@ -59,7 +59,7 @@ Update Viewpoint
   </tr>
   <tr class="containerBody">
     <td class="formLabel">Enabled</td>
-    <td><input type="checkbox" name="enabled" value="true" <%= Viewpoint.getEnabled() ? " checked" : ""%>></td>
+    <td><input type="checkbox" name="enabled" value="on" <%= Viewpoint.getEnabled() ? " checked" : ""%>></td>
   </tr>
 </table>
 &nbsp;

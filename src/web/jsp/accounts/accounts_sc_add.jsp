@@ -47,7 +47,7 @@
         <input type="button" value="Cancel" onClick="window.location.href='AccountsServiceContracts.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
         <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
         <br />
-<%= showError(request, "actionError") %>
+        <dhv:formMessage />
 <%--  include basic contract form --%>
 <%@ include file="servicecontract_include.jsp" %>
         <br />

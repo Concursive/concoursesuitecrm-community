@@ -10,6 +10,7 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -40,7 +41,11 @@ Schedule
       Run Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= Campaign.getActiveDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(Campaign.getActiveDateTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">

@@ -41,9 +41,9 @@ Queue
     <td>Generated reports are deleted from the server every 24 hours.</td></tr>
 </table>
 <%-- Completed Reports --%>
-<%= showError(request, "actionError", false) %>
+<dhv:formMessage showSpace="false" />
 <a href="Reports.do?command=RunReport">Add a Report</a><br>
-<br>
+<br />
 <table width="100%" border="0" cellpadding="4" cellspacing="0">
   <tr>
     <td nowrap class="pagedListTab"><img src="images/icons/stock_form-16.gif" align="absMiddle" alt="" />
@@ -84,7 +84,7 @@ Queue
   <tr class="row<%= rowid %>">
     <td><a href="javascript:displayMenu('select<%= thisQueue.getId() %>','menu1<%= (thisQueue.getStatus() == ReportQueue.STATUS_PROCESSED ? "a" : "b") %>','<%= thisQueue.getId() %>');" onMouseOver="over(0, <%= thisQueue.getId() %>)" onmouseout="out(0, <%= thisQueue.getId() %>); hideMenu('menu1<%= (thisQueue.getStatus() == ReportQueue.STATUS_PROCESSED ? "a" : "b") %>');"><img src="images/select.gif" name="select<%= thisQueue.getId() %>" id="select<%= thisQueue.getId() %>" align="absmiddle" border="0"></a></td>
     <td width="100%"><%= toHtml(thisQueue.getReport().getTitle()) %></td>
-    <td nowrap><zeroio:tz timestamp="<%= thisQueue.getProcessed() %>" /></td>
+    <td nowrap><zeroio:tz timestamp="<%= thisQueue.getProcessed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/></td>
     <td nowrap>
 <dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_QUEUED %>">Queued</dhv:evaluate>
 <dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_PROCESSING %>">Processing</dhv:evaluate>
@@ -136,7 +136,7 @@ Queue
   <tr class="row<%= rowid %>">
     <td><a href="javascript:displayMenu('select<%= thisQueue.getId() %>','menu2','<%= thisQueue.getId() %>',0);" onMouseOver="over(0, <%= thisQueue.getId() %>)" onmouseout="out(0, <%= thisQueue.getId() %>); hideMenu('menu2');"><img src="images/select.gif" name="select<%= thisQueue.getId() %>" id="select<%= thisQueue.getId() %>" align="absmiddle" border="0"></a></td>
     <td width="100%"><%= toHtml(thisQueue.getReport().getTitle()) %></td>
-    <td nowrap><zeroio:tz timestamp="<%= thisQueue.getEntered() %>" /></td>
+    <td nowrap><zeroio:tz timestamp="<%= thisQueue.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/></td>
     <td nowrap>
 <dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_QUEUED %>">Queued</dhv:evaluate>
 <dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_PROCESSING %>">Processing</dhv:evaluate>

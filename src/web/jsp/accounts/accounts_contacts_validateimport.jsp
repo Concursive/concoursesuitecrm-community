@@ -119,8 +119,8 @@
 <form method="post" name="inputForm" action="AccountContactsImports.do?command=Validate">
 <input type="submit" value="Process">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsImports.do?command=View';this.form.dosubmit.value='false';">
-<br>
-<%= showError(request, "actionError") %> 
+<br />
+<dhv:formMessage />
 <%-- General Import Properties --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>

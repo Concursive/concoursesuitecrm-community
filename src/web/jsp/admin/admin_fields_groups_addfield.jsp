@@ -23,14 +23,15 @@
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>"><%= PermissionCategory.getCategory() %></a> >
 <a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
 <a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>">Folder</a> >
-New Field<br>
-<%= showError(request, "actionError") %><br>
+New Field<br />
+<dhv:formMessage />
+<br />
 <%
   CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
 %>
-<strong>Module:</strong> <%= toHtml(PermissionCategory.getCategory()) %><br>
-<strong>Folder:</strong> <%= toHtml(Category.getName()) %><br>
-&nbsp;<br>
+<strong>Module:</strong> <%= toHtml(PermissionCategory.getCategory()) %><br />
+<strong>Folder:</strong> <%= toHtml(Category.getName()) %><br />
+<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

@@ -261,7 +261,7 @@ public class SearchCriteriaListList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
             sqlFilter.toString() +
-            "AND name < ? ");
+            "AND lower(name) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();

@@ -11,6 +11,7 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -42,7 +43,7 @@ Document Details
   </tr>
 </table>
 <%--TODO::END Document folder trails--%>
-<%= showError(request, "actionError") %>
+<dhv:formMessage />
 <br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
@@ -80,7 +81,7 @@ Document Details
         <%= thisVersion.getVersion() %>&nbsp;
       </td>
       <td nowrap>
-        <zeroio:tz timestamp="<%= thisVersion.getEntered() %>" />
+        <zeroio:tz timestamp="<%= thisVersion.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
       </td>
       <td>
         <dhv:username id="<%= thisVersion.getEnteredBy() %>"/>

@@ -91,7 +91,7 @@ Document Details
         <%= thisVersion.getVersion() %>&nbsp;
       </td>
       <td nowrap>
-        <zeroio:tz timestamp="<%= thisVersion.getEntered() %>" />
+        <zeroio:tz timestamp="<%= thisVersion.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
       </td>
       <td>
         <dhv:username id="<%= thisVersion.getEnteredBy() %>"/>

@@ -517,7 +517,7 @@ public class ProjectList extends ArrayList {
     if (!pagedListInfo.getCurrentLetter().equals("")) {
       pst = db.prepareStatement(sqlCount.toString() +
           sqlFilter.toString() +
-          "AND title < ? ");
+          "AND lower(title) < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();
@@ -746,24 +746,6 @@ public class ProjectList extends ArrayList {
     rs.close();
     pst.close();
     return events;
-  }
-
-
-  /**
-   *  Gets the alertDateStringLongYear attribute of the ProjectList class
-   *
-   *@param  alertDate  Description of the Parameter
-   *@return            The alertDateStringLongYear value
-   */
-  public static String getAlertDateStringLongYear(java.sql.Date alertDate) {
-    String tmp = "";
-    try {
-      SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
-      formatter.applyPattern("M/d/yyyy");
-      return formatter.format(alertDate);
-    } catch (NullPointerException e) {
-    }
-    return tmp;
   }
 
 

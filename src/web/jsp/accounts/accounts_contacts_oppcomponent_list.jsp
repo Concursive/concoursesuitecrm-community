@@ -113,7 +113,7 @@ Opportunities
               <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
             </td>      
             <td valign="top" align="center" class="row<%= rowid %>" nowrap>
-              <zeroio:tz timestamp="<%= oppHeader.getModified() %>" />
+              <zeroio:tz timestamp="<%= oppHeader.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
             </td>       
           </tr>
       <%

@@ -69,9 +69,7 @@ Add User
 </dhv:evaluate>
 <%-- End license info --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-<% if (request.getAttribute("actionError") != null) { %>
-  <%= showError(request, "actionError") %>
-<%}%>
+<dhv:formMessage showSpace="false" />
   <tr>
     <th colspan="2">
       <strong>Add a user account</strong>

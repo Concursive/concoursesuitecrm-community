@@ -670,7 +670,7 @@ public final class Accounts extends CFSModule {
       organizationList.setPagedListInfo(searchListInfo);
       organizationList.setMinerOnly(false);
       organizationList.setTypeId(searchListInfo.getFilterKey("listFilter1"));
-      searchListInfo.setSearchCriteria(organizationList);
+      searchListInfo.setSearchCriteria(organizationList,UserUtils.getUserLocale(context.getRequest()));
       if ("my".equals(searchListInfo.getListView())) {
         organizationList.setOwnerId(this.getUserId(context));
       }
@@ -772,13 +772,13 @@ public final class Accounts extends CFSModule {
       if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
         newOrg.setName(newOrg.getNameLastFirstMiddle());
         newOrg.populatePrimaryContact();
-        newOrg.getPrimaryContact().setRequestItems(context.getRequest());
+        newOrg.getPrimaryContact().setRequestItems(context);
         //set the access type for the contact to the default permission for Account Contacts (public)
         AccessTypeList accessTypes = this.getSystemStatus(context).getAccessTypeList(db, AccessType.ACCOUNT_CONTACTS);
         newOrg.getPrimaryContact().setAccessType(accessTypes.getDefaultItem());
       } else {
         //don't want to populate the addresses, etc. if this is an individual account
-        newOrg.setRequestItems(context.getRequest());
+        newOrg.setRequestItems(context);
       }
       recordInserted = newOrg.insert(db);
       if (recordInserted) {
@@ -833,11 +833,11 @@ public final class Accounts extends CFSModule {
       if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
         newOrg.populatePrimaryContact(db);
         newOrg.updatePrimaryContact();
-        ((Contact) newOrg.getPrimaryContact()).setRequestItems(context.getRequest());
+        ((Contact) newOrg.getPrimaryContact()).setRequestItems(context);
         newOrg.setName(newOrg.getNameLastFirstMiddle());
       } else {
         //don't want to populate the addresses, etc. if this is an individual account
-        newOrg.setRequestItems(context.getRequest());
+        newOrg.setRequestItems(context);
       }
 
       resultCount = newOrg.update(db);

@@ -113,8 +113,8 @@ Modify Vehicle
 <input type="hidden" name="id" value="<%= InventoryDetails.getId() %>">
 <input type="hidden" name="modified" value="<%= InventoryDetails.getModified() %>">
 <input type="hidden" name="dosubmit" value="true">
-<br>
-<%= showError(request, "actionError") %>
+<br />
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th colspan="2" valign="center">

@@ -63,7 +63,7 @@
     <input type="button" value="Delete this page" onClick="javascript:window.location.href='ProjectManagementNews.do?command=DeletePage&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>';">
   </dhv:evaluate>
   <input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagementNews.do?command=Edit&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>';"><br>
-  <%= showError(request, "actionError") %>
+  <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2" align="left">

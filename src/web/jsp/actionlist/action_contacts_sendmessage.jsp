@@ -46,9 +46,8 @@
 
 </script>
 <form name="sendMessage" action="MyActionContacts.do?command=SendMessage&auto-populate=true&actionSource=MyActionContacts" method="post" onSubmit="return checkForm(this);">
-<dhv:evaluate if="<%= hasText((String) request.getAttribute("actionError")) %>">
-<%= showError(request, "actionError") %>
-</dhv:evaluate>
+<dhv:formMessage showSpace="false" />
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 Start by choosing an existing message or create a new one:<br>
 <SELECT SIZE="1" name="listView" onChange="javascript:updateMessageList();">
   <OPTION VALUE="my"<dhv:evaluate if="<%= "my".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>My Messages</OPTION>

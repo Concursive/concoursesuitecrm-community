@@ -184,7 +184,7 @@ public final class Quotes extends CFSModule {
       //Build the quote list
       quoteList.setPagedListInfo(searchListInfo);
       quoteList.setTypeId(searchListInfo.getFilterKey("listFilter1"));
-      searchListInfo.setSearchCriteria(quoteList);
+      searchListInfo.setSearchCriteria(quoteList,UserUtils.getUserLocale(context.getRequest()));
       /*
        *  if ("my".equals(searchListInfo.getListView())) {
        *  quoteList.setOwnerId(this.getUserId(context));

@@ -103,17 +103,17 @@
       <%= thisRequirement.getEstimatedLoeString() %>
     </td>
     <td valign="top" align="center" width="8%" nowrap>
-      <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" dateOnly="true" timeZone="<%= thisRequirement.getStartDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(thisRequirement.getStartDateTimeZone())){%>
-      <br />
       <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="--"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" dateOnly="true" timeZone="<%= thisRequirement.getStartDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
       <% } %>
     </td>
     <td valign="top" align="center" width="8%" nowrap>
-      <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" dateOnly="true" timeZone="<%= thisRequirement.getDeadlineTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(thisRequirement.getDeadlineTimeZone())){%>
-      <br />
       <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="--"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" dateOnly="true" timeZone="<%= thisRequirement.getDeadlineTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
       <% } %>
     </td>
   </tr>
@@ -214,7 +214,11 @@
       <zeroio:tz timestamp="<%= thisAssignment.getEstStartDate() %>" dateOnly="true"/>
     </td>
     <td valign="top" align="center" nowrap>
-      <%= thisAssignment.getRelativeDueDateString(User.getTimeZone(), User.getLocale()) %>
+      <%= thisAssignment.getRelativeDueDateString(thisAssignment.getDueDateTimeZone(), User.getLocale()) %>
+     <% if (!User.getTimeZone().equals(thisAssignment.getDueDateTimeZone())){ %>
+      <br />
+            <%= thisAssignment.getRelativeDueDateString(User.getTimeZone(), User.getLocale()) %>
+      <% } %>
     </td>
 <%
       } else if (mapItem.getFolderId() > -1) {

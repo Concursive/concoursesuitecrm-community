@@ -72,8 +72,8 @@
 </table>
 <br>
   <input type="submit" value=" Save ">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>';"><br>
-  <%= showError(request, "actionError") %>
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>';"><br />
+  <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">

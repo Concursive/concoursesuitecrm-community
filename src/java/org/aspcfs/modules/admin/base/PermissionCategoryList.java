@@ -298,7 +298,7 @@ public class PermissionCategoryList extends Vector {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
             sqlFilter.toString() +
-            "AND pc.category < ? ");
+            "AND lower(pc.category) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();

@@ -80,8 +80,8 @@ function updateUserList() {
 <%} else {%> 
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='ProjectManagementTickets.do?command=Details&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>'">
 <%}%>
-<br>
-<%= showError(request, "actionError") %>
+<br />
+<dhv:formMessage />
 <dhv:evaluate if="<%= ticket.getId() > -1 %>">
   <br>
   <strong>Ticket #<%= ticket.getProjectTicketCount() %></strong>

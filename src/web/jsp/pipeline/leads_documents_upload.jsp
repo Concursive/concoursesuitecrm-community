@@ -74,7 +74,7 @@ Upload Document
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
-      <%= showError(request, "actionError") %>
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th colspan="2">

@@ -13,6 +13,7 @@ import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.accounts.base.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 
 /**
  *  Contains a list of phone numbers... currently used to build the list from
@@ -45,11 +46,11 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
    *
    *@param  request  Description of the Parameter
    */
-  public OrganizationPhoneNumberList(HttpServletRequest request) {
+  public OrganizationPhoneNumberList(ActionContext context) {
     int i = 0;
-    while (request.getParameter("phone" + (++i) + "type") != null) {
+    while (context.getRequest().getParameter("phone" + (++i) + "type") != null) {
       OrganizationPhoneNumber thisPhoneNumber = new OrganizationPhoneNumber();
-      thisPhoneNumber.buildRecord(request, i);
+      thisPhoneNumber.buildRecord(context, i);
       if (thisPhoneNumber.isValid()) {
         this.addElement(thisPhoneNumber);
       }
@@ -211,7 +212,7 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
             sqlFilter.toString() +
-            "AND phone_type < ? ");
+            "AND lower(phone_type) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();

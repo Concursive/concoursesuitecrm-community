@@ -16,7 +16,7 @@
   <tr>
     <td>
       Email failed.  The email transport returned the following error:<br>
-      <%= showError(request, "actionError") %>
+      <dhv:formMessage />
       <input type="button" value="OK" onClick="javascript:window.close()"/>
     </td>
   </tr>

@@ -63,7 +63,7 @@
   }
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
-<%= showError(request, "actionError", false) %>
+<dhv:formMessage showSpace="false" />
 <form name="register" action="Setup.do?command=SendReg&auto-populate=true" method="post" onSubmit="return checkForm(this)">
 <input type="hidden" name="configured" value="1"/>
 <table border="0" width="100%">

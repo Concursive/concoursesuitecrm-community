@@ -61,7 +61,7 @@
   	<td class="containerBack" width="100%">
       <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
         <font color="red"><dhv:label name="tickets.alert.closed">This ticket has been closed:</dhv:label>
-        <zeroio:tz timestamp="<%= TicketDetails.getClosed() %>" />
+        <zeroio:tz timestamp="<%= TicketDetails.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
         </font><br />
       </dhv:evaluate>
 				<% if (TicketDetails.getClosed() != null) { %>
@@ -78,7 +78,8 @@
 					<%}%>
       <%}%>
       <br />
-		  	<%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+      <dhv:formMessage />
+      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   <%@ include file="troubletickets_modify_include.jsp" %>
   <% if (TicketDetails.getClosed() != null) { %>
     <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">

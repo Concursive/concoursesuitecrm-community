@@ -14,6 +14,7 @@
 <jsp:useBean id="IssueCategory" class="com.zeroio.iteam.base.IssueCategory" scope="request"/>
 <jsp:useBean id="Issue" class="com.zeroio.iteam.base.Issue" scope="request"/>
 <jsp:useBean id="projectIssueRepliesInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
@@ -53,7 +54,7 @@
             By <dhv:username id="<%= Issue.getEnteredBy() %>"/>
             -
             Posted on
-            <zeroio:tz timestamp="<%= Issue.getEntered() %>"/>
+            <zeroio:tz timestamp="<%= Issue.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
             <dhv:evaluate if="<%= !(Issue.getModified().equals(Issue.getEntered())) %>">
             (edited)
             </dhv:evaluate>
@@ -111,7 +112,7 @@
           By <dhv:username id="<%= thisReply.getEnteredBy() %>"/>
           -
           Posted on
-          <zeroio:tz timestamp="<%= thisReply.getEntered() %>"/>
+          <zeroio:tz timestamp="<%= thisReply.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
           <dhv:evaluate if="<%= !(thisReply.getModified().equals(thisReply.getEntered())) %>">
           (edited)
           </dhv:evaluate>

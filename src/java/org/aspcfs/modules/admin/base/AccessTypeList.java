@@ -114,7 +114,7 @@ public class AccessTypeList extends LookupList {
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString() +
-            "AND description < ? ");
+            "AND lower(description) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();

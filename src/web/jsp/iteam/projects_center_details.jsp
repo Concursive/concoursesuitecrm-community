@@ -45,7 +45,7 @@
       </dhv:evaluate>
       <dhv:evaluate if="<%= Project.getClosed() %>">
         <font color="blue">This project was closed on
-        <zeroio:tz timestamp="<%= Project.getCloseDate() %>" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%= Project.getCloseDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
         </font>
       </dhv:evaluate>
       <dhv:evaluate if="<%= !Project.getClosed() %>">
@@ -53,7 +53,7 @@
           <font color="red">This project is currently under review and has not been approved</font>
         </dhv:evaluate>
         <dhv:evaluate if="<%= Project.getApprovalDate() != null %>">
-          <font color="darkgreen">This project was approved on <zeroio:tz timestamp="<%= Project.getApprovalDate() %>" default="&nbsp;"/></font>
+          <font color="darkgreen">This project was approved on <zeroio:tz timestamp="<%= Project.getApprovalDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/></font>
         </dhv:evaluate>
       </dhv:evaluate>
     </td>
@@ -120,14 +120,14 @@
     <td nowrap class="formLabel">Entered</td>
     <td>
       <dhv:username id="<%= Project.getEnteredBy() %>"/>
-      <zeroio:tz timestamp="<%= Project.getEntered() %>"/>
+      <zeroio:tz timestamp="<%= Project.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">Modified</td>
     <td>
       <dhv:username id="<%= Project.getModifiedBy() %>"/>
-      <zeroio:tz timestamp="<%= Project.getModified() %>"/>
+      <zeroio:tz timestamp="<%= Project.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
     </td>
   </tr>
 </table>

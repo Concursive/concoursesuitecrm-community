@@ -14,6 +14,6 @@
     opener.insertOption(text, value, 'contactId');
   }
 </script>
-  <body onload=javascript:addContact('<%= toJavaScript(ContactDetails.getNameLastFirst()) %>','<%= ContactDetails.getId() %>');window.close();>
+  <body onload="javascript:addContact('<%= toJavaScript(ContactDetails.getValidName()) %>','<%= ContactDetails.getId() %>');window.close();" />
 </body>
 </html>

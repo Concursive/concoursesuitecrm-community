@@ -506,7 +506,7 @@ public class PagedListInfo implements Serializable {
    *@param  obj  The new searchCriteria value
    *@return      Description of the Return Value
    */
-  public boolean setSearchCriteria(Object obj) {
+  public boolean setSearchCriteria(Object obj, Locale locale) {
     if (!this.getSavedCriteria().isEmpty()) {
 
       Iterator hashIterator = this.getSavedCriteria().keySet().iterator();
@@ -523,9 +523,6 @@ public class PagedListInfo implements Serializable {
           if (tempKey.startsWith("searchcode")) {
             ObjectUtils.setParam(obj, tempKey.substring(10), this.getCriteriaValue(tempKey));
           } else if (tempKey.startsWith("searchdate")) {
-            String language = System.getProperty("LANGUAGE");
-            String country = System.getProperty("COUNTRY");
-            Locale locale = new Locale(language, country);
             Timestamp tmpTimestamp = DateUtils.getUserToServerDateTime(null, DateFormat.SHORT, DateFormat.LONG, this.getCriteriaValue(tempKey), locale);
             if (tmpTimestamp != null) {
               boolean modified = false;

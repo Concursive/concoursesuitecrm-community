@@ -152,11 +152,12 @@ Add Ticket
   <tr>
     <td class="containerBack">
 <form name="addticket" action="AccountTickets.do?command=InsertTicket&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-  <input type="submit" value="Insert" name="Save" />
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
-  <%= showAttribute(request, "closedError") %>
-  <br />
-  <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<input type="submit" value="Insert" name="Save" />
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+<%= showAttribute(request, "closedError") %>
+<br />
+<dhv:formMessage />
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 	<tr>
     <th colspan="2">

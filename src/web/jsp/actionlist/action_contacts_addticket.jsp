@@ -10,9 +10,8 @@
 <%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*" %>
 <%@ include file="../initPage.jsp" %>
 <form name="addticket" action="TroubleTickets.do?command=Insert&auto-populate=true&actionSource=MyActionContacts" method="post">
-<dhv:evaluate if="<%= hasText((String) request.getAttribute("actionError")) %>">
-<%= showError(request, "actionError") %>
-</dhv:evaluate>
+<dhv:formMessage showSpace="false" />
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <% if (request.getAttribute("closedError") != null) { %>
   <%= showAttribute(request, "closedError") %>
 <%}%>

@@ -51,7 +51,8 @@ Add Activity Log
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
       <input type="button" value="Cancel" onClick="window.location.href='TroubleTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />
       <br />
-      <%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+      <dhv:formMessage />
+      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <%@ include file="troubletickets_update_activity_include.jsp" %>
       <br />
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />

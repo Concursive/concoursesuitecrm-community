@@ -16,6 +16,7 @@
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript">
@@ -63,8 +64,8 @@ Personal Information
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile';this.form.dosubmit.value='false';">
 </dhv:permission>
-<br>
-<%= showError(request, "actionError") %>
+<br />
+<dhv:formMessage />
 <input type="hidden" name="empid" value="<%= EmployeeBean.getId() %>">
 <input type="hidden" name="id" value="<%= EmployeeBean.getId() %>">
 <input type="hidden" name="modified" value="<%= EmployeeBean.getModified().toString() %>">
@@ -253,7 +254,7 @@ Personal Information
       Country
     </td>
     <td>
-      <%= CountrySelect.getHtml("address" + acount + "country") %>
+      <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
     </td>
   </tr>
   <tr>
@@ -316,7 +317,7 @@ Personal Information
       Country
     </td>
     <td>
-    	<%= CountrySelect.getHtml("address" + acount + "country") %>
+    	<%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
     </td>
   </tr>
 </table>

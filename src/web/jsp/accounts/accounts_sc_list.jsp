@@ -14,6 +14,7 @@
 <jsp:useBean id="serviceContractCategoryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="serviceContractTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ServiceContractListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -101,10 +102,18 @@ Service Contracts
       </dhv:evaluate>&nbsp;
       </td>
       <td width="20%">
-        <zeroio:tz timestamp="<%=thisContract.getCurrentStartDate()%>" dateOnly="true" default="&nbsp;"/>
+        <% if(!User.getTimeZone().equals(thisContract.getCurrentStartDateTimeZone())){%>
+        <zeroio:tz timestamp="<%= thisContract.getCurrentStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+        <% } else { %>
+        <zeroio:tz timestamp="<%= thisContract.getCurrentStartDate() %>" dateOnly="true" timeZone="<%= thisContract.getCurrentStartDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+        <% } %>
       </td>
       <td width="20%"  nowrap>
-        <zeroio:tz timestamp="<%=thisContract.getCurrentEndDate()%>" dateOnly="true" default="&nbsp;"/>
+        <% if(!User.getTimeZone().equals(thisContract.getCurrentEndDateTimeZone())){%>
+        <zeroio:tz timestamp="<%= thisContract.getCurrentEndDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+        <% } else {%>
+        <zeroio:tz timestamp="<%= thisContract.getCurrentEndDate() %>" dateOnly="true" timeZone="<%= thisContract.getCurrentEndDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+        <% } %>
       </td>
     </tr>
     <%  

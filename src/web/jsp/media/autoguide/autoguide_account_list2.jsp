@@ -36,7 +36,7 @@ Vehicle Inventory List
     <td class="containerBack">
 <dhv:permission name="accounts-autoguide-inventory-add"><a href="AccountsAutoGuide.do?command=AccountAdd&orgId=<%= OrgDetails.getOrgId() %>">Add a Vehicle</a></dhv:permission>
 <dhv:permission name="accounts-autoguide-inventory-add" none="true"><br></dhv:permission>
-<center><%= showError(request, "actionError") %></center>
+<center><dhv:formMessage /></center>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>">

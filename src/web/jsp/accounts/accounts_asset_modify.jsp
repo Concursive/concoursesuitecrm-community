@@ -51,8 +51,9 @@
       <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
       <input type="hidden" name="id" value="<%= asset.getId() %>" />
       <input type="hidden" name="return" value="<%= request.getParameter("return") %>" />
-      <br />
-<%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<br />
+<dhv:formMessage />
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <%@ include file="accountasset_include.jsp" %>
 <br>
   <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />

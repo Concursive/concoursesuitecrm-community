@@ -11,6 +11,7 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="ActiveSurvey" class="org.aspcfs.modules.communications.base.ActiveSurvey" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
@@ -65,7 +66,13 @@ Campaign Details
             Schedule
           </td>
           <td>
-            <font color="green">Scheduled to run on <%= Campaign.getActiveDateString() %></font>
+            <font color="green">Scheduled to run on 
+            <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= Campaign.getActiveDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <% if(!User.getTimeZone().equals(Campaign.getActiveDateTimeZone())){%>
+            <br />
+            <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <% } %>
+            </font>
           </td>
         </tr>
         <tr class="containerBody">
@@ -82,7 +89,7 @@ Campaign Details
           </td>
           <td>
             <dhv:username id="<%= Campaign.getEnteredBy() %>" />
-            <zeroio:tz timestamp="<%= Campaign.getEntered() %>" />
+            <zeroio:tz timestamp="<%= Campaign.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
           </td>
         </tr>
         <tr class="containerBody">
@@ -91,7 +98,7 @@ Campaign Details
           </td>
           <td>
             <dhv:username id="<%= Campaign.getModifiedBy() %>" />
-            <zeroio:tz timestamp="<%= Campaign.getModified() %>" />
+            <zeroio:tz timestamp="<%= Campaign.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
           </td>
         </tr>
       </table>

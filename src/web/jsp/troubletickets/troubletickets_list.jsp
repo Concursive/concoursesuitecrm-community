@@ -17,6 +17,7 @@
 <jsp:useBean id="OpenInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="AllTicketsList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="AllTicketsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -78,7 +79,11 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 			<%= toHtml(assignedTic.getPriorityName()) %>
 		</td>
 		<td width="15%" valign="top" nowrap>
-      <zeroio:tz timestamp="<%=assignedTic.getEstimatedResolutionDate()%>" dateOnly="true" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(assignedTic.getEstimatedResolutionDateTimeZone())){%>
+      <zeroio:tz timestamp="<%= assignedTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= assignedTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= assignedTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
 		</td>
 		<td width="6%" align="right" valign="top" nowrap>
 			<%= assignedTic.getAgeOf() %>
@@ -169,7 +174,11 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 			<%= toHtml(openTic.getPriorityName()) %>
 		</td>
 		<td width="15%" valign="top" class="row<%= rowid %>">
-      <zeroio:tz timestamp="<%=openTic.getEstimatedResolutionDate()%>" dateOnly="true" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(openTic.getEstimatedResolutionDateTimeZone())){%>
+      <zeroio:tz timestamp="<%= openTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= openTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= openTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
 		</td>
 		<td width="6%" align="right" valign="top" nowrap class="row<%= rowid %>">
 			<%= openTic.getAgeOf() %>
@@ -267,7 +276,11 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 			<%= toHtml(thisTic.getPriorityName()) %>
 		</td>
 		<td width="15%" valign="top" class="row<%= rowid %>">
-      <zeroio:tz timestamp="<%=thisTic.getEstimatedResolutionDate()%>" dateOnly="true" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(thisTic.getEstimatedResolutionDateTimeZone())){%>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= thisTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
 		</td>
 		<td width="6%" align="right" valign="top" nowrap>
 			<%= thisTic.getAgeOf() %>
@@ -366,7 +379,11 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 			<%= toHtml(thisTic.getPriorityName()) %>
 		</td>
 		<td width="15%" valign="top" class="row<%= rowid %>">
-      <zeroio:tz timestamp="<%=thisTic.getEstimatedResolutionDate()%>" dateOnly="true" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(thisTic.getEstimatedResolutionDateTimeZone())){%>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= thisTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
 		</td>
 		<td width="6%" align="right" valign="top" nowrap>
 			<%= thisTic.getAgeOf() %>

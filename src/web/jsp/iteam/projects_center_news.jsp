@@ -81,8 +81,10 @@
     <th width="100%">
       <img alt="" src="images/icons/stock_news-16.gif" align="absmiddle">
       <font size="2"><strong><%= toHtml(thisArticle.getSubject()) %></strong></font>
+      <font color="red">
       <dhv:evaluate if="<%= thisArticle.getStatus() == NewsArticle.DRAFT %>">(Draft)</dhv:evaluate>
       <dhv:evaluate if="<%= thisArticle.getStatus() == NewsArticle.UNAPPROVED %>">(Unapproved)</dhv:evaluate>
+      </font>
     </th>
   </tr>
   <tr class="row1">

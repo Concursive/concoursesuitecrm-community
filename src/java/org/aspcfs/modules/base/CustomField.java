@@ -1331,13 +1331,10 @@ public class CustomField extends GenericBean implements Cloneable {
         case CURRENCY:
           try {
             double thisAmount = Double.parseDouble(enteredValue);
-            Locale locale = new Locale(System.getProperty("LANGUAGE"),System.getProperty("COUNTRY"));
-            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
-            Currency currency = Currency.getInstance(System.getProperty("CURRENCY"));
-            currencyFormatter.setCurrency(currency);
-            return (currencyFormatter.format(thisAmount));
+            NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+            return (numberFormatter.format(thisAmount));
           } catch (Exception e) {
-            return ("$" + StringUtils.toHtml(enteredValue));
+            return (StringUtils.toHtml(enteredValue));
           }
         case PERCENT:
           return (StringUtils.toHtml(enteredValue) + "%");
@@ -1940,22 +1937,54 @@ public class CustomField extends GenericBean implements Cloneable {
 
       if (type == CURRENCY) {
         try {
-          Locale locale = new Locale(System.getProperty("LANGUAGE"),System.getProperty("COUNTRY"));
-          NumberFormat nf = NumberFormat.getInstance(locale);
-          enteredDouble = nf.parse(this.getEnteredValue()).doubleValue();
-          Double tmpDouble = new Double(enteredDouble);
-          this.setEnteredValue(tmpDouble.toString()); 
+          String testString = StringUtils.replace(this.getEnteredValue(), ",", "");
+          testString = StringUtils.replace(testString, "$", "");
+          double testNumber = Double.parseDouble(testString);
+          this.setEnteredValue(testString);
+          enteredDouble = testNumber;
         } catch (Exception e) {
           error = "Value should be a number";
         }
       }
 
       if (type == DATE) {
+          // a temporary and insufficient fix for dates in custom fields
         try {
+          /*
           Locale locale = new Locale(System.getProperty("LANGUAGE"),System.getProperty("COUNTRY"));
           DateFormat localeFormatter = DateFormat.getDateInstance(DateFormat.SHORT,locale);
           localeFormatter.setLenient(false);
           localeFormatter.parse(this.getEnteredValue());
+          */
+          String[] sep = null;
+          if (this.getEnteredValue().indexOf("/") != -1){
+            sep = this.getEnteredValue().split("/");
+          }else if (this.getEnteredValue().indexOf("-") != -1){
+            sep = this.getEnteredValue().split("-");
+          }else if (this.getEnteredValue().indexOf(".") != -1){
+            sep = this.getEnteredValue().split(".");
+          }
+          if (sep == null){
+            throw new java.text.ParseException("invalid date", 0);
+          }else if (sep.length != 3){
+            throw new java.text.ParseException("invalid date", 0);
+          }else{
+            int md1 = -1;
+            int md2 = -1;
+            int year = -1;
+            md1 = Integer.parseInt(sep[0]);
+            md2 = Integer.parseInt(sep[1]);
+            year = Integer.parseInt(sep[2]);
+            //This check is not suitable if locale is ja_JP (i.e., Japan)
+            //The only check that is made is to ensure that all entries are numbers
+            /*
+            if ((md1 <= 0 || md1 > 31) ||
+                (md2 <= 0 || md2 > 31) ||
+                (year < 0 || (year > 99 && year < 999) || year > 2200)) {
+                  throw new java.text.ParseException("invalid date", 0);
+            }
+            */
+          }
         } catch (java.text.ParseException e) {
           error = "Value should be a valid date";
         }

@@ -10,6 +10,7 @@
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="org.aspcfs.utils.DateUtils" %>
 <%
   String month = request.getParameter("month");
   String day = request.getParameter("day");
@@ -22,7 +23,7 @@
   }
   Locale locale = new Locale(language, country);
   SimpleDateFormat formatter = (SimpleDateFormat)SimpleDateFormat.getDateInstance(DateFormat.SHORT, locale);
-  formatter.applyPattern(formatter.toPattern() + "yy");
+  formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
   Calendar cal = Calendar.getInstance();
   cal.set(Calendar.YEAR, Integer.parseInt(year));
   cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));

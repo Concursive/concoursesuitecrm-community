@@ -11,6 +11,7 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.mycfs.base.*, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="CFSNoteList" class="org.aspcfs.modules.mycfs.base.CFSNoteList" scope="request"/>
 <jsp:useBean id="InboxInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -130,7 +131,9 @@ Mailbox
 		<td valign="center" class="row<%= rowid %>"><%= recipientList.toString() %></td>
                 <%
 		}%>
-		<td valign="center" class="row<%= rowid %>" nowrap><zeroio:tz timestamp="<%= thisNote.getEntered() %>" /></td>
+		<td valign="center" class="row<%= rowid %>" nowrap>
+      <zeroio:tz timestamp="<%= thisNote.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+    </td>
   </tr>
 <%}%>
 </table>

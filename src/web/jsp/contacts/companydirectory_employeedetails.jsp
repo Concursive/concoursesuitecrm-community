@@ -11,6 +11,7 @@
 <%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*" %>
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <form name="details" action="CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>" method="post">
@@ -155,7 +156,7 @@
     </td>
     <td>
       <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
-      <zeroio:tz timestamp="<%= ContactDetails.getEntered()  %>" />
+      <zeroio:tz timestamp="<%= ContactDetails.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
     </td>
   </tr>
   <tr class="containerBody">
@@ -164,7 +165,7 @@
     </td>
     <td>
       <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
-      <zeroio:tz timestamp="<%= ContactDetails.getModified()  %>" />
+      <zeroio:tz timestamp="<%= ContactDetails.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
     </td>
   </tr>
 </table>

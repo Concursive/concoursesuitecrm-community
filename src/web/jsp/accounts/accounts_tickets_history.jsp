@@ -11,6 +11,7 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.troubletickets.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -58,7 +59,7 @@ History
               <%= toHtml(thisEntry.getEnteredByName()) %>
             </td>
             <td nowrap valign="top">
-              <zeroio:tz timestamp="<%= thisEntry.getEntered() %>" />
+              <zeroio:tz timestamp="<%= thisEntry.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
             </td>
             <td valign="top" width="100%">
               <%= toHtml(thisEntry.getEntryText()) %>

@@ -14,6 +14,7 @@
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="categoryList" class="org.aspcfs.modules.tasks.base.TaskCategoryList" scope="request"/>
 <jsp:useBean id="projectListsCategoriesInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="initPopupMenu.jsp" %>
@@ -84,7 +85,7 @@
     </td>
     <td class="row<%= rowid %>" valign="top" align="center" nowrap><%= thisCategory.getTaskCount() %></td>
     <td class="row<%= rowid %>" valign="top" align="center" nowrap>
-      <zeroio:tz timestamp="<%= thisCategory.getLastTaskEntered() %>" default="--"/>
+      <zeroio:tz timestamp="<%= thisCategory.getLastTaskEntered() %>" default="--" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
     </td>
   </tr>
 <%    

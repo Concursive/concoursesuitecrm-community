@@ -13,6 +13,7 @@
 <jsp:useBean id="SKIN" class="java.lang.String" scope="application"/>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="fileFolderList" class="com.zeroio.iteam.base.FileFolderList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="initPopupMenu.jsp" %>
@@ -97,7 +98,7 @@
       --
     </td>
     <td class="row<%= rowid %>" align="center" nowrap>
-      <zeroio:tz timestamp="<%= thisFolder.getModified() %>"/><br />
+      <zeroio:tz timestamp="<%= thisFolder.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/><br />
       <dhv:username id="<%= thisFolder.getModifiedBy() %>"/>
     </td>
   </tr>
@@ -128,7 +129,7 @@
       <%= thisFile.getVersion() %>&nbsp;
     </td>
     <td class="row<%= rowid %>" align="center" nowrap>
-      <zeroio:tz timestamp="<%= thisFile.getModified() %>"/><br />
+      <zeroio:tz timestamp="<%= thisFile.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/><br />
       <dhv:username id="<%= thisFile.getModifiedBy() %>"/>
     </td>
   </tr>

@@ -12,6 +12,7 @@
 <jsp:useBean id="contact" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="ResponseDetails" class="org.aspcfs.modules.communications.base.ActiveSurveyQuestionList" scope="request"/>
 <jsp:useBean id="ResponseListDetailsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>

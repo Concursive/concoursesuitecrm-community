@@ -71,9 +71,7 @@
 <% breakAdded = true; %>
 </dhv:permission>
 </dhv:evaluate>
-<dhv:evaluate if="<%= request.getParameter("actionError") != null %>">
-<font color="red"><%= toString(request.getParameter("actionError")) %></font>
-</dhv:evaluate>
+<dhv:formMessage showSpace="false" />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

@@ -41,7 +41,8 @@
          <input type="button" value="Cancel" onClick="window.close()" />
       <%}%>
       <br />
-      <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+      <dhv:formMessage />
+      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <%-- include basic troubleticket modify form --%>
       <%@ include file="troubletickets_modify_include.jsp" %>
       <% if (TicketDetails.getClosed() != null) { %>

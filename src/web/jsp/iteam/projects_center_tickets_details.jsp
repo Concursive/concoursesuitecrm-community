@@ -17,6 +17,7 @@
 <jsp:useBean id="ticket" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="ticketList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="projectTicketsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <form name="details" action="ProjectManagementTickets.do?command=Modify&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>" method="post">
@@ -164,7 +165,7 @@
 		<td>
       <dhv:username id="<%= ticket.getEnteredBy() %>"/>
       -
-      <zeroio:tz timestamp="<%= ticket.getEntered() %>"/>
+      <zeroio:tz timestamp="<%= ticket.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
 		</td>
   </tr>
   <tr class="containerBody">
@@ -174,7 +175,7 @@
 		<td>
       <dhv:username id="<%= ticket.getModifiedBy() %>"/>
       -
-      <zeroio:tz timestamp="<%= ticket.getModified() %>" />
+      <zeroio:tz timestamp="<%= ticket.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
 		</td>
   </tr>
 <%--
@@ -208,7 +209,7 @@
 			<%}%>
 			<td nowrap valign="top" align="right">
         <dhv:username id="<%= thisEntry.getEnteredBy() %>"/>
-        <zeroio:tz timestamp="<%= thisEntry.getEntered() %>"/>
+        <zeroio:tz timestamp="<%= thisEntry.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
 			</td>
 			<td valign="top" width="100%">
         <%= toHtml(thisEntry.getEntryText()) %>

@@ -13,6 +13,7 @@
 <jsp:useBean id="SKIN" class="java.lang.String" scope="application"/>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="IssueCategory" class="com.zeroio.iteam.base.IssueCategory" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="initPopupMenu.jsp" %>
@@ -81,7 +82,7 @@
       <%= ((thisIssue.getReplyCount()==0)?"0":""+thisIssue.getReplyCount()) %>
     </td>
     <td class="row<%= rowid %>" valign="top" align="center" nowrap>
-      <zeroio:tz timestamp="<%= thisIssue.getReplyDate() %>"/><br />
+      <zeroio:tz timestamp="<%= thisIssue.getReplyDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/><br />
       <%= ((thisIssue.getReplyCount()==0)?"":"by") %>
       <dhv:username id="<%= thisIssue.getReplyBy() %>"/>
     </td>

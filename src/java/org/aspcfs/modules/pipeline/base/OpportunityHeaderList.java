@@ -499,7 +499,7 @@ public class OpportunityHeaderList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
             sqlFilter.toString() +
-            "AND x.description < ? ");
+            "AND lower(x.description) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();

@@ -11,7 +11,7 @@ import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 import java.sql.Timestamp;
 import java.sql.Date;
-import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.*;
 import java.text.*;
 import java.util.Locale;
 import org.aspcfs.modules.login.beans.UserBean;
@@ -259,14 +259,14 @@ public class DateTimeHandler extends TagSupport {
         } else {
           if (dateOnly) {
             if ((showTimeZone) && (timeZone != null)) {
-              formatter.applyPattern(formatter.toPattern() + "yy z");
+              formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()) + " z");
             } else {
-              formatter.applyPattern(formatter.toPattern() + "yy");
+              formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
             }
           } else {
             SimpleDateFormat dateFormatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
                 dateFormat, locale);
-            dateFormatter.applyPattern(dateFormatter.toPattern() + "yy");
+            dateFormatter.applyPattern(DateUtils.get4DigitYearDateFormat(dateFormatter.toPattern()));
 
             SimpleDateFormat timeFormatter = (SimpleDateFormat) SimpleDateFormat.getTimeInstance(
                 timeFormat, locale);
@@ -302,6 +302,5 @@ public class DateTimeHandler extends TagSupport {
   public int doEndTag() {
     return EVAL_PAGE;
   }
-
 }
 

@@ -14,6 +14,7 @@
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="ticketList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="projectTicketsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="initPopupMenu.jsp" %>
@@ -134,9 +135,9 @@
     </td>
     <td valign="top" align="center" nowrap>
 <% if (thisTicket.getClosed() == null) { %>
-      <zeroio:tz timestamp="<%= thisTicket.getModified() %>"/>
+      <zeroio:tz timestamp="<%= thisTicket.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
 <%} else {%>
-      <zeroio:tz timestamp="<%= thisTicket.getClosed() %>"/>
+      <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
 <%}%>
     </td>
 	</tr>

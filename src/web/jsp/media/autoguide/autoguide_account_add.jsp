@@ -108,8 +108,8 @@ Add Vehicle
 <input type="submit" value="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <input type="hidden" name="dosubmit" value="true">
-<br>
-<%= showError(request, "actionError") %>
+<br />
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2" valign="center">

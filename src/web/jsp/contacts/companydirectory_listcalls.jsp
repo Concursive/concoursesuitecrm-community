@@ -16,6 +16,7 @@
 <jsp:useBean id="CompletedCallsListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="CallTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="callResultList" class="org.aspcfs.modules.contacts.base.CallResultList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -95,7 +96,11 @@ Activities
             <%= toHtml(thisCall.getContactName()) %>
           </td>
           <td valign="top" nowrap>
-            <zeroio:tz timestamp="<%= thisCall.getAlertDate() %>" />
+            <% if(!User.getTimeZone().equals(thisCall.getAlertDateTimeZone())){%>
+            <zeroio:tz timestamp="<%= thisCall.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <% } else { %>
+            <zeroio:tz timestamp="<%= thisCall.getAlertDate() %>" dateOnly="true" timeZone="<%= thisCall.getAlertDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <% } %>
           </td>
           <td valign="top" nowrap>
             <dhv:username id="<%= thisCall.getOwner() %>" firstInitialLast="true"/>
@@ -193,7 +198,7 @@ Activities
             <dhv:username id="<%= thisCall.getEnteredBy() %>" firstInitialLast="true"/>
           </td>
           <td valign="top" nowrap>
-            <zeroio:tz timestamp="<%= thisCall.getEntered() %>" />
+            <zeroio:tz timestamp="<%= thisCall.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
           </td>
         </tr>
         <dhv:evaluate if="<%= CompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>">

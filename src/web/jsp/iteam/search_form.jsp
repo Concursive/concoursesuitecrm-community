@@ -23,63 +23,56 @@
     return "";
   }
 %>
-<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
-<table border="0" cellspacing="0" cellpadding="4" width="100%">
-  <tr class="shadow">
-    <td align="center" style="border-top: 1px solid #000; border-left: 1px solid #000; border-right: 1px solid #000" nowrap width="100%">
+<br />
+<form name="search" action="ProjectManagementSearch.do?auto-populate=true" method="post">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <b>Search</b>
+    </th>
+  </tr>
+  <tr>
+    <td class="formLabel">
+      Scope
+    </td>
+    <td>
+      <select name="scope" onChange="this.form.query.focus()">
+      <dhv:evaluate if="<%= request.getAttribute("Project") != null && ((Project) request.getAttribute("Project")).getId() > -1 %>">
+          <option value="this" <%= selected(searchBean, SearchBean.THIS, SearchBean.UNDEFINED) %>>This Project</option>
+          <option value="thisNews" <%= selected(searchBean, SearchBean.THIS, SearchBean.NEWS) %>>&nbsp; News</option>
+          <option value="thisDiscussion" <%= selected(searchBean, SearchBean.THIS, SearchBean.DISCUSSION) %>>&nbsp; Discussion</option>
+          <option value="thisDocuments" <%= selected(searchBean, SearchBean.THIS, SearchBean.DOCUMENTS) %>>&nbsp; Documents</option>
+          <option value="thisLists" <%= selected(searchBean, SearchBean.THIS, SearchBean.LISTS) %>>&nbsp; Lists</option>
+          <option value="thisPlan" <%= selected(searchBean, SearchBean.THIS, SearchBean.PLAN) %>>&nbsp; Plan</option>
+          <option value="thisTickets" <%= selected(searchBean, SearchBean.THIS, SearchBean.TICKETS) %>>&nbsp; Tickets</option>
+          <option value="thisDetails" <%= selected(searchBean, SearchBean.THIS, SearchBean.DETAILS) %>>&nbsp; Details</option>
+      </dhv:evaluate>
+          <option value="all" <%= selected(searchBean, SearchBean.ALL, SearchBean.UNDEFINED) %>>All Project Data</option>
+          <option value="allNews" <%= selected(searchBean, SearchBean.ALL, SearchBean.NEWS) %>>&nbsp; News</option>
+          <option value="allDiscussion" <%= selected(searchBean, SearchBean.ALL, SearchBean.DISCUSSION) %>>&nbsp; Discussion</option>
+          <option value="allDocuments" <%= selected(searchBean, SearchBean.ALL, SearchBean.DOCUMENTS) %>>&nbsp; Documents</option>
+          <option value="allLists" <%= selected(searchBean, SearchBean.ALL, SearchBean.LISTS) %>>&nbsp; Lists</option>
+          <option value="allPlan" <%= selected(searchBean, SearchBean.ALL, SearchBean.PLAN) %>>&nbsp; Plan</option>
+          <option value="allTickets" <%= selected(searchBean, SearchBean.ALL, SearchBean.TICKETS) %>>&nbsp; Tickets</option>
+          <option value="allDetails" <%= selected(searchBean, SearchBean.ALL, SearchBean.DETAILS) %>>&nbsp; Details</option>
+      </select>
+      <dhv:evaluate if="<%= request.getAttribute("Project") != null && ((Project) request.getAttribute("Project")).getId() > -1 %>">
+          <input type="hidden" name="projectId" value="<%= ((Project) request.getAttribute("Project")).getId() %>" />
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= request.getAttribute("Project") == null || ((Project) request.getAttribute("Project")).getId() == -1 %>">
+        <input type="hidden" name="projectId" value="-1" />
+      </dhv:evaluate>
     </td>
   </tr>
-  <tr bgColor="#FFFFFF">
-    <td style="border-left: 1px solid #000; border-right: 1px solid #000; border-bottom: 1px solid #000;" width="100%">
-      <table border="0" cellpadding="2" cellspacing="0" width="100%">
-        <form name="search" action="ProjectManagementSearch.do?auto-populate=true" method="post">
-        <tr>
-          <td>
-            <select name="scope" onChange="this.form.query.focus()">
-            <dhv:evaluate if="<%= request.getAttribute("Project") != null && ((Project) request.getAttribute("Project")).getId() > -1 %>">
-                <option value="this" <%= selected(searchBean, SearchBean.THIS, SearchBean.UNDEFINED) %>>This Project</option>
-                <option value="thisNews" <%= selected(searchBean, SearchBean.THIS, SearchBean.NEWS) %>>&nbsp; News</option>
-                <option value="thisDiscussion" <%= selected(searchBean, SearchBean.THIS, SearchBean.DISCUSSION) %>>&nbsp; Discussion</option>
-                <option value="thisDocuments" <%= selected(searchBean, SearchBean.THIS, SearchBean.DOCUMENTS) %>>&nbsp; Documents</option>
-                <option value="thisLists" <%= selected(searchBean, SearchBean.THIS, SearchBean.LISTS) %>>&nbsp; Lists</option>
-                <option value="thisPlan" <%= selected(searchBean, SearchBean.THIS, SearchBean.PLAN) %>>&nbsp; Plan</option>
-                <option value="thisTickets" <%= selected(searchBean, SearchBean.THIS, SearchBean.TICKETS) %>>&nbsp; Tickets</option>
-                <option value="thisDetails" <%= selected(searchBean, SearchBean.THIS, SearchBean.DETAILS) %>>&nbsp; Details</option>
-            </dhv:evaluate>
-                <option value="all" <%= selected(searchBean, SearchBean.ALL, SearchBean.UNDEFINED) %>>All Projects</option>
-                <option value="allNews" <%= selected(searchBean, SearchBean.ALL, SearchBean.NEWS) %>>&nbsp; News</option>
-                <option value="allDiscussion" <%= selected(searchBean, SearchBean.ALL, SearchBean.DISCUSSION) %>>&nbsp; Discussion</option>
-                <option value="allDocuments" <%= selected(searchBean, SearchBean.ALL, SearchBean.DOCUMENTS) %>>&nbsp; Documents</option>
-                <option value="allLists" <%= selected(searchBean, SearchBean.ALL, SearchBean.LISTS) %>>&nbsp; Lists</option>
-                <option value="allPlan" <%= selected(searchBean, SearchBean.ALL, SearchBean.PLAN) %>>&nbsp; Plan</option>
-                <option value="allTickets" <%= selected(searchBean, SearchBean.ALL, SearchBean.TICKETS) %>>&nbsp; Tickets</option>
-                <option value="allDetails" <%= selected(searchBean, SearchBean.ALL, SearchBean.DETAILS) %>>&nbsp; Details</option>
-            </select>
-            <dhv:evaluate if="<%= request.getAttribute("Project") != null && ((Project) request.getAttribute("Project")).getId() > -1 %>">
-                <input type="hidden" name="projectId" value="<%= ((Project) request.getAttribute("Project")).getId() %>" />
-            </dhv:evaluate>
-            <dhv:evaluate if="<%= request.getAttribute("Project") == null || ((Project) request.getAttribute("Project")).getId() == -1 %>">
-              <input type="hidden" name="projectId" value="-1" />
-            </dhv:evaluate>
-            <a href="javascript:popURL('ProjectManagementSearch.do?command=Tips&popup=true','Search_Tips','350','375','yes','yes');">tips</a>
-          </td>
-        </tr>
-        <tr>
-          <td nowrap>
-            <input type="text" size="15" name="query" value="<%= toHtmlValue(searchBean.getQuery()) %>" />
-            <input type="image" src="images/icons/stock_zoom-16.gif" systran="yes" border="0" alt="Search" name="Search" value="Search" align="absMiddle" />
-          </td>
-        </tr>
-        <%--
-        <tr>
-          <td nowrap>
-            <a href="Search.do?command=Advanced">Advanced search</a>
-          </td>
-        </tr>
-        --%>
-        </form>
-      </table>
+  <tr>
+    <td class="formLabel">
+      For
+    </td>
+    <td>
+      <input type="text" size="15" name="query" value="<%= toHtmlValue(searchBean.getQuery()) %>" />
     </td>
   </tr>
 </table>
+<br />
+<input type="submit" name="Search" value="Search" />
+</form>

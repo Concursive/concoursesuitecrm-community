@@ -11,6 +11,7 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.actionlist.base.*, org.aspcfs.modules.base.Constants"%>
 <jsp:useBean id="ActionLists" class="org.aspcfs.modules.actionlist.base.ActionLists" scope="request"/>
 <jsp:useBean id="ActionListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -100,7 +101,7 @@ Action Lists
       <%= thisList.getTotal() %>
     </td>
     <td nowrap align="center">
-      <zeroio:tz timestamp="<%= thisList.getModified() %>" />
+      <zeroio:tz timestamp="<%= thisList.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
     </td>
   </tr>
 <%}

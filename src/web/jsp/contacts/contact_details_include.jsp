@@ -7,6 +7,7 @@
   - Description: 
   --%>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*" %>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <%@ include file="contact_details_header_include.jsp" %>
@@ -153,7 +154,7 @@
     </td>
     <td>
       <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
-      <zeroio:tz timestamp="<%= ContactDetails.getEntered()  %>" />
+      <zeroio:tz timestamp="<%= ContactDetails.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
     </td>
   </tr>
   <tr class="containerBody">
@@ -162,7 +163,7 @@
     </td>
     <td>
       <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
-      <zeroio:tz timestamp="<%= ContactDetails.getModified()  %>" />
+      <zeroio:tz timestamp="<%= ContactDetails.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
     </td>
   </tr>
 </table>

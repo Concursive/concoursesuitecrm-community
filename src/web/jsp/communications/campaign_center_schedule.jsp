@@ -65,8 +65,8 @@ Delivery
 <input type="submit" name="Save" value="Update Campaign Schedule">
 </dhv:permission>
 <input type="button" value="Cancel" onClick="javascript:window.location.href='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'"><br>
-&nbsp;<br />
-<%=showError(request,"actionError")%>
+<br />
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">

@@ -13,8 +13,7 @@
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].description.focus();">
 <form name="addTask" action="TroubleTicketTasks.do?command=Save&id=<%= Task.getId() %>&auto-populate=true" method="post" onSubmit="return validateTask();">
-<%= showError(request, "actionError") %>
-
+<dhv:formMessage />
 <%@ include file="../tasks/task_include.jsp" %>
 
 <br>

@@ -66,9 +66,8 @@ function checkForm(form) {
 }
 </script>
 <form name="opportunityForm" action="ExternalContactsOpps.do?command=Save&contactId=<%= ContactDetails.getId() %>&actionSource=MyActionContacts&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<dhv:evaluate if="<%= hasText((String) request.getAttribute("actionError")) %>">
-<%= showError(request, "actionError") %>
-</dhv:evaluate>
+<dhv:formMessage showSpace="false"/>
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <%--  include basic opportunity form --%>
 <%@ include file="../pipeline/opportunity_include.jsp" %>
 <br>

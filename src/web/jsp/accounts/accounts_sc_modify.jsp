@@ -54,7 +54,7 @@
       <input type="hidden" name="id" value="<%= serviceContract.getId() %>" />
       <input type="hidden" name="return" value="<%= request.getParameter("return") %>" />
       <br />
-<%= showError(request, "actionError") %>
+      <dhv:formMessage />
 <%--  include basic service contract form --%>
 <%@ include file="servicecontract_include.jsp" %>
   <br />

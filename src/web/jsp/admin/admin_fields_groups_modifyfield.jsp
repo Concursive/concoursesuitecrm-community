@@ -44,15 +44,13 @@ Existing Field
 </tr>
 </table>
 <%-- End Trails --%>
-<% if (request.getAttribute("actionError") != null) { %>
-<%= showError(request, "actionError") %>
-<%}%>
+<dhv:formMessage showSpace="false" />
 <%
   CategoryList.setJsEvent("ONCHANGE=\"javascript:this.form.dosubmit.value='false';document.forms[0].submit();\"");
 %>
-<strong>Module:</strong> <%= toHtml(PermissionCategory.getCategory()) %><br>
-<strong>Folder:</strong> <%= toHtml(Category.getName()) %><br>
-&nbsp;
+<strong>Module:</strong> <%= toHtml(PermissionCategory.getCategory()) %><br />
+<strong>Folder:</strong> <%= toHtml(Category.getName()) %><br />
+<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

@@ -12,6 +12,7 @@
 <jsp:useBean id="campList" class="org.aspcfs.modules.communications.base.CampaignList" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="ContactMessageListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <dhv:evaluate exp="<%= !isPopup(request) %>">
 <%-- Trails --%>
@@ -74,16 +75,20 @@ Messages
         rowid = (rowid != 1?1:2);
         Campaign campaign = (Campaign)j.next();
 %>
-  <tr class="containerBody">
-    <td class="row<%= rowid %>">
+  <tr class="row<%= rowid %>">
+    <td>
       <a href="ExternalContacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(campaign.getMessageName() != null && !"".equals(campaign.getMessageName()) ? campaign.getMessageName() : "\"No name available\"") %></a>
       <%= (("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id")))?" <font color=\"red\">(Canceled)</font>":"") %>
     </td>
-    <td class="row<%= rowid %>"><%= toHtml(campaign.getMessageSubject()) %></td>
-    <td valign="top" align="left" nowrap class="row<%= rowid %>">
-      <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" dateOnly="true" default="&nbsp;"/>
+    <td><%= toHtml(campaign.getSubject()) %></td>
+    <td valign="top" align="left" nowrap>
+      <% if(!User.getTimeZone().equals(campaign.getActiveDateTimeZone())){%>
+      <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= campaign.getActiveDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
-    <td valign="top" nowrap class="row<%= rowid %>">
+    <td valign="top" nowrap>
       <%= toHtml(campaign.getStatus()) %>
     </td>
 	</tr>

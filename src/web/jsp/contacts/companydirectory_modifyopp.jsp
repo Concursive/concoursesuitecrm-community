@@ -54,8 +54,8 @@ Modify Opportunity
 <%} else {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
-<br>
-<%= showError(request, "actionError") %>
+<br />
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

@@ -12,6 +12,7 @@
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="document.inputForm.subject.focus();">
 <%-- Trails --%>
@@ -39,12 +40,12 @@ Modify Document
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
 		<td class="containerBack">
-    <%= showError(request, "actionError") %>
+    <dhv:formMessage />
     <%-- include modify form --%>
     <%@ include file="documents_modify_include.jsp" %>
   &nbsp;<br>
   <input type="submit" value=" Update " name="update">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>;">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="tId" value="<%= TicketDetails.getId() %>">
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">

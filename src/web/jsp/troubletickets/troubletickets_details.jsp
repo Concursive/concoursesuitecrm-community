@@ -269,7 +269,7 @@
     </td>
 		<td>
       <dhv:username id="<%= TicketDetails.getEnteredBy() %>"/>
-      <zeroio:tz timestamp="<%= TicketDetails.getEntered() %>" />
+      <zeroio:tz timestamp="<%= TicketDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
 		</td>
   </tr>
   <tr class="containerBody">
@@ -278,7 +278,7 @@
     </td>
 		<td>
       <dhv:username id="<%= TicketDetails.getModifiedBy() %>"/>
-      <zeroio:tz timestamp="<%= TicketDetails.getModified() %>" />
+      <zeroio:tz timestamp="<%= TicketDetails.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
 		</td>
   </tr>
 </table>

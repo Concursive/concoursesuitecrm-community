@@ -14,9 +14,8 @@
 <body onLoad="javascript:document.forms[0].description.focus();">
 <form name="addTask" action="MyTasks.do?command=<%= Task.getId()!=-1?"Update":"Insert" %>&id=<%= Task.getId() %>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>&actionSource=MyActionContacts" method="post" onSubmit="return validateTask();">
 <% boolean popUp = request.getParameter("popup") != null; %>
-<dhv:evaluate if="<%= hasText((String) request.getAttribute("actionError")) %>">
-<%= showError(request, "actionError") %>
-</dhv:evaluate>
+<dhv:formMessage showSpace="false" />
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <%@ include file="../tasks/task_include.jsp" %>
 <br>
 <input type="submit" value="<%= Task.getId()==-1?"Save":"Update" %>">

@@ -24,7 +24,7 @@
     return true;
   }
 </script>
-<%= showError(request, "actionError", false) %>
+<dhv:formMessage showSpace="false" />
 <form name="configure" action="SetupDirectory.do?command=ConfigureDirectory" method="post" onSubmit="return checkForm(this)">
 <table border="0" width="100%">
   <tr class="sectionTitle">

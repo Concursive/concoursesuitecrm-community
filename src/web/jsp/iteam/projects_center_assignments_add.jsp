@@ -91,8 +91,8 @@
   <input type="submit" value="Save & New" onClick="javascript:this.form.donew.value='true'">
 </dhv:evaluate>
   <input type="button" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';<%= (isPopup(request)?"window.close();":"window.location.href='ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=" + Project.getId()  + "&rid=" + String.valueOf(Assignment.getRequirementId()) + "';") %>">
-  <br>
-  <%= showError(request, "actionError") %>
+<br />
+<dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">

@@ -841,23 +841,6 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the alertDateStringLongYear attribute of the Opportunity object
-   *
-   *@return    The alertDateStringLongYear value
-   */
-  public String getAlertDateStringLongYear() {
-    String tmp = "";
-    try {
-      SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
-      formatter.applyPattern("M/d/yyyy");
-      return formatter.format(alertDate);
-    } catch (NullPointerException e) {
-    }
-    return tmp;
-  }
-
-
-  /**
    *  Gets the closeDateString attribute of the Opportunity object
    *
    *@return    The closeDateString value

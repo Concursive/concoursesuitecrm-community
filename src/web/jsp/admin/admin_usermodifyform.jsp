@@ -62,7 +62,7 @@ Modify User
 <input type="hidden" name="id" value="<%= UserRecord.getId() %>">
 <input type="hidden" name="contactId" value="<%= UserRecord.getContactId() %>">
 <input type="hidden" name="previousUsername" value="<%= ((UserRecord.getPreviousUsername() == null)?UserRecord.getUsername():UserRecord.getPreviousUsername()) %>">
-<%= showError(request, "actionError") %>
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

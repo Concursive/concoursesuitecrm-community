@@ -31,6 +31,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.IndexSearcher;
 
 /**
  *  Base class for all modules
@@ -1411,6 +1412,9 @@ public class CFSModule {
       Method m = c.getDeclaredMethod("add", argTypes);
       Object o = m.invoke(null, new Object[]{writer, item, new Boolean(true)});
       writer.optimize();
+      // Update the shared searcher
+      IndexSearcher searcher = new IndexSearcher(index);
+      context.getServletContext().setAttribute("indexSearcher", searcher);
     } catch (Exception io) {
       throw new IOException("Writer: " + io.getMessage());
     } finally {
@@ -1453,6 +1457,9 @@ public class CFSModule {
       if (o != null) {
         reader.delete((Term) o);
       }
+      // Update the shared searcher
+      IndexSearcher searcher = new IndexSearcher(index);
+      context.getServletContext().setAttribute("indexSearcher", searcher);
     } catch (Exception io) {
       throw new IOException(io.getMessage());
     } finally {
@@ -1490,7 +1497,7 @@ public class CFSModule {
       calendar.setTimeZone(java.util.TimeZone.getTimeZone(user.getTimeZone()));
       SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
           DateFormat.SHORT, user.getLocale());
-      formatter.applyPattern(formatter.toPattern() + "yy");
+      formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
       currentDateAsString = formatter.format(calendar.getTime());
     } catch (Exception e) {
     }

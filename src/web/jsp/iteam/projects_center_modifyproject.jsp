@@ -59,7 +59,7 @@
 <input type="submit" value=" Update ">
 <input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Details&pid=<%= Project.getId() %>'"><br />
 &nbsp;
-<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%>
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <input type="hidden" name="id" value="<%= Project.getId() %>">
   <input type="hidden" name="modified" value="<%= Project.getModified() %>">

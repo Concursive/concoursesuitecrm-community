@@ -525,4 +525,13 @@ A:visited:hover{color:#FF3300;}
 .searchLink:visited { color:#008000; }
 .searchLink:hover { color:#008000;text-decoration:underline; }
 .searchLink:visited:hover { color:#008000;text-decoration:underline; }
+/* Sub tab trails */
+.subtab, .subtab a, .subtab a:active, .subtab a:hover, .subtab a:visited:hover, .subtab a:visited {
+  color: #000;
+  background-color: #fffef3;
+}
+.subtab td {
+  border-top: 3px #fffef3 solid;
+  border-bottom: 1px #333 solid;
+}
 

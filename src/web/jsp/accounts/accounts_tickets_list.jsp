@@ -12,6 +12,7 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="AccountTicketInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -93,7 +94,11 @@ Tickets
 			<%= toHtml(thisTic.getPriorityName()) %>
 		</td>
 		<td width="15%" valign="top" nowrap>
-      <zeroio:tz timestamp="<%=thisTic.getEstimatedResolutionDate()%>" dateOnly="true" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(thisTic.getEstimatedResolutionDateTimeZone())){%>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= thisTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
 		</td>
 		<td width="8%" align="right" valign="top" nowrap>
 			<%= thisTic.getAgeOf() %>
@@ -103,9 +108,9 @@ Tickets
 		</td>
     <td width="150" nowrap valign="top">
       <% if (thisTic.getClosed() == null) { %>
-        <zeroio:tz timestamp="<%= thisTic.getModified() %>" />
+        <zeroio:tz timestamp="<%= thisTic.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
       <%} else {%>
-        <zeroio:tz timestamp="<%= thisTic.getClosed() %>" dateOnly="true" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%= thisTic.getClosed() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
       <%}%>
     </td>
    </tr>

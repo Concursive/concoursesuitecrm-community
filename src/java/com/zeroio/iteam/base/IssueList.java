@@ -285,7 +285,7 @@ public class IssueList extends ArrayList {
     if (!pagedListInfo.getCurrentLetter().equals("")) {
       pst = db.prepareStatement(sqlCount.toString() +
           sqlFilter.toString() +
-          "AND subject < ? ");
+          "AND lower(subject) < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();

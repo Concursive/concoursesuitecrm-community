@@ -50,7 +50,7 @@
   }
 </script>
 <body onLoad="javascript:document.forms[0].password1.focus();">
-<%= showError(request, "actionError", false) %>
+<dhv:formMessage showSpace="false" />
 <form name="configure" action="SetupUser.do?command=ConfigureUser&auto-populate=true" method="post" onSubmit="return checkForm(this)">
 <table border="0" width="100%">
   <tr class="sectionTitle">

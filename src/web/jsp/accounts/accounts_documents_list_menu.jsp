@@ -184,7 +184,7 @@
         </td>
       </tr>
     </dhv:permission>
-    <dhv:permission name="project-documents-folders-delete">
+    <dhv:permission name="accounts-accounts-documents-delete">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="deleteFolder();">
         <th valign="top">

@@ -12,6 +12,7 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
@@ -43,12 +44,13 @@ Add Folder Record
   	<td class="containerBack">
       <%@ include file="accounts_ticket_header_include.jsp" %>
       [ <dhv:container name="accountstickets" selected="folders" param="<%= "id=" + TicketDetails.getId() %>"/> ]<br>
-      Folder: <strong><%= Category.getName() %></strong><br>
+      <br />
+      Folder: <strong><%= Category.getName() %></strong><br />
       <dhv:evaluate exp="<%= !Category.isEmpty() %>">
-        &nbsp;<br>
+        <br />
         <input type="submit" value="Save" onClick="javascript:this.form.action='AccountTicketFolders.do?command=InsertFields&ticketId=<%= TicketDetails.getId() %>&catId=<%= Category.getId() %>'">
-        <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTicketFolders.do?command=Fields&ticketId=<%= TicketDetails.getId() %>&catId=<%= Category.getId() %>'"><br>
-        &nbsp;<br>
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTicketFolders.do?command=Fields&ticketId=<%= TicketDetails.getId() %>&catId=<%= Category.getId() %>'"><br />
+        <br />
       </dhv:evaluate>
 <%
   Iterator groups = Category.iterator();

@@ -13,6 +13,7 @@
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="category" class="org.aspcfs.modules.tasks.base.TaskCategory" scope="request"/>
 <jsp:useBean id="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -43,14 +44,14 @@
     <td class="formLabel" valign="top">Entered</td>
     <td>
       <dhv:username id="<%= Task.getEnteredBy() %>"/>
-      <zeroio:tz timestamp="<%= Task.getEntered() %>"/>
+      <zeroio:tz timestamp="<%= Task.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="top">Modified</td>
     <td>
       <dhv:username id="<%= Task.getModifiedBy() %>"/>
-      <zeroio:tz timestamp="<%= Task.getModified() %>"/>
+      <zeroio:tz timestamp="<%= Task.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
     </td>
   </tr>
 </table>

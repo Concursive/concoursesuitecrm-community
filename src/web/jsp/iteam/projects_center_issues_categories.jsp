@@ -12,6 +12,7 @@
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="SKIN" class="java.lang.String" scope="application"/>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="initPopupMenu.jsp" %>
@@ -79,7 +80,7 @@
     </td>
     <td class="row<%= rowid %>" valign="top" align="center" nowrap>
       <dhv:evaluate if="<%= thisCategory.getPostsCount() > 0 %>">
-      <zeroio:tz timestamp="<%= thisCategory.getLastPostDate() %>"/><br />
+      <zeroio:tz timestamp="<%= thisCategory.getLastPostDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/><br />
       </dhv:evaluate>
 			<dhv:username id="<%= thisCategory.getModifiedBy() %>"/>
     </td>

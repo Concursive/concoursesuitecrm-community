@@ -17,7 +17,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
 <center><%= AutoGuideDirectoryInfo.getAlphabeticalPageLinks() %><br>
-<%= showError(request, "actionError") %></center>
+<dhv:formMessage /></center>
 
 <table width="100%" border="0">
   <tr>

@@ -47,7 +47,7 @@
 </script>
 <body onLoad="document.inputForm.title.focus()">
 <form method="post" name="inputForm" action="ProjectManagement.do?command=InsertProject&auto-populate=true" onSubmit="return checkForm(this);">
-<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%>
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th colspan="2">

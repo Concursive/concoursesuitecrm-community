@@ -61,6 +61,13 @@ function addValues() {
     fieldType = "text";
   }
   
+  if (document.searchForm.fieldSelect.selectedIndex == 3) {
+    if(!checkDate(document.searchForm.searchValue.value)){
+      alert('Please enter a valid Date to continue');
+      return;
+    }
+  }
+  
   if (fieldType == "text" && document.searchForm.searchValue.value.length == 0) {
     alert("You must specify search text in order to add criteria.");
     return false;

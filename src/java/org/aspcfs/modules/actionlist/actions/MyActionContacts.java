@@ -490,7 +490,6 @@ public final class MyActionContacts extends CFSModule {
           thisMessage.setDisableNameValidation(true);
           thisMessage.setModifiedBy(this.getUserId(context));
           thisMessage.setEnteredBy(this.getUserId(context));
-          thisMessage.insert(db);
         }
         //create an instant campaign and activate it
         actionCampaign.setName(actionList.getDescription());

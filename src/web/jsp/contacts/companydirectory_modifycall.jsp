@@ -188,15 +188,16 @@ Modify Activity
     <dhv:evaluate exp="<%= !isPopup(request) || isInLinePopup(request) %>">
     <% if ("list".equals(request.getParameter("return"))) {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|view|actionId") %>';this.form.dosubmit.value='false';">
-    <%}else {%>
+    <%} else {%>
           <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsCalls.do?command=Details&id=<%= (PreviousCallDetails.getId() > -1 ? PreviousCallDetails.getId() : CallDetails.getId()) %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|view|actionId") %>';this.form.dosubmit.value='false';">
     <%}%>
     </dhv:evaluate>
     <dhv:evaluate exp="<%= isPopup(request)  && !isInLinePopup(request) %>">
-    <input type="button" value="Cancel" onclick="javascript:window.close();"> 
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|view|actionId") %>';this.form.dosubmit.value='false';">
     </dhv:evaluate>
 <br />
-<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<dhv:formMessage />
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <% if("pending".equals(request.getParameter("view"))){ %>
         <%-- include pending activity form --%>
         <%@ include file="call_followup_include.jsp" %>
@@ -238,7 +239,7 @@ Modify Activity
     <%}%>
     </dhv:evaluate>
     <dhv:evaluate exp="<%= isPopup(request)  && !isInLinePopup(request) %>">
-    <input type="button" value="Cancel" onclick="javascript:window.close();"> 
+    <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|view|actionId") %>';this.form.dosubmit.value='false';">
     </dhv:evaluate>
 </td>
 </tr>

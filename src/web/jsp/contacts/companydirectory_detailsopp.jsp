@@ -142,7 +142,11 @@ Opportunity Details
       <zeroio:currency value="<%= oppComponent.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">
-      <zeroio:tz timestamp="<%= oppComponent.getCloseDate() %>" dateOnly="true" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(oppComponent.getCloseDateTimeZone())){%>
+      <zeroio:tz timestamp="<%= oppComponent.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= oppComponent.getCloseDate() %>" dateOnly="true" timeZone="<%= oppComponent.getCloseDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= toHtml(oppComponent.getStageName()) %>

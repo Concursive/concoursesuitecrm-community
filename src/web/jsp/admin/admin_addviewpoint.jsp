@@ -36,8 +36,8 @@ Add Viewpoint
     <td class="containerBack">
       <input type="submit" value="Add" name="Save">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
-      <br>
-      <%= showError(request, "actionError") %>
+      <br />
+      <dhv:formMessage />
       <input type="hidden" name="userId" value="<%= UserRecord.getId() %>">
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>

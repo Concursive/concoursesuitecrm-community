@@ -196,7 +196,7 @@ Campaign Details
     </td>
     <td>
       <dhv:username id="<%= Campaign.getEnteredBy() %>" />
-      <zeroio:tz timestamp="<%= Campaign.getEntered() %>" />
+      <zeroio:tz timestamp="<%= Campaign.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -205,7 +205,7 @@ Campaign Details
     </td>
     <td>
       <dhv:username id="<%= Campaign.getModifiedBy() %>" />
-      <zeroio:tz timestamp="<%= Campaign.getModified() %>" />
+      <zeroio:tz timestamp="<%= Campaign.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
     </td>
   </tr>
 </table>

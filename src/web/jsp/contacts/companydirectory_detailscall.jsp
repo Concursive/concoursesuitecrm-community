@@ -87,7 +87,7 @@ Activity Details
           </td>
           <td>
             <dhv:username id="<%= CallDetails.getEnteredBy() %>"/>
-            <zeroio:tz timestamp="<%= CallDetails.getEntered()  %>" />
+            <zeroio:tz timestamp="<%= CallDetails.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
           </td>
         </tr>
         <tr class="containerBody">
@@ -96,7 +96,7 @@ Activity Details
           </td>
           <td>
             <dhv:username id="<%= CallDetails.getModifiedBy() %>"/>
-            <zeroio:tz timestamp="<%= CallDetails.getModified()  %>" />
+            <zeroio:tz timestamp="<%= CallDetails.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
           </td>
         </tr>
       </table>

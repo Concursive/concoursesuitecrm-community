@@ -81,6 +81,7 @@ public class FileItemIndexer implements Indexer {
     document.add(Field.Keyword("folderId", String.valueOf(fileItem.getFolderId())));
     document.add(Field.Keyword("projectId", String.valueOf(fileItem.getLinkItemId())));
     document.add(Field.Text("title", fileItem.getSubject() + " - " + fileItem.getClientFilename()));
+    document.add(Field.Text("filename", fileItem.getClientFilename()));
     document.add(Field.Text("extension", fileItem.getExtension()));
     document.add(Field.Text("contents",
         fileItem.getSubject() + " " +

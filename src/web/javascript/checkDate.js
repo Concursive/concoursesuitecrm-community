@@ -1,6 +1,5 @@
 /**
- * Checks to see if a date is entered in the 3-20-2001 or 3/20/2001 format
- * Allow mm/dd or dd/mm
+ * Checks to see if a date is generally entered
  * @arg1 = date to check
  */
 
@@ -12,39 +11,22 @@ function checkDate(datein) {
     sep = datein.split("/");
   } else if (datein.indexOf("-") != -1) {
     sep = datein.split("-");
+  } else if (datein.indexOf(".") != -1) {
+    sep = datein.split(".");
   } else {
     return false;
   }
   
-  if (checkDigits(sep[0])) {
-    m = parseInt(sep[0],10);
-  } else {
+  if (!checkDigits(sep[0])) {
     return false;
   }
-  if (checkDigits(sep[1])) {
-    d = parseInt(sep[1],10);
-  } else {
+  if (!checkDigits(sep[1])) {
     return false;
   }
-  if (sep[2] != null) { 
-    if (checkDigits(sep[2]) && sep[2].length > 1) {
-      y = parseInt(sep[2],10);
-    } else {
-      return false;
-    }
-  } else {
+  if (!checkDigits(sep[2])) {
     return false;
   }
-  
-  if (sep[3] != null) return false;
-  
-  if ((m <= 0 || m > 31) ||
-      (d <= 0 || d > 31) ||
-      (y < 0 || (y > 99 && y < 999) || y > 2200)) {
-    return false;
-  } else {
-    return true;
-  }
+  return true;
 }
 
 function checkDigits(str) {

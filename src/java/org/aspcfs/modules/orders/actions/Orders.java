@@ -132,7 +132,7 @@ public final class Orders extends CFSModule {
       //Build the order list
       orderList.setPagedListInfo(searchListInfo);
       //orderList.setTypeId(searchListInfo.getFilterKey("listFilter1"));
-      searchListInfo.setSearchCriteria(orderList);
+      searchListInfo.setSearchCriteria(orderList,UserUtils.getUserLocale(context.getRequest()));
       /*
        *  if ("my".equals(searchListInfo.getListView())) {
        *  orderList.setOwnerId(this.getUserId(context));

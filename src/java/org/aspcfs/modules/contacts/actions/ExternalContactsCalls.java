@@ -274,14 +274,13 @@ public final class ExternalContactsCalls extends CFSModule {
       }
       return this.getReturn(context, "Insert");
     } else if (resultCount == 1) {
+      if ("list".equals(context.getRequest().getParameter("return"))) {
+        return (executeCommandView(context));
+      }
       if (popup && !inlinePopup) {
         return ("PopupCloseOK");
       }
-      if ("list".equals(context.getRequest().getParameter("return"))) {
-        return (executeCommandView(context));
-      } else {
-        return ("UpdateOK");
-      }
+      return ("UpdateOK");
     }
     if (thisCall.getId() > 0) {
       return this.getReturn(context, "Modify");
@@ -628,7 +627,7 @@ public final class ExternalContactsCalls extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("Note", newNote);
-    return ("ForwardCallOK");
+    return this.getReturn(context,"ForwardCall");
   }
 
 

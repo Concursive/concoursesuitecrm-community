@@ -16,6 +16,7 @@
 <%@ page import="org.apache.lucene.document.Document" %>
 <jsp:useBean id="searchBean" class="com.zeroio.iteam.beans.SearchBean" scope="session" />
 <jsp:useBean id="searchBeanInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%
 Hits hits = (Hits) request.getAttribute("hits");
@@ -66,7 +67,7 @@ for (int i = searchBeanInfo.getCurrentOffset() ; i < searchBeanInfo.getPageSize(
       <dhv:evaluate if="<%= "listCategory".equals(type) %>"><a class="search" href="ProjectManagement.do?command=ProjectCenter&section=Lists&pid=<%= document.get("projectId") %>&cid=<%= document.get("listCategoryId") %>">List</a></dhv:evaluate>
       <dhv:evaluate if="<%= "list".equals(type) %>"><a class="search" href="ProjectManagementLists.do?command=Details&pid=<%= document.get("projectId") %>&id=<%= document.get("listId") %>">List Item</a></dhv:evaluate>
       <dhv:evaluate if="<%= "ticket".equals(type) %>"><a class="search" href="ProjectManagementTickets.do?command=Details&pid=<%= document.get("projectId") %>&id=<%= document.get("ticketId") %>">Ticket</a></dhv:evaluate>
-      <dhv:evaluate if="<%= hasText(document.get("extension")) %>">[<%= document.get("extension") %>]</dhv:evaluate>
+      <dhv:evaluate if="<%= hasText(document.get("filename")) %>">[<%= document.get("filename") %>]</dhv:evaluate>
     </td>
   </tr>
   <tr>
@@ -99,7 +100,7 @@ for (int i = searchBeanInfo.getCurrentOffset() ; i < searchBeanInfo.getPageSize(
       </dhv:evaluate>
       <dhv:evaluate if="<%= modified != null %>">
       -
-      <zeroio:tz timestamp="<%= modified %>" dateOnly="true" dateFormat="<%= DateFormat.LONG %>"/>
+      <zeroio:tz timestamp="<%= modified %>" dateOnly="true" dateFormat="<%= DateFormat.LONG %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
       </dhv:evaluate>
       <%--
       -
@@ -112,7 +113,9 @@ for (int i = searchBeanInfo.getCurrentOffset() ; i < searchBeanInfo.getPageSize(
 }
 %>
 </table>
+<dhv:evaluate if="<%= hits.length() > 0 %>">
 <dhv:pagedListControl object="searchBeanInfo"/>
+</dhv:evaluate>
 <%--
 <br />
 <br />

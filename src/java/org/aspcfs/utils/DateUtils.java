@@ -374,23 +374,34 @@ public class DateUtils {
    *  Gets the dateAsString attribute of the DateUtils class
    *
    *@param  tmpTimestamp  Description of the Parameter
+   *@param  locale        Description of the Parameter
    *@return               The dateAsString value
    */
-  public static String getDateAsString(Timestamp tmpTimestamp) {
+  public static String getDateAsString(Timestamp tmpTimestamp, Locale locale) {
     String dateAsString = "";
     try {
-      String language = System.getProperty("LANGUAGE");
-      String country = System.getProperty("COUNTRY");
-      Locale locale = new Locale(language, country);
-
       SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
           DateFormat.SHORT, locale);
-      formatter.applyPattern(formatter.toPattern() + "yy");
+      formatter.applyPattern(get4DigitYearDateFormat(formatter.toPattern()));
       dateAsString = formatter.format(tmpTimestamp);
     } catch (Exception e) {
     }
     return dateAsString;
   }
 
+
+  /**
+   *  Returns a date format with four digit year pattern
+   *
+   *@param  tmpDateFormat  Description of the Parameter
+   *@return                Description of the Return Value
+   */
+  public static String get4DigitYearDateFormat(String tmpDateFormat) {
+    if (tmpDateFormat.indexOf("yy") > -1 && tmpDateFormat.indexOf("yyyy") == -1) {
+      return StringUtils.replace(tmpDateFormat, "yy", "yyyy");
+    } else {
+      return tmpDateFormat;
+    }
+  }
 }
 

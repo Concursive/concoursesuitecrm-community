@@ -7,6 +7,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,org.aspcfs.modules.base.*" %>
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
@@ -14,6 +15,7 @@
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="Record" class="org.aspcfs.modules.base.CustomFieldRecord" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <form name="details" action="AccountTicketFolders.do?command=Fields&ticketId=<%= TicketDetails.getId() %>" method="post">
@@ -51,15 +53,17 @@ Folder Record Details
      CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
 %>
   Folder: <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><%= (Category.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif' alt='Folder is read-only'>":"") %><br>
-  &nbsp;<br>
-  This folder can have only one record...<br>
-  &nbsp;<br>
+  <br />
+  This folder can have only one record...<br />
+  <br />
 <% } %>
+<br />
 <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
 <dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='AccountTicketFolders.do?command=ModifyFields&ticketId=<%= TicketDetails.getId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="Delete Folder Record" onClick="javascript:this.form.action='AccountTicketFolders.do?command=DeleteFields&ticketId=<%= TicketDetails.getId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
 <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
-<br>&nbsp;<br>
+<br />
+<br />
 </dhv:permission>
 </dhv:evaluate>
 <%
@@ -112,7 +116,8 @@ Folder Record Details
       Entered
     </td>
     <td>
-      <dhv:username id="<%= Record.getEnteredBy() %>" />&nbsp;-&nbsp;<%= Record.getEnteredString() %>
+      <dhv:username id="<%= Record.getEnteredBy() %>" />
+      <zeroio:tz timestamp="<%= Record.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
     </td>
   </tr>
   <tr class="containerBody">
@@ -120,7 +125,8 @@ Folder Record Details
       Modified
     </td>
     <td>
-      <dhv:username id="<%= Record.getModifiedBy() %>" />&nbsp;-&nbsp;<%= toHtml(Record.getModifiedDateTimeString()) %>
+      <dhv:username id="<%= Record.getModifiedBy() %>" />
+      <zeroio:tz timestamp="<%= Record.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
     </td>
   </tr>
 </table>

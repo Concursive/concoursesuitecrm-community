@@ -104,7 +104,11 @@ Component Details
       Est. Close Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= OppComponentDetails.getCloseDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= OppComponentDetails.getCloseDate() %>" dateOnly="true" timeZone="<%= OppComponentDetails.getCloseDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(OppComponentDetails.getCloseDateTimeZone())){%>
+      <br>
+      <zeroio:tz timestamp="<%= OppComponentDetails.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -152,7 +156,7 @@ Component Details
       Current Stage Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= OppComponentDetails.getStageDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= OppComponentDetails.getStageDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -196,7 +200,7 @@ Component Details
     </td>
     <td>
       <dhv:username id="<%= OppComponentDetails.getEnteredBy() %>"/>
-      <zeroio:tz timestamp="<%= OppComponentDetails.getEntered() %>" />
+      <zeroio:tz timestamp="<%= OppComponentDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -205,7 +209,7 @@ Component Details
     </td>
     <td>
       <dhv:username id="<%= OppComponentDetails.getModifiedBy() %>"/>
-      <zeroio:tz timestamp="<%= OppComponentDetails.getModified() %>" />
+      <zeroio:tz timestamp="<%= OppComponentDetails.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
     </td>
   </tr>  
 </table>  

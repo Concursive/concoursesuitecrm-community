@@ -80,8 +80,8 @@
     <input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
     <input type="hidden" name="dosubmit" value="true">
     </dhv:evaluate>
-<br>
-<%= showError(request, "actionError") %>
+<br />
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

@@ -77,8 +77,8 @@ String documentModule = "Pipeline";
 </table>
 <br>
   <input type="submit" value=" Save " name="save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View<%= addLinkParams(request, "viewSource") %>';"><br>
-  <%= showError(request, "actionError") %><br>
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View<%= addLinkParams(request, "viewSource") %>';"><br />
+  <dhv:formMessage /><br />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">

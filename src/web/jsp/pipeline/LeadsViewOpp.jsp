@@ -109,7 +109,11 @@ Search Results
       <%= thisOpp.getComponent().getCloseProbValue() %>%
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">
-      <zeroio:tz timestamp="<%= thisOpp.getComponent().getCloseDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= thisOpp.getComponent().getCloseDate() %>" dateOnly="true" timeZone="<%= thisOpp.getComponent().getCloseDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(thisOpp.getComponent().getCloseDateTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= thisOpp.getComponent().getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= toHtml(thisOpp.getComponent().getTermsString()) %>

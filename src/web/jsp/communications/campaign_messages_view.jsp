@@ -11,6 +11,7 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="MessageList" class="org.aspcfs.modules.communications.base.MessageList" scope="request"/>
 <jsp:useBean id="CampaignMessageListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -101,7 +102,7 @@ Message List
       <dhv:username id="<%= thisMessage.getEnteredBy() %>" lastFirst="true" />
     </td>
     <td valign="center" class="row<%= rowid %>" nowrap>
-      <zeroio:tz timestamp="<%= thisMessage.getModified() %>" />
+      <zeroio:tz timestamp="<%= thisMessage.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
     </td>
   </tr>
 <%

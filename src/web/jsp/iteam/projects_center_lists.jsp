@@ -18,6 +18,7 @@
 <jsp:useBean id="category" class="org.aspcfs.utils.web.LookupElement" scope="request"/>
 <jsp:useBean id="outlineList" class="org.aspcfs.modules.tasks.base.TaskList" scope="request"/>
 <jsp:useBean id="projectListsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="initPopupMenu.jsp" %>
@@ -116,7 +117,7 @@
       <dhv:username id="<%= thisTask.getModifiedBy() %>"/>
     </td>
     <td align="center" valign="top" nowrap>
-      <zeroio:tz timestamp="<%= thisTask.getModified() %>"/>
+      <zeroio:tz timestamp="<%= thisTask.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
     </td>
   </tr>
 <%    

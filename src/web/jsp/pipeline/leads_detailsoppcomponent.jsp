@@ -187,7 +187,7 @@ Component Details
     </td>
     <td>
       <dhv:username id="<%= LeadsComponentDetails.getEnteredBy() %>"/>
-      <zeroio:tz timestamp="<%= LeadsComponentDetails.getEntered() %>"/>
+      <zeroio:tz timestamp="<%= LeadsComponentDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
     </td>
   </tr>
   <tr class="containerBody">
@@ -196,7 +196,7 @@ Component Details
     </td>
     <td>
       <dhv:username id="<%= LeadsComponentDetails.getModifiedBy() %>"/>
-      <zeroio:tz timestamp="<%= LeadsComponentDetails.getModified() %>"/>
+      <zeroio:tz timestamp="<%= LeadsComponentDetails.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
     </td>
   </tr>  
 </table>

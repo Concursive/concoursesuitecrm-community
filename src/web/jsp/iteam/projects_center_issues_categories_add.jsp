@@ -45,11 +45,11 @@
     </td>
   </tr>
 </table>
-<br>
+<br />
   <input type="submit" value=" Save ">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>';"><br>
-  <%= showError(request, "actionError") %>
-  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>';"><br />
+  <dhv:formMessage />
+  <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
       <th colspan="2">
         <strong><%= IssueCategory.getId() == -1 ? "Add" : "Modify" %> Forum</strong>

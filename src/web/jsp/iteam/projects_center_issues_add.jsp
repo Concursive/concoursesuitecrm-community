@@ -53,8 +53,8 @@
 </table>
 <br>
   <input type="submit" value=" Save ">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>';"><br>
-  <%= showError(request, "actionError") %>
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>';"><br />
+  <dhv:formMessage />
   <input type="hidden" name="categoryId" value="<%= IssueCategory.getId() %>">
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>

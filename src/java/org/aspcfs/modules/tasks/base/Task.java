@@ -788,41 +788,6 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Gets the alertDateStringLongYear attribute of the Task object
-   *
-   *@return    The alertDateStringLongYear value
-   */
-  public String getAlertDateStringLongYear() {
-    String tmp = "";
-    try {
-      SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
-      formatter.applyPattern("M/d/yyyy");
-      return formatter.format(dueDate);
-    } catch (NullPointerException e) {
-    }
-    return tmp;
-  }
-
-
-  /**
-   *  Gets the alertDateStringLongYear attribute of the Task class
-   *
-   *@param  dueDate  Description of the Parameter
-   *@return          The alertDateStringLongYear value
-   */
-  public static String getAlertDateStringLongYear(java.sql.Timestamp dueDate) {
-    String tmp = "";
-    try {
-      SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
-      formatter.applyPattern("M/d/yyyy");
-      return formatter.format(dueDate);
-    } catch (NullPointerException e) {
-    }
-    return tmp;
-  }
-
-
-  /**
    *  Gets the contactId attribute of the Task object
    *
    *@return    The contactId value

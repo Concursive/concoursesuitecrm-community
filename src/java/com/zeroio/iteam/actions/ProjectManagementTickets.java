@@ -284,6 +284,7 @@ public final class ProjectManagementTickets extends CFSModule {
         return "PermissionError";
       }
       recordDeleted = thisTicket.delete(db, this.getPath(context, "tickets"));
+      indexDeleteItem(context, thisTicket);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");

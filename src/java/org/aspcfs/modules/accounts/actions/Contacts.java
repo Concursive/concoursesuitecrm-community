@@ -136,7 +136,7 @@ public final class Contacts extends CFSModule {
     try {
       db = this.getConnection(context);
       boolean newContact = (thisContact.getId() == -1);
-      thisContact.setRequestItems(context.getRequest());
+      thisContact.setRequestItems(context);
       thisContact.setTypeList(context.getRequest().getParameterValues("selectedList"));
       thisContact.setModifiedBy(getUserId(context));
       thisContact.setEnteredBy(getUserId(context));

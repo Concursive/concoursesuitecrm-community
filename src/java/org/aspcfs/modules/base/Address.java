@@ -573,11 +573,7 @@ public class Address {
         (state == null ||
         state.trim().equals("") ||
         "-1".equals(state)) &&
-        (zip == null || zip.trim().equals("")) &&
-        (country == null ||
-        country.trim().equals("") ||
-        "-1".equals(country) ||
-        "UNITED STATES".equals(country))) {
+        (zip == null || zip.trim().equals(""))){
       return false;
     }
     return true;

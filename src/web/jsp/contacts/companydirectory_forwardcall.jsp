@@ -8,6 +8,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<dhv:evaluate exp="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -23,6 +24,7 @@ Forward Activity
 </td>
 </tr>
 </table>
+</dhv:evaluate>
 <%-- End Trails --%>
 <%@ include file="contact_details_header_include.jsp" %>
 <% String param1 = "id=" + ContactDetails.getId(); 
@@ -34,18 +36,18 @@ Forward Activity
       <form name="newMessageForm" action="ExternalContactsCallsForward.do?command=SendCall&contactId=<%= request.getParameter("contactId") %>&id=<%= request.getParameter("id") %>" method="post" onSubmit="return sendMessage();">
       <input type="submit" value="Send">
       <% if("list".equals(request.getParameter("return"))){ %>
-        <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>'">
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %><%= (request.getParameter("popup") != null?"&popup=true":"") %>'">
       <% }else{ %>
-        <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>'">
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %><%= (request.getParameter("popup") != null?"&popup=true":"") %>'">
       <% } %>
       <br><br>
       <%@ include file="../newmessage.jsp" %>
       <br>
       <input type="submit" value="Send">
       <% if("list".equals(request.getParameter("return"))){ %>
-        <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>'">
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %><%= (request.getParameter("popup") != null?"&popup=true":"") %>'">
       <% }else{ %>
-        <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>'">
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %><%= (request.getParameter("popup") != null?"&popup=true":"") %>'">
       <% } %>
       </form>
     </td>

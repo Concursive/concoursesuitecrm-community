@@ -222,8 +222,9 @@
 <%-- End Trails --%>
 <input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';">
-<br>
-<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<br />
+<dhv:formMessage />
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -679,7 +680,7 @@
     </td>
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
-      <%= CountrySelect.getHtml("address" + acount + "country") %>
+      <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
       <% CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
@@ -850,7 +851,7 @@
     </td>
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
-      <%= CountrySelect.getHtml("address" + acount + "country") %>
+      <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
       <% CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
@@ -929,7 +930,7 @@
     </td>
     <td>
     <% CountrySelect.setJsEvent("onChange=\"javascript:update('address1country', '1');\"");%>
-    <%= CountrySelect.getHtml("address1country") %>
+    <%= CountrySelect.getHtml("address1country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
     </td>
   </tr>
   <tr>
@@ -1001,7 +1002,7 @@
       Country
     </td>
     <td>
-      <%= CountrySelect.getHtml("address2country") %>
+      <%= CountrySelect.getHtml("address2country", applicationPrefs.get("SYSTEM.COUNTRY")) %>
     </td>
   </tr>
  </dhv:evaluate>

@@ -18,7 +18,7 @@
   }
 </script>
 <body onLoad="javascript:document.forms[0].license.focus();">
-<%= showError(request, "actionError", false) %>
+<dhv:formMessage showSpace="false" />
 <form name="register" action="Setup.do?command=Validate" method="post" onSubmit="return checkForm(this)">
 <table border="0" width="100%">
   <tr class="sectionTitle">

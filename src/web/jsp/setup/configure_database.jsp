@@ -26,7 +26,7 @@
   }
 </script>
 <body onLoad="javascript:document.forms[0].ip.focus();">
-<%= showError(request, "actionError", false) %>
+<dhv:formMessage showSpace="false" />
 <form name="configure" action="SetupDatabase.do?command=ConfigureDatabase&auto-populate=true" method="post" onSubmit="return showProgress()">
 <input type="hidden" name="configured" value="1"/>
 <table border="0" width="100%">

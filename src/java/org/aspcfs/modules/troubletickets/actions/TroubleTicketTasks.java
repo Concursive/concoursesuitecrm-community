@@ -88,10 +88,7 @@ public final class TroubleTicketTasks extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "View Tickets", "View Tickets");
-    if (hasAuthority(context, thisTask.getOwner())) {
-      return this.getReturn(context, "TaskDetails");
-    }
-    return ("PermissionError");
+    return this.getReturn(context, "TaskDetails");
   }
 
 
@@ -182,6 +179,9 @@ public final class TroubleTicketTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
+    if (!(hasPermission(context, "tickets-tickets-tasks-edit"))) {
+      return ("PermissionError");
+    }
     Connection db = null;
     Task thisTask = null;
     String id = context.getRequest().getParameter("id");

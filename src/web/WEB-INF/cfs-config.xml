@@ -481,8 +481,11 @@
   <action name="ExternalContactsCallsForward" class="org.aspcfs.modules.contacts.actions.ExternalContactsCalls">
     <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
     <forward name="SendCallOK" resource="/MyCFS.do?command=SendMessage&amp;actionSource=ExternalContactsCallsForward"/>
+    <forward name="SendCallPopupOK" resource="/MyCFS.do?command=SendMessage&amp;actionSource=ExternalContactsCallsForward"/>
     <forward name="SendMessageOK" resource="/contacts/companydirectory_confirmsend.jsp" layout="nav"/>
+    <forward name="SendMessagePopupOK" resource="/contacts/companydirectory_confirmsend.jsp" layout="style"/>
     <forward name="ForwardCallOK" resource="/contacts/companydirectory_forwardcall.jsp" layout="nav"/>
+    <forward name="ForwardCallPopupOK" resource="/contacts/companydirectory_forwardcall.jsp" layout="style"/>
    </action>
    <action name="ExternalContactsPrototype" class="org.aspcfs.modules.prototype.actions.Prototype">
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
@@ -1405,6 +1408,8 @@
     <forward name="ModifyFaxOK" resource="/admin/admin_modify_fax.jsp" layout="nav"/>
     <forward name="ModifyUrlOK" resource="/admin/admin_modify_url.jsp" layout="nav"/>
     <forward name="ModifyTimeZoneOK" resource="/admin/admin_modify_timezone.jsp" layout="nav"/>
+    <forward name="ModifyCurrencyOK" resource="/admin/admin_modify_currency.jsp" layout="nav"/>
+    <forward name="ModifyLanguageOK" resource="/admin/admin_modify_language.jsp" layout="nav"/>
     <forward name="ModifyLicenseOK" resource="/admin/admin_modify_license.jsp" layout="nav"/>
     <forward name="LicenseUpdatedOK" resource="/admin/admin_modify_license_updated.jsp" layout="nav"/>
     <forward name="LicenseCheckOK" resource="/admin/admin_modify_license_ok.jsp" layout="nav"/>

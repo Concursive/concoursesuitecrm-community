@@ -290,7 +290,8 @@
       <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
 <br />
-<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<dhv:formMessage />
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -738,7 +739,7 @@
     </td>
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
-      <%= CountrySelect.getHtml("address" + acount + "country") %>
+      <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
       <% CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
@@ -904,7 +905,7 @@
     </td>
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
-      <%= CountrySelect.getHtml("address" + acount + "country") %>
+      <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
       <% CountrySelect = new CountrySelect(); %>
     </td>
   </tr>

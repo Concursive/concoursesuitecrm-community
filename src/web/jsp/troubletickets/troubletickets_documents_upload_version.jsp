@@ -13,6 +13,7 @@
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <jsp:useBean id="folderId" class="java.lang.String"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
   function checkFileForm(form) {
@@ -76,7 +77,7 @@ Add Version
       </font><br>
       &nbsp;<br>
     </dhv:evaluate>
-    <%= showError(request, "actionError") %>
+    <dhv:formMessage />
     <%-- include add version form --%>
      <%@ include file="documents_addversion_include.jsp" %>
       <p align="center">

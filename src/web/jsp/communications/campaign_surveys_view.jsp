@@ -11,6 +11,7 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="CampaignSurveyListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="SurveyList" class="org.aspcfs.modules.communications.base.SurveyList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -90,7 +91,7 @@ Surveys
           <dhv:username id="<%= thisSurvey.getEnteredBy() %>"/>
         </td>
         <td class="row<%= rowid %>" nowrap>
-          <zeroio:tz timestamp="<%= thisSurvey.getModified() %>" />
+          <zeroio:tz timestamp="<%= thisSurvey.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
         </td>
       </tr>
 <%

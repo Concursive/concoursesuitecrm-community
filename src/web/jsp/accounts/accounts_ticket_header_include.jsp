@@ -27,7 +27,7 @@
             Open
       <%}else{%>
             <font color="red">Closed on
-            <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" />
+            <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
             </font>
       <%}%>
           </td>

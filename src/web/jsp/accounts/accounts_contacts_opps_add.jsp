@@ -115,7 +115,7 @@ Add Opportunity
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';this.form.dosubmit.value='false';">
       <br />
-      <%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%>
+      <dhv:formMessage />
       <br />
       <%--  include basic opportunity form --%>
       <%@ include file="../pipeline/opportunity_include.jsp" %>

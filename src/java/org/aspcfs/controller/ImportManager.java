@@ -225,7 +225,12 @@ public class ImportManager {
    */
   public Connection getConnection(ConnectionElement ce) throws SQLException {
     if (ce != null) {
-      return connectionPool.getConnection(ce);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("ImportManager-> got ce clone");
+      }
+      ConnectionElement thisElement = (ConnectionElement) ce.clone();
+      thisElement.setAllowCloseOnIdle(false);
+      return connectionPool.getConnection(thisElement);
     }
     return null;
   }

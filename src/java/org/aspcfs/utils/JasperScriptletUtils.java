@@ -4,6 +4,7 @@ import dori.jasper.engine.*;
 import java.sql.*;
 import java.text.*;
 import java.util.*;
+import org.aspcfs.utils.DateUtils;
 
 /**
  *  Description of the Class
@@ -138,6 +139,19 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 
 	/**
+	 *  Gets the localeFormat attribute of the JasperScriptletUtils object
+	 *
+	 *@param  date                      Description of the Parameter
+	 *@param  pattern                   Description of the Parameter
+	 *@return                           The localeFormat value
+	 *@exception  JRScriptletException  Description of the Exception
+	 */
+	public String getLocaleFormat(java.util.Date date, String pattern) throws JRScriptletException {
+		return (getLocaleFormat(new Timestamp(date.getTime()), pattern));
+	}
+
+
+	/**
 	 *  Description of the Method
 	 *
 	 *@param  ts                        Description of the Parameter
@@ -151,9 +165,30 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
 
 		SimpleDateFormat formatter =
 				(SimpleDateFormat) SimpleDateFormat.getDateInstance(DateFormat.SHORT, locale);
-		formatter.applyPattern(formatter.toPattern() + "yy");
+		formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
 		return (formatter.format(ts));
 	}
+
+
+	/**
+	 *  Gets the localeFormat attribute of the JasperScriptletUtils object
+	 *
+	 *@param  ts                        Description of the Parameter
+	 *@param  pattern                   Description of the Parameter
+	 *@return                           The localeFormat value
+	 *@exception  JRScriptletException  Description of the Exception
+	 */
+	public String getLocaleFormat(java.sql.Timestamp ts, String pattern) throws JRScriptletException {
+		String language = (String) this.getParameterValue("language");
+		String country = (String) this.getParameterValue("country");
+		Locale locale = new Locale(language, country);
+
+		SimpleDateFormat formatter =
+				(SimpleDateFormat) SimpleDateFormat.getDateInstance(DateFormat.SHORT, locale);
+		formatter.applyPattern(pattern);
+		return (formatter.format(ts));
+	}
+
 
 
 	/**

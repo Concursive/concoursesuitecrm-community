@@ -23,7 +23,8 @@
 <input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
 <br>
-<%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<dhv:formMessage />
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <% if (request.getAttribute("closedError") != null) { %>
   <%= showAttribute(request, "closedError") %>
 <%}%>

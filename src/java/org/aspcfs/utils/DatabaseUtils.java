@@ -339,7 +339,9 @@ public class DatabaseUtils {
     java.sql.Timestamp timestampValue = DatabaseUtils.parseTimestamp(tmp, locale);
     if (timestampValue == null) {
       try {
-        java.util.Date tmpDate = DateFormat.getDateInstance(DateFormat.SHORT, locale).parse(tmp);
+        DateFormat tmpDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+        tmpDateFormat.setLenient(false);
+        java.util.Date tmpDate = tmpDateFormat.parse(tmp);
         timestampValue = new java.sql.Timestamp(System.currentTimeMillis());
         timestampValue.setTime(tmpDate.getTime());
         timestampValue.setNanos(0);

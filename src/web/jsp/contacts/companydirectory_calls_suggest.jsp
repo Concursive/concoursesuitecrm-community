@@ -8,7 +8,7 @@
   --%>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="CallResult" class="org.aspcfs.modules.contacts.base.CallResult" scope="request"/>
-<%@ page import="java.util.*,java.text.*" %>
+<%@ page import="java.util.*,java.text.*,org.aspcfs.utils.DateUtils" %>
 <script language="JavaScript">
   function suggestCall() {
     <% if(CallResult.getNextRequired()){
@@ -19,7 +19,7 @@
 
         SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
                                                           DateFormat.SHORT, User.getUserRecord().getLocale());
-        formatter.applyPattern(formatter.toPattern() + "yy");
+        formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
         tmpDate = formatter.format(today.getTime());
         }catch(Exception e){}
     %>

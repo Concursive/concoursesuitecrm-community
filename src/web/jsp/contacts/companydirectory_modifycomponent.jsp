@@ -120,9 +120,8 @@ Modify Component
 <dhv:evaluate exp="<%= isPopup(request)  && !isInLinePopup(request) %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
-<br>
-<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%>
-
+<br />
+<dhv:formMessage />
 <%--  include basic opportunity form --%>
 <%@ include file="../pipeline/opportunity_include.jsp" %>
 

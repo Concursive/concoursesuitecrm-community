@@ -42,8 +42,9 @@ Contact Details
         <strong><%= ContactDetails.getNameLastFirst() %>:</strong>
         [ <dhv:container name="accountscontacts" selected="portal" param="<%= param1 %>"/> ]
       <br /> <br />
-  <input	type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
-  <br /><%= showError(request, "actionError") %>
+  <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
+  <br />
+  <dhv:formMessage />
   <%@ include file="accounts_contacts_portal_include.jsp" %>
   <br />
   <input	type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />

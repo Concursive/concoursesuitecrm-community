@@ -7,6 +7,8 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.DatabaseUtils;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.ApplicationPrefs;
 
 /**
  *  Represents a phone number.
@@ -560,28 +562,28 @@ public class PhoneNumber {
    *@param  parseItem  The phone number item to parse
    *@since             1.8
    */
-  public void buildRecord(HttpServletRequest request, int parseItem) {
-    this.setType(request.getParameter("phone" + parseItem + "type"));
+  public void buildRecord(ActionContext context, int parseItem) {
+    this.setType(context.getRequest().getParameter("phone" + parseItem + "type"));
 
     StringBuffer thisString = new StringBuffer();
 
-    if (request.getParameter("phone" + parseItem + "number") != null &&
-        !request.getParameter("phone" + parseItem + "number").trim().equals("")) {
-      thisString.append(convertToFormattedNumber(request.getParameter("phone" + parseItem + "number")));
+    if (context.getRequest().getParameter("phone" + parseItem + "number") != null &&
+        !context.getRequest().getParameter("phone" + parseItem + "number").trim().equals("")) {
+      thisString.append(convertToFormattedNumber(context, context.getRequest().getParameter("phone" + parseItem + "number")));
     }
 
     this.setNumber(thisString.toString());
-    this.setExtension(request.getParameter("phone" + parseItem + "ext"));
+    this.setExtension(context.getRequest().getParameter("phone" + parseItem + "ext"));
 
-    if (request.getParameter("phone" + parseItem + "delete") != null) {
-      String action = request.getParameter("phone" + parseItem + "delete").toLowerCase();
+    if (context.getRequest().getParameter("phone" + parseItem + "delete") != null) {
+      String action = context.getRequest().getParameter("phone" + parseItem + "delete").toLowerCase();
       if (action.equals("on")) {
         this.setEnabled(false);
       }
     }
 
-    if (request.getParameter("phone" + parseItem + "id") != null) {
-      this.setId(request.getParameter("phone" + parseItem + "id"));
+    if (context.getRequest().getParameter("phone" + parseItem + "id") != null) {
+      this.setId(context.getRequest().getParameter("phone" + parseItem + "id"));
     }
   }
 
@@ -615,7 +617,7 @@ public class PhoneNumber {
    *@param  tmp  Description of the Parameter
    *@return      Description of the Return Value
    */
-  public final static String convertToFormattedNumber(String tmp) {
+  public final static String convertToFormattedNumber(ActionContext context, String tmp) {
     String tmpNum = "";
     if (tmp.indexOf("+") == 0) {
       tmpNum = tmp;
@@ -624,21 +626,24 @@ public class PhoneNumber {
     }
     StringBuffer result = new StringBuffer();
 
+    String defaultCountry = ApplicationPrefs.getPref(context.getServletContext(), "SYSTEM.COUNTRY");
     //it's a US number
-    if (tmpNum.indexOf("+") == -1) {
+    if ((tmpNum.indexOf("+") == -1) &&
+        ("UNITED STATES".equals(defaultCountry))){
       //1-XXX numbers, strip off the beginning "1"
-      if (tmpNum.length() == 11 && tmpNum.charAt(0) == '1') {
+      if ((tmpNum.length() == 11) && 
+          (tmpNum.charAt(0) == '1')){
         tmpNum = tmpNum.substring(1);
       }
-
-      result.append("(");
-      result.append(tmpNum.substring(0, 3));
-      result.append(") ");
-      result.append(tmpNum.substring(3, 6));
-      result.append("-");
-      result.append(tmpNum.substring(6, 10));
-      if (tmpNum.length() > 10) {
-        result.append(tmpNum.substring(10));
+      if (tmpNum.length() == 10){
+        result.append("(");
+        result.append(tmpNum.substring(0, 3));
+        result.append(") ");
+        result.append(tmpNum.substring(3, 6));
+        result.append("-");
+        result.append(tmpNum.substring(6, 10));
+      }else{
+        result.append(tmpNum);
       }
     } else {
       result.append(tmpNum);

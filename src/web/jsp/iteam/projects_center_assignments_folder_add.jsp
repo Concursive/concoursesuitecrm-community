@@ -70,8 +70,8 @@
 <dhv:evaluate if="<%= assignmentFolder.getId() == -1 %>">
   <input type="submit" value="Save & New" onClick="javascript:this.form.donew.value='true'">
 </dhv:evaluate>
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';<%= (request.getParameter("popup") != null?"window.close();":"this.form.action='ProjectManagement.do?command=ProjectCenter&pid=" + Project.getId()  + ("Requirements".equals(request.getParameter("return"))?"&section=Requirements":"&section=Assignments") + "';") %>;"><br>
-  <%= showError(request, "actionError") %>
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';<%= (request.getParameter("popup") != null?"window.close();":"this.form.action='ProjectManagement.do?command=ProjectCenter&pid=" + Project.getId()  + ("Requirements".equals(request.getParameter("return"))?"&section=Requirements":"&section=Assignments") + "';") %>;"><br />
+  <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">

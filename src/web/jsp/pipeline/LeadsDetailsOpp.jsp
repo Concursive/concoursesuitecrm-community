@@ -40,9 +40,7 @@ Opportunity Details
 </tr>
 </table>
 <%-- End Trails --%>
-<% if (request.getAttribute("actionError") != null) { %>
-<%= showError(request, "actionError") %>
-<%}%>
+<dhv:formMessage showSpace="false" />
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>
@@ -117,7 +115,11 @@ Opportunity Details
       <zeroio:currency value="<%= thisComponent.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
     <td valign="top" align="center" nowrap>
-      <zeroio:tz timestamp="<%= thisComponent.getCloseDate() %>" dateOnly="true" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(thisComponent.getCloseDateTimeZone())){%>
+      <zeroio:tz timestamp="<%= thisComponent.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= thisComponent.getCloseDate() %>" dateOnly="true" timeZone="<%= thisComponent.getCloseDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
     <td valign="top" align="center" nowrap>
       <%= toHtml(thisComponent.getStageName()) %>

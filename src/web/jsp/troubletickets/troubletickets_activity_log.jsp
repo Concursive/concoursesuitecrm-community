@@ -13,6 +13,7 @@
 <jsp:useBean id="onsiteModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="activityList" class="org.aspcfs.modules.troubletickets.base.TicketActivityLogList" scope="request"/>
 <jsp:useBean id="TMListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%@ include file="activity_log_menu.jsp" %>
 <%-- Initialize the drop-down menus --%>
@@ -106,10 +107,10 @@ Activity Log
          <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
     <td width="12%" >
-      <zeroio:tz timestamp="<%=thisMaintenance.getFirstActivityDate()%>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=thisMaintenance.getFirstActivityDate()%>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
 		</td>
 		<td width="12%" >
-      <zeroio:tz timestamp="<%=thisMaintenance.getLastActivityDate()%>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=thisMaintenance.getLastActivityDate()%>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
 		</td>
 		<td width="12%" >
     <%if (thisMaintenance.getFollowUpRequired()) { %>
@@ -119,7 +120,11 @@ Activity Log
     <%}%>
 		</td>
 		<td width="10%" >
-    <zeroio:tz timestamp="<%=thisMaintenance.getAlertDate()%>" dateOnly="true" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(thisMaintenance.getAlertDateTimeZone())){%>
+      <zeroio:tz timestamp="<%= thisMaintenance.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= thisMaintenance.getAlertDate() %>" dateOnly="true" timeZone="<%= thisMaintenance.getAlertDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
 		</td>
 		<td width="48%" >
     <%if (thisMaintenance.getFollowUpRequired() == false) { %>
@@ -129,7 +134,7 @@ Activity Log
     <%}%>
 		</td>
 		<td width="10%" >
-      <zeroio:tz timestamp="<%=thisMaintenance.getModified()%>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=thisMaintenance.getModified()%>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
 		</td>
    </tr>
     <%  

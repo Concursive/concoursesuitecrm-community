@@ -57,13 +57,11 @@ New Action List
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:evaluate if="<%= request.getAttribute("actionError") != null %>">
-<%= showError(request, "actionError") %>
-</dhv:evaluate>
+<dhv:formMessage showSpace="false" />
 <input type="submit" value="Save">
 <input type="button" value="Cancel" onClick="javascript:window.location.href='<%= cancelURL %>'">
-<br>
-<br>
+<br />
+<br />
 
 <%-- include the basic form for adding a action list --%>
 <%@ include file="action_lists_include.jsp" %>
@@ -72,7 +70,7 @@ New Action List
 <dhv:evaluate if="<%= ActionList.getId() == -1 %>">
 <%-- include jsp for contact criteria --%>
 <%@ include file="../communications/group_criteria_include.jsp" %>
-<br>
+<br />
 </dhv:evaluate>
 
 <input type="submit" value="Save">

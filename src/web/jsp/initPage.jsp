@@ -76,7 +76,6 @@ public static String replace(String str, String o, String n) {
       jsReady = replace(jsReady, "\\", "\\\\");
       jsReady = replace(jsReady, "'", "\\'");
       jsReady = replace(jsReady, "\"", "\\\"");
-      jsReady = replace(jsReady, " ", "&nbsp;");
       return(jsReady);
     } else {
       return("");

@@ -58,8 +58,7 @@
 </table>
 <%-- End Trails --%>
 <form method="post" name="inputForm" action="ExternalContactsImports.do?command=Save" enctype="multipart/form-data" onSubmit="return doCheck(this);">
-<%= showError(request, "actionError") %>
-
+<dhv:formMessage />
 <%--  include basic contact form --%>
 <%@ include file="../import_include.jsp" %>
 

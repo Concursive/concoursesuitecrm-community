@@ -33,9 +33,7 @@
 </table>
 <%-- End Trails --%>
 <%@ include file="../accounts/accounts_importcontact_details_include.jsp" %>
-<dhv:evaluate if="<%= request.getParameter("actionError") != null %>">
-<font color="red">*toHtml((String) request.getParameter("actionError"))</font>
-</dhv:evaluate>
+<dhv:formMessage showSpace="false" />
 <dhv:permission name="accounts-accounts-contacts-imports-edit">
 <dhv:evaluate if="<%= !ContactDetails.isApproved()  %>">
 <br><input type="button" value="Delete" onClick="javascript:confirmDeleteContact();"><br><br>

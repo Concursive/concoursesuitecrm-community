@@ -69,10 +69,8 @@
       <dhv:evaluate exp="<%= popUp %>">
         <input type="button" value="Cancel" onclick="javascript:window.close();"> 
       </dhv:evaluate>
-      <br>&nbsp;
-      <% if (request.getAttribute("actionError") != null) { %>
-      <%= showError(request, "actionError") %>
-      <%}%>
+      <br />
+      <dhv:formMessage showSpace="false" />
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
           <th colspan="2">

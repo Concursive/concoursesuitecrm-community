@@ -36,8 +36,8 @@
     }
   }
 </script>
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
-  <%= showError(request, "actionError") %>
   <tr>
     <th colspan="2">
       <img border="0" src="images/file.gif" align="absmiddle"><b>Upload a New Document</b>

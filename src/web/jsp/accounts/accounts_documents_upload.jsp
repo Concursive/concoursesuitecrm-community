@@ -10,6 +10,7 @@
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="folderId" class="java.lang.String"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
   function checkFileForm(form) {
@@ -62,7 +63,7 @@ Upload Document
   <form method="post" name="inputForm" action="AccountsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
   <tr>
     <td class="containerBack">
-      <%= showError(request, "actionError") %>
+      <dhv:formMessage />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

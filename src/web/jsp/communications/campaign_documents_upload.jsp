@@ -61,7 +61,7 @@ Upload Document
   <form method="post" name="inputForm" action="CampaignDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
   <tr>
     <td class="containerBack">
-      <%= showError(request, "actionError") %>
+    <dhv:formMessage />
 	<table cellpadding="4" cellspacing="0" width="100%" class="details">
 	  <tr>
 	    <th colspan="2">

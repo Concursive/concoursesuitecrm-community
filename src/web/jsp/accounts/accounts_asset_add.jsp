@@ -54,7 +54,8 @@
       <input type="button" value="Cancel" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
       <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
       <br />
-<%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<dhv:formMessage />
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <%@ include file="accountasset_include.jsp" %>
 <input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />
 <br />

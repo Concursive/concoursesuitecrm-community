@@ -17,6 +17,7 @@ import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.communications.base.*;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.accounts.base.Organization;
+import com.darkhorseventures.framework.actions.ActionContext;
 
 /**
  *  Represents a Contact in CFS
@@ -1118,10 +1119,10 @@ public class Contact extends GenericBean {
    *@param  request  The new RequestItems value
    *@since           1.15
    */
-  public void setRequestItems(HttpServletRequest request) {
-    phoneNumberList = new ContactPhoneNumberList(request);
-    addressList = new ContactAddressList(request);
-    emailAddressList = new ContactEmailAddressList(request);
+  public void setRequestItems(ActionContext context) {
+    phoneNumberList = new ContactPhoneNumberList(context);
+    addressList = new ContactAddressList(context.getRequest());
+    emailAddressList = new ContactEmailAddressList(context.getRequest());
   }
 
 

@@ -381,7 +381,7 @@ public class NewsArticleList extends ArrayList {
     if (!pagedListInfo.getCurrentLetter().equals("")) {
       pst = db.prepareStatement(sqlCount.toString() +
           sqlFilter.toString() +
-          "AND n.subject > ? ");
+          "AND lower(n.subject) < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();

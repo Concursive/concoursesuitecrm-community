@@ -11,7 +11,7 @@ import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 import java.sql.Timestamp;
 import java.sql.Date;
-import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.*;
 import java.text.*;
 import java.util.Locale;
 import org.aspcfs.modules.login.beans.UserBean;
@@ -176,7 +176,7 @@ public class CalendarHandler extends TagSupport {
         //Format the specified value with the retrieved timezone
         SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
             dateFormat, locale);
-        formatter.applyPattern(formatter.toPattern() + "yy");
+        formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
 
         //set the timezone
         if (timeZone != null) {

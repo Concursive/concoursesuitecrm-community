@@ -159,7 +159,7 @@ public final class AccountTickets extends CFSModule {
       nc.setNameFirst(context.getRequest().getParameter("thisContact_nameFirst"));
       nc.setNameLast(context.getRequest().getParameter("thisContact_nameLast"));
       nc.setTitle(context.getRequest().getParameter("thisContact_title"));
-      nc.setRequestItems(context.getRequest());
+      nc.setRequestItems(context);
       nc.setOrgId(newTic.getOrgId());
       nc.setEnteredBy(getUserId(context));
       nc.setModifiedBy(getUserId(context));

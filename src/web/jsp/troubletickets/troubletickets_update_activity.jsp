@@ -54,7 +54,8 @@ Modify Activity Log
         <input type="button" value="Cancel" onClick="window.location.href='TroubleTicketActivityLog.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%=activityDetails.getId()%>';this.form.dosubmit.value='false';" />
       <%}%>
       <br />
-      <%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+      <dhv:formMessage />
+      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <%@ include file="troubletickets_update_activity_include.jsp" %>
       <br />
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />

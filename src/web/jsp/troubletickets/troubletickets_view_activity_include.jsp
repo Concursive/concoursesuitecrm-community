@@ -61,7 +61,11 @@
   %>
         <tr valign="top" class="containerBody">
           <td align="center" nowrap>
-            <zeroio:tz timestamp="<%=thisDayDescription.getActivityDate()%>" dateOnly="true" timeZone="<%=thisDayDescription.getActivityDateTimeZone()%>" showTimeZone="yes" default="&nbsp;"/>
+            <zeroio:tz timestamp="<%= thisDayDescription.getActivityDate() %>" dateOnly="true" timeZone="<%= thisDayDescription.getActivityDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <% if(!User.getTimeZone().equals(thisDayDescription.getActivityDateTimeZone())){%>
+            <br>
+            <zeroio:tz timestamp="<%= thisDayDescription.getActivityDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <% } %>
           <td align="right" nowrap>
             <%= thisDayDescription.getTravelHours() %> hrs &nbsp <%= thisDayDescription.getTravelMinutes() %> min 
           </td>
@@ -122,7 +126,11 @@
         Alert Date
       </td>
       <td>
-        <zeroio:tz timestamp="<%=activityDetails.getAlertDate()%>" timeZone="<%=activityDetails.getAlertDateTimeZone()%>" showTimeZone="yes" dateOnly="true" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%= activityDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= activityDetails.getAlertDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+        <% if(!User.getTimeZone().equals(activityDetails.getAlertDateTimeZone())){%>
+        <br>
+        <zeroio:tz timestamp="<%= activityDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+        <% } %>
       </td>
     </tr>
   </dhv:evaluate>

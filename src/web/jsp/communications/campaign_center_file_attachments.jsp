@@ -7,9 +7,11 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="fileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
 <script language="JavaScript">
@@ -90,7 +92,7 @@ File Attachments
               <%= thisFile.getRelativeSize() %> k&nbsp;
             </td>
             <td nowrap>
-              <%= thisFile.getModifiedDateTimeString() %><br>
+              <zeroio:tz timestamp="<%= thisFile.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/><br />
               <dhv:username id="<%= thisFile.getEnteredBy() %>"/>
             </td>
           </tr>
@@ -113,7 +115,7 @@ File Attachments
           </th>
         </tr>
         <tr class="containerBody">
-        <%= showError(request, "actionError") %>
+        <dhv:formMessage />
           <form method="post" name="inputForm" action="CampaignManager.do?command=UploadFile&id=<%= Campaign.getId() %>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
             <td width="100%">
               <center>

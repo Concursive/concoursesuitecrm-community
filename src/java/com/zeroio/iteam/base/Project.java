@@ -1863,7 +1863,7 @@ public class Project extends GenericBean {
       if (modified != null) {
         sql.append("modified, ");
       }
-      sql.append("title, shortDescription, requestedBy, requestedDept, requestDate, requestDate_timezone " +
+      sql.append("title, shortDescription, requestedBy, requestedDept, requestDate, requestDate_timezone, " +
           "allow_guests, news_enabled, details_enabled, " +
           "team_enabled, plan_enabled, lists_enabled, discussion_enabled, " +
           "tickets_enabled, documents_enabled, " +

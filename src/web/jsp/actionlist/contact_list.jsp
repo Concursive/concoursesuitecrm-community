@@ -12,6 +12,7 @@
 <jsp:useBean id="ActionContacts" class="org.aspcfs.modules.actionlist.base.ActionContactsList" scope="request"/>
 <jsp:useBean id="ActionList" class="org.aspcfs.modules.actionlist.base.ActionList" scope="request"/>
 <jsp:useBean id="ContactActionListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -158,7 +159,7 @@ Action Contacts
     <% } %>
     </td>
     <td nowrap align="center" valign="top">
-      <zeroio:tz timestamp="<%= thisContact.getModified() %>" />
+      <zeroio:tz timestamp="<%= thisContact.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
     </td>
   </tr>
 <%}

@@ -760,7 +760,7 @@ public final class TroubleTickets extends CFSModule {
 
     ticListInfo.setLink("TroubleTickets.do?command=SearchTickets");
     ticList.setPagedListInfo(ticListInfo);
-    ticListInfo.setSearchCriteria(ticList);
+    ticListInfo.setSearchCriteria(ticList,UserUtils.getUserLocale(context.getRequest()));
 
     try {
       db = this.getConnection(context);
@@ -871,7 +871,7 @@ public final class TroubleTickets extends CFSModule {
       nc.setNameFirst(context.getRequest().getParameter("thisContact_nameFirst"));
       nc.setNameLast(context.getRequest().getParameter("thisContact_nameLast"));
       nc.setTitle(context.getRequest().getParameter("thisContact_title"));
-      nc.setRequestItems(context.getRequest());
+      nc.setRequestItems(context);
       nc.setOrgId(newTic.getOrgId());
       nc.setEnteredBy(getUserId(context));
       nc.setModifiedBy(getUserId(context));

@@ -46,7 +46,7 @@ Add a Campaign
   <input type="submit" value="Insert" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignManager.do?command=View';">
   <br>
-  <%= showError(request, "actionError") %>
+<dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
       <th colspan="2">

@@ -367,7 +367,7 @@ public final class ExternalContacts extends CFSModule {
         return "ListContactsOK";
       }
       //set the searchcriteria
-      searchContactsInfo.setSearchCriteria(contactList);
+      searchContactsInfo.setSearchCriteria(contactList,UserUtils.getUserLocale(context.getRequest()));
       //make sure user has access to view account contacts
       if (!(hasPermission(context, "accounts-accounts-contacts-view"))) {
         contactList.setExcludeAccountContacts(true);
@@ -901,7 +901,7 @@ public final class ExternalContacts extends CFSModule {
     Organization thisOrg = null;
 
     Contact thisContact = (Contact) context.getFormBean();
-    thisContact.setRequestItems(context.getRequest());
+    thisContact.setRequestItems(context);
     thisContact.setTypeList(context.getRequest().getParameterValues("selectedList"));
     thisContact.setEnteredBy(getUserId(context));
     thisContact.setModifiedBy(getUserId(context));

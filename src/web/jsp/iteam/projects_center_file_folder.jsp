@@ -45,7 +45,8 @@
 <br>
   <input type="submit" value=" Save " name="save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=File_Library';"><br>
-  <%= showError(request, "actionError") %><br>
+  <dhv:formMessage />
+  <br />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">

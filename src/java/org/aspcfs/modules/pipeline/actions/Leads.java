@@ -968,7 +968,7 @@ public final class Leads extends CFSModule {
       context.getRequest().setAttribute("TypeSelect", typeSelect);
       //The list of opportunities, according to drop-down filter
       oppList.setPagedListInfo(searchOppListInfo);
-      searchOppListInfo.setSearchCriteria(oppList);
+      searchOppListInfo.setSearchCriteria(oppList,UserUtils.getUserLocale(context.getRequest()));
       if ("all".equals(searchOppListInfo.getListView())) {
         if (searchOppListInfo.getFilterKey("listFilter2") != -1) {
           oppList.setOwner(searchOppListInfo.getFilterKey("listFilter2"));

@@ -116,8 +116,8 @@
   <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
   </dhv:evaluate>
   <input type="submit" value="Cancel" onClick="<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "javascript:this.form.action='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';" %>">
-<br>
-<%= showError(request, "actionError") %>
+<br />
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

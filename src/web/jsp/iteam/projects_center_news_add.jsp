@@ -71,8 +71,8 @@
   <dhv:evaluate if="<%= newsArticle.getMessage() != null %>">
     <input type="submit" value="Save and Modify Next Page" onClick="javascript:this.form.newPage.value='true'" />
   </dhv:evaluate>
-  <input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>';"><br>
-  <%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+  <input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>';"><br />
+  <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2" align="left">

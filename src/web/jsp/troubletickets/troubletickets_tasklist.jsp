@@ -12,6 +12,7 @@
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="TaskList" class="org.aspcfs.modules.tasks.base.TaskList" scope="request"/>
 <jsp:useBean id="TicketTaskListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -202,10 +203,14 @@ Tasks
             <%}%>
           </td>
           <td nowrap align="center" valign="top">
-          <zeroio:tz timestamp="<%= thisTask.getDueDate() %>" dateOnly="true" default="-NA-"/>
+            <% if(!User.getTimeZone().equals(thisTask.getDueDateTimeZone())){%>
+            <zeroio:tz timestamp="<%= thisTask.getDueDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <% } else { %>
+            <zeroio:tz timestamp="<%= thisTask.getDueDate() %>" dateOnly="true" timeZone="<%= thisTask.getDueDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <% } %>
           </td>
             <td nowrap align="center" valign="top">
-              <zeroio:tz timestamp="<%= thisTask.getCompleteDate() %>" dateOnly="true" default="-NA-"/>
+              <zeroio:tz timestamp="<%= thisTask.getCompleteDate() %>" dateOnly="true" default="-NA-" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
             </td>
             <td nowrap align="center" valign="top">
               <%= thisTask.getAgeString() %>

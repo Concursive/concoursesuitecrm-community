@@ -499,7 +499,7 @@ public void setIncludeIds(String includeIds) {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lct.description < ? " + sqlFilterTail.toString());
+            "AND lower(lct.description) < ? " + sqlFilterTail.toString());
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();

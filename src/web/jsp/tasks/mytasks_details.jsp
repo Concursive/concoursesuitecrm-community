@@ -22,7 +22,7 @@ Task Details
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<%= showError(request, "actionError") %>
+<dhv:formMessage />
 <dhv:evaluate exp="<%= isPopup(request) %>"> 
 <input type="button" value="Cancel" onClick="javascript:window.close();"><br>
 </dhv:evaluate>

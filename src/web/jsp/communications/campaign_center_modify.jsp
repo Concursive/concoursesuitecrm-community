@@ -55,8 +55,8 @@ Modify
   <% }else{ %>
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignManager.do?command=ViewDetails';">
   <% } %>
-  <br>
-  <%= showError(request, "actionError") %>
+  <br />
+  <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
       <th colspan="2">

@@ -552,7 +552,7 @@ public final class MyCFS extends CFSModule {
     if (errors != null) {
       processErrors(context, errors);
     }
-    return ("SendMessageOK");
+    return this.getReturn(context,"SendMessage");
   }
 
 
@@ -1066,7 +1066,7 @@ public final class MyCFS extends CFSModule {
     int resultCount = 0;
     //Process the request
     Contact thisContact = (Contact) context.getFormBean();
-    thisContact.setRequestItems(context.getRequest());
+    thisContact.setRequestItems(context);
     thisContact.setEnteredBy(getUserId(context));
     thisContact.setModifiedBy(getUserId(context));
     try {

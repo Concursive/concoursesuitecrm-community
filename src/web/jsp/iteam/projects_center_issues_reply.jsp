@@ -57,7 +57,7 @@
 <br>
   <input type="submit" value=" Save ">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagementIssues.do?command=Details&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>';"><br>
-  <%= showError(request, "actionError") %>
+  <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">

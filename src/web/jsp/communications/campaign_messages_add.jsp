@@ -49,8 +49,8 @@ Add Message
 <%-- End Trails --%>
 <input type="submit" value="Save Message">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
-<br>
-<%= showError(request, "actionError") %>
+<br />
+<dhv:formMessage />
 <%@ include file="message_include.jsp" %>
 <br>
 <input type="submit" value="Save Message">

@@ -45,7 +45,7 @@
         ArrayList tmpList = (ArrayList) thisDay.get(category);
         CalendarEvent thisEvent = (CalendarEvent) tmpList.get(0);
     %>
-        <img border="0" src="images/event-holiday.gif" align="texttop" title="Holidays"><%= "Holiday: " + thisEvent.getSubject() %>
+        <img border="0" src="images/event-holiday.gif" align="texttop" title="Holidays"><%= "US Bank Holiday: " + thisEvent.getSubject() %>
     <% }  %>
   </td>
  </tr>

@@ -1359,7 +1359,9 @@ public class Assignment extends GenericBean {
       assignDueDateTest.setTime(dueDate);
       assignDueDateTest.set(Calendar.HOUR_OF_DAY, 0);
       assignDueDateTest.set(Calendar.MINUTE, 0);
-      DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+      SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(DateFormat.SHORT, locale);
+      formatter.applyPattern(formatter.toPattern() + " z");
+      formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
       if (!this.getComplete() && rightNow.after(assignDueDateTest)) {
         return "<font color='red'>" + formatter.format(dueDate) + "</font>";
       } else {

@@ -13,7 +13,7 @@
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].description.focus();">
 <form name="addTask" action="AccountTicketTasks.do?command=Save&id=<%= Task.getId() %>&auto-populate=true" method="post" onSubmit="return validateTask();">
-<%= showError(request, "actionError", false) %>
+<dhv:formMessage showSpace="false" />
 <%@ include file="../tasks/task_include.jsp" %>
 <br>
 <input type="submit" value="<%= Task.getId() == -1 ? "Save" : "Update" %>">

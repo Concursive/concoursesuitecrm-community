@@ -129,7 +129,8 @@ Modify Component
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
 <br />
-<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<dhv:formMessage />
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <%--  include basic opportunity form --%>
 <%@ include file="opportunity_include.jsp" %>
 &nbsp;

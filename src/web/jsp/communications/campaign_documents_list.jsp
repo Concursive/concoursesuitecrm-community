@@ -12,6 +12,7 @@
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="CampaignDocListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -90,7 +91,7 @@ Documents
       </td>
     </dhv:permission>
       <td nowrap>
-        <zeroio:tz timestamp="<%= thisFile.getModified() %>" /><br>
+        <zeroio:tz timestamp="<%= thisFile.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/><br>
         <dhv:username id="<%= thisFile.getEnteredBy() %>"/>
       </td>
     </tr>

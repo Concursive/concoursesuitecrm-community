@@ -28,11 +28,9 @@ New Folder
 </tr>
 </table>
 <%-- End Trails --%>
-<% if (request.getAttribute("actionError") != null) { %>
-<%= showError(request, "actionError") %>
-<%}%>
-<strong>Module:</strong> <%= PermissionCategory.getCategory() %><br>
-&nbsp;<br>
+<dhv:formMessage showSpace="false" />
+<strong>Module:</strong> <%= PermissionCategory.getCategory() %><br />
+<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

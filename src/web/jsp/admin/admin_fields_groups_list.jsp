@@ -53,15 +53,13 @@ Folder
 </tr>
 </table>
 <%-- End Trails --%>
-<% if (request.getAttribute("actionError") != null) { %>
-<%= showError(request, "actionError") %>
-<%}%>
+<dhv:formMessage showSpace="false" />
 <%
   CategoryList.setJsEvent("onChange=\"javascript:this.form.dosubmit.value='false';document.forms[0].submit();\"");
 %>
-  <strong>Module:</strong> <%= toHtml(PermissionCategory.getCategory()) %><br>
-  <strong>Folder:</strong> <%= CategoryList.getHtmlSelect("catId", Category.getId()) %><br>
-  &nbsp;<br>
+  <strong>Module:</strong> <%= toHtml(PermissionCategory.getCategory()) %><br />
+  <strong>Folder:</strong> <%= CategoryList.getHtmlSelect("catId", Category.getId()) %><br />
+  <br />
   <dhv:permission name="admin-sysconfig-folders-add">
     <a href="AdminFieldsGroup.do?command=AddGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>">Add a Group to this Folder</a><br>
     &nbsp;<br>

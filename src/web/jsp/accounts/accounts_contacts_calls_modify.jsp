@@ -207,7 +207,8 @@ Update Activity
           <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsCalls.do?command=Details&id=<%= (PreviousCallDetails.getId() > -1 ? PreviousCallDetails.getId() : CallDetails.getId()) %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "trailSource") %>';this.form.dosubmit.value='false';">
       <%}%>
       <br />
-      <%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+      <dhv:formMessage />
+      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <% if("pending".equals(request.getParameter("view"))){ %>
         <%-- include pending activity form --%>
         <%@ include file="../contacts/call_followup_include.jsp" %>

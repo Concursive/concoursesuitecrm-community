@@ -251,7 +251,11 @@ Tasks
     </td>
     <%}%>
     <td nowrap align="center" valign="top">
-      <zeroio:tz timestamp="<%= thisTask.getDueDate() %>" dateOnly="true" default="-NA-"/>
+      <% if(!User.getTimeZone().equals(thisTask.getDueDateTimeZone())) { %>
+      <zeroio:tz timestamp="<%= thisTask.getDueDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="-NA-"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= thisTask.getDueDate() %>" dateOnly="true" timeZone="<%= thisTask.getDueDateTimeZone() %>" showTimeZone="yes" default="-NA-"/>
+      <% } %>
     </td>
     <% if(TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("true")){ %>
       <td nowrap align="center" valign="top">

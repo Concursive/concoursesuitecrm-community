@@ -10,6 +10,7 @@
 <%@ page import="java.util.*,org.aspcfs.utils.web.*, org.aspcfs.modules.troubletickets.base.*" %>
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="ticketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>

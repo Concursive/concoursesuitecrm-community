@@ -31,7 +31,7 @@ Status
   <tr>
     <td>
       Transaction could not be completed, the following error was reported:<br />
-      <%= showError(request, "actionError") %>
+      <dhv:formMessage />
     </td>
   </tr>
 </table>

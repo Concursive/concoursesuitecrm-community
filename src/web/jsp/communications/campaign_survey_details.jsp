@@ -10,6 +10,7 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Survey" class="org.aspcfs.modules.communications.base.Survey" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
@@ -67,7 +68,7 @@ Survey Details
         Date
       </td>
       <td>
-        <zeroio:tz timestamp="<%= Survey.getEntered() %>" />
+        <zeroio:tz timestamp="<%= Survey.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
       </td>
     </tr>
     <tr class="containerBody">
@@ -83,7 +84,7 @@ Survey Details
         Date
       </td>
       <td>
-        <zeroio:tz timestamp="<%= Survey.getModified() %>" />
+        <zeroio:tz timestamp="<%= Survey.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
       </td>
     </tr>
   </table>

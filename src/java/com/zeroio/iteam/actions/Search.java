@@ -46,7 +46,7 @@ public final class Search extends CFSModule {
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
-  public String executeCommandIndex(ActionContext context) {
+  public synchronized String executeCommandIndex(ActionContext context) {
     //setMaximized(context);
     if (!hasPermission(context, "admin-view")) {
       return ("PermissionError");
@@ -76,6 +76,9 @@ public final class Search extends CFSModule {
       AssignmentIndexer.add(writer, db);
       // Finish up
       writer.optimize();
+      // Update the shared searcher
+      IndexSearcher searcher = new IndexSearcher(index);
+      context.getServletContext().setAttribute("indexSearcher", searcher);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");

@@ -12,6 +12,7 @@
 <%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.admin.base.User" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="currentMember" class="com.zeroio.iteam.base.TeamMember" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
   <tr class="subtab">
@@ -83,22 +84,22 @@
       </td>
     </zeroio:permission>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_ADDED %>">
-      <td valign="top" nowrap>Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true"/></td>
+      <td valign="top" nowrap>Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_PENDING %>">
-      <td valign="top" nowrap><font color="green">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true"/></font></td>
+      <td valign="top" nowrap><font color="green">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_INVITING %>">
-      <td valign="top" nowrap><font color="green">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true"/></font></td>
+      <td valign="top" nowrap><font color="green">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_MAILERROR %>">
       <td valign="top" nowrap><font color="red">Invitation could not be sent to email address</font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_REFUSED %>">
-      <td valign="top" nowrap><font color="red">Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true"/></font></td>
+      <td valign="top" nowrap><font color="red">Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/></font></td>
     </dhv:evaluate>
     <td nowrap valign="top">
-      <zeroio:tz timestamp="<%= thisMember.getLastAccessed() %>" dateOnly="true" default="--"/>
+      <zeroio:tz timestamp="<%= thisMember.getLastAccessed() %>" dateOnly="true" default="--" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
     </td>
   </tr>
 <%    

@@ -47,9 +47,7 @@ Re-assignments
 </tr>
 </table>
 <%-- End Trails --%>
-<% if (request.getAttribute("actionError") != null) { %>
-<%= showError(request, "actionError") %>
-<%}%>
+<dhv:formMessage showSpace="false" />
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="Reassignments.do?command=Reassign">

@@ -70,7 +70,7 @@ Search Opportunities
 </tr>
 </table>
 <%-- End Trails --%>
-<%= showError(request, "actionError") %>
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

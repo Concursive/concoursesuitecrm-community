@@ -31,8 +31,8 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <input type="submit" value="<%= Task.getId()==-1?"Save":"Update" %>">
-<input type="button" value="Cancel" onClick="<%=popUp?"javascript:window.close();":"javascript:window.location.href='MyTasks.do?command=ListTasks';"%>"><br>
-<%= showError(request, "actionError") %>
+<input type="button" value="Cancel" onClick="<%=popUp?"javascript:window.close();":"javascript:window.location.href='MyTasks.do?command=ListTasks';"%>"><br />
+<dhv:formMessage />
 <%@ include file="task_include.jsp" %>
 <br>
 <input type="submit" value="<%= Task.getId()==-1?"Save":"Update" %>">

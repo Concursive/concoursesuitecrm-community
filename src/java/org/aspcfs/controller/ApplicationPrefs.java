@@ -315,10 +315,15 @@ public class ApplicationPrefs {
     if (!this.has("SYSTEM.CURRENCY")) {
       this.add("SYSTEM.CURRENCY", "USD");
     }
-    System.setProperty("CURRENCY",this.get("SYSTEM.CURRENCY"));
     if (!this.has("SYSTEM.LANGUAGE")) {
       this.add("SYSTEM.LANGUAGE", "en_US");
     }
+    if (!this.has("SYSTEM.COUNTRY")) {
+      this.add("SYSTEM.COUNTRY", "UNITED STATES");
+    }
+    
+    // TODO: WARNING: THIS NEEDS TO BE REMOVED
+    System.setProperty("CURRENCY",this.get("SYSTEM.CURRENCY"));
     String[] locale = this.get("SYSTEM.LANGUAGE").split("_");
     if (locale[0] != null){
       System.setProperty("LANGUAGE",locale[0]);
@@ -336,9 +341,6 @@ public class ApplicationPrefs {
     addParameter(context, "MailServer", this.get("MAILSERVER"));
     addParameter(context, "FaxServer", this.get("FAXSERVER"));
     addParameter(context, "FaxEnabled", this.get("FAXENABLED"));
-    if (this.has("MAILSERVER")) {
-      System.setProperty("MailServer", this.get("MAILSERVER"));
-    }
     //Verify the license
     if (this.has("FILELIBRARY")) {
       String edition = null;

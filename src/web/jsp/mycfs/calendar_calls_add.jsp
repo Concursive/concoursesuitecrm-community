@@ -32,8 +32,9 @@
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="button" value="Cancel" onClick="javascript:window.close();">
       [<a href="javascript:showHistory();">View Contact History</a>]
-      <br>
-      <%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+      <br />
+      <dhv:formMessage />
+      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <%@ include file="../contacts/call_include.jsp" %>
       &nbsp;
       <br>

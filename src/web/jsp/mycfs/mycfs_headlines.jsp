@@ -95,7 +95,8 @@ Headlines
       <%= toHtml(thisOrg.getTicker()) %>
     </td>
     <td width="100" valign="center" align="center">
-      <%= thisOrg.getEnteredStringLongYear() %>
+      <%-- TODO: fix this --%>
+      <%--<%= thisOrg.getEnteredStringLongYear() %>--%>
     </td>
   </tr>
 <%}%>

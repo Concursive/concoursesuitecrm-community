@@ -26,7 +26,7 @@ Add Role
 <input type="submit" value="Add" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
 <br>
-<%= showError(request, "actionError") %>
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

@@ -50,7 +50,7 @@
     <tr>
      <td>
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayTaskMenu('select<%= menuCount %>','menuTask', '<%= Constants.TASKS %>', '<%=  pendingTask.getId() %>', '<%= pendingTask.getContactId() %>', '<%= pendingTask.getContact().getEmployee()?"yes":"no" %>');"
+       <a href="javascript:displayTaskMenu('select<%= menuCount %>','menuTask', '<%= Constants.TASKS %>', '<%=  pendingTask.getId() %>', '<%= pendingTask.getContactId() %>', '<%= ((pendingTask.getContactId()!=-1) && pendingTask.getContact().getEmployee())?"yes":"no" %>');"
        onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuTask');"><img src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
      </td>
      <td nowrap>

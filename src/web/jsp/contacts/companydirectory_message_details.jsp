@@ -69,7 +69,7 @@ Message Details
             Message Subject
           </td>
           <td>
-            <%=toHtml(Campaign.getMessageSubject())%>
+            <%= toHtml(Campaign.getSubject()) %>
           </td>
         </tr>
         <tr class="containerBody">

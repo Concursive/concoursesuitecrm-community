@@ -57,7 +57,7 @@ Modify Document
 <table cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td class="containerBack">
-      <%= showAttribute(request, "actionError") %>
+<dhv:formMessage />
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">

@@ -92,10 +92,7 @@ public final class AccountTicketTasks extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "View Accounts", "View Tickets");
-    if (hasAuthority(context, thisTask.getOwner())) {
-      return this.getReturn(context, "TaskDetails");
-    }
-    return ("PermissionError");
+    return this.getReturn(context, "TaskDetails");
   }
 
 

@@ -11,6 +11,7 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="campList" class="org.aspcfs.modules.communications.base.CampaignList" scope="request"/>
 <jsp:useBean id="CampaignDashboardListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%@ include file="../initPopupMenu.jsp" %>
 <%@ include file="campaign_dashboard_menu.jsp" %>
@@ -100,7 +101,11 @@ Dashboard
       <%= ("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id"))?" <font color=\"red\">(Added)</font>":"") %>
     </td>
     <td valign="center" align="center" nowrap class="row<%= rowid %>">
-      <zeroio:tz timestamp="<%=  campaign.getActiveDate() %>" dateOnly="true" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(campaign.getActiveDateTimeZone())){%>
+      <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } else { %>
+      <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= campaign.getActiveDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
     <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <%=campaign.getRecipientCount()%>

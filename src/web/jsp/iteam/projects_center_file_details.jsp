@@ -12,6 +12,7 @@
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
@@ -84,7 +85,7 @@
       <%= thisVersion.getVersion() %>&nbsp;
     </td>
     <td align="center" nowrap>
-      <zeroio:tz timestamp="<%= thisVersion.getEntered() %>"/>
+      <zeroio:tz timestamp="<%= thisVersion.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
     </td>
     <td align="center" nowrap>
       <dhv:username id="<%= thisVersion.getEnteredBy() %>"/>
