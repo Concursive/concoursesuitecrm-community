@@ -83,6 +83,7 @@ Queue
   }
 %>
 </table>
+* Generated reports are deleted from the server every 24 hours.<br>
 <%-- Reports in Queue --%>
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-bottom:3px">
