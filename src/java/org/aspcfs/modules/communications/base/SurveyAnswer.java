@@ -18,12 +18,13 @@ import java.util.Iterator;
 public class SurveyAnswer {
   private int id = -1;
   private int questionId = -1;
-  private String comments = "";
   private int quantAns = -1;
-  private String textAns = "";
   private int responseId = -1;
-  private ArrayList itemList = null;
   private int contactId = -1;
+  private ArrayList itemList = null;
+  private String comments = "";
+  private String textAns = "";
+  private java.sql.Timestamp entered = null;
 
 
   /**
@@ -93,6 +94,26 @@ public class SurveyAnswer {
    */
   public void setId(int id) {
     this.id = id;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the SurveyAnswer object
+   *
+   *@param  entered  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp entered) {
+    this.entered = entered;
+  }
+
+
+  /**
+   *  Gets the entered attribute of the SurveyAnswer object
+   *
+   *@return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
   }
 
 
@@ -169,6 +190,7 @@ public class SurveyAnswer {
     this.setComments(rs.getString("comments"));
     this.setQuantAns(rs.getInt("quant_ans"));
     this.setTextAns(rs.getString("text_ans"));
+    this.setEntered(rs.getTimestamp("entered"));
   }
 
 

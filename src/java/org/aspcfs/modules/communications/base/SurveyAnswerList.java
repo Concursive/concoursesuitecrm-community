@@ -228,7 +228,7 @@ public class SurveyAnswerList extends Vector {
     } else {
       sqlSelect.append("SELECT ");
     }
-    sqlSelect.append("sa.*, c.namelast as lastname, c.namefirst as firstname, c.contact_id as contactid " +
+    sqlSelect.append("sa.*, c.namelast as lastname, c.namefirst as firstname, c.contact_id as contactid, sr.entered as entered " +
         "FROM active_survey_answers sa, active_survey_responses sr " +
         "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
         "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id "
@@ -248,7 +248,7 @@ public class SurveyAnswerList extends Vector {
         break;
       }
       ++count;
-      SurveyAnswer thisAnswer = this.getObject(db, rs);
+      SurveyAnswer thisAnswer = new SurveyAnswer(rs);
       this.add(thisAnswer);
       if(contacts == null){
         contacts = new HashMap();
@@ -258,6 +258,7 @@ public class SurveyAnswerList extends Vector {
     }
     rs.close();
     pst.close();
+    
     Iterator ans = this.iterator();
     while (ans.hasNext()) {
       SurveyAnswer thisAnswer = (SurveyAnswer) ans.next();
@@ -305,21 +306,6 @@ public class SurveyAnswerList extends Vector {
       pst.setInt(++i, questionId);
     }
     return i;
-  }
-
-
-  /**
-   *  Gets the object attribute of the SurveyAnswerList object
-   *
-   *@param  rs                Description of the Parameter
-   *@param  db                Database connection needed for related items
-   *@return                   The object value
-   *@exception  SQLException  Description of the Exception
-   */
-  public SurveyAnswer getObject(Connection db, ResultSet rs) throws SQLException {
-    SurveyAnswer thisAnswer = new SurveyAnswer(rs);
-    thisAnswer.buildItems(db, thisAnswer.getId());
-    return thisAnswer;
   }
 
 

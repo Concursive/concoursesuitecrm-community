@@ -12,7 +12,7 @@
 <br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="<%=openEnded?"2":"3"%>">
+    <td colspan="<%= openEnded ? "2" : "3"%>">
       <strong>Survey Comments</strong>
     </td>
   </tr>
@@ -27,6 +27,9 @@
     </td>
     <td valign="center" align="left">
       User
+    </td>
+    <td valign="center" align="left">
+      Entered
     </td>
   </tr>
 <%    
@@ -44,16 +47,20 @@
    <tr class="row<%= rowid %>">
     <%if(!openEnded){%>
       <td valign="top" align="center" class="row<%= rowid %>" nowrap>
-        <%=thisAnswer.getQuantAns()!=-1?thisAnswer.getQuantAns()+"":"&nbsp;"%>
+        <%= thisAnswer.getQuantAns() != -1 ? thisAnswer.getQuantAns()+"" : "&nbsp;" %>
       </td>
     <%}%>
     
       <td width="80%">
         <%=toHtml(thisAnswer.getComments())%>
       </td>
-      <td align="center" nowrap>
+      <td valign="center" align="left" nowrap>
         <dhv:contactname id="<%=thisAnswer.getContactId()%>" listName="SurveyContactList"/>
       </td>
+      <td valign="center" align="left" >
+        <%= toDateTimeString(thisAnswer.getEntered()) %>
+      </td>
+      
     </tr>
     <%
    }
@@ -63,7 +70,7 @@
     <dhv:pagedListControl object="CommentListInfo" />
   <%} else {%>  
   <tr>
-    <td class="row2" valign="center" colspan="<%=openEnded?"2":"3"%>">
+    <td class="row2" valign="center" colspan="<%= openEnded ? "2" : "3" %>">
       No comments found for this question.
     </td>
   </tr>
