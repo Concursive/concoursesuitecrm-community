@@ -18,10 +18,12 @@ import java.sql.*;
  *      Exp $
  */
 public class BusinessProcessList extends HashMap {
+  //Filters
   private int enabled = Constants.UNDEFINED;
   private int typeId = -1;
   private int linkModuleId = -1;
-
+  //Object resources
+  private boolean buildScheduledEvents = false;
 
   /**
    *  Constructor for the BusinessProcessList object
@@ -98,6 +100,9 @@ public class BusinessProcessList extends HashMap {
     this.linkModuleId = Integer.parseInt(tmp);
   }
 
+  public void setBuildScheduledEvents(boolean tmp) { this.buildScheduledEvents = tmp; }
+public void setBuildScheduledEvents(String tmp) { this.buildScheduledEvents = DatabaseUtils.parseBoolean(tmp); }
+
 
   /**
    *  Gets the enabled attribute of the BusinessProcessList object
@@ -127,6 +132,8 @@ public class BusinessProcessList extends HashMap {
   public int getLinkModuleId() {
     return linkModuleId;
   }
+
+  public boolean getBuildScheduledEvents() { return buildScheduledEvents; }
 
 
   /**
@@ -221,6 +228,7 @@ public class BusinessProcessList extends HashMap {
     Iterator i = this.values().iterator();
     while (i.hasNext()) {
       BusinessProcess thisProcess = (BusinessProcess) i.next();
+      thisProcess.setBuildScheduledEvents(buildScheduledEvents);
       thisProcess.buildResources(db);
     }
   }

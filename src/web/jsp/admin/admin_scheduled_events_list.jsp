@@ -35,11 +35,25 @@ Scheduled Events<br>
     <td align="center" valign="top">
       Edit
     </td>
-    <td>
+    <td valign="top">
        <a href="AdminScheduledEvents.do?command=Workflow&moduleId=<%= PermissionCategory.getId() %>&process=<%= thisProcess.getId() %>&return=AdminScheduledEvents"><%= toHtml(thisProcess.getDescription()) %></a>
     </td>
     <td width="50%" valign="top">
-      NOT IMPLEMENTED
+      <dhv:evaluate if="<%= thisProcess.getEvents().isEmpty() %>">
+        Not scheduled
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= !thisProcess.getEvents().isEmpty() %>">
+<%
+      ScheduledEventList events = thisProcess.getEvents();
+      Iterator eventsIterator = events.iterator();
+      while (eventsIterator.hasNext()) {
+        ScheduledEvent thisEvent = (ScheduledEvent) eventsIterator.next();
+%>
+        <%= toHtml(thisEvent.toString()) %>
+<%
+      }
+%>
+      </dhv:evaluate>
     </td>
     <td align="center" valign="top">
       <%= thisProcess.getComponents().size() %>

@@ -34,6 +34,9 @@ public class BusinessProcess {
   private boolean enabled = false;
   private BusinessProcessComponentList components = null;
   private ProcessParameterList parameters = null;
+  private ScheduledEventList events = null;
+  //Build resources
+  private boolean buildScheduledEvents = false;
 
 
   /**
@@ -306,6 +309,36 @@ public class BusinessProcess {
 
 
   /**
+   *  Sets the events attribute of the BusinessProcess object
+   *
+   *@param  tmp  The new events value
+   */
+  public void setEvents(ScheduledEventList tmp) {
+    this.events = tmp;
+  }
+
+
+  /**
+   *  Sets the buildScheduledEvents attribute of the BusinessProcess object
+   *
+   *@param  tmp  The new buildScheduledEvents value
+   */
+  public void setBuildScheduledEvents(boolean tmp) {
+    this.buildScheduledEvents = tmp;
+  }
+
+
+  /**
+   *  Sets the buildScheduledEvents attribute of the BusinessProcess object
+   *
+   *@param  tmp  The new buildScheduledEvents value
+   */
+  public void setBuildScheduledEvents(String tmp) {
+    this.buildScheduledEvents = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Gets the id attribute of the BusinessProcess object
    *
    *@return    The id value
@@ -416,7 +449,27 @@ public class BusinessProcess {
 
 
   /**
-   *  Description of the Method
+   *  Gets the events attribute of the BusinessProcess object
+   *
+   *@return    The events value
+   */
+  public ScheduledEventList getEvents() {
+    return events;
+  }
+
+
+  /**
+   *  Gets the buildScheduledEvents attribute of the BusinessProcess object
+   *
+   *@return    The buildScheduledEvents value
+   */
+  public boolean getBuildScheduledEvents() {
+    return buildScheduledEvents;
+  }
+
+
+  /**
+   *  Returns if this business process has any parameters
    *
    *@return    Description of the Return Value
    */
@@ -514,6 +567,11 @@ public class BusinessProcess {
     parameters = new ProcessParameterList();
     parameters.setProcessId(id);
     parameters.buildList(db);
+    if (buildScheduledEvents) {
+      events = new ScheduledEventList();
+      events.setBusinessProcessId(id);
+      events.buildList(db);
+    }
   }
 
 

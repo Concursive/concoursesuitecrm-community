@@ -38,11 +38,9 @@ public final class AdminScheduledEvents extends CFSModule {
       BusinessProcessList list = new BusinessProcessList();
       list.setLinkModuleId(Integer.parseInt(moduleId));
       list.setTypeId(BusinessProcess.SCHEDULED_EVENT);
+      list.setBuildScheduledEvents(true);
       list.buildList(db);
       context.getRequest().setAttribute("processList", list);
-      //Load the schedule for this module's processes
-      //BusinessProcessEventList events = new BusinessProcessEventList();
-
       return "ListOK";
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
