@@ -14,11 +14,6 @@
 
 <body>
 
-<% if (CustomFormInfo.getReturnLink() != null && !(CustomFormInfo.getReturnLink().equals(""))) {%>
-<a href="<%=CustomFormInfo.getReturnLink()%>"><%=CustomFormInfo.getReturnLinkText()%></a>
-<%}%>
-<br>
-
 <form name="<%=CustomFormInfo.getName()%>" method="post" action="<%=CustomFormInfo.getAction()%>">
 
 <%
@@ -35,10 +30,6 @@
     		CustomFormInfo.setSelectedTabName(thisTab.getName());
 %>   
 
-<%=CustomFormInfo.displayButtons()%>
-<input type="submit" value="Submit Survey">
-
-<br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 
 
