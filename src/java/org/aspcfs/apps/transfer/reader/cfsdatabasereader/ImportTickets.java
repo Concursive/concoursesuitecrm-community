@@ -41,6 +41,7 @@ public class ImportTickets implements CFSDatabaseReaderImportModule {
     writer.setAutoCommit(false);
     TicketLogList ticketLogList = new TicketLogList();
     ticketLogList.buildList(db);
+    logger.info("ImportTickets-> " + ticketLogList.size());
     mappings.saveList(writer, ticketLogList, "insert");
     processOK = writer.commit();
     if (!processOK) {
