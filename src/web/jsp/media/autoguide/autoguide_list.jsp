@@ -32,7 +32,7 @@
   <tr>
 <%--
     <dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete">
-    <th valign="center" align="left" class="title">
+    <th valign="center">
       <strong>Action</strong>
     </th>
     </dhv:permission>

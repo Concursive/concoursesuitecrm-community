@@ -224,18 +224,17 @@ Add Vehicle<br>
 </table>
 <br>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="3" valign="center" align="left">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="3" valign="center">
       <strong>Select Vehicle Options</strong>
-    </td>     
+    </th>
   </tr>
 <%
   int rows = (OptionList.size()/3);
   if ((OptionList.size()%3) > 0) {
     ++rows;
   }
-  
   int itemCount = 0;
   for (int rowCount = 0; rowCount < rows; rowCount++) { 
     Option option1 = null;
@@ -280,11 +279,11 @@ Add Vehicle<br>
 </table>
 <br>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td valign="center" align="left">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th valign="center">
       <strong>Select Ad Run Dates</strong>
-    </td>
+    </th>
   </tr>
 <%
   for (int runCount = 1; runCount < 6; ++runCount) {

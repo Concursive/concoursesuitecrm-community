@@ -195,3 +195,4 @@ A:visited:hover{color:#FF3300;}
 .empty td {
   border: none !important;
 }
+.warning { background: #FF3300 !important; font-weight: bold; color: #FFFFFF }

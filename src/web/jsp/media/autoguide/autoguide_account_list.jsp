@@ -42,7 +42,7 @@ Vehicle Inventory List<br>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <dhv:permission name="accounts-autoguide-inventory-edit,accounts-autoguide-inventory-delete">
-    <th valign="center" align="left" class="title">
+    <th valign="center">
       <strong>Action</strong>
     </th>
     </dhv:permission>

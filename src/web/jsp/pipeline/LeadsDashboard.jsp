@@ -24,15 +24,15 @@ Dashboard<br>
       <%-- Graphic --%>
       <table width="275" cellpadding="3" cellspacing="0" border="0" class="pagedList">
         <dhv:evaluate exp="<%= Viewpoints.size() > 1 %>">
-        <tr class="<%= (PipelineViewpointInfo.isVpSelected(User.getUserId())?"warning":"title") %>">
-          <th valign="top" align="center" nowrap>
+        <tr>
+          <th valign="top" style="text-align: center;" nowrap<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>"> class="warning"</dhv:evaluate>>
             <% Viewpoints.setJsEvent("onChange=\"javascript:document.forms[0].reset.value='true';document.forms[0].submit();\""); %>
             Viewpoint: <%= Viewpoints.getHtmlSelect("viewpointId", PipelineViewpointInfo.getVpUserId()) %><br>
           </th>
         </tr>
         </dhv:evaluate>
         <tr>
-          <th valign="top" align="center" nowrap>
+          <th valign="top" style="text-align: center;" nowrap>
           <% if (request.getSession().getAttribute("leadsoverride") != null) { %>
             Dashboard: <%= toHtml((String)request.getSession().getAttribute("leadsothername")) %>
           <%} else {%>
@@ -46,7 +46,7 @@ Dashboard<br>
           </td>
         </tr>
         <tr>
-          <td align="center">
+          <td style="text-align: center;">
             <%= GraphTypeList.getHtml() %>&nbsp;
           </td>
         </tr>
@@ -54,7 +54,7 @@ Dashboard<br>
       <%-- Up a level --%>
       <table width="285" border="0" cellspacing="0" cellpadding="3">
         <tr>
-          <td align="center" width="100%">
+          <td style="text-align: center;" width="100%">
             <% if (!(((String)request.getSession().getAttribute("leadsoverride")) == null)) {
               int prevId =  Integer.parseInt((String)request.getSession().getAttribute("leadspreviousId"));
               %>
@@ -73,7 +73,7 @@ Dashboard<br>
           <th valign="center" nowrap>
             Reports ($Gr. Pipe.)
           </th>
-          <th width="125" valign=center>
+          <th width="125" valign="center">
             Title
           </th>
         </tr>
@@ -109,12 +109,12 @@ Dashboard<br>
       </table>
     </td>
     <%-- Right Column --%>
-    <td valign=top width="100%">
+    <td valign="top" width="100%">
       <%-- Opportunity List --%>
       <table cellpadding="3" cellspacing="0" border="0" width="100%" class="pagedList">
-        <tr class="title">
+        <tr>
           <th>Opportunity</th>
-          <th align="left">Amnt</th>
+          <th>Amnt</th>
         </tr>
 <%
 	Iterator n = oppList.iterator();
@@ -124,9 +124,9 @@ Dashboard<br>
     while (n.hasNext()) {
       rowid = (rowid != 1?1:2);
       OpportunityHeader thisHeader = (OpportunityHeader) n.next();
-%>    
+%>
 				<tr>
-          <td width="100%" class="row<%= rowid %>" valign=center>
+          <td width="100%" class="row<%= rowid %>" valign="center">
             <a href="Leads.do?command=DetailsOpp&headerId=<%= thisHeader.getId() %>&return=dashboard&reset=true"><%= toHtml(thisHeader.getDisplayName()) %>:
             <%= toHtml(thisHeader.getDescription()) %></a>
             (<%= thisHeader.getComponentCount() %>)
@@ -149,7 +149,7 @@ Dashboard<br>
       </table>
       <table width="100%" border="0" cellpadding="3">
         <tr>
-          <td align="center">
+          <td style="text-align: center;">
             <dhv:pagedListStatus object="DashboardListInfo" showRefresh="false" showControlOnly="true"/>
           </td>
         </tr>

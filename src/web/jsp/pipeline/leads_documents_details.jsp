@@ -23,7 +23,7 @@ Document Details<br>
     <td class="containerBack">
       <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-  <tr class="title">
+  <tr>
     <th colspan="7">
       <strong>All Versions of this Document</strong>
     </th>

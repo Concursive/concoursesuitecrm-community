@@ -71,10 +71,10 @@ Add a Call<br>
       <br>
       <%= showError(request, "actionError") %>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-        <tr class="title">
-          <td colspan="2">
+        <tr>
+          <th colspan="2">
             <strong>Log a New Call</strong>
-          </td>
+          </th>
         </tr>
         <tr class="containerBody">
           <td nowrap class="formLabel">
