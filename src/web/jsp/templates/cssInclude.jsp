@@ -15,12 +15,19 @@
     ClientType clientType = new ClientType(request);
     User.setClientType(clientType);
   }
+  //Mozilla: Mac (any version), Linux (1.2)
+  if ("moz".equals(User.getBrowserId()) &&
+      ("mac".equals(User.getClientType().getOsString()) ||
+      ("linux".equals(User.getClientType().getOsString()) && 
+       User.getBrowserVersion() == 1.2 ))) {
 %>
-<dhv:browser id="moz" maxVersion="1.2" os="linux">
-  <link rel="stylesheet" href="css/template0ns-linux.css" type="text/css">
-</dhv:browser>
-<dhv:browser id="moz" maxVersion="1.2" os="linux" include="false">
-  <link rel="stylesheet" href="css/template0ie.css" type="text/css">
-</dhv:browser>
+<link rel="stylesheet" href="css/template0-10pt.css" type="text/css">
+<%
+  } else {
+%>
+<link rel="stylesheet" href="css/template0-8pt.css" type="text/css">
+<%  
+  }
+%>
 <link rel="stylesheet" href="css/template0.css" type="text/css">
 
