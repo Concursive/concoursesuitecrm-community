@@ -18,6 +18,8 @@ public class SearchCriteriaElement {
 
   int fieldId = -1;
   int operatorId = -1;
+  int sourceId = -1;
+  
   String text = null;
   String operator = null;
   String dataType = null;
@@ -52,8 +54,20 @@ public class SearchCriteriaElement {
     if (st.hasMoreTokens()) {
       text = (String) st.nextToken();
     }
+    //if (st.hasMoreTokens()) {
+    //  sourceId = Integer.parseInt((String) st.nextToken());
+    //}    
   }
 
+  public int getSourceId() {
+          return sourceId;
+  }
+  public void setSourceId(int sourceId) {
+          this.sourceId = sourceId;
+  }
+  public void setSourceId(String sourceId) {
+          this.sourceId = Integer.parseInt(sourceId);
+  }
 
   /**
    *  Constructor for the SearchCriteriaElement object
@@ -319,8 +333,8 @@ public class SearchCriteriaElement {
 
     try {
       sql.append(
-          "INSERT INTO saved_criteriaelement ( id, field, operator, operatorid, value ) " +
-          "VALUES ( ?, ?, ?, ?, ? ) ");
+          "INSERT INTO saved_criteriaelement ( id, field, operator, operatorid, value, source ) " +
+          "VALUES ( ?, ?, ?, ?, ?, ? ) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -329,6 +343,7 @@ public class SearchCriteriaElement {
       pst.setString(++i, this.getOperator());
       pst.setInt(++i, this.getOperatorId());
       pst.setString(++i, this.getText());
+      pst.setInt(++i, this.getSourceId());
       
       pst.execute();
       pst.close();
@@ -375,6 +390,7 @@ public class SearchCriteriaElement {
     operatorId = rs.getInt("operatorid");
     operator = rs.getString("operator");
     text = rs.getString("value");
+    sourceId = rs.getInt("source");
     
     //lookup_contact_types table
     contactTypeName = rs.getString("ctype");

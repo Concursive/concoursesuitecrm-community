@@ -22,10 +22,6 @@ public class SearchCriteriaList extends HashMap {
   public final static int SOURCE_MY_CONTACTS = 1;
   public final static int SOURCE_ALL_CONTACTS = 2;
   public final static int SOURCE_ALL_ACCOUNTS = 3;
-  
-  //public final static int SOURCE_MY_ACCOUNTS = 2;
-  //public final static int SOURCE_MY_ACCOUNT_HIERARCHY = 3;
-  
   public final static int SOURCE_EMPLOYEES = 4;
 
   protected HashMap errors = new HashMap();
@@ -40,6 +36,7 @@ public class SearchCriteriaList extends HashMap {
   private String ownerIdRange = null;
   private String saveCriteria = "";
   private String htmlSelectIdName = null;
+  private boolean onlyContactIds = true;
 
 
   /**
@@ -125,6 +122,11 @@ public class SearchCriteriaList extends HashMap {
       String tmpCriteria = (String) st.nextToken();
       SearchCriteriaElement thisElement = new SearchCriteriaElement(tmpCriteria);
       Integer thisKey = new Integer(thisElement.getFieldId());
+      
+      if (thisKey.intValue() != Constants.CAMPAIGN_CONTACT_ID) {
+        onlyContactIds = false;
+      }
+      
       if (this.containsKey(thisKey)) {
         thisGroup = (SearchCriteriaGroup) this.get(thisKey);
       } else {
@@ -135,7 +137,13 @@ public class SearchCriteriaList extends HashMap {
       thisGroup.add(thisElement);
     }
   }
-
+  
+  public boolean getOnlyContactIds() {
+    return onlyContactIds;
+  }
+  public void setOnlyContactIds(boolean onlyContactIds) {
+    this.onlyContactIds = onlyContactIds;
+  }
 
   /**
    *  Sets the Errors attribute of the SearchCriteriaList object
@@ -498,6 +506,7 @@ public java.sql.Timestamp getModified() {
   public String getHtmlSelect(String selectName) {
     HtmlSelect selectList = new HtmlSelect();
     selectList.setSelectSize(10);
+    //String fromString = "";
     
     if (this.getHtmlSelectIdName() != null) {
             selectList.setIdName(this.getHtmlSelectIdName());
@@ -511,12 +520,34 @@ public java.sql.Timestamp getModified() {
 
       while (j.hasNext()) {
         SearchCriteriaElement thisElt = (SearchCriteriaElement) (j.next());
+        //String keyString = thisElt.getFieldIdAsString() + "*" + thisElt.getOperatorIdAsString() + "*" + thisElt.getText() + "*" + thisElt.getSourceId();
         String keyString = thisElt.getFieldIdAsString() + "*" + thisElt.getOperatorIdAsString() + "*" + thisElt.getText();
+        
+        /**
+        switch (thisElt.getSourceId()) {
+          case SearchCriteriaList.SOURCE_MY_CONTACTS:
+            fromString = " [My Contacts]";
+            break;
+          case SearchCriteriaList.SOURCE_ALL_CONTACTS:
+            fromString = " [All Contacts]";
+            break;
+          case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
+            fromString = " [Account Contacts]";
+          case SearchCriteriaList.SOURCE_EMPLOYEES:
+            fromString = " [Employees]";
+            break;
+          default:
+            break;
+        }
+        */
+        
         if (thisGroup.getGroupField().getDescription().equals("Contact Type") && thisElt.getContactTypeName() != null) {
+          //valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getContactTypeName() + fromString;
           valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getContactTypeName();
         } else if (thisGroup.getGroupField().getDescription().equals("Contact ID") && thisElt.getContactNameLast() != null) {
           valueString = "Contact Name (" + thisElt.getOperatorDisplayText() + ") " + Contact.getNameLastFirst(thisElt.getContactNameLast(), thisElt.getContactNameFirst());
         } else {
+          //valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText() + fromString;
           valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText();
         }
 

@@ -290,7 +290,6 @@ public final class CampaignManagerGroup extends CFSModule {
     Connection db = null;
     boolean recordInserted = false;
 
-    //SearchFormBean thisSearchForm = (SearchFormBean)context.getRequest().getAttribute("SearchForm");
     SearchFormBean thisSearchForm = (SearchFormBean) context.getFormBean();
     SearchCriteriaList thisSCL = thisSearchForm.getSearchCriteriaList();
 
@@ -508,36 +507,36 @@ public final class CampaignManagerGroup extends CFSModule {
     }
   }
 
-        public void buildFormElements(ActionContext context, Connection db) throws SQLException {
-                SearchFieldList searchFieldList = new SearchFieldList();
-                SearchOperatorList stringOperatorList = new SearchOperatorList();
-                SearchOperatorList dateOperatorList = new SearchOperatorList();
-                SearchOperatorList numberOperatorList = new SearchOperatorList();         
-                
-                HtmlSelect contactSource = new HtmlSelect();
-                contactSource.addItem(SearchCriteriaList.SOURCE_MY_CONTACTS, "My Contacts");
-                contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "All Contacts");
-                contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "Account Contacts");
-                contactSource.addItem(SearchCriteriaList.SOURCE_EMPLOYEES, "Employees");
-                context.getRequest().setAttribute("ContactSource", contactSource);
-                
-                ContactTypeList typeList = new ContactTypeList(db);
-                LookupList ctl = typeList.getLookupList("typeId", 0);
-                ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
-                context.getRequest().setAttribute("ContactTypeList", ctl);
-                
-                searchFieldList.buildFieldList(db);
-                context.getRequest().setAttribute("SearchFieldList", searchFieldList);
-                
-                stringOperatorList.buildOperatorList(db, 0);
-                context.getRequest().setAttribute("StringOperatorList", stringOperatorList);
-                
-                dateOperatorList.buildOperatorList(db, 1);
-                context.getRequest().setAttribute("DateOperatorList", dateOperatorList);
-                
-                numberOperatorList.buildOperatorList(db, 2);
-                context.getRequest().setAttribute("NumberOperatorList", numberOperatorList);
-        }        
+  public void buildFormElements(ActionContext context, Connection db) throws SQLException {
+    SearchFieldList searchFieldList = new SearchFieldList();
+    SearchOperatorList stringOperatorList = new SearchOperatorList();
+    SearchOperatorList dateOperatorList = new SearchOperatorList();
+    SearchOperatorList numberOperatorList = new SearchOperatorList();         
+    
+    HtmlSelect contactSource = new HtmlSelect();
+    contactSource.addItem(SearchCriteriaList.SOURCE_MY_CONTACTS, "My Contacts");
+    contactSource.addItem(SearchCriteriaList.SOURCE_ALL_CONTACTS, "All Contacts");
+    contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "Account Contacts");
+    contactSource.addItem(SearchCriteriaList.SOURCE_EMPLOYEES, "Employees");
+    context.getRequest().setAttribute("ContactSource", contactSource);
+    
+    ContactTypeList typeList = new ContactTypeList(db);
+    LookupList ctl = typeList.getLookupList("typeId", 0);
+    ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
+    context.getRequest().setAttribute("ContactTypeList", ctl);
+    
+    searchFieldList.buildFieldList(db);
+    context.getRequest().setAttribute("SearchFieldList", searchFieldList);
+    
+    stringOperatorList.buildOperatorList(db, 0);
+    context.getRequest().setAttribute("StringOperatorList", stringOperatorList);
+    
+    dateOperatorList.buildOperatorList(db, 1);
+    context.getRequest().setAttribute("DateOperatorList", dateOperatorList);
+    
+    numberOperatorList.buildOperatorList(db, 2);
+    context.getRequest().setAttribute("NumberOperatorList", numberOperatorList);
+  }        
 
 }
 

@@ -134,12 +134,17 @@ function addValues(){
 	searchText = document.searchForm.searchValue.value;
 	
 	var typeValue = document.searchForm.typeId.value;
-	var newOption = fieldName + " (" + operatorName + ") " + searchText;
+	//var newOption = fieldName + " (" + operatorName + ") " + searchText + " [" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].text + "]";
+  
+  var newOption = fieldName + " (" + operatorName + ") " + searchText;
+
 	
 	if (document.searchForm.fieldSelect.selectedIndex != 7) {
-		var newCriteria = fieldID  + "|" + operatorID + "|" + searchText;
+		//var newCriteria = fieldID  + "|" + operatorID + "|" + searchText + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value;
+    var newCriteria = fieldID  + "|" + operatorID + "|" + searchText;
 	} else {
-		var newCriteria = fieldID + "|" + operatorID + "|" + typeValue;
+		//var newCriteria = fieldID + "|" + operatorID + "|" + typeValue + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value;
+    var newCriteria = fieldID + "|" + operatorID + "|" + typeValue;
 	}
 	
 	if (searchList.length == 0 || searchList.options[0].value == "-1"){

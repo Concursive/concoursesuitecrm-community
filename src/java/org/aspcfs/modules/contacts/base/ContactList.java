@@ -769,14 +769,6 @@ public class ContactList extends Vector {
     return contactListSelect.getHtml(selectName, defaultKey);
   }
   
-  
-  /**
-   *  Description of the Method
-   *
-   *@param  thisOwnerId    Description of Parameter
-   *@param  thisUserRange  Description of Parameter
-   *@since
-   */
   public void buildQuery(int thisOwnerId, String thisUserRange) {
     
     switch (scl.getContactSource()) {
@@ -1036,9 +1028,13 @@ public class ContactList extends Vector {
     buildResources(db);
     
     if (this.getScl() != null) {
+            //System.out.println("Chris Test: " + this.getContactIdRange() + this.size());
             joinGlobalContacts(db);
     }
+    
   }
+  
+  //going to try to do this another way
   
   public void joinGlobalContacts(Connection db) throws SQLException {
     Iterator i = this.getScl().keySet().iterator();
@@ -1060,6 +1056,7 @@ public class ContactList extends Vector {
       }
     }
   }
+  
   
   
   /**
@@ -1275,8 +1272,8 @@ public class ContactList extends Vector {
         sqlFilter.append("AND c.owner IN (" + ownerIdRange + ") ");
       }
       
-      if (contactIdRange != null) {
-        sqlFilter.append("OR c.contact_id IN (" + contactIdRange + ") ");
+      if (contactIdRange != null && scl.getOnlyContactIds() == true) {
+        sqlFilter.append("AND c.contact_id IN (" + contactIdRange + ") ");
       }
       
       if (withAccountsOnly) {
