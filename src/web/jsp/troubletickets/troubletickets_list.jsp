@@ -27,7 +27,7 @@ View Tickets
 </table>
 <%-- End Trails --%>
 <% if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
-<dhv:pagedListStatus showExpandLink="true" title="Tickets Assigned to Me" object="AssignedToMeInfo"/>
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Assigned to Me" object="AssignedToMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
 		<th valign="center" align="left">
@@ -112,7 +112,7 @@ View Tickets
 <br>
 <%}%>
 <% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || OpenInfo.getExpandedSelection()) { %>
-<dhv:pagedListStatus showExpandLink="true" title="Other Tickets in My Department" object="OpenInfo"/>
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Other Tickets in My Department" object="OpenInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
 		<th valign="center" align="left">
@@ -203,7 +203,7 @@ View Tickets
 <br>
 <%}%>
 <% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection())) || CreatedByMeInfo.getExpandedSelection()) { %>
-<dhv:pagedListStatus showExpandLink="true" title="Tickets Created by Me" object="CreatedByMeInfo"/>
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Created by Me" object="CreatedByMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
 		<th valign="center" align="left">

@@ -33,11 +33,11 @@ Queue
 <%= showError(request, "actionError", false) %>
 <a href="Reports.do?command=RunReport">Add a Report</a><br>
 <br>
-<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-bottom:3px">
+<table width="100%" border="0" cellpadding="4" cellspacing="0">
   <tr>
-    <td><img src="images/icons/stock_form-16.gif" align="absMiddle" alt="" />
+    <td nowrap class="pagedListTab"><img src="images/icons/stock_form-16.gif" align="absMiddle" alt="" />
     Generated reports ready to be retrieved</td>
-    <td align="right">Records: <%= completedQueue.size() %></td>
+    <td width="100%" align="right">Records: <%= completedQueue.size() %></td>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
@@ -88,11 +88,11 @@ Queue
 </table>
 <%-- Reports in Queue --%>
 <br>
-<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-bottom:3px">
+<table width="100%" border="0" cellpadding="4" cellspacing="0">
   <tr>
-    <td><img src="images/icons/stock_form-autopilots-16.gif" align="absMiddle" alt="" />
+    <td nowrap class="pagedListTab"><img src="images/icons/stock_form-autopilots-16.gif" align="absMiddle" alt="" />
     Reports scheduled to be processed by server</td>
-    <td align="right">Records: <%= pendingQueue.size() %></td>
+    <td width="100%" align="right">Records: <%= pendingQueue.size() %></td>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">

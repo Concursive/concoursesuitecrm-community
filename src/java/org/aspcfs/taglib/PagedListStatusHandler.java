@@ -228,30 +228,32 @@ public class PagedListStatusHandler extends TagSupport {
         //Draw the header of the PagedList table
         out.write("<table align=\"center\" width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\">");
         out.write("<tr>");
-        //Display the title
         if (!showControlOnly) {
-          out.write("<td width=\"100%\" valign=\"bottom\" " +
+          //Display the title
+          out.write("<td nowrap valign=\"bottom\" " +
               "align=\"left\"" +
               ((bgColor != null) ? " bgColor=\"" + bgColor + "\"" : "") +
               ((tdClass != null) ? " class=\"" + tdClass + "\"" : "") +
               ">");
           out.write(title);
-
           //show hidden values only if showform is false
           if (showHiddenParams) {
             out.write("<input type=\"hidden\" name=\"offset\" value=\"\">");
             out.write("<input type=\"hidden\" name=\"pagedListInfoId\" value=\"" + object + "\">");
           }
+          out.write("</td>");
           //Display expansion link
           if (showExpandLink) {
+            out.write("<td nowrap width=\"100%\" valign=\"bottom\" " +
+                "align=\"left\"" +
+                ">");
             out.write(" (" + pagedListInfo.getExpandLink("Show more", "Return to overview") + ")");
+            out.write("</td>");
           }
-          out.write("</td>");
         }
 
         //The status cell on the right
         out.write("<td valign=\"bottom\" align=\"" + (showControlOnly ? "center" : "right") + "\" nowrap>");
-
         //Display record count
         if (pagedListInfo.getMaxRecords() > 0 && (pagedListInfo.getMaxRecords() - pagedListInfo.getCurrentOffset() > 0)) {
           out.write("Records " + (pagedListInfo.getCurrentOffset() + 1) + " to ");
@@ -264,7 +266,6 @@ public class PagedListStatusHandler extends TagSupport {
         } else {
           out.write("No records to display");
         }
-
         //Display next/previous buttons
         if (pagedListInfo.getExpandedSelection() || !showExpandLink) {
           out.write(" [" +
@@ -274,15 +275,14 @@ public class PagedListStatusHandler extends TagSupport {
               "]");
           out.write(" ");
         }
-
         //Display refresh icon
         if (pagedListInfo.hasLink() && showRefresh) {
           out.write(" " + pagedListInfo.getRefreshTag("<img src=\"images/refresh.gif\" border=\"0\" align=\"absbottom\">"));
         }
-
         //Close the cell
-        out.write("</td></tr>");
-        out.write("</table>");
+        out.write("</td>");
+        //Close the table
+        out.write("</tr></table>");
       } else {
         System.out.println("PagedListStatusHandler-> Status not found in request: " + object);
       }

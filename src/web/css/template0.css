@@ -363,3 +363,12 @@ A:visited:hover{color:#FF3300;}
   border: 1px solid #333;
   background-color: #FFFDED;
 }
+.pagedListTab {
+  color: #FFF;
+  text-align: left;
+  font-weight: bold;
+  background-image: url(../images/tabs/tabtopleft-unsel.gif);
+  background-color: #fffbde;
+  border-right: 1px solid #41413a;
+}
+
