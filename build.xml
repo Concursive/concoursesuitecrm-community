@@ -189,6 +189,20 @@
     </taskdef>
   </target>
   
+  <target name="taskdef.jasper" depends="init">
+    <taskdef name="compileJasperReport" 
+        classname="dori.jasper.ant.JRAntCompileTask">
+        <classpath>
+          <fileset dir="${build.lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+          <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+        </classpath>
+    </taskdef>
+  </target>
+  
   <!-- See if files are up-to-date so only new files are installed during development -->
   <target name="classes.prepare" depends="init">
     <uptodate property="classes.uptodate">
@@ -277,7 +291,7 @@
     </delete>
   </target>
   
-  <target name="deploy.copy">
+  <target name="deploy.copy" depends="taskdef.jasper">
     <!-- Copy the .jars, only if new -->
     <copy todir="${CFS_HOME}/WEB-INF/lib">
       <fileset dir="${build.lib.dir}">
@@ -323,6 +337,11 @@
     <delete>
         <fileset dir= "${CFS_HOME}/WEB-INF/fileLibrary/reports" includes="*.jasper"/>
     </delete>
+    <!-- Compile the reports -->
+    <compileJasperReport
+        srcdir="${CFS_HOME}/WEB-INF/fileLibrary/reports"
+        destdir="${CFS_HOME}/WEB-INF/fileLibrary/reports"
+        compiler="dori.jasper.engine.design.JRBshCompiler"/>
   </target>
   
   <!-- See if there is an updated file to merge -->
@@ -727,7 +746,7 @@
   </target>
   
   <!-- Copy the default .XML preferences for this system -->
-  <target name="install.copyprefs" depends="init,install.prepare.dbname,taskdef.upgradeDatabase">
+  <target name="install.copyprefs" depends="init,install.prepare.dbname,taskdef.upgradeDatabase,taskdef.jasper">
     <mkdir dir="${CFS_HOME}/WEB-INF/fileLibrary/${DATABASE.NAME}"/>
     <copy todir="${CFS_HOME}/WEB-INF/fileLibrary/${DATABASE.NAME}">
       <fileset dir="${pref.dir}/cfs/system">
@@ -769,7 +788,7 @@
       <mapper type="merge" to="${build.lib.dir}/aspcfs.jar"/>
     </uptodate>
   </target>
-  <target name="upgradedb" depends="log.upgradedb,taskdef.upgradeDatabase,upgradedb.name,upgradedb.site,upgradedb.uptodate,build" 
+  <target name="upgradedb" depends="log.upgradedb,taskdef.upgradeDatabase,taskdef.jasper,upgradedb.name,upgradedb.site,upgradedb.uptodate,build" 
     description="Upgrades all databases in the gatekeeper with a specified script file, for current sitecode">
     <fail unless="arg1">Missing arg1 -- the file to process</fail>
     <fail unless="arg2">Missing arg2 -- the database to process</fail>
