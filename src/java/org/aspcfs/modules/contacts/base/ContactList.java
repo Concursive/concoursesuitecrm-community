@@ -2126,7 +2126,7 @@ public class ContactList extends Vector {
         "UPDATE contact " +
         "SET org_name = ? " +
         "WHERE org_id = ?");
-    pst.setBoolean(1, true);
+    pst.setString(1, thisOrg.getName());
     pst.setInt(2, thisOrg.getOrgId());
     pst.executeUpdate();
     pst.close();
