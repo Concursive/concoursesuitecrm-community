@@ -45,7 +45,7 @@ Campaign Details
       Message
     </td>
     <td width="100%">
-      <font color='green'><%= Campaign.getMessageName() %></font>
+      <font color='green'><%= toHtml(Campaign.getMessage()) %></font>
     </td>
   </tr>
   <tr class="containerBody">
@@ -71,7 +71,7 @@ Campaign Details
       Entered
     </td>
     <td width="100%">
-      <dhv:username id="<%= Campaign.getEnteredBy() %>" /> - <%= Campaign.getEnteredString() %>
+      <dhv:username id="<%= Campaign.getEnteredBy() %>" /> - <%= toHtml(Campaign.getEnteredString()) %>
     </td>
   </tr>
   
@@ -80,7 +80,7 @@ Campaign Details
       Modified
     </td>
     <td width="100%">
-      <dhv:username id="<%= Campaign.getModifiedBy() %>" /> - <%= Campaign.getModifiedString() %>
+      <dhv:username id="<%= Campaign.getModifiedBy() %>" /> - <%= toHtml(Campaign.getModifiedString()) %>
     </td>
   </tr>
 </table>

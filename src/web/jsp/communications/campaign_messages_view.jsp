@@ -17,7 +17,7 @@ Message List
         <option <%= CampaignMessageListInfo.getOptionValue("my") %>>My Messages</option>
         <option <%= CampaignMessageListInfo.getOptionValue("all") %>>All Messages</option>
       </select>
-      <%= showAttribute(request, "actionError") %>
+      <%= showError(request, "actionError") %>
     </td>
     </form>
   </tr>

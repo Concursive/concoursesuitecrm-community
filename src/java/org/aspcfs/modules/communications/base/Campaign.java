@@ -1513,6 +1513,7 @@ public class Campaign extends GenericBean {
       if (!thisSurvey.getEnabled()) {
         thisSurvey.delete(db);
       }
+      //No need to check for messages to delete
       db.commit();
     } catch (SQLException e) {
       db.rollback();

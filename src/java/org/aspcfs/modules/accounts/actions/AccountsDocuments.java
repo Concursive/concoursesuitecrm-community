@@ -111,38 +111,46 @@ public final class AccountsDocuments extends CFSModule {
       HashMap parts = multiPart.parseData(
         context.getRequest().getInputStream(), "---------------------------", filePath);
       
-      String id = (String)parts.get("id");
-      String subject = (String)parts.get("subject");
-      String folderId = (String)parts.get("folderId");
-      
-      //Update the database with the resulting file
-      FileInfo newFileInfo = (FileInfo)parts.get("id" + id);
-      
-      
-      
       db = getConnection(context);
-      int orgId = addOrganization(context, db, id);
       
-      FileItem thisItem = new FileItem();
-      thisItem.setLinkModuleId(Constants.ACCOUNTS);
-      thisItem.setLinkItemId(orgId);
-      thisItem.setEnteredBy(getUserId(context));
-      thisItem.setModifiedBy(getUserId(context));
-      thisItem.setFolderId(Integer.parseInt(folderId));
-      thisItem.setSubject(subject);
-      thisItem.setClientFilename(newFileInfo.getClientFileName());
-      thisItem.setFilename(newFileInfo.getRealFilename());
-      thisItem.setVersion(1.0);
-      thisItem.setSize(newFileInfo.getSize());
+      if (parts != null && 
+          parts.containsKey("id") && 
+          parts.containsKey("id" + (String)parts.get("id")) &&
+          (Object)parts.get("id" + (String)parts.get("id")) instanceof FileInfo) {
       
-      if (thisItem.getSize() > 0) {
-	      recordInserted = thisItem.insert(db);
+        String id = (String)parts.get("id");
+        String subject = (String)parts.get("subject");
+        String folderId = (String)parts.get("folderId");
+        
+        //Update the database with the resulting file
+        FileInfo newFileInfo = (FileInfo)parts.get("id" + id);
+        int orgId = addOrganization(context, db, id);
+        
+        FileItem thisItem = new FileItem();
+        thisItem.setLinkModuleId(Constants.ACCOUNTS);
+        thisItem.setLinkItemId(orgId);
+        thisItem.setEnteredBy(getUserId(context));
+        thisItem.setModifiedBy(getUserId(context));
+        thisItem.setFolderId(Integer.parseInt(folderId));
+        thisItem.setSubject(subject);
+        thisItem.setClientFilename(newFileInfo.getClientFileName());
+        thisItem.setFilename(newFileInfo.getRealFilename());
+        thisItem.setVersion(1.0);
+        thisItem.setSize(newFileInfo.getSize());
+        
+        recordInserted = thisItem.insert(db);
+        if (!recordInserted) {
+          processErrors(context, thisItem.getErrors());
+        }
       } else {
-	      recordInserted = false;
-      }
       
-      if (!recordInserted) {
-        processErrors(context, thisItem.getErrors());
+      System.out.println("AccountsDocuments-> AD2");
+        recordInserted = false;
+        HashMap errors = new HashMap();
+        errors.put("actionError", "The file could not be sent by your computer");
+        processErrors(context, errors);
+        String id = (String)parts.get("id");
+        int orgId = addOrganization(context, db, id);
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -222,34 +230,47 @@ public final class AccountsDocuments extends CFSModule {
       HashMap parts = multiPart.parseData(
         context.getRequest().getInputStream(), "---------------------------", filePath);
       
-      String id = (String)parts.get("id");
-      String itemId = (String)parts.get("fid");
-      String subject = (String)parts.get("subject");
-      String versionId = (String)parts.get("versionId");
-      
-      //Update the database with the resulting file
-      FileInfo newFileInfo = (FileInfo)parts.get("id" + id);
-      
       db = getConnection(context);
-      int orgId = addOrganization(context, db, id);
       
-      FileItem thisItem = new FileItem();
-      thisItem.setLinkModuleId(Constants.ACCOUNTS);
-      thisItem.setLinkItemId(orgId);
-      thisItem.setId(Integer.parseInt(itemId));
-      thisItem.setEnteredBy(getUserId(context));
-      thisItem.setModifiedBy(getUserId(context));
-      thisItem.setSubject(subject);
-      thisItem.setClientFilename(newFileInfo.getClientFileName());
-      thisItem.setFilename(newFileInfo.getRealFilename());
-      thisItem.setVersion(Double.parseDouble(versionId));
-      thisItem.setSize(newFileInfo.getSize());
-      
-      recordInserted = thisItem.insertVersion(db);
-      if (!recordInserted) {
-        processErrors(context, thisItem.getErrors());
+      if (parts != null && 
+          parts.containsKey("id") && 
+          parts.containsKey("id" + (String)parts.get("id")) &&
+          (Object)parts.get("id" + (String)parts.get("id")) instanceof FileInfo) {
+            
+        String id = (String)parts.get("id");
+        String itemId = (String)parts.get("fid");
+        String subject = (String)parts.get("subject");
+        String versionId = (String)parts.get("versionId");
+        
+        //Update the database with the resulting file
+        FileInfo newFileInfo = (FileInfo)parts.get("id" + id);
+        int orgId = addOrganization(context, db, id);
+        
+        FileItem thisItem = new FileItem();
+        thisItem.setLinkModuleId(Constants.ACCOUNTS);
+        thisItem.setLinkItemId(orgId);
+        thisItem.setId(Integer.parseInt(itemId));
+        thisItem.setEnteredBy(getUserId(context));
+        thisItem.setModifiedBy(getUserId(context));
+        thisItem.setSubject(subject);
+        thisItem.setClientFilename(newFileInfo.getClientFileName());
+        thisItem.setFilename(newFileInfo.getRealFilename());
+        thisItem.setVersion(Double.parseDouble(versionId));
+        thisItem.setSize(newFileInfo.getSize());
+        
+        recordInserted = thisItem.insertVersion(db);
+        if (!recordInserted) {
+          processErrors(context, thisItem.getErrors());
+        }
+        context.getRequest().setAttribute("fid", itemId);
+      } else {
+        recordInserted = false;
+        HashMap errors = new HashMap();
+        errors.put("actionError", "The file could not be sent by your computer");
+        processErrors(context, errors);
+        String id = (String)parts.get("id");
+        int orgId = addOrganization(context, db, id);
       }
-      context.getRequest().setAttribute("fid", itemId);
     } catch (Exception e) {
       errorMessage = e;
     } finally {

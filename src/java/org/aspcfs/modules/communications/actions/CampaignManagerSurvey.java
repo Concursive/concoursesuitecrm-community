@@ -211,8 +211,6 @@ public final class CampaignManagerSurvey extends CFSModule {
  */
     if (errorMessage == null) {
       //context.getRequest().setAttribute("submenu", submenu);
-      //addModuleBean(context, submenu, "View Surveys");
-
       if (recordDeleted) {
         return ("DeleteOK");
       } else {
@@ -239,19 +237,15 @@ public final class CampaignManagerSurvey extends CFSModule {
     }
 
     Exception errorMessage = null;
-
     Survey thisSurvey = null;
     Connection db = null;
-
     CustomForm thisForm = getDynamicForm(context, "survey");
 
     try {
       db = this.getConnection(context);
-
       if (context.getRequest().getParameter("id") != null) {
         thisSurvey = new Survey(db, Integer.parseInt(context.getRequest().getParameter("id")));
       }
-
       thisForm.populate(thisSurvey);
     } catch (Exception e) {
       errorMessage = e;
@@ -260,7 +254,6 @@ public final class CampaignManagerSurvey extends CFSModule {
     }
 
     String submenu = context.getRequest().getParameter("submenu");
-
     if (submenu == null) {
       submenu = (String) context.getRequest().getAttribute("submenu");
     }
@@ -317,7 +310,6 @@ public final class CampaignManagerSurvey extends CFSModule {
     }
 
     String submenu = context.getRequest().getParameter("submenu");
-
     if (submenu == null) {
       submenu = (String) context.getRequest().getAttribute("submenu");
     }

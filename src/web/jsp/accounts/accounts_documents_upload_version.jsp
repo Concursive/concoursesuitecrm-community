@@ -62,7 +62,7 @@ Upload Document Version<br>
   <tr>
     <td class="containerBack">
       <a href="AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Back to Documents List</a><br>
-      <%= showAttribute(request, "actionError") %>
+      <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">

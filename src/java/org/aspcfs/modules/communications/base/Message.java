@@ -11,7 +11,8 @@ import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
- *  Description of the Class
+ *  Represents an HTML message than can be emailed, faxed, or printed.  Messages
+ *  are intended to be used with Campaigns.
  *
  *@author     Wesley_S_Gillette
  *@created    November 13, 2001
@@ -590,13 +591,45 @@ public class Message extends GenericBean {
    *@since
    */
   public boolean delete(Connection db) throws SQLException {
-
-    Statement st = db.createStatement();
-
+    boolean commit = true;
+    Statement st = null;
+    ResultSet rs = null;
+    
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      
+      //Check to see if a message is being used by any unfinished campaigns
+      //If so, the message can't be deleted
+      int inactiveCount = 0;
+      st = db.createStatement();
+      rs = st.executeQuery(
+        "SELECT COUNT(*) AS survey_count " +
+        "FROM campaign " +
+        "WHERE message_id = " + this.getId() + " " +
+        "AND status_id <> " + Campaign.FINISHED);
+      rs.next();
+      inactiveCount = rs.getInt("survey_count");
+      rs.close();
+      if (inactiveCount > 0) {
+        st.close();
+        errors.put("actionError", "Message could not be deleted because " +
+          inactiveCount + " " +
+          (inactiveCount == 1?"campaign is":"campaigns are") +
+          " being built that " +
+          (inactiveCount == 1?"uses":"use") +
+          " this message.");
+        return false;
+      }
+      
+      //If not, then the message can be deleted because a copy is made for
+      //activated campaigns
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       st.executeUpdate("DELETE FROM message WHERE id = " + this.getId());
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
       db.rollback();
       System.out.println(e.toString());

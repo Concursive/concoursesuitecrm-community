@@ -11,7 +11,7 @@ import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
- *  Description of the Class
+ *  Represents a survey that can have items and answers.
  *
  *@author     chris price
  *@created    August 7, 2002
@@ -697,7 +697,7 @@ public class Survey extends GenericBean {
         "SELECT COUNT(*) AS survey_count " +
         "FROM campaign " +
         "WHERE survey_id = " + this.getId() + " " +
-        "AND active = " + DatabaseUtils.getFalse(db));
+        "AND status_id <> " + Campaign.FINISHED);
       rs.next();
       inactiveCount = rs.getInt("survey_count");
       rs.close();

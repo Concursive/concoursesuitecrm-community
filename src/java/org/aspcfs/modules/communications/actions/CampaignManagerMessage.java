@@ -313,10 +313,7 @@ public final class CampaignManagerMessage extends CFSModule {
 
     Exception errorMessage = null;
     boolean recordDeleted = false;
-
     Message thisMessage = null;
-    MessageList messageList = null;
-
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -328,9 +325,7 @@ public final class CampaignManagerMessage extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "View Messages", "Delete Message");
     if (errorMessage == null) {
-      context.getRequest().setAttribute("MessageList", messageList);
       if (recordDeleted) {
         return ("DeleteOK");
       } else {
