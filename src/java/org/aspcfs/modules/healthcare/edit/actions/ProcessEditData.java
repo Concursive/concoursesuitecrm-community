@@ -279,7 +279,7 @@ public final class ProcessEditData extends CFSModule {
 									if (!(notFoundIds.contains(t))) {
 										notFoundIds.add(t);
 									}
-									//testBuffer.append("Skipping ID " + t + "- could not locate in CFS!\n");
+									testBuffer.append("Skipping ID " + t + "- could not locate in CFS!\n");
 								}
 
 							} else if (sub.indexOf("TOTAL TRANSACTIONS") > -1) {
