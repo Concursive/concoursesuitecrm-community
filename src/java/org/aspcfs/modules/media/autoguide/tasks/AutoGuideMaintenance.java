@@ -27,7 +27,7 @@ public class AutoGuideMaintenance {
    */
   public AutoGuideMaintenance(Connection db, HashMap siteInfo, HashMap config) {
     try {
-      String filePath = (String) config.get("FileLibrary") + fs + (String) config.get("name") + fs + "autoguide" + fs;
+      String filePath = (String) config.get("FileLibrary") + fs + (String) siteInfo.get("name") + fs + "autoguide" + fs;
       ArrayList deleteList = new ArrayList();
       //Determine the oldest date
       Calendar dateCheck = Calendar.getInstance();
