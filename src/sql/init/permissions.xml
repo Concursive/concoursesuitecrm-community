@@ -355,6 +355,7 @@
        <permission name="tickets-reports" attributes="va-d"/>
        <permission name="tickets-tickets-tasks" attributes="vae-"/>
        <permission name="employees" attributes="v---"/>
+       <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="reports" attributes="v---"/>
        <permission name="help" attributes="v---"/>
        <permission name="globalitems-search" attributes="v---"/>
@@ -393,6 +394,7 @@
        <permission name="tickets-reports" attributes="vaed"/>
        <permission name="tickets-tickets-tasks" attributes="vaed"/>
        <permission name="employees" attributes="v---"/>
+       <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="reports" attributes="v---"/>
        <permission name="help" attributes="v---"/>
        <permission name="globalitems-search" attributes="v---"/>
