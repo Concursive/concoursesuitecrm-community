@@ -16,6 +16,8 @@ public final class Constants {
   public static final int TICKETS_REPORTS = 13;
   public static final int AUTOGUIDE = 14;
   public static final int TASKS = 15;
+  public static final int COMMUNICATIONS_FILE_ATTACHMENTS = 16;
+  public static final int COMMUNICATIONS_DOCUMENTS = 17;
   
   public static final int TRUE = 1;
   public static final int FALSE = 0;
