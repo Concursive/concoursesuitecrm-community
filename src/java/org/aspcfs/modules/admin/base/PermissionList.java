@@ -37,7 +37,8 @@ public class PermissionList extends Vector {
         "SELECT p.*, c.category " +
         "FROM permission p, permission_category c " +
         "WHERE p.category_id = c.category_id " +
-        "AND p.enabled = " + DatabaseUtils.getTrue(db) + " ");
+        "AND p.enabled = " + DatabaseUtils.getTrue(db) + " " +
+        "AND c.enabled = " + DatabaseUtils.getTrue(db) + " ");
         
 
     //Need to build a base SQL statement for counting records
@@ -45,7 +46,8 @@ public class PermissionList extends Vector {
         "SELECT COUNT(*) AS recordcount " +
         "FROM permission p, permission_category c " +
         "WHERE p.category_id = c.category_id " +
-        "AND p.enabled = " + DatabaseUtils.getTrue(db) + " ");
+        "AND p.enabled = " + DatabaseUtils.getTrue(db) + " " +
+        "AND c.enabled = " + DatabaseUtils.getTrue(db) + " ");
 
     sqlSelect.append("ORDER BY c.level, p.level ");
         
