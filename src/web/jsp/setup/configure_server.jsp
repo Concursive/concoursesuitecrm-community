@@ -25,7 +25,6 @@
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
-<body onLoad="javascript:document.forms[0].email.focus();">
 <dhv:formMessage showSpace="false" />
 <form name="configure" action="SetupServerDetails.do?command=ConfigureServer&auto-populate=true" method="post">
 <input type="hidden" name="configured" value="1"/>
@@ -249,4 +248,3 @@
   </tr>
 </table>
 </form>
-</body>
