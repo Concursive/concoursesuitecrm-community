@@ -190,7 +190,7 @@ ORDER BY tcf.form_id]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[(($F{followreq}.booleanValue() == true) ? "Yes" : "No")]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[(($F{followreq} != null && $F{followreq}.booleanValue() == true) ? "Yes" : "No")]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
