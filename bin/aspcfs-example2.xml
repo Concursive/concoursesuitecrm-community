@@ -1,0 +1,187 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<app>
+<authentication>
+<id>127.0.0.1</id>
+<code>ok</code>
+<systemId>4</systemId>
+<clientId>1</clientId>
+</authentication>
+<transaction id='2'>
+<meta>
+<property>orgId</property>
+<property>contactId</property>
+<property>sourceCode</property>
+<property>problem</property>
+<property>comment</property>
+<property>enteredBy</property>
+<property>modifiedBy</property>
+<property>assignedTo</property>
+<property>severityCode</property>
+<property>catCode</property>
+<property>subCat1</property>
+<property>subCat2</property>
+</meta>
+
+
+<account action='insert' shareKey='true'>
+<name>new user</name>
+<owner>1</owner>
+<enteredBy>1</enteredBy>
+<modifiedBy>1</modifiedBy>
+</account>
+
+
+<organizationPhoneNumber action='insert'>
+<orgId>$C{account.id}</orgId>
+<number>800-555-1212</number>
+<type>1</type>
+<enteredBy>1</enteredBy>
+<modifiedBy>1</modifiedBy>
+</organizationPhoneNumber>
+
+
+<organizationEmailAddress action='insert'>
+<orgId>$C{account.id}</orgId>
+<email>email@email.com</email>
+<type>1</type>
+<enteredBy>1</enteredBy>
+<modifiedBy>1</modifiedBy>
+</organizationEmailAddress>
+
+<organizationAddress action='insert'>
+<orgId>$C{account.id}</orgId>
+<streetAddressLine1></streetAddressLine1>
+<city></city>
+<state></state>
+<zip></zip>
+<country></country>
+<type>1</type>
+<enteredBy>1</enteredBy>
+<modifiedBy>1</modifiedBy>
+</organizationAddress>
+
+
+<contact action='insert' shareKey='true'>
+<orgId>$C{account.id}</orgId>
+<primaryContact>true</primaryContact>
+<accessType>2</accessType>
+<nameSalutation/>
+<nameFirst></nameFirst>
+<nameMiddle/>
+<nameLast>new user</nameLast>
+<nameSuffix/>
+<orgName></orgName>
+<company></company>
+<title/>
+<owner>1</owner>
+<enteredBy>1</enteredBy>
+<modifiedBy>1</modifiedBy>
+</contact>
+
+
+<contactPhoneNumber action='insert'>
+<contactId>$C{contact.id}</contactId>
+<number>800-555-1212</number>
+<type>1</type>
+<enteredBy>1</enteredBy>
+<modifiedBy>1</modifiedBy>
+</contactPhoneNumber>
+
+
+<contactEmailAddress action='insert'>
+<contactId>$C{contact.id}</contactId>
+<email>email@email.com</email>
+<type>1</type>
+<enteredBy>1</enteredBy>
+<modifiedBy>1</modifiedBy>
+</contactEmailAddress>
+
+
+<contactAddress action='insert'>
+<contactId>$C{contact.id}</contactId>
+<streetAddressLine1></streetAddressLine1>
+<city></city>
+<state></state>
+<zip></zip>
+<country></country>
+<type>1</type>
+<enteredBy>1</enteredBy>
+<modifiedBy>1</modifiedBy>
+</contactAddress>
+
+
+
+
+<ticket action='insert' shareKey='true'>
+<orgId>$C{account.id}</orgId>
+<contactId>$C{contact.id}</contactId>
+<sourceCode>5</sourceCode>
+<problem>I have a message
+that appears here.  If it contains an &amp; or &quot; then those must be converted.  Also &lt; and &gt;.</problem>
+<comment>
+The following is set by this ticket: The ticket is entered, modified by, and assigned to McLean using the Web Site source. The ticket will be saved against the internal account (My Company). The severity is normal, and the issue is categorized as: Trouble,Technical Failure,E-Biz/Infrastructure
+</comment>
+<enteredBy>1</enteredBy>
+<modifiedBy>1</modifiedBy>
+<assignedTo>1</assignedTo>
+<severityCode>1</severityCode>
+<catCode>1</catCode>
+<subCat1></subCat1>
+<subCat2></subCat2>
+</ticket>
+
+<customFieldRecord action='insert' shareKey='true'>
+<linkModuleId>11072003</linkModuleId>
+<linkItemId>$C{ticket.id}</linkItemId>
+<categoryId>1</categoryId> 
+<enteredBy>1</enteredBy> 
+<modifiedBy>1</modifiedBy> 
+</customFieldRecord>  
+
+
+<customFieldData action='insert'> 
+<recordId>$C{customFieldRecord.id}</recordId> 
+<fieldId>1</fieldId> 
+<enteredValue>Not sure</enteredValue> 
+</customFieldData> 
+
+<customFieldData action='insert'> 
+<recordId>$C{customFieldRecord.id}</recordId> 
+<fieldId>2</fieldId> 
+<enteredValue>I purchased an ad while on the site.
+</enteredValue> 
+</customFieldData> 
+
+<customFieldData action='insert'> 
+<recordId>$C{customFieldRecord.id}</recordId> 
+<fieldId>3</fieldId> 
+<enteredValue>Yes, why</enteredValue> 
+</customFieldData> 
+
+<customFieldData action='insert'> 
+<recordId>$C{customFieldRecord.id}</recordId> 
+<fieldId>4</fieldId> 
+<enteredValue>I like everything</enteredValue> 
+</customFieldData>  
+
+<customFieldData action='insert'> 
+<recordId>$C{customFieldRecord.id}</recordId> 
+<fieldId>5</fieldId> 
+<enteredValue>I disliked everything</enteredValue> 
+</customFieldData>  
+
+<customFieldData action='insert'> 
+<recordId>$C{customFieldRecord.id}</recordId> 
+<fieldId>6</fieldId> 
+<enteredValue>I have no comments</enteredValue> 
+</customFieldData>  
+
+<customFieldData action='insert'> 
+<recordId>$C{customFieldRecord.id}</recordId> 
+<fieldId>7</fieldId> 
+<enteredValue>I have no trouble hearing</enteredValue> 
+</customFieldData>  
+
+
+</transaction>
+</app>
