@@ -167,7 +167,7 @@
     </submenu-->
     
     <submenu name="Add Opportunity">
-      <permission value="pipeline-opportunities-view"/>
+      <permission value="pipeline-opportunities-add"/>
       <long_html value="Add Opportunity"/>
       <short_html value="Add&lt;br&gt;Opportunity"/>
       <link value="/Leads.do?command=AddOpp"/>

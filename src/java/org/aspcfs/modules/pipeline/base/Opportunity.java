@@ -2045,44 +2045,45 @@ public class Opportunity extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public HashMap canDelete(Connection db) throws SQLException {
-    StringBuffer sqlCount = new StringBuffer();
+  public HashMap processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
-    PreparedStatement pst = null;
-    HashMap dependencies = new HashMap();
+    String sql = "";
+    HashMap dependencyList = new HashMap();
 
-    dependencies.put(new String("calls"), new Integer(0));
-    dependencies.put(new String("documents"), new Integer(0));
+    try {
+      db.setAutoCommit(false);
+      sql = "SELECT COUNT(*) as callcount FROM call_log c WHERE c.opp_id = ? ";
 
-    //get number of calls
-    sqlCount.append(
-        "SELECT COUNT(*) as callcount FROM call_log c WHERE c.opp_id = " + this.getId() + " ");
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        dependencyList.put("Calls", new Integer(rs.getInt("callcount")));
+      }
 
-    pst = db.prepareStatement(sqlCount.toString());
-    rs = pst.executeQuery();
-    if (rs.next()) {
-      dependencies.put(new String("calls"), new Integer(rs.getInt("callcount")));
-    }
+      sql = "SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = ? and pf.link_item_id = ? ";
 
-    rs.close();
+      i = 0;
+      pst = db.prepareStatement(sql);
+      pst.setInt(++i, Constants.PIPELINE);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        dependencyList.put("Documents", new Integer(rs.getInt("documentcount")));
+      }
+
     pst.close();
-
-    sqlCount = new StringBuffer();
-
-    //get number of docs
-    sqlCount.append(
-        "SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = " + Constants.PIPELINE + " and pf.link_item_id = " + this.getId() + " ");
-
-    pst = db.prepareStatement(sqlCount.toString());
-    rs = pst.executeQuery();
-    if (rs.next()) {
-      dependencies.put(new String("documents"), new Integer(rs.getInt("documentcount")));
+    db.commit();
+    
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    rs.close();
-    pst.close();
-
-    return dependencies;
+    return dependencyList;
   }
 
 }

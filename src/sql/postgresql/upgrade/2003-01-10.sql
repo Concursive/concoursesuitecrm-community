@@ -30,3 +30,6 @@ alter table  search_fields add column enabled BOOLEAN;
 ALTER TABLE  search_fields ALTER COLUMN enabled SET DEFAULT true;
 update search_fields set enabled = 't';
 
+//9-25-2002 (post-data migration)
+update permission set permission_add = 't' where permission = 'pipeline-opportunities';
+

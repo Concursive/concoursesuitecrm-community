@@ -62,7 +62,7 @@ public final class Leads extends CFSModule {
   }
   
   public String executeCommandAddOpp(ActionContext context) {
-	if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+	if (!(hasPermission(context, "pipeline-opportunities-add"))) {
 		return ("PermissionError");
 	}
 	
@@ -113,7 +113,7 @@ public final class Leads extends CFSModule {
   
   public String executeCommandInsertOpp(ActionContext context) {
 	  
-    if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+    if (!(hasPermission(context, "pipeline-opportunities-add"))) {
 	    return ("PermissionError");
     }
 	
@@ -251,6 +251,46 @@ public final class Leads extends CFSModule {
 		return ("SystemError");
 	}
 	
+  }
+  
+  public String executeCommandConfirmDelete(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    Opportunity thisOpp = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+    String id = null;
+
+    //if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+    //  return ("DefaultError");
+    //}
+
+    if (context.getRequest().getParameter("id") != null) {
+      id = context.getRequest().getParameter("id");
+    }
+    
+    try {
+      db = this.getConnection(context);
+      thisOpp = new Opportunity(db, id);
+      htmlDialog.setRelationships(thisOpp.processDependencies(db));
+      
+        htmlDialog.setTitle("CFS: Confirm Delete");
+        htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='/Leads.do?command=DeleteOpp&id=" + id + "&action=delete'");
+        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+        //htmlDialog.addButton("Disable Only", "javascript:window.location.href='/Leads.do?command=DeleteOpp&id=" + id + "&action=disable'");
+        
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
 
 
@@ -562,8 +602,8 @@ public final class Leads extends CFSModule {
     boolean recordDeleted = false;
     Opportunity newOpp = null;
 
-    String tempcontact = context.getRequest().getParameter("contactLink");
-    String tempaccount = context.getRequest().getParameter("accountLink");
+    //String tempcontact = context.getRequest().getParameter("contactLink");
+    //String tempaccount = context.getRequest().getParameter("accountLink");
 
     Connection db = null;
     try {
@@ -592,13 +632,12 @@ public final class Leads extends CFSModule {
     addModuleBean(context, "Opportunities", "Delete an opportunity");
     if (errorMessage == null) {
       if (recordDeleted) {
+        context.getRequest().setAttribute("refreshUrl","Leads.do?command=ViewOpp");
         deleteRecentItem(context, newOpp);
-        //return ("OppDeleteOK");
-	return ("PopupCloseOK");
+        return ("OppDeleteOK");
       } else {
         processErrors(context, newOpp.getErrors());
-        //return (executeCommandViewOpp(context));
-	return ("PopupCloseOK");
+        return (executeCommandViewOpp(context));
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -1042,44 +1081,6 @@ public final class Leads extends CFSModule {
 
   }
   
-  public String executeCommandConfirmDelete(ActionContext context) {
-
-	if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
-		return ("PermissionError");
-	}
-
-    Exception errorMessage = null;
-    boolean recordDeleted = false;
-    Opportunity thisOpportunity = null;
-    HashMap tempMap = null;
-
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
-      thisOpportunity = new Opportunity(db, context.getRequest().getParameter("id"));
-      tempMap = thisOpportunity.canDelete(db);
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-    
-    context.getRequest().setAttribute("OpportunityDetails", thisOpportunity);
-    context.getRequest().setAttribute("DeleteDetails", tempMap);
-
-    addModuleBean(context, "Opportunities", "Confirm Delete");
-    
-    if (errorMessage == null) {
-        return ("ConfirmDeleteOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      System.out.println(errorMessage);
-      return ("SystemError");
-    }
-    
-  }
-
-
   /**
    *  Description of the Method
    *

@@ -942,12 +942,11 @@ public final class Accounts extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
 	deleteRecentItem(context, thisOrganization);
-        //return ("DeleteOK");
-	return ("PopupCloseOK");
+        context.getRequest().setAttribute("refreshUrl","Accounts.do?command=View");
+        return ("DeleteOK");
       } else {
         processErrors(context, thisOrganization.getErrors());
-	return ("PopupCloseOK");
-        //return (executeCommandView(context));
+        return (executeCommandView(context));
       }
     } else {
       System.out.println(errorMessage);
@@ -999,27 +998,34 @@ public final class Accounts extends CFSModule {
     }
 
     Exception errorMessage = null;
-    boolean recordDeleted = false;
-    Organization thisOrganization = null;
-    HashMap tempMap = null;
-
     Connection db = null;
+    Organization thisOrg = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+    String id = null;
+
+    if (context.getRequest().getParameter("id") != null) {
+      id = context.getRequest().getParameter("id");
+    }
+    
     try {
       db = this.getConnection(context);
-      thisOrganization = new Organization(db, Integer.parseInt(context.getRequest().getParameter("orgId")));
-      tempMap = thisOrganization.canDelete(db);
+      thisOrg = new Organization(db, Integer.parseInt(id));
+      htmlDialog.setRelationships(thisOrg.processDependencies(db));
+      
+        htmlDialog.setTitle("CFS: Confirm Delete");
+        htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='/Accounts.do?command=Delete&action=delete&orgId=" + thisOrg.getOrgId() + "'");
+        //TODO: DISABLE
+        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+        
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-    
-    context.getRequest().setAttribute("OrgDetails", thisOrganization);
-    context.getRequest().setAttribute("DeleteDetails", tempMap);
-
-    addModuleBean(context, "Accounts", "Delete Account");
     if (errorMessage == null) {
-        return ("ConfirmDeleteOK");
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

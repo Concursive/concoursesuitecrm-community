@@ -168,108 +168,86 @@ public void setContactDelete(boolean tmp) { this.contactDelete = tmp; }
 public void setRevenueDelete(boolean tmp) { this.revenueDelete = tmp; }
 public void setDocumentDelete(boolean tmp) { this.documentDelete = tmp; }
 
-  public HashMap canDelete(Connection db)  throws SQLException {
-	  StringBuffer sqlCount = new StringBuffer();
-	  ResultSet rs = null;
-	  PreparedStatement pst = null;
-	  HashMap dependencies = new HashMap();
+  public HashMap processDependencies(Connection db)  throws SQLException {
+    ResultSet rs = null;
+    String sql = "";
+    HashMap dependencyList = new HashMap();
 	  
-	  dependencies.put(new String("contacts"), new Integer(0));
-	  dependencies.put(new String("revenue"), new Integer(0));
-	  dependencies.put(new String("opportunities"), new Integer(0));
-	  dependencies.put(new String("tickets"), new Integer(0));
-	  dependencies.put(new String("documents"), new Integer(0));
-	  dependencies.put(new String("folders"), new Integer(0));
-	  
-	  //get number of contacts
-	  sqlCount.append(
-	  	"SELECT COUNT(*) as contactcount FROM contact c WHERE c.org_id = " + this.getOrgId() + " ");
+    try {
+      db.setAutoCommit(false);
+      sql = "SELECT COUNT(*) as contactcount FROM contact c WHERE c.org_id = ? ";
+      
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        dependencyList.put("Contacts", new Integer(rs.getInt("contactcount")));
+      }
+      
+	    sql = "SELECT COUNT(*) as revenuecount FROM revenue r WHERE r.org_id = ? ";
+      
+      i = 0;
+      pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        dependencyList.put("Revenue", new Integer(rs.getInt("revenuecount")));
+      }
+      
+      sql = "SELECT COUNT(*) as oppcount FROM opportunity o WHERE o.acctlink = ? ";
 	
-	  pst = db.prepareStatement(sqlCount.toString());
-	  rs = pst.executeQuery();
-	  if (rs.next()) {
-		  dependencies.put(new String("contacts"), new Integer(rs.getInt("contactcount")));
-          }
+      i = 0;
+      pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        dependencyList.put("Opportunities", new Integer(rs.getInt("oppcount")));
+      }
 	  
-	  rs.close();
-	  pst.close();
+      sql = "SELECT COUNT(*) as ticketcount FROM ticket t WHERE t.org_id = ? ";
+      
+      i = 0;
+      pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        dependencyList.put("Tickets", new Integer(rs.getInt("ticketcount")));
+      }
 	  
-	  sqlCount = new StringBuffer();
-	  
-	  //get number of revenue
-	  sqlCount.append(
-	  	"SELECT COUNT(*) as revenuecount FROM revenue r WHERE r.org_id = " + this.getOrgId() + " ");
+	    sql = "SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = ? and pf.link_item_id = ? ";
 	
-	  pst = db.prepareStatement(sqlCount.toString());
-	  rs = pst.executeQuery();
-	  if (rs.next()) {
-		  dependencies.put(new String("revenue"), new Integer(rs.getInt("revenuecount")));
-          }
+      i = 0;
+      pst = db.prepareStatement(sql);
+      pst.setInt(++i, Constants.ACCOUNTS);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        dependencyList.put("Documents", new Integer(rs.getInt("documentcount")));
+      }
 	  
-	  rs.close();
-	  pst.close();
-	  
-	  sqlCount = new StringBuffer();
-	  
-	  //get number of opps
-	  sqlCount.append(
-	  	"SELECT COUNT(*) as oppcount FROM opportunity o WHERE o.acctlink = " + this.getOrgId() + " ");
+	  sql =	"SELECT COUNT(*) as foldercount FROM custom_field_record cfr WHERE cfr.link_module_id = ? and cfr.link_item_id = ? ";
 	
-	  pst = db.prepareStatement(sqlCount.toString());
-	  rs = pst.executeQuery();
-	  if (rs.next()) {
-		  dependencies.put(new String("opportunities"), new Integer(rs.getInt("oppcount")));
-          }
+      i = 0;
+      pst = db.prepareStatement(sql);
+      pst.setInt(++i, Constants.ACCOUNTS);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        dependencyList.put("Folders", new Integer(rs.getInt("foldercount")));
+      }
 	  
-	  rs.close();
-	  pst.close();
-	  
-	  sqlCount = new StringBuffer();
-	  
-	  //get number of tickets
-	  sqlCount.append(
-	  	"SELECT COUNT(*) as ticketcount FROM ticket t WHERE t.org_id = " + this.getOrgId() + " ");
-	
-	  pst = db.prepareStatement(sqlCount.toString());
-	  rs = pst.executeQuery();
-	  if (rs.next()) {
-		  dependencies.put(new String("tickets"), new Integer(rs.getInt("ticketcount")));
-          }
-	  
-	  rs.close();
-	  pst.close();
-	  
-	  sqlCount = new StringBuffer();
-	  
-	  //get number of docs
-	  sqlCount.append(
-	  	"SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = " + Constants.ACCOUNTS + " and pf.link_item_id = " + this.getOrgId() + " ");
-	
-	  pst = db.prepareStatement(sqlCount.toString());
-	  rs = pst.executeQuery();
-	  if (rs.next()) {
-		  dependencies.put(new String("documents"), new Integer(rs.getInt("documentcount")));
-          }
-	  
-	  rs.close();
-	  pst.close();
-	
-	  sqlCount = new StringBuffer();
-	  
-	  //get number of folder records
-	  sqlCount.append(
-	  	"SELECT COUNT(*) as foldercount FROM custom_field_record cfr WHERE cfr.link_module_id = " + Constants.ACCOUNTS + " and cfr.link_item_id = " + this.getOrgId() + " ");
-	
-	  pst = db.prepareStatement(sqlCount.toString());
-	  rs = pst.executeQuery();
-	  if (rs.next()) {
-		  dependencies.put(new String("folders"), new Integer(rs.getInt("foldercount")));
-          }
-	  
-	  rs.close();
-	  pst.close();
-	  
-	  return dependencies;
+    pst.close();
+    db.commit();
+    
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return dependencyList;
   }
 
   /**
@@ -1727,6 +1705,8 @@ public boolean getEnabled() {
       callList.buildList(db);
       callList.delete(db);
       callList = null;
+      
+      this.resetType(db);
 
       Statement st = db.createStatement();
       st.executeUpdate(
@@ -1738,8 +1718,6 @@ public boolean getEnabled() {
       st.executeUpdate(
           "DELETE FROM organization WHERE org_id = " + this.getOrgId());
       st.close();
-      
-      this.resetType(db);
       
       db.commit();
     } catch (SQLException e) {

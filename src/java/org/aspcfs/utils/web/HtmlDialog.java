@@ -319,24 +319,24 @@ public class HtmlDialog {
    *@return          The frameHtml value
    */
   public String getFrameHtml(int frameId) {
-    String htmlString = "";
+    StringBuffer htmlString = new StringBuffer();
 
     switch (frameId) {
         case HtmlDialog.TOP:
-          htmlString += "<strong>" + this.getHeader() + "</strong><br>";
+          htmlString.append("<strong>" + this.getHeader() + "</strong>");
           break;
         case HtmlDialog.MIDDLE:
           if (this.getRelationships().size() != 0) {
-            htmlString += "The following Relationships will be deleted ";
-            htmlString += this.getRelationshipString();
+            htmlString.append("The following Relationships will be deleted ");
+            htmlString.append(this.getRelationshipString());
           }
           break;
         case HtmlDialog.BOTTOM:
-          htmlString += "<center>" + this.getButtonString() + "</center>";
+          htmlString.append("<center>" + this.getButtonString() + "</center>");
           break;
     }
     decrementSynchFrameCounter();
-    return htmlString;
+    return htmlString.toString();
   }
 
 

@@ -1178,8 +1178,9 @@ public final class ExternalContacts extends CFSModule {
      //   htmlDialog.setShowAndConfirm(false);
      //   htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContacts.do?command=Delete&id=" + id + "'");
       //} else {
-        htmlDialog.setTitle("Confirm");
-        htmlDialog.setHeader("The object you are requesting to delete has the following CFS dependencies: ");
+              
+        htmlDialog.setTitle("CFS: Confirm Delete");
+        htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='/ExternalContacts.do?command=DeleteContact&id=" + id + "'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
      // }

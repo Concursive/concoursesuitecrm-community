@@ -43,7 +43,7 @@ Opportunity Details<br>
 <input type=hidden name="command" value="<%= OpportunityDetails.getId() %>">
 
 <dhv:permission name="pipeline-opportunities-edit"><input type="button" name="action" value="Modify" onClick="document.oppdet.command.value='ModifyOpp';document.oppdet.submit();"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';javascript:popURLReturn('/Leads.do?command=ConfirmDelete&id=<%= OpportunityDetails.getId() %>','/Leads.do?command=ViewOpp','Delete','300','150','no','no');"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';javascript:popURLReturn('/Leads.do?command=ConfirmDelete&id=<%=OpportunityDetails.getId()%>','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="pipeline-opportunities-delete,pipeline-opportunities-edit"><br>&nbsp;</dhv:permission>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -186,7 +186,7 @@ Opportunity Details<br>
 </table>
 <dhv:permission name="pipeline-opportunities-delete,pipeline-opportunities-edit"><br></dhv:permission>
 <dhv:permission name="pipeline-opportunities-edit"><input type="button" name="action" value="Modify" onClick="document.oppdet.command.value='ModifyOpp';document.oppdet.submit()"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';javascript:popURLReturn('/Leads.do?command=ConfirmDelete&id=<%= OpportunityDetails.getId() %>','/Leads.do?command=ViewOpp','Delete','300','150','no','no');"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';javascript:popURLReturn('/Leads.do?command=ConfirmDelete&id=<%=OpportunityDetails.getId()%>','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no');"></dhv:permission>
 </td></tr>
 </table>
 <% if (request.getParameter("return") != null) { %>

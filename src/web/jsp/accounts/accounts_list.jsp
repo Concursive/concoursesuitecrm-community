@@ -64,7 +64,7 @@ View Accounts<br>
     <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete">
     <td width=8 valign=center nowrap class="row<%= rowid %>">
       <dhv:evaluate exp="<%=(thisOrg.getEnabled())%>">
-      	<dhv:permission name="accounts-accounts-edit"><a href="/Accounts.do?command=Modify&orgId=<%= thisOrg.getOrgId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-edit,accounts-accounts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-delete"><a href="javascript:popURLReturn('/Accounts.do?command=ConfirmDelete&orgId=<%= thisOrg.getOrgId() %>','/Accounts.do?command=View','Delete','300','200','no','no');">Del</a></dhv:permission>
+      	<dhv:permission name="accounts-accounts-edit"><a href="/Accounts.do?command=Modify&orgId=<%= thisOrg.getOrgId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-edit,accounts-accounts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-delete"><a href="javascript:popURLReturn('/Accounts.do?command=ConfirmDelete&id=<%=thisOrg.getId()%>','Accounts.do?command=View', 'Delete_account','330','200','yes','no');">Del</a></dhv:permission>
       </dhv:evaluate>
       <dhv:evaluate exp="<%=!(thisOrg.getEnabled())%>">
         <dhv:permission name="accounts-accounts-edit"><a href="/Accounts.do?command=Enable&orgId=<%= thisOrg.getOrgId() %>&return=list">Enable</a></dhv:permission>
