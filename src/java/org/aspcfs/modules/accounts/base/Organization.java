@@ -639,6 +639,16 @@ public class Organization extends GenericBean {
 
 
   /**
+   *  Sets the industry attribute of the Organization object
+   *
+   *@param  tmp  The new industry value
+   */
+  public void setIndustry(int tmp) {
+    industry = tmp;
+  }
+
+
+  /**
    *  Sets the Miner_only attribute of the Organization object
    *
    *@param  tmp  The new Miner_only value
