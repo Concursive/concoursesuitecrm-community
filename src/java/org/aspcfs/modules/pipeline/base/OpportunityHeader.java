@@ -1,17 +1,18 @@
 //Copyright 2002-2003 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.pipeline.base;
 
-import org.theseus.beans.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.actions.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.controller.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.utils.DateUtils;
+import org.aspcfs.controller.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.base.*;
 import com.zeroio.iteam.base.FileItemList;
 
 /**
@@ -20,7 +21,8 @@ import com.zeroio.iteam.base.FileItemList;
  *
  *@author     chris
  *@created    December, 2002
- *@version    $Id$
+ *@version    $Id: OpportunityHeader.java,v 1.3 2003/01/07 20:21:45 mrajkowski
+ *      Exp $
  */
 
 public class OpportunityHeader extends GenericBean {
@@ -1002,8 +1004,8 @@ public class OpportunityHeader extends GenericBean {
       throw new SQLException("Opportunity ID not specified");
     }
     PreparedStatement pst = db.prepareStatement(
-      "DELETE FROM opportunity_component_levels " +
-      "WHERE opp_id in (SELECT id from opportunity_component oc where oc.opp_id = ?) ");
+        "DELETE FROM opportunity_component_levels " +
+        "WHERE opp_id in (SELECT id from opportunity_component oc where oc.opp_id = ?) ");
     pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
@@ -1165,10 +1167,10 @@ public class OpportunityHeader extends GenericBean {
   public void retrieveComponentCount(Connection db) throws SQLException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
-      "SELECT COUNT(*) as componentcount " +
-      "FROM opportunity_component oc " +
-      "WHERE id > 0 " +
-      "AND oc.opp_id = ?");
+        "SELECT COUNT(*) as componentcount " +
+        "FROM opportunity_component oc " +
+        "WHERE id > 0 " +
+        "AND oc.opp_id = ?");
     pst.setInt(1, oppId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -1189,10 +1191,10 @@ public class OpportunityHeader extends GenericBean {
   public void buildTotal(Connection db) throws SQLException {
     double total = 0;
     PreparedStatement pst = db.prepareStatement(
-      "SELECT sum(guessvalue) as total " +
-      "FROM opportunity_component oc " +
-      "WHERE id > 0 " +
-      "AND oc.opp_id = ?");
+        "SELECT sum(guessvalue) as total " +
+        "FROM opportunity_component oc " +
+        "WHERE id > 0 " +
+        "AND oc.opp_id = ?");
     pst.setInt(1, oppId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

@@ -1,17 +1,33 @@
 //Copyright 2001 Dark Horse Ventures
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.pipeline.base;
 
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Note;
+/**
+ *  Description of the Class
+ *
+ *@author     mrajkowski
+ *@created    January 14, 2003
+ *@version    $Id$
+ */
 public class OpportunityNote extends Note {
 
+  /**
+   *  Constructor for the OpportunityNote object
+   */
   public OpportunityNote() {
     isContact = false;
     isOrg = false;
   }
 
 
+  /**
+   *  Constructor for the OpportunityNote object
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public OpportunityNote(ResultSet rs) throws SQLException {
     isContact = false;
     isOrg = false;
@@ -19,6 +35,13 @@ public class OpportunityNote extends Note {
   }
 
 
+  /**
+   *  Constructor for the OpportunityNote object
+   *
+   *@param  db                Description of the Parameter
+   *@param  noteId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public OpportunityNote(Connection db, String noteId) throws SQLException {
     isContact = false;
     isOrg = false;
@@ -52,9 +75,9 @@ public class OpportunityNote extends Note {
    *  DELETE
    *
    *@param  db                Description of Parameter
-   *@param  orgId         Description of Parameter
    *@param  enteredBy         Description of Parameter
    *@param  modifiedBy        Description of Parameter
+   *@param  oppId             Description of the Parameter
    *@exception  SQLException  Description of Exception
    *@since
    */
@@ -71,6 +94,14 @@ public class OpportunityNote extends Note {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  oppId             Description of the Parameter
+   *@param  enteredBy         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void insert(Connection db, int oppId, int enteredBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO note " +
@@ -100,7 +131,7 @@ public class OpportunityNote extends Note {
    *@exception  SQLException  Description of Exception
    *@since
    */
-   
+
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE note " +

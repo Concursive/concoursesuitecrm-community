@@ -2,7 +2,8 @@ package org.aspcfs.modules.projects.base;
 
 import com.darkhorseventures.database.ConnectionPool;
 import org.aspcfs.utils.*;
-import org.aspcfs.modules.base.ScheduledActions; 
+import org.aspcfs.modules.base.ScheduledActions;
+import org.aspcfs.modules.mycfs.base.*; 
 import java.util.*;
 import com.zeroio.iteam.base.*;
 import java.sql.*;

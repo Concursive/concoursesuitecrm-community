@@ -1,22 +1,25 @@
 //Copyright 2003 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.pipeline.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
 import java.util.*;
 import java.text.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.utils.ObjectUtils;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.ObjectUtils;
+import org.aspcfs.modules.contacts.base.Call;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Container for OpportunityComponent objects.
  *
  *@author     chris
  *@created    January 7, 2003
- *@version    $Id$
+ *@version    $Id: OpportunityComponentList.java,v 1.5 2003/01/10 16:17:48
+ *      mrajkowski Exp $
  */
 
 public class OpportunityComponentList extends Vector {
@@ -252,6 +255,7 @@ public class OpportunityComponentList extends Vector {
     this.closeDateEnd = tmp;
   }
 
+
   /**
    *  Sets the closeDateEnd attribute of the OpportunityComponentList object
    *
@@ -379,7 +383,8 @@ public class OpportunityComponentList extends Vector {
 
 
   /**
-   *  Builds a subset of attributes of the Opprtunity primarily for the Calendar.
+   *  Builds a subset of attributes of the Opprtunity primarily for the
+   *  Calendar.
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception

@@ -1,22 +1,24 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.pipeline.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
 import java.util.*;
 import java.text.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.utils.ObjectUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.ObjectUtils;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Container for OpportunityHeader objects
  *
  *@author     chris
  *@created    December, 2003
- *@version    $Id$
+ *@version    $Id: OpportunityHeaderList.java,v 1.3 2003/01/07 20:21:45
+ *      mrajkowski Exp $
  */
 public class OpportunityHeaderList extends Vector {
 

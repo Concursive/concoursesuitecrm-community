@@ -1,12 +1,13 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.pipeline.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.NoteList;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -14,11 +15,23 @@ import javax.servlet.http.*;
  *  Contains a list of email addresses... currently used to build the list from
  *  the database with any of the parameters to limit the results.
  *
+ *@author     mrajkowski
+ *@created    January 14, 2003
+ *@version    $Id$
  */
 public class OpportunityNoteList extends NoteList {
 
+  /**
+   *  Constructor for the OpportunityNoteList object
+   */
   public OpportunityNoteList() { }
 
+
+  /**
+   *  Constructor for the OpportunityNoteList object
+   *
+   *@param  request  Description of the Parameter
+   */
   public OpportunityNoteList(HttpServletRequest request) {
     int i = 0;
     while (request.getParameter("note" + (++i) + "subject") != null) {
@@ -30,6 +43,13 @@ public class OpportunityNoteList extends NoteList {
     }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildList(Connection db) throws SQLException {
 
     PreparedStatement pst = null;
@@ -84,7 +104,7 @@ public class OpportunityNoteList extends NoteList {
     } else {
       sqlOrder.append("ORDER BY subject");
     }
-    
+
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
@@ -96,15 +116,15 @@ public class OpportunityNoteList extends NoteList {
         "FROM note n " +
         "WHERE subject != '' ");
     pst = db.prepareStatement(
-      sqlSelect.toString() + 
-      sqlFilter.toString() + 
-      sqlOrder.toString());
+        sqlSelect.toString() +
+        sqlFilter.toString() +
+        sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
+
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
