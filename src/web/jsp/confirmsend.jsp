@@ -25,7 +25,7 @@
 %>
   <tr class="row<%= rowid %>">
     <td>
-      <%= email %> <%= showAttribute(request, "contact" + contactId) %>
+      <%= toHtml(email) %> <%= showAttribute(request, "contact" + contactId) %>
     </td>
   </tr>
 <%
