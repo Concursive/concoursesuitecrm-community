@@ -8,6 +8,14 @@
     showSpan("progress");
     return true;
   }
+  function setPort() {
+    if (document.forms[0].type.value == "PostgreSQL" && document.forms[0].port.value == "1433") {
+      document.forms[0].port.value = "5432";
+    }
+    if (document.forms[0].type.value == "MSSQL" && document.forms[0].port.value == "5432") {
+      document.forms[0].port.value = "1433";
+    }
+  }
 </script>
 <body onLoad="javascript:document.forms[0].ip.focus();">
 <%= showError(request, "actionError", false) %>
@@ -25,13 +33,15 @@
       Dark Horse CRM stores and retrieves data using a database.<br>
       <br>
       Dark Horse CRM works best with the Open Source database server <a href="http://www.postgresql.org" target="_new">PostgreSQL</a>.
+      You can also use <a href="http://www.microsoft.com/sql" target="_new">Microsoft SQL Server</a>.
       <ul>
-      <li>Before continuing, PostgreSQL must be installed and functional</li>
+      <li>Before continuing, the database server must be installed and functional</li>
       <li>The database administrator should create a user called "darkhorse_crm"</li>
       <li>The database administrator should create a new database, with
-      UNICODE encoding, called "darkhorse_crm"</li> 
+      UNICODE encoding, called "darkhorse_crm"</li>
+      <li>The darkhorse_crm user must have full permissions on the darkhorse_crm database</li>
       <li>Once configured, enter the database connection information below, then press continue
-      to see if the database is found</li>
+      to verify the settings</li>
       </ul>
     </td>
   </tr>
@@ -46,7 +56,10 @@
             Database Type:
           </td>
           <td>
-            <%= toHtml(database.getType()) %>
+            <select name="type" onChange="javascript:setPort();">
+              <option value="PostgreSQL"<%= "PostgreSQL".equals(database.getType()) ? " selected" : "" %>>PostgreSQL</option>
+              <option value="MSSQL"<%= "MSSQL".equals(database.getType()) ? " selected" : "" %>>Microsoft SQL Server</option>
+            </select>
           </td>
         </tr>
         <tr>
