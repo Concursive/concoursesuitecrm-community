@@ -59,7 +59,7 @@ Relationship Type: <%= relationshipTypeSelect.getHtml() %><br>
       Influencer of
     </td>
     <td width="20%" valign="center" nowrap class="row1">
-      Enterprise Dark Horse CRM for 2003 (Opp)
+      Enterprise Dark Horse CRM for 2004 (Opp)
     </td>
   </tr>
   <tr class="row2">

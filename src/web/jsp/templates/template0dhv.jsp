@@ -1,4 +1,4 @@
-<%-- (C) 2001-2003 Dark Horse Ventures --%>
+<%-- (C) 2001-2004 Dark Horse Ventures --%>
 <%@ page  import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.controller.*" %>
 <jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>
 <%
