@@ -439,6 +439,11 @@ public class CFSModule {
       }
     }
     context.getRequest().setAttribute("errors", errors);
+    if (errors.size() > 0) {
+      if (context.getRequest().getAttribute("actionError") == null) {
+        context.getRequest().setAttribute("actionError", "Form could not be submitted, review messages below.");
+      }
+    }
   }
 
 
