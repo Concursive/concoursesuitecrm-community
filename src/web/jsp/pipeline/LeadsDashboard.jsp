@@ -129,7 +129,9 @@ Dashboard<br>
           <td width="100%" class="row<%= rowid %>" valign="center">
             <a href="Leads.do?command=DetailsOpp&headerId=<%= thisHeader.getId() %>&return=dashboard&reset=true"><%= toHtml(thisHeader.getDisplayName()) %>:
             <%= toHtml(thisHeader.getDescription()) %></a>
-            (<%= thisHeader.getOwnerComponentCount() %>/<%= thisHeader.getComponentCount() %>)
+            <dhv:evaluate if="<%= thisHeader.getComponentCount() > 1 %>">
+              (<%= thisHeader.getOwnerComponentCount() %>/<%= thisHeader.getComponentCount() %>)
+            </dhv:evaluate>
             <dhv:evaluate if="<%= thisHeader.hasFiles() %>">
               <%= thisFile.getImageTag() %>
             </dhv:evaluate>
