@@ -26,9 +26,9 @@ import org.jcrontab.CrontabBean;
  *  file. This Bean allows jcrontab to interact with the information from
  *  CrontabEntry
  *
- *@author     $Author$
- *@created    February 4, 2003
- *@version    $Revision$
+ *@author     Israel Olalla
+ *@created    November, 2002
+ *@version    $Id$
  */
 public class CrontabEntryBean implements Serializable {
 
@@ -49,6 +49,7 @@ public class CrontabEntryBean implements Serializable {
   private String[] extraInfo;
   private boolean bextraInfo = false;
   private String description;
+  private Object connectionContext = null;
 
   private boolean[] bHours;
   private boolean[] bSeconds;
@@ -247,7 +248,7 @@ public class CrontabEntryBean implements Serializable {
   /**
    *  bextraInfo setter
    *
-   *@param  bextraInfo   The new bExtraInfo value
+   *@param  bextraInfo  The new bExtraInfo value
    */
   public void setBExtraInfo(boolean bextraInfo) {
     this.bextraInfo = bextraInfo;
@@ -261,6 +262,16 @@ public class CrontabEntryBean implements Serializable {
    */
   public void setDescription(String description) {
     this.description = description;
+  }
+
+
+  /**
+   *  Sets the connectionContext attribute of the CrontabEntryBean object
+   *
+   *@param  tmp  The new connectionContext value
+   */
+  public void setConnectionContext(Object tmp) {
+    this.connectionContext = tmp;
   }
 
 
@@ -471,6 +482,16 @@ public class CrontabEntryBean implements Serializable {
    */
   public String getDescription() {
     return description;
+  }
+
+
+  /**
+   *  Gets the connectionContext attribute of the CrontabEntryBean object
+   *
+   *@return    The connectionContext value
+   */
+  public Object getConnectionContext() {
+    return connectionContext;
   }
 
 
