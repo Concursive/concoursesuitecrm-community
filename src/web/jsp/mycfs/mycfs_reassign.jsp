@@ -154,7 +154,7 @@ Re-assignments<br>
   
 </table>
 &nbsp;<br>
-<dhv:permission name="admin-reassign-edit">
+<dhv:permission name="myhomepage-reassign-edit">
 <input type="submit" value="Update">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=Home'">
 <input type="reset" value="Reset">
