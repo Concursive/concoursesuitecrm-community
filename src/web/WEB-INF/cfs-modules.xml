@@ -79,7 +79,7 @@
     <permission value="contacts-view"/>
     <long_html value="Contacts &amp; Resources"/>
     <short_html value="Contacts &amp; Resources"/>
-    <link value="/ExternalContacts.do?command=ListContacts"/>
+    <link value="/ExternalContacts.do"/>
     <graphic width="83" height="36" on="menu-contacts-on.gif" off="menu-contacts-off.gif" rollover=""/>
     
     <submenu name="Add Contact">

@@ -23,6 +23,13 @@ import java.text.*;
  */
 public final class ExternalContacts extends CFSModule {
 
+  public String executeCommandDefault(ActionContext context) {
+    if (!(hasPermission(context, "contacts-external_contacts-view"))) {
+      return ("DefaultError");
+    }
+    return (this.executeCommandListContacts(context));
+  }
+  
   /**
    *  Description of the Method
    *
