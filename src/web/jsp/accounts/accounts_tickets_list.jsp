@@ -80,9 +80,7 @@ Tickets<br>
 <%}%>
     </td>
     <td  valign=center class="row<%= rowid %>">
-      <a href="AccountTickets.do?command=TicketDetails&id=<%=thisTic.getId()%>">
-	<%= toHtml(thisTic.getProblemHeader()) %>
-	</a>&nbsp;
+      <a href="AccountTickets.do?command=TicketDetails&id=<%=thisTic.getId()%>"><%= toHtml(thisTic.getProblemHeader()) %></a>&nbsp;
 	<% if (thisTic.getCategoryName() != null) { %>
 	[<%=toHtml(thisTic.getCategoryName())%>]
 	<%}%>
