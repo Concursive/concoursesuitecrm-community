@@ -141,8 +141,11 @@ public class NetDescAccountsReader implements DataReader {
 
       POIFSFileSystem fs =
           new POIFSFileSystem(new FileInputStream(excelFile));
+          System.out.println("INFO: Created FileSystem");
       HSSFWorkbook wb = new HSSFWorkbook(fs);
+      System.out.println("INFO: Created WorkBook");
       HSSFSheet sheet = wb.getSheetAt(0);
+      System.out.println("INFO: Got Sheet");
       int rows = sheet.getLastRowNum();
       int beginningRow = 0;
       if (ignoreRow1) {
@@ -151,9 +154,10 @@ public class NetDescAccountsReader implements DataReader {
       for (int r = beginningRow; r < rows + 1; r++) {
         HSSFRow row = sheet.getRow(r);
         if (row != null) {
-          System.out.println("ROW " + row.getRowNum());
-          short firstCellNum = row.getFirstCellNum();
+          logger.info("ROW " + row.getRowNum());
+          short firstCellNum = (short) (row.getFirstCellNum() + 1);
 
+          logger.info("Processing Account " + row.getCell(firstCellNum).getStringCellValue());
           //build the organization
           Organization thisOrg = new Organization();
           thisOrg.setOrgId(r);
