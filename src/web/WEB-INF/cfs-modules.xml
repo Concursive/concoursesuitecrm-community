@@ -327,6 +327,19 @@
     <link value="/CampaignManager.do?command=Dashboard"/>
     <graphic width="83" height="36" on="menu-comm-on.gif" off="menu-comm-off.gif" rollover=""/>
     
+    <submenu name="Add Campaign">
+      <permission value="campaign-campaigns-add"/>
+      <long_html value="Add Campaign"/>
+      <short_html value="Add&lt;br&gt;Campaign"/>
+      <link value="/CampaignManager.do?command=Add"/>
+    </submenu>
+    
+    <submenu name="-">
+      <permission value="campaign-campaigns-add"/>
+      <long_html value="|"/>
+      <short_html value="&lt;image src='/images/divider.gif'&gt;"/>
+    </submenu>
+    
     <submenu name="Dashboard">
       <permission value="campaign-dashboard-view"/>
       <long_html value="Dashboard"/>
