@@ -647,12 +647,14 @@
        a site has been deployed -->
   <target name="upgradedb.name" unless="arg1">
     <input message="Enter file date to process: " addproperty="arg1"/>
+  </target>
+  <target name="upgradedb.uptodate">
     <uptodate property="classes.uptodate">
       <srcfiles dir="${src.classes.dir}" includes="**/*.java"/>
       <mapper type="merge" to="${build.lib.dir}/aspcfs.jar"/>
     </uptodate>
   </target>
-  <target name="upgradedb" depends="upgradedb.name,build" 
+  <target name="upgradedb" depends="upgradedb.name,upgradedb.uptodate,build" 
     description="Upgrades all databases in the gatekeeper with a specified script file, for current sitecode">
     <taskdef name="upgradeDatabase" 
         classname="org.aspcfs.ant.tasks.UpgradeDatabaseTask">
