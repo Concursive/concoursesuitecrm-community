@@ -193,7 +193,7 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
   }
   
   function setParentListCampaign(recipientEmails,recipientIds,listType,displayFieldId,hiddenFieldId){
-	  
+	  /**
     if(recipientEmails.length == 0 && listType == "list"){
       removeOptions(displayFieldId, recipientIds);
 		  //opener.insertOption("None Selected","",displayFieldId);
@@ -216,7 +216,7 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
       }
       
       //remove contacts that have been un-checked
-      //removeOptions(displayFieldId, recipientIds);
+      removeOptions(displayFieldId, recipientIds);
       
       for(i=0; i < recipientEmails.length; i++) {
           var newCriteria = "9|1|" + recipientIds[i];
@@ -233,7 +233,9 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
         opener.document.getElementById(hiddenFieldId).value = recipientIds[i];
         opener.changeDivContent(displayFieldId,recipientEmails[i]);
     }
+    */
     
+    return true;
   }
   
   
