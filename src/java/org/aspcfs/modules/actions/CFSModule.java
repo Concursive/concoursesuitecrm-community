@@ -262,6 +262,9 @@ public class CFSModule {
       String errorKey = (String)i.next();
       String errorMsg = (String)errors.get(errorKey);
       context.getRequest().setAttribute(errorKey, errorMsg);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(" Object Validation Error-> " + errorKey + "=" + errorMsg);
+      }
     }
   }
 
