@@ -4,22 +4,22 @@
 <jsp:useBean id="OppList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
 <jsp:useBean id="GraphTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form name=Dashboard action="Leads.do?command=Dashboard" method=POST>
+<form name="Dashboard" action="Leads.do?command=Dashboard" method=POST>
 <a href="Leads.do">Pipeline Management</a> > 
 Dashboard<br>
 <hr color="#BFBFBB" noshade>
 <table width="100%" border="0" cellspacing="0" cellpadding="3">
   <tr>
     <%-- Left Column --%>
-    <td width="275" valign=top>
+    <td width="275" valign="top">
       <%-- Graphic --%>
       <table width="275" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr bgcolor="#DEE0FA">
           <td valign="center" align="center">
-          <% if (((String)request.getSession().getAttribute("leadsoverride")) == null) {%>
-		My Dashboard
+    <% if (((String)request.getSession().getAttribute("leadsoverride")) == null) {%>
+      My Dashboard
 		<%} else {%>
-		Dashboard: <%=toHtml((String)request.getSession().getAttribute("leadsothername"))%>
+      Dashboard: <%=toHtml((String)request.getSession().getAttribute("leadsothername"))%>
 		<%}%>
           </td>
         </tr>
@@ -51,7 +51,7 @@ Dashboard<br>
       <%-- User List --%>
       <table width="285" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr bgcolor="#DEE0FA">
-          <td valign=center nowrap>
+          <td valign="center" nowrap>
             Reports ($Gr. Pipe.)
           </td>
           <td width=125 valign=center>
@@ -128,7 +128,7 @@ Dashboard<br>
 	  } else {
 %>
         <tr>
-          <td valign="center" colspan="7">No Opportunities found.</td>
+          <td valign="center" colspan="7">No opportunities found.</td>
         </tr>
 <%}%>
       </table>
