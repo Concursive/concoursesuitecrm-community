@@ -97,7 +97,7 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 						x="3"
 						y="2"
 						width="329"
-						height="12"
+						height="14"
 						forecolor="#FFFFFF"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"

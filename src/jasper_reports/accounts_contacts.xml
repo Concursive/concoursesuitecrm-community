@@ -52,14 +52,14 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 		<group  name="organization" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="88" >
 			<groupExpression><![CDATA[$F{org_id}]]></groupExpression>
 			<groupHeader>
-			<band height="17"  isSplitAllowed="true" >
+			<band height="19"  isSplitAllowed="true" >
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
 						x="1"
 						y="1"
 						width="738"
-						height="16"
+						height="18"
 						forecolor="#CCCCCC"
 						backcolor="#000000"
 						positionType="FixRelativeToTop"
@@ -70,12 +70,12 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 						isPrintWhenDetailOverflows="false"/>
 					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
 				</rectangle>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
 						x="5"
 						y="2"
 						width="368"
-						height="15"
+						height="16"
 						forecolor="#FFFFFF"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -84,7 +84,7 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{name}]]></textFieldExpression>
 				</textField>
