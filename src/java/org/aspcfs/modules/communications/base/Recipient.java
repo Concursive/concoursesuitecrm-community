@@ -147,6 +147,25 @@ public class Recipient extends GenericBean {
     }
   }
   
+  protected boolean isDuplicate(Connection db) throws SQLException {
+    boolean result = false;
+    String sql =
+        "SELECT * " +
+        "FROM scheduled_recipient " +
+        "WHERE campaign_id = ? AND contact_id = ? ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, campaignId);
+    pst.setInt(++i, contactId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      result = true;
+    }
+    rs.close();
+    pst.close();
+    return result;
+  }
+  
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");
     campaignId = rs.getInt("campaign_id");
@@ -171,6 +190,10 @@ public class Recipient extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
 
     if (!isValid(db)) {
+      return false;
+    }
+    
+    if (isDuplicate(db)) {
       return false;
     }
 
