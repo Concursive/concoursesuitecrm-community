@@ -120,7 +120,6 @@ public class Database {
   public static void main(String[] args) {
     Database thisApp = new Database();
     thisApp.runTests();
-    System.exit(0);
   }
 
 

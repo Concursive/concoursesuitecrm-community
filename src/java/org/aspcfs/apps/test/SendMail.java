@@ -19,7 +19,6 @@ public class SendMail {
   public static void main(String args[]) {
     if (args[0] == null || "".equals(args[0])) {
       System.out.println("USAGE: app <email address>");
-      System.exit(2);
     }
     System.out.println("Running...");
     SMTPMessage mail = new SMTPMessage();
@@ -32,10 +31,8 @@ public class SendMail {
     mail.setBody("BODY");
     if (mail.send() == 2) {
       System.out.println(mail.getErrorMsg());
-      System.exit(2);
     }
     System.out.println("OK");
-    System.exit(0);
   }
 }
 

@@ -49,14 +49,13 @@ public class Notifier extends ReportBuilder {
    *@param  args  Description of Parameter
    */
   public static void main(String args[]) {
-
-    Notifier thisNotifier = new Notifier();
-    if (args[0] != null) {
-      AppUtils.loadConfig(args[0], thisNotifier.config);
-    } else {
-      AppUtils.loadConfig("notifier.xml", thisNotifier.config);
+    String filename = args[0];
+    if (filename == null) {
+      filename = "notifier.xml";
     }
-
+    
+    Notifier thisNotifier = new Notifier();
+    AppUtils.loadConfig(filename, thisNotifier.config);
     thisNotifier.baseName = (String) thisNotifier.config.get("GATEKEEPER.URL");
     thisNotifier.dbUser = (String) thisNotifier.config.get("GATEKEEPER.USER");
     thisNotifier.dbPass = (String) thisNotifier.config.get("GATEKEEPER.PASSWORD");
@@ -116,9 +115,7 @@ public class Notifier extends ReportBuilder {
       } catch (Exception exc) {
         exc.printStackTrace(System.out);
         System.err.println("Notifier-> BuildReport Error: " + exc.toString());
-        System.exit(2);
       }
-      System.exit(0);
     }
   }
 
