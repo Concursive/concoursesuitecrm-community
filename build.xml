@@ -106,7 +106,7 @@
     <uptodate property="build.config.uptodate"
             srcfile="${base.dir}/master.properties"
             targetfile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"/>
-    <fail unless="build.config.uptodate">Initialization aborted${lf}${lf}The build.properties file might be out of date.  Compare and update the site copy with the source template, making any necessary changes.${lf}${lf}Site File: ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties${lf}Source Template: ${base.dir}${fs}master.properties</fail>
+    <fail unless="build.config.uptodate">Initialization aborted${lf}${lf}The build.properties file might be out of date.  Compare and update the site copy with the source template, making any necessary changes.${lf}${lf}Site File: ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties${lf}Source Template: master.properties</fail>
     <loadproperties srcFile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.StripLineComments">
