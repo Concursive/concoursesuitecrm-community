@@ -21,7 +21,6 @@ public class Viewpoint extends GenericBean {
   private int id = -1;
   private int userId = -1;
   private int vpUserId = -1;
-  private int vpContactId = -1;
   private int enteredBy = -1;
   private int modifiedBy = -1;
   private boolean enabled = true;
@@ -265,26 +264,6 @@ public class Viewpoint extends GenericBean {
 
 
   /**
-   *  Sets the vpContatId attribute of the Viewpoint object
-   *
-   *@param  vpContatId  The new vpContatId value
-   */
-  public void setVpContactId(int vpContatId) {
-    this.vpContactId = vpContactId;
-  }
-
-
-  /**
-   *  Sets the vpContatId attribute of the Viewpoint object
-   *
-   *@param  vpContactId  The new vpContactId value
-   */
-  public void setVpContactId(String vpContactId) {
-    this.vpContactId = Integer.parseInt(vpContactId);
-  }
-
-
-  /**
    *  Sets the enabled attribute of the Viewpoint object
    *
    *@param  enabled  The new enabled value
@@ -306,16 +285,6 @@ public class Viewpoint extends GenericBean {
    */
   public boolean getEnabled() {
     return enabled;
-  }
-
-
-  /**
-   *  Gets the vpContatId attribute of the Viewpoint object
-   *
-   *@return    The vpContatId value
-   */
-  public int getVpContactId() {
-    return vpContactId;
   }
 
 
@@ -417,10 +386,6 @@ public class Viewpoint extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean isVpUserValid(Connection db) throws SQLException {
-    if (vpUserId == -1 && vpContactId != -1) {
-      Contact thisContact = new Contact(db, vpContactId);
-      this.setVpUserId(thisContact.getUserId());
-    }
     if (vpUserId == -1) {
       return false;
     }

@@ -36,7 +36,6 @@ public class Task extends GenericBean {
   private double estimatedLOE = -1;
   private int estimatedLOEType = -1;
   private int owner = -1;
-  private int ownerContactId = -1;
   private int categoryId = -1;
   private int age = -1;
   private int type = -1;
@@ -100,7 +99,6 @@ public class Task extends GenericBean {
     if (thisId == -1) {
       throw new SQLException("Task ID not found");
     }
-    this.setOwnerContactId(db);
     buildResources(db);
   }
 
@@ -149,58 +147,6 @@ public class Task extends GenericBean {
 
 
   /**
-   *  Sets the ownerContactId attribute of the Task object
-   *
-   *@param  ownerContactId  The new ownerContactId value
-   */
-  public void setOwnerContactId(int ownerContactId) {
-    this.ownerContactId = ownerContactId;
-  }
-
-
-  /**
-   *  Sets the ownerContactId attribute of the Task object
-   *
-   *@param  ownerContactId  The new ownerContactId value
-   */
-  public void setOwnerContactId(String ownerContactId) {
-    this.ownerContactId = Integer.parseInt(ownerContactId);
-  }
-
-
-  /**
-   *  Sets the ownerContactId attribute of the Task object
-   *
-   *@param  db                The new ownerContactId value
-   *@exception  SQLException  Description of the Exception
-   */
-  public void setOwnerContactId(Connection db) throws SQLException {
-    if (owner != -1 && ownerContactId == -1) {
-      this.setOwnerContactId(User.getContactId(db, owner));
-    }
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
-  public boolean isOwnerValid(Connection db) throws SQLException {
-    if (owner == -1 && ownerContactId != -1) {
-      Contact thisContact = new Contact(db, ownerContactId);
-      this.setOwner(thisContact.getUserId());
-    }
-    if (owner == -1) {
-      return false;
-    }
-    return true;
-  }
-
-
-  /**
    *  Sets the type attribute of the Task object
    *
    *@param  type  The new type value
@@ -228,16 +174,6 @@ public class Task extends GenericBean {
    */
   public int getType() {
     return type;
-  }
-
-
-  /**
-   *  Gets the ownerContactId attribute of the Task object
-   *
-   *@return    The ownerContactId value
-   */
-  public int getOwnerContactId() {
-    return ownerContactId;
   }
 
 
@@ -1547,7 +1483,7 @@ public class Task extends GenericBean {
     if (this.getDescription() == null || this.getDescription().equals("")) {
       errors.put("descriptionError", "Task Description is required");
     }
-    if (this.getCategoryId() == -1 && !this.isOwnerValid(db)) {
+    if (this.getCategoryId() == -1 && owner == -1) {
       errors.put("ownerError", "Owner is required");
     }
     if (hasErrors()) {
