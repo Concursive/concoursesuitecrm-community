@@ -14,7 +14,6 @@ import org.aspcfs.controller.SessionManager;
 import org.aspcfs.modules.contacts.base.Contact;
 
 
-
 /**
  *  System status maintains global values for a shared group of users. This is
  *  based on the database that the user is connecting to.<p>
@@ -31,29 +30,29 @@ public class SystemStatus {
   //Unique to this system
   private ConnectionElement connectionElement = null;
   private String fileLibraryPath = null;
-  
+
   //Role permission cache
   private Date permissionCheck = new Date();
   private Hashtable rolePermissions = new Hashtable();
   private boolean permissionUpdating = false;
-  
+
   //User list cache
   private Date hierarchyCheck = new Date();
   private UserList hierarchyList = new UserList();
   private Hashtable userList = new Hashtable();
   private boolean hierarchyUpdating = false;
-  
+
   //Cached lookup tables
   private Hashtable lookups = new Hashtable();
-  
+
   //Site Preferences
   private ArrayList ignoredFields = new ArrayList();
   private Hashtable fieldLabels = new Hashtable();
   private int sessionTimeout = 5400;
-  
-  //Object Hook to Workflow Manager 
+
+  //Object Hook to Workflow Manager
   private ObjectHookManager hookManager = new ObjectHookManager();
-  
+
   //Session Manager
   private SessionManager sessionManager = new SessionManager();
 
@@ -263,7 +262,7 @@ public class SystemStatus {
   public void buildHierarchyList(Connection db) throws SQLException {
     hierarchyList.clear();
     userList.clear();
-    
+
     //Get the top level managers
     UserList tmpListA = new UserList();
     tmpListA.setBuildContact(false);
@@ -329,7 +328,14 @@ public class SystemStatus {
       }
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void updateRolePermissions(Connection db) throws SQLException {
     java.util.Date checkDate = new java.util.Date();
     if (checkDate.after(this.getPermissionCheck())) {
@@ -530,13 +536,21 @@ public class SystemStatus {
     hookManager.process(context, action, previousObject, object, sqlDriver, ce);
   }
 
-  public User getUser(int id) {
-    return (User)userList.get(new Integer(id));
-  }
 
   /**
-   *  Method checks the cached role permissions to see if the user
-   *  has the specified permission.
+   *  Gets the user attribute of the SystemStatus object
+   *
+   *@param  id  Description of the Parameter
+   *@return     The user value
+   */
+  public User getUser(int id) {
+    return (User) userList.get(new Integer(id));
+  }
+
+
+  /**
+   *  Method checks the cached role permissions to see if the user has the
+   *  specified permission.
    *
    *@param  userId          Description of the Parameter
    *@param  thisPermission  Description of the Parameter
@@ -551,6 +565,16 @@ public class SystemStatus {
       return false;
     }
     return permissions.contains(thisPermission);
+  }
+
+
+  /**
+   *  Returns whether this system has any permissions loaded
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean hasPermissions() {
+    return rolePermissions.size() > 0;
   }
 }
 
