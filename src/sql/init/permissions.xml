@@ -64,7 +64,7 @@
       <permission name="accounts-accounts-documents" attributes="vaed" description="Documents"/>
       <permission name="accounts-accounts-reports" attributes="va-d" description="Reports"/>
       <permission name="accounts-dashboard" attributes="v---" description="Dashboard"/>
-      <permission name="accounts-accounts-revenue" attributes="vaed" description="Revenue"/>
+      <permission name="accounts-accounts-revenue" attributes="vaed" description="Revenue" enabled="false"/>
       <permission name="accounts-autoguide-inventory" attributes="vaed" description="Auto Guide Vehicle Inventory" enabled="false"/>
     </category>
     <category id="3" name="Auto Guide" folders="false" lookups="false" enabled="false">
@@ -79,7 +79,7 @@
       <permission name="campaign-campaigns-messages" attributes="vaed" description="Campaign Message Records"/>
       <permission name="campaign-campaigns-surveys" attributes="vaed" description="Campaign Survey Records"/>
     </category>
-    <category id="7" name="Project Management" folders="false" lookups="false">
+    <category id="7" name="Project Management" folders="false" lookups="false" enabled="false">
       <permission name="projects" attributes="v---" description="Access to Project Management module"/>
       <permission name="projects-personal" attributes="v---" description="Personal View"/>
       <permission name="projects-enterprise" attributes="v---" description="Enterprise View"/>
