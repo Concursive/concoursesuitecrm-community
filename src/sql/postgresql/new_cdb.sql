@@ -4,8 +4,9 @@
  *@version    $Id$
  */
  
+CREATE SEQUENCE access_user_id_seq MINVALUE 0 START 0;
 CREATE TABLE access (
-  user_id SERIAL PRIMARY KEY,
+  user_id INTEGER DEFAULT nextval('access_user_id_seq') NOT NULL PRIMARY KEY,
   username VARCHAR(80) NOT NULL, 
   password VARCHAR(80),
   contact_id INT DEFAULT -1,
@@ -36,9 +37,8 @@ CREATE TABLE lookup_industry (
   enabled BOOLEAN DEFAULT true
 );
 
-CREATE SEQUENCE access_log_id_seq MINVALUE 0 START 0;
 CREATE TABLE access_log (
-  id INTEGER DEFAULT nextval('access_log_id_seq') NOT NULL PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   user_id INT NOT NULL references access(user_id),
   username VARCHAR(80) NOT NULL,
   ip VARCHAR(15),
