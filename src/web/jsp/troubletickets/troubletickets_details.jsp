@@ -81,10 +81,16 @@
       Name
     </td>
     <td>
-      <dhv:permission name="accounts-accounts-contacts-view">
-        <a href="Contacts.do?command=Details&id=<%= TicketDetails.getContactId() %>"><%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %></a>
-      </dhv:permission>
-      <dhv:permission name="accounts-accounts-contacts-view" none="true">
+      <% if (TicketDetails.getOrgId() == -1) {%> 
+        <dhv:permission name="contacts-external_contacts-view">
+          <a href="ExternalContacts.do?command=ContactDetails&id=<%= TicketDetails.getContactId() %>"><%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %></a>
+        </dhv:permission>
+      <%}else{%>
+        <dhv:permission name="accounts-accounts-contacts-view">
+          <a href="Contacts.do?command=Details&id=<%= TicketDetails.getContactId() %>"><%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %></a>
+        </dhv:permission>
+      <%}%>
+      <dhv:permission name="accounts-accounts-contacts-view,contacts-external_contacts-view" none="true">
         <%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %>
       </dhv:permission>
     </td>

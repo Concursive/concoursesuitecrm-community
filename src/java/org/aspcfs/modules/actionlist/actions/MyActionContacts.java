@@ -197,28 +197,29 @@ public final class MyActionContacts extends CFSModule {
     Connection db = null;
     try {
       //The criteria that makes up the contact list query
-      thisSCL = new SearchCriteriaList(criteria);
-      thisSCL.setGroupName("Action List");
-      thisSCL.setEnteredBy(getUserId(context));
-      thisSCL.setModifiedBy(getUserId(context));
-      thisSCL.setOwner(getUserId(context));
-      db = this.getConnection(context);
-      thisSCL.buildRelatedResources(db);
-
-      //Build the contactList
-      ContactList contacts = new ContactList();
-      contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
-      contacts.setBuildDetails(true);
-      contacts.setBuildTypes(false);
-      contacts.buildList(db);
-
-      //save action contacts
-      ActionContactsList thisList = new ActionContactsList();
-      thisList.setActionId(Integer.parseInt(actionId));
-      thisList.setEnteredBy(this.getUserId(context));
-      thisList.insert(db, contacts);
-      context.getRequest().setAttribute("ActionContacts", thisList);
-
+      if (criteria != null){
+        thisSCL = new SearchCriteriaList(criteria);
+        thisSCL.setGroupName("Action List");
+        thisSCL.setEnteredBy(getUserId(context));
+        thisSCL.setModifiedBy(getUserId(context));
+        thisSCL.setOwner(getUserId(context));
+        db = this.getConnection(context);
+        thisSCL.buildRelatedResources(db);
+  
+        //Build the contactList
+        ContactList contacts = new ContactList();
+        contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
+        contacts.setBuildDetails(true);
+        contacts.setBuildTypes(false);
+        contacts.buildList(db);
+  
+        //save action contacts
+        ActionContactsList thisList = new ActionContactsList();
+        thisList.setActionId(Integer.parseInt(actionId));
+        thisList.setEnteredBy(this.getUserId(context));
+        thisList.insert(db, contacts);
+        context.getRequest().setAttribute("ActionContacts", thisList);
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
