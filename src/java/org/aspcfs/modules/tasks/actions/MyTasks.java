@@ -197,6 +197,7 @@ public final class MyTasks extends CFSModule {
       db = this.getConnection(context);
       Task newTask = (Task) context.getFormBean();
       newTask.setEnteredBy(getUserId(context));
+      newTask.setModifiedBy(getUserId(context));
       if (!newTask.insert(db)) {
         processErrors(context, newTask.getErrors());
       }
@@ -240,7 +241,7 @@ public final class MyTasks extends CFSModule {
     try {
       db = this.getConnection(context);
       Task thisTask = (Task) context.getFormBean();
-      thisTask.setEnteredBy(getUserId(context));
+      thisTask.setModifiedBy(getUserId(context));
       int count = thisTask.update(db, id);
       if (count == -1) {
         processErrors(context, thisTask.getErrors());
