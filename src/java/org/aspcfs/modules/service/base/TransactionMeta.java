@@ -14,7 +14,7 @@ import java.sql.*;
  */
 public class TransactionMeta {
 
-  private ArrayList fields = null;
+  private LinkedList fields = null;
 
 
   /**
@@ -30,7 +30,7 @@ public class TransactionMeta {
    */
   public void setProperty(String tmp) {
     if (fields == null) {
-      fields = new ArrayList();
+      fields = new LinkedList();
     }
     fields.add(tmp);
   }
@@ -41,7 +41,7 @@ public class TransactionMeta {
    *
    *@return    The fields value
    */
-  public ArrayList getFields() {
+  public LinkedList getFields() {
     return fields;
   }
 }

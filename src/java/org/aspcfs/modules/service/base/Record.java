@@ -4,7 +4,7 @@ import java.util.*;
 //import org.w3c.dom.*;
 //import java.sql.*;
 
-public class Record extends Hashtable {
+public class Record extends LinkedHashMap {
   
   private String action = null;
 
