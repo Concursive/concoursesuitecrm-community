@@ -30,7 +30,7 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
     oppList.buildList(db);
     
     writer.setAutoCommit(false);
-    saveOppList(db, oppList);
+    saveOppList(db, oppList, mappings);
     //mappings.saveList(writer, oppList, "insert");
     writer.commit();
     
@@ -39,29 +39,21 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
     return true;
   }
   
-  private void saveOppList(Connection db, OpportunityList oppList) throws SQLException {
-    Iterator opps = oppList.iterator();
-    
-    while (opps.hasNext()) {
-      Opportunity thisOpp = (Opportunity)opps.next();
-      DataRecord thisRecord = mappings.createDataRecord(thisOpp, "insert");
-      writer.save(thisRecord);
-      
+  private void saveOppList(Connection db, OpportunityList oppList, PropertyMapList mappings) throws SQLException {
+          Iterator opps = oppList.iterator();
+        
+            while (opps.hasNext()) {
+              Opportunity thisOpp = (Opportunity)opps.next();
+              DataRecord thisRecord = mappings.createDataRecord(thisOpp, "insert");
+              writer.save(thisRecord);
+              
               logger.info("ImportOpportunities (Calls)-> Inserting Calls for " + thisOpp.getId());
-      
+              
               CallList callList = new CallList();
               callList.setOppId(thisOpp.getId());
               callList.buildList(db);
-              
-              Iterator calls = callList.iterator();
-              while (calls.hasNext()) {
-                      Call thisCall = (Call)calls.next();
-                      DataRecord thisCallRecord = mappings.createDataRecord(thisCall, "insert");
-                      writer.save(thisCallRecord);
-              }
-      
-    }
+              mappings.saveList(writer, callList, "insert");
+            }
   }
-    
 }
 
