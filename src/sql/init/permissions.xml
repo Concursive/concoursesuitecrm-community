@@ -140,7 +140,7 @@
     <category id="10" name="Help" folders="false" lookups="false">
       <permission name="help" attributes="v---" description="Access to Help System"/>
     </category>
-    <category id="15" name="QA" folders="false" lookups="false">
+    <category id="15" name="QA" folders="false" lookups="false" enabled="false">
       <permission name="qa" attributes="vaed" description="Access to QA Tool"/>
     </category>
     <category id="5" name="Demo" folders="false" lookups="false" enabled="false">
