@@ -149,8 +149,8 @@ public class SSLMessage {
     try {
       SSLSocketFactory factory;
       if (keystoreLocation != null && keystorePassword != null) {
-        System.setProperty("java.protocol.handler.pkgs",
-            "com.sun.net.ssl.internal.www.protocol");
+        //System.setProperty("java.protocol.handler.pkgs",
+        //    "com.sun.net.ssl.internal.www.protocol");
         if (System.getProperty("DEBUG") != null) {
           System.out.println("SSLMessage-> Keystore: " + keystoreLocation + ":" + keystorePassword);
         }
