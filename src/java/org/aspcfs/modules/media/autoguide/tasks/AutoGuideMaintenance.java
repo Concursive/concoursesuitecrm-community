@@ -38,12 +38,12 @@ public class AutoGuideMaintenance {
       PreparedStatement pst = db.prepareStatement(
           "SELECT inventory_id, max(run_date) AS last_date " +
           "FROM autoguide_ad_run " +
-          "WHERE run_date < ? " +
-          "AND inventory_id IN " +
+          "WHERE inventory_id IN " +
           "(SELECT inventory_id FROM autoguide_inventory WHERE sold = ?) " +
-          "GROUP BY inventory_id ");
-      pst.setDate(1, new java.sql.Date(dateCheck.getTimeInMillis()));
-      pst.setBoolean(2, true);
+          "GROUP BY inventory_id " +
+          "HAVING max(run_date) < ? ");
+      pst.setBoolean(1, true);
+      pst.setDate(2, new java.sql.Date(dateCheck.getTimeInMillis()));
       ResultSet rs = pst.executeQuery();
       while (rs.next()) {
         Integer id = new Integer(rs.getInt("inventory_id"));
