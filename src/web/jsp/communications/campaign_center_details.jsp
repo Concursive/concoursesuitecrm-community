@@ -1,9 +1,10 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
+<jsp:useBean id="fileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="modForm" action="/CampaignManager.do?command=Modify&id=<%= Campaign.getId() %>" method="post">
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<form name="modForm" action="CampaignManager.do?command=Modify&id=<%= Campaign.getId() %>" method="post">
 <a href="CampaignManager.do">Communications Manager</a> > 
 <a href="CampaignManager.do?command=View">Campaign List</a> >
 Campaign Details
@@ -83,10 +84,10 @@ Campaign Details
                   <dhv:evaluate if="<%= Campaign.hasSurvey() %>">
                     <font color="green">Interactive Response</font><br>
                   </dhv:evaluate>
-                  <dhv:evaluate if="<%= Campaign.hasFiles() %>">
+                  <dhv:evaluate if="<%= fileItemList.size() > 0 %>">
                     <font color="green">Files</font><br>
                   </dhv:evaluate>
-                  <dhv:evaluate if="<%= !Campaign.hasSurvey() && !Campaign.hasFiles() %>">
+                  <dhv:evaluate if="<%= !Campaign.hasSurvey() && fileItemList.size() < 1 %>">
                     None<br>
                     &nbsp;<br>
                   </dhv:evaluate>
