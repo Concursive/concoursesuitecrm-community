@@ -2,6 +2,7 @@
 <jsp:useBean id="Note" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
 <jsp:useBean id="returnUrl" class="java.lang.String" scope="request"/>
 <jsp:useBean id="sendUrl" class="java.lang.String" scope="request"/>
+<jsp:useBean id="Recipient" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
@@ -44,7 +45,13 @@ function sendMessage() {
         <tr>
           <td>
             <select size="3" name="listView" id="listViewId" multiple>
-              <option value="none" selected>None Selected</option>
+              <%
+              if(Recipient.getId() > 0){
+              %>
+                <option value="<%= Recipient.getId() %>" selected><%= Recipient.getNameLastFirst() %></option>
+              <%}else{%>
+                <option value="none" selected>None Selected</option>
+              <%}%>
             </select>
           </td>
           <td valign="top">
