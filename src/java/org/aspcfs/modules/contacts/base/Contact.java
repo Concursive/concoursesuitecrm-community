@@ -1919,7 +1919,7 @@ public class Contact extends GenericBean {
       return false;
     } else if ((hasAccess && !isEnabled) || hasRelatedRecords(db)) {
       errors.put("actionError", "Contact disabled from view, since it has a related user account");
-      this.disableContact(db);
+      this.disable(db);
       return true;
     } else {
       try {
@@ -1962,7 +1962,7 @@ public class Contact extends GenericBean {
         //For history, keep this contact if they previouslt received a comm. message
         if (RecipientList.retrieveRecordCount(db, Constants.CONTACTS, this.getId()) > 0) {
           errors.put("actionError", "Contact disabled from view, since it has related message records");
-          this.disableContact(db);
+          this.disable(db);
           db.commit();
           return true;
         }
@@ -2536,12 +2536,30 @@ public class Contact extends GenericBean {
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void disableContact(Connection db) throws SQLException {
+  public void disable(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact " +
         "SET enabled = ? " +
         "WHERE contact_id = ?");
     pst.setBoolean(1, false);
+    pst.setInt(2, this.getId());
+    pst.executeUpdate();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void enable(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE contact " +
+        "SET enabled = ? " +
+        "WHERE contact_id = ?");
+    pst.setBoolean(1, true);
     pst.setInt(2, this.getId());
     pst.executeUpdate();
     pst.close();

@@ -30,7 +30,8 @@ public class ContactList extends Vector {
 
   private boolean includeEnabledUsersOnly = false;
   private boolean includeNonUsersOnly = false;
-
+  private boolean includeUsersOnly = false;
+  
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
   private int typeId = -1;
@@ -99,6 +100,9 @@ public class ContactList extends Vector {
     this.showEmployeeContacts = showEmployeeContacts;
   }
 
+public void setIncludeUsersOnly(boolean includeUsersOnly) {
+	this.includeUsersOnly = includeUsersOnly;
+}
 
   /**
    *  Sets the checkExcludedFromCampaign attribute of the ContactList object
@@ -1167,8 +1171,8 @@ public class ContactList extends Vector {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
+      pst.close();
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
@@ -1234,7 +1238,6 @@ public class ContactList extends Vector {
     rs.close();
     pst.close();
     buildResources(db);
-
   }
 
 
@@ -1430,6 +1433,10 @@ public class ContactList extends Vector {
 
       if (includeNonUsersOnly) {
         sqlFilter.append("AND c.contact_id NOT IN (SELECT contact_id FROM access) ");
+      }
+      
+      if (includeUsersOnly) {
+        sqlFilter.append("AND c.user_id IN (SELECT user_id FROM access) ");
       }
 
       if (accountOwnerIdRange != null) {

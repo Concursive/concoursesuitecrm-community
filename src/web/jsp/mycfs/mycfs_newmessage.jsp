@@ -48,7 +48,7 @@ function sendMessage() {
       <select size="3" name="listView" id="listViewId" multiple>
         <option  value = "none" selected>None Selected</option>
       </select>
-      <a href="javascript:popContactsListMultiple('listViewId','1');">Add Recipients</a>
+      <a href="javascript:popContactsListMultiple('listViewId','1', 'usersOnly=true');">Add Recipients</a>
      </td>
  </tr>
   

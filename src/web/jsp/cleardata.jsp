@@ -22,7 +22,6 @@
       while (k.hasNext()) {
         User indUser = (User)k.next();
         indUser.setIsValid(false,true);
-        System.out.println("user: " + indUser.getId());
       }
       
       //thisUser.setIsValid(false,true);

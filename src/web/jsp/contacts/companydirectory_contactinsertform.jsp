@@ -1,3 +1,4 @@
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
@@ -49,13 +50,22 @@
     }
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
-<form name="addContact" action="ExternalContacts.do?command=InsertContact&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<form name="addContact" action="ExternalContacts.do?command=InsertContact&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
+<%boolean popUp = false;
+  if(request.getParameter("popup")!=null){
+    popUp = true;
+  }%>
+<dhv:evaluate exp="<%= !popUp %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
 Add Contact<br>
 <hr color="#BFBFBB" noshade>
+</dhv:evaluate>
+
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
+<dhv:evaluate exp="<%= !popUp %>">
 <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';">
+</dhv:evaluate>
+<input type="submit" value="Cancel" onClick="<%= popUp ? "javascript:window.close();" : "javascript:this.form.action='ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';" %>">
 <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
@@ -80,7 +90,6 @@ Add Contact<br>
     </td>
     <td valign="center">
       <select multiple name="selectedList" id="selectedList" size="5">
-        <dhv:evaluate exp="<%= ContactDetails.getTypes().isEmpty() %>">
         <%if(ContactDetails.getTypes().isEmpty()) {%>
           <option value="-1">None Selected</option>
         <%}else{
@@ -405,8 +414,10 @@ Add Contact<br>
 </table>
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
+<dhv:evaluate exp="<%= !popUp %>">
 <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';">
+</dhv:evaluate>
+<input type="submit" value="Cancel" onClick="<%= popUp ? "javascript:window.close();" : "javascript:this.form.action='ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';" %>">
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="saveAndNew" value="">

@@ -108,7 +108,7 @@
           </td>
           <td>
             <input type="hidden" name="ownerContactId" id="ownerid" value="<%= Task.getOwner() == -1 ? User.getUserRecord().getContactId() : Task.getOwnerContactId() %>">
-            &nbsp;<a href="javascript:popContactsListSingle('ownerid','changeowner');">Change Owner</a>
+            &nbsp;<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&reset=true');">Change Owner</a>
           </td>
         </tr>
       </table>
@@ -145,7 +145,7 @@
           </td>
           <td>
             <input type="hidden" name="contact" id="contactid" value="<%=(Task.getContactId() == -1)?-1:Task.getContactId()%>">
-            &nbsp;<a href="javascript:popContactsListSingle('contactid','changecontact','true');">Change Contact</a>
+            &nbsp;<a href="javascript:popContactsListSingle('contactid','changecontact', 'reset=true');">Change Contact</a>
           </td>
           <td>
             <a href="javascript:document.addTask.contact.value='-1';javascript:changeDivContent('changecontact','None');">Clear Contact</a>

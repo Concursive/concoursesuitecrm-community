@@ -415,6 +415,7 @@ public final class Users extends CFSModule {
     boolean recordDisabled = false;
     User thisUser = null;
     Ticket thisTicket = null;
+    
     User thisRec = ((UserBean) context.getSession().getAttribute("User")).getUserRecord();
     User managerUser = null;
 
@@ -422,7 +423,10 @@ public final class Users extends CFSModule {
     try {
       db = this.getConnection(context);
       thisUser = new User(db, context.getRequest().getParameter("id"));
-
+      if(context.getRequest().getParameter("disablecontact") != null){
+        Contact thisContact = new Contact(db, thisUser.getContactId());
+        thisContact.disable(db);
+      }
       recordDisabled = thisUser.delete(db);
 
       if (recordDisabled) {
@@ -492,6 +496,10 @@ public final class Users extends CFSModule {
     try {
       db = this.getConnection(context);
       thisUser = new User(db, context.getRequest().getParameter("id"));
+      Contact thisContact = new Contact(db, thisUser.getContactId());
+      if(!thisContact.getEnabled()){
+        thisContact.enable(db);
+      }
       recordEnabled = thisUser.enable(db);
 
       if (recordEnabled) {

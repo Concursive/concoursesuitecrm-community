@@ -15,7 +15,7 @@
 
 Disable User Account
 <hr color="#BFBFBB" noshade>
-
+<form name="disableUser" action="Users.do?command=DisableUser" method="POST">
 <table cellpadding=6 cellspacing=0 border=1 width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td align="left" bgcolor="#DEE0FA">
@@ -37,14 +37,13 @@ If you click "Proceed", the following actions will occur:
 
 <dhv:permission name="myhomepage-reassign-edit">
 If you are also responsible for the data re-assignments of this User, you can go to "Re-Assignments" in MYCFS, or just <a href="Reassignments.do?command=Reassign&userId=<%=User.getId()%>">click here</a> to make
-those changes.
+those changes.<br><br>
 </dhv:permission>
-<br>&nbsp;
+<input type="checkbox" name="disablecontact"> Check this box if you want to archive the contact associated with this user.<br>&nbsp;
 </td></tr>
 
   <tr>
     <td align="left">
-<form name="disableUser" action="Users.do?command=DisableUser" method="POST">
 <input type="submit" value="Proceed">
 
 <% if (request.getParameter("return") != null) {%>

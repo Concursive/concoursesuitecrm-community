@@ -35,7 +35,7 @@ View Users<br>
     <td bgcolor="#DEE0FA"><b><font class="column">
       <a href="Users.do?command=ListUsers&column=c.namelast">
       Name</a></font></b>
-      <%= UserListInfo.getSortIcon("namelast") %>
+      <%= UserListInfo.getSortIcon("c.namelast") %>
     </td>
     <td bgcolor="#DEE0FA"><b><font class="column">
       <a href="Users.do?command=ListUsers&column=username">

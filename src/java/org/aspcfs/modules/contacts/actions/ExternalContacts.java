@@ -438,7 +438,9 @@ public final class ExternalContacts extends CFSModule {
       externalContactsInfo.setSearchCriteria(contactList);
       if ("all".equals(externalContactsInfo.getListView())) {
         contactList.setOwnerIdRange(this.getUserRange(context));
-      } else {
+      } else if ("archived".equals(externalContactsInfo.getListView())) {
+        contactList.setIncludeEnabled(ContactList.FALSE);
+      }else{
         contactList.setOwner(this.getUserId(context));
       }
       contactList.buildList(db);
@@ -928,7 +930,6 @@ public final class ExternalContacts extends CFSModule {
     }
 
     Exception errorMessage = null;
-
     addModuleBean(context, "Add Contact", "Add a new contact");
 
     Connection db = null;
@@ -948,6 +949,9 @@ public final class ExternalContacts extends CFSModule {
 
     if (errorMessage == null) {
       context.getSession().removeAttribute("ContactMessageListInfo");
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("ContactPopupInsertFormOK");
+      }
       return ("ContactInsertFormOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -1045,11 +1049,12 @@ public final class ExternalContacts extends CFSModule {
     addModuleBean(context, "External Contacts", "Add a new contact");
     if (errorMessage == null) {
       if (recordInserted) {
-        if (context.getRequest().getParameter("saveAndNew") != null) {
-          if (context.getRequest().getParameter("saveAndNew").equals("true")) {
+        if ("true".equals((String)context.getRequest().getParameter("saveAndNew"))) {
             context.getRequest().removeAttribute("ContactDetails");
             return (executeCommandInsertContactForm(context));
-          }
+        }
+        if (context.getRequest().getParameter("popup") != null) {
+          return ("CloseInsertContactPopup");
         }
         return ("ContactDetailsOK");
       } else {

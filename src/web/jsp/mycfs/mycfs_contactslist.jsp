@@ -1,18 +1,13 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*,org.aspcfs.modules.contacts.base.Contact,org.aspcfs.modules.base.EmailAddress" %>
+<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*,org.aspcfs.modules.contacts.base.Contact,org.aspcfs.modules.contacts.base.ContactFilter,org.aspcfs.modules.base.EmailAddress" %>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="Filters" class="org.aspcfs.modules.contacts.base.ContactFilterList" scope="request"/>
 <jsp:useBean id="ContactListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="selectedContacts" class="java.util.HashMap" scope="session"/>
 <jsp:useBean id="finalContacts" class="java.util.HashMap" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="session"/>
 <jsp:useBean id="ProjectListSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="session"/>
-<jsp:useBean id="Filters" class="java.util.ArrayList" scope="request"/>
-<jsp:useBean id="DisplayFieldId" class="java.lang.String" scope="request"/>
-<jsp:useBean id="HiddenFieldId" class="java.lang.String" scope="request"/>
-<jsp:useBean id="ListType" class="java.lang.String" scope="request"/>
-<jsp:useBean id="Campaign" class="java.lang.String" scope="request"/>
-<jsp:useBean id="AllContacts" class="java.lang.String" scope="request"/>
 
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
@@ -36,15 +31,16 @@
 
 <table width="20%" border="0">
   <tr>
-    
     <td align="left">
       <select size="1" name="listView" onChange="javascript:setFieldSubmit('listFilter1','-1','contactListView');">
-        <dhv:evaluate exp="<%= !source.equalsIgnoreCase("opps") %>"><option <%= ContactListInfo.getOptionValue("all") %>>All Contacts</option></dhv:evaluate>
-        <dhv:evaluate exp="<%= !source.equalsIgnoreCase("opps") %>"><option <%= ContactListInfo.getOptionValue("employees") %>>Employees</option></dhv:evaluate>
-        <option <%= ContactListInfo.getOptionValue("mycontacts") %>>My Contacts</option>
-        <option <%= ContactListInfo.getOptionValue("accountcontacts") %>>Account Contacts</option>
-        <dhv:evaluate exp="<%= !source.equalsIgnoreCase("opps") %>"><option <%= ContactListInfo.getOptionValue("myprojects") %>>My Projects</option></dhv:evaluate>
-	</select>
+        <%
+          Iterator filters = Filters.iterator();
+          while(filters.hasNext()){
+          ContactFilter thisFilter = (ContactFilter) filters.next();
+        %>
+            <option <%= ContactListInfo.getOptionValue(thisFilter.getValue()) %>><%= thisFilter.getDisplayName() %></option>
+        <%}%>
+       </select>
      </td>
     <td>
       <% 
@@ -105,8 +101,8 @@
    %>      
   <tr class="row<%= rowid+((selectedContacts.get(new Integer(thisContact.getId()))!= null)?"hl":"") %>">
     <td align="center" nowrap width=8>
-  <%if(ListType.equalsIgnoreCase("list")){%>  
-	<input type=checkbox name="checkcontact<%=count%>" value=<%=thisContact.getId()%><%=((selectedContacts.get(new Integer(thisContact.getId()))!= null)?" checked":"")%> onClick="highlight(this,'<%=User.getBrowserId()%>');">
+  <% if("list".equals(request.getParameter("listType"))){ %>  
+	  <input type=checkbox name="checkcontact<%=count%>" value=<%=thisContact.getId()%><%=((selectedContacts.get(new Integer(thisContact.getId()))!= null)?" checked":"")%> onClick="highlight(this,'<%=User.getBrowserId()%>');">
   <%}
   else{%>
   <%--<input type=checkbox name="checkcontact<%=count%>" value=<%=thisContact.getId()%><%=((selectedContacts.get(new Integer(thisContact.getId()))!= null)?" checked":"")%> onClick="return keepCount('checkcontact','contactListView')">--%>
@@ -181,15 +177,16 @@ else{%>
       <%}%>
       <input type=hidden name="finalsubmit" value="false">
       <input type=hidden name="rowcount" value="0">
-      <input type=hidden name="displayFieldId" value="<%= DisplayFieldId %>">
-      <input type=hidden name="hiddenFieldId" value="<%= HiddenFieldId %>">
-      <input type=hidden name="listType" value="<%= ListType %>">
-      <input type=hidden name="campaign" value="<%= Campaign.toString() %>">
-      <input type=hidden name="allcontacts" value="<%= AllContacts.toString() %>">
-      <input type=hidden name="source" value="<%= source %>">
+      <input type=hidden name="displayFieldId" value="<%= request.getParameter("displayFieldId") %>">
+      <input type=hidden name="hiddenFieldId" value="<%= request.getParameter("hiddenFieldId") %>">
+      <input type=hidden name="listType" value="<%= (request.getParameter("listType") != null ? request.getParameter("listType") : "") %>">
+      <input type=hidden name="usersOnly" value="<%= (request.getParameter("usersOnly") != null ? request.getParameter("usersOnly") : "") %>">
+      <input type=hidden name="nonUsersOnly" value="<%= (request.getParameter("nonUsersOnly") != null ? request.getParameter("nonUsersOnly") : "") %>">
+      <input type=hidden name="campaign" value="<%= (request.getParameter("campaign") != null ? request.getParameter("campaign") : "") %>">
+      <input type=hidden name="filters" value="<%= (request.getParameter("filters") != null ? request.getParameter("filters") : "")%>">
     </table>
     
-    <%if(ListType.equalsIgnoreCase("list")){%>
+    <% if("list".equals(request.getParameter("listType"))){ %>
     <input type='button' value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','contactListView');">
     <input type="button" value="Cancel" onClick="javascript:window.close()">
     <a href="javascript:SetChecked(1,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Check All</a>
@@ -201,10 +198,10 @@ else{%>
     </form>
     <%} else {%>
       
-      <% if (((String) request.getParameter("campaign")).equalsIgnoreCase("true")) { %>
-        <body OnLoad="javascript:setParentListCampaign(recipientEmails,recipientIds,'<%=ListType%>','<%=DisplayFieldId%>','<%=HiddenFieldId%>','<%=User.getBrowserId()%>');window.close()">
+      <% if ("true".equals((String) request.getParameter("campaign"))) { %>
+        <body OnLoad="javascript:setParentListCampaign(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%=User.getBrowserId()%>');window.close()">
       <%} else {%>
-        <body OnLoad="javascript:setParentList(recipientEmails,recipientIds,'<%=ListType%>','<%=DisplayFieldId%>','<%=HiddenFieldId%>','<%=User.getBrowserId()%>');window.close()">
+        <body OnLoad="javascript:setParentList(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= User.getBrowserId() %>');window.close()">
       <%}%>
       
       <script>recipientEmails = new Array();recipientIds = new Array();</script>

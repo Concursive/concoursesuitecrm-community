@@ -7,6 +7,8 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript">
 <!-- 
   function toggle(id) {
@@ -47,36 +49,29 @@ Add User<br>
     </td>
   </tr>
   
-	<tr>
-    <td width="100" class="formLabel">
-      Contact Type
-    </td>
-    <td valign="center">
-      <%= ContactTypeList.getHtmlSelect("typeId") %><font color="red">*</font>
-    </td>
-  </tr>  
   
-	<tr>
+  <tr>
     <td width="100" class="formLabel" valign="top">
       Contact
     </td>
-    <td valign="center">
-      <% ContactList.setJsEvent("onChange=\"javascript:hideSpan('newContact');\""); %>
-      <%= ContactList.getHtmlSelect("contactId", UserRecord.getContactId()) %><font color="red">*</font>
-      &nbsp;[<a href="#" onClick="javascript:toggle('newContact'); return false;">add new</a>]
-      <span name="newContact" ID="newContact" style="display:none">
-        <br>
-        &nbsp;<br>
-        New Contact Details<br>
-        &nbsp;<br>
-        First Name: <input type="text" value="<%=toHtmlValue(UserRecord.getContact().getNameFirst())%>" name="contact_nameFirst"><br>
-        Last Name: <input type="text" value="<%=toHtmlValue(UserRecord.getContact().getNameLast())%>" name="contact_nameLast"><font color="red">*</font>
-      </span>
-      <%if (request.getAttribute("contactIdError") != null) {%>
-        <br><%= showAttribute(request, "contactIdError") %>
-      <%}%>
+    <td align="left">
+      <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" width="80" nowrap>
+          <a href="javascript:popContactsListSingle('contactLink','changecontact','nonUsersOnly=true&reset=true&filters=mycontacts|accountcontacts|employees');"><div id="changecontact">&nbsp;None Selected</div></a>
+          <input type="hidden" name="contactId" id="contactLink">
+      </td>
+      <td align="left" nowrap>
+        <a href="javascript:popURL('ExternalContacts.do?command=InsertContactForm&popup=true', 'New_Contact','500','600','yes','yes');">Add New</a></dhv:permission>
+        <%if (request.getAttribute("contactIdError") != null) {%>
+          <br><%= showAttribute(request, "contactIdError") %>
+        <%}%>
+      </td>
+      </tr>
+      </table>
     </td>
-  </tr>  
+  </tr>
+	
   
 	<tr>
     <td width="100" class="formLabel">

@@ -25,6 +25,7 @@ View Contacts<br>
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= ExternalContactsInfo.getOptionValue("my") %>>My Contacts </option>
         <option <%= ExternalContactsInfo.getOptionValue("all") %>>All Contacts</option>
+        <option <%= ExternalContactsInfo.getOptionValue("archived") %>>Archived Contacts</option>
         <% if (!(ExternalContactsInfo.getSavedCriteria().isEmpty())) { %>
           <option <%= ExternalContactsInfo.getOptionValue("search") %>>Search Results</option>
         <%}%>
@@ -83,10 +84,14 @@ View Contacts<br>
 %>      
       <tr>
         <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete">
-        <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="contacts-external_contacts-edit"><a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId()%>&cmd=modify&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-delete"><a href="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%=thisContact.getId()%>&popup=true','ExternalContacts.do?command=ListContacts', 'Delete_contact','330','200','yes','no');">Del</a></dhv:permission>
-        </td>
-	</dhv:permission>
+          <td width=8 valign=center nowrap class="row<%= rowid %>">
+            <%if(thisContact.getEnabled()) {%>
+             <dhv:permission name="contacts-external_contacts-edit"><a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId()%>&cmd=modify&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-delete"><a href="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%=thisContact.getId()%>&popup=true','ExternalContacts.do?command=ListContacts', 'Delete_contact','330','200','yes','no');">Del</a></dhv:permission>
+            <%}else{%>
+              &nbsp;
+            <%}%>
+          </td>
+        </dhv:permission>
         <td class="row<%= rowid %>" nowrap>
           <a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
           <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>

@@ -1,8 +1,9 @@
-function popContactsListSingle(hiddenFieldId,displayFieldId) {
-  popContactsListSingle(hiddenFieldId,displayFieldId,'false');
+function popContactsListSingle(hiddenFieldId, displayFieldId) {
+  popContactsListSingle(hiddenFieldId, displayFieldId, '');
 }
 
-function popContactsListSingle(hiddenFieldId,displayFieldId,allContacts) {
+
+function popContactsListSingle(hiddenFieldId, displayFieldId, params) {
   title  = 'Contacts';
   width  =  '700';
   height =  '450';
@@ -10,26 +11,11 @@ function popContactsListSingle(hiddenFieldId,displayFieldId,allContacts) {
   bars   =  'no';
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
-  
-  var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  var newwin=window.open('/ContactsList.do?command=ContactList&allcontacts='+allContacts+'&listType=single&flushtemplist=true&selectedIds='+document.getElementById(hiddenFieldId).value+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId, title, params);
-  if (newwin != null) {
-    if (newwin.opener == null)
-      newwin.opener = self;
+  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  if(params != ''){
+    params = '&' + params;
   }
-}
-
-function popContactsListOppsSingle(hiddenFieldId, displayFieldId, allContacts) {
-  title  = 'Contacts';
-  width  =  '700';
-  height =  '450';
-  resize =  'yes';
-  bars   =  'no';
-  var posx = (screen.width - width)/2;
-  var posy = (screen.height - height)/2;
-  
-  var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  var newwin=window.open('/ContactsList.do?command=ContactList&allcontacts=' + allContacts + '&listType=single&flushtemplist=true&source=Opps&reset=true&selectedIds=' + document.getElementById(hiddenFieldId).value + '&displayFieldId=' + displayFieldId + '&hiddenFieldId=' + hiddenFieldId, title, params);
+  var newwin=window.open('/ContactsList.do?command=ContactList&listType=single&flushtemplist=true&selectedIds='+document.getElementById(hiddenFieldId).value+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;
@@ -37,7 +23,12 @@ function popContactsListOppsSingle(hiddenFieldId, displayFieldId, allContacts) {
 }
 
 
-function popContactsListMultiple(displayFieldId,highLightedId) {
+function popContactsListMultiple(displayFieldId, highLightedId){
+   popContactsListMultiple(displayFieldId, highLightedId, '');
+}
+
+
+function popContactsListMultiple(displayFieldId, highLightedId, params) {
   title  = 'Contacts';
   width  =  '700';
   height =  '450';
@@ -60,8 +51,11 @@ function popContactsListMultiple(displayFieldId,highLightedId) {
           
   }
   
-  var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  var newwin=window.open('/ContactsList.do?command=ContactList&previousSelection=' + selectedIds + '&listType=list&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId, title, params);
+  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  if(params != ''){
+    params = '&' + params;
+  }
+  var newwin=window.open('/ContactsList.do?command=ContactList&previousSelection=' + selectedIds + '&listType=list&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId + params, title, windowParams);
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;

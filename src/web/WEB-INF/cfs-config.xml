@@ -209,6 +209,7 @@
     <forward name="UpdateFieldsOK" resource="/contacts/companydirectory_fields.jsp" layout="nav"/>
     <forward name="ContactDetailsUpdateOK" resource="/ExternalContacts.do?command=ContactDetails"/>
     <forward name="ContactInsertFormOK" resource="/contacts/companydirectory_contactinsertform.jsp" layout="nav"/>
+    <forward name="ContactPopupInsertFormOK" resource="/contacts/companydirectory_contactinsertform.jsp" layout="style"/>
     <forward name="ContactDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="MessageDetailsOK" resource="/contacts/companydirectory_message_details.jsp" layout="nav"/>
     <forward name="ViewMessagesOK" resource="/contacts/companydirectory_view_messages.jsp" layout="nav"/>
@@ -221,6 +222,7 @@
     <forward name="PopupContactTypeOK" resource="/contacts/companydirectory_contacttype_popup.jsp" layout="style"/>
     <forward name="DefaultError" resource="/CompanyDirectory.do?command=ListEmployees"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="CloseInsertContactPopup" resource="/contacts/close_insertcontact_popup.jsp"/>
   </action>
   <action name="ExternalContactsOpps" class="org.aspcfs.modules.contacts.actions.ExternalContactsOpps">
     <bean name="oppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>

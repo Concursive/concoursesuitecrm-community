@@ -24,12 +24,12 @@ Contact Details<br>
   <tr>
     <td class="containerBack">
     
-
+<dhv:evaluate exp="<%= (ContactDetails.getEnabled()) %>">
 <dhv:permission name="contacts-external_contacts-edit"><input type=button name="cmd" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="Clone"	onClick="javascript:this.form.action='ExternalContacts.do?command=Clone&id=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-delete"><input type="button" name="cmd" value="Delete" onClick="javascript:popURLReturn('/ExternalContacts.do?command=ConfirmDelete&id=<%=ContactDetails.getId()%>&popup=true','ExternalContacts.do?command=ListContacts', 'Delete_contact','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete"><br>&nbsp;</dhv:permission>
-
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">
@@ -202,10 +202,13 @@ Contact Details<br>
     <td width="100%"><%= toHtml(ContactDetails.getNotes()) %>&nbsp;</td>
   </tr>
 </table>
+<dhv:evaluate exp="<%= (ContactDetails.getEnabled()) %>">
 <dhv:permission name="contacts-external_contacts-delete,contacts-external_contacts-edit"><br></dhv:permission>
 <dhv:permission name="contacts-external_contacts-edit"><input type=button name="cmd" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="Clone"	onClick="javascript:this.form.action='ExternalContacts.do?command=Clone&id=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-delete"><input type="button" name="cmd" value="Delete" onClick="javascript:popURLReturn('/ExternalContacts.do?command=ConfirmDelete&id=<%=ContactDetails.getId()%>&popup=true','ExternalContacts.do?command=ListContacts', 'Delete_contact','320','200','yes','no');"></dhv:permission>
+</dhv:evaluate>
+
 </td></tr>
 </table>
 <input type=hidden name="command" value="">
