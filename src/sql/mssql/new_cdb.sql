@@ -166,6 +166,16 @@ CREATE TABLE lookup_contactphone_types (
 )
 ;
 
+CREATE TABLE lookup_access_types (
+  code INT IDENTITY PRIMARY KEY,
+  link_module_id INT NOT NULL,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER, 
+  enabled BIT DEFAULT 1,
+  rule_id INT NOT NULL
+);
+
 CREATE TABLE organization (
   org_id INT IDENTITY(0,1) PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
@@ -206,7 +216,6 @@ CREATE TABLE organization (
 
 CREATE INDEX "orglist_name" ON "organization" (name);
 
-
 CREATE TABLE contact (
   contact_id INT IDENTITY PRIMARY KEY,
   user_id INT references access(user_id),
@@ -242,7 +251,7 @@ CREATE TABLE contact (
   primary_contact BIT DEFAULT 0,
   employee BIT DEFAULT 0,
   org_name VARCHAR(255),
-  access_type INT REFERENCES lookup_access_types
+  access_type INT REFERENCES lookup_access_types(code)
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" ("user_id");
@@ -272,7 +281,8 @@ CREATE TABLE permission_category (
   viewpoints BIT DEFAULT 0,
   categories BIT DEFAULT 0,
   scheduled_events BIT DEFAULT 0,
-  object_events BIT DEFAULT 0
+  object_events BIT DEFAULT 0,
+  reports BIT DEFAULT 0
 );
 
 CREATE TABLE permission (
@@ -503,6 +513,61 @@ CREATE TABLE viewpoint_permission(
  viewpoint_add BIT NOT NULL DEFAULT 0,
  viewpoint_edit BIT NOT NULL DEFAULT 0,
  viewpoint_delete BIT NOT NULL DEFAULT 0
+);
+
+/* Reports */
+CREATE TABLE report (
+  report_id INT IDENTITY PRIMARY KEY,
+  category_id INT NOT NULL REFERENCES permission_category(category_id),
+  permission_id INT NULL REFERENCES permission(permission_id),
+  filename VARCHAR(300) NOT NULL,
+  type INTEGER NOT NULL DEFAULT 1,
+  title VARCHAR(300) NOT NULL,
+  description VARCHAR(1024) NOT NULL,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  enabled BIT NOT NULL DEFAULT 1,
+  custom BIT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE report_criteria (
+  criteria_id INT IDENTITY PRIMARY KEY,
+  report_id INT NOT NULL REFERENCES report(report_id),
+  owner INT NOT NULL REFERENCES access(user_id),
+  subject VARCHAR(512) NOT NULL,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  enabled BIT DEFAULT 1
+);
+
+CREATE TABLE report_criteria_parameter (
+  parameter_id INT IDENTITY PRIMARY KEY,
+  criteria_id INTEGER NOT NULL REFERENCES report_criteria(criteria_id),
+  parameter VARCHAR(255) NOT NULL,
+  value TEXT
+);
+
+CREATE TABLE report_queue (
+  queue_id INT IDENTITY PRIMARY KEY,
+  report_id INTEGER NOT NULL REFERENCES report(report_id),
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  processed DATETIME NULL DEFAULT NULL,
+  status INT NOT NULL DEFAULT 0,
+  filename VARCHAR(256),
+  filesize INT DEFAULT -1,
+  enabled BIT DEFAULT 1
+);
+
+CREATE TABLE report_queue_criteria (
+  criteria_id INT IDENTITY PRIMARY KEY,
+  queue_id INTEGER NOT NULL REFERENCES report_queue(queue_id),
+  parameter VARCHAR(255) NOT NULL,
+  value TEXT
 );
 
 /* Action Lists */
