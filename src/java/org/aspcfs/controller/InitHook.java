@@ -38,7 +38,6 @@ public class InitHook implements ControllerInitHook {
     InitHook.addAttribute(config, context, "GKHOST", "GATEKEEPER.URL");
     InitHook.addAttribute(config, context, "GKUSER", "GATEKEEPER.USER");
     InitHook.addAttribute(config, context, "GKUSERPW", "GATEKEEPER.PASSWORD");
-    
     //Define the ConnectionPool, else defaults from the ContextListener will be used
     ConnectionPool cp = (ConnectionPool) context.getAttribute("ConnectionPool");
     if (cp != null) {
@@ -61,8 +60,6 @@ public class InitHook implements ControllerInitHook {
         cp.setMaxDeadTimeSeconds(config.getInitParameter("CONNECTION_POOL.MAX_DEAD_TIME.SECONDS"));
       }
     }
-    
-    
     //Define whether the app requires SSL for browser clients
     if (config.getInitParameter("ForceSSL") != null) {
       if ("true".equals(config.getInitParameter("ForceSSL"))) {
@@ -105,13 +102,15 @@ public class InitHook implements ControllerInitHook {
         Properties jcronProperties = new Properties();
         jcronProperties.setProperty("org.jcrontab.Crontab.refreshFrequency", "3");
         //Specify the cron items are in the gatekeeper database
-        jcronProperties.setProperty("org.jcrontab.data.datasource", "org.jcrontab.data.GenericSQLSource");
+        jcronProperties.setProperty("org.jcrontab.data.datasource", "org.aspcfs.jcrontab.datasource.CFSDatasource");
         jcronProperties.setProperty("org.jcrontab.data.GenericSQLSource.driver", StringUtils.toString((String)context.getAttribute("GKDRIVER")));
         jcronProperties.setProperty("org.jcrontab.data.GenericSQLSource.url", StringUtils.toString((String)context.getAttribute("GKHOST")));
         jcronProperties.setProperty("org.jcrontab.data.GenericSQLSource.username", StringUtils.toString((String)context.getAttribute("GKUSER")));
         jcronProperties.setProperty("org.jcrontab.data.GenericSQLSource.password", StringUtils.toString((String)context.getAttribute("GKUSERPW")));
         //jcron logger -- TODO: implement a database logger
         jcronProperties.setProperty("org.jcrontab.log.Logger", "org.jcrontab.log.DebugLogger");
+        crontab.setConnectionPool(cp);
+        crontab.setServletContext(context);
         crontab.init(jcronProperties);
         context.setAttribute("Crontab", crontab);
       } catch (Exception e) {
