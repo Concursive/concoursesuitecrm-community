@@ -53,6 +53,29 @@ public class SyncClientMap {
     id = DatabaseUtils.getCurrVal(db, "sync_map_map_id_seq");
     return true;
   }
+  
+  public int lookupId(Connection db, int referenceTable, String clientUniqueId) throws SQLException {
+    int resultId = -1;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT record_id " +
+        "FROM sync_map " +
+        "WHERE client_id = ? " +
+        "AND table_id = ? " +
+        "AND cuid = ? ");
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, clientId);
+    pst.setInt(++i, referenceTable);
+    pst.setString(++i, clientUniqueId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      resultId = rs.getInt("record_id");
+    }
+    rs.close();
+    pst.close();
+    return resultId;
+  }
 
 
   public boolean delete(Connection db) throws SQLException {

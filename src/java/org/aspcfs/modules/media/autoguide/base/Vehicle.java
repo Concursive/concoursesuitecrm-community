@@ -146,7 +146,7 @@ public class Vehicle {
         "UPDATE autoguide_vehicle " +
         "SET year = ?, make_id = ?, model_id = ?, modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        "WHERE id = ? " +
+        "WHERE vehicle_id = ? " +
         "AND modified = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());

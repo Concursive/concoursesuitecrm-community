@@ -237,8 +237,9 @@ public class XMLUtils {
    *@param  target   Description of Parameter
    *@param  element  Description of Parameter
    */
-  public static void populateObject(Object target, Element element) {
+  public static HashMap populateObject(Object target, Element element) {
     if (target != null) {
+      HashMap ignoredProperties = new HashMap();
       NodeList objectElements = element.getChildNodes();
       for (int j = 0; j < objectElements.getLength(); j++) {
         Node theObject = (Node) objectElements.item(j);
@@ -250,13 +251,16 @@ public class XMLUtils {
               System.out.println("XMLUtils-> set" + param + "(" + value + ")");
             }
           } else {
+            ignoredProperties.put(param, value);
             if (System.getProperty("DEBUG") != null) {
               System.out.println("XMLUtils-> set" + param + "(" + value + ") **INVALID");
             }
           }
         }
       }
+      return ignoredProperties;
     }
+    return null;
   }
 
 

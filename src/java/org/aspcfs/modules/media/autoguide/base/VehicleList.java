@@ -16,6 +16,7 @@ public class VehicleList extends ArrayList {
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
+  private int year = -1;
   
   public VehicleList() { }
 
@@ -29,6 +30,8 @@ public class VehicleList extends ArrayList {
   }
   public void setSyncType(int tmp) { this.syncType = tmp; }
   public void setSyncType(String tmp) { this.syncType = Integer.parseInt(tmp); }
+  public void setYear(int tmp) { this.year = tmp; }
+  public void setYear(String tmp) { this.year = Integer.parseInt(tmp); }
   
   public String getTableName() { return tableName; }
   public String getUniqueField() { return uniqueField; }
@@ -86,14 +89,17 @@ public class VehicleList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND vehicle.entered > ? ");
+        sqlFilter.append("AND v.entered > ? ");
       }
-      sqlFilter.append("AND vehicle.entered < ? ");
+      sqlFilter.append("AND v.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND vehicle.modified > ? ");
-      sqlFilter.append("AND vehicle.entered < ? ");
-      sqlFilter.append("AND vehicle.modified < ? ");
+      sqlFilter.append("AND v.modified > ? ");
+      sqlFilter.append("AND v.entered < ? ");
+      sqlFilter.append("AND v.modified < ? ");
+    }
+    if (year > -1) {
+      sqlFilter.append("AND v.year = ? ");
     }
   }
   
@@ -109,6 +115,9 @@ public class VehicleList extends ArrayList {
       pst.setTimestamp(++i, lastAnchor);
       pst.setTimestamp(++i, lastAnchor);
       pst.setTimestamp(++i, nextAnchor);
+    }
+    if (year > -1) {
+      pst.setInt(++i, year);
     }
     return i;
   }

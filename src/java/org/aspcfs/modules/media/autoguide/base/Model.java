@@ -143,7 +143,7 @@ public class Model {
         "UPDATE autoguide_model " +
         "SET make_id = ?, model_name = ?, modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        "WHERE make_id = ? " +
+        "WHERE model_id = ? " +
         "AND modified = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());

@@ -132,6 +132,9 @@ public final class ProcessPacket extends CFSModule {
           Element recordSet = document.createElement("recordSet");
           recordSet.setAttribute("name", thisMessage.getRecordList().getName());
           recordSet.setAttribute("count", String.valueOf(thisMessage.getRecordList().size()));
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("ProcessPacket-> Records: " + thisMessage.getRecordList().size()); 
+          }
           response.appendChild(recordSet);
 
           Iterator recordList = thisMessage.getRecordList().iterator();

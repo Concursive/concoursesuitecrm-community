@@ -35,3 +35,25 @@ CREATE TABLE autoguide_vehicle (
   modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
 );
+
+CREATE TABLE autoguide_account_inventory (
+  inventory_id SERIAL PRIMARY KEY,
+  vehicle_id INTEGER NOT NULL,
+  account_id INTEGER,
+  vin VARCHAR(20),
+  adtype VARCHAR(20) NULL,
+  mileage VARCHAR(20) NULL,
+  is_new BOOLEAN DEFAULT false,
+  condition VARCHAR(20) NULL,
+  comments VARCHAR(255) NULL,
+  stock_no VARCHAR(20) NULL,
+  ext_color VARCHAR(20) NULL,
+  int_color VARCHAR(20) NULL,
+  invoice_price FLOAT NULL,
+  selling_price FLOAT NULL,
+  status VARCHAR(20) NULL,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL
+);

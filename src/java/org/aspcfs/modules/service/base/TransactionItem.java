@@ -33,6 +33,7 @@ public class TransactionItem {
   private final static byte SYNC_START = 6;
   private final static byte SYNC_END = 7;
   private final static byte SYNC_DELETE = 8;
+  private final static byte GET_TIME = 9;
 
   private String name = null;
   private Object object = null;
@@ -40,6 +41,7 @@ public class TransactionItem {
   private StringBuffer errorMessage = new StringBuffer();
   private RecordList recordList = null;
   private TransactionMeta meta = null;
+  private HashMap ignoredProperties = null;
 
 
   /**
@@ -59,7 +61,7 @@ public class TransactionItem {
     try {
       this.setAction(objectElement);
       this.setObject(objectElement, mapping);
-      XMLUtils.populateObject(object, objectElement);
+      ignoredProperties = XMLUtils.populateObject(object, objectElement);
     } catch (Exception e) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TransactionItem-> Cannot create: " + objectElement.getTagName());
@@ -101,23 +103,6 @@ public class TransactionItem {
 
 
   /**
-   *  Description of the Method
-   *
-   *@param  db                Description of Parameter
-   *@param  mapping           Description of Parameter
-   *@param  auth              Description of Parameter
-   *@param  record            Description of Parameter
-   *@exception  SQLException  Description of Exception
-   */
-  public void insertClientMapping(Connection db, SyncClientMap syncClientMap, 
-      Record record) throws SQLException {
-    syncClientMap.setRecordId(record.getRecordId());
-    syncClientMap.setClientUniqueId((String) record.get("guid"));
-    syncClientMap.insert(db);
-  }
-
-
-  /**
    *  Sets the object attribute of the TransactionItem object
    *
    *@param  tmp  The new object value
@@ -144,8 +129,6 @@ public class TransactionItem {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TransactionItem-> New: " + object.getClass().getName());
       }
-    } else {
-      appendErrorMessage("Unsupported object specified");
     }
   }
 
@@ -181,7 +164,9 @@ public class TransactionItem {
       setAction(this.SYNC_START);
     } else if ("syncEnd".equals(tmp)) {
       setAction(this.SYNC_END);
-    } 
+    } else if ("getTime".equals(tmp)) {
+      setAction(this.GET_TIME);
+    }
   }
 
 
@@ -262,6 +247,22 @@ public class TransactionItem {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  record            Description of Parameter
+   *@param  syncClientMap     Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void insertClientMapping(Connection db, SyncClientMap syncClientMap,
+      Record record) throws SQLException {
+    syncClientMap.setRecordId(record.getRecordId());
+    syncClientMap.setClientUniqueId((String) record.get("guid"));
+    syncClientMap.insert(db);
+  }
+
+
+  /**
    *  Assumes that the Object has already been built and populated, now the
    *  specified action will be executed. A database connection is passed along
    *  since the Object will need it.<p>
@@ -275,63 +276,44 @@ public class TransactionItem {
    *@exception  Exception  Description of Exception
    */
   public void execute(Connection db, AuthenticationItem auth, HashMap mapping) throws Exception {
-    String executeMethod = null;
-    switch (action) {
-        case -1:
-          appendErrorMessage("Action not specified");
-          break;
-        case INSERT:
-          executeMethod = "insert";
-          break;
-        case UPDATE:
-          executeMethod = "update";
-          break;
-        case DELETE:
-          executeMethod = "delete";
-          break;
-        case SELECT:
-          executeMethod = "select";
-          break;
-        case SYNC:
-          break;
-        case SYNC_START:
-          break;
-        case SYNC_END:
-          break;
-        case SYNC_DELETE:
-          break;
-        default:
-          appendErrorMessage("Unsupported action specified");
-          break;
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("TransactionItem-> Executing transaction");
     }
-    
-    if (object == null) {
+    if ((object == null || name == null) && !"system".equals(name)) {
       appendErrorMessage("Unsupported object specified");
       return;
     }
-    
+
     SyncClientMap syncClientMap = new SyncClientMap();
     syncClientMap.setClientId(auth.getClientId());
-    syncClientMap.setTableId(((SyncTable) mapping.get(name)).getId());
+    if (!"system".equals(name)) {
+      syncClientMap.setTableId(((SyncTable) mapping.get(name)).getId());
+    }
 
-    if ((action == INSERT && meta != null) || 
-        action == SELECT || 
+/*     if ((action == INSERT && meta != null) ||
+        action == SELECT ||
         action == SYNC) {
+ */
       if (recordList == null) {
         recordList = new RecordList(name);
       }
-    }
-    
-    if (action == SYNC_START) {
+//    }
+
+    if (action == GET_TIME) {
+      System.out.println("TransactionItem-> Getting the time");
+      Record thisRecord = new Record();
+      thisRecord.put("time", String.valueOf(new java.sql.Timestamp(new java.util.Date().getTime())));
+      System.out.println("TransactionItem-> Got a record of time");
+    } else if (action == SYNC_START) {
       ObjectUtils.setParam(object, "id", String.valueOf(auth.getClientId()));
       ObjectUtils.setParam(object, "anchor", auth.getLastAnchor());
-      if (! ((SyncClient)object).checkNormalSync(db)) {
+      if (!((SyncClient) object).checkNormalSync(db)) {
         appendErrorMessage("Client and server not in sync!");
       }
     } else if (action == SYNC_END) {
       ObjectUtils.setParam(object, "id", String.valueOf(auth.getClientId()));
       ObjectUtils.setParam(object, "anchor", auth.getNextAnchor());
-      ((SyncClient)object).updateSyncAnchor(db);
+      ((SyncClient) object).updateSyncAnchor(db);
     } else if (action == SYNC) {
       ObjectUtils.setParam(object, "lastAnchor", auth.getLastAnchor());
       ObjectUtils.setParam(object, "nextAnchor", auth.getNextAnchor());
@@ -359,21 +341,79 @@ public class TransactionItem {
         int id = rs.getInt(uniqueField);
         java.sql.Timestamp entered = rs.getTimestamp("entered");
         int enteredBy = rs.getInt("enteredby");
-        thisRecord.put("guid", 
-          ObjectUtils.generateGuid(entered, enteredBy, id));
+        thisRecord.put("guid",
+            ObjectUtils.generateGuid(entered, enteredBy, id));
         recordList.add(thisRecord);
       }
       rs.close();
       pst.close();
-    } else if (executeMethod != null) {
-      Class[] dbClass = new Class[]{Class.forName("java.sql.Connection")};
-      Object[] dbObject = new Object[]{db};
-      Method method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
-      Object result = method.invoke(object, dbObject);
+    } else {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("TransactionItem-> " + object.getClass().getName() + " " + executeMethod);
+        System.out.println("TransactionItem-> Base request");
       }
-      addRecords(object, recordList, null);
+      String executeMethod = null;
+      switch (action) {
+          case -1:
+            appendErrorMessage("Action not specified");
+            break;
+          case INSERT:
+            executeMethod = "insert";
+            break;
+          case UPDATE:
+            executeMethod = "update";
+            break;
+          case DELETE:
+            executeMethod = "delete";
+            break;
+          case SELECT:
+            executeMethod = "select";
+            break;
+          default:
+            appendErrorMessage("Unsupported action specified");
+            break;
+      }
+      if (executeMethod != null) {
+        if (action == INSERT) {
+          //Populate any client GUIDs with the correct server ID
+          if (ignoredProperties != null) {
+            Iterator ignoredList = ignoredProperties.keySet().iterator();
+            while (ignoredList.hasNext()) {
+              String param = (String)ignoredList.next();
+              if (param.endsWith("Guid")) {
+                String value = (String)ignoredProperties.get(param);
+                param = param.substring(0, param.indexOf("Guid"));
+                SyncTable referencedTable = (SyncTable)mapping.get(param + "List");
+                int recordId = syncClientMap.lookupId(db, referencedTable.getId(), value);
+                ObjectUtils.setParam(object, param + "Id", String.valueOf(recordId));
+                System.out.println("TransactionItem-> Setting new parameter: " + param + "Id");
+              }
+            }
+          }
+        }
+        Class[] dbClass = new Class[]{Class.forName("java.sql.Connection")};
+        Object[] dbObject = new Object[]{db};
+        Method method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
+        Object result = method.invoke(object, dbObject);
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("TransactionItem-> " + object.getClass().getName() + " " + executeMethod);
+        }
+        if (action == INSERT) {
+          //Insert the guid / id into client mapping
+          if (ignoredProperties != null) {
+            Iterator ignoredList = ignoredProperties.keySet().iterator();
+            while (ignoredList.hasNext()) {
+              String param = (String)ignoredList.next();
+              if (param.equals("guid")) {
+                syncClientMap.setRecordId( Integer.parseInt(ObjectUtils.getParam(object, "id")) );
+                syncClientMap.setClientUniqueId((String)ignoredProperties.get(param));
+                syncClientMap.insert(db);
+                break;
+              }
+            }
+          }
+        }
+        addRecords(object, recordList, null);
+      }
     }
   }
 
