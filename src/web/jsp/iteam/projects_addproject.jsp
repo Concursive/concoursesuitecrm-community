@@ -1,5 +1,6 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
+<jsp:useBean id="ProjectList" class="com.zeroio.iteam.base.ProjectList" scope="request"/>
 <jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body bgcolor='#FFFFFF' onLoad="document.inputForm.title.focus()">
@@ -64,7 +65,7 @@
     <tr>
       <td width="2" bgcolor="#808080">&nbsp;</td>
       <td width="50%">
-        &nbsp;Request Date:<br>
+        &nbsp;Start Date:<br>
         &nbsp;
         <input type="text" name="requestDate" size="10" value="<%= Project.getRequestDateString() %>">
         <a href="javascript:popCalendar('inputForm', 'requestDate');">Date</a>
@@ -77,6 +78,15 @@
         <%= DepartmentList.getHtmlSelect("departmentId", 0) %>
         <br>&nbsp;
       </td>    
+      <td width="2" bgcolor="#808080">&nbsp;</td>
+    </tr>
+		<tr>
+      <td width="2" bgcolor="#808080">&nbsp;</td>
+      <td width="100%" colspan="2">
+        &nbsp;Import Requirements &amp; Assignments from an Existing Project<br>
+        &nbsp;
+				<%= ProjectList.getHtmlSelect("templateId", 0) %>
+      </td>
       <td width="2" bgcolor="#808080">&nbsp;</td>
     </tr>
     <tr>

@@ -65,7 +65,7 @@
     <tr>
       <td width="2" bgcolor="#808080">&nbsp;</td>
       <td width="50%">
-        &nbsp;Request Date:<br>
+        &nbsp;Start Date:<br>
         &nbsp;
         <input type="text" name="requestDate" size="10" value="<%= Project.getRequestDateString() %>">
         <a href="javascript:popCalendar('inputForm', 'requestDate');">Date</a>

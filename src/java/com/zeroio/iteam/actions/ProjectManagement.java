@@ -154,6 +154,13 @@ public final class ProjectManagement extends CFSModule {
       LookupList departmentList = new LookupList(db, "lookup_department");
       departmentList.addItem(0, "--None--");
       context.getRequest().setAttribute("DepartmentList", departmentList);
+			
+			ProjectList projectList = new ProjectList();
+			projectList.setGroupId(-1);
+			projectList.setEmptyHtmlSelectRecord("--None--");
+			projectList.setEnteredByUserRange(getUserRange(context));
+			projectList.buildList(db);
+      context.getRequest().setAttribute("ProjectList", projectList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
