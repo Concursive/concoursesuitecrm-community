@@ -110,6 +110,9 @@ Modify Revenue<br>
       Amount
     </td>
     <td valign=center>
+<%
+  System.out.println("Getting amount value");
+%>
       <input type=text size=15 name="amount" value="<%=Revenue.getAmountValue()%>">
       <font color="red">*</font> <%= showAttribute(request, "amountError") %>
     </td>
