@@ -90,7 +90,7 @@ CREATE TABLE business_process_component_parameter (
   enabled BOOLEAN DEFAULT true NOT NULL
 );
 
-/* Scheduled business processes are configured here */
+/* Scheduled business processes are configured here, the task is the process name */
 
 CREATE SEQUENCE business_process_e_event_id_seq;
 CREATE TABLE business_process_events (
