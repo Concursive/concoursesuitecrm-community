@@ -5,20 +5,23 @@ import javax.servlet.*;
 import java.io.*;
 
 /**
- *  Utility to determine the client browser type.<br>
+ *  Utility to determine the client's browser type.<br>
  *  <br>
- *  Windows is expected, Mac detection not implemented.
+ *  Can be used for CSS or browser specific features.
  *
  *@author     Matt Rajkowski
  *@created    March 5, 2002
  *@version    $Id$
  */
 public class ClientType implements Serializable {
-  //Client Browser Products
+  public final static String allowed = "0123456789.";
+  
+  //Client Browser Products, also define the text below
   public final static int NETSCAPE = 1;
   public final static int IE = 2;
   public final static int POCKETIE = 3;
   public final static int OPERA = 4;
+  public final static int MOZILLA = 5;
   //Client Browser Types
   public final static int HTML_BROWSER = 1;
   public final static int WAP_BROWSER = 2;
@@ -26,12 +29,12 @@ public class ClientType implements Serializable {
   public final static int WINDOWS = 1;
   public final static int MAC = 2;
   public final static int LINUX = 3;
-
+  //Variables
   private int type = -1;
   private int id = -1;
   private double version = -1;
-  private int os = 1;
-
+  private int os = WINDOWS;
+  
   final static long serialVersionUID = 8345658414124283569L;
 
 
@@ -83,21 +86,13 @@ public class ClientType implements Serializable {
         os = LINUX;
       } else if (header.indexOf("mac_powerpc") > -1) {
         os = MAC;
+      } else if (header.indexOf("macintosh") > -1) {
+        os = MAC;
       }
 
-      if (header.indexOf("opera") > -1) {
-        this.id = OPERA;
-        //Search for "opera/x" or "opera x" first
-        try {
-          this.version =
-              Double.parseDouble(header.substring(header.indexOf("opera") + 6,
-              header.indexOf("opera") + 9).trim());
-        } catch (Exception e) {
-          this.version =
-              Double.parseDouble(header.substring(header.indexOf("opera") + 6,
-              header.indexOf("opera") + 8).trim());
-        }
-      } else if (header.indexOf("msie") > -1) {
+      if (header.indexOf("msie") > -1) {
+        //User-Agent: mozilla/4.0 (compatible; msie 6.0; windows 98; .net clr 1.0.3705)
+        //User-Agent: mozilla/4.0 (compatible; msie 5.01; windows nt 5.0)
         this.id = IE;
         //Search for "msie x"
         try {
@@ -109,42 +104,37 @@ public class ClientType implements Serializable {
               Double.parseDouble(header.substring(header.indexOf("msie ") + 5,
               header.indexOf("msie ") + 9).trim());
         }
+        cleanupVersion();
+      } else if (header.indexOf("opera") > -1) {
+        //Opera likes to impersonate other browsers
+        //User-Agent: mozilla/4.0 (compatible; msie 6.0; msie 5.5; windows 98) opera 7.02  [en]
+        this.id = OPERA;
+        parseVersion(header.substring(header.indexOf("opera") + 6));
       } else if (header.indexOf("mozilla") > -1) {
-        this.id = NETSCAPE;
-        if (header.indexOf("netscape6") > -1) {
-          version = 6;
+        //User-Agent: mozilla/5.0 (x11; u; linux i686; en-us; rv:1.3b) gecko/20030211
+        //User-Agent: mozilla/5.0 (macintosh; u; ppc mac os x; en-us; rv:1.0.1) gecko/20021104 chimera/0.6
+        //User-Agent: mozilla/5.0 (x11; u; linux i686; en-us; rv:1.0.1) gecko/20020830
+        //User-Agent: mozilla/5.0 (windows; u; win98; en-us; rv:1.0.2) gecko/20030208 netscape/7.02
+        if (header.indexOf("gecko/") > -1 && header.indexOf("rv:") > -1) {
+          this.id = MOZILLA;
+          version = parseVersion(header.substring(header.indexOf("rv:") + 3, header.indexOf(") gecko")));
         } else if (header.indexOf("gecko") > -1) {
+          this.id = NETSCAPE;
           version = 6;
         } else {
-          //Search for "mozilla/x" or "mozilla x"
-          try {
-            this.version =
-                Double.parseDouble(header.substring(header.indexOf("mozilla") + 8,
-                header.indexOf("mozilla") + 11).trim());
-          } catch (Exception e) {
-            this.version =
-                Double.parseDouble(header.substring(header.indexOf("mozilla") + 8,
-                header.indexOf("mozilla") + 10).trim());
-          }
+          //Just make a default
+          this.id = NETSCAPE;
+          this.version = 4;
         }
       } else {
-        //Can narrow down browser even more... or just make a default
         this.id = NETSCAPE;
         this.version = 4;
-      }
-
-      //Cleanup old versions...
-      if (version > 4.0 && version < 5.0) {
-        version = 4;
-      } else if (version > 3.0 && version < 4.0) {
-        version = 3;
-      } else if (version > 2.0 && version < 3.0) {
-        version = 2;
       }
 
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ClientType-> Browser Id: " + getBrowserId());
         System.out.println("ClientType-> Browser Version: " + getBrowserVersion());
+        System.out.println("ClientType-> Browser O/S: " + getOsString());
       }
     }
   }
@@ -238,11 +228,14 @@ public class ClientType implements Serializable {
   public String getBrowserId() {
     String thisId = null;
     switch (id) {
-        case NETSCAPE:
-          thisId = "ns";
-          break;
         case IE:
           thisId = "ie";
+          break;
+        case MOZILLA:
+          thisId = "moz";
+          break;
+        case NETSCAPE:
+          thisId = "ns";
           break;
         case POCKETIE:
           thisId = "pie";
@@ -250,7 +243,8 @@ public class ClientType implements Serializable {
         case OPERA:
           thisId = "opera";
           break;
-        default:
+        default: 
+          thisId = "moz";
           break;
     }
     return thisId;
@@ -265,14 +259,14 @@ public class ClientType implements Serializable {
   public String getBrowserIdAndOS() {
     String thisId = null;
     switch (id) {
+        case IE:
+          thisId = "ie";
+          break;
         case NETSCAPE:
           thisId = "ns";
           if (os == LINUX) {
             thisId += "-linux";
           }
-          break;
-        case IE:
-          thisId = "ie";
           break;
         case POCKETIE:
           thisId = "pie";
@@ -312,6 +306,32 @@ public class ClientType implements Serializable {
           return "win";
         default:
           return "win";
+    }
+  }
+  
+  public void cleanupVersion() {
+    //Cleanup old versions...
+    if (version > 4.0 && version < 5.0) {
+      version = 4;
+    } else if (version > 3.0 && version < 4.0) {
+      version = 3;
+    } else if (version > 2.0 && version < 3.0) {
+      version = 2;
+    }
+  }
+  
+  public double parseVersion(String versionText) {
+    try {
+      return Double.parseDouble(versionText);
+    } catch (Exception e) {
+      StringBuffer sb = new StringBuffer();
+      for (int i = 0; i < versionText.length(); i++) {
+        char c = versionText.charAt(i);
+        if (allowed.indexOf(c) > -1) {
+          sb.append(c);
+        }
+      }
+      return Double.parseDouble(sb.toString());
     }
   }
 }
