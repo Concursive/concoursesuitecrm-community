@@ -149,14 +149,21 @@ public class Ticket extends GenericBean {
       thisContact = null;
     }
 
+    this.buildHistory(db);
+    this.buildFiles(db);
+  }
+  
+  public void buildHistory(Connection db) throws SQLException {
     history.setTicketId(this.getId());
     history.buildList(db);
-    
+  }
+
+  public void buildFiles(Connection db) throws SQLException {
+    files.clear();
     files.setLinkModuleId(Constants.TICKETS);
     files.setLinkItemId(this.getId());
     files.buildList(db);
   }
-
 
   /**
    *  Gets the sendNotification attribute of the Ticket object
