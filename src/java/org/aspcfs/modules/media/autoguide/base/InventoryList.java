@@ -36,6 +36,7 @@ public class InventoryList extends ArrayList {
   //TODO: Implement these additional data filters
   private int hasRunDate = -1;
   private int makeId = -1;
+  private java.sql.Date adRunDate = null;
 
   /**
    *  Constructor for the InventoryList object
@@ -194,6 +195,7 @@ public class InventoryList extends ArrayList {
   public void setMakeId(String tmp) { 
     this.makeId = Integer.parseInt(tmp); 
   }
+  public void setAdRunDate(java.sql.Date tmp) { this.adRunDate = tmp; }
 
 
   /**
@@ -435,6 +437,11 @@ public class InventoryList extends ArrayList {
           "AND i.vehicle_id IN " +
           "(SELECT vehicle_id FROM autoguide_vehicle WHERE make_id = ?) ");
     }
+    if (adRunDate != null) {
+      sqlFilter.append(
+        "AND i.vehicle_id IN " +
+        "(SELECT vehicle_id FROM autoguide_ad_run WHERE run_date = ?) ");
+    }
   }
 
 
@@ -466,6 +473,9 @@ public class InventoryList extends ArrayList {
     }
     if (makeId > -1) {
       pst.setInt(++i, makeId);
+    }
+    if (adRunDate != null) {
+      pst.setDate(++i, adRunDate);
     }
     return i;
   }
