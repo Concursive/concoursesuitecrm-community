@@ -288,8 +288,6 @@ public final class TroubleTickets extends CFSModule {
 
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     
-    //new
-    
     PagedListInfo assignedToMeInfo = this.getPagedListInfo(context, "AssignedToMeInfo");
     PagedListInfo openInfo = this.getPagedListInfo(context, "OpenInfo");
     
@@ -297,10 +295,8 @@ public final class TroubleTickets extends CFSModule {
     openInfo.setLink("/TroubleTickets.do?command=Home");
     
     assignedToMeList.setPagedListInfo(assignedToMeInfo);
-    //assignedToMeInfo.setSearchCriteria(assignedToMeList);
 
     openList.setPagedListInfo(openInfo);
-    //openInfo.setSearchCriteria(openList);
     
     assignedToMeList.setAssignedTo(getUserId(context));
     assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
@@ -308,13 +304,10 @@ public final class TroubleTickets extends CFSModule {
     openList.setUnassignedToo(true);
     openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
     
-    //end
-
     PagedListInfo createdByMeInfo = this.getPagedListInfo(context, "CreatedByMeInfo");
     createdByMeInfo.setLink("/TroubleTickets.do?command=Home");
     
     createdByMeList.setPagedListInfo(createdByMeInfo);
-    //createdByMeInfo.setSearchCriteria(createdByMeList);
     
     createdByMeList.setUnassignedToo(true);
     createdByMeList.setEnteredBy(getUserId(context));
@@ -332,22 +325,6 @@ public final class TroubleTickets extends CFSModule {
           openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       }
 
-/**
-        if ("unassigned".equals(ticListInfo.getListView())) {
-          ticList.setUnassignedToo(true);
-          ticList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
-        } else if ("assignedToMe".equals(ticListInfo.getListView())) {
-          ticList.setAssignedTo(getUserId(context));
-          ticList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
-        } else {
-          ticList.setUnassignedToo(true);
-          
-          if ("createdByMe".equals(ticListInfo.getListView())) {
-                  ticList.setEnteredBy(getUserId(context));
-          }
-          
-        }
-*/
       createdByMeList.buildList(db);
       assignedToMeList.buildList(db);
       openList.buildList(db);
@@ -376,7 +353,20 @@ public final class TroubleTickets extends CFSModule {
     if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("PermissionError");
     }
-
+    
+    PagedListInfo ticListInfo = this.getPagedListInfo(context, "TicListInfo");
+    
+    if (ticListInfo.getSavedCriteria().isEmpty()) {
+            return(executeCommandSearchTicketsForm(context));
+    } 
+    
+    if (context.getRequest().getParameter("reset") != null) {
+            if (context.getRequest().getParameter("reset").equals("true")) {
+                    ticListInfo.getSavedCriteria().clear();
+                    return(executeCommandSearchTicketsForm(context));
+            }
+    }
+    
     int errorCode = 0;
     Exception errorMessage = null;
 
@@ -386,9 +376,7 @@ public final class TroubleTickets extends CFSModule {
 
     TicketList ticList = new TicketList();
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-    
-    
-    PagedListInfo ticListInfo = this.getPagedListInfo(context, "TicListInfo");
+        
     ticListInfo.setLink("/TroubleTickets.do?command=SearchTickets");
     ticList.setPagedListInfo(ticListInfo);
     ticListInfo.setSearchCriteria(ticList);
@@ -419,11 +407,11 @@ public final class TroubleTickets extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    addModuleBean(context, "ViewTickets", "View Tickets");
+    addModuleBean(context, "SearchTickets", "Search Tickets");
     context.getRequest().setAttribute("TicList", ticList);
 
     if (errorCode == 0) {
-      addModuleBean(context, "ViewTickets", "View Tickets");
+      addModuleBean(context, "SearchTickets", "Search Tickets");
       return ("ResultsOK");
     } else {
       return ("SystemError");

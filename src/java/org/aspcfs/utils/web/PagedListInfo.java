@@ -577,7 +577,7 @@ public void setId(String id) {
    */
   public String getListPropertiesHeader(String id) {
     if (showForm) {
-      return ("<form name=\"" + id + "\" action=\"" + link + "\" method=\"get\">");
+      return ("<form name=\"" + id + "\" action=\"" + link + "\" method=\"post\">");
     } else {
       return "";
     }

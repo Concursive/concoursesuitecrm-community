@@ -3,6 +3,7 @@
 <jsp:useBean id="SeverityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="TicketTypeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
+
 <body onLoad="javascript:document.forms[0].searchcodeId.focus();">
 <form name="searchTicket" action="/TroubleTickets.do?command=SearchTickets&auto-populate=true" method="post">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

@@ -485,7 +485,7 @@
       <permission value="tickets-tickets-view"/>
       <long_html value="Search Tickets"/>
       <short_html value="Search&lt;br&gt;Tickets"/>
-      <link value="/TroubleTickets.do?command=SearchTicketsForm"/>
+      <link value="/TroubleTickets.do?command=SearchTickets"/>
     </submenu>
     
     <submenu name="-">

@@ -66,11 +66,37 @@ Add Opportunity<br>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      Associate With
+    </td>
+    <td width="100%">
+        <input type="radio" name="opp_type" value="org">Organization<br>
+        <input type="radio" name="opp_type" value="contact">Contact
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       Organization
     </td>
     <td width="100%">
       <%= OrgList.getHtmlSelectDefaultNone("accountLink")%>
       <font color=red>*</font> <%= showAttribute(request, "orgError") %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Contact
+    </td>
+    <td width="100%">
+      <table>
+        <tr>
+          <td>
+            <div id="changecontact"><%=Task.getContactName().equals("")?"None":Task.getContactName()%></div>
+          </td>
+          <td>
+            <input type=hidden name="contact" value="<%=(Task.getContactId() == -1)?-1:Task.getContactId()%>"><a href="javascript:popURLReturn('/MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=contactsingle&parentFormName=addTask', 'MyTasks.do?command=New', 'Inbox_message','700','450','yes','no');">Change Contact</a>
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
   <tr class="containerBody">
