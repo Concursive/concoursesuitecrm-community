@@ -216,6 +216,8 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="OppDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ListOppsOK" resource="/companydirectory_listopps.jsp" layout="nav"/>
     <forward name="AddOppOK" resource="/companydirectory_addopp.jsp" layout="nav"/>
     <forward name="OppDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
@@ -423,6 +425,7 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DetailsOK" resource="/accounts_opportunities_details.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/Opportunities.do?command=Details"/>
     <forward name="ListOK" resource="/accounts_opportunities_list.jsp" layout="nav"/>
