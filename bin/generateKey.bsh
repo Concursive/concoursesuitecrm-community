@@ -1,0 +1,68 @@
+#!/bin/sh
+//bin/true; exec java -classpath .:lib/bsh.jar:lib/bcprov-jdk14-121.jar:build/lib/aspcfs.jar bsh.Interpreter "$0" "$@"
+
+/* This script will generate a public and private key pair.
+   Intended so that one system with the public key can encrypt data, 
+   and only the system with the private key can decrypt data.
+*/
+
+import java.security.*;
+import java.io.*;
+import javax.crypto.*;
+import com.sun.crypto.provider.*;
+import org.aspcfs.utils.PrivateString;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.* ;
+import sun.misc.*;
+
+String publicFilename = "public.key";
+String privateFilename = "private.key";
+
+Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+
+KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA", "BC");
+keyPairGen.initialize(1024, new SecureRandom());
+KeyPair keyPair = keyPairGen.generateKeyPair();
+
+PublicKey publicKey = keyPair.getPublic();
+PrivateKey privateKey = keyPair.getPrivate();
+
+
+ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(publicFilename));
+out.writeObject(publicKey);
+out.close();
+
+out = new ObjectOutputStream(new FileOutputStream(privateFilename));
+out.writeObject(privateKey);
+out.close();
+
+
+
+String TEXT = "1234567890123456";
+print("INITIAL: " + TEXT);
+
+//Encrypt
+String base64 = null;
+if (1 == 1) {
+  Cipher cipher = Cipher.getInstance("RSA/None/OAEPPadding","BC");
+  cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+  //cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+  byte[] inputBytes = TEXT.getBytes("UTF8");
+  byte[] outputBytes = cipher.doFinal(inputBytes);
+
+  BASE64Encoder encoder = new BASE64Encoder();
+  base64 = encoder.encode(outputBytes);
+  print("ENCRYPTED: " + base64);
+}
+
+//Decrypt
+if (base64 != null) {
+  Cipher cipher = Cipher.getInstance("RSA/None/OAEPPadding","BC");
+  cipher.init(Cipher.DECRYPT_MODE, privateKey);
+  //cipher.init(Cipher.DECRYPT_MODE, publicKey);
+  BASE64Decoder decoder = new BASE64Decoder();
+  byte[] inputBytes = decoder.decodeBuffer(base64);
+  byte[] outputBytes = cipher.doFinal(inputBytes);
+  String result = new String(outputBytes, "UTF8");
+  print("DECRYPTED: " + result);
+}

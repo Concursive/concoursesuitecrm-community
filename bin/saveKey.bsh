@@ -1,0 +1,64 @@
+#!/bin/sh
+//bin/true; exec java -classpath .:lib/bsh.jar:lib/bcprov-jdk14-121.jar:build/lib/aspcfs.jar bsh.Interpreter "$0" "$@"
+
+/* Application to encode and encrypt an object with a password */
+
+import java.security.*;
+import java.io.*;
+import javax.crypto.*;
+import com.sun.crypto.provider.*;
+import sun.misc.*;
+import javax.crypto.spec.*;
+import org.aspcfs.utils.ObjectUtils;
+import org.aspcfs.utils.PrivateString;
+import org.aspcfs.utils.StringUtils;
+
+if (bsh.args.length == 0) {
+  print("Usage:");
+  print("  SaveKey [password to encrypt with]");
+  print("");
+  print("  * Will read private.key and save as private.enc");
+  System.exit(0);
+}
+
+String password = bsh.args[0];
+
+PBEKeySpec pbeKeySpec;
+PBEParameterSpec pbeParamSpec;
+SecretKeyFactory keyFac;
+
+// Salt
+byte[] salt = {
+    (byte)0xc7, (byte)0x73, (byte)0x21, (byte)0x8c,
+    (byte)0x7e, (byte)0xc8, (byte)0xee, (byte)0x99
+};
+
+// Iteration count
+int count = 20;
+
+// Create PBE parameter set
+pbeParamSpec = new PBEParameterSpec(salt, count);
+pbeKeySpec = new PBEKeySpec(password.toCharArray());
+keyFac = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+SecretKey pbeKey = keyFac.generateSecret(pbeKeySpec);
+
+// Create PBE Cipher
+Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
+// Initialize PBE Cipher with key and parameters
+pbeCipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParamSpec);
+
+// Load the key
+PrivateKey key = (PrivateKey) PrivateString.loadKey("private.key");
+
+// Convert to byteArray
+byte[] cleartext = ObjectUtils.toByteArray(key);
+
+// Encrypt the byteArray
+byte[] ciphertext = pbeCipher.doFinal(cleartext);
+
+// Convert byteArray to base64
+BASE64Encoder encoder = new BASE64Encoder();
+String base64 = encoder.encode(ciphertext);
+
+// Save the encoded text
+StringUtils.saveText("private.enc", base64);
