@@ -9,7 +9,8 @@ import java.util.*;
  *
  *@author     matt rajkowski
  *@created    March 18, 2002
- *@version    $Id$
+ *@version    $Id: DatabaseUtils.java,v 1.13 2002/11/04 13:21:16 mrajkowski Exp
+ *      $
  */
 public class DatabaseUtils {
 
@@ -20,6 +21,7 @@ public class DatabaseUtils {
   public final static String POSTGRESQL_DRIVER = "postgresql";
   public final static String MSSQL_DRIVER = "sqlserver";
   public final static String ORACLE_DRIVER = "oracle";
+
 
   /**
    *  Gets the true attribute of the DatabaseUtils class
@@ -99,20 +101,29 @@ public class DatabaseUtils {
       return -1;
     }
   }
-  
+
+
+  /**
+   *  Gets the currVal attribute of the DatabaseUtils class
+   *
+   *@param  db                Description of the Parameter
+   *@param  sequenceName      Description of the Parameter
+   *@return                   The currVal value
+   *@exception  SQLException  Description of the Exception
+   */
   public static int getCurrVal(Connection db, String sequenceName) throws SQLException {
     int id = -1;
     Statement st = db.createStatement();
     ResultSet rs = null;
     switch (DatabaseUtils.getType(db)) {
-      case DatabaseUtils.POSTGRESQL:
-        rs = st.executeQuery("SELECT currval('" + sequenceName + "')");
-        break;
-      case DatabaseUtils.MSSQL:
-        rs = st.executeQuery("SELECT @@IDENTITY");
-        break;
-      default:
-        break;
+        case DatabaseUtils.POSTGRESQL:
+          rs = st.executeQuery("SELECT currval('" + sequenceName + "')");
+          break;
+        case DatabaseUtils.MSSQL:
+          rs = st.executeQuery("SELECT @@IDENTITY");
+          break;
+        default:
+          break;
     }
     if (rs.next()) {
       id = rs.getInt(1);
@@ -121,7 +132,15 @@ public class DatabaseUtils {
     st.close();
     return id;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  tmp           Description of the Parameter
+   *@param  defaultValue  Description of the Parameter
+   *@return               Description of the Return Value
+   */
   public static int parseInt(String tmp, int defaultValue) {
     try {
       return Integer.parseInt(tmp);
@@ -129,13 +148,27 @@ public class DatabaseUtils {
       return defaultValue;
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  tmp  Description of the Parameter
+   *@return      Description of the Return Value
+   */
   public static boolean parseBoolean(String tmp) {
-    return (tmp.equalsIgnoreCase("ON") || 
-           tmp.equalsIgnoreCase("TRUE") ||
-           tmp.equals("1"));
+    return (tmp.equalsIgnoreCase("ON") ||
+        tmp.equalsIgnoreCase("TRUE") ||
+        tmp.equals("1"));
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  tmp  Description of the Parameter
+   *@return      Description of the Return Value
+   */
   public static java.sql.Date parseDate(String tmp) {
     java.sql.Date dateValue = null;
     try {
@@ -151,11 +184,18 @@ public class DatabaseUtils {
     }
     return null;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  tmp  Description of the Parameter
+   *@return      Description of the Return Value
+   */
   public static java.sql.Timestamp parseTimestamp(String tmp) {
     java.sql.Timestamp timestampValue = null;
     try {
-      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.LONG).parse(tmp);
+      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).parse(tmp);
       timestampValue = new java.sql.Timestamp(new java.util.Date().getTime());
       timestampValue.setTime(tmpDate.getTime());
       return timestampValue;
@@ -167,7 +207,17 @@ public class DatabaseUtils {
     }
     return null;
   }
-  
+
+
+  /**
+   *  Gets the int attribute of the DatabaseUtils class
+   *
+   *@param  rs                Description of the Parameter
+   *@param  column            Description of the Parameter
+   *@param  defaultValue      Description of the Parameter
+   *@return                   The int value
+   *@exception  SQLException  Description of the Exception
+   */
   public static int getInt(ResultSet rs, String column, int defaultValue) throws SQLException {
     int fieldValue = rs.getInt(column);
     if (rs.wasNull()) {
@@ -175,11 +225,29 @@ public class DatabaseUtils {
     }
     return fieldValue;
   }
-  
+
+
+  /**
+   *  Gets the int attribute of the DatabaseUtils class
+   *
+   *@param  rs                Description of the Parameter
+   *@param  column            Description of the Parameter
+   *@return                   The int value
+   *@exception  SQLException  Description of the Exception
+   */
   public static int getInt(ResultSet rs, String column) throws SQLException {
     return DatabaseUtils.getInt(rs, column, -1);
   }
-  
+
+
+  /**
+   *  Sets the int attribute of the DatabaseUtils class
+   *
+   *@param  pst               The new int value
+   *@param  paramCount        The new int value
+   *@param  value             The new int value
+   *@exception  SQLException  Description of the Exception
+   */
   public static void setInt(PreparedStatement pst, int paramCount, int value) throws SQLException {
     if (value == -1) {
       pst.setNull(paramCount, java.sql.Types.INTEGER);
@@ -187,7 +255,16 @@ public class DatabaseUtils {
       pst.setInt(paramCount, value);
     }
   }
-  
+
+
+  /**
+   *  Sets the timestamp attribute of the DatabaseUtils class
+   *
+   *@param  pst               The new timestamp value
+   *@param  paramCount        The new timestamp value
+   *@param  value             The new timestamp value
+   *@exception  SQLException  Description of the Exception
+   */
   public static void setTimestamp(PreparedStatement pst, int paramCount, java.sql.Timestamp value) throws SQLException {
     if (value == null) {
       pst.setNull(paramCount, java.sql.Types.DATE);
@@ -195,7 +272,16 @@ public class DatabaseUtils {
       pst.setTimestamp(paramCount, value);
     }
   }
-  
+
+
+  /**
+   *  Sets the date attribute of the DatabaseUtils class
+   *
+   *@param  pst               The new date value
+   *@param  paramCount        The new date value
+   *@param  value             The new date value
+   *@exception  SQLException  Description of the Exception
+   */
   public static void setDate(PreparedStatement pst, int paramCount, java.sql.Date value) throws SQLException {
     if (value == null) {
       pst.setNull(paramCount, java.sql.Types.DATE);
