@@ -29,6 +29,7 @@ public class ContactReport extends ContactList {
 	protected ArrayList criteria = null;
 	String[] params = null;
 	
+	protected boolean displayId = true;
 	protected boolean displayType = true;
 	protected boolean displayNameLast = true;
 	protected boolean displayNameMiddle = true;
@@ -117,6 +118,13 @@ public class ContactReport extends ContactList {
 	public boolean getJoinOrgs() { return joinOrgs; }
 	public void setOrgReportJoin(OrganizationReport tmp) { this.orgReportJoin = tmp; }
 	public void setJoinOrgs(boolean tmp) { this.joinOrgs = tmp; }
+	
+	public boolean getDisplayId() {
+		return displayId;
+	}
+	public void setDisplayId(boolean displayId) {
+		this.displayId = displayId;
+	}
 
 	public ArrayList getCriteria() {
 		return criteria;
@@ -134,6 +142,7 @@ public class ContactReport extends ContactList {
 	}
 	
 	public void setCriteriaVars() {
+		if ( !(criteria.contains("id")) ) { displayId = false; }
 		if ( !(criteria.contains("type")) ) { displayType = false; }
 		if ( !(criteria.contains("nameLast")) ) { displayNameLast = false; }
 		if ( !(criteria.contains("nameFirst")) ) { displayNameFirst = false; }
@@ -182,6 +191,7 @@ public class ContactReport extends ContactList {
 	public void buildReportHeaders() {
 		if (joinOrgs) { orgReportJoin.buildReportHeaders(rep); }
 		
+		if (displayId) { rep.addColumn("Contact Id"); }
 		if (displayType) { rep.addColumn("Type"); }
 		if (displayNameLast) { rep.addColumn("Last Name", "Last Name"); }
 		if (displayNameFirst) { rep.addColumn("First Name", "First Name"); }
@@ -196,7 +206,10 @@ public class ContactReport extends ContactList {
 		if (displayOwner) { rep.addColumn("Owner"); }
 		if (displayBusinessEmail) { rep.addColumn("Business Email"); }
 		if (displayBusinessPhone) { rep.addColumn("Business Phone"); }
-		if (displayBusinessAddress) { rep.addColumn("Business Address"); }
+		if (displayBusinessAddress) { 
+			rep.addColumn("Business Address Line 1"); 
+			rep.addColumn("Business Address Line 2"); 
+		}
 		if (displayCity) { rep.addColumn("City"); }
 		if (displayState) { rep.addColumn("State"); }
 		if (displayZip) { rep.addColumn("Zip"); }
@@ -225,6 +238,7 @@ public class ContactReport extends ContactList {
 			}
 			
 			if (!joinOrgs || writeOut == true) {
+				if (displayId) { thisRow.addCell(thisContact.getId()); }
 				if (displayType) { thisRow.addCell(thisContact.getTypeName()); }
 				if (displayNameLast) { thisRow.addCell(thisContact.getNameLast()); }
 				if (displayNameFirst) { thisRow.addCell(thisContact.getNameFirst()); }
@@ -239,7 +253,10 @@ public class ContactReport extends ContactList {
 				if (displayOwner) { thisRow.addCell(thisContact.getOwnerName()); }
 				if (displayBusinessEmail) { thisRow.addCell(thisContact.getEmailAddress("Business")); }
 				if (displayBusinessPhone) { thisRow.addCell(thisContact.getPhoneNumber("Business")); }
-				if (displayBusinessAddress) { thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine1() + " " + thisContact.getAddress("Business").getStreetAddressLine2()); }
+				if (displayBusinessAddress) { 
+					thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine1());
+					thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine2()); 
+				}
 				if (displayCity) { thisRow.addCell(thisContact.getAddress("Business").getCity()); }
 				if (displayState) { thisRow.addCell(thisContact.getAddress("Business").getState()); }
 				if (displayZip) { thisRow.addCell(thisContact.getAddress("Business").getZip()); }
