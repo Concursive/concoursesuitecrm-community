@@ -24,7 +24,6 @@ public final class Opportunities extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandHome(ActionContext context) {
     addModuleBean(context, "Opportunities", "Opportunities Home");
@@ -37,11 +36,8 @@ public final class Opportunities extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
-
   public String executeCommandView(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-opportunities-view"))) {
       return ("PermissionError");
     }
@@ -91,7 +87,6 @@ public final class Opportunities extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsertOppComponent(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-opportunities-add"))) {
       return ("PermissionError");
     }
@@ -152,7 +147,6 @@ public final class Opportunities extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAddOppComponent(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-opportunities-add"))) {
       return ("PermissionError");
     }
@@ -203,11 +197,8 @@ public final class Opportunities extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
-
   public String executeCommandAdd(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-opportunities-add"))) {
       return ("PermissionError");
     }
@@ -276,10 +267,8 @@ public final class Opportunities extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandInsert(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-opportunities-add"))) {
       return ("PermissionError");
     }
@@ -359,7 +348,6 @@ public final class Opportunities extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDetailsComponent(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-opportunities-view"))) {
       return ("PermissionError");
     }
@@ -407,10 +395,8 @@ public final class Opportunities extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandDetails(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-opportunities-view"))) {
       return ("PermissionError");
     }
@@ -472,10 +458,8 @@ public final class Opportunities extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandDelete(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-opportunities-delete"))) {
       return ("PermissionError");
     }
@@ -617,10 +601,8 @@ public final class Opportunities extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandModify(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-opportunities-edit"))) {
       return ("PermissionError");
     }
@@ -724,7 +706,6 @@ public final class Opportunities extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModifyComponent(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-opportunities-edit"))) {
       return ("PermissionError");
     }
@@ -787,7 +768,6 @@ public final class Opportunities extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpdateComponent(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-opportunities-edit"))) {
       return ("PermissionError");
     }
@@ -807,15 +787,12 @@ public final class Opportunities extends CFSModule {
       db = this.getConnection(context);
       component.setModifiedBy(getUserId(context));
       resultCount = component.update(db, context);
-
       if (resultCount == 1) {
         component.queryRecord(db, component.getId());
         context.getRequest().setAttribute("OppComponentDetails", component);
       }
-
       thisOrg = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrg);
-
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -848,10 +825,8 @@ public final class Opportunities extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandUpdate(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-opportunities-edit"))) {
       return ("PermissionError");
     }
