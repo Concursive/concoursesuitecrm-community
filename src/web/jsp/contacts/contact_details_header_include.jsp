@@ -13,7 +13,15 @@
         <%-- Show an account link if the account is > 0, since 0 is "My Organization" --%>
         <dhv:evaluate if="<%= (ContactDetails.getOrgId() > 0) %>">
           <dhv:permission name="accounts-accounts-view">
-            (<a href="Accounts.do?command=Details&orgId=<%= ContactDetails.getOrgId() %>"><%= toHtml(ContactDetails.getOrgName()) %></a>)
+            <dhv:evaluate if="<%= !isPopup(request) %>">
+              (<a href="Accounts.do?command=Details&orgId=<%= ContactDetails.getOrgId() %>"><%= toHtml(ContactDetails.getOrgName()) %></a>)
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= isPopup(request) %>">
+              (<%= toHtml(ContactDetails.getOrgName()) %>)
+            </dhv:evaluate>
+          </dhv:permission>
+          <dhv:permission name="accounts-accounts-view" none="true">
+            (<%= toHtml(ContactDetails.getOrgName()) %>)
           </dhv:permission>
         </dhv:evaluate>
       </dhv:evaluate>
