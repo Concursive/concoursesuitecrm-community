@@ -10,7 +10,8 @@ import java.io.*;
  *
  *@author     mrajkowski
  *@created    May 21, 2002
- *@version    $Id$
+ *@version    $Id: StringUtils.java,v 1.15.14.1 2003/08/22 19:25:51 mrajkowski
+ *      Exp $
  */
 public class StringUtils {
 
@@ -355,7 +356,7 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   *  Loads text into a string from a file
    *
    *@param  filename                 Description of the Parameter
    *@return                          Description of the Return Value
@@ -371,6 +372,20 @@ public class StringUtils {
       text.append(ls);
     }
     return text.toString();
+  }
+
+
+  /**
+   *  Writes a string of text to a file
+   *
+   *@param  filename                 Description of the Parameter
+   *@param  data                     Description of the Parameter
+   *@exception  java.io.IOException  Description of the Exception
+   */
+  public static void saveText(String filename, String data) throws java.io.IOException {
+    BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+    out.write(data);
+    out.close();
   }
 
 
@@ -423,8 +438,8 @@ public class StringUtils {
 
   /**
    *  Reads a line of text in the Excel CSV format<br>
-   *  Each field is separated by a comma, except some fields have quotes
-   *  around them because the field has commas or spaces.<br>
+   *  Each field is separated by a comma, except some fields have quotes around
+   *  them because the field has commas or spaces.<br>
    *  TODO: Test to see how quotes within fields are treated
    *
    *@param  line  Description of the Parameter
@@ -473,8 +488,8 @@ public class StringUtils {
    *  Replaces all occurances of the matching pattern in the source string
    *
    *@param  source       Description of the Parameter
-   *@param  pattern      Description of the Parameter
    *@param  replacement  Description of the Parameter
+   *@param  thisPattern  Description of the Parameter
    *@return              Description of the Return Value
    */
   public static String replacePattern(String source, String thisPattern, String replacement) {
