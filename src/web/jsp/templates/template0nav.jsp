@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="css/template0<%= User.getBrowserIdAndOS() %>.css" type="text/css">
 <link rel="stylesheet" href="css/template0.css" type="text/css">
 </head>
-<script language="JavaScript" type="text/javascript" src="/javascript/popLEFT.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popLEFT.js"></script>
 <body leftmargin="0" rightmargin="0" margin="0" marginwidth="0" topmargin="0" marginheight="0">
 <table border="0" width="100%">
   <tr>
@@ -23,8 +23,8 @@
       &nbsp;
     </th>
     <th align="right">
-      <a href="/Login.do?command=Logout" class="s"> Logout</a> |
-      <a href="javascript:popLEFT('/Help.do?module=<%= request.getAttribute("moduleAction") %>&section=<%= request.getParameter("command") %>&sub=<%= request.getParameter("section") %>','CFS_Help','375','450','yes','yes');" class="s" onMouseOver="window.status='Pop-up Help';return true;" onMouseOut="window.status='';return true;">Help</a><br>
+      <a href="Login.do?command=Logout" class="s"> Logout</a> |
+      <a href="javascript:popLEFT('Help.do?module=<%= request.getAttribute("moduleAction") %>&section=<%= request.getParameter("command") %>&sub=<%= request.getParameter("section") %>','CFS_Help','375','450','yes','yes');" class="s" onMouseOver="window.status='Pop-up Help';return true;" onMouseOut="window.status='';return true;">Help</a><br>
 <%
   if (!User.getUserRecord().getContact().getNameFirstLast().equals("")) {
 %>  
@@ -44,9 +44,9 @@
 <!-- Main Menu -->
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
-    <!--<td width=10><img border="0" src="/images/menu-edge.gif" width="10" height="36"></td>-->
+    <!--<td width=10><img border="0" src="images/menu-edge.gif" width="10" height="36"></td>-->
     <%= request.getAttribute("MainMenu") %>
-    <td><img border="0" src="/images/menu-edge.gif" width="100%" height="36"></td>
+    <td><img border="0" src="images/menu-edge.gif" width="100%" height="36"></td>
   </tr>
 </table>
 <!-- Sub Menu 1 -->
