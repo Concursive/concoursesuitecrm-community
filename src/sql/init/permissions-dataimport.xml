@@ -3,6 +3,6 @@
     Imports permission categories, permissions, roles into CFS from an XML file.
     Specify the reader's processConfigFile and the writer's database url, driver.
   </description>
-  <reader class="org.aspcfs.apps.trasnfer.reader.cfs.InitPermissionsAndRoles"/>
+  <reader class="org.aspcfs.apps.transfer.reader.cfs.InitPermissionsAndRoles"/>
   <writer class="org.aspcfs.apps.transfer.writer.cfsdatabasewriter.PermissionsAndRolesWriter"/>
 </data-import-config>
