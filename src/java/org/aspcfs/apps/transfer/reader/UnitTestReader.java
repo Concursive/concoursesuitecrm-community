@@ -1,6 +1,6 @@
-package com.darkhorseventures.apps.dataimport.reader;
+package org.aspcfs.apps.transfer.reader;
 
-import com.darkhorseventures.apps.dataimport.*;
+import org.aspcfs.apps.transfer.*;
 import java.util.*;
 import java.io.*;
 import java.util.logging.*;

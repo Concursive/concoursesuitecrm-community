@@ -1,4 +1,4 @@
-package org.theseus.servlets;
+package com.darkhorseventures.framework.servlets;
 
 import java.util.*;
 import java.io.*;
@@ -6,8 +6,8 @@ import java.net.*;
 import java.lang.reflect.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.beans.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
 
@@ -119,9 +119,7 @@ public class ControllerServlet extends HttpServlet
    */
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
-
     // lets get the possible configuration parameters if they exist.
-
     // See if there is an init parameter designating a class to use as a ControllerInitHook.
     // If so, execute the hook.  This could be used for storing a Connection Pool in
     // the application scope, for example.
@@ -129,7 +127,7 @@ public class ControllerServlet extends HttpServlet
       // the parameter exists, so try to instantiate the class by the name of the
       // parameter value.
       try {
-        initHook = (ControllerInitHook)Class.forName(config.getInitParameter("InitHook")).newInstance();
+        initHook = (ControllerInitHook) Class.forName(config.getInitParameter("InitHook")).newInstance();
         initHook.executeControllerInit(config);
       } catch (Exception e) {
         System.out.println(e.toString());
@@ -152,7 +150,7 @@ public class ControllerServlet extends HttpServlet
       // the parameter exists, so try to instantiate the class by the name of the
       // parameter value.
       try {
-        hook = (ControllerHook)Class.forName(config.getInitParameter("Hook")).newInstance();
+        hook = (ControllerHook) Class.forName(config.getInitParameter("Hook")).newInstance();
       } catch (Exception e) {
         System.out.println(e.toString());
         hook = null;
@@ -169,7 +167,7 @@ public class ControllerServlet extends HttpServlet
       // the parameter exists, so try to instantiate the class by the name of the
       // parameter value.
       try {
-        mainMenuHook = (ControllerMainMenuHook)Class.forName(config.getInitParameter("MainMenuHook")).newInstance();
+        mainMenuHook = (ControllerMainMenuHook) Class.forName(config.getInitParameter("MainMenuHook")).newInstance();
         mainMenuHook.executeControllerMainMenu(config);
       } catch (Exception e) {
         System.out.println(e.toString());
@@ -187,7 +185,7 @@ public class ControllerServlet extends HttpServlet
       // the parameter exists, so try to instantiate the class by the name of the
       // parameter value.
       try {
-        globalItemsHook = (ControllerGlobalItemsHook)Class.forName(config.getInitParameter("GlobalItemsHook")).newInstance();
+        globalItemsHook = (ControllerGlobalItemsHook) Class.forName(config.getInitParameter("GlobalItemsHook")).newInstance();
       } catch (Exception e) {
         System.out.println(e.toString());
         globalItemsHook = null;
@@ -202,7 +200,7 @@ public class ControllerServlet extends HttpServlet
     // notifications, for example.
     if (config.getInitParameter("DestroyHook") != null) {
       try {
-        destroyHook = (ControllerDestroyHook)Class.forName(config.getInitParameter("DestroyHook")).newInstance();
+        destroyHook = (ControllerDestroyHook) Class.forName(config.getInitParameter("DestroyHook")).newInstance();
         destroyHook.executeControllerDestroyInit(config);
       } catch (Exception e) {
         System.out.println(e.toString());
@@ -284,7 +282,7 @@ public class ControllerServlet extends HttpServlet
       // then for what ever reason the init() mehtod is being called again, and it
       // should not be.
       if (populateClassInstance == null) {
-        populateClassInstance = (Populate)Class.forName(populateClassName).newInstance();
+        populateClassInstance = (Populate) Class.forName(populateClassName).newInstance();
       }
     } catch (Exception e) {
     }
@@ -311,11 +309,11 @@ public class ControllerServlet extends HttpServlet
         // so we need to get them from the Actions table.
         Iterator i = actions.values().iterator();
         while (i.hasNext()) {
-          Action action = (Action)i.next();
+          Action action = (Action) i.next();
 
           Iterator i2 = action.getResources().values().iterator();
           while (i2.hasNext()) {
-            Resource resource = (Resource)i2.next();
+            Resource resource = (Resource) i2.next();
             if (resource.getXSL() != null && resource.getXSL().length() > 0) {
               // there is an XSL page associated with this Resource, so
               // load it into cache and store it under its resource name.
@@ -386,7 +384,7 @@ public class ControllerServlet extends HttpServlet
     // class, store it in the classes Hashtable, then call the executeCommandXXX() method.
 
     if (actions.containsKey(actionPath)) {
-      Action action = (Action)actions.get(actionPath);
+      Action action = (Action) actions.get(actionPath);
 
       // now we will perform the security check, in case an application wants a specific
       // object to exist in the HttpSession, for example.
@@ -396,7 +394,9 @@ public class ControllerServlet extends HttpServlet
 
       String res = hook.securityCheck(this, request);
       if (res != null && res.length() > 0) {
-        if (System.getProperty("DEBUG") != null) System.out.println("> Security redirect: " + res);
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("> Security redirect: " + res);
+        }
         forward(res, action, request, response);
         return;
       }
@@ -408,23 +408,23 @@ public class ControllerServlet extends HttpServlet
       Object contextBeanRef = null;
 
       while (i.hasNext()) {
-        Beans beans = (Beans)i.next();
+        Beans beans = (Beans) i.next();
 
         // next, we get the bean reference from the scope the
         // bean is stored in.
         switch (beans.getBeanScope()) {
-          case 1:
-            // request scope
-            beanRef = request.getAttribute(beans.getBeanName());
-            break;
-          case 2:
-            // session scope
-            beanRef = request.getSession(true).getAttribute(beans.getBeanName());
-            break;
-          case 3:
-            // application/global scope (not thread safe)
-            beanRef = getServletContext().getAttribute(beans.getBeanName());
-            break;
+            case 1:
+              // request scope
+              beanRef = request.getAttribute(beans.getBeanName());
+              break;
+            case 2:
+              // session scope
+              beanRef = request.getSession(true).getAttribute(beans.getBeanName());
+              break;
+            case 3:
+              // application/global scope (not thread safe)
+              beanRef = getServletContext().getAttribute(beans.getBeanName());
+              break;
         }
 
         // if its not found, create it.
@@ -441,18 +441,18 @@ public class ControllerServlet extends HttpServlet
 
           // store it in the scope it is assigned to,
           switch (beans.getBeanScope()) {
-            case 1:
-              // request scope
-              request.setAttribute(beans.getBeanName(), beanRef);
-              break;
-            case 2:
-              // session scope
-              request.getSession(true).setAttribute(beans.getBeanName(), beanRef);
-              break;
-            case 3:
-              // application/global scope (not thread safe)
-              getServletContext().setAttribute(beans.getBeanName(), beanRef);
-              break;
+              case 1:
+                // request scope
+                request.setAttribute(beans.getBeanName(), beanRef);
+                break;
+              case 2:
+                // session scope
+                request.getSession(true).setAttribute(beans.getBeanName(), beanRef);
+                break;
+              case 3:
+                // application/global scope (not thread safe)
+                getServletContext().setAttribute(beans.getBeanName(), beanRef);
+                break;
           }
         }
 
@@ -467,7 +467,9 @@ public class ControllerServlet extends HttpServlet
         // interface.
         if (request.getParameter(populateAttribute) != null) {
           if (populateClassInstance != null) {
-            if (System.getProperty("DEBUG") != null) System.out.println("> Auto populating a bean");
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("> Auto populating a bean");
+            }
             populateClassInstance.populateObject(beanRef, request, nestedAttribute, indexAttribute);
           }
         }
@@ -509,7 +511,7 @@ public class ControllerServlet extends HttpServlet
           System.out.println("Class ref is null");
         }
         Method method = classRef.getClass().getMethod("executeCommand" + context.getCommand(), new Class[]{context.getClass()});
-        result = (String)method.invoke(classRef, new Object[]{context});
+        result = (String) method.invoke(classRef, new Object[]{context});
       } catch (NoSuchMethodException nm) {
         System.out.println("No Such Method Exception for method executeCommand" + context.getCommand() + ". MESAGE = " + nm.getMessage());
       } catch (IllegalAccessException ia) {
@@ -554,7 +556,9 @@ public class ControllerServlet extends HttpServlet
 
     // get the JSP page that will be dynamically created via the
     // javabean populated by the action class
-    if (System.getProperty("DEBUG") != null) System.out.println("> Looking up resource: " + lookup);
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("> Looking up resource: " + lookup);
+    }
     Resource resource = action.getResource(lookup);
     if (resource != null) {
       if ((resource.getXSL() != null) && (resource.getXSL().length() > 0)) {
@@ -572,7 +576,7 @@ public class ControllerServlet extends HttpServlet
         } else {
           // get it from cache
           if (xslCache.get(resource.getXSL()) != null) {
-            templates = (Templates)xslCache.get(resource.getXSL());
+            templates = (Templates) xslCache.get(resource.getXSL());
           } else {
             // didn't find it in cache, but we want to use cache, so try to read
             // the XSL page off the hd, then store it in cache.
@@ -711,6 +715,7 @@ public class ControllerServlet extends HttpServlet
    *  method
    *
    *@param  request  Description of Parameter
+   *@param  servlet  Description of the Parameter
    *@return          Description of the Returned Value
    *@since           1.0
    */
@@ -748,6 +753,7 @@ public class ControllerServlet extends HttpServlet
    *  ControllerGlobalItemsHook method
    *
    *@param  request  Description of Parameter
+   *@param  servlet  Description of the Parameter
    *@return          Description of the Returned Value
    *@since           1.1
    */

@@ -1,52 +1,66 @@
-package org.theseus.actions;
+package com.darkhorseventures.framework.actions;
 
 import java.io.*;
 import java.util.*;
 
+/**
+ *  Description of the Class
+ *
+ *@version    $Id$
+ */
 public class Forward
-  implements Serializable
-{
-  static final long serialVersionUID = 3699281129673395436L;
+     implements Serializable {
+  final static long serialVersionUID = 3699281129673395436L;
   private Hashtable forwards = null;
 
-  public Forward()
-  {
-    if( forwards == null )
+
+  /**
+   *  Constructor for the Forward object
+   */
+  public Forward() {
+    if (forwards == null) {
       forwards = new Hashtable();
+    }
   }
 
 
 
   /**
-   * Adds a forwarding resource to the hashtable
+   *  Adds a forwarding resource to the hashtable
+   *
+   *@param  forwardName  The feature to be added to the Forward attribute
+   *@param  resource     The feature to be added to the Forward attribute
    */
-  public void addForward(String forwardName, Resource resource)
-  {
+  public void addForward(String forwardName, Resource resource) {
     forwards.put(forwardName, resource);
   }
 
 
 
   /**
-   * Returns the Hashtable of forwards
+   *  Returns the Hashtable of forwards
+   *
+   *@return    The forwards value
    */
-  public Hashtable getForwards()
-  {
+  public Hashtable getForwards() {
     return forwards;
   }
 
+
   /**
-   * Retunrs the <code>Forward</code> object at the specified location
-   * or null if the location is too large.
+   *  Retunrs the <code>Forward</code> object at the specified location or null
+   *  if the location is too large.
+   *
+   *@param  pos  Description of the Parameter
+   *@return      The forwardAt value
    */
-  public Forward getForwardAt(int pos)
-  {
-    if( forwards.size() > pos )
-    {
+  public Forward getForwardAt(int pos) {
+    if (forwards.size() > pos) {
       int cntr = 0;
       Enumeration e = forwards.keys();
-      while( e.hasMoreElements() && cntr++ < (pos-1) )
-       e.nextElement();
+      while (e.hasMoreElements() && cntr++ < (pos - 1)) {
+        e.nextElement();
+      }
 
       return (Forward) e.nextElement();
     }
@@ -56,28 +70,34 @@ public class Forward
 
 
   /**
-   * Looks up a forward resource name and if it exists, returns the
-   * attribute equated to the resource name.
+   *  Looks up a forward resource name and if it exists, returns the attribute
+   *  equated to the resource name.
+   *
+   *@param  resourceName  Description of the Parameter
+   *@return               Description of the Return Value
    */
-  public Resource findResource(String resourceName)
-  {
-    if( forwards.containsKey(resourceName) )
+  public Resource findResource(String resourceName) {
+    if (forwards.containsKey(resourceName)) {
       return (Resource) forwards.get(resourceName);
-    else
+    } else {
       return null;
+    }
   }
 
 
   /**
-   * Looks for a resource, and if found, returns the XSL file associated with
-   * that resource to handle conversion of the xml output of the resource
-   * to another format, specified via the xsl xpath language
+   *  Looks for a resource, and if found, returns the XSL file associated with
+   *  that resource to handle conversion of the xml output of the resource to
+   *  another format, specified via the xsl xpath language
+   *
+   *@param  resourceName  Description of the Parameter
+   *@return               Description of the Return Value
    */
-  public String findXSL(String resourceName)
-  {
-    if( forwards.containsKey(resourceName) )
-      return (String) ( (Resource) forwards.get(resourceName)).getXSL();
-    else
+  public String findXSL(String resourceName) {
+    if (forwards.containsKey(resourceName)) {
+      return (String) ((Resource) forwards.get(resourceName)).getXSL();
+    } else {
       return null;
+    }
   }
 }

@@ -1,11 +1,11 @@
-package org.theseus.beans;
+package com.darkhorseventures.framework.beans;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
 import java.util.*;
 import java.io.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.text.*;
 
 /**
@@ -16,7 +16,6 @@ import java.text.*;
 
 public class GenericBean implements Serializable {
   protected HashMap errors = new HashMap();
-
   protected SimpleDateFormat shortDateFormat = new SimpleDateFormat("M/d/yyyy");
   protected SimpleDateFormat shortTimeFormat = new SimpleDateFormat("h:mm a");
   protected SimpleDateFormat shortDateTimeFormat = new SimpleDateFormat("M/d/yyyy h:mm:ss a");
@@ -194,20 +193,20 @@ public class GenericBean implements Serializable {
         char c = value.charAt(cntr);
 
         switch (c) {
-          case '&':
-            sb.append("&amp;");
-            break;
-          case '"':
-            sb.append("&quot;");
-            break;
-          case '<':
-            sb.append("&lt;");
-            break;
-          case '>':
-            sb.append("&gt;");
-            break;
-          default:
-            sb.append(c);
+            case '&':
+              sb.append("&amp;");
+              break;
+            case '"':
+              sb.append("&quot;");
+              break;
+            case '<':
+              sb.append("&lt;");
+              break;
+            case '>':
+              sb.append("&gt;");
+              break;
+            default:
+              sb.append(c);
         }
       }
 
@@ -259,6 +258,7 @@ public class GenericBean implements Serializable {
    *  Converts a string to a date object
    *
    *@param  thisString  Description of Parameter
+   *@param  dateFormat  Description of the Parameter
    *@return             Description of the Returned Value
    *@since              1.5
    */
@@ -276,6 +276,7 @@ public class GenericBean implements Serializable {
    *  Converts a string to a SQLDate object
    *
    *@param  thisString  Description of Parameter
+   *@param  dateFormat  Description of the Parameter
    *@return             Description of the Returned Value
    *@since              1.5
    */
@@ -288,57 +289,89 @@ public class GenericBean implements Serializable {
     }
     return null;
   }
-  
+
+
   /**
    *  Rounds a float to the specified decimal places
    *
-   *@param  thisPercent  Description of Parameter
+   *@param  x            Description of the Parameter
+   *@param  decimals     Description of the Parameter
    *@return              Description of the Returned Value
    *@since               1.6
    */
-  public final static double round(double x, int decimals) {  
+  public final static double round(double x, int decimals) {
     // rounds to the nearest integer
     int factor = 1;
-    for (int i = 0; i < Math.abs(decimals); i++) factor *= 10;
-    if (decimals < 0) return factor * Math.rint(x / factor);
-    else return Math.rint(factor * x) / factor;
+    for (int i = 0; i < Math.abs(decimals); i++) {
+      factor *= 10;
+    }
+    if (decimals < 0) {
+      return factor * Math.rint(x / factor);
+    } else {
+      return Math.rint(factor * x) / factor;
+    }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  str  Description of the Parameter
+   *@param  o    Description of the Parameter
+   *@param  n    Description of the Parameter
+   *@return      Description of the Return Value
+   */
   public final static String replace(String str, String o, String n) {
     boolean all = true;
-    if (str != null && o != null && o.length() > 0 && n != null) { 
+    if (str != null && o != null && o.length() > 0 && n != null) {
       StringBuffer result = null;
       int oldpos = 0;
       do {
-          int pos = str.indexOf(o, oldpos);
-          if (pos < 0)
-              break;
-          if (result == null)
-              result = new StringBuffer();
-          result.append(str.substring(oldpos, pos));
-          result.append(n);
-          pos += o.length();
-          oldpos = pos;
+        int pos = str.indexOf(o, oldpos);
+        if (pos < 0) {
+          break;
+        }
+        if (result == null) {
+          result = new StringBuffer();
+        }
+        result.append(str.substring(oldpos, pos));
+        result.append(n);
+        pos += o.length();
+        oldpos = pos;
       } while (all);
       if (oldpos == 0) {
-          return str;
+        return str;
       } else {
-          result.append(str.substring(oldpos));
-          return new String(result);
+        result.append(str.substring(oldpos));
+        return new String(result);
       }
     } else {
       return str;
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  s  Description of the Parameter
+   *@return    Description of the Return Value
+   */
   public final static String toString(String s) {
     if (s != null) {
-      return(s);
+      return (s);
     } else {
-      return("");
+      return ("");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  s  Description of the Parameter
+   *@return    Description of the Return Value
+   */
   public final static String toHtml(String s) {
     if (s != null) {
       if (s.trim().equals("")) {
@@ -347,11 +380,17 @@ public class GenericBean implements Serializable {
         return toHtmlValue(s);
       }
     } else {
-      return("&nbsp;");
+      return ("&nbsp;");
     }
   }
-  
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  s  Description of the Parameter
+   *@return    Description of the Return Value
+   */
   public final static String toHtmlValue(String s) {
     if (s != null) {
       String htmlReady = s.trim();
@@ -361,9 +400,9 @@ public class GenericBean implements Serializable {
       htmlReady = replace(htmlReady, "\r", "<br>");
       htmlReady = replace(htmlReady, "/&lt;", "<");
       htmlReady = replace(htmlReady, "/&gt;", ">");
-      return(htmlReady);
+      return (htmlReady);
     } else {
-      return("");
+      return ("");
     }
   }
 }

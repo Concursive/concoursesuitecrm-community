@@ -1,10 +1,10 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
 /**
  *  The Constants class provides several static variables that are used
- *  throughout ASPCFS.  To maintain, users cannot reuse numbers within
- *  a specific category, like Documents or Folders.  A formal request
- *  should be made before adding a new constant value.
+ *  throughout ASPCFS. To maintain, users cannot reuse numbers within a specific
+ *  category, like Documents or Folders. A formal request should be made before
+ *  adding a new constant value.
  *
  *@author     matt rajkowski
  *@created    February 8, 2002
@@ -72,7 +72,7 @@ public final class Constants {
 
   //Task Categories
   public final static int TASK_CATEGORY_PROJECTS = 4;
-  
+
   //TODO: Add lookup lists here...
 }
 

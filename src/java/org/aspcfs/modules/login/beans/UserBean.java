@@ -1,13 +1,13 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.login.beans;
 
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.beans.*;
 import java.util.*;
 import java.sql.*;
-import com.darkhorseventures.controller.*;
-import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.utils.ConnectionElement;
 import javax.servlet.http.*;
 import javax.servlet.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.framework.servlets.SystemStatus;
+import org.aspcfs.utils.web.*;
 
 /**
  *  User Session record -- maintained while the user is logged in
@@ -30,14 +30,33 @@ public class UserBean extends GenericBean {
   //TODO: Remove these from the user's session because they can't be serialized
   private User userRecord = null;
 
-  public UserBean() {}
 
+  /**
+   *  Constructor for the UserBean object
+   */
+  public UserBean() { }
+
+
+  /**
+   *  Sets the userId attribute of the UserBean object
+   *
+   *@param  tmp  The new userId value
+   */
   public void setUserId(int tmp) {
     userId = tmp;
   }
-  
-  public void setIdRange(String tmp) { this.idRange = tmp; }
-  
+
+
+  /**
+   *  Sets the idRange attribute of the UserBean object
+   *
+   *@param  tmp  The new idRange value
+   */
+  public void setIdRange(String tmp) {
+    this.idRange = tmp;
+  }
+
+
   /**
    *  Sets the CssFile attribute of the userBean object
    *
@@ -133,13 +152,27 @@ public class UserBean extends GenericBean {
     return actualUserId;
   }
 
+
+  /**
+   *  Gets the systemStatus attribute of the UserBean object
+   *
+   *@param  config  Description of the Parameter
+   *@return         The systemStatus value
+   */
   public SystemStatus getSystemStatus(ServletConfig config) {
     return (this.getSystemStatus(config.getServletContext()));
   }
-  
+
+
+  /**
+   *  Gets the systemStatus attribute of the UserBean object
+   *
+   *@param  context  Description of the Parameter
+   *@return          The systemStatus value
+   */
   public SystemStatus getSystemStatus(ServletContext context) {
-    Hashtable globalStatus = (Hashtable)context.getAttribute("SystemStatus");
-    return (SystemStatus)globalStatus.get(connectionElement.getUrl());
+    Hashtable globalStatus = (Hashtable) context.getAttribute("SystemStatus");
+    return (SystemStatus) globalStatus.get(connectionElement.getUrl());
   }
 
 

@@ -1,4 +1,4 @@
-package org.theseus.servlets;
+package com.darkhorseventures.framework.servlets;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -8,7 +8,8 @@ import javax.servlet.http.*;
  *
  *@author     mrajkowski
  *@created    July 30, 2001
- *@version    $Id$
+ *@version    $Id: ControllerDestroyHook.java,v 1.1.1.1 2002/01/14 19:49:29
+ *      mrajkowski Exp $
  */
 public interface ControllerDestroyHook {
 

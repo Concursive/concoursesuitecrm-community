@@ -1,10 +1,8 @@
-//Copyright 2001 Dark Horse Ventures
-
-package com.darkhorseventures.webutils;
+package org.aspcfs.utils.web;
 
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Represents an item from a Lookup table, to be used primarily with HtmlSelect

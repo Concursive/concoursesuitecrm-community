@@ -1,17 +1,15 @@
-package com.darkhorseventures.controller;
+package com.darkhorseventures.framework.hooks;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.servlets.ControllerMainMenuHook;
 import java.io.*;
 import java.util.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.cfsmodule.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-import com.darkhorseventures.utils.ConnectionElement;
-import com.darkhorseventures.controller.SystemStatus;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.framework.servlets.ControllerMainMenuHook;
+import com.darkhorseventures.framework.servlets.SystemStatus;
 
 /**
  *  When a template requiring navigation is requested, this class generates the

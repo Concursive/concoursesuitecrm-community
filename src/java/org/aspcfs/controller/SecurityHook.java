@@ -1,11 +1,9 @@
-package com.darkhorseventures.controller;
+package com.darkhorseventures.framework.hooks;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.servlets.ControllerHook;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.cfsmodule.*;
-import com.darkhorseventures.utils.*;
+import com.darkhorseventures.framework.servlets.ControllerHook;
+import com.darkhorseventures.database.*;
 import java.util.Hashtable;
 import java.sql.*;
 
@@ -19,7 +17,8 @@ import java.sql.*;
 public class SecurityHook implements ControllerHook {
 
   public final static String fs = System.getProperty("file.separator");
-  
+
+
   /**
    *  Checks to see if a User session object exists, if not then the security
    *  check fails.<p>
@@ -39,7 +38,7 @@ public class SecurityHook implements ControllerHook {
     String action = request.getServletPath();
     int slash = action.lastIndexOf("/");
     action = action.substring(slash + 1);
-    
+
     //Login and Process modules bypass security and must implement their own
     if (action.toUpperCase().startsWith("LOGIN") ||
         action.toUpperCase().startsWith("PROCESS")) {
@@ -53,7 +52,7 @@ public class SecurityHook implements ControllerHook {
       request.setAttribute("LoginBean", failedSession);
       return "SecurityCheck";
     }
-    
+
     //Check to see if this site requires SSL
     if ("true".equals((String) servlet.getServletConfig().getServletContext().getAttribute("ForceSSL")) &&
         "http".equals(request.getScheme())) {
@@ -73,13 +72,13 @@ public class SecurityHook implements ControllerHook {
         System.out.println("SecurityHook-> Fatal: CE is null");
         return ("SystemError");
       }
-      
+
       Hashtable globalStatus = (Hashtable) servlet.getServletConfig().getServletContext().getAttribute("SystemStatus");
       if (globalStatus == null) {
         //NOTE: This shouldn't occur
         System.out.println("SecurityHook-> Fatal: SystemStatus Hashtable is null!");
       }
-      
+
       SystemStatus systemStatus = (SystemStatus) globalStatus.get(ce.getUrl());
       if (systemStatus == null) {
         //NOTE: This happens when the context is reloaded and the user's
@@ -95,7 +94,7 @@ public class SecurityHook implements ControllerHook {
         }
       }
       request.setAttribute("moduleAction", action);
-      
+
       //Check the session manager to see if this session is valid
       SessionManager thisManager = systemStatus.getSessionManager();
       UserSession sessionInfo = thisManager.getUserSession(userSession.getActualUserId());
@@ -108,7 +107,7 @@ public class SecurityHook implements ControllerHook {
         request.setAttribute("LoginBean", failedSession);
         return "SecurityCheck";
       }
-      
+
       //Calling getHierarchyCheck() and getPermissionCheck() will block the
       //user until hierarchy and permisions have been rebuilt
       if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck()) ||
@@ -146,24 +145,34 @@ public class SecurityHook implements ControllerHook {
     return null;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@param  ce                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public static synchronized SystemStatus retrieveSystemStatus(ServletContext context, Connection db, ConnectionElement ce) throws SQLException {
     //SystemStatusList is created in InitHook
     Hashtable statusList = (Hashtable) context.getAttribute("SystemStatus");
     //Create the SystemStatus object if it does not exist for this connection,
     if (!statusList.containsKey(ce.getUrl())) {
       //synchronized (this) {
-        if (!statusList.containsKey(ce.getUrl())) {
-          SystemStatus newSystemStatus = new SystemStatus();
-          newSystemStatus.setConnectionElement((ConnectionElement) ce.clone());
-          newSystemStatus.setFileLibraryPath(
-              context.getRealPath("/") + "WEB-INF" + fs +
-              "fileLibrary" + fs + ce.getDbName() + fs);
-          newSystemStatus.queryRecord(db);
-          statusList.put(ce.getUrl(), newSystemStatus);
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("CFSModule-> Added new System Status object: " + ce.getUrl());
-          }
+      if (!statusList.containsKey(ce.getUrl())) {
+        SystemStatus newSystemStatus = new SystemStatus();
+        newSystemStatus.setConnectionElement((ConnectionElement) ce.clone());
+        newSystemStatus.setFileLibraryPath(
+            context.getRealPath("/") + "WEB-INF" + fs +
+            "fileLibrary" + fs + ce.getDbName() + fs);
+        newSystemStatus.queryRecord(db);
+        statusList.put(ce.getUrl(), newSystemStatus);
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("CFSModule-> Added new System Status object: " + ce.getUrl());
         }
+      }
       //}
     }
     return (SystemStatus) statusList.get(ce.getUrl());

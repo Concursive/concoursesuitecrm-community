@@ -1,4 +1,4 @@
-package com.darkhorseventures.utils;
+package com.darkhorseventures.database;
 
 import java.io.Serializable;
 

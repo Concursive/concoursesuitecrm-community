@@ -1,9 +1,9 @@
-package com.darkhorseventures.apps.dataimport.writer;
+package org.aspcfs.apps.transfer.writer;
 
-import com.darkhorseventures.apps.dataimport.*;
+import org.aspcfs.apps.transfer.*;
 import java.util.*;
 import java.util.logging.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.*;
 import java.io.*;
 
 public class TextWriter implements DataWriter {

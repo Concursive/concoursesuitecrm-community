@@ -1,13 +1,13 @@
-package com.darkhorseventures.apps.dataimport.reader.cfs;
+package org.aspcfs.apps.transfer.reader.cfs;
 
-import com.darkhorseventures.apps.dataimport.*;
+import org.aspcfs.apps.transfer.*;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import java.io.*;
-import com.darkhorseventures.apps.dataimport.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
+import org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;

@@ -1,4 +1,4 @@
-package org.theseus.beans;
+package com.darkhorseventures.framework.beans;
 
 import java.util.*;
 import java.lang.reflect.*;
@@ -43,6 +43,7 @@ import javax.servlet.http.*;
  *
  *@author     Kevin Duffey
  *@created    June 1, 2001
+ *@version    $Id$
  */
 public class BeanUtils
      implements Populate, java.io.Serializable {
@@ -63,7 +64,7 @@ public class BeanUtils
     String paramName = null;
 
     while (e.hasMoreElements()) {
-      paramName = (String)e.nextElement();
+      paramName = (String) e.nextElement();
 
       // a form has been submitted and requested to be auto-populated,
       // so we do that here..going through every element and trying
@@ -88,7 +89,6 @@ public class BeanUtils
    *
    *@param  source  Description of Parameter
    *@param  target  Description of Parameter
-   *@since
    */
   public static void populateObject(Object source, Object target) {
   }
@@ -103,7 +103,6 @@ public class BeanUtils
    *@param  target           Description of Parameter
    *@param  nestedAttribute  Description of Parameter
    *@param  indexAttribute   Description of Parameter
-   *@since
    */
   private static void populateParameter(String param, Object value, Object target, String nestedAttribute, String indexAttribute) {
     if ((param == null) || (param.length() == 0) || (value == null) || (target == null)) {

@@ -1,4 +1,4 @@
-package com.darkhorseventures.apps.dataimport;
+package org.aspcfs.apps.transfer;
 
 /**
  *  Represents an object that will be responsible for reading data from a system

@@ -1,7 +1,7 @@
-package com.darkhorseventures.controller;
+package com.darkhorseventures.framework.servlets;
 
 import javax.servlet.http.HttpSession;
-import org.theseus.actions.ActionContext;
+import com.darkhorseventures.framework.actions.ActionContext;
 
 /**
  *  Stores a user's session data
@@ -49,7 +49,7 @@ public class UserSession {
   /**
    *  Sets the maxInactiveTimeInterval attribute of the UserSession object
    *
-   *@param  maxInactiveInterval      The new maxInactiveInterval value
+   *@param  maxInactiveInterval  The new maxInactiveInterval value
    */
   public void setMaxInactiveInterval(int maxInactiveInterval) {
     this.maxInactiveInterval = maxInactiveInterval;

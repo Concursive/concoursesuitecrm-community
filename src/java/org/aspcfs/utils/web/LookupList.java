@@ -1,13 +1,10 @@
-//Copyright 2001 Dark Horse Ventures
-
-package com.darkhorseventures.webutils;
+package org.aspcfs.utils.web;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.cfsbase.Constants;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  A generic class that contains a list of LookupElement objects.
@@ -30,6 +27,7 @@ public class LookupList extends HtmlSelect {
   protected boolean showDisabledFlag = true;
   protected PagedListInfo pagedListInfo = null;
 
+
   /**
    *  Constructor for the LookupList object. Generates an empty list, which is
    *  not very useful.
@@ -37,6 +35,7 @@ public class LookupList extends HtmlSelect {
    *@since    1.1
    */
   public LookupList() { }
+
 
   /**
    *  Builds a list of elements based on the database connection and the table
@@ -52,6 +51,7 @@ public class LookupList extends HtmlSelect {
     tableName = thisTable;
     buildList(db);
   }
+
 
   /**
    *  Constructor for the LookupList object
@@ -76,13 +76,27 @@ public class LookupList extends HtmlSelect {
       this.add(thisElement);
     }
   }
-  
+
+
+  /**
+   *  Gets the pagedListInfo attribute of the LookupList object
+   *
+   *@return    The pagedListInfo value
+   */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
   }
+
+
+  /**
+   *  Sets the pagedListInfo attribute of the LookupList object
+   *
+   *@param  pagedListInfo  The new pagedListInfo value
+   */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
   }
+
 
   /**
    *  Constructor for the LookupList object
@@ -119,9 +133,22 @@ public class LookupList extends HtmlSelect {
     st.close();
   }
 
+
+  /**
+   *  Sets the showDisabledFlag attribute of the LookupList object
+   *
+   *@param  showDisabledFlag  The new showDisabledFlag value
+   */
   public void setShowDisabledFlag(boolean showDisabledFlag) {
     this.showDisabledFlag = showDisabledFlag;
   }
+
+
+  /**
+   *  Gets the showDisabledFlag attribute of the LookupList object
+   *
+   *@return    The showDisabledFlag value
+   */
   public boolean getShowDisabledFlag() {
     return showDisabledFlag;
   }
@@ -238,11 +265,23 @@ public class LookupList extends HtmlSelect {
   public void setSelectSize(int tmp) {
     this.selectSize = tmp;
   }
-  
+
+
+  /**
+   *  Gets the tableName attribute of the LookupList object
+   *
+   *@return    The tableName value
+   */
   public String getTableName() {
     return tableName;
   }
-  
+
+
+  /**
+   *  Gets the uniqueField attribute of the LookupList object
+   *
+   *@return    The uniqueField value
+   */
   public String getUniqueField() {
     return uniqueField;
   }
@@ -267,7 +306,14 @@ public class LookupList extends HtmlSelect {
   public boolean getMultiple() {
     return multiple;
   }
-  
+
+
+  /**
+   *  Gets the htmlSelectDefaultNone attribute of the LookupList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@return             The htmlSelectDefaultNone value
+   */
   public String getHtmlSelectDefaultNone(String selectName) {
     HtmlSelect thisSelect = new HtmlSelect();
     thisSelect.addItem(-1, "-- None --");
@@ -283,6 +329,12 @@ public class LookupList extends HtmlSelect {
     return thisSelect.getHtml(selectName);
   }
 
+
+  /**
+   *  Gets the enabledElementCount attribute of the LookupList object
+   *
+   *@return    The enabledElementCount value
+   */
   public int getEnabledElementCount() {
     int count = 0;
 
@@ -295,7 +347,8 @@ public class LookupList extends HtmlSelect {
     }
     return count;
   }
-  
+
+
   /**
    *  Gets the HtmlSelect attribute of the ContactEmailTypeList object
    *
@@ -309,7 +362,6 @@ public class LookupList extends HtmlSelect {
     thisSelect.setSelectSize(selectSize);
     thisSelect.setMultiple(multiple);
     thisSelect.setJsEvent(jsEvent);
-    
 
     Iterator i = this.iterator();
     boolean keyFound = false;
@@ -324,7 +376,7 @@ public class LookupList extends HtmlSelect {
           lookupDefault = thisElement.getCode();
         }
       } else if (thisElement.getCode() == defaultKey) {
-          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
       }
 
       if (thisElement.getCode() == defaultKey) {
@@ -338,7 +390,7 @@ public class LookupList extends HtmlSelect {
       return thisSelect.getHtml(selectName, lookupDefault);
     }
   }
-  
+
 
   /**
    *  Gets the HtmlSelect attribute of the ContactEmailTypeList object
@@ -518,19 +570,19 @@ public class LookupList extends HtmlSelect {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-    
+
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlSelect = new StringBuffer();
-    
+
     sqlCount.append(
-      "SELECT COUNT(*) AS recordcount " +
-      "FROM " + tableName + " " +
-      "WHERE code > -1 ");
-      
-    createFilter(sqlFilter);  
-      
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM " + tableName + " " +
+        "WHERE code > -1 ");
+
+    createFilter(sqlFilter);
+
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -542,11 +594,11 @@ public class LookupList extends HtmlSelect {
       }
       pst.close();
       rs.close();
-      
+
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString() +
-        "AND description < ? ");
+            "AND description < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -557,46 +609,45 @@ public class LookupList extends HtmlSelect {
         rs.close();
         pst.close();
       }
-      
+
       //Determine column to sort by
       pagedListInfo.setDefaultSort("description ", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY level,description ");
-    }  
-    
+    }
+
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     } else {
       sqlSelect.append("SELECT ");
     }
-    
+
     sqlSelect.append(
         "* " +
         "FROM " + tableName + " " +
         "WHERE code > -1 ");
-    
+
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    
+
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
-    
+
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-      DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-      count >= pagedListInfo.getItemsPerPage()) {
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          count >= pagedListInfo.getItemsPerPage()) {
         break;
       }
       ++count;
       LookupElement thisElement = new LookupElement(rs);
       this.add(thisElement);
     }
-    
+
     rs.close();
     pst.close();
   }

@@ -1,13 +1,15 @@
-package com.darkhorseventures.controller;
+package com.darkhorseventures.framework.servlets;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import com.darkhorseventures.cfsbase.UserBean;
-import com.darkhorseventures.utils.*;
 import java.util.Hashtable;
+import com.darkhorseventures.database.*;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.admin.base.User;
+
 /**
  *  Listener for monitoring session changes
  *
@@ -73,7 +75,7 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
           }
         }
       }
-    }  catch (Exception e) {
+    } catch (Exception e) {
       System.out.println("ContextSessionListener -- > Error " + e.toString());
     }
   }

@@ -1,8 +1,7 @@
-package com.darkhorseventures.webutils;
+package org.aspcfs.utils.web;
 
 import java.util.*;
 import java.sql.*;
-import com.darkhorseventures.webutils.LookupList;
 
 /**
  *  LookupTable generates an HTML SELECT dropdown or list box, optionally from a
@@ -20,49 +19,56 @@ public class HtmlSelect extends ArrayList {
   protected String firstEntry = "";
   protected String firstKey = "";
 
-	protected String defaultKey = "";
-	protected String defaultValue = "";
-	protected String jsEvent = null;
-	protected boolean multiple = false;
+  protected String defaultKey = "";
+  protected String defaultValue = "";
+  protected String jsEvent = null;
+  protected boolean multiple = false;
 
-	protected int processedRowCount = 0;
-	protected boolean checkboxOutput = false;
+  protected int processedRowCount = 0;
+  protected boolean checkboxOutput = false;
 
-	protected StringBuffer rowList = new StringBuffer();
+  protected StringBuffer rowList = new StringBuffer();
 
-	protected boolean built = false;
-	protected LookupList multipleSelects = null;
+  protected boolean built = false;
+  protected LookupList multipleSelects = null;
   protected String idName = null;
   protected HashMap attributeList = new HashMap();
 
-	/**
-	 *  Constructor for an HTML select box. Creates an HTML select box or series of
-	 *  checkboxes from the supplied items, either added manually or from a
-	 *  resultset. <br>
-	 *  A couple of built-in lists can also be retrieved. <p>
-	 *
-	 *  Usage: <p>
-	 *
-	 *  - Construct the object <br>
-	 *  - Then manually add items to the list by calling addItem() <br>
-	 *  - Then specify a default key or value <br>
-	 *  - Then build the list by calling build() or build(resultset...) <br>
-	 *  - To get the resulting HTML, use getHtml() <p>
-	 *
-	 *  HtmlSelect stateSelect = new HtmlSelect(); <br>
-	 *  stateSelect.addItem("VA"); <br>
-	 *  stateSelect.addItem("VT"); <br>
-	 *  stateSelect.setDefaultKey("VT"); <br>
-	 *  stateSelect.setSelectName("state"); <br>
-	 *  stateSelect.build(); <br>
-	 *  context.getRequest().setAttribute("StateSelect", stateSelect); <br>
-	 *
-	 *
-	 *@since    1.0
-	 */
-	
-	public HtmlSelect() { }
-	
+
+  /**
+   *  Constructor for an HTML select box. Creates an HTML select box or series
+   *  of checkboxes from the supplied items, either added manually or from a
+   *  resultset. <br>
+   *  A couple of built-in lists can also be retrieved. <p>
+   *
+   *  Usage: <p>
+   *
+   *  - Construct the object <br>
+   *  - Then manually add items to the list by calling addItem() <br>
+   *  - Then specify a default key or value <br>
+   *  - Then build the list by calling build() or build(resultset...) <br>
+   *  - To get the resulting HTML, use getHtml() <p>
+   *
+   *  HtmlSelect stateSelect = new HtmlSelect(); <br>
+   *  stateSelect.addItem("VA"); <br>
+   *  stateSelect.addItem("VT"); <br>
+   *  stateSelect.setDefaultKey("VT"); <br>
+   *  stateSelect.setSelectName("state"); <br>
+   *  stateSelect.build(); <br>
+   *  context.getRequest().setAttribute("StateSelect", stateSelect); <br>
+   *
+   *
+   *@since    1.0
+   */
+
+  public HtmlSelect() { }
+
+
+  /**
+   *  Constructor for the HtmlSelect object
+   *
+   *@param  itemsToAdd  Description of the Parameter
+   */
   public HtmlSelect(ArrayList itemsToAdd) {
     Iterator i = itemsToAdd.iterator();
     while (i.hasNext()) {
@@ -131,126 +137,157 @@ public class HtmlSelect extends ArrayList {
       built = false;
     }
     if (defaultKey != null) {
-			this.defaultKey = tmp;
-		} else {
-			this.defaultKey = "";
-		}
-	}
-	
-	/**
-	*  Set the default value for the HTML Select, by key name
-	*
-	*@param  tmp  The new DefaultKey value
-	*@since       1.0
-	*/
-	public void setDefaultKey(int tmp) {
-		setDefaultKey(String.valueOf(tmp));
-	}
-	
-	/**
-	*  Set the visible size of the HTML Select, default 1 for combo box
-	*
-	*@param  tmp  The new SelectSize value
-	*@since       1.0
-	*/
-	public void setSelectSize(int tmp) {
-		this.selectSize = tmp;
-	}
-  
+      this.defaultKey = tmp;
+    } else {
+      this.defaultKey = "";
+    }
+  }
+
+
+  /**
+   *  Set the default value for the HTML Select, by key name
+   *
+   *@param  tmp  The new DefaultKey value
+   *@since       1.0
+   */
+  public void setDefaultKey(int tmp) {
+    setDefaultKey(String.valueOf(tmp));
+  }
+
+
+  /**
+   *  Set the visible size of the HTML Select, default 1 for combo box
+   *
+   *@param  tmp  The new SelectSize value
+   *@since       1.0
+   */
+  public void setSelectSize(int tmp) {
+    this.selectSize = tmp;
+  }
+
+
+  /**
+   *  Gets the idName attribute of the HtmlSelect object
+   *
+   *@return    The idName value
+   */
   public String getIdName() {
-	  return idName;
+    return idName;
   }
-  
+
+
+  /**
+   *  Sets the idName attribute of the HtmlSelect object
+   *
+   *@param  idName  The new idName value
+   */
   public void setIdName(String idName) {
-	  this.idName = idName;
+    this.idName = idName;
   }
 
-	/**
-	*  Set a manual entry that appears first in the list, like Any or None, etc.
-	*
-	*@param  tmp  The new FirstEntry value
-	*@since       1.0
-	*/
-	public void setFirstEntry(String tmp) {
-		this.firstEntry = tmp;
-	}
 
-	/**
-	*  Sets the FirstEntry attribute of the HtmlSelect object
-	*
-	*@param  tmp1  The new FirstEntry value
-	*@param  tmp2  The new FirstEntry value
-	*@since        1.0
-	*/
-	public void setFirstEntry(String tmp1, String tmp2) {
-		this.firstKey = tmp1;
-		this.firstEntry = tmp2;
-	}
-	
-	/**
-	 *  Sets the CheckboxOutput attribute of the HtmlSelect object
-	 *
-	 *@param  tmp  The new CheckboxOutput value
-	 *@since       1.0
-	 */
-	public void setCheckboxOutput(boolean tmp) {
-		checkboxOutput = tmp;
-	}
+  /**
+   *  Set a manual entry that appears first in the list, like Any or None, etc.
+   *
+   *@param  tmp  The new FirstEntry value
+   *@since       1.0
+   */
+  public void setFirstEntry(String tmp) {
+    this.firstEntry = tmp;
+  }
 
 
-	/**
-	 *  Pre-programmed lookup types that can be used
-	 *
-	 *@since    1.0
-	 */
-	public void setTypeHours() {
-		this.addItem("12");
-		this.addItem("1");
-		this.addItem("2");
-		this.addItem("3");
-		this.addItem("4");
-		this.addItem("5");
-		this.addItem("6");
-		this.addItem("7");
-		this.addItem("8");
-		this.addItem("9");
-		this.addItem("10");
-		this.addItem("11");
-	}
+  /**
+   *  Sets the FirstEntry attribute of the HtmlSelect object
+   *
+   *@param  tmp1  The new FirstEntry value
+   *@param  tmp2  The new FirstEntry value
+   *@since        1.0
+   */
+  public void setFirstEntry(String tmp1, String tmp2) {
+    this.firstKey = tmp1;
+    this.firstEntry = tmp2;
+  }
 
 
-	/**
-	 *  Sets the TypeLocale attribute of the HtmlSelect object
-	 *
-	 *@since
-	 */
-	public void setTypeLocale() {
-		Locale[] locales;
-		locales = Locale.getAvailableLocales();
-		for (int i = 0; i < locales.length; i++) {
-			if (locales[i].getCountry().length() > 0) {
-				this.addItem(i, locales[i].getDisplayName());
-			}
-		}
-	}
-	
-	public LookupList getMultipleSelects() {
-		return multipleSelects;
-	}
-	public void setMultipleSelects(LookupList multipleSelects) {
-		this.multipleSelects = multipleSelects;
-	}
+  /**
+   *  Sets the CheckboxOutput attribute of the HtmlSelect object
+   *
+   *@param  tmp  The new CheckboxOutput value
+   *@since       1.0
+   */
+  public void setCheckboxOutput(boolean tmp) {
+    checkboxOutput = tmp;
+  }
 
-	/**
-	 *  Sets the TypeTimeZone attribute of the HtmlSelect object
-	 *
-	 *@since
-	 */
-	public void setTypeTimeZone() {
-		String[] timeZones;
-		timeZones = TimeZone.getAvailableIDs();
-		for (int i = 0; i < timeZones.length; i++) {
-			TimeZone tz = TimeZone.getTimeZone(timeZones[i]);
+
+  /**
+   *  Pre-programmed lookup types that can be used
+   *
+   *@since    1.0
+   */
+  public void setTypeHours() {
+    this.addItem("12");
+    this.addItem("1");
+    this.addItem("2");
+    this.addItem("3");
+    this.addItem("4");
+    this.addItem("5");
+    this.addItem("6");
+    this.addItem("7");
+    this.addItem("8");
+    this.addItem("9");
+    this.addItem("10");
+    this.addItem("11");
+  }
+
+
+  /**
+   *  Sets the TypeLocale attribute of the HtmlSelect object
+   *
+   *@since
+   */
+  public void setTypeLocale() {
+    Locale[] locales;
+    locales = Locale.getAvailableLocales();
+    for (int i = 0; i < locales.length; i++) {
+      if (locales[i].getCountry().length() > 0) {
+        this.addItem(i, locales[i].getDisplayName());
+      }
+    }
+  }
+
+
+  /**
+   *  Gets the multipleSelects attribute of the HtmlSelect object
+   *
+   *@return    The multipleSelects value
+   */
+  public LookupList getMultipleSelects() {
+    return multipleSelects;
+  }
+
+
+  /**
+   *  Sets the multipleSelects attribute of the HtmlSelect object
+   *
+   *@param  multipleSelects  The new multipleSelects value
+   */
+  public void setMultipleSelects(LookupList multipleSelects) {
+    this.multipleSelects = multipleSelects;
+  }
+
+
+  /**
+   *  Sets the TypeTimeZone attribute of the HtmlSelect object
+   *
+   *@since
+   */
+  public void setTypeTimeZone() {
+    String[] timeZones;
+    timeZones = TimeZone.getAvailableIDs();
+    for (int i = 0; i < timeZones.length; i++) {
+      TimeZone tz = TimeZone.getTimeZone(timeZones[i]);
       int rawOffset = tz.getRawOffset();
       double gmt = (rawOffset / 1000 / 60 / 60);
       int gmtInt = (rawOffset / 1000 / 60 / 60);
@@ -469,7 +506,7 @@ public class HtmlSelect extends ArrayList {
     }
     StringBuffer outputHtml = new StringBuffer();
     if (!checkboxOutput) {
-      outputHtml.append("<select size='" + this.selectSize + "' name='" + this.selectName + "'" + (jsEvent != null?" " + this.jsEvent:"") + (idName != null?" " + "id='" + this.idName + "' ":"")  + (multiple != false?" multiple ":"") + this.getAttributeList() + ">");
+      outputHtml.append("<select size='" + this.selectSize + "' name='" + this.selectName + "'" + (jsEvent != null ? " " + this.jsEvent : "") + (idName != null ? " " + "id='" + this.idName + "' " : "") + (multiple != false ? " multiple " : "") + this.getAttributeList() + ">");
     }
 
     //Process the rows

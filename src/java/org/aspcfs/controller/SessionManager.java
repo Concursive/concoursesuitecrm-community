@@ -1,8 +1,8 @@
-package com.darkhorseventures.controller;
+package com.darkhorseventures.framework.servlets;
 
 import java.util.HashMap;
 import javax.servlet.http.HttpSession;
-import org.theseus.actions.ActionContext;
+import com.darkhorseventures.framework.actions.ActionContext;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -28,12 +28,6 @@ public class SessionManager {
   public SessionManager() { }
 
 
-  //can be used later to increase performance by reducing rehash of HashMap each time.
-  /*
-   *  public SessionManager(int userCount) {
-   *  sessions = new HashMap(userCount);
-   *  }
-   */
   /**
    *  Sets the sessions attribute of the SessionManager object
    *
@@ -73,9 +67,8 @@ public class SessionManager {
 
 
   /**
-   *  Adds a feature to the User attribute of the SessionManager object,
-   *  for classes that do not have access to an ActionContext, like the
-   *  SecurityHook
+   *  Adds a feature to the User attribute of the SessionManager object, for
+   *  classes that do not have access to an ActionContext, like the SecurityHook
    *
    *@param  request  The feature to be added to the User attribute
    *@param  userId   The feature to be added to the User attribute

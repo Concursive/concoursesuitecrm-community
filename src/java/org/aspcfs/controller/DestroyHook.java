@@ -1,9 +1,9 @@
-package com.darkhorseventures.controller;
+package com.darkhorseventures.framework.hooks;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.servlets.ControllerDestroyHook;
-import com.darkhorseventures.utils.*;
+import com.darkhorseventures.framework.servlets.ControllerDestroyHook;
+import com.darkhorseventures.database.*;
 import java.sql.*;
 
 /**

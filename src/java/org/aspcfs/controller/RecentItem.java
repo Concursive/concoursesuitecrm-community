@@ -1,5 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
-package com.darkhorseventures.controller;
+package com.darkhorseventures.framework.hooks;
 
 import java.io.*;
 

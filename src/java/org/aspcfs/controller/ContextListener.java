@@ -1,4 +1,4 @@
-package com.darkhorseventures.controller;
+package com.darkhorseventures.framework.servlets;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextAttributeEvent;
@@ -6,14 +6,16 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.sql.*;
 import java.util.Hashtable;
-import com.darkhorseventures.utils.*;
+import com.darkhorseventures.database.*;
 
 /**
- *  Responsible for initialization and cleanup when the web-app is loaded/reloaded
+ *  Responsible for initialization and cleanup when the web-app is
+ *  loaded/reloaded
  *
  *@author     matt rajkowski
  *@created    November 11, 2002
- *@version    $Id$
+ *@version    $Id: ContextListener.java,v 1.4 2002/12/23 19:59:31 mrajkowski Exp
+ *      $
  */
 public class ContextListener implements ServletContextListener {
 

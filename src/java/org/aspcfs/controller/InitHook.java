@@ -1,9 +1,9 @@
-package com.darkhorseventures.controller;
+package com.darkhorseventures.framework.hooks;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.servlets.ControllerInitHook;
-import com.darkhorseventures.utils.*;
+import com.darkhorseventures.framework.servlets.ControllerInitHook;
+import com.darkhorseventures.database.*;
 import java.sql.*;
 import java.util.Hashtable;
 
@@ -29,7 +29,7 @@ public class InitHook implements ControllerInitHook {
     if (config.getInitParameter("SiteCode") != null) {
       context.setAttribute("SiteCode", config.getInitParameter("SiteCode"));
     }
-    
+
     if (config.getInitParameter("GKDRIVER") != null) {
       context.setAttribute("GKDRIVER", config.getInitParameter("GKDRIVER"));
     } else {
@@ -45,7 +45,7 @@ public class InitHook implements ControllerInitHook {
     if (config.getInitParameter("GKUSERPW") != null) {
       context.setAttribute("GKUSERPW", config.getInitParameter("GKUSERPW"));
     }
-    
+
     if (config.getInitParameter("ForceSSL") != null) {
       if ("true".equals(config.getInitParameter("ForceSSL"))) {
         context.setAttribute("ForceSSL", "true");
@@ -53,55 +53,54 @@ public class InitHook implements ControllerInitHook {
         context.setAttribute("ForceSSL", "false");
       }
     }
-    
+
     if (config.getInitParameter("GlobalPWInfo") != null) {
-      context.setAttribute("GlobalPWInfo", 
-        config.getInitParameter("GlobalPWInfo"));
+      context.setAttribute("GlobalPWInfo",
+          config.getInitParameter("GlobalPWInfo"));
     } else {
       context.setAttribute("GlobalPWInfo", "#notspecified");
     }
-    
+
     if (config.getInitParameter("ClientSSLKeystore") != null) {
-      context.setAttribute("ClientSSLKeystore", 
-        config.getInitParameter("ClientSSLKeystore"));
+      context.setAttribute("ClientSSLKeystore",
+          config.getInitParameter("ClientSSLKeystore"));
     }
-    
+
     if (config.getInitParameter("ClientSSLKeystorePassword") != null) {
-      context.setAttribute("ClientSSLKeystorePassword", 
-        config.getInitParameter("ClientSSLKeystorePassword"));
+      context.setAttribute("ClientSSLKeystorePassword",
+          config.getInitParameter("ClientSSLKeystorePassword"));
     }
-    
+
     if (config.getInitParameter("ContainerMenuConfig") != null) {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("InitHook-> Setting the ContainerMenuConfig property: " + 
-          config.getInitParameter("ContainerMenuConfig"));
+        System.out.println("InitHook-> Setting the ContainerMenuConfig property: " +
+            config.getInitParameter("ContainerMenuConfig"));
       }
-      context.setAttribute("ContainerMenuConfig", 
-        config.getInitParameter("ContainerMenuConfig"));
+      context.setAttribute("ContainerMenuConfig",
+          config.getInitParameter("ContainerMenuConfig"));
     }
-    
+
     if (config.getInitParameter("DynamicFormConfig") != null) {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("InitHook-> Setting the DynamicFormConfig property: " + 
-          config.getInitParameter("DynamicFormConfig"));
+        System.out.println("InitHook-> Setting the DynamicFormConfig property: " +
+            config.getInitParameter("DynamicFormConfig"));
       }
       context.setAttribute("DynamicFormConfig", config.getInitParameter("DynamicFormConfig"));
       CustomFormList forms = new CustomFormList(context, config.getInitParameter("DynamicFormConfig"));
       context.setAttribute("DynamicFormList", forms);
     }
-    
+
     if (config.getInitParameter("MailServer") != null) {
-      context.setAttribute("MailServer", 
-        config.getInitParameter("MailServer"));
+      context.setAttribute("MailServer",
+          config.getInitParameter("MailServer"));
       System.setProperty("MailServer", String.valueOf(config.getInitParameter("MailServer")));
     } else {
       context.setAttribute("MailServer", "127.0.0.1");
       System.setProperty("MailServer", "127.0.0.1");
     }
-    
+
     return null;
   }
-  
 
 }
 

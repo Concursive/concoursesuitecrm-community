@@ -1,4 +1,4 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.utils;
 
 import java.lang.reflect.*;
 import java.text.SimpleDateFormat;
@@ -170,8 +170,8 @@ public class ObjectUtils {
 
   /**
    *  Constructs a new object in which the object loads itself from a database
-   *  given an id for the object and a String typically used as a tableName
-   *  for a lookupElement object
+   *  given an id for the object and a String typically used as a tableName for
+   *  a lookupElement object
    *
    *@param  theClass   Description of the Parameter
    *@param  db         Description of the Parameter

@@ -1,4 +1,4 @@
-package org.theseus.actions;
+package com.darkhorseventures.framework.actions;
 
 import java.io.*;
 import java.util.*;
@@ -6,7 +6,7 @@ import java.sql.*;
 import javax.naming.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.beans.*;
 
 /**
  *  ActionContext is created in the <code>DefaultAction</code> so that a single
@@ -20,7 +20,6 @@ import org.theseus.beans.*;
  *@created    June 1, 2001
  *@version    1.0
  */
-
 public class ActionContext
      implements Serializable {
   private String command = "Default";
@@ -34,7 +33,6 @@ public class ActionContext
   final static long serialVersionUID = 215434482513634196L;
 
 
-
   /**
    *  Constructor that creates the ActionContext object and sets the needed
    *  object references that actions will need access to.
@@ -44,9 +42,7 @@ public class ActionContext
    *@param  action    Description of Parameter
    *@param  request   Description of Parameter
    *@param  response  Description of Parameter
-   *@since
    */
-
   public ActionContext(Servlet servlet, Object bean, Action action, HttpServletRequest request, HttpServletResponse response) {
     this.bean = bean;
     this.request = request;
@@ -74,7 +70,6 @@ public class ActionContext
    *
    *@param  name   The new Attribute value
    *@param  value  The new Attribute value
-   *@since
    */
   public void setAttribute(String name, Object value) {
     getSession().setAttribute(name, value);
@@ -88,13 +83,12 @@ public class ActionContext
    *  the JSP page is forwarded to.
    *
    *@param  value  the message to set into the request attribute
-   *@since
    */
   public void setMessage(String value) {
     // if the bean object is an instance of the GenericBean class, set the message
     // on the bean, as well as a request attribute
     if (bean instanceof GenericBean) {
-      ((GenericBean)bean).setMessage(value);
+      ((GenericBean) bean).setMessage(value);
     }
     getRequest().setAttribute(MESSAGE, value);
   }
@@ -105,7 +99,6 @@ public class ActionContext
    *  Returns the ServletContext if this servlet is an HttpServlet instance
    *
    *@return    ServletContext the ServletContext for this servlet
-   *@since
    */
   public ServletContext getServletContext() {
     return servlet.getServletConfig().getServletContext();
@@ -118,7 +111,6 @@ public class ActionContext
    *  is an HttpSession bean reference.
    *
    *@return    Object the bean reference mapped to this action
-   *@since
    */
   public Object getFormBean() {
     return bean;
@@ -131,7 +123,6 @@ public class ActionContext
    *
    *@param  beanName  Description of Parameter
    *@return           The FormBean value
-   *@since
    */
   public Object getFormBean(String beanName) {
     return action.getBeans().get(beanName);
@@ -148,7 +139,6 @@ public class ActionContext
    *  XSLControllerServlet is used.
    *
    *@return    Action the Action for this action
-   *@since
    */
   public Action getAction() {
     return action;
@@ -160,9 +150,7 @@ public class ActionContext
    *  Returns the clients browser information.
    *
    *@return    String The description of the clients browser
-   *@since
    */
-
   public String getBrowser() {
     return getRequest().getHeader("USER-AGENT");
   }
@@ -173,9 +161,7 @@ public class ActionContext
    *  Returns the command value associated with this request
    *
    *@return    int The value of the command for this request
-   *@since
    */
-
   public String getCommand() {
     return command;
   }
@@ -189,7 +175,6 @@ public class ActionContext
    *@param  paramName  Description of Parameter
    *@return            String the value of the parameter or null if the
    *      parameter does not exist
-   *@since
    */
   public String getParameter(String paramName) {
     return getRequest().getParameter(paramName);
@@ -201,9 +186,7 @@ public class ActionContext
    *  Returns the clients remote IP address
    *
    *@return    String The clients ip address to their computer.
-   *@since
    */
-
   public String getIpAddress() {
     return getRequest().getRemoteAddr();
   }
@@ -214,22 +197,17 @@ public class ActionContext
    *  Returns the current request object associated with a client
    *
    *@return    HttpServletRequest The request of this client
-   *@since
    */
-
   public HttpServletRequest getRequest() {
     return request;
   }
-
 
 
   /**
    *  Returns the current response object associated with a client
    *
    *@return    HttpServletResponse The response of this client
-   *@since
    */
-
   public HttpServletResponse getResponse() {
     return response;
   }
@@ -240,9 +218,7 @@ public class ActionContext
    *  Returns the session associated with a client
    *
    *@return    HttpSession The session context for this client
-   *@since
    */
-
   public HttpSession getSession() {
     return session;
   }
@@ -254,7 +230,6 @@ public class ActionContext
    *
    *@param  name  Description of Parameter
    *@return       The Attribute value
-   *@since
    */
   public Object getAttribute(String name) {
     return getSession().getAttribute(name);
@@ -268,14 +243,12 @@ public class ActionContext
    *
    *@param  name  Description of Parameter
    *@return       Description of the Returned Value
-   *@since
    */
   public boolean removeAttribute(String name) {
     if (getSession().getAttribute(name) != null) {
       getSession().removeAttribute(name);
       return true;
     }
-
     return false;
   }
 }

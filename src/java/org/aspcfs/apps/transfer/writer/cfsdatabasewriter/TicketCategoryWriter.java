@@ -1,9 +1,9 @@
-package com.darkhorseventures.apps.dataimport.writer.cfsdatabasewriter;
+package org.aspcfs.apps.transfer.writer.cfsdatabasewriter;
 
-import com.darkhorseventures.apps.dataimport.*;
+import org.aspcfs.apps.transfer.*;
 import java.util.*;
 import java.util.logging.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;

@@ -1,15 +1,16 @@
-package com.darkhorseventures.apps.dataimport.reader.autoguide;
+package org.aspcfs.apps.transfer.reader.autoguide;
 
-import com.darkhorseventures.apps.dataimport.*;
+import org.aspcfs.apps.transfer.*;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.autoguide.base.*;
-import com.darkhorseventures.apps.dataimport.writer.TextWriter;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.media.autoguide.base.*;
+import org.aspcfs.apps.transfer.writer.TextWriter;
 import java.io.*;
-import com.darkhorseventures.apps.dataimport.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
+import org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
+import com.darkhorseventures.database.*;
 
 /**
  *  Queries vehicle data from the Auto Guide database, grabs and resizes any

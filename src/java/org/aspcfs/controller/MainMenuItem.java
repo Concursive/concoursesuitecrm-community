@@ -1,4 +1,4 @@
-package com.darkhorseventures.controller;
+package com.darkhorseventures.framework.hooks;
 
 import java.util.*;
 
@@ -30,8 +30,7 @@ public class MainMenuItem {
    *
    *@since    1.1
    */
-  public MainMenuItem() {
-  }
+  public MainMenuItem() { }
 
 
   /**
@@ -322,20 +321,32 @@ public class MainMenuItem {
 
 
   /**
-   *  If this main menu item contains 
+   *  If this main menu item contains
    *
    *@param  tmp  Description of Parameter
    *@return      Description of the Returned Value
-   *@since 1.2
+   *@since       1.2
    */
   public boolean hasActionName(String tmp) {
     return actionNames.contains(tmp);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean hasRollover() {
     return (graphicRollover != null && !graphicRollover.equals(""));
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public String toString() {
     StringBuffer out = new StringBuffer();
     out.append("=============================\r\n");
@@ -343,16 +354,16 @@ public class MainMenuItem {
     out.append("Actions:");
     Iterator i = actionNames.iterator();
     while (i.hasNext()) {
-      out.append(" " + (String)i.next());
+      out.append(" " + (String) i.next());
     }
     out.append("\r\n");
     out.append("Submenu:");
     i = submenuItems.iterator();
     while (i.hasNext()) {
-      out.append(" " + ((SubmenuItem)i.next()).getName());
+      out.append(" " + ((SubmenuItem) i.next()).getName());
     }
     out.append("\r\n");
-    
+
     return out.toString();
   }
 

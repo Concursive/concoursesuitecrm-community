@@ -1,4 +1,4 @@
-package org.theseus.actions;
+package com.darkhorseventures.framework.actions;
 
 /**
  *  This class is provided as a means to descend from, so that common generic
@@ -11,6 +11,7 @@ package org.theseus.actions;
  *
  *@author     kevin
  *@created    July 9, 2001
+ *@version    $Id$
  */
 
 public class GenericAction implements java.io.Serializable {
@@ -20,11 +21,8 @@ public class GenericAction implements java.io.Serializable {
 
   /**
    *  0-arg constructor
-   *
-   *@since
    */
-  public GenericAction() {
-  }
+  public GenericAction() { }
 
 
   /**
@@ -37,7 +35,6 @@ public class GenericAction implements java.io.Serializable {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandDefault(ActionContext context) {
     return "DefaultOK";

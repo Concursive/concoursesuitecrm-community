@@ -1,4 +1,4 @@
-package org.theseus.actions;
+package com.darkhorseventures.framework.actions;
 
 import java.io.*;
 import java.util.*;
@@ -11,6 +11,7 @@ import java.util.*;
  *
  *@author     kevin
  *@created    October 8, 2000
+ *@version    $Id$
  */
 public class Resource
      implements Serializable {
@@ -31,14 +32,15 @@ public class Resource
     resourceName = name;
     resourceXSL = xsl;
   }
-  
+
+
   /**
    *  Constructor for the Resource object
    *
-   *@param  name  Description of Parameter
-   *@param  xsl   Description of Parameter
-   *@param  layout Description of Parameter
-   *@since 1.1
+   *@param  name    Description of Parameter
+   *@param  xsl     Description of Parameter
+   *@param  layout  Description of Parameter
+   *@since          1.1
    */
   public Resource(String name, String xsl, String layout) {
     resourceName = name;
@@ -68,7 +70,8 @@ public class Resource
   public String getXSL() {
     return resourceXSL;
   }
-  
+
+
   /**
    *  Returns the name of the layout to use
    *

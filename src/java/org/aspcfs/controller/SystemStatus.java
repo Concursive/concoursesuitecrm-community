@@ -1,14 +1,12 @@
-//Copyright 2001-2002 Dark Horse Ventures
-package com.darkhorseventures.controller;
+package com.darkhorseventures.framework.servlets;
 
 import java.util.Date;
 import java.util.*;
 import java.sql.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.utils.*;
 import org.w3c.dom.Element;
-import org.theseus.actions.*;
-import com.darkhorseventures.webutils.LookupList;
+import com.darkhorseventures.database.*;
+import org.aspcfs.framework.actions.*;
+import org.aspcfs.utils.web.LookupList;
 
 /**
  *  System status maintains global values for a shared group of users. This is
