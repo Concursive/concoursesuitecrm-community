@@ -1,20 +1,19 @@
 //Copyright 2001-2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.pipeline.base;
 
-import org.theseus.beans.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.actions.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.controller.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.*;
 import com.zeroio.iteam.base.FileItemList;
-import com.darkhorseventures.utils.DateUtils;
-import com.darkhorseventures.webutils.LookupList;
-import com.darkhorseventures.webutils.LookupElement;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.LookupElement;
 
 /**
  *  Description of the Class
@@ -32,9 +31,9 @@ public class Opportunity extends OpportunityComponent {
   private java.sql.Timestamp modified = null;
   private int enteredBy = -1;
   private int modifiedBy = -1;
-  
+
   //private boolean enabled = true;
-  
+
   private String accountName = "";
   private String contactName = "";
   private String contactCompanyName = "";
@@ -45,12 +44,13 @@ public class Opportunity extends OpportunityComponent {
   private boolean documentDelete = false;
   private FileItemList files = new FileItemList();
   private int componentCount = 0;
-  private boolean buildComponentCount = false;  
-  
+  private boolean buildComponentCount = false;
+
   private String componentDescription = null;
   private int componentId = -1;
   private double totalValue = 0;
-  
+
+
   /**
    *  Constructor for the Opportunity object
    *
@@ -82,6 +82,7 @@ public class Opportunity extends OpportunityComponent {
     queryRecord(db, oppId);
   }
 
+
   /**
    *  Description of the Method
    *
@@ -93,7 +94,7 @@ public class Opportunity extends OpportunityComponent {
     if (oppId == -1) {
       throw new SQLException("Valid opportunity ID not specified.");
     }
-    PreparedStatement pst=db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         "SELECT x.*, oc.*, y.description as stagename, org.name as acct_name, org.enabled as accountenabled, " +
         "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, oc.description as comp_desc, oc.id as comp_id, " +
         "ct.namelast as last_name, ct.namefirst as first_name, " +
@@ -108,18 +109,17 @@ public class Opportunity extends OpportunityComponent {
         "LEFT JOIN contact ct_owner ON (oc.owner = ct_owner.user_id) " +
         "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id), " +
         "lookup_stage y " +
-        "WHERE y.code = oc.stage " +        
+        "WHERE y.code = oc.stage " +
         "AND x.opp_id = ? ");
     pst.setInt(1, oppId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
       buildTypes(db);
-      
+
       if (buildComponentCount) {
         this.retrieveComponentCount(db);
       }
-
     } else {
       rs.close();
       pst.close();
@@ -145,11 +145,56 @@ public class Opportunity extends OpportunityComponent {
     queryRecord(db, Integer.parseInt(oppId));
   }
 
-  public void setComponentDescription(String tmp) { this.componentDescription = tmp; }
-  public void setComponentId(int tmp) { this.componentId = tmp; }
-  public void setComponentId(String tmp) { this.componentId = Integer.parseInt(tmp); }
-  public String getComponentDescription() { return componentDescription; }
-  public int getComponentId() { return componentId; }
+
+  /**
+   *  Sets the componentDescription attribute of the Opportunity object
+   *
+   *@param  tmp  The new componentDescription value
+   */
+  public void setComponentDescription(String tmp) {
+    this.componentDescription = tmp;
+  }
+
+
+  /**
+   *  Sets the componentId attribute of the Opportunity object
+   *
+   *@param  tmp  The new componentId value
+   */
+  public void setComponentId(int tmp) {
+    this.componentId = tmp;
+  }
+
+
+  /**
+   *  Sets the componentId attribute of the Opportunity object
+   *
+   *@param  tmp  The new componentId value
+   */
+  public void setComponentId(String tmp) {
+    this.componentId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the componentDescription attribute of the Opportunity object
+   *
+   *@return    The componentDescription value
+   */
+  public String getComponentDescription() {
+    return componentDescription;
+  }
+
+
+  /**
+   *  Gets the componentId attribute of the Opportunity object
+   *
+   *@return    The componentId value
+   */
+  public int getComponentId() {
+    return componentId;
+  }
+
 
   /**
    *  Sets the EnteredByName attribute of the Opportunity object
@@ -359,13 +404,33 @@ public class Opportunity extends OpportunityComponent {
     return callsDelete;
   }
 
+
+  /**
+   *  Gets the totalValue attribute of the Opportunity object
+   *
+   *@return    The totalValue value
+   */
   public double getTotalValue() {
     return totalValue;
   }
+
+
+  /**
+   *  Sets the totalValue attribute of the Opportunity object
+   *
+   *@param  totalValue  The new totalValue value
+   */
   public void setTotalValue(double totalValue) {
     this.totalValue = totalValue;
   }
-  
+
+
+  /**
+   *  Gets the totalValue attribute of the Opportunity object
+   *
+   *@param  divisor  Description of the Parameter
+   *@return          The totalValue value
+   */
   public String getTotalValue(int divisor) {
     NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
     double tempValue = (java.lang.Math.round(totalValue) / divisor);
@@ -378,7 +443,8 @@ public class Opportunity extends OpportunityComponent {
     }
 
     return amountOut;
-  }  
+  }
+
 
   /**
    *  Gets the documentDelete attribute of the Opportunity object
@@ -587,11 +653,46 @@ public class Opportunity extends OpportunityComponent {
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
   }
-  
-  public int getComponentCount() { return componentCount; }
-  public boolean getBuildComponentCount() { return buildComponentCount; }
-  public void setComponentCount(int tmp) { this.componentCount = tmp; }
-  public void setBuildComponentCount(boolean tmp) { this.buildComponentCount = tmp; }
+
+
+  /**
+   *  Gets the componentCount attribute of the Opportunity object
+   *
+   *@return    The componentCount value
+   */
+  public int getComponentCount() {
+    return componentCount;
+  }
+
+
+  /**
+   *  Gets the buildComponentCount attribute of the Opportunity object
+   *
+   *@return    The buildComponentCount value
+   */
+  public boolean getBuildComponentCount() {
+    return buildComponentCount;
+  }
+
+
+  /**
+   *  Sets the componentCount attribute of the Opportunity object
+   *
+   *@param  tmp  The new componentCount value
+   */
+  public void setComponentCount(int tmp) {
+    this.componentCount = tmp;
+  }
+
+
+  /**
+   *  Sets the buildComponentCount attribute of the Opportunity object
+   *
+   *@param  tmp  The new buildComponentCount value
+   */
+  public void setBuildComponentCount(boolean tmp) {
+    this.buildComponentCount = tmp;
+  }
 
 
   /**
@@ -661,6 +762,7 @@ public class Opportunity extends OpportunityComponent {
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
   }
+
 
   /**
    *  Sets the Description attribute of the Opportunity object
@@ -1649,7 +1751,7 @@ public class Opportunity extends OpportunityComponent {
    *@exception  SQLException  Description of Exception
    *@since
    */
-   
+
   public int update(Connection db, ActionContext context) throws SQLException {
     int oldId = -1;
     Statement st = db.createStatement();
@@ -1690,7 +1792,8 @@ public class Opportunity extends OpportunityComponent {
       return false;
     }
   }
-  
+
+
   /**
    *  Description of the Method
    *
@@ -1838,13 +1941,13 @@ public class Opportunity extends OpportunityComponent {
     if (this.getAccountLink() == -1 && this.getContactLink() == -1) {
       throw new SQLException("You must associate an Opportunity with an account or contact.");
     }
-    
+
     try {
       db.setAutoCommit(false);
       StringBuffer sql = new StringBuffer();
       sql.append(
-        "INSERT INTO opportunity_header " +
-        "(acctlink, contactlink, description, ");
+          "INSERT INTO opportunity_header " +
+          "(acctlink, contactlink, description, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -1897,11 +2000,19 @@ public class Opportunity extends OpportunityComponent {
     db.setAutoCommit(true);
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean insertAdditionalComponent(Connection db) throws SQLException {
     if (!isValid(db)) {
       return false;
-    }  
+    }
     try {
       db.setAutoCommit(false);
       this.insertComponent(db);
@@ -1914,8 +2025,17 @@ public class Opportunity extends OpportunityComponent {
     }
     db.setAutoCommit(true);
     return true;
-  }      
-  
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean insertAdditionalComponent(Connection db, ActionContext context) throws SQLException {
     boolean recordInserted = insertAdditionalComponent(db);
     if (recordInserted) {
@@ -1924,8 +2044,9 @@ public class Opportunity extends OpportunityComponent {
     } else {
       return false;
     }
-  }  
-      
+  }
+
+
   /**
    *  Description of the Method
    *
@@ -1977,21 +2098,21 @@ public class Opportunity extends OpportunityComponent {
 
     try {
       db.setAutoCommit(false);
-      
+
       st = db.createStatement();
       st.executeUpdate(
           "DELETE FROM opportunity_component_levels WHERE opp_id in (select id from opportunity_component oc where oc.opp_id = " + this.getId() + " ");
-      st.close();   
-      
+      st.close();
+
       st = db.createStatement();
       st.executeUpdate(
           "DELETE FROM opportunity_component WHERE opp_id = " + this.getId());
       st.close();
-      
+
       st = db.createStatement();
       st.executeUpdate(
           "DELETE FROM opportunity_header WHERE opp_id = " + this.getId());
-      st.close();      
+      st.close();
 
       db.commit();
     } catch (SQLException e) {
@@ -2039,12 +2160,12 @@ public class Opportunity extends OpportunityComponent {
         fileList.delete(db, baseFilePath);
         fileList = null;
       }
-      
+
       //delete components
       st = db.createStatement();
       st.executeUpdate(
           "DELETE FROM opportunity_component WHERE opp_id = " + this.getId());
-      st.close();      
+      st.close();
 
       st = db.createStatement();
       st.executeUpdate(
@@ -2109,13 +2230,13 @@ public class Opportunity extends OpportunityComponent {
 
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
-    
+
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
 
     //table
     accountName = rs.getString("acct_name");
-    
+
     if (accountLink > -1) {
       accountEnabled = rs.getBoolean("accountenabled");
     }
@@ -2127,22 +2248,29 @@ public class Opportunity extends OpportunityComponent {
     contactCompanyName = rs.getString("ctcompany");
     enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
     modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
-    
+
     componentDescription = rs.getString("comp_desc");
     componentId = rs.getInt("comp_id");
-    
+
     super.buildRecord(rs);
-    
+
     this.setId(rs.getInt("opp_id"));
   }
-  
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean insertComponent(Connection db) throws SQLException {
-    try{
+    try {
       StringBuffer sql = new StringBuffer();
       sql.append(
-        "INSERT INTO opportunity_component " +
-        "(opp_id, description, owner, closedate, ");
+          "INSERT INTO opportunity_component " +
+          "(opp_id, description, owner, closedate, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -2157,8 +2285,8 @@ public class Opportunity extends OpportunityComponent {
       if (modified != null) {
         sql.append("?, ");
       }
-      sql.append("?, ?) ");      
-      
+      sql.append("?, ?) ");
+
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getId());
@@ -2168,7 +2296,7 @@ public class Opportunity extends OpportunityComponent {
         pst.setNull(++i, java.sql.Types.DATE);
       } else {
         pst.setDate(++i, this.getCloseDate());
-      }      
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -2183,9 +2311,9 @@ public class Opportunity extends OpportunityComponent {
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
     }
-    
+
     return true;
-  }  
+  }
 
 
   /**
@@ -2332,7 +2460,7 @@ public class Opportunity extends OpportunityComponent {
       throw new SQLException("ID not specified");
     }
     String sql = "DELETE FROM opportunity_component_levels WHERE opp_id in (SELECT id from opportunity_component oc where oc.opp_id = ?) ";
-    int i=0;
+    int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, this.getId());
     pst.execute();
@@ -2457,7 +2585,7 @@ public class Opportunity extends OpportunityComponent {
         thisDependency.setCanDelete(true);
         dependencyList.add(thisDependency);
       }
-      
+
       sql = "SELECT COUNT(*) as componentcount FROM opportunity_component oc WHERE oc.opp_id = ? ";
 
       i = 0;
@@ -2484,25 +2612,32 @@ public class Opportunity extends OpportunityComponent {
     }
     return dependencyList;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void retrieveComponentCount(Connection db) throws SQLException {
     int count = 0;
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "SELECT COUNT(*) as componentcount " +
-      "FROM opportunity_component oc " +
-      "WHERE id > 0 ");
+        "SELECT COUNT(*) as componentcount " +
+        "FROM opportunity_component oc " +
+        "WHERE id > 0 ");
     sql.append("AND oc.opp_id = ?");
-    
+
     if (this.getOwner() > -1) {
       sql.append("AND oc.owner = ?");
     }
-    
+
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, id);
     if (this.getOwner() > -1) {
       pst.setInt(2, owner);
-    }    
+    }
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       count = rs.getInt("componentcount");
@@ -2510,19 +2645,26 @@ public class Opportunity extends OpportunityComponent {
     rs.close();
     pst.close();
     this.setComponentCount(count);
-  }   
+  }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildTotal(Connection db) throws SQLException {
     double total = 0;
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "SELECT sum(guessvalue) as total " +
-      "FROM opportunity_component oc " +
-      "WHERE id > 0 ");
+        "SELECT sum(guessvalue) as total " +
+        "FROM opportunity_component oc " +
+        "WHERE id > 0 ");
     sql.append("AND oc.opp_id = ?");
     if (this.getOwner() > -1) {
       sql.append("AND oc.owner = ?");
-    }    
+    }
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, oppId);
     if (this.getOwner() > -1) {
