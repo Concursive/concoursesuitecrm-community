@@ -38,7 +38,7 @@ public class PagedListInfo implements Serializable {
   String listView = null;
   HashMap listFilters = new HashMap();
   private int iteration = 0;
-  boolean enableJavaScript = false;
+  boolean enableJScript = false;
   boolean showForm = true;
   boolean resetList = true;
   String alternateSort = null;
@@ -72,11 +72,11 @@ public class PagedListInfo implements Serializable {
   /**
    *  Sets the ColumnToSortBy attribute of the PagedListInfo object
    *
-   *@param  enableJavaScript  The new enableJavaScript value
+   *@param  enableJScript  The new enableJScript value
    *@since                    1.0
    */
-  public void setEnableJavaScript(boolean enableJavaScript) {
-    this.enableJavaScript = enableJavaScript;
+  public void setEnableJScript(boolean enableJScript) {
+    this.enableJScript = enableJScript;
   }
 
 
@@ -441,7 +441,10 @@ public class PagedListInfo implements Serializable {
     }
 
     if (context.getRequest().getParameter("listFilter1") != null && resetList) {
-      resetList();
+      String thisFilter = context.getRequest().getParameter("listFilter1");
+      if (listFilters.get("listFilter1") != null && !thisFilter.equals(listFilters.get("listFilter1"))) {
+        resetList();
+      }
     }
 
     while (parameters.hasMoreElements()) {
@@ -578,8 +581,8 @@ public class PagedListInfo implements Serializable {
    *@return    The CurrentOffset value
    *@since     1.1
    */
-  public boolean getEnableJavaScript() {
-    return enableJavaScript;
+  public boolean getEnableJScript() {
+    return enableJScript;
   }
 
 
@@ -766,7 +769,7 @@ public class PagedListInfo implements Serializable {
     if (currentOffset > 0) {
       int newOffset = currentOffset - itemsPerPage;
 
-      if (!getEnableJavaScript()) {
+      if (!getEnableJScript()) {
         result.append("<a href='" + link + "&pagedListInfoId=" + this.getId());
         
         if (getExpandedSelection()) {
@@ -823,7 +826,7 @@ public class PagedListInfo implements Serializable {
     StringBuffer result = new StringBuffer();
     
     if ((currentOffset + itemsPerPage) < maxRecords) {
-      if (!getEnableJavaScript()) {
+      if (!getEnableJScript()) {
         result.append("<a href='" + link + "&pagedListInfoId=" + this.getId());
         
         if (getExpandedSelection()) {
