@@ -10,7 +10,7 @@
 <dhv:evaluate exp="<%= !isPopup(request) %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
-<a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
+<a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>">Contact Details</a> >
 List of Folder Records<br>
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
@@ -22,7 +22,7 @@ List of Folder Records<br>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + contactDetails.getId(); 
+      <% String param1 = "id=" + ContactDetails.getId(); 
           String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
       <dhv:container name="contacts" selected="folders" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
     </td>

@@ -7,7 +7,7 @@
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
-<a href="ExternalContacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%>">Messages</a> >
+<a href="ExternalContacts.do?command=ViewMessages&contactId=<%= ContactDetails.getId() %>">Messages</a> >
 Message Details
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
@@ -19,7 +19,7 @@ Message Details
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + contactDetails.getId(); 
+      <% String param1 = "id=" + ContactDetails.getId(); 
           String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
       <dhv:container name="contacts" selected="messages" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
     </td>

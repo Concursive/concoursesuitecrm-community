@@ -19,7 +19,7 @@ Messages<br>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + contactDetails.getId(); 
+      <% String param1 = "id=" + ContactDetails.getId(); 
           String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
       <dhv:container name="contacts" selected="messages" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
     </td>

@@ -9,7 +9,7 @@
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
-<a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
+<a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>">Contact Details</a> >
 Calls<br>
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
@@ -21,7 +21,7 @@ Calls<br>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + contactDetails.getId(); 
+      <% String param1 = "id=" + ContactDetails.getId(); 
           String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
       <dhv:container name="contacts" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
     </td>
