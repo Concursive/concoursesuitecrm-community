@@ -11,7 +11,7 @@
 Custom Folders<br>
 <hr color="#BFBFBB" noshade>
   <dhv:permission name="admin-sysconfig-folders-add">
-    <a href="/AdminFieldsFolder.do?command=AddFolder&modId=<%= ModId %>">Add a Folder to this Module</a><br>
+    <a href="AdminFieldsFolder.do?command=AddFolder&modId=<%= ModId %>">Add a Folder to this Module</a><br>
     &nbsp;<br>
   </dhv:permission>
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -45,15 +45,15 @@ Custom Folders<br>
     <tr class="row<%= rowId %>">
       <dhv:permission name="admin-sysconfig-folders-edit">
       <td align="center">
-        <a href="/AdminFieldsFolder.do?command=ModifyFolder&modId=<%= ModId %>&catId=<%= thisCategory.getId() %>">Details</a>
+        <a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= thisCategory.getId() %>">Edit</a>
       </td>
       </dhv:permission>
       <td align="left" width="100%" nowrap>
-        <dhv:permission name="admin-sysconfig-folders-view"><a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a><%= (thisCategory.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif'>":"") %></dhv:permission>
+        <dhv:permission name="admin-sysconfig-folders-view"><a href="AdminFieldsFolder.do?command=ModifyFolder&modId=<%= ModId %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a><%= (thisCategory.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif'>":"") %></dhv:permission>
       </td>
       <td align="center" nowrap>
         <dhv:permission name="admin-sysconfig-folders-edit">
-          <a href="/AdminFieldsFolder.do?command=ToggleFolder&modId=<%= ModId %>&catId=<%= thisCategory.getId() %>"></dhv:permission>
+          <a href="AdminFieldsFolder.do?command=ToggleFolder&modId=<%= ModId %>&catId=<%= thisCategory.getId() %>"></dhv:permission>
           <%= (thisCategory.getEnabled()? "Yes" : "No") %>
           <dhv:permission name="admin-sysconfig-folders-edit"></a></dhv:permission>
       </td>
