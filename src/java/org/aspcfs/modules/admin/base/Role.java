@@ -735,6 +735,7 @@ public class Role extends GenericBean {
    */
   private boolean isDuplicate(Connection db) throws SQLException {
     boolean duplicate = false;
+    int i = 0;
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT * " +
@@ -744,11 +745,17 @@ public class Role extends GenericBean {
     if (id > -1) {
       sql.append("AND role_id <> ? ");
     }
+    if (roleType > -1) {
+      sql.append("AND role_type = ? ");
+    }
     PreparedStatement pst = db.prepareStatement(sql.toString());
-    pst.setString(1, getRole());
-    pst.setBoolean(2, true);
+    pst.setString(++i, getRole());
+    pst.setBoolean(++i, true);
     if (id > -1) {
-      pst.setInt(3, id);
+      pst.setInt(++i, id);
+    }
+    if (roleType > -1) {
+      pst.setInt(++i, roleType);
     }
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
