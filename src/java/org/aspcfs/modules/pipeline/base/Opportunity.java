@@ -90,7 +90,7 @@ public class Opportunity extends GenericBean {
           queryRecord(db, oppId);
   }
           
-  public queryRecord(Connection db, int oppId) throws SQLException {
+  public void queryRecord(Connection db, int oppId) throws SQLException {
 
     Statement st = null;
     ResultSet rs = null;
