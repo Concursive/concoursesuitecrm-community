@@ -12,6 +12,13 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 
 <script language="JavaScript">
+  function doCheck(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    } else {
+      return(checkForm(form));
+    }
+  }
   function checkForm(form) {
       formTest = true;
       message = "";
@@ -50,12 +57,12 @@
 
 <body onLoad="javascript:document.forms[0].name.focus();">
 
-<form name="addAccount" action="/Accounts.do?command=Insert&auto-populate=true" method="post">
+<form name="addAccount" action="/Accounts.do?command=Insert&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="/Accounts.do">Account Management</a> > 
 Add Account<br>
 <hr color="#BFBFBB" noshade>
-<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View'">
+<input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
 &nbsp;
@@ -363,8 +370,9 @@ Add Account<br>
   </tr>
 </table>
 <br>
-<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View'">
+<input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
+<input type="hidden" name="dosubmit" value="true">
 </form>
 </body>

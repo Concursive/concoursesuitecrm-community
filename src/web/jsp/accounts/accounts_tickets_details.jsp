@@ -212,7 +212,7 @@ Ticket Details<br>
   } else {
 %>
   <tr class="containerBody">
-    <td>
+    <td class="formLabel">
       <font color="#9E9E9E" colspan=3>No Log Entries.</font>
     </td>
   </tr>

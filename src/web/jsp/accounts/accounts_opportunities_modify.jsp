@@ -10,6 +10,13 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript">
+  function doCheck(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    } else {
+      return(checkForm(form));
+    }
+  }
   function checkForm(form) {
       formTest = true;
       message = "";
@@ -41,7 +48,7 @@
       }
     }
 </script>
-<form name="updateOpp" action="/Opportunities.do?command=Update&auto-populate=true" method="post">
+<form name="updateOpp" action="/Opportunities.do?command=Update&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="/Accounts.do">Account Management</a> > 
 <a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -75,14 +82,14 @@ Modify Opportunity<br>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
 
-<input type="submit" value="Update" onClick="return checkForm(this.form)">
+<input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=View&orgId=<%= OppDetails.getAccountLink() %>'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=View&orgId=<%= OppDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=Details&id=<%= OppDetails.getId() %>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=Details&id=<%= OppDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 
 <input type="reset" value="Reset">
@@ -221,16 +228,17 @@ Modify Opportunity<br>
   </table>
 &nbsp;
 <br>
-<input type="submit" value="Update" onClick="return checkForm(this.form)">
+<input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=View&orgId=<%= OppDetails.getAccountLink() %>'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=View&orgId=<%= OppDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=Details&id=<%= OppDetails.getId() %>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=Details&id=<%= OppDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="reset" value="Reset">
+<input type="hidden" name="dosubmit" value="true">
   </td>
   </tr>
   </table>

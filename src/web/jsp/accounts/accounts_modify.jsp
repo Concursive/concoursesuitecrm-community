@@ -17,6 +17,13 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 
 <script language="JavaScript">
+  function doCheck(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    } else {
+      return(checkForm(form));
+    }
+  }
   function checkForm(form) {
       formTest = true;
       message = "";
@@ -59,7 +66,7 @@
       }
     }
 </script>
-<form name="addAccount" action="/Accounts.do?command=Update&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" method="post">
+<form name="addAccount" action="/Accounts.do?command=Update&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="/Accounts.do">Account Management</a> > 
 
 <% if (request.getParameter("return") != null) {%>
@@ -97,14 +104,13 @@ Modify Account<br>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
 
-<input type="submit" value="Update" name="Save" onClick="return checkForm(this.form)">
-
+<input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <%}%>
 
 <input type="reset" value="Reset">
@@ -479,15 +485,16 @@ Modify Account<br>
   </tr>
 </table>
 <br>
-<input type="submit" value="Update" name="Save" onClick="return checkForm(this.form)">
+<input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="reset" value="Reset">
+<input type="hidden" name="dosubmit" value="true">
   </td>
   </tr>
 </table>

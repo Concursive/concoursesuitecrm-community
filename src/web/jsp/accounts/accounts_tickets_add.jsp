@@ -15,7 +15,13 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
   <script language="JavaScript">
-
+  function doCheck(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    } else {
+      return(checkForm(form));
+    }
+  }
   function updateSubList1() {
     var sel = document.forms['addticket'].elements['catCode'];
     var value = sel.options[sel.selectedIndex].value;
@@ -86,13 +92,15 @@ Add Ticket<br>
   </tr>
   <tr>
     <td class="containerBack">
-<form name="addticket" action="/AccountTickets.do?command=InsertTicket&auto-populate=true" method="post">
+<form name="addticket" action="/AccountTickets.do?command=InsertTicket&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <% if (request.getParameter("contact") != null) {%>
-<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
+<input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
 <%} else {%>
 <input type="submit" value="Insert" name="Save">
 <%}%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>'">
+
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
+
 <input type="reset" value="Reset">	
 <%= showAttribute(request, "closedError") %>
 <br>
@@ -347,13 +355,14 @@ Add Ticket<br>
 </table>
 <br>
 <% if (request.getParameter("contact") != null) {%>
-<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
+<input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
 <%} else {%>
 <input type="submit" value="Insert" name="Save">
 <%}%>
 
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
+<input type="hidden" name="dosubmit" value="true">
 </td>
 </tr>
 </table>
