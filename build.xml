@@ -774,7 +774,9 @@
       <transaction src="${build.sql.dir}/tms.sql"/>
       <!-- quotes, orders -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_quote.sql"/>
+      <transaction src="${build.sql.dir}/quote.sql"/>
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_order.sql"/>
+      <transaction src="${build.sql.dir}/order.sql"/>
       <!-- custom fields -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_custom_field.sql"/>
       <!-- communications manager -->
