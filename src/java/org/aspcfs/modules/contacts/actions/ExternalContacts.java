@@ -940,6 +940,8 @@ public final class ExternalContacts extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
         context.getSession().removeAttribute("ContactMessageListInfo");
+        context.getRequest().setAttribute("refreshUrl","ExternalContacts.do?command=ListContacts");
+        deleteRecentItem(context, thisContact);
         return ("ContactDeleteOK");
       } else {
         processErrors(context, thisContact.getErrors());
@@ -1177,9 +1179,9 @@ public final class ExternalContacts extends CFSModule {
         htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContacts.do?command=Delete&id=" + id + "'");
       } else {
         htmlDialog.setTitle("Confirm");
-        htmlDialog.setHeader("Note: The object you are requesting to delete has the following dependencies within CFS: ");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='/ExternalContacts.do?command=Delete&id=" + id + "'");
-        htmlDialog.addButton("No", "javascript:parent.window.close()");
+        htmlDialog.setHeader("The object you are requesting to delete has the following CFS dependencies: ");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='/ExternalContacts.do?command=DeleteContact&id=" + id + "'");
+        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       errorMessage = e;

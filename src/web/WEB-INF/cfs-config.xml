@@ -168,7 +168,7 @@
     <forward name="UpdateFieldsOK" resource="/companydirectory_fields.jsp" layout="nav"/>
     <forward name="ContactDetailsUpdateOK" resource="/ExternalContacts.do?command=ContactDetails"/>
     <forward name="ContactInsertFormOK" resource="/companydirectory_contactinsertform.jsp" layout="nav"/>
-    <forward name="ContactDeleteOK" resource="/ExternalContacts.do?command=ListContacts"/>
+    <forward name="ContactDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="MessageDetailsOK" resource="/companydirectory_message_details.jsp" layout="nav"/>
     <forward name="ViewMessagesOK" resource="/companydirectory_view_messages.jsp" layout="nav"/>
     <forward name="ReportsOK" resource="/companydirectory_reports.jsp" layout="nav"/>
@@ -177,7 +177,7 @@
     <forward name="DeleteReportOK" resource="/ExternalContacts.do?command=Reports"/>
     <forward name="DeleteReportERROR" resource="/ExternalContacts.do?command=Reports"/>
     <forward name="DefaultError" resource="/CompanyDirectory.do?command=ListEmployees"/>
-    <forward name="ConfirmDeleteOK" resource="/dialog.jsp" layout="style"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
 </action>
   <action name="ExternalContactsOpps" class="com.darkhorseventures.cfsmodule.ExternalContactsOpps">
     <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>

@@ -1642,7 +1642,13 @@ public class Contact extends GenericBean {
     } else {
       try {
         db.setAutoCommit(false);
-
+        
+        OpportunityList oppList = new OpportunityList();
+        oppList.setContactId(this.getId() + "");
+        oppList.buildList(db);
+        oppList.delete(db);
+        oppList = null;
+        
         CustomFieldRecordList folderList = new CustomFieldRecordList();
         folderList.setLinkModuleId(Constants.CONTACTS);
         folderList.setLinkItemId(this.getId());
@@ -1659,6 +1665,18 @@ public class Contact extends GenericBean {
         st.executeUpdate("DELETE FROM contact_phone WHERE contact_id = " + this.getId());
         st.executeUpdate("DELETE FROM contact_emailaddress WHERE contact_id = " + this.getId());
         st.executeUpdate("DELETE FROM contact_address WHERE contact_id = " + this.getId());
+        
+        if (this.getCampaignMessageRange(db).equals("") || this.getCampaignMessageRange(db) == null) {
+                errors.put("actionError", "Contact disabled from view, since it has related message records");
+                st.executeUpdate(
+                  "UPDATE contact " +
+                  "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
+                  "WHERE contact_id = " + this.getId());
+                st.close();
+                db.commit();
+                return true;
+        }
+                
         st.executeUpdate("DELETE FROM contact WHERE contact_id = " + this.getId());
         db.commit();
       } catch (SQLException e) {
@@ -2047,7 +2065,35 @@ public class Contact extends GenericBean {
                   dependencyList.put("Opportunities", new Integer(rs.getInt("oppcount")));
           }
       }
+      
+      sql = "SELECT count(*) as callcount " +
+          "FROM call_log " +
+          "WHERE call_log.contact_id = ? ";
 
+      i = 0;
+      pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        if (rs.getInt("callcount") != 0) {
+          dependencyList.put("Calls", new Integer(rs.getInt("callcount")));
+        }
+      }
+      
+      sql = "SELECT count(*) as foldercount " +
+          "FROM custom_field_record cfr WHERE cfr.link_module_id = " + Constants.CONTACTS + 
+          " and cfr.link_item_id = ? ";
+
+      i = 0;
+      pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        if (rs.getInt("foldercount") != 0) {
+          dependencyList.put("Folders", new Integer(rs.getInt("foldercount")));
+        }
+      }
+      
       pst.close();
       db.commit();
     } catch (SQLException e) {

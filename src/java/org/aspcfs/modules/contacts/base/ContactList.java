@@ -21,6 +21,10 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *      $
  */
 public class ContactList extends Vector {
+        
+  public static final int TRUE = 1;
+  public static final int FALSE = 0;
+  private int includeEnabled = 1;
 
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
@@ -507,6 +511,13 @@ public class ContactList extends Vector {
   public int getPersonalId() {
     return personalId;
   }
+
+  public int getIncludeEnabled() {
+	return includeEnabled;
+}
+public void setIncludeEnabled(int includeEnabled) {
+	this.includeEnabled = includeEnabled;
+}
 
 
   /**
@@ -1113,6 +1124,10 @@ public class ContactList extends Vector {
       if (orgId != -1) {
         sqlFilter.append("AND c.org_id = ? ");
       }
+      
+      if (includeEnabled == TRUE || includeEnabled == FALSE) {
+              sqlFilter.append("AND c.enabled = ? ");
+      }
 
       if (owner != -1) {
         sqlFilter.append("AND c.owner = ? ");
@@ -1288,6 +1303,12 @@ public class ContactList extends Vector {
 
       if (orgId != -1) {
         pst.setInt(++i, orgId);
+      }
+      
+      if (includeEnabled == TRUE) {
+              pst.setBoolean(++i, true);
+      } else if (includeEnabled == FALSE) {
+              pst.setBoolean(++i, false);
       }
 
       if (owner != -1) {
