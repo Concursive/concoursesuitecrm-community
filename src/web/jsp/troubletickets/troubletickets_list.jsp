@@ -80,7 +80,7 @@
       FileItem thisFile = (FileItem)files.next();
       if (".wav".equalsIgnoreCase(thisFile.getExtension())) {
 %>
-  <a href="TroubleTicketsDocuments.do?command=Download&tId=<%= assignedTic.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom"></a>
+  <a href="TroubleTicketsDocuments.do?command=Download&stream=true&tId=<%= assignedTic.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom"></a>
 <%
       }
     }
@@ -174,7 +174,7 @@
       FileItem thisFile = (FileItem)files.next();
       if (".wav".equalsIgnoreCase(thisFile.getExtension())) {
 %>
-  <a href="TroubleTicketsDocuments.do?command=Download&tId=<%= openTic.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom"></a>
+  <a href="TroubleTicketsDocuments.do?command=Download&stream=true&tId=<%= openTic.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom"></a>
 <%
       }
     }
@@ -269,7 +269,7 @@
       FileItem thisFile = (FileItem)files.next();
       if (".wav".equalsIgnoreCase(thisFile.getExtension())) {
 %>
-  <a href="TroubleTicketsDocuments.do?command=Download&tId=<%= thisTic.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom"></a>
+  <a href="TroubleTicketsDocuments.do?command=Download&stream=true&tId=<%= thisTic.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom"></a>
 <%
       }
     }

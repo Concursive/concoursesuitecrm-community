@@ -35,6 +35,7 @@
   <tr class="title">
     <td colspan=2 valign=top align=left>
       <strong>Ticket Information</strong>
+<%--
 <dhv:evaluate exp="<%= TicketDetails.getFiles().hasFileType(".none") %>">
       <embed src="TroubleTicketsDocuments.do?command=Download&tId=23&fid=12"
         align="absmiddle" border="0" width="0" height="0"
@@ -42,6 +43,7 @@
       <noembed><A HREF="TroubleTicketsDocuments.do?command=Download&tId=23&fid=12">Recorded message</A></noembed>
       <A HREF="TroubleTicketsDocuments.do?command=Download&tId=23&fid=12">Recorded message</A>
 </dhv:evaluate>
+--%>
     </td>     
   </tr>
   <tr class="containerBody">
@@ -63,7 +65,7 @@
     FileItem thisFile = (FileItem)files.next();
     if (".wav".equalsIgnoreCase(thisFile.getExtension())) {
 %>
-  <a href="TroubleTicketsDocuments.do?command=Download&tId=<%= TicketDetails.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom">Play Audio Message</a><br>
+  <a href="TroubleTicketsDocuments.do?command=Download&stream=true&tId=<%= TicketDetails.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom">Play Audio Message</a><br>
 <%
     }
   }

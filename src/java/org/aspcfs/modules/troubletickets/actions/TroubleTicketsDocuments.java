@@ -342,6 +342,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
     String itemId = (String) context.getRequest().getParameter("fid");
     String version = (String) context.getRequest().getParameter("ver");
     FileItem thisItem = null;
+    String stream = (String)context.getRequest().getParameter("stream");
 
     Connection db = null;
     int ticketId = -1;
@@ -368,7 +369,11 @@ public final class TroubleTicketsDocuments extends CFSModule {
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
         if (fileDownload.fileExists()) {
-          fileDownload.sendFile(context);
+          if ("true".equals(stream)) {
+            fileDownload.streamContent(context);
+          } else {
+            fileDownload.sendFile(context);
+          }
           //Get a db connection now that the download is complete
           db = getConnection(context);
           itemToDownload.updateCounter(db);
