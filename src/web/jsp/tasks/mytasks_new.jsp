@@ -10,7 +10,7 @@
   }%>
 <dhv:evaluate exp="<%= !popUp %>">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 

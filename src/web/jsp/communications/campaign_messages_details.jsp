@@ -5,7 +5,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <form name="details" action="CampaignManagerMessage.do?command=Modify&id=<%= MessageDetails.getId() %>" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="CampaignManager.do">Communications</a> >

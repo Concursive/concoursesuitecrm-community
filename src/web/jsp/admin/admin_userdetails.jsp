@@ -5,7 +5,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Admin.do">Admin</a> >

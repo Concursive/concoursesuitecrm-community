@@ -31,7 +31,7 @@
 </script>
 <form name="details" action="AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>" method="post" onSubmit="return checkForm(this);">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Admin.do">Admin</a> >

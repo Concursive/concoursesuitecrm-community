@@ -34,7 +34,7 @@
 <body onLoad="javascript:document.forms[0].subject.focus();">
 <form name="generate" action="Accounts.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Accounts.do">Accounts</a> > 

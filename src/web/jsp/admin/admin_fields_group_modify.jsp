@@ -10,7 +10,7 @@
 <body onLoad="document.forms[0].name.focus();">
 <form name="details" action="AdminFieldsGroup.do?command=UpdateGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&auto-populate=true" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Admin.do">Admin</a> >

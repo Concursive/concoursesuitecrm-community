@@ -32,7 +32,7 @@
       if (thisTab.getReturnLinkText() != null && !(thisTab.getReturnLinkText().equals(""))) {
 %>
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <%= thisTab.getReturnLinkText() %>

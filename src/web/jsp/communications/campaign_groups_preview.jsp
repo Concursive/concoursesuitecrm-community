@@ -6,7 +6,7 @@
 <%@ include file="../initPage.jsp" %>
 <dhv:evaluate if="<%= !"true".equals(request.getParameter("popup")) %>">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="CampaignManager.do">Communications</a> >

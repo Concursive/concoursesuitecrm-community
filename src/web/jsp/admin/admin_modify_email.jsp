@@ -2,7 +2,7 @@
 <%@ include file="../initPage.jsp" %>
 <form name="modify" action="AdminConfig.do?command=Update" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Admin.do">Admin</a> >

@@ -8,7 +8,7 @@
 <script language="JavaScript" type="text/javascript" src="javascript/submit.js"></script>
 <form action='Viewpoints.do?command=InsertViewpoint&auto-populate=true' method='post'>
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Admin.do">Admin</a> >

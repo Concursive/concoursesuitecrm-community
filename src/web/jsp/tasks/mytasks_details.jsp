@@ -3,7 +3,7 @@
 <%@ include file="../initPage.jsp" %>
 <dhv:evaluate exp="<%= !isPopup(request) %>">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 

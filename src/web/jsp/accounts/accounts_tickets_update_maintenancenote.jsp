@@ -14,7 +14,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <form name="details" action="AccountTicketMaintenanceNotes.do?command=Update&auto-populate=true&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>&return=<%=request.getParameter("return")%>"  onSubmit="return doCheck(this);" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Accounts.do">Accounts</a> > 

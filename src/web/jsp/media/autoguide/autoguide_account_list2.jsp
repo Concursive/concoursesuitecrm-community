@@ -9,7 +9,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Accounts.do">Accounts</a> > 

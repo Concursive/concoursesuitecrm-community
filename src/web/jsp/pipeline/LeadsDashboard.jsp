@@ -15,7 +15,7 @@
 <jsp:include page="<%= includePage %>" flush="true"/>
 <form name="Dashboard" action="Leads.do?command=Dashboard" method=POST>
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Leads.do">Pipeline</a> > 

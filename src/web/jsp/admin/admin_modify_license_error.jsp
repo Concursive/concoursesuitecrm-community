@@ -3,7 +3,7 @@
 <jsp:useBean id="APP_ORGANIZATION" class="java.lang.String" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Admin.do">Admin</a> >

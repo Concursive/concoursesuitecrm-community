@@ -57,7 +57,7 @@
 %>
 <dhv:evaluate exp="<%= !popUp %>">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Leads.do">Pipeline</a> >

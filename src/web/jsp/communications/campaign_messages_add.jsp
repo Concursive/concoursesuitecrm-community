@@ -17,7 +17,7 @@
 <%}%>
 <form name="addMessage" method="post" action="CampaignManagerMessage.do?command=Insert&auto-populate=true">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="CampaignManager.do">Communications</a> >

@@ -35,7 +35,7 @@
 </script>
 <body onLoad="document.inputForm.subject.focus();">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="TroubleTickets.do">Help Desk</a> > 

@@ -14,7 +14,7 @@
   loadImages('select');
 </script>
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="ExternalContacts.do">Contacts</a> > 

@@ -67,7 +67,7 @@
   <form name="addContact" action="Contacts.do?command=Save&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" method="post">
   <dhv:evaluate exp="<%= !popUp %>">
 <%-- Trails --%>
-<table cellpadding="4" cellspacing="0" width="100%" class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td width="100%">
   <a href="Accounts.do">Accounts</a> > 

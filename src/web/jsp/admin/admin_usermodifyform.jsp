@@ -9,7 +9,7 @@
 <body onLoad="javascript:document.forms[0].username.focus();">
 <form name="details" action="Users.do?command=UpdateUser&auto-populate=true" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Admin.do">Admin</a> > 

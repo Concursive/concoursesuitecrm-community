@@ -21,7 +21,7 @@ function updateList() {
 <body onLoad="javascript:fillFrame(document.forms['modForm'].surveyId);">
 <form name="modForm" action="CampaignManager.do?command=InsertAttachment&id=<%= Campaign.getId() %>" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="CampaignManager.do">Communications</a> >

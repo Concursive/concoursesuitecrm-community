@@ -24,7 +24,7 @@
 <body onLoad="javascript:document.forms[0].subject.focus();">
 <form name="generate" action="TroubleTickets.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="TroubleTickets.do">Help Desk</a> > 

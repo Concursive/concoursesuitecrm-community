@@ -4,7 +4,7 @@
 <%@ page import="org.aspcfs.utils.web.HtmlSelectTimeZone" %>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Admin.do">Admin</a> >

@@ -51,7 +51,7 @@
 <body onLoad="javascript:document.forms[0].searchDescription.focus();checkOwnedBy();">
 <form name="searchLeads" action="Leads.do?command=Search" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Leads.do">Pipeline</a> > 

@@ -39,7 +39,7 @@ function checkForm(form) {
 <body onLoad="javascript:document.forms[0].description.focus()">
 <form name="searchForm" method="post" action="MyActionLists.do?command=Save&auto-populate=true" onSubmit="return checkForm(this);">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >

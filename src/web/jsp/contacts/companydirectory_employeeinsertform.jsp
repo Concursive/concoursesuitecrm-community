@@ -53,7 +53,7 @@
   <form name="addEmployee" action="CompanyDirectory.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate exp="<%= !isPopup(request) %>">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="CompanyDirectory.do?command=ListEmployees">Employees</a> >

@@ -42,7 +42,7 @@ function highlight() {
 <%}%>
 <form name="modMessage" action="CampaignManagerMessage.do?command=Update&auto-populate=true" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="CampaignManager.do">Communications</a> >

@@ -6,7 +6,7 @@
 <body onLoad="javascript:document.forms[0].password.focus();">
 <form action="MyCFSPassword.do?command=UpdatePassword&auto-populate=true" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 

@@ -6,7 +6,7 @@
 <%@ include file="../initPage.jsp" %>
 <form name="details" action="AdminFieldsFolder.do?command=ListFolders" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Admin.do">Admin</a> >

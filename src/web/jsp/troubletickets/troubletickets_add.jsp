@@ -3,7 +3,7 @@
 <%@ include file="../initPage.jsp" %>
 <form name="addticket" action="TroubleTickets.do?command=Insert&auto-populate=true" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="TroubleTickets.do">Help Desk</a> > 

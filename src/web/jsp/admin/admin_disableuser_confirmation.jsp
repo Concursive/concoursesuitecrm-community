@@ -5,7 +5,7 @@
 <%@ include file="../initPage.jsp" %>
 <form name="disableUser" action="Users.do?command=DisableUser" method="POST">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Admin.do">Admin</a> >

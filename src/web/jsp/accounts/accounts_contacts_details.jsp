@@ -9,7 +9,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/moveContact.js"></script>
 <form name="modContact" action="Contacts.do?command=Modify&id=<%=ContactDetails.getId()%>&orgId=<%=ContactDetails.getOrgId()%>" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Accounts.do">Accounts</a> > 

@@ -15,7 +15,7 @@
 <body onLoad="javascript:document.forms[0].vendor.focus();" >
 <form name="addAccountAsset" action="AccountsAssets.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%-- Trails --%>
-<table cellpadding="4" cellspacing="0" width="100%" class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td width="100%">
   <a href="Accounts.do">Accounts</a> > 

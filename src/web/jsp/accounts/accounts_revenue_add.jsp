@@ -8,7 +8,7 @@
 <body onLoad="javascript:document.forms[0].description.focus();">
 <form name="addRevenue" action="RevenueManager.do?command=Insert&auto-populate=true" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Accounts.do">Accounts</a> > 

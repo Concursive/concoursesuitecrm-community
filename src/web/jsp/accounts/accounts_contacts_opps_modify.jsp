@@ -7,7 +7,7 @@
 <body onLoad="javascript:document.forms[0].description.focus();">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Accounts.do">Accounts</a> > 

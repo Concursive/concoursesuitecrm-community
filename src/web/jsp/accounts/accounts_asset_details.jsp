@@ -17,7 +17,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <form name="viewAccountAsset" action="AccountsAssets.do?command=Modify&auto-populate=true&id=<%=asset.getId()%>" method="post">
 <%-- Trails --%>
-<table cellpadding="4" cellspacing="0" width="100%" class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td width="100%">
   <a href="Accounts.do">Accounts</a> > 

@@ -20,7 +20,7 @@ function checkForm(form) {
 <body onLoad="javascript:document.forms[0].groupName.focus()">
 <form name="searchForm" method="post" action="CampaignManagerGroup.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="CampaignManager.do">Communications</a> >

@@ -17,7 +17,7 @@ function saveCriteria() {
 %>
 <form name="searchForm" method="post" action="MyActionContacts.do?command=Save&actionId=<%= ActionList.getId() %>" onSubmit="return saveCriteria();">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >

@@ -6,7 +6,7 @@
 <form name="modifyOpp" action="ExternalContactsOpps.do?command=UpdateOpp&contactId=<%= ContactDetails.getId() %>&auto-populate=true" method="post">
 <dhv:evaluate exp="<%= !isPopup(request) %>">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="ExternalContacts.do">Contacts</a> > 

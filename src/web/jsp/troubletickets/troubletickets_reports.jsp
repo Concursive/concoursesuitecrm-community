@@ -15,7 +15,7 @@
 </script>
 <form name="listView" method="post" action="TroubleTickets.do?command=Reports">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="TroubleTickets.do">Help Desk</a> > 

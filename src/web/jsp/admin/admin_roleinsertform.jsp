@@ -6,7 +6,7 @@
 <body onLoad="javascript:document.forms[0].role.focus();">
 <form action='Roles.do?command=InsertRole&auto-populate=true' method='post'>
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Admin.do">Admin</a> >

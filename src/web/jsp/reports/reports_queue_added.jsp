@@ -8,7 +8,7 @@
 <jsp:useBean id="queuePosition" class="java.lang.String" scope="request" />
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Reports.do">Reports</a> >

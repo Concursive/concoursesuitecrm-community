@@ -3,7 +3,7 @@
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <form name="modifyTimeout" action="AdminConfig.do?command=Update" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Admin.do">Admin</a> >

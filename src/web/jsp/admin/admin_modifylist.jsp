@@ -19,7 +19,7 @@
 <body onLoad="javascript:document.forms['modifyList'].newValue.focus();">
 <form name="modifyList" method="post" action="Admin.do?command=UpdateList" onSubmit="return doCheck();">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Admin.do">Admin</a> >

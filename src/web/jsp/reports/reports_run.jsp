@@ -5,7 +5,7 @@
 <jsp:useBean id="categories" class="org.aspcfs.modules.admin.base.PermissionCategoryList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Reports.do">Reports</a> >

@@ -15,7 +15,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <form name="viewServiceContract" action="AccountsServiceContracts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>&id=<%=serviceContract.getId()%>&return=single" method="post">
 <%-- Trails --%>
-<table cellpadding="4" cellspacing="0" width="100%" class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td width="100%">
   <a href="Accounts.do">Accounts</a> > 

@@ -13,7 +13,7 @@
 <body onLoad="javascript:document.forms[0].searchName.focus();">
 <form name="searchAccount" action="Accounts.do?command=Search" method="post">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Accounts.do">Accounts</a> > 
