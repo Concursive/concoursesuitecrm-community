@@ -152,3 +152,5 @@ CREATE TABLE active_survey (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id)
 );
+
+INSERT INTO lookup_survey_types (description) VALUES ('Item List');
