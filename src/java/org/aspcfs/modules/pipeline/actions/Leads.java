@@ -738,7 +738,7 @@ public final class Leads extends CFSModule {
     addModuleBean(context, "View Opportunities", "Delete an opportunity");
     if (errorMessage == null) {
       if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl", "Leads.do?command=ViewOpp");
+        context.getRequest().setAttribute("refreshUrl", "Leads.do?command=Search");
         deleteRecentItem(context, newOpp);
         return ("OppDeleteOK");
       } else {
@@ -788,7 +788,7 @@ public final class Leads extends CFSModule {
         deleteRecentItem(context, component);
         if (context.getRequest().getParameter("return") != null) {
           if (context.getRequest().getParameter("return").equals("list")) {
-            context.getRequest().setAttribute("refreshUrl", "Leads.do?command=ViewOpp");
+            context.getRequest().setAttribute("refreshUrl", "Leads.do?command=Search");
             return ("ComponentDeleteOK");
           }
         }
