@@ -213,6 +213,7 @@ public String executeCommandReports(ActionContext context) {
 	boolean recordInserted = false;
 	Connection db = null;
 	String subject = context.getRequest().getParameter("subject");
+	String ownerCriteria = context.getRequest().getParameter("criteria1");
 		
 	//String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
 	
@@ -232,11 +233,15 @@ public String executeCommandReports(ActionContext context) {
 	contactReport.setSubject(subject);
 	contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
 	contactReport.setPersonalId(this.getUserId(context));
-	contactReport.setOwnerIdRange(this.getUserRange(context));
+	
+	if (ownerCriteria.equals("my")) {
+		contactReport.setOwner(this.getUserId(context));
+	} else if (ownerCriteria.equals("all")) {
+		contactReport.setOwnerIdRange(this.getUserRange(context));
+	}
 		
 	try {
 		db = this.getConnection(context);
-        	//contactReport.setOwner(this.getUserId(context));
 		
 		//builds list also
 		contactReport.buildReportFull(db);

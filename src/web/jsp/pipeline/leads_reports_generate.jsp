@@ -32,7 +32,7 @@
   
   <tr>
     <td nowrap class="formLabel">
-      Report Type
+      Type
     </td>
     <td>
       <select name="type">
@@ -43,10 +43,22 @@
   
   <tr>
     <td nowrap class="formLabel">
-      Report Subject
+      Subject
     </td>
     <td>
       <input type=text size=35 name="subject" maxlength=50>
+    </td>
+  </tr>
+  
+  <tr>
+    <td nowrap class="formLabel">
+      Criteria
+    </td>
+    <td>
+      <select name="criteria1">
+      <option value="my">My Opportunities</option>
+      <option value="all">All Opportunities</option>
+      </select>
     </td>
   </tr>
   
@@ -56,6 +68,7 @@
     </td>
     <td>
       <select size=5 multiple name="fields">
+      <option value="id" selected>Opportunity ID</option>
       <option value="description" selected>Description</option>
       <option value="contact" selected>Contact/Organization</option>
       <option value="owner" selected>Owner</option>

@@ -682,8 +682,7 @@ public final class Leads extends CFSModule {
 	boolean recordInserted = false;
 	Connection db = null;
 	String subject = context.getRequest().getParameter("subject");
-		
-	//String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
+	String ownerCriteria = context.getRequest().getParameter("criteria1");
 	
 	String filePath = this.getPath(context, "lead-reports");
 	
@@ -699,8 +698,13 @@ public final class Leads extends CFSModule {
 	oppReport.setEnteredBy(getUserId(context));
 	oppReport.setModifiedBy(getUserId(context));
 	oppReport.setSubject(subject);
-	oppReport.setOwnerIdRange(this.getUserRange(context));
-	//oppReport.setOwner(this.getUserId(context));
+	
+		
+	if (ownerCriteria.equals("my")) {
+		oppReport.setOwner(this.getUserId(context));
+	} else if (ownerCriteria.equals("all")) {
+		oppReport.setOwnerIdRange(this.getUserRange(context));
+	}
 	
 	try {
 		db = this.getConnection(context);

@@ -29,6 +29,7 @@ public class OpportunityReport extends OpportunityList {
 	protected ArrayList criteria = null;
 	String[] params = null;
 	
+	protected boolean displayId = true;
 	protected boolean displayDescription = true;
 	protected boolean displayContact = true;
 	protected boolean displayOwner = true;
@@ -101,6 +102,13 @@ public class OpportunityReport extends OpportunityList {
 	public boolean getJoinOrgs() { return joinOrgs; }
 	public void setOrgReportJoin(OrganizationReport tmp) { this.orgReportJoin = tmp; }
 	public void setJoinOrgs(boolean tmp) { this.joinOrgs = tmp; }
+	
+	public boolean getDisplayId() {
+		return displayId;
+	}
+	public void setDisplayId(boolean displayId) {
+		this.displayId = displayId;
+	}
 
 	public boolean getDisplayEntered() {
 		return displayEntered;
@@ -126,6 +134,7 @@ public class OpportunityReport extends OpportunityList {
 	}
 	
 	public void setCriteriaVars() {
+		if ( !(criteria.contains("id")) ) { displayId = false; }
 		if ( !(criteria.contains("description")) ) { displayDescription = false; }
 		if ( !(criteria.contains("contact")) ) { displayContact = false; }
 		if ( !(criteria.contains("owner")) ) { displayOwner = false; }
@@ -166,6 +175,7 @@ public class OpportunityReport extends OpportunityList {
 	public void buildReportHeaders() {
 		if (joinOrgs) { orgReportJoin.buildReportHeaders(rep); }
 		
+		if (displayId) { rep.addColumn("Opportunity ID"); }
 		if (displayDescription) { rep.addColumn("Description"); }
 		if (displayContact) { rep.addColumn("Contact/Organization"); }
 		if (displayOwner) { rep.addColumn("Owner"); }
@@ -201,6 +211,7 @@ public class OpportunityReport extends OpportunityList {
 			}
 			
 			if (!joinOrgs || writeOut == true) {
+				if (displayId) { thisRow.addCell(thisOpp.getId());	}
 				if (displayDescription) { thisRow.addCell(thisOpp.getDescription());	}
 				if (displayContact) { thisRow.addCell(thisOpp.getAccountName()); }
 				if (displayOwner) {	thisRow.addCell(thisOpp.getOwnerName()); }
