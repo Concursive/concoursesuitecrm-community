@@ -8,7 +8,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <form name="componentDetails" action="Leads.do?command=ModifyComponent&id=<%= LeadsComponentDetails.getId() %>&return=details" method="post">
 <a href="Leads.do">Pipeline Management</a> > 
-<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
+<a href="Leads.do?command=ViewOpp">View Components</a> >
 <a href="Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>&reset=true">Opportunity Details</a> > 
 Component Details<br>
 <hr color="#BFBFBB" noshade>

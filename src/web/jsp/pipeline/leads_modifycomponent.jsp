@@ -66,7 +66,7 @@ function checkForm(form) {
 <form name="opportunityForm" action="LeadsComponents.do?command=SaveComponent&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate if="<%= !popUp %>">
 <a href="Leads.do">Pipeline Management</a> > 
-<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
+<a href="Leads.do?command=ViewOpp">View Components</a> >
 <% if ("list".equals(request.getParameter("return"))) {%>
   <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>">Opportunity Details</a> > 
 <%} else if (request.getParameter("return") != null) {%>

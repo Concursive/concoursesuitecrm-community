@@ -8,7 +8,7 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <a href="Leads.do">Pipeline Management</a> > 
-<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
+<a href="Leads.do?command=ViewOpp">View Components</a> >
 <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
 Calls<br>
 <hr color="#BFBFBB" noshade>

@@ -9,7 +9,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <a href="Leads.do">Pipeline Management</a> > 
 <% if (request.getParameter("return") == null) { %>
-	<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
+	<a href="Leads.do?command=ViewOpp">View Components</a> >
 <%} else {%>
 	<% if (request.getParameter("return").equals("dashboard")) { %>
 		<a href="Leads.do?command=Dashboard">Dashboard</a> >

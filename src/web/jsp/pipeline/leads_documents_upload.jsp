@@ -36,7 +36,7 @@
 </script>
 <body onLoad="document.inputForm.subject.focus();">
 <a href="Leads.do">Pipeline Management</a> > 
-<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
+<a href="Leads.do?command=ViewOpp">View Components</a> >
 <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
 <a href="LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %>">Documents</a> > 
 Upload Document<br>

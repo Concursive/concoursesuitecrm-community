@@ -14,11 +14,11 @@
 <dhv:evaluate exp="<%= !popUp %>">
   <a href="Leads.do">Pipeline Management</a> > 
   <% if (request.getParameter("return") == null) { %>
-	  <a href="Leads.do?command=ViewOpp">View Opportunities</a> >
+	  <a href="Leads.do?command=ViewOpp">View Components</a> >
     <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
     <%} else {%>
     <% if (request.getParameter("return").equals("list")) { %>
-		<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
+		<a href="Leads.do?command=ViewOpp">View Components</a> >
     <%} else if (request.getParameter("return").equals("dashboard")) { %>
 		<a href="Leads.do?command=Dashboard">Dashboard</a> >
     <%}%>

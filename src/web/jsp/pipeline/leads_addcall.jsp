@@ -48,7 +48,7 @@
 </script>
 <form name="addCall" action="LeadsCalls.do?command=Insert&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="Leads.do">Pipeline Management</a> > 
-<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
+<a href="Leads.do?command=ViewOpp">View Components</a> >
 <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
 <a href="LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>">Calls</a> >
 Add a Call<br>
