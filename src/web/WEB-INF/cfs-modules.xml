@@ -242,6 +242,8 @@
 		<action name="AccountsDocuments"/>
     <action name="AccountsAutoGuide"/>
     <action name="AccountsPrototype"/>
+    <action name="AccountTicketsDocuments"/>
+    <action name="AccountTicketTasks"/>
     <page title="Account Management"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>
@@ -487,6 +489,8 @@
   
   <menu>
     <action name="TroubleTickets"/>
+    <action name="TroubleTicketTasks"/>
+    <action name="TroubleTicketsDocuments"/>
     <page title="Tickets"/>
     <permission value="tickets-view"/>
     <long_html value="Tickets"/>
