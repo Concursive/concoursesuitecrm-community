@@ -93,7 +93,7 @@ Add Contact<br>
               <input type="radio" name="contactcategory" value="2" <%= ContactDetails.getOrgId() > -1 ? " checked":""%>>
             </td>
             <td>
-              Associated with Account: &nbsp;
+              Permanently associate with Account: &nbsp;
             </td>
             <td>
               <div id="changeaccount"><%= ContactDetails.getOrgId() > -1 ? ContactDetails.getCompany() : "None Selected"%></div>
