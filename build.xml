@@ -253,6 +253,8 @@ determined user is ${USER}
 				<path refid="cfs2.classpath"/>
 				<pathelement location="${SRC_BIN}"/>
         <pathelement location="${SRC_LIB}/theseus.jar"/>
+        <pathelement location="${SRC_LIB}/isavvix.jar"/>
+        <pathelement location="${SRC_LIB}/zeroio-iteam.jar"/>
         <pathelement location="${SRC_LIB}/darkhorseventures.jar"/>
 			</classpath>
 		</javac>
