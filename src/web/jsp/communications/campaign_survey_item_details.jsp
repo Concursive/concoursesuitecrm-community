@@ -21,10 +21,10 @@
        <td valign="center" align="left" nowrap>
           Name
         </td>
-       <td valign="center" align="left" nowrap>
+       <td width="15%" valign="center" align="left" nowrap>
           Phone Number(s)
         </td>
-      <td valign="center" align="left" nowrap>
+      <td width="15%" valign="center" align="left" nowrap>
         Email Addresses
       </td>
       <td valign="center" align="left" nowrap>
@@ -44,16 +44,16 @@
         ActiveSurveyAnswerItem thisItem = (ActiveSurveyAnswerItem)i.next();
   %>      
      <tr class="row<%= rowid %>" nowrap>
-        <td valign="top" align="center" class="row<%= rowid %>" nowrap>
+        <td align="left" valign="center" class="row<%= rowid %>" nowrap>
           <%= thisItem.getRecipient().getNameLastFirst() %>
         </td>
-        <td width="20" nowrap>
+        <td width="15%" align="left" valign="center" nowrap>
           <%= toHtml(thisItem.getRecipient().getPhoneNumber(PhoneNumber.BUSSINESS)) %>
         </td>
-        <td width="40" nowrap>
+        <td width="15%" align="left" valign="center" nowrap>
           <%= toHtml(thisItem.getRecipient().getEmailAddress(EmailAddress.BUSSINESS)) %>
         </td>
-        <td width="40" nowrap>
+        <td align="left" valign="center" nowrap>
           <%= toDateTimeString(thisItem.getEntered()) %>
         </td>
       </tr>
