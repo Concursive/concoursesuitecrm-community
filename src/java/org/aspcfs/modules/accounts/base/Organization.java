@@ -1203,6 +1203,7 @@ public class Organization extends GenericBean {
     }
 
     try {
+      modifiedBy = enteredBy;
       db.setAutoCommit(false);
       String sql = 
         "INSERT INTO ORGANIZATION (name,industry_temp_code,url,miner_only,enteredby,modifiedby,owner,duplicate_id,notes,employees,revenue,ticker_symbol,account_number) " +
@@ -1214,7 +1215,7 @@ public class Organization extends GenericBean {
       pst.setString(++i, this.getUrl());
       pst.setBoolean(++i, this.getMiner_only());
       pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getOwner());
       pst.setInt(++i, this.getDuplicateId());
       pst.setString(++i, this.getNotes());
