@@ -1299,20 +1299,8 @@ public class CustomField extends GenericBean {
     sql.append(
         "INSERT INTO custom_field_data " +
         "(record_id, field_id, selected_item_id, entered_value, entered_number, ");
-                if (entered != null) {
-                        sql.append("entered, ");
-                }
-                if (modified != null) {
-                        sql.append("modified, ");
-                }        
     sql.append("entered_float ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
-                if (entered != null) {
-                        sql.append("?, ");
-                }
-                if (modified != null) {
-                        sql.append("?, ");
-                } 
     sql.append("?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -1321,13 +1309,6 @@ public class CustomField extends GenericBean {
     pst.setInt(++i, selectedItemId);
     pst.setString(++i, enteredValue);
     pst.setInt(++i, enteredNumber);
-    
-        if (entered != null) {
-                pst.setTimestamp(++i, entered);
-        }
-        if (modified != null) {
-                pst.setTimestamp(++i, modified);
-        }
     pst.setDouble(++i, enteredDouble);
     pst.execute();
     pst.close();

@@ -536,17 +536,11 @@ public class CustomFieldGroup extends ArrayList {
                 if (entered != null) {
                         sql.append("entered, ");
                 }
-                if (modified != null) {
-                        sql.append("modified, ");
-                }    
     sql.append("description ) ");
     sql.append("VALUES (?, ?, ?, ");
                 if (entered != null) {
                         sql.append("?, ");
                 }
-                if (modified != null) {
-                        sql.append("?, ");
-                }    
     sql.append("?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -554,9 +548,6 @@ public class CustomFieldGroup extends ArrayList {
     pst.setString(++i, this.getName());
         if (entered != null) {
                 pst.setTimestamp(++i, entered);
-        }
-        if (modified != null) {
-                pst.setTimestamp(++i, modified);
         }
     pst.setString(++i, this.getDescription());
     pst.execute();
