@@ -1,6 +1,6 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*,com.darkhorseventures.webutils.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
-<jsp:useBean id="category" class="com.darkhorseventures.webutils.LookupElement" scope="request"/>
+<jsp:useBean id="category" class="com.darkhorseventures.cfsbase.TaskCategory" scope="request"/>
 <jsp:useBean id="Task" class="com.darkhorseventures.cfsbase.Task" scope="request"/>
 <jsp:useBean id="PriorityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>

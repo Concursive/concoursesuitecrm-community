@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,com.darkhorseventures.webutils.LookupElement" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,com.darkhorseventures.cfsbase.TaskCategory" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="categoryList" class="com.darkhorseventures.cfsbase.TaskCategoryList" scope="request"/>
 <%@ include file="initPage.jsp" %>
@@ -11,26 +11,28 @@
 </table>
    
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
-  <tr>
-    <td width='5' bgcolor='#808080' nowrap>&nbsp;</td>
-    <td width="100%" bgcolor='#808080' nowrap><font color='#FFFFFF'>&lt;Category&gt;</font></td>
-    <td bgcolor='#808080' nowrap><font color='#FFFFFF'>&lt;Items&gt;</font></td>
-    <td bgcolor='#808080' nowrap><font color='#FFFFFF'>&lt;Latest Post&gt;</font></td>
+  <tr bgcolor="#808080">
+    <td width="5" nowrap>&nbsp;</td>
+    <td nowrap><font color='#FFFFFF'>&lt;Action&gt;</font></td>
+    <td width="100%" nowrap><font color='#FFFFFF'>&lt;Category&gt;</font></td>
+    <td nowrap><font color='#FFFFFF'>&lt;Items&gt;</font></td>
+    <td nowrap><font color='#FFFFFF'>&lt;Latest Post&gt;</font></td>
   </tr>
 <%    
   String bgColorVar = " bgColor=\"#E4E4E4\"";
   Iterator i = categoryList.iterator();
   while (i.hasNext()) {
-    LookupElement thisCategory = (LookupElement)i.next();
+    TaskCategory thisCategory = (TaskCategory)i.next();
 %>    
   <tr<%= bgColorVar %>>
-    <td width='5' valign='top' nowrap>&nbsp;</td>
-    <td width="100%" valign='top' align='left'>
+    <td width="5" valign="top" nowrap>&nbsp;</td>
+    <td valign="top" align="center" nowrap><a href="ProjectManagementListsCategory.do?command=AddCategory&pid=<%= Project.getId() %>&cid=<%= thisCategory.getId() %>">Edit</a>|Del</td>
+    <td width="100%" valign="top" align="left">
       <img border="0" src="images/folder.gif" align="absmiddle">
       <a href="ProjectManagement.do?command=ProjectCenter&section=Lists&pid=<%= Project.getId() %>&cid=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getDescription()) %></a>
     </td>
-    <td valign='top' align='center' nowrap>N/A</td>
-    <td valign='top' align='left' nowrap>N/A</td>
+    <td valign="top" align="center" nowrap><%= thisCategory.getTaskCount() %></td>
+    <td valign="top" align="left" nowrap><%= toDateTimeString(thisCategory.getLastTaskEntered()) %></td>
   </tr>
 <%    
     if (bgColorVar.equals(" bgColor=\"#E4E4E4\"")) {
@@ -43,4 +45,5 @@
 </table>
 &nbsp;<br>
 <hr color='#000000' width='100%' noshade size='1'>
-  
+<br>
+[<a href="ProjectManagementListsCategory.do?command=AddCategory&pid=<%= Project.getId() %>">Add a Category to this List</a>]
