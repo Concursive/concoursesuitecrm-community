@@ -15,6 +15,7 @@ import java.io.*;
 import com.zeroio.webutils.FileDownload;
 import org.aspcfs.utils.JasperReportUtils;
 import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Actions for working with Pipeline Management reports. Code originally from
@@ -96,6 +97,7 @@ public final class Reports extends CFSModule {
       //Get list of modules with reports
       PermissionCategoryList categories = new PermissionCategoryList();
       categories.setModulesWithReportsOnly(true);
+      categories.setEnabledState(Constants.TRUE);
       categories.buildList(db);
       context.getRequest().setAttribute("categories", categories);
     } catch (Exception e) {
