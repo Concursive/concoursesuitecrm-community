@@ -601,7 +601,7 @@ public class SearchCriteriaList extends Hashtable {
 			db.setAutoCommit(false);
 			sql.append(
 					"INSERT INTO saved_criterialist ( owner, name, contact_source, enteredby, modifiedby ) " +
-					"VALUES ( ?, ?, ?, ? ) ");
+					"VALUES ( ?, ?, ?, ?, ? ) ");
 			int i = 0;
 			PreparedStatement pst = db.prepareStatement(sql.toString());
 
