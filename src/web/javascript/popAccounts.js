@@ -16,6 +16,7 @@ function popAccountsListSingle(hiddenFieldId, displayFieldId, params) {
     params = '&' + params;
   }
   var newwin=window.open('AccountSelector.do?command=ListAccounts&listType=single&reset=true&previousSelection='+document.getElementById(hiddenFieldId).value+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+  newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;

@@ -11,6 +11,7 @@ function popContactsListSingle(hiddenFieldId, displayFieldId, params) {
     params = '&' + params;
   }
   var newwin=window.open('ContactsList.do?command=ContactList&listType=single&flushtemplist=true&selectedIds='+document.getElementById(hiddenFieldId).value+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+  newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;
@@ -39,6 +40,7 @@ function popContactsListMultiple(displayFieldId, highLightedId, params) {
     params = '&' + params;
   }
   var newwin=window.open('ContactsList.do?command=ContactList&previousSelection=' + selectedIds + '&listType=list&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId + params, title, windowParams);
+  newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;
@@ -142,6 +144,7 @@ function popContactsListMultipleCampaign(displayFieldId,highLightedId, params) {
   }
   var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
   var newwin=window.open('ContactsList.do?command=ContactList&previousSelection=' + selectedIds + '&listType=list&campaign=true&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId+params, title, windowParams);
+  newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;

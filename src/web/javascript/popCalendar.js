@@ -23,6 +23,7 @@ function popCalendar(formname, element) {
   var posy = (screen.height - 200)/2;
   
   var newwin=window.open(filename, 'popcalendar', 'WIDTH=210,HEIGHT=200,RESIZABLE=yes,SCROLLBARS=no,STATUS=0,LEFT=' + posx + ',TOP=' + posy + ',screenx=' + posx + ',screeny=' + posy);
+  newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;

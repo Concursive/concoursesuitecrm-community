@@ -13,6 +13,7 @@ function popURL(filename, title, width, height, resize, bars) {
   
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + ',screenX=' + posx + ',screenY=' + posy;
   var newwin=window.open(filename, title, params);
+  newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;
@@ -24,6 +25,7 @@ function popURLReturn(filename, returnUrl, title, width, height, resize, bars) {
   var posy = (screen.height - height)/2;
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
   var newwin=window.open(filename + "&return=" + escape(returnUrl), title, params);
+  newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;
@@ -39,6 +41,7 @@ function popURLCampaign(filename, title, width, height, resize, bars) {
   filename = filename + "&source=" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value; 
   
   var newwin=window.open(filename, title, params);
+  newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;

@@ -24,7 +24,7 @@ function popLookupSelectMultiple(displayFieldId,highLightedId,table) {
   
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
   var newwin=window.open('LookupSelector.do?command=PopupSelector&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&table=' + table + '', title, params);
-
+  newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;
@@ -58,7 +58,7 @@ function popContactTypeSelectMultiple(displayFieldId, category, contactId) {
   
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
   var newwin=window.open('ExternalContacts.do?command=PopupSelector&reset=true&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&category=' +  category + '&contactId=' + contactId , title, params);
-
+  newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;
