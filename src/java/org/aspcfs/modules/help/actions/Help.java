@@ -20,10 +20,11 @@ import org.aspcfs.utils.HTTPUtils;
  *@version    $Id$
  */
 
- public final class Help extends CFSModule {
+public final class Help extends CFSModule {
 
   /**
-   *  Description of the Method
+   *  Fetches the help_id and module_id based on the action, section and
+   *  sebsection
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -108,7 +109,7 @@ import org.aspcfs.utils.HTTPUtils;
 
 
   /**
-   *  Description of the Method
+   *  Fetches context sensitive (page related) help information
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -135,7 +136,7 @@ import org.aspcfs.utils.HTTPUtils;
 
 
   /**
-   *  Description of the Method
+   *  Fetches module description of the module that the page belongs to
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -165,7 +166,7 @@ import org.aspcfs.utils.HTTPUtils;
 
 
   /**
-   *  Description of the Method
+   *  Fetches the table of contents
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -184,4 +185,83 @@ import org.aspcfs.utils.HTTPUtils;
     }
     return ("TableOfContentsOK");
   }
+
+
+  /**
+   *  Provides an editable view of the module description
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandViewModuleDescription(ActionContext context) {
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      String module = context.getRequest().getParameter("module");
+      HelpModule thisModule = new HelpModule(db, module);
+      context.getRequest().setAttribute("helpModule", thisModule);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("ModuleDescriptionOK");
+  }
+
+
+  /**
+   *  Fetches the existing module descirption so that they can be modified
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandModifyDescription(ActionContext context) {
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      String id = context.getRequest().getParameter("id");
+      String action = context.getRequest().getParameter("action");
+      HelpModule thisModule = new HelpModule(db, Integer.parseInt(id));
+      thisModule.setRelatedAction(action);
+      context.getRequest().setAttribute("helpModule", thisModule);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("ModifyDescriptionOK");
+  }
+
+
+  /**
+   *  Saves the updated module description
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandSaveDescription(ActionContext context) {
+    Connection db = null;
+    int resultCount = -1;
+    HelpModule thisModule = (HelpModule) context.getFormBean();
+    try {
+      db = this.getConnection(context);
+      if (thisModule == null) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Help-> Help Module is NULL");
+        }
+      } else {
+        resultCount = thisModule.update(db);
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    context.getRequest().setAttribute("refreshUrl", "Help.do?command=ViewModuleDescription&module=" + thisModule.getRelatedAction() + HTTPUtils.addLinkParams(context.getRequest(), "popup"));
+    return this.getReturn(context, "SaveDescription");
+  }
 }
+

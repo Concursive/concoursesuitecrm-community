@@ -980,6 +980,7 @@
   <!-- End Setup Module -->
   
   <action name="Help" class="org.aspcfs.modules.help.actions.Help">
+    <bean name="helpModule" class="org.aspcfs.modules.help.base.HelpModule" scope="request" />
     <forward name="HelpOK" resource="/help/help.jsp"/>
     <forward name="ModifyOK" resource="/help/help_form.jsp" layout="style"/>
     <forward name="ProcessOK" resource="/closepopup.jsp"/>
@@ -987,6 +988,9 @@
     <forward name="ContextOK" resource="/help/help_context.jsp"/>
     <forward name="ModuleOK" resource="/help/help_module_content.jsp"/>
     <forward name="TableOfContentsOK" resource="/help/help_tableof_contents.jsp"/>
+    <forward name="ModuleDescriptionOK" resource="/help/help_module_description.jsp" layout="style"/>
+    <forward name="ModifyDescriptionOK" resource="/help/help_module_brief.jsp" layout="style"/>
+    <forward name="SaveDescriptionPopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
 
   <action name="QA" class="org.aspcfs.modules.help.actions.QA">
