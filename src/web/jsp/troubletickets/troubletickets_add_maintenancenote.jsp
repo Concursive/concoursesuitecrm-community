@@ -32,7 +32,7 @@ Activity Log
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
       <input type="button" value="Cancel" onClick="window.location.href='TroubleTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />
       <br /> <br />
-      <%@ include file="troubletickets_add_sun_maintenancenote.jsp" %>
+      <%@ include file="troubletickets_add_maintenancenote_include.jsp" %>
       <br />
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
       <input type="button" value="Cancel" onClick="window.location.href='TroubleTicketMaintenanceNotes.do?command=List&id=<%= ticketDetails.getId() %>';this.form.dosubmit.value='false';" />
