@@ -642,6 +642,7 @@ public final class AccountTickets extends CFSModule {
     categoryList.setCatLevel(0);
     categoryList.setParentCode(0);
     categoryList.setHtmlJsEvent("onChange=\"javascript:updateSubList1();\"");
+    categoryList.getCatListSelect().addItem(0, "Undetermined");
     categoryList.buildList(db);
     context.getRequest().setAttribute("CategoryList", categoryList);
 
