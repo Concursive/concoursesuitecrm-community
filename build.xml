@@ -606,6 +606,8 @@
     <!-- Copy the database files -->
     <copy file="${src.sql.dir}/postgresql/postgresql.sql" 
           todir="${dist.dir}/cfs/WEB-INF/setup"/>
+    <copy file="${src.sql.dir}/mssql/mssql.sql" 
+          todir="${dist.dir}/cfs/WEB-INF/setup"/>
     <!-- Copy and compile the reports -->
     <mkdir dir="${dist.dir}/cfs/WEB-INF/reports"/>
     <copy todir="${dist.dir}/cfs/WEB-INF/reports">
