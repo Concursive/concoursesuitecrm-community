@@ -14,3 +14,6 @@ OPTGROUP {
   font-size: 8pt;
   color: #000000;
 }
+.pagedListHeader td {
+  font-size: 12pt;
+}
