@@ -1,9 +1,10 @@
 <%@ page import="java.util.*"%>
 <%@ include file="initPage.jsp" %>
 <jsp:useBean id="Task" class="com.darkhorseventures.cfsbase.Task" scope="request"/>
-<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/tasks.js"></script>
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <body onLoad="javascript:document.forms[0].description.focus();">
 <br>
@@ -92,7 +93,7 @@
             <div id="changeowner"><%=Task.getOwnerName().equals("")?toHtml(User.getNameLast())+" "+ toHtml(User.getNameFirst()):""%><%=Task.getOwnerName()%></div>
           </td>
           <td>
-            <input type=hidden name="owner" value="<%=(Task.getOwner() == -1)?User.getUserRecord().getContact().getId():Task.getOwner()%>"><a href="javascript:popURLReturn('/MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=single&parentFormName=addTask', 'MyTasks.do?command=New', 'Inbox_message','700','450','yes','no');">Change Owner</a>
+            <input type="hidden" name="owner" id="ownerid" value="<%=(Task.getOwner() == -1)?User.getUserRecord().getContact().getId():Task.getOwner()%>"><a href="javascript:popContactsListSingle('ownerid','changeowner');">Change Owner</a>
           </td>
         </tr>
       </table>
@@ -126,7 +127,7 @@
             <div id="changecontact"><%=Task.getContactName().equals("")?"None":Task.getContactName()%></div>
           </td>
           <td>
-            <input type=hidden name="contact" value="<%=(Task.getContactId() == -1)?-1:Task.getContactId()%>"><a href="javascript:popURLReturn('/MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=contactsingle&parentFormName=addTask', 'MyTasks.do?command=New', 'Inbox_message','700','450','yes','no');">Change Contact</a>
+            <input type="hidden" name="contact" id="contactid" value="<%=(Task.getContactId() == -1)?-1:Task.getContactId()%>"><a href="javascript:popContactsListSingle('contactid','changecontact');">Change Contact</a>
           </td>
           <td>
             <a href="javascript:document.addTask.contact.value='-1';javascript:changeDivContent('changecontact','None');">Clear Contact</a>

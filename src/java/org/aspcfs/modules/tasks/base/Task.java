@@ -39,13 +39,15 @@ public class Task extends GenericBean {
   private java.sql.Date dueDate = null;
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp completeDate = null;
 
   //other
   private HashMap dependencyList = new HashMap();
-  private String ownerName = "";
   private int contactId = -1;
-  private String contactName = "";
   private int ticketId = -1;
+  private String contactName = "";
+  private String ownerName = "";
+  private boolean hasLinks = false;
   private Contact contact = null;
   private Ticket ticket = null;
 
@@ -73,7 +75,9 @@ public class Task extends GenericBean {
     try {
       db.setAutoCommit(false);
       sql.append(
-          "SELECT t.*,c.namelast as lastname,c.namefirst as firstname " +
+          "SELECT t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
+          "t.duedate, t.notes, t.sharing, t.complete, t.estimatedLOE, t.owner, t.completedate, " +
+          "c.namelast as lastname,c.namefirst as firstname " +
           "FROM task t,contact c " +
           "WHERE (task_id = ? AND t.owner = c.contact_id) ");
 
@@ -345,6 +349,41 @@ public class Task extends GenericBean {
 
 
   /**
+   *  Sets the completeDate attribute of the Task object
+   *
+   *@param  completeDate  The new completeDate value
+   */
+  public void setCompleteDate(java.sql.Timestamp completeDate) {
+    this.completeDate = completeDate;
+  }
+
+
+  /**
+   *  Gets the completeDate attribute of the Task object
+   *
+   *@return    The completeDate value
+   */
+  public java.sql.Timestamp getCompleteDate() {
+    return completeDate;
+  }
+
+
+  /**
+   *  Gets the completeDateString attribute of the Task object
+   *
+   *@return    The completeDateString value
+   */
+  public String getCompleteDateString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateInstance(3).format(completeDate);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+
+
+  /**
    *  Gets the contact attribute of the Task object
    *
    *@return    The contact value
@@ -361,6 +400,16 @@ public class Task extends GenericBean {
    */
   public Ticket getTicket() {
     return ticket;
+  }
+
+
+  /**
+   *  Gets the hasLinks attribute of the Task object
+   *
+   *@return    The hasLinks value
+   */
+  public boolean getHasLinks() {
+    return hasLinks;
   }
 
 
@@ -577,8 +626,8 @@ public class Task extends GenericBean {
       }
 
       sql = "INSERT INTO task " +
-          "(enteredby, priority, description, notes, sharing, complete, owner, duedate, estimatedloe) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+          "(enteredby, priority, description, notes, sharing, owner, duedate, estimatedloe, complete, completedate) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
@@ -587,10 +636,16 @@ public class Task extends GenericBean {
       pst.setString(++i, this.getDescription());
       pst.setString(++i, this.getNotes());
       pst.setInt(++i, this.getSharing());
-      pst.setBoolean(++i, this.getComplete());
       pst.setInt(++i, this.getOwner());
       pst.setDate(++i, this.getDueDate());
       pst.setInt(++i, this.getEstimatedLOE());
+      pst.setBoolean(++i, this.getComplete());
+      if (this.getComplete()) {
+        pst.setTimestamp(++i, new Timestamp(System.currentTimeMillis()));
+      } else {
+        pst.setTimestamp(++i, null);
+      }
+
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Task Insert Query --> " + pst.toString());
       }
@@ -620,35 +675,61 @@ public class Task extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean update(Connection db, int thisId) throws SQLException {
-    StringBuffer sql = new StringBuffer();
+    String sql = "";
+    ResultSet rs = null;
+    PreparedStatement pst = null;
+    boolean isAlreadyComplete = false;
+    java.sql.Timestamp previousCompleteTimeStamp = null;
+
     if (this.getDescription().equals("")) {
       return false;
     }
 
     try {
       db.setAutoCommit(false);
-      sql.append(
-          "UPDATE task " +
-          "SET enteredby = ?, priority = ?, description = ?, notes = ?, " +
-          "sharing = ?, complete = ?, owner = ?, duedate = ?, estimatedloe = ?, " +
-          "modified = CURRENT_TIMESTAMP " +
-          "WHERE task_id = ? ");
+      sql = "SELECT complete,completedate " +
+          "FROM task " +
+          "WHERE task_id = ?  ";
 
       int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql.toString());
+      pst = db.prepareStatement(sql);
+      pst.setInt(++i, thisId);
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        isAlreadyComplete = rs.getBoolean("complete");
+        previousCompleteTimeStamp = rs.getTimestamp("completedate");
+      }
+
+      sql= "UPDATE task " +
+           "SET enteredby = ?, priority = ?, description = ?, notes = ?, " +
+           "sharing = ?, owner = ?, duedate = ?, estimatedloe = ?, " +
+           "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ? " +
+           "WHERE task_id = ? ";
+
+      i = 0;
+      pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getPriority());
       pst.setString(++i, this.getDescription());
       pst.setString(++i, this.getNotes());
       pst.setInt(++i, this.getSharing());
-      pst.setBoolean(++i, this.getComplete());
       pst.setInt(++i, this.getOwner());
       pst.setDate(++i, this.getDueDate());
       pst.setInt(++i, this.getEstimatedLOE());
+      pst.setBoolean(++i, this.getComplete());
+      if (isAlreadyComplete && this.getComplete()) {
+        pst.setTimestamp(++i, previousCompleteTimeStamp);
+      } else if (this.getComplete() && !isAlreadyComplete) {
+        pst.setTimestamp(++i, new Timestamp(System.currentTimeMillis()));
+      } else {
+        pst.setTimestamp(++i, null);
+      }
       pst.setInt(++i, thisId);
+
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Task -> Update Query is " + pst.toString());
       }
+
       pst.execute();
       this.id = thisId;
       insertContacts(pst, db);
@@ -676,9 +757,6 @@ public class Task extends GenericBean {
   public boolean insertContacts(PreparedStatement pst, Connection db) throws SQLException {
 
     String sql = "";
-    if (contactId == -1) {
-      return false;
-    }
     try {
       db.setAutoCommit(false);
       sql = "DELETE FROM tasklink_contact " +
@@ -689,15 +767,17 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getId());
       pst.execute();
 
-      sql = "INSERT INTO tasklink_contact " +
-          "(task_id, contact_id) " +
-          "VALUES (?, ?) ";
+      if (contactId != -1) {
+        sql = "INSERT INTO tasklink_contact " +
+            "(task_id, contact_id) " +
+            "VALUES (?, ?) ";
 
-      i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      pst.setInt(++i, this.getContactId());
-      pst.execute();
+        i = 0;
+        pst = db.prepareStatement(sql);
+        pst.setInt(++i, this.getId());
+        pst.setInt(++i, this.getContactId());
+        pst.execute();
+      }
     } catch (SQLException e) {
       db.rollback();
       db.setAutoCommit(true);
@@ -851,6 +931,7 @@ public class Task extends GenericBean {
         this.contactId = rs.getInt("contact_id");
         this.contact = new Contact(db, new Integer(this.contactId).toString());
         this.contactName = rs.getString("ct_lastname") + "," + rs.getString("ct_firstname");
+        hasLinks = true;
       }
       sql = "SELECT ticket_id " +
           "FROM tasklink_ticket " +
@@ -893,6 +974,7 @@ public class Task extends GenericBean {
     complete = rs.getBoolean("complete");
     estimatedLOE = rs.getInt("estimatedloe");
     owner = rs.getInt("owner");
+    completeDate = rs.getTimestamp("completeDate");
     ownerName = rs.getString("lastname") + "," + rs.getString("firstname");
     if (entered != null) {
       float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);

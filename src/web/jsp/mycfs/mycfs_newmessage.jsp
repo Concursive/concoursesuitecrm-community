@@ -4,10 +4,34 @@
 <jsp:useBean id="sendUrl" class="java.lang.String" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
 <br>
-
+<script type="text/javascript">
+function sendMessage() {
+    formTest = true;
+    message = "";
+      
+    if(document.forms[0].listView.options[0].value == "none"){
+		    message += "- Select at least one recipient\r\n";
+        formTest = false;
+    }
+    if(document.forms[0].subject.value == ""){
+		    message += "- Enter a subject\r\n";
+        formTest = false;
+    }
+    if(document.forms[0].body.value == ""){
+        message += "- Enter a message in the body\r\n";
+        formTest = false;
+    }
+    if (formTest) {
+      return true;
+    } else {
+      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      return false;
+    }
+}
+</script>
 <form name="newMessageForm" action=<%=sendUrl%> method="post" onSubmit="return sendMessage();">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -21,10 +45,10 @@
       Recipient(s)
       </td>
     <td align="left">
-      <select size="3" name="listView" multiple>
+      <select size="3" name="listView" id="listViewId" multiple>
         <option  value = "none" selected>None Selected</option>
       </select>
-      <a href="javascript:popURLReturn('/MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=list&parentFormName=newMessageForm', 'MyCFSInbox.do?command=NewMessage', 'Inbox_message','700','450','yes','no');">Add Recipients</a>
+      <a href="javascript:popContactsListMultiple('listViewId','1');">Add Recipients</a>
      </td>
  </tr>
   

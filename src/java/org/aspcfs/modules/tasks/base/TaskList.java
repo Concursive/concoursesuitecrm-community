@@ -154,7 +154,7 @@ public class TaskList extends Vector {
     }
     sqlSelect.append(
         "t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
-        "t.duedate, t.notes, t.sharing, t.complete, t.estimatedLOE, t.owner, " +
+        "t.duedate, t.notes, t.sharing, t.complete, t.estimatedLOE, t.owner, t.completedate, " +
         "c.namelast as lastname,c.namefirst as firstname " +
         "FROM task t " +
         "LEFT JOIN contact c ON (t.owner = c.contact_id) " +

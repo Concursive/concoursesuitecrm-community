@@ -7,10 +7,12 @@
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="session"/>
 <jsp:useBean id="ProjectListSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="session"/>
+<jsp:useBean id="DisplayFieldId" class="java.lang.String" scope="request"/>
+<jsp:useBean id="HiddenFieldId" class="java.lang.String" scope="request"/>
+<jsp:useBean id="ListType" class="java.lang.String" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
-
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popContacts.js"></script>
 
 <%
  if(!"true".equalsIgnoreCase(request.getParameter("finalsubmit"))){
@@ -20,7 +22,7 @@
 <center><%= ContactListInfo.getAlphabeticalPageLinks("setFieldSubmit","contactListView") %></center>
 
 
-<form name="contactListView" method="post" action="/MyCFSInbox.do?command=ContactList">
+<form name="contactListView" method="post" action="/ContactsList.do?command=ContactList">
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
 <input type=hidden name="letter">
 <table width="20%" border="0">
@@ -94,7 +96,7 @@
    %>      
   <tr class="row<%= rowid+((selectedContacts.get(new Integer(thisContact.getId()))!= null)?"hl":"") %>">
     <td align="center" nowrap width=8>
-  <%if(ContactListInfo.getParentFieldType().equalsIgnoreCase("list")){%>  
+  <%if(ListType.equalsIgnoreCase("list")){%>  
 	<input type=checkbox name="checkcontact<%=count%>" value=<%=thisContact.getId()%><%=((selectedContacts.get(new Integer(thisContact.getId()))!= null)?" checked":"")%> onClick="highlight(this,'<%=User.getBrowserId()%>');">
   <%}
   else{%>
@@ -157,9 +159,6 @@ else{%>
       }
       %>
     <br>
-    <input type=hidden name="finalsubmit" value="false">
-    <input type=hidden name="rowcount" value="0">
-    
     <%
     }
     else {%>
@@ -169,9 +168,14 @@ else{%>
         </td>
       </tr>
       <%}%>
+      <input type=hidden name="finalsubmit" value="false">
+      <input type=hidden name="rowcount" value="0">
+      <input type=hidden name="displayFieldId" value="<%=DisplayFieldId%>">
+      <input type=hidden name="hiddenFieldId" value="<%=HiddenFieldId%>">
+      <input type=hidden name="listType" value="<%=ListType%>">
     </table>
     
-    <%if(ContactListInfo.getParentFieldType().equalsIgnoreCase("list")){%>
+    <%if(ListType.equalsIgnoreCase("list")){%>
     <input type='button' value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','contactListView');">
     <input type="button" value="Cancel" onClick="javascript:window.close()">
     <a href="javascript:SetChecked(1,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Check All</a>
@@ -184,7 +188,7 @@ else{%>
     <%}
       else {
       %>
-      <body OnLoad="javascript:setParentList(recipientEmails,recipientIds,'<%=ContactListInfo.getParentFormName()%>','<%=ContactListInfo.getParentFieldType()%>');window.close()">
+      <body OnLoad="javascript:setParentList(recipientEmails,recipientIds,'<%=ListType%>','<%=DisplayFieldId%>','<%=HiddenFieldId%>','<%=User.getBrowserId()%>');window.close()">
       <script>recipientEmails = new Array();recipientIds = new Array();</script>
       <%
         Set s = selectedContacts.keySet();
