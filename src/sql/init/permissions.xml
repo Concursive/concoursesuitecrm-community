@@ -26,15 +26,15 @@
       <permission name="myhomepage-profile-password" attributes="--e-" description="Password"/>
       <permission name="myhomepage-action-lists" attributes="vaed" description="My Action Lists"/>
     </category>
-    <category id="2" name="General Contacts" folders="true" lookups="true" reports="true">
+    <category id="2" name="Contacts" folders="true" lookups="true" reports="true">
       <folder constantId="2" description="Contacts"/>
       <lookup constantId="1" class="contactType" table="lookup_contact_types" description="Types"/>
       <lookup constantId="2" class="lookupList" table="lookup_contactemail_types" description="Email Types"/>
       <lookup constantId="3" class="lookupList" table="lookup_contactaddress_types" description="Address Types"/>
       <lookup constantId="4" class="lookupList" table="lookup_contactphone_types" description="Phone Types"/>
       <lookup constantId="5" class="lookupList" table="lookup_department" description="Departments"/>
-      <permission name="contacts" attributes="v---" description="Access to General Contacts module"/>
-      <permission name="contacts-external_contacts" attributes="vaed" description="External Contact Records"/>
+      <permission name="contacts" attributes="v---" description="Access to Contacts module"/>
+      <permission name="contacts-external_contacts" attributes="vaed" description="General Contact Records"/>
       <permission name="contacts-external_contacts-reports" attributes="va-d" description="Export Contact Data"/>
       <permission name="contacts-external_contacts-folders" attributes="vaed" description="Folders"/>
       <permission name="contacts-external_contacts-calls" attributes="vaed" description="Calls"/>
@@ -42,10 +42,10 @@
       <permission name="contacts-external_contacts-opportunities" attributes="vaed" description="Opportunities"/>
       <report file="contacts_user.xml" type="user" permission="contacts" title="Contacts" description="Who are my contacts?"/>
     </category>
-    <category id="4" name="Pipeline Management" folders="false" lookups="true" viewpoints="true" reports="true">
+    <category id="4" name="Pipeline" folders="false" lookups="true" viewpoints="true" reports="true">
       <lookup constantId="1" class="lookupList" table="lookup_stage" description="Stage"/>
       <lookup constantId="2" class="lookupList" table="lookup_opportunity_types" description="Opportunity Types"/>
-      <permission name="pipeline" attributes="v---" description="Access to Pipeline Management module" viewpoints="true"/>
+      <permission name="pipeline" attributes="v---" description="Access to Pipeline module" viewpoints="true"/>
       <permission name="pipeline-opportunities" attributes="vaed" description="Opportunity Records"/>
       <permission name="pipeline-dashboard" attributes="v---" description="Dashboard"/>
       <permission name="pipeline-reports" attributes="va-d" description="Export Opportunity Data"/>
@@ -53,18 +53,18 @@
       <permission name="pipeline-opportunities-documents" attributes="vaed" description="Documents"/>
       <report file="opportunity_pipeline.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Stage" description="What are my upcoming opportunities by stage?"/>
     </category>
-    <category id="1" name="Account Management" folders="true" lookups="true" reports="true">
+    <category id="1" name="Accounts" folders="true" lookups="true" reports="true">
       <folder constantId="1" description="Accounts"/>
       <lookup constantId="1" class="lookupList" table="lookup_account_types" description="Account Types"/>
       <lookup constantId="2" class="lookupList" table="lookup_revenue_types" description="Revenue Types"/>
       <lookup constantId="3" class="contactType" table="lookup_contact_types" description="Contact Types"/>
-      <permission name="accounts" attributes="v---" description="Access to Account Management module"/>
+      <permission name="accounts" attributes="v---" description="Access to Accounts module"/>
       <permission name="accounts-accounts" attributes="vaed" description="Account Records"/>
       <permission name="accounts-accounts-folders" attributes="vae-" description="Folders"/>
       <permission name="accounts-accounts-contacts" attributes="vaed" description="Contacts"/>
-      <permission name="accounts-accounts-contacts-opportunities" attributes="vaed" description="Contacts  Opportunities"/>
-      <permission name="accounts-accounts-contacts-calls" attributes="vaed" description="Contacts Calls"/>
-      <permission name="accounts-accounts-contacts-messages" attributes="vaed" description="Contacts Messages"/>
+      <permission name="accounts-accounts-contacts-opportunities" attributes="vaed" description="Contact Opportunities"/>
+      <permission name="accounts-accounts-contacts-calls" attributes="vaed" description="Contact Calls"/>
+      <permission name="accounts-accounts-contacts-messages" attributes="vaed" description="Contact Messages"/>
       <permission name="accounts-accounts-opportunities" attributes="vaed" description="Opportunities"/>
       <permission name="accounts-accounts-tickets" attributes="vaed" description="Tickets"/>
       <permission name="accounts-accounts-documents" attributes="vaed" description="Documents"/>
@@ -84,13 +84,13 @@
       <permission name="autoguide" attributes="v---" description="Access to the Auto Guide module"/>
       <permission name="autoguide-adruns" attributes="--e-" description="Ad Run complete status"/>
     </category>
-    <category id="6" name="Campaign Management" folders="false" lookups="false">
-      <permission name="campaign" attributes="v---" description="Access to Campaign Manager module"/>
+    <category id="6" name="Communications" folders="false" lookups="false">
+      <permission name="campaign" attributes="v---" description="Access to Communications module"/>
       <permission name="campaign-dashboard" attributes="v---" description="Dashboard"/>
       <permission name="campaign-campaigns" attributes="vaed" description="Campaign Records"/>
-      <permission name="campaign-campaigns-groups" attributes="vaed" description="Campaign Group Records"/>
-      <permission name="campaign-campaigns-messages" attributes="vaed" description="Campaign Message Records"/>
-      <permission name="campaign-campaigns-surveys" attributes="vaed" description="Campaign Survey Records"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed" description="Group Records"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed" description="Message Records"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed" description="Survey Records"/>
     </category>
     <category id="7" name="Project Management" folders="false" lookups="false" enabled="false">
       <permission name="projects" attributes="v---" description="Access to Project Management module"/>
