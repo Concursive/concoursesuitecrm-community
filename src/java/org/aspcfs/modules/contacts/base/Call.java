@@ -675,9 +675,22 @@ public class Call extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
       "INSERT INTO call_log " +
-      "(org_id, contact_id, opp_id, call_type_id, length, subject, notes, enteredby, modifiedby, alertdate) " +
-      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
-
+      "(org_id, contact_id, opp_id, call_type_id, length, subject, notes, alertdate, ");
+                if (entered != null) {
+                        sql.append("entered, ");
+                }
+                if (modified != null) {
+                        sql.append("modified, ");
+                }      
+      sql.append("enteredBy, modifiedBy ) ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
+                if (entered != null) {
+                        sql.append("?, ");
+                }
+                if (modified != null) {
+                        sql.append("?, ");
+                }
+      sql.append("?, ?) ");
     int i = 0;
     
     PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -705,13 +718,19 @@ public class Call extends GenericBean {
     pst.setInt(++i, this.getLength());
     pst.setString(++i, this.getSubject());
     pst.setString(++i, this.getNotes());
-    pst.setInt(++i, this.getEnteredBy());
-    pst.setInt(++i, this.getModifiedBy());
     if (alertDate == null) {
       pst.setNull(++i, java.sql.Types.DATE);
     } else {
       pst.setDate(++i, this.getAlertDate());
     }
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
+        if (modified != null) {
+                pst.setTimestamp(++i, modified);
+        }
+      pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());
     pst.execute();
     pst.close();
 

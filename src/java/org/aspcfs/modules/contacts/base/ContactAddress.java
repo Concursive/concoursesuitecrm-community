@@ -94,12 +94,28 @@ public class ContactAddress extends Address {
 
 
   public void insert(Connection db, int contactId, int enteredBy) throws SQLException {
-    PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO contact_address " +
-        "(contact_id, address_type, addrline1, addrline2, city, state, postalcode, country, enteredby, modifiedby) " +
-        "VALUES " +
-        "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+    StringBuffer sql = new StringBuffer();
+    sql.append("INSERT INTO contact_address " +
+        "(contact_id, address_type, addrline1, addrline2, city, state, postalcode, country, ");
+                if (this.getEntered() != null) {
+                        sql.append("entered, ");
+                }
+                if (this.getModified() != null) {
+                        sql.append("modified, ");
+                }        
+    sql.append("enteredBy, modifiedBy ) ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
+                if (this.getEntered() != null) {
+                        sql.append("?, ");
+                }
+                if (this.getModified() != null) {
+                        sql.append("?, ");
+                }    
+    sql.append("?, ?) ");                
+    
     int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    
     if (this.getContactId() > -1) {
       pst.setInt(++i, this.getContactId());
     } else {
@@ -116,8 +132,17 @@ public class ContactAddress extends Address {
     pst.setString(++i, this.getState());
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
-    pst.setInt(++i, enteredBy);
-    pst.setInt(++i, enteredBy);
+    
+        if (this.getEntered() != null) {
+                pst.setTimestamp(++i, this.getEntered());
+        }
+        if (this.getModified() != null) {
+                pst.setTimestamp(++i, this.getModified());
+        }
+    
+    pst.setInt(++i, this.getEnteredBy());
+    pst.setInt(++i, this.getModifiedBy());
+      
     pst.execute();
     pst.close();
     

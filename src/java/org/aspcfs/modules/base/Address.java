@@ -262,6 +262,8 @@ public int getContactId() {
     return orgId;
   }
 
+public java.sql.Timestamp getEntered() { return entered; }
+public java.sql.Timestamp getModified() { return modified; }
 
   /**
    *  Gets the StreetAddressLine1 attribute of the Address object
@@ -359,7 +361,6 @@ public int getContactId() {
   public int getType() {
     return type;
   }
-
 
   /**
    *  Gets the TypeName attribute of the Address object

@@ -120,12 +120,26 @@ public class ContactPhoneNumber extends PhoneNumber {
    }
    
   public void insert(Connection db, int contactId, int enteredBy) throws SQLException {
-    PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO contact_phone " +
-        "(contact_id, phone_type, number, extension, enteredby, modifiedby) " +
-        "VALUES " +
-        "(?, ?, ?, ?, ?, ?) ");
+    StringBuffer sql = new StringBuffer();
+    sql.append("INSERT INTO contact_phone " +
+        "(contact_id, phone_type, number, extension, ");
+                if (this.getEntered() != null) {
+                        sql.append("entered, ");
+                }
+                if (this.getModified() != null) {
+                        sql.append("modified, ");
+                }
+    sql.append("enteredBy, modifiedBy ) ");
+    sql.append("VALUES (?, ?, ?, ?, ");
+                if (this.getEntered() != null) {
+                        sql.append("?, ");
+                }
+                if (this.getModified() != null) {
+                        sql.append("?, ");
+                }    
+    sql.append("?, ?) ");                
     int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     if (contactId > -1) {
       pst.setInt(++i, this.getContactId());
     } else {
@@ -138,8 +152,14 @@ public class ContactPhoneNumber extends PhoneNumber {
     }
     pst.setString(++i, this.getNumber());
     pst.setString(++i, this.getExtension());
-    pst.setInt(++i, enteredBy);
-    pst.setInt(++i, enteredBy);
+        if (this.getEntered() != null) {
+                pst.setTimestamp(++i, this.getEntered());
+        }
+        if (this.getModified() != null) {
+                pst.setTimestamp(++i, this.getModified());
+        }
+      pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());
     pst.execute();
     pst.close();
 
