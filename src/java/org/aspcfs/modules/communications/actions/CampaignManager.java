@@ -1650,8 +1650,9 @@ public final class CampaignManager extends CFSModule {
       context.getSession().removeAttribute("CommentListInfo");
     }
     int itemId = Integer.parseInt(context.getRequest().getParameter("itemId"));
+    String questionId = context.getRequest().getParameter("questionId");
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ItemDetailsListInfo");
-    pagedListInfo.setLink("/CampaignManager.do?command=ShowItemDetails&itemId=" + itemId);
+    pagedListInfo.setLink("/CampaignManager.do?command=ShowItemDetails&itemId=" + itemId + "&questionId=" + questionId);
     
     try {
       db = this.getConnection(context);
