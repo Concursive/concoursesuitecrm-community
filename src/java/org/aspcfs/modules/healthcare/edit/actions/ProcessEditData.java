@@ -20,9 +20,9 @@ import com.darkhorseventures.utils.*;
 
 public final class ProcessEditData extends CFSModule {
 
-	public final static int PAYOR_DETAILS_CATEGORY = 24;
-	public final static int PROVIDER_TRANSACTION_CATEGORY = 25;
-	public final static int OFFICE_TRANSACTION_CATEGORY = 26;
+	public final static int PAYOR_DETAILS_CATEGORY = 5;
+	public final static int PROVIDER_TRANSACTION_CATEGORY = 10;
+	public final static int OFFICE_TRANSACTION_CATEGORY = 4;
 
 	public String executeCommandDefault(ActionContext context) {
 		Exception errorMessage = null;

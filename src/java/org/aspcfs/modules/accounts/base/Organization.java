@@ -56,7 +56,12 @@ public class Organization extends GenericBean {
   private LookupList types = new LookupList();
   private ArrayList typeList = null;
   protected double YTD = 0;
-
+  
+  private boolean contactDelete = false;
+  private boolean revenueDelete = false;
+  private boolean documentDelete = false;
+  
+  
   /**
    *  Constructor for the Organization object, creates an empty Organization
    *
@@ -154,7 +159,117 @@ public class Organization extends GenericBean {
 
     this.typeList = typeList;
   }
+  
+public boolean getContactDelete() { return contactDelete; }
+public boolean getRevenueDelete() { return revenueDelete; }
+public boolean getDocumentDelete() { return documentDelete; }
+public void setContactDelete(boolean tmp) { this.contactDelete = tmp; }
+public void setRevenueDelete(boolean tmp) { this.revenueDelete = tmp; }
+public void setDocumentDelete(boolean tmp) { this.documentDelete = tmp; }
 
+  public HashMap canDelete(Connection db)  throws SQLException {
+	  StringBuffer sqlCount = new StringBuffer();
+	  ResultSet rs = null;
+	  PreparedStatement pst = null;
+	  HashMap dependencies = new HashMap();
+	  
+	  dependencies.put(new String("contacts"), new Integer(0));
+	  dependencies.put(new String("revenue"), new Integer(0));
+	  dependencies.put(new String("opportunities"), new Integer(0));
+	  dependencies.put(new String("tickets"), new Integer(0));
+	  dependencies.put(new String("documents"), new Integer(0));
+	  dependencies.put(new String("folders"), new Integer(0));
+	  
+	  //get number of contacts
+	  sqlCount.append(
+	  	"SELECT COUNT(*) as contactcount FROM contact c WHERE c.org_id = " + this.getOrgId() + " ");
+	
+	  pst = db.prepareStatement(sqlCount.toString());
+	  rs = pst.executeQuery();
+	  if (rs.next()) {
+		  dependencies.put(new String("contacts"), new Integer(rs.getInt("contactcount")));
+          }
+	  
+	  rs.close();
+	  pst.close();
+	  
+	  sqlCount = new StringBuffer();
+	  
+	  //get number of revenue
+	  sqlCount.append(
+	  	"SELECT COUNT(*) as revenuecount FROM revenue r WHERE r.org_id = " + this.getOrgId() + " ");
+	
+	  pst = db.prepareStatement(sqlCount.toString());
+	  rs = pst.executeQuery();
+	  if (rs.next()) {
+		  dependencies.put(new String("revenue"), new Integer(rs.getInt("revenuecount")));
+          }
+	  
+	  rs.close();
+	  pst.close();
+	  
+	  sqlCount = new StringBuffer();
+	  
+	  //get number of opps
+	  sqlCount.append(
+	  	"SELECT COUNT(*) as oppcount FROM opportunity o WHERE o.acctlink = " + this.getOrgId() + " ");
+	
+	  pst = db.prepareStatement(sqlCount.toString());
+	  rs = pst.executeQuery();
+	  if (rs.next()) {
+		  dependencies.put(new String("opportunities"), new Integer(rs.getInt("oppcount")));
+          }
+	  
+	  rs.close();
+	  pst.close();
+	  
+	  sqlCount = new StringBuffer();
+	  
+	  //get number of tickets
+	  sqlCount.append(
+	  	"SELECT COUNT(*) as ticketcount FROM ticket t WHERE t.org_id = " + this.getOrgId() + " ");
+	
+	  pst = db.prepareStatement(sqlCount.toString());
+	  rs = pst.executeQuery();
+	  if (rs.next()) {
+		  dependencies.put(new String("tickets"), new Integer(rs.getInt("ticketcount")));
+          }
+	  
+	  rs.close();
+	  pst.close();
+	  
+	  sqlCount = new StringBuffer();
+	  
+	  //get number of docs
+	  sqlCount.append(
+	  	"SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = " + Constants.ACCOUNTS + " and pf.link_item_id = " + this.getOrgId() + " ");
+	
+	  pst = db.prepareStatement(sqlCount.toString());
+	  rs = pst.executeQuery();
+	  if (rs.next()) {
+		  dependencies.put(new String("documents"), new Integer(rs.getInt("documentcount")));
+          }
+	  
+	  rs.close();
+	  pst.close();
+	
+	  sqlCount = new StringBuffer();
+	  
+	  //get number of folder records
+	  sqlCount.append(
+	  	"SELECT COUNT(*) as foldercount FROM custom_field_record cfr WHERE cfr.link_module_id = " + Constants.ACCOUNTS + " and cfr.link_item_id = " + this.getOrgId() + " ");
+	
+	  pst = db.prepareStatement(sqlCount.toString());
+	  rs = pst.executeQuery();
+	  if (rs.next()) {
+		  dependencies.put(new String("folders"), new Integer(rs.getInt("foldercount")));
+          }
+	  
+	  rs.close();
+	  pst.close();
+	  
+	  return dependencies;
+  }
 
   /**
    *  Sets the EnteredByName attribute of the Organization object
@@ -1148,7 +1263,7 @@ public void setYTD(double YTD) {
     rs.close();
     st.close();
   }
-
+  
 
   /**
    *  Description of the Method
@@ -1196,7 +1311,36 @@ public void setYTD(double YTD) {
     st.close();
     return true;
   }
+  
+  public boolean disable(Connection db) throws SQLException {
+	if (this.getOrgId() == -1) {
+		throw new SQLException("Organization ID not specified");
+	}
+	
+	PreparedStatement pst = null;
+	StringBuffer sql = new StringBuffer();
+	boolean success = false;
+	
+	sql.append(
+		"UPDATE organization set enabled = " + DatabaseUtils.getFalse(db) + " " +
+		"WHERE org_id = ? ");
 
+	sql.append("AND modified = ? ");
+
+	int i = 0;
+	pst = db.prepareStatement(sql.toString());
+	pst.setInt(++i, orgId);
+	
+	pst.setTimestamp(++i, this.getModified());
+	
+	int resultCount = pst.executeUpdate();
+	pst.close();
+	
+	if (resultCount == 1) 
+		success = true;
+	
+	return success;
+  }
 
   /**
    *  Description of the Method
@@ -1469,11 +1613,13 @@ public void setYTD(double YTD) {
     try {
       db.setAutoCommit(false);
 
-      ContactList contactList = new ContactList();
-      contactList.setOrgId(this.getOrgId());
-      contactList.buildList(db);
-      contactList.delete(db);
-      contactList = null;
+      if (contactDelete) {
+	      ContactList contactList = new ContactList();
+	      contactList.setOrgId(this.getOrgId());
+	      contactList.buildList(db);
+	      contactList.delete(db);
+	      contactList = null;
+      }
 
       OpportunityList opportunityList = new OpportunityList();
       opportunityList.setOrgId(this.getOrgId());
@@ -1487,12 +1633,14 @@ public void setYTD(double YTD) {
       ticketList.delete(db);
       ticketList = null;
 
-      FileItemList fileList = new FileItemList();
-      fileList.setLinkModuleId(Constants.ACCOUNTS);
-      fileList.setLinkItemId(this.getOrgId());
-      fileList.buildList(db);
-      fileList.delete(db, baseFilePath);
-      fileList = null;
+      if (documentDelete) {
+	      FileItemList fileList = new FileItemList();
+	      fileList.setLinkModuleId(Constants.ACCOUNTS);
+	      fileList.setLinkItemId(this.getOrgId());
+	      fileList.buildList(db);
+	      fileList.delete(db, baseFilePath);
+	      fileList = null;
+      }
 
       CustomFieldRecordList folderList = new CustomFieldRecordList();
       folderList.setLinkModuleId(Constants.ACCOUNTS);
@@ -1500,6 +1648,14 @@ public void setYTD(double YTD) {
       folderList.buildList(db);
       folderList.delete(db);
       folderList = null;
+      
+      if (revenueDelete) {
+	      RevenueList revenueList = new RevenueList();
+	      revenueList.setOrgId(this.getOrgId());
+	      revenueList.buildList(db);
+	      revenueList.delete(db);
+	      revenueList = null; 
+      }
 
       CallList callList = new CallList();
       callList.setOrgId(this.getOrgId());
@@ -1517,6 +1673,9 @@ public void setYTD(double YTD) {
       st.executeUpdate(
           "DELETE FROM organization WHERE org_id = " + this.getOrgId());
       st.close();
+      
+      this.resetType(db);
+      
       db.commit();
     } catch (SQLException e) {
       e.printStackTrace(System.out);

@@ -19,6 +19,10 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *      Exp $
  */
 public class OrganizationList extends Vector {
+	
+  public static final int TRUE = 1;
+  public static final int FALSE = 0;
+  private int includeEnabled = 1;
 
   public static final String tableName = "organization";
   public static final String uniqueField = "org_id";
@@ -86,8 +90,7 @@ public class OrganizationList extends Vector {
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
-
-
+  
   /**
    *  Sets the MinerOnly attribute of the OrganizationList object to limit the
    *  results to miner only, or non-miner only.
@@ -103,6 +106,12 @@ public void setRevenueYear(int tmp) { this.revenueYear = tmp; }
 public int getRevenueType() { return revenueType; }
 public int getRevenueYear() { return revenueYear; }
 
+public int getIncludeEnabled() {
+	return includeEnabled;
+}
+public void setIncludeEnabled(int includeEnabled) {
+	this.includeEnabled = includeEnabled;
+}
 
   /**
    *  Sets the ShowMyCompany attribute of the OrganizationList object
@@ -500,7 +509,11 @@ public void setRevenueOwnerId(int revenueOwnerId) {
     if (ownerIdRange != null) {
       sqlFilter.append("AND o.owner IN (" + ownerIdRange + ") ");
     }
-
+    
+    if (includeEnabled == TRUE || includeEnabled == FALSE) {
+      sqlFilter.append("AND o.enabled = ? ");
+    }
+    
     if (showMyCompany == false) {
       sqlFilter.append("AND o.org_id != 0 ");
     }
@@ -582,6 +595,12 @@ public void setRevenueOwnerId(int revenueOwnerId) {
 
     if (ownerId > -1) {
       pst.setInt(++i, ownerId);
+    }
+    
+    if (includeEnabled == TRUE) {
+      pst.setBoolean(++i, true);
+    } else if (includeEnabled == FALSE) {
+      pst.setBoolean(++i, false);
     }
     
     if (syncType == Constants.SYNC_INSERTS) {

@@ -128,6 +128,15 @@ public class RevenueList extends Vector {
     rs.close();
     pst.close();
   }
+  
+  public void delete(Connection db) throws SQLException {
+    Iterator revenue = this.iterator();
+    while (revenue.hasNext()) {
+      Revenue thisRevenue = (Revenue) revenue.next();
+      thisRevenue.delete(db);
+    }
+  }
+    
   public int getOrgId() {
 	return orgId;
 }

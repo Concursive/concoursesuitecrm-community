@@ -61,6 +61,7 @@ public class Ticket extends GenericBean {
   private String sourceName = "";
 
   private boolean closeIt = false;
+  private boolean companyEnabled = true;
 
   private int ageOf = 0;
 
@@ -105,7 +106,7 @@ public class Ticket extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT t.*, " +
-        "o.name AS orgname, " +
+        "o.name AS orgname, o.enabled AS orgenabled, " +
         "ld.description AS dept, " +
         "tp.description AS ticpri, " +
         "ts.description AS ticsev, " +
@@ -217,6 +218,13 @@ public class Ticket extends GenericBean {
   public void setThisContact(Contact thisContact) {
     this.thisContact = thisContact;
   }
+  
+public boolean getCompanyEnabled() {
+	return companyEnabled;
+}
+public void setCompanyEnabled(boolean companyEnabled) {
+	this.companyEnabled = companyEnabled;
+}
 
 
   /**
@@ -1607,6 +1615,7 @@ public class Ticket extends GenericBean {
 
     //organization table
     companyName = rs.getString("orgname");
+    companyEnabled = rs.getBoolean("orgenabled");
 
     //lookup_department table
     departmentName = rs.getString("dept");

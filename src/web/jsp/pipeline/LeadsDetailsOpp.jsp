@@ -9,15 +9,14 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td width="80%">
-      <strong><%= toHtml(OpportunityDetails.getDescription()) %></strong>&nbsp;&nbsp;
-      
-      	<% 
-	  if (OpportunityDetails.getAccountLink() != -1) { %>
-	  	<dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="/Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
-	  <%} else { %>
-	  	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="/ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
-	  <%}%>
-      
+      <strong><%= toHtml(OpportunityDetails.getDescription()) %></strong>&nbsp;
+      	<dhv:evaluate exp="<%=(OpportunityDetails.getAccountEnabled() && OpportunityDetails.getAccountLink() > -1)%>">
+        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="/Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
+	</dhv:evaluate>
+	  
+	<dhv:evaluate exp="<%=(OpportunityDetails.getContactLink() > -1)%>">
+	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="/ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
+	</dhv:evaluate>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -47,7 +46,7 @@
       Organization
     </td>
     <td valign=center width=100%>
-      <%= OpportunityDetails.getAccountName() %>
+      <%= OpportunityDetails.getAccountName() %><dhv:evaluate exp="<%= (!(OpportunityDetails.getAccountEnabled()) && OpportunityDetails.getAccountLink() > 0)%>">&nbsp;<font color="red">(account disabled)</font></dhv:evaluate>
     </td>
   </tr>
     

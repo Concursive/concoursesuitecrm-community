@@ -7,7 +7,11 @@
 <a href="TroubleTickets.do?command=Home">Back to Ticket List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
-    <td><strong>Ticket #<%=TicketDetails.getId()%> - <%=toHtml(TicketDetails.getCompanyName())%></strong></td>
+    <td>
+    <strong>Ticket #<%=TicketDetails.getId()%><br>
+    <%=toHtml(TicketDetails.getCompanyName())%></strong>
+    <dhv:evaluate exp="<%=!(TicketDetails.getCompanyEnabled())%>"><font color="red">(account disabled)</font></dhv:evaluate>
+    </td>
   </tr>
   
 <% if (TicketDetails.getClosed() != null) { %>  

@@ -65,6 +65,8 @@ public class Contact extends GenericBean {
   private String ownerName = "";
   private String enteredByName = "";
   private String modifiedByName = "";
+  
+  private boolean orgEnabled = true;
 
 
   /**
@@ -103,7 +105,7 @@ public class Contact extends GenericBean {
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT c.*, d.description as departmentname, t.description as type_name, " +
+        "SELECT c.*, o.enabled as orgenabled, d.description as departmentname, t.description as type_name, " +
         "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
         "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
@@ -205,7 +207,7 @@ public void setCustom1(String custom1) {
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
   }
-
+  
 
   /**
    *  Sets the entered attribute of the Contact object
@@ -439,6 +441,12 @@ public void setCustom1(String custom1) {
     this.phoneNumberList = tmp;
   }
 
+public boolean getOrgEnabled() {
+	return orgEnabled;
+}
+public void setOrgEnabled(boolean orgEnabled) {
+	this.orgEnabled = orgEnabled;
+}
 
   /**
    *  Sets the excludedFromCampaign attribute of the Contact object
@@ -1823,6 +1831,7 @@ public void setCustom1(String custom1) {
     
     //organization table
     orgName = rs.getString("org_name");
+    orgEnabled = rs.getBoolean("orgenabled");
   }
 
   

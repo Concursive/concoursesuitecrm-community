@@ -917,12 +917,26 @@ public final class Accounts extends CFSModule {
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Organization thisOrganization = null;
-
+    
     Connection db = null;
     try {
       db = this.getConnection(context);
       thisOrganization = new Organization(db, Integer.parseInt(context.getRequest().getParameter("orgId")));
-      recordDeleted = thisOrganization.delete(db, this.getPath(context, "accounts", thisOrganization.getOrgId()));
+      
+      if (context.getRequest().getParameter("action") != null) {
+	      
+	      if ( ((String)context.getRequest().getParameter("action")).equals("delete") ) {
+		      //TODO: these may have different options later
+		      thisOrganization.setContactDelete(true);
+		      thisOrganization.setRevenueDelete(true);
+		      thisOrganization.setDocumentDelete(true);
+	      
+	      	      recordDeleted = thisOrganization.delete(db, this.getPath(context, "accounts", thisOrganization.getOrgId()));
+	      } else if ( ((String)context.getRequest().getParameter("action")).equals("disable") ) {
+		      recordDeleted = thisOrganization.disable(db);
+	      }
+      }
+      
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -933,15 +947,53 @@ public final class Accounts extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
 	deleteRecentItem(context, thisOrganization);
-        return ("DeleteOK");
+        //return ("DeleteOK");
+	return ("PopupCloseOK");
       } else {
         processErrors(context, thisOrganization.getErrors());
-        return (executeCommandView(context));
+	return ("PopupCloseOK");
+        //return (executeCommandView(context));
       }
+    } else {
+      System.out.println(errorMessage);
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandConfirmDelete(ActionContext context) {
+
+    if (!(hasPermission(context, "accounts-accounts-delete"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    boolean recordDeleted = false;
+    Organization thisOrganization = null;
+    HashMap tempMap = null;
+
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      thisOrganization = new Organization(db, Integer.parseInt(context.getRequest().getParameter("orgId")));
+      tempMap = thisOrganization.canDelete(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    context.getRequest().setAttribute("DeleteDetails", tempMap);
+
+    addModuleBean(context, "Accounts", "Delete Account");
+    if (errorMessage == null) {
+        return ("ConfirmDeleteOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+    
   }
 
 

@@ -403,7 +403,7 @@ public class TicketList extends Vector {
     }
     sqlSelect.append(
         "t.*, " +
-        "o.name AS orgname, " +
+        "o.name AS orgname, o.enabled AS orgenabled, " +
         "ld.description AS dept, " +
         "tp.description AS ticpri, " +
         "ts.description AS ticsev, " +

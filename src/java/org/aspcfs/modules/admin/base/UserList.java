@@ -729,7 +729,7 @@ public void setRevenueType(int revenueType) {
         "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
         "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
-        "o.name as org_name " +
+        "o.enabled as orgenabled, o.name as org_name " +
         "FROM access a " +
         "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
         "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +

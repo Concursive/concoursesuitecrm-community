@@ -329,7 +329,7 @@ public class OpportunityList extends Vector {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-      "x.*, y.description as stagename, org.name as acct_name, " +
+      "x.*, y.description as stagename, org.name as acct_name, org.enabled as accountenabled, " +
       "ct.namelast as last_name, ct.namefirst as first_name, " +
       "ct.company as ctcompany," +
       "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +

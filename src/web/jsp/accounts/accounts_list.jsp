@@ -4,6 +4,7 @@
 <jsp:useBean id="OrgListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
 <a href="/Accounts.do">Account Management</a> > 
 View Accounts<br>
 <hr color="#BFBFBB" noshade>
@@ -56,7 +57,7 @@ View Accounts<br>
   <tr>
     <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete">
     <td width=8 valign=center nowrap class="row<%= rowid %>">
-      <dhv:permission name="accounts-accounts-edit"><a href="/Accounts.do?command=Modify&orgId=<%= thisOrg.getOrgId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-edit,accounts-accounts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-delete"><a href="javascript:confirmDelete('/Accounts.do?command=Delete&orgId=<%= thisOrg.getOrgId() %>');">Del</a></dhv:permission>
+      <dhv:permission name="accounts-accounts-edit"><a href="/Accounts.do?command=Modify&orgId=<%= thisOrg.getOrgId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-edit,accounts-accounts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-delete"><a href="javascript:popURLReturn('/Accounts.do?command=ConfirmDelete&orgId=<%= thisOrg.getOrgId() %>','/Accounts.do?command=View','Delete','300','200','no','no');">Del</a></dhv:permission>
       </td>
     </dhv:permission>
     

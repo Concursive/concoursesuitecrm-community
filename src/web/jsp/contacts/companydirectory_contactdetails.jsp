@@ -43,7 +43,7 @@
       Company
     </td>
     <td width="100%">
-      <%= toHtml(ContactDetails.getCompany()) %>&nbsp; &nbsp;
+      <%= toHtml(ContactDetails.getCompany()) %><dhv:evaluate exp="<%= (!(ContactDetails.getOrgEnabled()) && ContactDetails.getOrgId() > 0)%>">&nbsp;<font color="red">(account disabled)</font></dhv:evaluate>
     </td>
   </tr>
   <tr class="containerBody">

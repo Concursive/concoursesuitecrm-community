@@ -932,7 +932,7 @@ public class ContactList extends Vector {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "c.*, d.description as departmentname, t.description as type_name, " +
+        "c.*, o.enabled as orgenabled, d.description as departmentname, t.description as type_name, " +
         "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
         "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +

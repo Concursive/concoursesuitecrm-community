@@ -94,7 +94,10 @@ function ShowSpan(thisID)
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 
   <tr>
-    <td bgColor="#FFFF95"><strong>Ticket #<%=TicketDetails.getId()%> - <%=toHtml(TicketDetails.getCompanyName())%></strong></td>
+    <td bgColor="#FFFF95"><strong>Ticket #<%=TicketDetails.getId()%><br>
+    <%=toHtml(TicketDetails.getCompanyName())%></strong>
+    <dhv:evaluate exp="<%=!(TicketDetails.getCompanyEnabled())%>"><font color="red">(account disabled)</font></dhv:evaluate>
+    </td>
   </tr>
   
   

@@ -90,21 +90,16 @@
       </td>
       
       <td width=30% valign=center class="row<%= rowid %>">
-<%
-      if (thisOpp.getAccountLink() > -1) {
-%>        
-        <a href="/Opportunities.do?command=View&orgId=<%= thisOpp.getAccountLink() %>">
-<%
-      }
-%>        
-        <%= toHtml(thisOpp.getAccountName()) %>
-<%
-      if (thisOpp.getAccountLink() > -1) {
-%>     
-        </a>
-<%
-      }
-%>        
+
+      <dhv:evaluate exp="<%=(thisOpp.getAccountEnabled() && thisOpp.getAccountLink() > -1)%>">
+      <a href="/Opportunities.do?command=View&orgId=<%= thisOpp.getAccountLink() %>">
+      </dhv:evaluate>
+     
+      <%= toHtml(thisOpp.getAccountName()) %><dhv:evaluate exp="<%=!(thisOpp.getAccountEnabled())%>">&nbsp;<font color="red">*</font></dhv:evaluate>
+
+      <dhv:evaluate exp="<%=(thisOpp.getAccountEnabled() && thisOpp.getAccountLink() > -1)%>">
+      </a>
+      </dhv:evaluate>
       </td>
       
       <td width=15% valign=center nowrap class="row<%= rowid %>">
