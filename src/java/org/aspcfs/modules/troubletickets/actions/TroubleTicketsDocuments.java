@@ -140,12 +140,8 @@ public final class TroubleTicketsDocuments extends CFSModule {
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-
-      HashMap parts = multiPart.parseData(
-          context.getRequest().getInputStream(), "---------------------------", filePath);
-
+      HashMap parts = multiPart.parseData(context.getRequest(), filePath);
       db = getConnection(context);
-
       String id = (String) parts.get("id");
       String subject = (String) parts.get("subject");
       String folderId = (String) parts.get("folderId");
@@ -271,12 +267,8 @@ public final class TroubleTicketsDocuments extends CFSModule {
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-
-      HashMap parts = multiPart.parseData(
-          context.getRequest().getInputStream(), "---------------------------", filePath);
-
+      HashMap parts = multiPart.parseData(context.getRequest(), filePath);
       db = getConnection(context);
-
       String id = (String) parts.get("id");
       String itemId = (String) parts.get("fid");
       String subject = (String) parts.get("subject");

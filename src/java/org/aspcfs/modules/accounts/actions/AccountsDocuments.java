@@ -140,8 +140,7 @@ public final class AccountsDocuments extends CFSModule {
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-      HashMap parts = multiPart.parseData(
-          context.getRequest().getInputStream(), "---------------------------", filePath);
+      HashMap parts = multiPart.parseData(context.getRequest(), filePath);
       String id = (String) parts.get("id");
       String subject = (String) parts.get("subject");
       String folderId = (String) parts.get("folderId");
@@ -256,8 +255,7 @@ public final class AccountsDocuments extends CFSModule {
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-      HashMap parts = multiPart.parseData(
-          context.getRequest().getInputStream(), "---------------------------", filePath);
+      HashMap parts = multiPart.parseData(context.getRequest(), filePath);
       String id = (String) parts.get("id");
       String itemId = (String) parts.get("fid");
       String subject = (String) parts.get("subject");

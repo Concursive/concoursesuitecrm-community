@@ -2066,19 +2066,14 @@ public final class CampaignManager extends CFSModule {
     boolean recordInserted = false;
     try {
       String filePath = this.getPath(context, "communications");
-
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
       multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-
-      HashMap parts = multiPart.parseData(
-          context.getRequest().getInputStream(), "---------------------------", filePath);
-
+      HashMap parts = multiPart.parseData(context.getRequest(), filePath);
       db = getConnection(context);
-
       String id = context.getRequest().getParameter("id");
       //String id = (String) parts.get("id");
       String subject = "Attachment";

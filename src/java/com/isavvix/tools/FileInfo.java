@@ -29,7 +29,9 @@ import java.io.File;
  *@see        com.isavvix.tools.HttpMultiPartParser
  */
 public class FileInfo {
-  private String name = null, clientFileName = null, fileContentType = null;
+  private String name = null, 
+      clientFileName = null, 
+      fileContentType = null;
   private byte[] fileContents = null;
   private File file = null;
   private StringBuffer sb = new StringBuffer(100);
@@ -38,7 +40,6 @@ public class FileInfo {
   private int size = -1;
 
 
-  // Param name
   /**
    *  Sets the Name attribute of the FileInfo object
    *
@@ -61,7 +62,6 @@ public class FileInfo {
   }
 
 
-  // File
   /**
    *  Sets the LocalFile attribute of the FileInfo object
    *
@@ -140,7 +140,6 @@ public class FileInfo {
   }
 
 
-  // File name
   /**
    *  Gets the ClientFileName attribute of the FileInfo object
    *
@@ -161,7 +160,13 @@ public class FileInfo {
   public String getFilename() {
     return file.getName();
   }
-  
+
+
+  /**
+   *  Gets the realFilename attribute of the FileInfo object
+   *
+   *@return    The realFilename value
+   */
   public String getRealFilename() {
     int index = file.getName().lastIndexOf('^');
     if (index >= 0) {
@@ -183,7 +188,6 @@ public class FileInfo {
   }
 
 
-  // File contents
   /**
    *  Gets the FileContents attribute of the FileInfo object
    *
@@ -195,7 +199,6 @@ public class FileInfo {
   }
 
 
-  // Content-type
   /**
    *  Gets the FileContentType attribute of the FileInfo object
    *

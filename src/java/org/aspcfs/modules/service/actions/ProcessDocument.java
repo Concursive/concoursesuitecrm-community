@@ -46,31 +46,25 @@ public final class ProcessDocument extends CFSModule {
     try {
       //Store all uploads into a temporary folder for processing
       String filePath = this.getPath(context, "tmp");
-
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
       multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(false);
       //TODO: multiPart.setExtensionId(...some unique id must go here...);
-
-      HashMap parts = multiPart.parseData(
-          context.getRequest().getInputStream(), "---------------------------", filePath);
-
+      HashMap parts = multiPart.parseData(context.getRequest(), filePath);
       //Check client authentication
       AuthenticationItem auth = new AuthenticationItem();
       auth.setId((String) parts.get("id"));
       auth.setCode((String) parts.get("code"));
       auth.setSystemId((String) parts.get("systemId"));
       db = auth.getConnection(context);
-
       if (db == null) {
         errors.put("authError", "No authorization");
       } else {
         //For the user's filelibrary path
         context.getSession().setAttribute("ConnectionElement", auth.getConnectionElement(context));
       }
-
       String type = (String) parts.get("type");
       if (type == null) {
         errors.put("typeError", "Object type not specified");

@@ -584,21 +584,15 @@ public final class AutoGuide extends CFSModule {
     boolean recordInserted = false;
     try {
       String filePath = this.getPath(context, "autoguide");
-
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
       multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-
-      HashMap parts = multiPart.parseData(
-          context.getRequest().getInputStream(), "---------------------------", filePath);
-
+      HashMap parts = multiPart.parseData(context.getRequest(), filePath);
       String id = (String) parts.get("id");
-
       db = getConnection(context);
-
       //Delete the previous files
       FileItemList previousFiles = new FileItemList();
       previousFiles.setLinkModuleId(Constants.AUTOGUIDE);

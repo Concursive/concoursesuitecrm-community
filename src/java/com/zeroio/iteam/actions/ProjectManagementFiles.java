@@ -87,10 +87,7 @@ public final class ProjectManagementFiles extends CFSModule {
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-      
-      HashMap parts = multiPart.parseData(
-        context.getRequest().getInputStream(), "---------------------------", filePath);
-      
+      HashMap parts = multiPart.parseData(context.getRequest(), filePath);
       String projectId = (String)parts.get("pid");
       String subject = (String)parts.get("subject");
       String folderId = (String)parts.get("folderId");
@@ -189,10 +186,7 @@ public final class ProjectManagementFiles extends CFSModule {
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-      
-      HashMap parts = multiPart.parseData(
-        context.getRequest().getInputStream(), "---------------------------", filePath);
-      
+      HashMap parts = multiPart.parseData(context.getRequest(), filePath);
       String projectId = (String)parts.get("pid");
       String itemId = (String)parts.get("fid");
       String subject = (String)parts.get("subject");
