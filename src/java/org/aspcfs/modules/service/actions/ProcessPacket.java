@@ -86,8 +86,11 @@ public final class ProcessPacket extends CFSModule {
       db = this.getConnection(context);
 
       if (!"true".equals(getPref(context, "WEBSERVER.ASPMODE"))) {
-        // If binary version then perform a lookup in the system table to set the authcode
-        //auth.setAuthCode();
+        // Perform a lookup in the sync client table to set the authcode
+        SyncClient client = new SyncClient(db, auth.getClientId());
+        if (client.getEnabled()) {
+          auth.setAuthCode(client.getCode());
+        }
         // The ASPMODE will look up the code in the gatekeeper table
       }
       if (auth.isAuthenticated(context)) {

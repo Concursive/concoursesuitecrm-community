@@ -39,6 +39,8 @@ public class SyncClient extends GenericBean {
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
   private java.sql.Timestamp anchor = null;
+  private boolean enabled = false;
+  private String code = null;
 
 
   /**
@@ -339,6 +341,56 @@ public class SyncClient extends GenericBean {
 
 
   /**
+   *  Gets the enabled attribute of the SyncClient object
+   *
+   *@return    The enabled value
+   */
+  public boolean getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the SyncClient object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(boolean tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the SyncClient object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the code attribute of the SyncClient object
+   *
+   *@return    The code value
+   */
+  public String getCode() {
+    return code;
+  }
+
+
+  /**
+   *  Sets the code attribute of the SyncClient object
+   *
+   *@param  tmp  The new code value
+   */
+  public void setCode(String tmp) {
+    this.code = tmp;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of Parameter
@@ -447,6 +499,8 @@ public class SyncClient extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     anchor = rs.getTimestamp("anchor");
+    enabled = rs.getBoolean("enabled");
+    code = rs.getString("code");
   }
 
 }
