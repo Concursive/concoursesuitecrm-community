@@ -1,0 +1,60 @@
+/* Install a jasper report script
+ * - The .xml will be copied by ant
+ * - This script inserts the report into the database so users can use it
+ */
+//Check to see if report already exists
+exists = false;
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT report_id " +
+  "FROM report " +
+  "WHERE filename = 'opportunity_pipeline.xml'");
+if (rs.next()) {
+  exists = true;
+}
+rs.close();
+st.close();
+
+if (!exists) {
+  //Get the report category id for which this report will be listed as
+  st = db.createStatement();
+  rs = st.executeQuery(
+    "SELECT category_id " +
+    "FROM permission_category " +
+    "WHERE category = 'Pipeline Management'");
+  if (rs.next()) {
+    categoryId = rs.getInt("category_id");
+  }
+  rs.close();
+  st.close();
+  //Get the permission id for accessing this report
+  st = db.createStatement();
+  rs = st.executeQuery(
+    "SELECT permission_id " +
+    "FROM permission " +
+    "WHERE permission = 'pipeline-opportunities'");
+  if (rs.next()) {
+    permissionId = rs.getInt("permission_id");
+  }
+  rs.close();
+  st.close();
+  
+  //Type 1 is for user reports, type 2 is for system-wide reports (is this working?)
+  int type = 1;
+  //Insert the filename, type, title, description
+  pst = db.prepareStatement(
+    "INSERT INTO report " +
+    "(category_id, permission_id, filename, type, title, description) " +
+    "VALUES (?, ?, ?, ?, ?, ?) ");
+  pst.setInt(1, categoryId);
+  DatabaseUtils.setInt(pst, 2, permissionId);
+  pst.setString(3, "opportunity_pipeline.xml");
+  pst.setString(4, type);
+  pst.setString(5, "Opportunity Pipeline");
+  pst.setString(6, "What are my upcoming opportunities by stage?");
+  pst.execute();
+  pst.close();
+  print("Report inserted");
+} else {
+  print("Report already exists");
+}
