@@ -681,6 +681,7 @@ public class Call extends GenericBean {
       "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 
     int i = 0;
+    
     PreparedStatement pst = db.prepareStatement(sql.toString());
         if (this.getOrgId() > 0) {
                 pst.setInt(++i, this.getOrgId());
@@ -697,7 +698,12 @@ public class Call extends GenericBean {
         } else {
                 pst.setNull(++i, java.sql.Types.INTEGER);
         }
-    pst.setInt(++i, this.getCallTypeId());
+        if (this.getCallTypeId() > 0) {
+                pst.setInt(++i, this.getCallTypeId());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
+        
     pst.setInt(++i, this.getLength());
     pst.setString(++i, this.getSubject());
     pst.setString(++i, this.getNotes());
@@ -779,7 +785,13 @@ public class Call extends GenericBean {
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, callTypeId);
+    
+        if (this.getCallTypeId() > 0) {
+                pst.setInt(++i, this.getCallTypeId());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
+        
     pst.setInt(++i, length);
     pst.setString(++i, subject);
     pst.setString(++i, notes);
@@ -863,6 +875,9 @@ public class Call extends GenericBean {
     modifiedBy = rs.getInt("modifiedby");
     //lookup_call_types table
     callTypeId = rs.getInt("code");
+    if (rs.wasNull()) {
+            callTypeId = -1;
+    }
     callType = rs.getString("description");
     //contact table
     enteredName = fullName(rs.getString("efirst"), rs.getString("elast"));
