@@ -867,7 +867,7 @@ public class CustomFieldCategory extends ArrayList {
     pst.setInt(3, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      recordId = rs.getInt(1);
+      recordId = rs.getInt("record_id");
     }
     rs.close();
     pst.close();
@@ -978,6 +978,7 @@ public class CustomFieldCategory extends ArrayList {
       thisRecord.setEnteredBy(enteredBy);
       thisRecord.setModifiedBy(modifiedBy);
       thisRecord.insert(db);
+      this.setRecordId(thisRecord.getId());
 
       Iterator i = this.iterator();
       while (i.hasNext()) {
@@ -997,10 +998,14 @@ public class CustomFieldCategory extends ArrayList {
       }
     } catch (Exception e) {
       db.rollback();
+      this.setRecordId(-1);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
     }
+	if (this.getRecordId() != -1) {
+	    update(db);
+	}
     return resultId;
   }
 

@@ -560,5 +560,19 @@ public class CustomFieldRecord {
     }
   }
 
+  public boolean deleteData(Connection db) throws SQLException {
+    StringBuffer sql = new StringBuffer();
+    //Delete the related data
+    sql.append(
+        " DELETE FROM custom_field_data " +
+        " WHERE record_id = ? ");
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    int i = 0;
+    pst.setInt(++i, this.getId());
+    pst.executeUpdate();
+    pst.close();
+    
+    return true;
+  }
 }
 

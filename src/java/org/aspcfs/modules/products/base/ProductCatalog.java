@@ -63,6 +63,39 @@ public class ProductCatalog extends GenericBean {
   private boolean buildProductOptions = true;
   private ProductOptionList productOptionList = null;
 
+  // helper properties
+  private boolean hasCustomerProduct = false;
+
+
+  /**
+   *  Sets the categoryId attribute of the ProductCatalog object
+   *
+   * @param  tmp  The new categoryId value
+   */
+  public void setCategoryId(int tmp) {
+    this.categoryId = tmp;
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the ProductCatalog object
+   *
+   * @param  tmp  The new categoryId value
+   */
+  public void setCategoryId(String tmp) {
+    this.categoryId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the categoryId attribute of the ProductCatalog object
+   *
+   * @return    The categoryId value
+   */
+  public int getCategoryId() {
+    return categoryId;
+  }
+
 
   /**
    *  Sets the productOptionList attribute of the ProductCatalog object
@@ -965,6 +998,36 @@ public class ProductCatalog extends GenericBean {
 
 
   /**
+   *  Sets the hasCustomerProduct attribute of the ProductCatalog object
+   *
+   * @param  tmp  The new hasCustomerProduct value
+   */
+  public void setHasCustomerProduct(boolean tmp) {
+    this.hasCustomerProduct = tmp;
+  }
+
+
+  /**
+   *  Sets the hasCustomerProduct attribute of the ProductCatalog object
+   *
+   * @param  tmp  The new hasCustomerProduct value
+   */
+  public void setHasCustomerProduct(String tmp) {
+    this.hasCustomerProduct = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return    Description of the Return Value
+   */
+  public boolean hasCustomerProduct() {
+    return hasCustomerProduct;
+  }
+
+
+  /**
    *  Constructor for the ProductCatalog object
    */
   public ProductCatalog() { }
@@ -1043,6 +1106,42 @@ public class ProductCatalog extends GenericBean {
     // build resources
     if (buildProductOptions) {
       this.buildProductOptions(db);
+    }
+
+    // detemine the products actual category trail since it might
+    // exist several levels down the category tree
+    determineActualCategory(db);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void determineActualCategory(Connection db) throws SQLException {
+    //Product categories is a tree of categories and products can exist
+    //at any level in the category list. Hence a product needs to know exactly
+    //the path from the root of the tree which is the category trail
+    if (categoryId != -1) {
+      StringBuffer sb = new StringBuffer();
+      sb.append(this.getCategoryName());
+    
+      ProductCategory category = new ProductCategory(db, this.categoryId);
+      int ctgyParentId = category.getParentId();
+      while (ctgyParentId != -1) {
+        ProductCategory parent = new ProductCategory(db, ctgyParentId);
+        sb.insert(0, parent.getName() + ", ");
+        ctgyParentId = parent.getParentId();
+      }
+      //TODO: determine if the following line needs to be changed
+      //eg: Currently it eliminates "Publications, " from "Publications, Flagship, Broadsheet"
+      String str = sb.toString().trim();
+      if (str.indexOf("Publications,") > -1) {
+        str = str.substring(str.indexOf(",") + 1);
+      }
+      this.setCategoryName(str.trim());
     }
   }
 
@@ -1175,9 +1274,9 @@ public class ProductCatalog extends GenericBean {
     this.setEnabled(rs.getBoolean("enabled"));
 
     // product_category table
-    this.setCategoryId(rs.getInt("category_id"));
+    this.setCategoryId(DatabaseUtils.getInt(rs, "category_id"));
     this.setCategoryName(rs.getString("category_name"));
-
+    
     // product_catalog_pricing table
     this.setMsrpAmount(rs.getFloat("msrp_amount"));
     this.setPriceAmount(rs.getFloat("price_amount"));

@@ -57,10 +57,6 @@ public final class ProductsCatalog extends CFSModule {
       String params = (String) context.getRequest().getParameter("params");
       String displayFieldId = (String) context.getRequest().getParameter("displayFieldId");
       String hiddenFieldId = (String) context.getRequest().getParameter("hiddenFieldId");
-
-      System.out.println("hiddenFieldId : " + hiddenFieldId);
-      System.out.println("displayFieldId : " + displayFieldId);
-
       categoryList = new ProductCategoryList();
       categoryList.setHasProducts(Constants.TRUE);
       categoryList.buildList(db);
@@ -88,22 +84,26 @@ public final class ProductsCatalog extends CFSModule {
     int categoryId = Integer.parseInt((String) context.getRequest().getParameter("id"));
     String displayFieldId = (String) context.getRequest().getParameter("displayFieldId");
     String hiddenFieldId = (String) context.getRequest().getParameter("hiddenFieldId");
-
+    ProductCategoryList trails = new ProductCategoryList();
     ProductCatalogList productList = null;
     ProductCategory category = null;
     Connection db = null;
     try {
       db = getConnection(context);
-
-      category = new ProductCategory(db, categoryId);
+      category = new ProductCategory();
+      category.setBuildChildList(true);
+      category.setBuildProductList(true);
+      category.setBuildEnabledProducts(Constants.TRUE);
+      category.queryRecord(db, categoryId);
+      
+      int parentId = category.getParentId();
+      while (parentId != -1) {
+        ProductCategory parent = new ProductCategory(db, parentId);
+        trails.add(0, parent);
+        parentId = parent.getParentId();
+      }
       context.getRequest().setAttribute("category", category);
-
-      productList = new ProductCatalogList();
-      productList.setPublicationId(categoryId);
-      productList.setBuildResources(true);
-      productList.buildList(db);
-
-      context.getRequest().setAttribute("productList", productList);
+      context.getRequest().setAttribute("trails", trails);
       context.getRequest().setAttribute("displayFieldId", displayFieldId);
       context.getRequest().setAttribute("hiddenFieldId", hiddenFieldId);
     } catch (Exception e) {
@@ -125,16 +125,64 @@ public final class ProductsCatalog extends CFSModule {
    */
   public String executeCommandCategories(ActionContext context) {
     int quoteId = Integer.parseInt((String) context.getRequest().getParameter("quoteId"));
+    String categoryIdString = (String) context.getRequest().getParameter("categoryId");
+    int categoryId = -1;
 
     Quote quote = null;
+    ProductCategory category = null;
     ProductCategoryList categoryList = null;
+    ProductCategoryList trailCategories = null;
+    ProductCategory parentCategory = null;
+    ProductCatalogList productList = null;
+
     Connection db = null;
     try {
       db = getConnection(context);
+      if (categoryIdString != null && !"".equals(categoryIdString)) {
 
-      categoryList = new ProductCategoryList();
-      categoryList.setHasProducts(Constants.TRUE);
-      categoryList.buildList(db);
+        categoryId = Integer.parseInt(categoryIdString);
+        category = new ProductCategory(db, categoryId);
+        context.getRequest().setAttribute("category", category);
+
+        int parentId = category.getParentId();
+        trailCategories = new ProductCategoryList();
+        while (parentId != -1) {
+          parentCategory = new ProductCategory(db, parentId);
+          trailCategories.add(0, parentCategory);
+          parentId = parentCategory.getParentId();
+        }
+        if (trailCategories != null) {
+          context.getRequest().setAttribute("trailCategories", trailCategories);
+        }
+
+        categoryList = new ProductCategoryList();
+        categoryList.setParentId(categoryId);
+        categoryList.buildList(db);
+        if(categoryList.size() > 0 ){
+          categoryList.removeNonProductCategories(db);
+        }
+
+        productList = new ProductCatalogList();
+        productList.setCategoryId(categoryId);
+        productList.setEnabled(Constants.TRUE);
+        productList.setBuildResources(true);
+        productList.buildList(db);
+      } else {
+        //Starting case where we start with the Top level categories
+        productList = new ProductCatalogList();
+        productList.setHasCategories(Constants.FALSE);
+        productList.setEnabled(Constants.TRUE);
+        productList.setBuildResources(true);
+        productList.buildList(db);
+        
+        categoryList = new ProductCategoryList();
+        categoryList.setTopOnly(Constants.TRUE);
+        categoryList.buildList(db);
+        if(categoryList.size() > 0 ){
+          categoryList.removeNonProductCategories(db);
+        }
+      }
+      context.getRequest().setAttribute("productList", productList);
       context.getRequest().setAttribute("categoryList", categoryList);
 
       quote = new Quote(db, quoteId);
@@ -158,28 +206,127 @@ public final class ProductsCatalog extends CFSModule {
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
-  public String executeCommandProducts(ActionContext context) {
+  public String executeCommandAddProducts(ActionContext context) {
     int quoteId = Integer.parseInt((String) context.getRequest().getParameter("quoteId"));
     int categoryId = Integer.parseInt((String) context.getRequest().getParameter("categoryId"));
+    boolean displayOptions = false;
     Quote quote = null;
-    ProductCatalogList productList = null;
+    ProductCategoryList trailCategories = null;
+    ProductCategory parentCategory = null;
     ProductCategory category = null;
+    QuoteProductList quoteProductList = null;
     Connection db = null;
     try {
       db = getConnection(context);
 
+      quote = new Quote();
+      quote.setBuildProducts(true);
+      quote.queryRecord(db, quoteId);
+      quote.retrieveTicket(db);
+      context.getRequest().setAttribute("quote", quote);
+
+      quoteProductList = new QuoteProductList();
+      quoteProductList.populate(db, context);
+      context.getRequest().setAttribute("quoteProductList", quoteProductList);
+
       category = new ProductCategory(db, categoryId);
       context.getRequest().setAttribute("category", category);
 
-      productList = new ProductCatalogList();
-      productList.setPublicationId(categoryId);
-      productList.setBuildResources(true);
-      productList.buildList(db);
-      context.getRequest().setAttribute("productList", productList);
+      trailCategories = new ProductCategoryList();
+      int parentId = category.getParentId();
+      while (parentId != -1) {
+        parentCategory = new ProductCategory(db, parentId);
+        trailCategories.add(0, parentCategory);
+        parentId = parentCategory.getParentId();
+      }
+      if (trailCategories != null) {
+        context.getRequest().setAttribute("trailCategories", trailCategories);
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      e.printStackTrace();
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "AddProductsOK";
+  }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandAddOptions(ActionContext context) {
+    int quoteId = Integer.parseInt((String) context.getRequest().getParameter("quoteId"));
+    int categoryId = Integer.parseInt((String) context.getRequest().getParameter("categoryId"));
+    StringBuffer abbreviation = new StringBuffer("");
+    Quote quote = null;
+    QuoteProduct quoteProduct = null;
+    QuoteProductList quoteProducts = null;
+    QuoteProductOption quoteProductOption = null;
+    ProductCategory category = null;
+    ProductCatalogList productList = null;
+    Connection db = null;
+    try {
+      db = getConnection(context);
       quote = new Quote(db, quoteId);
+      if (quote.getShortDescription() != null) {
+        abbreviation.append(quote.getShortDescription());
+      }
+      for (int i = 1; ; i++) {
+        String productIdString = (String) context.getRequest().getParameter("product_" + i);
+        if (productIdString == null || "".equals(productIdString)) {
+          break;
+        } else {
+          String quantityString = (String) context.getRequest().getParameter("qty_" + i);
+          if (quantityString != null && !"".equals(quantityString)) {
+            ProductCatalog product = new ProductCatalog(db, Integer.parseInt(productIdString));
+            quoteProduct = new QuoteProduct();
+            quoteProduct.setProductCatalog(product);
+            quoteProduct.setProductId(product.getId());
+            quoteProduct.setQuantity(quantityString);
+            quoteProduct.setQuoteId(quote.getId());
+            quoteProduct.setPriceAmount(product.getPriceAmount());
+            quoteProduct.setTotalPrice(product.getPriceAmount());
+            quoteProduct.insert(db);
+            abbreviation.append(product.getAbbreviation());
+            String optionIdString = (String) context.getRequest().getParameter("option_" + productIdString);
+            if (optionIdString != null && !"".equals(optionIdString)) {
+              String valueString = (String) context.getRequest().getParameter("value_" + productIdString + "_" + optionIdString);
+              if (valueString != null && !"".equals(valueString)) {
+                String optionSelection = (String) context.getRequest().getParameter("selection_" + productIdString + "_" + optionIdString);
+                if (!"".equals(optionSelection) && optionSelection != null) {
+                  ProductOption option = new ProductOption(db, Integer.parseInt(optionIdString.trim()));
+                  ProductOptionValues value = new ProductOptionValues(db, Integer.parseInt(optionSelection));
+                  quoteProductOption = new QuoteProductOption();
+                  quoteProductOption.setItemId(quoteProduct.getId());
+                  quoteProductOption.setProductOptionId(option.getId());
+                  quoteProductOption.setQuantity(1);
+                  quoteProductOption.setPriceAmount(value.getPriceAmount());
+                  quoteProductOption.setTotalPrice(value.getPriceAmount());
+                  quoteProductOption.setIntegerValue(value.getId());
+                  quoteProductOption.insert(db);
+                } else {
+                }
+              }
+            }
+          }
+        }
+      }
+      if (abbreviation != null && !"".equals(abbreviation.toString())) {
+        quote.setShortDescription(abbreviation.toString());
+        quote.update(db);
+      }
+      quote.setBuildProducts(true);
+      quote.queryRecord(db, quoteId);
       quote.retrieveTicket(db);
       context.getRequest().setAttribute("quote", quote);
+
+      category = new ProductCategory(db, categoryId);
+      context.getRequest().setAttribute("category", category);
 
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -188,7 +335,7 @@ public final class ProductsCatalog extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return "ProductsOK";
+    return "AddOptionsOK";
   }
 
 

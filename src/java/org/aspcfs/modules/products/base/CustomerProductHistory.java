@@ -21,7 +21,7 @@ public class CustomerProductHistory extends GenericBean {
   private int customerProductId = -1;
   private int orgId = -1;
   private int orderId = -1;
-
+  private int orderItemId = -1;
   private Timestamp productStartDate = null;
   private Timestamp productEndDate = null;
   // record status
@@ -30,6 +30,122 @@ public class CustomerProductHistory extends GenericBean {
   private Timestamp modified = null;
   private int modifiedBy = -1;
   private boolean enabled = true;
+  // others
+  private String productName = null;
+  private String shortDescription = null;
+  private String categoryName = null;
+  private double priceAmount = 0.0;
+
+
+
+  /**
+   *  Sets the shortDescription attribute of the CustomerProductHistory object
+   *
+   * @param  tmp  The new shortDescription value
+   */
+  public void setShortDescription(String tmp) {
+    this.shortDescription = tmp;
+  }
+
+
+  /**
+   *  Gets the shortDescription attribute of the CustomerProductHistory object
+   *
+   * @return    The shortDescription value
+   */
+  public String getShortDescription() {
+    return shortDescription;
+  }
+
+
+  /**
+   *  Sets the productName attribute of the CustomerProductHistory object
+   *
+   * @param  tmp  The new productName value
+   */
+  public void setProductName(String tmp) {
+    this.productName = tmp;
+  }
+
+
+  /**
+   *  Sets the categoryName attribute of the CustomerProductHistory object
+   *
+   * @param  tmp  The new categoryName value
+   */
+  public void setCategoryName(String tmp) {
+    this.categoryName = tmp;
+  }
+
+
+  /**
+   *  Sets the priceAmount attribute of the CustomerProductHistory object
+   *
+   * @param  tmp  The new priceAmount value
+   */
+  public void setPriceAmount(double tmp) {
+    this.priceAmount = tmp;
+  }
+
+
+  /**
+   *  Gets the productName attribute of the CustomerProductHistory object
+   *
+   * @return    The productName value
+   */
+  public String getProductName() {
+    return productName;
+  }
+
+
+  /**
+   *  Gets the categoryName attribute of the CustomerProductHistory object
+   *
+   * @return    The categoryName value
+   */
+  public String getCategoryName() {
+    return categoryName;
+  }
+
+
+  /**
+   *  Gets the priceAmount attribute of the CustomerProductHistory object
+   *
+   * @return    The priceAmount value
+   */
+  public double getPriceAmount() {
+    return priceAmount;
+  }
+
+
+  /**
+   *  Sets the orderItemId attribute of the CustomerProductHistory object
+   *
+   * @param  tmp  The new orderItemId value
+   */
+  public void setOrderItemId(int tmp) {
+    this.orderItemId = tmp;
+  }
+
+
+  /**
+   *  Sets the orderItemId attribute of the CustomerProductHistory object
+   *
+   * @param  tmp  The new orderItemId value
+   */
+  public void setOrderItemId(String tmp) {
+    this.orderItemId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the orderItemId attribute of the CustomerProductHistory object
+   *
+   * @return    The orderItemId value
+   */
+  public int getOrderItemId() {
+    return orderItemId;
+  }
 
 
   /**
@@ -406,8 +522,15 @@ public class CustomerProductHistory extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         " SELECT cph.history_id, cph.customer_product_id, cph.org_id, cph.order_id, " +
         "        cph.product_start_date, cph.product_end_date, cph.entered, cph.enteredby, " +
-        "        cph.modified, cph.modifiedby " +
+        "        cph.modified, cph.modifiedby, cph.order_item_id, " +
+        "        pc.product_name, pc.short_description, pcp.price_amount, pcat.category_name " +
         " FROM customer_product_history cph " +
+        " LEFT JOIN order_entry o ON (cph.order_id = o.order_id) " +
+        " LEFT JOIN order_product op ON (cph.order_item_id = op.item_id) " +
+        " LEFT JOIN product_catalog pc ON (op.product_id = pc.product_id) " +
+        " LEFT JOIN product_catalog_category_map pccm ON (pc.product_id = pccm.product_id) " +
+        " LEFT JOIN product_category pcat ON (pccm.category_id = pcat.category_id) " +
+        " LEFT JOIN product_catalog_pricing pcp ON (pc.product_id = pcp.product_id) " +
         " WHERE cph.history_id = ? "
         );
     pst.setInt(1, id);
@@ -442,6 +565,12 @@ public class CustomerProductHistory extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+
+    orderItemId = rs.getInt("order_item_id");
+    productName = rs.getString("product_name");
+    shortDescription = rs.getString("short_description");
+    categoryName = rs.getString("category_name");
+    priceAmount = rs.getDouble("price_amount");
   }
 
 
@@ -470,7 +599,7 @@ public class CustomerProductHistory extends GenericBean {
     if (modified != null) {
       sql.append("modified, ");
     }
-    sql.append("modifiedby) ");
+    sql.append("modifiedby, order_item_id) ");
     sql.append("VALUES( ?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
@@ -479,7 +608,7 @@ public class CustomerProductHistory extends GenericBean {
     if (modified != null) {
       sql.append("?, ");
     }
-    sql.append("? )");
+    sql.append("?, ? )");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, this.getCustomerProductId());
@@ -497,6 +626,7 @@ public class CustomerProductHistory extends GenericBean {
       pst.setTimestamp(++i, this.getModified());
     }
     pst.setInt(++i, this.getModifiedBy());
+    pst.setInt(++i, this.getOrderItemId());
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "customer_product_history_history_id_seq");
@@ -551,6 +681,7 @@ public class CustomerProductHistory extends GenericBean {
 
     sql.append(" UPDATE customer_product_history " +
         " SET order_id = ?, " +
+        "     order_item_id = ? " +
         "     product_start_date = ?, " +
         "     product_end_date = ?, " +
         "     modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
@@ -561,6 +692,8 @@ public class CustomerProductHistory extends GenericBean {
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
+    DatabaseUtils.setInt(pst, ++i, this.getOrderId());
+    DatabaseUtils.setInt(pst, ++i, this.getOrderItemId());
     pst.setTimestamp(++i, this.getProductStartDate());
     pst.setTimestamp(++i, this.getProductEndDate());
     pst.setInt(++i, this.getModifiedBy());

@@ -36,6 +36,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   private int typeId = -1;
   private int enabled = Constants.UNDEFINED;
   private int topOnly = Constants.UNDEFINED;
+  private int hasCategories = Constants.UNDEFINED;
   //other supplimentary data
   private String categoryName = null;
   private double msrpAmount = 0.0;
@@ -43,7 +44,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   private double recurringAmount = 0.0;
   private String parentName = null;
   private String typeName = null;
-  private int publicationId = -1;
+  private int categoryId = -1;
   //resources
   private boolean buildResources = false;
   private String optionText = null;
@@ -88,6 +89,36 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
    */
   public void setOptionPrice(String tmp) {
     this.optionPrice = tmp;
+  }
+
+
+  /**
+   *  Sets the hasCategories attribute of the ProductCatalogList object
+   *
+   *@param  tmp  The new hasCategories value
+   */
+  public void setHasCategories(int tmp) {
+    this.hasCategories = tmp;
+  }
+
+
+  /**
+   *  Sets the hasCategories attribute of the ProductCatalogList object
+   *
+   *@param  tmp  The new hasCategories value
+   */
+  public void setHasCategories(String tmp) {
+    this.hasCategories = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the hasCategories attribute of the ProductCatalogList object
+   *
+   *@return    The hasCategories value
+   */
+  public int getHasCategories() {
+    return hasCategories;
   }
 
 
@@ -413,12 +444,12 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the publicationId attribute of the ProductCatalogList object
+   *  Gets the categoryId attribute of the ProductCatalogList object
    *
    *@return    The publicationId value
    */
-  public int getPublicationId() {
-    return publicationId;
+  public int getCategoryId() {
+    return categoryId;
   }
 
 
@@ -673,22 +704,22 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the publicationId attribute of the ProductCatalogList object
+   *  Sets the categoryId attribute of the ProductCatalogList object
    *
    *@param  tmp  The new publicationId value
    */
-  public void setPublicationId(int tmp) {
-    this.publicationId = tmp;
+  public void setCategoryId(int tmp) {
+    this.categoryId = tmp;
   }
 
 
   /**
-   *  Sets the publicationId attribute of the ProductCatalogList object
+   *  Sets the categoryId attribute of the ProductCatalogList object
    *
    *@param  tmp  The new publicationId value
    */
-  public void setPublicationId(String tmp) {
-    this.publicationId = Integer.parseInt(tmp);
+  public void setCategoryId(String tmp) {
+    this.categoryId = Integer.parseInt(tmp);
   }
 
 
@@ -718,7 +749,17 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM product_catalog pctlg " +
-        "WHERE pctlg.product_id > 0 "
+        " LEFT JOIN product_catalog_category_map AS pccmap " +
+        " ON ( pctlg.product_id = pccmap.product_id ) " +
+        " LEFT JOIN product_category AS pctgy " +
+        " ON ( pccmap.category_id =  pctgy.category_id ) " +
+        " LEFT JOIN product_catalog_pricing AS pctlgpricing " +
+        " ON ( pctlg.product_id = pctlgpricing.product_id ) " +
+        " LEFT JOIN product_catalog AS pctlg2 " +
+        " ON ( pctlg.parent_id = pctlg2.product_id ) " +
+        " LEFT JOIN lookup_product_type AS pctlgtype " +
+        " ON ( pctlg.type_id = pctlgtype.code ) " +
+        " WHERE pctlg.product_id > 0  "
         );
 
     createFilter(sqlFilter, db);
@@ -771,6 +812,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
         " ON ( pctlg.type_id = pctlgtype.code ) " +
         " WHERE pctlg.product_id > 0  "
         );
+    sqlOrder.append(" ORDER BY pctlgpricing.price_amount ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -798,6 +840,13 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
         thisProduct.buildProductOptions(db);
       }
       determineMatch();
+    }
+    // detemine the product's actual category trail since it might
+    // exist several levels down the category tree
+    Iterator j = this.iterator();
+    while (j.hasNext()) {
+      ProductCatalog thisProduct = (ProductCatalog) j.next();
+      thisProduct.determineActualCategory(db);
     }
   }
 
@@ -924,10 +973,19 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       sqlFilter.append(" AND pctlgtype.description = ? ");
     }
 
-    if (publicationId != -1) {
+    if (categoryId != -1) {
       sqlFilter.append(" AND pctgy.category_id = ? ");
     }
 
+    if (hasCategories == Constants.TRUE) {
+      sqlFilter.append(" AND pctlg.product_id IN ( " +
+          " SELECT product_id FROM product_catalog_category_map ) "
+          );
+    } else if (hasCategories == Constants.FALSE) {
+      sqlFilter.append(" AND pctlg.product_id NOT IN ( " +
+          " SELECT product_id FROM product_catalog_category_map )"
+          );
+    }
     //Sync API
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
@@ -998,8 +1056,8 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       pst.setString(++i, typeName);
     }
 
-    if (publicationId != -1) {
-      pst.setInt(++i, publicationId);
+    if (categoryId != -1) {
+      pst.setInt(++i, categoryId);
     }
 
     //Sync API
@@ -1050,6 +1108,26 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       }
     }
     return sb.toString();
+  }
+
+
+  /**
+   *  Gets the productFromId attribute of the ProductCatalogList object
+   *
+   *@param  id  Description of the Parameter
+   *@return     The productFromId value
+   */
+  public ProductCatalog getProductFromId(int id) {
+    ProductCatalog result = null;
+    Iterator products = (Iterator) this.iterator();
+    while (products.hasNext()) {
+      ProductCatalog product = (ProductCatalog) products.next();
+      if (product.getId() == id) {
+        result = product;
+        break;
+      }
+    }
+    return result;
   }
 }
 

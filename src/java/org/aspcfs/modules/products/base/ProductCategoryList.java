@@ -10,6 +10,8 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.web.*;
 import java.util.Calendar;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.LookupList;
 
 /**
  *  The List class of Product Category.
@@ -48,6 +50,38 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
   private String parentName = null;
   private String typeName = null;
   private int hasProducts = Constants.UNDEFINED;
+  private boolean buildProducts = false;
+
+
+  /**
+   *  Sets the buildProducts attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new buildProducts value
+   */
+  public void setBuildProducts(boolean tmp) {
+    this.buildProducts = tmp;
+  }
+
+
+  /**
+   *  Sets the buildProducts attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new buildProducts value
+   */
+  public void setBuildProducts(String tmp) {
+    this.buildProducts = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the buildProducts attribute of the ProductCategoryList object
+   *
+   *@return    The buildProducts value
+   */
+  public boolean getBuildProducts() {
+    return buildProducts;
+  }
+
 
   private String emptyHtmlSelectRecord = null;
 
@@ -542,6 +576,10 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
         " FROM product_category AS pctgy " +
+        " LEFT JOIN product_category AS pctgy2 " +
+        " ON ( pctgy.parent_id = pctgy2.category_id ) " +
+        " LEFT JOIN lookup_product_category_type AS pctgytype " +
+        " ON ( pctgy.type_id = pctgytype.code ) " +
         " WHERE pctgy.category_id > 0 "
         );
     createFilter(sqlFilter, db);
@@ -556,7 +594,7 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
       }
       rs.close();
       pst.close();
-      
+
       //Determine column to sort by
       pagedListInfo.setDefaultSort("pctgy.category_name", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
@@ -589,12 +627,19 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.isEndOfOffset(db)) {
         break;
-      }      
+      }
       ProductCategory productCategory = new ProductCategory(rs);
       this.add(productCategory);
     }
     rs.close();
     pst.close();
+    if (buildProducts) {
+      Iterator i = this.iterator();
+      while (i.hasNext()) {
+        ProductCategory thisCategory = (ProductCategory) i.next();
+        thisCategory.buildProductList(db);
+      }
+    }
   }
 
 
@@ -768,6 +813,65 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
       }
     }
     return null;
+  }
+
+
+  /**
+   *  Gets the htmlSelect attribute of the ProductCategoryList object
+   *
+   *@param  typeId            Description of the Parameter
+   *@return                   The htmlSelect value
+   *@exception  SQLException  Description of the Exception
+   */
+  public HtmlSelect getHtmlSelect(int typeId) throws SQLException {
+    HtmlSelect select = new HtmlSelect();
+    select.addItem("-1", "--All--");
+    Iterator categories = this.iterator();
+    while (categories.hasNext()) {
+      ProductCategory thisCategory = (ProductCategory) categories.next();
+      if (thisCategory.getTypeId() == typeId) {
+        int value = thisCategory.getId();
+        String name = thisCategory.getName();
+        select.addItem(value, name);
+      }
+    }
+    return select;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void removeNonProductCategories(Connection db) throws SQLException {
+    Iterator iterator = (Iterator) this.iterator();
+    while (iterator.hasNext()) {
+      ProductCategory category = (ProductCategory) iterator.next();
+      if (!category.checkForProducts(db)) {
+        iterator.remove();
+      }
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean filterProductCategories(Connection db) throws SQLException {
+    Iterator iterator = (Iterator) this.iterator();
+    while (iterator.hasNext()) {
+      ProductCategory category = (ProductCategory) iterator.next();
+      if (category.checkForProducts(db)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 

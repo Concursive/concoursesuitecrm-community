@@ -27,7 +27,7 @@ import java.text.DateFormat;
 import org.aspcfs.modules.quotes.base.*;
 import org.aspcfs.controller.*;
 import org.aspcfs.modules.troubletickets.base.*;
-
+import org.aspcfs.modules.quotes.base.*;
 /**
  *  The MyCFS module.
  *
@@ -682,40 +682,6 @@ public final class MyCFS extends CFSModule {
     addModuleBean(context, "MyInbox", "Message Reply");
     context.getRequest().setAttribute("Note", newNote);
     return this.getReturn(context, "ReplyMessage");
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandCustomerQuoteDecision(ActionContext context) {
-    Connection db = null;
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
-    String value = (String) context.getRequest().getParameter("value");
-    try {
-      db = this.getConnection(context);
-      SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
-
-      if (value.equals("APPROVE")) {
-        value = new String("Accepted by customer");
-      } else if (value.equals("REJECT")) {
-        value = new String("Rejected by customer");
-      }
-      Quote quote = new Quote(db, Integer.parseInt(quoteIdString));
-      quote.setStatusId(list.getIdFromValue(value));
-      quote.update(db);
-
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
-    return executeCommandHome(context);
   }
 
 

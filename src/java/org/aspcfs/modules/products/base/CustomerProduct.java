@@ -11,6 +11,7 @@ import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.orders.base.*;
 
 /**
  *  Description of the Class
@@ -35,8 +36,114 @@ public class CustomerProduct extends GenericBean {
   private int modifiedBy = -1;
   private boolean enabled = true;
   //resources
-  private boolean buildFileList = true;
+  private boolean buildFileList = false;
   private FileItemList fileItemList = new FileItemList();
+  private boolean buildHistoryList = false;
+  private CustomerProductHistoryList historyList = new CustomerProductHistoryList();
+
+  private Timestamp lastOrdered = null;
+  private Order lastOrder = null;
+
+
+
+  /**
+   *  Sets the buildHistoryList attribute of the CustomerProduct object
+   *
+   * @param  tmp  The new buildHistoryList value
+   */
+  public void setBuildHistoryList(boolean tmp) {
+    this.buildHistoryList = tmp;
+  }
+
+
+  /**
+   *  Sets the buildHistoryList attribute of the CustomerProduct object
+   *
+   * @param  tmp  The new buildHistoryList value
+   */
+  public void setBuildHistoryList(String tmp) {
+    this.buildHistoryList = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the buildHistoryList attribute of the CustomerProduct object
+   *
+   * @return    The buildHistoryList value
+   */
+  public boolean getBuildHistoryList() {
+    return buildHistoryList;
+  }
+
+
+  /**
+   *  Sets the lastOrder attribute of the CustomerProduct object
+   *
+   * @param  tmp  The new lastOrder value
+   */
+  public void setLastOrder(Order tmp) {
+    this.lastOrder = tmp;
+  }
+
+
+  /**
+   *  Gets the lastOrder attribute of the CustomerProduct object
+   *
+   * @return    The lastOrder value
+   */
+  public Order getLastOrder() {
+    return lastOrder;
+  }
+
+
+  /**
+   *  Sets the lastOrdered attribute of the CustomerProduct object
+   *
+   * @param  tmp  The new lastOrdered value
+   */
+  public void setLastOrdered(Timestamp tmp) {
+    this.lastOrdered = tmp;
+  }
+
+
+  /**
+   *  Sets the lastOrdered attribute of the CustomerProduct object
+   *
+   * @param  tmp  The new lastOrdered value
+   */
+  public void setLastOrdered(String tmp) {
+    this.lastOrdered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Gets the lastOrdered attribute of the CustomerProduct object
+   *
+   * @return    The lastOrdered value
+   */
+  public Timestamp getLastOrdered() {
+    return lastOrdered;
+  }
+
+
+  /**
+   *  Sets the historyList attribute of the CustomerProduct object
+   *
+   * @param  tmp  The new historyList value
+   */
+  public void setHistoryList(CustomerProductHistoryList tmp) {
+    this.historyList = tmp;
+  }
+
+
+  /**
+   *  Gets the historyList attribute of the CustomerProduct object
+   *
+   * @return    The historyList value
+   */
+  public CustomerProductHistoryList getHistoryList() {
+    return historyList;
+  }
 
 
   /**
@@ -475,7 +582,6 @@ public class CustomerProduct extends GenericBean {
    * @exception  SQLException  Description of the Exception
    */
   public void buildFileList(Connection db) throws SQLException {
-    fileItemList = new FileItemList();
     fileItemList.setLinkModuleId(Constants.DOCUMENTS_CUSTOMER_PRODUCT);
     fileItemList.setLinkItemId(this.getId());
     fileItemList.buildList(db);
@@ -484,6 +590,31 @@ public class CustomerProduct extends GenericBean {
     while (i.hasNext()) {
       FileItem thisItem = (FileItem) i.next();
       thisItem.buildVersionList(db);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void buildHistoryList(Connection db) throws SQLException {
+    historyList.setOrgId(this.getOrgId());
+    historyList.setCustomerProductId(this.getId());
+    historyList.buildList(db);
+    if (historyList.size() > 1) {
+      /*
+        The history list size will be 1, if the customer product has never been used and the history item refers to the
+        time the customer product was uploaded.
+        
+        The history list size will be > 1, if the customer product has been used atleast once. If it has been used before,
+        then get the last history item in the list which corresponds to the last order that used it
+      */
+      CustomerProductHistory thisHistory = (CustomerProductHistory) historyList.get(historyList.size() - 1);
+      lastOrdered = thisHistory.getProductStartDate();
+      lastOrder = new Order(db, thisHistory.getOrderId());
     }
   }
 
@@ -501,7 +632,7 @@ public class CustomerProduct extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT cp.* "+
+        " SELECT cp.* " +
         " FROM customer_product cp " +
         " WHERE cp.customer_product_id = ? "
         );
@@ -517,6 +648,9 @@ public class CustomerProduct extends GenericBean {
     }
     if (buildFileList) {
       this.buildFileList(db);
+    }
+    if (buildHistoryList) {
+      this.buildHistoryList(db);
     }
   }
 
@@ -615,21 +749,37 @@ public class CustomerProduct extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Customer Product ID not specified");
     }
+    boolean recordDeleted = false;
     try {
       db.setAutoCommit(false);
       //TODO: code to delete customer product  history
-      // delete the customer product
-      PreparedStatement pst = db.prepareStatement(" DELETE FROM customer_product WHERE customer_product_id = ? ");
-      pst.setInt(1, this.getId());
-      pst.execute();
-      pst.close();
-      db.commit();
+      this.buildHistoryList(db);
+      if (historyList.size() == 1) {
+        // If the history list has just one entry for this customer product
+        // then it can be infered that this customer product has not been used in
+        // any ad run. Hence it is safe to delete this customer product
+
+        // Delete the customer product history
+        historyList.delete(db);
+        // Delete this customer product
+        PreparedStatement pst = db.prepareStatement(" DELETE FROM customer_product WHERE customer_product_id = ? ");
+        pst.setInt(1, this.getId());
+        pst.execute();
+        pst.close();
+        // Delete the dummy order product that maps to this customer product
+        OrderProduct thisProduct = new OrderProduct(db, this.getOrderItemId());
+        thisProduct.delete(db);
+        // Delete the dummy order that maps to this customer product
+        Order thisOrder = new Order(db, this.getOrderId());
+        recordDeleted = thisOrder.delete(db);
+        db.commit();
+      }
     } catch (SQLException e) {
       db.rollback();
     } finally {
       db.setAutoCommit(true);
     }
-    return true;
+    return recordDeleted;
   }
 
 
@@ -675,6 +825,43 @@ public class CustomerProduct extends GenericBean {
 
 
   /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public DependencyList processDependencies(Connection db) throws SQLException {
+    DependencyList dependencyList = new DependencyList();
+    if (historyList.size() > 1) {
+      Dependency thisDependency = new Dependency();
+      thisDependency.setName("History Exists");
+      thisDependency.setCount(FileItemList.retrieveRecordCount(db, Constants.DOCUMENTS_CUSTOMER_PRODUCT, this.getId()));
+      thisDependency.setCanDelete(false);
+      dependencyList.add(thisDependency);
+    }
+    return dependencyList;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return    Description of the Return Value
+   */
+  public boolean hasHistory() {
+    if (historyList != null) {
+      if (historyList.size() > 1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
+
+
+  /**
    *  Gets the valid attribute of the CustomerProduct object
    *
    * @param  db                Description of the Parameter
@@ -684,5 +871,37 @@ public class CustomerProduct extends GenericBean {
   protected boolean isValid(Connection db) throws SQLException {
     return true;
   }
+
+  public void queryRecordFromItemId(Connection db, int id) throws SQLException {
+    if (id == -1) {
+      throw new SQLException("Invalid Order Product Number");
+    }
+
+    PreparedStatement pst = db.prepareStatement(
+        " SELECT cp.* " +
+        " FROM customer_product cp " +
+        " LEFT JOIN customer_product_history hist "+
+        " ON ( cp.customer_product_id = hist.customer_product_id ) "+
+        " WHERE hist.order_item_id = ? "
+        );
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
+    
+    if (this.getId() == -1) {
+      throw new SQLException("Customer Product not found");
+    }
+    if (buildFileList) {
+      this.buildFileList(db);
+    }
+    if (buildHistoryList) {
+      this.buildHistoryList(db);
+    }
+  }
+
 }
 
