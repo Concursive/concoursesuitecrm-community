@@ -32,7 +32,7 @@ public class AccessLog extends GenericBean {
           queryRecord(db, id);
   }
   
-  public AccessLog(Connection db, int id) throws SQLException {
+  public AccessLog(Connection db, String id) throws SQLException {
           queryRecord(db, Integer.parseInt(id));
   }  
   
