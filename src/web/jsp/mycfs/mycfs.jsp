@@ -77,7 +77,7 @@
            &nbsp;&nbsp;
          </td>
          <td width="100%" valign="top">
-           No alerts found.
+           No alerts found.<br>&nbsp;
          </td>
        </tr>
 <%     }
