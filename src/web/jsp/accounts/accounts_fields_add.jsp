@@ -8,11 +8,15 @@
 <form name="details" action="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>" method="post">
 <a href="/Accounts.do">Account Management</a> > 
 <a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="/Accounts.do?command=Fields&orgId=<%=OrgDetails.getOrgId()%>">Folders</a> >
-Add Record
+<a href="/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
+<dhv:evaluate if="<%= (Category.getAllowMultipleRecords()) %>">
+  <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>">List of Folder Records</a> >
+</dhv:evaluate>
+<dhv:evaluate if="<%= (!Category.getAllowMultipleRecords()) %>">
+  <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>">Folder Record Details</a> >
+</dhv:evaluate>
+Add Folder Record
 <hr color="#BFBFBB" noshade>
-<a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>">Back to Folder Record List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -27,11 +31,11 @@ Add Record
   </tr>
   <tr>
     <td class="containerBack">
-<strong><%= Category.getName() %></strong><br>
-&nbsp;<br>
-<input type="submit" value="Save" onClick="javascript:this.form.action='/Accounts.do?command=InsertFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'"><br>
-&nbsp;<br>
+      Folder: <strong><%= Category.getName() %></strong><br>
+      &nbsp;<br>
+      <input type="submit" value="Save" onClick="javascript:this.form.action='/Accounts.do?command=InsertFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'"><br>
+      &nbsp;<br>
 <%
   Iterator groups = Category.iterator();
   while (groups.hasNext()) {

@@ -10,13 +10,20 @@
 <a href="/Accounts.do">Account Management</a> > 
 <a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<% if (Record == null) { %>
-Folders<br>
-<%} else {%>
-<a href="/Accounts.do?command=Fields&orgId=<%=OrgDetails.getOrgId()%>">Folders</a> >
-Record Details<br>
-<%}%>
+<dhv:evaluate if="<%= (Category.getAllowMultipleRecords() && Record == null) %>">
+List of Folder Records
+</dhv:evaluate>
 
+<dhv:evaluate if="<%= (Category.getAllowMultipleRecords() && Record != null) %>">
+<a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>">List of Folder Records</a> >
+Folder Record Details
+</dhv:evaluate>
+
+<dhv:evaluate if="<%= (!Category.getAllowMultipleRecords()) %>">
+Folder Record Details
+</dhv:evaluate>
+
+<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -32,15 +39,14 @@ Record Details<br>
   </tr>
   <tr>
     <td class="containerBack">
-<% if (Category.getAllowMultipleRecords()) { %>
-<a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>">Back to <%= Category.getName() %> Records</a>
-<% } else { 
+<% if (!Category.getAllowMultipleRecords()) {
      CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
 %>
-  <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><%= (Category.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif' alt='Folder is read-only'>":"") %>
+  Folder: <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><%= (Category.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif' alt='Folder is read-only'>":"") %><br>
+  &nbsp;<br>
+  This folder can have only one record...<br>
+  &nbsp;<br>
 <% } %>
-<br>
-&nbsp;<br>
 <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
 <dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='/Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="Delete Folder Record" onClick="javascript:this.form.action='/Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>

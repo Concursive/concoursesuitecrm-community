@@ -9,13 +9,13 @@
 <a href="/Accounts.do">Account Management</a> > 
 <a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="/Accounts.do?command=Fields&orgId=<%=OrgDetails.getOrgId()%>">Folders</a> >
-
+<dhv:evaluate if="<%= (Category.getAllowMultipleRecords()) %>">
+  <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>">List of Folder Records</a> >
+</dhv:evaluate>
 <% if (request.getParameter("return") == null) {%>
-	<a href="/Accounts.do?command=Fields&orgId=<%=OrgDetails.getOrgId()%>&catId=<%=Category.getId()%>&recId=<%=Category.getRecordId()%>">Record Details</a> >
+	<a href="/Accounts.do?command=Fields&orgId=<%=OrgDetails.getOrgId()%>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>">Folder Record Details</a> >
 <%}%>
-
-Modify Record
+Modify Folder Record
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -31,11 +31,11 @@ Modify Record
   </tr>
   <tr>
     <td class="containerBack">
-<strong><%= Category.getName() %></strong><br>
-&nbsp;<br>
-<input type="submit" value="Update" onClick="javascript:this.form.action='/Accounts.do?command=UpdateFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>'">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'"><br>
-&nbsp;<br>
+      Folder: <strong><%= Category.getName() %></strong><br>
+      &nbsp;<br>
+      <input type="submit" value="Update" onClick="javascript:this.form.action='/Accounts.do?command=UpdateFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>'">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'"><br>
+      &nbsp;<br>
 <%
   Iterator groups = Category.iterator();
   while (groups.hasNext()) {
