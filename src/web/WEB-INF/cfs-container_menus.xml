@@ -44,6 +44,11 @@
       <permission value="accounts-accounts-documents-view"/>
       <link value="AccountsDocuments.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
+    <submenu name="relationships">
+      <long_html value="Relationships"/>
+      <permission value="demo-view"/>
+      <link value="AccountsPrototype.do?module=Accounts&amp;include=accounts_relationships_view.jsp&amp;orgId=${orgId}"/>
+    </submenu>
   </container>
   
   <!-- Submenu used in the Contacts module -->
@@ -76,6 +81,11 @@
       <permission value="contacts-external_contacts-opportunities-view"/>
       <link value="ExternalContactsOpps.do?command=ViewOpps&amp;contactId=${id}"/>
     </submenu>
+    <submenu name="relationships">
+      <long_html value="Relationships"/>
+      <permission value="demo-view"/>
+      <link value="ExternalContactsPrototype.do?module=ExternalContacts&amp;include=companydirectory_relationships_view.jsp&amp;contactId=${id}"/>
+    </submenu>
   </container>
   
   <!-- Submenu used in the Opportunities (Pipeline) module -->
@@ -97,6 +107,11 @@
       <long_html value="Documents"/>
       <permission value="pipeline-opportunities-documents-view"/>
       <link value="LeadsDocuments.do?command=View&amp;oppId=${id}"/>
+    </submenu>
+    <submenu name="relationships">
+      <long_html value="Relationships"/>
+      <permission value="demo-view"/>
+      <link value="LeadsPrototype.do?module=Leads&amp;include=pipeline_relationships_view.jsp&amp;oppId=${id}"/>
     </submenu>
   </container>
   
