@@ -325,23 +325,23 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="HomeOK" resource="/leads.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/leads_add.jsp" layout="nav"/>
-    <forward name="SearchOK" resource="/LeadsSearchOpp.jsp" layout="nav"/>
-    <forward name="DashboardOK" resource="/LeadsDashboard.jsp" layout="nav"/>
+    <forward name="HomeOK" resource="/pipeline/leads.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/pipeline/leads_add.jsp" layout="nav"/>
+    <forward name="SearchOK" resource="/pipeline/LeadsSearchOpp.jsp" layout="nav"/>
+    <forward name="DashboardOK" resource="/pipeline/LeadsDashboard.jsp" layout="nav"/>
     <forward name="OppDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
-    <forward name="ModifyOppOK" resource="/LeadsModify.jsp" layout="nav"/>
+    <forward name="ModifyOppOK" resource="/pipeline/LeadsModify.jsp" layout="nav"/>
     <forward name="UpdateOppOK" resource="/Leads.do?command=DetailsOpp"/>
-    <forward name="OppListOK" resource="/LeadsViewOpp.jsp" layout="nav"/>
-    <forward name="OppDetailsOK" resource="/LeadsDetailsOpp.jsp" layout="nav"/>
+    <forward name="OppListOK" resource="/pipeline/LeadsViewOpp.jsp" layout="nav"/>
+    <forward name="OppDetailsOK" resource="/pipeline/LeadsDetailsOpp.jsp" layout="nav"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
-    <forward name="ReportsOK" resource="/leads_reports.jsp" layout="nav"/>
-    <forward name="GenerateFormOK" resource="/leads_reports_generate.jsp" layout="nav"/>
+    <forward name="ReportsOK" resource="/pipeline/leads_reports.jsp" layout="nav"/>
+    <forward name="GenerateFormOK" resource="/pipeline/leads_reports_generate.jsp" layout="nav"/>
     <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
     <forward name="DeleteReportOK" resource="/Leads.do?command=Reports"/>
     <forward name="DeleteReportERROR" resource="/Leads.do?command=Reports"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
-    <forward name="ModifyOppPopupOK" resource="/LeadsModify.jsp" layout="style"/>
+    <forward name="ModifyOppPopupOK" resource="/pipeline/LeadsModify.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   <action name="LeadsComponents" class="org.aspcfs.modules.pipeline.actions.Leads">
@@ -350,14 +350,14 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="AddOppComponentOK" resource="/leads_addoppcomponent.jsp" layout="nav"/>
-    <forward name="OppDetailsOK" resource="/LeadsDetailsOpp.jsp" layout="nav"/>
-    <forward name="DetailsComponentOK" resource="/leads_detailsoppcomponent.jsp" layout="nav"/>
+    <forward name="AddOppComponentOK" resource="/pipeline/leads_addoppcomponent.jsp" layout="nav"/>
+    <forward name="OppDetailsOK" resource="/pipeline/LeadsDetailsOpp.jsp" layout="nav"/>
+    <forward name="DetailsComponentOK" resource="/pipeline/leads_detailsoppcomponent.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
-    <forward name="OppListOK" resource="/LeadsViewOpp.jsp" layout="nav"/>
-    <forward name="PopupModifyOK" resource="/leads_modifycomponent.jsp" layout="style"/>
+    <forward name="OppListOK" resource="/pipeline/LeadsViewOpp.jsp" layout="nav"/>
+    <forward name="PopupModifyOK" resource="/pipeline/leads_modifycomponent.jsp" layout="style"/>
     <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
-    <forward name="ComponentModifyOK" resource="/leads_modifycomponent.jsp" layout="nav"/>
+    <forward name="ComponentModifyOK" resource="/pipeline/leads_modifycomponent.jsp" layout="nav"/>
     <forward name="ComponentUpdateOK" resource="LeadsComponents.do?command=DetailsComponent"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>    
@@ -367,10 +367,10 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="ViewOK" resource="/leads_listcalls.jsp" layout="nav"/>
-    <forward name="DetailsOK" resource="/leads_detailscall.jsp" layout="nav"/>
-    <forward name="ModifyPopupOK" resource="/leads_modifycall.jsp" layout="style"/>
-    <forward name="ModifyOK" resource="/leads_modifycall.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/pipeline/leads_listcalls.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/pipeline/leads_detailscall.jsp" layout="nav"/>
+    <forward name="ModifyPopupOK" resource="/pipeline/leads_modifycall.jsp" layout="style"/>
+    <forward name="ModifyOK" resource="/pipeline/leads_modifycall.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/LeadsCalls.do?command=Details"/>
     <forward name="DeleteOK" resource="/LeadsCalls.do?command=View"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
@@ -381,12 +381,12 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="ViewOK" resource="/leads_documents_list.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/leads_documents_upload.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/pipeline/leads_documents_list.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/pipeline/leads_documents_upload.jsp" layout="nav"/>
     <forward name="UploadOK" resource="/LeadsDocuments.do?command=View"/>
-    <forward name="AddVersionOK" resource="/leads_documents_upload_version.jsp" layout="nav"/>
-    <forward name="DetailsOK" resource="/leads_documents_details.jsp" layout="nav"/>
-    <forward name="ModifyOK" resource="/leads_documents_modify.jsp" layout="nav"/>
+    <forward name="AddVersionOK" resource="/pipeline/leads_documents_upload_version.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/pipeline/leads_documents_details.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/pipeline/leads_documents_modify.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/LeadsDocuments.do?command=View"/>
     <forward name="DeleteOK" resource="/LeadsDocuments.do?command=View"/>
     <forward name="DeleteERROR" resource="/LeadsDocuments.do?command=View"/>
