@@ -33,6 +33,12 @@ Working with Java Objects:
     Ex: Task, TaskList
   - CFS base classes should always have an "id" property for the synchronization
     API
+  - CFS list classes should allow for filtering the table by setting a variable on
+    the list object.  Example, if you want all Opportunities owned by a user, 
+    then you could do: 
+      OpportunityList opportunityList = new OpportunityList();
+      opportunityList.setOwner(5);
+      opportunityList.buildList(db);
   - CFS module classes are responsible for collecting data for a response to a
     client, code should not be implemented at this level, but at the base class
     level
