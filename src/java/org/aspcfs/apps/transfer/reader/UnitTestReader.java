@@ -93,11 +93,14 @@ public class UnitTestReader implements DataReader {
       DataRecord thisRecord = new DataRecord();
       thisRecord.setName("ticket");
       thisRecord.setAction("insert");
-      thisRecord.addField("orgId", "4");
-      thisRecord.addField("contactId", "28");
-      thisRecord.addField("problem", "Some problem");
+      thisRecord.addField("orgId", "1");
+      thisRecord.addField("contactId", "4");
+      thisRecord.addField("problem", "CFS Unit Test");
       thisRecord.addField("enteredBy", "2");
       thisRecord.addField("modifiedBy", "2");
+      thisRecord.addField("severityCode", "1");
+      thisRecord.addField("catCode", "3");
+      thisRecord.addField("subCat1", "14");
       writer.save(thisRecord);
       logger.info(writer.getLastResponse());
     }
