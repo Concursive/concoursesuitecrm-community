@@ -240,10 +240,11 @@ public final class ExternalContactsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
+      boolean inLinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
       if (recordDeleted) {
         context.getRequest().setAttribute("contactId", contactId);
-        context.getRequest().setAttribute("refreshUrl", "ExternalContactsCalls.do?command=View&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
-        return "DeleteOK";
+        context.getRequest().setAttribute("refreshUrl", "ExternalContactsCalls.do?command=View&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
+        return this.getReturn(context, "Delete");
       } else {
         processErrors(context, thisCall.getErrors());
         return (executeCommandView(context));
