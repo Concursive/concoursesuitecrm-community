@@ -92,8 +92,8 @@ CREATE TABLE ticketlog (
   ,assigned_to int REFERENCES access
   ,comment text
   ,closed BOOLEAN
-  ,pri_code int NOT NULL REFERENCES ticket_priority(code)
-  ,level_code int NOT NULL 
+  ,pri_code int REFERENCES ticket_priority(code)
+  ,level_code int 
   ,department_code INT REFERENCES lookup_department
   ,cat_code INT
   ,scode INT REFERENCES ticket_severity(code)
