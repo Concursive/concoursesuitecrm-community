@@ -51,8 +51,8 @@
   </tr>
   <tr>
     <td>
-      Dark Horse CRM<br>
-      saves time and money...<br>
+      Acquire, retain, and service your customers with
+      Dark Horse CRM.<br>
       <br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
       <a href="http://www.darkhorsecrm.com" target="_blank">Learn more about our products</a><br>
