@@ -3,7 +3,7 @@
 <jsp:useBean id="Help" class="org.aspcfs.modules.help.base.HelpItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <html>
-<head><title>CFS 2.7 Help</title></head>
+<head><title>Dark Horse CRM: Help</title></head>
 <FRAMESET COLS="25%,75%">
 	<FRAME SRC="help/help_tableof_contents.jsp" name="contents">
 	<FRAMESET ROWS="30%,70%">

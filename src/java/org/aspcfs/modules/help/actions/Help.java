@@ -150,10 +150,10 @@ public final class Help extends CFSModule {
 
       String moduleId = context.getRequest().getParameter("moduleId");
       db = this.getConnection(context);
-
-      HelpModule thisModule = new HelpModule(db, Integer.parseInt(moduleId));
-      context.getRequest().setAttribute("helpModule", thisModule);
-
+      if (moduleId != null && !"-1".equals(moduleId)) {
+        HelpModule thisModule = new HelpModule(db, Integer.parseInt(moduleId));
+        context.getRequest().setAttribute("helpModule", thisModule);
+      }
     } catch (Exception e) {
       errorMessage = e;
       e.printStackTrace(System.out);
