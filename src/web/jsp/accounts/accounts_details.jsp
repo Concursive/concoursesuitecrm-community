@@ -3,7 +3,6 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
-<form name="details" action="/Accounts.do" method="post">
 <a href="Accounts.do">Account Management</a> > 
 <% if (request.getParameter("return") == null) { %>
 <a href="Accounts.do?command=View">View Accounts</a> >
@@ -29,15 +28,15 @@ Account Details<br>
       <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
 <dhv:evaluate exp="<%= OrgDetails.getEnabled() %>">
   <dhv:permission name="accounts-accounts-edit">
-      <input type="button" name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()">
+      <input type="button" value="Modify" onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';">
   </dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate exp="<%= !(OrgDetails.getEnabled()) %>">
   <dhv:permission name="accounts-accounts-edit">
-    <input type="button" name="action" value="Enable"	onClick="document.details.command.value='Enable';document.details.submit()">
+    <input type="button" value="Enable"	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
   </dhv:permission>
 </dhv:evaluate>
-<dhv:permission name="accounts-accounts-delete"><input type="button" name="action" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
+<dhv:permission name="accounts-accounts-delete"><input type="button" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -373,17 +372,16 @@ Account Details<br>
 </table>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br></dhv:permission>
 <dhv:evaluate exp="<%=(OrgDetails.getEnabled())%>">
-  <dhv:permission name="accounts-accounts-edit"><input type=button name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
+  <dhv:permission name="accounts-accounts-edit"><input type="button" value="Modify"	onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';"></dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate exp="<%=!(OrgDetails.getEnabled())%>">
   <dhv:permission name="accounts-accounts-edit">
-    <input type=button name="action" value="Enable"	onClick="document.details.command.value='Enable';document.details.submit()">
+    <input type="button" value="Enable" 	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
   </dhv:permission>
 </dhv:evaluate>
-<dhv:permission name="accounts-accounts-delete"><input type="button" name="action" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
+<dhv:permission name="accounts-accounts-delete"><input type="button" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
 </td></tr>
 </table>
-<input type="hidden" name="command" value="">
 <% if (request.getParameter("return") != null) { %>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>

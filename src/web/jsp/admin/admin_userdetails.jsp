@@ -4,12 +4,10 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
-<form name="details" action="Users.do?auto-populate=true" method="post">
 <a href="Admin.do">Setup</a> >
 <a href="Users.do?command=ListUsers">View Users</a> >
 User Details<br>
 <hr color="#BFBFBB" noshade>
-<input type="hidden" name="id" value="<%= UserRecord.getId() %>">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -26,17 +24,17 @@ User Details<br>
     <td class="containerBack">
 <dhv:evaluate exp="<%=(UserRecord.getEnabled())%>">
 <dhv:permission name="admin-users-edit">
-  <input type="button" name="action" value="Modify"	onClick="document.details.command.value='ModifyUser';document.details.submit()">
+  <input type="button" name="action" value="Modify"	onClick="javascript:window.location.href='Users.do?command=ModifyUser&id=<%= UserRecord.getId() %>'">
 </dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate exp="<%= !(UserRecord.getEnabled()) %>">
 <dhv:permission name="admin-users-edit">
-  <input type="button" name="action" value="Enable"	onClick="document.details.command.value='EnableUser';document.details.submit()">
+  <input type="button" name="action" value="Enable"	onClick="javascript:window.location.href='Users.do?command=EnableUser&id=<%= UserRecord.getId() %>'">
 </dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate exp="<%=(UserRecord.getEnabled())%>">
 <dhv:permission name="admin-users-edit">
-  <input type="button" name="action" value="Disable" onClick="document.details.command.value='DisableUserConfirm';document.details.submit()">
+  <input type="button" name="action" value="Disable" onClick="javascript:window.location.href='Users.do?command=DisableUserConfirm&id=<%= UserRecord.getId() %>'">
 </dhv:permission>
 </dhv:evaluate>
 <dhv:permission name="admin-users-edit,admin-users-delete">
@@ -80,20 +78,19 @@ User Details<br>
   </tr>
 </table>
 <br>
-<input type="hidden" name="command" value="">
 <dhv:evaluate exp="<%=(UserRecord.getEnabled())%>">
 <dhv:permission name="admin-users-edit">
-  <input type="button" name="action" value="Modify"	onClick="document.details.command.value='ModifyUser';document.details.submit()">
+  <input type="button" name="action" value="Modify"	onClick="javascript:window.location.href='Users.do?command=ModifyUser&id=<%= UserRecord.getId() %>'">
 </dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate exp="<%=!(UserRecord.getEnabled())%>">
 <dhv:permission name="admin-users-edit">
-  <input type="button" name="action" value="Enable"	onClick="document.details.command.value='EnableUser';document.details.submit()">
+  <input type="button" name="action" value="Enable"	onClick="javascript:window.location.href='Users.do?command=EnableUser&id=<%= UserRecord.getId() %>'">
 </dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate exp="<%=(UserRecord.getEnabled())%>">
 <dhv:permission name="admin-users-edit">
-  <input type="button" name="action" value="Disable" onClick="document.details.command.value='DisableUserConfirm';document.details.submit()">
+  <input type="button" name="action" value="Disable" onClick="javascript:window.location.href='Users.do?command=DisableUserConfirm&id=<%= UserRecord.getId() %>'">
 </dhv:permission>
 </dhv:evaluate>
 </td></tr>
