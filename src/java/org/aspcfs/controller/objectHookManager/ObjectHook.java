@@ -146,7 +146,9 @@ public class ObjectHook extends Thread {
         //Pause the thread so that the debug output is easier to read
         Thread.sleep(2000);
       }
+      //If a business process is not specified, it must be looked up
       if (businessProcess == null) {
+        //Lookup the business process to execute for this object and hook action
         ObjectHookActionList actionList =
             (ObjectHookActionList) objectHookList.get(context.getClassName());
         if (actionList != null) {
@@ -157,13 +159,19 @@ public class ObjectHook extends Thread {
           }
         }
       }
+      //Execute the specified business process
       if (businessProcess != null) {
         context.setProcessName(businessProcess);
         if (businessProcessList != null) {
           BusinessProcess thisProcess = (BusinessProcess) businessProcessList.get(businessProcess);
           if (thisProcess != null) {
             context.setProcess(thisProcess);
+            //
+            
+            //
             manager.execute(context);
+            //
+            
           }
         }
       }
