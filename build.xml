@@ -131,32 +131,14 @@
     <echo message="Destination Path: ${CFS_HOME}"/>
   </target>
   
-  <target name="classes-check" depends="init">
-    <!-- See if files are up-to-date so only new files are installed during development -->
+  <!-- See if files are up-to-date so only new files are installed during development -->
+  <target name="classes.prepare" depends="init">
     <uptodate property="classes.uptodate">
       <srcfiles dir="${src.classes.dir}" includes="**/*.java"/>
       <mapper type="merge" to="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
     </uptodate>
   </target>
   
-  <target name="site.check" depends="init">
-    <uptodate property="site.uptodate" >
-      <srcfiles dir="${src.web.dir}" >
-        <include name="css/**" />
-        <include name="html/**" />
-        <include name="images/**" />
-        <include name="javascript/**" />
-        <include name="jsp/**" />
-<!--
-        <include name="WEB-INF/*.xml" />
-        <include name="WEB-INF/*.tld" />
-        <exclude name="WEB-INF/web.xml" />
--->
-      </srcfiles>
-      <mapper type="glob" from="*" to="${CFS_HOME}/*"/>
-     </uptodate>
-  </target>
-
   <!-- Compile the Java source code -->
   <target name="compile" 
           description="Compile source"
@@ -235,8 +217,6 @@
         <include name="css/**" />
       </fileset>
     </copy>
-    
-    
     <!-- Copy the configuration files -->
     <copy todir="${CFS_HOME}/WEB-INF">
       <fileset dir="${src.web.dir}/WEB-INF">
@@ -249,8 +229,10 @@
   
   <!-- See if there is an updated file to merge -->
   <target name="deploy.merge.prepare">
-    <!-- cvs web.xml is newer than CFS_HOME web.xml, so generate new CFS_HOME web.xml -->
-    <!-- CFS_HOME build.properties is newer than CFS_HOME web.xml, so generate new CFS_HOME web.xml -->
+    <!-- Generate a new CFS_HOME web.xml if any of the following: -->
+    <!-- 1. cvs web.xml is newer than CFS_HOME web.xml -->
+    <!-- 2. CFS_HOME build.properties is newer than CFS_HOME web.xml -->
+    <!-- 3. Any of the CFS_HOME xml or tld files are newer than CFS_HOME web.xml -->
     <condition property="deploy.merge.uptodate">
       <and>
         <available file="${CFS_HOME}/WEB-INF/web.xml"/>
@@ -259,6 +241,9 @@
                   targetfile="${CFS_HOME}/WEB-INF/web.xml"/>
         <uptodate srcfile="${CFS_HOME}/WEB-INF/build.properties"
                   targetfile="${CFS_HOME}/WEB-INF/web.xml"/>
+        <uptodate targetfile="${CFS_HOME}/WEB-INF/web.xml">
+          <srcfiles dir="${CFS_HOME}/WEB-INF" includes="*.xml,*.tld" excludes="web.xml"/>
+        </uptodate>
       </and>
     </condition>
   </target>
@@ -294,12 +279,12 @@
   </target>
   
   <!-- Check if keyfile exists -->
-  <target name="keyfile.init">
+  <target name="keyfile.exists">
     <available file="${CFS_HOME}/WEB-INF/keystore" property="keyfile.present"/>
   </target>
   
   <!-- Generate keyfile for new system -->
-  <target name="keyfile" depends="keyfile.init" unless="keyfile.present">
+  <target name="keyfile" depends="keyfile.exists" unless="keyfile.present">
     <genkey alias="cfs" 
             keystore="${CFS_HOME}/WEB-INF/keystore"
             storepass="aspcfs" 
@@ -319,10 +304,9 @@
   <!-- Copy all data to the web-app folder -->
   <target name="deploy"
           description="Build all data and copy to CFS_HOME"
-          depends="log,init,classes-check,build,keyfile,deploy.copy,deploy.merge">
+          depends="log,init,classes.prepare,build,keyfile,deploy.copy,deploy.merge">
     
   </target>
-  
   
   <!-- Try to generate .java/.class files out of the web-app .jsps -->
   <target name="test" depends="init,deploy">
