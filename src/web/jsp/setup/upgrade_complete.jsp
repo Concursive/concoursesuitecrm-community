@@ -47,4 +47,17 @@ String step = (String) installs.next();
 <%}%>
 </table>
 <br />
-<input type="button" value="Continue to Dark Horse CRM >" onClick="window.location.href='MyCFS.do?command=Home'" />
+<table border="0" width="100%">
+  <tr>
+    <td>
+      Since the JavaServerPages have not yet been compiled, you should choose to precompile the
+      JSPs first so that the application works without compile delays.
+      Precompiling will occur in the background and you can continue to use Dark Horse CRM.<br>
+      <br>
+      <input type="button" value="Precompile JSPs" onClick="javascript:popURL('setup/precompile.html','CRM_Precompile','500','325','yes','yes')"/><br>
+      <br>
+      <input type="button" value="Continue to Dark Horse CRM >" onClick="window.location.href='MyCFS.do?command=Home'" />
+    </td>
+  </tr>
+</table>
+
