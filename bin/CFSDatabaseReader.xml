@@ -62,6 +62,8 @@
       <property>custom1</property>
       <property>url</property>
       <property lookup="user">userId</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Organization" id="account">
       <property alias="guid">id</property>
@@ -81,6 +83,8 @@
       <property>ticker</property>
       <property>accountNumber</property>
       <property lookup="user">owner</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.User" id="user">
       <property alias="guid">id</property>
@@ -95,6 +99,10 @@
       <property>aliasName</property>
       <property lookup="user">assistant</property>
       <property lookup="user">alias</property>
+      <property>entered</property>
+      <property>modified</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Role" id="role">
       <property alias="guid">id</property>
@@ -158,6 +166,8 @@
       <property lookup="user">modifiedBy</property>
       <property>alertText</property>
       <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Ticket" id="ticket">
       <property alias="guid">id</property>
@@ -181,6 +191,8 @@
       <property lookup="user">modifiedBy</property>
       <property>closed</property>
       <property value="false">sendNotification</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.CustomFieldCategory" id="customFieldCategory">
       <property alias="guid">id</property>
@@ -234,6 +246,8 @@
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>alertDate</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="lookupProjectActivity" 
          table="lookup_project_activity" uniqueField="code">
@@ -434,6 +448,8 @@
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.ContactAddress" id="contactAddress">
       <property alias="guid">id</property>
@@ -450,6 +466,8 @@
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.ContactPhoneNumber" id="contactPhoneNumber">
       <property alias="guid">id</property>
@@ -461,6 +479,8 @@
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.OrganizationPhoneNumber" id="organizationPhoneNumber">
       <property alias="guid">id</property>
@@ -471,6 +491,8 @@
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.OrganizationEmailAddress" id="organizationEmailAddress">
       <property alias="guid">id</property>
@@ -480,6 +502,8 @@
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.OrganizationAddress" id="organizationAddress">
       <property alias="guid">id</property>
@@ -495,6 +519,8 @@
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.TicketLog" id="ticketLog">
       <property alias="guid">id</property>
@@ -509,6 +535,8 @@
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>closed</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Message" id="message">
       <property alias="guid">id</property>
@@ -523,6 +551,8 @@
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.SearchCriteriaList" id="searchCriteriaList">
       <property alias="guid">id</property>
@@ -531,6 +561,8 @@
       <property lookup="user">owner</property>
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
+      <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="savedCriteriaElement" table="saved_criteriaelement">
       <property lookup="searchCriteriaList" field="id"/>
@@ -561,6 +593,8 @@
       <property>description</property>
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
+       <property>entered</property>
+      <property>modified</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="campaign" table="campaign" uniqueField="campaign_id">
       <property alias="guid" field="id"/>
@@ -607,6 +641,7 @@
       <property lookup="account" field="id"/>
       <property lookup="lookupAccountTypes" field="type_id"/>
       <property field="level"/>
+      <property>entered</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="fieldTypes" table="field_types" uniqueField="id">
       <property alias="guid" field="id"/>
