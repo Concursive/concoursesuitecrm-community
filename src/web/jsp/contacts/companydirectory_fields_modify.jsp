@@ -27,8 +27,9 @@ Modify Folder Record
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + ContactDetails.getId(); %>      
-      <dhv:container name="contacts" selected="folders" param="<%= param1 %>" />
+      <% String param1 = "id=" + ContactDetails.getId(); 
+         String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+      <dhv:container name="contacts" selected="folders" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
     </td>
   </tr>
   <tr>
