@@ -47,7 +47,7 @@
 }
 
 function update(){
-	if (document.generate.type.selectedIndex == 3) {
+	if (document.generate.type.options[document.generate.type.selectedIndex].value == 4) {
 		javascript:ShowSpan('new0');
 	} else {
 		javascript:HideSpan('new0');
@@ -121,16 +121,24 @@ function HideSpan(thisID)
     <td colspan=4>
       <select name="type" onchange='update();'>
       <option value="1">All Accounts</option>
+<dhv:permission name="accounts-accounts-contacts">      
       <option value="2">Accounts w/Contacts</option>
+</dhv:permission>
+<dhv:permission name="accounts-accounts-tickets">      
       <option value="3">Accounts w/Tickets</option>
+</dhv:permission>
+<dhv:permission name="accounts-accounts-documents">
+<% if (CategoryList.size() > 0) {%>      
       <option value="4">Accounts w/Folders</option>
+<% } %>
+</dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities">
       <option value="5">Accounts w/Opportunities</option>
+</dhv:permission>
       </select>
       
       <span name="new0" ID="new0" style="position:relative; visibility:hidden">&nbsp;:&nbsp;
-	<% if (CategoryList.size() > 0) {%>
-	<%=CategoryList.getHtmlSelect("catId", 0)%>
-	<%}%>
+        <%= CategoryList.getHtmlSelect("catId", 0) %>
       </span>
       
     </td>
