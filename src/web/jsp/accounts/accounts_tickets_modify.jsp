@@ -285,45 +285,6 @@ Modify Ticket<br>
               </td>
             </tr>
         </table>
-        <br>
-          <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-            <tr class="title">
-              <td colspan="3" valign="center" align="left">
-                <strong>Ticket Log History</strong>
-              </td>     
-            </tr>
-        <%  
-            Iterator hist = TicketDetails.getHistory().iterator();
-            if (hist.hasNext()) {
-              while (hist.hasNext()) {
-                TicketLog thisEntry = (TicketLog)hist.next();
-          %>    
-          <% if (thisEntry.getSystemMessage() == true) {%>
-            <tr bgColor="#F1F0E0">
-          <% } else { %>
-            <tr class="containerBody">
-          <%}%>
-              <td nowrap valign="top" class="formLabel">
-                <%=toHtml(thisEntry.getEnteredByName())%>
-              </td>
-              <td nowrap valign="top" width="150">
-                <%=thisEntry.getEnteredString()%>
-              </td>
-              <td valign="top">
-                <%=toHtml(thisEntry.getEntryText())%>
-              </td>
-            </tr>
-          <%    
-              }
-            } else {
-          %>
-            <tr class="containerBody">
-              <td>
-                <font color="#9E9E9E" colspan="3">No Log Entries.</font>
-              </td>
-            </tr>
-          <%}%>
-        </table>
         &nbsp;<br>
         <% if (TicketDetails.getClosed() != null) { %>
               <input type="submit" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
