@@ -793,6 +793,10 @@ public class Contact extends GenericBean {
     if (nameSuffix != null && nameSuffix.length() > 0) {
       out.append(nameSuffix + " ");
     }
+    
+    if (out.toString().length() == 0) {
+	    return company;
+    }
 
     return out.toString().trim();
   }
@@ -837,6 +841,10 @@ public class Contact extends GenericBean {
         out.append(", ");
       }
       out.append(nameFirst);
+    }
+    
+    if (out.toString().length() == 0) {
+	    return company;
     }
 
     return out.toString().trim();
