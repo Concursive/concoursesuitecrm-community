@@ -48,8 +48,6 @@ public class ImportHelp {
     tableOfContents = new ArrayList();
 
     ConnectionPool sqlDriver = null;
-    System.out.println("Starting...");
-
     try {
       sqlDriver = new ConnectionPool();
     } catch (SQLException e) {
@@ -76,20 +74,18 @@ public class ImportHelp {
 
       db = sqlDriver.getConnection(thisElement);
 
-      System.out.println("Reading Help Date from XML");
+      System.out.println("Reading Help Data from XML...");
       buildHelpInformation(filePath);
       buildExistingPermissionCategories(db);
 
-      System.out.println("Insert data into help_module, help_contents, features, tips, etc.");
+      System.out.println("Inserting data into help_module, help_contents, features, tips, etc...");
       insertHelpRecords(db);
-
-      System.out.println("Building Table of Contents");
       buildTableOfContents();
-      System.out.println("Inserting table of content records");
+      System.out.println("Inserting table of content records...");
       insertTableOfContents(db);
 
       sqlDriver.free(db);
-      System.out.println("Inserted records and released database connection");
+      System.out.println("Finished");
     } catch (Exception e) {
       System.err.println(e);
     }
@@ -126,8 +122,7 @@ public class ImportHelp {
     Iterator itr = helpModules.iterator();
     while (itr.hasNext()) {
       HelpModule tempHelpModule = (HelpModule) itr.next();
-      System.out.println("Trying to insert records for " + tempHelpModule.getCategory());
-
+      System.out.println(" " + tempHelpModule.getCategory());
       // Verifying if the permission category exists in the new database
       int categoryId = -1;
       if ((categoryId = existPermissionCategory(tempHelpModule.getCategory())) != -1) {
@@ -136,7 +131,7 @@ public class ImportHelp {
 
         tempHelpModule.insertModule(db);
       } else {
-        System.out.println(tempHelpModule.getCategory() + " Does not exist in the new database");
+        System.out.println(" * " + tempHelpModule.getCategory() + " Does not exist in the new database");
       }
     }
 
@@ -248,8 +243,6 @@ public class ImportHelp {
 
       HelpModule helpModule = new HelpModule();
       helpModule.setCategory(moduleNMP.getNamedItem("name").getNodeValue());
-      System.out.println("Getting for module: " + helpModule.getCategory());
-
       helpModule.setContentLevel(moduleNMP.getNamedItem("contentLevel").getNodeValue());
 
       NodeList briefDescription = ((Element) module).getElementsByTagName("briefDescription");
@@ -260,7 +253,7 @@ public class ImportHelp {
 
       NodeList pageList = ((Element) module).getElementsByTagName("pageDescription");
 
-      System.out.println("Number of pages in " + helpModule.getCategory() + ":" + pageList.getLength());
+      System.out.println(" " + helpModule.getCategory() + ": " + pageList.getLength());
       for (int j = 0; j < pageList.getLength(); j++) {
         Node page = pageList.item(j);
         NamedNodeMap pageNMP = page.getAttributes();
