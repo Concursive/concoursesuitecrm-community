@@ -1,3 +1,4 @@
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
   var thisActionId = -1;
   var thisContactId = -1;
@@ -32,7 +33,7 @@
    }
   }
   function addTask() {
-    popURL('MyTasks.do?command=New&actionSource=MyActionContacts&contactId=' + thisContactId + '&ownerSet=true&actionId=' + thisItemId,'Task','600','425','yes','yes');
+    popURL('MyTasks.do?command=New&actionSource=MyActionContacts&popup=true&contactId=' + thisContactId + '&ownerSet=true&actionId=' + thisItemId,'Task','600','425','yes','yes');
   }
   function addOpportunity() {
     if(thisOrgId == -1){
@@ -49,6 +50,7 @@
 <div id="menuContactContainer" class="menu">
   <div id="menuContactContent">
     <table id="menuContactTable" class="pulldown" width="170">
+      <dhv:permission name="contacts-external_contacts-calls-add">
       <tr>
         <td>
           <!-- <img src="images/doAction.gif" border="0" align="absmiddle" height="16" width="16"/> -->
@@ -58,6 +60,8 @@
           <a href="javascript:addCall()">Add Call</a>
         </td>
       </tr>
+      </dhv:permission>
+      <dhv:permission name="contacts-external_contacts-opportunities-add">
       <tr>
         <td>
           &nbsp;
@@ -66,6 +70,7 @@
           <a href="javascript:addOpportunity()">Add Opportunity</a>
         </td>
       </tr>
+      </dhv:permission>
       <!-- 
       <tr>
         <td
@@ -76,6 +81,7 @@
         </td>
       </tr>
       !-->
+      <dhv:permission name="tickets-tickets-add">
       <tr>
         <td
           &nbsp;
@@ -84,6 +90,8 @@
           <a href="javascript:addTicket()">Add Ticket</a>
         </td>
       </tr>
+      </dhv:permission>
+      <dhv:permission name="myhomepage-tasks-add">
       <tr>
         <td
           &nbsp;
@@ -92,6 +100,7 @@
           <a href="javascript:addTask()">Add Task</a>
         </td>
       </tr>
+      </dhv:permission>
       <tr>
         <td
           &nbsp;
