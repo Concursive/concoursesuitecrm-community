@@ -309,7 +309,7 @@ public class ContactImportValidate {
                 if (thisProperty.getGroupId() > 0) {
                   addFieldError(field, "Multiple Property Map: The property \"" + thisProperty.getDisplayName() + " has already been mapped to another field");
                 } else {
-                addFieldError(field, "Multiple Property Map: The property \"" + thisProperty.getDisplayName() + "\" has already been mapped to another field");
+                  addFieldError(field, "Multiple Property Map: The property \"" + thisProperty.getDisplayName() + "\" has already been mapped to another field");
                 }
               } else {
                 thisProperty.setMappedColumn(fieldNumber);
@@ -365,7 +365,16 @@ public class ContactImportValidate {
       while (i.hasNext()) {
         Property p = (Property) i.next();
         if (p.getMappedColumn() < 0) {
-          addGeneralError("Required Property: The property " + p.getDisplayName() + " is required");
+          //check to see if there are any substitute properties
+          if (!"".equals(StringUtils.toString(p.getSubstitute()))) {
+            String substitute = p.getSubstitute();
+            Property thisProp = propertyMap.getProperty(substitute);
+            if (thisProp.getMappedColumn() < 0) {
+              addGeneralError("Required Property: The property " + p.getDisplayName() + " or " + thisProp.getDisplayName() + " is required");
+            }
+          } else {
+            addGeneralError("Required Property: The property " + p.getDisplayName() + " is required");
+          }
         }
       }
     }
