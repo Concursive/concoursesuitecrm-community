@@ -1515,12 +1515,18 @@ public class User extends GenericBean {
       if (modified != null) {
         sql.append("modified, ");
       }
+      if (lastLogin != null) {
+        sql.append("last_login, ");
+      }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
       if (modified != null) {
+        sql.append("?, ");
+      }
+      if (lastLogin != null) {
         sql.append("?, ");
       }
       sql.append("?, ?) ");
@@ -1554,6 +1560,9 @@ public class User extends GenericBean {
       if (modified != null) {
         pst.setTimestamp(++i, modified);
       }
+      if (lastLogin != null) {
+        pst.setTimestamp(++i, lastLogin);
+      }
 
       pst.setInt(++i, getEnteredBy());
       pst.setInt(++i, getModifiedBy());
@@ -1570,12 +1579,14 @@ public class User extends GenericBean {
         System.out.println("User-> Updating contact");
       }
 
-      Statement st = db.createStatement();
-      st.executeUpdate(
-          "UPDATE contact " +
-          "SET user_id = " + id + " " +
-          "WHERE contact_id = " + contact.getId());
-      st.close();
+      pst = db.prepareStatement(
+        "UPDATE contact " +
+        "SET user_id = ? " +
+        "WHERE contact_id = ? ");
+      pst.setInt(1, id);
+      pst.setInt(2, contact.getId());
+      pst.executeUpdate();
+      pst.close();
       db.commit();
 
       if (System.getProperty("DEBUG") != null) {
@@ -1623,12 +1634,14 @@ public class User extends GenericBean {
     }
 
     int resultCount = 0;
-    Statement st = db.createStatement();
-    resultCount = st.executeUpdate(
-        "UPDATE access " +
-        "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
-        "WHERE user_id = " + this.getId());
-    st.close();
+    PreparedStatement pst = db.prepareStatement(
+      "UPDATE access " +
+      "SET enabled = ? " +
+      "WHERE user_id = ? ");
+    pst.setBoolean(1, false);
+    pst.setInt(2, this.getId());
+    resultCount = pst.executeUpdate();
+    pst.close();
 
     if (resultCount == 0) {
       errors.put("actionError", "User could not be deleted because it no longer exists.");
