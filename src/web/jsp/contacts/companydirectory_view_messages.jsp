@@ -45,9 +45,6 @@ Messages
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <th width="8">
-      <strong>Action</strong>
-    </th>
     <th width="65%" nowrap>
       <a href="ExternalContacts.do?command=ViewMessages&column=c.name&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><strong>Name</strong></a>
       <%= ContactMessageListInfo.getSortIcon("c.name") %>
@@ -69,9 +66,6 @@ Messages
         Campaign campaign = (Campaign)j.next();
 %>
   <tr class="containerBody">
-    <td width="8" valign="top" nowrap class="row<%= rowid %>">
-      <%= (campaign.hasRun()?"&nbsp;":"<font color=\"#787878\">Cancel</font>") %>
-    </td>
     <td class="row<%= rowid %>">
       <a href="ExternalContacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(campaign.getMessageName()) %></a>
       <%= (("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id")))?" <font color=\"red\">(Cancelled)</font>":"") %>
@@ -86,7 +80,7 @@ Messages
 	<%}%>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="7">
+    <td colspan="3">
       No messages found.
     </td>
   </tr>
