@@ -48,6 +48,7 @@
     <td>
       Dark Horse CRM saves time and money...<br>
       <br>
+      <img alt="" src="images/bullet.gif"/>
       <a href="http://www.darkhorsecrm.com" target="_blank">Learn more about our products</a><br>
       &nbsp;
     </td>
@@ -68,7 +69,9 @@
       <br>
       Your information will not be provided to others.<br>
       <br>
+      <img alt="" src="images/bullet.gif"/>
       <a href="#">Review Privacy Statement</a><br>
+      <img alt="" src="images/bullet.gif"/>
       <a href="#">Review Security Statement</a><br>
       &nbsp;
     </td>
@@ -86,6 +89,8 @@
   <tr>
     <td>
       Remember to make backups of your data.<br>
+      <br>
+      <img alt="" src="images/bullet.gif"/>
       <a href="#">File Backup Tutorial</a><br>
       &nbsp;
     </td>
@@ -102,7 +107,9 @@
   </tr>
   <tr>
     <td>
+      <img alt="" src="images/bullet.gif"/>
       <a href="#">SendMail Tutorial</a><br>
+      <img alt="" src="images/bullet.gif"/>
       <a href="#">HylaFax Tutorial</a><br>
       &nbsp;
     </td>
@@ -119,6 +126,7 @@
   </tr>
   <tr>
     <td>
+      <img alt="" src="images/bullet.gif"/>
       <a href="#">PostgreSQL Tutorial</a><br>
       &nbsp;
     </td>
@@ -135,6 +143,7 @@
   </tr>
   <tr>
     <td>
+      <img alt="" src="images/bullet.gif"/>
       <a href="#">Dark Horse CRM Tutorial</a><br>
       &nbsp;
     </td>
