@@ -68,12 +68,12 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
         Call thisCall = (Call) m.next();
         CalendarEvent thisEvent = null;
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("CallListScheduledActions --> Added Alert " + thisCall.getSubject() + " on " + thisCall.getAlertDateStringLongYear());
+          System.out.println("CallListScheduledActions --> Added Alert " + thisCall.getAlertText() + " on " + thisCall.getAlertDateStringLongYear());
         }
         if (thisCall.getOppId() == -1 && thisCall.getContactId() > -1) {
-          thisEvent = companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), CalendarEventList.EVENT_TYPES[5], thisCall.getContactId(), thisCall.getId());
+          thisEvent = companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getContactName() + ": " + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[5], thisCall.getContactId(), thisCall.getId());
         } else {
-          thisEvent = companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), CalendarEventList.EVENT_TYPES[6], thisCall.getOppId(), thisCall.getId());
+          thisEvent = companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getContactName() + ": " + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[6], thisCall.getOppId(), thisCall.getId());
         }
         String contactLink = "<a target=\"_parent\" href=\"ExternalContacts.do?command=ContactDetails&id=" +  thisCall.getContactId() + "\">Contact Link</a>";
         thisEvent.addRelatedLink(contactLink);
