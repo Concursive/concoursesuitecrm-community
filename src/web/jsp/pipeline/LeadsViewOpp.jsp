@@ -23,8 +23,6 @@ View Opportunities<br>
       </select>
 			<% TypeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
       <%=TypeSelect.getHtmlSelect("listFilter1", OpportunityListInfo.getFilterKey("listFilter1"))%>
-      
-      
     </td>
     <td>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OpportunityListInfo"/>
