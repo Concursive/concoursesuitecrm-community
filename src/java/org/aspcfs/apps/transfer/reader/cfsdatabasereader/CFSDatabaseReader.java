@@ -262,14 +262,15 @@ public class CFSDatabaseReader implements DataReader {
     //Connect to database
     ConnectionPool sqlDriver = null;
     Connection db = null;
+    ConnectionElement connectionElement = null;
     try {
       sqlDriver = new ConnectionPool();
-      sqlDriver.setForceClose(false);
       sqlDriver.setMaxConnections(1);
-      ConnectionElement thisElement = new ConnectionElement(
-          url, user, password);
-      thisElement.setDriver(driver);
-      db = sqlDriver.getConnection(thisElement);
+      sqlDriver.setDebug(true);
+      connectionElement = new ConnectionElement(url, user, password);
+      connectionElement.setAllowCloseOnIdle(false);
+      connectionElement.setDriver(driver);
+      db = sqlDriver.getConnection(connectionElement);
     } catch (SQLException e) {
       logger.info("Could not get database connection" + e.toString());
       return false;

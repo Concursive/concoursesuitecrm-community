@@ -56,7 +56,7 @@ public class PropertyMapList extends HashMap {
    *@return         Description of the Return Value
    */
   public boolean saveList(DataWriter writer, AbstractList list, String action) {
-    logger.info("Record count: " + list.size());
+    logger.info("Class: " + list.getClass().getName() + " Record count: " + list.size());
     boolean processOK = true;
     Iterator i = list.iterator();
     while (i.hasNext() && processOK) {

@@ -245,7 +245,7 @@ public class ConnectionPool implements Runnable {
               // Freed up a spot for anybody waiting
               return (getConnection(requestElement));
             } else {
-              busyConnections.put(existingConnection, thisElement);
+              busyConnections.put(existingConnection, requestElement);
               return (existingConnection);
             }
           } catch (NullPointerException npe) {
@@ -571,8 +571,9 @@ public class ConnectionPool implements Runnable {
         ConnectionElement thisElement = (ConnectionElement)busyConnections.get(connection);
         java.util.Date testDate = thisElement.getActiveDate();
         if (connection.isClosed() ||
-            (testDate.getTime() < (currentDate.getTime() - maxDeadTime)) &&
-            thisElement.getAllowCloseOnIdle()) {
+            (thisElement.getAllowCloseOnIdle() && 
+             testDate.getTime() < (currentDate.getTime() - maxDeadTime))) {
+          System.out.println("ConnectionPool-> CE allowCloseOnIdle: " + thisElement.getAllowCloseOnIdle());
           connection.close();
           busyConnections.remove(connection);
           if (debug) {
