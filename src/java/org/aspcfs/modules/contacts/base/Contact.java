@@ -2291,14 +2291,15 @@ public class Contact extends GenericBean {
    */
   public boolean isValid(Connection db) throws SQLException {
     errors.clear();
+    //A contact must have at least a last name
     if (company == null || company.trim().equals("")) {
       if (nameLast == null || nameLast.trim().equals("")) {
         errors.put("nameLastError", "Last Name is required");
         errors.put("lastcompanyError", "Last Name or Company Name is required");
       }
     }
-
-    if (orgId != -1 && typeList.contains(String.valueOf(PERSONAL_TYPE))) {
+    //Prevent personal contacts from being associated with acctions
+    if (orgId > 0 && typeList.contains(String.valueOf(PERSONAL_TYPE))) {
       errors.put("personalContactError", "Account Contact cannot be personal");
     }
     if (hasErrors()) {
