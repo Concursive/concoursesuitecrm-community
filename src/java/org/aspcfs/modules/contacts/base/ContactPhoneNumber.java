@@ -95,8 +95,11 @@ public class ContactPhoneNumber extends PhoneNumber {
   public void process(Connection db, int contactId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
       if (this.getId() == -1) {
+	this.setEnteredBy(enteredBy);
+	this.setModifiedBy(enteredBy);
         this.insert(db, contactId, enteredBy);
       } else {
+	this.setModifiedBy(modifiedBy);
         this.update(db, modifiedBy);
       }
     } else {
