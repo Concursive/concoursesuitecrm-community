@@ -6,8 +6,9 @@
  *@version    $Id$
  */
 
-What is ASPCFS?
-  - A web application for various business processes
+What is CFS?
+  - Customer management and relationships
+  - Examples
     - Account management
     - Contact management
     - Sales pipeline management
@@ -16,13 +17,12 @@ What is ASPCFS?
     - Document management
     - Call management
     - Project management
-  - Why does it do all those things?
-    - Central information repository
-    - Streamlines productivity, reporting
-  - Target customers/users
-    - Large and small businesses
+  - Why use CFS instead of something elese?
+    - Open code
+    - Integration with other products
+    - Streamlines productivity
   
-What language is ASPCFS written in?
+What language is CFS written in?
   - Java J2SE, J2EE
   - Servlets, JSP, Taglibs, JavaBeans
   - JDBC, JavaMail
