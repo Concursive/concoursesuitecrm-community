@@ -931,11 +931,11 @@ public final class MyCFS extends CFSModule {
     CalendarBean calendarInfo = (CalendarBean) context.getSession().getAttribute("CalendarInfo");
     if (calendarInfo == null) {
       calendarInfo = new CalendarBean();
-      calendarInfo.addAlertType(0, "Task");
-      calendarInfo.addAlertType(1, "Call");
-      calendarInfo.addAlertType(2, "Project");
-      calendarInfo.addAlertType(3, "Accounts");
-      calendarInfo.addAlertType(4, "Opportunity");
+      calendarInfo.addAlertType("Task", "org.aspcfs.modules.tasks.base.TaskListScheduledActions", "Tasks");
+      calendarInfo.addAlertType("Call", "org.aspcfs.modules.contacts.base.CallListScheduledActions", "Calls");
+      calendarInfo.addAlertType("Project", "com.zeroio.iteam.base.ProjectListScheduledActions", "Projects");
+      calendarInfo.addAlertType("Accounts", "org.aspcfs.modules.accounts.base.AccountsListScheduledActions", "Accounts");
+      calendarInfo.addAlertType("Opportunity", "org.aspcfs.modules.pipeline.base.OpportunityListScheduledActions", "Opportunity");
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }
 
@@ -1023,26 +1023,26 @@ public final class MyCFS extends CFSModule {
 
       //create events depending on alert type
       String selectedAlertType = calendarInfo.getCalendarDetailsView();
-      String param1 = "com.darkhorseventures.utils.CalendarView";
+      String param1 = "org.aspcfs.utils.web.CalendarView";
       String param2 = "java.sql.Connection";
       ArrayList alertTypes = calendarInfo.getAlertTypes();
       for (int i = 0; i < alertTypes.size(); i++) {
-        String className = "com.darkhorseventures.cfsbase." + ((String) alertTypes.get(i)).trim() + "ListScheduledActions";
-        Object thisInstance = Class.forName(className).newInstance();
-        if (selectedAlertType.toLowerCase().startsWith((((String) alertTypes.get(i)).toLowerCase())) || selectedAlertType.equalsIgnoreCase("all")) {
+        AlertType thisAlert = (AlertType)alertTypes.get(i);
+        Object thisInstance = Class.forName(thisAlert.getClassName()).newInstance();
+        if (selectedAlertType.equalsIgnoreCase("all") || selectedAlertType.toLowerCase().startsWith(((thisAlert.getName()).toLowerCase()))) {
           //set UserId
-          Method method = Class.forName(className).getMethod("setUserId", new Class[]{int.class});
+          Method method = Class.forName(thisAlert.getClassName()).getMethod("setUserId", new Class[]{int.class});
           method.invoke(thisInstance, new Object[]{new Integer(calendarInfo.getSelectedUserId())});
 
           //set Start and End Dates
-          method = Class.forName(className).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Date")});
+          method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Date")});
           method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarStartDate(context)});
 
-          method = Class.forName(className).getMethod("setAlertRangeEnd", new Class[]{Class.forName("java.sql.Date")});
+          method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeEnd", new Class[]{Class.forName("java.sql.Date")});
           method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarEndDate(context)});
 
           //Add Events
-          method = Class.forName(className).getMethod("buildAlerts", new Class[]{Class.forName(param1), Class.forName(param2)});
+          method = Class.forName(thisAlert.getClassName()).getMethod("buildAlerts", new Class[]{Class.forName(param1), Class.forName(param2)});
           method.invoke(thisInstance, new Object[]{companyCalendar, db});
           if (!selectedAlertType.equalsIgnoreCase("all")) {
             break;
@@ -1087,8 +1087,6 @@ public final class MyCFS extends CFSModule {
       companyCalendar = new CalendarView(context.getRequest());
     }
 
-    ArrayList alertTypes = calendarInfo.getAlertTypes();
-
     try {
       db = this.getConnection(context);
       calendarInfo.update(db, context);
@@ -1097,26 +1095,26 @@ public final class MyCFS extends CFSModule {
 
       //Use reflection to invoke methods on scheduler classes
 
-      String param1 = "com.darkhorseventures.utils.CalendarView";
+      String param1 = "org.aspcfs.utils.web.CalendarView";
       String param2 = "java.sql.Connection";
-
+      ArrayList alertTypes = calendarInfo.getAlertTypes();
       for (int i = 0; i < alertTypes.size(); i++) {
-        String className = "com.darkhorseventures.cfsbase." + ((String) alertTypes.get(i)).trim() + "ListScheduledActions";
-        Object thisInstance = Class.forName(className).newInstance();
+        AlertType thisAlert = (AlertType)alertTypes.get(i);
+        Object thisInstance = Class.forName(thisAlert.getClassName()).newInstance();
 
         //set UserId
-        Method method = Class.forName(className).getMethod("setUserId", new Class[]{int.class});
+        Method method = Class.forName(thisAlert.getClassName()).getMethod("setUserId", new Class[]{int.class});
         method.invoke(thisInstance, new Object[]{new Integer(calendarInfo.getSelectedUserId())});
 
         //set Start and End Dates
-        method = Class.forName(className).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Date")});
+        method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Date")});
         method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarStartDate(context)});
 
-        method = Class.forName(className).getMethod("setAlertRangeEnd", new Class[]{Class.forName("java.sql.Date")});
+        method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeEnd", new Class[]{Class.forName("java.sql.Date")});
         method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarEndDate(context)});
 
         //Add Events
-        method = Class.forName(className).getMethod("buildAlertCount", new Class[]{Class.forName(param1), Class.forName(param2)});
+        method = Class.forName(thisAlert.getClassName()).getMethod("buildAlertCount", new Class[]{Class.forName(param1), Class.forName(param2)});
         method.invoke(thisInstance, new Object[]{companyCalendar, db});
       }
     } catch (SQLException e) {
@@ -1218,6 +1216,7 @@ public final class MyCFS extends CFSModule {
     CalendarBean calendarInfo = null;
     String returnPage = context.getRequest().getParameter("return");
     calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
+    
     try {
       db = this.getConnection(context);
       calendarInfo.update(db, context);

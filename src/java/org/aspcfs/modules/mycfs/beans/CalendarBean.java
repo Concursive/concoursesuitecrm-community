@@ -8,6 +8,8 @@ import java.sql.*;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.mycfs.base.AlertType;
+
 /**
  *  CalendarBean maintains all the users setting on his home page's calendar
  *  view like date,alerts etc so his view is maintained whenever he returns to
@@ -155,7 +157,7 @@ public class CalendarBean {
       this.setSelectedUserName(thisContact.getNameLastFirst());
     } catch (SQLException e) {
       errorMessage = e;
-      System.out.println(" *** ERROR *** \t CalendarBean -- > setSelectedUserName");
+      System.out.println(" *** ERROR *** \t CalendarBean -- > Error retrieving User Record");
     }
   }
 
@@ -184,11 +186,12 @@ public class CalendarBean {
   /**
    *  Adds a feature to the AlertType attribute of the CalendarBean object
    *
-   *@param  position   The feature to be added to the AlertType attribute
-   *@param  alertType  The feature to be added to the AlertType attribute
+   *@param  alert        The feature to be added to the AlertType attribute
+   *@param  className    The feature to be added to the AlertType attribute
+   *@param  displayName  The feature to be added to the AlertType attribute
    */
-  public void addAlertType(int position, String alertType) {
-    this.alertTypes.add(position, alertType);
+  public void addAlertType(String alert, String className, String displayName) {
+    this.alertTypes.add(new AlertType(alert, className, displayName));
   }
 
 
@@ -200,7 +203,6 @@ public class CalendarBean {
   public ArrayList getAlertTypes() {
     return alertTypes;
   }
-
 
 
 
