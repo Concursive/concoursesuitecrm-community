@@ -90,6 +90,16 @@ public class ObjectUtils {
     }
   }
 
+  public static Object constructObject(Class theClass, Object parameter, Connection db) {
+    try {
+      Class[] paramClass = new Class[]{parameter.getClass(),Class.forName("java.sql.Connection")};
+      Constructor constructor = theClass.getConstructor(paramClass);
+      Object[] paramObject = new Object[]{parameter, db};
+      return constructor.newInstance(paramObject);
+    } catch (Exception e) {
+      return null;
+    }
+  }
 
   /**
    *  Description of the Method
