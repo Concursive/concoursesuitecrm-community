@@ -9,6 +9,7 @@ function deleteOptions(optionListId){
     
    function insertOption(text,value,optionListId){
      var frm = document.getElementById(optionListId);
+      
      if (frm.selectedIndex>0){
        insertIndex=frm.selectedIndex;
      }

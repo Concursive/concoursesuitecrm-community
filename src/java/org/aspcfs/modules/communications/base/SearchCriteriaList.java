@@ -19,12 +19,14 @@ import com.darkhorseventures.utils.DateUtils;
  *      Exp $
  */
 public class SearchCriteriaList extends HashMap {
-
-  public final static int SOURCE_ALL_ACCOUNTS = 1;
-  public final static int SOURCE_MY_ACCOUNTS = 2;
-  public final static int SOURCE_MY_ACCOUNT_HIERARCHY = 3;
-  public final static int SOURCE_MY_CONTACTS = 4;
-  public final static int SOURCE_EMPLOYEES = 5;
+  public final static int SOURCE_MY_CONTACTS = 1;
+  public final static int SOURCE_ALL_CONTACTS = 2;
+  public final static int SOURCE_ALL_ACCOUNTS = 3;
+  
+  //public final static int SOURCE_MY_ACCOUNTS = 2;
+  //public final static int SOURCE_MY_ACCOUNT_HIERARCHY = 3;
+  
+  public final static int SOURCE_EMPLOYEES = 4;
 
   protected HashMap errors = new HashMap();
   private int id = -1;
@@ -37,6 +39,7 @@ public class SearchCriteriaList extends HashMap {
   private int owner = -1;
   private String ownerIdRange = null;
   private String saveCriteria = "";
+  private String htmlSelectIdName = null;
 
 
   /**
@@ -207,6 +210,13 @@ public class SearchCriteriaList extends HashMap {
   public void setOwner(int tmp) {
     this.owner = tmp;
   }
+  
+public String getHtmlSelectIdName() {
+	return htmlSelectIdName;
+}
+public void setHtmlSelectIdName(String htmlSelectIdName) {
+	this.htmlSelectIdName = htmlSelectIdName;
+}
 
   /**
    *  Sets the OwnerIdRange attribute of the SearchCriteriaList object
@@ -488,6 +498,10 @@ public java.sql.Timestamp getModified() {
   public String getHtmlSelect(String selectName) {
     HtmlSelect selectList = new HtmlSelect();
     selectList.setSelectSize(10);
+    
+    if (this.getHtmlSelectIdName() != null) {
+            selectList.setIdName(this.getHtmlSelectIdName());
+    }
 
     Iterator i = this.keySet().iterator();
     while (i.hasNext()) {

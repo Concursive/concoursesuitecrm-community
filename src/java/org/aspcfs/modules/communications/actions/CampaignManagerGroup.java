@@ -557,10 +557,11 @@ public final class CampaignManagerGroup extends CFSModule {
    */
   public void buildContactSource(ActionContext context) {
     HtmlSelect contactSource = new HtmlSelect();
-    contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "All Accounts");
-    contactSource.addItem(SearchCriteriaList.SOURCE_MY_ACCOUNTS, "My Accounts");
-    contactSource.addItem(SearchCriteriaList.SOURCE_MY_ACCOUNT_HIERARCHY, "My Account Hierarchy");
     contactSource.addItem(SearchCriteriaList.SOURCE_MY_CONTACTS, "My Contacts");
+    contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "All Contacts");
+    contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "Account Contacts");
+    //contactSource.addItem(SearchCriteriaList.SOURCE_MY_ACCOUNTS, "My Accounts");
+    //contactSource.addItem(SearchCriteriaList.SOURCE_MY_ACCOUNT_HIERARCHY, "My Account Hierarchy");
     contactSource.addItem(SearchCriteriaList.SOURCE_EMPLOYEES, "Employees");
     context.getRequest().setAttribute("ContactSource", contactSource);
   }

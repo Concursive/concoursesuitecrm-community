@@ -780,10 +780,19 @@ public class ContactList extends Vector {
   public void buildQuery(int thisOwnerId, String thisUserRange) {
     
     switch (scl.getContactSource()) {
+      case SearchCriteriaList.SOURCE_MY_CONTACTS:
+        this.setOwner(thisOwnerId);
+        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        break;
+      case SearchCriteriaList.SOURCE_ALL_CONTACTS:
+        this.setOwnerIdRange(thisUserRange);
+        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        break;        
       case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
         this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         this.setWithAccountsOnly(true);
         break;
+        /**
       case SearchCriteriaList.SOURCE_MY_ACCOUNTS:
         this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         this.setAccountOwnerIdRange("" + thisOwnerId);
@@ -792,10 +801,7 @@ public class ContactList extends Vector {
         this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         this.setAccountOwnerIdRange(thisUserRange);
         break;
-      case SearchCriteriaList.SOURCE_MY_CONTACTS:
-        this.setOwner(thisOwnerId);
-        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-        break;
+        */
       case SearchCriteriaList.SOURCE_EMPLOYEES:
         this.setTypeId(Contact.EMPLOYEE_TYPE);
         break;

@@ -32,6 +32,7 @@ public class HtmlSelect extends ArrayList {
 
 	protected boolean built = false;
 	protected LookupList multipleSelects = null;
+  protected String idName = null;
 
 	/**
 	 *  Constructor for an HTML select box. Creates an HTML select box or series of
@@ -152,6 +153,14 @@ public class HtmlSelect extends ArrayList {
 	public void setSelectSize(int tmp) {
 		this.selectSize = tmp;
 	}
+  
+  public String getIdName() {
+	  return idName;
+  }
+  
+  public void setIdName(String idName) {
+	  this.idName = idName;
+  }
 
 	/**
 	*  Set a manual entry that appears first in the list, like Any or None, etc.
@@ -415,7 +424,7 @@ public class HtmlSelect extends ArrayList {
     }
     StringBuffer outputHtml = new StringBuffer();
     if (!checkboxOutput) {
-      outputHtml.append("<select size='" + this.selectSize + "' name='" + this.selectName + "'" + (jsEvent != null?" " + this.jsEvent:"") + (multiple != false?" multiple ":"") + ">");
+      outputHtml.append("<select size='" + this.selectSize + "' name='" + this.selectName + "'" + (jsEvent != null?" " + this.jsEvent:"") + (idName != null?" " + "id='" + this.idName:"") + "'" + (multiple != false?" multiple ":"") + ">");
     }
 
     //Process the rows

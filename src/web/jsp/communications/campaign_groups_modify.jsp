@@ -64,6 +64,7 @@ function checkForm(form) {
 <script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
 <script language="JavaScript" type="text/javascript">
+
 var searchCriteria = new Array();
 
 searchField = new Array();
@@ -207,9 +208,10 @@ Group Details
     
 		<td align="center" valign="center" width="50%">
 		<% if (SCL.size() > 0) {%>
+      <% SCL.setHtmlSelectIdName("listViewId"); %>
 			<%= SCL.getHtmlSelect("searchCriteria") %>
 		<%} else {%>
-			<select name="searchCriteria" size="10">
+			<select name="searchCriteria" id="listViewId" size="10">
         <option value="-1">----------------Search Criteria----------------</option>
 			</select>
 		<%}%>

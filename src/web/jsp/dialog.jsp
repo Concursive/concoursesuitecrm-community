@@ -36,7 +36,7 @@ else{%>
     <table cellpadding="4" cellspacing="0" border="0" width="95%" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr valign="center">
       <td>
-       <strong>Are you sure you wish to delete this object from CFS?</strong>
+       Are you sure you wish to permanently delete this object from CFS?
       </td>
       </tr>
       
