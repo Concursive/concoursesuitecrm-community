@@ -41,9 +41,9 @@ public class VehicleList extends ArrayList {
     rs = pst.executeQuery();
     while (rs.next()) {
       Vehicle thisVehicle = new Vehicle(rs);
-      this.add(thisVehicle);
       thisVehicle.setMake(new Make(rs));
       thisVehicle.setModel(new Model(rs));
+      this.add(thisVehicle);
     }
     rs.close();
     pst.close();

@@ -37,17 +37,11 @@ public class ModelList extends ArrayList {
     rs = pst.executeQuery();
     while (rs.next()) {
       Model thisModel = new Model(rs);
-      this.add(thisModel);
       thisModel.setMake(new Make(rs));
+      this.add(thisModel);
     }
     rs.close();
     pst.close();
-    
-    /* Iterator modelList = this.iterator();
-    while (modelList.hasNext()) {
-      Model thisModel = (Model)modelList.next();
-      thisModel.buildResources(db);
-    } */
   }
   
   private void createFilter(StringBuffer sqlFilter) {
