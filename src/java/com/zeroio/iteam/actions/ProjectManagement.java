@@ -392,6 +392,7 @@ public final class ProjectManagement extends CFSModule {
           }
         }
         PagedListInfo projectRequirementsInfo = this.getPagedListInfo(context, "projectRequirementsInfo");
+        projectRequirementsInfo.setItemsPerPage(0);
         projectRequirementsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + thisProject.getId());
         thisProject.getRequirements().setPagedListInfo(projectRequirementsInfo);
         if ("all".equals(projectRequirementsInfo.getListView())) {
@@ -423,6 +424,7 @@ public final class ProjectManagement extends CFSModule {
         }
       } else if ("Assignments".equals(section)) {
         PagedListInfo projectAssignmentsInfo = this.getPagedListInfo(context, "projectAssignmentsInfo");
+        projectAssignmentsInfo.setItemsPerPage(0);
         projectAssignmentsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=" + thisProject.getId());
         thisProject.getAssignments().setPagedListInfo(projectAssignmentsInfo);
         if (System.getProperty("DEBUG") != null) {
