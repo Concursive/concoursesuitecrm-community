@@ -4,6 +4,9 @@ import org.theseus.beans.*;
 import java.util.*;
 import java.sql.*;
 import com.darkhorseventures.controller.*;
+import com.darkhorseventures.webutils.*;
+import javax.servlet.http.*;
+import javax.servlet.*;
 
 /**
  *  User Session record -- maintained while the user is logged in
@@ -17,13 +20,12 @@ public class UserBean extends GenericBean {
   
   private SystemStatus systemStatus = null;
   private User userRecord = null;
-  private String browserType = "";
   private String template = null;
   private String cssFile = "";
   private java.util.Date permissionCheck = new java.util.Date();
   private java.util.Date hierarchyCheck = new java.util.Date();
   private String idRange = "";
-
+  private ClientType clientType = null;
 
   /**
    *  Builds the userbean from the passed in User Record to speed up the login
@@ -36,17 +38,6 @@ public class UserBean extends GenericBean {
     systemStatus = thisSystem;
     userId = newUserId;
     updateUserRecord();
-  }
-
-
-  /**
-   *  Sets the BrowserType attribute of the User object
-   *
-   *@param  tmp  The new BrowserType value
-   *@since       1.14
-   */
-  public void setBrowserType(String tmp) {
-    this.browserType = tmp;
   }
 
 
@@ -104,8 +95,10 @@ public class UserBean extends GenericBean {
   public void setUserRecord(User tmp) {
     this.userRecord = tmp;
   }
-
-
+  
+  public void setClientType(HttpServletRequest request) {
+    this.clientType = new ClientType(request);
+  }
 
   /**
    *  Gets the User attribute of the User object
@@ -144,28 +137,18 @@ public class UserBean extends GenericBean {
   }
 
 
-  /**
-   *  Gets the BrowserType attribute of the User object
-   *
-   *@return    The BrowserType value
-   *@since     1.14
-   */
-  public String getBrowserType() {
-    return browserType;
-  }
-	
   public String getBrowserId() {
-    if (browserType.indexOf("Gecko") > 0 || browserType.indexOf("Netscape") > 0)  {
-      return ("ns");
-    } else {
-			return ("ie");
-    }
+    return clientType.getBrowserId();
   }
 	
 	public double getBrowserVersion() {
-		return 5.5;
+		return clientType.getBrowserVersion();
 	}
-
+  
+  public String getBrowserIdAndOS() {
+    return clientType.getBrowserIdAndOS();
+  }
+  
 
   /**
    *  Gets the Role attribute of the userBean object

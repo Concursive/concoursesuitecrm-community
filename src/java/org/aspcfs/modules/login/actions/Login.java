@@ -156,7 +156,8 @@ public final class Login extends GenericAction {
           if (System.getProperty("DEBUG") != null) System.out.println("Login-> updating user");
           thisUser.getUserRecord().setIp(context.getIpAddress());
           thisUser.getUserRecord().updateLogin(db);
-          thisUser.setBrowserType(context.getBrowser());
+          //thisUser.setClientType(context.getBrowser());
+          thisUser.setClientType(context.getRequest());
           thisUser.setTemplate("template0");
           thisUser.getUserRecord().setBuildContact(false);
           thisUser.getUserRecord().setBuildHierarchy(false);

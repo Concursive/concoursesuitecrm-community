@@ -9,7 +9,7 @@
 
 <head>
 <title>CFS<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
-<link rel="stylesheet" href="css/template0<%= User.getBrowserId() %>.css" type="text/css">
+<link rel="stylesheet" href="css/template0<%= User.getBrowserIdAndOS() %>.css" type="text/css">
 <link rel="stylesheet" href="css/template0.css" type="text/css">
 </head>
 <script language="JavaScript" type="text/javascript" src="/javascript/popLEFT.js"></script>
