@@ -20,17 +20,17 @@ import java.io.*;
 /**
  *  Description of the Class
  *
- *@author     akhi_m
- *@created    August 15, 2002
- *@version    $Id$
+ * @author     akhi_m
+ * @created    August 15, 2002
+ * @version    $Id$
  */
 public final class MyTasks extends CFSModule {
 
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-tasks-view"))) {
@@ -43,8 +43,8 @@ public final class MyTasks extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandListTasks(ActionContext context) {
     Exception errorMessage = null;
@@ -97,8 +97,8 @@ public final class MyTasks extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandNew(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-tasks-view"))) {
@@ -106,9 +106,18 @@ public final class MyTasks extends CFSModule {
     }
     Exception errorMessage = null;
     Connection db = null;
+    String ownerContactId = context.getRequest().getParameter("contactId");
     addModuleBean(context, "My Tasks", "Task Home");
+    Task newTask = (Task) context.getFormBean();
     try {
       db = this.getConnection(context);
+
+      //check to see if a default owner is set
+      if (ownerContactId != null) {
+        Contact thisContact = new Contact(db, Integer.parseInt(ownerContactId));
+        newTask.setContactId(Integer.parseInt(ownerContactId));
+        newTask.setContactName(thisContact.getNameLastFirst());
+      }
       //build loe types
       LookupList estimatedLOETypeList = new LookupList(db, "lookup_task_loe");
       context.getRequest().setAttribute("EstimatedLOETypeList", estimatedLOETypeList);
@@ -122,11 +131,10 @@ public final class MyTasks extends CFSModule {
     }
 
     context.getSession().removeAttribute("contactListInfo");
-    context.getRequest().setAttribute("Task", new Task());
     if (context.getRequest().getParameter("popup") != null) {
-      return ("NewTaskPopupOK");
+      return ("AddTaskPopupOK");
     } else {
-      return ("NewTaskOK");
+      return ("AddTaskOK");
     }
   }
 
@@ -134,8 +142,8 @@ public final class MyTasks extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     Exception errorMessage = null;
@@ -177,9 +185,9 @@ public final class MyTasks extends CFSModule {
       context.getRequest().setAttribute("Task", thisTask);
       addModuleBean(context, "My Tasks", "Task Home");
       if (context.getRequest().getParameter("popup") != null) {
-        return ("NewTaskPopupOK");
+        return ("AddTaskPopupOK");
       } else {
-        return ("NewTaskOK");
+        return ("AddTaskOK");
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -191,8 +199,8 @@ public final class MyTasks extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
     Exception errorMessage = null;
@@ -237,8 +245,8 @@ public final class MyTasks extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     Exception errorMessage = null;
@@ -283,8 +291,8 @@ public final class MyTasks extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -338,8 +346,8 @@ public final class MyTasks extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -383,8 +391,8 @@ public final class MyTasks extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandProcessImage(ActionContext context) {
     Exception errorMessage = null;
