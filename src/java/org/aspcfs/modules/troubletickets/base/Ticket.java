@@ -2421,7 +2421,6 @@ public class Ticket extends GenericBean {
       thisEntry.setSeverityCode(this.getSeverityCode());
       thisEntry.setTicketId(this.getId());
       thisEntry.setClosed(true);
-      thisEntry.setProductId(this.getProductId());
       thisEntry.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
     }
     return resultCount;
@@ -2479,7 +2478,6 @@ public class Ticket extends GenericBean {
       thisEntry.setSeverityCode(this.getSeverityCode());
       thisEntry.setEntryText(this.getComment());
       thisEntry.setTicketId(this.getId());
-      thisEntry.setProductId(this.getProductId());
       thisEntry.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
       db.commit();
     } catch (SQLException e) {
@@ -2720,7 +2718,6 @@ public class Ticket extends GenericBean {
       thisEntry.setTicketId(this.getId());
       thisEntry.setPriorityCode(this.getPriorityCode());
       thisEntry.setSeverityCode(this.getSeverityCode());
-      thisEntry.setProductId(this.getProductId());
       if (this.getCloseIt() == true) {
         thisEntry.setClosed(true);
       }
