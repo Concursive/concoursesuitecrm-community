@@ -66,6 +66,20 @@ public static String replace(String str, String o, String n) {
     }
   }
   
+  public static String toJavaScript(String s) {
+    if (s != null) {
+      String jsReady = s.trim();
+      jsReady = replace(jsReady, "\\", "\\\\");
+      return(jsReady);
+    } else {
+      return("");
+    }
+  }
+  
+  public static String toHtmlValue(int tmp) {
+    return (toHtmlValue(String.valueOf(tmp)));
+  }
+  
   public static String toDateTimeString(java.sql.Timestamp inDate) {
     try {
       return java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.LONG).format(inDate);
@@ -136,12 +150,16 @@ public static String replace(String str, String o, String n) {
   }
   
   public static String showError(HttpServletRequest request, String errorEntry) {
+    return showError(request, errorEntry, true);
+  }
+  
+  public static String showError(HttpServletRequest request, String errorEntry, boolean showSpace) {
     if (request.getAttribute(errorEntry) != null) {
-      return "&nbsp;<br><img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getAttribute(errorEntry)) + "</font><br>&nbsp;<br>";
+      return (showSpace ? "&nbsp;<br>" : "") + "<img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getAttribute(errorEntry)) + "</font><br>&nbsp;<br>";
     } else if (request.getParameter(errorEntry) != null) {
-      return "&nbsp;<br><img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getParameter(errorEntry)) + "</font><br>&nbsp;<br>";
+      return (showSpace ? "&nbsp;<br>" : "") + "<img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getParameter(errorEntry)) + "</font><br>&nbsp;<br>";
     } else {
-      return "&nbsp;";
+      return (showSpace ? "&nbsp;" : "");
     }
   }
   
@@ -193,4 +211,15 @@ public static String replace(String str, String o, String n) {
     return sb.toString();
   }
   
+  public static String getServerPort(HttpServletRequest request) {
+    int port = request.getServerPort();
+    if (port != 80 && port != 443) {
+      return ":" + String.valueOf(port);
+    }
+    return "";
+  }
+  
+  public static String getServerUrl(HttpServletRequest request) {
+    return request.getServerName() + getServerPort(request) + request.getContextPath();
+  }
 %>
