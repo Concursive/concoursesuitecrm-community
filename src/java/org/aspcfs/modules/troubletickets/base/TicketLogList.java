@@ -247,13 +247,13 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     
     int count = 0;
     while (rs.next()) {
-            /**
+
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
           DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
           count >= pagedListInfo.getItemsPerPage()) {
         break;
       }
-      */
+
       ++count;
       TicketLog thisTicketLog = new TicketLog(rs);
       
