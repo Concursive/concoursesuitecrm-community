@@ -146,27 +146,30 @@ public class UpgradeDatabaseTask extends Task {
       ConnectionElement ce = new ConnectionElement(url, user, password);
       ce.setDriver(driver);
       Connection db = sqlDriver.getConnection(ce);
-      //If a script exists for the gatekeeper, run it
-      executeScript(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : "gk.bsh"), fsEval, null);
-      executeSql(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : "gk.sql"), fsEval);
-      //Run the rest of the databases
-      PreparedStatement pst = db.prepareStatement(
-          "SELECT DISTINCT dbhost, dbname, dbuser, dbpw, driver " +
-          "FROM sites " +
-          "WHERE sitecode = ? ");
-      pst.setString(1, sitecode);
-      ResultSet rs = pst.executeQuery();
-      while (rs.next()) {
-        HashMap siteInfo = new HashMap();
-        siteInfo.put("url", rs.getString("dbhost"));
-        siteInfo.put("dbName", rs.getString("dbname"));
-        siteInfo.put("user", rs.getString("dbuser"));
-        siteInfo.put("password", rs.getString("dbpw"));
-        siteInfo.put("driver", rs.getString("driver"));
-        siteList.add(siteInfo);
+      //If this is a gatekeeper script, run it
+      if (baseFile.indexOf("gk") > -1) {
+        executeScript(db, baseFile, fsEval, null);
+        executeSql(db, baseFile, fsEval);
+      } else {
+        //Run the rest of the databases
+        PreparedStatement pst = db.prepareStatement(
+            "SELECT DISTINCT dbhost, dbname, dbuser, dbpw, driver " +
+            "FROM sites " +
+            "WHERE sitecode = ? ");
+        pst.setString(1, sitecode);
+        ResultSet rs = pst.executeQuery();
+        while (rs.next()) {
+          HashMap siteInfo = new HashMap();
+          siteInfo.put("url", rs.getString("dbhost"));
+          siteInfo.put("dbName", rs.getString("dbname"));
+          siteInfo.put("user", rs.getString("dbuser"));
+          siteInfo.put("password", rs.getString("dbpw"));
+          siteInfo.put("driver", rs.getString("driver"));
+          siteList.add(siteInfo);
+        }
+        rs.close();
+        pst.close();
       }
-      rs.close();
-      pst.close();
       sqlDriver.free(db);
       //Iterate over the databases to upgrade and run the correct
       //sql code and bean shell scripts
@@ -180,9 +183,9 @@ public class UpgradeDatabaseTask extends Task {
         ce.setDriver((String) siteInfo.get("driver"));
         db = sqlDriver.getConnection(ce);
         //Try to run a specified bean shell script if found
-        executeScript(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : ".bsh"), fsEval, (String) siteInfo.get("dbName"));
+        executeScript(db, baseFile, fsEval, (String) siteInfo.get("dbName"));
         //Try to run the specified sql file
-        executeSql(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : ".sql"), fsEval);
+        executeSql(db, baseFile, fsEval);
         sqlDriver.free(db);
       }
     } catch (Exception e) {
