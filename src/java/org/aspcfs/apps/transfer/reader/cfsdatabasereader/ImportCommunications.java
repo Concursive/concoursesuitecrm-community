@@ -83,7 +83,7 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
         switch (Integer.parseInt(thisElement.getValue("field"))) {
           case (8): thisRecord.addField("value", thisElement.getValue("value"), "lookupContactTypes", null); break;
           case (9): thisRecord.addField("value", thisElement.getValue("value"), "contact", null); break;
-          case (10): thisRecord.addField("value", thisElement.getValue("value"), "lookupAccountTypes", null); break;
+          //case (10): thisRecord.addField("value", thisElement.getValue("value"), "lookupAccountTypes", null); break;
           default: thisRecord.addField("value", thisElement.getValue("value")); break;
         }
         processOK = writer.save(thisRecord);
