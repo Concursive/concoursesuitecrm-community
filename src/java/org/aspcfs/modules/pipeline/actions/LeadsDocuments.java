@@ -321,29 +321,42 @@ public final class LeadsDocuments extends CFSModule {
     
     //Start the download
     try {
-      FileItem itemToDownload = null;
       if (version == null) {
-        itemToDownload = thisItem;
+        FileItem itemToDownload = thisItem;
+        itemToDownload.setEnteredBy(this.getUserId(context));
+        String filePath = this.getPath(context, "opportunities", opportunityId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        FileDownload fileDownload = new FileDownload();
+        fileDownload.setFullPath(filePath);
+        fileDownload.setDisplayName(itemToDownload.getClientFilename());
+        if (fileDownload.fileExists()) {
+          fileDownload.sendFile(context);
+          //Get a db connection now that the download is complete
+          db = getConnection(context);
+          itemToDownload.updateCounter(db);
+        } else {
+          db = null;
+          System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
+          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          return(executeCommandView(context));
+        }
       } else {
-        itemToDownload = thisItem.getVersion(Double.parseDouble(version));
-      }
-      
-      itemToDownload.setEnteredBy(this.getUserId(context));
-      String filePath = this.getPath(context, "opportunities", opportunityId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
-      
-      FileDownload fileDownload = new FileDownload();
-      fileDownload.setFullPath(filePath);
-      fileDownload.setDisplayName(itemToDownload.getClientFilename());
-      if (fileDownload.fileExists()) {
-        fileDownload.sendFile(context);
-        //Get a db connection now that the download is complete
-        db = getConnection(context);
-        itemToDownload.updateCounter(db);
-      } else {
-        db = null;
-        System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
-	context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
-	return(executeCommandView(context));
+        FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
+        itemToDownload.setEnteredBy(this.getUserId(context));
+        String filePath = this.getPath(context, "opportunities", opportunityId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        FileDownload fileDownload = new FileDownload();
+        fileDownload.setFullPath(filePath);
+        fileDownload.setDisplayName(itemToDownload.getClientFilename());
+        if (fileDownload.fileExists()) {
+          fileDownload.sendFile(context);
+          //Get a db connection now that the download is complete
+          db = getConnection(context);
+          itemToDownload.updateCounter(db);
+        } else {
+          db = null;
+          System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
+          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          return(executeCommandView(context));
+        }
       }
     } catch (java.net.SocketException se) {
       //User either cancelled the download or lost connection

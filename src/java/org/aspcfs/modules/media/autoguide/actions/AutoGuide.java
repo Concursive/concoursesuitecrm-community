@@ -693,25 +693,34 @@ public final class AutoGuide extends CFSModule {
 
     //Start the download
     try {
-      FileItem itemToDownload = null;
       if (version == null) {
-        itemToDownload = thisItem;
+        FileItem itemToDownload = thisItem;
+        itemToDownload.setEnteredBy(this.getUserId(context));
+        String filePath = this.getPath(context, "autoguide") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        FileDownload fileDownload = new FileDownload();
+        fileDownload.setFullPath(filePath);
+        fileDownload.setDisplayName(itemToDownload.getClientFilename());
+        if (fileDownload.fileExists()) {
+          String imageType = "jpg";
+          //TODO: do not hard code this
+          fileDownload.sendFile(context, "image/" + imageType);
+        } else {
+          System.err.println("AutoGuide-> Trying to send a file that does not exist");
+        }
       } else {
-        itemToDownload = thisItem.getVersion(Double.parseDouble(version));
-      }
-
-      itemToDownload.setEnteredBy(this.getUserId(context));
-      String filePath = this.getPath(context, "autoguide") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
-
-      FileDownload fileDownload = new FileDownload();
-      fileDownload.setFullPath(filePath);
-      fileDownload.setDisplayName(itemToDownload.getClientFilename());
-      if (fileDownload.fileExists()) {
-        String imageType = "jpg";
-        //TODO: do not hard code this
-        fileDownload.sendFile(context, "image/" + imageType);
-      } else {
-        System.err.println("AutoGuide-> Trying to send a file that does not exist");
+        FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
+        itemToDownload.setEnteredBy(this.getUserId(context));
+        String filePath = this.getPath(context, "autoguide") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        FileDownload fileDownload = new FileDownload();
+        fileDownload.setFullPath(filePath);
+        fileDownload.setDisplayName(itemToDownload.getClientFilename());
+        if (fileDownload.fileExists()) {
+          String imageType = "jpg";
+          //TODO: do not hard code this
+          fileDownload.sendFile(context, "image/" + imageType);
+        } else {
+          System.err.println("AutoGuide-> Trying to send a file that does not exist");
+        }
       }
     } catch (java.net.SocketException se) {
       //User either cancelled the download or lost connection
@@ -755,7 +764,7 @@ public final class AutoGuide extends CFSModule {
 
     //Start the download
     try {
-      FileItem itemToDownload = null;
+      FileItemVersion itemToDownload = null;
       if (version == null) {
         //Retrieves the original/raw image instead of latest file
         itemToDownload = thisItem.getVersion(1.0);

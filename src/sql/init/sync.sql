@@ -639,11 +639,6 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'opportunityList', 'com.darkhorseventures.cfsbase.OpportunityList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'project', 'com.zeroio.iteam.base.Project');
-INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'projectList', 'com.zeroio.iteam.base.ProjectList');
- 
- INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'call', 'com.darkhorseventures.cfsbase.Call');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'callList', 'com.darkhorseventures.cfsbase.CallList');
@@ -720,6 +715,24 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'issue', 'com.zeroio.iteam.base.Issue');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'issueList', 'com.zeroio.iteam.base.IssueList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'issueReply', 'com.zeroio.iteam.base.IssueReply');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'issueReplyList', 'com.zeroio.iteam.base.IssueReplyList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'teamMember', 'com.zeroio.iteam.base.TeamMember');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'fileItem', 'com.zeroio.iteam.base.FileItem');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'fileItemList', 'com.zeroio.iteam.base.FileItemList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'fileItemVersion', 'com.zeroio.iteam.base.FileItemVersion');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'fileItemVersionList', 'com.zeroio.iteam.base.FileItemVersionList'); 
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'contactAddress', 'com.darkhorseventures.cfsbase.ContactAddress');

@@ -28,6 +28,7 @@ public class PropertyMapList extends HashMap {
   }
   
   public boolean saveList(DataWriter writer, AbstractList list, String action) {
+    logger.info("Record count: " + list.size());
     boolean processOK = true;
     Iterator i = list.iterator();
     while (i.hasNext() && processOK) {

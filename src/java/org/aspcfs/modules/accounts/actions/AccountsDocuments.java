@@ -214,7 +214,7 @@ public final class AccountsDocuments extends CFSModule {
     if (itemId == null) {
       itemId = (String) context.getRequest().getAttribute("fid");
     }
-    
+
     String folderId = context.getRequest().getParameter("folderId");
     if (folderId != null) {
       context.getRequest().setAttribute("folderId", folderId);
@@ -401,34 +401,45 @@ public final class AccountsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
     //Start the download
-    
-    try {
-      FileItem itemToDownload = null;
-      if (version == null) {
-        itemToDownload = thisItem;
-      } else {
-        itemToDownload = thisItem.getVersion(Double.parseDouble(version));
-      }
-      
-      itemToDownload.setEnteredBy(this.getUserId(context));
-      String filePath = this.getPath(context, "accounts", orgId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
 
-      FileDownload fileDownload = new FileDownload();
-      fileDownload.setFullPath(filePath);
-      fileDownload.setDisplayName(itemToDownload.getClientFilename());
-      
-      if (fileDownload.fileExists()) {
-        fileDownload.sendFile(context);
-        //Get a db connection now that the download is complete
-	db = getConnection(context);
-        itemToDownload.updateCounter(db);
+    try {
+      if (version == null) {
+        FileItem itemToDownload = thisItem;
+        itemToDownload.setEnteredBy(this.getUserId(context));
+        String filePath = this.getPath(context, "accounts", orgId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        FileDownload fileDownload = new FileDownload();
+        fileDownload.setFullPath(filePath);
+        fileDownload.setDisplayName(itemToDownload.getClientFilename());
+        if (fileDownload.fileExists()) {
+          fileDownload.sendFile(context);
+          //Get a db connection now that the download is complete
+          db = getConnection(context);
+          itemToDownload.updateCounter(db);
+        } else {
+          db = null;
+          System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
+          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          return (executeCommandView(context));
+        }
       } else {
-	db = null;
-        System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
-	context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
-	return(executeCommandView(context));
+        FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
+        itemToDownload.setEnteredBy(this.getUserId(context));
+        String filePath = this.getPath(context, "accounts", orgId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        FileDownload fileDownload = new FileDownload();
+        fileDownload.setFullPath(filePath);
+        fileDownload.setDisplayName(itemToDownload.getClientFilename());
+        if (fileDownload.fileExists()) {
+          fileDownload.sendFile(context);
+          //Get a db connection now that the download is complete
+          db = getConnection(context);
+          itemToDownload.updateCounter(db);
+        } else {
+          db = null;
+          System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
+          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          return (executeCommandView(context));
+        }
       }
-      
     } catch (java.net.SocketException se) {
       //User either cancelled the download or lost connection
       if (System.getProperty("DEBUG") != null) {
@@ -439,11 +450,10 @@ public final class AccountsDocuments extends CFSModule {
       System.out.println(e.toString());
     } finally {
       if (db != null) {
-	      this.freeConnection(context, db);
+        this.freeConnection(context, db);
       }
     }
-    
-    
+
     if (errorMessage == null) {
       return ("-none-");
     } else {

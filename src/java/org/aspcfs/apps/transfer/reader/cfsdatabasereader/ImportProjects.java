@@ -73,7 +73,6 @@ public class ImportProjects implements CFSDatabaseReaderImportModule {
       return false;
     }
     
-/*
     logger.info("ImportBaseData-> Inserting Issue Replies");
     IssueReplyList issueReplyList = new IssueReplyList();
     issueReplyList.buildList(db);
@@ -83,13 +82,8 @@ public class ImportProjects implements CFSDatabaseReaderImportModule {
     TeamMemberList teamMemberList = new TeamMemberList();
     teamMemberList.buildList(db);
     processOK = mappings.saveList(writer, teamMemberList, "insert");
- */
-/*     
-    logger.info("ImportBaseData-> Inserting FileItemList");
-    FileItemList fileItemList = new FileItemList();
-    fileItemList.buildList(db);
-    processOK = mappings.saveList(writer, fileItemList, "insert");
- */    
+    
+    //Documents are inserting in bulk later
     return true;
   }
   

@@ -339,26 +339,36 @@ public final class ProjectManagementFiles extends CFSModule {
     
     //Start the download
     try {
-      FileItem itemToDownload = null;
       if (version == null) {
-        itemToDownload = thisItem;
+        FileItem itemToDownload = thisItem;
+        itemToDownload.setEnteredBy(this.getUserId(context));
+        String filePath = this.getPath(context, "projects", thisItem.getProjectId()) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        FileDownload fileDownload = new FileDownload();
+        fileDownload.setFullPath(filePath);
+        fileDownload.setDisplayName(itemToDownload.getClientFilename());
+        if (fileDownload.fileExists()) {
+          fileDownload.sendFile(context);
+          //Get a db connection now that the download is complete
+          db = getConnection(context);
+          itemToDownload.updateCounter(db);
+        } else {
+          System.err.println("PMF-> Trying to send a file that does not exist");
+        }
       } else {
-        itemToDownload = thisItem.getVersion(Double.parseDouble(version));
-      }
-      
-      itemToDownload.setEnteredBy(this.getUserId(context));
-      String filePath = this.getPath(context, "projects", itemToDownload.getProjectId()) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
-      
-      FileDownload fileDownload = new FileDownload();
-      fileDownload.setFullPath(filePath);
-      fileDownload.setDisplayName(itemToDownload.getClientFilename());
-      if (fileDownload.fileExists()) {
-        fileDownload.sendFile(context);
-        //Get a db connection now that the download is complete
-        db = getConnection(context);
-        itemToDownload.updateCounter(db);
-      } else {
-        System.err.println("PMF-> Trying to send a file that does not exist");
+        FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
+        itemToDownload.setEnteredBy(this.getUserId(context));
+        String filePath = this.getPath(context, "projects", thisItem.getProjectId()) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        FileDownload fileDownload = new FileDownload();
+        fileDownload.setFullPath(filePath);
+        fileDownload.setDisplayName(itemToDownload.getClientFilename());
+        if (fileDownload.fileExists()) {
+          fileDownload.sendFile(context);
+          //Get a db connection now that the download is complete
+          db = getConnection(context);
+          itemToDownload.updateCounter(db);
+        } else {
+          System.err.println("PMF-> Trying to send a file that does not exist");
+        }
       }
     } catch (java.net.SocketException se) {
       //User either cancelled the download or lost connection

@@ -58,7 +58,7 @@ Document Details<br>
   int rowid = 0;
   while (versionList.hasNext()) {
     if (rowid != 1) rowid = 1; else rowid = 2;
-    FileItem thisVersion = (FileItem)versionList.next();
+    FileItemVersion thisVersion = (FileItemVersion)versionList.next();
 %>      
     <tr class="row<%= rowid %>">
       <td width="10" align="center" rowspan="2" nowrap>

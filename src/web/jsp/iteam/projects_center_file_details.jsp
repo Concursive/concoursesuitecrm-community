@@ -42,7 +42,7 @@
     } else {
       rowid = 2;
     }
-    FileItem thisVersion = (FileItem)versionList.next();
+    FileItemVersion thisVersion = (FileItemVersion)versionList.next();
 %>
   <tr class="row<%= rowid %>">
     <td rowspan="2">
