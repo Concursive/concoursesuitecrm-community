@@ -92,6 +92,6 @@
 <br>
 <center><%= request.getAttribute("MainMenuSmall") %></center>
 <br>
-<center>(C) 2000-2003 Dark Horse Ventures</center>
+<center>Copyright (c) 2000-2003 Dark Horse Ventures.  All rights reserved.</center>
 </body>
 </html>
