@@ -473,7 +473,10 @@ public class TransactionRecord extends GenericBean {
    *@param  tmp  The new performed value
    */
   public void setPerformed(String tmp) {
-    this.performed = DateUtils.parseTimestampString(tmp, "yyyy-MM-dd hh-mm-ss a");
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("TransactionRecord-> Setting: " + tmp);
+    }
+    this.performed = DateUtils.parseTimestampString(tmp, "yyyy-MM-dd hh-mm-ss aa");
   }
 
 
