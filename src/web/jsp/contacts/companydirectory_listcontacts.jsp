@@ -77,8 +77,9 @@
           <%= toHtml(thisContact.getPhoneNumber("Mobile")) %>
         </td>
       </tr>
-<%}%>
-<%} else {%>  
+<%
+    }
+  } else {%>  
   <tr>
     <td class="row2" valign="center" colspan="5">
       No contacts found.
