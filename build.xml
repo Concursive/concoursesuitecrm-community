@@ -13,7 +13,7 @@
    
    The build process needs write access to the destination web-app folder.
 -->
-<project name="CFS" default="usage" basedir=".">
+<project name="Dark Horse CRM" default="usage" basedir=".">
   
   <!-- enable environment variables -->
   <property environment="env"/>
@@ -131,7 +131,7 @@
   <!-- Configure classpath as both object and a property -->
   <target name="init.classpath" depends="init.classpath.uptodate">
     <path id="cfs2.classpath">
-      <fileset dir="${env.CATALINA_HOME}/common/lib">
+      <fileset dir="${CATALINA_HOME}/common/lib">
         <include name="*.jar"/>
       </fileset>
       <fileset dir="${lib.dir}">
@@ -730,8 +730,8 @@
         url="${GATEKEEPER.URL}"
         user="${GATEKEEPER.USER}"
         password="${GATEKEEPER.PASSWORD}"
-        servletJar="${env.CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"
-        webPath="${env.CFS_HOME}"
+        servletJar="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"
+        webPath="${CFS_HOME}"
         baseFile="${src.sql.dir}${fs}init${fs}workflow.bsh"
         specificDatabase="${DATABASE.NAME}">
     </upgradeDatabase>
@@ -768,8 +768,8 @@
         url="${GATEKEEPER.URL}"
         user="${GATEKEEPER.USER}"
         password="${GATEKEEPER.PASSWORD}"
-        servletJar="${env.CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"
-        webPath="${env.CFS_HOME}"
+        servletJar="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"
+        webPath="${CFS_HOME}"
         baseFile="${src.sql.dir}${fs}${SITE.DBTYPE}${fs}upgrade${fs}${arg1}"
         specificDatabase="${arg2}">
     </upgradeDatabase>
