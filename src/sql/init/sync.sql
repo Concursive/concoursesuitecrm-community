@@ -797,9 +797,9 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'messageList', 'com.darkhorseventures.cfsbase.MessageList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'searchCriteriaList', 'com.darkhorseventures.cfsbase.SearchCriteriaList');
+ VALUES (4, 'searchCriteriaElements', 'com.darkhorseventures.cfsbase.SearchCriteriaList');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'searchCriteriaListList', 'com.darkhorseventures.cfsbase.SearchCriteriaListList');
+ VALUES (4, 'searchCriteriaElementsList', 'com.darkhorseventures.cfsbase.SearchCriteriaListList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'savedCriteriaElement', 'com.darkhorseventures.webutils.CustomLookupElement');
