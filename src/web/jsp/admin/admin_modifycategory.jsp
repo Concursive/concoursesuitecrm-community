@@ -154,13 +154,13 @@
     return false;
   }
   
-  function confirmSave(){
+  function save(){
     populateForm();
     var params =
     'categories=' + escape(document.getElementById('categories').value) + 
     '&parentCode=' + <%= request.getParameter("categoryId") %> + 
     '&level=' + <%= request.getParameter("level") %>;
-    popURL('AdminCategories.do?command=ConfirmSave&' + params + '&popup=true', 'Save','320','200','yes','no');
+    window.location.href = 'AdminCategories.do?command=Save&' + params;
   }
   
 </SCRIPT>
@@ -213,9 +213,9 @@
     <%}%>
     <br>
     <center>
-      <input type="button" value="Remove" onclick="javascript:removeValues()">
-      <input type="button" value="Rename" onclick="javascript:editValues();">
-      <input type="button" value="Enable" onclick="javascript:enable();" disable>
+      <dhv:permission name="admin-sysconfig-categories-delete"><input type="button" value="Remove" onclick="javascript:removeValues()"></dhv:permission>
+      <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Rename" onclick="javascript:editValues();"></dhv:permission>
+      <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Enable" onclick="javascript:enable();" disable></dhv:permission>
     </center>
    </td>
   </tr>
@@ -224,7 +224,7 @@
  <table cellpadding="0" cellspacing="0" border="0" width="100%" class="empty">
   <tr>
     <td align="left" colspan="2">
-      <input type="button" value="Save" onClick="javascript:confirmSave();">&nbsp;
+      <input type="button" value="Save" onClick="javascript:save();">&nbsp;
       <input type="button" value="Cancel" onclick="javascript:window.close();">
     </td>
   </tr>
