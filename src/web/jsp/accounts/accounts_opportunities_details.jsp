@@ -76,6 +76,10 @@ Opportunity Details<br>
 	<%= AccountsComponentListInfo.getSortIcon("description") %>
     </td>
     <td valign=center align=left>
+	<strong><a href="Opportunities.do?command=Details&oppId=<%=HeaderDetails.getId()%>&orgId=<%=OrgDetails.getId()%>&column=closed">Status</a></strong>
+	<%= AccountsComponentListInfo.getSortIcon("closed") %>
+    </td>
+    <td valign=center align=left>
 	<strong><a href="Opportunities.do?command=Details&oppId=<%=HeaderDetails.getId()%>&orgId=<%=OrgDetails.getId()%>&column=guessvalue">Guess Amount</a></strong>
 	<%= AccountsComponentListInfo.getSortIcon("guessvalue") %>
     </td>
@@ -113,6 +117,9 @@ Opportunity Details<br>
     <td width=100% valign=center class="row<%= rowid %>">
       <a href="OpportunitiesComponents.do?command=DetailsComponent&orgId=<%=OrgDetails.getId()%>&id=<%=thisOpp.getId()%>">
       <%= toHtml(thisOpp.getDescription()) %></a>
+    </td>
+    <td width=125 valign=center nowrap class="row<%= rowid %>">
+      <%= thisOpp.getClosed() != null ? "<font color=\"red\">closed</font>" : "<font color=\"green\">open</font>" %>
     </td>
     <td width=125 valign=center nowrap class="row<%= rowid %>">
       $<%= thisOpp.getGuessCurrency() %>
