@@ -88,6 +88,10 @@ Modify User<br>
     </td>
   </tr>
   
+  <tr>
+    <td width="150">Generate new password</td>
+    <td><input type=checkbox name="generatePass"></td>
+  </tr>  
 
   
 </table>

@@ -918,13 +918,15 @@ public final class Users extends CFSModule {
 		Exception errorMessage = null;
 
 		User newUser = (User) context.getFormBean();
-
+    User modifiedUser = null;
+    
 		Connection db = null;
 		int resultCount = 0;
-
+    
 		try {
 			db = this.getConnection(context);
 			resultCount = newUser.update(db, context);
+      
 			if (resultCount == -1) {
 				UserList userList = new UserList();
 				userList.setEmptyHtmlSelectRecord("-- None --");
@@ -938,6 +940,10 @@ public final class Users extends CFSModule {
 				context.getRequest().setAttribute("RoleList", roleList);
 			}
 			else if (resultCount == 1) {
+        if (context.getRequest().getParameter("generatePass") != null) {
+          resultCount = newUser.generateRandomPassword(db, context);
+          modifiedUser = new User(db, context.getRequest().getParameter("id"));
+        }
 				updateSystemHierarchyCheck(db, context);
 				updateSystemPermissionCheck(context);
 			}
@@ -956,6 +962,23 @@ public final class Users extends CFSModule {
 			}
 			else if (resultCount == 1) {
 				context.getRequest().setAttribute("id", context.getRequest().getParameter("id"));
+        
+        if (context.getRequest().getParameter("generatePass") != null) {
+            //send email
+            SMTPMessage mail = new SMTPMessage();
+            mail.setHost("127.0.0.1");
+            mail.setFrom("cfs-root@darkhorseventures.com");
+            mail.setType("text/html");      
+            mail.setTo("chris@darkhorseventures.com");
+            mail.setSubject("CFS password changed");
+            mail.setBody("Your CFS User account password has been changed by " + ((User)getUser(context, getUserId(context))).getUsername() + ".<br>" +
+              " Your new CFS password is: " + modifiedUser.getPassword());
+					
+					  if (mail.send() == 2) {
+              System.err.println(mail.getErrorMsg());
+            }         
+        }
+        
 				if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
 					return (executeCommandListUsers(context));
 				} else {

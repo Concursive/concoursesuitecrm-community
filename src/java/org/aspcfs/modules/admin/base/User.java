@@ -32,6 +32,7 @@ import com.darkhorseventures.utils.DateUtils;
  *@version    $Id$
  */
 public class User extends GenericBean {
+  private static Random rn = new Random();
 
   protected String errmsg = "";
   protected int id = -1;
@@ -255,8 +256,15 @@ public class User extends GenericBean {
   public void setExpires(String tmp) {
     this.expires = DateUtils.parseDateString(tmp);
   }
-
-
+  
+  public int generateRandomPassword(Connection db, ActionContext context) throws SQLException {
+      int resultCount = -1;
+      String newPassword = randomstring(6,8);
+      this.setPassword1(newPassword);
+      this.setPassword2(newPassword);
+      resultCount = this.newPassword(db, context);
+      return resultCount;
+  }
   /**
    *  Sets the Assistant attribute of the User object
    *
@@ -2287,5 +2295,33 @@ public class User extends GenericBean {
     PasswordHash passwordHash = new PasswordHash();
     return passwordHash.encrypt(tmp);
   }
+  
+  /**
+  * The following functions are used to generate a random password
+  */
+  
+	public static int rand(int lo, int hi)
+	{
+		int n = hi - lo + 1;
+		int i = rn.nextInt() % n;
+		if (i < 0) {
+			i = -i;
+		}
+		
+		return lo + i;
+	}
+
+	
+	public static String randomstring(int lo, int hi)
+	{
+		int n = rand(lo, hi);
+		byte b[] = new byte[n];
+		for (int i = 0; i < n; i++) {
+			b[i] = (byte)rand('a', 'z');
+		}
+		
+		return new String(b, 0);
+	}  
+  
 }
 
