@@ -1,5 +1,6 @@
 package org.theseus.servlets;
 
+import javax.servlet.*;
 import javax.servlet.http.*;
 
 /**
@@ -16,6 +17,6 @@ public interface ControllerGlobalItemsHook {
    *@return          Description of the Returned Value
    *@since 1.0
    */
-  public String generateItems(HttpServletRequest request);
+  public String generateItems(Servlet servlet, HttpServletRequest request);
 }
 

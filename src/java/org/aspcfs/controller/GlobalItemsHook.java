@@ -1,9 +1,13 @@
 package com.darkhorseventures.controller;
 
+import javax.servlet.*;
 import javax.servlet.http.*;
 import org.theseus.servlets.ControllerGlobalItemsHook;
 import java.util.*;
 import com.darkhorseventures.cfsbase.*;
+import java.sql.*;
+import com.darkhorseventures.controller.*;
+import com.darkhorseventures.utils.*;
 
 /**
  *  Configures globally available items for CFS.
@@ -21,9 +25,10 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
    *@return          Description of the Returned Value
    *@since           1.0
    */
-  public String generateItems(HttpServletRequest request) {
+  public String generateItems(Servlet servlet, HttpServletRequest request) {
 
     UserBean thisUser = (UserBean)request.getSession().getAttribute("User");
+    int userId = thisUser.getUserId();
 
     StringBuffer items = new StringBuffer();
     int itemCount = 0;
@@ -53,23 +58,101 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
 
     //My Items
     if (thisUser.hasPermission("globalitems-myitems-view")) {
+      
+      ConnectionPool sqlDriver = (ConnectionPool)servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool");
+      ConnectionElement ce = (ConnectionElement)request.getSession().getAttribute("ConnectionElement");
+      Connection db = null;
+      
+      //Output
       ++itemCount;
       items.append(
         "<!-- My Items -->" +
         "<table border='0' width='150' cellpadding='0' cellspacing='1'>" +
         "<tr><td valign='top'> <img border='0' src='images/sb-myitems.gif' width='147' height='20'></td></tr>" +
         "<tr>" +
-        "<td bgcolor='#E7E9EB'>" +
-        "<a href='/Leads.do?module=Manage%20Tasks&include=pipeline_managetasks.htm' class='s'>Calls to make</a> (3)<a href='/Leads.do?module=Manage%20Tasks&include=pipeline_assignedtasks.htm' class='s'><br>" +
-        "Assigned Tasks</a> (4)<br>" +
-        "<a href='/TroubleTickets.do?command=Home' class='s'>Assigned Tickets</a> (4)" +
+        "<td bgcolor='#E7E9EB'>");
+      
+      try {
+        int myItems = 0;
+        db = sqlDriver.getConnection(ce);
+        String sql = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        
+        //External Contact Calls
+        if (thisUser.hasPermission("contacts-external_contacts-view")) {
+          int callCount = 0;
+          sql = 
+            "SELECT COUNT(*) as callcount FROM call_log WHERE alertdate = CURRENT_TIMESTAMP AND enteredby = ?";
+          pst = db.prepareStatement(sql);
+          pst.setInt(1, userId);
+          rs = pst.executeQuery();
+          if (rs.next()) {
+            callCount = rs.getInt("callcount");
+            myItems += callCount;
+            if (System.getProperty("DEBUG") != null) System.out.println("GlobalItemsHook-> Calls: " + callCount);
+          }
+          rs.close();
+          pst.close();
+          items.append("<a href='/MyCFS.do?command=Home' class='s'>Calls to make</a> (" + callCount + ")<br>");
+        }
+        
+        //Project Activities
+        if (thisUser.hasPermission("projects-view")) {
+          int activityCount = 0;
+          sql = 
+            "SELECT count(*) as activitycount FROM project_assignments WHERE complete_date IS NULL AND user_assign_id = ?";
+          pst = db.prepareStatement(sql);
+          pst.setInt(1, userId);
+          rs = pst.executeQuery();
+          if (rs.next()) {
+            activityCount = rs.getInt("activitycount");
+            myItems += activityCount;
+            if (System.getProperty("DEBUG") != null) System.out.println("GlobalItemsHook-> Activities: " + activityCount);
+          }
+          rs.close();
+          pst.close();
+          items.append("<a href='/ProjectManagement.do?command=PersonalView' class='s'>Assigned Activities</a> (" + activityCount + ")<br>");
+        }
+        
+        //Tickets
+        if (thisUser.hasPermission("tickets-view")) {
+          int ticketCount = 0;
+          sql = 
+            "SELECT COUNT(*) as ticketcount FROM ticket WHERE assigned_to = ? AND closed IS NULL";
+          pst = db.prepareStatement(sql);
+          pst.setInt(1, userId);
+          rs = pst.executeQuery();
+          if (rs.next()) {
+            ticketCount = rs.getInt("ticketcount");
+            myItems += ticketCount;
+            if (System.getProperty("DEBUG") != null) System.out.println("GlobalItemsHook-> Tickets: " + ticketCount);
+          }
+          rs.close();
+          pst.close();
+          items.append("<a href='/TroubleTickets.do?command=Home' class='s'>Assigned Tickets</a> (" + ticketCount + ")<br>");
+        }
+      
+        //Default no items
+        if (myItems == 0) {
+          items.append("No Items Found<br>&nbsp;<br>");
+        }
+          
+      } catch (Exception e) {
+        System.out.println("GlobalItemsHook Error-> " + e.toString());
+        e.printStackTrace(System.out);
+      }
+      sqlDriver.free(db);
+      
+      items.append(
         "</td>" +
         "</tr>" +
         "</table>");
-
+        
       if (itemCount > 0) {
         items.append("&nbsp;\r\n");
       }
+      
     }
 
     //Recent Items

@@ -631,7 +631,7 @@ public class ControllerServlet extends HttpServlet
               mainMenuHook.generateMenu(request, action.getActionName());
 
               //Build the Global Items
-              String globalItems = globalItemsHook.generateItems(request);
+              String globalItems = globalItemsHook.generateItems(this, request);
               if (globalItems != null) {
                 request.setAttribute("GlobalItems", globalItems);
               }
@@ -747,7 +747,7 @@ public class ControllerServlet extends HttpServlet
    *@return          Description of the Returned Value
    *@since           1.1
    */
-  public String generateItems(HttpServletRequest request) {
+  public String generateItems(Servlet servlet, HttpServletRequest request) {
     return null;
   }
 
