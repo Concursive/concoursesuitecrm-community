@@ -64,12 +64,15 @@ A:visited:hover{color:#FF3300;}
 /* trails */
 .trails {
   width: 100%;
-  border-spacing: 0px;
-  padding-bottom: 10px;
+  margin: 0;
+  padding-left: 0px;
+  border-bottom: 6px solid #FFF;
 }
 .trails td {
   color: #000;
   background-color: #EDEDED;
+  padding-bottom: 6px;
+  padding-left: 3px;
 }
 /* Main Menu */
 .menutabs {

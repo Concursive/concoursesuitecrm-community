@@ -26,7 +26,6 @@ Search Results
 </table>
 <%-- End Trails --%>
 <dhv:evaluate if="<%= (User.getRoleType() > 0) %>" >
-<br />
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
@@ -35,7 +34,6 @@ Search Results
 </table>
 </dhv:evaluate>
 <dhv:permission name="accounts-accounts-add"><a href="Accounts.do?command=Add">Add an Account</a></dhv:permission>
-<dhv:permission name="accounts-accounts-add" none="true"><br /></dhv:permission>
 <center><%= SearchOrgListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchOrgListInfo"/>
 <% int columnCount = 0; %>
