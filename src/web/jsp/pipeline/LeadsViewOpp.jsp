@@ -105,7 +105,7 @@
       </td>
       
       <td width=10% class="row<%= rowid %>">
-        <%= thisOpp.getCloseProbPercent() %>
+        <%= thisOpp.getCloseProbValue() %>%
       </td>
       
       <td width=10% valign=center nowrap class="row<%= rowid %>">

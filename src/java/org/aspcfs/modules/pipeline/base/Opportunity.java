@@ -490,6 +490,7 @@ public void setStageDate(java.sql.Date tmp) { this.stageDate = tmp; }
 	 */
 	public void setCloseProb(String closeProb) {
 		this.closeProb = ((Double.parseDouble(closeProb)) / 100);
+		if (System.getProperty("DEBUG") != null) System.out.println("Opportunity-> Close prob: " + closeProb);
 	}
 
 
@@ -972,6 +973,9 @@ public void setStageDate(java.sql.Date tmp) { this.stageDate = tmp; }
 	 *@since
 	 */
 	public double getCloseProb() {
+		if (System.getProperty("DEBUG") != null) {
+			System.out.println("Opportunity-> Close Prob: " + closeProb);
+		}
 		return closeProb;
 	}
 
@@ -983,8 +987,18 @@ public void setStageDate(java.sql.Date tmp) { this.stageDate = tmp; }
 	 *@since
 	 */
 	public String getCloseProbString() {
-		String stringOut = (new java.math.BigDecimal("" + closeProb)).toString();
-		return stringOut;
+		//String stringOut = (new java.math.BigDecimal("" + closeProb)).toString();
+		return "" + closeProb;
+	}
+	
+	public String getCloseProbValue() {
+		double value_2dp = (double)Math.round(closeProb * 100.0 * 100.0) / 100.0;
+		String toReturn = "" + value_2dp;
+		if (toReturn.endsWith(".0")) {
+			return (toReturn.substring(0, toReturn.length()-2));
+		} else {
+			return toReturn;
+		}
 	}
 
 
@@ -1064,6 +1078,16 @@ public void setStageDate(java.sql.Date tmp) { this.stageDate = tmp; }
 		NumberFormat percentFormatter = NumberFormat.getPercentInstance(Locale.US);
 		String percentOut = percentFormatter.format(commission);
 		return percentOut;
+	}
+	
+	public String getCommissionValue() {
+		double value_2dp = (double)Math.round(commission * 100.0 * 100.0) / 100.0;
+		String toReturn = "" + value_2dp;
+		if (toReturn.endsWith(".0")) {
+			return (toReturn.substring(0, toReturn.length()-2));
+		} else {
+			return toReturn;
+		}
 	}
 
 
@@ -1382,6 +1406,7 @@ public void setStageDate(java.sql.Date tmp) { this.stageDate = tmp; }
 		closeDate = rs.getDate("closedate");
 		
 		closeProb = rs.getDouble("closeprob");
+		if (System.getProperty("DEBUG") != null) System.out.println("Opportunity-> Close Prob: " + closeProb);
 		terms = rs.getInt("terms");
 		low = rs.getDouble("lowvalue");
 		guess = rs.getDouble("guessvalue");

@@ -95,7 +95,7 @@
     Prob. of Close
   </td>
   <td valign=center>
-    <input type=text size=5 name="closeProb" value="<%= OppDetails.getCloseProb()*100 %>">%
+    <input type=text size=5 name="closeProb" value="<%= OppDetails.getCloseProbValue() %>">%
     <font color="red">*</font> <%= showAttribute(request, "closeProbError") %>
   </td>
 </tr>
@@ -171,7 +171,7 @@
     Est. Commission
   </td>
   <td valign=center>
-    <input type=text size=5 name="commission" value="<%= OppDetails.getCommission()*100 %>">%
+    <input type=text size=5 name="commission" value="<%= OppDetails.getCommissionValue() %>">%
     <input type=hidden name="accountLink" value="<%=request.getParameter("orgId")%>">
     <input type=hidden name="orgId" value="<%=request.getParameter("orgId")%>">
   </td>

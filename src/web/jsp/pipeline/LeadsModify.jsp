@@ -104,7 +104,7 @@ Reassign To
     Prob. of Close
   </td>
   <td colspan=1 valign=center>
-    <input type=text size=5 name="closeProb" value="<%= OpportunityDetails.getCloseProb()*100 %>">%
+    <input type=text size=5 name="closeProb" value="<%= OpportunityDetails.getCloseProbValue() %>">%
     <font color="red">*</font> <%= showAttribute(request, "closeProbError") %>
   </td>
 </tr>
@@ -179,7 +179,7 @@ Reassign To
     Est. Commission
   </td>
   <td colspan=1 valign=center>
-    <input type=text size=5 name="commission" value="<%= OpportunityDetails.getCommission()*100 %>">%
+    <input type=text size=5 name="commission" value="<%= OpportunityDetails.getCommissionValue() %>">%
     <input type=hidden name="accountLink" value="<%=request.getParameter("orgId")%>">
     <input type=hidden name="orgId" value="<%=request.getParameter("orgId")%>">
   </td>

@@ -46,7 +46,7 @@
       Prob. of Close
     </td>
     <td valign=center width=100%>
-      <%= OppDetails.getCloseProbPercent() %>
+      <%= OppDetails.getCloseProbValue() %>%
     </td>
   </tr>
 
@@ -109,7 +109,7 @@
       Est. Commission
     </td>
     <td>
-      <%= OppDetails.getCommissionPercent() %>
+      <%= OppDetails.getCommissionValue() %>%
     </td>
   </tr>
   

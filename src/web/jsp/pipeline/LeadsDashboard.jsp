@@ -127,7 +127,7 @@
           <td class="row<%= rowid %>" valign=center><a href="/Leads.do?command=DetailsOpp&id=<%=thisOpp.getId()%>"><%= toHtml(thisOpp.getShortDescription()) %></a></td>
           <td class="row<%= rowid %>" valign=center><%= thisOpp.getAccountName() %></td>
           <td class="row<%= rowid %>" valign=center align="right">$<%= ((thisOpp.getGuess()/1000)) %>K</td>
-          <td class="row<%= rowid %>" valign=center align="right" width=25><%= ((int)(thisOpp.getCloseProb()*100)) %></td>
+          <td class="row<%= rowid %>" valign=center align="right" width=25><%= ((int)(thisOpp.getCloseProbValue())) %></td>
           <td class="row<%= rowid %>" valign=center align="right"  width=90><%= toHtml(thisOpp.getCloseDateString()) %></td>
           <td class="row<%= rowid %>" valign=center align="right" width=25><%= thisOpp.getTermsString() %></td>
         </tr>
