@@ -205,6 +205,53 @@ public final class ExternalContactsOpps extends CFSModule {
   }
 
 
+  public String executeCommandUpdateOpp(ActionContext context) {
+    if (!hasPermission(context, "contacts-external_contacts-opportunities-edit")) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    Connection db = null;
+    int resultCount = 0;
+    String headerId = context.getRequest().getParameter("headerId");
+
+    try {
+      db = this.getConnection(context);
+      OpportunityHeader oppHeader = new OpportunityHeader(db, Integer.parseInt(headerId));
+      if (!hasAuthority(context, oppHeader.getEnteredBy())) {
+        return "PermissionError";
+      }
+      oppHeader.setModifiedBy(getUserId(context));
+      oppHeader.setDescription(context.getRequest().getParameter("description"));
+      resultCount = oppHeader.update(db);
+      if (resultCount == -1) {
+        processErrors(context, oppHeader.getErrors());
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (resultCount == -1) {
+        return executeCommandModifyOpp(context);
+      } else if (resultCount == 1) {
+        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+          return (executeCommandViewOpps(context));
+        } else {
+          return (executeCommandDetailsOpp(context));
+        }
+      } else {
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+        return ("UserError");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
   /**
    *  Description of the Method
    *
