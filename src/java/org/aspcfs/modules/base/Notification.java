@@ -12,7 +12,27 @@ import java.net.*;
  *@created    October 15, 2001
  *@version    $Id$
  */
-public class Notification {
+public class Notification extends Thread {
+
+  public static final int EMAIL = 1;
+  public static final int FAX = 2;
+  public static final int LETTER = 3;
+  public static final int EMAILFAX = 4;
+  public static final int EMAILLETTER = 5;
+  public static final int EMAILFAXLETTER = 6;
+  public static final int IM = 7;
+  public static final int SSL = 8;
+
+  public static final String EMAIL_TEXT = "Email";
+  public static final String FAX_TEXT = "Fax";
+  public static final String LETTER_TEXT = "Letter";
+  public static final String EMAILFAX_TEXT = "Email first, try Fax";
+  public static final String EMAILLETTER_TEXT = "Email first, then Letter";
+  public static final String EMAILFAXLETTER_TEXT = "Email first, try Fax, then Letter";
+  public static final String IM_TEXT = "Instant Message";
+  public static final String SSL_TEXT = "SSL Message";
+  String faxLogEntry = null;
+  Contact contact = null;
 
   private int id = -1;
   private String databaseName = null;
@@ -26,31 +46,18 @@ public class Notification {
   private int messageIdToSend = -1;
   private String messageToSend = null;
   private int type = -1;
-	private String typeText = null;
+  private String typeText = null;
+  
+  private String host = null;
+  private int port = -1;
+  
   private String siteCode = null;
   private java.sql.Timestamp attempt = null;
   private int result = 0;
   private String status = "";
   private String errorMessage = null;
-  String faxLogEntry = null;
-  Contact contact = null;
 
-	public final static int EMAIL = 1;
-	public final static int FAX = 2;
-  public final static int LETTER = 3;
-  public final static int EMAILFAX = 4;
-  public final static int EMAILLETTER = 5;
-  public final static int EMAILFAXLETTER = 6;
-  public final static int IM = 7;
-	
-  public final static String EMAIL_TEXT = "Email";
-  public final static String FAX_TEXT = "Fax";
-  public final static String LETTER_TEXT = "Letter";
-  public final static String EMAILFAX_TEXT = "Email first, try Fax";
-  public final static String EMAILLETTER_TEXT = "Email first, then Letter";
-  public final static String EMAILFAXLETTER_TEXT = "Email first, try Fax, then Letter";
-  public final static String IM_TEXT = "Instant Message";
-  
+  private Connection connection = null;
 
 
   /**
@@ -70,9 +77,23 @@ public class Notification {
   public void setUserToNotify(int tmp) {
     this.userToNotify = tmp;
   }
-  
-  public void setContactToNotify(int tmp) { this.contactToNotify = tmp; }
 
+
+  /**
+   *  Sets the contactToNotify attribute of the Notification object
+   *
+   *@param  tmp  The new contactToNotify value
+   */
+  public void setContactToNotify(int tmp) {
+    this.contactToNotify = tmp;
+  }
+
+
+  /**
+   *  Sets the databaseName attribute of the Notification object
+   *
+   *@param  tmp  The new databaseName value
+   */
   public void setDatabaseName(String tmp) {
     this.databaseName = tmp;
   }
@@ -109,7 +130,13 @@ public class Notification {
   public void setItemModified(java.sql.Timestamp tmp) {
     this.itemModified = tmp;
   }
-  
+
+
+  /**
+   *  Sets the messageIdToSend attribute of the Notification object
+   *
+   *@param  tmp  The new messageIdToSend value
+   */
   public void setMessageIdToSend(int tmp) {
     this.messageIdToSend = tmp;
   }
@@ -125,31 +152,44 @@ public class Notification {
     this.messageToSend = tmp;
   }
 
-	public void setType(int tmp) {
-		this.type = tmp;
+
+  /**
+   *  Sets the type attribute of the Notification object
+   *
+   *@param  tmp  The new type value
+   */
+  public void setType(int tmp) {
+    this.type = tmp;
     switch (this.type) {
-      case EMAIL:
-        this.setTypeText(EMAIL_TEXT);
-        break;
-      case FAX:
-        this.setTypeText(FAX_TEXT);
-        break;
-      case LETTER:
-        this.setTypeText(LETTER_TEXT);
-        break;
-      case EMAILFAX:
-        this.setTypeText(EMAILFAX_TEXT);
-        break;
-      case EMAILLETTER:
-        this.setTypeText(EMAILLETTER_TEXT);
-        break;
-      case EMAILFAXLETTER:
-        this.setTypeText(EMAILFAXLETTER_TEXT);
-        break;
-      default:
-        break;
+        case EMAIL:
+          this.setTypeText(EMAIL_TEXT);
+          break;
+        case FAX:
+          this.setTypeText(FAX_TEXT);
+          break;
+        case LETTER:
+          this.setTypeText(LETTER_TEXT);
+          break;
+        case EMAILFAX:
+          this.setTypeText(EMAILFAX_TEXT);
+          break;
+        case EMAILLETTER:
+          this.setTypeText(EMAILLETTER_TEXT);
+          break;
+        case EMAILFAXLETTER:
+          this.setTypeText(EMAILFAXLETTER_TEXT);
+          break;
+        case IM:
+          this.setTypeText(IM_TEXT);
+          break;
+        case SSL:
+          this.setTypeText(SSL_TEXT);
+          break;
+        default:
+          break;
     }
-	}
+  }
+
 
   /**
    *  Sets the Type attribute of the Notification object
@@ -171,7 +211,13 @@ public class Notification {
   public void setSubject(String tmp) {
     this.subject = tmp;
   }
-  
+
+
+  /**
+   *  Sets the from attribute of the Notification object
+   *
+   *@param  tmp  The new from value
+   */
   public void setFrom(String tmp) {
     this.from = tmp;
   }
@@ -185,6 +231,14 @@ public class Notification {
    */
   public void setSiteCode(String tmp) {
     this.siteCode = tmp;
+  }
+  
+  public void setPort(int tmp) {
+    this.port = tmp;
+  }
+  
+  public void setHost(String tmp) {
+    this.host = tmp;
   }
 
 
@@ -219,7 +273,13 @@ public class Notification {
   public int getResult() {
     return result;
   }
-  
+
+
+  /**
+   *  Gets the status attribute of the Notification object
+   *
+   *@return    The status value
+   */
   public String getStatus() {
     return status;
   }
@@ -235,13 +295,26 @@ public class Notification {
     return errorMessage;
   }
 
+
+  /**
+   *  Gets the faxLogEntry attribute of the Notification object
+   *
+   *@return    The faxLogEntry value
+   */
   public String getFaxLogEntry() {
     return faxLogEntry;
   }
-  
+
+
+  /**
+   *  Gets the contact attribute of the Notification object
+   *
+   *@return    The contact value
+   */
   public Contact getContact() {
     return contact;
   }
+
 
   /**
    *  Gets the New attribute of the Notification object
@@ -257,7 +330,7 @@ public class Notification {
       String sql =
           "SELECT * " +
           "FROM notification " +
-          "WHERE notify_user = " + ((userToNotify > -1)?userToNotify:contactToNotify) + " " +
+          "WHERE notify_user = " + ((userToNotify > -1) ? userToNotify : contactToNotify) + " " +
           "AND module = ? " +
           "AND item_id = " + itemId + " " +
           "AND item_modified = ? ";
@@ -270,7 +343,7 @@ public class Notification {
       } else {
         pst.setTimestamp(++i, itemModified);
       }
-      
+
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
         resultCheck = 1;
@@ -309,10 +382,10 @@ public class Notification {
   public void insertNotification(Connection db) {
     try {
       String sql =
-        "INSERT INTO notification " +
-        "(notify_user, module, item_id, item_modified, notify_type, subject, message, result, errorMessage) " +
-        "VALUES " +
-        "(?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+          "INSERT INTO notification " +
+          "(notify_user, module, item_id, item_modified, notify_type, subject, message, result, errorMessage) " +
+          "VALUES " +
+          "(?, ?, ?, ?, ?, ?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       if (userToNotify > -1) {
@@ -339,7 +412,7 @@ public class Notification {
       result += 1;
     }
   }
-  
+
 
   /**
    *  Description of the Method
@@ -375,10 +448,10 @@ public class Notification {
           }
         } else if (type == IM) {
 
-
         } else if (type == FAX) {
 
-
+        } else if (type == SSL) {
+          
         }
       } catch (Exception e) {
         result = 2;
@@ -388,7 +461,13 @@ public class Notification {
       System.out.println("Notification-> Type not set");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db  Description of Parameter
+   */
   public void notifyContact(Connection db) {
     if (type > -1) {
       try {
@@ -430,7 +509,7 @@ public class Notification {
             mail.setFrom(siteCode + "@" + this.getHostName());
           }
           mail.setType("text/html");
-          
+
           if (thisContact.getEmailAddress("Business").equals("")) {
             mail.addTo(thisContact.getEmailAddress("Personal"));
           } else {
@@ -452,14 +531,14 @@ public class Notification {
 
           status = "IM Sent";
         } else if (type == FAX) {
-					System.out.println("Notification-> To: " + thisContact.getPhoneNumber("Demo Fax"));
+          System.out.println("Notification-> To: " + thisContact.getPhoneNumber("Demo Fax"));
           String phoneNumber = thisContact.getPhoneNumber("Demo Fax");
           if (!phoneNumber.equals("") && phoneNumber.length() > 0) {
-						phoneNumber = PhoneNumber.convertToNumber(phoneNumber);
+            phoneNumber = PhoneNumber.convertToNumber(phoneNumber);
             if (phoneNumber.startsWith("1")) {
-							phoneNumber = phoneNumber.substring(1);
-						}
-						if (phoneNumber.startsWith("757")) {
+              phoneNumber = phoneNumber.substring(1);
+            }
+            if (phoneNumber.startsWith("757")) {
               phoneNumber = phoneNumber.substring(3);
             } else {
               phoneNumber = "1" + phoneNumber;
@@ -471,6 +550,8 @@ public class Notification {
         } else if (type == LETTER) {
           contact = thisContact;
           status = "Added to Report";
+        } else if (type == SSL) {
+          
         }
       } catch (Exception e) {
         result = 2;
@@ -480,7 +561,39 @@ public class Notification {
       System.out.println("Notification-> Type not set");
     }
   }
+  
+  public void notifySystem() throws Exception {
+    if (type == SSL) {
+      SSLMessage thisMessage = new SSLMessage();
+      thisMessage.setUrl(host);
+      thisMessage.setPort(port);
+      thisMessage.setMessage(messageToSend);
+      result = thisMessage.send();
+    }
+  }
 
+  public void send()  {
+    this.start();
+  }
+  
+  public void send(Connection db)  {
+    this.connection = db;
+    this.start();
+  }
+  
+  public void run() {
+    try {
+      if (userToNotify > -1) {
+        this.notifyUser(connection);
+      } else if (contactToNotify > -1) {
+        this.notifyContact(connection);
+      } else {
+       this.notifySystem();
+      }
+    } catch (Exception ignore) {
+      result = 1;
+    }
+  }
 
   /**
    *  Gets the HostName attribute of the Notification object

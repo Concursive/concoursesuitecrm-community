@@ -1203,6 +1203,8 @@ public final class Accounts extends CFSModule {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Accounts-> InsertField validation error");
         }
+      } else {
+        //trigger
       }
       context.getRequest().setAttribute("Category", thisCategory);
 
