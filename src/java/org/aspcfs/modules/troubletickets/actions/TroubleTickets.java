@@ -502,7 +502,7 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandHome(ActionContext context) {
-
+    int MINIMIZED_ITEMS_PER_PAGE = 5;
     if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("PermissionError");
     }
@@ -534,9 +534,13 @@ public final class TroubleTickets extends CFSModule {
     
     if (sectionId == null) {
       if (!assignedToMeInfo.getExpandedSelection()) {
-        assignedToMeInfo.setItemsPerPage(6);
+        if (assignedToMeInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
+          assignedToMeInfo.setItemsPerPage(MINIMIZED_ITEMS_PER_PAGE);
+        }
       } else {
-        assignedToMeInfo.setItemsPerPage(10);
+        if (assignedToMeInfo.getItemsPerPage() == MINIMIZED_ITEMS_PER_PAGE) {
+          assignedToMeInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
+        }
       }
     } else if (sectionId.equals(assignedToMeInfo.getId())) {
       assignedToMeInfo.setExpandedSelection(true);
@@ -559,9 +563,13 @@ public final class TroubleTickets extends CFSModule {
     
     if (sectionId == null) {
       if (!openInfo.getExpandedSelection()) {
-        openInfo.setItemsPerPage(6);
+        if (openInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
+          openInfo.setItemsPerPage(MINIMIZED_ITEMS_PER_PAGE);
+        }
       } else {
-        openInfo.setItemsPerPage(10);
+        if (openInfo.getItemsPerPage() == MINIMIZED_ITEMS_PER_PAGE) {
+          openInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
+        }
       }
     } else if (sectionId.equals(openInfo.getId())) {
       openInfo.setExpandedSelection(true);
@@ -584,9 +592,13 @@ public final class TroubleTickets extends CFSModule {
     
     if (sectionId == null) {
       if (!createdByMeInfo.getExpandedSelection()) {
-        createdByMeInfo.setItemsPerPage(6);
+        if (createdByMeInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
+          createdByMeInfo.setItemsPerPage(MINIMIZED_ITEMS_PER_PAGE);
+        }
       } else {
-        createdByMeInfo.setItemsPerPage(10);
+        if (createdByMeInfo.getItemsPerPage() == MINIMIZED_ITEMS_PER_PAGE) {
+          createdByMeInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
+        }
       }
     } else if (sectionId.equals(createdByMeInfo.getId())) {
       createdByMeInfo.setExpandedSelection(true);
