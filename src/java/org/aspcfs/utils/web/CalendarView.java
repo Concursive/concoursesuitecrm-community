@@ -888,12 +888,6 @@ public class CalendarView {
 		Date now = new Date();
 		tmpCal.setTime(now);
 
-		//StringTokenizer st = new StringTokenizer(startingDate, "/");
-
-		//if (st.hasMoreTokens()) {
-		//tmpCal.set( Integer.parseInt(tmpCal.get(Calendar.YEAR)), Integer.parseInt(tmpCal.get(Calendar.MONTH)), Integer.parseInt(tmpCal.get(Calendar.DAY_OF_MONTH)) );
-		//}
-
 		while (count < max && loopCount < 31) {
 			thisDay = getDaysEvents(tmpCal.get(Calendar.MONTH), tmpCal.get(Calendar.DAY_OF_MONTH), tmpCal.get(Calendar.YEAR));
 			Iterator i = thisDay.iterator();
@@ -910,6 +904,9 @@ public class CalendarView {
 			tmpCal.add(java.util.Calendar.DATE, +1);
 			loopCount++;
 		}
+		
+		if (count == 0) { html.append("<tr><td valign=center>No alerts found.</td></tr>"); }
+			
 
 		return html;
 	}
