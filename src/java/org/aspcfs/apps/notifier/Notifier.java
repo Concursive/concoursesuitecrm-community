@@ -57,8 +57,6 @@ public class Notifier extends ReportBuilder {
       AppUtils.loadConfig("notifier.xml", thisNotifier.config);
     }
 
-    System.out.println("Generating and sending reports... ");
-
     thisNotifier.baseName = (String) thisNotifier.config.get("GATEKEEPER.URL");
     thisNotifier.dbUser = (String) thisNotifier.config.get("GATEKEEPER.USER");
     thisNotifier.dbPass = (String) thisNotifier.config.get("GATEKEEPER.PASSWORD");
@@ -107,16 +105,9 @@ public class Notifier extends ReportBuilder {
               (String) siteInfo.get("user"),
               (String) siteInfo.get("password"));
           thisNotifier.baseName = (String) siteInfo.get("sitecode");
-
-          System.out.println("Running Alerts...");
           thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db, siteInfo));
-          //thisNotifier.output.append(thisNotifier.buildCallAlerts(db));
-          thisNotifier.output.append(lf+lf+lf);
-
-          System.out.println("Running Communications...");
+          //thisNotifier.output.append(thisNotifier.buildCallAlerts(db, siteInfo));
           thisNotifier.output.append(thisNotifier.buildCommunications(db, siteInfo));
-          thisNotifier.output.append(lf+lf+lf);
-
           db.close();
         }
 
@@ -172,41 +163,49 @@ public class Notifier extends ReportBuilder {
       thisNotification.setItemId(thisComponent.getId());
       thisNotification.setItemModified(thisComponent.getModified());
       if (thisNotification.isNew(db)) {
-        System.out.println("Notifier-> ...it's new");
         OpportunityHeader thisOpportunity = new OpportunityHeader(db, thisComponent.getHeaderId());
         String relationshipType = null;
         String relationshipName = null;
         if (thisOpportunity.getAccountLink() > 0) {
-          Organization thisOrganization = new Organization(db, thisOpportunity.getAccountLink());
-          relationshipType = "Organization";
-          relationshipName = thisOrganization.getName();
+          try {
+            Organization thisOrganization = new Organization(db, thisOpportunity.getAccountLink());
+            relationshipType = "Organization";
+            relationshipName = thisOrganization.getName();
+          } catch (Exception ignore) {
+          }
         } else if (thisOpportunity.getContactLink() > 0) {
-          Contact thisContact = new Contact(db, thisOpportunity.getContactLink());
-          relationshipType = "Contact";
-          relationshipName = thisContact.getNameFull();
+          try {
+            Contact thisContact = new Contact(db, thisOpportunity.getContactLink());
+            relationshipType = "Contact";
+            relationshipName = thisContact.getNameFull();
+          } catch (Exception ignore) {
+          }
         }
         thisNotification.setFrom("cfs-messenger@" + (String) siteInfo.get("vhost"));
         thisNotification.setSiteCode(baseName);
-        thisNotification.setSubject("CFS Opportunity: " + StringUtils.toHtml(relationshipName));
+        thisNotification.setSubject("CFS Opportunity" + (relationshipName != null?": " + StringUtils.toHtml(relationshipName):""));
         thisNotification.setMessageToSend(
+            NOREPLY_DISCLAIMER + "<br>" +
+            "<br>" +
             "The following opportunity component in CFS has an alert set:<br>" +
             "<br>" +
-            relationshipType + ": " + StringUtils.toHtml(relationshipName) + "<br>" +
+            (relationshipType != null?
+             relationshipType + ": " + StringUtils.toHtml(relationshipName) + "<br>":"") +
             "Opportunity Name: " + StringUtils.toHtml(thisOpportunity.getDescription()) + "<br>" +
             "Component Description: " + StringUtils.toHtml(thisComponent.getDescription()) + "<br>" +
             "Close Date: " + thisComponent.getCloseDateString() + "<br>" +
             "Alert Text: " + StringUtils.toHtml(thisComponent.getAlertText()) + "<br>" +
             "Notes: " + StringUtils.toHtml(thisComponent.getNotes()) + "<br>" +
-            "<br>" + NOREPLY_DISCLAIMER);
+            "<br>" +
+            "<a href=\"" + (String) siteInfo.get("vhost") + "\"");
         thisNotification.setType(Notification.EMAIL);
         thisNotification.setTypeText(Notification.EMAIL_TEXT);
         thisNotification.notifyUser(db);
         ++notifyCount;
-      } else {
-        System.out.println("Notifier-> ...it's old");
       }
       if (thisNotification.hasErrors()) {
         System.out.println("Notifier Error-> " + thisNotification.getErrorMessage());
+        System.out.println("Notifier-> Opportunity Component: " + thisComponent.getId());
       }
     }
     thisReport.setHeader("Opportunity Alerts Report for " + start.toString() + lf + "Total Records: " + notifyCount);
@@ -222,7 +221,7 @@ public class Notifier extends ReportBuilder {
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
-  private String buildCallAlerts(Connection db) throws SQLException {
+  private String buildCallAlerts(Connection db, HashMap siteInfo) throws SQLException {
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
     thisReport.addColumn("User");
@@ -254,11 +253,14 @@ public class Notifier extends ReportBuilder {
         thisNotification.setSubject(
             "Call Alert: " + thisCall.getSubject());
         thisNotification.setMessageToSend(
+            NOREPLY_DISCLAIMER + "<br>" +
+            "<br>" +
             "The following call in CFS has an alert set: <br>" +
             "<br>" +
             "Contact: " + StringUtils.toHtml(thisCall.getContactName()) + "<br>" +
             "Call Notes: " + StringUtils.toHtml(thisCall.getNotes()) + "<br>" +
-            "<br>" + NOREPLY_DISCLAIMER);
+            "<br>" +
+            "<a href=\"" + (String) siteInfo.get("vhost") + "\"");
         thisNotification.setType(Notification.EMAIL);
         thisNotification.setTypeText(Notification.EMAIL_TEXT);
         thisNotification.notifyUser(db);
