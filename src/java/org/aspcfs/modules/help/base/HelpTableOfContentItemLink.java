@@ -10,7 +10,8 @@ import java.util.*;
 import java.text.*;
 
 /**
- *  Description of the Class
+ *  Represents the properties/methods of a href(s) of each item in the 
+ * table of contents of the Table of Contents of the help module
  *
  *@author     kbhoopal
  *@created    November 11, 2003

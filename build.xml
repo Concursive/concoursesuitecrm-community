@@ -56,9 +56,11 @@
     <echo message="ant installdb: create tables, insert base records and permissions into new database"/>
     <echo message="    install.database: just create the tables and base data"/>
     <echo message="    install.permissions: just install the permissions"/>
+    <echo message="    install.help: just install the help contents"/>
     <echo message="    install.addsite: just add a site to the gatekeeper database"/>
     <echo message="    install.copyprefs: just copy site pref files to WEB-INF fileLibrary"/>
     <echo message="ant upgradedb: upgrades all databases in the gatekeeper with a specified script file"/>
+    <echo message="    upgradedb.help: upgrades the help contents of a specific database"/>
     <echo message="ant test: compile deployed JSPs to check for errors"/>
     <echo message="ant clean: delete the temporary build folder used by the install"/>
     <echo message="ant docs: generate JavaDocs for all packages"/>
@@ -474,7 +476,7 @@
   <!-- Copy all data to the web-app folder and finalize any items -->
   <target name="deploy"
           description="Compile, build, copy, and configure web application"
-          depends="log.deploy,classes.prepare,build,keyfile,deploy.delete,deploy.copy,deploy.merge,deploy.jasper">
+          depends="log.deploy,classes.prepare,build,keyfile,license,deploy.delete,deploy.copy,deploy.merge,deploy.jasper">
     <mkdir dir="${CFS_HOME}/graphs"/>
   </target>
   
@@ -783,6 +785,54 @@
     </java>
   </target>
   
+  
+  <!-- Upgrade help contents by deleting all help and then inserting -->
+  <target name="upgradedb.help" depends="init,install.prepare,install.deletehelp,install.help"/>
+  
+  <!-- Upgrade help contents by deleting all help and then inserting -->
+  <target name="install.deletehelp" depends="init,install.prepare">
+    <echo message="Deleting existing help contents..."/>
+    <!-- Delete the old help -->
+    <sql
+        driver="${SITE.DRIVER}"
+        url="${SITE.URL}${DATABASE.NAME}"
+        userid="${SITE.USER}"
+        password="${SITE.PASSWORD}">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+      </classpath>
+      <transaction>DROP TABLE help_tips;</transaction>
+      <transaction>DROP TABLE help_notes;</transaction>
+      <transaction>DROP TABLE help_business_rules;</transaction>
+      <transaction>DROP TABLE help_faqs;</transaction>
+      <transaction>DROP TABLE help_related_links;</transaction>
+      <transaction>DROP TABLE help_features;</transaction>
+      <transaction>DROP TABLE lookup_help_features;</transaction>
+      <transaction>DROP TABLE help_tableofcontentitem_links;</transaction>
+      <transaction>DROP TABLE help_tableof_contents;</transaction>
+      <transaction>DROP TABLE help_contents;</transaction>
+      <transaction>DROP TABLE help_module;</transaction>
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_help.sql"/>
+    </sql>
+  </target>
+  
+  <!-- Install help contents into blank database -->
+  <target name="install.help" depends="init,install.prepare">
+    <echo message="Installing help contents from: ${src.sql.dir}${fs}init${fs}help.xml"/>
+    <java classname="org.aspcfs.apps.help.ImportHelp" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/darkhorseventures.jar"/>
+      </classpath>
+      <arg value="${src.sql.dir}${fs}init${fs}help.xml"/>
+      <arg value="${SITE.DRIVER}"/>
+      <arg value="${SITE.URL}${DATABASE.NAME}"/>
+      <arg value="${SITE.USER}"/>
+      <arg value="${SITE.PASSWORD}"/>
+    </java>
+  </target>
+  
   <!-- Add a site record to the sites table -->
   <target name="install.addsite" depends="init,install.prepare.dbname,install.gatekeeper.init" unless="DATABASE.SKIP_GATEKEEPER">
     <input message="Please enter the virtual host URL for this site, ex &lt;site&gt;.aspcfs.com or 127.0.0.1: " 
@@ -827,7 +877,7 @@
   </target>
   
   <!-- Installs a new database -->
-  <target name="installdb" depends="log.installdb,install.database,install.permissions,install.copyprefs,install.addsite"
+  <target name="installdb" depends="log.installdb,install.database,install.permissions,install.help,install.copyprefs,install.addsite"
     description="Create tables, insert base records and permissions into new database, copy XML files">
   </target>
   

@@ -10,10 +10,11 @@ import java.util.*;
 import java.text.*;
 
 /**
- *  Represents a Help Tip on a page in CFS
+ *  Help Module class to allow administrators to insert
+ *  biref and detailed description of application modules
  *
  *@author     kbhoopal
- *@created    Nov 10, 2003
+ *@created    December 10, 2003
  *@version    $Id$
  */
 public class HelpModule extends GenericBean {
@@ -268,10 +269,10 @@ public class HelpModule extends GenericBean {
     int count = 0;
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
-      "UPDATE help_module " +
-      "SET module_brief_description = ?, module_detail_description = ? " +
-      "WHERE module_id = ?"
-      );
+        "UPDATE help_module " +
+        "SET module_brief_description = ?, module_detail_description = ? " +
+        "WHERE module_id = ?"
+        );
     pst.setString(++i, this.getBriefDescription());
     pst.setString(++i, this.getDetailDescription());
     pst.setInt(++i, this.getId());

@@ -20,7 +20,7 @@
       </tr>
        <tr>
          <td>
-          <%=helpModule.getBriefDescription()%>
+          <%=toHtml(helpModule.getBriefDescription())%>
         </td>
        </tr>
      </table><br>
@@ -36,7 +36,7 @@
       </tr>
        <tr>
          <td>
-          <%=helpModule.getDetailDescription()%>
+          <%=toHtml(helpModule.getDetailDescription())%>
         </td>
        </tr>
      </table><br>

@@ -10,7 +10,8 @@ import java.util.*;
 import java.text.*;
 
 /**
- *  Description of the Class
+ *  Represents a single the properties and methods of/on a single 
+ *  item in the Table of Contents of the help system 
  *
  *@author     kbhoopal
  *@created    November 11, 2003

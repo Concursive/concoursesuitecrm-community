@@ -10,7 +10,7 @@ import java.util.*;
 import java.text.*;
 
 /**
- *  Description of the Class
+ *  Represents the properties of the Table of Contents in the Help System 
  *
  *@author     kbhoopal
  *@created    November 11, 2003

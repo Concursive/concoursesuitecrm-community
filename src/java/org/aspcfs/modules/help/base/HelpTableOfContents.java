@@ -11,7 +11,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 /**
- *  Description of the Class
+ *  List class of TableofContentItem 
  *
  *@author     kbhoopal
  *@created    November 10, 2003
