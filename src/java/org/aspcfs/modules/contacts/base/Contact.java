@@ -228,14 +228,28 @@ public class Contact extends GenericBean {
   public String getUrl() {
     return url;
   }
-  
+
+
+  /**
+   *  Gets the hasOpportunities attribute of the Contact object
+   *
+   *@return    The hasOpportunities value
+   */
   public boolean getHasOpportunities() {
     return hasOpportunities;
   }
+
+
+  /**
+   *  Sets the hasOpportunities attribute of the Contact object
+   *
+   *@param  hasOpportunities  The new hasOpportunities value
+   */
   public void setHasOpportunities(boolean hasOpportunities) {
     this.hasOpportunities = hasOpportunities;
   }
-  
+
+
   /**
    *  Sets the url attribute of the Contact object
    *
@@ -370,7 +384,6 @@ public class Contact extends GenericBean {
         "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
-    System.out.println(pst.toString());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       this.setHasEnabledOwnerAccount(true);
@@ -921,14 +934,12 @@ public class Contact extends GenericBean {
   public void setTypeList(String[] criteriaString) {
     if (criteriaString != null) {
       String[] params = criteriaString;
-      System.out.println("Contact -- > TypeList not null  " + params.toString());
       typeList = new ArrayList(Arrays.asList(params));
     } else {
       typeList = new ArrayList();
     }
 
     this.typeList = typeList;
-    System.out.println("Contact -- > TypeList " + typeList.toString());
   }
 
 
@@ -1721,9 +1732,6 @@ public class Contact extends GenericBean {
 
     try {
       db.setAutoCommit(false);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Contact-> Inserting contact");
-      }
       sql.append(
           "INSERT INTO contact " +
           "(user_id, namefirst, namelast, owner, primary_contact, ");
@@ -1908,15 +1916,8 @@ public class Contact extends GenericBean {
     } else {
       try {
         db.setAutoCommit(false);
-        
-        /**
-        OpportunityList oppList = new OpportunityList();
-        oppList.setContactId(this.getId());
-        oppList.buildList(db);
-        oppList.delete(db);
-        oppList = null;
-        */
-        
+
+
         CustomFieldRecordList folderList = new CustomFieldRecordList();
         folderList.setLinkModuleId(Constants.CONTACTS);
         folderList.setLinkItemId(this.getId());
@@ -1994,7 +1995,8 @@ public class Contact extends GenericBean {
       return true;
     }
   }
-  
+
+
   /**
    *  Resets the types for this Contact
    *
@@ -2287,7 +2289,6 @@ public class Contact extends GenericBean {
 
     //Remove all contact types, add new list
     if (typeList != null) {
-      System.out.println("Contact -- > Inserting Contact Types ");
       resetType(db);
       int lvlcount = 0;
       for (int k = 0; k < typeList.size(); k++) {
@@ -2368,58 +2369,6 @@ public class Contact extends GenericBean {
     //organization table
     orgName = rs.getString("org_name");
     orgEnabled = rs.getBoolean("orgenabled");
-  }
-
-
-  /**
-   *  Gets the contactType attribute of the Contact class
-   *
-   *@param  db                Description of the Parameter
-   *@param  contactId         Description of the Parameter
-   *@return                   The contactType value
-   *@exception  SQLException  Description of the Exception
-   */
-  public static int getContactType(Connection db, int contactId) throws SQLException {
-    int typeId = -1;
-
-    try {
-      if (contactId == -1) {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("Contact -> Invalid Contact ID");
-        }
-      }
-
-      db.setAutoCommit(false);
-      int i = 0;
-
-      PreparedStatement pst = db.prepareStatement(
-          "SELECT user_id, type_id " +
-          "FROM contact " +
-          "where contact_id = ? ");
-      pst.setInt(1, contactId);
-      ResultSet rs = pst.executeQuery();
-      if (rs.next()) {
-        typeId = rs.getInt("type_id");
-        if (rs.wasNull()) {
-          typeId = -1;
-        }
-      }
-
-      pst.close();
-      rs.close();
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Contact -> ContactID: " + contactId);
-        System.out.println("Contact -> Type id is " + typeId);
-      }
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
-    }
-    return typeId;
   }
 
 
@@ -2542,7 +2491,7 @@ public class Contact extends GenericBean {
       if (rs.next()) {
         int oppCount = rs.getInt("oppcount");
         if (oppCount > 0) {
-            this.setHasOpportunities(true);
+          this.setHasOpportunities(true);
         }
         Dependency thisDependency = new Dependency();
         thisDependency.setName("Opportunities");

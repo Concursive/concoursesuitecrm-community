@@ -1160,7 +1160,6 @@ public class ContactList extends Vector {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
-      System.out.println("ContactList -- > BuildList " + pst.toString());
       rs = pst.executeQuery();
       if (rs.next()) {
         int maxRecords = rs.getInt("recordcount");
