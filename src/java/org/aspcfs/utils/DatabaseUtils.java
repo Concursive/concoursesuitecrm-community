@@ -67,7 +67,7 @@ public class DatabaseUtils {
     if (databaseName.indexOf("postgresql") > -1) {
       return "CURRENT_TIMESTAMP";
     } else if (databaseName.indexOf("mssql") > -1) {
-      return "now()";
+      return "CURRENT_TIMESTAMP";
     } else if (databaseName.indexOf("oracle") > -1) {
       return "CURRENT_TIMESTAMP";
     } else {
