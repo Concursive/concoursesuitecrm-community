@@ -260,24 +260,24 @@ public class SystemStatus {
     userList.clear();
     
     //Get the top level managers
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("SystemStatus-> buildHierarchyList: A");
-    }
     UserList tmpListA = new UserList();
     tmpListA.setBuildContact(false);
     tmpListA.setBuildHierarchy(false);
     tmpListA.setTopLevel(true);
     tmpListA.buildList(db);
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("SystemStatus-> buildHierarchyList: A " + tmpListA.size());
+    }
 
     //Get everyone
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("SystemStatus-> buildHierarchyList: B");
-    }
     UserList tmpListB = new UserList();
     tmpListB.setBuildContact(false);
     tmpListB.setBuildHierarchy(false);
     tmpListB.setTopLevel(false);
     tmpListB.buildList(db);
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("SystemStatus-> buildHierarchyList: B " + tmpListB.size());
+    }
 
     //Combine the lists
     Iterator listA = tmpListA.iterator();
@@ -286,12 +286,11 @@ public class SystemStatus {
       User userToAdd = tmpListB.getTopUser(thisUser.getId());
       if (userToAdd != null) {
         hierarchyList.add(userToAdd);
-        //System.out.println("SystemStatus-> Manager Added: " + thisUser.getUsername() + " " + thisUser.getId());
+        userList.put(new Integer(userToAdd.getId()), userToAdd);
         this.addChildUsers(userToAdd, tmpListB);
       } else {
         hierarchyList.add(thisUser);
         userList.put(new Integer(thisUser.getId()), thisUser);
-        //System.out.println("SystemStatus-> System User Added: " + thisUser.getUsername());
       }
     }
 
