@@ -11,18 +11,21 @@
   <property environment="env"/>
   
   <!-- computed properties -->
+  <property name="fs" value="${file.separator}"/>
   <property name="base.dir" value="${basedir}"/>
-  <property name="bin.dir" value="${base.dir}${file.separator}bin"/>
-  <property name="lib.dir" value="${base.dir}${file.separator}lib"/>
-  <property name="src.dir" value="${base.dir}${file.separator}src"/>
-  <property name="src.classes.dir" value="${src.dir}${file.separator}java"/>
-  <property name="src.web.dir" value="${src.dir}${file.separator}web"/>
-  <property name="build.dir" value="${base.dir}${file.separator}build"/>
-  <property name="build.lib.dir" value="${build.dir}${file.separator}lib"/>
-  <property name="build.classes.dir" value="${build.dir}${file.separator}classes"/>
-  <property name="build.jsp.dir" value="${build.dir}${file.separator}jsp"/>
-  <property name="build.jspclasses.dir" value="${build.dir}${file.separator}jspclasses"/>
-  <property name="dist.dir" value="${base.dir}${file.separator}dist"/>
+  <property name="bin.dir" value="${base.dir}${fs}bin"/>
+  <property name="lib.dir" value="${base.dir}${fs}lib"/>
+  <property name="src.dir" value="${base.dir}${fs}src"/>
+  <property name="src.classes.dir" value="${src.dir}${fs}java"/>
+  <property name="src.web.dir" value="${src.dir}${fs}web"/>
+  <property name="src.sql.dir" value="${src.dir}${fs}sql"/>
+  <property name="build.dir" value="${base.dir}${fs}build"/>
+  <property name="build.lib.dir" value="${build.dir}${fs}lib"/>
+  <property name="build.classes.dir" value="${build.dir}${fs}classes"/>
+  <property name="build.jsp.dir" value="${build.dir}${fs}jsp"/>
+  <property name="build.jspclasses.dir" value="${build.dir}${fs}jspclasses"/>
+  <property name="build.sql.dir" value="${build.dir}${fs}sql"/>
+  <property name="dist.dir" value="${base.dir}${fs}dist"/>
 
   <!-- Environment variables must be set before continuing -->
   <target name="init.environment">
@@ -55,7 +58,7 @@
     <uptodate property="build.config.uptodate"
             srcfile="${base.dir}/build.properties"
             targetfile="${CFS_HOME}/WEB-INF/build.properties"/>
-    <fail unless="build.config.uptodate">Initialization aborted, update ${CFS_HOME}${file.separator}WEB-INF${file.separator}build.properties with any new changes from ${base.dir}${file.separator}build.properties.</fail>
+    <fail unless="build.config.uptodate">Initialization aborted, update ${CFS_HOME}${fs}WEB-INF${fs}build.properties with any new changes from ${base.dir}${fs}build.properties.</fail>
     <loadproperties srcFile="${CFS_HOME}/WEB-INF/build.properties">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.StripLineComments">
@@ -63,8 +66,8 @@
         </filterreader>
       </filterchain>
     </loadproperties>
-    <fail unless="build.config.present">Initialization aborted, build properties file not found at ${CFS_HOME}${file.separator}WEB-INF${file.separator}build.properties</fail>
-    <fail unless="CONTROL">Initialization aborted, edit the properties file at ${CFS_HOME}${file.separator}WEB-INF${file.separator}build.properties</fail>
+    <fail unless="build.config.present">Initialization aborted, build properties file not found at ${CFS_HOME}${fs}WEB-INF${fs}build.properties</fail>
+    <fail unless="CONTROL">Initialization aborted, edit the properties file at ${CFS_HOME}${fs}WEB-INF${fs}build.properties</fail>
   </target>
   
   <!-- Copy the common jars -->
@@ -91,6 +94,7 @@
     <!-- Default properties if not set in file above -->
     <property name="DEBUGLEVEL" value="none"/>
     <!-- WEBSERVER.TYPE -->
+    <property name="GATEKEEPER.DBTYPE" value="postgresql"/>
     <property name="GATEKEEPER.DRIVER" value="org.postgresql.Driver"/>
     <property name="GATEKEEPER.URL" value="jdbc:postgresql://127.0.0.1:5432/cfs2gk"/>
     <property name="GATEKEEPER.USER" value="postgres"/>
@@ -301,11 +305,11 @@
     </genkey>
   </target>
   
-  <!-- Copy all data to the web-app folder -->
+  <!-- Copy all data to the web-app folder and finalize any items -->
   <target name="deploy"
           description="Build all data and copy to CFS_HOME"
           depends="log,init,classes.prepare,build,keyfile,deploy.copy,deploy.merge">
-    
+    <mkdir dir="${CFS_HOME}/graphs"/>
   </target>
   
   <!-- Try to generate .java/.class files out of the web-app .jsps -->
@@ -343,6 +347,100 @@
           depends="init">
     <delete dir="${build.dir}"/>
   </target>
+  
+  
+  <!-- Install the gatekeeper to store all of the database references -->
+  <target name="install.gatekeeper" depends="init">
+    <echo message="Attempting to create gatekeeper tables and permissions, the gatekeeper user and database must already have been created at the database."/>
+    <sql
+        driver="${GATEKEEPER.DRIVER}"
+        url="${GATEKEEPER.URL}"
+        userid="${GATEKEEPER.USER}"
+        password="${GATEKEEPER.PASSWORD}">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+      </classpath>
+      <transaction src="${src.sql.dir}/${GATEKEEPER.DBTYPE}/gatekeeper.sql"/>
+    </sql>
+  </target>
+  
+  <!-- Install a new database -->
+  <target name="install.database" depends="init">
+    <echo message="Building database"/>
+    <!-- Prepare files for any database type -->
+    <delete dir="${build.sql.dir}" failonerror="false"/>
+    <mkdir dir="${build.sql.dir}"/>
+    <copy todir="${build.sql.dir}">
+      <fileset dir="${src.sql.dir}/init">
+        <include name="*.sql" />
+      </fileset>
+    </copy>
+    
+    <!-- Only needed for MSSQL -->
+    <replace dir="${build.sql.dir}" token="true" value="1">
+      <include name="*.sql"/>
+    </replace>
+    <replace dir="${build.sql.dir}" token="false" value="0">
+      <include name="*.sql"/>
+    </replace>
+    
+    <!-- Only needed for PostgreSQL -->
+    <replace dir="${build.sql.dir}" token="true" value="true">
+      <include name="*.sql"/>
+    </replace>
+    <replace dir="${build.sql.dir}" token="false" value="false">
+      <include name="*.sql"/>
+    </replace>
+    
+    <!-- Ask for database name, and optionally create -->
+    
+    <!-- Create database and initialize data -->
+    <sql
+        driver="${SITE.DRIVER}"
+        url="${SITE.URL}"
+        userid="${SITE.USER}"
+        password="${SITE.PASSWORD}">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+      </classpath>
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_cdb.sql"/>
+      <transaction src="${build.sql.dir}/cdb.sql"/>
+      <transaction src="${build.sql.dir}/code_tables.sql"/>
+      <transaction src="${build.sql.dir}/access.sql"/>
+      <transaction src="${build.sql.dir}/organization.sql"/>
+      
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_opportunity.sql"/>
+      <transaction src="${build.sql.dir}/opportunity.sql"/>
+      
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_tms.sql"/>
+      <transaction src="${build.sql.dir}/tms.sql"/>
+      
+      <transaction src="${build.sql.dir}/${SITE.DBTYPE}/new_custom_field.sql"/>
+      
+      <transaction src="${build.sql.dir}/${SITE.DBTYPE}/new_project.sql"/>
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/project.init"/>
+      
+      <transaction src="${build.sql.dir}/${SITE.DBTYPE}/new_campaign.sql"/>
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/campaign.init"/>
+      
+      <transaction src="${build.sql.dir}/${SITE.DBTYPE}/new_help.sql"/>
+      
+      <transaction src="${build.sql.dir}/${SITE.DBTYPE}/new_sync.sql"/>
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/sync.init"/>
+      
+      <transaction src="${build.sql.dir}/${SITE.DBTYPE}/new_autoguide.sql"/>
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/autoguide.init"/>
+      
+      <transaction src="${build.sql.dir}/${SITE.DBTYPE}/new_revenue.sql"/>
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/revenue.init"/>
+      
+      <transaction src="${build.sql.dir}/${SITE.DBTYPE}/new_task.sql"/>
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/task.init"/>
+    </sql>
+    <delete dir="${build.sql.dir}" failonerror="false"/>
+  </target>
+  
+  
   
   
   
@@ -446,7 +544,7 @@
           description="Install library files to site." 
           depends="compile">
     <echo message="Installing JAR files"/>
-    <echo message=" Source: ${SRC_APP}${file.separator}WEB-INF${file.separator}lib${file.separator}*.jar"/>
+    <echo message=" Source: ${SRC_APP}${fs}WEB-INF${fs}lib${fs}*.jar"/>
     <echo message=" Destination: ${CFS_HOME}"/>
     <!-- Need to delete jar files that are no longer in source lib -->
     <!-- Fails under windows because Tomcat has these in-use
