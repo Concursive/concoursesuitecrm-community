@@ -169,17 +169,11 @@ public class Contact extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT c.*, d.description as departmentname, t.description as type_name, " +
-        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
         "o.name as org_name, o.enabled as orgenabled " +
         "FROM contact c " +
         "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
         "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
-        "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
         "WHERE c.contact_id = ? ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, contactId);
@@ -2381,11 +2375,6 @@ public class Contact extends GenericBean {
 
     //lookup_department table
     departmentName = rs.getString("departmentname");
-
-    //contact table
-    ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));
-    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
-    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
 
     //organization table
     orgName = rs.getString("org_name");
