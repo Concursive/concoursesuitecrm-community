@@ -15,7 +15,7 @@
 <input type="button" value="Cancel" onClick="javascript:window.close();">
 <input type="hidden" name="ticketId" value="<%= request.getParameter("ticketId") %>">
 <input type="hidden" name="type" value="<%= Constants.TICKET_OBJECT %>">
-<input type="hidden" name="return" value="TroubleTickets.do?command=Details&id=<%= request.getParameter("ticketId") %>">
+<input type="hidden" name="return" value="TroubleTicketTasks.do?command=List&ticketId=<%= request.getParameter("ticketId") %>">
 </form>
 </body>
 
