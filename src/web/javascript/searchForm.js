@@ -217,11 +217,11 @@ function removeValues(){
 	var count = 0;
 	
 	
-	if (searchCriteria.length != searchList.length) {
-		for (count=0; count<(searchList.length); count++) {
-			searchCriteria[count] = searchList.options[count].value;
-		}
-	}
+	//if (searchCriteria.length != searchList.length) {
+	//	for (count=0; count<(searchList.length); count++) {
+	//		searchCriteria[count] = searchList.options[count].value;
+	//	}
+	//}
 	
 	if (searchList.length == 0) {
 		alert("Nothing to remove");
@@ -230,6 +230,7 @@ function removeValues(){
   } else {
 		searchCriteria[searchList.selectedIndex] = "skip";
 		searchList.options[searchList.selectedIndex] = null;
+    alert("one");
 		for (i=0; i < searchCriteria.length; i++){
 			if (searchCriteria[i] == "skip") {
 				offset = 1;
@@ -244,6 +245,7 @@ function removeValues(){
 					tempArray[i] = searchCriteria[i+offset];
 				}
 		}
+    alert("two");
 		delete searchCriteria;
 		searchCriteria = new Array();
 		for (i=0; i < tempArray.length; i++){
