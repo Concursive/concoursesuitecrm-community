@@ -24,6 +24,7 @@ public class LookupElement {
   protected java.sql.Timestamp entered = null;
   protected java.sql.Timestamp modified = null;
   protected int fieldId = -1;
+  protected boolean group = false;
 
 
   /**
@@ -281,6 +282,26 @@ public class LookupElement {
 
 
   /**
+   *  Sets the group attribute of the LookupElement object
+   *
+   *@param  tmp  The new group value
+   */
+  public void setGroup(boolean tmp) {
+    this.group = tmp;
+  }
+
+
+  /**
+   *  Sets the group attribute of the LookupElement object
+   *
+   *@param  tmp  The new group value
+   */
+  public void setGroup(String tmp) {
+    this.group = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Gets the tableName attribute of the LookupElement object
    *
    *@return    The tableName value
@@ -390,6 +411,25 @@ public class LookupElement {
     return fieldId;
   }
 
+
+  /**
+   *  Gets the group attribute of the LookupElement object
+   *
+   *@return    The group value
+   */
+  public boolean isGroup() {
+    return group;
+  }
+
+
+  /**
+   *  Gets the group attribute of the LookupElement object
+   *
+   *@return    The group value
+   */
+  public boolean getGroup() {
+    return group;
+  }
 
 
   /**

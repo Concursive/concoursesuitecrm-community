@@ -15,6 +15,13 @@ public class HtmlOption {
   String text = null;
   String jsEvent = null;
   HashMap attributeList = null;
+  boolean group = false;
+
+
+  /**
+   *  Constructor for the HtmlOption object
+   */
+  public HtmlOption() { }
 
 
   /**
@@ -134,6 +141,36 @@ public class HtmlOption {
    */
   public String getJsEvent() {
     return jsEvent;
+  }
+
+
+  /**
+   *  Sets the group attribute of the HtmlOption object
+   *
+   *@param  tmp  The new group value
+   */
+  public void setGroup(boolean tmp) {
+    this.group = tmp;
+  }
+
+
+  /**
+   *  Gets the group attribute of the HtmlOption object
+   *
+   *@return    The group value
+   */
+  public boolean getGroup() {
+    return group;
+  }
+
+
+  /**
+   *  Gets the group attribute of the HtmlOption object
+   *
+   *@return    The group value
+   */
+  public boolean isGroup() {
+    return group;
   }
 
 

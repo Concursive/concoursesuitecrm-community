@@ -9,7 +9,8 @@ import java.sql.*;
  *
  *@author     Matt Rajkowski
  *@created    August 3, 2001
- *@version    $Id$
+ *@version    $Id: HtmlSelect.java,v 1.19.36.1 2004/01/30 15:02:15 mrajkowski
+ *      Exp $
  */
 public class HtmlSelect extends ArrayList {
 
@@ -575,6 +576,19 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
+   *  Adds a feature to the Group attribute of the HtmlSelect object
+   *
+   *@param  category  The feature to be added to the Group attribute
+   */
+  protected void addGroup(String category) {
+    HtmlOption thisGroup = new HtmlOption();
+    thisGroup.setGroup(true);
+    thisGroup.setText(category);
+    this.add(thisGroup);
+  }
+
+
+  /**
    *  Adds a feature to the Item attribute of the HtmlSelect object
    *
    *@param  tmp1      The feature to be added to the Item attribute
@@ -706,32 +720,41 @@ public class HtmlSelect extends ArrayList {
     }
 
     //Process a Vector
+    boolean groupOpen = false;
     for (int i = 0; i < this.size(); i++) {
       ++processedRowCount;
       HtmlOption thisOption = (HtmlOption) this.get(i);
       String tmp1 = thisOption.getValue();
       String tmp2 = thisOption.getText();
       String attributes = thisOption.getAttributes();
-
-      String optionChecked = "";
-      String optionSelected = "";
-
-      if (multipleSelects != null && multipleSelects.containsKey(Integer.parseInt(tmp1))) {
-        optionSelected = "selected ";
-        optionChecked = " checked";
-      } else if (multipleSelects == null && ((tmp2.equals(this.defaultValue)) ||
-          (tmp1.equals(this.defaultValue)) ||
-          (rowSelect == processedRowCount) ||
-          (tmp1.equals(this.defaultKey)))) {
-        optionSelected = "selected ";
-        optionChecked = " checked";
-      }
-      //Build the option row
-      if (!checkboxOutput) {
-        rowList.append("<option " + optionSelected + "value='" + tmp1 + "' " + attributes + ">" + toHtml(tmp2) + "</option>");
+      if (thisOption.isGroup()) {
+        if (groupOpen) {
+          rowList.append("</optgroup>");
+        }
+        rowList.append("<optgroup label=\"" + tmp2 + "\">");
       } else {
-        rowList.append("<input type='radio'" + optionChecked + ">" + toHtml(tmp2) + "&nbsp;");
+        String optionChecked = "";
+        String optionSelected = "";
+        if (multipleSelects != null && multipleSelects.containsKey(Integer.parseInt(tmp1))) {
+          optionSelected = "selected ";
+          optionChecked = " checked";
+        } else if (multipleSelects == null && ((tmp2.equals(this.defaultValue)) ||
+            (tmp1.equals(this.defaultValue)) ||
+            (rowSelect == processedRowCount) ||
+            (tmp1.equals(this.defaultKey)))) {
+          optionSelected = "selected ";
+          optionChecked = " checked";
+        }
+        //Build the option row
+        if (!checkboxOutput) {
+          rowList.append("<option " + optionSelected + "value='" + tmp1 + "' " + attributes + ">" + toHtml(tmp2) + "</option>");
+        } else {
+          rowList.append("<input type='radio'" + optionChecked + ">" + toHtml(tmp2) + "&nbsp;");
+        }
       }
+    }
+    if (groupOpen) {
+      rowList.append("</optgroup>");
     }
   }
 
@@ -775,7 +798,6 @@ public class HtmlSelect extends ArrayList {
     }
     //Process a ResultSet
     try {
-
       while (rs.next()) {
         ++processedRowCount;
         //Check to see if option should be selected

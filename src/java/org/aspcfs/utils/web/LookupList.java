@@ -349,13 +349,18 @@ public class LookupList extends HtmlSelect implements SyncableList {
   public String getHtmlSelectDefaultNone(String selectName) {
     HtmlSelect thisSelect = new HtmlSelect();
     thisSelect.addItem(-1, "-- None --");
-
     Iterator i = this.iterator();
     while (i.hasNext()) {
       LookupElement thisElement = (LookupElement) i.next();
-      thisSelect.addItem(
-          thisElement.getCode(),
-          thisElement.getDescription());
+      if (thisElement.isGroup()) {
+        // Create an option group
+        thisSelect.addGroup(thisElement.getDescription());
+      } else {
+        // Add the item
+        thisSelect.addItem(
+            thisElement.getCode(),
+            thisElement.getDescription());
+      }
     }
 
     return thisSelect.getHtml(selectName);
@@ -395,28 +400,29 @@ public class LookupList extends HtmlSelect implements SyncableList {
     thisSelect.setSelectStyle(selectStyle);
     thisSelect.setMultiple(multiple);
     thisSelect.setJsEvent(jsEvent);
-
     Iterator i = this.iterator();
     boolean keyFound = false;
     int lookupDefault = defaultKey;
-
     while (i.hasNext()) {
       LookupElement thisElement = (LookupElement) i.next();
-
-      if (thisElement.getEnabled() == true || !showDisabledFlag) {
-        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
-        if (thisElement.getDefaultItem()) {
-          lookupDefault = thisElement.getCode();
+      if (thisElement.isGroup()) {
+        // Create an option group
+        thisSelect.addGroup(thisElement.getDescription());
+      } else {
+        // Add the item to the list
+        if (thisElement.getEnabled() == true || !showDisabledFlag) {
+          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+          if (thisElement.getDefaultItem()) {
+            lookupDefault = thisElement.getCode();
+          }
+        } else if (thisElement.getCode() == defaultKey) {
+          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
         }
-      } else if (thisElement.getCode() == defaultKey) {
-        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
-      }
-
-      if (thisElement.getCode() == defaultKey) {
-        keyFound = true;
+        if (thisElement.getCode() == defaultKey) {
+          keyFound = true;
+        }
       }
     }
-
     if (keyFound) {
       return thisSelect.getHtml(selectName, defaultKey);
     } else {
@@ -443,21 +449,24 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
     while (i.hasNext()) {
       LookupElement thisElement = (LookupElement) i.next();
-
-      if (thisElement.getEnabled() == true || !showDisabledFlag) {
-        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
-        if (thisElement.getDefaultItem()) {
-          lookupDefault = thisElement.getCode();
+      if (thisElement.isGroup()) {
+        // Create an option group
+        thisSelect.addGroup(thisElement.getDescription());
+      } else {
+        //Add the item
+        if (thisElement.getEnabled() == true || !showDisabledFlag) {
+          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+          if (thisElement.getDefaultItem()) {
+            lookupDefault = thisElement.getCode();
+          }
+        } else if (thisElement.getCode() == defaultKey) {
+          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
         }
-      } else if (thisElement.getCode() == defaultKey) {
-        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
-      }
-
-      if (thisElement.getCode() == defaultKey) {
-        keyFound = true;
+        if (thisElement.getCode() == defaultKey) {
+          keyFound = true;
+        }
       }
     }
-
     if (keyFound) {
       thisSelect.setDefaultKey(defaultKey);
     } else {
@@ -487,22 +496,25 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
     while (i.hasNext()) {
       LookupElement thisElement = (LookupElement) i.next();
-
-      if (thisElement.getEnabled() == true) {
-        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
-      } else if (defaultValue.equals(thisElement.getDescription())) {
-        keyFound = true;
-        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
-      }
-
-      if (defaultValue.equals(thisElement.getDescription())) {
-        keyFound = true;
-      }
-      if (thisElement.getDefaultItem()) {
-        lookupDefault = thisElement.getDescription();
+      if (thisElement.isGroup()) {
+        // Create an option group
+        thisSelect.addGroup(thisElement.getDescription());
+      } else {
+        // Add the item
+        if (thisElement.getEnabled() == true) {
+          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+        } else if (defaultValue.equals(thisElement.getDescription())) {
+          keyFound = true;
+          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+        }
+        if (defaultValue.equals(thisElement.getDescription())) {
+          keyFound = true;
+        }
+        if (thisElement.getDefaultItem()) {
+          lookupDefault = thisElement.getDescription();
+        }
       }
     }
-
     return thisSelect.getHtml(selectName, defaultValue);
   }
 
@@ -522,21 +534,23 @@ public class LookupList extends HtmlSelect implements SyncableList {
     thisSelect.setMultiple(multiple);
     thisSelect.setMultipleSelects(ms);
     Iterator i = this.iterator();
-
     boolean keyFound = false;
     String lookupDefault = null;
-
     while (i.hasNext()) {
       LookupElement thisElement = (LookupElement) i.next();
-
-      if (thisElement.getEnabled() == true) {
-        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
-      }
-      if (thisElement.getDefaultItem()) {
-        lookupDefault = thisElement.getDescription();
+      if (thisElement.isGroup()) {
+        // Create an option group
+        thisSelect.addGroup(thisElement.getDescription());
+      } else {
+        // Add the item
+        if (thisElement.getEnabled() == true) {
+          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+        }
+        if (thisElement.getDefaultItem()) {
+          lookupDefault = thisElement.getDescription();
+        }
       }
     }
-
     return thisSelect.getHtml(selectName);
   }
 
@@ -884,6 +898,20 @@ public class LookupList extends HtmlSelect implements SyncableList {
     } else {
       this.add(this.size(), thisElement);
     }
+  }
+
+
+  /**
+   *  A group is for visual presentation only, the following items will be
+   *  in this group.
+   *
+   *@param  category  The feature to be added to the Group attribute
+   */
+  public void addGroup(String category) {
+    LookupElement thisElement = new LookupElement();
+    thisElement.setDescription(category);
+    thisElement.setGroup(true);
+    this.add(thisElement);
   }
 
 
