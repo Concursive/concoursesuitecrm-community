@@ -29,8 +29,11 @@ public class InventoryList extends ArrayList {
   private boolean buildOrganizationInfo = false;
   private boolean buildPictureId = false;
   private int orgId = -1;
-  //TODO: Implement these additional data filters
+  
   private int showSold = -1;
+  private boolean showIncompleteAdRunsOnly = false;
+  private int showIncompleteInventoryAds = -1;
+  //TODO: Implement these additional data filters
   private int hasRunDate = -1;
   private int makeId = -1;
 
@@ -144,6 +147,21 @@ public class InventoryList extends ArrayList {
     }
   }
   
+  public void setShowIncompleteAdRunsOnly(boolean tmp) { 
+    this.showIncompleteAdRunsOnly = tmp; 
+  }
+  
+  public void setShowIncompleteInventoryAds(int tmp) { 
+    this.showIncompleteInventoryAds = tmp; 
+  }
+  public void setShowIncompleteInventoryAds(String tmp) {
+    if (tmp != null) {
+      this.showIncompleteInventoryAds = Integer.parseInt(tmp);
+    } else {
+      this.showIncompleteInventoryAds = -1;
+    }
+  }
+  
   public void setHasRunDate(int tmp) { this.hasRunDate = tmp; }
   public void setHasRunDate(String tmp) {
     if (tmp != null) {
@@ -242,6 +260,7 @@ public class InventoryList extends ArrayList {
         if (buildPictureId) {
           thisItem.buildPicture(db);
         }
+        thisItem.setShowIncompleteAdRunsOnly(showIncompleteAdRunsOnly);
         thisItem.buildAdRuns(db);
       }
     }
@@ -304,10 +323,10 @@ public class InventoryList extends ArrayList {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("i.inventory_id", null);
+      pagedListInfo.setDefaultSort("i.stock_no", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY i.inventory_id ");
+      sqlOrder.append("ORDER BY i.stock_no ");
     }
     
     //Need to build a base SQL statement for returning records
@@ -373,6 +392,22 @@ public class InventoryList extends ArrayList {
     if (showSold > -1) {
       sqlFilter.append("AND sold = ? ");
     }
+    if (showIncompleteInventoryAds > -1) {
+      if (showIncompleteInventoryAds == Constants.TRUE) {
+        sqlFilter.append(
+          "AND i.inventory_id IN " +
+          "(SELECT inventory_id FROM autoguide_ad_run WHERE completedby = -1) ");
+      } else {
+        sqlFilter.append(
+          "AND i.inventory_id IN " +
+          "(SELECT inventory_id FROM autoguide_ad_run WHERE completedby > -1) ");
+      }
+    }
+    if (makeId > -1) {
+      sqlFilter.append(
+          "AND i.vehicle_id IN " +
+          "(SELECT vehicle_id FROM autoguide_vehicle WHERE make_id = ?) ");
+    }
   }
 
 
@@ -401,6 +436,9 @@ public class InventoryList extends ArrayList {
     }
     if (showSold > -1) {
       pst.setBoolean(++i, (showSold == Constants.TRUE));
+    }
+    if (makeId > -1) {
+      pst.setInt(++i, makeId);
     }
     return i;
   }

@@ -24,6 +24,7 @@ public class AdRunList extends ArrayList {
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
   private int inventoryId = -1;
+  private boolean incompleteOnly = false;
 
 
   /**
@@ -147,6 +148,8 @@ public class AdRunList extends ArrayList {
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
   }
+
+  public void setIncompleteOnly(boolean tmp) { this.incompleteOnly = tmp; }
 
 
   /**
@@ -348,6 +351,9 @@ public class AdRunList extends ArrayList {
     }
     if (inventoryId > -1) {
       sqlFilter.append("AND ad.inventory_id = ? ");
+    }
+    if (incompleteOnly) {
+      sqlFilter.append("AND ad.completedby = -1 ");
     }
   }
 

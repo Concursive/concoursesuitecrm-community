@@ -459,7 +459,7 @@ public class AdRun {
     sql.append(
         "UPDATE autoguide_ad_run " +
         "SET complete_date = ?, completedby = ? " +
-        "WHERE ad_run_id = ?, completedby = ? ");
+        "WHERE ad_run_id = ? AND completedby = ? ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setNull(++i, java.sql.Types.DATE);

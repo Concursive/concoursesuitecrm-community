@@ -3,6 +3,8 @@
 <jsp:useBean id="InventoryList" class="com.darkhorseventures.autoguide.base.InventoryList" scope="request"/>
 <jsp:useBean id="AutoGuideDirectoryInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <jsp:useBean id="listFilterSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
+<jsp:useBean id="statusFilterSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
+<jsp:useBean id="MakeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 
@@ -20,6 +22,12 @@
       &nbsp;
       <% listFilterSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
 			View: <%= listFilterSelect.getHtml("listFilter1", AutoGuideDirectoryInfo.getFilterKey("listFilter1")) %>
+      &nbsp;
+      <% statusFilterSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+			Status: <%= statusFilterSelect.getHtml("listFilter2", AutoGuideDirectoryInfo.getFilterKey("listFilter2")) %>
+      &nbsp;
+      <% MakeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+			Make: <%= MakeSelect.getHtml("listFilter3", AutoGuideDirectoryInfo.getFilterKey("listFilter3")) %>
       <%= showAttribute(request, "actionError") %>
     </td>
   </tr>
@@ -50,7 +58,7 @@
       <strong><a href="AutoGuide.do?command=List&column=i.inventory_id">Model</a></strong>
     </td>
     <td>
-      <strong><a href="AutoGuide.do?command=List&column=i.inventory_id">Next Ad</a></strong>
+      <strong><a href="AutoGuide.do?command=List&column=i.inventory_id">Next Incomplete Ad</a></strong>
     </td>
   </tr>
 <%    

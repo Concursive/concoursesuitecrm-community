@@ -51,6 +51,7 @@ public class Inventory {
   private int pictureId = -1;
   private FileItem picture = null;
 
+  private boolean showIncompleteAdRunsOnly = false;
 
   /**
    *  Constructor for the Inventory object
@@ -489,6 +490,9 @@ public class Inventory {
     this.picture = tmp;
   }
 
+  public void setShowIncompleteAdRunsOnly(boolean tmp) { 
+    this.showIncompleteAdRunsOnly = tmp; 
+  }
 
   /**
    *  Gets the id attribute of the Inventory object
@@ -1049,6 +1053,7 @@ public class Inventory {
    */
   public void buildAdRuns(Connection db) throws SQLException {
     adRuns = new AdRunList();
+    adRuns.setIncompleteOnly(showIncompleteAdRunsOnly);
     adRuns.setInventoryId(id);
     adRuns.buildList(db);
   }

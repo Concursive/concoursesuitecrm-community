@@ -59,10 +59,14 @@ public final class AutoGuide extends CFSModule {
     try {
       db = this.getConnection(context);
       populateListFilters(context, autoGuideDirectoryInfo);
+      populateMakeSelect(context, db, null, "All Makes");
       inventoryList.setPagedListInfo(autoGuideDirectoryInfo);
       inventoryList.setBuildOrganizationInfo(true);
       inventoryList.setBuildPictureId(true);
       inventoryList.setShowSold(autoGuideDirectoryInfo.getFilterKey("listFilter1"));
+      inventoryList.setShowIncompleteAdRunsOnly(true);
+      inventoryList.setShowIncompleteInventoryAds(autoGuideDirectoryInfo.getFilterKey("listFilter2"));
+      inventoryList.setMakeId(autoGuideDirectoryInfo.getFilterKey("listFilter3"));
       inventoryList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -294,7 +298,7 @@ public final class AutoGuide extends CFSModule {
       db = this.getConnection(context);
       populateOrganization(context, db, orgId);
       populateYearSelect(context, db);
-      populateMakeSelect(context, db, null);
+      populateMakeSelect(context, db, null, null);
       populateModelSelect(context, db, null);
       populateOptionList(context, db);
       populateAdRunTypeSelect(context, db);
@@ -449,7 +453,7 @@ public final class AutoGuide extends CFSModule {
 
       populateOrganization(context, db, Integer.parseInt(orgId));
       populateYearSelect(context, db);
-      populateMakeSelect(context, db, thisItem.getVehicle());
+      populateMakeSelect(context, db, thisItem.getVehicle(), null);
       populateModelSelect(context, db, thisItem.getVehicle());
       populateOptionList(context, db);
       populateAdRunTypeSelect(context, db);
@@ -836,12 +840,20 @@ public final class AutoGuide extends CFSModule {
     if (!info.hasListFilters()) {
       //Default to Current Inventory
       info.addFilter(1, "0");
+      //Default to Inventory with incomplete ads
+      info.addFilter(2, "1");
     }
     HtmlSelect listFilterSelect = new HtmlSelect();
     listFilterSelect.addItem(0, "Current Inventory");
     listFilterSelect.addItem(1, "Sold Inventory");
     listFilterSelect.addItem(-1, "All Inventory");
     context.getRequest().setAttribute("listFilterSelect", listFilterSelect);
+    
+    HtmlSelect statusFilterSelect = new HtmlSelect();
+    statusFilterSelect.addItem(1, "Incomplete Ads");
+    statusFilterSelect.addItem(0, "Completed Ads");
+    statusFilterSelect.addItem(-1, "All Ads");
+    context.getRequest().setAttribute("statusFilterSelect", statusFilterSelect);
   }
 
 
@@ -882,9 +894,13 @@ public final class AutoGuide extends CFSModule {
    *@param  thisVehicle       Description of Parameter
    *@exception  SQLException  Description of Exception
    */
-  private void populateMakeSelect(ActionContext context, Connection db, Vehicle thisVehicle) throws SQLException {
+  private void populateMakeSelect(ActionContext context, Connection db, Vehicle thisVehicle, String defaultText) throws SQLException {
     HtmlSelect makeSelect = new HtmlSelect();
-    makeSelect.addItem(-1, "--None--");
+    if (defaultText == null) {
+      makeSelect.addItem(-1, "--None--");
+    } else {
+      makeSelect.addItem(-1, defaultText);
+    }
     MakeList makeList = new MakeList();
     if (thisVehicle != null) {
       makeList.setYear(thisVehicle.getYear());
