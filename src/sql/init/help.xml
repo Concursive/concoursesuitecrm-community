@@ -2848,7 +2848,7 @@ This shows the progress chart for different years and types. All the accounts wi
 </pageDescription>
 <!-- End New pages -->
 </module>
-<module contentLevel="2" name="Campaign Manager">
+<module contentLevel="2" name="Communications">
 <briefDescription>Communications is a &quot;Campaign Manager&quot; Module where you can manage complex email. fax, or mail communications with your customers. Communications allows you to create and choose Groups, Messages, and Schedules to define communications scenarios from the simple to the very complex. Groups can range from a single contact chosen from a pick list to the result of a complex query of the Account/Contact database. Messages can be anything from a single-line email to a rich, multimedia product catalog to an interactive survey.</briefDescription>
 <detailDescription>This Communication System has six main features
 
