@@ -201,14 +201,23 @@
     <!-- Copy the web data, only if new -->
     <copy todir="${CFS_HOME}">
       <fileset dir="${src.web.dir}/jsp">
-        <include name="**/*.jsp"/>
+        <include name="*"/>
       </fileset>
     </copy>
     <copy todir="${CFS_HOME}">
       <fileset dir="${src.web.dir}/html">
-        <include name="**/*.*"/>
+        <include name="*"/>
       </fileset>
     </copy>
+    <copy todir="${CFS_HOME}" >
+      <fileset dir="${src.web.dir}">
+        <include name="images/**" />
+        <include name="javascript/**" />
+        <include name="css/**" />
+      </fileset>
+    </copy>
+    
+    
     <!-- Copy the configuration files -->
     <copy todir="${CFS_HOME}/WEB-INF">
       <fileset dir="${src.web.dir}/WEB-INF">
