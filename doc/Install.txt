@@ -77,6 +77,7 @@
 - Configure OS environment (as root)
   # Create a group called "cfs"
     $ vigr
+      cfs:x:101:
   # Add users to the system:
     $ adduser cfsdba
     $ adduser [your name] -g cfs
@@ -98,7 +99,9 @@
     
   # Make the web folders
     $ mkdir /home/webapps
-    $ mkdir -m 2775 /home/webapps/ROOT
+    $ mkdir /home/webapps/ROOT
+    $ chmod ug+rw /home/webapps/ROOT
+    $ chmod 2775 /home/webapps/ROOT
     $ chown .cfs /home/webapps/ROOT
     
   # Log back in as root for changes to take effect, then test:
@@ -138,10 +141,6 @@
     
   # Setup tomcat to start when server starts up
     $ chkconfig --level 2345 tomcat on
-    
-  # Allow users to add libraries to Tomcat
-    $ chmod 2775 ${CATALINA_HOME}/common/lib
-    $ chown .cfs ${CATALINA_HOME}/common/lib/*
     
   # Make sure Apache Web Server is not installed or running
     $ service httpd stop
