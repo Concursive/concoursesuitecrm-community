@@ -17,6 +17,8 @@ import com.zeroio.iteam.base.*;
 import java.text.*;
 import org.aspcfs.apps.workFlowManager.*;
 import org.aspcfs.controller.objectHookManager.*;
+import org.aspcfs.modules.system.base.ApplicationVersion;
+import org.aspcfs.modules.system.base.DatabaseVersion;
 
 /**
  *  Administrative commands executor.
@@ -142,7 +144,7 @@ public final class Admin extends CFSModule {
       FileItemVersionList fileList = new FileItemVersionList();
       int fileCount = fileList.queryRecordCount(db);
       long fileSize = fileList.queryFileSize(db);
-      usageList.add(nf.format(fileCount) + " file" + StringUtils.addS(fileCount) + " stored in document library using " + nf.format(fileSize) + " mb" + StringUtils.addS(fileSize) + " of storage");
+      usageList.add(nf.format(fileCount) + " file" + StringUtils.addS(fileCount) + " stored in document library using " + nf.format(fileSize) + " megabyte" + StringUtils.addS(fileSize) + " of storage");
 
       //Logins
       AccessLogList accessLog = new AccessLogList();
@@ -186,6 +188,14 @@ public final class Admin extends CFSModule {
 
       context.getRequest().setAttribute("usageList", usageList);
       context.getRequest().setAttribute("usageList2", usageList2);
+      
+      //Application Version
+      String appVersion = ApplicationVersion.VERSION;
+      context.getRequest().setAttribute("applicationVersion", appVersion);
+      
+      //Database Version
+      String dbVersion = DatabaseVersion.getLatestVersion(db);
+      context.getRequest().setAttribute("databaseVersion", dbVersion);
     } catch (Exception e) {
       errorMessage = e;
     } finally {

@@ -186,6 +186,7 @@ public class UpgradeDatabaseTask extends Task {
         executeScript(db, baseFile, fsEval, (String) siteInfo.get("dbName"));
         //Try to run the specified sql file
         executeSql(db, baseFile, fsEval);
+        updateDBVersion(db, baseFile);
         sqlDriver.free(db);
       }
     } catch (Exception e) {
@@ -242,6 +243,44 @@ public class UpgradeDatabaseTask extends Task {
         throw new Exception(sq);
       } finally {
         db.setAutoCommit(true);
+      }
+    }
+  }
+  
+  private void updateDBVersion(Connection db, String baseName) throws Exception {
+    if (new File(baseName).exists()) {
+      try {
+        boolean newFile = true;
+        //Ex. /home/user/cfs2/src/sql/postgresql/upgrade/2003-07-23.bsh
+        String fileName = baseFile.substring(baseFile.indexOf("upgrade") + 8);
+        PreparedStatement pst = db.prepareStatement(
+            "SELECT version_id " +
+            "FROM database_version " +
+            "WHERE script_filename = ? ");
+        pst.setString(1, fileName);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+          newFile = false;
+        }
+        rs.close();
+        pst.close();
+        
+        if (newFile) {
+          //Ex. 2003-07-23.sql  2003-07-23.bsh  2003-07-23gk.sql
+          String scriptVersion = fileName.substring(0, fileName.indexOf("."));
+          if (scriptVersion.indexOf("gk") > 0) {
+            scriptVersion = scriptVersion.substring(0, scriptVersion.indexOf("gk"));
+          }
+          pst = db.prepareStatement(
+              "INSERT INTO database_version " +
+              "(script_filename, script_version) VALUES (?, ?) ");
+          pst.setString(1, fileName);
+          pst.setString(2, scriptVersion);
+          pst.execute();
+          pst.close();
+        }
+      } catch (SQLException sq) {
+        //Table might not exist yet
       }
     }
   }

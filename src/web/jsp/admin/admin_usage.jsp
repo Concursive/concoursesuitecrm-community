@@ -5,6 +5,8 @@
 <jsp:useBean id="dateEnd" class="java.sql.Date" scope="request"/>
 <jsp:useBean id="usageList" class="java.util.ArrayList" scope="request"/>
 <jsp:useBean id="usageList2" class="java.util.ArrayList" scope="request"/>
+<jsp:useBean id="applicationVersion" class="java.lang.String" scope="request"/>
+<jsp:useBean id="databaseVersion" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
@@ -133,4 +135,7 @@ Current Usage and Billing Usage Information<br>
   }
 %>
 </table>
+<br>
+Application Version: <%= toHtml(applicationVersion) %><br>
+Database Version: (<%= toHtml(databaseVersion) %>)
 </body>
