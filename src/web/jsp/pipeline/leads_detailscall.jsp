@@ -1,40 +1,42 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="OpportunityDetails" class="org.aspcfs.modules.pipeline.base.Opportunity" scope="request"/>
+<%@ page import="org.aspcfs.modules.base.Constants" %>
+<jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
+<jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
-<form name="addCall" action="/LeadsCalls.do?id=<%= CallDetails.getId() %>&oppId=<%= OpportunityDetails.getId() %>" method="post">
-
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
+<form name="addCall" action="LeadsCalls.do?id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>" method="post">
 <a href="Leads.do">Pipeline Management</a> > 
 <a href="Leads.do?command=ViewOpp">View Opportunities</a> >
-<a href="Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
-<a href="LeadsCalls.do?command=View&oppId=<%=OpportunityDetails.getId()%>">Calls</a> >
+<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
+<a href="LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>">Calls</a> >
 Call Details<br>
 <hr color="#BFBFBB" noshade>
+<dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+      <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(OpportunityDetails.getDescription()) %></strong>&nbsp;
-      	<dhv:evaluate exp="<%=(OpportunityDetails.getAccountEnabled() && OpportunityDetails.getAccountLink() > -1)%>">
-        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
-	</dhv:evaluate>
-	  
-	<dhv:evaluate exp="<%=(OpportunityDetails.getContactLink() > -1)%>">
-	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
-	</dhv:evaluate>
-  
-        <% if (OpportunityDetails.hasFiles()) { %>
-      <% FileItem thisFile = new FileItem(); %>
-      <%= thisFile.getImageTag()%>
-      <%}%>    
-  
+      <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>&nbsp;
+      	<dhv:evaluate exp="<%= (opportunityHeader.getAccountEnabled() && opportunityHeader.getAccountLink() > -1) %>">
+          <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%= opportunityHeader.getAccountLink() %>">Go to this Account</a> ]</dhv:permission>
+        </dhv:evaluate>
+        <dhv:evaluate exp="<%= opportunityHeader.getContactLink() > -1 %>">
+          <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%= opportunityHeader.getContactLink() %>">Go to this Contact</a> ]</dhv:permission>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
+            <% FileItem thisFile = new FileItem(); %>
+            <%= thisFile.getImageTag()%>
+        </dhv:evaluate>
     </td>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + OpportunityDetails.getId(); %>      
+      <% String param1 = "id=" + opportunityHeader.getId(); %>      
       <dhv:container name="opportunities" selected="calls" param="<%= param1 %>" />
     </td>
   </tr>
@@ -47,8 +49,8 @@ Call Details<br>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
-      <strong>Call Details</strong> [ <a href="javascript:popURL('ForwardNote.do?command=ShowForm&linkRecordId=<%=CallDetails.getId()%>&linkModuleId=8&popup=true','Forward_Call','600','290','yes','yes');">Forward</a> ]
+    <td colspan="2" valign="center" align="left">
+      <strong>Call Details</strong> [ <a href="javascript:popURL('ForwardNote.do?command=ShowForm&linkRecordId=<%= CallDetails.getId() %>&linkModuleId=<%= Constants.CONTACTS_CALLS %>&popup=true','Forward_Call','600','290','yes','yes');">Forward</a> ]
     </td>     
   </tr>
   <tr class="containerBody">

@@ -4,70 +4,75 @@
 <jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="OppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
+<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].header_description.focus();">
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
-<script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popLookupSelect.js"></script>
-<script language="JavaScript">
-  function doCheck(form) {
-    if (form.dosubmit.value == "false") {
-      return true;
-    } else {
-      return(checkForm(form));
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popLookupSelect.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript">
+function doCheck(form) {
+  if (form.dosubmit.value == "false") {
+    return true;
+  } else {
+    return(checkForm(form));
+  }
+}
+function checkForm(form) {
+  formTest = true;
+  message = "";
+  selected = -1;
+  for (i=0; i<form.opp_type.length; i++) {
+    if (form.opp_type[i].checked) {
+      selected = i;
     }
   }
-  function checkForm(form) {
-      formTest = true;
-      message = "";
-        selected = -1;
-        for (i=0; i<form.opp_type.length; i++) {
-          if (form.opp_type[i].checked) {
-            selected = i;
-          }
-        }
-        if (selected == -1) {
-            message += "- Please select an opportunity type (account or contact)\r\n";
-            formTest = false;
-        }
-
-      if ((!form.component_closeDate.value == "") && (!checkDate(form.component_closeDate.value))) { 
-        message += "- Check that Est. Close Date is entered correctly\r\n";
-        formTest = false;
-      }
-      if ((!form.component_alertDate.value == "") && (!checkDate(form.component_alertDate.value))) { 
-        message += "- Check that Alert Date is entered correctly\r\n";
-        formTest = false;
-      }
-      if ((!form.component_alertDate.value == "") && (!checkAlertDate(form.component_alertDate.value))) { 
-        message += "- Check that Alert Date is on or after today's date\r\n";
-        formTest = false;
-      }
-      if ((!form.component_alertText.value == "") && (form.component_alertDate.value == "")) { 
-        message += "- Please specify an alert date\r\n";
-        formTest = false;
-      }
-      if ((!form.component_alertDate.value == "") && (form.component_alertText.value == "")) { 
-        message += "- Please specify an alert description\r\n";
-        formTest = false;
-      }
-      if (formTest == false) {
-        alert("Form could not be saved, please check the following:\r\n\r\n" + message);
-        return false;
-      } else {
-        var test = document.addOpportunity.selectedList;
-        if (test != null) {
-          return selectAllOptions(document.addOpportunity.selectedList);
-        }
-      }
+  if (selected == -1) {
+    message += "- Please select an opportunity type (account or contact)\r\n";
+    formTest = false;
+  }
+  if ((!form.component_closeDate.value == "") && (!checkDate(form.component_closeDate.value))) { 
+    message += "- Check that Est. Close Date is entered correctly\r\n";
+    formTest = false;
+  }
+  if ((!form.component_alertDate.value == "") && (!checkDate(form.component_alertDate.value))) { 
+    message += "- Check that Alert Date is entered correctly\r\n";
+    formTest = false;
+  }
+  if ((!form.component_alertDate.value == "") && (!checkAlertDate(form.component_alertDate.value))) { 
+    message += "- Check that Alert Date is on or after today's date\r\n";
+    formTest = false;
+  }
+  if ((!form.component_alertText.value == "") && (form.component_alertDate.value == "")) { 
+    message += "- Please specify an alert date\r\n";
+    formTest = false;
+  }
+  if ((!form.component_alertDate.value == "") && (form.component_alertText.value == "")) { 
+    message += "- Please specify an alert description\r\n";
+    formTest = false;
+  }
+  if (formTest == false) {
+    alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+    return false;
+  } else {
+    var test = document.addOpportunity.selectedList;
+    if (test != null) {
+      return selectAllOptions(document.addOpportunity.selectedList);
     }
+  }
+}
 </script>
 <form name="addOpportunity" action="Leads.do?command=InsertOpp&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<a href="/Leads.do">Pipeline Management</a> > 
+<a href="Leads.do">Pipeline Management</a> > 
 Add Opportunity<br>
 <hr color="#BFBFBB" noshade>
+<dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+      <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td>
@@ -103,6 +108,15 @@ Add Opportunity<br>
   </tr>  
   
   <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Assign To
+    </td>
+    <td valign="center">
+      <%= UserList.getHtmlSelect("component_owner") %>
+    </td>
+  </tr>
+  
+  <tr class="containerBody">
   <td nowrap class="formLabel" valign="top">
     Component<br>Type(s)
   </td>
@@ -134,8 +148,8 @@ Add Opportunity<br>
             <input type="radio" name="opp_type" value="contact" <dhv:evaluate exp="<%=(OppDetails.getHeader().getContactLink() > -1)%>">checked</dhv:evaluate>>Contact
           </td>
           <td align="left" valign="bottom">
-            <a href="javascript:popContactsListOppsSingle('header_contactLink','changecontact','true');"><div id="changecontact"><%=(OppDetails.getHeader().getContactLink()+"").equals("-1")?"&nbsp;None Selected":"&nbsp;" + OppDetails.getHeader().getContactName()%></div></a>
-            <input type="hidden" name="header_contactLink" id="header_contactLink" value="<%=(OppDetails.getHeader().getContactLink() == -1)?-1:OppDetails.getHeader().getContactLink()%>">
+            <a href="javascript:popContactsListOppsSingle('header_contactLink','changecontact','true');"><div id="changecontact"><%= String.valueOf(OppDetails.getHeader().getContactLink()).equals("-1")?"&nbsp;None Selected":"&nbsp;" + OppDetails.getHeader().getContactName()%></div></a>
+            <input type="hidden" name="header_contactLink" id="header_contactLink" value="<%= OppDetails.getHeader().getContactLink() == -1?-1:OppDetails.getHeader().getContactLink() %>">
           </td>
         </tr>
       </table>
@@ -271,7 +285,7 @@ Add Opportunity<br>
 &nbsp;
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
     </td>

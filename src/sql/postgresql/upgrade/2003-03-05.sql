@@ -1,0 +1,88 @@
+/* This table is no longer needed */
+DROP TABLE opportunity;
+
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.service.base.SyncClient' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.SyncClient';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.admin.base.User' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.User';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.accounts.base.Organization' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.Organization';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.media.autoguide.base.Inventory' WHERE mapped_class_name = 'com.darkhorseventures.autoguide.base.Inventory';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.media.autoguide.base.InventoryOption' WHERE mapped_class_name = 'com.darkhorseventures.autoguide.base.InventoryOption';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.media.autoguide.base.AdRun' WHERE mapped_class_name = 'com.darkhorseventures.autoguide.base.AdRun';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.service.base.SyncTableList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.SyncTableList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.admin.base.UserList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.UserList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.media.autoguide.base.MakeList' WHERE mapped_class_name = 'com.darkhorseventures.autoguide.base.MakeList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.media.autoguide.base.ModelList' WHERE mapped_class_name = 'com.darkhorseventures.autoguide.base.ModelList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.media.autoguide.base.VehicleList' WHERE mapped_class_name = 'com.darkhorseventures.autoguide.base.VehicleList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.accounts.base.OrganizationList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.OrganizationList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.media.autoguide.base.InventoryList' WHERE mapped_class_name = 'com.darkhorseventures.autoguide.base.InventoryList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.media.autoguide.base.OptionList' WHERE mapped_class_name = 'com.darkhorseventures.autoguide.base.OptionList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.media.autoguide.base.InventoryOptionList' WHERE mapped_class_name = 'com.darkhorseventures.autoguide.base.InventoryOptionList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.utils.web.LookupList' WHERE mapped_class_name = 'com.darkhorseventures.webutils.LookupList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.media.autoguide.base.AdRunList' WHERE mapped_class_name = 'com.darkhorseventures.autoguide.base.AdRunList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.utils.web.LookupElement' WHERE mapped_class_name = 'com.darkhorseventures.webutils.LookupElement';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.utils.web.CustomLookupElement' WHERE mapped_class_name = 'com.darkhorseventures.webutils.CustomLookupElement';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.troubletickets.base.Ticket' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.Ticket';
+
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.troubletickets.base.TicketCategory' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.TicketCategory';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.troubletickets.base.TicketCategoryList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.TicketCategoryList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.contacts.base.Contact' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.Contact';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.contacts.base.ContactList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.ContactList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.troubletickets.base.TicketList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.TicketList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.admin.base.Role' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.Role';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.admin.base.RoleList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.RoleList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.admin.base.PermissionCategory' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.PermissionCategory';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.admin.base.PermissionCategoryList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.PermissionCategoryList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.admin.base.Permission' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.Permission';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.admin.base.PermissionList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.PermissionList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.admin.base.RolePermission' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.RolePermission';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.admin.base.RolePermissionList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.RolePermissionList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.pipeline.base.Opportunity' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.Opportunity';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.pipeline.base.OpportunityList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.OpportunityList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.contacts.base.Call' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.Call';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.contacts.base.CallList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CallList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.base.CustomFieldCategory' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CustomFieldCategory';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.base.CustomFieldCategoryList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CustomFieldCategoryList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.base.CustomFieldGroup' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CustomFieldGroup';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.base.CustomFieldGroupList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CustomFieldGroupList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.base.CustomField' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CustomField';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.base.CustomFieldList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CustomFieldList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.base.CustomFieldRecord' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CustomFieldRecord';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.base.CustomFieldRecordList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CustomFieldRecordList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.contacts.base.ContactEmailAddress' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.ContactEmailAddress';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.contacts.base.ContactEmailAddressList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.ContactEmailAddressList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.base.CustomFieldData' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CustomFieldData';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.utils.web.CustomLookupList' WHERE mapped_class_name = 'com.darkhorseventures.webutils.CustomLookupList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.contacts.base.ContactAddress' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.ContactAddress';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.contacts.base.ContactAddressList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.ContactAddressList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.contacts.base.ContactPhoneNumber' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.ContactPhoneNumber';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.contacts.base.ContactPhoneNumberList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.ContactPhoneNumberList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.accounts.base.OrganizationPhoneNumber' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.OrganizationPhoneNumber';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.accounts.base.OrganizationPhoneNumberList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.OrganizationPhoneNumberList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.accounts.base.OrganizationEmailAddress' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.OrganizationEmailAddress';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.accounts.base.OrganizationEmailAddressList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.OrganizationEmailAddressList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.accounts.base.OrganizationAddress' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.OrganizationAddress';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.accounts.base.OrganizationAddressList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.OrganizationAddressList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.troubletickets.base.TicketLog' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.TicketLog';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.troubletickets.base.TicketLogList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.TicketLogList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.communications.base.Message' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.Message';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.communications.base.MessageList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.MessageList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.communications.base.SearchCriteriaList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.SearchCriteriaList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.communications.base.SearchCriteriaListList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.SearchCriteriaListList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.communications.base.SavedCriteriaElement' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.SavedCriteriaElement';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.utils.web.CustomLookupList' WHERE mapped_class_name = 'com.darkhorseventures.webutils.CustomLookupList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.accounts.base.Revenue' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.Revenue';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.accounts.base.RevenueList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.RevenueList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.communications.base.Campaign' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.Campaign';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.communications.base.CampaignList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CampaignList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.communications.base.ScheduledRecipient' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.ScheduledRecipient';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.communications.base.ScheduledRecipientList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.ScheduledRecipientList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.admin.base.AccessLog' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.AccessLog';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.admin.base.AccessLogList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.AccessLogList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.accounts.base.AccountTypeLevel' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.AccountTypeLevel';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.communications.base.ExcludedRecipient' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.ExcludedRecipient';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.communications.base.CampaignRun' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CampaignRun';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.communications.base.CampaignRunList' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CampaignRunList';
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.communications.base.CampaignListGroup' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.CampaignListGroup';
+
+ 
+ 
+ 

@@ -1,0 +1,83 @@
+/**
+ *  Viewpoints Implementation Information
+ *
+ *@author     Mathur
+ *@created    March 7, 2003
+ *@version    $Id$
+ */
+
+Viewpoints :
+
+1. How to add Viewpoints  to a module?
+  - Steps involved in adding viewpoints to a module:
+     - Set the enabled flag in the permission_category table to true for that module.
+     - Set the enabled flag in the permission table for that partcular module level permission to true.
+     - In the module for example "Leads" do the following for every method:
+        - Define rules for adding viewpoints 
+          - Any data entered from a viewpoint stamps the data as enteredBy the user who's logged in.
+          - Any data modified from a viewpoint stamps the data as modifiedBy the user who's logged in.
+          - Adding of a totally new component is independent of the viewpoint. For example if a Viewpoint is selected and an opportunity is added then the fact that Viewpoint is selected has no effect.
+          - Once a viewpoint is defined the user has full access to the Viewpoints data (vaed).
+        - Use the ViewpointInfo object to get the Viewpoint deltails.
+        - Use the getVpUserId(loggedInUser) method of the ViewpointInfo to get the Viewpoint or if no viewpoint is selected it defaults to the parameter sent to it (should be user logged in mostly).
+        - Any part of the implementation of the method which uses the user logged in should be analyzed and replaced following the rules defined for Viewpoints.
+        - Add a "hasViewpointAuthority" method to check if user has authority to perform the action (The hasViewpointAuthority method first calls hasAuthority method and on failure looks into Viewpoints for permissions).
+        - The method which implements the dashboard of a module should be used to buildViewpoints.
+        - Every module has it's own ViewpointInfo similar to the PagedListInfo. The name given to the ViewpointInfo object for a module follows this rule: moduleName + "ViewpointInfo".
+     - In the jsp add the following:
+        - 2 include objects ( one ViewpointInfo and other the User object both from session)
+        - Add code to display the Viewpoint only if one is selected.
+        - Some screens might not need it like the "Add Opportunity" screen as it doesn't matter if a Viewpoint is selected.
+
+        
+Code Samples:
+------------
+
+  - Adding of Viewpoints to pipeline module
+    - Getting ViewpointInfo object in a module method
+       ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+       
+    - Getting the Viewpoint user. Defaults to parameter passed if no viewpoint is selected.
+       int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+       
+    - Checking hasViewpointAuthority in the method that builds dashboard (or first screen) of a module.
+      if (hasViewpointAuthority(db, context, "pipeline", overrideId, userId)) {
+        UserList vpUserList = this.addViewpoints(db, context, "pipeline");//builds userList of all Viewpoints
+        viewpointInfo.setVpUserName(vpUserList);//capture Viewpoint user name for jsp display
+        //other stuff if any
+      }
+      
+    - Checking hasViewpointAuthority in other methods for access permission.
+      if (!hasViewpointAuthority(db, context, "pipeline", newOpp.getEnteredBy(), userId)) {
+        this.freeConnection(context, db);
+        return "PermissionError";
+      }
+      
+    - Jsp include code: (some of them might already have the User bean included
+      - Header
+        <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
+        <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+      - Body: 
+        - Right after the trails solid line use this code if alphabetical links are there
+          <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+              <td align="left" width="30%" nowrap>
+                <b>Viewpoint:</b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
+              </td>
+              <td align="center" width="30%" nowrap>
+                <%= OpportunityListInfo.getAlphabeticalPageLinks() %>
+              </td>
+              <td align="right" width="40%">
+                &nbsp;
+              </td>
+              </tr>
+            </table>
+          </dhv:evaluate>
+          <dhv:evaluate exp="<%= !(PipelineViewpointInfo.isVpSelected(User.getUserId())) %>">
+              <center><%= OpportunityListInfo.getAlphabeticalPageLinks() %></center>
+          </dhv:evaluate>
+        - Right after the trails solid line use this code if no alphabetical links are there  
+        <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+            <b>Viewpoint:</b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
+        </dhv:evaluate>

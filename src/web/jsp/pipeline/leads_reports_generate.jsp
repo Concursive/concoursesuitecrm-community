@@ -1,6 +1,7 @@
+<jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/reportSelect.js"></script>
-
 <script language="JavaScript">
   function checkForm(form) {
   	var test = document.generate.selectedList;
@@ -20,15 +21,17 @@
 				return true;
 			}
 		}
-    }
+  }
 </script>
-
 <body onLoad="javascript:document.forms[0].subject.focus();">
 <form name="generate" action="Leads.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
 <a href="Leads.do">Pipeline Management</a> > 
 <a href="Leads.do?command=Reports">Reports</a> > 
 Generate New Report <br>
 <hr color="#BFBFBB" noshade>
+<dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+      <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+</dhv:evaluate>
 <input type="submit" value="Generate">
 <input type="button" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Reports';javascript:this.form.submit();">
 <br>
@@ -39,24 +42,22 @@ Generate New Report <br>
       <strong>Generate a New Report</strong>
     </td>     
   </tr>
-  
   <tr>
     <td nowrap class="formLabel">
       Type
     </td>
     <td colspan=4>
       <select name="type">
-      <option value=1>Opportunities Listing</option>
+      <option value="1">Opportunities Listing</option>
       </select>
     </td>
   </tr>
-  
   <tr>
     <td nowrap class="formLabel">
       Subject
     </td>
-    <td colspan=4>
-      <input type=text size=35 name="subject" maxlength=50>
+    <td colspan="4">
+      <input type="text" size="35" name="subject" maxlength="50">
     </td>
   </tr>
   
@@ -76,7 +77,7 @@ Generate New Report <br>
     <td nowrap class="formLabel">
       Sorting
     </td>
-    <td colspan=4>
+    <td colspan="4">
       <select name="sort">
       <option value="x.description">Description</option>
       <option value="opp_id">Opportunity ID</option>
@@ -98,8 +99,8 @@ Generate New Report <br>
     <td nowrap valign=top class="formLabel">
       Select fields to include
     </td>
-    <td width=50%>
-      <select size=5 multiple name="fields">
+    <td width="50%">
+      <select size="5" multiple name="fields">
       <option value="contact" >Contact/Organization</option>
       <option value="type" >Type(s)</option>
       <option value="owner" >Owner</option>
@@ -119,9 +120,9 @@ Generate New Report <br>
       <option value="modifiedBy" >Modified By</option>
       </select>
      </td>
-      <td width=25>
-      <table width=100% cellspacing=0 cellpadding=2 border=0>
-      <tr><td valign=center>
+      <td width="25">
+      <table width="100%" cellspacing="0" cellpadding="2" border="0">
+      <tr><td valign="center">
       <input type="button" value="All >" onclick="javascript:allValues()">
       </td></tr>
       
@@ -135,27 +136,23 @@ Generate New Report <br>
       </table>
       </td>
       
-      <td width=50% align=right>
-      <select size=5 name="selectedList" multiple>
+      <td width="50%" align="right">
+      <select size="5" name="selectedList" multiple>
       <option value="id" >Opportunity ID</option>
       <option value="description" >Description</option>
       </select>
-    
       </td>
-      
-      <td width=25>
-	<table width=100% cellspacing=0 cellpadding=2 border=0>
-	<tr><td valign=center>
-	<input type=button value="Up" onclick="javascript:moveOptionUp(document.generate.selectedList)">
+      <td width="25">
+	<table width="100%" cellspacing="0" cellpadding="2" border="0">
+	<tr><td valign="center">
+	<input type="button" value="Up" onclick="javascript:moveOptionUp(document.generate.selectedList)">
 	</td></tr>
-	<tr><td valign=center>
-	<input type=button value="Down" onclick="javascript:moveOptionDown(document.generate.selectedList)">
+	<tr><td valign="center">
+	<input type="button" value="Down" onclick="javascript:moveOptionDown(document.generate.selectedList)">
 	</td></tr>
 	</table>
-      </td>
-      
+  </td>
   </tr>
-  
 </table>
 <br>
 <input type="submit" value="Generate">

@@ -1,0 +1,22 @@
+/**
+ *  Importing data into CFS using a CSV file
+ *
+ *@author     Matt Rajkowski
+ *@created    March 7, 2003
+ *@version    $Id$
+ */
+ 
+- Line 1 column names are required
+- One record per line
+- Fields TAB delimited, but the delimited character can be any unique character as long as it is consistent
+- One item per field -- for example, 1 phone number per phone number field
+- The only field that can have return characters is the note field.  This is a good field to put data in for which there is no other field.  However, return characters need to be replaced with \r\n or simply \r because the CSV importer treats each line as a new record.
+
+- For Phone Numbers, we have provided several fields that can be used in place of using return characters in phone numbers.  For example, Business Phone and Business2 Phone.  In these cases, there should be 1 phone number per field.
+- If the phone number is international, it should be preceeded by a +, that way any formatting used in the phone number will be preserved
+- Phone number extensions can be included in the phone number and we will parse those, for example, you might have "800-555-1212 x234" 
+
+- Zip Codes: for example, 2142 when they should show up as 02142.  We can automatically add the 0 for US zip codes, but this may be a problem for other postal codes and should be reviewed.
+
+- For Addresses, we have provided two fields for the street, Line 1 and Line 2, however there are addresses stored in Line 1 with return characters and no Line 2.  In these case, an address should be split into Line 1 and Line2 because the return characters abort the import appliction.
+

@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<CFSDatabaseReader>
+  <processes>
+    <!-- Initialization Data -->
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportLookupTables</module>
+    <!-- Users, Accounts, Contacts and ownership -->
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportBaseData</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportRoles</module>
+    <!-- Related Data -->
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportOpportunities</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportTickets</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportCalls</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportCommunications</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportRevenue</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportProjects</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportDocuments</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportFolders</module>
+  </processes>
+  <mappings>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupIndustry" table="lookup_industry"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="systemModules" table="system_modules"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupContactTypes" table="lookup_contact_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupAccountTypes" table="lookup_account_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupDepartment" table="lookup_department"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupOrgAddressTypes" table="lookup_orgaddress_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupOrgEmailTypes" table="lookup_orgemail_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupOrgPhoneTypes" table="lookup_orgphone_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupInstantMessengerTypes" table="lookup_instantmessenger_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupEmploymentTypes" table="lookup_employment_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupLocale" table="lookup_locale"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupContactAddressTypes" table="lookup_contactaddress_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupContactEmailTypes" table="lookup_contactemail_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupContactPhoneTypes" table="lookup_contactphone_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupStage" table="lookup_stage"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupDeliveryOptions" table="lookup_delivery_options"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupCallTypes" table="lookup_call_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="ticketSeverity" table="ticket_severity"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupTicketSource" table="lookup_ticketsource"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="ticketPriority" table="ticket_priority"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupRevenueTypes" table="lookup_revenue_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupRevenueDetailTypes" table="lookup_revenuedetail_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupSurveyTypes" table="lookup_survey_types"/>
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="systemPrefs" table="system_prefs">
+      <property field="category"/>
+      <property field="data"/>
+    </map>
+    <map class="org.aspcfs.modules.contacts.base.Contact" id="contact">
+      <property alias="guid">id</property>
+      <property>orgId</property>
+      <property>title</property>
+      <property>department</property>
+      <property>company</property>
+      <property>nameSalutation</property>
+      <property>nameFirst</property>
+      <property>nameMiddle</property>
+      <property>nameLast</property>
+      <property>nameSuffix</property>
+      <property>typeId</property>
+      <property>site</property>
+      <property>notes</property>
+      <property>locale</property>
+      <property>employeeId</property>
+      <property>employmentType</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+      <property>owner</property>
+      <property>custom1</property>
+      <property>url</property>
+      <property lookup="user">userId</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.modules.accounts.base.Organization" id="account">
+      <property alias="guid">id</property>
+      <property>name</property>
+      <property>url</property>
+      <property>notes</property>
+      <property>industry</property>
+      <property>minerOnly</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>contractEndDate</property>
+      <property>alertDate</property>
+      <property>alertText</property>
+      <property>enabled</property>
+      <property>employees</property>
+      <property>revenue</property>
+      <property>ticker</property>
+      <property>accountNumber</property>
+      <property lookup="user">owner</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.modules.admin.base.User" id="user">
+      <property alias="guid">id</property>
+      <property>username</property>
+      <property>encryptedPassword</property>
+      <property>contactId</property>
+      <property lookup="role">roleId</property>
+      <property lookup="user">managerId</property>
+      <property>timeZone</property>
+      <property lookup="user">enteredBy</property>
+      <property>expires</property>
+      <property>aliasName</property>
+      <property lookup="user">assistant</property>
+      <property lookup="user">alias</property>
+      <property>entered</property>
+      <property>modified</property>
+      <property>lastLogin</property>
+    </map>
+    <map class="org.aspcfs.modules.admin.base.Role" id="role">
+      <property alias="guid">id</property>
+      <property>role</property>
+      <property>description</property>
+      <property>entered</property>
+      <property>modified</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+    </map>
+    <map class="org.aspcfs.modules.admin.base.PermissionCategory" id="permissionCategory">
+      <property alias="guid">id</property>
+      <property>category</property>
+      <property>description</property>
+      <property>level</property>
+      <property>enabled</property>
+      <property>active</property>
+      <property>folders</property>
+      <property>lookups</property>
+    </map>
+    <map class="org.aspcfs.modules.admin.base.Permission" id="permission">
+      <property alias="guid">id</property>
+      <property lookup="permissionCategory">categoryId</property>
+      <property>permissionLevel</property>
+      <property>name</property>
+      <property>add</property>
+      <property>view</property>
+      <property>edit</property>
+      <property>delete</property>
+      <property>description</property>
+      <property>enabled</property>
+      <property>active</property>
+    </map>
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="rolePermission" table="role_permission" uniqueField="id">
+      <property alias="guid" field="id">id</property>
+      <property lookup="role" field="role_id">roleId</property>
+      <property lookup="permission" field="permission_id">permissionId</property>
+      <property field="role_add">add</property>
+      <property field="role_view">view</property>
+      <property field="role_edit">edit</property>
+      <property field="role_delete">delete</property>
+    </map>
+    <map class="org.aspcfs.modules.pipeline.base.Opportunity" id="opportunity">
+      <property alias="guid">id</property>
+      <property lookup="user">owner</property>
+      <property>description</property>
+      <property lookup="account">accountLink</property>
+      <property lookup="contact">contactLink</property>
+      <property>closeDate</property>
+      <property alias="closeProb">closeProbPercent</property>
+      <property>terms</property>
+      <property>units</property>
+      <property>low</property>
+      <property>guess</property>
+      <property>high</property>
+      <property lookup="lookupStage">stage</property>
+      <property>stageDate</property>
+      <property alias="commission">commissionPercent</property>
+      <property>type</property>
+      <property>alertDate</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>alertText</property>
+      <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.modules.troubletickets.base.TicketCategory" id="ticketCategory">
+      <property alias="guid">id</property>
+      <property>categoryLevel</property>
+      <property lookup="ticketCategory">parentCode</property>
+      <property>description</property>
+      <property>level</property>
+      <property>enabled</property>
+    </map>
+    <map class="org.aspcfs.modules.troubletickets.base.Ticket" id="ticket">
+      <property alias="guid">id</property>
+      <property lookup="account">orgId</property>
+      <property lookup="contact">contactId</property>
+      <property lookup="user">owner</property>
+      <property lookup="user">assignedTo</property>
+      <property>problem</property>
+      <property>comment</property>
+      <property>solution</property>
+      <property lookup="ticketPriority">priorityCode</property>
+      <property>levelCode</property>
+      <property lookup="lookupDepartment">departmentCode</property>
+      <property lookup="lookupTicketSource">sourceCode</property>
+      <property lookup="ticketCategory">catCode</property>
+      <property lookup="ticketCategory">subCat1</property>
+      <property lookup="ticketCategory">subCat2</property>
+      <property lookup="ticketCategory">subCat3</property>
+      <property lookup="ticketSeverity">severityCode</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>closed</property>
+      <property value="false">sendNotification</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.modules.base.CustomFieldCategory" id="customFieldCategory">
+      <property alias="guid">id</property>
+      <property lookup="systemModules">moduleId</property>
+      <property>name</property>
+      <property>description</property>
+      <property>level</property>
+      <property>startDate</property>
+      <property>endDate</property>
+      <property>defaultItem</property>
+      <property>entered</property>
+      <property>enabled</property>
+      <property>allowMultipleRecords</property>
+      <property>readOnly</property>
+    </map>
+    <map class="org.aspcfs.modules.base.CustomFieldGroup" id="customFieldGroup">
+      <property alias="guid">id</property>
+      <property lookup="customFieldCategory">categoryId</property>
+      <property>name</property>
+      <property>description</property>
+      <property>level</property>
+      <property>startDate</property>
+      <property>endDate</property>
+      <property>entered</property>
+      <property>enabled</property>
+    </map>
+    <map class="org.aspcfs.modules.base.CustomField" id="customField">
+      <property alias="guid">id</property>
+      <property lookup="customFieldGroup">groupId</property>
+      <property>name</property>
+      <property>additionalText</property>
+      <property>level</property>
+      <property>type</property>
+      <property>validationType</property>
+      <property>required</property>
+      <property alias="parameters">parameterData</property>
+      <property>startDate</property>
+      <property>endDate</property>
+      <property>entered</property>
+      <property>enabled</property>
+    </map>
+    <map class="org.aspcfs.modules.contacts.base.Call" id="call">
+      <property alias="guid">id</property>
+      <property lookup="account">orgId</property>
+      <property lookup="contact">contactId</property>
+      <property lookup="lookupCallTypes">callTypeId</property>
+      <property lookup="opportunity">oppId</property>
+      <property>length</property>
+      <property>subject</property>
+      <property>notes</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>alertDate</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="lookupProjectActivity" 
+         table="lookup_project_activity" uniqueField="code">
+      <property field="code" alias="guid"/>
+      <property field="description"/>
+      <property field="default_item"/>
+      <property field="level"/>
+      <property field="enabled"/>
+      <property field="group_id"/>
+      <property field="template_id"/>
+    </map>
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="lookupProjectIssues" 
+         table="lookup_project_issues" uniqueField="code">
+      <property field="code" alias="guid"/>
+      <property field="description"/>
+      <property field="default_item"/>
+      <property field="level"/>
+      <property field="enabled"/>
+      <property field="group_id"/>
+    </map>
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="lookupProjectLoe" 
+         table="lookup_project_loe" uniqueField="code">
+      <property field="code" alias="guid"/>
+      <property field="description"/>
+      <property field="base_value"/>
+      <property field="default_item"/>
+      <property field="level"/>
+      <property field="enabled"/>
+      <property field="group_id"/>
+    </map>
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="lookupProjectPriority" 
+         table="lookup_project_priority" uniqueField="code">
+      <property field="code" alias="guid"/>
+      <property field="description"/>
+      <property field="default_item"/>
+      <property field="level"/>
+      <property field="enabled"/>
+      <property field="group_id"/>
+      <property field="graphic"/>
+      <property field="type"/>
+    </map>
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="lookupProjectStatus" 
+         table="lookup_project_status" uniqueField="code">
+      <property field="code" alias="guid"/>
+      <property field="description"/>
+      <property field="default_item"/>
+      <property field="level"/>
+      <property field="enabled"/>
+      <property field="group_id"/>
+      <property field="graphic"/>
+      <property field="type"/>
+    </map>
+    <map class="com.zeroio.iteam.base.Project" id="project">
+      <property alias="guid">id</property>
+      <property lookup="lookupDepartment">departmentId</property>
+      <property>title</property>
+      <property>shortDescription</property>
+      <property>requestedBy</property>
+      <property>requestedByDept</property>
+      <property>requestDate</property>
+      <property>approvalDate</property>
+      <property>approved</property>
+      <property>closeDate</property>
+      <property>entered</property>
+      <property lookup="user">enteredBy</property>
+      <property>modified</property>
+      <property lookup="user">modifiedBy</property>
+    </map>
+    <map class="com.zeroio.iteam.base.Requirement" id="requirement">
+      <property alias="guid">id</property>
+      <property lookup="project">projectId</property>
+      <property>submittedBy</property>
+      <property>departmentBy</property>
+      <property>shortDescription</property>
+      <property>description</property>
+      <property>dateReceived</property>
+      <property>estimatedLoe</property>
+      <property lookup="lookupProjectLoe">estimatedLoeTypeId</property>
+      <property>actualLoe</property>
+      <property lookup="lookupProjectLoe">actualLoeTypeId</property>
+      <property>deadline</property>
+      <property lookup="user">approvedBy</property>
+      <property>approvalDate</property>
+      <property>approved</property>
+      <property lookup="user">closedBy</property>
+      <property>closeDate</property>
+      <property>closed</property>
+      <property>entered</property>
+      <property lookup="user">enteredBy</property>
+      <property>modified</property>
+      <property lookup="user">modifiedBy</property>
+    </map>
+    <map class="com.zeroio.iteam.base.Assignment" id="assignment">
+      <property alias="guid">id</property>
+      <property lookup="project">projectId</property>
+      <property lookup="requirement">requirementId</property>
+      <property lookup="user">assignedBy</property>
+      <property lookup="user">userAssignedId</property>
+      <property lookup="lookupProjectActivity">activityId</property>
+      <property>technology</property>
+      <property>role</property>
+      <property>estimatedLoe</property>
+      <property lookup="lookupProjectLoe">estimatedLoeTypeId</property>
+      <property>actualLoe</property>
+      <property lookup="lookupProjectLoe">actualLoeTypeId</property>
+      <property lookup="lookupProjectPriority">priorityId</property>
+      <property>assignDate</property>
+      <property>estStartDate</property>
+      <property>startDate</property>
+      <property>dueDate</property>
+      <property lookup="lookupProjectStatus">statusId</property>
+      <property>statusDate</property>
+      <property>completeDate</property>
+      <property>entered</property>
+      <property lookup="user">enteredBy</property>
+      <property>modified</property>
+      <property lookup="user">modifiedBy</property>
+    </map>
+    <map class="com.zeroio.iteam.base.Issue" id="issue">
+      <property alias="guid">id</property>
+      <property lookup="project">projectId</property>
+      <property lookup="lookupProjectIssues">categoryId</property>
+      <property>subject</property>
+      <property>body</property>
+      <property>importance</property>
+      <property>enabled</property>
+      <property>entered</property>
+      <property lookup="user">enteredBy</property>
+      <property>modified</property>
+      <property lookup="user">modifiedBy</property>
+    </map>
+    <map class="com.zeroio.iteam.base.IssueReply" id="issueReply">
+      <property alias="guid">id</property>
+      <property lookup="issue">issueId</property>
+      <property>subject</property>
+      <property>body</property>
+      <property>importance</property>
+      <property>entered</property>
+      <property lookup="user">enteredBy</property>
+      <property>modified</property>
+      <property lookup="user">modifiedBy</property>
+    </map>
+    <map class="com.zeroio.iteam.base.TeamMember" id="teamMember">
+      <property lookup="project">projectId</property>
+      <property lookup="user">userId</property>
+      <property>userLevel</property>
+      <property>entered</property>
+      <property lookup="user">enteredBy</property>
+      <property>modified</property>
+      <property lookup="user">modifiedBy</property>
+    </map>
+    <map class="com.zeroio.iteam.base.FileItem" id="fileItem">
+      <property alias="guid">id</property>
+      <property lookup="project">projectId</property>
+      <property>folderId</property>
+      <property>subject</property>
+      <property>clientFilename</property>
+      <property>filename</property>
+      <property>version</property>
+      <property>size</property>
+      <property>downloads</property>
+      <property>enabled</property>
+      <property>linkModuleId</property>
+<!-- This item is interactively added because of multiple lookups
+      <property>linkItemId</property>
+-->
+      <property>entered</property>
+      <property lookup="user">enteredBy</property>
+      <property>modified</property>
+      <property lookup="user">modifiedBy</property>
+    </map>
+    <map class="com.zeroio.iteam.base.FileItemVersion" id="fileItemVersion">
+      <property lookup="fileItem">id</property>
+      <property>subject</property>
+      <property>clientFilename</property>
+      <property>filename</property>
+      <property>version</property>
+      <property>size</property>
+      <property>downloads</property>
+      <property>enabled</property>
+      <property>entered</property>
+      <property lookup="user">enteredBy</property>
+      <property>modified</property>
+      <property lookup="user">modifiedBy</property>
+    </map>
+    <map class="com.zeroio.iteam.base.FileDownloadLog" id="fileDownloadLog">
+      <property lookup="fileItem">itemId</property>
+      <property>version</property>
+      <property lookup="user">userId</property>
+      <property>downloadDate</property>
+    </map>
+    <map class="org.aspcfs.modules.contacts.base.ContactEmailAddress" id="contactEmailAddress">
+      <property alias="guid">id</property>
+      <property>orgId</property>
+      <property lookup="contact">contactId</property>
+      <property>type</property>
+      <property>email</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.modules.contacts.base.ContactAddress" id="contactAddress">
+      <property alias="guid">id</property>
+      <property>orgId</property>
+      <property lookup="contact">contactId</property>
+      <property>streetAddressLine1</property>
+      <property>streetAddressLine2</property>
+      <property>city</property>
+      <property>state</property>
+      <property>zip</property>
+      <property>country</property>
+      <property>type</property>
+      <property>email</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.modules.contacts.base.ContactPhoneNumber" id="contactPhoneNumber">
+      <property alias="guid">id</property>
+      <property>orgId</property>
+      <property lookup="contact">contactId</property>
+      <property>number</property>
+      <property>extension</property>
+      <property>type</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.modules.accounts.base.OrganizationPhoneNumber" id="organizationPhoneNumber">
+      <property alias="guid">id</property>
+      <property lookup="account">orgId</property>
+      <property>number</property>
+      <property>extension</property>
+      <property>type</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.modules.accounts.base.OrganizationEmailAddress" id="organizationEmailAddress">
+      <property alias="guid">id</property>
+      <property lookup="account">orgId</property>
+      <property>type</property>
+      <property>email</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.modules.accounts.base.OrganizationAddress" id="organizationAddress">
+      <property alias="guid">id</property>
+      <property lookup="account">orgId</property>
+      <property>streetAddressLine1</property>
+      <property>streetAddressLine2</property>
+      <property>city</property>
+      <property>state</property>
+      <property>zip</property>
+      <property>country</property>
+      <property>type</property>
+      <property>email</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.modules.troubletickets.base.TicketLog" id="ticketLog">
+      <property alias="guid">id</property>
+      <property lookup="ticket">ticketId</property>
+      <property>entryText</property>
+      <property lookup="user">assignedTo</property>
+      <property lookup="ticketPriority">priorityCode</property>
+      <property>levelCode</property>
+      <property lookup="lookupDepartment">departmentCode</property>
+      <property>catCode</property>
+      <property lookup="ticketSeverity">severityCode</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>closed</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.modules.communications.base.Message" id="message">
+      <property alias="guid">id</property>
+      <property>name</property>
+      <property>description</property>
+      <property>templateId</property>
+      <property>replyTo</property>
+      <property>messageSubject</property>
+      <property>messageText</property>
+      <property>url</property>
+      <property>image</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.modules.communications.base.SearchCriteriaList" id="searchCriteriaElements">
+      <property alias="guid">id</property>
+      <property>groupName</property>
+      <property>contactSource</property>
+      <property lookup="user">owner</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>entered</property>
+      <property>modified</property>
+    </map>
+<!-- Coded directly to handle multiple lookups per field    
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="savedCriteriaElement" table="saved_criteriaelement">
+      <property lookup="searchCriteriaElements" field="id">savedCriteriaListId</property>
+      <property lookup="searchFieldElement" field="field">fieldId</property>
+      <property field="operator">operator</property>
+      <property lookup="fieldTypes" field="operatorid">operatorId</property>
+      <property field="value">value</property>
+    </map>
+-->
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="searchFieldElement" table="search_fields" uniqueField="id">
+      <property alias="guid" field="id"/>
+      <property field="field"/>
+      <property field="description"/>
+      <property field="searchable"/>
+      <property field="field_typeid"/>
+      <property field="table_name"/>
+      <property field="object_class"/>
+      <property field="enabled"/>
+    </map>
+    <map class="org.aspcfs.modules.accounts.base.Revenue" id="revenue">
+      <property alias="guid">id</property>
+      <property lookup="account">orgId</property>
+      <property>transactionId</property>
+      <property>month</property>
+      <property>year</property>
+      <property>amount</property>
+      <property lookup="lookupRevenueTypes">type</property>
+      <property lookup="user">owner</property>
+      <property>description</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+       <property>entered</property>
+      <property>modified</property>
+    </map>
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="campaign" table="campaign" uniqueField="campaign_id">
+      <property alias="guid" field="id">id</property>
+      <property field="name">name</property>
+      <property field="description">description</property>
+      <property lookup="searchCriteriaElements" field="list_id">groupId</property>
+      <property lookup="message" field="message_id">messageId</property>
+      <property field="reply_addr">replyTo</property>
+      <property field="subject">subject</property>
+      <property field="message">message</property>
+      <property field="status_id">statusId</property>
+      <property field="status">status</property>
+      <property field="active">active</property>
+      <property field="active_date">activeDate</property>
+      <property field="send_method_id">sendMethodId</property>
+      <property field="inactive_date">inactiveDate</property>
+      <property field="approval_date">approvalDate</property>
+      <property lookup="user" field="approvedby">approvedBy</property>
+      <property field="enabled">enabled</property>
+      <property lookup="user" field="enteredby">enteredBy</property>
+      <property lookup="user" field="modifiedby">modifiedBy</property>
+      <property field="entered">entered</property>
+      <property field="modified">modified</property>
+    </map>
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="scheduledRecipient" table="scheduled_recipient" uniqueField="id">
+      <property alias="guid" field="id">id</property>
+      <property lookup="campaign" field="campaign_id">campaignId</property>
+      <property lookup="contact" field="contact_id">contactId</property>
+      <property lookup="campaignRun" field="run_id">runId</property>
+      <property field="status_id">statusId</property>
+      <property field="status">status</property>
+      <property field="status_date">statusDate</property>
+      <property field="scheduled_date">scheduledDate</property>
+      <property field="sent_date">sentDate</property>
+      <property field="reply_date">replyDate</property>
+      <property field="bounce_date">bounceDate</property>
+    </map>
+    <map class="org.aspcfs.modules.admin.base.AccessLog " id="accessLog">
+      <property alias="guid">id</property>
+      <property lookup="user">userId</property>
+      <property>username</property>
+      <property>ip</property>
+      <property>browser</property>
+      <property>entered</property>
+    </map>
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="accountTypeLevels" table="account_type_levels">
+      <property lookup="account" field="id">orgId</property>
+      <property lookup="lookupAccountTypes" field="type_id">typeId</property>
+      <property field="level">level</property>
+      <property field="entered">entered</property>
+      <property field="modified">modified</property>
+    </map>
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="fieldTypes" table="field_types" uniqueField="id">
+      <property alias="guid" field="id"/>
+      <property field="data_typeid"/>
+      <property field="data_type"/>
+      <property field="operator"/>
+      <property field="display_text"/>
+    </map>
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="excludedRecipient" table="excluded_recipient" uniqueField="id">
+      <property field="id">id</property>
+      <property lookup="campaign" field="campaign_id">campaignId</property>
+      <property lookup="contact" field="contact_id">contactId</property>
+    </map>
+<!--
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="recipientList" table="recipient_list" uniqueField="id">
+      <property alias="guid" field="id"/>
+      <property field="name"/>
+      <property field="description"/>
+      <property field="search_id"/>
+      <property field="dynamic"/>
+      <property field="enabled"/>
+      <property lookup="user" field="enteredby"/>
+      <property lookup="user" field="modifiedby"/>
+    </map>
+-->
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="campaignRun" table="campaign_run" uniqueField="id">
+      <property alias="guid" field="id">id</property>
+      <property lookup="campaign" field="campaign_id">campaignId</property>
+      <property field="status">status</property>
+      <property field="run_date">runDate</property>
+      <property field="total_contacts">totalContacts</property>
+      <property field="total_sent">totalSent</property>
+      <property field="total_replied">totalReplied</property>
+      <property field="total_bounced">totalBounced</property>
+    </map>   
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="campaignListGroups" table="campaign_list_groups">
+      <property lookup="campaign" field="campaign_id">campaignId</property>
+      <property lookup="searchCriteriaElements" field="group_id">groupId</property>
+    </map>  
+  </mappings>
+</CFSDatabaseReader>
