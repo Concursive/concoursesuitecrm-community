@@ -41,7 +41,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
       items.append(
         "<!-- Site Search -->" +
         "<table border='0' width='150' cellpadding='0' cellspacing='1'>" +
-        "<form action='/Search.do?command=SiteSearch' method='post'>" +
+        "<form action='Search.do?command=SiteSearch' method='post'>" +
         "<tr><td valign='top'> <img border='0' src='images/sb-search.gif' width='147' height='20'></td></tr>" +
         "<tr>" +
         "<td bgcolor='#E7E9EB'><p align='center'>Search this site for...<br>" +
@@ -96,7 +96,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           }
           rs.close();
           pst.close();
-          items.append("<a href='/MyCFS.do?command=Home' class='s'>Calls to make</a> (" + paint(callCount) + ")<br>");
+          items.append("<a href='MyCFS.do?command=Home' class='s'>Calls to make</a> (" + paint(callCount) + ")<br>");
           ++myItems;
         }
         
@@ -114,7 +114,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           }
           rs.close();
           pst.close();
-          items.append("<a href='/ProjectManagement.do?command=PersonalView' class='s'>Assigned Activities</a> (" + paint(activityCount) + ")<br>");
+          items.append("<a href='ProjectManagement.do?command=PersonalView' class='s'>Assigned Activities</a> (" + paint(activityCount) + ")<br>");
           ++myItems;
         }
         
@@ -132,7 +132,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           }
           rs.close();
           pst.close();
-          items.append("<a href='/TroubleTickets.do?command=Home' class='s'>Assigned Tickets</a> (" + paint(ticketCount) + ")<br>");
+          items.append("<a href='TroubleTickets.do?command=Home' class='s'>Assigned Tickets</a> (" + paint(ticketCount) + ")<br>");
           ++myItems;
         }
         
@@ -152,7 +152,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           }
           rs.close();
           pst.close();
-          items.append("<a href='/TroubleTickets.do?command=Home' class='s'>Unassigned Tickets</a> (" + paint(ticketCount) + ")<br>");
+          items.append("<a href='TroubleTickets.do?command=Home' class='s'>Unassigned Tickets</a> (" + paint(ticketCount) + ")<br>");
           ++myItems;
         }
 	
@@ -164,14 +164,14 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           newMessages.setNewMessagesOnly(true);
           newMessages.buildList(db);
           inboxCount = newMessages.size();
-          items.append("<a href='/MyCFSInbox.do?command=Inbox&return=1' class='s'>Inbox</a> (" + paint(inboxCount) + " new)<br>");
+          items.append("<a href='MyCFSInbox.do?command=Inbox&return=1' class='s'>Inbox</a> (" + paint(inboxCount) + " new)<br>");
           ++myItems;
         }
       
       //Tasks Items
       if (thisUser.hasPermission("myhomepage-inbox-view")) {
-          int taskCount = TaskList.pendingCount(db,contactId);
-          items.append("<a href='/MyTasks.do?command=ListTasks' class='s'>Tasks</a> (" + paint(taskCount) + " incomplete)<br>");
+          int taskCount = TaskList.queryPendingCount(db,contactId);
+          items.append("<a href='MyTasks.do?command=ListTasks' class='s'>Tasks</a> (" + paint(taskCount) + " incomplete)<br>");
           ++myItems;
         }
         
@@ -230,7 +230,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
 
     if (items.length() > 0) {
       //If they have any modules, then create a cell to hold them...
-      return ("<td width=150 valign='top'>" + items.toString() + "</td>");
+      return ("<td width=\"150\" valign=\"top\">" + items.toString() + "</td>");
     } else {
       //No global items
       return "";
