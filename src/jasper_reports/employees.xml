@@ -27,9 +27,10 @@
 con.namefirst,con.namelast,con.contact_id,con.title,
 o.name,dept.description as contact_dept
 FROM contact con
-LEFT JOIN organization o ON (con.org_id = o.org_id)
-LEFT JOIN lookup_department dept ON (con.department = dept.code)
-WHERE con.org_id = 0
+LEFT JOIN lookup_department dept ON (con.department = dept.code),
+organization o
+WHERE con.org_id = o.org_id
+AND con.org_id = 0
 AND employee = $P{TRUE}
 AND con.enabled = $P{TRUE}
 ORDER BY con.namelast, con.namefirst]]></queryString>
