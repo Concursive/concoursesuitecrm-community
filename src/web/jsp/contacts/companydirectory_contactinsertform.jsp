@@ -27,6 +27,10 @@
   function checkForm(form) {
     formTest = true;
     message = "";
+    if(document.forms[0].contactcategory[1].checked && document.forms[0].orgId.value == '-1') {
+       message += "- Make sure you select an account.\r\n";
+			 formTest = false;
+    }
     if ((!checkPhone(form.phone1number.value)) || (!checkPhone(form.phone2number.value)) || (!checkPhone(form.phone3number.value)) ) { 
       message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
       formTest = false;
