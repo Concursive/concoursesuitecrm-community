@@ -104,7 +104,7 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
       Iterator i = s.iterator();
       while (i.hasNext()) {
         String thisDay = (String) i.next();
-        companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[4], thisDay, dayEvents.get(thisDay));
+        companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[8], thisDay, dayEvents.get(thisDay));
         if (System.getProperty("DEBUG") != null) {
           System.out.println("ProjectListScheduledActions --> Added Assignments for day " + thisDay + "- " + String.valueOf(dayEvents.get(thisDay)));
         }
