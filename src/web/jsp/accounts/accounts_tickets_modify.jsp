@@ -68,7 +68,7 @@ Modify Ticket<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(TicketDetails.getCompanyName()) %> - Ticket #<%=TicketDetails.getId()%></strong>
+      <strong><%= toHtml(TicketDetails.getCompanyName()) %> - Ticket # <%=TicketDetails.getPaddedId()%></strong>
       <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
     </td>
   </tr>
@@ -109,13 +109,11 @@ Modify Ticket<br>
             <%}%>
         <%} else {%>
               <input type="submit" value="Update">
-          <% if (request.getParameter("return") != null) {%>
-            <% if (request.getParameter("return").equals("list")) {%>
+            <% if ("list".equals(request.getParameter("return"))) {%>
               <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
             <%} else {%> 
               <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
             <%}%>
-          <%}%>
               <%= showAttribute(request, "closedError") %>
         <%}%>
               <br>
@@ -288,13 +286,11 @@ Modify Ticket<br>
         &nbsp;<br>
         <% if (TicketDetails.getClosed() != null) { %>
               <input type="submit" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
-          <% if (request.getParameter("return") != null) {%>
-            <% if (request.getParameter("return").equals("list")) {%>
+            <% if ("list".equals(request.getParameter("return"))) {%>
               <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
             <%} else {%> 
               <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
             <%}%>
-          <%}%>
         <%} else {%>
               <input type="submit" value="Update">
             <% if ("list".equals(request.getParameter("return"))) {%>

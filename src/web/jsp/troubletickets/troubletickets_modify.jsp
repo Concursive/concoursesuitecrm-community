@@ -82,10 +82,8 @@ Modify Ticket<br>
 			<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
 		<%} else {%>
 			<input type="submit" value="Update">
-      <% if (request.getParameter("return") != null) {%>
-        <% if (request.getParameter("return").equals("list")) {%>
+        <% if ("list".equals(request.getParameter("return"))) {%>
           <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
-        <%}%>
       <%} else {%>
         <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
       <%}%>
