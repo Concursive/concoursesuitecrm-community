@@ -2,10 +2,11 @@
  * Make_Get_and_Set_Methods.bsh - a BeanShell macro for
  * the jEdit text editor - facilitates the creation of
  * get() and set() methods from instance variables
- * Copyright (C) 2001-2003 Matt Rajkowski
+ * Copyright (C) 2001-2004 Matt Rajkowski
  * mattjava@zeroio.com
  *
  * Added feature to process any number of selected lines, skipping comments
+ * Added Centric CRM specific String handling for beans
  *
  * originally developed by John Gellene
  *
@@ -31,53 +32,40 @@ void makeGetSetDialog() {
   textPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
   setPanel = new JPanel(new BorderLayout());
-  setLabel = new JLabel("set() methods", SwingConstants.LEFT);
-  setText = new JTextArea();
+  setLabel = new JLabel("set() and get() methods:", SwingConstants.LEFT);
+  
   setPanel.add(setLabel, "North");
-  setPanel.add(new JScrollPane( setText), "Center");
+  
+  setText = new JTextArea();
+  setPanel.add(new JScrollPane(setText), "Center");
   textPanel.add(setPanel);
-
-  getPanel = new JPanel(new BorderLayout());
-  getLabel = new JLabel("get() methods", SwingConstants.LEFT);
-  getText = new JTextArea();
-  getPanel.add(getLabel, "North");
-  getPanel.add(new JScrollPane( getText), "Center");
-  textPanel.add(getPanel);
 
   content.add(textPanel, "Center");
 
   buttonPanel = new JPanel(new GridLayout(4, 1, 0, 30));
   buttonPanel.setBorder( new EmptyBorder(22, 5, 5, 5));
 
-  makeSetButton = new JButton("Create Get/Set");
-  insertSetButton = new JButton("Insert Set");
-  insertGetButton = new JButton("Insert Get");
+  insertSetButton = new JButton("Insert Get/Set");
   
   doneButton = new JButton("Close");
-  buttonPanel.add(makeSetButton);
   buttonPanel.add(insertSetButton);
-  buttonPanel.add(insertGetButton);
   buttonPanel.add(doneButton);
 
   content.add(buttonPanel, "East");
 
   // action listener for buttons
-  makeSetButton.addActionListener(this);
   insertSetButton.addActionListener(this);
   doneButton.addActionListener(this);
-  insertGetButton.addActionListener(this);
 
   actionPerformed(e) {
     cmd = e.getActionCommand();
     if(cmd.indexOf("Close") != -1) {
       this.dialog.dispose();
       return;
-    }
-    isGetCmd = (cmd.indexOf("Get") != -1);
-    if(cmd.indexOf("Insert") != -1)
-      doInsert(isGetCmd ? this.getText : this.setText);
-    else if(isGetCmd) {
-      doMakeGetSet(this.setText, this.getText);
+    } else {
+      doInsert(this.setText);
+      this.dialog.dispose();
+      return;
     }
   }
 
@@ -85,13 +73,15 @@ void makeGetSetDialog() {
   dialog.setLocationRelativeTo(view);
   dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
   dialog.setVisible(true);
-  doMakeGetSet(this.setText, this.getText);
+  doMakeGetSet(this.setText);
 }
 
-void doMakeGetSet(JTextArea setText, JTextArea getText) {
+void doMakeGetSet(JTextArea setText) {
   
   //Iterate through the lines in the selection, then
   //create get and set methods for each
+  String indent = "";
+  boolean firstTime = true;
   
   end = textArea.getSelectionEndLine() + 1;
   for(line = textArea.getSelectionStartLine(); line < end; ++line) {
@@ -105,6 +95,9 @@ void doMakeGetSet(JTextArea setText, JTextArea getText) {
     
     //result = parseLine();
     if(result.length() > 0) {
+      if (!firstTime) {
+        index = "  ";
+      }
       tokenizer = new StringTokenizer(result);
       String resultType = tokenizer.nextToken();
       String resultVariable = tokenizer.nextToken();
@@ -112,23 +105,27 @@ void doMakeGetSet(JTextArea setText, JTextArea getText) {
       //Get
       c = resultVariable.substring(0,1);
       c = c.toUpperCase();
-      sb1 = new StringBuffer();
-      sb1.append("public ");
-      sb1.append(resultType);
-      sb1.append(" get");
-      sb1.append(c);
-      sb1.append(resultVariable.substring(1));
-      sb1.append("()");
-      //sb1.append(" {\n\treturn ");
-      sb1.append(" { return ");
-      sb1.append(resultVariable);
-      //sb1.append(";\n}\n");
-      sb1.append("; }\n");
-      getText.append(sb1.toString());
+      if (1==1) {
+        sb = new StringBuffer();
+        sb.append(indent);
+        sb.append("public ");
+        sb.append(resultType);
+        sb.append(" get");
+        sb.append(c);
+        sb.append(resultVariable.substring(1));
+        sb.append("()");
+        //sb.append(" {\n\treturn ");
+        sb.append(" { return ");
+        sb.append(resultVariable);
+        //sb.append(";\n}\n");
+        sb.append("; }\n");
+        setText.append(sb.toString());
+      }
       
       //Set
       if (1==1) {
         sb = new StringBuffer();
+        sb.append(indent);
         sb.append("public ");
         sb.append("void set");
         sb.append(c);
@@ -153,6 +150,7 @@ void doMakeGetSet(JTextArea setText, JTextArea getText) {
       //Set
       if ("int".equals(resultType)) {
         sb = new StringBuffer();
+        sb.append(indent);
         sb.append("public ");
         sb.append("void set");
         sb.append(c);
@@ -176,6 +174,7 @@ void doMakeGetSet(JTextArea setText, JTextArea getText) {
       
       if ("double".equals(resultType)) {
         sb = new StringBuffer();
+        sb.append(indent);
         sb.append("public ");
         sb.append("void set");
         sb.append(c);
@@ -199,6 +198,7 @@ void doMakeGetSet(JTextArea setText, JTextArea getText) {
       
       if ("long".equals(resultType)) {
         sb = new StringBuffer();
+        sb.append(indent);
         sb.append("public ");
         sb.append("void set");
         sb.append(c);
@@ -223,6 +223,7 @@ void doMakeGetSet(JTextArea setText, JTextArea getText) {
       //Set
       if ("boolean".equals(resultType)) {
         sb = new StringBuffer();
+        sb.append(indent);
         sb.append("public ");
         sb.append("void set");
         sb.append(c);
@@ -247,6 +248,7 @@ void doMakeGetSet(JTextArea setText, JTextArea getText) {
       //Set
       if ("Timestamp".equals(resultType) || "java.sql.Timestamp".equals(resultType)) {
         sb = new StringBuffer();
+        sb.append(indent);
         sb.append("public ");
         sb.append("void set");
         sb.append(c);
@@ -267,6 +269,10 @@ void doMakeGetSet(JTextArea setText, JTextArea getText) {
         sb.append("; }\n");
         setText.append(sb.toString());
       }
+      if (line+1 < end) {
+        setText.append("\n");
+      }
+      firstTime = false;
     }
   }
 }
