@@ -45,7 +45,7 @@ Search Results
 		<td width="10" valign="top" nowrap class="row<%= rowid %>">
 			<%= toHtml(thisTic.getPriorityName()) %>
 		</td>
-		<td width="8%" valign="top" nowrap class="row<%= rowid %>">
+		<td width="8%" align="right" valign="top" nowrap class="row<%= rowid %>">
 			<%= thisTic.getAgeOf() %>
 		</td>
 		<td width="90%" valign="top" class="row<%= rowid %>">
