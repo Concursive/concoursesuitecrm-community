@@ -821,5 +821,10 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'accessLog', 'com.darkhorseventures.cfsbase.AccessLog');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'accessLogList', 'com.darkhorseventures.cfsbase.AccessLogList');
+ 
+  INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'accountTypeLevels', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'accountTypeLevelsList', 'com.darkhorseventures.webutils.CustomLookupList');
 
  

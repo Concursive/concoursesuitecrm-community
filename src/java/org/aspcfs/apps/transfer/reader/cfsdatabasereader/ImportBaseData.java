@@ -69,6 +69,13 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       return false;
     }
     
+    writer.setAutoCommit(true);
+    logger.info("ImportBaseData-> Inserting Account Type Levels");
+    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "accountTypeLevels");
+    if (!processOK) {
+      return false;
+    }
+    
     //Organization Phone?
     logger.info("ImportBaseData-> Inserting account phone numbers");
     writer.setAutoCommit(false);
