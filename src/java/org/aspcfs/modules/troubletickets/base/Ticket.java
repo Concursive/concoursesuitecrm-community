@@ -1612,6 +1612,7 @@ public class Ticket extends GenericBean {
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "ticket_ticketid_seq");
+      //Update the rest of the fields
       if (this.getEntered() == null) {
         this.update(db);
       } else {
@@ -1993,13 +1994,10 @@ public class Ticket extends GenericBean {
       thisEntry.setTicketId(this.getId());
       thisEntry.setPriorityCode(this.getPriorityCode());
       thisEntry.setSeverityCode(this.getSeverityCode());
-
       if (this.getCloseIt() == true) {
         thisEntry.setClosed(true);
       }
-
-      history.addElement(thisEntry);
-
+      history.add(thisEntry);
       Iterator hist = history.iterator();
       while (hist.hasNext()) {
         TicketLog thisLog = (TicketLog) hist.next();

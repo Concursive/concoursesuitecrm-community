@@ -2,7 +2,7 @@
 
 package org.aspcfs.modules.troubletickets.base;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -19,7 +19,7 @@ import javax.servlet.http.*;
  *@version    $Id: TicketLogList.java,v 1.11 2003/03/07 14:47:27 mrajkowski Exp
  *      $
  */
-public class TicketLogList extends Vector {
+public class TicketLogList extends ArrayList {
 
   private PagedListInfo pagedListInfo = null;
   private int ticketId = -1;
@@ -53,7 +53,7 @@ public class TicketLogList extends Vector {
       thisEntry.buildRecord(request);
 
       if (thisEntry.isValid()) {
-        this.addElement(thisEntry);
+        this.add(thisEntry);
       }
     }
   }
@@ -107,59 +107,92 @@ public class TicketLogList extends Vector {
    *@return          Description of the Returned Value
    */
   public boolean setSystemMessages(TicketLog current, TicketLog prev) {
-
     TicketLog tempLog = null;
-
     if (prev == null) {
-      return false;
-    } else {
-      if (current.getAssignedTo() != prev.getAssignedTo()) {
+      //First log entry
+      if (1 == 1) {
         tempLog = new TicketLog();
-        tempLog.createSysMsg(prev);
-
+        tempLog.createSysMsg(current);
+        tempLog.setEntryText("[ Ticket Opened ]");
+        this.add(tempLog);
+      }
+      if (1 == 1) {
+        tempLog = new TicketLog();
+        tempLog.createSysMsg(current);
         if (tempLog.getAssignedToName() != null) {
-          tempLog.setEntryText("[ Re-assigned to " + tempLog.getAssignedToName() + " ]");
+          tempLog.setEntryText("[ Assigned to " + current.getAssignedToName() + " ]");
         } else {
           tempLog.setEntryText("[ Ticket is un-assigned ]");
         }
-        this.addElement(tempLog);
+        this.add(tempLog);
       }
-
+      if (current.getDepartmentCode() > 0) {
+        tempLog = new TicketLog();
+        tempLog.createSysMsg(current);
+        tempLog.setEntryText("[ Department assigned to " + current.getDepartmentName() + " ]");
+        this.add(tempLog);
+      }
+      if (current.getPriorityCode() > 0) {
+        tempLog = new TicketLog();
+        tempLog.createSysMsg(current);
+        tempLog.setEntryText("[ Priority set to " + current.getPriorityName() + " ]");
+        this.add(tempLog);
+      }
+      if (current.getSeverityCode() > 0) {
+        tempLog = new TicketLog();
+        tempLog.createSysMsg(current);
+        tempLog.setEntryText("[ Severity set to " + current.getSeverityName() + " ]");
+        this.add(tempLog);
+      }
+      if (current.getClosed()) {
+        tempLog = new TicketLog();
+        tempLog.createSysMsg(current);
+        tempLog.setEntryText("[ Ticket was immediately closed ]");
+        this.add(tempLog);
+      }
+      return true;
+    } else {
+      //Comparative log entry
+      if (current.getAssignedTo() != prev.getAssignedTo()) {
+        tempLog = new TicketLog();
+        tempLog.createSysMsg(prev);
+        if (tempLog.getAssignedToName() != null) {
+          tempLog.setEntryText("[ Re-assigned from " + prev.getAssignedToName() + " to " + current.getAssignedToName() + " ]");
+        } else {
+          tempLog.setEntryText("[ Ticket is un-assigned ]");
+        }
+        this.add(tempLog);
+      }
       if (current.getDepartmentCode() != prev.getDepartmentCode()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Department changed to " + tempLog.getDepartmentName() + " ]");
-        this.addElement(tempLog);
+        tempLog.setEntryText("[ Department changed from " + prev.getDepartmentName() + " to " + current.getDepartmentName() + " ]");
+        this.add(tempLog);
       }
-
       if (current.getPriorityCode() != prev.getPriorityCode()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Priority changed to " + tempLog.getPriorityName() + " ]");
-        this.addElement(tempLog);
+        tempLog.setEntryText("[ Priority changed from " + prev.getPriorityName() + " to " + current.getPriorityName() + " ]");
+        this.add(tempLog);
       }
-
       if (current.getSeverityCode() != prev.getSeverityCode()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Severity changed to " + tempLog.getSeverityName() + " ]");
-        this.addElement(tempLog);
+        tempLog.setEntryText("[ Severity changed from " + prev.getSeverityName() + " to " + current.getSeverityName() + " ]");
+        this.add(tempLog);
       }
-
-      if (current.getClosed() && !prev.getClosed()) {
-        tempLog = new TicketLog();
-        tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Ticket Re-opened ]");
-        this.addElement(tempLog);
-      }
-
       if (!current.getClosed() && prev.getClosed()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Ticket Closed ]");
-        this.addElement(tempLog);
+        tempLog.setEntryText("[ Ticket Re-opened ]");
+        this.add(tempLog);
       }
-
+      if (current.getClosed() && !prev.getClosed()) {
+        tempLog = new TicketLog();
+        tempLog.createSysMsg(prev);
+        tempLog.setEntryText("[ Ticket Closed ]");
+        this.add(tempLog);
+      }
       return true;
     }
   }
@@ -252,13 +285,9 @@ public class TicketLogList extends Vector {
    *@exception  SQLException  Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-
-    TicketLog prevTicketLog = null;
-    boolean systemResult = true;
 
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
@@ -303,10 +332,12 @@ public class TicketLogList extends Vector {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("t.entered", "desc");
+      pagedListInfo.setDefaultSort("t.entered", null);
+      //NOTE: Do not change the order due to the system message method
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY t.entered desc ");
+      //NOTE: Do not change the order due to the system message method
+      sqlOrder.append("ORDER BY t.entered ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -332,32 +363,30 @@ public class TicketLogList extends Vector {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
+    TicketLog prevTicketLog = null;
     int count = 0;
     while (rs.next()) {
-
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
           DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
           count >= pagedListInfo.getItemsPerPage()) {
         break;
       }
-
       ++count;
       TicketLog thisTicketLog = new TicketLog(rs);
-
       if (doSystemMessages) {
-        systemResult = this.setSystemMessages(thisTicketLog, prevTicketLog);
-        if (thisTicketLog.getEntryText() != null && !(thisTicketLog.getEntryText().equals(""))) {
-          this.addElement(thisTicketLog);
+        //Add the system generated messages
+        this.setSystemMessages(thisTicketLog, prevTicketLog);
+        if (thisTicketLog.getEntryText() != null && !thisTicketLog.getEntryText().equals("")) {
+          //Add the comments
+          this.add(thisTicketLog);
         }
       } else {
-        this.addElement(thisTicketLog);
+        //Just add the whole thing
+        this.add(thisTicketLog);
       }
-
       prevTicketLog = thisTicketLog;
     }
     rs.close();
