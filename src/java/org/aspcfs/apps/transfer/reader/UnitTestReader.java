@@ -55,7 +55,7 @@ public class UnitTestReader implements DataReader {
    *@return                  Description of the Return Value
    */
   public boolean execute(DataWriter writer) {
-    if (1==1) {
+/*    if (1==1) {
       DataRecord thisRecord = new DataRecord();
       thisRecord.setName("accountList");
       thisRecord.setAction("select");
@@ -88,7 +88,19 @@ public class UnitTestReader implements DataReader {
       writer.load(thisRecord);
       logger.info(writer.getLastResponse());
     }
-    
+ */    
+    if (1==1) {
+      DataRecord thisRecord = new DataRecord();
+      thisRecord.setName("ticket");
+      thisRecord.setAction("insert");
+      thisRecord.addField("orgId", "4");
+      thisRecord.addField("contactId", "28");
+      thisRecord.addField("problem", "Some problem");
+      thisRecord.addField("enteredBy", "2");
+      thisRecord.addField("modifiedBy", "2");
+      writer.save(thisRecord);
+      logger.info(writer.getLastResponse());
+    }
     return true;
   }
 }
