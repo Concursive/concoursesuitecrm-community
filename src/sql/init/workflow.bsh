@@ -1,0 +1,27 @@
+/*
+  This script reads the specified database's workflow.xml file and either:
+    - Imports the workflow into a new database, or
+    - Merges the workflow into an existing database
+    
+  This script is used by build.xml when installing a new database.
+*/
+import java.sql.*;
+import java.io.File;
+import org.aspcfs.apps.workFlowManager.*;
+import org.aspcfs.controller.objectHookManager.*;
+
+File xmlFile = new File(dbFileLibraryPath + System.getProperty("file.separator") + "workflow.xml");
+if (xmlFile.exists()) {
+  //Read in any workflow business processes
+  BusinessProcessList processList = new BusinessProcessList();
+  processList.buildList(xmlFile);
+  print("Importing business processes... " + processList.size() + " item" + (processList.size() != 1 ? "s" : ""));
+  processList.insert(db);
+  //Read in any object hooks
+  ObjectHookList hookList = new ObjectHookList();
+  hookList.buildList(xmlFile);
+  print("Importing object hooks..." + hookList.size() + " item" + (hookList.size() != 1 ? "s" : ""));
+  hookList.insert(db);
+} else {
+  print("No workflow.xml to import");
+}
