@@ -58,12 +58,12 @@ ORDER BY tcf.form_id]]></queryString>
 		<group  name="activity_form" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$F{form_id}]]></groupExpression>
 			<groupHeader>
-			<band height="22"  isSplitAllowed="true" >
+			<band height="25"  isSplitAllowed="true" >
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
 						x="1"
-						y="0"
+						y="3"
 						width="546"
 						height="6"
 						forecolor="#000000"
@@ -79,7 +79,7 @@ ORDER BY tcf.form_id]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="3"
-						y="8"
+						y="12"
 						width="79"
 						height="11"
 						forecolor="#000000"
@@ -98,7 +98,7 @@ ORDER BY tcf.form_id]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="83"
-						y="8"
+						y="12"
 						width="100"
 						height="11"
 						forecolor="#000000"
@@ -117,7 +117,7 @@ ORDER BY tcf.form_id]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="188"
-						y="8"
+						y="12"
 						width="100"
 						height="11"
 						forecolor="#000000"
@@ -136,7 +136,7 @@ ORDER BY tcf.form_id]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="295"
-						y="8"
+						y="12"
 						width="216"
 						height="11"
 						forecolor="#000000"

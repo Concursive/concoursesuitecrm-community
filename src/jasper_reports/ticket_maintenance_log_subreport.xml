@@ -15,6 +15,7 @@
 		 topMargin="20"
 		 bottomMargin="20"
 		 whenNoDataType="AllSectionsNoDetail"
+		 scriptletClass="org.aspcfs.modules.troubletickets.jasperreports.scriptlets.MaintenanceItemsExistScriptlet"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<parameter name="ticketid" isForPrompting="false" class="java.lang.Integer">
@@ -59,7 +60,7 @@ WHERE t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="6"
-						y="4"
+						y="16"
 						width="530"
 						height="3"
 						forecolor="#000000"
@@ -75,7 +76,7 @@ WHERE t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="48"
-						y="54"
+						y="66"
 						width="306"
 						height="13"
 						forecolor="#000000"
@@ -94,7 +95,7 @@ WHERE t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="47"
-						y="73"
+						y="85"
 						width="105"
 						height="11"
 						forecolor="#000000"
@@ -113,7 +114,7 @@ WHERE t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="157"
-						y="73"
+						y="85"
 						width="155"
 						height="11"
 						forecolor="#000000"
@@ -132,7 +133,7 @@ WHERE t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="318"
-						y="73"
+						y="85"
 						width="212"
 						height="11"
 						forecolor="#000000"
@@ -151,7 +152,7 @@ WHERE t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="8"
-						y="12"
+						y="24"
 						width="105"
 						height="29"
 						forecolor="#000000"
@@ -171,7 +172,7 @@ of Service]]></text>
 					<reportElement
 						mode="Opaque"
 						x="47"
-						y="68"
+						y="80"
 						width="484"
 						height="3"
 						forecolor="#000000"
@@ -183,6 +184,27 @@ of Service]]></text>
 						isPrintWhenDetailOverflows="false"/>
 					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
 				</rectangle>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="6"
+						y="1"
+						width="119"
+						height="14"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false">
+							<printWhenExpression><![CDATA[new Boolean(!((org.aspcfs.modules.troubletickets.jasperreports.scriptlets.MaintenanceItemsExistScriptlet) $P{REPORT_SCRIPTLET}).maintenanceItemsExist($P{REPORT_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
+						</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Maintenance Notes]]></text>
+				</staticText>
 			</band>
 			</groupFooter>
 		</group>
@@ -191,14 +213,14 @@ of Service]]></text>
 			</band>
 		</background>
 		<title>
-			<band height="120"  isSplitAllowed="true" >
+			<band height="146"  isSplitAllowed="true" >
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
 						x="4"
 						y="35"
 						width="533"
-						height="77"
+						height="107"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -210,10 +232,10 @@ of Service]]></text>
 				</rectangle>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="149"
-						y="82"
-						width="125"
-						height="12"
+						x="100"
+						y="96"
+						width="138"
+						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -230,8 +252,8 @@ of Service]]></text>
 					<reportElement
 						mode="Transparent"
 						x="7"
-						y="82"
-						width="139"
+						y="96"
+						width="87"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -250,7 +272,7 @@ of Service]]></text>
 						mode="Transparent"
 						x="7"
 						y="50"
-						width="140"
+						width="88"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -266,10 +288,10 @@ of Service]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="150"
+						x="101"
 						y="50"
-						width="125"
-						height="14"
+						width="138"
+						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -320,9 +342,9 @@ of Service]]></text>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="280"
-						y="49"
-						width="120"
+						x="243"
+						y="50"
+						width="106"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -338,10 +360,10 @@ of Service]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="408"
-						y="49"
-						width="85"
-						height="14"
+						x="355"
+						y="50"
+						width="178"
+						height="20"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -357,9 +379,9 @@ of Service]]></text>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="280"
-						y="78"
-						width="120"
+						x="243"
+						y="96"
+						width="106"
 						height="11"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -375,10 +397,10 @@ of Service]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="408"
-						y="79"
-						width="123"
-						height="11"
+						x="355"
+						y="96"
+						width="178"
+						height="22"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -395,8 +417,8 @@ of Service]]></text>
 					<reportElement
 						mode="Transparent"
 						x="5"
-						y="66"
-						width="141"
+						y="72"
+						width="89"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -413,9 +435,9 @@ of Service]]></text>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="61"
-						y="96"
-						width="84"
+						x="7"
+						y="121"
+						width="86"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -431,10 +453,10 @@ of Service]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="150"
-						y="66"
-						width="125"
-						height="14"
+						x="101"
+						y="72"
+						width="138"
+						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -449,10 +471,10 @@ of Service]]></text>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="149"
-						y="96"
-						width="124"
-						height="13"
+						x="100"
+						y="121"
+						width="137"
+						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -468,9 +490,9 @@ of Service]]></text>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="280"
-						y="64"
-						width="120"
+						x="243"
+						y="72"
+						width="106"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -486,10 +508,10 @@ of Service]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="408"
-						y="64"
-						width="83"
-						height="13"
+						x="355"
+						y="72"
+						width="177"
+						height="21"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -505,9 +527,9 @@ of Service]]></text>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="316"
-						y="94"
-						width="84"
+						x="242"
+						y="121"
+						width="107"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -523,10 +545,10 @@ of Service]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="408"
-						y="94"
-						width="124"
-						height="13"
+						x="355"
+						y="121"
+						width="179"
+						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -609,7 +631,7 @@ of Service]]></text>
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Asset Tag #]]></text>
 				</staticText>
@@ -625,6 +647,7 @@ of Service]]></text>
 		</columnHeader>
 		<detail>
 			<band height="37"  isSplitAllowed="true" >
+				<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.modules.troubletickets.jasperreports.scriptlets.MaintenanceItemsExistScriptlet) $P{REPORT_SCRIPTLET}).maintenanceItemsExist($P{REPORT_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
 				<staticText>
 					<reportElement
 						mode="Opaque"
@@ -660,6 +683,9 @@ of Service]]></text>
 						isPrintWhenDetailOverflows="true"/>
 					<subreportParameter  name="ticketid">
 						<subreportParameterExpression><![CDATA[$P{ticketid}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="path">
+						<subreportParameterExpression><![CDATA[$P{path}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "ticket_maintenance_log_items_subreport.jasper"]]></subreportExpression>

@@ -15,6 +15,7 @@
 		 topMargin="20"
 		 bottomMargin="20"
 		 whenNoDataType="AllSectionsNoDetail"
+		 scriptletClass="org.aspcfs.modules.troubletickets.jasperreports.scriptlets.ActivityItemsExistScriptlet"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<parameter name="ticketid" isForPrompting="false" class="java.lang.Integer">
@@ -59,18 +60,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 	<field name="onsiteservice" class="java.lang.String"/>
 	<field name="emailservice" class="java.lang.String"/>
 	<field name="hoursremaining" class="java.lang.Double"/>
-		<group  name="dummy" isStartNewColumn="false" isStartNewPage="true" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
-			<groupExpression><![CDATA[null]]></groupExpression>
-			<groupHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-			</groupHeader>
-			<groupFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-			</groupFooter>
-		</group>
-		<group  name="dummy_activity" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
+		<group  name="dummy_activity" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="true" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[null]]></groupExpression>
 			<groupHeader>
 			<band height="0"  isSplitAllowed="true" >
@@ -82,7 +72,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="3"
-						y="6"
+						y="19"
 						width="546"
 						height="6"
 						forecolor="#000000"
@@ -98,7 +88,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="5"
-						y="14"
+						y="27"
 						width="79"
 						height="11"
 						forecolor="#000000"
@@ -117,7 +107,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="85"
-						y="14"
+						y="27"
 						width="100"
 						height="11"
 						forecolor="#000000"
@@ -136,7 +126,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="190"
-						y="14"
+						y="27"
 						width="100"
 						height="11"
 						forecolor="#000000"
@@ -155,7 +145,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="294"
-						y="14"
+						y="27"
 						width="216"
 						height="11"
 						forecolor="#000000"
@@ -269,7 +259,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="85"
-						y="26"
+						y="39"
 						width="47"
 						height="11"
 						forecolor="#000000"
@@ -288,7 +278,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="137"
-						y="26"
+						y="39"
 						width="45"
 						height="11"
 						forecolor="#000000"
@@ -307,7 +297,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="191"
-						y="27"
+						y="40"
 						width="47"
 						height="11"
 						forecolor="#000000"
@@ -326,7 +316,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="243"
-						y="27"
+						y="40"
 						width="45"
 						height="11"
 						forecolor="#000000"
@@ -341,6 +331,27 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					</textElement>
 				<text><![CDATA[Mins]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="3"
+						y="1"
+						width="119"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="false"
+						isRemoveLineWhenBlank="true"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false">
+							<printWhenExpression><![CDATA[new Boolean(!((org.aspcfs.modules.troubletickets.jasperreports.scriptlets.ActivityItemsExistScriptlet) $P{REPORT_SCRIPTLET}).activityItemsExist($P{REPORT_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
+						</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Activity Log]]></text>
+				</staticText>
 			</band>
 			</groupFooter>
 		</group>
@@ -353,7 +364,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="291"
+						x="290"
 						y="215"
 						width="259"
 						height="31"
@@ -401,7 +412,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="294"
+						x="293"
 						y="230"
 						width="113"
 						height="14"
@@ -877,7 +888,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="409"
+						x="408"
 						y="230"
 						width="137"
 						height="14"
@@ -896,7 +907,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
-						x="291"
+						x="290"
 						y="214"
 						width="259"
 						height="15"
@@ -912,7 +923,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="292"
+						x="291"
 						y="215"
 						width="148"
 						height="13"
@@ -980,7 +991,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Service Contract #]]></text>
 				</staticText>
@@ -995,23 +1006,29 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="34"  isSplitAllowed="true" >
+			<band height="38"  isSplitAllowed="false" >
+				<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.modules.troubletickets.jasperreports.scriptlets.ActivityItemsExistScriptlet) $P{REPORT_SCRIPTLET}).activityItemsExist($P{REPORT_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
 				<subreport  isUsingCache="true">
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="17"
+						y="22"
 						width="562"
 						height="16"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="true"
-						isPrintWhenDetailOverflows="true"/>
+						isPrintRepeatedValues="false"
+						isRemoveLineWhenBlank="true"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false">
+							<printWhenExpression><![CDATA[new Boolean(((org.aspcfs.modules.troubletickets.jasperreports.scriptlets.ActivityItemsExistScriptlet) $P{REPORT_SCRIPTLET}).activityItemsExist($P{REPORT_CONNECTION}, $P{ticketid}.intValue()))]]></printWhenExpression>
+						</reportElement>
 					<subreportParameter  name="ticketid">
 						<subreportParameterExpression><![CDATA[$P{ticketid}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="path">
+						<subreportParameterExpression><![CDATA[$P{path}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "ticket_activity_log_items_subreport.jasper"]]></subreportExpression>
