@@ -25,6 +25,8 @@ public class SurveyAnswerList extends Vector {
 
   private int questionId = -1;
   private int hasComments = -1;
+  private int responseId = -1;
+  private int contactId = -1;
   private boolean lastAnswers = false;
   private int itemsPerPage = 10;
   private HashMap contacts = null;
@@ -111,7 +113,7 @@ public class SurveyAnswerList extends Vector {
   /**
    *  Set if Most recently entered survey answers are needed
    *
-   *@param  lastItems  The new lastItems value
+   *@param  lastAnswers  The new lastAnswers value
    */
   public void setLastAnswers(boolean lastAnswers) {
     this.lastAnswers = lastAnswers;
@@ -135,6 +137,32 @@ public class SurveyAnswerList extends Vector {
    */
   public void setContacts(HashMap contacts) {
     this.contacts = contacts;
+  }
+
+
+  /**
+   *  Sets the responseId attribute of the SurveyAnswerList object
+   *
+   *@param  responseId  The new responseId value
+   */
+  public void setResponseId(int responseId) {
+    this.responseId = responseId;
+  }
+
+public void setContactId(int contactId) {
+	this.contactId = contactId;
+}
+public int getContactId() {
+	return contactId;
+}
+
+  /**
+   *  Gets the responseId attribute of the SurveyAnswerList object
+   *
+   *@return    The responseId value
+   */
+  public int getResponseId() {
+    return responseId;
   }
 
 
@@ -231,7 +259,7 @@ public class SurveyAnswerList extends Vector {
     sqlSelect.append("sa.*, c.namelast as lastname, c.namefirst as firstname, c.contact_id as contactid, sr.entered as entered " +
         "FROM active_survey_answers sa, active_survey_responses sr " +
         "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
-        "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id "
+        "WHERE sa.question_id > -1 "
         );
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -250,15 +278,15 @@ public class SurveyAnswerList extends Vector {
       ++count;
       SurveyAnswer thisAnswer = new SurveyAnswer(rs);
       this.add(thisAnswer);
-      if(contacts == null){
+      if (contacts == null) {
         contacts = new HashMap();
       }
-      String contactName = Contact.getNameLastFirst(rs.getString("lastname") , rs.getString("firstname"));
-      contacts.put(new Integer(rs.getInt("contactid")),contactName);
+      String contactName = Contact.getNameLastFirst(rs.getString("lastname"), rs.getString("firstname"));
+      contacts.put(new Integer(rs.getInt("contactid")), contactName);
     }
     rs.close();
     pst.close();
-    
+
     Iterator ans = this.iterator();
     while (ans.hasNext()) {
       SurveyAnswer thisAnswer = (SurveyAnswer) ans.next();
@@ -282,6 +310,16 @@ public class SurveyAnswerList extends Vector {
       sqlFilter.append("AND sa.question_id = ? ");
     }
 
+    if (responseId != -1) {
+      sqlFilter.append("AND sa.response_id = ? ");
+    } else {
+      sqlFilter.append("AND sa.response_id = sr.response_id ");
+    }
+
+    if(contactId != -1){
+      sqlFilter.append("AND sr.contact_id = ? ");
+    }
+    
     if (hasComments > -1) {
       if (hasComments == Constants.TRUE) {
         sqlFilter.append("AND sa.comments <> '' ");
@@ -305,6 +343,15 @@ public class SurveyAnswerList extends Vector {
     if (questionId != -1) {
       pst.setInt(++i, questionId);
     }
+
+    if (responseId != -1) {
+      pst.setInt(++i, responseId);
+    }
+    
+    if(contactId != -1){
+      pst.setInt(++i, contactId);
+    }
+    
     return i;
   }
 
