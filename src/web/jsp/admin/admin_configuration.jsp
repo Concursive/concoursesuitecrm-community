@@ -10,7 +10,6 @@ Setup CFS to meet the specific needs of your organization, including configurati
 <table cellpadding="0" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td width="49%" valign="top">
-
 <%
   Iterator i = PermissionCategoryList.iterator();
   int limit = (PermissionCategoryList.size()/2);
@@ -19,30 +18,32 @@ Setup CFS to meet the specific needs of your organization, including configurati
     count++;
     PermissionCategory thisPermissionCat = (PermissionCategory)i.next();
 %>
-    <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="title">
-    <td>
-    <strong><a href="Admin.do?command=ConfigDetails&moduleId=<%=thisPermissionCat.getId()%>"><%=thisPermissionCat.getCategory()%></a></strong>
-    </td>
-    </tr>
-    <tr class="containerBody">
-    <td>
-    Module Description
-    </td>
-    </tr>
-    </table>&nbsp;
-    
-  <% if (count == limit) { %>
-      </td>
-      <td width="2%">
+      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+        <tr class="title">
+          <td>
+            <strong><a href="Admin.do?command=ConfigDetails&moduleId=<%=thisPermissionCat.getId()%>"><%=thisPermissionCat.getCategory()%></a></strong>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td>
+            Changes affect all users
+          </td>
+        </tr>
+      </table>
       &nbsp;
-      </td>
-      <td width="49%" valign="top">
-  <%}%>    
-    
-  <%}%>
-  
+<% 
+    if (count == limit) { 
+%>
+    </td>
+    <td width="2%">
+      &nbsp;
+    </td>
+    <td width="49%" valign="top">
+<%
+    }
+  }
+%>
     </td>
   </tr>
 </table>
-  
+

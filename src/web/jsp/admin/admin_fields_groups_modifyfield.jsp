@@ -6,9 +6,9 @@
 <jsp:useBean id="ModId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
-<script language="JavaScript" type="text/javascript" src="/javascript/editListForm.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/editListForm.js"></script>
 <script language="JavaScript" type="text/javascript">
   function doCheck() {
     if (document.modifyList.dosubmit.value == "false") {
@@ -99,37 +99,45 @@ Existing Field<br>
             <%= showAttribute(request, "lookupListError") %>
             <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
               <tr>
-                <td width=50%>
-                  <table width=100% cellspacing=0 cellpadding=2 border=0>
-                    <tr><td valign=center>
-                      New Option
-                    </td></tr>
-                    <tr><td valign=center>
-                      <input type="text" name="newValue" value="" size=25  maxlength=125>
-                    </td></tr>
-                    <tr><td valign=center>
-                      <input type="button" value="Add >" onclick="javascript:addValues()">
-                    </td></tr>
+                <td width="50%">
+                  <table width="100%" cellspacing="0" cellpadding="2" border="0">
+                    <tr>
+                      <td valign="center">
+                        New Option
+                      </td>
+                    </tr>
+                    <tr>
+                      <td valign="center">
+                        <input type="text" name="newValue" value="" size="25"  maxlength="125">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td valign="center">
+                        <input type="button" value="Add >" onclick="javascript:addValues()">
+                      </td>
+                    </tr>
                   </table>
                 </td>
-                <td width=25>
-                  <table width=100% cellspacing=0 cellpadding=2 border=0>
-                    <tr><td valign=center>
-                      <input type=button value="Up" onclick="javascript:moveOptionUp(document.modifyList.selectedList)">
+                <td width="25">
+                  <table width="100%" cellspacing="0" cellpadding="2" border="0">
+                    <tr><td valign="center">
+                      <input type="button" value="Up" onclick="javascript:moveOptionUp(document.modifyList.selectedList)">
                     </td></tr>
-                    <tr><td valign=center>
-                      <input type=button value="Down" onclick="javascript:moveOptionDown(document.modifyList.selectedList)">
+                    <tr><td valign="center">
+                      <input type="button" value="Down" onclick="javascript:moveOptionDown(document.modifyList.selectedList)">
                     </td></tr>
-                    <tr><td valign=center>
+                    <tr><td valign="center">
                       <input type="button" value="Remove" onclick="javascript:removeValues()">
                     </td></tr>
-                    <tr><td valign=center>
+                    <tr><td valign="center">
                       <input type="button" value="Sort" onclick="javascript:sortSelect(document.modifyList.selectedList)">
                     </td></tr>
                   </table>
                 </td>
-                <td width=50%><%= SelectedList.getHtmlSelect("selectedList",0) %></td>
-                <input type=hidden name="selectNames" value="">
+                <td width="50%">
+                  <%= SelectedList.getHtmlSelect("selectedList",0) %>
+                </td>
+                <input type="hidden" name="selectNames" value="">
               </tr>
             </table>
           </td>
@@ -168,8 +176,8 @@ Existing Field<br>
       <input type="hidden" name="id" value="<%= (String)request.getParameter("id") %>">
       <input type="hidden" name="groupId" value="<%= (String)request.getParameter("grpId") %>">
       <input type="hidden" name="dosubmit" value="true">
-      <input type="submit" value="Update" onClick="javascript:this.form.action='/AdminFields.do?command=UpdateField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true';this.form.dosubmit.value='true';">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="Update" onClick="javascript:this.form.action='AdminFields.do?command=UpdateField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true';this.form.dosubmit.value='true';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>';this.form.dosubmit.value='false';">
     </td>
   </tr>
 </table>

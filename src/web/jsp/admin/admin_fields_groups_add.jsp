@@ -16,11 +16,9 @@
 <a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>">Folder</a> >
 New Group<br>
 <hr color="#BFBFBB" noshade>
-
 <% if (request.getAttribute("actionError") != null) { %>
 <%= showError(request, "actionError") %>
 <%}%>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -54,7 +52,7 @@ New Group<br>
       <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
       <input type="hidden" name="moduleId" value="<%= ConstantId %>">
       <input type="submit" value="Save">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>'">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>'">
     </td>
   </tr>
 </table>

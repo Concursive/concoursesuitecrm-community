@@ -22,11 +22,11 @@ Custom Folders<br>
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
       <dhv:permission name="admin-sysconfig-folders-edit">
-      <td width="8" align="center">
+      <td align="center">
         <strong>Action</strong>
       </td>
       </dhv:permission>
-      <td align="left">
+      <td width="100%">
         <strong>Custom Folders</strong>
       </td>
       <td align="center">
@@ -45,7 +45,7 @@ Custom Folders<br>
     Iterator records = CategoryList.iterator();
     while (records.hasNext()) {
       rowId = (rowId == 1 ? 2 : 1);
-      CustomFieldCategory thisCategory = (CustomFieldCategory)records.next();
+      CustomFieldCategory thisCategory = (CustomFieldCategory) records.next();
 %>    
     <tr class="row<%= rowId %>">
       <dhv:permission name="admin-sysconfig-folders-edit">
@@ -53,7 +53,7 @@ Custom Folders<br>
         <a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= PermissionCategory.getId() %>&catId=<%= thisCategory.getId() %>">Edit</a>
       </td>
       </dhv:permission>
-      <td align="left" width="100%" nowrap>
+      <td width="100%">
         <dhv:permission name="admin-sysconfig-folders-view"><a href="AdminFieldsFolder.do?command=ModifyFolder&modId=<%= PermissionCategory.getId() %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a><%= (thisCategory.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif'>":"") %></dhv:permission>
       </td>
       <td align="center" nowrap>

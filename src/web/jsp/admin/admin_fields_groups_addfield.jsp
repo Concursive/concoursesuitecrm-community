@@ -115,8 +115,8 @@ New Field<br>
       </table>
       &nbsp;<br>
       <input type="hidden" name="groupId" value="<%= (String)request.getParameter("grpId") %>">
-      <input type="submit" value="Save" onClick="javascript:this.form.action='/AdminFields.do?command=InsertField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true'">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>'">
+      <input type="submit" value="Save" onClick="javascript:this.form.action='AdminFields.do?command=InsertField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true'">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>'">
     </td>
   </tr>
 </table>

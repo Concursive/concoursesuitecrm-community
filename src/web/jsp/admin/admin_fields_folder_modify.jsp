@@ -13,11 +13,9 @@
 <a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
 Existing Folder<br>
 <hr color="#BFBFBB" noshade>
-
 <% if (request.getAttribute("actionError") != null) { %>
   <%= showError(request, "actionError") %>
 <%}%>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -26,7 +24,6 @@ Existing Folder<br>
   </tr>
   <tr>
     <td class="containerBack">
-      
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td colspan="2">
@@ -71,7 +68,7 @@ Existing Folder<br>
       <input type="hidden" name="moduleId" value="<%= ConstantId %>">
       <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
       <input type="submit" value="Update">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>'">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>'">
     </td>
   </tr>
 </table>

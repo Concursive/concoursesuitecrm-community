@@ -9,7 +9,7 @@
 <form name="details" action="AdminFieldsFolder.do?command=InsertFolder&modId=<%= ModId %>&auto-populate=true" method="post">
 <a href="Admin.do">Setup</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
-<a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
+<a href="Admin.do?command=ConfigDetails&moduleId=<%= ModId %>">Configuration Options</a> >
 <a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> >
 New Folder<br>
 <hr color="#BFBFBB" noshade>
@@ -19,12 +19,11 @@ New Folder<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong>Module: <%=PermissionCategory.getCategory()%></strong>
+      <strong>Module: <%= PermissionCategory.getCategory() %></strong>
     </td>
   </tr>
   <tr>
     <td class="containerBack">
-      
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td colspan="2">
@@ -68,7 +67,7 @@ New Folder<br>
       &nbsp;<br>
       <input type="hidden" name="moduleId" value="<%= ConstantId %>">
       <input type="submit" value="Save">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>'">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>'">
     </td>
   </tr>
 </table>

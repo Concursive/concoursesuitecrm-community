@@ -15,7 +15,6 @@ function newOpt(param, value) {
 	newOpt.value=value;
   return newOpt;
 }
-
 function page_init() {
 <dhv:evaluate exp="<%= ((ContactList.size() > 0) || (typeId != null)) %>">
   var list = parent.document.forms[0].elements['contactId'];
@@ -28,7 +27,7 @@ function page_init() {
     if (!thisContact.hasAccount()) {
 %>
   list.options[list.length] = newOpt("<%= thisContact.getNameLastFirst() %>", "<%= thisContact.getId() %>");
-<%      
+<%
     }
   }
 %>
