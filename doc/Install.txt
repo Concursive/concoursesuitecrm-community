@@ -1,6 +1,6 @@
 /**
  *  ASPCFS Server Installation
- *  Configured for Red Hat 8.0, Postgresql 7.2.3, and Tomcat 4.1.12/.24
+ *  Configured for Red Hat 9.0, Postgresql 7.2.3, and Tomcat 4.1.24
  *
  *@author     matt rajkowski
  *@created    October 9, 2002
@@ -23,12 +23,13 @@
       - Install Red Hat Database PostgreSQL (v7.3.2)
   - Configure IP
   - Turn on port 80 and 443 during install or in iptables later
+    - iptables must be edited later to allow DNS through using lokkit
 
-- Install Java2 SDK 1.4.1_02 RPM for Linux
+- Install Java2 SDK 1.4.1_03 RPM for Linux
   Purpose: Programming language just-in-time compiler, 
     required for executing Java applications
   http://java.sun.com
-  file: 2sdk-1_4_1_02-fcs-linux-i586.rpm
+  file: 2sdk-1_4_1_03-fcs-linux-i586.rpm
   destination: /usr/java/j2sdk1.4.1
   $ rpm --install [file]
   $ ln -s /usr/java/j2sdk1.4.1 /usr/java/j2se
@@ -277,4 +278,10 @@ to the same server or other servers fairly easily.
 # 723 matches Postgresql 7.2.3
 37 4 * * * su postgres -c "/var/lib/pgsql/postgres-backup.sh 723 aspcfs.darkhorseventures.com all `date +%a`"
 
+
+*** System Failure Recovery ***
+
+# Postgres
+  - if the server is reset without shutting down, PostgreSQL might fail to startup
+  $ rm /var/lib/pgsql/data/postmaster.pid
 
