@@ -217,7 +217,7 @@ public final class ContactsList extends CFSModule {
 
     if (firstFilter.equalsIgnoreCase("all")) {
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-      contactList.setAllContacts(true, this.getUserRange(context));
+      contactList.setAllContacts(true, this.getUserId(context), this.getUserRange(context));
     }
     if (firstFilter.equalsIgnoreCase("employees")) {
       contactList.setTypeId(Contact.EMPLOYEE_TYPE);
@@ -228,7 +228,7 @@ public final class ContactsList extends CFSModule {
     if (firstFilter.equalsIgnoreCase("mycontacts")) {
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
       contactList.setOwner(getUserId(context));
-      contactList.setIncludePersonal(true);
+      contactList.setPersonalId(this.getUserId(context));
     }
     if (firstFilter.equalsIgnoreCase("accountcontacts")) {
       contactList.setWithAccountsOnly(true);
@@ -251,6 +251,7 @@ public final class ContactsList extends CFSModule {
       contactList.setIncludeNonUsersOnly(true);
     }
   }
+  
 }
 
 
