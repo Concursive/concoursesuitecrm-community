@@ -492,7 +492,7 @@ public final class Accounts extends CFSModule {
    *@exception  SQLException  Description of the Exception
    */
   public void buildFormElements(ActionContext context, Connection db) throws SQLException {
-    
+
     String index = null;
     if (context.getRequest().getParameter("index") != null) {
       index = context.getRequest().getParameter("index");
@@ -500,34 +500,33 @@ public final class Accounts extends CFSModule {
     LookupList industrySelect = new LookupList(db, "lookup_industry");
     industrySelect.addItem(0, "--None--");
     context.getRequest().setAttribute("IndustryList", industrySelect);
-    
+
     LookupList accountTypeList = new LookupList(db, "lookup_account_types");
     accountTypeList.setSelectSize(4);
     accountTypeList.setMultiple(true);
     context.getRequest().setAttribute("AccountTypeList", accountTypeList);
-    
-    if (index == null || (index!=null && Integer.parseInt(index) == 0)) {
-        LookupList phoneTypeList = new LookupList(db, "lookup_orgphone_types");
-        context.getRequest().setAttribute("OrgPhoneTypeList", phoneTypeList);
 
-        LookupList addrTypeList = new LookupList(db, "lookup_orgaddress_types");
-        context.getRequest().setAttribute("OrgAddressTypeList", addrTypeList);
+    if (index == null || (index != null && Integer.parseInt(index) == 0)) {
+      LookupList phoneTypeList = new LookupList(db, "lookup_orgphone_types");
+      context.getRequest().setAttribute("OrgPhoneTypeList", phoneTypeList);
 
-        LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
-        context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
-        
-        
-      } else {
-        LookupList phoneTypeList = new LookupList(db, "lookup_contactphone_types");
-        context.getRequest().setAttribute("OrgPhoneTypeList", phoneTypeList);
+      LookupList addrTypeList = new LookupList(db, "lookup_orgaddress_types");
+      context.getRequest().setAttribute("OrgAddressTypeList", addrTypeList);
 
-        LookupList addrTypeList = new LookupList(db, "lookup_contactaddress_types");
-        context.getRequest().setAttribute("OrgAddressTypeList", addrTypeList);
+      LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
+      context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
 
-        LookupList emailTypeList = new LookupList(db, "lookup_contactemail_types");
-        context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
-        
-      }
+    } else {
+      LookupList phoneTypeList = new LookupList(db, "lookup_contactphone_types");
+      context.getRequest().setAttribute("OrgPhoneTypeList", phoneTypeList);
+
+      LookupList addrTypeList = new LookupList(db, "lookup_contactaddress_types");
+      context.getRequest().setAttribute("OrgAddressTypeList", addrTypeList);
+
+      LookupList emailTypeList = new LookupList(db, "lookup_contactemail_types");
+      context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
+
+    }
   }
 
 
@@ -626,56 +625,9 @@ public final class Accounts extends CFSModule {
     newUserList.setJsEvent("onChange = \"javascript:fillFrame('calendar','MyCFS.do?command=MonthView&source=Calendar&userId='+document.getElementById('userId').value + '&return=Accounts'); javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=CalendarDetails&userId='+document.getElementById('userId').value + '&return=Accounts');javascript:changeDivContent('userName','Scheduled Actions for ' + document.getElementById('userId').options[document.getElementById('userId').selectedIndex].firstChild.nodeValue);\"");
     HtmlSelect userListSelect = newUserList.getHtmlSelectObj("userId", getUserId(context));
     userListSelect.addAttribute("id", "userId");
-    CalendarView companyCalendar = new CalendarView(context.getRequest());
-
-    PagedListInfo orgAlertPaged = new PagedListInfo();
-    orgAlertPaged.setMaxRecords(20);
-    orgAlertPaged.setColumnToSortBy("alertdate");
-
-    OrganizationList alertOrgs = new OrganizationList();
-    alertOrgs.setPagedListInfo(orgAlertPaged);
-    alertOrgs.setHasAlertDate(true);
-
-    OrganizationList expireOrgs = new OrganizationList();
-    expireOrgs.setPagedListInfo(orgAlertPaged);
-    expireOrgs.setHasExpireDate(true);
-
-    Connection db = null;
-    Exception errorMessage = null;
-
-    try {
-      db = this.getConnection(context);
-      calendarInfo.update(db, context);
-      alertOrgs.setEnteredBy(calendarInfo.getSelectedUserId());
-      expireOrgs.setEnteredBy(calendarInfo.getSelectedUserId());
-      alertOrgs.buildList(db);
-      expireOrgs.buildList(db);
-    } catch (SQLException e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    Iterator n = alertOrgs.iterator();
-    while (n.hasNext()) {
-      Organization thisOrg = (Organization) n.next();
-      companyCalendar.addEvent(thisOrg.getAlertDateStringLongYear(), "", thisOrg.getName() + ": " + thisOrg.getAlertText(), "Account", thisOrg.getOrgId());
-    }
-
-    Iterator m = expireOrgs.iterator();
-    while (m.hasNext()) {
-      Organization thatOrg = (Organization) m.next();
-      companyCalendar.addEvent(thatOrg.getContractEndDateStringLongYear(), "", thatOrg.getName() + ": " + "Contract Expiration", "Account", thatOrg.getOrgId());
-    }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("Return", "Accounts");
-      context.getRequest().setAttribute("NewUserList", userListSelect);
-      return ("DashboardOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("Return", "Accounts");
+    context.getRequest().setAttribute("NewUserList", userListSelect);
+    return ("DashboardOK");
   }
 
 
@@ -826,7 +778,6 @@ public final class Accounts extends CFSModule {
       //don't want to populate the addresses, etc. if this is an individual account
       newOrg.setRequestItems(context.getRequest());
     }
-
 
     try {
       db = this.getConnection(context);
