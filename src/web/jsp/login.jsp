@@ -1,4 +1,5 @@
 <jsp:useBean id="LoginBean" class="org.aspcfs.modules.login.beans.LoginBean" scope="request"/>
+<jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
 <%!
   public static String getLongDate(java.util.Date tmp) {
     java.text.SimpleDateFormat formatter1 = new java.text.SimpleDateFormat ("MMMMM d, yyyy");
@@ -64,20 +65,16 @@
           <td width="1%" height="26">&nbsp;</td>
         </tr>
         <tr>
-          <td width="9%">&nbsp;</td>
-          <td width="1%">&nbsp;</td>
-          <td width="15%" valign="top">&nbsp;</td>
-          <td width="30%">&nbsp;</td>
-        </tr>
-        <tr> 
+          <td colspan="4">
           <form name="login" method="POST" action="Login.do?command=Login&auto-populate=true">
-            <table width="100%" align="left" cellspacing="1" cellpadding="3" border="0">
+            <table width="100%" cellspacing="1" cellpadding="3" border="0">
               <tr>
-                <td valign="center" colspan="4">&nbsp;</td>
+                <td colspan="4">&nbsp;</td>
               </tr>
               <tr>
                 <td align="center" valign="center" colspan="4">
-                  <font face="Arial, Helvetica, sans-serif" size="2"><strong>Dark Horse CRM <%= ("https".equals(request.getScheme())?"Secure ":"") %>Login</strong></font>
+                  <font face="Arial, Helvetica, sans-serif" size="2"><strong>Dark Horse CRM <%= ("https".equals(request.getScheme())?"Secure ":"") %>Login</strong><br>
+                  <%= toHtml(APP_TEXT) %></font>
                 </td>
               </tr>
 <%
@@ -98,37 +95,46 @@
                 </td>
               </tr>
               <tr>
-                <td width="33%">&nbsp;</td>
-                <td valign="top" align="right" width="100">
+                <td align="center" colspan="4">
+                
+              <table style="border:1px #EFEFEF solid" align="center" width="50%">
+              <tr><td colspan="2">&nbsp;</td></tr>
+              <tr><td align="center">
+                
+              <table border="0">
+              <tr>
+                <td align="right">
                   <font face="Arial, Helvetica, sans-serif" size="2">Username:</font>
                 </td>
-                <td valign="top" align="left" width="200">
+                <td>
                   <font face="Arial, Helvetica, sans-serif" size="2"><input type="text" name="username" value="<%= LoginBean.getUsername() %>" size="20">&nbsp;</font>
                 </td>
-                <td width="33%">&nbsp;</td>
               </tr>
               <tr>
-                <td width="33%">&nbsp;</td>
-                <td valign="top" align="right" width="100">
+                <td align="right">
                   <font face="Arial, Helvetica, sans-serif" size="2">Password:</font>
                 </td>
-                <td valign="top" align="left" width="200">
+                <td>
                   <font face="Arial, Helvetica, sans-serif" size="2"><input type="password" name="password" size="20"></font>
                 </td>
-                <td width="33%">&nbsp;</td>
               </tr>
               <tr>
-                <td width="23%">&nbsp;</td>
-                <td valign="center" align="right" width="100">&nbsp;</td>
-                <td valign="center" align="left">
+                <td align="right">&nbsp;</td>
+                <td>
                   <input type="submit" value="Login" name="action">
                   <input type="reset" value="Reset">
                 </td>
-                <td width="43%">&nbsp;</td>
               </tr>
+              </table>
+              </td></tr>
+              <tr><td colspan="2">&nbsp;</td></tr>
+              </table>
+              </td>
+            </tr>
 <%}%>
             </table>
           </form>
+          </td>
         </tr>
       </table>
     </td>

@@ -29,7 +29,9 @@ public class Zlib {
   private String nameLast = null;
   private String company = null;
   private String email = null;
+  private String edition = null;
   private String text = null;
+  private String text2 = null;
   private String profile = null;
   private String mailError = null;
   private String os = null;
@@ -126,12 +128,32 @@ public class Zlib {
 
 
   /**
+   *  Sets the edition attribute of the Zlib object
+   *
+   *@param  tmp  The new edition value
+   */
+  public void setEdition(String tmp) {
+    this.edition = tmp;
+  }
+
+
+  /**
    *  Sets the text attribute of the Zlib object
    *
    *@param  tmp  The new text value
    */
   public void setText(String tmp) {
     this.text = tmp;
+  }
+
+
+  /**
+   *  Sets the text2 attribute of the Zlib object
+   *
+   *@param  tmp  The new text2 value
+   */
+  public void setText2(String tmp) {
+    this.text2 = tmp;
   }
 
 
@@ -246,12 +268,32 @@ public class Zlib {
 
 
   /**
+   *  Gets the edition attribute of the Zlib object
+   *
+   *@return    The edition value
+   */
+  public String getEdition() {
+    return edition;
+  }
+
+
+  /**
    *  Gets the text attribute of the Zlib object
    *
    *@return    The text value
    */
   public String getText() {
     return text;
+  }
+
+
+  /**
+   *  Gets the text2 attribute of the Zlib object
+   *
+   *@return    The text2 value
+   */
+  public String getText2() {
+    return text2;
   }
 
 
@@ -390,6 +432,14 @@ public class Zlib {
     Element licenseElement = document.createElement("license");
     licenseElement.appendChild(document.createTextNode(text));
     rootElement.appendChild(licenseElement);
+    //License name
+    Element editionElement = document.createElement("edition");
+    editionElement.appendChild(document.createTextNode(edition));
+    rootElement.appendChild(editionElement);
+    //crc
+    Element crcElement = document.createElement("text2");
+    crcElement.appendChild(document.createTextNode(text2));
+    rootElement.appendChild(crcElement);
     //Date and time approved
     Element dateTimeElement = document.createElement("entered");
     dateTimeElement.appendChild(document.createTextNode(String.valueOf(new java.util.Date())));

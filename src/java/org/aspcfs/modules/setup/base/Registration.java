@@ -21,6 +21,7 @@ public class Registration extends GenericBean {
   private String email = null;
   private String profile = null;
   private String text = null;
+  private String text2 = null;
   private String os = null;
   private String java = null;
   private String webserver = null;
@@ -28,6 +29,24 @@ public class Registration extends GenericBean {
   private String keyFile = null;
   private boolean enabled = true;
   private Timestamp entered = null;
+  private String edition = null;
+
+
+  /**
+   *  Constructor for the Registration object
+   */
+  public Registration() { }
+
+
+  /**
+   *  Constructor for the Registration object
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public Registration(ResultSet rs) throws SQLException {
+    buildRecord(rs);
+  }
 
 
   /**
@@ -121,6 +140,16 @@ public class Registration extends GenericBean {
 
 
   /**
+   *  Sets the text2 attribute of the Registration object
+   *
+   *@param  tmp  The new text2 value
+   */
+  public void setText2(String tmp) {
+    this.text2 = tmp;
+  }
+
+
+  /**
    *  Sets the os attribute of the Registration object
    *
    *@param  tmp  The new os value
@@ -198,6 +227,16 @@ public class Registration extends GenericBean {
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the edition attribute of the Registration object
+   *
+   *@param  tmp  The new edition value
+   */
+  public void setEdition(String tmp) {
+    this.edition = tmp;
   }
 
 
@@ -282,6 +321,16 @@ public class Registration extends GenericBean {
 
 
   /**
+   *  Gets the text2 attribute of the Registration object
+   *
+   *@return    The text2 value
+   */
+  public String getText2() {
+    return text2;
+  }
+
+
+  /**
    *  Gets the os attribute of the Registration object
    *
    *@return    The os value
@@ -342,6 +391,43 @@ public class Registration extends GenericBean {
 
 
   /**
+   *  Gets the edition attribute of the Registration object
+   *
+   *@return    The edition value
+   */
+  public String getEdition() {
+    return edition;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildRecord(ResultSet rs) throws SQLException {
+    //registration table
+    id = rs.getInt("registration_id");
+    email = rs.getString("email");
+    profile = rs.getString("profile");
+    nameFirst = rs.getString("name_first");
+    nameLast = rs.getString("name_last");
+    company = rs.getString("company");
+    text = rs.getString("registration_text");
+    os = rs.getString("os_version");
+    java = rs.getString("java_version");
+    webserver = rs.getString("webserver");
+    ip = rs.getString("ip_address");
+    edition = rs.getString("edition");
+    text2 = rs.getString("crc");
+    keyFile = rs.getString("key_file");
+    enabled = rs.getBoolean("enabled");
+    entered = rs.getTimestamp("entered");
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -351,8 +437,8 @@ public class Registration extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO registration (email, profile, name_first, name_last, " +
         "company, registration_text, os_version, java_version, webserver, " +
-        "ip_address, " +
-        "key_file, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "ip_address, edition, code, " +
+        "key_file, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     pst.setString(++i, email);
     pst.setString(++i, profile);
@@ -364,11 +450,31 @@ public class Registration extends GenericBean {
     pst.setString(++i, java);
     pst.setString(++i, webserver);
     pst.setString(++i, ip);
+    pst.setString(++i, edition);
+    pst.setString(++i, text2);
     pst.setString(++i, keyFile);
     pst.setBoolean(++i, enabled);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "registration_registration_id_seq");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void updateEnabled(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE registration " +
+        "SET enabled = ? " +
+        "WHERE registration_id = ? ");
+    pst.setBoolean(1, enabled);
+    pst.setInt(2, id);
+    pst.executeUpdate();
+    pst.close();
   }
 }
 

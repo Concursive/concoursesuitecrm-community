@@ -55,7 +55,7 @@ public class Setup extends CFSModule {
       return "SetupCompleteError";
     }
     addModuleBean(context, null, "Welcome");
-    //Check if license exists, if not force user to use a new license
+    //Check if key exists, if not force user to use a new key
     String path = getPath(context);
     if (path == null) {
       path = context.getServletContext().getRealPath("/") + "WEB-INF" + fs;
@@ -185,7 +185,6 @@ public class Setup extends CFSModule {
         return "SendRegERROR";
       }
       XMLUtils responseXML = new XMLUtils(response);
-      //System.out.println(responseXML.toString());
       Element responseNode = responseXML.getFirstChild("response");
       if (!"0".equals(XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "status")))) {
         context.getRequest().setAttribute("actionError",
@@ -238,7 +237,6 @@ public class Setup extends CFSModule {
       licenseXml = StringUtils.replace(licenseXml, " ", "\r\n");
       //Try decoding the license to make sure it's good
       XMLUtils xml = new XMLUtils(PrivateString.decrypt(key, licenseXml));
-      //System.out.println(xml.toString());
       //The license is presumed good here so save the xml, it will be tested again
       String entered = XMLUtils.getNodeText(xml.getFirstChild("entered"));
       if (entered != null) {

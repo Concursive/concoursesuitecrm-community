@@ -266,6 +266,24 @@ public class ApplicationPrefs {
     if (this.has("MAILSERVER")) {
       System.setProperty("MailServer", this.get("MAILSERVER"));
     }
+    //Verify the license
+    if (this.has("FILELIBRARY")) {
+      System.out.println("ApplicationPrefs-> VERIFYING THE LICENSE FOR THIS APPLICATION");
+      try {
+        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(this.get("FILELIBRARY") + "init" + fs + "zlib.jar");
+        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText(this.get("FILELIBRARY") + "init" + fs + "input.txt")));
+        String edition = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("edition"));
+        context.setAttribute("APP_TEXT", edition);
+        //String gdot = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
+      } catch (Exception e) {
+        if ("true".equals(this.get("WEBSERVER.ASPMODE"))) {
+          context.setAttribute("APP_TEXT", "Enterprise Edition");
+        } else {
+          context.removeAttribute("cfs.setup");
+        }
+      }
+    }
+    
     //Start the cron last
     if ("true".equals(this.get("CRON.ENABLED"))) {
       try {

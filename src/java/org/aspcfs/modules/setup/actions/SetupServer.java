@@ -10,9 +10,10 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 import org.aspcfs.modules.setup.beans.Zlib;
-import org.aspcfs.modules.setup.base.Registration;
+import org.aspcfs.modules.setup.base.*;
 import java.sql.Connection;
 import org.aspcfs.modules.login.base.AuthenticationItem;
+import org.aspcfs.utils.StringUtils;
 
 public class SetupServer extends CFSModule {
 
@@ -47,6 +48,18 @@ public class SetupServer extends CFSModule {
           //get a database connection using the vhost context info
           AuthenticationItem auth = new AuthenticationItem();
           db = auth.getConnection(context, false);
+          //locate a previous registration to send back
+          db.setAutoCommit(false);
+          Registration previousRegistration = RegistrationList.locate(db, license.getEmail(), license.getProfile(), true);
+          //If a previous registration matches, then set it to disabled and insert the new registration
+          if (previousRegistration != null) {
+            previousRegistration.setEnabled(false);
+            previousRegistration.updateEnabled(db);
+          } else {
+            license.setEdition("Free Edition (5-seat binary)");
+            license.setText2(StringUtils.randomString(5,5));
+          }
+          //save the registration
           Registration registration = new Registration();
           registration.setKeyFile(license.getKeyText());
           registration.setNameFirst(license.getNameFirst());
@@ -59,13 +72,25 @@ public class SetupServer extends CFSModule {
           registration.setJava(license.getJava());
           registration.setWebserver(license.getWebserver());
           registration.setIp(context.getIpAddress());
+          if (previousRegistration == null) {
+            registration.setEdition(license.getEdition());
+            registration.setText2(license.getText2());
+          } else {
+            registration.setEdition(previousRegistration.getEdition());
+            registration.setText2(previousRegistration.getText2());
+          }
           registration.insert(db);
           status.appendChild(document.createTextNode("0"));
           errorText.appendChild(document.createTextNode("SUCCESS"));
+          db.commit();
         } catch (Exception e) {
           status.appendChild(document.createTextNode("1"));
           errorText.appendChild(document.createTextNode("FAILURE"));
+          db.rollback();
         } finally {
+          if (db != null) {
+            db.setAutoCommit(true);
+          }
           freeConnection(context, db);
         }
         //Send the registration email
