@@ -119,12 +119,18 @@ public final class ForwardNote extends CFSModule {
 		thisNote.setReplyId(getUserId(context));
 		thisNote.setType(CFSNote.CALL);
 		
+		User thisRecord = (User)((UserBean) context.getSession().getAttribute("User")).getUserRecord();
+		thisRecord.setBuildContact(true);
+		
 		Connection db = null;
 		
 		try {
 			db = this.getConnection(context);
 			list.buildList(db);
 			context.getRequest().setAttribute("NoteDetails", thisNote);
+			
+			thisRecord.buildResources(db);
+			String replyAddr = thisRecord.getContact().getEmailAddress("Business");
 		
 			String[] params = context.getRequest().getParameterValues("selectedList");
 			for (k=0; k<params.length; k++) {
@@ -134,7 +140,6 @@ public final class ForwardNote extends CFSModule {
 				if (!recordInserted) {
 					processErrors(context, thisNote.getErrors());
 				} else if (recordInserted && context.getRequest().getParameter("email1") != null) {
-					String replyAddr = ((UserBean)context.getSession().getAttribute("User")).getUserRecord().getContact().getEmailAddress("Business");
 					User tempUser = new User(db, thisNote.getSentTo());
 					tempUser.setBuildContact(true);
 					tempUser.buildResources(db);
@@ -144,8 +149,10 @@ public final class ForwardNote extends CFSModule {
 					SMTPMessage mail = new SMTPMessage();
 					mail.setHost("127.0.0.1");
 				
-					mail.setFrom("cfs-messenger@darkhorseventures.com");
-					mail.addReplyTo(replyAddr);
+					mail.setFrom("cfs-root@darkhorseventures.com");
+					
+					if (replyAddr != null && !(replyAddr.equals(""))) 
+						mail.addReplyTo(replyAddr);
 				
 					mail.setType("text/html");
 					mail.setTo(tempUser.getContact().getEmailAddress("Business"));
