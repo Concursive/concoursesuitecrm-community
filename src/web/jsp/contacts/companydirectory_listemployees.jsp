@@ -39,16 +39,16 @@ View Employees
       <%= CompanyDirectoryInfo.getSortIcon("c.namelast") %>
     </th>
     <th nowrap>
-      <a href="CompanyDirectory.do?command=ListEmployees&column=departmentname">
+      <a href="CompanyDirectory.do?command=ListEmployees&column=departmentname,c.namelast">
         <strong>Department</strong>
       </a>
-      <%= CompanyDirectoryInfo.getSortIcon("departmentname") %>
+      <%= CompanyDirectoryInfo.getSortIcon("departmentname,c.namelast") %>
     </th>
     <th nowrap>
-      <a href="CompanyDirectory.do?command=ListEmployees&column=c.title">
+      <a href="CompanyDirectory.do?command=ListEmployees&column=c.title,c.namelast">
         <strong>Title</strong>
       </a>
-      <%= CompanyDirectoryInfo.getSortIcon("c.title") %>
+      <%= CompanyDirectoryInfo.getSortIcon("c.title,c.namelast") %>
     </th nowrap>
     <th nowrap>
       <strong>Business Phone</strong>
