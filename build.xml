@@ -141,6 +141,7 @@
     <!-- External Servers -->
     <property name="MAILSERVER" value="127.0.0.1"/>
     <property name="FAXSERVER" value="127.0.0.1"/>
+    <property name="CRON.ENABLED" value="false"/>
     
     <!-- Begin output -->
     <echo message="Project: ${ant.project.name}"/>
@@ -206,6 +207,10 @@
     <jar jarfile="${build.lib.dir}/aspcfs.jar"
           basedir="${build.classes.dir}"
           includes="org/aspcfs/**/*.class"/>
+    <!-- jcrontab.jar -->
+    <jar jarfile="${build.lib.dir}/jcrontab.jar"
+          basedir="${build.classes.dir}"
+          includes="org/jcrontab/**/*.class"/>
   </target>
   
   <target name="build"
@@ -312,6 +317,8 @@
              token="@FORCESSL@" value="${FORCESSL}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@DEBUGLEVEL@" value="${DEBUGLEVEL}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@CRON.ENABLED@" value="${CRON.ENABLED}"/>
   </target>
   
   <!-- Log the deployment procss to the web-app folder -->
@@ -374,6 +381,7 @@
        <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
        <pathelement location="${CFS_HOME}/WEB-INF/lib/zeroio-iteam.jar"/>
        <pathelement location="${CFS_HOME}/WEB-INF/lib/isavvix.jar"/>
+       <pathelement location="${CFS_HOME}/WEB-INF/lib/jcrontab.jar"/>
      </classpath>
      <include name="**/*.java"/>
     </javac>
@@ -399,6 +407,9 @@
         <path refid="cfs2.classpath"/>
       </classpath>
       <transaction src="${src.sql.dir}/${GATEKEEPER.DBTYPE}/gatekeeper.sql"/>
+      <transaction>
+        INSERT INTO events (minute, task, extrainfo) values ('*/5', 'org.aspcfs.apps.notifier.Notifier', '${CFS_HOME}/WEB-INF/notifier.xml');
+      </transaction>
     </sql>
   </target>
   
