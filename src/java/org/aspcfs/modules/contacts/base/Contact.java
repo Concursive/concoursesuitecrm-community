@@ -1733,6 +1733,16 @@ public class Contact extends GenericBean {
    *@return    Description of the Returned Value
    */
   public boolean excludedFromCampaign() {
+    return getExcludedFromCampaign();
+  }
+
+
+  /**
+   *  Gets the excludedFromCampaign attribute of the Contact object
+   *
+   *@return    The excludedFromCampaign value
+   */
+  public boolean getExcludedFromCampaign() {
     return excludedFromCampaign;
   }
 
