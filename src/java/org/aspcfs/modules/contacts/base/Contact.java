@@ -1435,12 +1435,7 @@ public class Contact extends GenericBean {
    *@since
    */
   public String getNameLastFirst() {
-    String toReturn = Contact.getNameLastFirst(nameLast, nameFirst);
-    if (toReturn == null) {
-      return company;
-    } else {
-      return toReturn;
-    }
+    return  Contact.getNameLastFirst(nameLast, nameFirst);
   }
 
 

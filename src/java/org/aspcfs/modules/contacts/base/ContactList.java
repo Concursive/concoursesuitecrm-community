@@ -15,6 +15,7 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.communications.base.*;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.admin.base.AccessType;
+import org.aspcfs.modules.admin.base.AccessTypeList;
 
 /**
  *  Contains a list of contacts... currently used to build the list from the
@@ -29,6 +30,8 @@ public class ContactList extends Vector {
 
   public final static int TRUE = 1;
   public final static int FALSE = 0;
+  //EXCLUDE_PERSONAL excludes all personal contacts, IGNORE_PERSONAL ignores personal contacts. By default the
+  //list excludes personal contacts 
   public final static int EXCLUDE_PERSONAL = -1;
   public final static int IGNORE_PERSONAL = -2;
   private int includeEnabled = TRUE;
@@ -59,6 +62,7 @@ public class ContactList extends Vector {
   private String accountOwnerIdRange = null;
   private boolean withAccountsOnly = false;
   private boolean withProjectsOnly = false;
+  private boolean employeesOnly = false;
   //Combination filters
   private boolean allContacts = false;
   private boolean controlledHierarchyOnly = false;
@@ -89,6 +93,8 @@ public class ContactList extends Vector {
   private int ruleId = -1;
   private int personalId = EXCLUDE_PERSONAL;
 
+  //objects for speed up
+  AccessTypeList accessTypes = null;
 
 
   /**
@@ -129,6 +135,25 @@ public class ContactList extends Vector {
   }
 
 
+  /**
+   *  Sets the employeesOnly attribute of the ContactList object
+   *
+   *@param  employeesOnly  The new employeesOnly value
+   */
+  public void setEmployeesOnly(boolean employeesOnly) {
+    this.employeesOnly = employeesOnly;
+  }
+
+
+  /**
+   *  Gets the employeesOnly attribute of the ContactList object
+   *
+   *@return    The employeesOnly value
+   */
+  public boolean getEmployeesOnly() {
+    return employeesOnly;
+  }
+
 
   /**
    *  Gets the accountTypeIdHash attribute of the ContactList object
@@ -161,6 +186,26 @@ public class ContactList extends Vector {
 
 
   /**
+   *  Sets the accessTypes attribute of the ContactList object
+   *
+   *@param  accessTypes  The new accessTypes value
+   */
+  public void setAccessTypes(AccessTypeList accessTypes) {
+    this.accessTypes = accessTypes;
+  }
+
+
+  /**
+   *  Gets the accessTypes attribute of the ContactList object
+   *
+   *@return    The accessTypes value
+   */
+  public AccessTypeList getAccessTypes() {
+    return accessTypes;
+  }
+
+
+  /**
    *  Gets the includeEnabledUsersOnly attribute of the ContactList object
    *
    *@return    The includeEnabledUsersOnly value
@@ -182,12 +227,36 @@ public class ContactList extends Vector {
 
 
   /**
-   *  Sets the personalId attribute of the ContactList object
+   *  Filters personal contacts based on the argument specified<br>
+   *  Usage: EXCLUDE_PERSONAL to exclude personal contacts
+   *         IGNORE_PERSONAL to ignore personal contacts
+   *         Set UserId to include personal contacts
+   *  Note: If owner is set personal contacts are included by default
+   *        so personalId can be set to IGNORE_PERSONAL<br>
+   *        Also set the AccessTypeList for speed up of the query
    *
    *@param  personalId  The new personalId value
    */
   public void setPersonalId(int personalId) {
     this.personalId = personalId;
+  }
+
+
+  /**
+   *  Filters personal contacts based on the argument specified<br>
+   *  Usage: EXCLUDE_PERSONAL to exclude personal contacts
+   *         IGNORE_PERSONAL to ignore personal contacts
+   *         Set UserId to include personal contacts
+   *  Note: If owner is set personal contacts are included by default
+   *        so personalId can be set to IGNORE_PERSONAL<br>
+   *        For external applications using ContactList it works without accessTypes too
+   *
+   *@param  personalId   The new personalId value
+   *@param  accessTypes  The new personalId value
+   */
+  public void setPersonalId(int personalId, AccessTypeList accessTypes) {
+    this.personalId = personalId;
+    this.accessTypes = accessTypes;
   }
 
 
@@ -232,7 +301,10 @@ public class ContactList extends Vector {
 
 
   /**
-   *  Sets the allContacts attribute of the ContactList object
+   *  Method to get all contacts including personal
+   *  Optionally the three arguments can be set seperately but it is highly recommended
+   *  to use this method
+   *  Note: AccessTypeList has to be set for the personalId to work
    *
    *@param  allContacts   The new allContacts value
    *@param  ownerIdRange  The new allContacts value
@@ -296,7 +368,7 @@ public class ContactList extends Vector {
 
 
   /**
-   *  Gets the ruleId attribute of the ContactList object
+   *  Set the rule Id to get only contacts which follow a certain rule e.g Personal
    *
    *@return    The ruleId value
    */
@@ -357,7 +429,10 @@ public class ContactList extends Vector {
 
 
   /**
-   *  Sets the controlledHierarchyOnly attribute of the ContactList object
+   *  Gets all hierarchy contacts<br>
+   *  Optionally could set the two arguments seperately but using this
+   *  method is highly recommended for clarity purposes
+   *  Note: Also set the AccessTypeList for speed up of the query
    *
    *@param  controlledHierarchyOnly  The new controlledHierarchyOnly value
    *@param  ownerIdRange             The new controlledHierarchyOnly value
@@ -1296,6 +1371,7 @@ public class ContactList extends Vector {
         "WHERE c.contact_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
+    System.out.println(pst.toString());
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
@@ -1520,23 +1596,35 @@ public class ContactList extends Vector {
       sqlFilter.append("AND c.user_id IN (SELECT user_id FROM access) ");
     }
 
+    if (employeesOnly) {
+      sqlFilter.append("AND c.employee = ? ");
+    }
     if (accountOwnerIdRange != null) {
       sqlFilter.append("AND c.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
     }
 
+    //TODO: Use cached AccessTypeList to get the public codes for Account & General contacts
     if (allContacts) {
-      //get contact in users hierarchy
       sqlFilter.append("AND (c.owner IN (" + ownerIdRange + ") OR c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)) ");
     }
 
+    //NOTE: Only general contacts can be personal and so AccessTypeList has to be for the General Contacts
     switch (personalId) {
         case IGNORE_PERSONAL:
           break;
         case EXCLUDE_PERSONAL:
-          sqlFilter.append("AND c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) ");
+          if (accessTypes == null) {
+            sqlFilter.append("AND c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) ");
+          } else {
+            sqlFilter.append("AND c.access_type NOT IN (" + accessTypes.getCode(AccessType.PERSONAL) + ") ");
+          }
           break;
         default:
-          sqlFilter.append("AND (c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)  OR (c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) AND c.owner = ?)) ");
+          if (accessTypes == null) {
+            sqlFilter.append("AND (c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)  OR (c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) AND c.owner = ?)) ");
+          } else {
+            sqlFilter.append("AND (c.access_type NOT IN (" + accessTypes.getCode(AccessType.PERSONAL) + ")  OR (c.access_type IN (" + accessTypes.getCode(AccessType.PERSONAL) + ") AND c.owner = ?)) ");
+          }
           break;
     }
 
@@ -2057,6 +2145,10 @@ public class ContactList extends Vector {
       pst.setBoolean(++i, true);
     }
 
+    if (employeesOnly) {
+      pst.setBoolean(++i, true);
+    }
+
     if (allContacts) {
       pst.setInt(++i, AccessType.PUBLIC);
     }
@@ -2065,11 +2157,15 @@ public class ContactList extends Vector {
         case IGNORE_PERSONAL:
           break;
         case EXCLUDE_PERSONAL:
-          pst.setInt(++i, AccessType.PERSONAL);
+          if (accessTypes == null) {
+            pst.setInt(++i, AccessType.PERSONAL);
+          }
           break;
         default:
-          pst.setInt(++i, AccessType.PERSONAL);
-          pst.setInt(++i, AccessType.PERSONAL);
+          if (accessTypes == null) {
+            pst.setInt(++i, AccessType.PERSONAL);
+            pst.setInt(++i, AccessType.PERSONAL);
+          }
           pst.setInt(++i, personalId);
           break;
     }
@@ -2216,5 +2312,4 @@ public class ContactList extends Vector {
   }
 
 }
-
 

@@ -535,13 +535,16 @@ public final class CampaignManagerGroup extends CFSModule {
     SearchOperatorList numberOperatorList = new SearchOperatorList();
 
     HtmlSelect contactSource = new HtmlSelect();
-    contactSource.addItem(SearchCriteriaList.SOURCE_MY_CONTACTS, "My General Contacts");
-    contactSource.addItem(SearchCriteriaList.SOURCE_ALL_CONTACTS, "All General Contacts");
+    contactSource.addItem(SearchCriteriaList.SOURCE_MY_CONTACTS, "My Contacts");
+    contactSource.addItem(SearchCriteriaList.SOURCE_ALL_CONTACTS, "All Contacts");
     contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "All Account Contacts");
     contactSource.addItem(SearchCriteriaList.SOURCE_EMPLOYEES, "Employees");
     context.getRequest().setAttribute("ContactSource", contactSource);
 
-    ContactTypeList typeList = new ContactTypeList(db);
+    ContactTypeList typeList = new ContactTypeList();
+    PagedListInfo contactTypeInfo = new PagedListInfo();
+    typeList.setPagedListInfo(contactTypeInfo);
+    typeList.buildList(db);
     LookupList ctl = typeList.getLookupList("typeId", 0);
     ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
     context.getRequest().setAttribute("ContactTypeList", ctl);

@@ -171,10 +171,9 @@ public final class Reassignments extends CFSModule {
       } else {
         sourceUser = (User) thisRec.getChild(userId);
       }
-    }
-
-    if (sourceUser == null) {
-      return ("PermissionError");
+      if (sourceUser == null) {
+        return ("PermissionError");
+      }
     }
 
     OrganizationList sourceAccounts = null;

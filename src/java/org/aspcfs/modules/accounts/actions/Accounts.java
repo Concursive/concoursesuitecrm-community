@@ -10,17 +10,20 @@ import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.pipeline.base.OpportunityReport;
 import org.aspcfs.modules.mycfs.base.*;
 import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.login.beans.*;
 import org.aspcfs.modules.mycfs.beans.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.troubletickets.base.*;
+import org.aspcfs.modules.admin.base.AccessType;
+import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.pipeline.base.OpportunityReport;
 
 /**
  *  Actions for the Accounts module
@@ -712,18 +715,22 @@ public final class Accounts extends CFSModule {
     newOrg.setModifiedBy(getUserId(context));
     newOrg.setOwner(getUserId(context));
 
-    //set the name to namelastfirstmiddle if individual
-    if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
-      newOrg.setName(newOrg.getNameLastFirstMiddle());
-      newOrg.populatePrimaryContact();
-      ((Contact) newOrg.getPrimaryContact()).setRequestItems(context.getRequest());
-    } else {
-      //don't want to populate the addresses, etc. if this is an individual account
-      newOrg.setRequestItems(context.getRequest());
-    }
-
     try {
       db = this.getConnection(context);
+
+      //set the name to namelastfirstmiddle if individual
+      if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
+        newOrg.setName(newOrg.getNameLastFirstMiddle());
+        newOrg.populatePrimaryContact();
+        newOrg.getPrimaryContact().setRequestItems(context.getRequest());
+        //set the access type for the contact to the default permission for Account Contacts (public)
+        AccessTypeList accessTypes = this.getSystemStatus(context).getAccessTypeList(db, AccessType.ACCOUNT_CONTACTS);
+        newOrg.getPrimaryContact().setAccessType(accessTypes.getDefaultItem());
+      } else {
+        //don't want to populate the addresses, etc. if this is an individual account
+        newOrg.setRequestItems(context.getRequest());
+      }
+
       recordInserted = newOrg.insert(db);
 
       if (recordInserted) {
@@ -1012,22 +1019,29 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
       newOrg = new Organization(db, tempid);
-      LookupList industrySelect = new LookupList(db, "lookup_industry");
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+
+      LookupList industrySelect = systemStatus.getLookupList(db, "lookup_industry");
       industrySelect.addItem(0, "--None--");
       context.getRequest().setAttribute("IndustryList", industrySelect);
-      LookupList phoneTypeList = new LookupList(db, "lookup_orgphone_types");
+
+      LookupList phoneTypeList = systemStatus.getLookupList(db, "lookup_orgphone_types");
       context.getRequest().setAttribute("OrgPhoneTypeList", phoneTypeList);
-      LookupList addrTypeList = new LookupList(db, "lookup_orgaddress_types");
+
+      LookupList addrTypeList = systemStatus.getLookupList(db, "lookup_orgaddress_types");
       context.getRequest().setAttribute("OrgAddressTypeList", addrTypeList);
-      LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
+
+      LookupList emailTypeList = systemStatus.getLookupList(db, "lookup_orgemail_types");
       context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
+
       //if this is an individual account
       if (newOrg.getPrimaryContact() != null) {
-        LookupList contactEmailTypeList = new LookupList(db, "lookup_contactemail_types");
+        LookupList contactEmailTypeList = systemStatus.getLookupList(db, "lookup_contactemail_types");
         context.getRequest().setAttribute("ContactEmailTypeList", contactEmailTypeList);
-        LookupList contactAddrTypeList = new LookupList(db, "lookup_contactaddress_types");
+        LookupList contactAddrTypeList = systemStatus.getLookupList(db, "lookup_contactaddress_types");
         context.getRequest().setAttribute("ContactAddressTypeList", contactAddrTypeList);
-        LookupList contactPhoneTypeList = new LookupList(db, "lookup_contactphone_types");
+        LookupList contactPhoneTypeList = systemStatus.getLookupList(db, "lookup_contactphone_types");
         context.getRequest().setAttribute("ContactPhoneTypeList", contactPhoneTypeList);
       }
     } catch (Exception e) {

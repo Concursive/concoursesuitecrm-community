@@ -220,14 +220,14 @@ public final class ContactsList extends CFSModule {
       contactList.setAllContacts(true, this.getUserId(context), this.getUserRange(context));
     }
     if (firstFilter.equalsIgnoreCase("employees")) {
-      contactList.setTypeId(Contact.EMPLOYEE_TYPE);
+      contactList.setEmployeesOnly(true);
       if (secondFilter != null && !"".equals(secondFilter)) {
         contactList.setDepartmentId(Integer.parseInt(secondFilter));
       }
     }
     if (firstFilter.equalsIgnoreCase("mycontacts")) {
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-      contactList.setOwner(getUserId(context));
+      contactList.setOwner(this.getUserId(context));
       contactList.setPersonalId(this.getUserId(context));
     }
     if (firstFilter.equalsIgnoreCase("accountcontacts")) {

@@ -376,7 +376,7 @@ public final class RevenueManager extends CFSModule {
       thisRevenue = new Revenue(db, context.getRequest().getParameter("id"));
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
 
-      if (hasAuthority(context, thisRevenue.getOwner())) {
+      if (!hasAuthority(context, thisRevenue.getOwner())) {
         return "PermissionError";
       }
       recordDeleted = thisRevenue.delete(db, context);

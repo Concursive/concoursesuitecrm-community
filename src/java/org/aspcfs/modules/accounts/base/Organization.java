@@ -1873,7 +1873,10 @@ public class Organization extends GenericBean {
       if(nameLast != null && !"".equals(nameLast)){
         primaryContact.setOrgId(orgId);
         primaryContact.setOrgName(this.getName());
-        primaryContact.insert(db);
+        boolean contactInserted = primaryContact.insert(db);
+        if(!contactInserted){
+          throw new SQLException("Contact could not be inserted");
+        }
       }
       
       

@@ -68,9 +68,9 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
         Call thisCall = (Call) m.next();
         CalendarEvent thisEvent = null;
         if (thisCall.getOppHeaderId() == -1 && thisCall.getContactId() > -1) {
-          thisEvent = companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getContactName() + ": " + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[5], thisCall.getContactId(), thisCall.getId());
+          thisEvent = companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", (thisCall.getContactName() != null && !"".equals(thisCall.getContactName()) ? thisCall.getContactName() + ": " : "") + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[5], thisCall.getContactId(), thisCall.getId());
         } else {
-          thisEvent = companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getContactName() + ": " + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[6], thisCall.getOppHeaderId(), thisCall.getId());
+          thisEvent = companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", (thisCall.getContactName() != null && !"".equals(thisCall.getContactName()) ? thisCall.getContactName() + ": " : "") + ": " + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[6], thisCall.getOppHeaderId(), thisCall.getId());
         }
         String contactLink = "[<a href=\"javascript:popURL('ExternalContacts.do?command=ContactDetails&id=" + thisCall.getContactId() + "&popup=true&popupType=inline','Details','650','500','yes','yes');\">Contact Link</a>]";
         thisEvent.addRelatedLink(contactLink);

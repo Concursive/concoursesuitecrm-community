@@ -66,9 +66,10 @@ public final class CompanyDirectory extends CFSModule {
     try {
       db = this.getConnection(context);
       employeeList.setPagedListInfo(companyDirectoryInfo);
-      employeeList.setTypeId(Contact.EMPLOYEE_TYPE);
+      employeeList.setEmployeesOnly(true);
       employeeList.setCheckEnabledUserAccess(true);
       employeeList.setBuildDetails(true);
+      employeeList.setPersonalId(ContactList.IGNORE_PERSONAL);
       employeeList.setBuildTypes(false);
       employeeList.buildList(db);
     } catch (Exception e) {

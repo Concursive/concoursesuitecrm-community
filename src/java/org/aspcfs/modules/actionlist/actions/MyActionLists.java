@@ -17,18 +17,22 @@ import java.sql.*;
 /**
  *  Description of the Class
  *
- * @author     Mathur
- * @created    April 18, 2003
+ *@author     Mathur
+ *@created    April 18, 2003
+ *@version    $id:exp$
  */
 public final class MyActionLists extends CFSModule {
 
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-view"))) {
+      return ("PermissionError");
+    }
     return executeCommandList(context);
   }
 
@@ -36,10 +40,13 @@ public final class MyActionLists extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-view"))) {
+      return ("PermissionError");
+    }
     Exception errorMessage = null;
     addModuleBean(context, "My Action Lists", "Action Lists");
     String linkModuleId = context.getRequest().getParameter("linkModuleId");
@@ -56,7 +63,7 @@ public final class MyActionLists extends CFSModule {
       if (!"all".equals(actionListInfo.getListView())) {
         if ("complete".equals(actionListInfo.getListView())) {
           thisList.setCompleteOnly(true);
-        } else{
+        } else {
           thisList.setInProgressOnly(true);
         }
       }
@@ -79,10 +86,13 @@ public final class MyActionLists extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-view"))) {
+      return ("PermissionError");
+    }
     Exception errorMessage = null;
     addModuleBean(context, "My Action Lists", "");
     String actionId = context.getRequest().getParameter("id");
@@ -109,10 +119,13 @@ public final class MyActionLists extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-add"))) {
+      return ("PermissionError");
+    }
     addModuleBean(context, "My Action Lists", "Add an Action List");
     return "PrepareAddOK";
   }
@@ -121,10 +134,13 @@ public final class MyActionLists extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
+      return ("PermissionError");
+    }
     Exception errorMessage = null;
     addModuleBean(context, "My Action Lists", "");
     String actionId = context.getRequest().getParameter("id");
@@ -151,10 +167,13 @@ public final class MyActionLists extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-add"))) {
+      return ("PermissionError");
+    }
     Exception errorMessage = null;
     boolean recordInserted = false;
     int resultCount = 0;
@@ -227,10 +246,13 @@ public final class MyActionLists extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-delete"))) {
+      return ("PermissionError");
+    }
     Exception errorMessage = null;
     Connection db = null;
     addModuleBean(context, "My Action Lists", "");
@@ -274,10 +296,13 @@ public final class MyActionLists extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-delete"))) {
+      return ("PermissionError");
+    }
     Exception errorMessage = null;
     addModuleBean(context, "My Action Lists", "");
     String actionId = context.getRequest().getParameter("id");

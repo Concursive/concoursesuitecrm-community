@@ -49,7 +49,11 @@ public final class ProcessSurvey extends CFSModule {
       String codedId = context.getRequest().getParameter("id");
       String uncodedId = PrivateString.decrypt(filename, codedId);
       int surveyId = -1;
-
+      
+      //return alert message if someone tried clicking link from the campaign dashboard's message tab
+      if(codedId != null && codedId.startsWith("${surveyId")){
+          return "InvalidRequestError";
+      }
       StringTokenizer st = new StringTokenizer(uncodedId, ",");
       while (st.hasMoreTokens()) {
         String pair = (st.nextToken());

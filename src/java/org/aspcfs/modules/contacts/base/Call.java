@@ -105,7 +105,7 @@ public class Call extends GenericBean {
         "SELECT c.*, t.*, " +
         "e.namelast as elast, e.namefirst as efirst, " +
         "m.namelast as mlast, m.namefirst as mfirst, " +
-        "ct.namelast as ctlast, ct.namefirst as ctfirst " +
+        "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.company as ctcompany " +
         "FROM call_log c " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
         "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
@@ -1067,6 +1067,9 @@ public class Call extends GenericBean {
     enteredName = Contact.getNameLastFirst(rs.getString("elast"), rs.getString("efirst"));
     modifiedName = Contact.getNameLastFirst(rs.getString("mlast"), rs.getString("mfirst"));
     contactName = Contact.getNameLastFirst(rs.getString("ctlast"), rs.getString("ctfirst"));
+    if(contactName == null || "".equals(contactName)){
+      contactName = rs.getString("ctcompany");
+    }
   }
 }
 

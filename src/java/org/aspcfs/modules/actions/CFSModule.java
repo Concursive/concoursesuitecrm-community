@@ -399,7 +399,6 @@ public class CFSModule {
         "fileLibrary" + fs +
         getDbName(context) + fs +
         moduleFolderName + fs);
-    //"id" + moduleItemId + fs);
   }
 
 

@@ -35,7 +35,7 @@ public final class AccountTicketTasks extends CFSModule {
    */
   public String executeCommandList(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-tickets-view")) {
-      return ("DefaultError");
+      return ("PermissionError");
     }
     String ticketId = context.getRequest().getParameter("ticketId");
     Connection db = null;
@@ -71,7 +71,7 @@ public final class AccountTicketTasks extends CFSModule {
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-tickets-view"))) {
-      return ("DefaultError");
+      return ("PermissionError");
     }
     addModuleBean(context, "View Accounts", "View Tickets");
     return this.getReturn(context, "TaskDetails");
@@ -86,7 +86,7 @@ public final class AccountTicketTasks extends CFSModule {
    */
   public String executeCommandSave(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
-      return ("DefaultError");
+      return ("PermissionError");
     }
 
     Exception errorMessage = null;
@@ -141,7 +141,7 @@ public final class AccountTicketTasks extends CFSModule {
    */
   public String executeCommandAdd(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
-      return ("DefaultError");
+      return ("PermissionError");
     }
     addModuleBean(context, "View Accounts", "Add Ticket");
     return ("AddTaskOK");
@@ -160,7 +160,7 @@ public final class AccountTicketTasks extends CFSModule {
     Task thisTask = null;
     String id = context.getRequest().getParameter("id");
     if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
-      return ("DefaultError");
+      return ("PermissionError");
     }
     addModuleBean(context, "View Accounts", "Add Ticket");
     try {
@@ -206,7 +206,7 @@ public final class AccountTicketTasks extends CFSModule {
     int action = -1;
 
     if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
-      return ("DefaultError");
+      return ("PermissionError");
     }
     try {
       db = this.getConnection(context);
@@ -239,8 +239,8 @@ public final class AccountTicketTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
-    if (!(hasPermission(context, "tickets-tickets-edit"))) {
-      return ("DefaultError");
+    if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
+      return ("PermissionError");
     }
     Exception errorMessage = null;
     Connection db = null;

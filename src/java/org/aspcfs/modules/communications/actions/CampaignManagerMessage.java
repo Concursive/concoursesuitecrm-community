@@ -427,6 +427,10 @@ public final class CampaignManagerMessage extends CFSModule {
     try {
       db = this.getConnection(context);
       newMessage = new Message(db, passedId);
+      
+      //get access types
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.COMMUNICATION_MESSAGES);
+      context.getRequest().setAttribute("AccessTypeList", accessTypeList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {

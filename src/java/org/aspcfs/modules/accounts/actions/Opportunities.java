@@ -18,9 +18,9 @@ import org.aspcfs.utils.web.*;
 /**
  *  Description of the Class
  *
- * @author     chris
- * @created    October 17, 2001
- * @version    $Id: Opportunities.java,v 1.17 2003/01/07 16:29:07 mrajkowski Exp
+ *@author     chris
+ *@created    October 17, 2001
+ *@version    $Id: Opportunities.java,v 1.17 2003/01/07 16:29:07 mrajkowski Exp
  *      $
  */
 public final class Opportunities extends CFSModule {
@@ -28,8 +28,8 @@ public final class Opportunities extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandHome(ActionContext context) {
     addModuleBean(context, "Opportunities", "Opportunities Home");
@@ -40,8 +40,8 @@ public final class Opportunities extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandView(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-opportunities-view")) {
@@ -96,8 +96,8 @@ public final class Opportunities extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSaveComponent(ActionContext context) {
 
@@ -154,6 +154,12 @@ public final class Opportunities extends CFSModule {
       thisOrg = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrg);
       context.getRequest().setAttribute("ComponentDetails", newComponent);
+
+      //build the header
+      if (resultCount == 1 || recordInserted) {
+        OpportunityHeader oppHeader = new OpportunityHeader(db, newComponent.getHeaderId());
+        context.getRequest().setAttribute("OpportunityHeader", oppHeader);
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -192,15 +198,40 @@ public final class Opportunities extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandAdd(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-opportunities-add")) {
+      return ("PermissionError");
+    }
+    addModuleBean(context, "View Accounts", "Add Opportunity");
+    return executeCommandPrepare(context);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandPrepare(ActionContext context) {
     //Parameters
     String orgId = context.getRequest().getParameter("orgId");
     String headerId = context.getRequest().getParameter("headerId");
+    String permission = "accounts-accounts-opportunities-add";
     Organization thisOrganization = null;
     Connection db = null;
+
+    //check permissions
+    if (headerId != null && !"-1".equals(headerId)) {
+      permission = "accounts-accounts-opportunities-edit";
+    }
+    if (!hasPermission(context, permission)) {
+      return ("PermissionError");
+    }
+
     if (context.getRequest().getParameter("UserList") == null) {
       UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
       User thisRec = thisUser.getUserRecord();
@@ -212,12 +243,7 @@ public final class Opportunities extends CFSModule {
       userList.setExcludeDisabledIfUnselected(true);
       context.getRequest().setAttribute("UserList", userList);
     }
-    if (headerId != null && !"-1".equals(headerId)) {
-      if (!hasPermission(context, "accounts-accounts-opportunities-add")) {
-        return ("PermissionError");
-      }
-      addModuleBean(context, "View Accounts", "Add Opportunity");
-    }
+
     try {
       db = this.getConnection(context);
       if (context.getRequest().getParameter("OrgDetails") == null) {
@@ -242,8 +268,8 @@ public final class Opportunities extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandSave(ActionContext context) {
     Exception errorMessage = null;
@@ -333,8 +359,8 @@ public final class Opportunities extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDetailsComponent(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-opportunities-view")) {
@@ -356,7 +382,7 @@ public final class Opportunities extends CFSModule {
       thisComponent.checkEnabledOwnerAccount(db);
       //Load the header
       OpportunityHeader oppHeader = new OpportunityHeader(db, thisComponent.getHeaderId());
-      context.getRequest().setAttribute("opportunityHeader", oppHeader);
+      context.getRequest().setAttribute("OpportunityHeader", oppHeader);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -375,8 +401,8 @@ public final class Opportunities extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-opportunities-view")) {
@@ -439,8 +465,8 @@ public final class Opportunities extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-opportunities-delete")) {
@@ -483,8 +509,8 @@ public final class Opportunities extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandConfirmComponentDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-opportunities-delete")) {
@@ -525,8 +551,8 @@ public final class Opportunities extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDeleteComponent(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-opportunities-delete")) {
@@ -568,8 +594,8 @@ public final class Opportunities extends CFSModule {
   /**
    *  Modify Contact
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-opportunities-edit")) {
@@ -600,7 +626,7 @@ public final class Opportunities extends CFSModule {
         return "PermissionError";
       }
       addRecentItem(context, thisHeader);
-      return "PrepareModifyOK";
+      return "PrepareModifyOppOK";
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -611,8 +637,8 @@ public final class Opportunities extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-opportunities-delete")) {
@@ -653,8 +679,8 @@ public final class Opportunities extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandModifyComponent(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-opportunities-edit")) {
@@ -690,8 +716,8 @@ public final class Opportunities extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-opportunities-edit")) {

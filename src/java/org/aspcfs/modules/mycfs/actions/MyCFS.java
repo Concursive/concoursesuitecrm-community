@@ -713,7 +713,7 @@ public final class MyCFS extends CFSModule {
       } else if (context.getAction().getActionName().equals("LeadsCallsForward")) {
         addModuleBean(context, "View Opportunities", "Opportunity Calls");
       } else {
-        addModuleBean(context, "My Tasks", "");
+        addModuleBean(context, "My Tasks", "Forward Message");
       }
       context.getRequest().setAttribute("Note", newNote);
       return ("ForwardMessageOK");
@@ -840,11 +840,21 @@ public final class MyCFS extends CFSModule {
     CalendarBean calendarInfo = (CalendarBean) context.getSession().getAttribute("CalendarInfo");
     if (calendarInfo == null) {
       calendarInfo = new CalendarBean();
-      calendarInfo.addAlertType("Task", "org.aspcfs.modules.tasks.base.TaskListScheduledActions", "Tasks");
-      calendarInfo.addAlertType("Call", "org.aspcfs.modules.contacts.base.CallListScheduledActions", "Calls");
-      calendarInfo.addAlertType("Project", "com.zeroio.iteam.base.ProjectListScheduledActions", "Projects");
+      if (hasPermission(context, "myhomepage-tasks-view")) {
+        calendarInfo.addAlertType("Task", "org.aspcfs.modules.tasks.base.TaskListScheduledActions", "Tasks");
+      }
+      if (hasPermission(context, "contacts-external_contacts-calls-view")) {
+        calendarInfo.addAlertType("Call", "org.aspcfs.modules.contacts.base.CallListScheduledActions", "Calls");
+      }
+      if (hasPermission(context, "projects-projects-view")) {
+        calendarInfo.addAlertType("Project", "com.zeroio.iteam.base.ProjectListScheduledActions", "Projects");
+      }
+      if (hasPermission(context, "accounts-accounts-view")) {
       calendarInfo.addAlertType("Accounts", "org.aspcfs.modules.accounts.base.AccountsListScheduledActions", "Accounts");
-      calendarInfo.addAlertType("Opportunity", "org.aspcfs.modules.pipeline.base.OpportunityListScheduledActions", "Opportunity");
+      }
+      if (hasPermission(context, "contacts-external_contacts-opportunities-view") || hasPermission(context, "pipeline-opportunities-view")) {
+      calendarInfo.addAlertType("Opportunity", "org.aspcfs.modules.pipeline.base.OpportunityListScheduledActions", "Opportunities");
+      }
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }
 

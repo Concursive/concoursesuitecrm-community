@@ -467,7 +467,7 @@ public class CallList extends ArrayList {
         "c.*, t.*, " +
         "e.namelast as elast, e.namefirst as efirst, " +
         "m.namelast as mlast, m.namefirst as mfirst, " +
-        "ct.namelast as ctlast, ct.namefirst as ctfirst " +
+        "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.company as ctcompany " +
         "FROM call_log c " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
         "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +

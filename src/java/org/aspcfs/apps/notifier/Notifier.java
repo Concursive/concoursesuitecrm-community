@@ -601,7 +601,7 @@ public class Notifier extends ReportBuilder {
     if (contactReport == null || contactReport.size() == 0) {
       return false;
     }
-    String filePath = (String) config.get("FileLibrary") + fs + dbName + fs + "communications" + fs + "id" + thisCampaign.getId() + fs + CFSModule.getDatePath(new java.util.Date()) + fs;
+    String filePath = (String) config.get("FileLibrary") + fs + dbName + fs + "communications" + fs +  CFSModule.getDatePath(new java.util.Date()) + fs;
     String baseFilename = contactReport.generateFilename();
     File f = new File(filePath);
     f.mkdirs();

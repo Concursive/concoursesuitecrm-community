@@ -15,8 +15,9 @@ import org.aspcfs.modules.contacts.base.ContactList;
  *  can be quickly created with a message and recipients without having
  *  to build criteria.
  *
- * @author     akhi_m
- * @created    May 13, 2003
+ *@author     akhi_m
+ *@created    May 13, 2003
+ *@version    $id:exp$
  */
 public class InstantCampaign extends Campaign {
   private Message instantMessage = null;
@@ -26,7 +27,7 @@ public class InstantCampaign extends Campaign {
   /**
    *  Sets the instantMessage attribute of the InstantCampaign object
    *
-   * @param  instantMessage  The new instantMessage value
+   *@param  instantMessage  The new instantMessage value
    */
   public void setMessage(Message instantMessage) {
     this.instantMessage = instantMessage;
@@ -36,7 +37,7 @@ public class InstantCampaign extends Campaign {
   /**
    *  Sets the recipients attribute of the InstantCampaign object
    *
-   * @param  recipients  The new recipients value
+   *@param  recipients  The new recipients value
    */
   public void setRecipients(ContactList recipients) {
     this.recipients = recipients;
@@ -46,7 +47,7 @@ public class InstantCampaign extends Campaign {
   /**
    *  Gets the recipients attribute of the InstantCampaign object
    *
-   * @return    The recipients value
+   *@return    The recipients value
    */
   public ContactList getRecipients() {
     return recipients;
@@ -56,7 +57,7 @@ public class InstantCampaign extends Campaign {
   /**
    *  Gets the instantMessage attribute of the InstantCampaign object
    *
-   * @return    The instantMessage value
+   *@return    The instantMessage value
    */
   public Message getInstantMessage() {
     return instantMessage;
@@ -66,9 +67,9 @@ public class InstantCampaign extends Campaign {
   /**
    *  Adds a feature to the Recipient attribute of the InstantCampaign object
    *
-   * @param  db                The feature to be added to the Recipient attribute
-   * @param  contactId         The feature to be added to the Recipient attribute
-   * @exception  SQLException  Description of the Exception
+   *@param  db                The feature to be added to the Recipient attribute
+   *@param  contactId         The feature to be added to the Recipient attribute
+   *@exception  SQLException  Description of the Exception
    */
   public void addRecipient(Connection db, int contactId) throws SQLException {
     if (recipients == null) {
@@ -81,9 +82,9 @@ public class InstantCampaign extends Campaign {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean activate(Connection db) throws SQLException {
     int resultCount = 0;
@@ -97,8 +98,8 @@ public class InstantCampaign extends Campaign {
       template.setText(instantMessage.getMessageText());
 
       //insert the campaign
-      java.util.Date dtNow = new java.util.Date(); 
-      java.sql.Date today = new java.sql.Date(dtNow.getTime()); 
+      java.util.Date dtNow = new java.util.Date();
+      java.sql.Date today = new java.sql.Date(dtNow.getTime());
       this.setMessageId(instantMessage.getId());
       this.setReplyTo(instantMessage.getReplyTo());
       this.setSubject(instantMessage.getMessageSubject());
@@ -170,6 +171,34 @@ public class InstantCampaign extends Campaign {
       db.setAutoCommit(true);
     }
     return false;
+  }
+
+
+  /**
+   *  Gets the valid attribute of the InstantCampaign object
+   *
+   *@param  thisMessage       Description of the Parameter
+   *@return                   The valid value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean isValid(Message thisMessage) throws SQLException {
+    errors.clear();
+    instantMessage = thisMessage;
+    if (instantMessage != null) {
+      if (instantMessage.getMessageSubject() == null || instantMessage.getMessageSubject().trim().equals("")) {
+        errors.put("messageSubjectError", "Message subject is required");
+      }
+
+      if (instantMessage.getReplyTo() == null || instantMessage.getReplyTo().trim().equals("") ||
+          instantMessage.getReplyTo().indexOf("@") == -1 || instantMessage.getReplyTo().indexOf("@") == instantMessage.getReplyTo().length() - 1) {
+        errors.put("replyToError", "Full email address is required");
+      }
+    }
+    if (hasErrors()) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
 

@@ -21,18 +21,22 @@ import org.aspcfs.modules.communications.base.*;
  *  Represents Action Contacts on a list and possible actions
  *  that can be performed on each action contact
  *
- * @author     akhi_m
- * @created    April 23, 2003
+ *@author     akhi_m
+ *@created    April 23, 2003
+ *@version    $id:exp$
  */
 public final class MyActionContacts extends CFSModule {
 
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-view"))) {
+      return ("PermissionError");
+    }
     return executeCommandList(context);
   }
 
@@ -40,10 +44,13 @@ public final class MyActionContacts extends CFSModule {
   /**
    *  Lists action contacts on a list based on the filter.
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-view"))) {
+      return ("PermissionError");
+    }
     Exception errorMessage = null;
     String actionId = context.getRequest().getParameter("actionId");
     addModuleBean(context, "My Action Lists", "Action Contacts");
@@ -88,10 +95,13 @@ public final class MyActionContacts extends CFSModule {
   /**
    *  Add new contacts to the list.
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandPrepare(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-add"))) {
+      return ("PermissionError");
+    }
     Exception errorMessage = null;
     String actionId = (String) context.getRequest().getParameter("actionId");
     ActionList actionList = null;
@@ -156,10 +166,13 @@ public final class MyActionContacts extends CFSModule {
   /**
    *  Save action contacts to the list based on criteria
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
+      return ("PermissionError");
+    }
     Exception errorMessage = null;
     SearchCriteriaList thisSCL = null;
     String criteria = context.getRequest().getParameter("searchCriteriaText");
@@ -207,10 +220,13 @@ public final class MyActionContacts extends CFSModule {
   /**
    *  Update contacts on action list
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
+      return ("PermissionError");
+    }
     addModuleBean(context, "My Action Lists", "");
     String selectedContacts = context.getRequest().getParameter("selectedContacts");
     String actionId = context.getRequest().getParameter("actionId");
@@ -239,10 +255,13 @@ public final class MyActionContacts extends CFSModule {
   /**
    *   Modify contacts on action list
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
+      return ("PermissionError");
+    }
     addModuleBean(context, "My Action Lists", "");
     String actionId = context.getRequest().getParameter("actionId");
     boolean buildContacts = true;
@@ -287,10 +306,13 @@ public final class MyActionContacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
+      return ("PermissionError");
+    }
     addModuleBean(context, "My Action Lists", "");
     return "PrepareOK";
   }
@@ -299,10 +321,13 @@ public final class MyActionContacts extends CFSModule {
   /**
    *  View history of actions performed on a action contact
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandViewHistory(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-view"))) {
+      return ("PermissionError");
+    }
     addModuleBean(context, "My Action Lists", "");
     String itemId = context.getRequest().getParameter("itemId");
     Exception errorMessage = null;
@@ -331,10 +356,13 @@ public final class MyActionContacts extends CFSModule {
   /**
    *  Change the status of an action contact
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandProcessImage(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
+      return ("PermissionError");
+    }
     Exception errorMessage = null;
     Connection db = null;
     int count = 0;
@@ -385,10 +413,13 @@ public final class MyActionContacts extends CFSModule {
   /**
    *  Prepare form for sending a message to an action contact
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandPrepareMessage(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
+      return ("PermissionError");
+    }
     String msgId = context.getRequest().getParameter("messageId");
     String contactId = context.getRequest().getParameter("contactId");
     Message thisMessage = null;
@@ -423,10 +454,13 @@ public final class MyActionContacts extends CFSModule {
   /**
    *  Sends the entered message to the action contact.
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSendMessage(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
+      return ("PermissionError");
+    }
     String msgId = context.getRequest().getParameter("messageId");
     String contactId = context.getRequest().getParameter("contactId");
     String actionId = context.getRequest().getParameter("actionId");
@@ -435,6 +469,8 @@ public final class MyActionContacts extends CFSModule {
     Message thisMessage = (Message) context.getFormBean();
     Exception errorMessage = null;
     Connection db = null;
+    
+    InstantCampaign actionCampaign = new InstantCampaign();
     try {
       db = getConnection(context);
 
@@ -446,11 +482,10 @@ public final class MyActionContacts extends CFSModule {
 
       //build the Action List
       ActionList actionList = new ActionList(db, Integer.parseInt(actionListId));
-
+      
       //check if message if valid
-      if (thisMessage.isValid()) {
+      if (actionCampaign.isValid(thisMessage)) {
         //create an instant campaign and activate it
-        InstantCampaign actionCampaign = new InstantCampaign();
         actionCampaign.setName(actionList.getDescription());
         actionCampaign.setEnteredBy(this.getUserId(context));
         actionCampaign.setModifiedBy(this.getUserId(context));
