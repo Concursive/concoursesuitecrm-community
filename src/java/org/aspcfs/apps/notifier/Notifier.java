@@ -197,7 +197,7 @@ public class Notifier extends ReportBuilder {
             "Alert Text: " + StringUtils.toHtml(thisComponent.getAlertText()) + "<br>" +
             "Notes: " + StringUtils.toHtml(thisComponent.getNotes()) + "<br>" +
             "<br>" +
-            "<a href=\"" + (String) siteInfo.get("vhost") + "\"");
+            generateCFSUrl(siteInfo, "LeadsComponents.do?command=DetailsComponent&id=" + thisComponent.getId()));
         thisNotification.setType(Notification.EMAIL);
         thisNotification.setTypeText(Notification.EMAIL_TEXT);
         thisNotification.notifyUser(db);
@@ -260,7 +260,7 @@ public class Notifier extends ReportBuilder {
             "Contact: " + StringUtils.toHtml(thisCall.getContactName()) + "<br>" +
             "Call Notes: " + StringUtils.toHtml(thisCall.getNotes()) + "<br>" +
             "<br>" +
-            "<a href=\"" + (String) siteInfo.get("vhost") + "\"");
+            generateCFSUrl(siteInfo, "ExternalContactsCalls.do?command=Details&id=" + thisCall.getId() + "&contactId=" + thisCall.getContactId()));
         thisNotification.setType(Notification.EMAIL);
         thisNotification.setTypeText(Notification.EMAIL_TEXT);
         thisNotification.notifyUser(db);
@@ -624,6 +624,16 @@ public class Notifier extends ReportBuilder {
     thisItem.insert(db);
 
     return true;
+  }
+  
+  public String generateCFSUrl(HashMap siteInfo, String url) {
+    String schema = "http";
+    if ("true".equals((String) config.get("ForceSSL"))) {
+      schema = "https";
+    }
+    return ("<a href=\"" + schema + "://" + (String) siteInfo.get("vhost") + "/" + url + "\">" + 
+      "View in CFS" +
+      "</a>");
   }
 }
 
