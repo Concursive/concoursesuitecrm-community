@@ -827,22 +827,34 @@ public final class MyCFS extends CFSModule {
             recipientList.append(",");
           }
         }
-        newNote.setSubject("Fwd: " + newNote.getSubject());
-        newNote.setBody("\n\n----Original Message----\nFrom: " + newNote.getSentName() + "\nSent: " + newNote.getEnteredDateTimeString() +
-            "\nTo: " + recipientList.toString() + "\nSubject: " + newNote.getSubject() + "\n\n" + newNote.getBody() + "\n\n");
+        newNote.setSubject("Fwd: " + StringUtils.toString(newNote.getSubject()));
+        newNote.setBody(
+          "\n\n----Original Message----\n" +
+          "From: " + StringUtils.toString(newNote.getSentName()) + "\n" +
+          "Sent: " + newNote.getEnteredDateTimeString() + "\n" +
+          "To: " + recipientList.toString() + "\n" +
+          "Subject: " + StringUtils.toString(newNote.getSubject()) + 
+          "\n\n" + 
+          StringUtils.toString(newNote.getBody()) + "\n\n");
       } else if (noteType == Constants.CONTACTS_CALLS) {
         Call thisCall = new Call(db, msgId);
-        newNote.setBody("Contact Name: " + thisCall.getContactName() + "\nType: " + thisCall.getCallType() + "\nLength: " + thisCall.getLengthText() +
-            "\nSubject: " + thisCall.getSubject() + "\nNotes: " + thisCall.getNotes() + "\nEntered: "
-             + thisCall.getEnteredName() + " - " + thisCall.getEnteredString() + "\nModified: " +
-            thisCall.getModifiedName() + " - " + thisCall.getModifiedString());
+        newNote.setBody(
+          "Contact Name: " + StringUtils.toString(thisCall.getContactName()) + "\n" +
+          "Type: " + StringUtils.toString(thisCall.getCallType()) + "\n" +
+          "Length: " + StringUtils.toString(thisCall.getLengthText()) + "\n" +
+          "Subject: " + StringUtils.toString(thisCall.getSubject()) + "\n" +
+          "Notes: " + StringUtils.toString(thisCall.getNotes()) + "\n" +
+          "Entered: " + StringUtils.toString(thisCall.getEnteredName()) + " - " + thisCall.getEnteredString() + "\n" +
+          "Modified: " + StringUtils.toString(thisCall.getModifiedName()) + " - " + thisCall.getModifiedString());
       } else if (noteType == Constants.TASKS) {
         Task thisTask = new Task(db, Integer.parseInt(msgId));
         String userName = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getNameLastFirst();
-        newNote.setBody("------Task Details------\n\n" +
-            "Task :" + thisTask.getDescription() + "\nFrom: " + userName + "\nDue Date :"
-             + thisTask.getDueDateString() + ((thisTask.getNotes().equals("")) ? "" : "Relevant Notes : ") + thisTask.getNotes() + "\n\n" +
-            "-----------------------\n\n");
+        newNote.setBody(
+          "------Task Details------\n\n" +
+          "Task:" + StringUtils.toString(thisTask.getDescription()) + "\n" +
+          "From: " + StringUtils.toString(userName) + "\n" +
+          "Due Date: " + thisTask.getDueDateString() + "\n" +
+          ("".equals(thisTask.getNotes()) ? "" : "Relevant Notes: " + StringUtils.toString(thisTask.getNotes())) + "\n\n");
       }
       context.getSession().removeAttribute("selectedContacts");
       context.getSession().removeAttribute("finalContacts");
