@@ -1565,7 +1565,7 @@ public void setCompanyEnabled(boolean companyEnabled) {
     errors.clear();
 
     if (problem == null || problem.trim().equals("")) {
-      errors.put("problemError", "A problem description is required");
+      errors.put("problemError", "An issue is required");
     } else if (closeIt == true && (solution == null || solution.trim().equals(""))) {
       errors.put("closedError", "A solution is required when closing a ticket");
     } else if (orgId == -1) {

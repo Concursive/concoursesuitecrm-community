@@ -388,6 +388,8 @@ public class PhoneNumber {
     this.setType(request.getParameter("phone" + parseItem + "type"));
 
     StringBuffer thisString = new StringBuffer();
+    
+/**
     if (request.getParameter("phone" + parseItem + "ac") != null &&
         !request.getParameter("phone" + parseItem + "ac").trim().equals("")) {
       thisString.append(request.getParameter("phone" + parseItem + "ac"));
@@ -400,13 +402,12 @@ public class PhoneNumber {
       }
       thisString.append(request.getParameter("phone" + parseItem + "pre"));
     }
+*/
 
     if (request.getParameter("phone" + parseItem + "number") != null &&
         !request.getParameter("phone" + parseItem + "number").trim().equals("")) {
-      if (thisString.length() > 0) {
-        thisString.append("-");
-      }
-      thisString.append(request.getParameter("phone" + parseItem + "number"));
+      thisString.append(convertToFormattedNumber(request.getParameter("phone" + parseItem + "number")));
+      System.out.println(thisString);
     }
 
     this.setNumber(thisString.toString());
@@ -433,8 +434,42 @@ public class PhoneNumber {
 			if (allowed.indexOf(theChar) > -1) {
 				sb.append(theChar);
 			}
+			if (i==0 && theChar.equals("+")) {
+				sb.append(theChar);
+			}
 		}
 		return sb.toString();
+	}
+	
+	public static final String convertToFormattedNumber(String tmp) {
+		String tmpNum = "";
+		
+		if (tmp.indexOf("+") == 0) {
+			tmpNum = tmp;
+		} else {
+			tmpNum = convertToNumber(tmp);
+		}
+			
+		StringBuffer result = new StringBuffer();
+		
+		//it's a US number
+		if (tmpNum.indexOf("+") == -1) {
+			//1-XXX numbers, strip off the beginning "1"
+			if (tmpNum.length() == 11) {
+				tmpNum = tmpNum.substring(1);
+			}
+			
+			result.append("(");
+			result.append(tmpNum.substring(0,3));
+			result.append(") ");
+			result.append(tmpNum.substring(3,6));
+			result.append("-");
+			result.append(tmpNum.substring(6,10));
+		} else {
+			result.append(tmpNum);
+		}
+		
+		return result.toString();
 	}
 }
 

@@ -1132,43 +1132,49 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    *@since
    */
-  /*
-   *  public String executeCommandUpdateProfile(ActionContext context) {
-   *  if (!(hasPermission(context, "myhomepage-profile-personal-edit"))) {
-   *  return ("PermissionError");
-   *  }
-   *  Exception errorMessage = null;
-   *  Connection db = null;
-   *  int resultCount = 0;
-   *  try {
-   *  thisContact.setRequestItems(context.getRequest());
-   *  thisContact.setModifiedBy(getUserId(context));
-   *  db = this.getConnection(context);
-   *  resultCount = thisContact.update(db);
-   *  if (resultCount == -1) {
-   *  processErrors(context, thisContact.getErrors());
-   *  buildFormElements(context, db);
-   *  }
-   *  } catch (Exception e) {
-   *  errorMessage = e;
-   *  } finally {
-   *  this.freeConnection(context, db);
-   *  }
-   *  if (errorMessage == null) {
-   *  if (resultCount == -1) {
-   *  return (executeCommandMyCFSProfile(context));
-   *  } else if (resultCount == 1) {
-   *  return ("UpdateProfileOK");
-   *  } else {
-   *  context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-   *  return ("UserError");
-   *  }
-   *  } else {
-   *  context.getRequest().setAttribute("Error", errorMessage);
-   *  return ("SystemError");
-   *  }
-   *  }
-   */
+  
+   public String executeCommandUpdateProfile(ActionContext context) {
+	if (!(hasPermission(context, "myhomepage-profile-personal-edit"))) {
+		return ("PermissionError");
+	}
+	
+	Exception errorMessage = null;
+	Connection db = null;
+	int resultCount = 0;
+	
+	Contact thisContact = (Contact) context.getFormBean();
+	thisContact.setRequestItems(context.getRequest());
+	thisContact.setModifiedBy(getUserId(context));
+	
+	try {
+		db = this.getConnection(context);
+		resultCount = thisContact.update(db);
+		
+		if (resultCount == -1) {
+			processErrors(context, thisContact.getErrors());
+			buildFormElements(context, db);
+		}
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	if (errorMessage == null) {
+		if (resultCount == -1) {
+			return (executeCommandMyCFSProfile(context));
+		} else if (resultCount == 1) {
+			return ("UpdateProfileOK");
+		} else {
+			context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+			return ("UserError");
+		}
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+  }
+
 
   /**
    *  The user wants to change the password

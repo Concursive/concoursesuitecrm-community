@@ -40,7 +40,7 @@
       }
     }
 </script>
-<form name="addOpportunity" action="/Opportunities.do?command=Insert&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<form name="addOpportunity" action="/Opportunities.do?command=Insert&auto-populate=true" method="post">
 <a href="/Accounts.do">Account Management</a> > 
 <a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -62,7 +62,7 @@ Add Opportunity<br>
   </tr>
   <tr>
     <td class="containerBack">
-<input type="submit" value="Save">
+<input type="submit" value="Save" onClick="return checkForm(this.form)">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>'">
 <input type="reset" value="Reset">
 <br>
@@ -186,7 +186,7 @@ Add Opportunity<br>
 </table>
 &nbsp;
 <br>
-<input type="submit" value="Save">
+<input type="submit" value="Save" onClick="return checkForm(this.form)">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>'">
 <input type="reset" value="Reset">
     </td>

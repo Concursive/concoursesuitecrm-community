@@ -41,7 +41,7 @@
       }
     }
 </script>
-<form name="updateOpp" action="/Opportunities.do?command=Update&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<form name="updateOpp" action="/Opportunities.do?command=Update&auto-populate=true" method="post">
 <a href="/Accounts.do">Account Management</a> > 
 <a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -75,7 +75,7 @@ Modify Opportunity<br>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
 
-<input type="submit" value="Update">
+<input type="submit" value="Update" onClick="return checkForm(this.form)">
 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
@@ -221,7 +221,7 @@ Modify Opportunity<br>
   </table>
 &nbsp;
 <br>
-<input type="submit" value="Update">
+<input type="submit" value="Update" onClick="return checkForm(this.form)">
 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>

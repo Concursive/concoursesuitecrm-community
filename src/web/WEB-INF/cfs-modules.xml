@@ -164,6 +164,13 @@
       <link value="/Leads.do?module=Add%20Record&amp;include=pipeline_addrecord.htm"/>
     </submenu-->
     
+    <submenu name="Add Opportunity">
+      <permission value="pipeline-opportunities-view"/>
+      <long_html value="Add Opportunity"/>
+      <short_html value="Add&lt;br&gt;Opportunity"/>
+      <link value="/Leads.do?command=AddOpp"/>
+    </submenu>
+    
     <submenu name="Search Opportunities">
       <permission value="pipeline-opportunities-view"/>
       <long_html value="Search Opportunities"/>

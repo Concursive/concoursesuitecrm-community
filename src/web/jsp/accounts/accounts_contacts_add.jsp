@@ -6,6 +6,25 @@
 <jsp:useBean id="ContactEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
+
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
+<script language="JavaScript">
+  function checkForm(form) {
+      formTest = true;
+      message = "";
+      if ((!checkPhone(form.phone1number.value)) || (!checkPhone(form.phone2number.value)) || (!checkPhone(form.phone3number.value)) ) { 
+        message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
+        formTest = false;
+      }
+      if (formTest == false) {
+        alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+        return false;
+      } else {
+        return true;
+      }
+    }
+</script>
+
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
 <form name="addContact" action="/Contacts.do?command=Insert&auto-populate=true" method="post">
 <a href="/Accounts.do">Account Management</a> > 
@@ -30,7 +49,7 @@ Add Contact<br>
   <tr>
     <td class="containerBack">
 <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
-<input type=submit value="Save">
+<input type=submit value="Save" onClick="return checkForm(this.form)">
 <input type=reset value="Reset">
 <br>
 &nbsp;
@@ -112,27 +131,30 @@ Add Contact<br>
   <tr class="containerBody">
     <td>
       <%= ContactPhoneTypeList.getHtmlSelect("phone1type", "Business") %>
-      <input type=text size=3 name="phone1ac" maxlength=3>-
+      <!--input type=text size=3 name="phone1ac" maxlength=3>-
       <input type=text size=3 name="phone1pre" maxlength=3>-
-      <input type=text size=4 name="phone1number" maxlength=4>ext.
+      <input type=text size=4 name="phone1number" maxlength=4>ext. -->
+      <input type=text size=20 name="phone1number">&nbsp;ext.
       <input type=text size=5 name="phone1ext" maxlength=10>
     </td>
   </tr>
   <tr class="containerBody">
     <td>
       <%= ContactPhoneTypeList.getHtmlSelect("phone2type", "Home") %>
-      <input type=text size=3 name="phone2ac" maxlength=3>-
+      <!--input type=text size=3 name="phone2ac" maxlength=3>-
       <input type=text size=3 name="phone2pre" maxlength=3>-
-      <input type=text size=4 name="phone2number" maxlength=4>ext.
+      <input type=text size=4 name="phone2number" maxlength=4>ext. -->
+      <input type=text size=20 name="phone2number">&nbsp;ext.
       <input type=text size=5 name="phone2ext" maxlength=10>
     </td>
   </tr>
   <tr class="containerBody">
     <td>
       <%= ContactPhoneTypeList.getHtmlSelect("phone3type", "Mobile") %>
-      <input type=text size=3 name="phone3ac" maxlength=3>-
+      <!--input type=text size=3 name="phone3ac" maxlength=3>-
       <input type=text size=3 name="phone3pre" maxlength=3>-
-      <input type=text size=4 name="phone3number" maxlength=4>ext.
+      <input type=text size=4 name="phone3number" maxlength=4>ext. -->
+      <input type=text size=20 name="phone3number">&nbsp;ext.
       <input type=text size=5 name="phone3ext" maxlength=10>
     </td>
   </tr>
@@ -261,7 +283,7 @@ Add Contact<br>
   </tr>
 </table>
 <br>
-<input type=submit value="Save">
+<input type=submit value="Save" onClick="return checkForm(this.form)">
 <input type=reset value="Reset">
     </td>
   </tr>

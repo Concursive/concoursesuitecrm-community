@@ -40,7 +40,7 @@
       }
     }
 </SCRIPT>
-<form name="updateOpp" action="/Leads.do?command=UpdateOpp&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<form name="updateOpp" action="/Leads.do?command=UpdateOpp&auto-populate=true" method="post">
 
 <a href="/Leads.do">Pipeline Management</a> > 
 <% if (request.getParameter("return") == null) { %>
@@ -90,7 +90,7 @@ Modify Opportunity<br>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
 
-<input type="submit" value="Update">
+<input type="submit" value="Update" onClick="return checkForm(this.form)">
 
     <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
@@ -246,7 +246,7 @@ Reassign To
 </table>
 &nbsp;
 <br>
-<input type="submit" value="Update">
+<input type="submit" value="Update" onClick="return checkForm(this.form)">
     <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=ViewOpp'">

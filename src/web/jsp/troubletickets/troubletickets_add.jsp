@@ -13,6 +13,8 @@
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="ContactList" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
+
 <script language="JavaScript">
   function updateSubList1() {
     var sel = document.forms['addticket'].elements['catCode'];
@@ -44,9 +46,28 @@
     var url = "TroubleTickets.do?command=OrganizationJSList&orgId=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
+  function checkForm(form) {
+      formTest = true;
+      message = "";
+      
+      if ((!checkPhone(form.phone1number.value))) { 
+	message += "- The entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
+	formTest = false;
+      }
+      if (formTest == false) {
+	alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+	return false;
+      } else {
+	return true;
+      }
+  }
 </script>
 <form name="addticket" action="/TroubleTickets.do?command=Insert&auto-populate=true" method="post">
+<% if (request.getParameter("contact") != null) {%>
+<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
+<%} else {%>
 <input type="submit" value="Insert" name="Save">
+<%}%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Home'">
 <input type="reset" value="Reset">	
 <%= showAttribute(request, "closedError") %>
@@ -165,9 +186,10 @@
     </td>
     <td>
       <input type="hidden" name="phone1type" value="1">
-      <input type="text" size="3" name="phone1ac" maxlength="3">-
+      <!--input type="text" size="3" name="phone1ac" maxlength="3">-
       <input type="text" size="3" name="phone1pre" maxlength="3">-
-      <input type="text" size="4" name="phone1number" maxlength="4">ext.
+      <input type="text" size="4" name="phone1number" maxlength="4">ext. -->
+      <input type="text" size="20" name="phone1number">&nbsp;ext.
       <input type="text" size="5" name="phone1ext" maxlength="10">
     </td>
   </tr>
@@ -335,7 +357,11 @@
 	
 </table>
 <br>
+<% if (request.getParameter("contact") != null) {%>
+<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
+<%} else {%>
 <input type="submit" value="Insert" name="Save">
+<%}%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Home'">
 <input type="reset" value="Reset">
 

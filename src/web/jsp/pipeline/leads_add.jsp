@@ -39,14 +39,14 @@
       }
     }
 </script>
-<form name="addOpportunity" action="/Leads.do?command=InsertOpp&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<form name="addOpportunity" action="/Leads.do?command=InsertOpp&auto-populate=true" method="post">
 <a href="/Leads.do">Pipeline Management</a> > 
 Add Opportunity<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td>
-<input type="submit" value="Save">
+<input type="submit" value="Save" onClick="return checkForm(this.form)">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=ViewOpp'">
 <input type="reset" value="Reset">
 <br>
@@ -177,7 +177,7 @@ Add Opportunity<br>
 </table>
 &nbsp;
 <br>
-<input type="submit" value="Save">
+<input type="submit" value="Save" onClick="return checkForm(this.form)">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=ViewOpp'">
 <input type="reset" value="Reset">
     </td>

@@ -234,7 +234,7 @@
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="HomeOK" resource="/leads.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/addLead.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/leads_add.jsp" layout="nav"/>
     <forward name="SearchOK" resource="/LeadsSearchOpp.jsp" layout="nav"/>
     <forward name="DashboardOK" resource="/LeadsDashboard.jsp" layout="nav"/>
     <forward name="OppDeleteOK" resource="/Leads.do?command=ViewOpp"/>

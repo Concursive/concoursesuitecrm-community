@@ -8,6 +8,7 @@
 <jsp:useBean id="CountrySelect" class="com.darkhorseventures.webutils.CountrySelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 
 <script language="JavaScript">
@@ -34,6 +35,10 @@
         message += "- Please specify an alert description\r\n";
         formTest = false;
       }
+      if ((!checkPhone(form.phone1number.value)) || (!checkPhone(form.phone2number.value))) { 
+        message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
+        formTest = false;
+      }
       if (formTest == false) {
         alert("Form could not be saved, please check the following:\r\n\r\n" + message);
         return false;
@@ -45,11 +50,11 @@
 
 <body onLoad="javascript:document.forms[0].name.focus();">
 
-<form name="addAccount" action="/Accounts.do?command=Insert&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<form name="addAccount" action="/Accounts.do?command=Insert&auto-populate=true" method="post">
 <a href="/Accounts.do">Account Management</a> > 
 Add Account<br>
 <hr color="#BFBFBB" noshade>
-<input type="submit" value="Insert" name="Save">
+<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View'">
 <input type="reset" value="Reset">
 <br>
@@ -73,9 +78,8 @@ Add Account<br>
       	</td>
 	
 	<td valign=top>
-	Instructions: Press "Shift" and drag with your mouse for multiple consecutive selections. 
-	For multiple non-consecutive selections, hold down "Ctrl" and click on each item you want to select. 
-	To de-select an item, press "Ctrl" and click on the item. 
+	Press "Shift" and drag for multiple consecutive selections. For non-consecutive selections, hold down "Ctrl" and click on each item you want to select. 
+	To de-select, press "Ctrl" and click on the item. 
 	</td>
 	
 	</tr>
@@ -185,18 +189,18 @@ Add Account<br>
   <tr>
     <td>
       <%= OrgPhoneTypeList.getHtmlSelect("phone1type", "Main") %>
-      <input type=text size=3 name="phone1ac" maxlength=3>-
-      <input type=text size=3 name="phone1pre" maxlength=3>-
-      <input type=text size=4 name="phone1number" maxlength=4>ext.
+      <!--input type=text size=3 name="phone1ac" maxlength=3>-
+      <input type=text size=3 name="phone1pre" maxlength=3>- -->
+      <input type=text size=20 name="phone1number">&nbsp;ext.
       <input type=text size=5 name="phone1ext" maxlength=10>
     </td>
   </tr>
   <tr>
     <td>
       <%= OrgPhoneTypeList.getHtmlSelect("phone2type", "Fax") %>
-      <input type=text size=3 name="phone2ac" maxlength=3>-
-      <input type=text size=3 name="phone2pre" maxlength=3>-
-      <input type=text size=4 name="phone2number" maxlength=4>ext.
+      <!--input type=text size=3 name="phone2ac" maxlength=3>- 
+      <input type=text size=3 name="phone2pre" maxlength=3>- -->
+      <input type=text size=20 name="phone2number">&nbsp;ext.
       <input type=text size=5 name="phone2ext" maxlength=10>
     </td>
   </tr>
@@ -359,7 +363,7 @@ Add Account<br>
   </tr>
 </table>
 <br>
-<input type="submit" value="Insert" name="Save">
+<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View'">
 <input type="reset" value="Reset">
 </form>

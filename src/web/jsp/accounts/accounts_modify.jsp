@@ -13,6 +13,7 @@
 <%@ include file="initPage.jsp" %>
 <%@ include file="initPageIsManagerOf.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 
 <script language="JavaScript">
@@ -39,6 +40,17 @@
         message += "- Please specify an alert description\r\n";
         formTest = false;
       }
+      
+      <%
+      		for (int i=1; i<=(OrgDetails.getPhoneNumberList().size()+1); i++) {
+      %>
+		<dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkPhone(form.phone<%=i%>number.value)) { 
+			message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
+			formTest = false;
+		}
+      
+      <%}%>
+      
       if (formTest == false) {
         alert("Form could not be saved, please check the following:\r\n\r\n" + message);
         return false;
@@ -47,8 +59,7 @@
       }
     }
 </script>
-
-<form name="addAccount" action="/Accounts.do?command=Update&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<form name="addAccount" action="/Accounts.do?command=Update&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" method="post">
 <a href="/Accounts.do">Account Management</a> > 
 
 <% if (request.getParameter("return") != null) {%>
@@ -86,7 +97,7 @@ Modify Account<br>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
 
-<input type="submit" value="Update" name="Save">
+<input type="submit" value="Update" name="Save" onClick="return checkForm(this.form)">
 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
@@ -120,12 +131,25 @@ Modify Account<br>
       Account Type(s)
     </td>
     <td>
-	<dhv:evaluate exp="<%=OrgDetails.getTypes().isEmpty()%>">
+    
+        <table width=100% cellpadding=0 cellspacing=0 border=0>
+	<tr>
+	<td width=90 valign=center>
+        <dhv:evaluate exp="<%=OrgDetails.getTypes().isEmpty()%>">
 		<%= AccountTypeList.getHtmlSelect("selectedList", 0) %>
 	</dhv:evaluate>
 	<dhv:evaluate exp="<%=!(OrgDetails.getTypes().isEmpty())%>">
 		<%= AccountTypeList.getHtmlSelect("selectedList", OrgDetails.getTypes()) %>
 	</dhv:evaluate>
+      	</td>
+	
+	<td valign=top>
+	Press "Shift" and drag for multiple consecutive selections. For non-consecutive selections, hold down "Ctrl" and click on each item you want to select. 
+	To de-select, press "Ctrl" and click on the item. 
+	</td>
+	
+	</tr>
+	</table>
     </td>
   </tr>
   <tr class="containerBody">
@@ -238,9 +262,11 @@ Modify Account<br>
     <td>
       <input type="hidden" name="phone<%= icount %>id" value="<%= thisPhoneNumber.getId() %>">
       <%= OrgPhoneTypeList.getHtmlSelect("phone" + icount + "type", thisPhoneNumber.getType()) %>
-      <input type=text size=3 name="phone<%= icount %>ac" maxlength=3 value="<%= toHtmlValue(thisPhoneNumber.getAreaCode()) %>">-
+      <!--input type=text size=3 name="phone<%= icount %>ac" maxlength=3 value="<%= toHtmlValue(thisPhoneNumber.getAreaCode()) %>">-
       <input type=text size=3 name="phone<%= icount %>pre" maxlength=3 value="<%= toHtmlValue(thisPhoneNumber.getPrefix()) %>">-
-      <input type=text size=4 name="phone<%= icount %>number" maxlength=4 value="<%= toHtmlValue(thisPhoneNumber.getPostfix()) %>">ext.
+      <input type=text size=4 name="phone<%= icount %>number" maxlength=4 value="<%= toHtmlValue(thisPhoneNumber.getPostfix()) %>"> ext. -->
+      
+      <input type=text size=20 name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
       <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10" value="<%= toHtmlValue(thisPhoneNumber.getExtension()) %>">
       <input type="checkbox" name="phone<%= icount %>delete" value="on">mark to remove
     </td>
@@ -251,9 +277,10 @@ Modify Account<br>
   <tr class="containerBody">
     <td>
       <%= OrgPhoneTypeList.getHtmlSelect("phone" + (++icount) + "type", "Other") %>
-      <input type=text size=3 name="phone<%= icount %>ac" maxlength=3>-
+      <!--input type=text size=3 name="phone<%= icount %>ac" maxlength=3>-
       <input type=text size=3 name="phone<%= icount %>pre" maxlength=3>-
-      <input type=text size=4 name="phone<%= icount %>number" maxlength=4>ext.
+      <input type=text size=4 name="phone<%= icount %>number" maxlength=4>ext. -->
+      <input type=text size=20 name="phone<%= icount %>number">&nbsp;ext.
       <input type=text size=5 name="phone<%= icount %>ext" maxlength=10>
     </td>
   </tr>
@@ -452,7 +479,7 @@ Modify Account<br>
   </tr>
 </table>
 <br>
-<input type="submit" value="Update" name="Save">
+<input type="submit" value="Update" name="Save" onClick="return checkForm(this.form)">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View'">
