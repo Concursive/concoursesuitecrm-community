@@ -190,5 +190,28 @@ public class RecipientList extends Vector {
 
     return i;
   }
+  
+  public static int retrieveRecordCount(Connection db, int moduleId, int itemId) throws SQLException {
+    int count = 0;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+      "SELECT COUNT(*) as itemcount " +
+      "FROM scheduled_recipient s " +
+      "WHERE id > 0 ");
+    if (moduleId == Constants.CONTACTS) {  
+      sql.append("AND s.contact_id = ? ");
+    }
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    if (moduleId == Constants.CONTACTS) {
+      pst.setInt(1, itemId);
+    }
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      count = rs.getInt("itemcount");
+    }
+    rs.close();
+    pst.close();
+    return count;
+  }
 }
 
