@@ -112,10 +112,10 @@
     <category id="420041018" name="Orders" folders="false" lookups="false" reports="true" enabled="false">
       <permission name="orders" attributes="vaed" description="Access to Orders module"/>
     </category>
-    <category id="330041409" name="Product Catalog" folders="true" lookups="false" reports="false" categories="false">
-      <folder constantId="200403192" description="Product Catalog Categories"/>
-      <permission name="product-catalog" attributes="v---" description="Access to Product Catalog module"/>
-      <permission name="product-catalog-product" attributes="vaed" description="Products"/>
+    <category id="330041409" name="Product Catalog" folders="true" lookups="false" reports="false" categories="false" products="true">
+      <folder constantId="200403192" description="Product Catalog Categories" enabled="false"/>
+      <permission name="product-catalog" attributes="v---" description="Access to Product Catalog module" enabled="false"/>
+      <permission name="product-catalog-product" attributes="vaed" description="Products" enabled="false"/>
     </category>
     <category id="6" name="Communications" folders="false" lookups="false" reports="true">
       <permission name="campaign" attributes="v---" description="Access to Communications module"/>
@@ -185,6 +185,7 @@
       <permission name="admin-sysconfig-folders" attributes="vaed" description="Configure Custom Folders &amp; Fields"/>
       <permission name="admin-object-workflow" attributes="vaed" description="Configure Object Workflow"/>
       <permission name="admin-sysconfig-categories" attributes="vaed" description="Categories"/>
+      <permission name="admin-sysconfig-products" attributes="vaed" description="Labor Category Editor"/>
       <report file="users.xml" type="user" permission="admin" title="System Users" description="Who are all the users of the system?"/>
     </category>
     <category id="10" name="Help" folders="false" lookups="false">

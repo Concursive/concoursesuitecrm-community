@@ -2,6 +2,7 @@
 <%@ page import="java.util.*,org.aspcfs.modules.products.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="productList" class="org.aspcfs.modules.products.base.ProductCatalogList" scope="request"/>
 <jsp:useBean id="productCatalogListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -16,12 +17,15 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ProductsCatalog.do?command=ListAllProducts">Products</a> > 
-View Products
+<a href="Admin.do">Admin</a> >
+<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
+Labor Category Editor
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
+<dhv:permission name="admin-sysconfig-products-add"><a href="ProductsCatalog.do?command=AddProduct&moduleId=<%= PermissionCategory.getId() %>">Add an item</a></dhv:permission>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="productCatalogListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -51,7 +55,7 @@ View Products
            <a href="javascript:displayMenu('menuProduct', '<%= thisProduct.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
         </td>
         <td>
-          <a href="ProductsCatalog.do?command=ViewProductDetails&productId=<%=thisProduct.getId()%>"><%= thisProduct.getSku() %></a>
+          <a href="ProductsCatalog.do?command=ViewProductDetails&productId=<%=thisProduct.getId()%>&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(thisProduct.getSku()) %></a>
         </td>
         <td>
           <%= toHtml(thisProduct.getName()) %>

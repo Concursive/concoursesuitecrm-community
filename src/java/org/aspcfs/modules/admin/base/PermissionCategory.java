@@ -35,6 +35,7 @@ public class PermissionCategory extends GenericBean {
   private boolean scheduledEvents = false;
   private boolean objectEvents = false;
   private boolean reports = false;
+  private boolean products = false;
 
   //Constants for working with lookup lists
   //NOTE: currently all editable lookup lists need to be defined here
@@ -393,7 +394,10 @@ public class PermissionCategory extends GenericBean {
   public boolean getReports() {
     return reports;
   }
-
+  
+  public boolean getProducts() { return products; }
+  public void setProducts(boolean tmp) { this.products = tmp; }
+  public void setProducts(String tmp) { this.products = DatabaseUtils.parseBoolean(tmp); }
 
   /**
    *  Gets the scheduledEvents attribute of the PermissionCategory object
@@ -546,8 +550,8 @@ public class PermissionCategory extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO permission_category (category, description, " +
         "level, enabled, active, lookups, folders, viewpoints, categories, scheduled_events, " +
-        "object_events, reports) " +
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "object_events, reports, products) " +
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     pst.setString(++i, category);
     pst.setString(++i, description);
@@ -561,6 +565,7 @@ public class PermissionCategory extends GenericBean {
     pst.setBoolean(++i, scheduledEvents);
     pst.setBoolean(++i, objectEvents);
     pst.setBoolean(++i, reports);
+    pst.setBoolean(++i, products);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "permission_cate_category_id_seq");
@@ -588,6 +593,7 @@ public class PermissionCategory extends GenericBean {
     scheduledEvents = rs.getBoolean("scheduled_events");
     objectEvents = rs.getBoolean("object_events");
     reports = rs.getBoolean("reports");
+    products = rs.getBoolean("products");
   }
 
 

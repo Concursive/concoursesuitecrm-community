@@ -85,6 +85,19 @@
   </tr>
   </dhv:permission>
 <%}%>
+<%-- Product Catalog Editor --%>
+<% 
+  if (PermissionCategory.getProducts()) { 
+%>
+  <dhv:permission name="admin-sysconfig-products-view">
+  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
+  <tr class="row<%= rowid %>">
+    <td>
+      <a href="ProductsCatalog.do?command=ListAllProducts&moduleId=<%= PermissionCategory.getId() %>">Labor Category Editor</a>
+    </td>
+  </tr>
+  </dhv:permission>
+<%}%>
 <%-- Nothing to configure --%>
 <dhv:evaluate if="<%= count == 0 %>">
   <tr>

@@ -3,7 +3,7 @@
   connection (db) from ant upgradedb
   
   December 15th 2003
-  - Adds the permission "product-catalog-produc" to the "Product Catalog" category
+  - Adds the permission "product-catalog" to the "Product Catalog" category
 */
 import java.sql.*;
 import org.aspcfs.modules.admin.base.Permission;
@@ -13,7 +13,7 @@ st = db.createStatement();
 rs = st.executeQuery(
   "SELECT category_id " +
   "FROM permission_category " +
-  "WHERE category = 'Product Catalog'");
+  "WHERE category = 'Admin'");
 if(rs.next()){
   categoryId = rs.getInt("category_id");
 }
@@ -25,31 +25,31 @@ PermissionCategory thisCategory = new PermissionCategory(db, categoryId);
 rs = st.executeQuery(
   "SELECT count(permission_id) AS recordcount " +
   "FROM permission " +
-  "WHERE permission = 'product-catalog-product'");
+  "WHERE permission = 'admin-sysconfig-products'");
 rs.next();
 hasPermission = (rs.getInt("recordcount") > 0);
-print("Permission Status: product-catalog-product " + hasPermission);
+print("Permission Status: admin-sysconfig-products " + hasPermission);
 
 //Doesn't exist so insert the new permission
 if (!hasPermission) {
   rs = st.executeQuery(
     "SELECT max(p.level) AS maxlevel " +
     "FROM permission p, permission_category pc " +
-    "WHERE p.category_id = pc.category_id AND pc.category ='Product Catalog'");
+    "WHERE p.category_id = pc.category_id AND pc.category ='Admin'");
   rs.next();
   level = (rs.getInt("maxlevel") + 10);
   print("level to insert: " + level);
   //Insert the new permission
   permission = new Permission();
   permission.setCategoryId(thisCategory.getId());
-  permission.setName("product-catalog-product");
-  permission.setDescription("Products");
+  permission.setName("admin-sysconfig-products");
+  permission.setDescription("Configure Labor Categories");
   permission.setView(true);
   permission.setAdd(true);
   permission.setEdit(true);
   permission.setDelete(true);
   permission.setPermissionLevel(level);
-  permission.setEnabled(false);
+  permission.setEnabled(true);
   permission.setActive(true);
   permission.insert(db);
   print("New permission added");

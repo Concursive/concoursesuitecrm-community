@@ -224,6 +224,7 @@ public class PermissionsAndRolesWriter implements DataWriter {
         thisCategory.setCategories(record.getValue("categories"));
         thisCategory.setScheduledEvents(record.getValue("scheduledEvents"));
         thisCategory.setObjectEvents(record.getValue("objectEvents"));
+        thisCategory.setProducts(record.getValue("products"));
         thisCategory.insert(db);
         id = thisCategory.getId();
         return true;

@@ -291,10 +291,11 @@ CREATE TABLE permission_category (
   folders boolean NOT NULL DEFAULT false,
   lookups boolean NOT NULL DEFAULT false,
   viewpoints BOOLEAN DEFAULT false,
-  categories BOOLEAN DEFAULT false,
-  scheduled_events BOOLEAN DEFAULT false,
-  object_events BOOLEAN DEFAULT false,
-  reports BOOLEAN DEFAULT false
+  categories BOOLEAN NOT NULL DEFAULT false,
+  scheduled_events BOOLEAN NOT NULL DEFAULT false,
+  object_events BOOLEAN NOT NULL DEFAULT false,
+  reports BOOLEAN NOT NULL DEFAULT false,
+  products BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE permission (

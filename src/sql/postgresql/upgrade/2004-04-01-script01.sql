@@ -227,3 +227,7 @@ CREATE TABLE category_editor_lookup (
   max_levels INT NOT NULL
 );
 
+ALTER TABLE permission_category ADD COLUMN products BOOLEAN;
+UPDATE permission_category SET products = false;
+ALTER TABLE permission_category ALTER COLUMN products SET DEFAULT false;
+

@@ -227,3 +227,6 @@ CREATE TABLE category_editor_lookup (
   max_levels INT NOT NULL
 );
 
+ALTER TABLE permission_category ADD products BIT DEFAULT 0;
+UPDATE permission_category SET products = 0;
+

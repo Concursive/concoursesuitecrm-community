@@ -17,3 +17,6 @@ CREATE TABLE quote_notes (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+--ALTER TABLE permission_category ADD products BIT DEFAULT 0;
+--UPDATE permission_category SET products = 0;
+

@@ -17,3 +17,7 @@ CREATE TABLE quote_notes (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+--ALTER TABLE permission_category ADD COLUMN products BOOLEAN;
+--UPDATE permission_category SET products = false;
+--ALTER TABLE permission_category ALTER COLUMN products SET DEFAULT false;
+

@@ -284,10 +284,11 @@ CREATE TABLE permission_category (
   folders BIT NOT NULL DEFAULT 0,
   lookups BIT NOT NULL DEFAULT 0,
   viewpoints BIT DEFAULT 0,
-  categories BIT DEFAULT 0,
-  scheduled_events BIT DEFAULT 0,
-  object_events BIT DEFAULT 0,
-  reports BIT DEFAULT 0
+  categories BIT NOT NULL DEFAULT 0,
+  scheduled_events BIT NOT NULL DEFAULT 0,
+  object_events BIT NOT NULL DEFAULT 0,
+  reports BIT NOT NULL DEFAULT 0,
+  products BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE permission (

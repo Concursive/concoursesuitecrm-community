@@ -49,7 +49,7 @@ if (!hasPermission) {
   permission.setEdit(false);
   permission.setDelete(false);
   permission.setPermissionLevel(level);
-  permission.setEnabled(true);
+  permission.setEnabled(false);
   permission.setActive(true);
   permission.insert(db);
   print("New permission added");

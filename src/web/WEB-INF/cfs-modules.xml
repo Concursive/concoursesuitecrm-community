@@ -257,6 +257,7 @@
     </submenu>
   </menu>
   
+<!--
   <menu>
     <action name="ProductsCatalog" />
     <page title="Catalog" />
@@ -278,7 +279,7 @@
       <link value="ProductsCatalog.do?command=AddProduct"/>
     </submenu>
   </menu>
-  
+-->
   <menu>
     <action name="AutoGuide"/>
     <page title="Auto Guide"/>
@@ -517,6 +518,7 @@
     <action name="AdminObjectEvents"/>
     <action name="AdminScheduledEvents"/>
     <action name="AdminQA"/>
+    <action name="ProductsCatalog" />
     <page title="Admin"/>
     <permission value="admin-view"/>
     <long_html value="Admin"/>
