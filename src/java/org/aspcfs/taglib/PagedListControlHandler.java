@@ -18,7 +18,7 @@ public class PagedListControlHandler extends TagSupport {
   private String bgColor = null;
   private String fontColor = "#666666";
   private String tdClass = null;
-
+  private boolean showForm = true;
 
   /**
    *  Sets the name attribute of the PagedListControlHandler object
@@ -69,6 +69,18 @@ public class PagedListControlHandler extends TagSupport {
     tdClass = tmp;
   }
 
+  /**
+   *  Sets the showForm attribute of the PagedListControlHandler object
+   *
+   *@param  showForm  The new showForm value
+   */
+  
+  public void setShowForm(String showForm) {
+	this.showForm = "true".equalsIgnoreCase(showForm);
+	
+ }
+
+  
 
   /**
    *  Description of the Method
@@ -81,6 +93,7 @@ public class PagedListControlHandler extends TagSupport {
       PagedListInfo pagedListInfo = (PagedListInfo) pageContext.getSession().getAttribute(object);
 
       if (pagedListInfo != null) {
+        pagedListInfo.setShowForm(showForm);
         JspWriter out = this.pageContext.getOut();
         out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">");
         out.write(pagedListInfo.getListPropertiesHeader(name));
@@ -90,12 +103,15 @@ public class PagedListControlHandler extends TagSupport {
             ((bgColor != null) ? " bgColor=\"" + bgColor + "\"" : "") +
             ((tdClass != null) ? " class=\"" + tdClass + "\"" : "") +
             ">");
-        out.write("<font color=\"" + fontColor + "\">");
+        out.write("<input type=\"hidden\" name=\"offset\" value=\"\">");
+        
         out.write("[" +
-            pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") +
+            pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>","Previous") +
             "|" +
             pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") +
             "] ");
+        
+	      out.write("<font color=\"" + fontColor + "\">");
         out.write("Page " + pagedListInfo.getNumericalPageEntry() + " ");
         out.write("of " + ((pagedListInfo.getNumberOfPages() == 0)?"1":String.valueOf(pagedListInfo.getNumberOfPages())) + ", ");
         out.write("Items per page: " + pagedListInfo.getItemsPerPageEntry() + " ");

@@ -75,6 +75,7 @@
     <action name="ExternalContacts"/>
     <action name="ExternalContactsOpps"/>
     <action name="ExternalContactsCalls"/>
+    <action name="ExternalContactsCallsForward"/>
     <page title="Contacts &amp; Resources"/>
     <permission value="contacts-view"/>
     <long_html value="Contacts &amp; Resources"/>

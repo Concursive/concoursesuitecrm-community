@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import com.darkhorseventures.webutils.*;
 import java.util.Enumeration;
 import java.util.Iterator;
-
+import java.util.HashMap;
+import java.util.Set;
 /**
  *  The MyCFS module.
  *
@@ -43,13 +44,12 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandInbox(ActionContext context) {
-	  
-	if (!(hasPermission(context, "myhomepage-inbox-view"))) {
-	    return ("PermissionError");
-    	}
-	  
-    Exception errorMessage = null;
 
+    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
     inboxInfo.setLink("/MyCFSInbox.do?command=Inbox");
 
@@ -60,6 +60,7 @@ public final class MyCFS extends CFSModule {
       db = this.getConnection(context);
       noteList.setPagedListInfo(inboxInfo);
       noteList.setSentTo(getUserId(context));
+      noteList.setSentFrom(getUserId(context));
 
       if (context.getRequest().getParameter("return") != null) {
         inboxInfo.setListView("new");
@@ -67,6 +68,10 @@ public final class MyCFS extends CFSModule {
 
       if ("old".equals(inboxInfo.getListView())) {
         noteList.setOldMessagesOnly(true);
+      }
+
+      if ("sent".equals(inboxInfo.getListView())) {
+        noteList.setSentMessagesOnly(true);
       }
 
       noteList.buildList(db);
@@ -87,6 +92,8 @@ public final class MyCFS extends CFSModule {
   }
 
 
+
+
   /**
    *  Description of the Method
    *
@@ -95,11 +102,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandDeleteHeadline(ActionContext context) {
-	  
-	if (!(hasPermission(context, "myhomepage-miner-delete"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "myhomepage-miner-delete"))) {
+      return ("PermissionError");
+    }
+
     //Process all parameters
     Enumeration parameters = context.getRequest().getParameterNames();
     Exception errorMessage = null;
@@ -117,7 +124,10 @@ public final class MyCFS extends CFSModule {
           Organization newOrg = new Organization();
           newOrg.setOrgId(orgId);
           newOrg.deleteMinerOnly(db);
-          System.out.println(param + ": " + context.getRequest().getParameter(param) + "<br>");
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("MyCFS-> " + param + ": " + context.getRequest().getParameter(param) + "<br>");
+          }
+       
         }
       }
     } catch (SQLException e) {
@@ -143,18 +153,22 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandCFSNoteDelete(ActionContext context) {
-	  
-	if (!(hasPermission(context, "myhomepage-inbox-view"))) {
-	    return ("PermissionError");
-    	}
-	  
+
+    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+      return ("PermissionError");
+    }
+
     Connection db = null;
     Exception errorMessage = null;
-
+    PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
     try {
       db = this.getConnection(context);
       int noteId = Integer.parseInt(context.getRequest().getParameter("id"));
-      CFSNote newNote = new CFSNote(db, noteId);
+      CFSNote newNote = new CFSNote(db, noteId, getUserId(context), inboxInfo.getListView());
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("\nMYCFS view mode" + context.getRequest().getParameter("listView"));
+      }
+      newNote.setCurrentView(inboxInfo.getListView());
       newNote.delete(db, getUserId(context));
     } catch (SQLException e) {
       errorMessage = e;
@@ -179,21 +193,22 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandCFSNoteTrash(ActionContext context) {
-	  
-	if (!(hasPermission(context, "myhomepage-inbox-view"))) {
-	    return ("PermissionError");
-    	}
-	  
+
+    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+      return ("PermissionError");
+    }
+    PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
     Connection db = null;
     Exception errorMessage = null;
 
     try {
       db = this.getConnection(context);
       int noteId = Integer.parseInt(context.getRequest().getParameter("id"));
-      CFSNote newNote = new CFSNote(db, noteId);
-
-      System.out.println("Status before: " + newNote.getStatus());
-
+      CFSNote newNote = new CFSNote(db, noteId, getUserId(context), inboxInfo.getListView());
+   
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("MyCFS-> Status before: " + newNote.getStatus());
+      }
       if (newNote.getStatus() == 2) {
         newNote.setStatus(CFSNote.READ);
       } else {
@@ -201,8 +216,9 @@ public final class MyCFS extends CFSModule {
       }
 
       newNote.updateStatus(db);
-      System.out.println("Status after: " + newNote.getStatus());
-
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("MyCFS-> Status after: " + newNote.getStatus());
+      }
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -228,11 +244,11 @@ public final class MyCFS extends CFSModule {
    *@since           1.1
    */
   public String executeCommandHeadline(ActionContext context) {
-	  
-	if (!(hasPermission(context, "myhomepage-miner-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "myhomepage-miner-view"))) {
+      return ("PermissionError");
+    }
+
     addModuleBean(context, "Customize Headlines", "Customize Headlines");
     Exception errorMessage = null;
 
@@ -272,11 +288,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandInsertHeadline(ActionContext context) {
-	  
-	if (!(hasPermission(context, "myhomepage-miner-add"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "myhomepage-miner-add"))) {
+      return ("PermissionError");
+    }
+
     addModuleBean(context, "Customize Headlines", "");
     int headlines = 0;
     Exception errorMessage = null;
@@ -288,14 +304,14 @@ public final class MyCFS extends CFSModule {
     String sym = context.getRequest().getParameter("stockSymbol");
 
     Organization newOrg = (Organization) new Organization();
-      
-      newOrg.setName(name);
-      newOrg.setTicker(sym);
-      newOrg.setIndustry("1");
-      newOrg.setEnteredBy(getUserId(context));
-      newOrg.setModifiedBy(getUserId(context));
-      newOrg.setOwner(-1);
-      newOrg.setMiner_only(true);
+
+    newOrg.setName(name);
+    newOrg.setTicker(sym);
+    newOrg.setIndustry("1");
+    newOrg.setEnteredBy(getUserId(context));
+    newOrg.setModifiedBy(getUserId(context));
+    newOrg.setOwner(-1);
+    newOrg.setMiner_only(true);
 
     try {
       db = this.getConnection(context);
@@ -324,11 +340,12 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandCFSNoteDetails(ActionContext context) {
-	  
-	if (!(hasPermission(context, "myhomepage-inbox-view"))) {
-	    return ("PermissionError");
-    	}
-	  
+
+    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+      return ("PermissionError");
+    }
+
+    PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
     Exception errorMessage = null;
     Connection db = null;
     CFSNote newNote = null;
@@ -336,11 +353,13 @@ public final class MyCFS extends CFSModule {
     try {
       int msgId = Integer.parseInt(context.getRequest().getParameter("id"));
       db = this.getConnection(context);
-      newNote = new CFSNote(db, msgId);
-
-      if (newNote.getStatus() == CFSNote.NEW) {
-        newNote.setStatus(CFSNote.READ);
-        newNote.updateStatus(db);
+      newNote = new CFSNote(db, msgId, getUserId(context),inboxInfo.getListView());
+      if (!inboxInfo.getListView().equalsIgnoreCase("sent")) {
+        //do not change status if its the OutBox
+        if (newNote.getStatus() == CFSNote.NEW) {
+          newNote.setStatus(CFSNote.READ);
+          newNote.updateStatus(db);
+        }
       }
       //addRecentItem(context, newOrg);
     } catch (Exception e) {
@@ -361,6 +380,355 @@ public final class MyCFS extends CFSModule {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
+  public String executeCommandNewMessage(ActionContext context) {
+
+    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+      return ("PermissionError");
+    }
+    
+    context.getSession().removeAttribute("selectedContacts");
+    context.getSession().removeAttribute("finalContacts");
+    CFSNote newNote = new CFSNote();
+    context.getRequest().setAttribute("Note", newNote);
+    String returnUrl = context.getRequest().getParameter("return");
+    if(returnUrl!=null){
+      context.getRequest().setAttribute("returnUrl",returnUrl);
+    }
+    addModuleBean(context, "MyInbox", "");
+    return ("CFSNewMessageOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
+  public String executeCommandContactList(ActionContext context) {
+
+    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+      return ("PermissionError");
+    }
+
+    PagedListInfo contactListInfo = this.getPagedListInfo(context, "ContactListInfo");
+    Exception errorMessage = null;
+    Connection db = null;
+    ContactList contactList = null;
+    contactListInfo.setLink("/MyCFSInbox.do?command=ContactList");
+    contactListInfo.setEnableJavaScript(true);
+    String contactListFilter = "";
+    
+    HashMap selectedList = (HashMap) context.getSession().getAttribute("selectedContacts");
+    /* Flush the selectedList if its a new selection*/
+    if(context.getRequest().getParameter("flushtemplist") != null){
+      if (((String) context.getRequest().getParameter("flushtemplist")).equalsIgnoreCase("true")) {
+        if(context.getSession().getAttribute("finalContacts") != null){
+        selectedList = (HashMap)((HashMap)context.getSession().getAttribute("finalContacts")).clone();
+        }
+      }
+     }
+    
+    HashMap finalContactList = (HashMap) context.getSession().getAttribute("finalContacts");
+    boolean listDone = false;
+    //set when User hits DONE
+
+    try {
+      contactListFilter = contactListInfo.getListView();
+      db = this.getConnection(context);
+      contactList = new ContactList();
+
+      /*
+       *  Collect the selected entries in the contactList & store it in the session's HashMap i.e checkcontact
+       *  checkcontact+rowCount is the checkbox name (value is  the contact_id)
+       *  Single Email   : email as a hidden value contactemail+rowCount
+       *  Multiple Emails: email as a value of selected entry from comboBox i.e contactemail_rowCount
+       */
+      int rowCount = 1;
+      while (context.getRequest().getParameter("hiddencontactid" + rowCount) != null) {
+          int contactId = 0;
+          String emailAddress = "";
+          contactId = Integer.parseInt(context.getRequest().getParameter("hiddencontactid" + rowCount));
+          if (context.getRequest().getParameter("checkcontact" + rowCount) != null) {
+              if (context.getRequest().getParameter("contactemail" + rowCount) != null) {
+                   emailAddress = context.getRequest().getParameter("contactemail" + rowCount);
+              }
+
+            /*If User does not have a emailAddress replace with Name(LastFirst)*/
+          if (emailAddress.equals("")) {
+                if (context.getRequest().getParameter("hiddenname" + rowCount) != null) {
+                  emailAddress = "P:" + context.getRequest().getParameter("hiddenname" + rowCount);
+            }
+          }
+
+          if (selectedList.get(new Integer(contactId)) == null) {
+            selectedList.put(new Integer(contactId), (Object) emailAddress);
+          }else{
+              selectedList.remove(new Integer(contactId));
+              selectedList.put(new Integer(contactId), (Object) emailAddress);
+          }
+        } else {
+          selectedList.remove(new Integer(contactId));
+        }
+        rowCount++;
+      }
+
+      if (context.getRequest().getParameter("finalsubmit") != null) {
+        if (((String) context.getRequest().getParameter("finalsubmit")).equalsIgnoreCase("true")) {
+          listDone = true;
+          finalContactList = (HashMap)selectedList.clone();
+        }
+      }
+      
+      
+        /*set Filter for retrieving addresses depending on typeOfContact*/
+      if ((contactListFilter == null || contactListFilter.equals(""))) {
+              contactListFilter = "all";
+      }
+      if (contactListFilter.equalsIgnoreCase("all")) {
+        contactList.setPersonalId(getUserId(context));
+        contactList.setOwnerIdRange(this.getUserRange(context));
+      }
+      if (contactListFilter.equalsIgnoreCase("employees")) {
+        contactList.setTypeId(Contact.EMPLOYEE_TYPE);
+      }
+      if (contactListFilter.equalsIgnoreCase("mycontacts")) {
+        contactList.setPersonalId(getUserId(context));
+        contactList.setOwner(getUserId(context));
+      }
+      if (contactListFilter.equalsIgnoreCase("accountcontacts")) {
+        contactList.setWithAccountsOnly(true);
+      }
+
+      contactList.setPagedListInfo(contactListInfo);
+      contactList.setCheckUserAccess(true);
+      contactList.setBuildDetails(true);
+      contactList.buildList(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+        context.getRequest().setAttribute("ContactList", contactList);
+        context.getSession().setAttribute("selectedContacts", selectedList);
+      if(listDone){
+          context.getSession().setAttribute("finalContacts",finalContactList);
+      }
+      return ("CFSContactListOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
+
+  public String executeCommandSendMessage(ActionContext context) {
+    Exception errorMessage = null;
+    boolean recordInserted = false;
+    Connection db = null;
+    boolean savecopy = false;
+    boolean copyrecipients = false;
+    HashMap selectedList = (HashMap) context.getSession().getAttribute("finalContacts");
+    if (selectedList == null) {
+      selectedList = new HashMap();
+    }
+
+    CFSNote thisNote = new CFSNote();
+    thisNote.setEnteredBy(getUserId(context));
+    thisNote.setModifiedBy(getUserId(context));
+    thisNote.setReplyId(getUserId(context));
+    thisNote.setType(CFSNote.CALL);
+
+    if (context.getRequest().getParameter("subject") != null) {
+      thisNote.setSubject(context.getRequest().getParameter("subject"));
+    } else {
+      thisNote.setSubject("error");
+    }
+    if (context.getRequest().getParameter("body") != null) {
+      thisNote.setBody(context.getRequest().getParameter("body"));
+    } else {
+      thisNote.setBody("error");
+    }
+    if (context.getRequest().getParameter("savecopy") != null) {
+      savecopy = true;
+    }
+
+    if (context.getRequest().getParameter("mailrecipients") != null) {
+      copyrecipients = true;
+    }
+
+    Contact thisContact = new Contact();
+    User thisRecord = (User) ((UserBean) context.getSession().getAttribute("User")).getUserRecord();
+    thisRecord.setBuildContact(true);
+
+    try {
+      db = this.getConnection(context);
+      thisRecord.buildResources(db);
+      if (selectedList.size() != 0) {
+        String replyAddr = thisRecord.getContact().getEmailAddress("Business");
+        int count = -1;
+        int contactId = -1;
+        boolean firstTime = true;
+        String email = "";
+        Set s = selectedList.keySet();
+        Iterator i = s.iterator();
+        while (i.hasNext()) {
+          count++;
+          Integer hashKey = (Integer) i.next();
+          contactId = hashKey.intValue();
+
+          if (selectedList.get(hashKey) != null) {
+            Object st = selectedList.get(hashKey);
+            email = st.toString();
+          }
+          boolean isEmployee = false;
+          if ((thisContact.getContactType(db, contactId)) == Contact.EMPLOYEE_TYPE) {
+            isEmployee = true;
+          }
+
+          if (isEmployee) {
+                if (firstTime) {
+                  recordInserted = thisNote.insert(db, 1);
+                  firstTime = false;
+                  if (!recordInserted) {
+                             processErrors(context, thisNote.getErrors());
+              }
+            }
+              thisNote.setSentTo(thisContact.getUserId());
+              recordInserted = thisNote.insert(db, 2);
+              if (!recordInserted) {
+                    processErrors(context, thisNote.getErrors());
+            }
+          }
+          if ((!email.startsWith("P:")) && (copyrecipients || !isEmployee)) {
+            SMTPMessage mail = new SMTPMessage();
+            mail.setHost("127.0.0.1");
+            mail.setFrom("cfs-messenger@darkhorseventures.com");
+            if (replyAddr != null && !(replyAddr.equals(""))) {
+              mail.addReplyTo(replyAddr);
+            }
+            mail.setType("text/html");
+            mail.setTo(email);
+            mail.setSubject(thisNote.getSubject());
+            mail.setBody("The following message was sent to your CFS Inbox by " + thisRecord.getUsername() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + StringUtils.toHtml(thisNote.getBody()));
+            if (mail.send() == 2) {
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("MyCFS-> Send error: " + mail.getErrorMsg() + "<br><br>");
+              }
+              System.err.println(mail.getErrorMsg());
+            } else {
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("MyCFS-> Sending message to " + email);
+              }
+            }
+          }
+        }
+      }
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (context.getAction().getActionName().equals("ExternalContactsCallsForward")) {
+      addModuleBean(context, "External Contacts", "");
+    } else {
+      addModuleBean(context, "MyInbox", "");
+    }
+    
+    if (errorMessage == null) {
+      return ("SendMessageOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+  
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
+  public String executeCommandForwardMessage(ActionContext context) {
+
+    Connection db = null;
+    Exception errorMessage = null;
+    CFSNote newNote = null;
+    PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
+    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+      return ("PermissionError");
+    }
+    String returnUrl = context.getRequest().getParameter("return");
+
+     try {
+      String msgId = context.getRequest().getParameter("id");
+      int noteType = Integer.parseInt(context.getRequest().getParameter("forwardType"));
+      db = this.getConnection(context);
+      newNote = new CFSNote();
+      if(noteType == Constants.CFSNOTE){
+      newNote = new CFSNote(db, Integer.parseInt(msgId), getUserId(context),inboxInfo.getListView());
+      HashMap recipients = newNote.buildRecipientList(db);
+      Iterator i = recipients.keySet().iterator();
+      StringBuffer recipientList = new StringBuffer();
+      while (i.hasNext()) {
+      Object st = i.next();
+      recipientList.append(st);
+      if(i.hasNext()){
+          recipientList.append(",");
+          }
+        }
+      newNote.setSubject("Fwd: "+newNote.getSubject());
+      newNote.setBody("\n\n----Original Message----\nFrom: " + newNote.getSentName() + "\nSent: " + newNote.getEnteredDateTimeString() +
+      "\nTo: " +	recipientList.toString() + "\nSubject: " + newNote.getSubject() + "\n\n" + newNote.getBody() +"\n\n");
+      }
+      else if(noteType == Constants.CONTACTS_CALLS){
+      Call thisCall = new Call(db, msgId);
+      newNote.setBody("Contact Name: " + thisCall.getContactName() + "\nType: " + thisCall.getCallType() + "\nLength: " + thisCall.getLengthText() + 
+						"\nSubject: " + thisCall.getSubject() + "\nNotes: " + thisCall.getNotes() + "\nEntered: " 
+						+ thisCall.getEnteredName() + " - " + thisCall.getEnteredString() + "\nModified: " + 
+						thisCall.getModifiedName() + " - " + thisCall.getModifiedString());
+			}
+      context.getSession().removeAttribute("selectedContacts");
+      context.getSession().removeAttribute("finalContacts");
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (context.getAction().getActionName().equals("ExternalContactsCallsForward")) {
+        addModuleBean(context, "External Contacts", "");
+      } else {
+        addModuleBean(context, "MyInbox", "");
+      }
+      
+      context.getRequest().setAttribute("Note",newNote);
+      context.getRequest().setAttribute("returnUrl",returnUrl);
+      return ("ForwardMessageOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+  /**
    *  Takes a look at the User Session Object and prepares the MyCFSBean for the
    *  JSP. The bean will contain all the information that the JSP can see.
    *
@@ -369,11 +737,11 @@ public final class MyCFS extends CFSModule {
    *@since           1.1
    */
   public String executeCommandHome(ActionContext context) {
-	  
+
     if (!(hasPermission(context, "myhomepage-dashboard-view"))) {
-	    return ("PermissionError");
+      return ("PermissionError");
     }
-	
+
     addModuleBean(context, "Home", "");
     int headlines = 0;
     Exception errorMessage = null;
@@ -493,7 +861,6 @@ public final class MyCFS extends CFSModule {
         sql.append("LIMIT 10 ");
       }
 
-      //System.out.println(sql.toString());
       st = db.createStatement();
 
       //Execute the main query
@@ -565,7 +932,7 @@ public final class MyCFS extends CFSModule {
       PagedListInfo alertPaged2 = new PagedListInfo();
       alertPaged2.setItemsPerPage(0);
       alertPaged2.setColumnToSortBy("x.alertdate");
-      
+
       OpportunityList alertOpps = new OpportunityList();
       alertOpps.setPagedListInfo(alertPaged2);
       alertOpps.setEnteredBy(alertsDD);
@@ -607,11 +974,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyProfile(ActionContext context) {
-	  
-	if (!(hasPermission(context, "myhomepage-profile-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "myhomepage-profile-view"))) {
+      return ("PermissionError");
+    }
+
     addModuleBean(context, "MyProfile", "");
     return ("MyProfileOK");
   }
@@ -625,11 +992,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyCFSProfile(ActionContext context) {
-	
-	if (!(hasPermission(context, "myhomepage-profile-personal-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "myhomepage-profile-personal-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
     try {
@@ -658,50 +1025,43 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    *@since
    */
-  public String executeCommandUpdateProfile(ActionContext context) {
-	  
-	if (!(hasPermission(context, "myhomepage-profile-personal-edit"))) {
-	    return ("PermissionError");
-    	}
-	
-    Exception errorMessage = null;
-
-    Contact thisContact = (Contact) context.getFormBean();
-
-    Connection db = null;
-    int resultCount = 0;
-
-    try {
-      thisContact.setRequestItems(context.getRequest());
-      thisContact.setModifiedBy(getUserId(context));
-      db = this.getConnection(context);
-      resultCount = thisContact.update(db);
-
-      if (resultCount == -1) {
-        processErrors(context, thisContact.getErrors());
-        buildFormElements(context, db);
-      }
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        return (executeCommandMyCFSProfile(context));
-      } else if (resultCount == 1) {
-        return ("UpdateProfileOK");
-      } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
-  }
-
+  /*
+   *  public String executeCommandUpdateProfile(ActionContext context) {
+   *  if (!(hasPermission(context, "myhomepage-profile-personal-edit"))) {
+   *  return ("PermissionError");
+   *  }
+   *  Exception errorMessage = null;
+   *  Connection db = null;
+   *  int resultCount = 0;
+   *  try {
+   *  thisContact.setRequestItems(context.getRequest());
+   *  thisContact.setModifiedBy(getUserId(context));
+   *  db = this.getConnection(context);
+   *  resultCount = thisContact.update(db);
+   *  if (resultCount == -1) {
+   *  processErrors(context, thisContact.getErrors());
+   *  buildFormElements(context, db);
+   *  }
+   *  } catch (Exception e) {
+   *  errorMessage = e;
+   *  } finally {
+   *  this.freeConnection(context, db);
+   *  }
+   *  if (errorMessage == null) {
+   *  if (resultCount == -1) {
+   *  return (executeCommandMyCFSProfile(context));
+   *  } else if (resultCount == 1) {
+   *  return ("UpdateProfileOK");
+   *  } else {
+   *  context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+   *  return ("UserError");
+   *  }
+   *  } else {
+   *  context.getRequest().setAttribute("Error", errorMessage);
+   *  return ("SystemError");
+   *  }
+   *  }
+   */
 
   /**
    *  The user wants to change the password
@@ -711,11 +1071,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyCFSPassword(ActionContext context) {
-	  
-	if (!(hasPermission(context, "myhomepage-profile-password-edit"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "myhomepage-profile-password-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
     try {
@@ -744,11 +1104,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandUpdatePassword(ActionContext context) {
-	  
-	if (!(hasPermission(context, "myhomepage-profile-password-edit"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "myhomepage-profile-password-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -800,11 +1160,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyCFSSettings(ActionContext context) {
-	  
-	if (!(hasPermission(context, "myhomepage-profile-settings-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "myhomepage-profile-settings-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
     try {
@@ -833,11 +1193,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandUpdateSettings(ActionContext context) {
-	  
-	if (!(hasPermission(context, "myhomepage-profile-settings-edit"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "myhomepage-profile-settings-edit"))) {
+      return ("PermissionError");
+    }
+
     return ("UpdateSettingsOK");
   }
 

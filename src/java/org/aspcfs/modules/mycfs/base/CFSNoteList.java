@@ -16,13 +16,15 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *
  *@author     chris
  *@created    February 21, 2002
- *@version
+ *@version    $Id$
  */
 public class CFSNoteList extends Vector {
 
   private PagedListInfo pagedListInfo = null;
   private int sentTo = -1;
+  private int sentFrom = -1;
   private boolean oldMessagesOnly = false;
+  private boolean sentMessagesOnly = false;
 
 
   /**
@@ -55,6 +57,18 @@ public class CFSNoteList extends Vector {
   }
 
 
+
+  /**
+   *  Sets the SentFrom attribute of the CFSNoteList object
+   *
+   *@param  sentFrom  The new SentFrmm value
+   *@since
+   */
+  public void setSentFrom(int sentFrom) {
+    this.sentFrom = sentFrom;
+  }
+
+
   /**
    *  Sets the OldMessagesOnly attribute of the CFSNoteList object
    *
@@ -64,6 +78,18 @@ public class CFSNoteList extends Vector {
   public void setOldMessagesOnly(boolean oldMessagesOnly) {
     this.oldMessagesOnly = oldMessagesOnly;
   }
+
+
+  /**
+   *  Sets the sentMessagesOnly attribute of the CFSNoteList object
+   *
+   *@param  sentMessagesOnly  The sent Messages Only value
+   *@since
+   */
+  public void setSentMessagesOnly(boolean sentMessagesOnly) {
+    this.sentMessagesOnly = sentMessagesOnly;
+  }
+
 
 
   /**
@@ -86,6 +112,18 @@ public class CFSNoteList extends Vector {
   public int getSentTo() {
     return sentTo;
   }
+
+
+  /**
+   *  Gets the SentFrom attribute of the CFSNoteList object
+   *
+   *@return    The SentFrom value
+   *@since
+   */
+  public int getSentFrom() {
+    return sentFrom;
+  }
+
 
   // end buildList
 
@@ -119,10 +157,20 @@ public class CFSNoteList extends Vector {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
 
-    sqlCount.append(
-        "SELECT COUNT(*) AS recordcount " +
-        "FROM cfsinbox_message m " +
-        "WHERE m.id > -1 ");
+    if (sentMessagesOnly) {
+      sqlCount.append(
+          "SELECT COUNT(*) AS recordcount " +
+          "FROM cfsinbox_message m " +
+          "WHERE m.id > -1 AND m.delete_flag=" + DatabaseUtils.getFalse(db) + " ");
+    } else {
+      sqlCount.append(
+          "SELECT COUNT(*) AS recordcount " +
+          "FROM cfsinbox_messagelink ml,cfsinbox_message m " +
+          "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
+          "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
+          "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
+          "WHERE m.id > -1 AND (m.id = ml.id) ");
+    }
 
     createFilter(sqlFilter);
 
@@ -156,7 +204,7 @@ public class CFSNoteList extends Vector {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("subject", null);
+      pagedListInfo.setDefaultSort("entered", "desc");
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY entered desc ");
@@ -166,24 +214,32 @@ public class CFSNoteList extends Vector {
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     } else {
-      sqlSelect.append("SELECT ");
+      sqlSelect.append("SELECT DISTINCT ");
     }
-    sqlSelect.append(
-        "m.*, ml.*, ct_sent.namefirst as sent_namefirst, ct_sent.namelast as sent_namelast " +
-        "FROM cfsinbox_message m " +
-        "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
-        "LEFT JOIN cfsinbox_messagelink ml ON (m.id = ml.id) " +
-        "WHERE m.id > -1 ");
+
+    if (sentMessagesOnly) {
+      sqlSelect.append(
+          "m.id,m.subject,m.body,m.sent,m.delete_flag " +
+          "FROM cfsinbox_message m " +
+          "WHERE m.id > -1 AND m.delete_flag=" + DatabaseUtils.getFalse(db) + " ");
+    } else {
+      sqlSelect.append(
+          "m.*, ml.*, ct_sent.namefirst as sent_namefirst, ct_sent.namelast as sent_namelast " +
+          "FROM cfsinbox_messagelink ml,cfsinbox_message m " +
+          "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
+          "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
+          "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
+          "WHERE m.id > -1 AND (m.id = ml.id) ");
+    }
+
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    
+
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
+
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -192,7 +248,13 @@ public class CFSNoteList extends Vector {
         break;
       }
       ++count;
-      CFSNote thisNote = new CFSNote(rs);
+
+      CFSNote thisNote = new CFSNote();
+      if (pagedListInfo != null) {
+        thisNote.setCurrentView(pagedListInfo.getListView());
+      }
+      thisNote.buildRecord(rs);
+      thisNote.buildRecipientList(db);
       this.addElement(thisNote);
     }
     rs.close();
@@ -211,16 +273,17 @@ public class CFSNoteList extends Vector {
       sqlFilter = new StringBuffer();
     }
 
-    if (sentTo > -1) {
-      sqlFilter.append("AND m.id in (SELECT DISTINCT id FROM cfsinbox_messagelink WHERE sent_to = ?) ");
+    if (sentTo > -1 && !sentMessagesOnly) {
+      sqlFilter.append("AND ml.sent_to = ? ");
+    } else {
+      sqlFilter.append("AND m.enteredby = ? ");
     }
 
     if (oldMessagesOnly == true) {
-      sqlFilter.append("AND m.id in (SELECT DISTINCT id FROM cfsinbox_messagelink WHERE status = 2) ");
-    } else {
-      sqlFilter.append("AND m.id in (SELECT DISTINCT id FROM cfsinbox_messagelink WHERE status IN (0,1)) ");
+      sqlFilter.append("AND ml.status = 2 ");
+    } else if (!sentMessagesOnly) {
+      sqlFilter.append("AND ml.status IN (0,1) ");
     }
-
   }
 
 
@@ -235,8 +298,10 @@ public class CFSNoteList extends Vector {
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
 
-    if (sentTo > -1) {
+    if (sentTo > -1 && !sentMessagesOnly) {
       pst.setInt(++i, sentTo);
+    } else {
+      pst.setInt(++i, sentFrom);
     }
 
     return i;

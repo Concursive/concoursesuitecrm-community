@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+	//Copyright 2001 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -20,11 +20,14 @@ import com.darkhorseventures.utils.DatabaseUtils;
 public class CFSNote extends GenericBean {
 
   public final static int CALL = 1;
-
-  public final static int NEW = 0;
+  public final static int NEW  = 0;
   public final static int READ = 1;
-  public final static int OLD = 2;
-
+  public final static int OLD  = 2;
+  public final static int DELETE = 3;
+  public final static int SENDER = 1;
+  public final static int RECIPIENT = 2;
+  
+  public  String sentToList = ""; 
   private int id = -1;
   private String subject = "";
   private String body = "";
@@ -38,10 +41,12 @@ public class CFSNote extends GenericBean {
   private boolean enabled = true;
   private String sentName = "";
   private int type = -1;
-
+  private boolean deleteFlag = false;
+  private String currentView = "none";
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
-
+  protected HashMap recipientList;
+  
 
   /**
    *  Constructor for the CFSNote object
@@ -60,14 +65,14 @@ public class CFSNote extends GenericBean {
   }
 
 
-  /**
+   /**
    *  Constructor for the CFSNote object
    *
    *@param  db                Description of Parameter
    *@param  noteId            Description of Parameter
    *@exception  SQLException  Description of Exception
    */
-  public CFSNote(Connection db, String noteId) throws SQLException {
+  public CFSNote(Connection db, String noteId, int myId ,String listView) throws SQLException {
 
     Statement st = null;
     ResultSet rs = null;
@@ -75,15 +80,20 @@ public class CFSNote extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT m.*, ml.*, ct_sent.namefirst as sent_namefirst, ct_sent.namelast as sent_namelast " +
-        "FROM cfsinbox_message m " +
+	"FROM cfsinbox_messagelink ml,cfsinbox_message m " +
         "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
-        "LEFT JOIN cfsinbox_messagelink ml ON (m.id = ml.id) " +
-        "WHERE m.id > -1 ");
+        "WHERE m.id > -1 AND (m.id = ml.id) ");
 
     if (noteId != null && !noteId.equals("")) {
       sql.append("AND m.id = " + noteId + " ");
+      if(listView.equals("sent")){
+	      sql.append("AND ml.sent_from = " + myId + " ");
+      }
+      else{
+	      sql.append("AND ml.sent_to = " + myId + " ");
+      }
     } else {
       throw new SQLException("CFS Note ID not specified.");
     }
@@ -109,7 +119,7 @@ public class CFSNote extends GenericBean {
    *@param  noteId            Description of Parameter
    *@exception  SQLException  Description of Exception
    */
-  public CFSNote(Connection db, int noteId) throws SQLException {
+  public CFSNote(Connection db, int noteId, int myId,String listView) throws SQLException {
 
     Statement st = null;
     ResultSet rs = null;
@@ -117,15 +127,21 @@ public class CFSNote extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT m.*, ml.*, ct_sent.namefirst as sent_namefirst, ct_sent.namelast as sent_namelast " +
-        "FROM cfsinbox_message m " +
+        "FROM cfsinbox_messagelink ml,cfsinbox_message m " +
         "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
-        "LEFT JOIN cfsinbox_messagelink ml ON (m.id = ml.id) " +
-        "WHERE m.id > -1 ");
+        "WHERE m.id > -1 AND (m.id = ml.id) ");
 
     if (noteId > -1) {
       sql.append("AND m.id = " + noteId + " ");
+      //sql.append("AND ml.sent_to = " + myId + " ");
+      if(listView.equalsIgnoreCase("sent")){
+	      sql.append("AND ml.sent_from = " + myId + " ");
+      }
+      else{
+	      sql.append("AND ml.sent_to = " + myId + " ");
+      }
     } else {
       throw new SQLException("Invalid CFS Note ID.");
     }
@@ -142,6 +158,8 @@ public class CFSNote extends GenericBean {
     rs.close();
     st.close();
   }
+
+
 
 
   /**
@@ -326,7 +344,81 @@ public class CFSNote extends GenericBean {
   }
 
 
+  
   /**
+   *  Sets the DeleteFlag attribute of the CFSNote object
+   *
+   *@param  DeleteFlag to  The new delete_flag value
+   */
+  
+  public void setDeleteFlag(boolean deleteFlag) {
+	this.deleteFlag = deleteFlag;
+  }
+  
+  /**
+   *  Sets the  CurrentView attribute of the CFSNote object
+   *
+   *@param  CurrentView to  The new delete_flag value
+   */
+  public void setCurrentView(String currentView) {
+		this.currentView = currentView;
+	}
+
+ 
+ 
+ /**
+   *  Gets the recipientList attribute of the CFSNote object
+   *
+   *@return    The recipientList value
+   */
+  public HashMap getRecipientList() {
+	return recipientList;
+}
+
+  
+  /**
+   *  Gets the RecipientList attribute of the CFSNote object
+   *
+   *@return    The RecipientList value
+  */
+  public HashMap buildRecipientList(Connection db) throws SQLException{
+    Statement st = null;
+    ResultSet rs = null;
+    sentToList   = "";
+    StringBuffer sql = new StringBuffer();
+    HashMap recipients = new HashMap();
+    
+    sql.append(
+        "SELECT ct_eb.namefirst as sent_namefirst, ct_eb.namelast as sent_namelast,ml.status " +
+        "FROM cfsinbox_messagelink ml " +
+        "LEFT JOIN contact ct_eb ON (ml.sent_to = ct_eb.user_id) " +
+        "WHERE ml.id > -1 AND ml.id = '"+this.getId()+"' ");
+
+    try{
+      if(id != -1){
+        st = db.createStatement();
+        rs = st.executeQuery(sql.toString());
+        while (rs.next()) {
+          String recipient = rs.getString("sent_namefirst") + " " + rs.getString("sent_namelast");
+          Integer status    = new Integer(rs.getInt("status"));
+          recipients.put(recipient,status);
+        }
+        rs.close();
+        st.close();
+   }
+    this.recipientList = recipients;
+   } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+   } finally {
+      db.setAutoCommit(true);
+    }
+   return recipients;
+}
+
+ 
+ /**
    *  Gets the sentName attribute of the CFSNote object
    *
    *@return    The sentName value
@@ -335,8 +427,7 @@ public class CFSNote extends GenericBean {
     return sentName;
   }
 
-
-  /**
+   /**
    *  Gets the statusText attribute of the CFSNote object
    *
    *@return    The statusText value
@@ -346,12 +437,50 @@ public class CFSNote extends GenericBean {
       return ("Unread");
     } else if (status == 1) {
       return ("Read");
-    } else {
+    } else if (status == 2) {
       return ("Archived");
+    } else {
+      return ("Deleted");
     }
   }
 
-
+  
+  /**
+   *  Gets the statusColor of the CFSNote object
+   *
+   *@return    The statusColor value
+   */
+  public String getStatusColor(int noteStatus){
+     if (noteStatus == 0) {
+      return ("red");	
+    } else if (noteStatus == 1) {
+      return ("blue");
+    } else if (noteStatus == 2) {
+      return ("orange");
+    } else {
+      return ("green");
+    }
+  }
+  
+  
+    /**
+   *  Gets the statusText of the CFSNote object
+   *
+   *@return    The statusText value
+   */
+  public String getStatusText(int noteStatus){
+     if (noteStatus == 0) {
+      return ("Unread");	
+    } else if (noteStatus == 1) {
+      return ("Read");
+    } else if (noteStatus == 2) {
+      return ("Archived");
+    } else {
+      return ("Deleted");
+    }
+  }
+    
+    
   /**
    *  Gets the type attribute of the CFSNote object
    *
@@ -547,6 +676,25 @@ public class CFSNote extends GenericBean {
     return ("");
   }
 
+  
+  /**
+   *  Gets the DeleteFlag attribute of the CFSNote object
+   *
+   *@return    The  DeleteFlag value
+   */
+  public boolean getDeleteFlag() {
+	return deleteFlag;
+  }
+  
+  /**
+   *  Gets the CurrentView attribute of the CFSNote object
+   *
+   *@return    The  CurrentView value
+   */
+  public String getCurrentView() {
+		return currentView;
+  }
+
 
   /**
    *  Description of the Method
@@ -555,7 +703,7 @@ public class CFSNote extends GenericBean {
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
-  public boolean insert(Connection db) throws SQLException {
+  public boolean insert(Connection db,int person) throws SQLException {
 
     if (!isValid(db)) {
       return false;
@@ -565,10 +713,11 @@ public class CFSNote extends GenericBean {
 
     try {
       db.setAutoCommit(false);
+      if(person == SENDER){
       sql.append(
           "INSERT INTO cfsinbox_message " +
-          "(enteredby, modifiedby, body, reply_id, type) " +
-          "VALUES (?, ?, ?, ?, ?) ");
+          "(enteredby, modifiedby, body, reply_id, type, delete_flag) " +
+          "VALUES (?, ?, ?, ?, ?, ?) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -577,17 +726,21 @@ public class CFSNote extends GenericBean {
       pst.setString(++i, this.getBody());
       pst.setInt(++i, this.getReplyId());
       pst.setInt(++i, this.getType());
+      pst.setBoolean(++i, this.getDeleteFlag());
       pst.execute();
       pst.close();
 
       id = DatabaseUtils.getCurrVal(db, "cfsinbox_message_id_seq");
+     }else if(person == RECIPIENT){
       this.insertLink(db);
+     }
       this.update(db, true);
       db.commit();
     } catch (SQLException e) {
       db.rollback();
       db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+      
     } finally {
       db.setAutoCommit(true);
     }
@@ -616,7 +769,6 @@ public class CFSNote extends GenericBean {
       pst.setInt(++i, this.getId());
       pst.setInt(++i, this.getSentTo());
       pst.setInt(++i, this.getEnteredBy());
-
       pst.execute();
       pst.close();
     } catch (SQLException e) {
@@ -657,36 +809,80 @@ public class CFSNote extends GenericBean {
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of Parameter
-   *@param  myId              Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   */
-  public boolean delete(Connection db, int myId) throws SQLException {
+   public boolean delete(Connection db, int myId) throws SQLException {
 
     try {
+      PreparedStatement pst = null;
+      ResultSet rs = null;
+      int inboxCount = -1 ,outboxCount =-1;
+      String outboxQuery = "SELECT count(*) as outboxcount FROM cfsinbox_message "+
+			   "WHERE id ='" + this.getId() +"' "+
+			   "AND delete_flag ="+DatabaseUtils.getFalse(db)+" ";
+      
+      String inboxQuery   = "SELECT count(*) as inboxcount FROM cfsinbox_messagelink "+
+			    "WHERE id =" + this.getId() +" "+
+			    "AND status <> 3 ";
+			   
       db.setAutoCommit(false);
       Statement st = db.createStatement();
+      
+      //Get the status of deleted msgs by sender
+      pst = db.prepareStatement(outboxQuery);
+      rs  = pst.executeQuery();
+      if (rs.next()) {
+          outboxCount = rs.getInt("outboxcount");
+      }
+      pst.close();
+      rs.close();
+      //Get the count of deleted msgs by the recipients
+      pst = db.prepareStatement(inboxQuery);
+      rs = pst.executeQuery();
+      if (rs.next()) {
+	  inboxCount   = rs.getInt("inboxcount");
+      }
+      
+      pst.close();
+      rs.close();
+      
+      if((outboxCount ==0 && inboxCount == 1) || (outboxCount ==1 && inboxCount == 0)){//sender & recipient(s) have marked messages to be deleted 
       st.executeUpdate(
         "DELETE FROM cfsinbox_messagelink " +
         "WHERE id = " + this.getId() + " " +
         "AND sent_to = " + myId + " ");
+   
       st.executeUpdate(
         "DELETE FROM cfsinbox_message " +
         "WHERE id = " + this.getId() + " ");
+      }else{//atleast one of the sender or the recipient(s) has not deleted message
+      
+      if(!getCurrentView().equalsIgnoreCase("sent")){//inbox or archived delete
+      //Mark status as 3 
+      st.executeUpdate(
+        "UPDATE cfsinbox_messagelink "+
+        "SET status = 3 "+
+        "WHERE  id ='"+this.getId()+"' AND sent_to ='" +myId+ "' ");
+      }else{//Outbox delete
+      //Set delete_flag 
+      st.executeUpdate(
+        "UPDATE cfsinbox_message "+
+        "SET delete_flag ="+DatabaseUtils.getTrue(db)+ " " +
+        "WHERE  id =" +this.getId()+ " ") ;
+      }
       st.close();
+     }
     } catch (SQLException e) {
       db.rollback();
-      System.out.println(e.toString());
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("CFSNote-> "+e.toString());
+      }
     } finally {
       db.setAutoCommit(true);
     }
     return true;
   }
 
+  
+  
 
   /**
    *  Description of the Method
@@ -708,16 +904,15 @@ public class CFSNote extends GenericBean {
     sql.append(
         "UPDATE cfsinbox_messagelink " +
         "SET status = ?, viewed = CURRENT_TIMESTAMP " +
-        "WHERE id = ? ");
+        "WHERE id = ? AND sent_to = ? ");
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, this.getStatus());
     pst.setInt(++i, this.getId());
-
+    pst.setInt(++i, this.getSentTo());
     resultCount = pst.executeUpdate();
     pst.close();
-
     return resultCount;
   }
 
@@ -806,6 +1001,8 @@ public class CFSNote extends GenericBean {
    *@since
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
+    
+    if(!getCurrentView().equalsIgnoreCase("sent")){
     //cfsinbox_message table
     this.setId(rs.getInt("id"));
     subject = rs.getString("subject");
@@ -817,15 +1014,25 @@ public class CFSNote extends GenericBean {
     modified = rs.getTimestamp("modified");
     type = rs.getInt("type");
     modifiedBy = rs.getInt("modifiedby");
+    deleteFlag = rs.getBoolean("delete_flag");
+    sentTo  = rs.getInt("sent_to");
     
-    //cfsinbox_messagelink table
-    sentTo = rs.getInt("sent_to");
     status = rs.getInt("status");
     viewed = rs.getTimestamp("viewed");
 
     //contact table
     sentName = rs.getString("sent_namefirst") + " " + rs.getString("sent_namelast");
+    
+    } else{
+   //outbox case
+    this.setId(rs.getInt("id"));
+    subject    = rs.getString("subject");
+    body       = rs.getString("body");
+    entered       = rs.getTimestamp("sent");
+    deleteFlag = rs.getBoolean("delete_flag");
+    }
   }
-
+  
+ 
 }
 

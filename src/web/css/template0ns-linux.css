@@ -12,7 +12,9 @@ BODY  { font-family: verdana, helvetica, arial, sans-serif; font-size: 10pt; bac
   .column { color: #000080; font-weight: bold; }
   .row1old { background: #E5E5E5; }
   .row1 { background: #EDEDED; }
+  .row1hl { background: #FFFDED; }
   .row2 { background: #FFFFFF; }
+  .row2hl { background: #FFFDED; }
   .columntext1 { color: #000080; }
   .error { color: #006699; }
   

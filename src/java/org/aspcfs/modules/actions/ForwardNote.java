@@ -48,7 +48,7 @@ public final class ForwardNote extends CFSModule {
 				 }
 				 //forwarding a note
 				 else if (Integer.parseInt(linkModId) == Constants.CFSNOTE) {
-					thisNote = new CFSNote(db, linkRecId);
+					thisNote = new CFSNote(db, linkRecId,getUserId(context),"none");
 					thisNote.setBody("----Original Message----\nFrom: " + thisNote.getSentName() + "\nSent: " + thisNote.getEnteredDateTimeString() + "\nTo: " +
 						thisUser.getNameFirst() + " " + thisUser.getNameLast() + 
 						"\nSubject: " + thisNote.getSubject() + "\n\n" + thisNote.getBody());
@@ -128,14 +128,16 @@ public final class ForwardNote extends CFSModule {
 			db = this.getConnection(context);
 			list.buildList(db);
 			context.getRequest().setAttribute("NoteDetails", thisNote);
-			
 			thisRecord.buildResources(db);
+			recordInserted = thisNote.insert(db,1);
+				if (!recordInserted) 
+				processErrors(context, thisNote.getErrors());
+				
 			String replyAddr = thisRecord.getContact().getEmailAddress("Business");
-		
 			String[] params = context.getRequest().getParameterValues("selectedList");
 			for (k=0; k<params.length; k++) {
 				thisNote.setSentTo(Integer.parseInt(params[k]));
-				recordInserted = thisNote.insert(db);
+				recordInserted = thisNote.insert(db,2);
 	
 				if (!recordInserted) {
 					processErrors(context, thisNote.getErrors());
@@ -144,8 +146,6 @@ public final class ForwardNote extends CFSModule {
 					tempUser.setBuildContact(true);
 					tempUser.buildResources(db);
 				
-					CFSNote tempNote = new CFSNote(db, thisNote.getId());
-					
 					SMTPMessage mail = new SMTPMessage();
 					mail.setHost("127.0.0.1");
 				
@@ -157,8 +157,8 @@ public final class ForwardNote extends CFSModule {
 					mail.setType("text/html");
 					mail.setTo(tempUser.getContact().getEmailAddress("Business"));
 				
-					mail.setSubject(tempNote.getSubject());
-					mail.setBody("The following message was sent to your CFS Inbox by " + tempNote.getSentName() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + toHtml(tempNote.getBody()));
+					mail.setSubject(thisNote.getSubject());
+					mail.setBody("The following message was sent to your CFS Inbox by " + thisNote.getSentName() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + toHtml(thisNote.getBody()));
 				
 					if (mail.send() == 2) {
 						System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");

@@ -24,12 +24,13 @@
     
 <dhv:permission name="contacts-external_contacts-calls-edit"><input type="submit" name="command" value="Modify"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-calls-delete"><input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()"></dhv:permission>
+<dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='/ExternalContactsCallsForward.do?command=ForwardMessage&popup=true&forwardType=8&id=<%=CallDetails.getId()%>&return=/ExternalContacts.do?command=ListContacts'"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete"><br>&nbsp;</dhv:permission>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
-      <strong>Call Details</strong> [ <a href="javascript:popURLReturn('/ForwardNote.do?command=ShowForm&linkRecordId=<%=CallDetails.getId()%>&linkModuleId=8&popup=true','ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>','Forward_Call','600','450','yes','no');">Forward</a> ]
+      <strong>Call Details</strong>  
     </td>
   </tr>
   <tr class="containerBody">
@@ -94,6 +95,7 @@
 <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete"><br></dhv:permission>
 <dhv:permission name="contacts-external_contacts-calls-edit"><input type="submit" name="command" value="Modify"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-calls-delete"><input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()"></dhv:permission>
+<dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='/MyCFSInbox.do?command=ForwardMessage&popup=true&forwardType=8&id=<%=CallDetails.getId()%>&return=/ExternalContacts.do?command=ListContacts'"></dhv:permission>
 </td>
 </tr>
 </table>
