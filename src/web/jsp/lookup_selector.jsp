@@ -54,7 +54,9 @@
   <input type=hidden name="elementvalue<%=count%>" value="<%=thisElt.getDescription()%>">
   </td>
   </tr>
-  <%}%>
+  <%} else {
+    count--;
+  }%>
   
   <%}
   } else {%>
