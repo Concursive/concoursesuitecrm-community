@@ -1,6 +1,12 @@
 ## These files will be deleted by ant deploy
 ## and exist in the CFS_HOME directory
 
+## 2003-09-05 moved to fileLibrary directory
+WEB-INF/build.properties
+WEB-INF/notifier.xml
+WEB-INF/build.xml
+WEB-INF/keystore
+
 ## 2003-08-07 no longer is repository
 actionlist/action_lists_addcontacts.jsp
 
