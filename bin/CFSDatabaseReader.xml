@@ -83,8 +83,8 @@
       <property>id</property>
       <property lookup="user">owner</property>
       <property>description</property>
-      <property lookup="account">acctlink</property>
-      <property lookup="contact">contactlink</property>
+      <property lookup="">acctlink</property>
+      <property lookup="">contactlink</property>
       <property>closedate</property>
       <property>closeprob</property>
       <property>terms</property>
