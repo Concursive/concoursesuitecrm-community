@@ -31,16 +31,20 @@
     </td>
     </dhv:permission>
     <td valign=center align=left>
-      <strong>Opportunity Name</strong>
+	<strong><a href="/Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=description">Description</a></strong>
+	<%= OpportunityPagedInfo.getSortIcon("description") %>
     </td>
     <td valign=center align=left>
-      <strong>Best Guess Amount</strong>
+	<strong><a href="/Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=guessvalue">Guess Amount</a></strong>
+	<%= OpportunityPagedInfo.getSortIcon("guessvalue") %>
     </td>
     <td valign=center align=left>
-      <strong>Close Date</strong>
+      	<strong><a href="/Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=closedate">Close Date</a></strong>
+	<%= OpportunityPagedInfo.getSortIcon("closedate") %>
     </td>
     <td valign=center align=left>
-      <strong>Current Stage</strong>
+      	<strong><a href="/Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=stage">Current Stage</a></strong>
+	<%= OpportunityPagedInfo.getSortIcon("stage") %>
     </td>  
   </tr>
 
@@ -65,18 +69,18 @@
           <dhv:permission name="accounts-accounts-opportunities-edit"><a href="/Opportunities.do?command=Modify&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%=thisOpp.getContactLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:confirmDelete('/Opportunities.do?command=Delete&id=<%= thisOpp.getId()%>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink() %>');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
-    <td width=40% valign=center class="row<%= rowid %>">
+    <td width=100% valign=center class="row<%= rowid %>">
       <a href="/Opportunities.do?command=Details&id=<%=thisOpp.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">
       <%= toHtml(thisOpp.getDescription()) %></a>
     </td>
-    <td width=20% valign=center nowrap class="row<%= rowid %>">
+    <td width=125 valign=center nowrap class="row<%= rowid %>">
       $<%= thisOpp.getGuessCurrency() %>
     </td>
-    <td width=20% valign=center nowrap class="row<%= rowid %>">
+    <td width=125 valign=center nowrap class="row<%= rowid %>">
       <%= toHtml(thisOpp.getCloseDateString()) %>
     </td>
-    <td width=20% valign=center class="row<%= rowid %>">
-      <%= thisOpp.getStageName() %>
+    <td width=125 valign=center nowrap class="row<%= rowid %>">
+      <%= toHtml(thisOpp.getStageName()) %>
     </td>		
   </tr>
 <%}%>

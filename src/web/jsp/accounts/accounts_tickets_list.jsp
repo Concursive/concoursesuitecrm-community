@@ -33,7 +33,7 @@
   </td>
   </dhv:permission>
     <td valign=center align=left>
-      <strong>Status</strong>
+      	<strong>Status</strong>
     </td>
     <td>
       <b><dhv:label name="tickets-problem">Issue</dhv:label></b>
