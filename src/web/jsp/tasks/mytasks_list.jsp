@@ -8,7 +8,6 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/images.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/tasks.js"></SCRIPT>
 <body onLoad="javascript:document.forms['addTask'].description.focus();">
-<br>
 
 <form name="addTask" action="/MyTasks.do?command=Insert&auto-populate=true" method="post">
  <table cellpadding="4" cellspacing="0" border="1" width="45%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -36,11 +35,10 @@
   </tr>
  </table>
 </form>
+
+<a href="javascript:window.location.href='MyTasks.do?command=New'">Add an Advanced Task</a><br>
 <br>
 
-<a href='javascript:window.location.href="MyTasks.do?command=New"'>Add a Advanced Task</a>
-<br>
-<br>
 <form name="taskListView" method="post" action="/MyTasks.do?command=ListTasks">
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
 <table width="20%" border="0">
@@ -55,9 +53,9 @@
      <%if(!TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("all")){%>
      <td>
        <select size="1" name="listFilter2" onChange="javascript:document.taskListView.submit();">
-        <option value="false" <%=TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("false")?" selected":""%>>InComplete Tasks</option>
+        <option value="false" <%=TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("false")?" selected":""%>>Incomplete Tasks</option>
         <option value="true" <%=TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("true")?" selected":""%>>Completed Tasks</option>
-        <option value="all" <%=TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("all")?" selected":""%>>All</option>
+        <option value="all" <%=TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("all")?" selected":""%>>Any Status</option>
       </select>
       </td>
       <%}%>
@@ -69,9 +67,8 @@
       <strong>Action</strong>
     </td>
     <td align=center width="8%" nowrap>
-    <strong><a href="MyTasks.do?command=ListTasks&column=t.priority">Priority</a></strong>
-    <%= TaskListInfo.getSortIcon("t.priority") %>
-    </td>
+      <strong><a href="MyTasks.do?command=ListTasks&column=t.priority">Priority</a></strong>
+      <%= TaskListInfo.getSortIcon("t.priority") %>
     </td>
      <td align=left width="68%" nowrap>
       <strong><a href="MyTasks.do?command=ListTasks&column=t.description">Task</a></strong>
@@ -193,26 +190,22 @@
       </td>
     <%}%>
     
-    <td nowrap align="center" valign="top">
-      <%= thisTask.getAgeString() %>
-    </td>
+      <td nowrap align="center" valign="top">
+        <%= thisTask.getAgeString() %>
+      </td>
     </tr>
     <%
       }
     }
     else {%>
       <tr bgcolor="white">
-        <td colspan="4" valign="center">
-          No contacts matched query.
+        <td colspan="6" valign="center">
+          No tasks found in this view.
         </td>
       </tr>
       <%}%>
-      </table>
-      </form>
-      <br>
-      <dhv:pagedListControl object="TaskListInfo" tdClass="row1"/>
-      <br><br>
-
-<br>
+    </table>
+  </form>
+  <dhv:pagedListControl object="TaskListInfo" tdClass="row1"/>
 </body>
     
