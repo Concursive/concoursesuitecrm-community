@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="SelectedList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <jsp:useBean id="moduleId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="SubTitle" class="java.lang.String" scope="request"/>
 <jsp:useBean id="category" class="java.lang.String" scope="request"/>
@@ -15,10 +16,11 @@
     }
   }
 </script>
+<body onLoad="javascript:document.forms['modifyList'].newValue.focus();">
 <form name="modifyList" method="post" action="Admin.do?command=UpdateList" onSubmit="return doCheck();">
 <a href="Admin.do">Setup</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
-<a href="Admin.do?command=ConfigDetails&moduleId=<%=moduleId%>">Configuration Options</a> >
+<a href="Admin.do?command=ConfigDetails&moduleId=<%=moduleId%>"><%=PermissionCategory.getCategory()%></a> >
 <a href="Admin.do?command=EditLists&moduleId=<%=moduleId%>">Lookup Lists</a> > 
 Edit List<br>
 <hr color="#BFBFBB" noshade>
