@@ -81,6 +81,10 @@ public class Ticket extends GenericBean {
   private int campaignId = -1;
   private boolean hasEnabledOwnerAccount = true;
 
+  private boolean buildFiles = false;
+  private boolean buildTasks = false;
+  private boolean buildHistory = false;
+  
   private TicketLogList history = new TicketLogList();
   private FileItemList files = new FileItemList();
   private TaskList tasks = new TaskList();
@@ -174,9 +178,15 @@ public class Ticket extends GenericBean {
       thisContact = null;
     }
 
-    this.buildHistory(db);
-    this.buildFiles(db);
-    this.buildTasks(db);
+    if (buildHistory) {
+      this.buildHistory(db);
+    }
+    if (buildFiles) {
+      this.buildFiles(db);
+    }
+    if (buildTasks) {
+      this.buildTasks(db);
+    }
   }
 
 
@@ -674,6 +684,66 @@ public class Ticket extends GenericBean {
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the buildFiles attribute of the Ticket object
+   *
+   *@param  buildFiles  The new buildFiles value
+   */
+  public void setBuildFiles(boolean buildFiles) {
+    this.buildFiles = buildFiles;
+  }
+
+
+  /**
+   *  Sets the buildTasks attribute of the Ticket object
+   *
+   *@param  buildTasks  The new buildTasks value
+   */
+  public void setBuildTasks(boolean buildTasks) {
+    this.buildTasks = buildTasks;
+  }
+
+
+  /**
+   *  Sets the buildHistory attribute of the Ticket object
+   *
+   *@param  buildHistory  The new buildHistory value
+   */
+  public void setBuildHistory(boolean buildHistory) {
+    this.buildHistory = buildHistory;
+  }
+
+
+  /**
+   *  Gets the buildFiles attribute of the Ticket object
+   *
+   *@return    The buildFiles value
+   */
+  public boolean getBuildFiles() {
+    return buildFiles;
+  }
+
+
+  /**
+   *  Gets the buildTasks attribute of the Ticket object
+   *
+   *@return    The buildTasks value
+   */
+  public boolean getBuildTasks() {
+    return buildTasks;
+  }
+
+
+  /**
+   *  Gets the buildHistory attribute of the Ticket object
+   *
+   *@return    The buildHistory value
+   */
+  public boolean getBuildHistory() {
+    return buildHistory;
   }
 
 
@@ -1974,21 +2044,21 @@ public class Ticket extends GenericBean {
       db.setAutoCommit(false);
       //delete any related action list items
       ActionItemLog.deleteLink(db, this.getId(), Constants.TICKET_OBJECT);
-      
+
       //delete all log data
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM ticketlog WHERE ticketid = ?");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      
+
       //delete related tasks
       pst = db.prepareStatement(
           "DELETE FROM tasklink_ticket WHERE ticket_id = ?");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      
+
       //delete the ticket
       pst = db.prepareStatement(
           "DELETE FROM ticket WHERE ticketid = ?");
