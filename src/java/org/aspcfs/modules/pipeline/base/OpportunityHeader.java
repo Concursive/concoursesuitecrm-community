@@ -1249,7 +1249,7 @@ public class OpportunityHeader extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "SELECT sum(guessvalue) as total " +
         "FROM opportunity_component oc " +
-        "WHERE oc.opp_id = ? " +
+        "WHERE oc.opp_id = ? AND oc.closed IS NULL " +
         (ownerId != -1 ? "AND oc.owner = ? " : ""));
     pst.setInt(1, id);
     if (ownerId != -1) {

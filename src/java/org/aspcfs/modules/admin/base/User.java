@@ -1945,7 +1945,7 @@ public class User extends GenericBean {
         "SELECT SUM(oc.guessvalue) AS sum " +
         "FROM opportunity_component oc " +
         "WHERE oc.owner IN (" + this.getIdRange() + ") " +
-        "AND oc.enabled = ? ");
+        "AND oc.enabled = ? AND oc.closed IS NULL ");
     pst.setBoolean(1, true);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
