@@ -45,22 +45,24 @@
   }
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
-<%
-  boolean popUp = false;
-  if(request.getParameter("popup")!=null){
-    popUp = true;
-  }
-%>
   <form name="addEmployee" action="CompanyDirectory.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+  <dhv:evaluate exp="<%= !isPopup(request) %>">
   <a href="MyCFS.do?command=Home">My Home Page</a> > 
   Add Employee<br>
   <hr color="#BFBFBB" noshade>
+  </dhv:evaluate>
   <input type="hidden" name="empid" value="<%= ContactDetails.getId() %>">
   <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
   <input type="submit" value="Save" name="Save" onClick="this.form.dosubmit.value='true';">
+  <dhv:evaluate exp="<%= !isPopup(request) %>">
   <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
+  </dhv:evaluate>
+  <% if(isPopup(request)){ %>
+    <input type="submit" value="Cancel" onClick="javascript:window.close();">
+  <% }else{ %>
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
   <input type="hidden" name="dosubmit" value="true">
+  <%}%>
 <input type=reset value="Reset">
 <br>
 <%= showError(request, "actionError") %>
@@ -117,8 +119,16 @@
 
 <br>
   <input type="submit" value="Save" name="Save" onClick="this.form.dosubmit.value='true';">
+  <dhv:evaluate exp="<%= !isPopup(request) %>">
   <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
+  </dhv:evaluate>
+  <% if(isPopup(request)){ %>
+    <input type="submit" value="Cancel" onClick="javascript:window.close();">
+  <% }else{ %>
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
+  <input type="hidden" name="dosubmit" value="true">
+  <%}%>
   <input type="reset" value="Reset">
+  <%= addHiddenParams(request, "popup|source") %>
 </form>
 </body>
