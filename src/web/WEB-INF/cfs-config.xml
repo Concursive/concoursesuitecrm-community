@@ -117,17 +117,6 @@
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="PopLookupOK" resource="/lookup_selector.jsp" layout="style"/>
    </action>
-   
-  <action name="ForwardNote" class="org.aspcfs.modules.actions.ForwardNote">
-    <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
-    <forward name="SecurityCheck" resource="/login.jsp"/>
-    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
-    <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
-    <forward name="PopupOK" resource="/forwardnote_form.jsp" layout="style"/>
-    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
-    <forward name="MakeUserListOK" resource="/forwardnote_makeuserlist.jsp"/>
-  </action>
-  
   
   <action name="MyTasks" class="org.aspcfs.modules.tasks.actions.MyTasks">
     <bean name="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request" />
