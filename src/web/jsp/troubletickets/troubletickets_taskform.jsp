@@ -8,7 +8,7 @@
 <input type="button" value="Cancel" onClick="javascript:window.close();"><br>
 <%= showError(request, "actionError") %>
 
-<%@ include file="../tasks/task_form.jsp" %>
+<%@ include file="../tasks/task_include.jsp" %>
 
 <br>
 <input type="submit" value="<%= Task.getId() == -1 ? "Save" : "Update" %>">
