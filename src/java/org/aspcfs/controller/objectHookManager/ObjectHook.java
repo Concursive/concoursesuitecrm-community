@@ -30,6 +30,7 @@ public class ObjectHook extends Thread {
   private Object object = null;
   private Object previousObject = null;
   private int method = 0;
+  private String fileLibraryPath = null;
 
 
   /**
@@ -74,6 +75,10 @@ public class ObjectHook extends Thread {
   public void setMethod(int tmp) {
     this.method = tmp;
   }
+  
+  public void setFileLibraryPath(String tmp) {
+    this.fileLibraryPath = tmp;
+  }
 
 
   /**
@@ -91,6 +96,7 @@ public class ObjectHook extends Thread {
           db = sqlDriver.getConnection(ce);
           ((BaseObjectHook) hook).setConnection(db);
         }
+        ((BaseObjectHook) hook).setFileLibraryPath(fileLibraryPath);
         switch (method) {
             case INSERT:
               ((BaseObjectHook) hook).processInsert();

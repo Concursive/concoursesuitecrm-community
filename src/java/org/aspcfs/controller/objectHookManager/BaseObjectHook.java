@@ -39,6 +39,8 @@ public interface BaseObjectHook {
    *@param  tmp  The new currentObject value
    */
   public void setCurrentObject(Object tmp);
+  
+  public void setFileLibraryPath(String tmp);
 
 
   /**

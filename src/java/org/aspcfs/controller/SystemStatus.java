@@ -22,14 +22,14 @@ import org.w3c.dom.Element;
  */
 public class SystemStatus {
 
-  Date permissionCheck = new Date();
-  Date hierarchyCheck = new Date();
-  UserList hierarchyList = new UserList();
-  boolean hierarchyUpdating = false;
-  ArrayList ignoredFields = new ArrayList();
-  Hashtable fieldLabels = new Hashtable();
-  ObjectHookList hooks = new ObjectHookList();
-
+  private Date permissionCheck = new Date();
+  private Date hierarchyCheck = new Date();
+  private UserList hierarchyList = new UserList();
+  private boolean hierarchyUpdating = false;
+  private ArrayList ignoredFields = new ArrayList();
+  private Hashtable fieldLabels = new Hashtable();
+  private ObjectHookList hooks = new ObjectHookList();
+  private String fileLibraryPath = null;
 
   /**
    *  Constructor for the SystemStatus object
@@ -73,6 +73,7 @@ public class SystemStatus {
     this.hierarchyCheck = tmp;
   }
 
+  public void setFileLibraryPath(String tmp) { this.fileLibraryPath = tmp; }
 
   /**
    *  Gets the PermissionCheck attribute of the SystemStatus object
@@ -267,6 +268,7 @@ public class SystemStatus {
       }
     }
 
+    hooks.setFileLibraryPath(fileLibraryPath);
     hooks.clear();
     hooks.parse(hookData);
   }

@@ -14,11 +14,14 @@ import com.darkhorseventures.utils.*;
  */
 public class ObjectHookList extends HashMap {
 
+  private String fileLibraryPath = null;
+  
   /**
    *  Constructor for the ObjectHookList object
    */
   public ObjectHookList() { }
-
+  
+  public void setFileLibraryPath(String tmp) { this.fileLibraryPath = tmp; }
 
   /**
    *  Queries the database and retrieves the configured hooks from the
@@ -109,6 +112,7 @@ public class ObjectHookList extends HashMap {
       if (this.has(object)) {
         String classHook = (String) this.get(object.getClass().getName());
         ObjectHook thisHook = new ObjectHook(sqlDriver, ce, classHook, object);
+        thisHook.setFileLibraryPath(fileLibraryPath);
         thisHook.setMethod(ObjectHook.INSERT);
         thisHook.start();
       }
@@ -130,6 +134,7 @@ public class ObjectHookList extends HashMap {
       if (this.has(object)) {
         String classHook = (String) this.get(object.getClass().getName());
         ObjectHook thisHook = new ObjectHook(sqlDriver, ce, classHook, previousObject, object);
+        thisHook.setFileLibraryPath(fileLibraryPath);
         thisHook.setMethod(ObjectHook.UPDATE);
         thisHook.start();
       }
@@ -150,6 +155,7 @@ public class ObjectHookList extends HashMap {
       if (this.has(previousObject)) {
         String classHook = (String) this.get(previousObject.getClass().getName());
         ObjectHook thisHook = new ObjectHook(sqlDriver, ce, classHook, previousObject, null);
+        thisHook.setFileLibraryPath(fileLibraryPath);
         thisHook.setMethod(ObjectHook.DELETE);
         thisHook.start();
       }
