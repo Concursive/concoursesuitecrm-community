@@ -189,9 +189,23 @@ determined user is ${USER}
 	</target>
   
   <target name="isavvix" description="compile isavvix into JAR">
+    <echo message=" Source: ${SRC_CLASSES}"/>
+		<javac srcdir="${SRC_CLASSES}/com/isavvix" verbose="off">
+			<classpath>
+				<path refid="cfs2.classpath"/>
+			</classpath>
+		</javac>
+		<delete file="${SRC_LIB}/isavvix.jar"/>
     <jar jarfile="${SRC_LIB}/isavvix.jar"
 				basedir="${SRC_CLASSES}"
 				includes="com/isavvix/**/*.class"/>
+    <exec executable="chown" os="Linux" failonerror="true">
+			<arg value="${USER}.${CFSGRP}"/>
+			<arg value="${SRC_LIB}/isavvix.jar"/>
+		</exec>
+		<delete>
+			<fileset dir= "${SRC_CLASSES}/com/isavvix" includes="**/*.class"/>
+		</delete>
   </target>
 
 	<target name="darkhorseventures" description="compile dark horse classes into JAR"
