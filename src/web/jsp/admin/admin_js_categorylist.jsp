@@ -7,10 +7,13 @@
 </head>
 <body onload="page_init();">
 <script language="JavaScript">
-function newOpt(param, value) {
+function newOpt(param, value, color) {
   var newOpt = parent.document.createElement("OPTION");
 	newOpt.text=param;
 	newOpt.value=value;
+  if(color != '-none-'){
+    newOpt.style.color =color;
+  }
   return newOpt;
 }
 function page_init() {
@@ -23,15 +26,12 @@ function page_init() {
     while (list1.hasNext()) {
       TicketCategoryDraft thisCategory = (TicketCategoryDraft)list1.next();
       String elementText = thisCategory.getDescription();
-      if (!(thisCategory.getEnabled())) {
-        elementText += " *";
-      }
   %>
-    list.options[list.length] = newOpt("<%= elementText %>", "<%= thisCategory.getId() %>");
+    list.options[list.length] = newOpt('<%= elementText %>', '<%= thisCategory.getId() %>', '<%= !(thisCategory.getEnabled()) ? "Red" : (thisCategory.getActualCatId() == -1 ? "blue" : "-none-") %>');
   <%
     }
   }else{%>
-    list.options[list.length] = newOpt("--None--", "-1");
+    list.options[list.length] = newOpt("---------None---------", "-1");
  <%}%>
   if(level == '0'){
     resetList(parent.document.getElementById('level1'));
@@ -51,7 +51,7 @@ function page_init() {
 }
 function resetList(list) {
   list.options.length = 0;
-  list.options[list.length] = newOpt("--None--", "-1");
+  list.options[list.length] = newOpt("---------None---------", "-1");
 }
 </script>
 </body>
