@@ -4,7 +4,13 @@ package org.aspcfs.modules.base;
  *  The Constants class provides several static variables that are used
  *  throughout ASPCFS. To maintain, users cannot reuse numbers within a specific
  *  category, like Documents or Folders. A formal request should be made before
- *  adding a new constant value.
+ *  adding a new constant value.<p>
+ *
+ *  Constants should be in the following form (10 digits max!):<br>
+ *  two-digit month (no proceeding zero in an integer)<br>
+ *  two-digit day<br>
+ *  four-digit year<br>
+ *  two-digit hour of day (24 hour time)
  *
  *@author     matt rajkowski
  *@created    February 8, 2002
