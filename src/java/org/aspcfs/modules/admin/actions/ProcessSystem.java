@@ -6,8 +6,10 @@ import org.theseus.actions.*;
 import com.darkhorseventures.cfsmodule.CFSModule;
 import com.darkhorseventures.controller.*;
 import com.darkhorseventures.cfsbase.*;
+import com.darkhorseventures.utils.*;
 import java.util.*;
 import java.io.File;
+import java.sql.*;
 
 /** Perform system level maintenance, typically setup on a cron
  * @author matt rajkowski
@@ -15,6 +17,12 @@ import java.io.File;
  * @version $Id$
  */
 public final class ProcessSystem extends CFSModule {
+  
+  
+  public String executeCommandReloadSystemPrefs(ActionContext context) {
+    reloadSystemPrefs(context);
+    return "ProcessOK";
+  }
   
   /** Erases the day's graphing data since the graphs need to be rebuilt daily */
   public String executeCommandClearGraphData(ActionContext context) {
@@ -60,6 +68,23 @@ public final class ProcessSystem extends CFSModule {
           User indUser = (User)k.next();
           indUser.setIsValid(false,true);
         }
+      }
+    }
+  }
+  
+  private void reloadSystemPrefs(ActionContext context) {
+    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+    Hashtable globalStatus = (Hashtable)context.getServletContext().getAttribute("SystemStatus");
+    Iterator i = globalStatus.values().iterator();
+    while (i.hasNext()) {
+      SystemStatus systemStatus = (SystemStatus)i.next();
+      Connection db = null;
+      try {
+        db = sqlDriver.getConnection(systemStatus.getConnectionElement());
+        systemStatus.buildPreferences(db);
+      } catch (SQLException e) {
+      } finally {
+        sqlDriver.free(db);
       }
     }
   }
