@@ -1,15 +1,5 @@
-INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (8, 'tickets-tickets-reports', true, true, false, true, 'Reports', 30);
-
-alter table permission_category add column folders boolean;
-alter table permission_category alter column folders set default false;
-update permission_category set folders='f';
-
-alter table permission_category add column lookups boolean;
-alter table permission_category alter column lookups set default false;
-update permission_category set lookups='f';
-
 /*
-do the database switch-around right before this to make accounts id 1 and contacts id 2
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (8, 'tickets-tickets-reports', true, true, false, true, 'Reports', 30);
 */
 
 update permission_category set folders='t' where category_id in (1,2);
