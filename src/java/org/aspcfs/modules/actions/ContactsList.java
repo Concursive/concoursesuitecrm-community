@@ -10,7 +10,7 @@ import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.contacts.base.ContactFilterList;
+import org.aspcfs.modules.base.FilterList;
 import java.util.*;
 import com.zeroio.iteam.base.*;
 
@@ -209,7 +209,7 @@ public final class ContactsList extends CFSModule {
     String nonUsersOnly = context.getRequest().getParameter("nonUsersOnly");
 
     //add filters
-    ContactFilterList filters = new ContactFilterList(context.getRequest());
+    FilterList filters = new FilterList(context.getRequest());
     context.getRequest().setAttribute("Filters", filters);
     
     //  set Filter for retrieving addresses depending on typeOfContact
