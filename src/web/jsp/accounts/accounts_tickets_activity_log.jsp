@@ -42,18 +42,24 @@ Forms
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
-<br /><br />
+<br />
+<dhv:permission name="accounts-accounts-tickets-activity-log-add,tickets-activity-log-view" all="false">
+<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" >
   <tr>
     <td>
       <dhv:permission name="accounts-accounts-tickets-activity-log-add"><a href="AccountTicketActivityLog.do?command=Add&id=<%=ticketDetails.getId()%>">Add activities</a><br /></dhv:permission>
     </td>
    <td align="right">
-    <img src="images/icons/stock_print-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-    <a href="javascript:popURLReturn('TroubleTicketActivityLog.do?command=PrintActivityForm&id=<%=thisTicket.getId()%>&orgId=<%=thisTicket.getOrgId()%>')">Printable Form</a>
+     &nbsp;
+     <dhv:permission name="tickets-activity-log-view">
+       <img src="images/icons/stock_print-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+       <a href="javascript:popURLReturn('TroubleTicketActivityLog.do?command=PrintActivityForm&id=<%=thisTicket.getId()%>&orgId=<%=thisTicket.getOrgId()%>')">Printable Form</a>
+     </dhv:permission>
    </td>
   </tr>
 </table>
+</dhv:permission>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="TMListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>

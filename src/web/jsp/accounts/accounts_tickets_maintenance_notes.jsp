@@ -81,6 +81,7 @@ Forms
     </td>
   </tr>
 </table>
+<dhv:permission name="accounts-accounts-tickets-maintenance-report-add,tickets-maintenance-report-view" all="false">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" >
   <tr>
     <td>
@@ -90,11 +91,15 @@ Forms
       <dhv:permission name="accounts-accounts-tickets-maintenance-report-add" none="true"></dhv:permission>
     </td>
    <td align="right">
-    <img src="images/icons/stock_print-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-    <a href="javascript:popURLReturn('TroubleTicketMaintenanceNotes.do?command=PrintMaintenanceForm&id=<%=thisTicket.getId()%>&orgId=<%=thisTicket.getOrgId()%>')">Printable Form</a>
+     &nbsp;
+     <dhv:permission name="tickets-maintenance-report-view">
+       <img src="images/icons/stock_print-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+       <a href="javascript:popURLReturn('TroubleTicketMaintenanceNotes.do?command=PrintMaintenanceForm&id=<%=thisTicket.getId()%>&orgId=<%=thisTicket.getOrgId()%>')">Printable Form</a>
+     </dhv:permission>
    </td>
   </tr>
 </table>
+</dhv:permission>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SunListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
