@@ -1,7 +1,6 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
-<jsp:useBean id="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
 <jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script type="text/javascript">
@@ -9,7 +8,7 @@
 function downloadMessage(campaignId){
   fileList = document.getElementById('attList');
   if(fileList.selectedIndex != -1){
-    window.location.href='CampaignDocuments.do?command=Download&id=' + campaignId +  '&fid=' + fileList.value;
+    window.location.href='CampaignManager.do?command=DownloadMessage&id=' + campaignId +  '&fid=' + fileList.value;
   }else{
     alert('Please select a file to download');
   }
@@ -43,10 +42,10 @@ Message
         </tr>
         <tr class="containerBody">
             <td valign="top" align="left">
-               <strong>From:</strong> <%= toHtml(Message.getReplyTo()) %><br>
-               <strong>Subject:</strong> <%= toHtml(Message.getMessageSubject()) %><br>
+               <strong>From:</strong> <%= toHtml(Campaign.getReplyTo()) %><br>
+               <strong>Subject:</strong> <%= toHtml(Campaign.getSubject()) %><br>
                &nbsp;<br>
-               <%= (Message.getMessageText()) %>
+               <%= (Campaign.getMessage()) %>
             </td>
            <%
             Iterator j = FileItemList.iterator();
@@ -68,7 +67,7 @@ Message
                   if (rowid != 1) rowid = 1; else rowid = 2;
                   FileItem thisFile = (FileItem)j.next();
                 %>      
-                  <option  value = "<%= thisFile.getId() %>"><%= toHtml(thisFile.getSubject()) %>&nbsp;(<%= thisFile.getRelativeSize() %> k)</option>
+                  <option  value = "<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></option>
                <%}%>
                   </select>
                  </td>
