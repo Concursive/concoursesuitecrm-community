@@ -80,13 +80,12 @@ ALTER TABLE call_log ADD complete_date DATETIME NULL;
 ALTER TABLE call_log ADD result_id INT REFERENCES lookup_call_result(result_id);
 ALTER TABLE call_log ADD priority_id INT REFERENCES lookup_call_priority(code);
 ALTER TABLE call_log ADD status_id INT;
-UPDATE call_log SET status_id = 1;
+UPDATE call_log SET status_id = 2;
 ALTER TABLE call_log ADD CONSTRAINT call_status_not_null_CHECK(status_id NOT NULL);
 ALTER TABLE call_log ALTER status_id SET DEFAULT 1;
 ALTER TABLE call_log ADD reminder_value INT NULL;
 ALTER TABLE call_log ADD reminder_type_id INT NULL REFERENCES lookup_call_reminder(code);
 UPDATE call_log SET result_id = 1;
-UPDATE call_log SET status_id = 2;
 
 /* Activity Indexes */
 CREATE INDEX "call_log_entered_idx" ON "call_log" (entered);
