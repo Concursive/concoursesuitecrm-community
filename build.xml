@@ -1015,7 +1015,9 @@
     <replace file="${build.pref.dir}/import-accountcontacts.xml"
              token="@URL@" value="${arg2}"/>
     <replace file="${build.pref.dir}/import-accountcontacts.xml"
-             token="@CODE@" value="${arg3}"/>
+             token="@ID@" value="${arg3}"/>
+    <replace file="${build.pref.dir}/import-accountcontacts.xml"
+             token="@CODE@" value="${arg4}"/>
     <replace file="${build.pref.dir}/import-accountcontacts.xml"
              token="@SYSTEM.ID@" value="4"/>
     <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">

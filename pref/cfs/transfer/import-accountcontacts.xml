@@ -8,7 +8,7 @@
   </reader>
   <writer class="org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter">
     <url>http://@URL@/ProcessPacket.do</url>
-    <id>@URL@</id>
+    <id>@ID@</id>
     <code>@CODE@</code>
     <systemId>@SYSTEM.ID@</systemId>
   </writer>
