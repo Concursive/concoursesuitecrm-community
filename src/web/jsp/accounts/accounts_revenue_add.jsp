@@ -8,6 +8,7 @@
 <body onLoad="javascript:document.forms[0].description.focus();">
 <form name="addRevenue" action="/RevenueManager.do?command=Insert&auto-populate=true" method="post">
 <a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="/RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Revenue</a> >
 Add Revenue<br>

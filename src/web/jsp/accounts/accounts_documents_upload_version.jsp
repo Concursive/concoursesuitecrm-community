@@ -40,6 +40,7 @@
 <body onLoad="document.inputForm.subject.focus();">
 
 <a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="/AccountsDocuments.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Documents</a> >
 Upload Document Version<br>

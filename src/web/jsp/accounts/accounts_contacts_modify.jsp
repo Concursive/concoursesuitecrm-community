@@ -9,6 +9,7 @@
 <%@ include file="initPage.jsp" %>
 <form name="modContact" action="/Contacts.do?command=Update&action=Modify&auto-populate=true&orgId=<%=ContactDetails.getOrgId()%>" method="post">
 <a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="/Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
 

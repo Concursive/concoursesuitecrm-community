@@ -54,6 +54,7 @@
 	<a href="/Accounts.do?command=View">View Accounts</a> >
 	<%}%>
 <%} else {%>
+<a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <%}%>
 

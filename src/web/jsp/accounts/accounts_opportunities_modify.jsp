@@ -31,6 +31,7 @@
 </script>
 <form name="updateOpp" action="/Opportunities.do?command=Update&auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="/Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
 

@@ -5,6 +5,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="details" action="/Accounts.do" method="post">
 <a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=View">View Accounts</a> >
 Account Details<br>
 <hr color="#BFBFBB" noshade>
 <a href="/Accounts.do?command=View">Back to Account List</a><br>&nbsp;

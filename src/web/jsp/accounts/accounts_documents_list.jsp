@@ -7,6 +7,7 @@
 <script language="JavaScript" type="text/javascript" src="/javascript/confirmDelete.js"></script>
 
 <a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 Documents<br>
 <hr color="#BFBFBB" noshade>

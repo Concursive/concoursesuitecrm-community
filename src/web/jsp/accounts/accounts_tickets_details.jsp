@@ -6,6 +6,7 @@
 <form name="details" action="AccountTickets.do?command=ModifyTicket&auto-populate=true" method="post">
 
 <a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>">Account Details</a> >
 <a href="/Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>">Tickets</a> >
 Ticket Details<br>
