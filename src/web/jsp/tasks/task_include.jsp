@@ -82,7 +82,7 @@
             </div>
           </td>
           <td>
-            <input type="hidden" name="ownerContactId" id="ownerid" value="<%= Task.getOwner() == -1 ? User.getUserRecord().getContactId() : Task.getOwnerContactId() %>">
+            <input type="hidden" name="owner" id="ownerid" value="<%= Task.getOwner() == -1 ? User.getUserRecord().getId() : Task.getOwner() %>">
             &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&reset=true');">Change Owner</a>]
           </td>
         </tr>
