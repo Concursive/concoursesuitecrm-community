@@ -43,7 +43,7 @@
               <td>
             <table width="100%" cellspacing="4" cellpadding="0" border="0" class="title">
               <tr class="title">
-                <td valign="center" align="center" nowrap>
+                <td valign="center" nowrap>
                   <select id="alerts" size="1" name="alertsView" onChange="javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=calendardetails&inline=true&return=Accounts&alertsView='+document.getElementById('alerts').value);">
                     <option  value="AccountsAll" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAll")?" selected":"" %>>All Sched. Actions</option>
                     <option  value="AccountsContractEndDates" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsEndDates")?" selected":"" %>>Contract End Dates</option>
