@@ -43,7 +43,7 @@ if (!hasPermission) {
   permission = new Permission();
   permission.setCategoryId(thisCategory.getId());
   permission.setName("myhomepage-action-lists");
-  permission.setDescription("Access to Action Lists");
+  permission.setDescription("My Action Lists");
   permission.setView(true);
   permission.setAdd(true);
   permission.setEdit(true);
