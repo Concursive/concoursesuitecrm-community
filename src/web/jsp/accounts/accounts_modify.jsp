@@ -18,12 +18,9 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popLookupSelect.js"></script>
-
-
 <script language="JavaScript">
   indSelected = 0;
   orgSelected = 0; 
-  
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
       return true;
@@ -31,17 +28,15 @@
       return(checkForm(form));
     }
   }
-  
   function initializeClassification() {
-      <% if (OrgDetails.getPrimaryContact() != null) { %>
-          indSelected = 1;
-          updateFormElements(1);
-      <%} else if (OrgDetails.getPrimaryContact() == null) {%>
-          orgSelected = 1;
-          updateFormElements(0);
-      <%}%>
+  <% if (OrgDetails.getPrimaryContact() != null) { %>
+      indSelected = 1;
+      updateFormElements(1);
+  <%} else if (OrgDetails.getPrimaryContact() == null) {%>
+      orgSelected = 1;
+      updateFormElements(0);
+  <%}%>
   }
-  
   function resetFormElements() {
     //some checks
     isNS4 = (document.layers) ? true : false;
@@ -49,45 +44,36 @@
     isIE5 = (document.all && document.getElementById) ? true : false;
     isNS6 = (!document.all && document.getElementById) ? true : false;  
     //end checks 
-    
     if (isNS4){
       elm1 = document.layers["nameFirst1"];
       elm2 = document.layers["nameMiddle1"];
       elm3 = document.layers["nameLast1"];
       elm4 = document.layers["orgname1"];
       elm5 = document.layers["ticker1"];
-    }
-    else if (isIE4) {
+    } else if (isIE4) {
       elm1 = document.all["nameFirst1"];
       elm2 = document.all["nameMiddle1"];
       elm3 = document.all["nameLast1"];
       elm4 = document.all["orgname1"];
       elm5 = document.all["ticker1"];
-    }    
-    else if (isIE5 || isNS6) {
+    } else if (isIE5 || isNS6) {
       elm1 = document.getElementById("nameFirst1");
       elm2 = document.getElementById("nameMiddle1");
       elm3 = document.getElementById("nameLast1");
       elm4 = document.getElementById("orgname1");
       elm5 = document.getElementById("ticker1");
-      
       elm1.style.color = "#000000";
       document.addAccount.nameFirst.style.background = "#ffffff";
-      
       elm2.style.color = "#000000";      
       document.addAccount.nameMiddle.style.background = "#ffffff";
-      
       elm3.style.color = "#000000";          
       document.addAccount.nameLast.style.background = "#ffffff";
-      
       elm4.style.color = "#000000"; 
       document.addAccount.name.style.background = "#ffffff";
-      
       elm5.style.color = "#000000";      
       document.addAccount.ticker.style.background = "#ffffff";
     }
   }  
-    
   function updateFormElements(index) {
     //some checks
     isNS4 = (document.layers) ? true : false;
@@ -95,62 +81,50 @@
     isIE5 = (document.all && document.getElementById) ? true : false;
     isNS6 = (!document.all && document.getElementById) ? true : false;  
     //end checks 
-    
     if (isNS4){
       elm1 = document.layers["nameFirst1"];
       elm2 = document.layers["nameMiddle1"];
       elm3 = document.layers["nameLast1"];
       elm4 = document.layers["orgname1"];
       elm5 = document.layers["ticker1"];
-    }
-    else if (isIE4) {
+    } else if (isIE4) {
       elm1 = document.all["nameFirst1"];
       elm2 = document.all["nameMiddle1"];
       elm3 = document.all["nameLast1"];
       elm4 = document.all["orgname1"];
       elm5 = document.all["ticker1"];
-    }
-    else if (isIE5 || isNS6) {
+    } else if (isIE5 || isNS6) {
       elm1 = document.getElementById("nameFirst1");
       elm2 = document.getElementById("nameMiddle1");
       elm3 = document.getElementById("nameLast1");
       elm4 = document.getElementById("orgname1");
       elm5 = document.getElementById("ticker1");
-      
       if (index == 1) {
         indSelected = 1;
         orgSelected = 0;        
-        
         resetFormElements();
-      
         elm4.style.color="#cccccc";
         document.addAccount.name.style.background = "#cccccc";
         document.addAccount.name.value = "";
-
         elm5.style.color="#cccccc";
         document.addAccount.ticker.style.background = "#cccccc";
         document.addAccount.ticker.value = "";        
       } else {
         indSelected = 0;
         orgSelected = 1;
-        
         resetFormElements();        
-        
         elm1.style.color = "#cccccc";
         document.addAccount.nameFirst.style.background = "#cccccc";
         document.addAccount.nameFirst.value = "";
-        
         elm2.style.color = "#cccccc";  
         document.addAccount.nameMiddle.style.background = "#cccccc";
         document.addAccount.nameMiddle.value = ""; 
-        
         elm3.style.color = "#cccccc";      
         document.addAccount.nameLast.style.background = "#cccccc";
         document.addAccount.nameLast.value = "";     
       }
     }
   }    
-  
   //-------------------------------------------------------------------
   // getElementIndex(input_object)
   //   Pass an input object, returns index in form.elements[] for the object
@@ -161,11 +135,10 @@
     for (var i=0; i<theform.elements.length; i++) {
       if (obj.name == theform.elements[i].name) {
         return i;
-        }
       }
-      return -1;
     }
-
+    return -1;
+  }
   // -------------------------------------------------------------------
   // tabNext(input_object)
   //   Pass an form input object. Will focus() the next field in the form
@@ -193,53 +166,51 @@
         }
       j++;
       if (j >= theform.elements.length) { j=0; }
-      }
+    }
   }  
-  
   function checkForm(form) {
-      formTest = true;
-      message = "";
-      if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-        message += "- Check that Alert Date is entered correctly\r\n";
-        formTest = false;
-      }
-      if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-        message += "- Check that Alert Date is on or after today's date\r\n";
-        formTest = false;
-      }
-      if ((!form.contractEndDate.value == "") && (!checkDate(form.contractEndDate.value))) { 
-        message += "- Check that Contract End Date is entered correctly\r\n";
-        formTest = false;
-      }
-      if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
-        message += "- Please specify an alert date\r\n";
-        formTest = false;
-      }
-      if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
-        message += "- Please specify an alert description\r\n";
-        formTest = false;
-      }
-      
-      <%
-      		for (int i=1; i<=(OrgDetails.getPhoneNumberList().size()+1); i++) {
-      %>
-		<dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkPhone(form.phone<%=i%>number.value)) { 
-			message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
-			formTest = false;
-		}
-      
-      <%}%>
-      
-      if (formTest == false) {
-        alert("Form could not be saved, please check the following:\r\n\r\n" + message);
-        return false;
-      } else {
-        var test = document.addAccount.selectedList;
-        if (test != null) {
-          return selectAllOptions(document.addAccount.selectedList);
-        }
+    formTest = true;
+    message = "";
+    if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
+      message += "- Check that Alert Date is entered correctly\r\n";
+      formTest = false;
+    }
+    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
+      message += "- Check that Alert Date is on or after today's date\r\n";
+      formTest = false;
+    }
+    if ((!form.contractEndDate.value == "") && (!checkDate(form.contractEndDate.value))) { 
+      message += "- Check that Contract End Date is entered correctly\r\n";
+      formTest = false;
+    }
+    if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
+      message += "- Please specify an alert date\r\n";
+      formTest = false;
+    }
+    if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
+      message += "- Please specify an alert description\r\n";
+      formTest = false;
+    }
+<%
+    for (int i=1; i<=(OrgDetails.getPhoneNumberList().size()+1); i++) {
+%>
+  <dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkPhone(form.phone<%=i%>number.value)) { 
+      message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
+      formTest = false;
+    }
+<%
+    }
+%>
+    if (formTest == false) {
+      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      return false;
+    } else {
+      var test = document.addAccount.selectedList;
+      if (test != null) {
+        return selectAllOptions(document.addAccount.selectedList);
       }
     }
+  }
 </script>
 <body onLoad="javascript:initializeClassification();">
 <form name="addAccount" action="Accounts.do?command=Update&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
@@ -249,10 +220,9 @@
   }%>
 <dhv:evaluate exp="<%= !popUp %>">
 <a href="Accounts.do">Account Management</a> > 
-
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<a hrefAccounts.do?command=View">View Accounts</a> >
+	<a href="Accounts.do?command=View">View Accounts</a> >
 	<%} else if (request.getParameter("return").equals("dashboard")) {%>
 	<a href="Accounts.do?command=Dashboard">Dashboard</a> >
 	<%}%>
@@ -269,7 +239,6 @@ Modify Account<br>
       <strong><%= toHtml(OrgDetails.getName()) %></strong>
     </td>
   </tr>
-  
   <dhv:evaluate exp="<%= !popUp %>">
   <tr class="containerMenu">
     <td>
@@ -278,36 +247,30 @@ Modify Account<br>
     </td>
   </tr>
   </dhv:evaluate>
-  
   <tr>
     <td class="containerBack">
-<input type="hidden" name="modified" value="<%= OrgDetails.getModified() %>">
-
+      <input type="hidden" name="modified" value="<%= OrgDetails.getModified() %>">
 <% if (request.getParameter("return") != null) {%>
-<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+      <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
-
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=View';this.form.dosubmit.value='false';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=View';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <%}%>
-
-
-<input type="reset" value="Reset">
+      <input type="reset" value="Reset">
 <dhv:evaluate exp="<%= popUp %>">
-  <input type="button" value="Cancel" onclick="javascript:window.close();">
+      <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
-
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
-    <strong>Modify Primary Information</strong>
+    <td colspan="2">
+      <strong>Modify Primary Information</strong>
     </td>     
   </tr>
 <dhv:evaluate exp="<%= OrgDetails.getOwner() == User.getUserId() || isManagerOf(pageContext, User.getUserId(), OrgDetails.getOwner()) %>">
@@ -315,7 +278,7 @@ Modify Account<br>
     <td nowrap class="formLabel">
       Account Owner
     </td>
-    <td valign=center>
+    <td>
       <%= UserList.getHtmlSelect("owner", OrgDetails.getOwner() ) %>
     </td>
   </tr>
@@ -324,106 +287,102 @@ Modify Account<br>
     <td nowrap class="formLabel" valign="top">
       Account Type(s)
     </td>
-  
-  	<td valign=center>
-      
-      <select multiple name="selectedList" id="selectedList" size="5">
-      <dhv:evaluate exp="<%=OrgDetails.getTypes().isEmpty()%>">
-      <option value="-1">None Selected</option>
-      </dhv:evaluate>
-      
-      <dhv:evaluate exp="<%=!(OrgDetails.getTypes().isEmpty())%>">
-       <%
-        Iterator i = OrgDetails.getTypes().iterator();
-        
-        while (i.hasNext()) {
-          LookupElement thisElt = (LookupElement)i.next();
+  	<td>
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>
+            <select multiple name="selectedList" id="selectedList" size="5">
+            <dhv:evaluate exp="<%=OrgDetails.getTypes().isEmpty()%>">
+            <option value="-1">None Selected</option>
+            </dhv:evaluate>
+            <dhv:evaluate exp="<%=!(OrgDetails.getTypes().isEmpty())%>">
+      <%
+              Iterator i = OrgDetails.getTypes().iterator();
+              while (i.hasNext()) {
+                LookupElement thisElt = (LookupElement)i.next();
       %>
-        <option value="<%=thisElt.getCode()%>"><%=thisElt.getDescription()%></option>
-      <%}%>
-      </dhv:evaluate>      
-      </select>
-      
-      <input type="hidden" name="previousSelection" value="">
-      <a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_account_types');">Select</a>
-  </td>
+              <option value="<%=thisElt.getCode()%>"><%=thisElt.getDescription()%></option>
+            <%}%>
+            </dhv:evaluate>      
+            </select>
+          </td>
+          <td valign="top">
+            <input type="hidden" name="previousSelection" value="">
+            &nbsp;[<a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_account_types');">Select</a>]
+          </td>
+        </tr>
+      </table>
+    </td>
   </tr>
-  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel">
       Classification
     </td>
     <td>
-        <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">
-          Individual
-          <input type=hidden name="form_type" value="individual">
-        </dhv:evaluate>
-        <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
-          Organization
-          <input type=hidden name="form_type" value="organization">
-        </dhv:evaluate>        
+      <dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() != null) %>">
+        Individual
+        <input type="hidden" name="form_type" value="individual">
+      </dhv:evaluate>
+      <dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() == null) %>">
+        Organization
+        <input type="hidden" name="form_type" value="organization">
+      </dhv:evaluate>        
     </td>
-  </tr>  
-  
+  </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel" name="orgname1" id="orgname1">
       Organization Name
     </td>
     <td>
-      <input onFocus="if (indSelected == 1) { tabNext(this) }" type=text size=35 name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
+      <input onFocus="if (indSelected == 1) { tabNext(this) }" type="text" size="35" name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
-  
   <tr class="containerBody">
     <td name="nameFirst1" id="nameFirst1" nowrap class="formLabel">
       First Name
     </td>
     <td>
-        <input onFocus="if (orgSelected == 1) { tabNext(this) }" type=text size=35 name="nameFirst" value="<%= toHtmlValue(OrgDetails.getNameFirst()) %>">
+      <input onFocus="if (orgSelected == 1) { tabNext(this) }" type="text" size="35" name="nameFirst" value="<%= toHtmlValue(OrgDetails.getNameFirst()) %>">
     </td>
   </tr>
-
   <tr class="containerBody">
     <td name="nameMiddle1" id="nameMiddle1" nowrap class="formLabel">
       Middle Name
     </td>
     <td>
-        <input onFocus="if (orgSelected == 1) { tabNext(this) }" type=text size=35 name="nameMiddle" value="<%= toHtmlValue(OrgDetails.getNameMiddle()) %>">
+      <input onFocus="if (orgSelected == 1) { tabNext(this) }" type="text" size="35" name="nameMiddle" value="<%= toHtmlValue(OrgDetails.getNameMiddle()) %>">
     </td>
   </tr>
-
   <tr class="containerBody">
     <td name="nameLast1" id="nameLast1" nowrap class="formLabel">
       Last Name
     </td>
     <td>
-        <input onFocus="if (orgSelected == 1) { tabNext(this) }" type=text size=35 name="nameLast" value="<%= toHtmlValue(OrgDetails.getNameLast()) %>"><font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
+      <input onFocus="if (orgSelected == 1) { tabNext(this) }" type="text" size="35" name="nameLast" value="<%= toHtmlValue(OrgDetails.getNameLast()) %>"><font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>  
-  
-  
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Account Number
     </td>
     <td>
-      <input type=text size=50 name="accountNumber" value="<%= toHtmlValue(OrgDetails.getAccountNumber()) %>">
+      <input type="text" size="50" name="accountNumber" value="<%= toHtmlValue(OrgDetails.getAccountNumber()) %>">
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel">
       URL
     </td>
     <td>
-      <input type=text size=50 name="url" value="<%= toHtmlValue(OrgDetails.getUrl()) %>">
+      <input type="text" size="50" name="url" value="<%= toHtmlValue(OrgDetails.getUrl()) %>">
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel">
       Industry
     </td>
     <td>
-      <%=IndustryList.getHtmlSelect("industry",OrgDetails.getIndustry())%>
+      <%= IndustryList.getHtmlSelect("industry",OrgDetails.getIndustry()) %>
     </td>
   </tr>
   <dhv:include name="accounts-employees" none="true">
@@ -431,153 +390,142 @@ Modify Account<br>
     <td nowrap class="formLabel">
       No. of Employees
     </td>
-    <td valign=center colspan=1>
-      <input type=text size=10 name="employees" value="<%= OrgDetails.getEmployees() %>">
+    <td>
+      <input type="text" size="10" name="employees" value="<%= OrgDetails.getEmployees() %>">
     </td>
   </tr>
   </dhv:include>
-  
   <dhv:include name="accounts-revenue" none="true">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Revenue
     </td>
-    <td valign=center colspan=1>
-      <input type=text size=10 name="revenue" value="<%= OrgDetails.getRevenue() %>">
+    <td>
+      <input type="text" size="10" name="revenue" value="<%= OrgDetails.getRevenue() %>">
     </td>
   </tr>
   </dhv:include>
-  
   <tr class="containerBody">
     <td name="ticker1" id="ticker1" nowrap class="formLabel">
       Ticker Symbol
     </td>
-    <td valign=center colspan=1>
-      <input onFocus="if (indSelected == 1) { tabNext(this) }" type=text size=10 name="ticker" value="<%= toHtmlValue(OrgDetails.getTicker()) %>">
+    <td>
+      <input onFocus="if (indSelected == 1) { tabNext(this) }" type="text" size="10" name="ticker" value="<%= toHtmlValue(OrgDetails.getTicker()) %>">
     </td>
   </tr>
-  
-            <tr class="containerBody">
-   <td nowrap class="formLabel">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       Contract End Date
     </td>
-    <td valign=center colspan=1>
-      <input type=text size=10 name="contractEndDate" value="<%= toHtmlValue(OrgDetails.getContractEndDateString()) %>">
+    <td>
+      <input type="text" size="10" name="contractEndDate" value="<%= toHtmlValue(OrgDetails.getContractEndDateString()) %>">
       <a href="javascript:popCalendar('addAccount', 'contractEndDate');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>
-  
-              <tr class="containerBody">
+  <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert Description
     </td>
-    <td valign=center colspan=1>
-      <input type=text size=50 name="alertText" value="<%= toHtmlValue(OrgDetails.getAlertText()) %>"><br>
-
+    <td>
+      <input type="text" size="50" name="alertText" value="<%= toHtmlValue(OrgDetails.getAlertText()) %>">
     </td>
   </tr>
-  
-
-      
-                    <tr class="containerBody">
+  <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert Date
     </td>
-    <td valign=center colspan=1>
-              <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OrgDetails.getAlertDateStringLongYear()) %>">
+    <td>
+      <input type="text" size="10" name="alertDate" value="<%= toHtmlValue(OrgDetails.getAlertDateStringLongYear()) %>">
       <a href="javascript:popCalendar('addAccount', 'alertDate');">Date</a> (mm/dd/yyyy)
-
     </td>
   </tr>
-  
 </table>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td valign=center align=left>
+    <td colspan="2">
 	    <strong>Phone Numbers</strong>
 	  </td>
   </tr>
-<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">    
+<dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() == null) %>">    
 <%  
   int icount = 0;
   Iterator inumber = OrgDetails.getPhoneNumberList().iterator();
-  
   while (inumber.hasNext()) {
     ++icount;
     OrganizationPhoneNumber thisPhoneNumber = (OrganizationPhoneNumber)inumber.next();
 %>    
   <tr class="containerBody">
+    <td class="formLabel">
+      Phone <%= icount %>
+    </td>
     <td>
       <input type="hidden" name="phone<%= icount %>id" value="<%= thisPhoneNumber.getId() %>">
       <%= OrgPhoneTypeList.getHtmlSelect("phone" + icount + "type", thisPhoneNumber.getType()) %>
-      <!--input type=text size=3 name="phone<%= icount %>ac" maxlength=3 value="<%= toHtmlValue(thisPhoneNumber.getAreaCode()) %>">-
-      <input type=text size=3 name="phone<%= icount %>pre" maxlength=3 value="<%= toHtmlValue(thisPhoneNumber.getPrefix()) %>">-
-      <input type=text size=4 name="phone<%= icount %>number" maxlength=4 value="<%= toHtmlValue(thisPhoneNumber.getPostfix()) %>"> ext. -->
-      
-      <input type=text size=20 name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
+      <input type="text" size="20" name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
       <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10" value="<%= toHtmlValue(thisPhoneNumber.getExtension()) %>">
       <input type="checkbox" name="phone<%= icount %>delete" value="on">mark to remove
     </td>
   </tr>    
 <%    
   }
+  ++icount;
 %>
-
   <tr class="containerBody">
+    <td class="formLabel">
+      Phone <%= icount %>
+    </td>
     <td>
-      <%= OrgPhoneTypeList.getHtmlSelect("phone" + (++icount) + "type", "Main") %>
-      <!--input type=text size=3 name="phone<%= icount %>ac" maxlength=3>-
-      <input type=text size=3 name="phone<%= icount %>pre" maxlength=3>-
-      <input type=text size=4 name="phone<%= icount %>number" maxlength=4>ext. -->
-      <input type=text size=20 name="phone<%= icount %>number">&nbsp;ext.
-      <input type=text size=5 name="phone<%= icount %>ext" maxlength=10>
+      <%= OrgPhoneTypeList.getHtmlSelect("phone" + icount + "type", "Main") %>
+      <input type="text" size="20" name="phone<%= icount %>number">&nbsp;ext.
+      <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10">
     </td>
   </tr>
 </dhv:evaluate>
-
-<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">    
+<dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() != null) %>">    
 <%  
   int icount = 0;
   Iterator inumber = OrgDetails.getPrimaryContact().getPhoneNumberList().iterator();
-  
   while (inumber.hasNext()) {
     ++icount;
-    ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)inumber.next();
-%>    
+    ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber) inumber.next();
+%>
   <tr class="containerBody">
+    <td class="formLabel">
+      Phone <%= icount %>
+    </td>
     <td>
       <input type="hidden" name="phone<%= icount %>id" value="<%= thisPhoneNumber.getId() %>">
       <%= ContactPhoneTypeList.getHtmlSelect("phone" + icount + "type", thisPhoneNumber.getType()) %>
-      
-      <input type=text size=20 name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
+      <input type="text" size="20" name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
       <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10" value="<%= toHtmlValue(thisPhoneNumber.getExtension()) %>">
       <input type="checkbox" name="phone<%= icount %>delete" value="on">mark to remove
     </td>
-  </tr>    
-<%    
+  </tr>
+<%
   }
+  ++icount;
 %>
-
   <tr class="containerBody">
+    <td class="formLabel">
+      Phone <%= icount %>
+    </td>
     <td>
-      <%= ContactPhoneTypeList.getHtmlSelect("phone" + (++icount) + "type", "Business") %>
-      <input type=text size=20 name="phone<%= icount %>number">&nbsp;ext.
-      <input type=text size=5 name="phone<%= icount %>ext" maxlength=10>
+      <%= ContactPhoneTypeList.getHtmlSelect("phone" + icount + "type", "Business") %>
+      <input type="text" size="20" name="phone<%= icount %>number">&nbsp;ext.
+      <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10">
     </td>
   </tr>
 </dhv:evaluate>
-  
 </table>
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td valign=center align=left colspan="2">
+    <td colspan="2">
       <strong>Addresses</strong>
     </td>
   </tr>
-  
-<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">  
+<dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() == null) %>">  
 <%  
   int acount = 0;
   Iterator anumber = OrgDetails.getAddressList().iterator();
@@ -587,8 +535,8 @@ Modify Account<br>
 %>    
   <tr class="containerBody">
     <input type="hidden" name="address<%= acount %>id" value="<%= thisAddress.getId() %>">
-    <td>
-      &nbsp;
+    <td class="formLabel">
+      Type
     </td>
     <td>
       <%= OrgAddressTypeList.getHtmlSelect("address" + acount + "type", thisAddress.getType()) %>
@@ -600,7 +548,7 @@ Modify Account<br>
       Address Line 1
     </td>
     <td>
-      <input type=text size=40 name="address<%= acount %>line1" maxlength=80 value="<%= toHtmlValue(thisAddress.getStreetAddressLine1()) %>">
+      <input type="text" size="40" name="address<%= acount %>line1" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine1()) %>">
     </td>
   </tr>
   <tr class="containerBody">
@@ -608,7 +556,7 @@ Modify Account<br>
       Address Line 2
     </td>
     <td>
-      <input type=text size=40 name="address<%= acount %>line2" maxlength=80 value="<%= toHtmlValue(thisAddress.getStreetAddressLine2()) %>">
+      <input type="text" size="40" name="address<%= acount %>line2" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine2()) %>">
     </td>
   </tr>
   <tr class="containerBody">
@@ -616,7 +564,7 @@ Modify Account<br>
       City
     </td>
     <td>
-      <input type=text size=28 name="address<%= acount %>city" maxlength=80 value="<%= toHtmlValue(thisAddress.getCity()) %>">
+      <input type="text" size="28" name="address<%= acount %>city" maxlength="80" value="<%= toHtmlValue(thisAddress.getCity()) %>">
     </td>
   </tr>
   <tr class="containerBody">
@@ -624,9 +572,8 @@ Modify Account<br>
       State/Province
     </td>
     <td>
-      <%=StateSelect.getHtml("address" + acount + "state", thisAddress.getState())%>
+      <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
       <% StateSelect = new StateSelect(); %>
-      <!--input type=text size=28 name="address<%= acount %>state" maxlength=80 value="<%= toHtmlValue(thisAddress.getState()) %>"-->
     </td>
   </tr>
   <tr class="containerBody">
@@ -634,7 +581,7 @@ Modify Account<br>
       Zip/Postal Code
     </td>
     <td>
-      <input type=text size=10 name="address<%= acount %>zip" maxlength=12 value="<%= toHtmlValue(thisAddress.getZip()) %>">
+      <input type="text" size="10" name="address<%= acount %>zip" maxlength="12" value="<%= toHtmlValue(thisAddress.getZip()) %>">
     </td>
   </tr>
   <tr class="containerBody">
@@ -642,9 +589,8 @@ Modify Account<br>
       Country
     </td>
     <td>
-      <%=CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry())%>
+      <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
       <% CountrySelect = new CountrySelect(); %>
-      <!--input type=text size=28 name="address<%= acount %>country" maxlength=80 value="<%= toHtmlValue(thisAddress.getCountry()) %>"-->
     </td>
   </tr>
   <tr class="containerBody">
@@ -654,13 +600,14 @@ Modify Account<br>
   </tr> 
 <%    
   }
+  ++acount;
 %>
   <tr class="containerBody">
-    <td>
-      &nbsp;
+    <td class="formLabel">
+      Type
     </td>
     <td>
-      <%= OrgAddressTypeList.getHtmlSelect("address" + (++acount) + "type", "Primary") %>
+      <%= OrgAddressTypeList.getHtmlSelect("address" + acount + "type", "Primary") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -668,7 +615,7 @@ Modify Account<br>
       Address Line 1
     </td>
     <td>
-      <input type=text size=40 name="address<%= acount %>line1" maxlength=80>
+      <input type="text" size="40" name="address<%= acount %>line1" maxlength="80">
     </td>
   </tr>
   <tr class="containerBody">
@@ -676,7 +623,7 @@ Modify Account<br>
       Address Line 2
     </td>
     <td>
-      <input type=text size=40 name="address<%= acount %>line2" maxlength=80>
+      <input type="text" size="40" name="address<%= acount %>line2" maxlength="80">
     </td>
   </tr>
   <tr class="containerBody">
@@ -684,7 +631,7 @@ Modify Account<br>
       City
     </td>
     <td>
-      <input type=text size=28 name="address<%= acount %>city" maxlength=80>
+      <input type="text" size="28" name="address<%= acount %>city" maxlength="80">
     </td>
   </tr>
   <tr class="containerBody">
@@ -692,9 +639,8 @@ Modify Account<br>
       State/Province
     </td>
     <td>
-      <%=StateSelect.getHtml("address" + acount + "state")%>
+      <%= StateSelect.getHtml("address" + acount + "state") %>
       <% StateSelect = new StateSelect(); %>
-      <!--input type=text size=28 name="address<%= acount %>state" maxlength=80-->
     </td>
   </tr>
   <tr class="containerBody">
@@ -702,7 +648,7 @@ Modify Account<br>
       Zip/Postal Code
     </td>
     <td>
-      <input type=text size=10 name="address<%= acount %>zip" maxlength=12>
+      <input type="text" size="10" name="address<%= acount %>zip" maxlength="12">
     </td>
   </tr>
   <tr class="containerBody">
@@ -710,14 +656,12 @@ Modify Account<br>
       Country
     </td>
     <td>
-      <%=CountrySelect.getHtml("address" + acount + "country")%>
+      <%= CountrySelect.getHtml("address" + acount + "country") %>
       <% CountrySelect = new CountrySelect(); %>
-      <!--input type=text size=28 name="address<%= acount %>country" maxlength=80-->
     </td>
   </tr>
   </dhv:evaluate>
-  
-<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">  
+<dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() != null) %>">  
 <%  
   int acount = 0;
   Iterator anumber = OrgDetails.getPrimaryContact().getAddressList().iterator();
@@ -727,8 +671,8 @@ Modify Account<br>
 %>    
   <tr class="containerBody">
     <input type="hidden" name="address<%= acount %>id" value="<%= thisAddress.getId() %>">
-    <td>
-      &nbsp;
+    <td class="formLabel">
+      Type
     </td>
     <td>
       <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", thisAddress.getType()) %>
@@ -740,7 +684,7 @@ Modify Account<br>
       Address Line 1
     </td>
     <td>
-      <input type=text size=40 name="address<%= acount %>line1" maxlength=80 value="<%= toHtmlValue(thisAddress.getStreetAddressLine1()) %>">
+      <input type="text" size="40" name="address<%= acount %>line1" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine1()) %>">
     </td>
   </tr>
   <tr class="containerBody">
@@ -748,7 +692,7 @@ Modify Account<br>
       Address Line 2
     </td>
     <td>
-      <input type=text size=40 name="address<%= acount %>line2" maxlength=80 value="<%= toHtmlValue(thisAddress.getStreetAddressLine2()) %>">
+      <input type="text" size="40" name="address<%= acount %>line2" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine2()) %>">
     </td>
   </tr>
   <tr class="containerBody">
@@ -756,7 +700,7 @@ Modify Account<br>
       City
     </td>
     <td>
-      <input type=text size=28 name="address<%= acount %>city" maxlength=80 value="<%= toHtmlValue(thisAddress.getCity()) %>">
+      <input type="text" size="28" name="address<%= acount %>city" maxlength="80" value="<%= toHtmlValue(thisAddress.getCity()) %>">
     </td>
   </tr>
   <tr class="containerBody">
@@ -764,9 +708,8 @@ Modify Account<br>
       State/Province
     </td>
     <td>
-      <%=StateSelect.getHtml("address" + acount + "state", thisAddress.getState())%>
+      <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
       <% StateSelect = new StateSelect(); %>
-      <!--input type=text size=28 name="address<%= acount %>state" maxlength=80 value="<%= toHtmlValue(thisAddress.getState()) %>"-->
     </td>
   </tr>
   <tr class="containerBody">
@@ -774,7 +717,7 @@ Modify Account<br>
       Zip/Postal Code
     </td>
     <td>
-      <input type=text size=10 name="address<%= acount %>zip" maxlength=12 value="<%= toHtmlValue(thisAddress.getZip()) %>">
+      <input type="text" size="10" name="address<%= acount %>zip" maxlength="12" value="<%= toHtmlValue(thisAddress.getZip()) %>">
     </td>
   </tr>
   <tr class="containerBody">
@@ -782,9 +725,8 @@ Modify Account<br>
       Country
     </td>
     <td>
-      <%=CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry())%>
+      <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
       <% CountrySelect = new CountrySelect(); %>
-      <!--input type=text size=28 name="address<%= acount %>country" maxlength=80 value="<%= toHtmlValue(thisAddress.getCountry()) %>"-->
     </td>
   </tr>
   <tr class="containerBody">
@@ -794,13 +736,14 @@ Modify Account<br>
   </tr> 
 <%    
   }
+  ++acount;
 %>
   <tr class="containerBody">
-    <td>
-      &nbsp;
+    <td class="formLabel">
+      Type
     </td>
     <td>
-      <%= ContactAddressTypeList.getHtmlSelect("address" + (++acount) + "type", "Business") %>
+      <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", "Business") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -808,7 +751,7 @@ Modify Account<br>
       Address Line 1
     </td>
     <td>
-      <input type=text size=40 name="address<%= acount %>line1" maxlength=80>
+      <input type="text" size="40" name="address<%= acount %>line1" maxlength="80">
     </td>
   </tr>
   <tr class="containerBody">
@@ -816,7 +759,7 @@ Modify Account<br>
       Address Line 2
     </td>
     <td>
-      <input type=text size=40 name="address<%= acount %>line2" maxlength=80>
+      <input type="text" size="40" name="address<%= acount %>line2" maxlength="80">
     </td>
   </tr>
   <tr class="containerBody">
@@ -824,7 +767,7 @@ Modify Account<br>
       City
     </td>
     <td>
-      <input type=text size=28 name="address<%= acount %>city" maxlength=80>
+      <input type="text" size="28" name="address<%= acount %>city" maxlength="80">
     </td>
   </tr>
   <tr class="containerBody">
@@ -832,7 +775,7 @@ Modify Account<br>
       State/Province
     </td>
     <td>
-      <%=StateSelect.getHtml("address" + acount + "state")%>
+      <%= StateSelect.getHtml("address" + acount + "state") %>
       <% StateSelect = new StateSelect(); %>
     </td>
   </tr>
@@ -841,7 +784,7 @@ Modify Account<br>
       Zip/Postal Code
     </td>
     <td>
-      <input type=text size=10 name="address<%= acount %>zip" maxlength=12>
+      <input type="text" size="10" name="address<%= acount %>zip" maxlength="12">
     </td>
   </tr>
   <tr class="containerBody">
@@ -849,21 +792,19 @@ Modify Account<br>
       Country
     </td>
     <td>
-      <%=CountrySelect.getHtml("address" + acount + "country")%>
+      <%= CountrySelect.getHtml("address" + acount + "country") %>
       <% CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
-  </dhv:evaluate>  
-  
+  </dhv:evaluate>
 </table>
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td valign=center align=left>
+    <td colspan="2">
 	    <strong>Email Addresses</strong>
 	  </td>
   </tr>
-  
 <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
 <%  
   int ecount = 0;
@@ -873,59 +814,68 @@ Modify Account<br>
     OrganizationEmailAddress thisEmailAddress = (OrganizationEmailAddress)enumber.next();
 %>    
   <tr class="containerBody">
+    <td class="formLabel">
+      Email <%= ecount %>
+    </td>
     <td>
       <input type="hidden" name="email<%= ecount %>id" value="<%= thisEmailAddress.getId() %>">
       <%= OrgEmailTypeList.getHtmlSelect("email" + ecount + "type", thisEmailAddress.getType()) %>
-      <input type=text size=40 name="email<%= ecount %>address" maxlength=255 value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
+      <input type="text" size="40" name="email<%= ecount %>address" maxlength="255" value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
       <input type="checkbox" name="email<%= ecount %>delete" value="on">mark to remove
     </td>
   </tr>
 <%    
   }
+  ++ecount;
 %>
-
   <tr class="containerBody">
+    <td class="formLabel">
+      Email <%= ecount %>
+    </td>
     <td>
-      <%= OrgEmailTypeList.getHtmlSelect("email" + (++ecount) + "type", "Primary") %>
-      <input type=text size=40 name="email<%= ecount %>address" maxlength=255>
+      <%= OrgEmailTypeList.getHtmlSelect("email" + ecount + "type", "Primary") %>
+      <input type="text" size="40" name="email<%= ecount %>address" maxlength="255">
     </td>
   </tr>
 </dhv:evaluate>
-
-
 <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">
 <%  
   int ecount = 0;
   Iterator enumber = OrgDetails.getPrimaryContact().getEmailAddressList().iterator();
   while (enumber.hasNext()) {
     ++ecount;
-    ContactEmailAddress thisEmailAddress = (ContactEmailAddress)enumber.next();
+    ContactEmailAddress thisEmailAddress = (ContactEmailAddress) enumber.next();
 %>    
   <tr class="containerBody">
+    <td class="formLabel">
+      Email <%= ecount %>
+    </td>
     <td>
       <input type="hidden" name="email<%= ecount %>id" value="<%= thisEmailAddress.getId() %>">
       <%= ContactEmailTypeList.getHtmlSelect("email" + ecount + "type", thisEmailAddress.getType()) %>
-      <input type=text size=40 name="email<%= ecount %>address" maxlength=255 value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
+      <input type="text" size="40" name="email<%= ecount %>address" maxlength="255" value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
       <input type="checkbox" name="email<%= ecount %>delete" value="on">mark to remove
     </td>
   </tr>
 <%    
   }
+  ++ecount;
 %>
-
   <tr class="containerBody">
+    <td class="formLabel">
+      Email <%= ecount %>
+    </td>
     <td>
-      <%= ContactEmailTypeList.getHtmlSelect("email" + (++ecount) + "type", "Business") %>
-      <input type=text size=40 name="email<%= ecount %>address" maxlength=255>
+      <%= ContactEmailTypeList.getHtmlSelect("email" + ecount + "type", "Business") %>
+      <input type="text" size="40" name="email<%= ecount %>address" maxlength="255">
     </td>
   </tr>
 </dhv:evaluate>
-
 </table>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td valign=center align=left colspan="2">
+    <td colspan="2">
       <strong>Additional Details</strong>
     </td>
   </tr>  
@@ -934,7 +884,7 @@ Modify Account<br>
       Notes
     </td>
     <td>
-      <TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toString(OrgDetails.getNotes()) %></TEXTAREA>
+      <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(OrgDetails.getNotes()) %></TEXTAREA>
     </td>
   </tr>
 </table>
