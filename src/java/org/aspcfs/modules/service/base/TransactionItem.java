@@ -65,11 +65,11 @@ public class TransactionItem {
   
   public void setAction(Element objectElement) {
     if (objectElement.hasAttributes()) {
-      if (objectElement.getAttribute("type") != null) {
-        this.setAction(objectElement.getAttribute("type"));
-      } else {
-        this.setAction(objectElement.getAttribute("action"));
+      String thisAction = objectElement.getAttribute("type");
+      if (thisAction == null || thisAction.equals("")) {
+        thisAction = objectElement.getAttribute("action");
       }
+      this.setAction(action);
     }
   }
   
