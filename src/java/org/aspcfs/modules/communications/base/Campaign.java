@@ -42,6 +42,7 @@ public class Campaign extends GenericBean {
 	private String subject = null;
 	private String message = null;
 	private int sendMethodId = -1;
+	private String deliveryName = null;
 
   public final static int IDLE = 1;
   public final static int QUEUE = 2;
@@ -93,9 +94,10 @@ public class Campaign extends GenericBean {
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT c.*, msg.name as messageName " +
+        "SELECT c.*, msg.name as messageName, dt.description as delivery " +
         "FROM campaign c " +
         "LEFT JOIN message msg ON (c.message_id = msg.id) " +
+	"LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
         "WHERE c.id > -1 ");
 
     if (campaignId != null && !campaignId.equals("")) {
@@ -164,6 +166,9 @@ public class Campaign extends GenericBean {
     this.sentCount = tmp;
   }
 
+public int getSendMethodId() {
+	return sendMethodId;
+}
 
   /**
    *  Sets the MessageName attribute of the Campaign object
@@ -460,6 +465,13 @@ public class Campaign extends GenericBean {
       this.enabled = true;
     }
   }
+  
+public String getDeliveryName() {
+	return deliveryName;
+}
+public void setDeliveryName(String deliveryName) {
+	this.deliveryName = deliveryName;
+}
 
 
   /**
@@ -1716,6 +1728,7 @@ public class Campaign extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     messageName = rs.getString("messageName");
+    deliveryName = rs.getString("delivery");
   }
 }
 

@@ -1,5 +1,6 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
+<jsp:useBean id="DeliveryList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body onLoad="document.inputForm.activeDate.focus()">
 <script language="JavaScript" type="text/javascript" src="/javascript/checkDate.js"></script>
@@ -55,6 +56,16 @@
       <input type="checkbox" name="active" <%= Campaign.getActive("checked") %>>Ready to Run--%>
     </td>
   </tr>
+  
+  <tr class="containerBody">
+      <td class="formLabel" valign="center" nowrap>
+      Delivery Method
+    </td>
+    <td width="100%">
+      <%=DeliveryList.getHtmlSelect("sendMethodId",Campaign.getSendMethodId() )%>
+    </td>
+  </tr>
+  
 </table>
 <br>
 <input type='submit' name="Save" value="Update Campaign Schedule">

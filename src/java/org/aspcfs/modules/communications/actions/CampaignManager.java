@@ -299,8 +299,16 @@ public final class CampaignManager extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "ManageCampaign", "Preview");
-
+    String submenu = context.getRequest().getParameter("submenu");
+    if (submenu == null) {
+      submenu = (String)context.getRequest().getAttribute("submenu");
+    }
+    if (submenu == null) {
+      submenu = "ManageCampaigns";
+    }
+    context.getRequest().setAttribute("submenu", submenu);
+    addModuleBean(context, submenu, "Preview");
+    
     if (errorMessage == null) {
       return ("PreviewGroupsOK");
     } else {
@@ -394,6 +402,9 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       Campaign campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
+      
+      LookupList deliveryList = new LookupList(db, "lookup_delivery_options");
+      context.getRequest().setAttribute("DeliveryList", deliveryList);
 
       SearchCriteriaListList sclList = new SearchCriteriaListList();
       sclList.setCampaignId(campaign.getId());
@@ -602,6 +613,7 @@ public final class CampaignManager extends CFSModule {
       campaign.setActiveDate(context.getRequest().getParameter("activeDate"));
       campaign.setActive(context.getRequest().getParameter("active"));
       campaign.setModifiedBy(this.getUserId(context));
+      campaign.setSendMethodId(Integer.parseInt(context.getRequest().getParameter("sendMethodId")));
       resultCount = campaign.updateSchedule(db);
     } catch (Exception e) {
       errorMessage = e;

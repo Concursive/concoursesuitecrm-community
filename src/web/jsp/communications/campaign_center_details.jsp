@@ -68,6 +68,16 @@
       <a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>"><%= (Campaign.hasDetails()?"<font color='green'>Scheduled to run on " + Campaign.getActiveDateString() + "</font>":"<font color='red'>Not Scheduled</font>") %></a>
     </td>
   </tr>
+  
+  <tr class="containerBody">
+    <td class="formLabel">
+      Delivery
+    </td>
+    <td width="100%">
+      <a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>"><%= (Campaign.hasDetails()?"<font color='green'>" + toHtml(Campaign.getDeliveryName())  + "</font>":"<font color='red'>Not Specified</font>") %></a>
+    </td>
+  </tr>
+  
 <%  
   if (Campaign.isReadyToActivate()) {
 %>  

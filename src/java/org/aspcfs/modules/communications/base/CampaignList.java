@@ -284,8 +284,9 @@ public void setIdRange(String idRange) {
     StringBuffer sqlOrder = new StringBuffer();
 
     sqlSelect.append(
-        "SELECT c.*, msg.name as messageName FROM campaign c " +
+        "SELECT c.*, msg.name as messageName, dt.description as delivery FROM campaign c " +
         "LEFT JOIN message msg ON (c.message_id = msg.id) " +
+	"LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
         //"LEFT JOIN scheduled_recipient rl ON (c.list_id = rl.id) " +
     //"LEFT JOIN campaign_run cr ON (c.runId = run_id.id) " +
     //"LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
