@@ -645,9 +645,10 @@
          manifest="${pref.dir}/cfs/war/MANIFEST.MF"
          />
     <!-- Create the distributable .zip file -->
-    <zip destfile="${dist.dir}/dhcrm.war.zip">
+    <zip destfile="${dist.dir}/dhcrm_war.zip">
       <fileset dir="${doc.dir}" includes="Binary*EULA.rtf"/>
       <fileset dir="${doc.dir}" includes="Dark*Horse*CRM*Installation*and*Setup.pdf"/>
+      <fileset dir="${doc.dir}/Change Logs" includes="readme.txt"/>
       <fileset dir="${dist.dir}" includes="darkhorse.war"/>
     </zip>
     <!-- Cleanup files -->
