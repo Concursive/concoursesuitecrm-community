@@ -51,9 +51,7 @@ public class TicketLogList extends Vector {
 
       if (thisEntry.isValid()) {
         this.addElement(thisEntry);
-      } else {
-        System.out.println("not inserting" + request.getParameter("refresh"));
-      }
+      } 
     }
   }
 
@@ -96,7 +94,6 @@ public void setDoSystemMessages(boolean doSystemMessages) {
     TicketLog tempLog = null;
 
     if (prev == null) {
-      System.out.println("The first");
       return false;
     } else {
       if (current.getAssignedTo() != prev.getAssignedTo()) {
@@ -131,14 +128,22 @@ public void setDoSystemMessages(boolean doSystemMessages) {
         tempLog.setEntryText("[ Severity changed to " + tempLog.getSeverityName() + " ]");
         this.addElement(tempLog);
       }
+      
 
-      if (current.getClosed() != prev.getClosed()) {
+      if (current.getClosed() && !prev.getClosed()) {
+        tempLog = new TicketLog();
+        tempLog.createSysMsg(prev);
+        tempLog.setEntryText("[ Ticket Re-opened ]");
+        this.addElement(tempLog);
+      }
+      
+      if (!current.getClosed() && prev.getClosed()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
         tempLog.setEntryText("[ Ticket Closed ]");
         this.addElement(tempLog);
       }
-
+      
       return true;
     }
   }
@@ -258,10 +263,10 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
       TicketLog thisTicketLog = new TicketLog(rs);
       
       if (doSystemMessages) {
-              systemResult = this.setSystemMessages(thisTicketLog, prevTicketLog);
+                systemResult = this.setSystemMessages(thisTicketLog, prevTicketLog);
                 if (thisTicketLog.getEntryText() != null && !(thisTicketLog.getEntryText().equals(""))) {
                         this.addElement(thisTicketLog);
-                }
+                } 
       } else {
               this.addElement(thisTicketLog);
       }

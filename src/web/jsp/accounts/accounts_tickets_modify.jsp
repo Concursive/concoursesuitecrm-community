@@ -126,9 +126,10 @@ Modify Ticket<br>
     <td class="containerBack">
 <form name="details" action="/AccountTickets.do?command=UpdateTicket&auto-populate=true" method="post">    
 <% if (TicketDetails.getClosed() != null) { %>
-  <input type=button value="Reopen">
-  <% if (request.getParameter("return") != null) {%>
-    <% if (request.getParameter("return").equals("list")) {%>
+  <input type="submit" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
+    <% if (request.getParameter("return") != null) {%>
+
+  <% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
   <%} else {%> 
         <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
@@ -330,47 +331,48 @@ Modify Ticket<br>
 		</tr>
 </table>
 <br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-		<td colspan=4 valign=center align=left>
-      <strong>Ticket Log History</strong>
-		</td>     
-  </tr>
-<%  
+  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+    <tr bgcolor="#DEE0FA">
+      <td colspan="3" valign="center" align="left">
+        <strong>Ticket Log History</strong>
+      </td>     
+    </tr>
+	
+	<%  
 		Iterator hist = TicketDetails.getHistory().iterator();
 		if (hist.hasNext()) {
 			while (hist.hasNext()) {
 				TicketLog thisEntry = (TicketLog)hist.next();
-%>    
-<% if (thisEntry.getSystemMessage() == true) {%>
-  <tr bgColor="#F1F0E0">
-<% } else { %>
-  <tr class="containerBody">
-<%}%>
-    <td nowrap valign=center class="formLabel">
-			<%=toHtml(thisEntry.getEnteredByName())%>
-    </td>
-    <td nowrap valign=center>
-			<%=thisEntry.getEnteredString()%>
-    </td>
-    <td valign=center>
-			<%=toHtml(thisEntry.getEntryText())%>
-    </td>
-  </tr>
-<%    
-    }
-  } else {
-%>
-  <tr class="containerBody">
-    <td>
-			<font color="#9E9E9E" colspan=3>No Log Entries.</font>
-    </td>
-  </tr>
-<%}%>
+	%>    
+  <% if (thisEntry.getSystemMessage() == true) {%>
+    <tr bgColor="#F1F0E0">
+  <% } else { %>
+    <tr class="containerBody">
+  <%}%>
+			<td nowrap valign="top" width="100" class="formLabel">
+        <%=toHtml(thisEntry.getEnteredByName())%>
+			</td>
+			<td nowrap valign="top" width="150">
+        <%=thisEntry.getEnteredString()%>
+			</td>
+			<td valign="top">
+        <%=toHtml(thisEntry.getEntryText())%>
+			</td>
+    </tr>
+	<%    
+			}
+		} else {
+	%>
+    <tr>
+      <td>
+        <font color="#9E9E9E" colspan="3">No Log Entries.</font>
+			</td>
+    </tr>
+  <%}%>
 </table>
-<br>
+&nbsp;<br>
 <% if (TicketDetails.getClosed() != null) { %>
-  <input type=button value="Reopen">
+  <input type="submit" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
     <% if (request.getParameter("return") != null) {%>
 
   <% if (request.getParameter("return").equals("list")) {%>

@@ -25,7 +25,7 @@
   <tr>
 		<td class="containerBack">
       <% if (TicketDetails.getClosed() != null) { %>
-        <dhv:permission name="tickets-tickets-edit"><input type="button" value="Reopen"></dhv:permission>
+        <dhv:permission name="tickets-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='/TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();"></dhv:permission>
       <%} else {%>
         <dhv:permission name="tickets-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='/TroubleTickets.do?command=Modify&auto-populate=true';submit();"></dhv:permission>
         <dhv:permission name="tickets-tickets-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='/TroubleTickets.do?command=Delete&id=<%= TicketDetails.getId()%>';confirmSubmit(this.form);"></dhv:permission>
@@ -242,7 +242,7 @@
 </table>
 &nbsp;<br>
 		<% if (TicketDetails.getClosed() != null) { %>
-      <dhv:permission name="tickets-tickets-edit"><input type=button value="Reopen"></dhv:permission>
+      <dhv:permission name="tickets-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='/TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();"></dhv:permission>
 		<%} else {%>
       <dhv:permission name="tickets-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='/TroubleTickets.do?command=Modify&auto-populate=true';submit();"></dhv:permission>
         <dhv:permission name="tickets-tickets-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='/TroubleTickets.do?command=Delete&id=<%= TicketDetails.getId()%>';confirmSubmit(this.form);"></dhv:permission>

@@ -34,6 +34,43 @@ public final class AccountTickets extends CFSModule {
     addModuleBean(context, module, module);
     return ("IncludeOK");
   }
+  
+  public String executeCommandReopenTicket(ActionContext context) {
+
+    if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
+      return ("PermissionError");
+    }    
+    int resultCount = -1;
+    Exception errorMessage = null;
+    Connection db = null;
+    Ticket thisTicket = null;
+    
+    try {
+      db = this.getConnection(context);
+      thisTicket = new Ticket(db, Integer.parseInt(context.getRequest().getParameter("id")));
+      thisTicket.setModifiedBy(getUserId(context));
+      resultCount = thisTicket.reopen(db);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+      
+    if (errorMessage == null) {
+      if (resultCount == -1) {
+        return (executeCommandTicketDetails(context));
+      } else if (resultCount == 1) {
+        return (executeCommandTicketDetails(context));
+      } else {
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+        return ("UserError");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+    
+  }
 
 
   /**
@@ -149,7 +186,6 @@ public final class AccountTickets extends CFSModule {
           recordInserted = newTic.insert(db);
         }
       } else {
-        System.out.println("trying to use " + newTic.getOrgId());
         recordInserted = newTic.insert(db);
       }
 
@@ -307,11 +343,10 @@ public final class AccountTickets extends CFSModule {
         newTic = new Ticket(db, Integer.parseInt(ticketId));
       } else {
         newTic = (Ticket) context.getFormBean();
+        newTic.getHistory().setTicketId(newTic.getId());
+        newTic.getHistory().buildList(db);        
       }
       
-      newTic.getHistory().setTicketId(newTic.getId());
-      newTic.getHistory().buildList(db);
-
       Organization thisOrganization = new Organization(db, newTic.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
 

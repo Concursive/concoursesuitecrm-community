@@ -469,7 +469,6 @@ public final class TroubleTickets extends CFSModule {
     String ticketId = null;
 
     PagedListInfo ticListInfo = this.getPagedListInfo(context, "TicketDetails");
-
     ticListInfo.setColumnToSortBy("entered");
 
     try {
@@ -645,6 +644,43 @@ public final class TroubleTickets extends CFSModule {
     } else {
       return ("SystemError");
     }
+  }
+  
+  public String executeCommandReopen(ActionContext context) {
+
+    if (!(hasPermission(context, "tickets-tickets-edit"))) {
+      return ("PermissionError");
+    }    
+    int resultCount = -1;
+    Exception errorMessage = null;
+    Connection db = null;
+    Ticket thisTicket = null;
+    
+    try {
+      db = this.getConnection(context);
+      thisTicket = new Ticket(db, Integer.parseInt(context.getRequest().getParameter("id")));
+      thisTicket.setModifiedBy(getUserId(context));
+      resultCount = thisTicket.reopen(db);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+      
+    if (errorMessage == null) {
+      if (resultCount == -1) {
+        return (executeCommandDetails(context));
+      } else if (resultCount == 1) {
+        return (executeCommandDetails(context));
+      } else {
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+        return ("UserError");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+    
   }
 
 

@@ -1627,6 +1627,17 @@ public class Ticket extends GenericBean {
 
     if (this.getCloseIt() == true) {
       pst.setString(++i, this.getSolution());
+      
+      TicketLog thisEntry = new TicketLog();
+      thisEntry.setEnteredBy(this.getModifiedBy());
+      thisEntry.setDepartmentCode(this.getDepartmentCode());
+      thisEntry.setAssignedTo(this.getAssignedTo());
+      thisEntry.setPriorityCode(this.getPriorityCode());
+      thisEntry.setSeverityCode(this.getSeverityCode());
+      //thisEntry.setEntryText("Solution: " + this.getSolution());
+      thisEntry.setTicketId(this.getId());
+      thisEntry.setClosed(true);
+      thisEntry.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
     }
 
     pst.setInt(++i, id);
@@ -1638,6 +1649,48 @@ public class Ticket extends GenericBean {
     resultCount = pst.executeUpdate();
     pst.close();
 
+    return resultCount;
+  }
+  
+  //reopen a ticket
+  
+  public int reopen(Connection db) throws SQLException {
+    int resultCount = 0;
+
+    db.setAutoCommit(false);
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    
+    sql.append(
+        "UPDATE ticket SET closed = ?, solution = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ? ");
+    sql.append(
+        "WHERE ticketid = ? ");
+
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+
+    pst.setNull(++i, java.sql.Types.INTEGER);
+    pst.setString(++i, "");
+    pst.setInt(++i, this.getModifiedBy());
+    pst.setInt(++i, this.getId());
+    
+    resultCount = pst.executeUpdate();
+    pst.close();
+    
+    
+    TicketLog thisEntry = new TicketLog();
+    
+    thisEntry.setEnteredBy(this.getModifiedBy());
+    thisEntry.setDepartmentCode(this.getDepartmentCode());
+    thisEntry.setAssignedTo(this.getAssignedTo());
+    thisEntry.setPriorityCode(this.getPriorityCode());
+    thisEntry.setSeverityCode(this.getSeverityCode());
+    thisEntry.setEntryText(this.getComment());
+    thisEntry.setTicketId(this.getId());
+    thisEntry.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
+
+    db.commit();
+    
     return resultCount;
   }
 
@@ -1691,16 +1744,16 @@ public class Ticket extends GenericBean {
     try {
       db.setAutoCommit(false);
       i = this.update(db, false);
-
+      
       //insert a new entry into the ticket log only if there is a comment entered
       //TODO: OR when a ticket is being re-assigned, re-prioritized, or re-severitized
-      if (this.getComment() != null && !(this.getComment().equals(""))) {
+      
+      //if (this.getComment() != null && !(this.getComment().equals(""))) {
         TicketLog thisEntry = new TicketLog();
         thisEntry.setEnteredBy(this.getModifiedBy());
         thisEntry.setDepartmentCode(this.getDepartmentCode());
         thisEntry.setAssignedTo(this.getAssignedTo());
         thisEntry.setEntryText(this.getComment());
-
         thisEntry.setTicketId(this.getId());
         thisEntry.setPriorityCode(this.getPriorityCode());
         thisEntry.setSeverityCode(this.getSeverityCode());
@@ -1710,14 +1763,14 @@ public class Ticket extends GenericBean {
         }
 
         history.addElement(thisEntry);
-      }
+      //}
 
       Iterator hist = history.iterator();
       while (hist.hasNext()) {
         TicketLog thisLog = (TicketLog) hist.next();
         thisLog.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
       }
-
+      
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1728,8 +1781,7 @@ public class Ticket extends GenericBean {
     db.setAutoCommit(true);
     return i;
   }
-
-
+  
   /**
    *  Gets the Valid attribute of the Ticket object
    *
