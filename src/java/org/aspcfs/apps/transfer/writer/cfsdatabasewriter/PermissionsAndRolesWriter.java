@@ -8,6 +8,13 @@ import java.sql.*;
 import org.aspcfs.modules.admin.base.*;
 import com.darkhorseventures.database.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author     matt rajkowski
+ *@created    January 23, 2003
+ *@version    $Id$
+ */
 public class PermissionsAndRolesWriter implements DataWriter {
   private ConnectionPool sqlDriver = null;
   private Connection db = null;
@@ -19,91 +26,161 @@ public class PermissionsAndRolesWriter implements DataWriter {
   private String pass = null;
 
 
+  /**
+   *  Sets the driver attribute of the PermissionsAndRolesWriter object
+   *
+   *@param  tmp  The new driver value
+   */
   public void setDriver(String tmp) {
     this.driver = tmp;
   }
 
 
+  /**
+   *  Sets the url attribute of the PermissionsAndRolesWriter object
+   *
+   *@param  tmp  The new url value
+   */
   public void setUrl(String tmp) {
     this.url = tmp;
   }
 
 
+  /**
+   *  Sets the user attribute of the PermissionsAndRolesWriter object
+   *
+   *@param  tmp  The new user value
+   */
   public void setUser(String tmp) {
     this.user = tmp;
   }
 
 
+  /**
+   *  Sets the pass attribute of the PermissionsAndRolesWriter object
+   *
+   *@param  tmp  The new pass value
+   */
   public void setPass(String tmp) {
     this.pass = tmp;
   }
 
 
+  /**
+   *  Sets the autoCommit attribute of the PermissionsAndRolesWriter object
+   *
+   *@param  flag  The new autoCommit value
+   */
   public void setAutoCommit(boolean flag) {
   }
 
 
+  /**
+   *  Gets the driver attribute of the PermissionsAndRolesWriter object
+   *
+   *@return    The driver value
+   */
   public String getDriver() {
     return driver;
   }
 
 
+  /**
+   *  Gets the url attribute of the PermissionsAndRolesWriter object
+   *
+   *@return    The url value
+   */
   public String getUrl() {
     return url;
   }
 
 
+  /**
+   *  Gets the user attribute of the PermissionsAndRolesWriter object
+   *
+   *@return    The user value
+   */
   public String getUser() {
     return user;
   }
 
 
+  /**
+   *  Gets the pass attribute of the PermissionsAndRolesWriter object
+   *
+   *@return    The pass value
+   */
   public String getPass() {
     return pass;
   }
 
 
+  /**
+   *  Gets the version attribute of the PermissionsAndRolesWriter object
+   *
+   *@return    The version value
+   */
   public double getVersion() {
     return 1.0d;
   }
 
 
+  /**
+   *  Gets the name attribute of the PermissionsAndRolesWriter object
+   *
+   *@return    The name value
+   */
   public String getName() {
     return "Permissions and Roles Writer";
   }
 
 
+  /**
+   *  Gets the description attribute of the PermissionsAndRolesWriter object
+   *
+   *@return    The description value
+   */
   public String getDescription() {
     return "Inserts data directly into a CFS database";
   }
 
 
+  /**
+   *  Gets the lastResponse attribute of the PermissionsAndRolesWriter object
+   *
+   *@return    The lastResponse value
+   */
   public String getLastResponse() {
     return String.valueOf(id);
   }
 
 
+  /**
+   *  Gets the configured attribute of the PermissionsAndRolesWriter object
+   *
+   *@return    The configured value
+   */
   public boolean isConfigured() {
     String tmpUrl = System.getProperty("url");
     if (tmpUrl != null) {
       url = tmpUrl;
     }
-    
+
     String tmpDriver = System.getProperty("driver");
     if (tmpDriver != null) {
       driver = tmpDriver;
     }
-    
+
     String tmpUser = System.getProperty("user");
     if (tmpUser != null) {
       user = tmpUser;
     }
-    
+
     String tmpPass = System.getProperty("pass");
     if (tmpPass != null) {
       pass = tmpPass;
     }
-    
+
     if (url == null) {
       return false;
     }
@@ -125,6 +202,12 @@ public class PermissionsAndRolesWriter implements DataWriter {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  record  Description of the Parameter
+   *@return         Description of the Return Value
+   */
   public boolean save(DataRecord record) {
     try {
       if (record.getName().equals("permissionCategory")) {
@@ -139,7 +222,7 @@ public class PermissionsAndRolesWriter implements DataWriter {
         id = thisCategory.getId();
         return true;
       }
-      
+
       if (record.getName().equals("permission")) {
         Permission thisPermission = new Permission();
         thisPermission.setCategoryId(record.getValue("categoryId"));
@@ -156,7 +239,7 @@ public class PermissionsAndRolesWriter implements DataWriter {
         id = thisPermission.getId();
         return true;
       }
-      
+
       if (record.getName().equals("role")) {
         Role thisRole = new Role();
         thisRole.setRole(record.getValue("role"));
@@ -167,7 +250,7 @@ public class PermissionsAndRolesWriter implements DataWriter {
         id = thisRole.getId();
         return true;
       }
-      
+
       if (record.getName().equals("rolePermission")) {
         RolePermission thisRolePermission = new RolePermission();
         thisRolePermission.setRoleId(record.getValue("roleId"));
@@ -189,19 +272,42 @@ public class PermissionsAndRolesWriter implements DataWriter {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean commit() {
     return true;
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean rollback() {
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  record  Description of the Parameter
+   *@return         Description of the Return Value
+   */
   public boolean load(DataRecord record) {
     return false;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean close() {
     if (db != null) {
       try {
