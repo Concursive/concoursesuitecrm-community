@@ -23,6 +23,8 @@
     <action name="MyCFSInbox"/>
     <action name="MyTasks"/>
     <action name="MyTasksForward"/>
+    <action name="MyActionLists"/>
+    <action name="MyActionContacts"/>
     <action name="CompanyDirectory"/>
     <action name="Reassignments"/>
     <action name="Reassignments"/>
@@ -58,6 +60,13 @@
       <long_html value="My Tasks"/>
       <short_html value="My&lt;br&gt;Tasks"/>
       <link value="MyTasks.do"/>
+    </submenu>
+    
+    <submenu name="My Action Lists">
+     <permission value="myhomepage-tasks-view"/>
+      <long_html value="My Action Lists"/>
+      <short_html value="My&lt;br&gt;Action Lists"/>
+      <link value="MyActionLists.do?command=List&amp;linkModuleId=2"/>
     </submenu>
     
     <submenu name="Internal Contacts">
