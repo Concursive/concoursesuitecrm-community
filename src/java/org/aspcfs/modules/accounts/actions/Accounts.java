@@ -638,60 +638,45 @@ public final class Accounts extends CFSModule {
    *@param  context  Description of Paramet47hu *@return Description of the
    *      Returned Value
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandView(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-view"))) {
+    if (!hasPermission(context, "accounts-accounts-view")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
-
-    PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
-    orgListInfo.setLink("Accounts.do?command=View");
-
-    //NOTE: For any new container menu item...
-    //Need to reset any sub PagedListInfos since this is a new account
-    this.resetPagedListInfo(context);
-
     Connection db = null;
     OrganizationList organizationList = new OrganizationList();
-
+    //Prepare pagedListInfo
+    PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
+    orgListInfo.setLink("Accounts.do?command=View");
+    //Need to reset any sub PagedListInfos since this is a new account
+    this.resetPagedListInfo(context);
     try {
       db = this.getConnection(context);
-
+      //Account type lookup
       LookupList typeSelect = new LookupList(db, "lookup_account_types");
       typeSelect.addItem(0, "All Types");
       context.getRequest().setAttribute("TypeSelect", typeSelect);
-
+      //Build the organization list
       organizationList.setPagedListInfo(orgListInfo);
       organizationList.setMinerOnly(false);
       organizationList.setTypeId(orgListInfo.getFilterKey("listFilter1"));
       orgListInfo.setSearchCriteria(organizationList);
-
       if ("my".equals(orgListInfo.getListView())) {
         organizationList.setOwnerId(this.getUserId(context));
       }
-
       if ("disabled".equals(orgListInfo.getListView())) {
         organizationList.setIncludeEnabled(0);
       }
-
       organizationList.buildList(db);
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
       context.getRequest().setAttribute("OrgList", organizationList);
       addModuleBean(context, "View Accounts", "Accounts View");
       return ("ListOK");
-    } else {
+    } catch (Exception errorMessage) {
+      //Go through the SystemError process
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
     }
   }
 
@@ -704,19 +689,15 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandViewTickets(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-tickets-view"))) {
+    if (!hasPermission(context, "accounts-accounts-tickets-view")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
-
     Connection db = null;
     TicketList ticList = new TicketList();
     Organization newOrg = null;
-
+    //Process request parameters
     int passedId = Integer.parseInt(context.getRequest().getParameter("orgId"));
-
+    //Prepare PagedListInfo
     PagedListInfo ticketListInfo = this.getPagedListInfo(context, "AccountTicketInfo", "t.entered", "desc");
     ticketListInfo.setLink("Accounts.do?command=ViewTickets&orgId=" + passedId);
     ticList.setPagedListInfo(ticketListInfo);
@@ -725,20 +706,15 @@ public final class Accounts extends CFSModule {
       newOrg = new Organization(db, passedId);
       ticList.setOrgId(passedId);
       ticList.buildList(db);
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
       context.getRequest().setAttribute("TicList", ticList);
       context.getRequest().setAttribute("OrgDetails", newOrg);
       addModuleBean(context, "View Accounts", "Accounts View");
       return ("ViewTicketsOK");
-    } else {
+    } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
     }
   }
 
