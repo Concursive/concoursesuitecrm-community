@@ -290,8 +290,8 @@ public class SMTPMessage {
 
         //Text message -- always include for those without HTML viewers
         MimeBodyPart textPart = new MimeBodyPart();
-        textPart.setText(body);
-        textPart.setContent(body, "text/plain");
+        textPart.setText(HTMLUtils.htmlToText(body));
+        textPart.setContent(HTMLUtils.htmlToText(body), "text/plain");
         mpContent.addBodyPart(textPart);
 
         //Html message
