@@ -265,17 +265,20 @@ public class User extends GenericBean {
       this.setPassword2(newPassword);
       resultCount = this.newPassword(db, context);
       
-              
       if (resultCount > -1) {
           modUser = new User();
           modUser.setBuildContact(true);
           modUser.buildRecord(db, modifiedBy);
+          
+          this.setBuildContact(true);
+          this.buildResources(db);
+          
           //send email
           SMTPMessage mail = new SMTPMessage();
           mail.setHost("127.0.0.1");
           mail.setFrom("cfs-root@darkhorseventures.com");
           mail.setType("text/html");      
-          mail.setTo("chris@darkhorseventures.com");
+          mail.setTo(this.getContact().getEmailAddress("Business"));
           mail.setSubject("CFS password changed");
           mail.setBody("Your CFS User account password has been changed by " + modUser.getUsername() + " (" + modUser.getContact().getNameLastFirst() + ").<br><br>" +
             " Your new CFS password is the following:<br>" + newPassword + "<br><br>" +
@@ -1946,11 +1949,17 @@ public class User extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE access " +
-        "SET password = ? " +
-        "WHERE user_id = ? ");
+        "SET password = ? ");
+    if (modifiedBy > -1) {
+      sql.append(", modifiedby = ? ");
+    }
+    sql.append(" WHERE user_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, encryptPassword(password1));
+    if (modifiedBy > -1) {
+      pst.setInt(++i, modifiedBy);
+    }    
     pst.setInt(++i, getId());
     resultCount = pst.executeUpdate();
     pst.close();
