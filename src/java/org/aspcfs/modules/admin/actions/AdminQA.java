@@ -6,6 +6,7 @@ import com.darkhorseventures.database.*;
 import java.sql.*;
 import org.aspcfs.modules.help.base.*;
 import java.util.*;
+import org.aspcfs.utils.web.PagedListInfo;
 
 /**
  *  Various QA tools for Admin
@@ -27,6 +28,9 @@ public class AdminQA extends CFSModule {
     try {
       db = getConnection(context);
       HelpItemList contents = new HelpItemList();
+      PagedListInfo pagedListInfo = new PagedListInfo();
+      pagedListInfo.setItemsPerPage(0);
+      pagedListInfo.setDefaultSort("module, section, subsection", null);
       contents.buildList(db);
       Iterator i = contents.iterator();
       while (i.hasNext()) {
