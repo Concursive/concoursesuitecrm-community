@@ -56,6 +56,7 @@ public class UserList extends Vector {
   private String username = null;
 
   private boolean excludeDisabledIfUnselected = false;
+  private boolean includeUsersWithRolesOnly = true;
   private java.sql.Timestamp enteredRangeStart = null;
   private java.sql.Timestamp enteredRangeEnd = null;
 
@@ -176,6 +177,17 @@ public class UserList extends Vector {
 
 
   /**
+   *  Gets the includeUsersWithRolesOnly attribute of the UserList object
+   *
+   *@return    The includeUsersWithRolesOnly value
+   */
+  public boolean getIncludeUsersWithRolesOnly() {
+    return includeUsersWithRolesOnly;
+  }
+
+
+
+  /**
    *  Sets the excludeDisabledIfUnselected attribute of the UserList object
    *
    *@param  excludeDisabledIfUnselected  The new excludeDisabledIfUnselected
@@ -183,6 +195,16 @@ public class UserList extends Vector {
    */
   public void setExcludeDisabledIfUnselected(boolean excludeDisabledIfUnselected) {
     this.excludeDisabledIfUnselected = excludeDisabledIfUnselected;
+  }
+
+
+  /**
+   *  Sets the includeUsersWithRolesOnly attribute of the UserList object
+   *
+   *@param  tmp  The new includeUsersWithRolesOnly value
+   */
+  public void setIncludeUsersWithRolesOnly(boolean tmp) {
+    this.includeUsersWithRolesOnly = tmp;
   }
 
 
@@ -392,7 +414,14 @@ public class UserList extends Vector {
   }
 
 
-  public void setIncludeAliases(int tmp) { this.includeAliases = tmp; }
+  /**
+   *  Sets the includeAliases attribute of the UserList object
+   *
+   *@param  tmp  The new includeAliases value
+   */
+  public void setIncludeAliases(int tmp) {
+    this.includeAliases = tmp;
+  }
 
 
   /**
@@ -427,7 +456,13 @@ public class UserList extends Vector {
   public void setBuildContact(boolean tmp) {
     this.buildContact = tmp;
   }
-  
+
+
+  /**
+   *  Sets the buildContactDetails attribute of the UserList object
+   *
+   *@param  tmp  The new buildContactDetails value
+   */
   public void setBuildContactDetails(boolean tmp) {
     this.buildContactDetails = tmp;
   }
@@ -484,7 +519,14 @@ public class UserList extends Vector {
   }
 
 
-  public int getIncludeAliases() { return includeAliases; }
+  /**
+   *  Gets the includeAliases attribute of the UserList object
+   *
+   *@return    The includeAliases value
+   */
+  public int getIncludeAliases() {
+    return includeAliases;
+  }
 
 
   /**
@@ -862,9 +904,9 @@ public class UserList extends Vector {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM access a " +
-        "LEFT JOIN contact c ON (a.contact_id = c.contact_id), " +
-        "role r " +
-        "WHERE a.role_id = r.role_id ");
+        "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
+        "LEFT JOIN role r ON (a.role_id = r.role_id) " +
+        "WHERE a.user_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -923,9 +965,9 @@ public class UserList extends Vector {
         "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
         "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN access m_usr ON (a.manager_id = m_usr.user_id), " +
-        "role r " +
-        "WHERE a.role_id = r.role_id ");
+        "LEFT JOIN access m_usr ON (a.manager_id = m_usr.user_id) " +
+        "LEFT JOIN role r ON (a.role_id = r.role_id) " +
+        "WHERE a.user_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -1002,15 +1044,12 @@ public class UserList extends Vector {
         sqlFilter.append("AND a.contact_id > -1 ");
       }
     }
-
     if (enabled > -1) {
       sqlFilter.append("AND a.enabled = ? ");
     }
-
     if (username != null) {
       sqlFilter.append("AND a.username = ? ");
     }
-
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
         sqlFilter.append("AND a.entered > ? ");
@@ -1027,6 +1066,9 @@ public class UserList extends Vector {
     }
     if (enteredRangeEnd != null) {
       sqlFilter.append("AND a.entered <= ? ");
+    }
+    if (includeUsersWithRolesOnly) {
+      sqlFilter.append("AND a.role_id > -1 AND a.role_id IS NOT NULL ");
     }
   }
 
