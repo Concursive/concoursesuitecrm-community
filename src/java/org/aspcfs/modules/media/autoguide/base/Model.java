@@ -299,8 +299,10 @@ public class Model {
         "model.entered, model.enteredby, " +
         "model.modified, model.modifiedby " +
         "FROM autoguide_model model " +
-        "WHERE lower(model_name) = ? ");
+        "WHERE lower(model_name) = ? " +
+        "AND model.make_id = ? ");
     pst.setString(1, name.toLowerCase());
+    pst.setInt(2, makeId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);

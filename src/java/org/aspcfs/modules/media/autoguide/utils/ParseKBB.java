@@ -111,15 +111,21 @@ public class ParseKBB {
     }
 
     Model model = new Model(modelText);
+    model.setMakeId(make.getId());
     if (!model.exists(db)) {
-      model.setMakeId(make.getId());
+      Logger logger = Logger.getLogger("com.darkhorseventures.autoguide");
+      logger.fine("Inserting Model-> " + model.getName());
+      //System.out.println("Inserting-> " + make.getName() + " | " + model.getName());
       model.insert(db);
-    }
-
-    while (st.hasMoreTokens()) {
-      int year = Integer.parseInt(st.nextToken());
-      Vehicle thisVehicle = new Vehicle(year, make.getId(), model.getId());
-      thisVehicle.insert(db);
+      
+      while (st.hasMoreTokens()) {
+        int year = Integer.parseInt(st.nextToken());
+        Vehicle thisVehicle = new Vehicle(year, make.getId(), model.getId());
+        logger.fine("Inserting Year-> " + thisVehicle.getYear());
+        //System.out.println("         -> " + thisVehicle.getYear());
+        thisVehicle.insert(db);
+      }
+      
     }
   }
 }

@@ -136,6 +136,16 @@
   </tr>
 </dhv:evaluate>
 </table>
+&nbsp;<br>
+<% String phoneType = "Main"; %>
+Ad Text:
+<input type="text" name="adtext" size="80" value="<%= toHtml(InventoryItem.getOrganization().getName()) %><dhv:evaluate exp="<%= hasText(InventoryItem.getOrganization().getAccountNumber()) %>"> (<%= toHtml(InventoryItem.getOrganization().getAccountNumber()) %>)</dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getOrganization().getPhoneNumber(phoneType)) %>"> <%= toHtml(InventoryItem.getOrganization().getPhoneNumber("Main")) %></dhv:evaluate> <%= toHtml(InventoryItem.getVehicle().getMake().getName()) %> <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %> <%= InventoryItem.getVehicle().getYear() %><dhv:evaluate exp="<%= hasText(InventoryItem.getStockNo()) %>"> <%= toHtml(InventoryItem.getStockNo()) %></dhv:evaluate><dhv:evaluate exp="<%= (InventoryItem.getMileage() > -1) %>"> <%= InventoryItem.getMileageString() %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getVin()) %>"> <%= toHtml(InventoryItem.getVin()) %></dhv:evaluate><dhv:evaluate exp="<%= (InventoryItem.getSellingPrice() > 0) %>"> <%= InventoryItem.getSellingPriceString() %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getExteriorColor()) %>"> <%= toHtml(InventoryItem.getExteriorColor()) %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getCondition()) %>"> <%= toHtml(InventoryItem.getCondition()) %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getComments()) %>"> <%= toHtml(InventoryItem.getComments()) %></dhv:evaluate><dhv:evaluate exp="<%= InventoryItem.hasOptions() %>"> <%
+      Iterator options = InventoryItem.getOptions().iterator();
+      while (options.hasNext()) {
+        Option thisOption = (Option)options.next();
+%><%= toHtml(thisOption.getName()) %><%= (options.hasNext()?", ":"") %><%
+      }
+%></dhv:evaluate>"><br>
 <dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
