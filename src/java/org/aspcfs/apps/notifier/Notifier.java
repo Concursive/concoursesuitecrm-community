@@ -99,7 +99,7 @@ public class Notifier extends ReportBuilder {
       //Temporary default list of tasks
       this.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyOpportunityOwners");
       this.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients");
-      //this.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCallOwners");
+      this.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCallOwners");
     }
     AppUtils.loadConfig(filename, this.config);
     if (config.containsKey("FILELIBRARY")) {
@@ -201,7 +201,7 @@ public class Notifier extends ReportBuilder {
       thisNotification.setUserToNotify(thisComponent.getOwner());
       thisNotification.setModule("Opportunities");
       thisNotification.setItemId(thisComponent.getId());
-      thisNotification.setItemModified(thisComponent.getModified());
+      thisNotification.setItemModified(thisComponent.getAlertDate());
       if (thisNotification.isNew(db)) {
         OpportunityHeader thisOpportunity = new OpportunityHeader(db, thisComponent.getHeaderId());
         String relationshipType = null;
@@ -281,7 +281,7 @@ public class Notifier extends ReportBuilder {
       thisNotification.setUserToNotify(thisCall.getEnteredBy());
       thisNotification.setModule("Calls");
       thisNotification.setItemId(thisCall.getId());
-      thisNotification.setItemModified(null);
+      thisNotification.setItemModified(thisCall.getAlertDate());
       if (thisNotification.isNew(db)) {
         thisNotification.setSiteCode(baseName);
         thisNotification.setFrom((String) this.config.get("EMAILADDRESS"));
@@ -410,7 +410,7 @@ public class Notifier extends ReportBuilder {
         thisNotification.setDatabaseName(dbName);
         thisNotification.setItemId(thisCampaign.getId());
         thisNotification.setFileAttachments(attachments);
-        //thisNotification.setItemModified(thisCampaign.getActiveDate());
+        thisNotification.setItemModified(thisCampaign.getActiveDate());
         if (thisNotification.isNew(db)) {
           thisNotification.setFrom(thisCampaign.getReplyTo());
           thisNotification.setSubject(thisCampaign.getSubject());
