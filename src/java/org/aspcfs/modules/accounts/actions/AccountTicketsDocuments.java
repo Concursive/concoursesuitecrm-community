@@ -21,7 +21,7 @@ import com.isavvix.tools.*;
 import java.io.*;
 
 /**
- *  Description of the Class
+ *  Implements Documents under Account Tickets 
  *
  *@author     Mathur
  *@created    June 13, 2003
@@ -30,7 +30,7 @@ import java.io.*;
 public final class AccountTicketsDocuments extends CFSModule {
 
   /**
-   *  Description of the Method
+   *  View All documents for a particular Ticket
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -81,7 +81,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Add a document under a Ticket
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -119,7 +119,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Upload a document
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -203,7 +203,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Show form for adding a Version to an existing Ticket Document
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -251,7 +251,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Upload a Version to an existing Ticket Document
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -335,7 +335,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Show Ticket Document Details
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -376,7 +376,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Download Ticket Document
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -477,7 +477,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Modify a Ticket Document
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -518,7 +518,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Update a Ticket Document
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -569,7 +569,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Delete a Ticket Document
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -615,8 +615,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Adds a feature to the Ticket attribute of the TroubleTicketsDocuments
-   *  object
+   *  Add Ticket object
    *
    *@param  context           The feature to be added to the Ticket attribute
    *@param  db                The feature to be added to the Ticket attribute
@@ -633,8 +632,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   /**
-   *  Adds a feature to the Ticket attribute of the TroubleTicketsDocuments
-   *  object
+   *  Add Ticket object
    *
    *@param  context           The feature to be added to the Ticket attribute
    *@param  db                The feature to be added to the Ticket attribute
