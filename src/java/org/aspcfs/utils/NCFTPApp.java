@@ -1,4 +1,4 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.utils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -30,8 +30,8 @@ public class NCFTPApp {
 
 
   /**
-   *  Sets the appExecutable attribute of the NCFTPApp object, this is the
-   *  base name for all ncftp commands that will be appended, ncftpput, etc.
+   *  Sets the appExecutable attribute of the NCFTPApp object, this is the base
+   *  name for all ncftp commands that will be appended, ncftpput, etc.
    *
    *@param  tmp  The new appExecutable value
    */
@@ -41,8 +41,7 @@ public class NCFTPApp {
 
 
   /**
-   *  Sets the result attribute of the NCFTPApp object after executing a
-   *  method
+   *  Sets the result attribute of the NCFTPApp object after executing a method
    *
    *@param  tmp  The new result value
    */
@@ -90,7 +89,15 @@ public class NCFTPApp {
     this.deleteSourceFilesAfterSend = tmp;
   }
 
-  public void setMakeRemoteDir(boolean tmp) { this.makeRemoteDir = tmp; }
+
+  /**
+   *  Sets the makeRemoteDir attribute of the NCFTPApp object
+   *
+   *@param  tmp  The new makeRemoteDir value
+   */
+  public void setMakeRemoteDir(boolean tmp) {
+    this.makeRemoteDir = tmp;
+  }
 
 
   /**

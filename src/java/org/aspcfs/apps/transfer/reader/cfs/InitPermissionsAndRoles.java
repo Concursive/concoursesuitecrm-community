@@ -1,19 +1,18 @@
 package org.aspcfs.apps.transfer.reader.cfs;
 
-import org.aspcfs.apps.transfer.*;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
 import java.io.*;
-import org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
+import org.aspcfs.apps.transfer.*;
+import org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
+import org.aspcfs.utils.*;
 
 public class InitPermissionsAndRoles implements DataReader {
   public final static String fs = System.getProperty("file.separator");
