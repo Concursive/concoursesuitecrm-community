@@ -695,9 +695,12 @@ public final class MyCFS extends CFSModule {
       return ("PermissionError");
     }
     addModuleBean(context, "Home", "");
+    if (getUserId(context) == 0) {
+      return ("MaintenanceModeOK");
+    }
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     NewsArticleList newsList = null;
     Connection db = null;
-    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     //this is how we get the multiple-level heirarchy...recursive function.
     User thisRec = thisUser.getUserRecord();
 
