@@ -20,6 +20,11 @@ import com.darkhorseventures.utils.DatabaseUtils;
  */
 public class OrganizationList extends Vector {
 
+  public static final String tableName = "organization";
+  public static final String uniqueField = "org_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
   private PagedListInfo pagedListInfo = null;
   private Boolean minerOnly = null;
   private int enteredBy = -1;
@@ -40,6 +45,21 @@ public class OrganizationList extends Vector {
    */
   public OrganizationList() { }
 
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+  
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+  
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+  
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
 
   /**
    *  Sets the PagedListInfo attribute of the OrganizationList object. <p>
@@ -290,6 +310,27 @@ public class OrganizationList extends Vector {
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
+    ResultSet rs = queryList(db, pst);
+    while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.isEndOfOffset(db)) {
+        break;
+      }
+      Organization thisOrganization = this.getObject(rs);
+      this.add(thisOrganization);
+    }
+    rs.close();
+    if (pst != null) {
+      pst.close();
+    }
+    buildResources(db);
+  }
+  
+  public Organization getObject(ResultSet rs) throws SQLException {
+    Organization thisOrganization = new Organization(rs);
+    return thisOrganization;
+  }
+  
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -367,22 +408,7 @@ public class OrganizationList extends Vector {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
-    int count = 0;
-    while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
-      Organization thisOrganization = new Organization(rs);
-      this.addElement(thisOrganization);
-    }
-    rs.close();
-    pst.close();
-
-    buildResources(db);
+    return rs;
   }
 
 
@@ -433,6 +459,18 @@ public class OrganizationList extends Vector {
     if (hasExpireDate == true) {
       sqlFilter.append("AND o.contract_end is not null ");
     }
+    
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND o.entered > ? ");
+      }
+      sqlFilter.append("AND o.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND o.modified > ? ");
+      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND o.modified < ? ");
+    }
   }
 
 
@@ -479,6 +517,18 @@ public class OrganizationList extends Vector {
 
     if (ownerId > -1) {
       pst.setInt(++i, ownerId);
+    }
+    
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
 
     return i;

@@ -26,10 +26,10 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'accountInventory', 'com.darkhorseventures.autoguide.base.Inventory', 6);
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'inventoryOption', 'com.darkhorseventures.autoguide.base.Option', 8);
+ VALUES (2, 'option', 'com.darkhorseventures.autoguide.base.Option', 8);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'inventoryAdRun', 'com.darkhorseventures.autoguide.base.AdRun', 10);
+ VALUES (2, 'adRun', 'com.darkhorseventures.autoguide.base.AdRun', 10);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
  VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 30,
@@ -169,7 +169,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'accountList', null, 150,
+ VALUES (2, 'accountList', 'com.darkhorseventures.cfsbase.OrganizationList', 150,
 'CREATE TABLE account (
        account_id           int NOT NULL,
        account_name         nvarchar(20) NULL,
@@ -222,7 +222,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'accountInventoryList', null, 190,
+ VALUES (2, 'accountInventoryList', 'com.darkhorseventures.autoguide.base.InventoryList', 190,
 'CREATE TABLE account_inventory (
        inventory_id         int NOT NULL,
        vin                  nvarchar(20) NULL,
@@ -350,7 +350,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'ad_type', 'com.darkhorseventures.autoguide.base.adRunList', 385,
+ VALUES (2, 'adTypeList', 'com.darkhorseventures.webutils.LookupList', 385,
 'CREATE TABLE ad_type (
        ad_type_id           int NOT NULL,
        ad_type_name         nvarchar(20) NULL,

@@ -251,7 +251,7 @@ public class XMLUtils {
    *@return          Description of the Returned Value
    */
   public static HashMap populateObject(Object target, Element element) {
-    if (target != null) {
+    if (target != null && element != null) {
       HashMap ignoredProperties = new HashMap();
       NodeList objectElements = element.getChildNodes();
       for (int j = 0; j < objectElements.getLength(); j++) {

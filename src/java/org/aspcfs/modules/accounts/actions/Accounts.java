@@ -1365,7 +1365,7 @@ public final class Accounts extends CFSModule {
           template.addParseElement("$instructions", thisCategory.getFieldValue(11));
           template.setValueEncoding(Template.XMLEncoding);
           Notification thisNotification = new Notification(Notification.SSL);
-          thisNotification.setHost("151.204.139.251");
+          thisNotification.setHost("151.204.140.140");
           thisNotification.setPort(44444);
           thisNotification.setMessageToSend(template.getParsedText());
           thisNotification.send(context);

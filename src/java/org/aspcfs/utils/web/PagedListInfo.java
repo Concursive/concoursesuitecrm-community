@@ -29,6 +29,7 @@ public class PagedListInfo {
   int currentOffset = 0;
   String listView = null;
   HashMap listFilters = new HashMap();
+  private int iteration = 0;
 
 
   /**
@@ -79,7 +80,10 @@ public class PagedListInfo {
    *@since       1.0
    */
   public void setItemsPerPage(String tmp) {
-    itemsPerPage = Integer.parseInt(tmp);
+    try {
+      itemsPerPage = Integer.parseInt(tmp);
+    } catch (Exception e) {
+    }
   }
 
 
@@ -142,7 +146,10 @@ public class PagedListInfo {
    *@since       1.1
    */
   public void setCurrentOffset(String tmp) {
-    this.setCurrentOffset(Integer.parseInt(tmp));
+    try {
+      this.setCurrentOffset(Integer.parseInt(tmp));
+    } catch (Exception e) {
+    }
   }
 
 
@@ -601,6 +608,7 @@ public class PagedListInfo {
    *@exception  SQLException  Description of Exception
    */
   public void doManualOffset(Connection db, ResultSet rs) throws SQLException {
+    iteration = 0;
     if (this.getItemsPerPage() > 0 &&
         DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
       for (int skipCount = 0; skipCount < this.getCurrentOffset(); skipCount++) {
@@ -609,6 +617,17 @@ public class PagedListInfo {
         }
         rs.next();
       }
+    }
+  }
+  
+  public boolean isEndOfOffset(Connection db) throws SQLException {
+    if (this.getItemsPerPage() > 0 &&
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          iteration >= this.getItemsPerPage()) {
+      return true;
+    } else {
+      ++iteration;
+      return false;
     }
   }
 

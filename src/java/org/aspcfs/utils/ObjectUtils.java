@@ -12,6 +12,7 @@ public class ObjectUtils {
       Method method = target.getClass().getMethod("set" + param, argTypes);
       method.invoke(target, new Object[]{value});
     } catch (Exception e) {
+      //e.printStackTrace(System.out);
       return false;
     }
     return true;

@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.cfsbase.Constants;
+import com.darkhorseventures.webutils.PagedListInfo;
 
 /**
  *  Represents a list of vehicles
@@ -18,13 +19,13 @@ import com.darkhorseventures.cfsbase.Constants;
  */
 public class VehicleList extends ArrayList {
 
-  public static String tableName = "autoguide_vehicle";
-  public static String uniqueField = "vehicle_id";
+  public static final String tableName = "autoguide_vehicle";
+  public static final String uniqueField = "vehicle_id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
   private int year = -1;
-
+  private PagedListInfo pagedListInfo = null;
 
   /**
    *  Constructor for the VehicleList object
@@ -54,6 +55,12 @@ public class VehicleList extends ArrayList {
     return years;
   }
 
+  public void setPagedListInfo(PagedListInfo tmp) {
+    this.pagedListInfo = tmp;
+  }
+  public PagedListInfo getPagedListInfo() {
+    return pagedListInfo;
+  }
 
   /**
    *  Sets the lastAnchor attribute of the VehicleList object
@@ -189,6 +196,9 @@ public class VehicleList extends ArrayList {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
     while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.isEndOfOffset(db)) {
+        break;
+      }
       Vehicle thisVehicle = this.getObject(rs);
       this.add(thisVehicle);
     }
@@ -211,9 +221,47 @@ public class VehicleList extends ArrayList {
     ResultSet rs = null;
     int items = -1;
 
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT v.vehicle_id, v.year, v.make_id AS vehicle_make_id, " +
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlCount = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlOrder = new StringBuffer();
+    
+    sqlCount.append(
+      "SELECT COUNT(*) AS recordcount " +
+      "FROM autoguide_vehicle v " +
+        " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
+        " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
+        "WHERE vehicle_id > -1 ");
+        
+    createFilter(sqlFilter);
+        
+    if (pagedListInfo != null) {
+      //Get the total number of records matching filter
+      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
+      items = prepareFilter(pst);
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        int maxRecords = rs.getInt("recordcount");
+        pagedListInfo.setMaxRecords(maxRecords);
+      }
+      pst.close();
+      rs.close();
+      
+      //Determine column to sort by
+      pagedListInfo.setDefaultSort("v.vehicle_id", null);
+      pagedListInfo.appendSqlTail(db, sqlOrder);
+    } else {
+      sqlOrder.append("ORDER BY v.vehicle_id ");
+    }
+    
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "v.vehicle_id, v.year, v.make_id AS vehicle_make_id, " +
         "v.model_id AS vehicle_model_id, v.entered AS vehicle_entered, " +
         "v.enteredby AS vehicle_enteredby, v.modified AS vehicle_modified, " +
         "v.modifiedby AS vehicle_modifiedby, " +
@@ -225,13 +273,14 @@ public class VehicleList extends ArrayList {
         "make.modified AS make_modified, make.modifiedby AS make_modifiedby " +
         "FROM autoguide_vehicle v " +
         " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
-        " LEFT JOIN autoguide_model model ON v.model_id = model.model_id ");
-    sql.append("WHERE vehicle_id > -1 ");
-    createFilter(sql);
-    sql.append("ORDER BY vehicle_id ");
-    pst = db.prepareStatement(sql.toString());
+        " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
+        "WHERE vehicle_id > -1 ");
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
     return rs;
   }
 

@@ -930,6 +930,10 @@ public void setTypes(LookupList types) {
   public int getOrgId() {
     return orgId;
   }
+  
+  public int getId() {
+    return orgId;
+  }
 
 
   /**

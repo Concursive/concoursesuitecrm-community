@@ -6,6 +6,7 @@ import java.sql.*;
 import java.lang.reflect.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.utils.ObjectUtils;
+import com.darkhorseventures.webutils.PagedListInfo;
 
 /**
  *  Every Transaction can be made of many TransactionItems. TransactionItems
@@ -39,6 +40,7 @@ public class TransactionItem {
   private Object object = null;
   private int action = -1;
   private int identity = -1;
+  private PagedListInfo pagedListInfo = null;
   private StringBuffer errorMessage = new StringBuffer();
   private RecordList recordList = null;
   private TransactionMeta meta = null;
@@ -99,9 +101,9 @@ public class TransactionItem {
         thisRecord.put(thisField, thisValue);
       }
       thisRecord.setRecordId(ObjectUtils.getParam(thisObject, "id"));
-/*       if (thisRecord.containsKey("guid")) {
+      if (thisRecord.containsKey("guid")) {
         thisRecord.put("guid", String.valueOf(identity++));
-      } */
+      }
     }
   }
 
@@ -189,6 +191,14 @@ public class TransactionItem {
       try {
         identity = Integer.parseInt(thisIdentity);
       } catch (Exception e) {
+      }
+      String thisCurrentOffset = objectElement.getAttribute("offset");
+      String thisItemsPerPage = objectElement.getAttribute("items");
+      if ((thisCurrentOffset != null && !"".equals(thisCurrentOffset)) ||
+         (thisItemsPerPage != null && !"".equals(thisItemsPerPage)))  {
+        pagedListInfo = new PagedListInfo();
+        pagedListInfo.setItemsPerPage(thisItemsPerPage);
+        pagedListInfo.setCurrentOffset(thisCurrentOffset);
       }
       this.setAction(thisAction);
     }
@@ -302,9 +312,12 @@ public class TransactionItem {
     if (recordList == null) {
       recordList = new RecordList(name);
     }
+    
+    if (pagedListInfo != null) {
+      doSetPagedListInfo();
+    }
 
     if (action == GET_DATETIME) {
-      System.out.println("TransactionItem-> Getting the date & time");
       Record thisRecord = new Record("info");
       thisRecord.put("dateTime", String.valueOf(new java.sql.Timestamp(new java.util.Date().getTime())));
       //this.addFields(thisRecord, meta, objectItem);
@@ -382,25 +395,30 @@ public class TransactionItem {
       if (executeMethod != null) {
         if (action == INSERT) {
           //Populate any client GUIDs with the correct server ID
-          if (ignoredProperties != null) {
+          if (ignoredProperties != null && ignoredProperties.size() > 0) {
             Iterator ignoredList = ignoredProperties.keySet().iterator();
             while (ignoredList.hasNext()) {
               String param = (String)ignoredList.next();
-              if (param.endsWith("Guid")) {
+              if (param != null && param.endsWith("Guid")) {
                 String value = (String)ignoredProperties.get(param);
                 param = param.substring(0, param.indexOf("Guid"));
                 SyncTable referencedTable = (SyncTable)mapping.get(param + "List");
-                int recordId = syncClientMap.lookupId(db, referencedTable.getId(), value);
-                ObjectUtils.setParam(object, param + "Id", String.valueOf(recordId));
-                System.out.println("TransactionItem-> Setting new parameter: " + param + "Id");
+                if (referencedTable != null) {
+                  int recordId = syncClientMap.lookupId(db, referencedTable.getId(), value);
+                  ObjectUtils.setParam(object, param + "Id", String.valueOf(recordId));
+                  if (System.getProperty("DEBUG") != null) {
+                    System.out.println("TransactionItem-> Setting new parameter: " + param + "Id");
+                  }
+                } else {
+                  if (System.getProperty("DEBUG") != null) {
+                    System.out.println("TransactionItem-> Reference for " + param + "List does not exist");
+                  }
+                }
               }
             }
           }
         }
-        Class[] dbClass = new Class[]{Class.forName("java.sql.Connection")};
-        Object[] dbObject = new Object[]{db};
-        Method method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
-        Object result = method.invoke(object, dbObject);
+        Object result = doExecute(db, executeMethod);
         if (System.getProperty("DEBUG") != null) {
           System.out.println("TransactionItem-> " + object.getClass().getName() + " " + executeMethod);
         }
@@ -422,8 +440,31 @@ public class TransactionItem {
         addRecords(object, recordList, null);
       }
     }
+    if (pagedListInfo != null) {
+      recordList.setTotalRecords(pagedListInfo.getMaxRecords());
+    }
   }
 
+  private Object doExecute(Connection db, String executeMethod) throws Exception {
+    Class[] dbClass = new Class[]{Class.forName("java.sql.Connection")};
+    Object[] dbObject = new Object[]{db};
+    Method method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
+    return(method.invoke(object, dbObject));
+  }
+  
+  private void doSetPagedListInfo() {
+    try {
+      Class[] theClass = new Class[]{pagedListInfo.getClass()};
+      Object[] theObject = new Object[]{pagedListInfo};
+      Method method = object.getClass().getDeclaredMethod("setPagedListInfo", theClass);
+      method.invoke(object, theObject);
+    } catch (Exception e) {
+      //This class must not support the pagedListInfo
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("TransactionItem-> Object does not have setPagedListInfo method");
+      }
+    }
+  }
 
   /**
    *  Description of the Method

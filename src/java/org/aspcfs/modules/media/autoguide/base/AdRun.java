@@ -100,13 +100,21 @@ public class AdRun {
    *@param  tmp  The new runDate value
    */
   public void setRunDate(String tmp) {
+    this.runDate = java.sql.Date.valueOf(tmp);
+    
+    /* System.out.println("AdRun-> Trying to setRunDate(" + tmp + ")");
     try {
+      System.out.println("AdRun-> Trying to setRunDate(" + tmp + ")");
       java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
+      System.out.println("AdRun-> Trying to setRunDate(" + tmp + ")");
       runDate = new java.sql.Date(new java.util.Date().getTime());
+      System.out.println("AdRun-> runDate: " + tmp + " = " + runDate.getTime());
       runDate.setTime(tmpDate.getTime());
+      System.out.println("AdRun-> runDate: " + tmp + " = " + runDate.getTime());
     } catch (Exception e) {
       runDate = null;
-    }
+      System.out.println("AdRun-> Bad runDate: " + tmp + " = " + runDate.getTime());
+    } */
   }
 
 
@@ -244,6 +252,10 @@ public class AdRun {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
+  
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -263,6 +275,10 @@ public class AdRun {
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
+  }
+  
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
   }
 
 

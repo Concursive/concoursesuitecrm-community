@@ -45,7 +45,7 @@ public class AuthenticationItem {
     String serverName = context.getRequest().getServerName();
     if (System.getProperty("DEBUG") != null) System.out.println("AuthenticationItem-> ServerName: " + serverName);
     
-    if (id.equals(serverName)) {
+    if (id != null && id.equals(serverName)) {
       String authCode = null;
       ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
       ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);

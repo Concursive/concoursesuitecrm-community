@@ -44,7 +44,7 @@ Client #1 Configures its internal clock
 - This will be used as the "nextAnchor" for the current session of transactions
 - An XML record is returned with a field called "dateTime"
   Ex. "2002-05-28 16:34:20.167"
-
+  
 <?xml version="1.0" standalone="yes"?>
 <app>
   <authentication>
@@ -52,7 +52,7 @@ Client #1 Configures its internal clock
     <code>BZTST27A</code>
     <systemId>2</systemId>
   </authentication>
-  <transaction id="2">
+  <transaction id="1">
     <syncClient action="getDateTime"/>
   </transaction>
 </app>
@@ -60,11 +60,49 @@ Client #1 Configures its internal clock
 
 Client #1 Logs into the server
 - Client sends transaction with username and password
+- The User's validated ID will be returned if valid (status == 0)
+- An error (status == 1) will be returned if invalid
 
+<app>
+  <authentication>
+    <id>ds21.darkhorseventures.com</id>
+    <code>BZTST27A</code>
+    <systemId>2</systemId>
+  </authentication>
+  <transaction id="2">
+    <meta>
+      <property>id</property>
+    </meta>
+    <user action="select">
+      <username>* PUT USER'S NAME *</username>
+      <password>* PUT USER'S PASSWORD *</password>
+    </user>
+  </transaction>
+</app>
 
 Client #1 Registers its device
 - Client sends transaction with device registration information
+- The client will receive a new id that allows the server to uniquely
+  identify this client.  Only needs to be done once, or if the client
+  is re-initialized.
 
+<app>
+  <authentication>
+    <id>ds21.darkhorseventures.com</id>
+    <code>BZTST27A</code>
+    <systemId>2</systemId>
+  </authentication>
+  <transaction id="3">
+    <meta>
+      <property>id</property>
+    </meta>
+    <syncClient action="insert">
+      <type>PocketPC 2002</type>
+      <version>20020420001</version>
+      <enteredBy>* PUT USER'S ID (FROM ABOVE) HERE*</enteredBy>
+    </syncClient>
+  </transaction>
+</app>
 
 Client #1 Prepares for Synchronization
 - Client reads local Sync Anchor (Last Anchor) from internal database
@@ -79,7 +117,7 @@ Client #1 Prepares for Synchronization
     <systemId>2</systemId>
     <clientId>*PUT CLIENT ID HERE*</clientId>
     <lastAnchor/>
-    <nextAnchor>2002-04-20 15:30:30</nextAnchor>
+    <nextAnchor>*INSERT NEXT ANCHOR HERE*</nextAnchor>
   </authentication>
   <transaction id="4">
     <syncClient action="syncStart"/>
@@ -87,7 +125,10 @@ Client #1 Prepares for Synchronization
 </app>
 
 - Server compares anchors, if not a match then a previous synchronization error
-  may have occurred, returns error response
+  may have occurred and returns (status == 1) response, 
+  otherwise returns (status == 0) response if ready to go.
+- If an error response, then we need to do a complete sync... not sure what the
+  process is yet.
 
 ---[ BEGIN CLIENT DATA SYNCHRONIZATION ]---
 All changes can be requested and sent in a single transaction, or separated.  
@@ -124,8 +165,6 @@ Client #1 Sends records for delete with GUID...
 All changes can be requested and sent in a single transaction, or separated.  
 The order in which tables are processed is important for referential data.
 
-** UPDATED PROCESS 4/19/2002 **
-
 Client #1 Either requests a list of tables to be synchronized, or
 iterates through its cached table list from the database initialization
 - Client sends Last Anchor and Next Anchor to server in authentication block
@@ -154,9 +193,20 @@ and limit.
       <property>modified</property>
       <property>modifiedBy</property>
     </meta>
-    <makeList action="sync" identity="1" offset="0" items="100"/>
+    <makeList action="sync" identity="1" offset="0" items="50"/>
   </transaction>
 </app>
+
+Identity is the client's (max Id + 1) in which records will be inserted at
+Offset is the record count to begin downloading from
+Items is the max number of records that should be returned on this request
+
+Response includes:
+<recordSet name="makeList" count="50" total="4824">
+
+In the next client request, add from the previous request (items + offset) to 
+get the new offset. So:
+<makeList action="sync" identity="51" offset="50" items="50"/>
 
 ---[ FINALIZE DATA SYNCHRONIZATION ]---
 
@@ -166,78 +216,36 @@ Client #1 Ends Synchronization
 - Server deletes records flagged in client mapping table since they should
   no longer be on the client
 
-  
-Sync protocol:
-
-getTime
-  <time>  set your nextAnchor to this
-  
-syncClient action="syncStart"
-  lastAnchor
-  
-<object> action="sync"
-  previousAnchor
-  nextAnchor
-
-<object> action="insert"
-<object> action="update"
-
-
-syncClient action="syncEnd"
-  nextAnchor
-  
-...Client needs to make sure it's internal clock is set correctly:
-
-<?xml version="1.0" standalone="yes"?>
 <app>
   <authentication>
-    <id>ds21.darkhorseventures.com</id>
-    <code>BZTST27A</code>
+    <id>ds21.darkhorseventures.com</id> 
+    <code>BZTST27A</code> 
     <systemId>2</systemId>
-    <clientId>1</clientId>
-    <lastAnchor/>
-    <nextAnchor>2002-04-20 15:30:30</nextAnchor>
+    <clientId>*PUT YOUR ID HERE*</clientId>
   </authentication>
-  <transaction id="5">
-    <meta>
-      <property>dateTime</property>
-    </meta>
-    <syncClient action="getDateTime"/>
+  <transaction id="14">
+    <syncClient action="update">
+      <id>*PUT YOUR ID HERE*</id>
+      <anchor>*PUT ANCHOR TO STORE ON SERVER (the nextAnchor that was used) *</anchor>
+    </syncClient>
   </transaction>
 </app>
 
-...Client verifies sync mode:
 
-<?xml version="1.0" standalone="yes"?>
-<app>
+
+
+** Object Properties **
+
   <authentication>
-    <id>ds21.darkhorseventures.com</id>
-    <code>BZTST27A</code>
-    <systemId>2</systemId>
-    <clientId>1</clientId>
-    <lastAnchor/>
-    <nextAnchor>2002-04-20 15:30:30</nextAnchor>
-  </authentication>
-  <transaction id="5">
-    <syncClient action="syncStart"/>
-  </transaction>
-</app>
-
-...If error, client will need to resync all data...tbd,
-...else continue with sync
-
-...Client syncs tables from internal list of tables
-
-<app>
-  <authentication>
-    <id>ds21.darkhorseventures.com</id>
+    <id>ds21.darkhorseventures.com</id> 
     <code>BZTST27A</code>
     <systemId>2</systemId>
     <clientId>93</clientId>
     <lastAnchor/>
     <nextAnchor>2002-5-2 20:12:26</nextAnchor>
   </authentication>
-  <transaction id="2">
+  
+  <transaction id="1">
     <meta>
       <property>guid</property>
       <property>name</property>
@@ -245,20 +253,30 @@ syncClient action="syncEnd"
       <property>modified</property>
       <property>modifiedBy</property>
     </meta>
-    <makeList action="sync" identity="1"/>
+    <accountList action="sync" identity="1"/>
   </transaction>
-</app>
-
-<app>
-  <authentication>
-    <id>ds21.darkhorseventures.com</id>
-    <code>BZTST27A</code>
-    <systemId>2</systemId>
-    <clientId>93</clientId>
-    <lastAnchor/>
-    <nextAnchor>2002-5-2 23:12:13</nextAnchor>
-  </authentication>
+  
+  <transaction id="2">
+    <meta>
+      <property>guid</property>
+      <property>name</property>
+      <property>modified</property>
+    </meta>
+    <optionList action="sync" identity="1"/>
+  </transaction>
+  
   <transaction id="3">
+    <meta>
+      <property>guid</property>
+      <property>name</property>
+      <property>enteredBy</property>
+      <property>modified</property>
+      <property>modifiedBy</property>
+    </meta>
+    <makeList action="sync"/>
+  </transaction>
+
+  <transaction id="4">
     <meta>
       <property>guid</property>
       <property>name</property>
@@ -267,20 +285,10 @@ syncClient action="syncEnd"
       <property>modified</property>
       <property>modifiedBy</property>
     </meta>
-    <modelList action="sync" identity="1"/>
+    <modelList action="sync"/>
   </transaction>
-</app>
-
-<app>
-  <authentication>
-    <id>ds21.darkhorseventures.com</id>
-    <code>BZTST27A</code>
-    <systemId>2</systemId>
-    <clientId>93</clientId>
-    <lastAnchor/>
-    <nextAnchor>2002-4-30 20:12:7</nextAnchor>
-  </authentication>
-  <transaction id="2">
+  
+  <transaction id="5">
     <meta>
       <property>guid</property>
       <property>year</property>
@@ -289,17 +297,15 @@ syncClient action="syncEnd"
       <property>enteredBy</property>
       <property>modified</property>
       <property>modifiedBy</property>
-      <property></property>
     </meta>
-    <vehicleList action="sync" identity="1" offset="0" items="100">
-      <year>1985</year>
+    <vehicleList action="sync">
+      <year>*Optionally specify a specific year to receive, or remove this attribute*</year>
     </vehicleList>
   </transaction>
-</app>
 
 
-
-...Client inserts a vehicle with options and ad runs:
+...Client inserts a vehicle with options and ad runs (MUST HAVE
+SYNC'D ALL TABLES FIRST):
 
 <?xml version="1.0" standalone="yes"?> 
 <app>
@@ -312,13 +318,11 @@ syncClient action="syncEnd"
     <nextAnchor>2002-04-27 14:30:30</nextAnchor>
   </authentication>
   <transaction id="11">
-    <meta>
-      <property>guid</property>
-    </meta>
     <accountInventory action="insert">
       <guid>10</guid>
       <vehicleGuid>1089</vehicleGuid>
-      <enteredBy>2</enteredBy>
+      <accountGuid>5</accountGuid>
+      <enteredBy>*USER'S ID*</enteredBy>
       <stockNo>aaa</stockNo>
       <mileage>123</mileage>
       <vin>XCV</vin>
@@ -328,88 +332,34 @@ syncClient action="syncEnd"
       <comments>additional text</comments>
       <sold>false</sold>
     </accountInventory>
-    <inventoryOption action="insert">
+    <option action="insert">
       <guid>1</guid>
-      <inventoryGuid>10</inventoryGuid>
-    </inventoryOption>
-    <inventoryOption action="insert">
+      <accountInventoryGuid>10</accountInventoryGuid>
+    </option>
+    <option action="insert">
       <guid>2</guid>
-      <inventoryGuid>10</inventoryGuid>
-    </inventoryOption>
-    <inventoryOption action="insert">
+      <accountInventoryGuid>10</accountInventoryGuid>
+    </option>
+    <option action="insert">
       <guid>3</guid>
-      <inventoryGuid>10</inventoryGuid>
-    </inventoryOption>
-    <inventoryAdRun action="insert">
-      <inventoryGuid>10</inventoryGuid>
+      <accountInventoryGuid>10</accountInventoryGuid>
+    </option>
+    <adRun action="insert">
+      <guid>1</guid>
+      <accountInventoryGuid>10</accountInventoryGuid>
       <runDate>2002-05-10</runDate>
       <adTypeGuid>3</adTypeGuid>
       <includePhoto>true</includePhoto>
       <enteredBy>10</enteredBy>
-    </inventoryAdRun>
-    <inventoryAdRun action="insert">
-      <inventoryGuid>10</inventoryGuid>
+    </adRun>
+    <adRun action="insert">
+      <guid>2</guid>
+      <accountInventoryGuid>10</accountInventoryGuid>
       <runDate>2002-05-17</runDate>
       <adTypeGuid>3</adTypeGuid>
       <includePhoto>false</includePhoto>
       <enteredBy>10</enteredBy>
-    </inventoryAdRun>
-  </transaction>
-</app>
-  
-...Client requests changes:
-
-<?xml version="1.0" standalone="yes"?> 
-<app>
-  <authentication>
-    <id>ds21.darkhorseventures.com</id> 
-    <code>BZTST27A</code> 
-    <systemId>2</systemId>
-    <clientId>*PUT YOUR ID HERE*</clientId>
-    <lastAnchor/>
-    <nextAnchor>2002-04-27 14:30:30</nextAnchor>
-  </authentication>
-  <transaction id="12">
-    <meta>
-      <property>guid</property>
-      <property>make_id</property>
-      <property>make_name</property>
-      <property>etc..</property>
-    </meta>
-    <makeList action="sync">
-      <lastSyncAnchor/>
-      <nextSyncAnchor>2002-04-16 15:30:30</nextSyncAnchor>
-    </makeList>
-  </transaction>
-  <transaction id="13">
-    <meta>
-      <property>guid</property>
-      <property>vehicle_id</property>
-      <property>make_id</property>
-      <property>etc..</property>
-    </meta>
-    <vehicleList action="sync">
-      <lastSyncAnchor/>
-      <nextSyncAnchor>2002-04-16 15:30:30</nextSyncAnchor>
-    </vehicleList>
-  </transaction>
-</app>
-
-...Client finalizes sync:
-
-<?xml version="1.0" standalone="yes"?> 
-<app>
-  <authentication>
-    <id>ds21.darkhorseventures.com</id> 
-    <code>BZTST27A</code> 
-    <systemId>2</systemId>
-    <clientId>*PUT YOUR ID HERE*</clientId>
-  </authentication>
-  <transaction id="14">
-    <syncClient action="update">
-      <id>*PUT YOUR ID HERE*</id>
-      <anchor>20020416155045</anchor>
-    </syncClient>
+    </adRun>
   </transaction>
 </app>
 
