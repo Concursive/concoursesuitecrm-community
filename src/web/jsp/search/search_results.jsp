@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="ContactList" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
 <jsp:useBean id="EmployeeList" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
@@ -10,13 +11,12 @@
 <!--b>Search Results</b-->
 Your search for <b><%= request.getParameter("search") %></b> returned:
 <br>&nbsp;<br> 
+<dhv:permission name="contacts-external_contacts-view">
 <strong><%=ContactList.size()%></strong> result(s) in <strong>External Contacts</strong>.
-
 <%
 Iterator i = ContactList.iterator();
 if (i.hasNext()) {
 %>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td>
@@ -64,19 +64,17 @@ if (i.hasNext()) {
 <%}%>
 </table>
 <br>
-
 <%} else {%>
 	<br>&nbsp;<br>
 <%}%>
-
+</dhv:permission>
+<dhv:permission name="contacts-internal_contacts-view">
 <strong><%=EmployeeList.size()%></strong> result(s) in <strong>Employees</strong>.
-
-<% Iterator j = EmployeeList.iterator();
-	
-    if (j.hasNext()) {
+<% 
+  Iterator j = EmployeeList.iterator();
+  if (j.hasNext()) {
     int rowid = 0;
 %>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td>
@@ -131,17 +129,14 @@ if (i.hasNext()) {
 %>
 	<br>&nbsp;<br>  
 <%}%>
-
-
-
+</dhv:permission>
+<dhv:permission name="accounts-accounts-view">
 <strong><%=OrganizationList.size()%></strong> result(s) in <strong>Accounts</strong>.
-
-<% Iterator k = OrganizationList.iterator();
-	
-    if (k.hasNext()) {
+<% 
+  Iterator k = OrganizationList.iterator();
+  if (k.hasNext()) {
     int rowid = 0;
 %>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td valign=center align=left>
@@ -184,48 +179,38 @@ if (i.hasNext()) {
 %>
 	<br>&nbsp;<br>  
 <%}%>
-
+</dhv:permission>
+<dhv:permission name="pipeline-opportunities-view">
 <strong><%=OpportunityList.size()%></strong> result(s) in <strong>Opportunities</strong>.
-
-<% Iterator m = OpportunityList.iterator();
-	
-    if (m.hasNext()) {
+<% 
+  Iterator m = OpportunityList.iterator();
+  if (m.hasNext()) {
     int rowid = 0;
 %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-
 <tr bgcolor="#DEE0FA">
-    
     <td valign=center>
       <strong><a href="/Leads.do?command=ViewOpp&column=description">Opportunity</a></strong>
     </td>
-    
     <td width=175 valign=center>
       <strong><a href="/Leads.do?command=ViewOpp&column=acct_name">Organization</a></strong>
     </td>
-    
     <td width=100 valign=center>
       <strong><a href="/Leads.do?command=ViewOpp&column=guessvalue">Amount</a></strong>
     </td>
-    
     <td width=100 valign=center nowrap>
       <strong><a href="/Leads.do?command=ViewOpp&column=closedate">Revenue Start</a></strong>
     </td>
-
-    
   </tr>
   <%
- 	        while (m.hasNext()) {
-		
+    while (m.hasNext()) {
 			if (rowid != 1) {
 				rowid = 1;
 			} else {
 				rowid = 2;
 			}
-		
 		Opportunity thisOpp = (Opportunity)m.next();
 %>      
-	
 	<tr bgcolor="white">
       
       <td valign=center class="row<%= rowid %>">
@@ -261,28 +246,24 @@ if (i.hasNext()) {
 
     </tr>
 <%}%>
-	
 </table>
 <br>
 <%} else {%>
   <br>&nbsp;<br> 
 <%}%>
-
+</dhv:permission>
+<dhv:permission name="tickets-tickets-view">
 <strong><%=TicketList.size()%></strong> result(s) in <strong>Tickets</strong>.
-
-<% Iterator n = TicketList.iterator();
-	
-    if (n.hasNext()) {
+<% 
+  Iterator n = TicketList.iterator();
+  if (n.hasNext()) {
     int rowid = 0;
 %>
-
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
-    
     <td valign=center align=left bgcolor="#DEE0FA">
       <strong>Number</strong>
     </td>
-  
     <td bgcolor="#DEE0FA"><b>Priority</b></td>
     <td bgcolor="#DEE0FA"><b>Age</b></td>
     <td bgcolor="#DEE0FA"><b>Company</b></td>
@@ -298,32 +279,27 @@ if (i.hasNext()) {
 	
 		Ticket thisTic = (Ticket)n.next();
 %>   
-		<tr>
-		
+  <tr>
 		<td width=15 valign=center nowrap class="row<%= rowid %>">
-		<a href="/TroubleTickets.do?command=Details&id=<%=thisTic.getId()%>"><%=thisTic.getPaddedId()%></a>
+      <a href="/TroubleTickets.do?command=Details&id=<%=thisTic.getId()%>"><%=thisTic.getPaddedId()%></a>
 		</td>
-	
 		<td width=10 valign=center nowrap class="row<%= rowid %>">
-		<%=toHtml(thisTic.getPriorityName())%>
+      <%=toHtml(thisTic.getPriorityName())%>
 		</td>
-		
 		<td width=8% valign=center nowrap class="row<%= rowid %>">
-		<%=thisTic.getAgeOf()%>
+      <%=thisTic.getAgeOf()%>
 		</td>
-		
 		<td width=40% valign=center nowrap class="row<%= rowid %>">
-		<%=toHtml(thisTic.getCompanyName())%>
+      <%=toHtml(thisTic.getCompanyName())%>
 		</td>
-		
 		<td width=52% valign=center class="row<%= rowid %>">
-		<%=toHtml(thisTic.getProblem())%> <% if (thisTic.getCategoryName() != null) { %>[<%=toHtml(thisTic.getCategoryName())%>]<%}%>
+      <%=toHtml(thisTic.getProblem())%> <% if (thisTic.getCategoryName() != null) { %>[<%=toHtml(thisTic.getCategoryName())%>]<%}%>
 		</td>
-			
-		</tr>
-	<%}%>
-	</table>
-	<br>
-	<%} else {%>
-		<br>&nbsp;<br> 
-	<%}%>
+  </tr>
+<%}%>
+</table>
+<br>
+<%} else {%>
+  <br>&nbsp;<br> 
+<%}%>
+</dhv:permission>
