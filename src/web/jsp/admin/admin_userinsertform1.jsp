@@ -82,6 +82,8 @@
     <%}%>
     
     elm.style.visibility="visible";
+    
+    return false;
   }  
   
   function updateContactList() {
@@ -117,7 +119,7 @@ Add User<br>
 	<tr>
     <td width="100" class="formLabel">
       Contact<br>
-      [<a href="#" onClick="javascript:ShowSpan('newContact');">add new</a>]
+      (<a href="#" onClick="javascript:return ShowSpan('newContact');">add new</a>)
     </td>
     <td valign="center">
       <% ContactList.setJsEvent("onChange=\"javascript:HideSpan('newContact');\""); %>

@@ -682,10 +682,9 @@ public final class Users extends CFSModule {
         if (thisUser.getManagerId() > -1) {
           managerUser = new User();
           managerUser.setBuildContact(true);
-          managerUser.setBuildHierarchy(true);
-          managerUser.buildResources(db);
+          managerUser.buildRecord(db, thisUser.getManagerId());
           updateSystemHierarchyCheck(db, context);
-          thisTicket.setAssignedTo(managerUser.getId());
+          thisTicket.setAssignedTo(thisUser.getManagerId());
           thisTicket.setDepartmentCode(managerUser.getContact().getDepartment());
         } else {
           thisTicket.setDepartmentCode(thisUser.getContact().getDepartment());
