@@ -1028,6 +1028,21 @@ public class Task extends GenericBean {
       }
       rs.close();
       pst.close();
+      
+      sql = "SELECT count(*) as linkcount " +
+          "FROM tasklink_project " +
+          "WHERE task_id = ? ";
+      i = 0;
+      pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        if (rs.getInt("linkcount") != 0) {
+          dependencyList.put("Projects", new Integer(rs.getInt("linkcount")));
+        }
+      }
+      rs.close();
+      pst.close();
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
     }
@@ -1043,22 +1058,17 @@ public class Task extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
-    String sql = null;
     if (this.getId() == -1) {
       throw new SQLException("Task ID not specified");
     }
-
     try {
       db.setAutoCommit(false);
-      PreparedStatement pst = null;
-
-      deleteRelationships(pst, db);
-
-      sql = "DELETE from task " +
-          "WHERE task_id = ? ";
-      int i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
+      deleteRelationships(db);
+      String sql = 
+        "DELETE from task " +
+        "WHERE task_id = ? ";
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
       db.commit();
@@ -1081,7 +1091,7 @@ public class Task extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean deleteRelationships(PreparedStatement pst, Connection db) throws SQLException {
+  public boolean deleteRelationships(Connection db) throws SQLException {
     String sql = null;
     boolean commit = true;
     try {
@@ -1091,17 +1101,22 @@ public class Task extends GenericBean {
       }
       sql = "DELETE from tasklink_contact " +
           "WHERE task_id = ? ";
-      int i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setInt(1, this.getId());
       pst.execute();
 
       sql = "DELETE from tasklink_ticket " +
           "WHERE task_id = ? ";
-      i = 0;
       pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
+      pst.setInt(1, this.getId());
       pst.execute();
+      
+      sql = "DELETE from tasklink_project " +
+          "WHERE task_id = ? ";
+      pst = db.prepareStatement(sql);
+      pst.setInt(1, this.getId());
+      pst.execute();
+      
       if (commit) {
         db.commit();
       }
@@ -1200,7 +1215,7 @@ public class Task extends GenericBean {
     owner = rs.getInt("owner");
     completeDate = rs.getTimestamp("completeDate");
     modified = rs.getTimestamp("modified");
-    categoryId = rs.getInt("category_id");
+    categoryId = DatabaseUtils.getInt(rs, "category_id");
     if (entered != null) {
       float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
       age = java.lang.Math.round(ageCheck);
