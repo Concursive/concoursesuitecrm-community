@@ -5,7 +5,6 @@ package org.aspcfs.modules.accounts.base;
 import java.util.StringTokenizer;
 import java.sql.*;
 import org.aspcfs.utils.DateUtils;
-import com.darkhorseventures.database.Connection;
 import org.aspcfs.utils.DatabaseUtils;
 /**
  *  Description of the Class

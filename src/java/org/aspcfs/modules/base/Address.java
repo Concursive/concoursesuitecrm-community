@@ -1,11 +1,11 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.utils.DateUtils;
+import org.aspcfs.utils.DateUtils;
 
 /**
  *  Represents a mailing address to be used as a base class.

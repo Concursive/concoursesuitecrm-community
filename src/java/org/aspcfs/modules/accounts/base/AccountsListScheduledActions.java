@@ -1,6 +1,5 @@
 package org.aspcfs.modules.accounts.base;
 
-import com.darkhorseventures.database.Connection;
 import org.aspcfs.modules.base.ScheduledActions;
 import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.mycfs.base.*;

@@ -1,11 +1,11 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.utils.DateUtils;
+import org.aspcfs.utils.DateUtils;
 
 /**
  *  Represents an email address.
@@ -61,8 +61,14 @@ public class EmailAddress {
   public void setOrgId(int tmp) {
     this.orgId = tmp;
   }
-  
-    public void setOrgId(String tmp) {
+
+
+  /**
+   *  Sets the orgId attribute of the EmailAddress object
+   *
+   *@param  tmp  The new orgId value
+   */
+  public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
   }
 
@@ -76,8 +82,14 @@ public class EmailAddress {
   public void setContactId(int tmp) {
     this.contactId = tmp;
   }
-  
-    public void setContactId(String tmp) {
+
+
+  /**
+   *  Sets the contactId attribute of the EmailAddress object
+   *
+   *@param  tmp  The new contactId value
+   */
+  public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
   }
 
@@ -135,14 +147,28 @@ public class EmailAddress {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
-  
-    public void setEnteredBy(String tmp) {
+
+
+  /**
+   *  Sets the enteredBy attribute of the EmailAddress object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
   }
 
+
+  /**
+   *  Sets the enabled attribute of the EmailAddress object
+   *
+   *@param  tmp  The new enabled value
+   */
   public void setEnabled(String tmp) {
     enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
+
+
   /**
    *  Sets the ModifiedBy attribute of the EmailAddress object
    *
@@ -152,8 +178,14 @@ public class EmailAddress {
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
   }
-  
-    public void setModifiedBy(String tmp) {
+
+
+  /**
+   *  Sets the modifiedBy attribute of the EmailAddress object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
   }
 
@@ -223,18 +255,66 @@ public class EmailAddress {
     return typeName;
   }
 
-public java.sql.Timestamp getEntered() { return entered; }
-public java.sql.Timestamp getModified() { return modified; }
-public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
-public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 
+  /**
+   *  Gets the entered attribute of the EmailAddress object
+   *
+   *@return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Gets the modified attribute of the EmailAddress object
+   *
+   *@return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the EmailAddress object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the EmailAddress object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the EmailAddress object
+   *
+   *@param  tmp  The new entered value
+   */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
   }
-  
+
+
+  /**
+   *  Sets the modified attribute of the EmailAddress object
+   *
+   *@param  tmp  The new modified value
+   */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
   }
+
 
   /**
    *  Gets the Email attribute of the EmailAddress object
@@ -304,35 +384,35 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
     if (!isContact) {
       this.setOrgId(rs.getInt("org_id"));
       if (rs.wasNull()) {
-              this.setOrgId(-1);
+        this.setOrgId(-1);
       }
     } else {
       this.setContactId(rs.getInt("contact_id"));
       if (rs.wasNull()) {
-              this.setContactId(-1);
+        this.setContactId(-1);
       }
     }
     this.setType(rs.getInt("emailaddress_type"));
     if (rs.wasNull()) {
-            this.setType(-1);
+      this.setType(-1);
     }
     this.setTypeName(rs.getString("description"));
     this.setEmail(rs.getString("email"));
     this.setEntered(rs.getTimestamp("entered"));
     this.setEnteredBy(rs.getInt("enteredby"));
-    
+
     if (enteredBy == -1) {
-            this.setEnteredBy(0);
+      this.setEnteredBy(0);
     }
-    
+
     this.setModified(rs.getTimestamp("modified"));
     this.setModifiedBy(rs.getInt("modifiedby"));
-    
+
     if (modifiedBy == -1) {
-            this.setModifiedBy(0);
+      this.setModifiedBy(0);
     }
-    
   }
+
 
   /**
    *  Description of the Method
@@ -354,19 +434,25 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
       }
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public String toString() {
     return (
-      "=[Email Address]=============================================\r\n" + 
-      " Id: " + this.getId() + "\r\n" +
-      " Org Id: " + this.getOrgId() + "\r\n" + 
-      " Contact Id: " + this.getContactId() + "\r\n" +
-      " Type: " + this.getType() + "\r\n" +
-      " Type Name: " + this.getTypeName() + "\r\n" +
-      " Email: " + this.getEmail() + "\r\n" +
-      " Entered By: " + this.getEnteredBy() + "\r\n" +
-      " Modified By: " + this.getModifiedBy() + "\r\n"
-      );
+        "=[Email Address]=============================================\r\n" +
+        " Id: " + this.getId() + "\r\n" +
+        " Org Id: " + this.getOrgId() + "\r\n" +
+        " Contact Id: " + this.getContactId() + "\r\n" +
+        " Type: " + this.getType() + "\r\n" +
+        " Type Name: " + this.getTypeName() + "\r\n" +
+        " Email: " + this.getEmail() + "\r\n" +
+        " Entered By: " + this.getEnteredBy() + "\r\n" +
+        " Modified By: " + this.getModifiedBy() + "\r\n"
+        );
   }
 }
 

@@ -1,13 +1,11 @@
 //Copyright 2001 Dark Horse Ventures
-// The createFilter method and the prepareFilter method need to have the same
-// number of parameters if modified.
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
+import org.aspcfs.utils.web.PagedListInfo;
 
 /**
  *  Contains a list of email addresses... currently used to build the list from
@@ -80,7 +78,7 @@ public class EmailAddressList extends Vector {
   protected String getEmailAddress(String thisType) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      EmailAddress thisAddress = (EmailAddress)i.next();
+      EmailAddress thisAddress = (EmailAddress) i.next();
       if (thisType.equals(thisAddress.getTypeName())) {
         return thisAddress.getEmail();
       }
@@ -98,7 +96,7 @@ public class EmailAddressList extends Vector {
    */
   protected String getEmailAddress(int thisItem) {
     if (thisItem - 1 > -1 && thisItem <= this.size()) {
-      EmailAddress thisAddress = (EmailAddress)this.get(thisItem - 1);
+      EmailAddress thisAddress = (EmailAddress) this.get(thisItem - 1);
       return thisAddress.getEmail();
     }
     return "";
@@ -114,7 +112,7 @@ public class EmailAddressList extends Vector {
    */
   protected int getEmailAddressTypeId(int thisItem) {
     if (thisItem - 1 > -1 && thisItem <= this.size()) {
-      EmailAddress thisAddress = (EmailAddress)this.get(thisItem - 1);
+      EmailAddress thisAddress = (EmailAddress) this.get(thisItem - 1);
       return thisAddress.getType();
     }
     return -1;

@@ -1,11 +1,24 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.utils;
 
 import java.sql.*;
 import java.text.*;
 import java.util.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author     matt rajkowski
+ *@created    January 13, 2003
+ *@version    $Id$
+ */
 public class DateUtils {
 
+  /**
+   *  Description of the Method
+   *
+   *@param  tmp  Description of the Parameter
+   *@return      Description of the Return Value
+   */
   public static java.sql.Date parseDateString(String tmp) {
     java.sql.Date dateValue = null;
     try {
@@ -21,11 +34,18 @@ public class DateUtils {
     }
     return null;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  tmp  Description of the Parameter
+   *@return      Description of the Return Value
+   */
   public static java.sql.Timestamp parseTimestampString(String tmp) {
     java.sql.Timestamp timestampValue = null;
     try {
-      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.LONG).parse(tmp);
+      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).parse(tmp);
       timestampValue = new java.sql.Timestamp(new java.util.Date().getTime());
       timestampValue.setTime(tmpDate.getTime());
       return timestampValue;
@@ -38,5 +58,5 @@ public class DateUtils {
     return null;
   }
 
-
 }
+

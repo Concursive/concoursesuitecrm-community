@@ -1,7 +1,8 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.mycfs.base;
 
 import java.util.*;
 import java.text.*;
+import org.aspcfs.modules.tasks.base.Task;
 
 /**
  *  Description of the Class
@@ -11,7 +12,6 @@ import java.text.*;
  *@version    $Id: CalendarEvent.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski
  *      Exp $
  */
- 
 public class CalendarEvent implements Comparable {
 
   //General Information
@@ -341,9 +341,15 @@ public class CalendarEvent implements Comparable {
     }
     return icon;
   }
-  
-  
-  public static String getIcon(String thisCategory){
+
+
+  /**
+   *  Gets the icon attribute of the CalendarEvent class
+   *
+   *@param  thisCategory  Description of the Parameter
+   *@return               The icon value
+   */
+  public static String getIcon(String thisCategory) {
     if (thisCategory.equals("event")) {
       return "<img border=0 src=\"/images/event-timed.gif\" align=texttop width=12 height=12 title=\"Event\">";
     } else if (thisCategory.equalsIgnoreCase("holiday")) {
@@ -357,13 +363,19 @@ public class CalendarEvent implements Comparable {
     } else if (thisCategory.equalsIgnoreCase("Accounts")) {
       return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" align=texttop title=\"Accounts\">";
     } else if (thisCategory.equalsIgnoreCase("Tasks")) {
-        return "<img src=\"images/box.gif\" border=0 align=texttop width=\"14\" height=\"14\" title=\"Tasks\">";
-      }
+      return "<img src=\"images/box.gif\" border=0 align=texttop width=\"14\" height=\"14\" title=\"Tasks\">";
+    }
     return "";
   }
-  
-  
-  public static String getNamePlural(String thisCategory){
+
+
+  /**
+   *  Gets the namePlural attribute of the CalendarEvent class
+   *
+   *@param  thisCategory  Description of the Parameter
+   *@return               The namePlural value
+   */
+  public static String getNamePlural(String thisCategory) {
     if (thisCategory.equals("event")) {
       return "Events";
     } else if (thisCategory.equalsIgnoreCase("holiday")) {
@@ -377,8 +389,8 @@ public class CalendarEvent implements Comparable {
     } else if (thisCategory.equalsIgnoreCase("Accounts")) {
       return "Accounts";
     } else if (thisCategory.equalsIgnoreCase("Tasks")) {
-        return "Tasks";
-      }
+      return "Tasks";
+    }
     return "";
   }
 

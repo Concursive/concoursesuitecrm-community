@@ -1,13 +1,13 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.contacts.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import org.aspcfs.utils.web.PagedListInfo;
 
 /**
  *  Builds an address list for a contact using a custom query that extends the

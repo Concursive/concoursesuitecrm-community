@@ -1,8 +1,9 @@
 //Copyright 2001 Dark Horse Ventures
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.contacts.base;
 
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.PhoneNumber;
 
 /**
  *  Represents a contact phone number, extending the base PhoneNumber class.

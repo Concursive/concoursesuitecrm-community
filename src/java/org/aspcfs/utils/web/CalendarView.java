@@ -1,4 +1,4 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.utils.web;
 
 import com.darkhorseventures.cfsbase.CalendarEvent;
 import com.darkhorseventures.cfsbase.CalendarEventList;
