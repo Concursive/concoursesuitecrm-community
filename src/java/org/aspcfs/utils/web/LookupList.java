@@ -295,7 +295,6 @@ public class LookupList extends HtmlSelect {
     }
   }
 
-
   /**
    *  Gets the HtmlSelect attribute of the ContactEmailTypeList object
    *

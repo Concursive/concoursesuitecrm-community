@@ -6,6 +6,8 @@ import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.controller.SystemStatus;
 import com.darkhorseventures.controller.RecentItem;
+import com.darkhorseventures.controller.CustomForm;
+import com.darkhorseventures.controller.CustomFormList;
 import java.sql.*;
 import java.util.*;
 import java.text.*;
@@ -545,6 +547,15 @@ public class CFSModule {
     out.write(text);
     out.close();
   }
-
+  
+  public CustomForm getDynamicForm(ActionContext context, String which) {
+	CustomForm thisForm = new CustomForm();
+	
+	if ( ((CustomFormList)context.getServletContext().getAttribute("DynamicFormList")).containsKey(which) ) {
+		thisForm = (CustomForm)(((CustomForm)((CustomFormList)context.getServletContext().getAttribute("DynamicFormList")).get(which)).clone());
+	}
+	
+	return thisForm;
+  }
 }
 

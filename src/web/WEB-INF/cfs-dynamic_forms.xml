@@ -1,0 +1,38 @@
+<application>
+  <!-- Form used in the survey module -->
+  <form name="survey" defaultField="name" button0text="Save" button0link="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" button1text="Preview" button1link="CampaignManagerSurvey.do?command=Details&amp;auto-populate=true" action="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" cancel="CampaignManagerSurvey.do?command=View" returnLinkText="Back to Survey List" returnLink="CampaignManagerSurvey.do?command=View">
+    <tab name="Page 1" next="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true&amp;pg=1" id="0">
+      <group name="Create a New Survey">
+        <field name="name" display="Name" type="text" parameters="size=50^maxlength=80" required="on"/>
+	<field name="description" display="Description" type="text" parameters="size=50^maxlength=80"/>
+	<field name="type" display="Type" type="select" lookupList="Open-Ended^Quantitative (no comments)^Quantitative (with comments)" required="on"/>
+	<field name="itemLength" display="Number of Items" type="select" lookupList="5^9" textAsCode="on" required="on"/>
+	<field name="intro" display="Introduction Text" type="textarea"/>
+	<field name="id" display="id" type="hidden"/>
+      </group>
+    </tab>
+    <tab name="Page 2" prev="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true" id="1">
+      <group name="Survey Items">
+	<field name="items" display="Item" type="rowlist" lengthVar="itemLength" parameters="size=50^maxlength=80" required="on"/>
+      </group>
+    </tab>
+  </form>
+  
+  <form name="surveydetails" button0text="Modify" button0link="CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true" button1text="Delete Survey" button1link="CampaignManagerSurvey.do?command=Delete&amp;auto-populate=true" action="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" cancel="CampaignManagerSurvey.do?command=View" returnLinkText="Back to Survey List" returnLink="CampaignManagerSurvey.do?command=View">
+    <tab name="Page 1" id="0">
+      <group name="Survey Details">
+        <field name="name" display="Name" type="displaytext"/>
+	<field name="description" display="Description" type="displaytext"/>
+	<field name="typeName" display="Type" type="displaytext"/>
+	<field name="itemLength" display="Number of Items" type="displaytext"/>
+	<field name="intro" display="Introduction Text" type="displaytext"/>
+	<field name="enteredByName" display="Entered By" type="displaytext"/>
+	<field name="enteredDateTimeString" display="Date" type="displaytext"/>
+	<field name="modifiedByName" display="Last Modified By" type="displaytext"/>
+	<field name="modifiedDateTimeString" display="Date" type="displaytext"/>
+	<field name="id" display="id" type="hidden"/>
+      </group>
+    </tab>
+  </form>
+  
+</application>

@@ -166,6 +166,9 @@ public int getCustom1() {
 public void setCustom1(int custom1) {
 	this.custom1 = custom1;
 }
+public void setCustom1(String custom1) {
+	this.custom1 = Integer.parseInt(custom1);
+}
 
   /**
    *  Sets the Id attribute of the Contact object

@@ -1,6 +1,7 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="CampaignSurveyListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
+<jsp:useBean id="SurveyList" class="com.darkhorseventures.cfsbase.SurveyList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="listView" method="post" action="/CampaignManagerSurvey.do?command=View">
@@ -32,17 +33,56 @@
       <a href="/CampaignManagerSurvey.do?command=View&column=description"><strong>Type</strong></a>
     </td>
     <td valign=center align=left nowrap>
-      <a href="/CampaignManagerSurvey.do?command=View&column=m.enteredby"><strong>Entered By</strong></a>
+      <a href="/CampaignManagerSurvey.do?command=View&column=s.enteredby"><strong>Entered By</strong></a>
     </td>
     <td valign=center align=left nowrap>
-      <a href="/CampaignManagerSurvey.do?command=View&column=m.modified"><strong>Last Modified</strong></a>
+      <a href="/CampaignManagerSurvey.do?command=View&column=s.modified"><strong>Last Modified</strong></a>
     </td>
   </tr>
-  <tr class="containerBody">
-    <td colspan="5" valign="center">
+<%    
+	Iterator i = SurveyList.iterator();
+	
+	if (i.hasNext()) {
+	int rowid = 0;
+	
+		while (i.hasNext()) {
+			if (rowid != 1) {
+				rowid = 1;
+			} else {
+				rowid = 2;
+			}
+			
+		Survey thisSurvey = (Survey)i.next();
+%>      
+      <tr>
+        <dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete">
+        <td width=8 valign=center nowrap class="row<%= rowid %>">
+          <dhv:permission name="campaign-campaigns-surveys-edit"><a href="/CampaignManagerSurvey.do?command=Modify&id=<%=thisSurvey.getId()%>">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-surveys-delete"><a href="javascript:confirmDelete('/CampaignManagerSurvey.do?command=Delete&id=<%=thisSurvey.getId()%>');">Del</a></dhv:permission>
+        </td>
+	</dhv:permission>
+        <td class="row<%= rowid %>" nowrap>
+          <a href="/CampaignManagerSurvey.do?command=Details&id=<%= thisSurvey.getId() %>"><%= toHtml(thisSurvey.getName()) %></a>
+        </td>
+        <td class="row<%= rowid %>">
+          <%=toHtml(thisSurvey.getTypeName())%>
+        </td>
+        <td class="row<%= rowid %>" nowrap>
+          <%= toHtml(thisSurvey.getEnteredByName()) %>
+        </td>
+        <td class="row<%= rowid %>" nowrap>
+          <%= toHtml(thisSurvey.getModifiedDateTimeString()) %>
+        </td>
+      </tr>
+<%
+    }
+  } else {%>  
+  <tr>
+    <td class="row2" valign="center" colspan="5">
       No surveys found.
     </td>
   </tr>
+<%}%>
 </table>
 <br>
+[<%= CampaignSurveyListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignSurveyListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= CampaignSurveyListInfo.getNumericalPageLinks() %>
 </form>

@@ -51,6 +51,10 @@ Replaceable parameter  typical value / description
         <param-value>cfs-container_menus.xml</param-value>
     </init-param>
     <init-param>
+        <param-name>DynamicFormConfig</param-name>
+        <param-value>cfs-dynamic_forms.xml</param-value>
+    </init-param>
+    <init-param>
         <param-name>PopulateAttributeName</param-name>
         <param-value>auto-populate</param-value>
     </init-param>
@@ -88,7 +92,7 @@ Replaceable parameter  typical value / description
     </init-param>
     <init-param>
         <param-name>SiteCode</param-name>
-        <param-value>@SiteCode@</param-value>
+        <param-value>ds21</param-value>
     </init-param>
     <init-param>
         <param-name>ClientSSLKeystore</param-name>
@@ -101,15 +105,15 @@ Replaceable parameter  typical value / description
     <!-- Gatekeeper configuration -->
     <init-param>
         <param-name>GKHOST</param-name>
-        <param-value>@GKHOST@</param-value>
+        <param-value>jdbc:postgresql://216.54.81.101:5432/cfs2gk</param-value>
     </init-param>
     <init-param>
         <param-name>GKUSER</param-name>
-        <param-value>@GKUSER@</param-value>
+        <param-value>gatekeeper</param-value>
     </init-param>
     <init-param>
         <param-name>GKUSERPW</param-name>
-        <param-value>@GKUSERPW@</param-value>
+        <param-value></param-value>
     </init-param>
     <init-param>
         <param-name>GlobalPWInfo</param-name>

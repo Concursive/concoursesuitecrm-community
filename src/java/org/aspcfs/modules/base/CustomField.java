@@ -18,6 +18,7 @@ import com.darkhorseventures.webutils.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import java.util.*;
 import java.text.*;
+import com.darkhorseventures.cfsbase.SurveyItem;
 
 /**
  *  Represents a CustomField, used for both the definition of a custom field and
@@ -45,7 +46,10 @@ public class CustomField extends GenericBean {
   public final static int EMAIL = 13;
   public final static int URL = 14;
   public final static int PHONE = 15;
-
+  public final static int ROWLIST = 16;
+  public final static int HIDDEN = 17;
+  public final static int DISPLAYTEXT = 18;
+  
   //Properties for a Field
   private int id = -1;
   private int groupId = -1;
@@ -71,7 +75,12 @@ public class CustomField extends GenericBean {
   private int enteredNumber = 0;
   private double enteredDouble = 0;
   private Object elementData = null;
-
+  
+  private String display = null;
+  private String lengthVar = null;
+  private int maxRowItems = 0;
+  private String delimiter = "\r\n";
+  private boolean textAsCode = false;
 
   /**
    *  Constructor for the CustomField object
@@ -91,6 +100,9 @@ public class CustomField extends GenericBean {
   public CustomField(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
+public void setElementData(Object elementData) {
+	this.elementData = elementData;
+}
 
 
   /**
@@ -107,6 +119,9 @@ public class CustomField extends GenericBean {
     }
     buildRecord(rs);
   }
+public void setTextAsCode(boolean textAsCode) {
+	this.textAsCode = textAsCode;
+}
 
 
   /**
@@ -118,7 +133,17 @@ public class CustomField extends GenericBean {
   public void setId(int tmp) {
     this.id = tmp;
   }
+public String getLengthVar() {
+	return lengthVar;
+}
+public void setLengthVar(String lengthVar) {
+	this.lengthVar = lengthVar;
+}
 
+
+public void setParameter(String parameterName, String value) {
+	parameters.put(parameterName, value);
+}
 
   /**
    *  Sets the Id attribute of the CustomField object
@@ -130,6 +155,18 @@ public class CustomField extends GenericBean {
     this.id = Integer.parseInt(tmp);
   }
 
+public String getDelimiter() {
+	return delimiter;
+}
+public void setDelimiter(String delimiter) {
+	this.delimiter = delimiter;
+}
+public boolean getTextAsCode() {
+	return textAsCode;
+}
+public void setTextAsCode(String textAsCode) {
+	this.textAsCode = textAsCode.equalsIgnoreCase("ON");
+}
 
   /**
    *  Sets the GroupId attribute of the CustomField object
@@ -152,6 +189,15 @@ public class CustomField extends GenericBean {
     this.groupId = Integer.parseInt(tmp);
   }
 
+public void setMaxRowItems(int maxRowItems) {
+	this.maxRowItems = maxRowItems;
+}
+public int getMaxRowItems() {
+	return maxRowItems;
+}
+public void setMaxRowItems(String maxRowItems) {
+	this.maxRowItems = Integer.parseInt(maxRowItems);
+}
 
   /**
    *  Sets the Name attribute of the CustomField object
@@ -163,6 +209,16 @@ public class CustomField extends GenericBean {
     this.name = tmp;
   }
   
+  public String getDisplay() {
+	return display;
+  }
+  public String getDisplayHtml() {
+	return toHtml(display);
+  }
+  public void setDisplay(String display) {
+	this.display = display;
+  }
+
   public void setAdditionalText(String additionalText) {
 	this.additionalText = additionalText;
 }
@@ -198,9 +254,26 @@ public class CustomField extends GenericBean {
    *@since
    */
   public void setType(String tmp) {
-    this.type = Integer.parseInt(tmp);
+     try {
+	     this.type = Integer.parseInt(tmp);
+     } catch (Exception e) {
+	     if (tmp.equalsIgnoreCase("text")) {
+		     this.type = TEXT;
+	     } else if (tmp.equalsIgnoreCase("select")) {
+		     this.type = SELECT;
+	     } else if (tmp.equalsIgnoreCase("checkbox")) {
+		     this.type = CHECKBOX;
+	     } else if (tmp.equalsIgnoreCase("textarea")) {
+		     this.type = TEXTAREA;
+	     } else if (tmp.equalsIgnoreCase("rowlist")) {
+		     this.type = ROWLIST;
+	     } else if (tmp.equalsIgnoreCase("hidden")) {
+		     this.type = HIDDEN;
+	     } else if (tmp.equalsIgnoreCase("displaytext")) {
+		     this.type = DISPLAYTEXT;
+	     }
+     }
   }
-
 
   /**
    *  Sets the ValidationType attribute of the CustomField object
@@ -332,6 +405,10 @@ public class CustomField extends GenericBean {
   public void setSelectedItemId(int tmp) {
     this.selectedItemId = tmp;
   }
+  
+  public void setSelectedItemId(String tmp) {
+    this.selectedItemId = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -367,22 +444,27 @@ public class CustomField extends GenericBean {
   public void setLookupList(String tmp) {
     elementData = new LookupList();
     int count = 0;
-    StringTokenizer st = new StringTokenizer(tmp, "\r\n");
+    StringTokenizer st = new StringTokenizer(tmp, delimiter);
     while (st.hasMoreTokens()) {
       String listField = st.nextToken();
       if (!listField.trim().equals("")) {
         ++count;
         LookupElement thisElement = new LookupElement();
         thisElement.setDescription(listField.trim());
-        thisElement.setCode(count);
+	
+	if (textAsCode) {
+		thisElement.setCode(Integer.parseInt(thisElement.getDescription()));
+	} else {
+		thisElement.setCode(count);
+	}
+	
         thisElement.setLevel(count);
         thisElement.setDefaultItem(false);
         ((LookupList) elementData).add(thisElement);
       }
     }
   }
-
-
+  
   /**
    *  Sets the Parameters attribute of the CustomField object
    *
@@ -439,7 +521,7 @@ public class CustomField extends GenericBean {
         LookupElement thisElement = (LookupElement) i.next();
         sb.append(thisElement.getDescription());
         if (i.hasNext()) {
-          sb.append("\r\n");
+          sb.append(delimiter);
         }
       }
     }
@@ -736,7 +818,31 @@ public class CustomField extends GenericBean {
     }
   }
 
-
+  public String getRowListElement(int index) {
+	  String hiddenElementName = name + index + "id";
+	  String textElementName = name + index + "text";
+	  SurveyItem tmpResult = null;
+	  
+	  String maxlength = this.getParameter("maxlength");
+          String size = "";
+          if (!maxlength.equals("")) {
+            if (Integer.parseInt(maxlength) > 40) {
+              size = "40";
+            } else {
+              size = maxlength;
+            }
+          }
+	  
+	  if (((ArrayList)elementData).size() >= index) {
+		  tmpResult = (SurveyItem)((ArrayList)elementData).get(index-1);
+          } else {
+		  tmpResult = new SurveyItem();
+          }
+	  
+	  return ("<input type=\"hidden\" name=\"" + hiddenElementName + "\" value=\"" + tmpResult.getId() + "\">\n<input type=\"text\" name=\"" + textElementName + "\" " + (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
+              (size.equals("") ? "" : "size=\"" + size + "\" ") + " value=\"" + toHtmlValue(tmpResult.getDescription()) + "\"> ");
+  }
+       
   /**
    *  Gets the HtmlElement attribute of the CustomField object when drawing
    *  forms.
@@ -756,7 +862,9 @@ public class CustomField extends GenericBean {
         case TEXTAREA:
           return ("<textarea cols=\"70\" rows=\"8\" name=\"" + elementName + "\">" + toString(enteredValue) + "</textarea>");
         case SELECT:
+	if ( !( ((LookupList) elementData).containsKey(-1) ) ) {
           ((LookupList) elementData).addItem(-1, "-- None --");
+	}
           return ((LookupList) elementData).getHtmlSelect(elementName, selectedItemId);
         case CHECKBOX:
           return ("<input type=\"checkbox\" name=\"" + elementName + "\" value=\"ON\" " + (selectedItemId == 1 ? "checked" : "") + ">");
@@ -765,7 +873,11 @@ public class CustomField extends GenericBean {
               "<a href=\"javascript:popCalendar('forms[0]', '" + elementName + "');\">Date</a> (mm/dd/yyyy)");
         case PERCENT:
           return ("<input type=\"text\" name=\"" + elementName + "\" size=\"8\" value=\"" + toHtmlValue(enteredValue) + "\"> " + "%");
-        default:
+	case HIDDEN:
+          return ("<input type=\"hidden\" name=\"" + elementName + "\" value=\"" + toHtmlValue(enteredValue) + "\">");
+	case DISPLAYTEXT:
+          return (toHtmlValue(enteredValue));
+	default:
           String maxlength = this.getParameter("maxlength");
           String size = "";
           if (!maxlength.equals("")) {

@@ -393,6 +393,28 @@ public class PagedListInfo {
     return links.toString();
   }
 
+  public String getAlphabeticalPageLinksTwoLines() {
+    StringBuffer links = new StringBuffer();
+    for (int i = 0; i < (lettersArray.length/2); i++) {
+      String thisLetter = lettersArray[i];
+      if (thisLetter.equals(currentLetter)) {
+        links.append(" <b>" + thisLetter + "</b> ");
+      } else {
+        links.append("<a href='" + link + "&letter=" + thisLetter + "'> " + thisLetter + " </a>");
+      }
+    }
+    links.append("<br>");
+    for (int j = (lettersArray.length/2); j < lettersArray.length; j++) {
+      String thisLetter = lettersArray[j];
+      if (thisLetter.equals(currentLetter)) {
+        links.append(" <b>" + thisLetter + "</b> ");
+      } else {
+        links.append("<a href='" + link + "&letter=" + thisLetter + "'> " + thisLetter + " </a>");
+      }
+    }
+    return links.toString();
+  }
+
 
   /**
    *  Gets the PreviousPageLink attribute of the PagedListInfo object

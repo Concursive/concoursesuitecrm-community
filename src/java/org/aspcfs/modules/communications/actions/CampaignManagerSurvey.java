@@ -8,11 +8,12 @@ import java.util.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
-
+import com.darkhorseventures.controller.CustomFormList;
+import com.darkhorseventures.controller.CustomForm;
 
 public final class CampaignManagerSurvey extends CFSModule {
 
-  public String executeCommandView(ActionContext context) {
+  public String executeCommandView(ActionContext context) throws SQLException {
 	  
 	  	if (!(hasPermission(context, "campaign-campaigns-surveys-view"))) {
 	    		return ("PermissionError");
@@ -20,30 +21,33 @@ public final class CampaignManagerSurvey extends CFSModule {
 		
     Exception errorMessage = null;
 
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignSurveyListInfo");
-    pagedListInfo.setLink("/CampaignManagerSurvey.do?command=View");
+    PagedListInfo surveyInfo = this.getPagedListInfo(context, "CampaignSurveyListInfo");
+    surveyInfo.setLink("/CampaignManagerSurvey.do?command=View");
 
     Connection db = null;
     
-    /**
-    MessageList messageList = new MessageList();
+    SurveyList surveyList = new SurveyList();
 
     try {
       db = this.getConnection(context);
-      messageList.setPagedListInfo(pagedListInfo);
-      if ("all".equals(pagedListInfo.getListView())) {
-        messageList.setOwnerIdRange(this.getUserRange(context));
+
+      surveyList.setPagedListInfo(surveyInfo);
+      //contactList.setTypeId(externalContactsInfo.getFilterKey("listFilter1"));
+
+      if ("all".equals(surveyInfo.getListView())) {
+        surveyList.setEnteredByIdRange(this.getUserRange(context));
       } else {
-        messageList.setOwner(this.getUserId(context));
+        surveyList.setEnteredByIdRange(this.getUserId(context) + "");
       }
-      messageList.buildList(db);
+
+      surveyList.buildList(db);
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-    */
-    
+
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
       submenu = (String)context.getRequest().getAttribute("submenu");
@@ -55,7 +59,7 @@ public final class CampaignManagerSurvey extends CFSModule {
     addModuleBean(context, submenu, "View Surveys");
 
     if (errorMessage == null) {
-      //context.getRequest().setAttribute("MessageList", messageList);
+      context.getRequest().setAttribute("SurveyList", surveyList);
       return ("ViewOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -64,38 +68,239 @@ public final class CampaignManagerSurvey extends CFSModule {
   }
   
   public String executeCommandAdd(ActionContext context) {
-	  
 	if (!(hasPermission(context, "campaign-campaigns-surveys-add"))) {
 		return ("PermissionError");
 	}
 	
-    HtmlSelect surveyType = new HtmlSelect();
-    surveyType.setSelectName("type");
-    surveyType.addItem(0, "--Please Select--");
-    surveyType.addItem(1, "Open-Ended");
-    surveyType.addItem(2, "Quantitative (no comments)");
-    surveyType.addItem(3, "Quantitative (with comments)");
-    surveyType.build();
-    
-    HtmlSelect surveyLength = new HtmlSelect();
-    surveyLength.setSelectName("length");
-    surveyLength.addItem(0, "--Please Select--");
-    surveyLength.addItem(5, "5");
-    surveyLength.addItem(9, "9");
-    surveyLength.build();
+	int pg = 0;
+	int updateResult = 0;
+	
+	if (context.getRequest().getParameter("pg") != null)
+		pg = Integer.parseInt(context.getRequest().getParameter("pg"));
+	
+	CustomForm thisForm = getDynamicForm(context, "survey");
+	thisForm.setSelectedTabId(pg);
+	
+	Survey thisSurvey = (Survey)context.getFormBean();
 		
-    String submenu = context.getRequest().getParameter("submenu");
-    if (submenu == null) {
-      submenu = (String)context.getRequest().getAttribute("submenu");
-    }
-    if (submenu == null) {
-      submenu = "ManageSurveys";
-    }
-    context.getRequest().setAttribute("submenu", submenu);
-    context.getRequest().setAttribute("SurveyType", surveyType);
-    context.getRequest().setAttribute("SurveyLength", surveyLength);
-    addModuleBean(context, submenu, "Add Message");
-    return ("AddOK");
+	thisSurvey.setRequestItems(context.getRequest());
+	updateResult = thisForm.populate(thisSurvey);
+	
+	String submenu = context.getRequest().getParameter("submenu");
+	
+	if (submenu == null)
+		submenu = (String)context.getRequest().getAttribute("submenu");
+	if (submenu == null)
+		submenu = "ManageSurveys";
+	
+	context.getRequest().setAttribute("submenu", submenu);
+	context.getRequest().setAttribute("Survey", thisSurvey);
+	context.getRequest().setAttribute("CustomFormInfo", thisForm);
+	addModuleBean(context, submenu, "Add Survey");
+	
+	return ("AddOK");
+  }
+  
+  public String executeCommandDetails(ActionContext context) throws SQLException {
+	if (!(hasPermission(context, "campaign-campaigns-surveys-view"))) {
+		return ("PermissionError");
+	}
+	
+	Exception errorMessage = null;
+	
+	Survey thisSurvey = null;
+	Connection db = null;
+	
+	CustomForm thisForm = getDynamicForm(context, "surveydetails");
+	
+	try {
+		db = this.getConnection(context);
+		thisSurvey = new Survey(db, context.getRequest().getParameter("id"));
+		thisForm.populate(thisSurvey);
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	String submenu = context.getRequest().getParameter("submenu");
+	
+	if (submenu == null)
+		submenu = (String)context.getRequest().getAttribute("submenu");
+	if (submenu == null)
+		submenu = "ManageSurveys";
+	
+	if (errorMessage == null) {
+		context.getRequest().setAttribute("submenu", submenu);
+		addModuleBean(context, submenu, "Add Surveys");
+	
+		if (thisSurvey != null) {
+			context.getRequest().setAttribute("Survey", thisSurvey);
+			context.getRequest().setAttribute("CustomFormInfo", thisForm);
+			return ("DetailsOK");
+		} else {
+			processErrors(context, thisSurvey.getErrors());
+			return (executeCommandView(context));
+		}
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+  }
+  
+  
+    public String executeCommandDelete(ActionContext context) throws SQLException {
+	if (!(hasPermission(context, "campaign-campaigns-surveys-add"))) {
+		return ("PermissionError");
+	}
+	
+	Exception errorMessage = null;
+	boolean recordDeleted = false;
+	
+	Survey thisSurvey = null;
+	Survey surveyList = null;
+	
+	Connection db = null;
+	
+	try {
+		db = this.getConnection(context);
+		thisSurvey = new Survey(db, context.getRequest().getParameter("id"));
+		recordDeleted = thisSurvey.delete(db);
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	String submenu = context.getRequest().getParameter("submenu");
+	
+	if (submenu == null)
+		submenu = (String)context.getRequest().getAttribute("submenu");
+	if (submenu == null)
+		submenu = "ManageSurveys";
+	
+	if (errorMessage == null) {
+		context.getRequest().setAttribute("SurveyList", surveyList);
+		context.getRequest().setAttribute("submenu", submenu);
+		addModuleBean(context, submenu, "View Surveys");
+	
+		if (recordDeleted) {
+			return ("DeleteOK");
+		} else {
+			processErrors(context, thisSurvey.getErrors());
+			return (executeCommandView(context));
+		}
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+  }
+  
+  public String executeCommandModify(ActionContext context) throws SQLException {
+	if (!(hasPermission(context, "campaign-campaigns-surveys-edit"))) {
+		return ("PermissionError");
+	}
+	
+	Exception errorMessage = null;
+	
+	Survey thisSurvey = null;
+	Connection db = null;
+	
+	CustomForm thisForm = getDynamicForm(context, "survey");
+	
+	try {
+		db = this.getConnection(context);
+		thisSurvey = new Survey(db, context.getRequest().getParameter("id"));
+		thisForm.populate(thisSurvey);
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	String submenu = context.getRequest().getParameter("submenu");
+	
+	if (submenu == null)
+		submenu = (String)context.getRequest().getAttribute("submenu");
+	if (submenu == null)
+		submenu = "ManageSurveys";
+	
+	if (errorMessage == null) {
+		context.getRequest().setAttribute("submenu", submenu);
+		addModuleBean(context, submenu, "Add Surveys");
+	
+		if (thisSurvey != null) {
+			context.getRequest().setAttribute("Survey", thisSurvey);
+			context.getRequest().setAttribute("CustomFormInfo", thisForm);
+			return ("ModifyOK");
+		} else {
+			processErrors(context, thisSurvey.getErrors());
+			return (executeCommandView(context));
+		}
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+  }
+  
+    public String executeCommandInsert(ActionContext context) {
+	if (!(hasPermission(context, "campaign-campaigns-surveys-add"))) {
+		return ("PermissionError");
+	}
+	
+	Exception errorMessage = null;
+	boolean recordInserted = false;
+	int recordsModified = 0;
+	
+	Survey newSurvey = (Survey)context.getFormBean();
+	int surveyId = -1;
+	
+	if (context.getRequest().getParameter("id") != null && !(context.getRequest().getParameter("id").equals("")))
+		surveyId = Integer.parseInt(context.getRequest().getParameter("id"));
+	
+	if (surveyId == -1) 
+		newSurvey.setEnteredBy(getUserId(context));
+	
+	newSurvey.setModifiedBy(getUserId(context));
+	newSurvey.setRequestItems(context.getRequest());
+	Connection db = null;
+	
+	System.out.println("Survey ID is: " + surveyId);
+	
+	try {
+		db = this.getConnection(context);
+		
+		if (surveyId == -1) {
+			recordInserted = newSurvey.insert(db);
+		} else { 
+			recordsModified = newSurvey.update(db);
+		}
+		
+		System.out.println("records modified: " + recordsModified);
+		
+		if (recordInserted || recordsModified > 0) {
+			//newSurvey = new Survey(db, "" + newSurvey.getId());
+			//newSurvey = new Survey();
+			context.getRequest().setAttribute("SurveyDetails", newSurvey);
+		} else {
+			processErrors(context, newSurvey.getErrors());
+		}
+	} catch (SQLException e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	if (errorMessage == null) {
+		if (recordInserted || recordsModified > 0) {
+			return ("InsertOK");
+		} else {
+			return (executeCommandAdd(context));
+		}
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
   }
   
   public String executeCommandAdd2(ActionContext context) {
@@ -104,22 +309,7 @@ public final class CampaignManagerSurvey extends CFSModule {
 		return ("PermissionError");
 	}
 	
-	java.util.Enumeration e = context.getRequest().getParameterNames();
-	
-
-	
-	Survey thisSurvey = new Survey();
-	
-	//java.lang.reflect.Field[] f = new java.lang.reflect.Field[5];
-	java.lang.reflect.Field[] f = thisSurvey.getClass().getDeclaredFields();
-	
-	for (int i=0; i<f.length; i++) {
-		//System.out.println(f[i].getName());
-	}
-		
-	while (e.hasMoreElements()) {
-		System.out.println(e.nextElement());
-	}
+	Survey thisSurvey = (Survey)context.getFormBean();
 	
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
@@ -129,7 +319,8 @@ public final class CampaignManagerSurvey extends CFSModule {
       submenu = "ManageSurveys";
     }
     context.getRequest().setAttribute("submenu", submenu);
-    addModuleBean(context, submenu, "Add Message");
+    context.getRequest().setAttribute("Survey", thisSurvey);
+    addModuleBean(context, submenu, "Add Survey");
     return ("Add2OK");
   }
 

@@ -88,7 +88,18 @@ public class InitHook implements ControllerInitHook {
       config.getServletContext().setAttribute("ContainerMenuConfig", 
         config.getInitParameter("ContainerMenuConfig"));
     }
-
+    
+    if (config.getInitParameter("DynamicFormConfig") != null) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("InitHook-> Setting the DynamicFormConfig property: " + 
+          config.getInitParameter("DynamicFormConfig"));
+      }
+      config.getServletContext().setAttribute("DynamicFormConfig", 
+        config.getInitParameter("DynamicFormConfig"));
+      CustomFormList forms = new CustomFormList(config.getServletContext(), config.getInitParameter("DynamicFormConfig"));
+      config.getServletContext().setAttribute("DynamicFormList", forms);
+    }
+    
     config.getServletContext().setAttribute("SystemStatus", new Hashtable());
 
     return null;
