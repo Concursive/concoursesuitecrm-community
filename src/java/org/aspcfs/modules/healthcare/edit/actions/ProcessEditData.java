@@ -48,7 +48,7 @@ public String executeCommandDefault(ActionContext context) {
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
 		
-      StringTokenizer st = new com.Ostermiller.util.StringTokenizer(id, "|");
+      com.Ostermiller.util.StringTokenizer st = new com.Ostermiller.util.StringTokenizer(id, "|");
       String dbName = st.nextToken();
       String fileName = st.nextToken();
       
