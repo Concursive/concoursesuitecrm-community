@@ -740,7 +740,7 @@ public class TransactionItem {
           } else if (thisRecord.getAction().equals("insert")) {
             thisRecord.put("guid", String.valueOf(identity++));
           } else if (thisRecord.getAction().equals("update")) {
-            thisRecord.put("guid", ignoredProperties.get("guid"));
+            thisRecord.put("guid", ObjectUtils.getParam(object, "id"));
           }
         }
       } catch (java.lang.NumberFormatException e) {
