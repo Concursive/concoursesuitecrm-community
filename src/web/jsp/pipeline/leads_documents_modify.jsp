@@ -99,8 +99,8 @@ Modify Document<br>
   </tr>
 </table>
 &nbsp;<br>
-  <input type='submit' value=' Update ' name="update">
-  <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %>';">
+  <input type="submit" value=" Update " name="update">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %>';">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">

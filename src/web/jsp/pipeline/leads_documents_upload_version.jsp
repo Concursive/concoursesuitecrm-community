@@ -114,8 +114,8 @@ Upload New Version<br>
     * Large files may take a while to upload.<br>
     Wait for file completion message when upload is complete.
   </p>
-  <input type='submit' value=' Upload ' name="upload">
-  <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %>';">
+  <input type="submit" value=" Upload " name="upload">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %>';">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= opportunityHeader.getId() %>">
   <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">

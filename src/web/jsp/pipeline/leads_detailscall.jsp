@@ -16,7 +16,7 @@
 Call Details<br>
 <hr color="#BFBFBB" noshade>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-      <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
+  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -42,99 +42,91 @@ Call Details<br>
   </tr>
   <tr>
     <td class="containerBack">
-    
-<dhv:permission name="pipeline-opportunities-calls-edit"><input type="submit" name="command" value="Modify"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-calls-delete"><input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br>&nbsp;</dhv:permission>
-
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2" valign="center" align="left">
-      <strong>Call Details</strong> [ <a href="javascript:popURL('ForwardNote.do?command=ShowForm&linkRecordId=<%= CallDetails.getId() %>&linkModuleId=<%= Constants.CONTACTS_CALLS %>&popup=true','Forward_Call','600','290','yes','yes');">Forward</a> ]
-    </td>     
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Type
-    </td>
-    <td width=100%>
-      <%= toHtml(CallDetails.getCallType()) %>
-    </td>
-  </tr>
-  
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Contact Name
-    </td>
-    <td width=100%>
-      <%= toHtml(CallDetails.getContactName()) %>
-    </td>
-  </tr>
-  
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Length
-    </td>
-    <td>
-      <%= toHtml(CallDetails.getLengthText()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Subject
-    </td>
-    <td>
-      <%= toHtml(CallDetails.getSubject()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel" width=100%>
-      Notes
-    </td>
-    <td>
-      <%= toHtml(CallDetails.getNotes()) %>
-    </td>
-  </tr>
-  
-  <tr class="containerBody">
-    <td nowrap class="formLabel" width=100%>
-      Alert Description
-    </td>
-    <td>
-      <%= toHtml(CallDetails.getAlertText()) %>
-    </td>
-  </tr>
-  
-  <tr class="containerBody">
-    <td nowrap class="formLabel" width=100%>
-      Alert Date
-    </td>
-    <td>
-      <%= toHtml(CallDetails.getAlertDateString()) %>
-    </td>
-  </tr>
-  
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Entered
-    </td>
-    <td>
-      <%= toHtml(CallDetails.getEnteredName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getEnteredString()) %>
-    </td>
-  </tr>
-  
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Modified
-    </td>
-    <td>
-      <%= toHtml(CallDetails.getModifiedName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getModifiedString()) %>
+      <dhv:permission name="pipeline-opportunities-calls-edit"><input type="submit" name="command" value="Modify"></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-calls-delete"><input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()"></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br>&nbsp;</dhv:permission>
+      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+        <tr class="title">
+          <td colspan="2">
+            <strong>Call Details</strong> [ <a href="javascript:popURL('ForwardNote.do?command=ShowForm&linkRecordId=<%= CallDetails.getId() %>&linkModuleId=<%= Constants.CONTACTS_CALLS %>&popup=true','Forward_Call','600','290','yes','yes');">Forward</a> ]
+          </td>     
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel">
+            Type
+          </td>
+          <td>
+            <%= toHtml(CallDetails.getCallType()) %>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel">
+            Contact Name
+          </td>
+          <td>
+            <%= toHtml(CallDetails.getContactName()) %>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel">
+            Length
+          </td>
+          <td>
+            <%= toHtml(CallDetails.getLengthText()) %>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel">
+            Subject
+          </td>
+          <td>
+            <%= toHtml(CallDetails.getSubject()) %>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel">
+            Notes
+          </td>
+          <td>
+            <%= toHtml(CallDetails.getNotes()) %>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td nowrap class="formLabel">
+            Alert Description
+          </td>
+          <td>
+            <%= toHtml(CallDetails.getAlertText()) %>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td nowrap class="formLabel">
+            Alert Date
+          </td>
+          <td>
+            <%= toHtml(CallDetails.getAlertDateString()) %>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel">
+            Entered
+          </td>
+          <td>
+            <%= toHtml(CallDetails.getEnteredName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getEnteredString()) %>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td nowrap class="formLabel">
+            Modified
+          </td>
+          <td>
+            <%= toHtml(CallDetails.getModifiedName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getModifiedString()) %>
+          </td>
+        </tr>
+      </table>
+      <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-calls-edit"><input type="submit" name="command" value="Modify"></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-calls-delete"><input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()"></dhv:permission>
     </td>
   </tr>
-</table>
-<dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br></dhv:permission>
-<dhv:permission name="pipeline-opportunities-calls-edit"><input type="submit" name="command" value="Modify"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-calls-delete"><input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()"></dhv:permission>
-</td>
-</tr>
 </table>

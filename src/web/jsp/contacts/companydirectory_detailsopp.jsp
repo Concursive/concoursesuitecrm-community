@@ -114,7 +114,7 @@ Opportunity Details<br>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= toHtml(oppComponent.getCloseDateString()) %>
     </td>
-    <td valign="top" nowrap class="row<%= rowid %>">
+    <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= toHtml(oppComponent.getStageName()) %>
     </td>		
   </tr>

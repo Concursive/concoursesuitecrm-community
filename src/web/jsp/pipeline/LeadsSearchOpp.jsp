@@ -9,70 +9,64 @@
 Search Opportunities<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-
-  <tr bgcolor="#DEE0FA">
-    <td colspan=2 valign=center align=left>
-    <strong>Search Pipeline</strong>
+  <tr class="title">
+    <td colspan="2">
+      <strong>Search Pipeline</strong>
     </td>     
   </tr>
-  
-  <tr><td width="125" class="formLabel">
-Description
-</td>
-<td colspan=1 valign=center>
-<input type=text size=35 name="searchDescription">
-</td>
-</tr>
-
+  <tr>
+    <td class="formLabel">
+      Description
+    </td>
+    <td>
+      <input type="text" size="35" name="searchDescription">
+    </td>
+  </tr>
   <tr>
     <td nowrap class="formLabel">
       Organization
     </td>
-	<td bgColor="white">
-	<%= OrgList.getHtmlSelectDefaultNone("searchcodeOrgId") %>
-	</td>
+    <td>
+      <%= OrgList.getHtmlSelectDefaultNone("searchcodeOrgId") %>
+    </td>
   </tr>
-  
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <a href="javascript:popURLReturn('MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=contactsingle&parentFormName=searchLeads&popup=true', 'Leads.do?command=SearchOpp', 'Search_Opp','700','450','yes','no');">Contact</a>
     </td>
-    <td width="100%">
+    <td>
       <table>
         <tr>
           <td>
             <div id="changecontact">None Selected</div>
           </td>
           <td>
-            <input type=hidden name="contact" value="-1">
+            <input type="hidden" name="contact" value="-1">
           </td>
         </tr>
       </table>
     </td>
   </tr>
-  
-    <tr>
+  <tr>
     <td nowrap class="formLabel">
       Current Stage
     </td>
-	<td bgColor="white">
-	<%=StageList.getHtmlSelectDefaultNone("searchcodeStage")%>
-	</td>
-    </tr>
-    
-      <tr>
-      <td width="125" valign="top" class="formLabel">
-Est. Close Date between
-</td>
-<td colspan=1 valign=center>
-<input type=text size=10 name="searchdateCloseDateStart" value="">
-<a href="javascript:popCalendar('searchLeads', 'searchdateCloseDateStart');">Date</a> (mm/dd/yyyy)
-&nbsp;and<br>
-<input type=text size=10 name="searchdateCloseDateEnd" value="">
-<a href="javascript:popCalendar('searchLeads', 'searchdateCloseDateEnd');">Date</a> (mm/dd/yyyy)
-</td>
-</tr>
-    
+    <td>
+      <%= StageList.getHtmlSelectDefaultNone("searchcodeStage") %>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" class="formLabel">
+      Est. Close Date between
+    </td>
+    <td>
+      <input type="text" size="10" name="searchdateCloseDateStart" value="">
+      <a href="javascript:popCalendar('searchLeads', 'searchdateCloseDateStart');">Date</a> (mm/dd/yyyy)
+      &nbsp;and<br>
+      <input type="text" size="10" name="searchdateCloseDateEnd" value="">
+      <a href="javascript:popCalendar('searchLeads', 'searchdateCloseDateEnd');">Date</a> (mm/dd/yyyy)
+    </td>
+  </tr>
 </table>
 &nbsp;<br>
 <input type=submit value="Search">

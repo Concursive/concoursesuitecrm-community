@@ -4,9 +4,7 @@
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="CallTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<dhv:permission name="contacts-external_contacts-calls-add">
 <body onLoad="javascript:document.forms[0].subject.focus();">
-</dhv:permission>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
@@ -21,7 +19,6 @@
   function checkForm(form) {
     formTest = true;
     message = "";
-    
     if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
       message += "- Check that Alert Date is entered correctly\r\n";
       formTest = false;

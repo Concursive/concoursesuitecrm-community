@@ -13,7 +13,7 @@
 Document Details<br>
 <hr color="#BFBFBB" noshade>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-      <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
+  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -57,17 +57,16 @@ Document Details<br>
   </tr>
 <%
   Iterator versionList = FileItem.getVersionList().iterator();
-  
   int rowid = 0;
   while (versionList.hasNext()) {
-    if (rowid != 1) rowid = 1; else rowid = 2;
+    rowid = (rowid != 1?1:2);
     FileItemVersion thisVersion = (FileItemVersion)versionList.next();
 %>      
     <tr class="row<%= rowid %>">
-      <td width="10" align="center" rowspan="2" nowrap>
+      <td align="center" rowspan="2" nowrap>
         <a href="LeadsDocuments.do?command=Download&headerId=<%= opportunityHeader.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>">Download</a>
       </td>
-      <td width="100%">
+      <td>
         <%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %>
       </td>
       <td align="right" nowrap>

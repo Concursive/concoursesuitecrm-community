@@ -12,23 +12,22 @@
 Documents<br>
 <hr color="#BFBFBB" noshade>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-      <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
+  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
       <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>&nbsp;
-      	<dhv:evaluate exp="<%= (opportunityHeader.getAccountEnabled() && opportunityHeader.getAccountLink() > -1) %>">
+      <dhv:evaluate exp="<%= (opportunityHeader.getAccountEnabled() && opportunityHeader.getAccountLink() > -1) %>">
         <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%= opportunityHeader.getAccountLink() %>">Go to this Account</a> ]</dhv:permission>
-	</dhv:evaluate>
-	  
-	<dhv:evaluate exp="<%=(opportunityHeader.getContactLink() > -1)%>">
-	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%= opportunityHeader.getContactLink() %>">Go to this Contact</a> ]</dhv:permission>
-	</dhv:evaluate>
-  <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
-    <% FileItem thisFile = new FileItem(); %>
-    <%= thisFile.getImageTag() %>
-  </dhv:evaluate>
+      </dhv:evaluate>
+      <dhv:evaluate exp="<%=(opportunityHeader.getContactLink() > -1)%>">
+        <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%= opportunityHeader.getContactLink() %>">Go to this Contact</a> ]</dhv:permission>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
+        <% FileItem thisFile = new FileItem(); %>
+        <%= thisFile.getImageTag() %>
+      </dhv:evaluate>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -55,11 +54,10 @@ Documents<br>
   </tr>
 <%
   Iterator j = FileItemList.iterator();
-  
   if ( j.hasNext() ) {
     int rowid = 0;
     while (j.hasNext()) {
-      if (rowid != 1) rowid = 1; else rowid = 2;
+      rowid = (rowid != 1?1:2);
       FileItem thisFile = (FileItem)j.next();
 %>      
     <tr class="row<%= rowid %>">
@@ -91,7 +89,7 @@ Documents<br>
   </table>
 <%} else {%>
     <tr class="containerBody">
-      <td colspan="7" valign="center">
+      <td colspan="7">
         No documents found.
       </td>
     </tr>

@@ -3,8 +3,6 @@
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="LeadsCallList" class="org.aspcfs.modules.contacts.base.CallList" scope="request"/>
 <jsp:useBean id="LeadsCallListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
-<jsp:useBean id="CallTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -14,7 +12,7 @@
 Calls<br>
 <hr color="#BFBFBB" noshade>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-      <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
+  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -40,76 +38,61 @@ Calls<br>
   </tr>
   <tr>
     <td class="containerBack">
-    <dhv:permission name="contacts-external_contacts-calls-add"><a href="LeadsCalls.do?command=Add&headerId=<%= opportunityHeader.getId() %>">Add a Call</a></dhv:permission>
-    <center><%= LeadsCallListInfo.getAlphabeticalPageLinks() %></center>
-  <%= showError(request, "actionError") %>
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="title">
-    <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete">
-      <td valign=center align=left>
-        <strong>Action</strong>
-      </td>
-    </dhv:permission>  
-      <td valign=center align=left>
-        <strong>Subject</strong>
-      </td>
-    
-      <td valign=center align=left>
-        <strong>Type</strong>
-      </td>
-      
-      <td valign=center align=center>
-        <strong>Length</strong>
-      </td>
-      
-      <td valign=center align=center>
-        <strong>Date</strong>
-      </td>
-    </tr>
-  
-  <%
+      <dhv:permission name="contacts-external_contacts-calls-add"><a href="LeadsCalls.do?command=Add&headerId=<%= opportunityHeader.getId() %>">Add a Call</a><br></dhv:permission>
+      <%= showError(request, "actionError") %>
+      <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+        <tr class="title">
+        <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete">
+          <td>
+            <strong>Action</strong>
+          </td>
+        </dhv:permission>  
+          <td>
+            <strong>Subject</strong>
+          </td>
+          <td>
+            <strong>Type</strong>
+          </td>
+          <td>
+            <strong>Length</strong>
+          </td>
+          <td>
+            <strong>Date</strong>
+          </td>
+        </tr>
+<%
     Iterator j = LeadsCallList.iterator();
-    
     if ( j.hasNext() ) {
       int rowid = 0;
         while (j.hasNext()) {
-      
-          if (rowid != 1) {
-            rowid = 1;
-          } else {
-            rowid = 2;
-          }
-      
-      Call thisCall = (Call)j.next();
-  %>      
-      <tr class="containerBody">
+          rowid = (rowid != 1?1:2);
+          Call thisCall = (Call)j.next();
+%>
+        <tr class="containerBody">
         <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete">
-        <td width=8 valign=center nowrap class="row<%= rowid %>">
+          <td width="8" nowrap class="row<%= rowid %>">
             <dhv:permission name="pipeline-opportunities-calls-edit"><a href="LeadsCalls.do?command=Modify&id=<%= thisCall.getId() %>&headerId=<%= opportunityHeader.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-calls-delete"><a href="javascript:confirmDelete('LeadsCalls.do?command=Delete&id=<%= thisCall.getId() %>&headerId=<%= opportunityHeader.getId() %>');">Del</a></dhv:permission>
-        </td>
+          </td>
         </dhv:permission>
-        
-        <td width="100%" valign=center class="row<%= rowid %>">
+        <td width="100%" class="row<%= rowid %>">
           <a href="LeadsCalls.do?command=Details&id=<%= thisCall.getId() %>&headerId=<%= opportunityHeader.getId() %>">
           <%= toHtml(thisCall.getSubject()) %>
           </a>
         </td>
-        <td valign=center nowrap class="row<%= rowid %>">
+        <td nowrap class="row<%= rowid %>">
           <%= toHtml(thisCall.getCallType()) %>
         </td>
-        
-        <td align=center valign=center nowrap class="row<%= rowid %>">
+        <td valign=center nowrap class="row<%= rowid %>">
           <%= toHtml(thisCall.getLengthText()) %>
         </td>
-        
-        <td valign=center nowrap class="row<%= rowid %>">
+        <td nowrap class="row<%= rowid %>">
           <%= toHtml(thisCall.getEnteredString()) %>
         </td>
       </tr>
    <%}%>
   <%} else {%>
       <tr class="containerBody">
-        <td colspan=5 valign=center>
+        <td colspan="5">
           No calls found.
         </td>
       </tr>
@@ -119,4 +102,3 @@ Calls<br>
 </td>
 </tr>
 </table>
-</body>

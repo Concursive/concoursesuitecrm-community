@@ -72,7 +72,6 @@ function checkForm(form) {
 Modify Component<br>
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
-
 <input type="hidden" name="id" value="<%= LeadsComponentDetails.getId() %>">
 <input type="hidden" name="headerId" value="<%= LeadsComponentDetails.getHeaderId() %>">
 <input type="hidden" name="modified" value="<%= LeadsComponentDetails.getModified() %>">
@@ -80,7 +79,7 @@ Modify Component<br>
   <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 </dhv:evaluate>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-      <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
 </dhv:evaluate>
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 <% 
@@ -96,11 +95,11 @@ Modify Component<br>
     }
   } else {
 %>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= LeadsComponentDetails.getId() %>';this.form.dosubmit.value='false';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= LeadsComponentDetails.getId() %>';this.form.dosubmit.value='false';">
 <%
   }
 %>
-<input type="reset" value="Reset">
+  <input type="reset" value="Reset">
 <dhv:evaluate exp="<%= popUp %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
@@ -108,59 +107,67 @@ Modify Component<br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="2" valign="center" align=left>
+    <td colspan="2">
       <strong><%= LeadsComponentDetails.getDescription() %></strong>&nbsp;
     </td>     
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel">
       Reassign To
     </td>
-    <td valign=center>
+    <td>
       <%= UserList.getHtmlSelect("owner", LeadsComponentDetails.getOwner() ) %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel" valign="top">
+    <td class="formLabel" valign="top">
       Component<br>Type(s)
     </td>
-  	<td valign=center>
-      <select multiple name="selectedList" id="selectedList" size="5">
-      <dhv:evaluate exp="<%= LeadsComponentDetails.getTypes().isEmpty() %>">
-        <option value="-1">None Selected</option>
-      </dhv:evaluate>
-      <dhv:evaluate exp="<%= !LeadsComponentDetails.getTypes().isEmpty() %>">
-<%
-      Iterator i = LeadsComponentDetails.getTypes().iterator();
-      while (i.hasNext()) {
-        LookupElement thisElt = (LookupElement)i.next();
-%>
-        <option value="<%= thisElt.getCode() %>"><%= thisElt.getDescription() %></option>
-      <%}%>
-      </dhv:evaluate>      
-      </select>
-      <input type="hidden" name="previousSelection" value="">
-      <a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_opportunity_types');">Select</a>
+  	<td>
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>
+            <select multiple name="selectedList" id="selectedList" size="5">
+            <dhv:evaluate exp="<%= LeadsComponentDetails.getTypes().isEmpty() %>">
+              <option value="-1">None Selected</option>
+            </dhv:evaluate>
+            <dhv:evaluate exp="<%= !LeadsComponentDetails.getTypes().isEmpty() %>">
+      <%
+            Iterator i = LeadsComponentDetails.getTypes().iterator();
+            while (i.hasNext()) {
+              LookupElement thisElt = (LookupElement)i.next();
+      %>
+              <option value="<%= thisElt.getCode() %>"><%= thisElt.getDescription() %></option>
+            <%}%>
+            </dhv:evaluate>      
+            </select>
+            <input type="hidden" name="previousSelection" value="">
+          </td>
+          <td valign="top">
+            &nbsp;[<a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_opportunity_types');">Select</a>]
+          </td>
+        </tr>
+      </table>
     </td>
   </tr> 
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel">
       Description
     </td>
-    <td valign=center>
-      <input type=text size=50 name="description" value="<%= toHtmlValue(LeadsComponentDetails.getDescription()) %>">
+    <td>
+      <input type="text" size="50" name="description" value="<%= toHtmlValue(LeadsComponentDetails.getDescription()) %>">
       <font color="red">*</font> <%= showAttribute(request, "componentDescriptionError") %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td valign="top" nowrap class="formLabel">Additional Notes</td>
+    <td valign="top" class="formLabel">Additional Notes</td>
     <td><TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(LeadsComponentDetails.getNotes()) %></TEXTAREA></td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Source
     </td>
-    <td valign=center>
+    <td>
       <%= BusTypeList.getHtml() %>
     </td>
   </tr>
@@ -168,8 +175,8 @@ Modify Component<br>
     <td nowrap class="formLabel">
       Prob. of Close
     </td>
-    <td valign=center>
-      <input type=text size=5 name="closeProb" value="<%= LeadsComponentDetails.getCloseProbValue() %>">%
+    <td>
+      <input type="text" size="5" name="closeProb" value="<%= LeadsComponentDetails.getCloseProbValue() %>">%
       <font color="red">*</font> <%= showAttribute(request, "closeProbError") %>
     </td>
   </tr>
@@ -177,8 +184,8 @@ Modify Component<br>
     <td nowrap class="formLabel">
       Est. Close Date
     </td>
-    <td valign=center>
-      <input type=text size=10 name="closeDate" value="<%= toHtmlValue(LeadsComponentDetails.getCloseDateString()) %>">
+    <td>
+      <input type="text" size="10" name="closeDate" value="<%= toHtmlValue(LeadsComponentDetails.getCloseDateString()) %>">
       <a href="javascript:popCalendar('updateOpp', 'closeDate');">Date</a> (mm/dd/yyyy)
       <font color="red">*</font> <%= showAttribute(request, "closeDateError") %>
     </td>
@@ -187,7 +194,7 @@ Modify Component<br>
     <td nowrap class="formLabel">
       Low Estimate
     </td>
-    <td valign=center>
+    <td>
       <input type=text size="10" name="low" value="<%= LeadsComponentDetails.getLowAmount() %>">
     </td>
   </tr>
@@ -195,8 +202,8 @@ Modify Component<br>
     <td nowrap class="formLabel">
       Best Guess Estimate
     </td>
-    <td valign=center>
-      <input type=text size="10" name="guess" value="<%= LeadsComponentDetails.getGuessAmount() %>">
+    <td>
+      <input type="text" size="10" name="guess" value="<%= LeadsComponentDetails.getGuessAmount() %>">
       <font color="red">*</font> <%= showAttribute(request, "guessError") %>
     </td>
   </tr>
@@ -204,15 +211,15 @@ Modify Component<br>
     <td nowrap class="formLabel">
       High Estimate
     </td>
-    <td valign=center>
-      <input type=text size="10" name="high" value="<%= LeadsComponentDetails.getHighAmount() %>">
+    <td>
+      <input type="text" size="10" name="high" value="<%= LeadsComponentDetails.getHighAmount() %>">
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel">
       Est. Term
     </td>
-    <td valign="center">
+    <td>
       <input type="text" size="5" name="terms" value="<%= LeadsComponentDetails.getTermsString() %>">
       <%= UnitTypeList.getHtml() %>
       <font color="red">*</font> <%= showAttribute(request, "termsError") %>
@@ -222,36 +229,32 @@ Modify Component<br>
     <td nowrap class="formLabel">
       Current Stage
     </td>
-    <td valign=center>
+    <td>
       <%= StageList.getHtmlSelect("stage", LeadsComponentDetails.getStage()) %>
-      <input type="checkbox" name="closeNow"
-        <% if (LeadsComponentDetails.getClosed() != null) {%>
-            checked
-        <%}%>
-        >Closed 
+      <input type="checkbox" name="closeNow"<dhv:evaluate if="<%= LeadsComponentDetails.getClosed() != null %>"> checked</dhv:evaluate>> Closed
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Est. Commission
     </td>
-    <td valign=center>
-      <input type=text size="5" name="commission" value="<%= LeadsComponentDetails.getCommissionValue() %>">%
+    <td>
+      <input type="text" size="5" name="commission" value="<%= LeadsComponentDetails.getCommissionValue() %>">%
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert Description
     </td>
-    <td valign=center>
-      <input type=text size="50" name="alertText" value="<%= toHtmlValue(LeadsComponentDetails.getAlertText()) %>"><br>
+    <td>
+      <input type="text" size="50" name="alertText" value="<%= toHtmlValue(LeadsComponentDetails.getAlertText()) %>"><br>
     </td>
   </tr>
    <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert Date
     </td>
-    <td valign=center>
+    <td>
       <input type="text" size="10" name="alertDate" value="<%= toHtmlValue(LeadsComponentDetails.getAlertDateStringLongYear()) %>">
       <a href="javascript:popCalendar('updateOpp', 'alertDate');">Date</a> (mm/dd/yyyy)
     </td>

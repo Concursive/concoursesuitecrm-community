@@ -7,7 +7,8 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
-  <a href="Leads.do">Pipeline Management</a> > 
+<form name="oppdet" action="Leads.do?id=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
+<a href="Leads.do">Pipeline Management</a> > 
 <% if (request.getParameter("return") == null) { %>
 	<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
 <%} else {%>
@@ -47,35 +48,33 @@ Opportunity Details<br>
   </tr>
   <tr>
     <td class="containerBack">
-<form name="oppdet" action="Leads.do?id=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
-<dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Rename" onClick="javascript:this.form.action='Leads.do?command=ModifyOpp&headerId=<%= HeaderDetails.getId() %>';submit();"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%= HeaderDetails.getId() %>&popup=true','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no')"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='LeadsComponents.do?command=AddOppComponent&id=<%= HeaderDetails.getId() %>';submit();"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete,pipeline-opportunities-edit"><br>&nbsp;</dhv:permission>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
-    <td colspan="2" valign="center">
-      <strong>Primary Information</strong>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Entered
-    </td>
-    <td>
-      <%= HeaderDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= HeaderDetails.getEnteredString() %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Modified
-    </td>
-    <td>
-      <%= HeaderDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= HeaderDetails.getModifiedString() %>
-    </td>
-  </tr> 
-</table>
-</form>
+      <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Rename" onClick="javascript:this.form.action='Leads.do?command=ModifyOpp&headerId=<%= HeaderDetails.getId() %>';submit();"></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%= HeaderDetails.getId() %>&popup=true','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='LeadsComponents.do?command=AddOppComponent&id=<%= HeaderDetails.getId() %>';submit();"></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-delete,pipeline-opportunities-edit"><br>&nbsp;</dhv:permission>
+      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+        <tr class="title">
+          <td colspan="2">
+            <strong>Primary Information</strong>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td nowrap class="formLabel">
+            Entered
+          </td>
+          <td>
+            <%= HeaderDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= HeaderDetails.getEnteredString() %>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td nowrap class="formLabel">
+            Modified
+          </td>
+          <td>
+            <%= HeaderDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= HeaderDetails.getModifiedString() %>
+          </td>
+        </tr> 
+      </table>
 <br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsComponentListInfo"/>
  <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -154,3 +153,4 @@ Opportunity Details<br>
 </td>
 </tr>
 </table>
+</form>

@@ -12,22 +12,22 @@
 Component Details<br>
 <hr color="#BFBFBB" noshade>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-      <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
 </dhv:evaluate>
 <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='LeadsComponents.do?command=ModifyComponent&id=<%= LeadsComponentDetails.getId() %>';submit();"></dhv:permission>
 <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=<%= LeadsComponentDetails.getId() %>&popup=true','Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="2" valign="center" align="left">
+    <td colspan="2">
       <strong><%= toHtml(LeadsComponentDetails.getDescription()) %></strong>
     </td>
   </tr>  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel">
       Owner
     </td>
-    <td valign=center width="100%">
+    <td>
       <%= LeadsComponentDetails.getOwnerName() %>
       <dhv:evaluate exp="<%= !(LeadsComponentDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
     </td>
@@ -45,14 +45,14 @@ Component Details<br>
 <dhv:evaluate exp="<%= hasText(LeadsComponentDetails.getNotes()) %>">
   <tr class="containerBody">
     <td valign="top" nowrap class="formLabel">Additional Notes</td>
-    <td valign="top"><%= toHtml(LeadsComponentDetails.getNotes()) %></td>
+    <td><%= toHtml(LeadsComponentDetails.getNotes()) %></td>
   </tr>
 </dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Prob. of Close
     </td>
-    <td valign=center width=100%>
+    <td>
       <%= LeadsComponentDetails.getCloseProbValue() %>%
     </td>
   </tr>
@@ -125,7 +125,7 @@ Component Details<br>
     <td nowrap class="formLabel">
       Alert Description
     </td>
-    <td valign=center colspan=1>
+    <td>
        <%= toHtml(LeadsComponentDetails.getAlertText()) %>
     </td>
   </tr>
@@ -135,7 +135,7 @@ Component Details<br>
     <td nowrap class="formLabel">
       Alert Date
     </td>
-    <td valign=center colspan=1>
+    <td>
        <%= LeadsComponentDetails.getAlertDateStringLongYear() %>
     </td>
   </tr>

@@ -30,49 +30,47 @@
 Generate New Report <br>
 <hr color="#BFBFBB" noshade>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-      <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
 </dhv:evaluate>
 <input type="submit" value="Generate">
 <input type="button" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Reports';javascript:this.form.submit();">
 <br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
-    <td colspan=5 valign=center align=left>
+  <tr class="title">
+    <td colspan="5">
       <strong>Generate a New Report</strong>
     </td>     
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel">
       Type
     </td>
-    <td colspan=4>
+    <td colspan="4">
       <select name="type">
       <option value="1">Opportunities Listing</option>
       </select>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel">
       Subject
     </td>
     <td colspan="4">
       <input type="text" size="35" name="subject" maxlength="50">
     </td>
   </tr>
-  
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel">
       Criteria
     </td>
-    <td colspan=4>
+    <td colspan="4">
       <select name="criteria1">
       <option value="my">My Opportunities</option>
       <option value="all">All Opportunities</option>
       </select>
     </td>
   </tr>
-  
   <tr>
     <td nowrap class="formLabel">
       Sorting
@@ -94,9 +92,8 @@ Generate New Report <br>
       </select>
     </td>
   </tr>
-  
   <tr>
-    <td nowrap valign=top class="formLabel">
+    <td nowrap valign="top" class="formLabel">
       Select fields to include
     </td>
     <td width="50%">
@@ -119,39 +116,46 @@ Generate New Report <br>
       <option value="modified" >Modified</option>
       <option value="modifiedBy" >Modified By</option>
       </select>
-     </td>
-      <td width="25">
+    </td>
+    <td width="25">
       <table width="100%" cellspacing="0" cellpadding="2" border="0">
-      <tr><td valign="center">
-      <input type="button" value="All >" onclick="javascript:allValues()">
-      </td></tr>
-      
-      <tr><td valign=center>
-      <input type="button" value="Add >" onclick="javascript:addValue()">
-      </td></tr>
-      
-      <tr><td valign=center>
-      <input type="button" value="< Del" onclick="javascript:removeValue()">
-      </td></tr>
+        <tr>
+          <td>
+            <input type="button" value="All >" onclick="javascript:allValues()">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="button" value="Add >" onclick="javascript:addValue()">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="button" value="< Del" onclick="javascript:removeValue()">
+          </td>
+        </tr>
       </table>
-      </td>
-      
-      <td width="50%" align="right">
+    </td>
+    <td width="50%" align="right">
       <select size="5" name="selectedList" multiple>
       <option value="id" >Opportunity ID</option>
       <option value="description" >Description</option>
       </select>
-      </td>
-      <td width="25">
-	<table width="100%" cellspacing="0" cellpadding="2" border="0">
-	<tr><td valign="center">
-	<input type="button" value="Up" onclick="javascript:moveOptionUp(document.generate.selectedList)">
-	</td></tr>
-	<tr><td valign="center">
-	<input type="button" value="Down" onclick="javascript:moveOptionDown(document.generate.selectedList)">
-	</td></tr>
-	</table>
-  </td>
+    </td>
+    <td width="25">
+      <table width="100%" cellspacing="0" cellpadding="2" border="0">
+        <tr>
+          <td>
+            <input type="button" value="Up" onclick="javascript:moveOptionUp(document.generate.selectedList)">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="button" value="Down" onclick="javascript:moveOptionDown(document.generate.selectedList)">
+          </td>
+        </tr>
+      </table>
+    </td>
   </tr>
 </table>
 <br>
