@@ -14,12 +14,8 @@
   function checkForm(form) {
     formTest = true;
     message = "";
-    if ((!form.closeDate.value == "") && (!checkDate(form.closeDate.value))) { 
-      message += "- Check that Est. Close Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is entered correctly\r\n";
+    if (form.stockNo.value == "") { 
+      message += "- StockNo is a required field\r\n";
       formTest = false;
     }
     if (formTest == false) {

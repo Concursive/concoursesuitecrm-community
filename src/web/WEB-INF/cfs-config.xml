@@ -192,6 +192,8 @@
     <forward name="DeleteOK" resource="/AutoGuide.do?command=List"/>
     <forward name="MakeListOK" resource="/autoguide_makelist.jsp"/>
     <forward name="ModelListOK" resource="/autoguide_modellist.jsp"/>
+    <forward name="UploadFormOK" resource="/autoguide_photo_upload.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   
   <!-- Pipeline Management Module -->

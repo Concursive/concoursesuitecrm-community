@@ -27,3 +27,16 @@
 	border-left: #597ccc 1px solid;
 	border-bottom: #597ccc 1px solid;
 }
+.PhotoDetail
+{
+	font-size: x-small;
+	vertical-align: baseline;
+	text-align: center;
+}
+.PhotoDetail img
+{
+	border-right: #597ccc 1px solid;
+	border-top: #597ccc 1px solid;
+	border-left: #597ccc 1px solid;
+	border-bottom: #597ccc 1px solid;
+}

@@ -12,6 +12,8 @@ import com.darkhorseventures.utils.ObjectUtils;
 import com.darkhorseventures.utils.StringUtils;
 import com.darkhorseventures.cfsbase.Organization;
 import javax.servlet.http.*;
+import com.darkhorseventures.cfsbase.Constants;
+import com.zeroio.iteam.base.FileItem;
 
 public class Inventory {
 
@@ -39,6 +41,7 @@ public class Inventory {
   private Organization organization = null;
   private OptionList options = null;
   private AdRunList adRuns = null;
+  private int pictureId = -1;
   
   public Inventory() { }
 
@@ -81,6 +84,7 @@ public class Inventory {
     this.buildOrganizationInfo(db);
     this.buildOptions(db);
     this.buildAdRuns(db);
+    this.buildPictureId(db);
   }
 
   public void setId(int tmp) { id = tmp; }
@@ -139,7 +143,8 @@ public class Inventory {
     adRuns = new AdRunList(request);
   }
   public void setAdRuns(AdRunList tmp) { this.adRuns = tmp; }
-  
+  public void setPictureId(int tmp) { this.pictureId = tmp; }
+
 
   public int getId() { return id; }
   public int getVehicleId() { return vehicleId; }
@@ -196,6 +201,7 @@ public class Inventory {
   public boolean hasAdRuns() {
     return (adRuns != null && adRuns.size() > 0);
   }
+  public int getPictureId() { return pictureId; }
 
 
   public boolean insert(Connection db) throws SQLException {
@@ -271,7 +277,7 @@ public class Inventory {
     }
     
     try {
-      db.setAutoCommit(false);
+      //db.setAutoCommit(false);
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
 
@@ -314,14 +320,14 @@ public class Inventory {
         options.update(db);
       }
       
-      db.commit();
+      //db.commit();
     } catch (Exception e) {
-      db.rollback();
-      db.setAutoCommit(true);
+      //db.rollback();
+      //db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     }
 
-    db.setAutoCommit(true);
+    //db.setAutoCommit(true);
     return resultCount;
   }
 
@@ -412,6 +418,14 @@ public class Inventory {
   
   public void generateVehicleId(Connection db) throws SQLException {
     vehicleId = this.getVehicle().generateId(db);
+  }
+  
+  public void buildPictureId(Connection db) throws SQLException {
+    FileItem fileItem = new FileItem(db, -1, id, Constants.AUTOGUIDE);
+    pictureId = fileItem.getId();
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Inventory-> PictureID: " + pictureId);
+    }
   }
 }
 

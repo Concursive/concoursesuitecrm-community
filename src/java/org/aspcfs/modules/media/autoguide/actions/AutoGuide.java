@@ -5,10 +5,19 @@ import javax.servlet.http.*;
 import org.theseus.actions.*;
 import java.sql.*;
 import com.darkhorseventures.cfsbase.Organization;
+import com.darkhorseventures.cfsbase.Constants;
 import com.darkhorseventures.cfsmodule.CFSModule;
 import com.darkhorseventures.webutils.*;
 import com.darkhorseventures.autoguide.base.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import com.zeroio.iteam.base.*;
+import com.zeroio.webutils.*;
+import com.isavvix.tools.*;
+import java.io.*;
+import javax.imageio.ImageReader;
+import java.awt.Image;
+
 
 /**
  *  Description of the Class
@@ -105,8 +114,7 @@ public final class AutoGuide extends CFSModule {
         addModuleBean(context, "Auto Guide", "Details");
       } else {
         addModuleBean(context, "View Accounts", "Vehicle Details");
-        Organization thisOrganization = new Organization(db, Integer.parseInt(orgId));
-        context.getRequest().setAttribute("OrgDetails", thisOrganization);
+        populateOrganization(context, db, Integer.parseInt(orgId));
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -186,12 +194,11 @@ public final class AutoGuide extends CFSModule {
     InventoryList inventoryList = new InventoryList();
     try {
       db = this.getConnection(context);
-      Organization org = new Organization(db, orgId);
+      populateOrganization(context, db, orgId);
       //inventoryList.setPagedListInfo(autoGuideAccountInfo);
-      inventoryList.setOrgId(org.getOrgId());
+      inventoryList.setOrgId(orgId);
       inventoryList.setBuildOrganizationInfo(false);
       inventoryList.buildList(db);
-      context.getRequest().setAttribute("OrgDetails", org);
       context.getRequest().setAttribute("InventoryList", inventoryList);
     } catch (Exception e) {
       errorMessage = e;
@@ -222,35 +229,12 @@ public final class AutoGuide extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      Organization thisOrganization = new Organization(db, orgId);
-      context.getRequest().setAttribute("OrgDetails", thisOrganization);
       
-      ArrayList yearList = VehicleList.buildYearList(db); 
-      HtmlSelect yearSelect = new HtmlSelect(yearList);
-      yearSelect.addItem(-1, "--None--", 0);
-      context.getRequest().setAttribute("YearSelect", yearSelect);
-      
-      HtmlSelect makeSelect = new HtmlSelect();
-      makeSelect.addItem(-1, "--None--");
-      MakeList makeList = new MakeList();
-      PreparedStatement pst = null;
-      ResultSet rs = makeList.queryList(db, pst);
-      while (rs.next()) {
-        Make thisMake = makeList.getObject(rs);
-        makeSelect.addItem(thisMake.getId(), thisMake.getName());
-      }
-      rs.close();
-      if (pst != null) {
-        pst.close();
-      }
-      context.getRequest().setAttribute("MakeSelect", makeSelect);
-      
-      HtmlSelect modelSelect = new HtmlSelect();
-      modelSelect.addItem(-1, "--None--");
-      context.getRequest().setAttribute("ModelSelect", modelSelect);
-      
-      OptionList options = new OptionList(db);
-      context.getRequest().setAttribute("OptionList", options);
+      populateOrganization(context, db, orgId);
+      populateYearSelect(context, db);
+      populateMakeSelect(context, db, null);
+      populateModelSelect(context, db, null);
+      populateOptionList(context, db);
       
     } catch (SQLException e) {
       errorMessage = e;
@@ -370,48 +354,11 @@ public final class AutoGuide extends CFSModule {
       Inventory thisItem = new Inventory(db, Integer.parseInt(id));
       context.getRequest().setAttribute("InventoryDetails", thisItem);
       
-      Organization thisOrganization = new Organization(db, Integer.parseInt(orgId));
-      context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      
-      ArrayList yearList = VehicleList.buildYearList(db); 
-      HtmlSelect yearSelect = new HtmlSelect(yearList);
-      yearSelect.addItem(-1, "--None--", 0);
-      context.getRequest().setAttribute("YearSelect", yearSelect);
-      
-      HtmlSelect makeSelect = new HtmlSelect();
-      makeSelect.addItem(-1, "--None--");
-      MakeList makeList = new MakeList();
-      makeList.setYear(thisItem.getVehicle().getYear());
-      PreparedStatement pst = null;
-      ResultSet rs = makeList.queryList(db, pst);
-      while (rs.next()) {
-        Make thisMake = makeList.getObject(rs);
-        makeSelect.addItem(thisMake.getId(), thisMake.getName());
-      }
-      rs.close();
-      if (pst != null) {
-        pst.close();
-      }
-      context.getRequest().setAttribute("MakeSelect", makeSelect);
-      
-      HtmlSelect modelSelect = new HtmlSelect();
-      modelSelect.addItem(-1, "--None--");
-      ModelList modelList = new ModelList();
-      modelList.setYear(thisItem.getVehicle().getYear());
-      modelList.setMakeId(thisItem.getVehicle().getMakeId());
-      rs = modelList.queryList(db, pst);
-      while (rs.next()) {
-        Model thisModel = modelList.getObject(rs);
-        modelSelect.addItem(thisModel.getId(), thisModel.getName());
-      }
-      rs.close();
-      if (pst != null) {
-        pst.close();
-      }
-      context.getRequest().setAttribute("ModelSelect", modelSelect);
-      
-      OptionList options = new OptionList(db);
-      context.getRequest().setAttribute("OptionList", options);
+      populateOrganization(context, db, Integer.parseInt(orgId));
+      populateYearSelect(context, db);
+      populateMakeSelect(context, db, thisItem.getVehicle());
+      populateModelSelect(context, db, thisItem.getVehicle());
+      populateOptionList(context, db);
       
     } catch (Exception e) {
       errorMessage = e;
@@ -434,25 +381,22 @@ public final class AutoGuide extends CFSModule {
     }
  */
     Exception errorMessage = null;
-    
-    Inventory thisItem = (Inventory)context.getFormBean();
-    thisItem.setRequestItems(context.getRequest());
-    thisItem.setModifiedBy(getUserId(context));
-    
-    Organization thisOrganization = null;
-    String orgid = context.getRequest().getParameter("orgId");
-
     Connection db = null;
+    
+    String orgid = context.getRequest().getParameter("orgId");
     int resultCount = 0;
+    
     try {
+      Inventory thisItem = (Inventory)context.getFormBean();
+      thisItem.setRequestItems(context.getRequest());
+      thisItem.setModifiedBy(getUserId(context));
+      
       db = this.getConnection(context);
       thisItem.generateVehicleId(db);
       resultCount = thisItem.update(db);
       if (resultCount == -1) {
         //processErrors(context, thisItem.getErrors());
-        //buildFormElements(context, db);
-        thisOrganization = new Organization(db, Integer.parseInt(orgid));
-        context.getRequest().setAttribute("OrgDetails", thisOrganization);
+        populateOrganization(context, db, Integer.parseInt(orgid));
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -474,5 +418,164 @@ public final class AutoGuide extends CFSModule {
       return ("SystemError");
     }
   }
-}
+  
+  public String executeCommandUploadForm(ActionContext context) {
 
+    /*
+     *  if (!(hasPermission(context, "autoguide-inventory-view"))) {
+     *  return ("PermissionError");
+     *  }
+     */
+    Exception errorMessage = null;
+
+    Connection db = null;
+    try {
+      int id = Integer.parseInt((String) context.getRequest().getParameter("id"));
+      db = this.getConnection(context);
+      Inventory inventoryItem = new Inventory(db, id);
+      context.getRequest().setAttribute("InventoryItem", inventoryItem);
+      
+      addModuleBean(context, "Auto Guide", "Photo Upload");
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    if (errorMessage == null) {
+      return ("UploadFormOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandUpload(ActionContext context) {
+/* 	  
+    if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
+	    return ("PermissionError");
+    }
+*/	
+    Exception errorMessage = null;
+    Connection db = null;
+
+    boolean recordInserted = false;
+    try {
+      String filePath = this.getPath(context, "autoguide");
+      
+      //Process the form data
+      HttpMultiPartParser multiPart = new HttpMultiPartParser();
+      multiPart.setUsePathParam(true);
+      multiPart.setUseUniqueName(true);
+      multiPart.setUseDateForFolder(true);
+      multiPart.setExtensionId(getUserId(context));
+      
+      HashMap parts = multiPart.parseData(
+        context.getRequest().getInputStream(), "---------------------------", filePath);
+      
+      String id = (String)parts.get("id");
+      
+      //Update the database with the resulting file
+      db = getConnection(context);
+      
+      FileItem previousItem = new FileItem(db, -1, Integer.parseInt(id), Constants.AUTOGUIDE);
+      if (previousItem.getId() > -1) {
+        previousItem.delete(db, filePath);
+      }
+
+      FileInfo newFileInfo = (FileInfo)parts.get("id" + id);
+      FileItem thisItem = new FileItem();
+      thisItem.setLinkModuleId(Constants.AUTOGUIDE);
+      thisItem.setLinkItemId(Integer.parseInt(id));
+      thisItem.setEnteredBy(getUserId(context));
+      thisItem.setModifiedBy(getUserId(context));
+      //thisItem.setFolderId(Integer.parseInt(folderId));
+      thisItem.setSubject("vehicle photo");
+      thisItem.setClientFilename(newFileInfo.getClientFileName());
+      thisItem.setFilename(newFileInfo.getRealFilename());
+      thisItem.setVersion(1.0);
+      thisItem.setSize(newFileInfo.getSize());
+      recordInserted = thisItem.insert(db);
+      if (!recordInserted) {
+        processErrors(context, thisItem.getErrors());
+      } else {
+        //Create a thumbnail
+        //Image image = new ImageReader(newFileInfo.getRealFilename()).image;
+        
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (recordInserted) {
+        return ("PopupCloseOK");
+      } else {
+        return ("SystemError");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  private void populateOrganization(ActionContext context, Connection db, int orgId) throws SQLException {
+    Organization thisOrganization = new Organization(db, orgId);
+    context.getRequest().setAttribute("OrgDetails", thisOrganization);
+  }
+  
+  private void populateYearSelect(ActionContext context, Connection db) throws SQLException {
+    ArrayList yearList = VehicleList.buildYearList(db); 
+    HtmlSelect yearSelect = new HtmlSelect(yearList);
+    yearSelect.addItem(-1, "--None--", 0);
+    context.getRequest().setAttribute("YearSelect", yearSelect);
+  }
+  
+  private void populateMakeSelect(ActionContext context, Connection db, Vehicle thisVehicle) throws SQLException {
+    HtmlSelect makeSelect = new HtmlSelect();
+    makeSelect.addItem(-1, "--None--");
+    MakeList makeList = new MakeList();
+    if (thisVehicle != null) {
+      makeList.setYear(thisVehicle.getYear());
+    }
+    PreparedStatement pst = null;
+    ResultSet rs = makeList.queryList(db, pst);
+    while (rs.next()) {
+      Make thisMake = makeList.getObject(rs);
+      makeSelect.addItem(thisMake.getId(), thisMake.getName());
+    }
+    rs.close();
+    if (pst != null) {
+      pst.close();
+    }
+    context.getRequest().setAttribute("MakeSelect", makeSelect);
+  }
+  
+  private void populateModelSelect(ActionContext context, Connection db, Vehicle thisVehicle) throws SQLException {
+    HtmlSelect modelSelect = new HtmlSelect();
+    modelSelect.addItem(-1, "--None--");
+    ModelList modelList = new ModelList();
+    if (thisVehicle != null) {
+      PreparedStatement pst = null;
+      modelList.setYear(thisVehicle.getYear());
+      modelList.setMakeId(thisVehicle.getMakeId());
+      ResultSet rs = modelList.queryList(db, pst);
+      while (rs.next()) {
+        Model thisModel = modelList.getObject(rs);
+        modelSelect.addItem(thisModel.getId(), thisModel.getName());
+      }
+      rs.close();
+      if (pst != null) {
+        pst.close();
+      }
+    }
+    context.getRequest().setAttribute("ModelSelect", modelSelect);
+  }
+
+  private void populateOptionList(ActionContext context, Connection db) throws SQLException {
+    OptionList options = new OptionList(db);
+    context.getRequest().setAttribute("OptionList", options);
+  }
+}  

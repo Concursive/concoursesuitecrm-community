@@ -43,7 +43,7 @@
       Acct. Type(s)
     </td>
     <td>  
-    <%=OrgDetails.getTypes().valuesAsString() %>
+      <%= toHtml(OrgDetails.getTypes().valuesAsString()) %>
      </td>
   </tr> 
   <tr class="containerBody">

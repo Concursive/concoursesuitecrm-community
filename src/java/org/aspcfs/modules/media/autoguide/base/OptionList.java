@@ -85,7 +85,6 @@ public class OptionList extends ArrayList {
   }
   
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-    ResultSet rs = null;
     int items = -1;
     
     StringBuffer sql = new StringBuffer(); 
@@ -101,7 +100,7 @@ public class OptionList extends ArrayList {
     sql.append("ORDER BY level, o.option_id ");
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
-    rs = pst.executeQuery();
+    ResultSet rs = pst.executeQuery();
     return rs;
   }
   

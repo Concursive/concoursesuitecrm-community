@@ -65,6 +65,7 @@ public class InventoryList extends ArrayList {
           System.out.println("InventoryList-> Building info for: " + thisItem.getId());
         }
         thisItem.buildOrganizationInfo(db);
+        thisItem.buildPictureId(db);
       }
     }
   }

@@ -3,6 +3,8 @@
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="InventoryItem" class="com.darkhorseventures.autoguide.base.Inventory" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
+<link rel="stylesheet" href="css/photolist.css" type="text/css">
 <form name="modInventory" action='/AccountsAutoGuide.do?command=AccountModify&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>' method='post'>
 <a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>">Back to Vehicle List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -22,6 +24,10 @@
 <dhv:permission name="autoguide-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
 <dhv:permission name="autoguide-inventory-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=Delete&id=<%=InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>'"></dhv:permission>
 <dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete"><br>&nbsp;</dhv:permission>
+
+<table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr>
+    <td width="100%" valign="top">
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -87,6 +93,15 @@
     </td>
   </tr>
 </dhv:evaluate>
+</table>
+    </td>
+    <td class="PhotoDetail">
+      <span>
+        <img src="images/vehicle_unavailable.gif" border="0"/><br>
+      </span>
+      <a href="javascript:popURL('AutoGuide.do?command=UploadForm&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&return=<%= java.net.URLEncoder.encode("AccountsAutoGuide.do?command=Details&orgId=" + OrgDetails.getOrgId() + "&id=" + InventoryItem.getId()) %>','Photo Upload','500','300','no','no');">Upload Photo</a>
+    </td>
+  </tr>
 </table>
 <dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete"><br></dhv:permission>
 <dhv:permission name="autoguide-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
