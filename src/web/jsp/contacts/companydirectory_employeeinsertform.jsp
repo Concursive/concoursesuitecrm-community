@@ -1,4 +1,5 @@
 <%-- Import required libraries --%>
+<%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="EmployeeBean" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -126,36 +127,40 @@ Add Employee<br>
 	    <strong>Phone Numbers</strong>
 	  </td>
   </tr>
-  <tr>
+  <%  
+  int icount = 0;
+  int itotal = 3;
+  Iterator inumber = EmployeeBean.getPhoneNumberList().iterator();
+  while (inumber.hasNext()) {
+    ++icount;
+    ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)inumber.next();
+%>
+  <tr class="containerBody">
     <td class="formLabel">
-      Phone 1
+      Phone <%= icount %>
     </td>
     <td>
-      <%= ContactPhoneTypeList.getHtmlSelect("phone1type", "Business") %>
-      <input type="text" size="20" name="phone1number">&nbsp;ext.
-      <input type="text" size="5" name="phone1ext" maxlength="10">
+      <%= ContactPhoneTypeList.getHtmlSelect("phone" + icount + "type", thisPhoneNumber.getType()) %>
+      <input type="text" size="20" name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
+      <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10" value="<%= toHtmlValue(thisPhoneNumber.getExtension()) %>">
     </td>
-  </tr>
-  <tr>
+  </tr>    
+<%    
+  }
+  while (icount < itotal) {
+    ++icount;
+%>
+   <tr class="containerBody">
     <td class="formLabel">
-      Phone 2
+      Phone <%= icount %>
     </td>
     <td>
-      <%= ContactPhoneTypeList.getHtmlSelect("phone2type", "Home") %>
-      <input type=text size=20 name="phone2number">&nbsp;ext.
-      <input type=text size=5 name="phone2ext" maxlength=10>
+      <%= ContactPhoneTypeList.getHtmlSelect("phone"+icount+"type", "Business") %>
+      <input type="text" size="20" name="phone<%=icount%>number">&nbsp;ext.
+      <input type="text" size="5" name="phone<%=icount%>ext" maxlength="10">
     </td>
   </tr>
-  <tr>
-    <td class="formLabel">
-      Phone 3
-    </td>
-    <td>
-      <%= ContactPhoneTypeList.getHtmlSelect("phone3type", "Mobile") %>
-      <input type=text size=20 name="phone3number">&nbsp;ext.
-      <input type=text size=5 name="phone3ext" maxlength=10>
-    </td>
-  </tr>
+<%}%>
 </table>
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -164,148 +169,182 @@ Add Employee<br>
       <strong>Addresses</strong>
     </td>
   </tr>
-  <tr>
+  <%
+  int acount = 0;
+  int atotal = 2;
+  Iterator anumber = EmployeeBean.getAddressList().iterator();
+  while (anumber.hasNext()) {
+    ++acount;
+    ContactAddress thisAddress = (ContactAddress)anumber.next();
+%>
+  <tr class="containerBody">
+    <input type="hidden" name="address<%= acount %>id" value="<%= thisAddress.getId() %>">
     <td class="formLabel">
       Type
     </td>
     <td>
-      <%= ContactAddressTypeList.getHtmlSelect("address1type", "Business") %>
+      <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", thisAddress.getType()) %>
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       Address Line 1
     </td>
     <td>
-      <input type=text size=40 name="address1line1" maxlength=80>
+      <input type="text" size="40" name="address<%= acount %>line1" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine1()) %>">
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       Address Line 2
     </td>
     <td>
-      <input type=text size=40 name="address1line2" maxlength=80>
+      <input type="text" size="40" name="address<%= acount %>line2" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine2()) %>">
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       Address Line 3
     </td>
     <td>
-      <input type="text" size="40" name="address1line3" maxlength="80">
+      <input type="text" size="40" name="address<%= acount %>line3" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine3()) %>">
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       City
     </td>
     <td>
-      <input type=text size=28 name="address1city" maxlength=80>
+      <input type="text" size="28" name="address<%= acount %>city" maxlength="80" value="<%= toHtmlValue(thisAddress.getCity()) %>">
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       State/Province
     </td>
     <td>
-      <span name="state11" ID="state11">
-        <%= StateSelect.getHtml("address1state") %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(thisAddress.getCountry()) || "CANADA".equals(thisAddress.getCountry()))? "" : " display:none" %>">
+        <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state21" ID="state21" style="display:none">
-        <input type="text" size="25" name="<%= "address1otherState" %>">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
+        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
+      <% StateSelect = new StateSelect(); %>
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       Zip/Postal Code
     </td>
     <td>
-      <input type=text size=28 name="address1zip" maxlength=12>
+      <input type="text" size="10" name="address<%= acount %>zip" maxlength="12" value="<%= toHtmlValue(thisAddress.getZip()) %>">
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       Country
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address1country', '1');\"");%>
-      <%= CountrySelect.getHtml("address1country") %>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
+      <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
+      <% CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
-  <tr><td colspan="2">&nbsp;</td></tr>
-  <tr>
+  <tr class="containerBody">
+    <td colspan="2">
+      &nbsp;
+    </td>
+  </tr>
+<%    
+  }
+  while (acount < atotal) {
+  ++acount;
+%>
+  <tr class="containerBody">
     <td class="formLabel">
       Type
     </td>
     <td>
-      <%= ContactAddressTypeList.getHtmlSelect("address2type", "Home") %>
+      <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", "Business") %>
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       Address Line 1
     </td>
     <td>
-      <input type=text size=40 name="address2line1" maxlength=80>
+      <input type="text" size="40" name="address<%= acount %>line1" maxlength="80">
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       Address Line 2
     </td>
     <td>
-      <input type=text size=40 name="address2line2" maxlength=80>
+      <input type="text" size="40" name="address<%= acount %>line2" maxlength="80">
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       Address Line 3
     </td>
     <td>
-      <input type="text" size="40" name="address2line3" maxlength="80">
+      <input type="text" size="40" name="address<%= acount %>line3" maxlength="80">
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       City
     </td>
     <td>
-      <input type="text" size="28" name="address2city" maxlength="80">
+      <input type="text" size="28" name="address<%= acount %>city" maxlength="80">
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       State/Province
     </td>
     <td>
-      <span name="state12" ID="state12">
-        <%= StateSelect.getHtml("address2state") %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>">
+        <%= StateSelect.getHtml("address" + acount + "state") %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state22" ID="state22" style="display:none">
-        <input type="text" size="25" name="<%= "address2otherState" %>">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
+        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
       </span>
+      <% StateSelect = new StateSelect(); %>
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       Zip/Postal Code
     </td>
     <td>
-      <input type="text" size="28" name="address2zip" maxlength="12">
+      <input type="text" size="10" name="address<%= acount %>zip" maxlength="12">
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>
       Country
     </td>
     <td>
-      <%= CountrySelect.getHtml("address2country") %>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
+      <%= CountrySelect.getHtml("address" + acount + "country") %>
+      <% CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
+<% 
+  if (acount != atotal) { %>
+    <tr class="containerBody">
+    <td colspan="2">
+      &nbsp;
+    </td>
+  </tr>
+<%
+  }
+}
+%>  
 </table>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
