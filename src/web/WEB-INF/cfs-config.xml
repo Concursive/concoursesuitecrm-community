@@ -118,7 +118,8 @@
     <forward name="NewTaskPopupOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=MyTasks"/>
     <forward name="PrepareTaskPopupOK" resource="/tasks/mytasks_new.jsp" layout="style"/>
     <forward name="TaskDetailsPopupOK" resource="/tasks/mytasks_details.jsp" layout="style"/>
-    <forward name="TaskDetailsOK" resource="/tasks/mytasks_details.jsp" layout="style"/>
+    <forward name="TaskDetailsOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=MyTasks&amp;returnAction=TaskDetailsForm"/>
+    <forward name="TaskDetailsFormOK" resource="/tasks/mytasks_details.jsp" layout="nav"/>
     <forward name="InsertTaskPopupOK" resource="/closepopupandreload.jsp"/>
   </action>
   
