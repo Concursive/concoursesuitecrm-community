@@ -1,8 +1,8 @@
-package com.darkhorseventures.apps.dataimport.reader.cfsdatabasereader;
+package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
 import java.util.*;
-import com.darkhorseventures.apps.dataimport.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.apps.transfer.*;
+import org.aspcfs.utils.*;
 import java.util.logging.*;
 
 /**
@@ -13,7 +13,7 @@ import java.util.logging.*;
  *@version    $Id$
  */
 public class PropertyMapList extends HashMap {
-  public static Logger logger = Logger.getLogger(DataImport.class.getName());
+  public static Logger logger = Logger.getLogger(Transfer.class.getName());
 
 
   /**

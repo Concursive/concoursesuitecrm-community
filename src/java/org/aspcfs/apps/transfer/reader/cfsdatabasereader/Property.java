@@ -1,4 +1,4 @@
-package com.darkhorseventures.apps.dataimport.reader.cfsdatabasereader;
+package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
 /**
  *  Represents a definition for extracting a property from an object for

@@ -1,9 +1,11 @@
-package com.darkhorseventures.apps.dataimport.reader.cfsdatabasereader;
+package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
 import java.sql.*;
-import com.darkhorseventures.apps.dataimport.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import com.zeroio.iteam.base.*;
+import org.aspcfs.apps.transfer.*;
+import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReaderImportModule;
+import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
 import com.zeroio.iteam.base.*;
 import java.util.*;
 

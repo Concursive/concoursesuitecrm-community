@@ -1,7 +1,7 @@
-package com.darkhorseventures.apps.dataimport.reader.cfsdatabasereader;
+package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
 import java.sql.*;
-import com.darkhorseventures.apps.dataimport.*;
+import org.aspcfs.apps.transfer.*;
 import java.util.logging.*;
 
 /**
@@ -12,7 +12,7 @@ import java.util.logging.*;
  *@version    $Id$
  */
 public interface CFSDatabaseReaderImportModule {
-  public static Logger logger = Logger.getLogger(DataImport.class.getName());
+  public static Logger logger = Logger.getLogger(Transfer.class.getName());
 
 
   /**

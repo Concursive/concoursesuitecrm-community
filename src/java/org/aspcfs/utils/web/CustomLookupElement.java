@@ -1,10 +1,10 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.webutils;
+package org.aspcfs.utils.web;
 
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.*;
 
 public class CustomLookupElement extends HashMap {
 

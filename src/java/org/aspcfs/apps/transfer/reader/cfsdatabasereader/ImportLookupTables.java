@@ -1,10 +1,12 @@
-package com.darkhorseventures.apps.dataimport.reader.cfsdatabasereader;
+package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.apps.dataimport.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import org.aspcfs.apps.transfer.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReaderImportModule;
+import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
 
 /**
  *  Reads most of the lookup tables found in CFS -- scans for any PropertyMap

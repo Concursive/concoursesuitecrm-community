@@ -1,11 +1,14 @@
-package com.darkhorseventures.apps.dataimport.reader.cfsdatabasereader;
+package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
-import com.darkhorseventures.apps.dataimport.*;
 import java.sql.*;
 import java.util.*;
 import java.io.*;
 import java.util.logging.*;
-import com.darkhorseventures.utils.*;
+import com.darkhorseventures.database.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.apps.transfer.DataReader;
+import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
 import org.w3c.dom.*;
 
 /**
@@ -37,6 +40,7 @@ public class CFSDatabaseReader implements DataReader {
   private PropertyMapList mappings = null;
 
   private int count = 0;
+
 
   /**
    *  Sets the driver attribute of the CFSDatabaseReader object
@@ -199,7 +203,7 @@ public class CFSDatabaseReader implements DataReader {
         mapProperties.setId((String) map.getAttribute("id"));
         mapProperties.setTable((String) map.getAttribute("table"));
         mapProperties.setUniqueField((String) map.getAttribute("uniqueField"));
-        
+
         //Get any property nodes
         NodeList nl = map.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
@@ -222,12 +226,12 @@ public class CFSDatabaseReader implements DataReader {
             if (alias != null && !"".equals(alias)) {
               thisProperty.setAlias(alias);
             }
-            
+
             String field = ((Element) n).getAttribute("field");
             if (field != null && !"".equals(field)) {
               thisProperty.setField(field);
             }
-            
+
             String value = ((Element) n).getAttribute("value");
             if (value != null && !"".equals(value)) {
               thisProperty.setValue(value);
