@@ -41,7 +41,7 @@ Contact Details<br>
       Owner
     </td>
     <td>
-      <%= toHtml(ContactDetails.getOwnerName()) %>
+      <dhv:username id="<%= ContactDetails.getOwner() %>"/>
       <dhv:evaluate exp="<%=!(ContactDetails.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
@@ -76,7 +76,9 @@ Contact Details<br>
       Entered
     </td>
     <td>
-      <%= ContactDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= ContactDetails.getEnteredString() %>
+      <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
+      -
+      <%= ContactDetails.getEnteredString() %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -84,7 +86,9 @@ Contact Details<br>
       Modified
     </td>
     <td>
-      <%= ContactDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= ContactDetails.getModifiedString() %>
+      <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
+      -
+      <%= ContactDetails.getModifiedString() %>
     </td>
   </tr>
 </table>

@@ -97,7 +97,7 @@ View Contacts<br>
         </td>
         <dhv:evaluate exp="<%= "all".equals(ExternalContactsInfo.getListView()) %>">
           <td class="row<%= rowid %>" nowrap>
-            <%= toHtml(thisContact.getOwnerName()) %>
+            <dhv:username id="<%= thisContact.getOwner() %>"/>
           </td>
         </dhv:evaluate>
       </tr>
