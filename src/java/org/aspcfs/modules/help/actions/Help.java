@@ -72,5 +72,23 @@ public final class Help extends CFSModule {
       return ("UserError");
     }
   }
+  
+  public String executeCommandViewAll(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+
+    try {
+      db = this.getConnection(context);
+      HelpContents contents = new HelpContents(db);
+      context.getRequest().setAttribute("HelpContents", contents);
+    } catch (Exception e) {
+      errorMessage = e;
+      e.printStackTrace(System.out);
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    return ("ViewAllOK");
+  }
 }
 

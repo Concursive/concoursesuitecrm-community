@@ -513,6 +513,7 @@
     <forward name="HelpOK" resource="/help.jsp" layout="style"/>
     <forward name="ModifyOK" resource="/help_form.jsp" layout="style"/>
     <forward name="ProcessOK" resource="/closepopup.jsp"/>
+    <forward name="ViewAllOK" resource="/help_viewall.jsp" layout="style"/>
   </action>
   
   <action name="Search" class="com.darkhorseventures.cfsmodule.Search">

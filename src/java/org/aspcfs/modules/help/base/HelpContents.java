@@ -14,9 +14,15 @@ public class HelpContents extends Vector {
     ResultSet rs = null;
 
     String sql =
-        "SELECT * " +
-        "FROM help_contents h " +
-        "WHERE level1 = 0 ";
+      "SELECT module, section, subsection, description, " +
+      "help_id, display1, display2, display3, display4, " +
+      "enteredby, entered, modifiedby, modified " +
+      "FROM help_contents h " +
+      "WHERE enabled = true " +
+      "GROUP BY module, section, subsection, description, " +
+      "help_id, display1, display2, display3, display4, " +
+      "enteredby, entered, modifiedby, modified ";
+        
     pst = db.prepareStatement(sql);
     rs = pst.executeQuery();
     while (rs.next()) {
