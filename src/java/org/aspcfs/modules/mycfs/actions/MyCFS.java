@@ -547,7 +547,12 @@ public final class MyCFS extends CFSModule {
           com.zeroio.iteam.base.Assignment thisAssignment = (com.zeroio.iteam.base.Assignment) assignmentList.next();
           if (thisAssignment.getDueDate() != null) {
             CalendarEvent thisEvent = new CalendarEvent();
-            thisEvent.setDate(thisAssignment.getDueDate());
+            java.sql.Timestamp today = new java.sql.Timestamp(new java.util.Date().millis());
+            if (thisAssignment.getDueDate().before(today)) {
+              thisEvent.setDate(today);
+            } else {
+              thisEvent.setDate(thisAssignment.getDueDate());
+            }
             thisEvent.setSubject(thisAssignment.getRole());
             thisEvent.setCategory("Assignment");
             thisEvent.setId(thisAssignment.getProjectId());
