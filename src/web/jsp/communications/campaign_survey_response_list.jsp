@@ -50,13 +50,13 @@ Response
       SurveyResponse thisResponse = (SurveyResponse)j.next();
 %>      
     <tr class="row<%= rowid %>">
-      <td valign="middle" width="100%" align="left" nowrap>
+      <td valign="middle" width="35%" align="left" nowrap>
         <a href="CampaignManager.do?command=ResponseDetails&id=<%= Campaign.getId() %>&contactId=<%= thisResponse.getContactId() %>"><%= toHtml(thisResponse.getContact().getNameLastFirst()) %></a>
       </td>
-      <td align="center"><%= toHtml(thisResponse.getIpAddress()) %>&nbsp;</td>
       <td align="right" valign="middle" align="left" nowrap>
         <%= toDateString(thisResponse.getEntered()) %>&nbsp;
       </td>
+      <td align="center"><%= toHtml(thisResponse.getIpAddress()) %>&nbsp;</td>
       <td align="center" valign="middle" align="left"  nowrap>
         <%= thisResponse.getContact().getEmailAddress("BUSSINESS") %> &nbsp;
       </td>
