@@ -369,9 +369,9 @@ public final class MyCFS extends CFSModule {
    */
   public String executeCommandHome(ActionContext context) {
 	  
-	if (!(hasPermission(context, "myhomepage-dashboard-view"))) {
+    if (!(hasPermission(context, "myhomepage-dashboard-view"))) {
 	    return ("PermissionError");
-    	}
+    }
 	
     addModuleBean(context, "Home", "");
     int headlines = 0;

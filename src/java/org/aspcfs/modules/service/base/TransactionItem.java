@@ -99,9 +99,9 @@ public class TransactionItem {
         thisRecord.put(thisField, thisValue);
       }
       thisRecord.setRecordId(ObjectUtils.getParam(thisObject, "id"));
-      if (thisRecord.containsKey("guid")) {
+/*       if (thisRecord.containsKey("guid")) {
         thisRecord.put("guid", String.valueOf(identity++));
-      }
+      } */
     }
   }
 
