@@ -13,6 +13,10 @@ import com.darkhorseventures.utils.*;
  *@version    $Id$
  */
 public class ComponentContext extends HashMap {
+  public static final int TEXT_ENCODING = 0;
+  public static final int XML_ENCODING = 1;
+  public static final int HTML_ENCODING = 2;
+
   private String processName = null;
   private BusinessProcess process = null;
   private Object previousObject = null;
@@ -243,18 +247,40 @@ public class ComponentContext extends HashMap {
    *@return        Description of the Return Value
    */
   public String retrieveContextValue(String param) {
+    int encoding = TEXT_ENCODING;
+    if (param.indexOf(":xml") > -1) {
+      encoding = XML_ENCODING;
+      param = param.substring(0, param.indexOf(":xml"));
+    } else if (param.indexOf(":html") > -1) {
+      encoding = HTML_ENCODING;
+      param = param.substring(0, param.indexOf(":html"));
+    }
+    
+    String value = null;
     if (param.indexOf(".") > -1) {
       if (param.indexOf("this.") == 0) {
-        return ObjectUtils.getParam(thisObject, param.substring(5));
+        value = ObjectUtils.getParam(thisObject, param.substring(5));
       } else if (param.indexOf("previous.") == 0) {
-        return ObjectUtils.getParam(previousObject, param.substring(9));
+        value = ObjectUtils.getParam(previousObject, param.substring(9));
       } else {
         Object paramObject = this.getAttribute(param.substring(0, param.indexOf(".")));
-        return ObjectUtils.getParam(paramObject, param.substring(param.indexOf(".") + 1));
+        value = ObjectUtils.getParam(paramObject, param.substring(param.indexOf(".") + 1));
       }
     } else {
-      return ObjectUtils.getParam(thisObject, param);
+      value = ObjectUtils.getParam(thisObject, param);
     }
+    if (value != null) {
+      switch (encoding) {
+        case XML_ENCODING:
+          value = XMLUtils.toXMLValue(value);
+          break;
+        case HTML_ENCODING:
+          value = HTTPUtils.toHtmlValue(value);
+          break;
+        default: break;
+      }
+    }
+    return value;
   }
 }
 
