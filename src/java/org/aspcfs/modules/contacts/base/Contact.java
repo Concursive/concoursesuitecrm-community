@@ -37,7 +37,7 @@ public class Contact extends GenericBean {
   private String orgName = "";
   private String company = "";
   private String title = "";
-  private int department = 0;
+  private int department = -1;
   private String nameSalutation = "";
   private String nameFirst = "";
   private String nameMiddle = "";
