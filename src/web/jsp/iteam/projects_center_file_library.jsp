@@ -38,7 +38,7 @@
     <td valign="middle" align="center">
       <%= toHtml(thisFile.getExtension()) %>&nbsp;
     </td>
-    <td align="right" valign="middle">
+    <td align="right" valign="middle" nowrap>
       <%= thisFile.getRelativeSize() %> k&nbsp;
     </td>
     <td align="center" valign="middle">
