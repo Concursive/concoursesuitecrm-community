@@ -7,7 +7,7 @@
  */
 
 CREATE TABLE access (
-  user_id INT IDENTITY PRIMARY KEY,
+  user_id INT IDENTITY(0,1) PRIMARY KEY,
   username VARCHAR(80) NOT NULL, 
   password VARCHAR(80),
   contact_id INT DEFAULT -1,
@@ -39,7 +39,7 @@ CREATE TABLE lookup_industry (
 );
 
 CREATE TABLE access_log (
-  id INT IDENTITY(0,1) PRIMARY KEY,
+  id INT IDENTITY PRIMARY KEY,
   user_id INT NOT NULL REFERENCES access(user_id),
   username VARCHAR(80) NOT NULL,
   ip VARCHAR(15),
