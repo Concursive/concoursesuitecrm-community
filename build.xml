@@ -436,7 +436,7 @@
   <!-- Prepare files for any database type -->
   <target name="install.prepare.init" depends="init,install.prepare.dbname">
     <!-- Verify database can be overwritten -->
-    <input message="The database '${DATABASE.NAME}' will be modified if it exists, continue? "
+    <input message="The database '${DATABASE.NAME}' will be modified and must already exist, continue? "
            validargs="y,n"
            addproperty="DATABASE.DELETE"/>
     <condition property="ABORT">
@@ -556,7 +556,7 @@
   </target>
   
   <target name="install.addsite" depends="init,install.prepare.dbname,install.gatekeeper.init" unless="DATABASE.SKIP_GATEKEEPER">
-    <input message="Please enter the virtual host URL for this site, ex &lt;site&gt;.aspcfs.org: " 
+    <input message="Please enter the virtual host URL for this site, ex &lt;site&gt;.aspcfs.com: " 
            addproperty="SITE.VIRTUAL_HOST"/>
     <sql
         driver="${GATEKEEPER.DRIVER}"
@@ -571,6 +571,7 @@
         VALUES ('${SITE.APPCODE}', '${SITE.VIRTUAL_HOST}', '${SITE.URL}${DATABASE.NAME}', '${DATABASE.NAME}', '${SITE.USER}', '${SITE.PASSWORD}', '${SITE.DRIVER}');
       ]]>
     </sql>
+    <echo message="Make sure to set ENABLED = TRUE in sites table if events for this site should be processed."/>
   </target>
   
   <target name="installdb" depends="install.database,install.permissions,install.addsite">
