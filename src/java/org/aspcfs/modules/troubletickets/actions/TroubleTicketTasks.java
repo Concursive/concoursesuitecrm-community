@@ -267,7 +267,7 @@ public final class TroubleTicketTasks extends CFSModule {
       } else {
         htmlDialog.setTitle("Confirm");
         htmlDialog.setHeader("Are you sure you want to delete this item:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "'");
+        htmlDialog.addButton("Delete", "javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "'");
         htmlDialog.addButton("No", "javascript:parent.window.close()");
       }
     } catch (Exception e) {
