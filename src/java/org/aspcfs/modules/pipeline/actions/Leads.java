@@ -344,7 +344,7 @@ public final class Leads extends CFSModule {
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    */
-  public String executeCommandSearchOpp(ActionContext context) {
+  public String executeCommandSearchForm(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
       return ("PermissionError");
     }
@@ -944,22 +944,31 @@ public final class Leads extends CFSModule {
       context.getRequest().setAttribute("TypeSelect", typeSelect);
       //The list of opportunities, according to drop-down filter
       oppList.setPagedListInfo(oppListInfo);
-      oppListInfo.setSearchCriteria(oppList);
       if ("all".equals(oppListInfo.getListView())) {
-        oppList.setOwnerIdRange(this.getUserRange(context, userId));
+        if (oppListInfo.getFilterKey("listFilter2") != -1) {
+          oppList.setOwner(oppListInfo.getFilterKey("listFilter2"));
+        } else {
+          oppList.setOwnerIdRange(this.getUserRange(context, userId));
+        }
         oppList.setQueryOpenOnly(true);
       } else if ("closed".equals(oppListInfo.getListView())) {
-        oppList.setOwnerIdRange(this.getUserRange(context, userId));
+        if (oppListInfo.getFilterKey("listFilter2") != -1) {
+          oppList.setOwner(oppListInfo.getFilterKey("listFilter2"));
+        } else {
+          oppList.setOwnerIdRange(this.getUserRange(context, userId));
+        }
         oppList.setQueryClosedOnly(true);
+      } else if ("search".equals(oppListInfo.getListView())) {
+        return executeCommandSearch(context);
       } else {
+        System.out.println("User id is " + userId);
         oppList.setOwner(userId);
         oppList.setQueryOpenOnly(true);
       }
       oppList.setTypeId(oppListInfo.getFilterKey("listFilter1"));
-      oppList.setOwner(oppListInfo.getFilterKey("listFilter2"));
       oppList.buildList(db);
       context.getRequest().setAttribute("OpportunityList", oppList);
-      
+
       //Generate user list
       User thisRec = this.getUser(context, userId);
       UserList shortChildList = thisRec.getShortChildList();
@@ -969,7 +978,80 @@ public final class Leads extends CFSModule {
       userList.setIncludeMe(true);
       userList.setExcludeDisabledIfUnselected(true);
       context.getRequest().setAttribute("UserList", userList);
-      
+
+      addModuleBean(context, "View Opportunities", "Opportunities Add");
+      return ("OppListOK");
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+  }
+
+
+
+  /**
+   *  Search Opportunities
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandSearch(ActionContext context) {
+    if (!hasPermission(context, "pipeline-opportunities-view")) {
+      return ("PermissionError");
+    }
+
+    //Prepare the paged list
+    PagedListInfo searchOppListInfo = this.getPagedListInfo(context, "SearchOppListInfo");
+    PagedListInfo oppListInfo = this.getPagedListInfo(context, "OpportunityListInfo");
+    oppListInfo.setLink("Leads.do?command=ViewOpp");
+
+    //Prepare viewpoints
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int vpUserId = viewpointInfo.getVpUserId(this.getUserId(context));
+    int userId = this.getUserId(context);
+    if (vpUserId != -1 && vpUserId != userId) {
+      userId = vpUserId;
+    }
+    Connection db = null;
+    OpportunityList oppList = new OpportunityList();
+    try {
+      db = this.getConnection(context);
+      //Opportunity types drop-down menu
+      LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
+      typeSelect.addItem(0, "All Types");
+      context.getRequest().setAttribute("TypeSelect", typeSelect);
+      //The list of opportunities, according to drop-down filter
+      oppList.setPagedListInfo(searchOppListInfo);
+      oppListInfo.setSearchCriteria(oppList);
+      if ("all".equals(searchOppListInfo.getListView())) {
+        oppList.setOwnerIdRange(this.getUserRange(context, userId));
+        oppList.setQueryOpenOnly(true);
+      } else if ("closed".equals(searchOppListInfo.getListView())) {
+        oppList.setOwnerIdRange(this.getUserRange(context, userId));
+        oppList.setQueryClosedOnly(true);
+      } else {
+        oppList.setOwner(userId);
+        oppList.setQueryOpenOnly(true);
+      }
+      oppList.setTypeId(oppListInfo.getFilterKey("listFilter1"));
+      oppList.buildList(db);
+      context.getRequest().setAttribute("OpportunityList", oppList);
+
+      //Generate user list
+      User thisRec = this.getUser(context, userId);
+      UserList shortChildList = thisRec.getShortChildList();
+      UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+      userList.setMyId(userId);
+      userList.setMyValue(thisRec.getContact().getNameLastFirst());
+      userList.setIncludeMe(true);
+      userList.setExcludeDisabledIfUnselected(true);
+      context.getRequest().setAttribute("UserList", userList);
+
+      //set the view to search
+      oppListInfo.setListView("search");
+
       addModuleBean(context, "View Opportunities", "Opportunities Add");
       return ("OppListOK");
     } catch (Exception errorMessage) {
