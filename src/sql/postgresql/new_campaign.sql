@@ -67,7 +67,7 @@ CREATE TABLE campaign_list_groups (
 
 CREATE TABLE scheduled_recipient (
   id serial PRIMARY KEY,
-  campaign_id INT NOT NULL DEFAULT -1 REFERENCES campaign(campaign_id),
+  campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
   contact_id INT NOT NULL REFERENCES contact(contact_id),
   run_id INT DEFAULT -1,
   status_id INT DEFAULT 0,
