@@ -14,45 +14,7 @@ INSERT INTO sync_system (application_name) VALUES ('Street Smart Speakers: Web P
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (1, 'ticket', 'com.darkhorseventures.cfsbase.Ticket');
 
-/* AUTO GUIDE
-
-  THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 0, false,
-'CREATE TABLE sync_table (
-       table_id             int NOT NULL,
-       table_name           nvarchar(20) NULL,
-       order_id             int NULL,
-       create_statement     nvarchar(255) NULL,
-       sync_item            int NULL,
-       PRIMARY KEY (table_id)
-)'
-);
-
-  THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'status_master', null, 0,
-'CREATE TABLE status_master (
-       record_status_id     int NOT NULL,
-       record_status_name   nchar varying(20) NULL,
-       PRIMARY KEY (record_status_id)
-)'
-);
-
-  THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'system', null, 70,
-'CREATE TABLE system (
-       pda_id               int NOT NULL,
-       version              datetime NULL,
-       state                int NULL,
-       sync_anchor          datetime NULL,
-       PRIMARY KEY (pda_id)
-)'
-);
-*/
-
-
+/* AUTO GUIDE */
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'syncClient', 'com.darkhorseventures.cfsbase.SyncClient', 2);
