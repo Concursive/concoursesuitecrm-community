@@ -1529,7 +1529,7 @@ public void setSurveyId(String surveyId) {
     
 	Template template = new Template();
 	template.setText(thisMessageText);
-	template.addParseElement("${survey_url}", "(url goes here)");
+	template.addParseElement("${survey_url}", "<a href=\"http://ds21.darkhorseventures.com/ProcessSurvey.do?command=View&surveyId=" + this.getSurveyId() + "\">http://ds21.darkhorseventures.com/ProcessSurvey.do?command=View&surveyId=" + this.getSurveyId() + "</a>");
 	template.setValueEncoding(Template.HTMLEncoding);
 	  
     pst = db.prepareStatement(
