@@ -119,12 +119,12 @@
       <link value="/CompanyDirectory.do?command=ListEmployees"/>
     </submenu>
     
-    <submenu name="Other Resources">
+    <!--submenu name="Other Resources">
       <permission value="contacts-other-view"/>
       <long_html value="Resources"/>
       <short_html value="Resources"/>
       <link value="/CompanyDirectory.do?module=Other%20Resources&amp;include=companydirectory_otherresources.htm"/>
-    </submenu>
+    </submenu-->
     
     <!--submenu name="Company Profile">
       <permission value="contacts-profile-view"/>
