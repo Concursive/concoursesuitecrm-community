@@ -1085,7 +1085,7 @@ public void setEnabled(boolean enabled) {
 	String amountOut = "";
 	
 	if (tempValue < 1) {
-		amountOut = " <1";
+		amountOut = "<1";
         } else {
 		amountOut = numberFormatter.format(guess);
 	}

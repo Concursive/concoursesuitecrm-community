@@ -6,7 +6,7 @@ function checkPhone(phonein) {
 	if (stripped.length > 0) {
 		if (stripped.indexOf("+") == -1) {
 			//must be a valid length
-			if (!(stripped.length == 10 || stripped.length == 11)) {
+			if (!(stripped.length == 10 || (stripped.length == 11 && stripped.charAt(0) == "1")) ) {
 				return false;
 			} else {
 				return true;
