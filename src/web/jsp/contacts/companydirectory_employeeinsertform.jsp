@@ -71,7 +71,7 @@ Add Employee
     <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
     <input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
     <input type="hidden" name="dosubmit" value="true">
-    <input type=reset value="Reset">
+    <input type="reset" value="Reset">
     </dhv:evaluate>
 <br>
 <%= showError(request, "actionError") %>
