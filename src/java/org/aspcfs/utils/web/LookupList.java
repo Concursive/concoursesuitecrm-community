@@ -259,7 +259,21 @@ public class LookupList extends HtmlSelect {
   public boolean getMultiple() {
     return multiple;
   }
+  
+  public String getHtmlSelectDefaultNone(String selectName) {
+    HtmlSelect thisSelect = new HtmlSelect();
+    thisSelect.addItem(-1, "-- None --");
 
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+      thisSelect.addItem(
+          thisElement.getCode(),
+          thisElement.getDescription());
+    }
+
+    return thisSelect.getHtml(selectName);
+  }
 
   /**
    *  Gets the HtmlSelect attribute of the ContactEmailTypeList object

@@ -340,7 +340,10 @@ public final class LeadsDocuments extends CFSModule {
         db = getConnection(context);
         itemToDownload.updateCounter(db);
       } else {
+        db = null;
         System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
+	context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+	return(executeCommandView(context));
       }
     } catch (java.net.SocketException se) {
       //User either cancelled the download or lost connection

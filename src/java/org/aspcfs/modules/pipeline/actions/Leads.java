@@ -116,8 +116,37 @@ public final class Leads extends CFSModule {
 	    return ("PermissionError");
     	}
 	
-    addModuleBean(context, "Search Opportunities", "Search Opportunities");
-    return ("SearchOK");
+	Connection db = null;
+	int errorCode = 0;
+	Exception errorMessage = null;
+
+	try {
+		db = this.getConnection(context);
+	
+		OrganizationList orgList = new OrganizationList();
+		orgList.setMinerOnly(false);
+		orgList.setShowMyCompany(true);
+		orgList.buildList(db);
+		context.getRequest().setAttribute("OrgList", orgList);
+		
+		LookupList stageSelect = new LookupList(db, "lookup_stage");
+		context.getRequest().setAttribute("StageList", stageSelect);
+	
+	} catch (Exception e) {
+		errorCode=1;
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	if (errorCode == 0) {
+		addModuleBean(context, "Search Opportunities", "Search Opportunities");
+		return ("SearchOK");
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+	
   }
 
 
@@ -589,10 +618,22 @@ public final class Leads extends CFSModule {
     //search stuff
 
     String passedDesc = context.getRequest().getParameter("searchDescription");
+    String passedOrg = context.getRequest().getParameter("searchOrgId");
+    String passedStage = context.getRequest().getParameter("searchStage");
 
     if (passedDesc != null && !(passedDesc.equals(""))) {
       passedDesc = "%" + passedDesc + "%";
       oppList.setDescription(passedDesc);
+    }
+    
+    if (passedOrg != null && !(passedOrg.equals(""))) {
+      if (Integer.parseInt(passedOrg) != -1) 	    
+	      oppList.setOrgId(passedOrg);
+    }
+    
+    if (passedStage != null && !(passedStage.equals(""))) {
+      if (Integer.parseInt(passedStage) != -1) 	    
+	      oppList.setStage(passedStage);
     }
 
     //end search stuff

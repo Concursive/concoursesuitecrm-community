@@ -1,3 +1,5 @@
+<jsp:useBean id="OrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
+<jsp:useBean id="StageList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <body onLoad="javascript:document.forms[0].searchDescription.focus();">
 <form name="searchLeads" action="/Leads.do?command=ViewOpp" method="post">
 <a href="/Leads.do">Pipeline Management</a> > 
@@ -19,6 +21,24 @@ Description
 </td>
 </tr>
 
+  <tr>
+    <td nowrap class="formLabel">
+      Organization
+    </td>
+	<td bgColor="white">
+	<%= OrgList.getHtmlSelectDefaultNone("searchOrgId") %>
+	</td>
+  </tr>
+  
+    <tr>
+    <td nowrap class="formLabel">
+      Current Stage
+    </td>
+	<td bgColor="white">
+	<%=StageList.getHtmlSelectDefaultNone("searchStage")%>
+	</td>
+    </tr>
+    
 </table>
 &nbsp;<br>
 <input type=submit value="Search">

@@ -39,7 +39,7 @@ public class OpportunityList extends Vector {
   private String accountOwnerIdRange = null;
   private java.sql.Date alertRangeStart = null;
   private java.sql.Date alertRangeEnd = null;
-
+  private int stage = -1;
 
   /**
    *  Constructor for the ContactList object
@@ -79,6 +79,17 @@ public class OpportunityList extends Vector {
   public void setOrgId(int tmp) {
     this.orgId = tmp;
   }
+
+  public int getStage() {
+	return stage;
+}
+public void setStage(int stage) {
+	this.stage = stage;
+}
+
+public void setStage(String stage) {
+	this.stage = Integer.parseInt(stage);
+}
 
 
   /**
@@ -494,6 +505,10 @@ public class OpportunityList extends Vector {
     if (includeEnabled == TRUE || includeEnabled == FALSE) {
       sqlFilter.append("AND x.enabled = ? ");
     }
+    
+    if (stage != -1) {
+      sqlFilter.append("AND x.stage = ? ");
+    }
 	
   }
 
@@ -557,6 +572,10 @@ public class OpportunityList extends Vector {
       pst.setBoolean(++i, true);
     } else if (includeEnabled == FALSE) {
       pst.setBoolean(++i, false);
+    }
+    
+    if (stage != -1) {
+      pst.setInt(++i, stage);
     }
 
     return i;

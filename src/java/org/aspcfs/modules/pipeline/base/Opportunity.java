@@ -209,6 +209,18 @@ public boolean getDocumentDelete() { return documentDelete; }
 public void setCallsDelete(boolean tmp) { this.callsDelete = tmp; }
 public void setDocumentDelete(boolean tmp) { this.documentDelete = tmp; }
 
+public void setEnabled(boolean enabled) {
+	this.enabled = enabled;
+}
+
+  public void setEnabled(String tmp) {
+    if (tmp.toLowerCase().equals("false")) {
+      this.enabled = false;
+    } else {
+      this.enabled = true;
+    }
+  }
+
 
   /**
    *  Sets the alertDate attribute of the Opportunity object
@@ -1672,6 +1684,7 @@ public void setDocumentDelete(boolean tmp) { this.documentDelete = tmp; }
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     closed = rs.getString("closed");
+    enabled = rs.getBoolean("enabled");
     
     //table
     stageName = rs.getString("stagename");
@@ -1797,7 +1810,7 @@ public void setDocumentDelete(boolean tmp) { this.documentDelete = tmp; }
     if (!override) {
       pst.setTimestamp(++i, this.getModified());
     }
-
+    
     resultCount = pst.executeUpdate();
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity-> ResultCount: " + resultCount);
