@@ -35,7 +35,14 @@ public class EvaluateHandler extends TagSupport {
     }
     result = "true".equalsIgnoreCase(tmp);
   }
+  
+  public final void setIf(boolean tmp) {
+    this.setExp(tmp);
+  }
 
+  public final void setIf(String tmp) {
+    this.setExp(tmp);
+  }
 
   /**
    *  Description of the Method
