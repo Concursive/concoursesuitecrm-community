@@ -5,10 +5,10 @@
 <jsp:useBean id="NewUserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="alertPaged" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
-<table bgcolor=white border=0 width="100%">
+<table bgcolor="#FFFFFF" border="0" width="100%">
 <tr>
   <form name="monthBean" action="MyCFS.do?command=Home" method="post">
-    <td valign="top" bgcolor="white" width="300">
+    <td valign="top" bgcolor="#FFFFFF" width="300">
   <%  
       CompanyCalendar.setBorderSize(1);
       CompanyCalendar.setCellPadding(4);
@@ -23,16 +23,16 @@
       <%= CompanyCalendar.getHtml() %>
     </td>
   
-  <td "bgcolor=white" valign="top" height="100%" width="100%">
-    <table bgcolor="white" height="100%" width="100%" border="1" cellpadding="1" cellspacing="0" bordercolorlight="#000000" bordercolor="#FFFFFF">
-      <tr bgcolor="#DEE0FA">
+  <td "bgcolor=#FFFFFF" valign="top" height="100%" width="100%">
+    <table bgcolor="#FFFFFF" height="100%" width="100%" border="1" cellpadding="1" cellspacing="0" bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <tr>
         <td width="100%">
-          <table width=100% cellspacing="0" cellpadding="0" border="0">
-            <tr bgcolor="#DEE0FA">
-              <td width=60% valign=center>
+          <table width="100%" cellspacing="0" cellpadding="0" border="0">
+            <tr class="title">
+              <td width="60%" valign="center">
                 <strong>Alerts</strong>
               </td>
-              <td valign=center align=right>
+              <td valign="center" align="right">
 		<% if (request.getParameter("userId") == null || request.getParameter("userId").equals("")) { %>
 			<%= NewUserList.getHtmlSelect("userId",0) %>
 		<% } else { %>

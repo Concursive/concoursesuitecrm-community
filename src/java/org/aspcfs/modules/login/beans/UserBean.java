@@ -155,10 +155,10 @@ public class UserBean extends GenericBean {
   }
 	
   public String getBrowserAbbr() {
-    if (browserType.trim().startsWith("Mozilla") || browserType.trim().startsWith("Netscape"))  {
+    if (browserType.indexOf("Gecko") > 0 || browserType.indexOf("Netscape") > 0)  {
       return ("ns");
     } else {
-	  return ("ie");
+			return ("ie");
     }
   }
 
