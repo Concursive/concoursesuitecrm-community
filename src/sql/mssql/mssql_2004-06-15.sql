@@ -1,3 +1,4 @@
+-- Script (C) 2004 Dark Horse Ventures, all rights reserved
 -- Database upgrade v2.8 (2004-06-15)
 -- NOT FINISHED YET
 -- TODO: Compare with postgresql for anything that might have been missed
@@ -12,10 +13,15 @@ ALTER TABLE contact ADD [status_id] [int] NULL;
 ALTER TABLE contact ADD [import_id] [int] NULL;
 
 ALTER TABLE role ADD [role_type] [int] NULL;
+UPDATE role SET role_type = 0 WHERE role_type IS NULL;
 
-ALTER TABLE permission_category ADD [products] [bit] NOT NULL;
+ALTER TABLE permission_category ADD [products] [bit] NULL;
+UPDATE permission_category SET products = 0;
+ALTER TABLE permission_category ALTER COLUMN [products] [bit] NOT NULL;
 
-ALTER TABLE contact_emailaddress ADD [primary_email] [bit] NOT NULL;
+ALTER TABLE contact_emailaddress ADD [primary_email] [bit] NULL;
+UPDATE contact_emailaddress SET primary_email = 0;
+ALTER TABLE contact_emailaddress ALTER COLUMN [primary_email] [bit] NOT NULL;
 
 ALTER TABLE sync_client ADD [enabled] [bit] NULL;
 ALTER TABLE sync_client ADD [code] [varchar] (255) NULL;
@@ -1010,13 +1016,6 @@ ALTER TABLE [lookup_creditcard_types] WITH NOCHECK ADD
 GO
 
 ALTER TABLE [lookup_currency] WITH NOCHECK ADD 
-	 PRIMARY KEY  CLUSTERED 
-	(
-		[code]
-	)  ON [PRIMARY] 
-GO
-
-ALTER TABLE [lookup_delivery_options] WITH NOCHECK ADD 
 	 PRIMARY KEY  CLUSTERED 
 	(
 		[code]
@@ -2031,9 +2030,6 @@ INSERT [lookup_creditcard_types] ([code],[description],[default_item],[level],[e
 SET IDENTITY_INSERT [lookup_creditcard_types] OFF
 GO
 SET NOCOUNT OFF
-
-
-INSERT [module_field_categorylink] ([id],[module_id],[category_id],[level],[description],[entered])VALUES(4,17,200403192,10,'Product Catalog Categories','Jun 15 2004  8:49:59:710AM')
 
 INSERT INTO product_category (category_name, enteredby, modifiedby, enabled) VALUES ('Labor Categories', 0, 0, 1);
 
@@ -3406,5 +3402,5 @@ ALTER TABLE [trouble_asset_replacement] ADD
 	)
 GO
 
-INSERT [database_version] ([version_id],[script_filename],[script_version],[entered])VALUES(1,'mssql.sql','2004-06-15','Jun 15 2004  8:50:20:450AM')
+INSERT [database_version] ([script_filename],[script_version])VALUES('mssql_2004-06-15.sql','2004-06-15');
 
