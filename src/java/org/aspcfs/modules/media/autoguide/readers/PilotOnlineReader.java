@@ -457,28 +457,35 @@ public class PilotOnlineReader implements DataReader {
 
     if (processOK) {
       processLog.add("INFO: FTP Sending pictures");
+      boolean sendComplete = false;
+      int retryCount = 0;
       NCFTPApp ftp = new NCFTPApp();
       ftp.setDeleteSourceFilesAfterSend(true);
       ftp.setMakeRemoteDir(true);
       ftp.addFile(pictureDestinationPath + "*.jpg");
-      processOK = (ftp.put(ftpPictures) == 0);
-      if (!processOK) {
-        processLog.add("ERROR: FTP Sending pictures-> " + ftp.getStdErr());
+      while (!sendComplete && retryCount < 6) {
+        ++retryCount;
+        processOK = (ftp.put(ftpPictures) == 0);
+        if (!processOK) {
+          processLog.add("ERROR: FTP Sending pictures-> " + ftp.getStdErr());
+        } else {
+          sendComplete = true;
+        }
       }
     } else {
       processLog.add("ERROR: FTP Sending pictures-> Skipped because of previous error");
     }
 
     if (processOK) {
+      processLog.add("INFO: FTP Sending data");
       boolean sendComplete = false;
       int retryCount = 0;
+      NCFTPApp ftp = new NCFTPApp();
+      ftp.setDeleteSourceFilesAfterSend(true);
+      ftp.setMakeRemoteDir(true);
+      ftp.addFile(((TextWriter) writer).getFilename());
       while (!sendComplete && retryCount < 6) {
         ++retryCount;
-        processLog.add("INFO: FTP Sending data");
-        NCFTPApp ftp = new NCFTPApp();
-        ftp.setDeleteSourceFilesAfterSend(true);
-        ftp.setMakeRemoteDir(true);
-        ftp.addFile(((TextWriter) writer).getFilename());
         processOK = (ftp.put(ftpData) == 0);
         if (!processOK) {
           processLog.add("ERROR: FTP Sending data-> " + ftp.getStdErr());
