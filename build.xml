@@ -542,7 +542,8 @@
        <pathelement location="${CFS_HOME}/WEB-INF/lib/jcrontab.jar"/>
      </classpath>
      <include name="**/*.java"/>
-     <exclude name="**/*_include_jsp.java"/>
+     <exclude name="**/*finclude_jsp.java"/>
+     <exclude name="**/*fmenu_jsp.java"/>
     </javac>
   </target>
   
