@@ -624,7 +624,7 @@
     <forward name="ViewOK" resource="/communications/campaign_groups_view.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/communications/campaign_groups_modify.jsp" layout="nav"/>
     <forward name="AddOK" resource="/communications/campaign_groups_add.jsp" layout="nav"/>
-    <forward name="InsertOK" resource="/CampaignManagerGroup.do?command=Details"/>
+    <forward name="InsertOK" resource="/CampaignManagerGroup.do?command=View"/>
     <forward name="UpdateOK" resource="/CampaignManagerGroup.do?command=Details"/>
     <forward name="PreviewOK" resource="/communications/campaign_groups_preview.jsp" layout="nav"/>
     <forward name="PopPreviewOK" resource="/communications/campaign_groups_preview.jsp" layout="style"/>
