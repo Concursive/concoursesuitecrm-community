@@ -2,7 +2,7 @@
 <img src="images/error.gif" border="0" align="absmiddle"/>
 <font color="red">The requested action could not be completed</font>
 <hr color="#BFBFBB" noshade>
-<table class="note">
+<table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
     <td>The installed Dark Horse CRM license limits this system to <%= APP_SIZE %> active users.

@@ -26,7 +26,7 @@ Queue
 </tr>
 </table>
 <%-- End Trails --%>
-<table class="note">
+<table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
     <td>Generated reports are deleted from the server every 24 hours.</td></tr>

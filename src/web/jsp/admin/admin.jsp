@@ -9,7 +9,7 @@ Admin
 </tr>
 </table>
 <%-- End Trails --%>
-<table class="note">
+<table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
     <td>Manage Dark Horse CRM by reviewing system usage, configuring specific modules, and configuring system parameters.</td>
