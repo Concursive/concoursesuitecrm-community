@@ -79,26 +79,28 @@ public class UsernameHandler extends TagSupport {
       ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
       if (ce == null) {
         System.out.println("UsernameHandler-> ConnectionElement is null");
-      }
-      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-      if (systemStatus == null) {
-        System.out.println("UsernameHandler-> SystemStatus is null");
-      }
-      User thisUser = systemStatus.getUser(userId);
-      if (thisUser != null) {
-        Contact thisContact = thisUser.getContact();
-        if (thisContact != null) {
-          if (lastFirst) {
-            this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameLastFirst()));
-          } else {
-            this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameFirstLast()));
-          }
-        } else {
-          System.out.println("UsernameHandler-> Contact is null");
-        }
       } else {
-        //NOTE: the default text will already be in the output format
-        this.pageContext.getOut().write(StringUtils.toHtml(defaultText));
+        SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+        if (systemStatus == null) {
+          System.out.println("UsernameHandler-> SystemStatus is null");
+        } else {
+          User thisUser = systemStatus.getUser(userId);
+          if (thisUser != null) {
+            Contact thisContact = thisUser.getContact();
+            if (thisContact != null) {
+              if (lastFirst) {
+                this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameLastFirst()));
+              } else {
+                this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameFirstLast()));
+              }
+            } else {
+              System.out.println("UsernameHandler-> Contact is null");
+            }
+          } else {
+            //NOTE: the default text will already be in the output format
+            this.pageContext.getOut().write(StringUtils.toHtml(defaultText));
+          }
+        }
       }
     } catch (Exception e) {
       e.printStackTrace(System.out);
