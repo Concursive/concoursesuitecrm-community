@@ -312,6 +312,13 @@
     </copy>
     <!-- Copy this build file -->
     <copy file="${base.dir}/build.xml" todir="${CFS_HOME}/WEB-INF/fileLibrary" verbose="true"/>
+    <!-- Copy the jasperreports, only if new -->
+    <!-- TODO: The old .jasper file must be removed when a new .xml is copied -->
+    <copy todir="${CFS_HOME}/WEB-INF/fileLibrary/reports">
+      <fileset dir="${src.dir}/jasper_reports">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
   </target>
   
   <!-- See if there is an updated file to merge -->
