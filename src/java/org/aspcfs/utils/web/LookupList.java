@@ -248,7 +248,6 @@ public class LookupList extends HtmlSelect {
     return thisSelect.getHtml(selectName, defaultValue);
   }
 
-
   /**
    *  Gets the selectedKey attribute of the LookupList object
    *

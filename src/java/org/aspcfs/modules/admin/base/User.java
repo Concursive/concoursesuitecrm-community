@@ -1572,7 +1572,7 @@ public void setPermissions(Vector permissions) {
     }
 
     if (!password1.equals(password2)) {
-      errors.put("password2Error", "Verification password does not match the password");
+      errors.put("password2Error", "Verification password does not match");
     }
 
     if (hasErrors()) {

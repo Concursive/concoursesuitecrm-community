@@ -58,7 +58,7 @@ public class ContactEmailAddress extends EmailAddress {
   public void process(Connection db, int contactId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
       if (this.getId() == -1) {
-      this.insert(db, contactId, enteredBy);
+        this.insert(db, contactId, enteredBy);
       } else {
         this.update(db, modifiedBy);
       }

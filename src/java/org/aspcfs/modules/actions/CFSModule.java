@@ -184,14 +184,14 @@ public class CFSModule {
    */
   protected String getPath(ActionContext context) {
     return (
-        context.getServletContext().getRealPath("/") + ".." + fs +
+        context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
         "fileLibrary" + fs);
   }
   
   
   protected String getPath(ActionContext context, String moduleFolderName) {
     return (
-        context.getServletContext().getRealPath("/") + ".." + fs +
+        context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
         "fileLibrary" + fs +
         (this.getDbName(context) == null?"":this.getDbName(context) + fs) +
         moduleFolderName + fs);
@@ -209,7 +209,7 @@ public class CFSModule {
    */
   public static String getPath(ActionContext context, String moduleFolderName, int moduleItemId) {
     return (
-        context.getServletContext().getRealPath("/") + ".." + fs +
+        context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
         "fileLibrary" + fs +
         getDbName(context) + fs +
         moduleFolderName + fs +

@@ -54,6 +54,7 @@ public class Contact extends GenericBean {
   private boolean hasAccount = false;
   private boolean excludedFromCampaign = false;
   private int owner = -1;
+  private int custom1 = -1;
   private String url = null;
   
 
@@ -158,6 +159,12 @@ public class Contact extends GenericBean {
 }
 public void setUrl(String url) {
 	this.url = url;
+}
+public int getCustom1() {
+	return custom1;
+}
+public void setCustom1(int custom1) {
+	this.custom1 = custom1;
 }
 
   /**
@@ -1679,7 +1686,7 @@ public void setUrl(String url) {
         "UPDATE contact " +
         "SET company = ?, title = ?, department = ?, namesalutation = ?, " +
         "namefirst = ?, namelast = ?, " +
-        "namemiddle = ?, namesuffix = ?, type_id = ?, notes = ?, owner = ?, url = ?, ");
+        "namemiddle = ?, namesuffix = ?, type_id = ?, notes = ?, owner = ?, custom1 = ?, url = ?,  ");
     if (orgId > -1) {
       sql.append("org_id = ?, ");
     }
@@ -1714,6 +1721,7 @@ public void setUrl(String url) {
     pst.setInt(++i, this.getTypeId());
     pst.setString(++i, this.getNotes());
     pst.setInt(++i, this.getOwner());
+    pst.setInt(++i, this.getCustom1());
     pst.setString(++i, this.getUrl());
 
     if (orgId > -1) {
@@ -1784,6 +1792,7 @@ public void setUrl(String url) {
     modifiedBy = rs.getInt("modifiedby");
     enabled = rs.getBoolean("enabled");
     owner = rs.getInt("owner");
+    custom1 = rs.getInt("custom1");
     url = rs.getString("url");
     
     //lookup_department table
