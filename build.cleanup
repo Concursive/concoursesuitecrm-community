@@ -1,6 +1,9 @@
 ## These files will be deleted by ant deploy
 ## and exist in the CFS_HOME directory
 
+## 2003-08-07 no longer is repository
+actionlist/action_lists_addcontacts.jsp
+
 ## 2003-06-27 not implemented
 global/global_addopp.jsp
 pipeline/leads_header_include.jsp
