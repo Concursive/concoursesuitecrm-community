@@ -1277,7 +1277,7 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  ��V$ Gets the Notes attribute of the Contact object
+   *  ??????V$ Gets the Notes attribute of the Contact object
    *
    *@return    The Notes value
    *@since     1.1
@@ -2104,10 +2104,10 @@ public class Contact extends GenericBean {
    */
   public static String getNameLastFirst(String nameLast, String nameFirst) {
     StringBuffer out = new StringBuffer();
-    if (nameLast != null && nameLast.length() > 0) {
+    if (nameLast != null && nameLast.trim().length() > 0) {
       out.append(nameLast);
     }
-    if (nameFirst != null && nameFirst.length() > 0) {
+    if (nameFirst != null && nameFirst.trim().length() > 0) {
       if (nameLast.length() > 0) {
         out.append(", ");
       }
