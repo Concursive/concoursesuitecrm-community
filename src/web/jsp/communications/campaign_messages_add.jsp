@@ -7,7 +7,7 @@
 <script type="text/javascript" src="/javascript/coolbuttons.js"></script>
 <script>
   function save() {
-	<dhv:browser id="ie" minVersion="5.5" include="true">
+	<dhv:browser id="ie" minVersion="5.0" os="win" include="true">
     var edit = document.all.edit;
     document.all.messageText.value = edit.getHTML();
     edit.focus();
@@ -67,11 +67,11 @@ Add Message
       Subject: <input type="text" size="50" maxlength="255" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
 			<font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %><br>
       &nbsp;<br>
-		<dhv:browser id="ie" minVersion="5.5" include="false">
+		<dhv:browser id="ie" minVersion="5.0" os="win" include="false">
 		  HTML tags are allowed in text message<br>
       <textarea name="messageText" rows="10" cols="75" wrap="physical"><%= StringUtils.toHtmlTextValue(Message.getMessageText()) %></textarea>
     </dhv:browser>
-    <dhv:browser id="ie" minVersion="5.5" include="true">
+    <dhv:browser id="ie" minVersion="5.0" os="win" include="true">
 		  <input type="hidden" name="messageText" value="">
       <table cellspacing="0" id="toolBar" class="coolBar">
         <tr>
@@ -84,15 +84,28 @@ Add Message
           <td class="coolButton" onclick="document.all.edit.setUnderline(); document.all.edit.frameWindow.focus();">
             &nbsp;<u>Underline</u>&nbsp;
           </td>
+          <td>|</td>
           <td class="coolButton" onclick="document.all.edit.setColor('#000000'); document.all.edit.frameWindow.focus();">
             &nbsp;<font color="#000000">Black</font>&nbsp;
           </td>
           <td class="coolButton" onclick="document.all.edit.setColor('#0000FF'); document.all.edit.frameWindow.focus();">
             &nbsp;<font color="#0000FF">Blue</font>&nbsp;
           </td>
+          <td class="coolButton" onclick="document.all.edit.setColor('#00FF00'); document.all.edit.frameWindow.focus();">
+            &nbsp;<font color="#00FF00">Green</font>&nbsp;
+          </td>
+          <td class="coolButton" onclick="document.all.edit.setColor('#FF7E00'); document.all.edit.frameWindow.focus();">
+            &nbsp;<font color="#FF7E00">Orange</font>&nbsp;
+          </td>
+          <td class="coolButton" onclick="document.all.edit.setColor('#FF0000'); document.all.edit.frameWindow.focus();">
+            &nbsp;<font color="#FF0000">Red</font>&nbsp;
+          </td>
+          <td class="coolButton" onclick="document.all.edit.setColor('#FFFF00'); document.all.edit.frameWindow.focus();">
+            &nbsp;<font color="#FFFF00">Yellow</font>&nbsp;
+          </td>
         </tr>
       </table>
-      <iframe id="edit" frameborder="0" class="richEdit" style="border: 1px solid #cccccc; width: 100%; height: 100%;" onblur="return false">
+      <iframe id="edit" frameborder="0" class="richEdit" style="border: 1px solid #cccccc; width: 100%; height: 250;" onblur="return false">
          <body style="color: black; background: white;font: 8pt verdana;">
            <%= Message.getMessageText() %>
          </body>

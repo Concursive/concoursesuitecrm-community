@@ -34,6 +34,10 @@
       <name>maxVersion</name>
       <required>no</required>
     </attribute>
+    <attribute>
+      <name>os</name>
+      <required>no</required>
+    </attribute>
 		<attribute>
       <name>include</name>
       <required>no</required>
