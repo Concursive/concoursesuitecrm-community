@@ -154,6 +154,11 @@
       <permission value="campaign-dashboard-view"/>
       <link value="CampaignManager.do?command=ViewResults&amp;reset=true&amp;id=${id}"/>
     </submenu>
+    <submenu name="response">
+      <long_html value="Response"/>
+      <permission value="campaign-dashboard-view"/>
+      <link value="CampaignManager.do?command=ViewResponse&amp;id=${id}"/>
+    </submenu>
     <submenu name="documents">
       <long_html value="Documents"/>
       <permission value="campaign-dashboard-view"/>
