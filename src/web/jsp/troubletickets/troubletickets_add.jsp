@@ -13,7 +13,8 @@
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript">
   function updateSubList1() {
     var sel = document.forms['addticket'].elements['catCode'];
@@ -41,7 +42,7 @@
   }
   function updateContactList() {
     var sel = document.forms['addticket'].elements['orgId'];
-    var value = sel.options[sel.selectedIndex].value;
+    var value = document.forms['addticket'].orgId.value;
     var url = "TroubleTickets.do?command=OrganizationJSList&orgId=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
@@ -58,6 +59,41 @@
     } else {
       return true;
     }
+  }
+  //used when a new contact is added
+  function insertOption(text,value,optionListId){
+   var obj = document.forms['addticket'].contactId;
+   insertIndex= obj.options.length;
+   obj.options[insertIndex] = new Option(text,value);
+   obj.selectedIndex = insertIndex;
+  }
+  function changeDivContent(divName, divContents) {
+    if(document.layers){
+      // Netscape 4 or equiv.
+      divToChange = document.layers[divName];
+      divToChange.document.open();
+      divToChange.document.write(divContents);
+      divToChange.document.close();
+    } else if(document.all){
+      // MS IE or equiv.
+      divToChange = document.all[divName];
+      divToChange.innerHTML = divContents;
+    } else if(document.getElementById){
+      // Netscape 6 or equiv.
+      divToChange = document.getElementById(divName);
+      divToChange.innerHTML = divContents;
+    }
+    //
+    if(document.forms['addticket'].orgId.value != '-1'){
+      updateContactList();
+    }
+	}
+  function isAccountValid(){
+    if(document.forms['addticket'].orgId.value == -1){
+      alert('You  have to select an Account first');
+      return false;
+    }
+    return true;
   }
 </script>
 <form name="addticket" action="TroubleTickets.do?command=Insert&auto-populate=true" method="post">
@@ -95,28 +131,33 @@ Add Ticket<br>
       Organization
     </td>
     <td>
-	<% if (TicketDetails == null || TicketDetails.getOrgId() == -1) { %>
-      <%= OrgList.getHtmlSelectDefaultNone("orgId")%>
-	<%} else {%>
-      <%= OrgList.getHtmlSelect("orgId", TicketDetails.getOrgId()) %>
-	<%}%>
-      <font color="red">*</font> <%= showAttribute(request, "orgIdError") %>
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td>
+            <div id="changeaccount"><%= TicketDetails.getOrgId() != -1 ? TicketDetails.getCompanyName() : "None Selected" %></div>
+          </td>
+          <td>
+            <input type="hidden" name="orgId" id="orgId" value="<%=  TicketDetails.getOrgId() %>">
+            &nbsp;<font color="red">*</font>
+            <%= showAttribute(request, "orgIdError") %>
+            [<a href="javascript:popAccountsListSingle('orgId','changeaccount');">Select</a>]
+          </td>
+        </tr>
+      </table>
     </td>
 	</tr>	
 	<tr>
     <td class="formLabel">
       Contact
     </td>
-    <td>
+    <td valign="center">
 	<% if (TicketDetails == null || TicketDetails.getOrgId() == -1 || ContactList.size() == 0) { %>
       <%= ContactList.getEmptyHtmlSelect("contactId") %>
 	<%} else {%>
       <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
 	<%}%>
       <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-      <input type="checkbox" name="contact"<dhv:evaluate if="<%= request.getParameter("contact") != null %>"> checked</dhv:evaluate>
-      onClick="javascript:this.form.action='TroubleTickets.do?command=Add&auto-populate=true#newcontact';this.form.submit()">Add new
-      <a name="newcontact"></a> 
+      [<a href="javascript:popURL('Contacts.do?command=Add&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','500','600','yes','yes');" onClick="return isAccountValid();">Add New</a>] 
     </td>
 	</tr>
 </table>
@@ -141,7 +182,7 @@ Add Ticket<br>
       Last Name
     </td>
     <td valign="center">
-      <input type=text size=35 name="thisContact_nameLast" value="<%=TicketDetails.getThisContact().getNameLast()%>">
+      <input type="text" size="35" name="thisContact_nameLast" value="<%=TicketDetails.getThisContact().getNameLast()%>">
       <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>
@@ -212,7 +253,7 @@ Add Ticket<br>
 </dhv:include>
 <dhv:include name="tickets-subcat1" none="true">
 	<tr>
-    <td class="formLabel">
+    <td class="formLabel" nowrap>
       Sub-level 1
     </td>
     <td>
@@ -223,7 +264,7 @@ Add Ticket<br>
 </dhv:include>
 <dhv:include name="tickets-subcat2" none="true">
 	<tr>
-    <td class="formLabel">
+    <td class="formLabel" nowrap>
       Sub-level 2
     </td>
     <td>
@@ -233,7 +274,7 @@ Add Ticket<br>
 </dhv:include>
 <dhv:include name="tickets-subcat3" none="true">
 	<tr>
-    <td class="formLabel">
+    <td class="formLabel" nowrap>
       Sub-level 3
     </td>
     <td>

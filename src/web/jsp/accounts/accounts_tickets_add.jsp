@@ -69,11 +69,11 @@
   }
   //used when a new contact is added
   function insertOption(text,value,optionListId){
-     var obj = document.forms['addticket'].contactId;
-     insertIndex= obj.options.length;
-     obj.options[insertIndex] = new Option(text,value);
-     obj.selectedIndex = insertIndex;
-    }
+   var obj = document.forms['addticket'].contactId;
+   insertIndex= obj.options.length;
+   obj.options[insertIndex] = new Option(text,value);
+   obj.selectedIndex = insertIndex;
+  }
 </script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >

@@ -9,11 +9,12 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].header_description.focus();">
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popLookupSelect.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" type="text/javascript" src="javascript/popContacts.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" type="text/javascript" src="javascript/popAccounts.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript">
 function doCheck(form) {
   if (form.dosubmit.value == "false") {
@@ -110,7 +111,7 @@ Add Opportunity<br>
       Assign To
     </td>
     <td valign="center">
-      <%= UserList.getHtmlSelect("component_owner") %>
+      <%= UserList.getHtmlSelect("component_owner", OppDetails.getComponent().getOwner()) %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -122,7 +123,7 @@ Add Opportunity<br>
         <tr>
           <td>
             <select multiple name="selectedList" id="selectedList" size="5">
-            <option value="-1">None Selected</option>
+              <dhv:lookupHtml listName="TypeList" lookupName="TypeSelect"/> 
             </select>
             <input type="hidden" name="previousSelection" value="">
           </td>
@@ -138,20 +139,27 @@ Add Opportunity<br>
       Associate With
     </td>
     <td>
+      <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+              <td>
+                <input type="radio" name="opp_type" value="org" onclick="javascript:document.forms['addOpportunity'].header_contactLink.value = '-1';" <dhv:evaluate exp="<%=(OppDetails.getHeader().getAccountLink() > -1)%>">checked</dhv:evaluate>>
+              </td>
+              <td>
+                Account:&nbsp;
+              </td>
+              <td>
+                <div id="changeaccount"><%= OppDetails.getHeader().getAccountLink() != -1 ? OppDetails.getHeader().getAccountName() : "None Selected" %></div>
+              </td>
+              <td>
+                <input type="hidden" name="header_accountLink" id="header_accountLink" value="<%= OppDetails.getHeader().getAccountLink() %>">
+                &nbsp;[<a href="javascript:popAccountsListSingle('header_accountLink','changeaccount');">Select</a>]&nbsp;<font color="red">*</font> <%= showAttribute(request, "orgError") %>
+              </td>
+            </tr>
+       </table>
       <table border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td>
-            <input type="radio" name="opp_type" value="org" <dhv:evaluate exp="<%=(OppDetails.getHeader().getAccountLink() > -1)%>">checked</dhv:evaluate>>Account
-          </td>
-          <td>
-            &nbsp;<%= OrgList.getHtmlSelectDefaultNone("header_accountLink", OppDetails.getHeader().getAccountLink())%><font color="red">*</font> <%= showAttribute(request, "orgError") %>
-          </td>
-        </tr>
-      </table>
-      <table border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td>
-            <input type="radio" name="opp_type" value="contact" <dhv:evaluate exp="<%=(OppDetails.getHeader().getContactLink() > -1)%>">checked</dhv:evaluate>>
+            <input type="radio" name="opp_type" value="contact" onclick="javascript:document.forms['addOpportunity'].header_accountLink.value = '-1';" <dhv:evaluate exp="<%=(OppDetails.getHeader().getContactLink() > -1)%>">checked</dhv:evaluate>>
           </td>
           <td>
             Contact:&nbsp;
@@ -185,8 +193,8 @@ Add Opportunity<br>
       Source
     </td>
     <td>
-      <% BusTypeList.setSelectName("component_type"); %>
-      <%= BusTypeList.getHtml() %>
+      <% BusTypeList.setDefaultKey(OppDetails.getComponent() != null ? OppDetails.getComponent().getType() : "");%>
+      <%= BusTypeList.getHtml("component_type") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -239,8 +247,7 @@ Add Opportunity<br>
     </td>
     <td>
       <input type="text" size="5" name="component_terms" value="<%= toHtmlValue(OppDetails.getComponent().getTermsString()) %>">
-      <% UnitTypeList.setSelectName("component_units");%>
-      <%= UnitTypeList.getHtml() %>
+      <%= UnitTypeList.getHtml("component_units", (OppDetails.getComponent().getUnits() != null ? OppDetails.getComponent().getUnits() : "")) %>
       <font color="red">*</font> <%= showAttribute(request, "termsError") %>
     </td>
   </tr>
@@ -250,7 +257,7 @@ Add Opportunity<br>
     </td>
     <td>
       <%= StageList.getHtmlSelect("component_stage",OppDetails.getComponent().getStage()) %>
-      <input type="checkbox" name="closeNow">Close this component
+      <input type="checkbox" name="component_closeNow" <%= OppDetails.getComponent().getCloseIt() ? " checked" : ""%>>Close this component
     </td>
   </tr>
   <tr class="containerBody">

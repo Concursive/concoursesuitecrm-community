@@ -158,18 +158,22 @@ Modify Component<br>
         <tr>
           <td>
             <select multiple name="selectedList" id="selectedList" size="5">
-            <dhv:evaluate exp="<%= LeadsComponentDetails.getTypes().isEmpty() %>">
-              <option value="-1">None Selected</option>
-            </dhv:evaluate>
-            <dhv:evaluate exp="<%= !LeadsComponentDetails.getTypes().isEmpty() %>">
-      <%
-            Iterator i = LeadsComponentDetails.getTypes().iterator();
-            while (i.hasNext()) {
-              LookupElement thisElt = (LookupElement)i.next();
-      %>
-              <option value="<%= thisElt.getCode() %>"><%= thisElt.getDescription() %></option>
-            <%}%>
-            </dhv:evaluate>      
+            <%if(request.getAttribute("TypeList") != null){ %>
+              <dhv:lookupHtml listName="TypeList" lookupName="TypeSelect"/>
+            <% }else{ %>
+               <dhv:evaluate exp="<%= LeadsComponentDetails.getTypes().isEmpty() %>">
+                  <option value="-1">None Selected</option>
+                </dhv:evaluate>
+                <dhv:evaluate exp="<%= !LeadsComponentDetails.getTypes().isEmpty() %>">
+              <%
+                Iterator i = LeadsComponentDetails.getTypes().iterator();
+                while (i.hasNext()) {
+                LookupElement thisElt = (LookupElement)i.next();
+              %>
+                <option value="<%= thisElt.getCode() %>"><%= thisElt.getDescription() %></option>
+              <%}%>
+              </dhv:evaluate>
+            <% } %>
             </select>
             <input type="hidden" name="previousSelection" value="">
           </td>
@@ -198,6 +202,7 @@ Modify Component<br>
       Source
     </td>
     <td>
+      <% BusTypeList.setDefaultKey(LeadsComponentDetails.getType());%>
       <%= BusTypeList.getHtml() %>
     </td>
   </tr>
@@ -251,7 +256,7 @@ Modify Component<br>
     </td>
     <td>
       <input type="text" size="5" name="terms" value="<%= LeadsComponentDetails.getTermsString() %>">
-      <%= UnitTypeList.getHtml() %>
+      <%= UnitTypeList.getHtml("units", (LeadsComponentDetails.getUnits() != null ? LeadsComponentDetails.getUnits() : "")) %>
       <font color="red">*</font> <%= showAttribute(request, "termsError") %>
     </td>
   </tr>
@@ -261,7 +266,7 @@ Modify Component<br>
     </td>
     <td>
       <%= StageList.getHtmlSelect("stage", LeadsComponentDetails.getStage()) %>
-      <input type="checkbox" name="closeNow"<dhv:evaluate if="<%= LeadsComponentDetails.getClosed() != null %>"> checked</dhv:evaluate>> Closed
+      <input type="checkbox" name="closeNow" <dhv:evaluate if="<%= (LeadsComponentDetails.getClosed() != null || LeadsComponentDetails.getCloseIt()) %>"> checked</dhv:evaluate>> Closed
     </td>
   </tr>
   <tr class="containerBody">
@@ -315,3 +320,4 @@ Modify Component<br>
 </dhv:evaluate>
 <%-- End container --%>
 </form>
+

@@ -15,6 +15,7 @@ import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.accounts.base.OrganizationList;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.pipeline.base.OpportunityHeaderList;
 import org.aspcfs.modules.base.*;
 import com.zeroio.iteam.base.*;
@@ -421,7 +422,7 @@ public final class ExternalContacts extends CFSModule {
       contactTypeList.addItem(-1, "All Contact Types");
       contactTypeList.buildList(db);
       context.getRequest().setAttribute("ContactTypeList", contactTypeList);
-      
+
       contactList.setBuildDetails(true);
       contactList.setBuildTypes(false);
       contactList.setPagedListInfo(externalContactsInfo);
@@ -886,6 +887,10 @@ public final class ExternalContacts extends CFSModule {
         userList.setIncludeMe(true);
         userList.setExcludeDisabledIfUnselected(true);
         context.getRequest().setAttribute("UserList", userList);
+        if (thisContact.getOrgId() > -1) {
+          Organization thisOrg = new Organization(db, thisContact.getOrgId());
+          thisContact.setCompany(thisOrg.getName());
+        }
         processErrors(context, thisContact.getErrors());
         buildFormElements(context, db);
       }
@@ -936,11 +941,11 @@ public final class ExternalContacts extends CFSModule {
     try {
       db = this.getConnection(context);
       buildFormElements(context, db);
-      OrganizationList orgList = new OrganizationList();
-      orgList.setMinerOnly(false);
-      orgList.setShowMyCompany(true);
-      orgList.buildList(db);
-      context.getRequest().setAttribute("OrgList", orgList);
+      if("adduser".equals(context.getRequest().getParameter("source"))){
+        LookupList departmentList = new LookupList(db, "lookup_department");
+        departmentList.addItem(0, "--None--");
+        context.getRequest().setAttribute("DepartmentList", departmentList);
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1023,9 +1028,6 @@ public final class ExternalContacts extends CFSModule {
 
     Contact thisContact = (Contact) context.getFormBean();
     thisContact.setRequestItems(context.getRequest());
-    if (context.getRequest().getParameterValues("selectedList") == null) {
-      System.out.println("External Contacts -->  TypeList is NULL");
-    }
     thisContact.setTypeList(context.getRequest().getParameterValues("selectedList"));
     thisContact.setEnteredBy(getUserId(context));
     thisContact.setModifiedBy(getUserId(context));
@@ -1039,6 +1041,11 @@ public final class ExternalContacts extends CFSModule {
         thisContact = new Contact(db, "" + thisContact.getId());
         context.getRequest().setAttribute("ContactDetails", thisContact);
         addRecentItem(context, thisContact);
+      }else{
+        if (thisContact.getOrgId() > -1) {
+          Organization thisOrg = new Organization(db, thisContact.getOrgId());
+          thisContact.setCompany(thisOrg.getName());
+        }
       }
     } catch (Exception e) {
       errorMessage = e;

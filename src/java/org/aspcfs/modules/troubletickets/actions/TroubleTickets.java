@@ -12,6 +12,7 @@ import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.accounts.base.OrganizationList;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.communications.base.CampaignList;
 import org.aspcfs.modules.actions.CFSModule;
@@ -861,6 +862,10 @@ public final class TroubleTickets extends CFSModule {
         processInsertHook(context, newTic);
       } else {
         processErrors(context, newTic.getErrors());
+        if(newTic.getOrgId() != -1){
+          Organization thisOrg = new Organization(db, newTic.getOrgId());
+          newTic.setCompanyName(thisOrg.getName());
+        }
       }
 
     } catch (Exception e) {
@@ -1129,13 +1134,6 @@ public final class TroubleTickets extends CFSModule {
       userList.buildList(db);
     }
     context.getRequest().setAttribute("UserList", userList);
-
-    OrganizationList orgList = new OrganizationList();
-    orgList.setMinerOnly(false);
-    orgList.setHtmlJsEvent("onChange=\"javascript:updateContactList();\"");
-    orgList.setShowMyCompany(true);
-    orgList.buildList(db);
-    context.getRequest().setAttribute("OrgList", orgList);
 
     TicketCategoryList categoryList = new TicketCategoryList();
     categoryList.setCatLevel(0);

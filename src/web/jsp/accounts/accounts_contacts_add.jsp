@@ -31,7 +31,7 @@
   }
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
-<form name="addContact" action="Contacts.do?command=Insert&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>`" method="post">
+<form name="addContact" action="Contacts.do?command=Insert&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" method="post">
 <%boolean popUp = false;
   if(request.getParameter("popup")!=null){
     popUp = true;

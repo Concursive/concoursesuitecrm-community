@@ -103,7 +103,7 @@ Add Component<br>
             <tr>
               <td>
                 <select multiple name="selectedList" id="selectedList" size="5">
-                  <option value="-1">None Selected</option>
+                  <dhv:lookupHtml listName="TypeList" lookupName="TypeSelect"/>
                 </select>
                 <input type="hidden" name="previousSelection" value="">
               </td>
@@ -132,6 +132,7 @@ Add Component<br>
           Source
         </td>
         <td>
+          <% BusTypeList.setDefaultKey(OppComponentDetails.getType());%>
           <%= BusTypeList.getHtml() %>
         </td>
       </tr>
@@ -186,7 +187,7 @@ Add Component<br>
         </td>
         <td>
           <input type="text" size="5" name="terms" value="<%= toHtmlValue(OppComponentDetails.getTermsString()) %>">
-          <%= UnitTypeList.getHtml() %>
+          <%= UnitTypeList.getHtml("units", (OppComponentDetails.getUnits() != null ? OppComponentDetails.getUnits() : "")) %>
           <font color="red">*</font> <%= showAttribute(request, "termsError") %>
         </td>
       </tr>
@@ -196,7 +197,7 @@ Add Component<br>
         </td>
         <td>
           <%= StageList.getHtmlSelect("stage", OppComponentDetails.getStage()) %>
-          <input type="checkbox" name="closeNow">Close this component
+          <input type="checkbox" name="closeNow" <%= OppComponentDetails.getCloseIt() ? " checked" : ""%>>Close this component
         </td>
       </tr>
       <tr class="containerBody">

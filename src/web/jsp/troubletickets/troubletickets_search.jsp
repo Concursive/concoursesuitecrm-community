@@ -3,6 +3,8 @@
 <jsp:useBean id="SeverityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="TicketTypeSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <body onLoad="javascript:document.forms[0].searchcodeId.focus();">
 <form name="searchTicket" action="TroubleTickets.do?command=SearchTickets&auto-populate=true" method="post">
 <a href="TroubleTickets.do">Tickets</a> > 
@@ -35,7 +37,17 @@ Search Form<br>
       Organization
     </td>
     <td>
-      <%= OrgList.getHtmlSelectDefaultNone("searchcodeOrgId") %>
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td>
+            <div id="changeaccount">None Selected</div>
+          </td>
+          <td>
+            <input type="hidden" name="searchcodeOrgId" id="searchcodeOrgId">
+            &nbsp;[<a href="javascript:popAccountsListSingle('searchcodeOrgId','changeaccount');">Select</a>]
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
 <dhv:include name="tickets-severity" none="true">

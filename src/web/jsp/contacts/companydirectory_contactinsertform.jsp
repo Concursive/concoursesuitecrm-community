@@ -7,12 +7,16 @@
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
-<jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
+<jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popLookupSelect.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
+    if(document.forms['addContact'].contactcategory[0].checked && document.forms['addContact'].contactcategory[0].value == '3'){
+      document.forms['addContact'].action = 'CompanyDirectory.do?command=InsertEmployee&auto-populate=true&popup=true';
+    }
     if (form.dosubmit.value == "false") {
       return true;
     } else {
@@ -69,7 +73,7 @@ Add Contact<br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Add a New Contact</strong>
     </td>
   </tr>
@@ -78,8 +82,28 @@ Add Contact<br>
       Contact Category
     </td>
     <td>
-      <input type="radio" name="contactcategory" value="1" onclick="javascript:document.forms[0].orgId.selectedIndex = 0;" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>
-      <input type="radio" name="contactcategory" value="2" <%= ContactDetails.getOrgId() > -1 ? " checked":""%>> Associated with Account &nbsp; <%= OrgList.getHtmlSelectDefaultNone("orgId", ContactDetails.getOrgId())%>
+      <% if(!"adduser".equals(request.getParameter("source"))){ %>
+        <input type="radio" name="contactcategory" value="1" onclick="javascript:document.forms[0].orgId.value = '-1';" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>
+      <% }else{ %>
+        <input type="radio" name="contactcategory" value="3" onclick="javascript:document.forms[0].orgId.value = '-1';" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>Employee<br>
+      <% } %>
+      <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td>
+              <input type="radio" name="contactcategory" value="2" <%= ContactDetails.getOrgId() > -1 ? " checked":""%>>
+            </td>
+            <td>
+              Associated with Account: &nbsp;
+            </td>
+            <td>
+              <div id="changeaccount"><%= ContactDetails.getOrgId() > -1 ? ContactDetails.getCompany() : "None Selected"%></div>
+            </td>
+            <td>
+              <input type="hidden" name="orgId" id="orgId" value="<%= ContactDetails.getOrgId() %>">
+              &nbsp;[<a href="javascript:popAccountsListSingle('orgId','changeaccount');">Select</a>]&nbsp;
+            </td>
+          </tr>
+       </table>
     </td>
   </tr>
   <tr>
@@ -129,7 +153,7 @@ Add Contact<br>
       Middle Name
     </td>
     <td>
-      <input type=text size=35 name="nameMiddle" value="<%= toHtmlValue(ContactDetails.getNameMiddle()) %>">
+      <input type="text" size="35" name="nameMiddle" value="<%= toHtmlValue(ContactDetails.getNameMiddle()) %>">
     </td>
   </tr>
   <tr>
@@ -150,6 +174,15 @@ Add Contact<br>
       <font color="red">-</font> <%= showAttribute(request, "lastcompanyError") %>
     </td>
   </tr>
+  <%-- Check if a user is being added --%>
+  <% if("adduser".equals(request.getParameter("source"))){ %>
+  <tr>
+      <td class="formLabel" nowrap>Department</td>
+      <td>
+        <%= DepartmentList.getHtmlSelect("department", ContactDetails.getDepartment()) %>
+      </td>
+   </tr>
+    <% } %>
   <tr>
     <td class="formLabel" nowrap>
       Title
@@ -241,7 +274,7 @@ Add Contact<br>
       <input type="text" size="5" name="phone<%=icount%>ext" maxlength="10">
     </td>
   </tr>
-<%}%>  
+<%}%>
 </table>
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -422,5 +455,8 @@ Add Contact<br>
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="saveAndNew" value="">
+<dhv:evaluate exp="<%= popUp %>">
+<input type="hidden" name="source" value="<%= request.getParameter("source") != null ? request.getParameter("source") : "" %>">
+</dhv:evaluate>
 </form>
 </body>

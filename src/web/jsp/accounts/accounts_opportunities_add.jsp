@@ -107,7 +107,7 @@ Add Opportunity<br>
       Assign To
     </td>
     <td>
-      <%= UserList.getHtmlSelect("component_owner") %>
+      <%= UserList.getHtmlSelect("component_owner", OppDetails.getComponent().getOwner()) %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -119,7 +119,7 @@ Add Opportunity<br>
         <tr>
           <td>
             <select multiple name="selectedList" id="selectedList" size="5">
-              <option value="-1">None Selected</option>
+              <dhv:lookupHtml listName="TypeList" lookupName="TypeSelect"/>
             </select>
             <input type="hidden" name="previousSelection" value="">
           </td>
@@ -148,8 +148,8 @@ Add Opportunity<br>
       Source
     </td>
     <td>
-      <% BusTypeList.setSelectName("component_type");%>
-      <%= BusTypeList.getHtml() %>
+      <% BusTypeList.setDefaultKey(OppDetails.getComponent() != null ? OppDetails.getComponent().getType() : "");%>
+      <%= BusTypeList.getHtml("component_type") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -202,8 +202,7 @@ Add Opportunity<br>
     </td>
     <td>
       <input type="text" size="5" name="component_terms" value="<%= toHtmlValue(OppDetails.getComponent().getTermsString()) %>">
-      <% UnitTypeList.setSelectName("component_units");%>
-      <%= UnitTypeList.getHtml() %>
+      <%= UnitTypeList.getHtml("component_units", (OppDetails.getComponent().getUnits() != null ? OppDetails.getComponent().getUnits() : "")) %>
       <font color="red">*</font> <%= showAttribute(request, "termsError") %>
     </td>
   </tr>
@@ -212,8 +211,8 @@ Add Opportunity<br>
       Current Stage
     </td>
     <td>
-      <%= StageList.getHtmlSelect("component_stage",OppDetails.getComponent().getStage()) %>
-      <input type="checkbox" name="closeNow">Close this component
+      <%= StageList.getHtmlSelect("component_stage", OppDetails.getComponent().getStage()) %>
+      <input type="checkbox" name="component_closeNow" <%= OppDetails.getComponent().getCloseIt() ? " checked" : ""%>>Close this component
     </td>
   </tr>
   <tr class="containerBody">

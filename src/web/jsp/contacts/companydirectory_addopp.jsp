@@ -106,7 +106,7 @@ Add Opportunity<br>
       Assign To
     </td>
     <td valign="center">
-      <%= UserList.getHtmlSelect("component_owner") %>
+      <%= UserList.getHtmlSelect("component_owner", oppDetails.getComponent().getOwner()) %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -118,7 +118,7 @@ Add Opportunity<br>
         <tr>
           <td>
             <select multiple name="selectedList" id="selectedList" size="5">
-              <option value="-1">None Selected</option>
+              <dhv:lookupHtml listName="TypeList" lookupName="TypeSelect"/>
             </select>
             <input type="hidden" name="previousSelection" value="">
           </td>
@@ -147,8 +147,8 @@ Add Opportunity<br>
       Source
     </td>
     <td>
-      <% busTypeList.setSelectName("component_type");%>
-      <%= busTypeList.getHtml() %>
+      <% busTypeList.setDefaultKey(oppDetails.getComponent() != null ? oppDetails.getComponent().getType() : "");%>
+      <%= busTypeList.getHtml("component_type") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -201,8 +201,7 @@ Add Opportunity<br>
     </td>
     <td>
       <input type="text" size="5" name="component_terms" value="<%= toHtmlValue(oppDetails.getComponent().getTermsString()) %>">
-      <% unitTypeList.setSelectName("component_units");%>
-      <%= unitTypeList.getHtml() %>
+      <%= unitTypeList.getHtml("component_units", (oppDetails.getComponent().getUnits() != null ? oppDetails.getComponent().getUnits() : "")) %>
       <font color="red">*</font> <%= showAttribute(request, "termsError") %>
     </td>
   </tr>
@@ -212,7 +211,7 @@ Add Opportunity<br>
     </td>
     <td>
       <%= stageList.getHtmlSelect("component_stage", oppDetails.getComponent().getStage()) %>
-      <input type="checkbox" name="closeNow">Close this component
+      <input type="checkbox" name="component_closeNow" <%= oppDetails.getComponent().getCloseIt() ? " checked" : ""%>>Close this component
     </td>
   </tr>
   <tr class="containerBody">

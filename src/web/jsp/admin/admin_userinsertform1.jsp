@@ -32,9 +32,9 @@ Add User<br>
             <div id="changecontact">None Selected</div>
           </td>
           <td valign="top" width="100%" nowrap>
-            [<a href="javascript:popContactsListSingle('contactLink','changecontact','nonUsersOnly=true&reset=true&filters=mycontacts|accountcontacts|employees');">Select Contact</a>]
+            [<a href="javascript:popContactsListSingle('contactLink','changecontact','nonUsersOnly=true&reset=true&filters=accountcontacts|employees');">Select Contact</a>]
             <input type="hidden" name="contactId" id="contactLink">
-            [<a href="javascript:popURL('ExternalContacts.do?command=InsertContactForm&popup=true', 'New_Contact','500','600','yes','yes');">Create new contact</a>]
+            [<a href="javascript:popURL('ExternalContacts.do?command=InsertContactForm&popup=true&source=adduser', 'New_Contact','500','600','yes','yes');">Create new contact</a>]
           <%if (request.getAttribute("contactIdError") != null) {%>
             <br><%= showAttribute(request, "contactIdError") %>
           <%}%>

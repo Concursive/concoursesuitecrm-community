@@ -118,20 +118,24 @@ Modify Component<br>
               <tr>
                 <td>
                   <select multiple name="selectedList" id="selectedList" size="5">
-                  <dhv:evaluate exp="<%= OppComponentDetails.getTypes().isEmpty() %>">
-                    <option value="-1">None Selected</option>
-                  </dhv:evaluate>
-                  <dhv:evaluate exp="<%= !(OppComponentDetails.getTypes().isEmpty()) %>">
-                  <%
-                    Iterator i = OppComponentDetails.getTypes().iterator();
-                    while (i.hasNext()) {
-                      LookupElement thisElt = (LookupElement)i.next();
-                  %>
-                    <option value="<%=thisElt.getCode()%>"><%=thisElt.getDescription()%></option>
-                  <%
-                    }
-                  %>
-                  </dhv:evaluate>      
+                  <%if(request.getAttribute("TypeList") != null){ %>
+                    <dhv:lookupHtml listName="TypeList" lookupName="TypeSelect"/>
+                  <% }else{ %>
+                    <dhv:evaluate exp="<%= OppComponentDetails.getTypes().isEmpty() %>">
+                      <option value="-1">None Selected</option>
+                    </dhv:evaluate>
+                    <dhv:evaluate exp="<%= !(OppComponentDetails.getTypes().isEmpty()) %>">
+                    <%
+                      Iterator i = OppComponentDetails.getTypes().iterator();
+                      while (i.hasNext()) {
+                        LookupElement thisElt = (LookupElement)i.next();
+                    %>
+                      <option value="<%=thisElt.getCode()%>"><%=thisElt.getDescription()%></option>
+                    <%
+                      }
+                    %>
+                    </dhv:evaluate>
+                  <% } %>
                   </select>
                 </td>
                 <td valign="top">
@@ -160,6 +164,7 @@ Modify Component<br>
             Source
           </td>
           <td>
+            <%  BusTypeList.setDefaultKey(OppComponentDetails.getType()); %>
             <%= BusTypeList.getHtml() %>
           </td>
         </tr>
@@ -213,7 +218,7 @@ Modify Component<br>
           </td>
           <td valign=center>
             <input type="text" size="5" name="terms" value="<%= OppComponentDetails.getTermsString() %>">
-            <%= UnitTypeList.getHtml() %>
+            <%= UnitTypeList.getHtml("units", (OppComponentDetails.getUnits() != null ? OppComponentDetails.getUnits() : "")) %>
             <font color="red">*</font> <%= showAttribute(request, "termsError") %>
           </td>
         </tr>
@@ -223,8 +228,7 @@ Modify Component<br>
           </td>
           <td>
             <%= StageList.getHtmlSelect("stage", OppComponentDetails.getStage()) %>
-            <input type="checkbox" name="closeNow"<dhv:evaluate if="<%= OppComponentDetails.getClosed() != null %>"> checked</dhv:evaluate>>
-            Closed 
+            <input type="checkbox" name="closeNow" <dhv:evaluate if="<%= (OppComponentDetails.getClosed() != null || OppComponentDetails.getCloseIt()) %>"> checked</dhv:evaluate>> Closed
           </td>
         </tr>
         <tr class="containerBody">
