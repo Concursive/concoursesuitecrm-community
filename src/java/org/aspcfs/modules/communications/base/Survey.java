@@ -53,7 +53,16 @@ public class Survey extends SurveyBase {
    *@param  surveyId          Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
+   
+  public Survey(Connection db, String surveyId) throws SQLException {
+          queryRecord(db, Integer.parseInt(surveyId));
+  }
+  
   public Survey(Connection db, int surveyId) throws SQLException {
+          queryRecord(db, surveyId);
+  }
+          
+  public void queryRecord(Connection db, int surveyId) throws SQLException {
     Statement st = null;
     ResultSet rs = null;
     String sql = 
@@ -506,6 +515,39 @@ public class Survey extends SurveyBase {
 
     db.setAutoCommit(true);
     return resultCount;
+  }
+  
+    
+  public HashMap processDependencies(Connection db) throws SQLException {
+    ResultSet rs = null;
+    String sql = "";
+    HashMap dependencyList = new HashMap();
+    try {
+      db.setAutoCommit(false);
+      sql = "SELECT COUNT(*) AS survey_count " +
+        "FROM campaign_survey_link " +
+        "WHERE survey_id = ? ";
+
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        if (rs.getInt("survey_count") != 0) {
+                dependencyList.put("Campaigns", new Integer(rs.getInt("survey_count")));
+        }
+      }
+
+      pst.close();
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return dependencyList;
   }
 
 

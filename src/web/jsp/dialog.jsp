@@ -33,15 +33,21 @@ else{%>
   <title><%=Dialog.getTitle()%></title>
   <body>
     <br>
-    <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-      <tr valign="top">
+    <table cellpadding="4" cellspacing="0" border="0" width="95%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <tr valign="center">
       <td>
-       <center><strong>Are you sure ?</strong></center><br><br>
+       <strong>Are you sure you wish to delete this object from CFS?</strong>
       </td>
       </tr>
+      
+      <tr><td>&nbsp;</td></tr>
+      <tr><td>&nbsp;</td></tr>
+      <tr><td>&nbsp;</td></tr>
+      <tr><td>&nbsp;</td></tr>
+      
       <tr align="center">
       <td>
-        <input type="button" value="Yes" onClick="<%=toHtml(Dialog.getDeleteUrl())%>">&nbsp;&nbsp;
+        <input type="button" value="Yes" onClick="<%=toHtml(Dialog.getDeleteUrl())%>">
         <input type="button" value="Cancel" onClick="javascript:window.close();">
         </td>
       </tr>

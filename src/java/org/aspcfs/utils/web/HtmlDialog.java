@@ -254,7 +254,6 @@ public class HtmlDialog {
       Object id = i.next();
       Object st = buttons.get(id);
       buttonString.append("<input type=button name=\"" + id.toString() + "\" value=\"" + id.toString() + "\" onClick=\"" + st.toString() + "\">");
-      buttonString.append("&nbsp;&nbsp;");
     }
     return buttonString.toString();
   }

@@ -496,7 +496,8 @@
     <forward name="PreviewOK" resource="/campaign_messages_preview.jsp"/>
     <forward name="PreviewSurveyOK" resource="/display_survey.jsp" layout="styleNoSession"/>
     <forward name="PreviewSurveyMISSING" resource="/display_survey_missing.jsp" layout="styleNoSession"/>
-    <forward name="DeleteOK" resource="/CampaignManagerMessage.do?command=View"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
   <action name="CampaignManagerSurvey" class="com.darkhorseventures.cfsmodule.CampaignManagerSurvey">
     <bean name="Survey" class="com.darkhorseventures.cfsbase.Survey" scope="request" />
@@ -510,7 +511,8 @@
     <forward name="PreviewOK" resource="/dynamic_form.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/dynamic_form.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/CampaignManagerSurvey.do?command=ViewReturn"/>
-    <forward name="DeleteOK" resource="/CampaignManagerSurvey.do?command=View"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
   <action name="CampaignManagerAttachment" class="com.darkhorseventures.cfsmodule.CampaignManagerAttachment">
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>

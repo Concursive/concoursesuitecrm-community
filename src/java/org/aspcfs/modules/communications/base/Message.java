@@ -644,6 +644,39 @@ public java.sql.Timestamp getModified() {
     }
     return true;
   }
+  
+  public HashMap processDependencies(Connection db) throws SQLException {
+    ResultSet rs = null;
+    String sql = "";
+    HashMap dependencyList = new HashMap();
+    try {
+      db.setAutoCommit(false);
+      sql = "SELECT COUNT(*) AS message_count " +
+        "FROM campaign " +
+        "WHERE message_id = ? " +
+        "AND status_id <> " + Campaign.FINISHED + " ";
+
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        if (rs.getInt("message_count") != 0) {
+                dependencyList.put("Campaigns", new Integer(rs.getInt("message_count")));
+        }
+      }
+
+      pst.close();
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return dependencyList;
+  }
 
 
   /**

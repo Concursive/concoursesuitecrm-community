@@ -3,7 +3,7 @@
 <jsp:useBean id="CampaignSurveyListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <jsp:useBean id="SurveyList" class="com.darkhorseventures.cfsbase.SurveyList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManagerAttachment.do">Create Attachments</a> >
 Surveys
@@ -62,7 +62,7 @@ Surveys
       <tr>
         <dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete">
         <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="campaign-campaigns-surveys-edit"><a href="CampaignManagerSurvey.do?command=Modify&id=<%=thisSurvey.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-surveys-delete"><a href="javascript:confirmDelete('/CampaignManagerSurvey.do?command=Delete&id=<%=thisSurvey.getId()%>');">Del</a></dhv:permission>
+          <dhv:permission name="campaign-campaigns-surveys-edit"><a href="CampaignManagerSurvey.do?command=Modify&id=<%=thisSurvey.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-surveys-delete"><a href="javascript:popURLReturn('/CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=thisSurvey.getId()%>','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">Del</a></dhv:permission>
         </td>
 	</dhv:permission>
         <td class="row<%= rowid %>" nowrap>

@@ -207,6 +207,7 @@ public final class CampaignManagerSurvey extends CFSModule {
 
     if (errorMessage == null) {
       if (recordDeleted) {
+        context.getRequest().setAttribute("refreshUrl","CampaignManagerSurvey.do?command=View");
         return ("DeleteOK");
       } else {
         processErrors(context, thisSurvey.getErrors());
@@ -384,33 +385,49 @@ public final class CampaignManagerSurvey extends CFSModule {
     }
   }
 
+  public String executeCommandConfirmDelete(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    Survey thisSurvey = null;
+    
+    HtmlDialog htmlDialog = new HtmlDialog();
+    String id = null;
 
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-/*   public String executeCommandAdd2(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-surveys-add"))) {
+    if (!(hasPermission(context, "campaign-campaigns-surveys-delete"))) {
       return ("PermissionError");
     }
 
-    Survey thisSurvey = (Survey) context.getFormBean();
-
-    String submenu = context.getRequest().getParameter("submenu");
-    if (submenu == null) {
-      submenu = (String) context.getRequest().getAttribute("submenu");
+    if (context.getRequest().getParameter("id") != null) {
+      id = context.getRequest().getParameter("id");
     }
-    if (submenu == null) {
-      submenu = "ManageSurveys";
+    
+    try {
+      db = this.getConnection(context);
+      thisSurvey = new Survey(db, id);
+        htmlDialog.setTitle("CFS: Campaign Manager");
+        
+        htmlDialog.setRelationships(thisSurvey.processDependencies(db));
+        
+        if (htmlDialog.getRelationships().size() == 0) {
+                htmlDialog.setShowAndConfirm(false);
+                htmlDialog.setDeleteUrl("javascript:window.location.href='/CampaignManagerSurvey.do?command=Delete&id=" + id + "'");
+        } else {
+                htmlDialog.setHeader("This Survey cannot be deleted because at least one Campaign is using it.");
+                htmlDialog.addButton("OK", "javascript:parent.window.close()");
+        }
+        
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("submenu", submenu);
-    context.getRequest().setAttribute("Survey", thisSurvey);
-    addModuleBean(context, submenu, "Add Survey");
-    return ("Add2OK");
+    if (errorMessage == null) {
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
- */
 }
 

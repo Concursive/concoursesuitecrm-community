@@ -327,6 +327,7 @@ public final class CampaignManagerMessage extends CFSModule {
 
     if (errorMessage == null) {
       if (recordDeleted) {
+        context.getRequest().setAttribute("refreshUrl","CampaignManagerMessage.do?command=View");
         return ("DeleteOK");
       } else {
         processErrors(context, thisMessage.getErrors());
@@ -376,6 +377,50 @@ public final class CampaignManagerMessage extends CFSModule {
     }
   }
 
+  public String executeCommandConfirmDelete(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    Message thisMessage = null;
+    
+    HtmlDialog htmlDialog = new HtmlDialog();
+    String id = null;
+
+    if (!(hasPermission(context, "campaign-campaigns-messages-delete"))) {
+      return ("PermissionError");
+    }
+
+    if (context.getRequest().getParameter("id") != null) {
+      id = context.getRequest().getParameter("id");
+    }
+    
+    try {
+      db = this.getConnection(context);
+      thisMessage = new Message(db, id);
+      htmlDialog.setTitle("CFS: Campaign Manager");
+        
+      htmlDialog.setRelationships(thisMessage.processDependencies(db));
+        
+      if (htmlDialog.getRelationships().size() == 0) {
+              htmlDialog.setShowAndConfirm(false);
+              htmlDialog.setDeleteUrl("javascript:window.location.href='/CampaignManagerMessage.do?command=Delete&id=" + id + "'");
+       } else {
+              htmlDialog.setHeader("This Message cannot be deleted because at least one Campaign is using it.");
+              htmlDialog.addButton("OK", "javascript:parent.window.close()");
+       }
+        
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
 
   /**
    *  Description of the Method
