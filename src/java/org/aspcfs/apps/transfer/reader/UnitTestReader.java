@@ -55,16 +55,40 @@ public class UnitTestReader implements DataReader {
    *@return                  Description of the Return Value
    */
   public boolean execute(DataWriter writer) {
-    DataRecord thisRecord = new DataRecord();
-    thisRecord.setName("ticket");
-    thisRecord.setAction("insert");
-    thisRecord.addField("orgId", "1");
-    thisRecord.addField("contactId", "2");
-    thisRecord.addField("problem", "Sample problem text");
-    thisRecord.addField("enteredBy", "2");
-    thisRecord.addField("modifiedBy", "2");
-    writer.save(thisRecord);
-    logger.info(writer.getLastResponse());
+    if (1==1) {
+      DataRecord thisRecord = new DataRecord();
+      thisRecord.setName("accountList");
+      thisRecord.setAction("select");
+      thisRecord.addField("id", "");
+      thisRecord.addField("name", "");
+      writer.load(thisRecord);
+      logger.info(writer.getLastResponse());
+    }
+    
+    if (1==1) {
+      DataRecord thisRecord = new DataRecord();
+      thisRecord.setName("contactList");
+      thisRecord.setAction("select");
+      thisRecord.addField("id", "");
+      thisRecord.addField("nameFirst", "");
+      thisRecord.addField("nameLast", "");
+      thisRecord.addField("nameFull", "");
+      thisRecord.addField("nameFirstLast", "");
+      thisRecord.addField("nameLastFirst", "");
+      writer.load(thisRecord);
+      logger.info(writer.getLastResponse());
+    }
+    
+    if (1==1) {
+      DataRecord thisRecord = new DataRecord();
+      thisRecord.setName("userList");
+      thisRecord.setAction("select");
+      thisRecord.addField("id", "");
+      thisRecord.addField("username", "");
+      writer.load(thisRecord);
+      logger.info(writer.getLastResponse());
+    }
+    
     return true;
   }
 }
