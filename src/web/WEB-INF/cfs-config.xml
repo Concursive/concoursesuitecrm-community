@@ -111,7 +111,7 @@
     <forward name="TaskListOK" resource="/mytasks_list.jsp" layout="nav"/>
     <forward name="NewTaskOK" resource="/mytasks_new.jsp" layout="nav"/>
     <forward name="InsertTaskOK" resource="/MyTasks.do?command=ListTasks"/>
-     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     </action>
   
