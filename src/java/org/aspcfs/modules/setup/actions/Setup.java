@@ -30,6 +30,7 @@ import org.aspcfs.modules.accounts.base.Organization;
 import java.net.InetAddress;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.jcrontab.datasource.Event;
+import java.util.TimeZone;
 
 /**
  *  Actions for setting up Dark Horse CRM the first time
@@ -619,6 +620,9 @@ public class Setup extends CFSModule {
       if (bean.getUrl() == null) {
         bean.setUrl(HTTPUtils.getServerUrl(context.getRequest()));
       }
+      if (bean.getTimeZone() == null) {
+        bean.setTimeZone(TimeZone.getDefault().getID());
+      }
     }
     return "ConfigureServerCheckOK";
   }
@@ -659,6 +663,7 @@ public class Setup extends CFSModule {
       prefs.add("MAILSERVER", bean.getEmail());
       prefs.add("FAXSERVER", bean.getFax());
       prefs.add("EMAILADDRESS", bean.getEmailAddress());
+      prefs.add("SYSTEM.TIMEZONE", bean.getTimeZone());
       prefs.save();
       return "ConfigureServerOK";
     } catch (Exception e) {

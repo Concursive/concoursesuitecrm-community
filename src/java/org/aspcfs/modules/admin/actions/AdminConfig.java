@@ -104,6 +104,9 @@ public final class AdminConfig extends CFSModule {
     if ("WEBSERVER.URL".equals(module)) {
       return "ModifyUrlOK";
     }
+    if ("SYSTEM.TIMEZONE".equals(module)) {
+      return "ModifyTimeZoneOK";
+    }
     return "ModifyError";
   }
 
@@ -143,6 +146,12 @@ public final class AdminConfig extends CFSModule {
     if (url != null) {
       prefs.add("WEBSERVER.URL", url);
     }
+    //Process the request
+    String timeZone = context.getRequest().getParameter("timeZone");
+    if (timeZone != null) {
+      prefs.add("SYSTEM.TIMEZONE", timeZone);
+    }
+    //Save the prefs...
     prefs.save();
     prefs.populateContext(context.getServletContext());
     return "UpdateOK";

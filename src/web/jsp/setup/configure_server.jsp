@@ -1,4 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="org.aspcfs.utils.web.HtmlSelectTimeZone" %>
+<%@ page import="org.aspcfs.utils.web.HtmlSelect" %>
 <jsp:useBean id="server" class="org.aspcfs.modules.setup.beans.ServerBean" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
@@ -15,8 +17,32 @@
   </tr>
   <tr>
     <td>
-      Dark Horse CRM interacts with various servers that must be defined.<br>
+      Dark Horse CRM interacts with various servers and services that must be defined.<br>
       &nbsp;<br>
+    </td>
+  </tr>
+  <%-- Time Zone --%>
+  <tr class="sectionTitle">
+    <th>Default Time Zone</th>
+  </tr>
+  <tr>
+    <td>
+      Every user in Dark Horse CRM can configure the time zone in which they are currently in.
+      This allows users to see and enter dates and times according to their configured time zone.<br>
+      What should the default time zone be set to for new users?
+      <br>
+      <table border="0" class="empty">
+        <tr>
+          <td class="formLabel">
+            Time Zone:
+          </td>
+          <td>
+            <% HtmlSelect select = HtmlSelectTimeZone.getSelect("timeZone", server.getTimeZoneDefault());   
+            select.addItem(-1, "None Selected", 0); %><%= select.getHtml() %><font color="red">*</font>
+          </td>
+        </tr>
+      </table>
+      <br>
     </td>
   </tr>
   <%-- Email Server --%>

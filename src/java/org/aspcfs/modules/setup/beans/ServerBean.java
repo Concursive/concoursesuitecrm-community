@@ -4,6 +4,7 @@ package org.aspcfs.modules.setup.beans;
 
 import com.darkhorseventures.framework.beans.*;
 import java.util.StringTokenizer;
+import java.util.TimeZone;
 
 /**
  *  Bean to encapsulate the Configure Server HTML form
@@ -20,6 +21,7 @@ public class ServerBean extends GenericBean {
   private String email = null;
   private String emailAddress = null;
   private String fax = null;
+  private String timeZone = null;
 
 
   /**
@@ -83,6 +85,16 @@ public class ServerBean extends GenericBean {
 
 
   /**
+   *  Sets the timeZone attribute of the ServerBean object
+   *
+   *@param  tmp  The new timeZone value
+   */
+  public void setTimeZone(String tmp) {
+    this.timeZone = tmp;
+  }
+
+
+  /**
    *  Gets the configured attribute of the ServerBean object
    *
    *@return    The configured value
@@ -133,6 +145,30 @@ public class ServerBean extends GenericBean {
 
 
   /**
+   *  Gets the timeZone attribute of the ServerBean object
+   *
+   *@return    The timeZone value
+   */
+  public String getTimeZone() {
+    return timeZone;
+  }
+
+
+  /**
+   *  Gets the timeZoneDefault attribute of the ServerBean object
+   *
+   *@return    The timeZoneDefault value
+   */
+  public String getTimeZoneDefault() {
+    if (timeZone != null) {
+      return timeZone;
+    } else {
+      return TimeZone.getDefault().getID();
+    }
+  }
+
+
+  /**
    *  Gets the valid attribute of the ServerBean object
    *
    *@return    The valid value
@@ -147,6 +183,9 @@ public class ServerBean extends GenericBean {
     }
     if (emailAddress == null || "".equals(emailAddress.trim())) {
       errors.put("emailAddressError", "Email address is a required field");
+    }
+    if (timeZone == null || "".equals(timeZone.trim()) || "-1".equals(timeZone)) {
+      errors.put("timeZoneError", "Time Zone is a required field");
     }
     return (!hasErrors());
   }
@@ -171,6 +210,8 @@ public class ServerBean extends GenericBean {
         fax = value;
       } else if ("url".equals(param)) {
         url = value;
+      } else if ("timezone".equals(param)) {
+        timeZone = value;
       }
     }
   }
@@ -185,7 +226,8 @@ public class ServerBean extends GenericBean {
     return "email=" + email + "|" +
         "addr=" + emailAddress + "|" +
         "fax=" + fax + "|" +
-        "url=" + url;
+        "url=" + url + "|" +
+        "timezone=" + timeZone;
   }
 }
 
