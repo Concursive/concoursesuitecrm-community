@@ -12,6 +12,8 @@ import java.sql.*;
 import java.util.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.controller.*;
+import org.aspcfs.modules.login.base.AuthenticationItem;
+import org.aspcfs.modules.base.Constants;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
@@ -23,7 +25,8 @@ import java.io.*;
  *
  *@author     matt rajkowski
  *@created    October 9, 2002
- *@version    $Id$
+ *@version    $Id: ProcessDocument.java,v 1.4 2003/01/13 22:01:24 mrajkowski Exp
+ *      $
  */
 public final class ProcessDocument extends CFSModule {
 

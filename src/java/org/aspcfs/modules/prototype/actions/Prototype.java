@@ -1,17 +1,31 @@
-package com.darkhorseventures.cfs.prototype.module;
+package org.aspcfs.modules.prototype.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.text.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.cfsmodule.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.pipeline.base.OpportunityList;
+import org.aspcfs.modules.contacts.base.Contact;
 
+/**
+ *  Description of the Class
+ *
+ *@author     matt rajkowski
+ *@created    January 15, 2003
+ *@version    $Id$
+ */
 public final class Prototype extends CFSModule {
-  
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDefault(ActionContext context) {
     String module = context.getRequest().getParameter("module");
     String includePage = context.getRequest().getParameter("include");
@@ -36,21 +50,39 @@ public final class Prototype extends CFSModule {
       return ("IncludeStyleContainerOK");
     }
   }
-  
+
+
+  /**
+   *  Adds a feature to the Contact attribute of the Prototype object
+   *
+   *@param  context           The feature to be added to the Contact attribute
+   *@param  db                The feature to be added to the Contact attribute
+   *@exception  SQLException  Description of the Exception
+   */
   private void addContact(ActionContext context, Connection db) throws SQLException {
-    String contactId = (String)context.getRequest().getParameter("contactId");
+    String contactId = (String) context.getRequest().getParameter("contactId");
     if (contactId == null) {
-      contactId = (String)context.getRequest().getAttribute("contactId");
+      contactId = (String) context.getRequest().getAttribute("contactId");
     }
     if (contactId != null) {
       Contact thisContact = new Contact(db, Integer.parseInt(contactId));
       context.getRequest().setAttribute("ContactDetails", thisContact);
     }
   }
-  
+
+
+  /**
+   *  Adds a feature to the HtmlSelectElements attribute of the Prototype object
+   *
+   *@param  context           The feature to be added to the HtmlSelectElements
+   *      attribute
+   *@param  db                The feature to be added to the HtmlSelectElements
+   *      attribute
+   *@exception  SQLException  Description of the Exception
+   */
   private void addHtmlSelectElements(ActionContext context, Connection db) throws SQLException {
     HtmlSelect relationshipTypeSelect = new HtmlSelect();
-    
+
     String includePage = context.getRequest().getParameter("include");
     if (includePage != null && includePage.indexOf("_add") > 0) {
       relationshipTypeSelect.addItem("--Select--");
@@ -86,7 +118,7 @@ public final class Prototype extends CFSModule {
     objectSelect.addItem("Opportunities");
     objectSelect.addItem("Projects");
     context.getRequest().setAttribute("objectSelect", objectSelect);
-    
+
     HtmlSelect objectSubSelect = new HtmlSelect();
     objectSubSelect.addItem("--None--");
     objectSubSelect.addItem("My Open Opportunities");
@@ -94,7 +126,7 @@ public final class Prototype extends CFSModule {
     objectSubSelect.addItem("My Closed Opportunities");
     objectSubSelect.addItem("All Closed Opportunities");
     context.getRequest().setAttribute("objectSubSelect", objectSubSelect);
-    
+
     HtmlSelect howDirectSelect = new HtmlSelect();
     howDirectSelect.addItem("--None--");
     howDirectSelect.addItem("1 Hop");
@@ -114,13 +146,23 @@ public final class Prototype extends CFSModule {
     howDirectSelect.addItem("> .05 Index");
     context.getRequest().setAttribute("howDirectSelect", howDirectSelect);
   }
-  
+
+
+  /**
+   *  Adds a feature to the OpportunityList attribute of the Prototype object
+   *
+   *@param  context           The feature to be added to the OpportunityList
+   *      attribute
+   *@param  db                The feature to be added to the OpportunityList
+   *      attribute
+   *@exception  SQLException  Description of the Exception
+   */
   private void addOpportunityList(ActionContext context, Connection db) throws SQLException {
     OpportunityList thisList = new OpportunityList();
     thisList.setOwner(this.getUserId(context));
-    String contactId = (String)context.getRequest().getParameter("contactId");
+    String contactId = (String) context.getRequest().getParameter("contactId");
     if (contactId == null) {
-      contactId = (String)context.getRequest().getAttribute("contactId");
+      contactId = (String) context.getRequest().getAttribute("contactId");
     }
     if (contactId != null) {
       thisList.setContactId(contactId);

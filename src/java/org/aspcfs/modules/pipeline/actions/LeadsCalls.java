@@ -1,15 +1,17 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.pipeline.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.util.Vector;
 import java.io.*;
 import java.sql.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.pipeline.base.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.contacts.base.*;
 
 /**
  *  Description of the Class
@@ -166,11 +168,11 @@ public final class LeadsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, thisCall.getEnteredBy())) {
         return ("PermissionError");
-      }      
-      
+      }
+
       context.getRequest().setAttribute("CallDetails", thisCall);
       addModuleBean(context, "View Opportunities", "Opportunity Calls");
       return ("DetailsOK");
@@ -269,11 +271,11 @@ public final class LeadsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, thisCall.getEnteredBy())) {
         return ("PermissionError");
-      }      
-      
+      }
+
       addModuleBean(context, "View Opportunities", "Opportunity Calls");
       context.getRequest().setAttribute("CallDetails", thisCall);
       if (context.getRequest().getParameter("popup") != null) {

@@ -1,13 +1,24 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.mycfs.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
-import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.utils.*;
+import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.mycfs.base.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.accounts.base.OrganizationList;
+import org.aspcfs.modules.mycfs.beans.CalendarBean;
+import org.aspcfs.modules.tasks.base.Task;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.accounts.base.NewsArticleList;
+
 import com.zeroio.iteam.base.*;
-import java.util.ArrayList;
 import java.sql.*;
 import java.lang.reflect.*;
 import java.util.*;
@@ -712,7 +723,7 @@ public final class MyCFS extends CFSModule {
 
           if ((!email.startsWith("P:")) && (copyrecipients || !thisContact.hasAccount())) {
             SMTPMessage mail = new SMTPMessage();
-            mail.setHost((String)System.getProperty("MailServer"));
+            mail.setHost((String) System.getProperty("MailServer"));
             mail.setFrom("cfs-messenger@darkhorseventures.com");
             if (replyAddr != null && !(replyAddr.equals(""))) {
               mail.addReplyTo(replyAddr);
@@ -828,32 +839,32 @@ public final class MyCFS extends CFSModule {
         }
         newNote.setSubject("Fwd: " + StringUtils.toString(newNote.getSubject()));
         newNote.setBody(
-          "\n\n----Original Message----\n" +
-          "From: " + StringUtils.toString(newNote.getSentName()) + "\n" +
-          "Sent: " + newNote.getEnteredDateTimeString() + "\n" +
-          "To: " + recipientList.toString() + "\n" +
-          "Subject: " + StringUtils.toString(newNote.getSubject()) + 
-          "\n\n" + 
-          StringUtils.toString(newNote.getBody()) + "\n\n");
+            "\n\n----Original Message----\n" +
+            "From: " + StringUtils.toString(newNote.getSentName()) + "\n" +
+            "Sent: " + newNote.getEnteredDateTimeString() + "\n" +
+            "To: " + recipientList.toString() + "\n" +
+            "Subject: " + StringUtils.toString(newNote.getSubject()) +
+            "\n\n" +
+            StringUtils.toString(newNote.getBody()) + "\n\n");
       } else if (noteType == Constants.CONTACTS_CALLS) {
         Call thisCall = new Call(db, msgId);
         newNote.setBody(
-          "Contact Name: " + StringUtils.toString(thisCall.getContactName()) + "\n" +
-          "Type: " + StringUtils.toString(thisCall.getCallType()) + "\n" +
-          "Length: " + StringUtils.toString(thisCall.getLengthText()) + "\n" +
-          "Subject: " + StringUtils.toString(thisCall.getSubject()) + "\n" +
-          "Notes: " + StringUtils.toString(thisCall.getNotes()) + "\n" +
-          "Entered: " + StringUtils.toString(thisCall.getEnteredName()) + " - " + thisCall.getEnteredString() + "\n" +
-          "Modified: " + StringUtils.toString(thisCall.getModifiedName()) + " - " + thisCall.getModifiedString());
+            "Contact Name: " + StringUtils.toString(thisCall.getContactName()) + "\n" +
+            "Type: " + StringUtils.toString(thisCall.getCallType()) + "\n" +
+            "Length: " + StringUtils.toString(thisCall.getLengthText()) + "\n" +
+            "Subject: " + StringUtils.toString(thisCall.getSubject()) + "\n" +
+            "Notes: " + StringUtils.toString(thisCall.getNotes()) + "\n" +
+            "Entered: " + StringUtils.toString(thisCall.getEnteredName()) + " - " + thisCall.getEnteredString() + "\n" +
+            "Modified: " + StringUtils.toString(thisCall.getModifiedName()) + " - " + thisCall.getModifiedString());
       } else if (noteType == Constants.TASKS) {
         Task thisTask = new Task(db, Integer.parseInt(msgId));
         String userName = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getNameLastFirst();
         newNote.setBody(
-          "------Task Details------\n\n" +
-          "Task:" + StringUtils.toString(thisTask.getDescription()) + "\n" +
-          "From: " + StringUtils.toString(userName) + "\n" +
-          "Due Date: " + thisTask.getDueDateString() + "\n" +
-          ("".equals(thisTask.getNotes()) ? "" : "Relevant Notes: " + StringUtils.toString(thisTask.getNotes())) + "\n\n");
+            "------Task Details------\n\n" +
+            "Task:" + StringUtils.toString(thisTask.getDescription()) + "\n" +
+            "From: " + StringUtils.toString(userName) + "\n" +
+            "Due Date: " + thisTask.getDueDateString() + "\n" +
+            ("".equals(thisTask.getNotes()) ? "" : "Relevant Notes: " + StringUtils.toString(thisTask.getNotes())) + "\n\n");
       }
       context.getSession().removeAttribute("selectedContacts");
       context.getSession().removeAttribute("finalContacts");
@@ -933,13 +944,13 @@ public final class MyCFS extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      
+
       NewsArticleList newsArticleList = new NewsArticleList();
       newsArticleList.setIndustryCode(1);
-      
+
       newsArticleList.setEnteredBy(getUserId(context));
       newsArticleList.buildList(db);
-      
+
       LookupList indSelect = new LookupList(db, "lookup_industry");
       indSelect.setJsEvent("onChange=\"document.forms['miner_select'].submit();\"");
       indSelect.addItem(0, "Latest News");
@@ -947,7 +958,7 @@ public final class MyCFS extends CFSModule {
 
       if (newsArticleList.size() > 0) {
         indSelect.addItem(1, "My News");
-        
+
         if (industryCheck == null) {
           industryCheck = "1";
         }
@@ -955,7 +966,7 @@ public final class MyCFS extends CFSModule {
 
       newsList = new NewsArticleList();
       newsList.setPagedListInfo(newsListInfo);
-      
+
       if (industryCheck != null && !(industryCheck.equals("0"))) {
         newsList.setIndustryCode(industryCheck);
         if (industryCheck.equals("1")) {
@@ -964,9 +975,9 @@ public final class MyCFS extends CFSModule {
       } else if (industryCheck == null || industryCheck.equals("0")) {
         newsList.setMinerOnly(false);
       }
-      
+
       newsList.buildList(db);
-      
+
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -1018,7 +1029,7 @@ public final class MyCFS extends CFSModule {
       for (int i = 0; i < alertTypes.size(); i++) {
         String className = "com.darkhorseventures.cfsbase." + ((String) alertTypes.get(i)).trim() + "ListScheduledActions";
         Object thisInstance = Class.forName(className).newInstance();
-        if (selectedAlertType.toLowerCase().startsWith((((String)alertTypes.get(i)).toLowerCase())) || selectedAlertType.equalsIgnoreCase("all")) {
+        if (selectedAlertType.toLowerCase().startsWith((((String) alertTypes.get(i)).toLowerCase())) || selectedAlertType.equalsIgnoreCase("all")) {
           //set UserId
           Method method = Class.forName(className).getMethod("setUserId", new Class[]{int.class});
           method.invoke(thisInstance, new Object[]{new Integer(calendarInfo.getSelectedUserId())});
@@ -1115,7 +1126,7 @@ public final class MyCFS extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     if (errorMessage == null) {
       context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
       return "CalendarOK";

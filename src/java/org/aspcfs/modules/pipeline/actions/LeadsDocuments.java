@@ -2,31 +2,47 @@
  *  Copyright 2002 Dark Horse Ventures
  *  Uses iteam objects from matt@zeroio.com http://www.mavininteractive.com
  */
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.pipeline.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.pipeline.base.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.Constants;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import java.io.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author     Mathur
+ *@created    January 15, 2003
+ *@version    $Id$
+ */
 public final class LeadsDocuments extends CFSModule {
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandView(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-documents-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-documents-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
-    
+
     try {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
@@ -40,7 +56,7 @@ public final class LeadsDocuments extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     addModuleBean(context, "View Opportunities", "View Documents");
     if (errorMessage == null) {
       return ("ViewOK");
@@ -49,13 +65,20 @@ public final class LeadsDocuments extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandAdd(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-documents-add"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-documents-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
 
@@ -78,39 +101,45 @@ public final class LeadsDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUpload(ActionContext context) {
-	  
- 	if (!(hasPermission(context, "pipeline-opportunities-documents-add"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-documents-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
 
     boolean recordInserted = false;
     try {
       String filePath = this.getPath(context, "opportunities");
-      
+
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
       multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-      
+
       HashMap parts = multiPart.parseData(
-        context.getRequest().getInputStream(), "---------------------------", filePath);
-      
-      String id = (String)parts.get("id");
-      String subject = (String)parts.get("subject");
-      String folderId = (String)parts.get("folderId");
-      
+          context.getRequest().getInputStream(), "---------------------------", filePath);
+
+      String id = (String) parts.get("id");
+      String subject = (String) parts.get("subject");
+      String folderId = (String) parts.get("folderId");
+
       //Update the database with the resulting file
-      FileInfo newFileInfo = (FileInfo)parts.get("id" + id);
-      
+      FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
+
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db, id);
-      
+
       FileItem thisItem = new FileItem();
       thisItem.setLinkModuleId(Constants.PIPELINE);
       thisItem.setLinkItemId(opportunityId);
@@ -122,7 +151,7 @@ public final class LeadsDocuments extends CFSModule {
       thisItem.setFilename(newFileInfo.getRealFilename());
       thisItem.setVersion(1.0);
       thisItem.setSize(newFileInfo.getSize());
-      
+
       recordInserted = thisItem.insert(db);
       if (!recordInserted) {
         processErrors(context, thisItem.getErrors());
@@ -145,25 +174,31 @@ public final class LeadsDocuments extends CFSModule {
     }
   }
 
-  
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandAddVersion(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-documents-add"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-documents-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
-    String itemId = (String)context.getRequest().getParameter("fid");
-    if (itemId == null) { 
-      itemId = (String)context.getRequest().getAttribute("fid");
+    String itemId = (String) context.getRequest().getParameter("fid");
+    if (itemId == null) {
+      itemId = (String) context.getRequest().getAttribute("fid");
     }
 
     Connection db = null;
     try {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
-      
+
       FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.PIPELINE);
       context.getRequest().setAttribute("FileItem", thisFile);
     } catch (Exception e) {
@@ -180,42 +215,48 @@ public final class LeadsDocuments extends CFSModule {
       return ("SystemError");
     }
   }
-  
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUploadVersion(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-documents-add"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-documents-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
 
     boolean recordInserted = false;
     try {
       String filePath = this.getPath(context, "opportunities");
-      
+
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
       multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-      
+
       HashMap parts = multiPart.parseData(
-        context.getRequest().getInputStream(), "---------------------------", filePath);
-      
-      String id = (String)parts.get("id");
-      String itemId = (String)parts.get("fid");
-      String subject = (String)parts.get("subject");
-      String versionId = (String)parts.get("versionId");
-      
+          context.getRequest().getInputStream(), "---------------------------", filePath);
+
+      String id = (String) parts.get("id");
+      String itemId = (String) parts.get("fid");
+      String subject = (String) parts.get("subject");
+      String versionId = (String) parts.get("versionId");
+
       //Update the database with the resulting file
-      FileInfo newFileInfo = (FileInfo)parts.get("id" + id);
-      
+      FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
+
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db, id);
-      
+
       FileItem thisItem = new FileItem();
       thisItem.setLinkModuleId(Constants.PIPELINE);
       thisItem.setLinkItemId(opportunityId);
@@ -227,7 +268,7 @@ public final class LeadsDocuments extends CFSModule {
       thisItem.setFilename(newFileInfo.getRealFilename());
       thisItem.setVersion(Double.parseDouble(versionId));
       thisItem.setSize(newFileInfo.getSize());
-      
+
       recordInserted = thisItem.insertVersion(db);
       if (!recordInserted) {
         processErrors(context, thisItem.getErrors());
@@ -251,27 +292,34 @@ public final class LeadsDocuments extends CFSModule {
     }
   }
 
-  
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDetails(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-documents-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-documents-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
-    
-    String itemId = (String)context.getRequest().getParameter("fid");
-    
+
+    String itemId = (String) context.getRequest().getParameter("fid");
+
     try {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
-      /*FileItemList documents = new FileItemList();
-      documents.setLinkModuleId(Constants.PIPELINE);
-      documents.setLinkItemId(opportunityId);
-      documents.buildList(db);
-      context.getRequest().setAttribute("FileItemList", documents);*/
-      
+      /*
+       *  FileItemList documents = new FileItemList();
+       *  documents.setLinkModuleId(Constants.PIPELINE);
+       *  documents.setLinkItemId(opportunityId);
+       *  documents.buildList(db);
+       *  context.getRequest().setAttribute("FileItemList", documents);
+       */
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.PIPELINE);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
@@ -290,20 +338,26 @@ public final class LeadsDocuments extends CFSModule {
       return ("SystemError");
     }
   }
-  
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDownload(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-documents-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-documents-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
-    String itemId = (String)context.getRequest().getParameter("fid");
-    String version = (String)context.getRequest().getParameter("ver");
+    String itemId = (String) context.getRequest().getParameter("fid");
+    String version = (String) context.getRequest().getParameter("ver");
     FileItem thisItem = null;
-    
+
     Connection db = null;
     int opportunityId = -1;
     try {
@@ -318,13 +372,13 @@ public final class LeadsDocuments extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     //Start the download
     try {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "opportunities", opportunityId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "opportunities") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -337,12 +391,12 @@ public final class LeadsDocuments extends CFSModule {
           db = null;
           System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
           context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
-          return(executeCommandView(context));
+          return (executeCommandView(context));
         }
       } else {
         FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "opportunities", opportunityId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "opportunities") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -355,19 +409,23 @@ public final class LeadsDocuments extends CFSModule {
           db = null;
           System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
           context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
-          return(executeCommandView(context));
+          return (executeCommandView(context));
         }
       }
     } catch (java.net.SocketException se) {
       //User either cancelled the download or lost connection
-			if (System.getProperty("DEBUG") != null) System.out.println(se.toString());
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(se.toString());
+      }
     } catch (Exception e) {
       errorMessage = e;
       System.out.println(e.toString());
     } finally {
-      if (db != null) this.freeConnection(context, db);
+      if (db != null) {
+        this.freeConnection(context, db);
+      }
     }
-    
+
     addModuleBean(context, "View Opportunities", "");
     if (errorMessage == null) {
       return ("-none-");
@@ -378,21 +436,27 @@ public final class LeadsDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandModify(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-documents-edit"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-documents-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
-    String itemId = (String)context.getRequest().getParameter("fid");
+    String itemId = (String) context.getRequest().getParameter("fid");
 
     Connection db = null;
     try {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
-      
+
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.PIPELINE);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
@@ -411,27 +475,33 @@ public final class LeadsDocuments extends CFSModule {
       return ("SystemError");
     }
   }
-  
-	
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUpdate(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-documents-edit"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-documents-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     boolean recordInserted = false;
 
-    String itemId = (String)context.getRequest().getParameter("fid");
-    String subject = (String)context.getRequest().getParameter("subject");
-    String filename = (String)context.getRequest().getParameter("clientFilename");
+    String itemId = (String) context.getRequest().getParameter("fid");
+    String subject = (String) context.getRequest().getParameter("subject");
+    String filename = (String) context.getRequest().getParameter("clientFilename");
 
     Connection db = null;
     int opportunityId = -1;
     try {
       db = getConnection(context);
       opportunityId = addOpportunity(context, db);
-      
+
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.PIPELINE);
       thisItem.setClientFilename(filename);
       thisItem.setSubject(subject);
@@ -442,7 +512,7 @@ public final class LeadsDocuments extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     addModuleBean(context, "View Opportunities", "");
     if (errorMessage == null) {
       if (recordInserted) {
@@ -456,35 +526,40 @@ public final class LeadsDocuments extends CFSModule {
       return ("SystemError");
     }
   }
-  
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDelete(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-documents-delete"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-documents-delete"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
-    String itemId = (String)context.getRequest().getParameter("fid");
+    String itemId = (String) context.getRequest().getParameter("fid");
 
     Connection db = null;
     try {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
-      
+
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.PIPELINE);
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
-        recordDeleted = thisItem.delete(db, this.getPath(context, "opportunities", thisItem.getLinkItemId()));
+        recordDeleted = thisItem.delete(db, this.getPath(context, "opportunities"));
       }
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     addModuleBean(context, "View Opportunities", "Delete Document");
     if (errorMessage == null) {
       if (recordDeleted) {
@@ -496,17 +571,40 @@ public final class LeadsDocuments extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-  } 
+  }
 
-  
+
+  /**
+   *  Adds a feature to the Opportunity attribute of the LeadsDocuments object
+   *
+   *@param  context           The feature to be added to the Opportunity
+   *      attribute
+   *@param  db                The feature to be added to the Opportunity
+   *      attribute
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private int addOpportunity(ActionContext context, Connection db) throws SQLException {
-    String opportunityId = (String)context.getRequest().getParameter("oppId");
-    if (opportunityId == null) { 
-      opportunityId = (String)context.getRequest().getAttribute("oppId");
+    String opportunityId = (String) context.getRequest().getParameter("oppId");
+    if (opportunityId == null) {
+      opportunityId = (String) context.getRequest().getAttribute("oppId");
     }
     return addOpportunity(context, db, opportunityId);
   }
-  
+
+
+  /**
+   *  Adds a feature to the Opportunity attribute of the LeadsDocuments object
+   *
+   *@param  context           The feature to be added to the Opportunity
+   *      attribute
+   *@param  db                The feature to be added to the Opportunity
+   *      attribute
+   *@param  opportunityId     The feature to be added to the Opportunity
+   *      attribute
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private int addOpportunity(ActionContext context, Connection db, String opportunityId) throws SQLException {
     context.getRequest().setAttribute("oppId", opportunityId);
     Opportunity thisOpportunity = new Opportunity(db, opportunityId);

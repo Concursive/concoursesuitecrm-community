@@ -1,13 +1,21 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.pipeline.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.text.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.pipeline.base.*;
+import org.aspcfs.modules.pipeline.beans.OpportunityBean;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.accounts.base.OrganizationList;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -513,7 +521,7 @@ public final class Leads extends CFSModule {
     } else {
       graphString = "gmr";
     }
-    
+
     //Check the cache and see if the current graph exists and is valid
     String checkFileName = null;
     if (thisRec.getIsValid() == true) {
@@ -545,7 +553,7 @@ public final class Leads extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      
+
       //Generate the opportunities pagedList for the idToUse, right of graph
       PagedListInfo dashboardListInfo = this.getPagedListInfo(context, "DashboardListInfo");
       dashboardListInfo.setLink("Leads.do?command=Dashboard");
@@ -568,7 +576,7 @@ public final class Leads extends CFSModule {
         realFullOppList.setOwnerIdRange(range);
         realFullOppList.buildList(db);
       }
-      
+
       //ShortChildList is used for showing user list, under graph
       shortChildList.buildPipelineValues(db);
     } catch (Exception e) {
@@ -667,7 +675,7 @@ public final class Leads extends CFSModule {
         param.setQuality(1.0f, true);
         encoder.encode(img, param);
         foutstream.close();
-        
+
         //Update the cached filename
         if (graphString.equals("gmr")) {
           thisRec.getGmr().setLastFileName(fileName);
@@ -715,7 +723,7 @@ public final class Leads extends CFSModule {
     try {
       db = this.getConnection(context);
       newOpp = new OpportunityHeader(db, context.getRequest().getParameter("id"));
-      recordDeleted = newOpp.delete(db, context, this.getPath(context, "opportunities", newOpp.getId()));
+      recordDeleted = newOpp.delete(db, context, this.getPath(context, "opportunities"));
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -758,7 +766,7 @@ public final class Leads extends CFSModule {
     try {
       db = this.getConnection(context);
       component = new OpportunityComponent(db, context.getRequest().getParameter("id"));
-      recordDeleted = component.delete(db, context, this.getPath(context, "opportunities", component.getId()));
+      recordDeleted = component.delete(db, context, this.getPath(context, "opportunities"));
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1434,7 +1442,7 @@ public final class Leads extends CFSModule {
 
     Calendar rightNow = Calendar.getInstance();
     rightNow.set(Calendar.DAY_OF_MONTH, 1);
-    
+
     Calendar rightNowAdjusted = Calendar.getInstance();
     rightNowAdjusted.set(Calendar.DAY_OF_MONTH, 1);
     rightNowAdjusted.add(Calendar.DATE, -1);
@@ -1569,10 +1577,9 @@ public final class Leads extends CFSModule {
 
   /**
    *  Create the x and y data for a chart for a single user, on top of another
-   *  list of user's data.. 
-   *  Each year and month combo for twelve months from the beginning of this
-   *  month are stored under a new single User object (hmph) for drawing a 
-   *  line on the graph to show cumulative data.
+   *  list of user's data.. Each year and month combo for twelve months from the
+   *  beginning of this month are stored under a new single User object (hmph)
+   *  for drawing a line on the graph to show cumulative data.
    *
    *@param  primaryNode   Description of Parameter
    *@param  currentLines  Description of Parameter
@@ -1599,10 +1606,10 @@ public final class Leads extends CFSModule {
 
 
   /**
-   *  Create the x and y data for a chart for a list of users. 
-   *  Each year and month combo for twelve months from the beginning of this
-   *  month are added together for each user and stored under a new single 
-   *  User object (hmph) for drawing a line on the graph.
+   *  Create the x and y data for a chart for a list of users. Each year and
+   *  month combo for twelve months from the beginning of this month are added
+   *  together for each user and stored under a new single User object (hmph)
+   *  for drawing a line on the graph.
    *
    *@param  toRollUp      Description of Parameter
    *@param  currentLines  Description of Parameter

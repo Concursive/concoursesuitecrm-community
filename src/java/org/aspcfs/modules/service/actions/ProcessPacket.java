@@ -7,11 +7,15 @@ package org.aspcfs.modules.service.actions;
 import org.aspcfs.modules.actions.CFSModule;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.database.*;
 import java.sql.*;
 import java.util.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.controller.*;
+import org.aspcfs.modules.service.base.*;
+import org.aspcfs.controller.objectHookManager.ObjectHookManager;
+import org.aspcfs.modules.login.base.AuthenticationItem;
 import java.io.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
@@ -27,7 +31,8 @@ import java.lang.reflect.*;
  *
  *@author     matt rajkowski
  *@created    April 24, 2002
- *@version    $Id$
+ *@version    $Id: ProcessPacket.java,v 1.36 2003/01/13 22:01:24 mrajkowski Exp
+ *      $
  */
 public final class ProcessPacket extends CFSModule {
 
@@ -52,52 +57,52 @@ public final class ProcessPacket extends CFSModule {
       //There should be an authentication node in the packet
       AuthenticationItem auth = new AuthenticationItem();
       xml.populateObject(auth, xml.getFirstChild("authentication"));
-      
+
       //Initialize the auth by getting the connection element
       ConnectionElement ce = auth.getConnectionElement(context);
-      
-      //Since this module bypasses the user login module, set this "user's" 
+
+      //Since this module bypasses the user login module, set this "user's"
       //connection info to simulate the login
       context.getSession().setAttribute("ConnectionElement", ce);
-      
+
       if (auth.isAuthenticated(context)) {
         //Environment variables for this packet request
         PacketContext packetContext = new PacketContext();
         packetContext.setActionContext(context);
-        
+
         if (auth.getSystemId() == -1) {
           //Temporarily for Vport
           auth.setSystemId(1);
         }
         packetContext.setAuthenticationItem(auth);
-        
+
         db = this.getConnection(context);
-        
+
         //Prepare the SyncClientManager
         SyncClientManager clientManager = new SyncClientManager();
         clientManager.addClient(db, auth.getClientId());
         packetContext.setClientManager(clientManager);
-        
+
         //Prepare the objectMap: The allowable objects that can be processed for the
         //given systemId
         HashMap objectMap = this.getObjectMap(context, db, auth);
         packetContext.setObjectMap(objectMap);
-        
-        ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
+
+        ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
         packetContext.setConnectionPool(sqlDriver);
         packetContext.setConnectionElement(ce);
-        
+
         //Initialize the systemStatus for this request to re-use objects, if not already initialized
         SystemStatus systemStatus = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
-        
+
         //Prepare the objectHooks that are cached
         ObjectHookManager hookManager = systemStatus.getHookManager();
         packetContext.setObjectHookManager(hookManager);
-        
+
         //2nd connection when transactions need to do additional processing
         dbLookup = this.getConnection(context);
         dbLookup.setAutoCommit(false);
-        
+
         //Process the transactions
         LinkedList transactionList = new LinkedList();
         xml.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
@@ -107,7 +112,7 @@ public final class ProcessPacket extends CFSModule {
           Element thisElement = (Element) trans.next();
           Transaction thisTransaction = new Transaction();
           thisTransaction.setPacketContext(packetContext);
-          
+
           SyncTable metaMapping = new SyncTable();
           metaMapping.setName("meta");
           metaMapping.setMappedClassName("com.darkhorseventures.utils.TransactionMeta");
@@ -219,7 +224,7 @@ public final class ProcessPacket extends CFSModule {
         }
       }
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ProcessPacket-> Total Records: " + returnedRecordCount); 
+        System.out.println("ProcessPacket-> Total Records: " + returnedRecordCount);
       }
 
       context.getRequest().setAttribute("statusXML", XMLUtils.toString(document));
@@ -246,10 +251,10 @@ public final class ProcessPacket extends CFSModule {
   /**
    *  Gets the objectMap attribute of the ProcessPacket object
    *
-   *@param  context   Description of Parameter
-   *@param  db        Description of Parameter
-   *@param  systemId  Description of Parameter
-   *@return           The objectMap value
+   *@param  context  Description of Parameter
+   *@param  db       Description of Parameter
+   *@param  auth     Description of the Parameter
+   *@return          The objectMap value
    */
   private HashMap getObjectMap(ActionContext context, Connection db, AuthenticationItem auth) {
     SyncTableList systemObjectMap = (SyncTableList) context.getServletContext().getAttribute("SyncObjectMap" + auth.getId());

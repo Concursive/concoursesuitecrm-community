@@ -2,22 +2,38 @@
  *  Copyright 2002 Dark Horse Ventures
  *  Uses iteam objects from matt@zeroio.com http://www.mavininteractive.com
  */
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.troubletickets.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.troubletickets.base.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.base.Constants;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import java.io.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author     Mathur
+ *@created    January 15, 2003
+ *@version    $Id$
+ */
 public final class TroubleTicketsDocuments extends CFSModule {
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandView(ActionContext context) {
 
     if (!(hasPermission(context, "accounts-accounts-documents-view"))) {
@@ -61,6 +77,12 @@ public final class TroubleTicketsDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandAdd(ActionContext context) {
 
     if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
@@ -93,6 +115,12 @@ public final class TroubleTicketsDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUpload(ActionContext context) {
 
     if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
@@ -218,6 +246,12 @@ public final class TroubleTicketsDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUploadVersion(ActionContext context) {
 
     if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
@@ -296,6 +330,12 @@ public final class TroubleTicketsDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDetails(ActionContext context) {
 
     if (!(hasPermission(context, "accounts-accounts-documents-view"))) {
@@ -331,18 +371,24 @@ public final class TroubleTicketsDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDownload(ActionContext context) {
-/* 
-    if (!(hasPermission(context, "accounts-accounts-documents-view"))) {
-      return ("PermissionError");
-    }
- */
+    /*
+     *  if (!(hasPermission(context, "accounts-accounts-documents-view"))) {
+     *  return ("PermissionError");
+     *  }
+     */
     Exception errorMessage = null;
 
     String itemId = (String) context.getRequest().getParameter("fid");
     String version = (String) context.getRequest().getParameter("ver");
     FileItem thisItem = null;
-    String stream = (String)context.getRequest().getParameter("stream");
+    String stream = (String) context.getRequest().getParameter("stream");
 
     Connection db = null;
     int ticketId = -1;
@@ -364,7 +410,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "tickets", ticketId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "tickets") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -386,7 +432,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       } else {
         FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "tickets", ticketId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "tickets") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -467,6 +513,12 @@ public final class TroubleTicketsDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUpdate(ActionContext context) {
 
     if (!(hasPermission(context, "accounts-accounts-documents-edit"))) {
@@ -512,6 +564,12 @@ public final class TroubleTicketsDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDelete(ActionContext context) {
 
     if (!(hasPermission(context, "accounts-accounts-documents-delete"))) {
@@ -530,7 +588,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
 
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
-        recordDeleted = thisItem.delete(db, this.getPath(context, "tickets", thisItem.getLinkItemId()));
+        recordDeleted = thisItem.delete(db, this.getPath(context, "tickets"));
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -552,6 +610,15 @@ public final class TroubleTicketsDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Adds a feature to the Ticket attribute of the TroubleTicketsDocuments
+   *  object
+   *
+   *@param  context           The feature to be added to the Ticket attribute
+   *@param  db                The feature to be added to the Ticket attribute
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private int addTicket(ActionContext context, Connection db) throws SQLException {
     String ticketId = (String) context.getRequest().getParameter("tId");
     if (ticketId == null) {
@@ -561,6 +628,16 @@ public final class TroubleTicketsDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Adds a feature to the Ticket attribute of the TroubleTicketsDocuments
+   *  object
+   *
+   *@param  context           The feature to be added to the Ticket attribute
+   *@param  db                The feature to be added to the Ticket attribute
+   *@param  ticketId          The feature to be added to the Ticket attribute
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private int addTicket(ActionContext context, Connection db, String ticketId) throws SQLException {
     context.getRequest().setAttribute("tId", ticketId);
     Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
