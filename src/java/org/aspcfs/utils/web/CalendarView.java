@@ -1297,8 +1297,8 @@ public class CalendarView {
    *@param  category   The feature to be added to the Event attribute
    *@param  id         The feature to be added to the Event attribute
    */
-  public void addEvent(java.sql.Timestamp eventDate, String subject, String category, int id) {
-    addEvent(eventDate, subject, category, id, -1);
+  public CalendarEvent addEvent(java.sql.Timestamp eventDate, String subject, String category, int id) {
+    return addEvent(eventDate, subject, category, id, -1);
   }
 
 
@@ -1311,12 +1311,14 @@ public class CalendarView {
    *@param  idmain     The feature to be added to the Event attribute
    *@param  idsub      The feature to be added to the Event attribute
    */
-  public void addEvent(java.sql.Timestamp eventDate, String subject, String category, int idmain, int idsub) {
+  public CalendarEvent addEvent(java.sql.Timestamp eventDate, String subject, String category, int idmain, int idsub) {
+    CalendarEvent thisEvent = new CalendarEvent();
     if (eventDate != null) {
       SimpleDateFormat shortDateFormat = new SimpleDateFormat("M/d/yyyy");
       String eventDateString = shortDateFormat.format(eventDate);
-      addEvent(eventDateString, "", subject, category, idmain, idsub, -1);
+      return addEvent(eventDateString, "", subject, category, idmain, idsub, -1);
     }
+    return null;
   }
 
 
@@ -1328,8 +1330,8 @@ public class CalendarView {
    *@param  subject    The feature to be added to the Event attribute
    *@param  category   The feature to be added to the Event attribute
    */
-  public void addEvent(String eventDate, String subject, String category) {
-    this.addEvent(eventDate, "", subject, category);
+  public CalendarEvent addEvent(String eventDate, String subject, String category) {
+    return addEvent(eventDate, "", subject, category);
   }
 
 
@@ -1341,8 +1343,8 @@ public class CalendarView {
    *@param  subject    The feature to be added to the Event attribute
    *@param  category   The feature to be added to the Event attribute
    */
-  public void addEvent(String eventDate, String eventTime, String subject, String category) {
-    addEvent(eventDate, eventTime, subject, category, -1, -1, -1);
+  public CalendarEvent addEvent(String eventDate, String eventTime, String subject, String category) {
+    return addEvent(eventDate, eventTime, subject, category, -1, -1, -1);
   }
 
 
@@ -1355,8 +1357,8 @@ public class CalendarView {
    *@param  category   The feature to be added to the Event attribute
    *@param  id         The feature to be added to the Event attribute
    */
-  public void addEvent(String eventDate, String eventTime, String subject, String category, int id) {
-    addEvent(eventDate, eventTime, subject, category, id, -1, -1);
+  public CalendarEvent addEvent(String eventDate, String eventTime, String subject, String category, int id) {
+    return addEvent(eventDate, eventTime, subject, category, id, -1, -1);
   }
 
 
@@ -1370,8 +1372,8 @@ public class CalendarView {
    *@param  idmain     The feature to be added to the Event attribute
    *@param  idsub      The feature to be added to the Event attribute
    */
-  public void addEvent(String eventDate, String eventTime, String subject, String category, int idmain, int idsub) {
-    addEvent(eventDate, eventTime, subject, category, idmain, idsub, -1);
+  public CalendarEvent addEvent(String eventDate, String eventTime, String subject, String category, int idmain, int idsub) {
+    return addEvent(eventDate, eventTime, subject, category, idmain, idsub, -1);
   }
 
 
@@ -1386,7 +1388,7 @@ public class CalendarView {
    *@param  idsub      The feature to be added to the Event attribute
    *@param  status     The feature to be added to the Event attribute
    */
-  public void addEvent(String eventDate, String eventTime, String subject, String category, int idmain, int idsub, int status) {
+  public CalendarEvent addEvent(String eventDate, String eventTime, String subject, String category, int idmain, int idsub, int status) {
     CalendarEvent thisEvent = new CalendarEvent();
     StringTokenizer st = new StringTokenizer(eventDate, "/");
     if (st.hasMoreTokens()) {
@@ -1401,6 +1403,7 @@ public class CalendarView {
     thisEvent.setIdsub(idsub);
     thisEvent.setStatus(status);
     this.addEvent(thisEvent);
+    return thisEvent;
   }
 
 

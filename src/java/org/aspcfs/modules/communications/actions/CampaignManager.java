@@ -1631,6 +1631,7 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
+<<<<<<< CampaignManager.java
    *  Show all contacts who responded to a specific item in the Item List
    *
    *@param  context  Description of the Parameter
@@ -1677,6 +1678,51 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
+   *  Show all contacts who responded to a specific item in the Item List
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandShowItemDetails(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    Connection db = null;
+    ActiveSurveyAnswerItemList itemDetails = null;
+
+    if ("true".equals(context.getRequest().getParameter("reset"))) {
+      context.getSession().removeAttribute("CommentListInfo");
+    }
+    int itemId = Integer.parseInt(context.getRequest().getParameter("itemId"));
+    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ItemDetailsListInfo");
+    pagedListInfo.setLink("/CampaignManager.do?command=ShowItemDetails&itemId=" + itemId);
+    
+    try {
+      db = this.getConnection(context);
+      itemDetails = new ActiveSurveyAnswerItemList();
+      itemDetails.setItemId(itemId);
+      itemDetails.buildList(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("ItemDetails", itemDetails);
+      return ("ItemDetailsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+>>>>>>> 1.37.4.1
    *  Processes a Campaign Delete request
    *
    *@param  context  Description of Parameter

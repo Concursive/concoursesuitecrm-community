@@ -71,6 +71,7 @@ public class CalendarEvent implements Comparable {
   protected String comments = "";
 
   private Comparator eventComparator = new comparatorEvent();
+  private ArrayList relatedLinks = null;
 
 
   //Telephone Number
@@ -232,6 +233,39 @@ public class CalendarEvent implements Comparable {
    */
   public void setStatus(int status) {
     this.status = status;
+  }
+
+
+  /**
+   *  Sets the relatedLinks attribute of the CalendarEvent object
+   *
+   *@param  relatedLinks  The new relatedLinks value
+   */
+  public void setRelatedLinks(ArrayList relatedLinks) {
+    this.relatedLinks = relatedLinks;
+  }
+
+
+  /**
+   *  Adds a feature to the RelatedLink attribute of the CalendarEvent object
+   *
+   *@param  link  The feature to be added to the RelatedLink attribute
+   */
+  public void addRelatedLink(String link) {
+    if(relatedLinks == null){
+      relatedLinks = new ArrayList();
+    }
+    relatedLinks.add(link);
+  }
+
+
+  /**
+   *  Gets the relatedLinks attribute of the CalendarEvent object
+   *
+   *@return    The relatedLinks value
+   */
+  public ArrayList getRelatedLinks() {
+    return relatedLinks;
   }
 
 

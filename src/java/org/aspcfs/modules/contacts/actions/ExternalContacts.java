@@ -247,6 +247,26 @@ public final class ExternalContacts extends CFSModule {
     if (!(hasPermission(context, "contacts-external_contacts-reports-add"))) {
       return ("PermissionError");
     }
+    
+    Exception errorMessage = null;
+    Connection db = null;
+    
+    CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+    thisList.setLinkModuleId(Constants.CONTACTS);
+    thisList.setIncludeEnabled(Constants.TRUE);
+    thisList.setIncludeScheduled(Constants.TRUE);
+    thisList.setAllSelectOption(true);
+    thisList.setBuildResources(false);
+
+    try {
+      db = getConnection(context);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
 
     addModuleBean(context, "Reports", "Generate new");
     return ("GenerateFormOK");
@@ -312,6 +332,7 @@ public final class ExternalContacts extends CFSModule {
     Connection db = null;
     String subject = context.getRequest().getParameter("subject");
     String ownerCriteria = context.getRequest().getParameter("criteria1");
+    String type = context.getRequest().getParameter("type");
 
     //String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
 
@@ -339,6 +360,13 @@ public final class ExternalContacts extends CFSModule {
       contactReport.setOwner(this.getUserId(context));
     } else if (ownerCriteria.equals("all")) {
       contactReport.setOwnerIdRange(this.getUserRange(context));
+    }
+
+    int folderId = Integer.parseInt(context.getRequest().getParameter("catId"));
+    if (type.equals("4") && folderId == 0) {
+      contactReport.setIncludeFolders(true);
+    } else if (type.equals("4") && folderId > 0) {
+      contactReport.setFolderId(folderId);
     }
 
     try {
@@ -833,7 +861,7 @@ public final class ExternalContacts extends CFSModule {
 
     Exception errorMessage = null;
     String id = context.getRequest().getParameter("id");
-    
+
     Contact thisContact = (Contact) context.getFormBean();
     if (context.getRequest().getParameter("primaryContact") != null) {
       if (context.getRequest().getParameter("primaryContact").equalsIgnoreCase("true")) {
@@ -1298,6 +1326,47 @@ public final class ExternalContacts extends CFSModule {
   }
 
 
+  public String executeCommandDeleteFields(ActionContext context) {
+    if (!(hasPermission(context, "contacts-external_contacts-folders-delete"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    Connection db = null;
+    boolean recordDeleted = false;
+
+    try {
+      db = this.getConnection(context);
+      String selectedCatId = context.getRequest().getParameter("catId");
+      String recordId = context.getRequest().getParameter("recId");
+      String contactId = context.getRequest().getParameter("contactId");
+
+      CustomFieldCategory thisCategory = new CustomFieldCategory(db,
+          Integer.parseInt(selectedCatId));
+
+      CustomFieldRecord thisRecord = new CustomFieldRecord(db, Integer.parseInt(recordId));
+      thisRecord.setLinkModuleId(Constants.CONTACTS);
+      thisRecord.setLinkItemId(Integer.parseInt(contactId));
+      thisRecord.setCategoryId(Integer.parseInt(selectedCatId));
+      if (!thisCategory.getReadOnly()) {
+        recordDeleted = thisRecord.delete(db);
+      }
+      context.getRequest().setAttribute("recordDeleted", "true");
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("DeleteFieldsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  
   /**
    *  Description of the Method
    *

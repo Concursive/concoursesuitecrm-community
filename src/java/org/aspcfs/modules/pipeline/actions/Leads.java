@@ -966,8 +966,13 @@ public final class Leads extends CFSModule {
 
       if ("all".equals(oppListInfo.getListView())) {
         oppList.setOwnerIdRange(this.getUserRange(context));
-      } else {
+        oppList.setQueryOpenOnly(true);
+      }else if ("closed".equals(oppListInfo.getListView())) { 
+        oppList.setOwnerIdRange(this.getUserRange(context));
+        oppList.setQueryClosedOnly(true);
+      }else {
         oppList.setOwner(this.getUserId(context));
+        oppList.setQueryOpenOnly(true);
       }
 
       oppList.setTypeId(oppListInfo.getFilterKey("listFilter1"));

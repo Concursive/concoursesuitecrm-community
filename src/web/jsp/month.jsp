@@ -1,3 +1,4 @@
+<%@ page import="org.aspcfs.modules.mycfs.base.CalendarEvent"%>
 <jsp:useBean id="cal" class="org.aspcfs.utils.web.CalendarView" scope="page"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <html>

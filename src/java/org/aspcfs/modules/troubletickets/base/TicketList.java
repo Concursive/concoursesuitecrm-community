@@ -471,10 +471,6 @@ public String getUniqueField() { return uniqueField; }
               thisTicket.setSendNotification(false);
       }
       
-      if (thisTicket.getAssignedTo() > -1) {
-        thisTicket.checkEnabledOwnerAccount(db);
-      }
-      
       this.addElement(thisTicket);
     }
     rs.close();
@@ -484,6 +480,9 @@ public String getUniqueField() { return uniqueField; }
     while (i.hasNext()) {
       Ticket thisTicket = (Ticket)i.next();
       thisTicket.buildFiles(db);
+      if (thisTicket.getAssignedTo() > -1) {
+        thisTicket.checkEnabledOwnerAccount(db);
+      }
     }
   }
 

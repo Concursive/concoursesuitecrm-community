@@ -218,6 +218,7 @@
     <forward name="GenerateFormOK" resource="/contacts/companydirectory_reports_generate.jsp" layout="nav"/>
     <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
     <forward name="DeleteReportOK" resource="/ExternalContacts.do?command=Reports"/>
+    <forward name="DeleteFieldsOK" resource="/ExternalContacts.do?command=Fields"/>
     <forward name="DeleteReportERROR" resource="/ExternalContacts.do?command=Reports"/>
     <forward name="PopupContactTypeOK" resource="/contacts/companydirectory_contacttype_popup.jsp" layout="style"/>
     <forward name="DefaultError" resource="/CompanyDirectory.do?command=ListEmployees"/>

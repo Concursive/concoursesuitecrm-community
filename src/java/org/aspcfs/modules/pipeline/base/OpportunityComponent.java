@@ -1834,7 +1834,7 @@ public class OpportunityComponent extends GenericBean {
       errors.put("closeDateError", "Close Date cannot be left blank");
     }
 
-    if (guess == 0 && !(errors.containsKey("guessError"))) {
+    if (guess == 0 && !(errors.containsKey("guessError")) && !this.getCloseIt()) {
       errors.put("guessError", "Amount needs to be entered");
     }
 
@@ -2038,7 +2038,7 @@ public class OpportunityComponent extends GenericBean {
         System.out.println("Opportunity Component-> Retrieving values from previous Opportunity Component");
       }
       sql.append(
-          "SELECT stage " +
+          "SELECT stage, closed " +
           "FROM opportunity_component " +
           "WHERE id = ? ");
       pst = db.prepareStatement(sql.toString());
@@ -2050,6 +2050,11 @@ public class OpportunityComponent extends GenericBean {
           this.setStageChange(true);
         } else {
           this.setStageChange(false);
+        }
+        //check if opp is reopened
+        closed = rs.getString("closed");
+        if(!rs.wasNull() && !this.getCloseIt()){
+          this.setOpenIt(true);
         }
       }
       rs.close();

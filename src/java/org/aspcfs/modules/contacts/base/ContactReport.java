@@ -44,6 +44,9 @@ public class ContactReport extends ContactList {
   protected OrganizationReport orgReportJoin = new OrganizationReport();
   protected boolean joinOrgs = false;
 
+  protected boolean includeFolders = false;
+  protected int folderId = -1;
+
 
   /**
    *  Constructor for the ContactReport object
@@ -88,6 +91,46 @@ public class ContactReport extends ContactList {
    */
   public void setTdFormat(String tmp) {
     this.tdFormat = tmp;
+  }
+
+
+  /**
+   *  Sets the includeFolders attribute of the ContactReport object
+   *
+   *@param  includeFolders  The new includeFolders value
+   */
+  public void setIncludeFolders(boolean includeFolders) {
+    this.includeFolders = includeFolders;
+  }
+
+
+  /**
+   *  Sets the folderId attribute of the ContactReport object
+   *
+   *@param  folderId  The new folderId value
+   */
+  public void setFolderId(int folderId) {
+    this.folderId = folderId;
+  }
+
+
+  /**
+   *  Gets the includeFolders attribute of the ContactReport object
+   *
+   *@return    The includeFolders value
+   */
+  public boolean getIncludeFolders() {
+    return includeFolders;
+  }
+
+
+  /**
+   *  Gets the folderId attribute of the ContactReport object
+   *
+   *@return    The folderId value
+   */
+  public int getFolderId() {
+    return folderId;
   }
 
 
@@ -442,6 +485,16 @@ public class ContactReport extends ContactList {
         rep.addColumn("Notes");
       }
     }
+
+    if (includeFolders) {
+      rep.addColumn("Folder Name");
+      rep.addColumn("Record Name");
+      rep.addColumn("Group Name");
+      rep.addColumn("Field Name");
+      rep.addColumn("Field Value");
+      rep.addColumn("Entered");
+      rep.addColumn("Modified");
+    }
   }
 
 
@@ -467,98 +520,235 @@ public class ContactReport extends ContactList {
     boolean writeOut = false;
     Organization tempOrg = null;
 
+    CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+    CustomFieldCategory thisCat = null;
+    CustomFieldGroup thisGroup = new CustomFieldGroup();
+
+    if (includeFolders) {
+      thisList.setLinkModuleId(Constants.CONTACTS);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(true);
+      thisList.buildList(db);
+    } else if (folderId > -1) {
+      thisCat = new CustomFieldCategory(db, folderId);
+      thisCat.buildResources(db);
+
+      Iterator grp = thisCat.iterator();
+      thisGroup = new CustomFieldGroup();
+      thisGroup = (CustomFieldGroup) grp.next();
+      thisGroup.buildResources(db);
+
+      Iterator fields = thisGroup.iterator();
+
+      if (fields.hasNext()) {
+        while (fields.hasNext()) {
+          CustomField thisField = (CustomField) fields.next();
+          rep.addColumn(thisField.getNameHtml());
+        }
+      }
+    }
+
     Iterator x = this.iterator();
     while (x.hasNext()) {
       Contact thisContact = (Contact) x.next();
-      ReportRow thisRow = new ReportRow();
 
-      if (joinOrgs && thisContact.getOrgId() > 0) {
-        tempOrg = new Organization(db, thisContact.getOrgId());
+      if (includeFolders) {
 
-        if (limitId > -1) {
-          if (tempOrg.getOwner() == limitId) {
+        CustomFieldRecordList recordList = new CustomFieldRecordList();
+        thisGroup = new CustomFieldGroup();
+
+        Iterator cat = thisList.iterator();
+        while (cat.hasNext()) {
+          thisCat = (CustomFieldCategory) cat.next();
+
+          recordList = new CustomFieldRecordList();
+          recordList.setLinkModuleId(Constants.CONTACTS);
+          recordList.setLinkItemId(thisContact.getId());
+          recordList.setCategoryId(thisCat.getId());
+          recordList.buildList(db);
+
+          Iterator rec = recordList.iterator();
+
+          while (rec.hasNext()) {
+
+            CustomFieldRecord thisRec = (CustomFieldRecord) rec.next();
+            Iterator grp = thisCat.iterator();
+            while (grp.hasNext()) {
+              thisGroup = new CustomFieldGroup();
+              thisGroup = (CustomFieldGroup) grp.next();
+              thisGroup.buildResources(db);
+
+              Iterator fields = thisGroup.iterator();
+              if (fields.hasNext()) {
+                while (fields.hasNext()) {
+
+                  ReportRow thisRow = new ReportRow();
+
+                  CustomField thisField = (CustomField) fields.next();
+
+                  thisField.setRecordId(thisRec.getId());
+                  thisField.buildResources(db);
+
+                  addDataRow(thisRow, thisContact);
+
+                  thisRow.addCell(thisCat.getName());
+                  thisRow.addCell(thisCat.getName() + " #" + thisRec.getId());
+                  thisRow.addCell(thisGroup.getName());
+                  thisRow.addCell(thisField.getNameHtml());
+                  thisRow.addCell(thisField.getValueHtml());
+                  thisRow.addCell(thisRec.getEnteredString());
+                  thisRow.addCell(thisRec.getModifiedDateTimeString());
+
+                  rep.addRow(thisRow);
+
+                }
+              }
+            }
+          }
+
+        }
+
+      } else if (folderId > -1) {
+        CustomFieldRecordList recordList = new CustomFieldRecordList();
+        recordList.setLinkModuleId(Constants.CONTACTS);
+        recordList.setLinkItemId(thisContact.getId());
+        recordList.setCategoryId(thisCat.getId());
+        recordList.buildList(db);
+
+        Iterator rec = recordList.iterator();
+
+        while (rec.hasNext()) {
+
+          ReportRow thisRow = new ReportRow();
+          addDataRow(thisRow, thisContact);
+          thisRow.addCell(thisCat.getName());
+
+          CustomFieldRecord thisRec = (CustomFieldRecord) rec.next();
+          Iterator grp = thisCat.iterator();
+          while (grp.hasNext()) {
+            thisGroup = new CustomFieldGroup();
+            thisGroup = (CustomFieldGroup) grp.next();
+            thisGroup.buildResources(db);
+
+            Iterator fields = thisGroup.iterator();
+            if (fields.hasNext()) {
+              while (fields.hasNext()) {
+
+                CustomField thisField = (CustomField) fields.next();
+                thisField.setRecordId(thisRec.getId());
+                thisField.buildResources(db);
+
+                thisRow.addCell(thisField.getValueHtml());
+              }
+            }
+          }
+
+          rep.addRow(thisRow);
+        }
+      } else {
+        ReportRow thisRow = new ReportRow();
+
+        if (joinOrgs && thisContact.getOrgId() > 0) {
+          tempOrg = new Organization(db, thisContact.getOrgId());
+
+          if (limitId > -1) {
+            if (tempOrg.getOwner() == limitId) {
+              orgReportJoin.addDataRow(thisRow, tempOrg);
+              writeOut = true;
+            }
+          } else {
             orgReportJoin.addDataRow(thisRow, tempOrg);
             writeOut = true;
           }
-        } else {
-          orgReportJoin.addDataRow(thisRow, tempOrg);
-          writeOut = true;
         }
-      }
 
-      if (!joinOrgs || writeOut == true) {
-        Iterator y = criteria.iterator();
-        while (y.hasNext()) {
-          String param = (String) y.next();
-
-          if (param.equals("id")) {
-            thisRow.addCell(thisContact.getId());
-          }
-          if (param.equals("type")) {
-            thisRow.addCell(thisContact.getTypesNameString());
-          }
-          if (param.equals("nameLast")) {
-            thisRow.addCell(thisContact.getNameLast());
-          }
-          if (param.equals("nameFirst")) {
-            thisRow.addCell(thisContact.getNameFirst());
-          }
-          if (param.equals("nameMiddle")) {
-            thisRow.addCell(thisContact.getNameMiddle());
-          }
-          if (param.equals("company")) {
-            thisRow.addCell(thisContact.getCompany());
-          }
-          if (param.equals("title")) {
-            thisRow.addCell(thisContact.getTitle());
-          }
-          if (param.equals("department")) {
-            thisRow.addCell(thisContact.getDepartmentName());
-          }
-          if (param.equals("entered")) {
-            thisRow.addCell(thisContact.getEnteredString());
-          }
-          if (param.equals("enteredBy")) {
-            thisRow.addCell(thisContact.getEnteredByName());
-          }
-          if (param.equals("modified")) {
-            thisRow.addCell(thisContact.getModifiedString());
-          }
-          if (param.equals("modifiedBy")) {
-            thisRow.addCell(thisContact.getModifiedByName());
-          }
-          if (param.equals("owner")) {
-            thisRow.addCell(thisContact.getOwnerName());
-          }
-          if (param.equals("businessEmail")) {
-            thisRow.addCell(thisContact.getEmailAddress("Business"));
-          }
-          if (param.equals("businessPhone")) {
-            thisRow.addCell(thisContact.getPhoneNumber("Business"));
-          }
-          if (param.equals("businessAddress")) {
-            thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine1());
-            thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine2());
-          }
-          if (param.equals("city")) {
-            thisRow.addCell(thisContact.getAddress("Business").getCity());
-          }
-          if (param.equals("state")) {
-            thisRow.addCell(thisContact.getAddress("Business").getState());
-          }
-          if (param.equals("zip")) {
-            thisRow.addCell(thisContact.getAddress("Business").getZip());
-          }
-          if (param.equals("country")) {
-            thisRow.addCell(thisContact.getAddress("Business").getCountry());
-          }
-          if (param.equals("notes")) {
-            thisRow.addCell(thisContact.getNotes());
-          }
+        if (!joinOrgs || writeOut == true) {
+          addDataRow(thisRow, thisContact);
+          rep.addRow(thisRow);
         }
-        rep.addRow(thisRow);
+        writeOut = false;
       }
-      writeOut = false;
+    }
+  }
+
+
+  /**
+   *  Adds a feature to the DataRow attribute of the ContactReport object
+   *
+   *@param  thisRow           The feature to be added to the DataRow attribute
+   *@param  thisContact       The feature to be added to the DataRow attribute
+   *@exception  SQLException  Description of the Exception
+   */
+  public void addDataRow(ReportRow thisRow, Contact thisContact) throws SQLException {
+    Iterator y = criteria.iterator();
+    while (y.hasNext()) {
+      String param = (String) y.next();
+
+      if (param.equals("id")) {
+        thisRow.addCell(thisContact.getId());
+      }
+      if (param.equals("type")) {
+        thisRow.addCell(thisContact.getTypesNameString());
+      }
+      if (param.equals("nameLast")) {
+        thisRow.addCell(thisContact.getNameLast());
+      }
+      if (param.equals("nameFirst")) {
+        thisRow.addCell(thisContact.getNameFirst());
+      }
+      if (param.equals("nameMiddle")) {
+        thisRow.addCell(thisContact.getNameMiddle());
+      }
+      if (param.equals("company")) {
+        thisRow.addCell(thisContact.getCompany());
+      }
+      if (param.equals("title")) {
+        thisRow.addCell(thisContact.getTitle());
+      }
+      if (param.equals("department")) {
+        thisRow.addCell(thisContact.getDepartmentName());
+      }
+      if (param.equals("entered")) {
+        thisRow.addCell(thisContact.getEnteredString());
+      }
+      if (param.equals("enteredBy")) {
+        thisRow.addCell(thisContact.getEnteredByName());
+      }
+      if (param.equals("modified")) {
+        thisRow.addCell(thisContact.getModifiedString());
+      }
+      if (param.equals("modifiedBy")) {
+        thisRow.addCell(thisContact.getModifiedByName());
+      }
+      if (param.equals("owner")) {
+        thisRow.addCell(thisContact.getOwnerName());
+      }
+      if (param.equals("businessEmail")) {
+        thisRow.addCell(thisContact.getEmailAddress("Business"));
+      }
+      if (param.equals("businessPhone")) {
+        thisRow.addCell(thisContact.getPhoneNumber("Business"));
+      }
+      if (param.equals("businessAddress")) {
+        thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine1());
+        thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine2());
+      }
+      if (param.equals("city")) {
+        thisRow.addCell(thisContact.getAddress("Business").getCity());
+      }
+      if (param.equals("state")) {
+        thisRow.addCell(thisContact.getAddress("Business").getState());
+      }
+      if (param.equals("zip")) {
+        thisRow.addCell(thisContact.getAddress("Business").getZip());
+      }
+      if (param.equals("country")) {
+        thisRow.addCell(thisContact.getAddress("Business").getCountry());
+      }
+      if (param.equals("notes")) {
+        thisRow.addCell(thisContact.getNotes());
+      }
     }
   }
 

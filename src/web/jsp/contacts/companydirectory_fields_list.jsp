@@ -70,7 +70,7 @@ List of Folder Records<br>
         <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
         <dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <dhv:permission name="contacts-external_contacts-folders-edit"><a href="ExternalContacts.do?command=ModifyFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-folders-delete"><a href="javascript:confirmDelete('ExternalContacts.do?command=DeleteFields&contactId=<%= ContactDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>');">Del</a></dhv:permission>
+          <dhv:permission name="contacts-external_contacts-folders-edit"><a href="ExternalContacts.do?command=ModifyFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-folders-delete"><a href="javascript:confirmDelete('ExternalContacts.do?command=DeleteFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>');">Del</a></dhv:permission>
           </td>
         </dhv:permission>
         </dhv:evaluate>

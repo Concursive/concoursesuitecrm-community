@@ -4,14 +4,14 @@ Create Attachments
 <hr color="#BFBFBB" noshade>
 Customize and configure your Campaigns with the following attachments:<br>
 &nbsp;<br>
-<table cellpadding="0" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="0" cellspacing="0" border="0" width="50%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td width="49%" valign="top">
       <dhv:permission name="campaign-campaigns-surveys-view">
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td>
-            <strong><a href="CampaignManagerSurvey.do?command=View">Interactive Responses</a></strong>
+            <strong><a href="CampaignManagerSurvey.do?command=View">Surveys</a></strong>
           </td>
         </tr>
         <tr class="containerBody">
@@ -26,7 +26,7 @@ Customize and configure your Campaigns with the following attachments:<br>
     <td width="2%">
       &nbsp;
     </td>
-    <td width="49%" valign="top">
+    <!--<td width="49%" valign="top">
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td>
@@ -39,9 +39,9 @@ Customize and configure your Campaigns with the following attachments:<br>
           </td>
         </tr>
       </table>
-    </td>
+    </td> !-->
   </tr>
-  
+  <!--
     <tr>
     <td width="49%" valign="top">
       <dhv:permission name="campaign-campaigns-surveys-view">
@@ -78,4 +78,5 @@ Customize and configure your Campaigns with the following attachments:<br>
       </table>
     </td>
   </tr>
+  !-->
 </table>

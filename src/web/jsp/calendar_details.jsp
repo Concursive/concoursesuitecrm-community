@@ -119,7 +119,18 @@ function switchStyle(E){
             <tr>
               <td style="visibility:hidden" width="18">&nbsp;</td>
               <td>
-                <li><%=thisEvent.getCategory().equalsIgnoreCase("task")?thisEvent.getIcon():""%>&nbsp;<%= thisEvent.getLink() %><%= thisEvent.getSubject() %></a></li>
+                <li>
+                  <%=thisEvent.getCategory().equalsIgnoreCase("task")?thisEvent.getIcon():""%>&nbsp;<%= thisEvent.getLink() %><%= thisEvent.getSubject() %></a><%= thisEvent.getRelatedLinks() != null && thisEvent.getRelatedLinks().size() > 0 ? "&nbsp;" : "" %>
+                  <%-- Display all related links --%>
+                   <dhv:evaluate exp="<%= thisEvent.getRelatedLinks() != null %>">
+                   <%
+                    Iterator linkList = thisEvent.getRelatedLinks().iterator();
+                    while (linkList.hasNext()) {
+                   %>
+                      <%= linkList.next().toString() %>
+                   <%}%>
+                   </dhv:evaluate>
+                </li>
               </td>
             </tr>
 <%

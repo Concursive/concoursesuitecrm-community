@@ -509,17 +509,20 @@ public class OpportunityHeaderList extends Vector {
       }
       ++count;
       OpportunityHeader thisOppHeader = new OpportunityHeader(rs);
-      thisOppHeader.retrieveComponentCount(db);
-
-      if (buildTotalValues) {
-        thisOppHeader.buildTotal(db);
-      }
-
-      thisOppHeader.buildFiles(db);
       this.addElement(thisOppHeader);
     }
     rs.close();
     pst.close();
+
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      OpportunityHeader thisOppHeader = (OpportunityHeader) i.next();
+      thisOppHeader.retrieveComponentCount(db);
+      if (buildTotalValues) {
+        thisOppHeader.buildTotal(db);
+      }
+      thisOppHeader.buildFiles(db);
+    }
   }
 
 

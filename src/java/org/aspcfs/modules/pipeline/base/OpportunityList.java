@@ -15,7 +15,6 @@ import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.modules.pipeline.base.*;
 import org.aspcfs.modules.base.Constants;
 
-
 /**
  *  Contains a list of opportunities, which are now a combination of
  *  OpportunityHeader and OpportunityComponent objects.
@@ -55,6 +54,7 @@ public class OpportunityList extends Vector {
   protected java.sql.Date closeDateEnd = null;
   protected int stage = -1;
   private boolean queryOpenOnly = false;
+  private boolean queryClosedOnly = false;
   private boolean buildComponentInfo = false;
   private int typeId = 0;
 
@@ -96,6 +96,16 @@ public class OpportunityList extends Vector {
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
+  }
+
+
+  /**
+   *  Sets the queryClosedOnly attribute of the OpportunityList object
+   *
+   *@param  queryClosedOnly  The new queryClosedOnly value
+   */
+  public void setQueryClosedOnly(boolean queryClosedOnly) {
+    this.queryClosedOnly = queryClosedOnly;
   }
 
 
@@ -657,16 +667,21 @@ public class OpportunityList extends Vector {
       }
       ++count;
       Opportunity thisOpp = new Opportunity(rs);
+      this.add(thisOpp);
+    }
+    rs.close();
+    pst.close();
+
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Opportunity thisOpp = (Opportunity) i.next();
       thisOpp.buildFiles(db);
       thisOpp.buildTypes(db);
       if (this.getBuildComponentInfo()) {
         thisOpp.retrieveComponentCount(db);
         thisOpp.buildTotal(db);
       }
-      this.add(thisOpp);
     }
-    rs.close();
-    pst.close();
   }
 
 
@@ -805,6 +820,9 @@ public class OpportunityList extends Vector {
     }
     if (queryOpenOnly) {
       sqlFilter.append("AND oc.closed IS NULL ");
+    }
+    if (queryClosedOnly) {
+      sqlFilter.append("AND oc.closed IS NOT NULL ");
     }
     if (typeId > 0) {
       sqlFilter.append("AND oc.id IN (select ocl.opp_id from opportunity_component_levels ocl where ocl.type_id = ?) ");

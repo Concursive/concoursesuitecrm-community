@@ -309,11 +309,16 @@ public class TaskList extends ArrayList {
       }
       ++count;
       Task thisTask = new Task(rs);
-      thisTask.buildResources(db);
       this.add(thisTask);
     }
     rs.close();
     pst.close();
+
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Task thisTask = (Task) i.next();
+      thisTask.buildResources(db);
+    }
   }
 
 

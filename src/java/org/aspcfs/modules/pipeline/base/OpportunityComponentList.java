@@ -521,7 +521,6 @@ public class OpportunityComponentList extends Vector {
       }
       ++count;
       OpportunityComponent thisOppComponent = new OpportunityComponent(rs);
-      //thisOppHeader.buildFiles(db);
       this.addElement(thisOppComponent);
     }
     rs.close();
