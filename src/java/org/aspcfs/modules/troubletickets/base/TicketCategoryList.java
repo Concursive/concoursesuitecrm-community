@@ -27,6 +27,7 @@ public class TicketCategoryList extends Vector {
   private int catLevel = -1;
   private String HtmlJsEvent = "";
   private int enabledState = -1;
+  private boolean includeDisabled = false;
 
 
   /**
@@ -125,6 +126,26 @@ public class TicketCategoryList extends Vector {
 
 
   /**
+   *  Sets the includeDisabled attribute of the TicketCategoryList object
+   *
+   *@param  includeDisabled  The new includeDisabled value
+   */
+  public void setIncludeDisabled(boolean includeDisabled) {
+    this.includeDisabled = includeDisabled;
+  }
+
+
+  /**
+   *  Gets the includeDisabled attribute of the TicketCategoryList object
+   *
+   *@return    The includeDisabled value
+   */
+  public boolean getIncludeDisabled() {
+    return includeDisabled;
+  }
+
+
+  /**
    *  Gets the CatListSelect attribute of the TicketCategoryList object
    *
    *@return    The CatListSelect value
@@ -219,11 +240,19 @@ public class TicketCategoryList extends Vector {
         catListSelect.addItem(
             thisCat.getId(),
             elementText);
-      } else if (!(thisCat.getEnabled()) && thisCat.getId() == defaultKey) {
-        elementText += "*";
-        catListSelect.addItem(
-            thisCat.getId(),
-            elementText);
+      } else if ((!(thisCat.getEnabled()) && thisCat.getId() == defaultKey) || includeDisabled) {
+        if (catListSelect.getSelectSize() > 1) {
+          HashMap colorAttribute = new HashMap();
+          colorAttribute.put("style", "color: red");
+          catListSelect.addItem(
+              thisCat.getId(),
+              elementText, colorAttribute);
+        } else {
+          elementText += "*";
+          catListSelect.addItem(
+              thisCat.getId(),
+              elementText);
+        }
       }
     }
 
