@@ -25,3 +25,8 @@ alter table  opportunity add column enabled BOOLEAN;
 ALTER TABLE  opportunity ALTER COLUMN enabled SET DEFAULT true;
 update opportunity set enabled = 't';
 
+//might need to do this
+alter table  search_fields add column enabled BOOLEAN;
+ALTER TABLE  search_fields ALTER COLUMN enabled SET DEFAULT true;
+update search_fields set enabled = 't';
+

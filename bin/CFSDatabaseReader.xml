@@ -70,8 +70,8 @@
       <property>minerOnly</property>
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
-      <property alias="contractEndDate">contactEndDateString</property>
-      <property alias="alertDate">alertDateString</property>
+      <property>contactEndDate</property>
+      <property>alertDate</property>
       <property>alertText</property>
       <property>enabled</property>
       <property>employees</property>

@@ -9,6 +9,7 @@ import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.utils.DateUtils;
 
 /**
  *  Represents a Contact in CFS
@@ -259,25 +260,23 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Contact object
+   *  Sets the entered attribute of the Ticket object
    *
    *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
-    this.entered = java.sql.Timestamp.valueOf(tmp);
+    this.entered = DateUtils.parseTimestampString(tmp);
   }
 
 
   /**
-   *  Sets the modified attribute of the Contact object
+   *  Sets the modified attribute of the Ticket object
    *
    *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
-    this.modified = java.sql.Timestamp.valueOf(tmp);
-    ;
+    this.modified = DateUtils.parseTimestampString(tmp);
   }
-
 
   /**
    *  Sets the Owner attribute of the Opportunity object
@@ -1504,8 +1503,23 @@ public class Contact extends GenericBean {
       }
       sql.append(
           "INSERT INTO contact " +
-          "(user_id, type_id, enteredby, modifiedby, namefirst, namelast, owner) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+          "(user_id, type_id, namefirst, namelast, owner, ");
+                if (entered != null) {
+                        sql.append("entered, ");
+                }
+                if (modified != null) {
+                        sql.append("modified, ");
+                }
+      sql.append("enteredBy, modifiedBy ) ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ");
+                if (entered != null) {
+                        sql.append("?, ");
+                }
+                if (modified != null) {
+                        sql.append("?, ");
+                }
+      sql.append("?, ?) ");
+    
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       if (userId > -1) {
@@ -1518,8 +1532,7 @@ public class Contact extends GenericBean {
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
-      pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getModifiedBy());
+      
       pst.setString(++i, this.getNameFirst());
       pst.setString(++i, this.getNameLast());
       if (owner > -1) {
@@ -1527,6 +1540,15 @@ public class Contact extends GenericBean {
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
+        if (modified != null) {
+                pst.setTimestamp(++i, modified);
+        }
+      pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());
+      
       pst.execute();
       pst.close();
 

@@ -11,6 +11,7 @@ import javax.servlet.http.*;
 import com.zeroio.iteam.base.FileItemList;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.webutils.LookupList;
+import com.darkhorseventures.utils.DateUtils;
 
 /**
  *@author     chris
@@ -376,23 +377,22 @@ public void setDocumentDelete(boolean tmp) { this.documentDelete = tmp; }
 
 
   /**
-   *  Sets the Entered attribute of the Organization object
+   *  Sets the entered attribute of the Organization object
    *
-   *@param  tmp  The new Entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
-    this.entered = java.sql.Timestamp.valueOf(tmp);
+    this.entered = DateUtils.parseTimestampString(tmp);
   }
 
 
   /**
-   *  Sets the Modified attribute of the Organization object
+   *  Sets the modified attribute of the Organization object
    *
-   *@param  tmp  The new Modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
-    this.modified = java.sql.Timestamp.valueOf(tmp);
-    ;
+    this.modified = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -449,13 +449,7 @@ public void setYTD(double YTD) {
    *@param  tmp  The new ContractEndDate value
    */
   public void setContractEndDate(String tmp) {
-    try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
-      contractEndDate = new java.sql.Date(new java.util.Date().getTime());
-      contractEndDate.setTime(tmpDate.getTime());
-    } catch (Exception e) {
-      contractEndDate = null;
-    }
+    this.contractEndDate = DateUtils.parseDateString(tmp);
   }
 
   public void buildRevenueYTD(Connection db, int year, int type, int ownerId) throws SQLException {
@@ -493,13 +487,7 @@ public void setYTD(double YTD) {
    *@param  tmp  The new alertDate value
    */
   public void setAlertDate(String tmp) {
-    try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
-      alertDate = new java.sql.Date(new java.util.Date().getTime());
-      alertDate.setTime(tmpDate.getTime());
-    } catch (Exception e) {
-      alertDate = null;
-    }
+    this.alertDate = DateUtils.parseDateString(tmp);
   }
 
 
@@ -1439,21 +1427,35 @@ public boolean getEnabled() {
     if (!isValid(db)) {
       return false;
     }
-
+    
+    StringBuffer sql = new StringBuffer();
+    
     try {
       modifiedBy = enteredBy;
       db.setAutoCommit(false);
-      String sql = 
-        "INSERT INTO ORGANIZATION (name,industry_temp_code,url,miner_only,enteredby,modifiedby,owner,duplicate_id,notes,employees,revenue,ticker_symbol,account_number) " +
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
+      sql.append("INSERT INTO ORGANIZATION (name, industry_temp_code, url, miner_only, owner, duplicate_id, ");
+      sql.append("notes, employees, revenue, ticker_symbol, account_number, ");
+              if (entered != null) {
+                      sql.append("entered, ");
+              }
+              if (modified != null) {
+                      sql.append("modified, ");
+              }
+      sql.append("enteredBy, modifiedBy ) ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+              if (entered != null) {
+                      sql.append("?, ");
+              }
+              if (modified != null) {
+                      sql.append("?, ");
+              }
+      sql.append("?, ?) ");
       int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql);
+      PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, this.getName());
       pst.setInt(++i, this.getIndustry());
       pst.setString(++i, this.getUrl());
       pst.setBoolean(++i, this.getMiner_only());
-      pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getModifiedBy());
       if (owner > -1) {
 	      pst.setInt(++i, this.getOwner());
       } else {
@@ -1465,6 +1467,16 @@ public boolean getEnabled() {
       pst.setDouble(++i, this.getRevenue());
       pst.setString(++i, this.getTicker());
       pst.setString(++i, this.getAccountNumber());
+      
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
+        if (modified != null) {
+                pst.setTimestamp(++i, modified);
+        }
+      
+      pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());
       pst.execute();
       pst.close();
 
