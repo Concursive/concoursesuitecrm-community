@@ -631,7 +631,7 @@ public class ControllerServlet extends HttpServlet
           if (resource.getLayout() != null && resource.getLayout().length() > 0) {
             String templateForwardPath = resource.getName();
             request.setAttribute("IncludeModule", templateForwardPath);
-            forwardPath = "/template0" + resource.getLayout() + ".jsp";
+            forwardPath = "/templates/template0" + resource.getLayout() + ".jsp";
 
             //Process extra layout options
             if (resource.getLayout().toLowerCase().startsWith("nav")) {
