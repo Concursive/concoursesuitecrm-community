@@ -1,0 +1,55 @@
+/**
+ *  Business Processes
+ *
+ *@author     mrajkowski
+ *@created    November 1, 2002
+ *@version    $Id$
+ */
+
+---> CFS loads and stores all business process information when started up,
+     and can reload if requested by an administrator.  This information
+     is cached within an ObjectHookList.
+
+ObjectHookList contains which objects in CFS have a hook.
+  Ex. com.darkhorseventures.base.Ticket = BusinessProcessList
+      com.darkhorseventures.base.Opportunity = BusinessProcessList
+      
+---> The BusinessProcessList can be stored with the ObjectHooks, or can be
+     instantiated separately for a front-end to manage the components.
+
+  A BusinessProcessList contains business processes for INSERT, UPDATE, and 
+  DELETE defined in a BusinessProcess object.
+  Ex. Insert = BusinessProcess
+      Update = BusinessProcess
+      Delete = BusinessProcess
+      
+  A BusinessProcess defines characteristics of a business process flow, and
+  contains the component definitions and order in which components are executed.
+  
+  A BusinessProcessComponent maps to a component of the business process.
+  The BusinessProcessComponent specifies the component class that is mapped, as
+  well as any parameters that have been configured before run-time.
+  Ex. 1. LoadTicketDetails
+      2. QueryTicketClosed?
+      3. Send an email to person who entered ticket, with the following params:
+         host=mail.darkhorseventures.com
+         subject=A ticket in CFS has been closed
+         from=cfs-root@darkhorseventures.com
+         to=userId${enteredBy}
+  
+---> Now that the business processes are known and loaded, the 
+     ObjectHookList can be executed...  This creates a threaded class
+     called an ObjectHook.  The ObjectHook maintains the current information
+     about the BusinessProcess that is executed.
+     The ObjectHook uses the ObjectHookManager to manage the component process.
+     ObjectHookManager is responsible for navigating the hierarchy of
+     BusinessProcessComponent objects and executing the mapped classes.
+  
+  When executing a process, a ComponentContext must be passed that may contain:
+  - Environment variables
+  - Component specific variables
+  - Database connection information
+  - currentObject if this was an INSERT or UPDATE
+  - previousObject if this was an UPDATE or DELETE
+  - fileLibrary path if the component needs to operate on files
+  

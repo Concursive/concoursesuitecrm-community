@@ -20,7 +20,7 @@ import org.theseus.beans.*;
  *  that are to be returned after the insert is executed, any errors that occur
  *  are placed in the errorMessage property.
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    April 10, 2002
  *@version    $Id: TransactionItem.java,v 1.13 2002/04/24 15:39:44 mrajkowski
  *      Exp $
@@ -48,15 +48,9 @@ public class TransactionItem {
   private RecordList recordList = null;
   private TransactionMeta meta = null;
   private HashMap ignoredProperties = null;
-  private SyncClientManager clientManager = null;
-  private AuthenticationItem auth = null;
-  private HashMap mapping = null;
   private SyncClientMap syncClientMap = null;
-  private ObjectHookList objectHookList = null;
-  private ConnectionPool sqlDriver = null;
-  private ConnectionElement ce = null;
-
-
+  private PacketContext packetContext = null;
+  
   /**
    *  Constructor for the TransactionItem object
    */
@@ -197,63 +191,8 @@ public class TransactionItem {
   }
 
 
-  /**
-   *  Sets the clientManager attribute of the TransactionItem object
-   *
-   *@param  tmp  The new clientManager value
-   */
-  public void setClientManager(SyncClientManager tmp) {
-    this.clientManager = tmp;
-  }
-
-
-  /**
-   *  Sets the auth attribute of the TransactionItem object
-   *
-   *@param  tmp  The new auth value
-   */
-  public void setAuth(AuthenticationItem tmp) {
-    this.auth = tmp;
-  }
-
-
-  /**
-   *  Sets the mapping attribute of the TransactionItem object
-   *
-   *@param  tmp  The new mapping value
-   */
-  public void setMapping(HashMap tmp) {
-    this.mapping = tmp;
-  }
-
-
-  /**
-   *  Sets the objectHookList attribute of the TransactionItem object
-   *
-   *@param  tmp  The new objectHookList value
-   */
-  public void setObjectHookList(ObjectHookList tmp) {
-    this.objectHookList = tmp;
-  }
-
-
-  /**
-   *  Sets the sqlDriver attribute of the TransactionItem object
-   *
-   *@param  tmp  The new sqlDriver value
-   */
-  public void setSqlDriver(ConnectionPool tmp) {
-    this.sqlDriver = tmp;
-  }
-
-
-  /**
-   *  Sets the ce attribute of the TransactionItem object
-   *
-   *@param  tmp  The new ce value
-   */
-  public void setCe(ConnectionElement tmp) {
-    this.ce = tmp;
+  public void setPacketContext(PacketContext tmp) {
+    this.packetContext = tmp;
   }
 
 
@@ -316,7 +255,7 @@ public class TransactionItem {
    */
   public void insertClientMapping(Connection db, Record record) throws SQLException {
     if (record.containsKey("guid")) {
-      clientManager.insert(
+      packetContext.getClientManager().insert(
           syncClientMap.getClientId(),
           syncClientMap.getTableId(),
           new Integer(record.getRecordId()),
@@ -358,7 +297,7 @@ public class TransactionItem {
       syncClientMap.setClientUniqueId((String) record.get("guid"));
       syncClientMap.delete(db);
     }
-    clientManager.remove(
+    packetContext.getClientManager().remove(
         syncClientMap.getClientId(),
         syncClientMap.getTableId(),
         new Integer(record.getRecordId())
@@ -388,9 +327,9 @@ public class TransactionItem {
     }
 
     syncClientMap = new SyncClientMap();
-    syncClientMap.setClientId(auth.getClientId());
+    syncClientMap.setClientId(packetContext.getAuthenticationItem().getClientId());
     if (!"system".equals(name)) {
-      syncClientMap.setTableId(((SyncTable) mapping.get(name)).getId());
+      syncClientMap.setTableId(((SyncTable) packetContext.getObjectMap().get(name)).getId());
     }
 
     if (recordList == null) {
@@ -406,29 +345,29 @@ public class TransactionItem {
       thisRecord.put("dateTime", String.valueOf(new java.sql.Timestamp(new java.util.Date().getTime())));
       recordList.add(thisRecord);
     } else if (action == SYNC_START) {
-      ObjectUtils.setParam(object, "id", String.valueOf(auth.getClientId()));
-      ObjectUtils.setParam(object, "anchor", auth.getLastAnchor());
+      ObjectUtils.setParam(object, "id", String.valueOf(packetContext.getAuthenticationItem().getClientId()));
+      ObjectUtils.setParam(object, "anchor", packetContext.getAuthenticationItem().getLastAnchor());
       if (!((SyncClient) object).checkNormalSync(db)) {
         appendErrorMessage("Client and server not in sync!");
       }
     } else if (action == SYNC_END) {
-      ObjectUtils.setParam(object, "id", String.valueOf(auth.getClientId()));
-      ObjectUtils.setParam(object, "anchor", auth.getNextAnchor());
+      ObjectUtils.setParam(object, "id", String.valueOf(packetContext.getAuthenticationItem().getClientId()));
+      ObjectUtils.setParam(object, "anchor", packetContext.getAuthenticationItem().getNextAnchor());
       ((SyncClient) object).updateSyncAnchor(db);
       Record thisRecord = new Record("syncEnd");
       thisRecord.put("endDateTime", String.valueOf(new java.sql.Timestamp(new java.util.Date().getTime())));
       recordList.add(thisRecord);
     } else if (action == SYNC) {
-      ObjectUtils.setParam(object, "lastAnchor", auth.getLastAnchor());
-      ObjectUtils.setParam(object, "nextAnchor", auth.getNextAnchor());
+      ObjectUtils.setParam(object, "lastAnchor", packetContext.getAuthenticationItem().getLastAnchor());
+      ObjectUtils.setParam(object, "nextAnchor", packetContext.getAuthenticationItem().getNextAnchor());
       //If the client supplied any filters... set them
       setGuidParameters(db);
       //Build inserts for client
-      if (auth.getNextAnchor() != null) {
+      if (packetContext.getAuthenticationItem().getNextAnchor() != null) {
         buildRecords(object, db, dbLookup, Constants.SYNC_INSERTS);
       }
       //Build updates for client
-      if (auth.getLastAnchor() != null) {
+      if (packetContext.getAuthenticationItem().getLastAnchor() != null) {
         buildRecords(object, db, dbLookup, Constants.SYNC_UPDATES);
       }
     } else if (action == SYNC_DELETE) {
@@ -558,7 +497,7 @@ public class TransactionItem {
           this.setReferencedTable();
           if (thisRecord != null &&
               syncClientMap.lookupClientId(
-              clientManager,
+              packetContext.getClientManager(),
               syncClientMap.getTableId(),
               ObjectUtils.getParam(object, "id")
               ) != -1) {
@@ -623,10 +562,10 @@ public class TransactionItem {
    */
   public void setObjectId(Connection db) throws SQLException {
     if (ignoredProperties != null && ignoredProperties.containsKey("guid")) {
-      SyncTable referencedTable = (SyncTable) mapping.get(name + "List");
+      SyncTable referencedTable = (SyncTable) packetContext.getObjectMap().get(name + "List");
       if (referencedTable != null) {
         String value = (String) ignoredProperties.get("guid");
-        int recordId = syncClientMap.lookupServerId(clientManager, referencedTable.getId(), value);
+        int recordId = syncClientMap.lookupServerId(packetContext.getClientManager(), referencedTable.getId(), value);
         ObjectUtils.setParam(object, "id", String.valueOf(recordId));
         if (System.getProperty("DEBUG") != null) {
           System.out.println("TransactionItem-> Setting object id: " + recordId);
@@ -657,18 +596,18 @@ public class TransactionItem {
             String lookupField = param.substring(param.indexOf("^") + 1);
             param = param.substring(0, param.indexOf("^"));
 
-            SyncTable referencedTable = (SyncTable) mapping.get(lookupField + "List");
+            SyncTable referencedTable = (SyncTable) packetContext.getObjectMap().get(lookupField + "List");
             if (referencedTable != null) {
-              int recordId = syncClientMap.lookupServerId(clientManager, referencedTable.getId(), value);
+              int recordId = syncClientMap.lookupServerId(packetContext.getClientManager(), referencedTable.getId(), value);
               ObjectUtils.setParam(object, param, String.valueOf(recordId));
               if (System.getProperty("DEBUG") != null) {
                 System.out.println("TransactionItem-> Setting server parameter: " + param + " data: " + recordId);
               }
             }
           } else {
-            SyncTable referencedTable = (SyncTable) mapping.get(param + "List");
+            SyncTable referencedTable = (SyncTable) packetContext.getObjectMap().get(param + "List");
             if (referencedTable != null) {
-              int recordId = syncClientMap.lookupServerId(clientManager, referencedTable.getId(), value);
+              int recordId = syncClientMap.lookupServerId(packetContext.getClientManager(), referencedTable.getId(), value);
               ObjectUtils.setParam(object, param + "Id", String.valueOf(recordId));
               if (System.getProperty("DEBUG") != null) {
                 System.out.println("TransactionItem-> Setting new parameter: " + param + "Id" + " data: " + recordId);
@@ -698,7 +637,7 @@ public class TransactionItem {
     Method method = object.getClass().getMethod(executeMethod, dbClass);
     //Retrieve the previous object before executing an action
     Object previousObject = null;
-    if (objectHookList != null) {
+    if (packetContext.getObjectHookManager() != null) {
       if (action == UPDATE || action == DELETE) {
         previousObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
       }
@@ -706,16 +645,16 @@ public class TransactionItem {
     //Execute
     Object result = (method.invoke(object, dbObject));
     //Process any hooks
-    if (objectHookList != null) {
+    if (packetContext.getObjectHookManager() != null) {
       switch (action) {
           case INSERT:
-            objectHookList.processInsert(object, sqlDriver, ce);
+            packetContext.getObjectHookManager().process(packetContext, ObjectHookAction.INSERT, null, object);
             break;
           case UPDATE:
-            objectHookList.processUpdate(previousObject, object, sqlDriver, ce);
+            packetContext.getObjectHookManager().process(packetContext, ObjectHookAction.UPDATE, previousObject, object);
             break;
           case DELETE:
-            objectHookList.processDelete(previousObject, sqlDriver, ce);
+            packetContext.getObjectHookManager().process(packetContext, ObjectHookAction.DELETE, previousObject, null);
             break;
           default:
             break;
@@ -804,7 +743,7 @@ public class TransactionItem {
       }
       if (syncType == Constants.SYNC_INSERTS) {
         //Check to see if the client already has this record...
-        if (syncClientMap.lookupClientId(clientManager, syncClientMap.getTableId(), ObjectUtils.getParam(thisObject, "id")) == -1) {
+        if (syncClientMap.lookupClientId(packetContext.getClientManager(), syncClientMap.getTableId(), ObjectUtils.getParam(thisObject, "id")) == -1) {
           Record thisRecord = addRecords(thisObject, recordList, recordAction);
           this.insertClientMapping(dbLookup, thisRecord);
         }
@@ -877,16 +816,16 @@ public class TransactionItem {
             param = param.substring(param.indexOf("^") + 1);
             lookupField = thisField.substring(0, thisField.indexOf("^"));
             thisField = thisField.substring(0, thisField.indexOf("^"));
-            SyncTable referencedTable = (SyncTable) mapping.get(param + "List");
+            SyncTable referencedTable = (SyncTable) packetContext.getObjectMap().get(param + "List");
             if (referencedTable != null) {
-              int recordId = syncClientMap.lookupClientId(clientManager, referencedTable.getId(),
+              int recordId = syncClientMap.lookupClientId(packetContext.getClientManager(), referencedTable.getId(),
                   ObjectUtils.getParam(thisObject, lookupField));
               thisValue = String.valueOf(recordId);
             }
           } else {
-            SyncTable referencedTable = (SyncTable) mapping.get(param + "List");
+            SyncTable referencedTable = (SyncTable) packetContext.getObjectMap().get(param + "List");
             if (referencedTable != null) {
-              int recordId = syncClientMap.lookupClientId(clientManager, referencedTable.getId(),
+              int recordId = syncClientMap.lookupClientId(packetContext.getClientManager(), referencedTable.getId(),
                   ObjectUtils.getParam(thisObject, lookupField + "Id"));
               thisValue = String.valueOf(recordId);
             }
@@ -896,9 +835,9 @@ public class TransactionItem {
           if (thisField.indexOf(".guid") > -1) {
             //This is a sub-object, so get the correct guid for the client
             String lookupField = thisField.substring(0, thisField.indexOf(".guid"));
-            SyncTable referencedTable = (SyncTable) mapping.get(lookupField + "List");
+            SyncTable referencedTable = (SyncTable) packetContext.getObjectMap().get(lookupField + "List");
             if (referencedTable != null) {
-              int recordId = syncClientMap.lookupClientId(clientManager, referencedTable.getId(), thisValue);
+              int recordId = syncClientMap.lookupClientId(packetContext.getClientManager(), referencedTable.getId(), thisValue);
               thisValue = String.valueOf(recordId);
             }
           }
@@ -918,7 +857,7 @@ public class TransactionItem {
             thisRecord.put("guid", String.valueOf(identity++));
           } else if (thisRecord.getAction().equals("update")) {
             //Sending an update back to client, get the correct guid
-            thisRecord.put("guid", syncClientMap.lookupClientId(clientManager, syncClientMap.getTableId(), ObjectUtils.getParam(thisObject, "id")));
+            thisRecord.put("guid", syncClientMap.lookupClientId(packetContext.getClientManager(), syncClientMap.getTableId(), ObjectUtils.getParam(thisObject, "id")));
           } else if (thisRecord.getAction().equals("delete")) {
             //Let the client know that its record was deleted
             thisRecord.put("guid", ignoredProperties.get("guid"));
@@ -941,7 +880,7 @@ public class TransactionItem {
   public boolean setReferencedTable() {
     //The client requested an object, but the mapping is stored as the objectList
     if (!name.endsWith("List")) {
-      SyncTable referencedTable = (SyncTable) mapping.get(name + "List");
+      SyncTable referencedTable = (SyncTable) packetContext.getObjectMap().get(name + "List");
       if (referencedTable != null) {
         syncClientMap.setTableId(referencedTable.getId());
         return true;

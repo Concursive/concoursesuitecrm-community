@@ -16,7 +16,7 @@ import java.util.*;
  *  Provides essential methods for working with XML. XMLUtils is also a class
  *  representing an XML document.
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    April 10, 2002
  *@version    $Id$
  */
@@ -88,9 +88,6 @@ public class XMLUtils {
     boolean endElement = true;
     while ((line = br.readLine()) != null) {
       data.append(line.trim() + System.getProperty("line.separator"));
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("  ++Line: " + line);
-      }
       if (cacheXML) {
         if (XMLString == null) {
           XMLString = new StringBuffer();
@@ -461,9 +458,6 @@ public class XMLUtils {
    *@exception  Exception  Description of Exception
    */
   private void parseXML(String xmlToParse) throws Exception {
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("XMLUtils-> Parsing XML string");
-    }
     StringReader strXML = new StringReader(xmlToParse);
     InputSource isXML = new InputSource(strXML);
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -474,15 +468,12 @@ public class XMLUtils {
 
 
   /**
-   *  Description of the Method
+   *  Builds an XML document from the specified File object
    *
    *@param  xmlFileToParse  Description of Parameter
    *@exception  Exception   Description of Exception
    */
   private void parseXML(File xmlFileToParse) throws Exception {
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("XMLUtils-> Parsing XML file");
-    }
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
     this.document = builder.parse(xmlFileToParse);

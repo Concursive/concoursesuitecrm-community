@@ -16,7 +16,7 @@ import java.util.Hashtable;
  *@created    July 9, 2001
  *@version    $Id$
  */
-public final class Login extends GenericAction {
+public final class Login extends CFSModule {
 
   public final static String fs = System.getProperty("file.separator");
   
@@ -107,22 +107,10 @@ public final class Login extends GenericAction {
       int userId = -1;
       db = sqlDriver.getConnection(ce);
       
-      //Create the SystemStatus object if it does not exist for this connection,
-      //needs to be done before creating the user object
-      if (!((Hashtable)context.getServletContext().getAttribute("SystemStatus")).containsKey(ce.getUrl())) {
-        synchronized (this) {
-          if (!((Hashtable)context.getServletContext().getAttribute("SystemStatus")).containsKey(ce.getUrl())) {
-            SystemStatus newSystemStatus = new SystemStatus();
-            newSystemStatus.setFileLibraryPath( 
-              context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
-                "fileLibrary" + fs + ce.getDbName() + fs);
-            newSystemStatus.queryRecord(db);
-            ((Hashtable)context.getServletContext().getAttribute("SystemStatus")).put(ce.getUrl(), newSystemStatus);
-            if (System.getProperty("DEBUG") != null) {
-              System.out.println("Login-> Added new System Status object: " + ce.getUrl());
-            }
-          }
-        }
+      //A good place to initialize this SystemStatus, must be done before getting a user
+      SystemStatus thisSystem = this.retrieveSystemStatus(context, db, ce);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Login-> Getting SystemStatus from memory : " + ((thisSystem == null)?"false":"true"));
       }
       
       pst = db.prepareStatement(
@@ -159,10 +147,6 @@ public final class Login extends GenericAction {
       if (userId > -1) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Login-> Getting user " + userId + " from memory");
-        }
-        SystemStatus thisSystem = (SystemStatus)((Hashtable)context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("Login-> Getting SystemStatus from memory : " + ((thisSystem == null)?"false":"true"));
         }
         thisUser = new UserBean(thisSystem, userId);
         if (thisUser != null) {

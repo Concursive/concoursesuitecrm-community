@@ -8,6 +8,7 @@ import com.darkhorseventures.controller.SystemStatus;
 import com.darkhorseventures.controller.RecentItem;
 import com.darkhorseventures.controller.CustomForm;
 import com.darkhorseventures.controller.CustomFormList;
+import com.darkhorseventures.controller.ObjectHookAction;
 import java.sql.*;
 import java.util.*;
 import java.text.*;
@@ -702,19 +703,41 @@ public class CFSModule {
   protected void processInsertHook(ActionContext context, Object object) {
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
-    this.getSystemStatus(context).processInsertHook(object, sqlDriver, ce);
+    this.getSystemStatus(context).processHook(context, ObjectHookAction.INSERT, null, object, sqlDriver, ce);
   }
   
   protected void processUpdateHook(ActionContext context, Object previousObject, Object object) {
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
-    this.getSystemStatus(context).processUpdateHook(previousObject, object, sqlDriver, ce);
+    this.getSystemStatus(context).processHook(context, ObjectHookAction.UPDATE, previousObject, object, sqlDriver, ce);
   }
   
   protected void processDeleteHook(ActionContext context, Object previousObject) {
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
-    this.getSystemStatus(context).processDeleteHook(previousObject, sqlDriver, ce);
+    this.getSystemStatus(context).processHook(context, ObjectHookAction.DELETE, previousObject, null, sqlDriver, ce);
+  }
+  
+  public SystemStatus retrieveSystemStatus(ActionContext context, Connection db, ConnectionElement ce) throws SQLException {
+    //SystemStatusList is created in InitHook
+    Hashtable statusList = (Hashtable)context.getServletContext().getAttribute("SystemStatus");
+    //Create the SystemStatus object if it does not exist for this connection,
+    if (!statusList.containsKey(ce.getUrl())) {
+      synchronized (this) {
+        if (!statusList.containsKey(ce.getUrl())) {
+          SystemStatus newSystemStatus = new SystemStatus();
+          newSystemStatus.setFileLibraryPath( 
+            context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
+              "fileLibrary" + fs + ce.getDbName() + fs);
+          newSystemStatus.queryRecord(db);
+          statusList.put(ce.getUrl(), newSystemStatus);
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("Login-> Added new System Status object: " + ce.getUrl());
+          }
+        }
+      }
+    }
+    return (SystemStatus)statusList.get(ce.getUrl());
   }
 }
 

@@ -7,6 +7,7 @@ import java.sql.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.utils.*;
 import org.w3c.dom.Element;
+import org.theseus.actions.*;
 
 /**
  *  System status maintains global values for a shared group of users. This is
@@ -28,7 +29,7 @@ public class SystemStatus {
   private boolean hierarchyUpdating = false;
   private ArrayList ignoredFields = new ArrayList();
   private Hashtable fieldLabels = new Hashtable();
-  private ObjectHookList hooks = new ObjectHookList();
+  private ObjectHookManager hookManager = new ObjectHookManager();
   private String fileLibraryPath = null;
 
   /**
@@ -123,7 +124,11 @@ public class SystemStatus {
   public String getLabel(String thisLabel) {
     return ((String) fieldLabels.get(thisLabel));
   }
+  
+  public String getFileLibraryPath() { return fileLibraryPath; }
 
+
+  public ObjectHookManager getHookManager() { return hookManager; }
 
 
   /**
@@ -271,9 +276,9 @@ public class SystemStatus {
       }
     }
 
-    hooks.setFileLibraryPath(fileLibraryPath);
-    hooks.clear();
-    hooks.parse(hookData);
+    hookManager.setFileLibraryPath(fileLibraryPath);
+    hookManager.initializeObjectHookList(hookData);
+    hookManager.initializeBusinessProcessList(hookData);
   }
 
 
@@ -313,58 +318,8 @@ public class SystemStatus {
     }
   }
 
-
-  /**
-   *  Returns whether an object hook exists for the given object
-   *
-   *@param  object                                Description of the Parameter
-   *@return                                       Description of the Return
-   *      Value
-   *@exception  java.lang.ClassNotFoundException  Description of the Exception
-   */
-  public boolean hasHook(Object object) throws java.lang.ClassNotFoundException {
-    return (hooks.has(object));
+  public void processHook(ActionContext context, int action, Object previousObject, Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
+    hookManager.process(context, action, previousObject, object, sqlDriver, ce);
   }
-
-
-  /**
-   *  Executes a hook when an object is being inserted, called by the XML API or
-   *  CFSModule
-   *
-   *@param  object     Description of the Parameter
-   *@param  sqlDriver  Description of the Parameter
-   *@param  ce         Description of the Parameter
-   */
-  public void processInsertHook(Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
-    hooks.processInsert(object, sqlDriver, ce);
-  }
-
-
-  /**
-   *  Executes a hook when an object is being updated, called by the XML API or
-   *  CFSModule
-   *
-   *@param  previousObject  Description of the Parameter
-   *@param  object          Description of the Parameter
-   *@param  sqlDriver       Description of the Parameter
-   *@param  ce              Description of the Parameter
-   */
-  public void processUpdateHook(Object previousObject, Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
-    hooks.processUpdate(previousObject, object, sqlDriver, ce);
-  }
-
-
-  /**
-   *  Executes a hook when an object is being deleted, called by the XML API or
-   *  CFSModule
-   *
-   *@param  previousObject  Description of the Parameter
-   *@param  sqlDriver       Description of the Parameter
-   *@param  ce              Description of the Parameter
-   */
-  public void processDeleteHook(Object previousObject, ConnectionPool sqlDriver, ConnectionElement ce) {
-    hooks.processDelete(previousObject, sqlDriver, ce);
-  }
-
 }
 

@@ -1,0 +1,72 @@
+<config>
+  <hooks>
+    <hook class="com.darkhorseventures.cfsbase.Ticket">
+      <actions>
+        <action type="update" process="dhv.ticket.insert" enabled="true"/>
+        <action type="insert" process="dhv.ticket.insert" enabled="true"/>
+      </actions>
+    </hook>
+    <hook class="com.darkhorseventures.cfsbase.Opportunity"/>
+    <hook class="com.darkhorseventures.cfsbase.Assignment"/>
+  </hooks>
+  <processes>
+    <process name="dhv.ticket.insert" description="DHV Ticket Insert Process" startId="1" entered="" modified="">
+      <parameters>
+        <parameter name="notification.host" value="mail.darkhorseventures.com" type="java.lang.String" enabled="true"/>
+        <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="com.darkhorseventures.cfs.troubletickets.component.LoadTicketDetails" enabled="true"/>
+        <component id="2" parent="1" class="com.darkhorseventures.cfs.troubletickets.component.QueryTicketJustClosed"/>
+        <component id="3" parent="2" if="false" class="com.darkhorseventures.cfs.troubletickets.component.QueryTicketJustAssigned"/>
+        <component id="4" parent="2" if="true" class="com.darkhorseventures.cfs.component.SendUserNotification">
+          <parameters>
+            <parameter name="notification.module" value="Tickets"/>
+            <parameter name="notification.itemId" value="${this.id}"/>
+            <parameter name="notification.itemModified" value="${this.modified}"/>
+            <parameter name="notification.userToNotify" value="${this.enteredBy}"/>
+            <parameter name="notification.subject">CFS Ticket Closed: ${this.paddedId}</parameter>
+<parameter name="notification.body">
+The following ticket in CFS has been closed:&lt;br&gt;
+&lt;br&gt;
+--- Ticket Details ---&lt;br&gt;
+&lt;br&gt;
+Ticket # ${this.paddedId}&lt;br&gt;
+Priority: ${ticketPriorityLookup.description}&lt;br&gt;
+Severity: ${ticketSeverityLookup.description}&lt;br&gt;
+Issue: ${this.problem}&lt;br&gt;
+&lt;br&gt;
+Comment: ${this.comment}&lt;br&gt;
+&lt;br&gt;
+Closed by: ${ticketModifiedByContact.nameFirstLast}&lt;br&gt;
+&lt;br&gt;
+Solution: ${this.solution}
+</parameter>
+          </parameters>
+        </component>
+        <component id="5" parent="3" if="true" class="com.darkhorseventures.cfs.component.SendUserNotification">
+        <parameters>
+            <parameter name="notification.module" value="Tickets"/>
+            <parameter name="notification.itemId" value="${this.id}"/>
+            <parameter name="notification.itemModified" value="${this.modified}"/>
+            <parameter name="notification.userToNotify" value="${this.enteredBy}"/>
+            <parameter name="notification.subject">CFS Ticket Assigned: ${this.paddedId}</parameter>
+<parameter name="notification.body">
+The following ticket in CFS has been assigned to you:&lt;br&gt;
+&lt;br&gt;
+--- Ticket Details ---&lt;br&gt;
+&lt;br&gt;
+Ticket # ${this.paddedId}&lt;br&gt;
+Priority: ${ticketPriorityLookup.description}&lt;br&gt;
+Severity: ${ticketSeverityLookup.description}&lt;br&gt;
+Issue: ${this.problem}&lt;br&gt;
+&lt;br&gt;
+Assigned By: ${ticketModifiedByContact.nameFirstLast}&lt;br&gt;
+Comment: ${this.comment}
+</parameter>
+          </parameters>
+        </component>
+      </components>
+    </process>
+  </processes>
+</config>

@@ -4,6 +4,8 @@ import java.util.*;
 import org.w3c.dom.Element;
 import java.sql.*;
 import com.darkhorseventures.utils.*;
+import com.darkhorseventures.cfsbase.Constants;
+import java.io.*;
 
 /**
  *  Manages a list of hooks that are available for the given system
@@ -14,15 +16,15 @@ import com.darkhorseventures.utils.*;
  */
 public class ObjectHookList extends HashMap {
 
-  private String fileLibraryPath = null;
-  
   /**
    *  Constructor for the ObjectHookList object
    */
   public ObjectHookList() { }
   
-  public void setFileLibraryPath(String tmp) { this.fileLibraryPath = tmp; }
-
+  public ObjectHookList(Connection db) throws SQLException {
+    this.buildList(db);
+  }
+  
   /**
    *  Queries the database and retrieves the configured hooks from the
    *  system_prefs table
@@ -31,7 +33,6 @@ public class ObjectHookList extends HashMap {
    *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    String hookData = null;
     PreparedStatement pst = db.prepareStatement(
         "SELECT data " +
         "FROM system_prefs " +
@@ -40,14 +41,27 @@ public class ObjectHookList extends HashMap {
     pst.setString(1, "system.objects.hooks");
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      hookData = rs.getString("data");
+    while (rs.next()) {
+      this.parse(rs.getString("data"));
     }
     rs.close();
     pst.close();
-    this.parse(hookData);
   }
 
+  public void buildListTest()  {
+    try {
+      File file = new File("/home/matt/source/dhv/cfs2/documentation/Hooks and components.xml");
+      BufferedReader in = new BufferedReader(new FileReader(file));
+      
+      StringBuffer config = new StringBuffer();
+      String text = null;
+      while ((text = in.readLine()) != null) {
+        config.append(text);
+      }
+      this.parse(config.toString());
+    } catch (Exception e) {
+    }
+  }
 
   /**
    *  Parses the XML hook configuration data into objects
@@ -61,22 +75,23 @@ public class ObjectHookList extends HashMap {
     }
     try {
       XMLUtils xml = new XMLUtils(hookData);
-      ArrayList hookElements = new ArrayList();
-      xml.getAllChildren(xml.getDocumentElement(), "hook", hookElements);
-      Iterator elements = hookElements.iterator();
-      while (elements.hasNext()) {
-        Element thisElement = (Element) elements.next();
-        String enabled = (String) thisElement.getAttribute("enabled");
-        if (enabled == null || !"false".equals(enabled)) {
-          String hookId = (String) thisElement.getAttribute("id");
-          String hookClass = (String) thisElement.getAttribute("class");
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("ObjectHookList-> Hook " + hookId + " executes " + hookClass);
+      //Process all hooks and the corresponding actions
+      Element hooks = XMLUtils.getFirstElement(xml.getDocumentElement(), "hooks");
+      if (hooks != null) {
+        ArrayList hookNodes = XMLUtils.getElements(hooks, "hook");
+        Iterator hookElements = hookNodes.iterator();
+        while (hookElements.hasNext()) {
+          Element hookElement = (Element) hookElements.next();
+          String hookClass = (String) hookElement.getAttribute("class");
+          String hookEnabled = (String) hookElement.getAttribute("enabled");
+          if (hookEnabled != null && "false".equals(hookEnabled)) {
+            break;
           }
-          this.put(hookId, hookClass);
-        }
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("ObjectHookList-> Hooks added: " + this.size());
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("ObjectHookList-> Added a hook: " + hookClass);
+          }
+          ObjectHookActionList actionList = new ObjectHookActionList(hookElement, Constants.TRUE);
+          this.put(hookClass, actionList);
         }
       }
     } catch (Exception e) {
@@ -97,70 +112,6 @@ public class ObjectHookList extends HashMap {
    */
   public boolean has(Object object) throws java.lang.ClassNotFoundException {
     return (this.get(object.getClass().getName()) != null);
-  }
-
-
-  /**
-   *  Executes the given hook as an insert
-   *
-   *@param  object     Description of the Parameter
-   *@param  sqlDriver  Description of the Parameter
-   *@param  ce         Description of the Parameter
-   */
-  public void processInsert(Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
-    try {
-      if (this.has(object)) {
-        String classHook = (String) this.get(object.getClass().getName());
-        ObjectHook thisHook = new ObjectHook(sqlDriver, ce, classHook, object);
-        thisHook.setFileLibraryPath(fileLibraryPath);
-        thisHook.setMethod(ObjectHook.INSERT);
-        thisHook.start();
-      }
-    } catch (ClassNotFoundException e) {
-    }
-  }
-
-
-  /**
-   *  Executes the given hook as an update
-   *
-   *@param  previousObject  Description of the Parameter
-   *@param  object          Description of the Parameter
-   *@param  sqlDriver       Description of the Parameter
-   *@param  ce              Description of the Parameter
-   */
-  public void processUpdate(Object previousObject, Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
-    try {
-      if (this.has(object)) {
-        String classHook = (String) this.get(object.getClass().getName());
-        ObjectHook thisHook = new ObjectHook(sqlDriver, ce, classHook, previousObject, object);
-        thisHook.setFileLibraryPath(fileLibraryPath);
-        thisHook.setMethod(ObjectHook.UPDATE);
-        thisHook.start();
-      }
-    } catch (ClassNotFoundException e) {
-    }
-  }
-
-
-  /**
-   *  Executes the given hook as a delete
-   *
-   *@param  previousObject  Description of the Parameter
-   *@param  sqlDriver       Description of the Parameter
-   *@param  ce              Description of the Parameter
-   */
-  public void processDelete(Object previousObject, ConnectionPool sqlDriver, ConnectionElement ce) {
-    try {
-      if (this.has(previousObject)) {
-        String classHook = (String) this.get(previousObject.getClass().getName());
-        ObjectHook thisHook = new ObjectHook(sqlDriver, ce, classHook, previousObject, null);
-        thisHook.setFileLibraryPath(fileLibraryPath);
-        thisHook.setMethod(ObjectHook.DELETE);
-        thisHook.start();
-      }
-    } catch (ClassNotFoundException e) {
-    }
   }
 
 }

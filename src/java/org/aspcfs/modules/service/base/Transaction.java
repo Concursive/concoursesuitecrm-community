@@ -4,7 +4,6 @@ import java.util.*;
 import org.w3c.dom.*;
 import java.sql.*;
 import com.darkhorseventures.cfsbase.SyncTable;
-import com.darkhorseventures.cfsbase.SyncClientManager;
 import com.darkhorseventures.controller.ObjectHookList;
 
 /**
@@ -21,15 +20,10 @@ import com.darkhorseventures.controller.ObjectHookList;
 public class Transaction extends ArrayList {
 
   private int id = -1;
-  private HashMap mapping = null;
   private StringBuffer errorMessage = new StringBuffer();
   private RecordList recordList = null;
   private TransactionMeta meta = null;
-  private SyncClientManager clientManager = null;
-  private AuthenticationItem auth = null;
-  private ObjectHookList objectHookList = null;
-  private ConnectionPool sqlDriver = null;
-  private ConnectionElement ce = null;
+  private PacketContext packetContext = null;
 
   /**
    *  Constructor for the Transaction object
@@ -61,25 +55,10 @@ public class Transaction extends ArrayList {
   }
 
 
-  /**
-   *  Sets the mapping attribute of the Transaction object
-   *
-   *@param  tmp  The new mapping value
-   */
-  public void setMapping(HashMap tmp) {
-    mapping = tmp;
+  public void setPacketContext(PacketContext tmp) {
+    packetContext = tmp;
   }
   
-  public void setClientManager(SyncClientManager tmp) {
-    clientManager = tmp;
-  }
-  
-  public void setAuth(AuthenticationItem tmp) { this.auth = tmp; }
-
-  public void setObjectHookList(ObjectHookList tmp) { this.objectHookList = tmp; }
-  public void setSqlDriver(ConnectionPool tmp) { this.sqlDriver = tmp; }
-  public void setCe(ConnectionElement tmp) { this.ce = tmp; }
-
 
   /**
    *  Gets the id attribute of the Transaction object
@@ -125,13 +104,8 @@ public class Transaction extends ArrayList {
     Iterator i = objectElements.iterator();
     while (i.hasNext()) {
       Element objectElement = (Element) i.next();
-      TransactionItem thisItem = new TransactionItem(objectElement, mapping);
-      thisItem.setClientManager(clientManager);
-      thisItem.setMapping(mapping);
-      thisItem.setAuth(auth);
-      thisItem.setObjectHookList(objectHookList);
-      thisItem.setSqlDriver(sqlDriver);
-      thisItem.setCe(ce);
+      TransactionItem thisItem = new TransactionItem(objectElement, packetContext.getObjectMap());
+      thisItem.setPacketContext(packetContext);
       if (thisItem.getName().equals("meta")) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Transaction-> Meta data found");
@@ -154,10 +128,7 @@ public class Transaction extends ArrayList {
    *@param  value  The feature to be added to the Mapping attribute
    */
   public void addMapping(String key, SyncTable value) {
-    if (mapping == null) {
-      mapping = new HashMap();
-    }
-    mapping.put(key, value);
+    packetContext.getObjectMap().put(key, value);
   }
 
 

@@ -52,30 +52,50 @@ public final class ProcessPacket extends CFSModule {
       //There should be an authentication node in the packet
       AuthenticationItem auth = new AuthenticationItem();
       xml.populateObject(auth, xml.getFirstChild("authentication"));
-      db = auth.getConnection(context);
-      if (db != null) {
+      
+      //Initialize the auth by getting the connection element
+      ConnectionElement ce = auth.getConnectionElement(context);
+      
+      //Since this module bypasses the user login module, set this "user's" 
+      //connection info to simulate the login
+      context.getSession().setAttribute("ConnectionElement", ce);
+      
+      if (auth.isAuthenticated(context)) {
+        //Environment variables for this packet request
+        PacketContext packetContext = new PacketContext();
+        packetContext.setActionContext(context);
+        
         if (auth.getSystemId() == -1) {
-          //For Vport
+          //Temporarily for Vport
           auth.setSystemId(1);
         }
+        packetContext.setAuthenticationItem(auth);
+        
+        db = this.getConnection(context);
         
         //Prepare the SyncClientManager
         SyncClientManager clientManager = new SyncClientManager();
         clientManager.addClient(db, auth.getClientId());
+        packetContext.setClientManager(clientManager);
         
         //Prepare the objectMap: The allowable objects that can be processed for the
         //given systemId
         HashMap objectMap = this.getObjectMap(context, db, auth);
+        packetContext.setObjectMap(objectMap);
         
-        //Prepare the objectHooks: Inserts and updates can trigger code if specified
-        ObjectHookList hooks = new ObjectHookList();
-        hooks.setFileLibraryPath(this.getDbNamePath(context));
-        hooks.buildList(db);
         ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
-        ConnectionElement ce = auth.getConnectionElement(context);
+        packetContext.setConnectionPool(sqlDriver);
+        packetContext.setConnectionElement(ce);
+        
+        //Initialize the systemStatus for this request to re-use objects, if not already initialized
+        SystemStatus systemStatus = this.retrieveSystemStatus(context, db, ce);
+        
+        //Prepare the objectHooks that are cached
+        ObjectHookManager hookManager = systemStatus.getHookManager();
+        packetContext.setObjectHookManager(hookManager);
         
         //2nd connection when transactions need to do additional processing
-        dbLookup = auth.getConnection(context);
+        dbLookup = this.getConnection(context);
         dbLookup.setAutoCommit(false);
         
         //Process the transactions
@@ -86,12 +106,8 @@ public final class ProcessPacket extends CFSModule {
           //Configure the transaction
           Element thisElement = (Element) trans.next();
           Transaction thisTransaction = new Transaction();
-          thisTransaction.setAuth(auth);
-          thisTransaction.setMapping(objectMap);
-          thisTransaction.setClientManager(clientManager);
-          thisTransaction.setObjectHookList(hooks);
-          thisTransaction.setSqlDriver(sqlDriver);
-          thisTransaction.setCe(ce);
+          thisTransaction.setPacketContext(packetContext);
+          
           SyncTable metaMapping = new SyncTable();
           metaMapping.setName("meta");
           metaMapping.setMappedClassName("com.darkhorseventures.utils.TransactionMeta");

@@ -148,5 +148,19 @@ public class Template {
     return value;
   }
 
+  public ArrayList getVariables() {
+    ArrayList variables = new ArrayList();
+    if (text != null) {
+      int posCount = 0;
+      int loc = -1;
+      while ((loc = text.indexOf("${", posCount)) > -1) {
+        int endLoc = text.indexOf("}", loc);
+        String variable = text.substring(loc + 2, endLoc);
+        variables.add(variable);
+        posCount = endLoc;
+      }
+    }
+    return variables;
+  }
 }
 

@@ -1,83 +1,109 @@
 package com.darkhorseventures.controller;
 
-import com.darkhorseventures.utils.*;
-import java.sql.*;
-
 /**
- *  A class that allows hooks to be run in a thread
+ *  A class that allows hooks to be run in a thread, created by the WorkflowManager
  *
  *@author     matt rajkowski
  *@created    October 14, 2002
- *@version    $Id$
+ *@version    $Id: ObjectHook.java,v 1.2.2.4 2002/11/12 19:10:57 mrajkowski Exp
+ *      $
  */
 public class ObjectHook extends Thread {
-  /**
-   *  The method state for this object hook
-   */
-  public final static int INSERT = 1;
-  /**
-   *  The method state for this object hook
-   */
-  public final static int UPDATE = 2;
-  /**
-   *  The method state for this object hook
-   */
-  public final static int DELETE = 3;
 
-  private ConnectionPool sqlDriver = null;
-  private ConnectionElement ce = null;
-  private String classHook = null;
-  private Object object = null;
-  private Object previousObject = null;
-  private int method = 0;
-  private String fileLibraryPath = null;
+  private ComponentContext context = null;
+  private ObjectHookList objectHookList = null;
+  private BusinessProcessList businessProcessList = null;
+  private int actionId = -1;
+  private WorkflowManager manager = null;
 
 
   /**
-   *  Sets the ObjectHook properties
+   *  Sets the objectHookList attribute of the ObjectHook object
    *
-   *@param  sqlDriver  Description of the Parameter
-   *@param  ce         Description of the Parameter
-   *@param  classHook  Description of the Parameter
-   *@param  object     Description of the Parameter
+   *@param  tmp  The new objectHookList value
    */
-  public ObjectHook(ConnectionPool sqlDriver, ConnectionElement ce, String classHook, Object object) {
-    this.sqlDriver = sqlDriver;
-    this.ce = ce;
-    this.object = object;
-    this.classHook = classHook;
+  public void setObjectHookList(ObjectHookList tmp) {
+    this.objectHookList = tmp;
   }
 
 
   /**
-   *  Sets the ObjectHook properties
+   *  Sets the businessProcessList attribute of the ObjectHook object
    *
-   *@param  sqlDriver       Description of the Parameter
-   *@param  ce              Description of the Parameter
-   *@param  classHook       Description of the Parameter
-   *@param  previousObject  Description of the Parameter
-   *@param  object          Description of the Parameter
+   *@param  tmp  The new businessProcessList value
    */
-  public ObjectHook(ConnectionPool sqlDriver, ConnectionElement ce, String classHook, Object previousObject, Object object) {
-    this.sqlDriver = sqlDriver;
-    this.ce = ce;
-    this.object = object;
-    this.previousObject = previousObject;
-    this.classHook = classHook;
+  public void setBusinessProcessList(BusinessProcessList tmp) {
+    this.businessProcessList = tmp;
   }
 
 
   /**
-   *  Sets the method attribute of the ObjectHook object
+   *  Sets the actionId attribute of the ObjectHook object
    *
-   *@param  tmp  The new method value
+   *@param  tmp  The new actionId value
    */
-  public void setMethod(int tmp) {
-    this.method = tmp;
+  public void setActionId(int tmp) {
+    this.actionId = tmp;
   }
-  
-  public void setFileLibraryPath(String tmp) {
-    this.fileLibraryPath = tmp;
+
+
+  /**
+   *  Sets the manager attribute of the ObjectHook object
+   *
+   *@param  tmp  The new manager value
+   */
+  public void setManager(WorkflowManager tmp) {
+    this.manager = tmp;
+  }
+
+
+  /**
+   *  Gets the businessProcessList attribute of the ObjectHook object
+   *
+   *@return    The businessProcessList value
+   */
+  public BusinessProcessList getBusinessProcessList() {
+    return businessProcessList;
+  }
+
+
+  /**
+   *  Gets the objectHookList attribute of the ObjectHook object
+   *
+   *@return    The objectHookList value
+   */
+  public ObjectHookList getObjectHookList() {
+    return objectHookList;
+  }
+
+
+  /**
+   *  Gets the actionId attribute of the ObjectHook object
+   *
+   *@return    The actionId value
+   */
+  public int getActionId() {
+    return actionId;
+  }
+
+
+  /**
+   *  Gets the manager attribute of the ObjectHook object
+   *
+   *@return    The manager value
+   */
+  public WorkflowManager getManager() {
+    return manager;
+  }
+
+
+  /**
+   *  Constructor for the ObjectHook object
+   *
+   *@param  context  Description of the Parameter
+   */
+  public ObjectHook(ComponentContext context) {
+    this.context = context;
   }
 
 
@@ -85,37 +111,30 @@ public class ObjectHook extends Thread {
    *  Main processing method for the ObjectHook object
    */
   public void run() {
-    Connection db = null;
     try {
-      //Thread.sleep(1000);
-      Object hook = ObjectUtils.constructObject(Class.forName(classHook));
-      if (hook instanceof BaseObjectHook) {
-        ((BaseObjectHook) hook).setCurrentObject(object);
-        ((BaseObjectHook) hook).setPreviousObject(previousObject);
-        if (((BaseObjectHook) hook).requiresConnection()) {
-          db = sqlDriver.getConnection(ce);
-          ((BaseObjectHook) hook).setConnection(db);
-        }
-        ((BaseObjectHook) hook).setFileLibraryPath(fileLibraryPath);
-        switch (method) {
-            case INSERT:
-              ((BaseObjectHook) hook).processInsert();
-              break;
-            case UPDATE:
-              ((BaseObjectHook) hook).processUpdate();
-              break;
-            case DELETE:
-              ((BaseObjectHook) hook).processDelete();
-              break;
-            default:
-              break;
+      if (System.getProperty("DEBUG") != null) {
+        //Pause the thread so that the debug output is easier to read
+        Thread.sleep(2000);
+      }
+      ObjectHookActionList actionList =
+          (ObjectHookActionList) objectHookList.get(context.getClassName());
+      if (actionList != null) {
+        ObjectHookAction thisAction =
+            (ObjectHookAction) actionList.get(new Integer(actionId));
+        if (thisAction != null) {
+          context.setProcessName(thisAction.getProcessName());
+          if (businessProcessList != null) {
+            BusinessProcess thisProcess = (BusinessProcess) businessProcessList.get(thisAction.getProcessName());
+            if (thisProcess != null) {
+              context.setProcess(thisProcess);
+              manager.execute(context);
+            }
+          }
         }
       }
     } catch (Exception e) {
+      e.printStackTrace(System.out);
     } finally {
-      if (db != null) {
-        sqlDriver.free(db);
-      }
     }
   }
 }
