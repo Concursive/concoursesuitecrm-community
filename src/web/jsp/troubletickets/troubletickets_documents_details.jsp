@@ -28,7 +28,9 @@ Details
   <tr>
 		<td class="containerBack">
     <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
+      <font color="red">This ticket was closed on
+      <dhv:tz timestamp="<%= TicketDetails.getClosed() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+      </font><br>
       &nbsp;<br>
     </dhv:evaluate>
     <%= showError(request, "actionError") %>
