@@ -37,17 +37,17 @@ public final class TaskForm extends CFSModule {
       LookupList priorityList = new LookupList(db, "lookup_task_priority");
       context.getRequest().setAttribute("PriorityList", priorityList);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
 
-    if (errorMessage == null) {
-      return this.getReturn(context, "PrepareTask");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    String returnAction = "PrepareTask";
+      if(context.getRequest().getParameter("returnAction") != null){
+        returnAction =  (String) context.getRequest().getParameter("returnAction");
+      }
+      return this.getReturn(context, returnAction);
   }
 }
 
