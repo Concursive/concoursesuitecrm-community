@@ -169,7 +169,6 @@ Modify Ticket
     </table>
    </td>
   </tr>
-
   <tr class="containerBody">
     <td class="formLabel">
       Asset
@@ -184,7 +183,7 @@ Modify Ticket
           <input type="hidden" name="assetId" id="assetId" value="<%=  TicketDetails.getAssetId() %>">
           &nbsp;
           <%= showAttribute(request, "assetIdError") %>
-          [<a href="javascript:popAssetListSingle('assetId','addAsset', 'filters=all|my|disabled','contractId','addServiceContract');">Select</a>]
+          [<a href="javascript:popAssetListSingle('assetId','addAsset', 'filters=allassets|undercontract','contractId','addServiceContract');">Select</a>]
           &nbsp [<a href="javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');">Clear</a>] 
         </td>
       </tr>

@@ -105,6 +105,7 @@ File Attachments
           </th>
         </tr>
         <tr class="containerBody">
+        <%= showError(request, "actionError") %>
           <form method="post" name="inputForm" action="CampaignManager.do?command=UploadFile&id=<%= Campaign.getId() %>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
             <td width="100%">
               <center>

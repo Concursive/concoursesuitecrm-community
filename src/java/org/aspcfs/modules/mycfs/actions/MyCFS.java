@@ -510,6 +510,11 @@ public final class MyCFS extends CFSModule {
               errors = new HashMap();
             }
             errors.put("contact" + thisContact.getId(), "Message could not be sent since contact does not have an email address");
+          } else if(email.startsWith("P:") && (thisContact.hasAccount() && (thisContact.getOrgId() != 0))){
+            if (errors == null) {
+              errors = new HashMap();
+            }
+            errors.put("contact" + thisContact.getId(), "Message could not be sent since contact does not have an email address");
           }
         }
       }

@@ -18,7 +18,7 @@
 <a href="TroubleTickets.do?">Help Desk</a> > 
 <a href="TroubleTickets.do?command=Home">View Tickets</a> >
 <a href="TroubleTickets.do?command=Details&id=<%= ticketDetails.getId() %>">Ticket Details</a> >
-Activity Log
+Maintenance Notes
 </td>
 </tr>
 </table>

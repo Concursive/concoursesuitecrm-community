@@ -26,6 +26,8 @@ public class AssetList extends ArrayList {
   private int serviceContractId = -1;
   private String serviceContractNumber = null;
   private int enteredBy = -1;
+  private String serialNumber = null;
+  private boolean allAssets = true;
 
 
   /**
@@ -124,6 +126,26 @@ public class AssetList extends ArrayList {
 
 
   /**
+   *  Sets the serialNumber attribute of the AssetList object
+   *
+   *@param  tmp  The new serialNumber value
+   */
+  public void setSerialNumber(String tmp) {
+    this.serialNumber = tmp;
+  }
+
+
+  /**
+   *  Sets the allAssets attribute of the AssetList object
+   *
+   *@param  tmp  The new allAssets value
+   */
+  public void setAllAssets(boolean tmp) {
+    this.allAssets = tmp;
+  }
+
+
+  /**
    *  Sets the enteredBy attribute of the AssetList object
    *
    *@param  tmp  The new enteredBy value
@@ -194,6 +216,26 @@ public class AssetList extends ArrayList {
 
 
   /**
+   *  Gets the serialNumber attribute of the AssetList object
+   *
+   *@return    The serialNumber value
+   */
+  public String getSerialNumber() {
+    return serialNumber;
+  }
+
+
+  /**
+   *  Gets the allAssets attribute of the AssetList object
+   *
+   *@return    The allAssets value
+   */
+  public boolean getAllAssets() {
+    return allAssets;
+  }
+
+
+  /**
    *  Gets the enteredBy attribute of the AssetList object
    *
    *@return    The enteredBy value
@@ -247,6 +289,7 @@ public class AssetList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM asset a " +
+        "LEFT JOIN service_contract sc ON (a.contract_id = sc.contract_id) " +
         "WHERE asset_id > -1 ");
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
@@ -274,7 +317,8 @@ public class AssetList extends ArrayList {
     }
     sqlSelect.append(
         "a.*, sc.contract_number AS service_contract_number " +
-        "FROM asset a LEFT JOIN service_contract sc ON (a.contract_id = sc.contract_id) " +
+        "FROM asset a " +
+        "LEFT JOIN service_contract sc ON (a.contract_id = sc.contract_id) " +
         "WHERE asset_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -304,7 +348,25 @@ public class AssetList extends ArrayList {
       sqlFilter.append("AND a.account_id = ? ");
     }
     if (serviceContractId > -1) {
-      sqlFilter.append("AND a.contract_id = ? ");
+      sqlFilter.append("AND (a.contract_id = ? ");
+      sqlFilter.append((allAssets) ? "OR a.contract_id IS NULL)" : ")");
+    } else {
+      sqlFilter.append((allAssets) ? " " : "AND a.contract_id IS NOT NULL ");
+    }
+    if (serialNumber != null) {
+      if (serialNumber.indexOf("%") >= 0) {
+        sqlFilter.append("AND lower(a.serial_number) like lower(?) ");
+      } else {
+        sqlFilter.append("AND lower(a.serial_number) = lower(?) ");
+      }
+    }
+
+    if (serviceContractNumber != null) {
+      if (serviceContractNumber.indexOf("%") >= 0) {
+        sqlFilter.append("AND lower(sc.contract_number) like lower(?) ");
+      } else {
+        sqlFilter.append("AND lower(sc.contract_number) = lower(?) ");
+      }
     }
   }
 
@@ -329,6 +391,12 @@ public class AssetList extends ArrayList {
     }
     if (serviceContractId > -1) {
       pst.setInt(++i, serviceContractId);
+    }
+    if (serialNumber != null) {
+      pst.setString(++i, serialNumber);
+    }
+    if (serviceContractNumber != null) {
+      pst.setString(++i, serviceContractNumber);
     }
     return i;
   }

@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*, org.aspcfs.utils.web.*,java.util.*,org.aspcfs.modules.assets.base.*,org.aspcfs.modules.servicecontracts.base.*,java.text.DateFormat" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*, org.aspcfs.utils.web.*,java.util.*,org.aspcfs.modules.assets.base.*,org.aspcfs.modules.servicecontracts.base.*,java.text.DateFormat, org.aspcfs.modules.base.Filter" %>
 <jsp:useBean id="assetList" class="org.aspcfs.modules.assets.base.AssetList" scope="request"/>
 <jsp:useBean id="finalAssets" class="org.aspcfs.modules.assets.base.AssetList" scope="request"/>
 <jsp:useBean id="AssetListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -9,21 +9,81 @@
 <jsp:useBean id="categoryList2" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="categoryList3" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="assetStatusList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="Filters" class="org.aspcfs.modules.base.FilterList" scope="request"/>
+<jsp:useBean id="chosenContractId" class="java.lang.Integer" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popAssets.js"></script>
+<SCRIPT LANGUAGE="JavaScript">
+	function init() {
+	<% 
+		String serialNumber = request.getParameter("serialNumber") ;
+		String contractNumber = request.getParameter("contractNumber") ;
+		if (serialNumber == null || "".equals(serialNumber.trim())){
+	%>
+		  document.assetListView.serialNumber.value = "Serial Number";
+	<%}		
+		if (contractNumber == null || "".equals(contractNumber.trim())){
+	%>
+		  document.assetListView.contractNumber.value = "Service Contract Number";
+	<%}%>		
+
+	}
+
+	function clearSearchFields(clear, field) {
+		if (clear) {
+			// Clear the search fields since clear button was clicked
+			document.assetListView.serialNumber.value = "Serial Number";
+			document.assetListView.contractNumber.value = "Service Contract Number";
+		} else {
+			// The search fields recieved focus
+			if (field.value == "Serial Number" ) {
+				field.value = "" ;
+			}
+			if (field.value == "Service Contract Number" ) {
+				field.value = "" ;
+			}
+		}
+	}  
+</SCRIPT>  
 <%
   if (!"true".equals(request.getParameter("finalsubmit"))) {
      String source = request.getParameter("source");
 %>
-<%-- Navigating the contact list --%>
-<br>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AssetListInfo" showHiddenParams="true" enableJScript="true" />
-<br>
-
+<body onLoad="init()">
 <form name="assetListView" method="post" action="AssetSelector.do?command=ListAssets">
-  <input type="hidden" name="letter">
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+	<table cellpadding="6" cellspacing="0" width="100%" border="0">
+		<tr>
+			<td align="center" valign="center" bgcolor="#d3d1d1">
+				<strong>Search</strong>
+				<input type="text" name="serialNumber" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("serialNumber")) %>">
+				<input type="text" name="contractNumber" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("contractNumber")) %>">
+				<input type="submit" value="search">
+				<input type="button" value="clear" onClick="clearSearchFields(true, '')">
+			</td>
+		</tr>
+	</table>
+&nbsp;<br>
+<input type="hidden" name="letter">
+  <table width="100%" border="0">
+    <tr>
+      <td>
+        <select size="1" name="listView" onChange="javascript:setFieldSubmit('listFilter1','-1','assetListView');">
+          <%
+            Iterator filters = Filters.iterator();
+            while(filters.hasNext()){
+            Filter thisFilter = (Filter) filters.next();
+          %>
+            <option <%= AssetListInfo.getOptionValue(thisFilter.getValue()) %>><%= toHtml(thisFilter.getDisplayName()) %></option>
+          <%}%>
+         </select>
+      </td>
+      <td>
+        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AssetListInfo" showHiddenParams="true" enableJScript="true" />
+      </td>
+    </tr>
+  </table>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>
       <strong>Action</strong>

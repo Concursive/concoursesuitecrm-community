@@ -2140,7 +2140,7 @@ public class Campaign extends GenericBean {
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  private void lockGroupCriteria(SearchCriteriaListList groups, Connection db) throws SQLException {
+  public void lockGroupCriteria(SearchCriteriaListList groups, Connection db) throws SQLException {
     Iterator i = groups.iterator();
     while (i.hasNext()) {
       SearchCriteriaList thisList = (SearchCriteriaList) i.next();

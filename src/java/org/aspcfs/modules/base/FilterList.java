@@ -12,12 +12,14 @@ import org.aspcfs.modules.base.Constants;
  *
  *@author     Mathur
  *@created    March 5, 2003
- *@version    $Id$
+ *@version    $Id: FilterList.java,v 1.2.136.1 2004/06/08 18:34:00 kbhoopal Exp
+ *      $
  */
 public class FilterList extends ArrayList {
 
   private final static String[] CONTACT_FILTERS = {"all", "employees", "mycontacts", "accountcontacts", "myprojects"};
   private final static String[] ACCOUNT_FILTERS = {"all", "my", "disabled"};
+  private final static String[] ASSET_FILTERS = {"allassets", "undercontract"};
   private int source = Constants.CONTACTS;
 
 
@@ -85,6 +87,12 @@ public class FilterList extends ArrayList {
           } else if (name.equals("disabled")) {
             return "Disabled Accounts";
           }
+        case Constants.ASSETS:
+          if (name.equals("allassets")) {
+            return "All Assets";
+          } else if (name.equals("undercontract")) {
+            return "Assets under Contract";
+          }
         default:
           return "-None-";
     }
@@ -123,6 +131,11 @@ public class FilterList extends ArrayList {
         case Constants.ACCOUNTS:
           for (int i = 0; i < Array.getLength(ACCOUNT_FILTERS); i++) {
             this.add(new Filter(ACCOUNT_FILTERS[i], getDisplayName(ACCOUNT_FILTERS[i])));
+          }
+          break;
+        case Constants.ASSETS:
+          for (int i = 0; i < Array.getLength(ASSET_FILTERS); i++) {
+            this.add(new Filter(ASSET_FILTERS[i], getDisplayName(ASSET_FILTERS[i])));
           }
     }
   }

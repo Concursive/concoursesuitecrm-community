@@ -77,7 +77,7 @@ Upload Document
       Subject
     </td>
     <td>
-      <input type="text" name="subject" size="59" maxlength="255"><font color="red">*</font>
+      <input type="text" name="subject" size="59" maxlength="255" value="<%= toHtmlValue((String)request.getAttribute("subject")) %>"><font color="red">*</font>
     </td>
   </tr>
   <tr class="containerBody">
@@ -98,7 +98,7 @@ Upload Document
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= opportunityHeader.getId() %>">
   <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
-  <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
+  <input type="hidden" name="folderId" value="<%= request.getAttribute("folderId") %>">
   <%= addHiddenParams(request, "viewSource") %>
 </td>
 </tr>

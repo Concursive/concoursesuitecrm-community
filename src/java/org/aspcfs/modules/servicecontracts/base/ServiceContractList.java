@@ -21,6 +21,8 @@ import org.aspcfs.modules.base.Constants;
 public class ServiceContractList extends ArrayList {
 
   private PagedListInfo pagedListInfo = null;
+  private String emptyHtmlSelectRecord = null;
+  private String jsEvent = null;
   private int id = -1;
   private int orgId = -1;
   private String serviceContractNumber = null;
@@ -49,6 +51,26 @@ public class ServiceContractList extends ArrayList {
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
+  }
+
+
+  /**
+   *  Sets the emptyHtmlSelectRecord attribute of the ServiceContractList object
+   *
+   *@param  tmp  The new emptyHtmlSelectRecord value
+   */
+  public void setEmptyHtmlSelectRecord(String tmp) {
+    this.emptyHtmlSelectRecord = tmp;
+  }
+
+
+  /**
+   *  Sets the jsEvent attribute of the ServiceContractList object
+   *
+   *@param  tmp  The new jsEvent value
+   */
+  public void setJsEvent(String tmp) {
+    this.jsEvent = tmp;
   }
 
 
@@ -129,6 +151,26 @@ public class ServiceContractList extends ArrayList {
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
+  }
+
+
+  /**
+   *  Gets the emptyHtmlSelectRecord attribute of the ServiceContractList object
+   *
+   *@return    The emptyHtmlSelectRecord value
+   */
+  public String getEmptyHtmlSelectRecord() {
+    return emptyHtmlSelectRecord;
+  }
+
+
+  /**
+   *  Gets the jsEvent attribute of the ServiceContractList object
+   *
+   *@return    The jsEvent value
+   */
+  public String getJsEvent() {
+    return jsEvent;
   }
 
 
@@ -375,6 +417,40 @@ public class ServiceContractList extends ArrayList {
       ServiceContract thisContract = (ServiceContract) contracts.next();
       thisContract.delete(db);
     }
+  }
+
+
+  /**
+   *  Gets the htmlSelect attribute of the ServiceContractList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@return             The htmlSelect value
+   */
+  public String getHtmlSelect(String selectName) {
+    return getHtmlSelect(selectName, -1);
+  }
+
+
+  /**
+   *  Gets the htmlSelect attribute of the ServiceContractList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelect value
+   */
+  public String getHtmlSelect(String selectName, int defaultKey) {
+    HtmlSelect contractListSelect = new HtmlSelect();
+    if (emptyHtmlSelectRecord != null) {
+      contractListSelect.addItem(-1, emptyHtmlSelectRecord);
+    }
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ServiceContract thisContract = (ServiceContract) i.next();
+      contractListSelect.addItem(
+          thisContract.getId(),
+          thisContract.getServiceContractNumber());
+    }
+    return contractListSelect.getHtml(selectName, defaultKey);
   }
 }
 

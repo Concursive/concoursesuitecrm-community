@@ -23,10 +23,6 @@
   
     formTest = true;
     message = "";
-    if (form.contractId.value == -1) { 
-      message += "- Service Contract Number is required\r\n";
-      formTest = false;
-    }
     if (form.dateListed.value == "") { 
       message += "- Date Listed is required\r\n";
       formTest = false;
@@ -196,7 +192,6 @@
         </td>
         <td>
           <input type="hidden" name="contractId" id="contractId" value="<%= asset.getContractId() %>">
-          &nbsp;<font color="red">*</font>
           <%= showAttribute(request, "contractIdError") %>
           [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled', <%=OrgDetails.getOrgId()%>);">Select</a>]
         </td>

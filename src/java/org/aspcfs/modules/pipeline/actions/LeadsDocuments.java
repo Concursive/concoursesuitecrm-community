@@ -78,6 +78,10 @@ public final class LeadsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
+      String folderId = context.getRequest().getParameter("folderId");
+      if (folderId != null) {
+        context.getRequest().setAttribute("folderId", folderId);
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -117,27 +121,39 @@ public final class LeadsDocuments extends CFSModule {
       String id = (String) parts.get("id");
       String subject = (String) parts.get("subject");
       String folderId = (String) parts.get("folderId");
-      //Update the database with the resulting file
-      FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
 
-      db = getConnection(context);
-      int opportunityId = addOpportunity(context, db, id);
+      if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
 
-      FileItem thisItem = new FileItem();
-      thisItem.setLinkModuleId(Constants.DOCUMENTS_OPPORTUNITIES);
-      thisItem.setLinkItemId(opportunityId);
-      thisItem.setEnteredBy(getUserId(context));
-      thisItem.setModifiedBy(getUserId(context));
-      thisItem.setFolderId(Integer.parseInt(folderId));
-      thisItem.setSubject(subject);
-      thisItem.setClientFilename(newFileInfo.getClientFileName());
-      thisItem.setFilename(newFileInfo.getRealFilename());
-      thisItem.setVersion(1.0);
-      thisItem.setSize(newFileInfo.getSize());
-
-      recordInserted = thisItem.insert(db);
-      if (!recordInserted) {
-        processErrors(context, thisItem.getErrors());
+        //Update the database with the resulting file
+        FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
+  
+        db = getConnection(context);
+        int opportunityId = addOpportunity(context, db, id);
+  
+        FileItem thisItem = new FileItem();
+        thisItem.setLinkModuleId(Constants.DOCUMENTS_OPPORTUNITIES);
+        thisItem.setLinkItemId(opportunityId);
+        thisItem.setEnteredBy(getUserId(context));
+        thisItem.setModifiedBy(getUserId(context));
+        thisItem.setFolderId(Integer.parseInt(folderId));
+        thisItem.setSubject(subject);
+        thisItem.setClientFilename(newFileInfo.getClientFileName());
+        thisItem.setFilename(newFileInfo.getRealFilename());
+        thisItem.setVersion(1.0);
+        thisItem.setSize(newFileInfo.getSize());
+  
+        recordInserted = thisItem.insert(db);
+        if (!recordInserted) {
+          processErrors(context, thisItem.getErrors());
+        }
+      } else {
+        recordInserted = false;
+        HashMap errors = new HashMap();
+        errors.put("actionError", "The file could not be sent by your computer, make sure the file exists");
+        processErrors(context, errors);
+        context.getRequest().setAttribute("headerId", id);
+        context.getRequest().setAttribute("subject", subject);
+        context.getRequest().setAttribute("folderId", folderId);
       }
     } catch (Exception e) {
       errorMessage = e;

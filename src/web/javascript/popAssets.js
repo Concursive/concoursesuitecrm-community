@@ -51,8 +51,10 @@ function setAssetList(assetIds, assetNumbers, scIds, scNumbers, listType, displa
     opener.changeDivContent(displayFieldId1, assetNumbers[i]);
     
     if (hiddenFieldId2){
-      opener.document.getElementById(hiddenFieldId2).value = scIds[i];
-      opener.changeDivContent(displayFieldId2, scNumbers[i]);
+      if (scIds[i] != "-1"){
+        opener.document.getElementById(hiddenFieldId2).value = scIds[i];
+        opener.changeDivContent(displayFieldId2, scNumbers[i]);
+      }
     }
   }
 }

@@ -9,8 +9,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.modules.servicecontracts.base.*;
 import org.aspcfs.modules.assets.base.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.CategoryList;
+import org.aspcfs.modules.base.*;
 
 /**
  *  Description of the Class
@@ -36,6 +35,7 @@ public final class AssetSelector extends CFSModule {
     AssetList assetList = null;
     AssetList finalAssets = null;
     ArrayList selectedList = (ArrayList) context.getSession().getAttribute("SelectedAssets");
+    int tmpContractId = -1;
 
     if (selectedList == null || "true".equals(context.getRequest().getParameter("reset"))) {
       selectedList = new ArrayList();
@@ -92,17 +92,14 @@ public final class AssetSelector extends CFSModule {
 
       buildCategories(context, db, null);
 
-      //Set AssetList Parameters and build the list
-      setParameters(assetList, context);
-      assetList.setOrgId(context.getRequest().getParameter("orgId"));
-      
-      int tmpContractId = -1;
       try{
         tmpContractId = Integer.parseInt(context.getRequest().getParameter("contractId"));
       }catch(Exception e){
         tmpContractId = -1;
       }
       assetList.setServiceContractId(tmpContractId);
+      setParameters(assetList, context);
+      assetList.setOrgId(context.getRequest().getParameter("orgId"));
       assetList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -110,6 +107,7 @@ public final class AssetSelector extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
+      context.getRequest().setAttribute("chosenContractId", new Integer(tmpContractId));
       context.getRequest().setAttribute("assetList", assetList);
       context.getSession().setAttribute("selectedAssets", selectedList);
       if (listDone) {
@@ -132,8 +130,38 @@ public final class AssetSelector extends CFSModule {
    */
   private void setParameters(AssetList assetList, ActionContext context) {
 
-    PagedListInfo assetListInfo = this.getPagedListInfo(context, "AssetListInfo");
+    String serialNumber = context.getRequest().getParameter("serialNumber");
+    String contractNumber = context.getRequest().getParameter("contractNumber");
+    if (serialNumber != null) {
+      if (!"Serial Number".equals(serialNumber) && !"".equals(serialNumber.trim())) {
+        assetList.setSerialNumber("%" + serialNumber + "%");
+      }
+    }
+    if (contractNumber != null) {
+      if (!"Service Contract Number".equals(contractNumber) && !"".equals(contractNumber.trim())) {
+        assetList.setServiceContractNumber("%" + contractNumber + "%");
+        assetList.setServiceContractId(-1);
+      }
+    }
 
+    PagedListInfo assetListInfo = this.getPagedListInfo(context, "AssetListInfo");
+    //filter for departments & project teams
+    if (!assetListInfo.hasListFilters()) {
+      assetListInfo.addFilter(1, "0");
+    }
+    //add filters
+    FilterList filters = new FilterList();
+    filters.setSource(Constants.ASSETS);
+    filters.build(context.getRequest());
+    context.getRequest().setAttribute("Filters", filters);
+    //  set Filter for retrieving contracts depending on type of asset
+    String firstFilter = filters.getFirstFilter(assetListInfo.getListView());
+    if("allassets".equals(firstFilter)){
+      assetList.setAllAssets(true);
+    }else{
+      assetList.setAllAssets(false);
+    }
+    
     String orgId = context.getRequest().getParameter("orgId");
     assetListInfo.setLink("AssetSelector.do?command=ListAssets&orgId=" + orgId);
     assetList.setPagedListInfo(assetListInfo);

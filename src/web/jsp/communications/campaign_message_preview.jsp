@@ -42,7 +42,9 @@ Message
                <strong>From:</strong> <%= toHtml(Campaign.getReplyTo()) %><br>
                <strong>Subject:</strong> <%= toHtml(Campaign.getSubject()) %><br>
                &nbsp;<br>
-               <%= (Campaign.getMessage()) %>
+               <%= (Campaign.getMessage()) + "*" %><br />
+               <br />
+               * NOTE: If this message contains a link to a survey then the recipients of this message are provided a URL that is tailored for the survey.
             </td>
            <%
             Iterator j = FileItemList.iterator();
