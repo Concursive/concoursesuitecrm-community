@@ -1,0 +1,35 @@
+/**
+ *  Database Independence
+ *
+ *@author     mrajkowski
+ *@created    July 18, 2002
+ *@version    $Id$
+ */
+ 
+Summary: It is important for CFS to work with any of the supported database
+servers.  Currently CFS supports PostgreSQL and Microsoft SQL Server.
+
+Tips on being database independent:
+
+- Don't use stored procedures
+
+- Use queries that are SQL-92 compliant, for the most part we can get by
+  with simple select queries and joins
+
+- Use the DatabaseUtils class if a check needs to be done on the database type
+  for a custom query
+
+- Use the DatabaseUtils class when embedding the string TRUE or FALSE in
+  a query 
+  
+  MSSQL uses bits (1's and 0's) instead of the boolean (true and false)
+  
+  Even better would be to use a PreparedStatement and setBoolean(int, true) or 
+  setBoolean(int, false)
+
+- Use the DatabaseUtils class to get the inserted identity of a query
+
+- Use the PagedList object for querying pages of data...
+  Ex. Use a PagedList to get rows 1-10 or 11-20
+
+
