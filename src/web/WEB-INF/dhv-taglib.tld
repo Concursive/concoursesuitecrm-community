@@ -176,6 +176,11 @@
       <required>no</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
+    <attribute>
+      <name>appendToUrl</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
   </tag>
   
   <tag>
