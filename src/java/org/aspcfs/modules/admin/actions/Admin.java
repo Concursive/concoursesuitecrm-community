@@ -141,7 +141,7 @@ public final class Admin extends CFSModule {
       FileItemVersionList fileList = new FileItemVersionList();
       int fileCount = fileList.queryRecordCount(db);
       long fileSize = fileList.queryFileSize(db);
-      usageList.add(nf.format(fileCount) + " file" + StringUtils.addS(fileCount) + " stored in document library using " + nf.format(fileSize) + " byte" + StringUtils.addS(fileSize) + " of storage");
+      usageList.add(nf.format(fileCount) + " file" + StringUtils.addS(fileCount) + " stored in document library using " + nf.format(fileSize) + " mb" + StringUtils.addS(fileSize) + " of storage");
 
       //Logins
       AccessLogList accessLog = new AccessLogList();
