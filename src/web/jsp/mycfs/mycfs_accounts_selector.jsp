@@ -99,6 +99,7 @@
     <input type="hidden" name="displayFieldId" value="<%= toHtmlValue(request.getParameter("displayFieldId")) %>">
     <input type="hidden" name="hiddenFieldId" value="<%= toHtmlValue(request.getParameter("hiddenFieldId")) %>">
     <input type="hidden" name="listType" value="<%= toHtmlValue(request.getParameter("listType")) %>">
+    <input type="hidden" name="showMyCompany" value="<%= toHtmlValue(request.getParameter("showMyCompany")) %>">
   </table>
 <% if("list".equals(request.getParameter("listType"))){ %>
   <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','acctListView');">

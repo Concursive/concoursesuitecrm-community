@@ -123,6 +123,7 @@ public final class AccountSelector extends CFSModule {
    */
   private void setParameters(OrganizationList acctList, ActionContext context) {
 
+    boolean showMyCompany = "true".equals((String) context.getRequest().getParameter("showMyCompany"));
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("AccountListInfo");
     }
@@ -132,7 +133,7 @@ public final class AccountSelector extends CFSModule {
     if (!acctListInfo.hasListFilters()) {
       acctListInfo.addFilter(1, "0");
     }
-
+    
     //add filters
     FilterList filters = new FilterList();
     filters.setSource(Constants.ACCOUNTS);
@@ -145,6 +146,7 @@ public final class AccountSelector extends CFSModule {
     acctList.setPagedListInfo(acctListInfo);
     acctList.setMinerOnly(false);
     acctList.setTypeId(acctListInfo.getFilterKey("listFilter1"));
+    acctList.setShowMyCompany(showMyCompany);
 
     if ("my".equals(firstFilter)) {
       acctList.setOwnerId(this.getUserId(context));
