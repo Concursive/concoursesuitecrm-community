@@ -174,7 +174,7 @@ public final class CompanyDirectory extends CFSModule {
       if (!thisContact.hasAccount()) {
         htmlDialog.setTitle("CFS: Confirm Delete");
         htmlDialog.setHeader("The employee you are requesting to delete has the following dependencies within CFS:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='CompanyDirectory.do?command=DeleteEmployee&empid=" + id + "'");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='CompanyDirectory.do?command=DeleteEmployee&empid=" + id + "&popup=true'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
       } else {
         htmlDialog.setHeader("This employee cannot be deleted because it is associated with a user account.");
@@ -336,6 +336,10 @@ public final class CompanyDirectory extends CFSModule {
     addModuleBean(context, "Internal Contacts", "Internal Insert");
     if (errorMessage == null) {
       if (recordInserted) {
+        if ("true".equals((String) context.getRequest().getParameter("saveAndNew"))) {
+          context.getRequest().removeAttribute("EmployeeBean");
+          return (executeCommandInsertEmployeeForm(context));
+        }
         return ("EmployeeDetailsOK");
       } else {
         return (executeCommandInsertEmployeeForm(context));
@@ -378,9 +382,12 @@ public final class CompanyDirectory extends CFSModule {
     addModuleBean(context, "Internal Contacts", "Internal Delete");
     if (errorMessage == null) {
       if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl", "CompanyDirectory.do?command=ListEmployees");
         deleteRecentItem(context, thisContact);
-        return ("EmployeeDeleteOK");
+        if("true".equals(context.getRequest().getParameter("popup"))){
+          context.getRequest().setAttribute("refreshUrl", "CompanyDirectory.do?command=ListEmployees");
+          return ("EmployeeDeletePopupOK");
+        }
+          return "EmployeeDeleteOK";
       } else {
         processErrors(context, thisContact.getErrors());
         return (executeCommandListEmployees(context));
