@@ -151,6 +151,9 @@ public class OptionList extends ArrayList {
       "VALUES (?, ?)");
     Iterator optionList = this.iterator();
     while (optionList.hasNext()) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("OptionList-> Inserting option...");
+      }
       Option thisOption = (Option)optionList.next();
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(1, inventoryId);

@@ -305,6 +305,10 @@ public class Inventory {
       resultCount = pst.executeUpdate();
       pst.close();
 
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Inventory-> Vehicle updated, updating options...");
+      }
+      
       if (resultCount == 1) {
         options.setInventoryId(id);
         options.update(db);
