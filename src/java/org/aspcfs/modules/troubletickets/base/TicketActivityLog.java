@@ -52,10 +52,10 @@ public class TicketActivityLog extends GenericBean {
   private int modifiedBy = -1;
   private boolean enabled = true;
 
-  private int totalTravelHours = -1;
-  private int totalTravelMinutes = -1;
-  private int totalLaborHours = -1;
-  private int totalLaborMinutes = -1;
+  private int totalTravelHours = 0;
+  private int totalTravelMinutes = 0;
+  private int totalLaborHours = 0;
+  private int totalLaborMinutes = 0;
   private boolean travelTowardsServiceContract = true;
   private boolean laborTowardsServiceContract = true;
 
