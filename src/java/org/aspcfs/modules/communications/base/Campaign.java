@@ -156,13 +156,33 @@ public class Campaign extends GenericBean {
     this.responseCount = responseCount;
   }
 
-public void setLastResponse(java.sql.Timestamp lastResponse) {
-	this.lastResponse = lastResponse;
-}
-public java.sql.Timestamp getLastResponse() {
-	return lastResponse;
-}
-public String getLastResponseString() {
+
+  /**
+   *  Sets the lastResponse attribute of the Campaign object
+   *
+   *@param  lastResponse  The new lastResponse value
+   */
+  public void setLastResponse(java.sql.Timestamp lastResponse) {
+    this.lastResponse = lastResponse;
+  }
+
+
+  /**
+   *  Gets the lastResponse attribute of the Campaign object
+   *
+   *@return    The lastResponse value
+   */
+  public java.sql.Timestamp getLastResponse() {
+    return lastResponse;
+  }
+
+
+  /**
+   *  Gets the lastResponseString attribute of the Campaign object
+   *
+   *@return    The lastResponseString value
+   */
+  public String getLastResponseString() {
     String tmp = "";
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(lastResponse);
@@ -170,6 +190,7 @@ public String getLastResponseString() {
     }
     return tmp;
   }
+
 
   /**
    *  Gets the responseCount attribute of the Campaign object
@@ -236,7 +257,6 @@ public String getLastResponseString() {
         "LEFT JOIN message msg ON (c.message_id = msg.id) " +
         "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
         "WHERE c.campaign_id = ? ";
-    //"WHERE c.id = ? ";
     pst = db.prepareStatement(sql);
     pst.setInt(1, campaignId);
     rs = pst.executeQuery();
@@ -1382,28 +1402,34 @@ public String getLastResponseString() {
 
 
   /**
-   *  Builds the total number of people who responded to the survey 
-   *  Note : counts a person only once.
+   *  Builds the total number of people who responded to the survey Note :
+   *  counts a person only once.
+   *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public void buildResponseCount(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT distinct(sr.contact_id) " +
+        "SELECT count(sr.contact_id) " +
         "FROM active_survey_responses sr, active_survey sa " +
         "WHERE campaign_id = ? AND (sr.active_survey_id = sa.active_survey_id) ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     int count = 0;
     while (rs.next()) {
-      count++;
+      this.setResponseCount(rs.getInt(1));
     }
     rs.close();
     pst.close();
-    this.setResponseCount(count);
   }
-  
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildLastResponse(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT max(sr.entered) as lastresponse " +
