@@ -155,6 +155,7 @@ public class HelpItem extends GenericBean {
     if (subsection != null) {
       pst.setString(++i, subsection);
     }
+    System.out.println(pst.toString());
     rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
