@@ -82,7 +82,7 @@ View Contacts<br>
             <%}%>
           </td>
         </dhv:permission>
-        <td class="row<%= rowid %>" width="10" nowrap>
+        <td class="row<%= rowid %>" <%= "".equals(toString(thisContact.getNameLastFirst())) ? "width=\"10\"" : ""  %> nowrap>
           <% if(!"".equals(toString(thisContact.getNameLastFirst()))){ %>
           <a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
           <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
