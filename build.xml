@@ -607,7 +607,24 @@
   
   
   
-  <!-- MISC STUFF TO GO THROUGH -->
+  <!-- MISC STUFF TO GO THROUGH (AND MOVE SOMEWHERE ELSE) -->
+  <!-- Run KBB Vehicle Import -->
+  <target name="run.parsekbb" depends="init,install.prepare">
+    <java classname="org.aspcfs.modules.media.autoguide.utils.ParseKBB" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/darkhorseventures.jar"/>
+      </classpath>
+      <sysproperty key="file" value="${arg1}"/>
+      <sysproperty key="driver" value="${SITE.DRIVER}"/>
+      <sysproperty key="url" value="${SITE.URL}${DATABASE.NAME}"/>
+      <sysproperty key="user" value="${SITE.USER}"/>
+      <sysproperty key="pass" value="${SITE.PASSWORD}"/>
+    </java>
+  </target>
+  
+  
   <!-- Run Net Decisions import (one-time process) -->
   <target name="run.netdecisions" depends="init">
     <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
