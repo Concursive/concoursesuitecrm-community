@@ -608,7 +608,7 @@ public final class ExternalContacts extends CFSModule {
           //The user didn't request a specific record, so show a list
           //of records matching this category that the user can choose from
           PagedListInfo folderListInfo = this.getPagedListInfo(context, "ContactFolderInfo");
-          folderListInfo.setLink("ExternalContacts.do?command=Fields&contactId=" + contactId + "&catId=" + selectedCatId);
+          folderListInfo.setLink("ExternalContacts.do?command=Fields&contactId=" + contactId + "&catId=" + selectedCatId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
 
           CustomFieldRecordList recordList = new CustomFieldRecordList();
           recordList.setLinkModuleId(Constants.CONTACTS);

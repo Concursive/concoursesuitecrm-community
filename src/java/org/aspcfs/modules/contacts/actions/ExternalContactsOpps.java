@@ -396,7 +396,7 @@ public final class ExternalContactsOpps extends CFSModule {
     OpportunityComponentList componentList = null;
 
     PagedListInfo componentListInfo = this.getPagedListInfo(context, "ComponentListInfo");
-    componentListInfo.setLink("ExternalContactsOpps.do?command=DetailsOpp&headerId=" + headerId + "&contactId=" + contactId);
+    componentListInfo.setLink("ExternalContactsOpps.do?command=DetailsOpp&headerId=" + headerId + "&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
