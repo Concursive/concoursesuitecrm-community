@@ -30,7 +30,7 @@ upgrade information
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
-        <strong>License</strong>
+        <strong>Installed License</strong>
       </th>
     </tr>
     <tr class="containerBody">
@@ -51,10 +51,15 @@ upgrade information
     </tr>
   </table>
   <br />
-  <input type="radio" name="doLicense" value="internet" checked/>
-  Automatically have this system remotely check and download an updated license<br />
+  <%--
+  <input type="radio" name="doLicense" value="internet" checked />
+  --%>
+  <input type="hidden" name="doLicense" value="internet" />
+  Use HTTP/S to have this system remotely check and download an updated license<br />
+  <%--
   <input type="radio" name="doLicense" value="email"/>
   Manually enter an updated license from an email message<br />
+  --%>
   <br />
   <input type="submit" value="Update">
   <input type="button" value="Cancel" onClick="javascript:window.location.href='AdminConfig.do?command=ListGlobalParams';">
