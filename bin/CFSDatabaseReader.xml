@@ -191,9 +191,6 @@
       <property>endDate</property>
       <property>defaultItem</property>
       <property>entered</property>
-      <property lookup="user">enteredBy</property>
-      <property>modified</property>
-      <property lookup="user">modifiedBy</property>
       <property>enabled</property>
       <property>allowMultipleRecords</property>
       <property>readOnly</property>
