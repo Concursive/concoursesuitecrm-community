@@ -193,7 +193,8 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
   }
   
   function setParentListCampaign(recipientEmails,recipientIds,listType,displayFieldId,hiddenFieldId){
-	  if(recipientEmails.length == 0 && listType == "list"){
+	  
+    if(recipientEmails.length == 0 && listType == "list"){
       removeOptions(displayFieldId, recipientIds);
 		  //opener.insertOption("None Selected","",displayFieldId);
 	  }
@@ -211,6 +212,8 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
                         opener.searchCriteria[count] = searchList.options[count].value;
                 }
         }
+        
+        //...
       }
       
       //remove contacts that have been un-checked
@@ -222,14 +225,12 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
           //don't insert duplicate options
           if (!(checkKey(displayFieldId, recipientIds[i]))) {
                   opener.insertOption("Contact Name (is) " + recipientEmails[i],recipientIds[i],displayFieldId);
-                  opener.searchCriteria[opener.searchCriteria.length] = newCriteria;
+                  //opener.searchCriteria[opener.searchCriteria.length] = newCriteria;
           }
           
 			}
       
-		}
-		
-    else if(listType == "single"){
+		} else if(listType == "single"){
         opener.document.getElementById(hiddenFieldId).value = recipientIds[i];
         opener.changeDivContent(displayFieldId,recipientEmails[i]);
     }
