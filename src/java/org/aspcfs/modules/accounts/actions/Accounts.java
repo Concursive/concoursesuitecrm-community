@@ -1204,7 +1204,25 @@ public final class Accounts extends CFSModule {
           System.out.println("Accounts-> InsertField validation error");
         }
       } else {
-        //trigger
+        if (this.getDbName(context).equals("cdb_matt") &&
+            thisCategory.hasField(4)) {
+          Notification thisNotification = new Notification(Notification.SSL);
+          thisNotification.setHost("127.0.0.1");
+          thisNotification.setPort(44444);
+          thisNotification.setMessageToSend(thisCategory.getFieldValue(4));
+          thisNotification.send();
+        } else if (this.getDbName(context).equals("cdb_vport") &&
+            thisCategory.hasField(11)) {
+          MessageTemplate template = new MessageTemplate();
+          template.setText("Some text $field");
+          template.addParseElement("$field", thisCategory.getFieldValue(11));
+          
+          Notification thisNotification = new Notification(Notification.SSL);
+          thisNotification.setHost("151.204.139.251");
+          thisNotification.setPort(44444);
+          thisNotification.setMessageToSend(template.getParsedText());
+          thisNotification.send();
+        }
       }
       context.getRequest().setAttribute("Category", thisCategory);
 

@@ -66,6 +66,10 @@ public class Notification extends Thread {
    *@since
    */
   public Notification() { }
+  
+  public Notification(int thisType) {
+    this.setType(thisType);
+  }
 
 
   /**
@@ -564,11 +568,17 @@ public class Notification extends Thread {
   
   public void notifySystem() throws Exception {
     if (type == SSL) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Notification-> SENDING SSL NOTIFICATION");
+      }
       SSLMessage thisMessage = new SSLMessage();
       thisMessage.setUrl(host);
       thisMessage.setPort(port);
       thisMessage.setMessage(messageToSend);
       result = thisMessage.send();
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Notification->SEND RESULT: " + result);
+      }
     }
   }
 

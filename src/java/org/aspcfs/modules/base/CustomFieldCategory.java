@@ -571,6 +571,36 @@ public class CustomFieldCategory extends Vector {
     }
     return new CustomFieldGroup();
   }
+  
+  public String getFieldValue(int fieldId) {
+    Iterator groups = this.iterator();
+    while (groups.hasNext()) {
+      CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
+      Iterator fields = thisGroup.iterator();
+      while (fields.hasNext()) {
+        CustomField thisField = (CustomField)fields.next();
+        if (thisField.getId() == fieldId) {
+          return thisField.getEnteredValue();
+        }
+      }
+    }
+    return null;
+  }
+  
+  public boolean hasField(int fieldId) {
+    Iterator groups = this.iterator();
+    while (groups.hasNext()) {
+      CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
+      Iterator fields = thisGroup.iterator();
+      while (fields.hasNext()) {
+        CustomField thisField = (CustomField)fields.next();
+        if (thisField.getId() == fieldId) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
 
   /**
