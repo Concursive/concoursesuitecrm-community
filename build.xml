@@ -195,7 +195,7 @@ determined user is ${USER}
   </target>
 
 	<target name="darkhorseventures" description="compile dark horse classes into JAR"
-			depends="init,theseus,zeroio,isavvix" 
+			depends="init,theseus,isavvix" 
 			unless="darkhorseventures-jar-uptodate">
 		<echo message=" Source: ${SRC_CLASSES}"/>
 		<javac srcdir="${SRC_CLASSES}/com/darkhorseventures" verbose="off">
