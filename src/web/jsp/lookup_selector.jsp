@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.webutils.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="BaseList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="selectedElements" class="java.util.HashMap" scope="session"/>
 <jsp:useBean id="finalElements" class="java.util.HashMap" scope="session"/>
@@ -12,7 +12,7 @@
 <% if(!"true".equalsIgnoreCase(request.getParameter("finalsubmit"))){ %>
 <br>
 <center><%= LookupSelectorInfo.getAlphabeticalPageLinks("setFieldSubmit","elementListView") %></center>
-<form name="elementListView" method="post" action="/LookupSelector.do?command=PopupSelector">
+<form name="elementListView" method="post" action="LookupSelector.do?command=PopupSelector">
 <input type=hidden name="letter">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
    <tr class="title">

@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="Task" class="org.aspcfs.modules.Task" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.tasks.base.*" %>
+<jsp:useBean id="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request"/>
 <jsp:useBean id="DependencyList" class="java.util.HashMap" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
@@ -18,7 +18,7 @@
 This task is linked to :
 <br>
 
-<form name="deleteView" method="post" action="/MyTasks.do?command=Delete&id=<%=Task.getId()%>">
+<form name="deleteView" method="post" action="MyTasks.do?command=Delete&id=<%=Task.getId()%>">
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -64,7 +64,7 @@ This task is linked to :
      </tr>
     <br>
     <tr halign="right">
-      <input type="button" value="OK" onClick="javascript:opener.window.location.href='/MyTasks.do?command=ListTasks';javascript:window.close()">
+      <input type="button" value="OK" onClick="javascript:opener.window.location.href='MyTasks.do?command=ListTasks';javascript:window.close()">
     </tr>
     </table>
   <%}%>

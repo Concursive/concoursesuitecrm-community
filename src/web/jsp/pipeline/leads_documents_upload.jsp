@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="OpportunityDetails" class="org.aspcfs.modules.Opportunity" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.pipline.base.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="OpportunityDetails" class="org.aspcfs.modules.pipline.base.Opportunity" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
   function checkFileForm(form) {

@@ -24,13 +24,13 @@
 </script>
 
 <body onLoad="javascript:document.forms[0].subject.focus();">
-<form name="generate" action="/Leads.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
-<a href="/Leads.do">Pipeline Management</a> > 
-<a href="/Leads.do?command=Reports">Reports</a> > 
+<form name="generate" action="Leads.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
+<a href="Leads.do">Pipeline Management</a> > 
+<a href="Leads.do?command=Reports">Reports</a> > 
 Generate New Report <br>
 <hr color="#BFBFBB" noshade>
 <input type="submit" value="Generate">
-<input type="button" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=Reports';javascript:this.form.submit();">
+<input type="button" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Reports';javascript:this.form.submit();">
 <br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -159,6 +159,6 @@ Generate New Report <br>
 </table>
 <br>
 <input type="submit" value="Generate">
-<input type="button" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=Reports';javascript:this.form.submit();">
+<input type="button" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Reports';javascript:this.form.submit();">
 </form>
 </body>

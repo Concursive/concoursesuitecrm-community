@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="TaskList" class="org.aspcfs.modules.TaskList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.tasks.base.*" %>
+<jsp:useBean id="TaskList" class="org.aspcfs.modules.tasks.base.TaskList" scope="request"/>
 <jsp:useBean id="TaskListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -8,7 +8,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/images.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/tasks.js"></SCRIPT>
 <body onLoad="javascript:document.forms['addTask'].description.focus();">
-<form name="addTask" action="/MyTasks.do?command=Insert&auto-populate=true" method="post" onSubmit="return validateTask();">
+<form name="addTask" action="MyTasks.do?command=Insert&auto-populate=true" method="post" onSubmit="return validateTask();">
 <a href="MyCFS.do?command=Home">My Home Page</a> > My Tasks<br>
 <hr color="#BFBFBB" noshade>
  <table cellpadding="4" cellspacing="0" border="1" width="45%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -41,7 +41,7 @@
 <a href="javascript:window.location.href='MyTasks.do?command=New'">Add an Advanced Task</a><br>
 <br>
 
-<form name="taskListView" method="post" action="/MyTasks.do?command=ListTasks">
+<form name="taskListView" method="post" action="MyTasks.do?command=ListTasks">
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
 <table width="100%" border="0">
   <tr>
@@ -49,7 +49,6 @@
       <select size="1" name="listFilter1" onChange="javascript:document.taskListView.submit();">
         <option value="my" <%=TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("taskstome")?" selected":""%>>My Tasks</option>
         <option value="tasksbyme" <%=TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("tasksbyme")?" selected":""%>>Tasks Assigned By Me</option>
-<%--        <option value="all" <%=TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("all")?" selected":""%>>All Tasks</option> --%>
       </select>
      <%if(!TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("all")){%>
        <select size="1" name="listFilter2" onChange="javascript:document.taskListView.submit();">
@@ -118,7 +117,7 @@
    %>      
   <tr class="row<%= rowid %>">
     <td align="center" valign="top">
-          <a href='javascript:window.location.href="/MyTasksForward.do?command=ForwardMessage&forwardType=15&id=<%=thisTask.getId()%>&return=" +escape("MyTasks.do?command=ListTasks")+ "&sendUrl="+ escape("MyTasksForward.do?command=SendMessage");'>Fwd</a>|<a href="javascript:popURLReturn('/MyTasks.do?command=ConfirmDelete&id=<%=thisTask.getId()%>','MyTasks.do?command=ListTasks', 'Delete_message','320','200','yes','no');">Del</a>
+          <a href='javascript:window.location.href="MyTasksForward.do?command=ForwardMessage&forwardType=15&id=<%=thisTask.getId()%>&return=" +escape("MyTasks.do?command=ListTasks")+ "&sendUrl="+ escape("MyTasksForward.do?command=SendMessage");'>Fwd</a>|<a href="javascript:popURLReturn('/MyTasks.do?command=ConfirmDelete&id=<%=thisTask.getId()%>','MyTasks.do?command=ListTasks', 'Delete_message','320','200','yes','no');">Del</a>
     </td>
         <td nowrap align="center" valign="top">
       <%= thisTask.getPriority()==-1?"-NA-":(new Integer(thisTask.getPriority())).toString() %>

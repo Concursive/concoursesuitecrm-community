@@ -1,15 +1,15 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.pipline.base.*" %>
 <jsp:useBean id="FileList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <jsp:useBean id="LeadRptListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
-<form name="listView" method="post" action="/Leads.do?command=Reports">
-<a href="/Leads.do">Pipeline Management</a> > 
+<form name="listView" method="post" action="Leads.do?command=Reports">
+<a href="Leads.do">Pipeline Management</a> > 
 Reports<br>
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="pipeline-reports-add"><a href="/Leads.do?command=GenerateForm">Generate new report</a></dhv:permission>
+<dhv:permission name="pipeline-reports-add"><a href="Leads.do?command=GenerateForm">Generate new report</a></dhv:permission>
 <dhv:permission name="pipeline-reports-add" none="true"><br></dhv:permission>
 <center><%= LeadRptListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
@@ -67,11 +67,11 @@ Reports<br>
   <tr>
     <dhv:permission name="pipeline-reports-view,pipeline-reports-delete">
     <td width=8 valign=center nowrap class="row<%= rowid %>">
-    <dhv:permission name="pipeline-reports-view"><a href="/Leads.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="pipeline-reports-view,pipeline-reports-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-reports-delete"><a href="javascript:confirmDelete('/Leads.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
+    <dhv:permission name="pipeline-reports-view"><a href="Leads.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="pipeline-reports-view,pipeline-reports-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-reports-delete"><a href="javascript:confirmDelete('Leads.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
     <td width="40%" class="row<%= rowid %>">
-    <a href="javascript:popURL('/Leads.do?command=ShowReportHtml&pid=-1&fid=<%= thisItem.getId() %>&popup=true','Report','600','400','yes','yes');"><%=toHtml(thisItem.getSubject())%></a>
+    <a href="javascript:popURL('Leads.do?command=ShowReportHtml&pid=-1&fid=<%= thisItem.getId() %>&popup=true','Report','600','400','yes','yes');"><%=toHtml(thisItem.getSubject())%></a>
     </td>
     <td width=20 class="row<%= rowid %>">
     <%= thisItem.getRelativeSize() %>k

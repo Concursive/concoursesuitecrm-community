@@ -1,15 +1,15 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.troubletickets.base.*" %>
 <jsp:useBean id="FileList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <jsp:useBean id="TicketRptListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <form name="listView" method="post" action="/TroubleTickets.do?command=Reports">
-<a href="/TroubleTickets.do">Tickets</a> > 
+<a href="TroubleTickets.do">Tickets</a> > 
 Reports<br>
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="tickets-tickets-reports-add"><a href="/TroubleTickets.do?command=GenerateForm">Generate new report</a></dhv:permission>
+<dhv:permission name="tickets-tickets-reports-add"><a href="TroubleTickets.do?command=GenerateForm">Generate new report</a></dhv:permission>
 <dhv:permission name="tickets-tickets-reports-add" none="true"><br></dhv:permission>
 <center><%= TicketRptListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
@@ -67,7 +67,7 @@ Reports<br>
   <tr>
     <dhv:permission name="tickets-tickets-reports-view,tickets-tickets-reports-delete">
     <td width=8 valign=center nowrap class="row<%= rowid %>">
-    <dhv:permission name="tickets-tickets-reports-view"><a href="/TroubleTickets.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="tickets-tickets-reports-view,tickets-tickets-reports-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-reports-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
+    <dhv:permission name="tickets-tickets-reports-view"><a href="TroubleTickets.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="tickets-tickets-reports-view,tickets-tickets-reports-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-reports-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
     <td width="40%" class="row<%= rowid %>">

@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="OpportunityDetails" class="org.aspcfs.modules.Opportunity" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.pipline.base.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="OpportunityDetails" class="org.aspcfs.modules.pipline.base.Opportunity" scope="request"/>
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="LeadsCallList" class="org.aspcfs.modules.contacts.base.CallList" scope="request"/>
 <jsp:useBean id="LeadsCallListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -51,11 +51,11 @@
     }
 </script>
 
-<form name="addCall" action="/LeadsCalls.do?command=Insert&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<form name="addCall" action="LeadsCalls.do?command=Insert&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 
-<a href="/Leads.do">Pipeline Management</a> > 
-<a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
-<a href="/Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
+<a href="Leads.do">Pipeline Management</a> > 
+<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
+<a href="Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
 Calls<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -63,11 +63,11 @@ Calls<br>
     <td>
       <strong><%= toHtml(OpportunityDetails.getDescription()) %></strong>&nbsp;
       	<dhv:evaluate exp="<%=(OpportunityDetails.getAccountEnabled() && OpportunityDetails.getAccountLink() > -1)%>">
-        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="/Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
+        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
 	</dhv:evaluate>
 	  
 	<dhv:evaluate exp="<%=(OpportunityDetails.getContactLink() > -1)%>">
-	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="/ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
+	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
 	</dhv:evaluate>
   
         <% if (OpportunityDetails.hasFiles()) { %>
@@ -213,12 +213,12 @@ Calls<br>
     <tr class="containerBody">
       <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete">
       <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="pipeline-opportunities-calls-edit"><a href="/LeadsCalls.do?command=Modify&id=<%= thisCall.getId() %>&oppId=<%= OpportunityDetails.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-calls-delete"><a href="javascript:confirmDelete('/LeadsCalls.do?command=Delete&id=<%= thisCall.getId() %>&oppId=<%= OpportunityDetails.getId()%>');">Del</a></dhv:permission>
+          <dhv:permission name="pipeline-opportunities-calls-edit"><a href="LeadsCalls.do?command=Modify&id=<%= thisCall.getId() %>&oppId=<%= OpportunityDetails.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-calls-delete"><a href="javascript:confirmDelete('LeadsCalls.do?command=Delete&id=<%= thisCall.getId() %>&oppId=<%= OpportunityDetails.getId()%>');">Del</a></dhv:permission>
       </td>
       </dhv:permission>
       
       <td width="100%" valign=center class="row<%= rowid %>">
-        <a href="/LeadsCalls.do?command=Details&id=<%= thisCall.getId() %>&oppId=<%= OpportunityDetails.getId() %>">
+        <a href="LeadsCalls.do?command=Details&id=<%= thisCall.getId() %>&oppId=<%= OpportunityDetails.getId() %>">
         <%= toHtml(thisCall.getSubject()) %>
         </a>
       </td>

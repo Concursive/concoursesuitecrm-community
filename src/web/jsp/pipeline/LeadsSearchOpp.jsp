@@ -1,11 +1,11 @@
-<jsp:useBean id="OrgList" class="org.aspcfs.modules.OrganizationList" scope="request"/>
+<jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
 <body onLoad="javascript:document.forms[0].searchDescription.focus();">
-<form name="searchLeads" action="/Leads.do?command=ViewOpp" method="post">
-<a href="/Leads.do">Pipeline Management</a> > 
+<form name="searchLeads" action="Leads.do?command=ViewOpp" method="post">
+<a href="Leads.do">Pipeline Management</a> > 
 Search Opportunities<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -35,7 +35,7 @@ Description
   
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <a href="javascript:popURLReturn('/MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=contactsingle&parentFormName=searchLeads', 'Leads.do?command=SearchOpp', 'Search_Opp','700','450','yes','no');">Contact</a>
+      <a href="javascript:popURLReturn('MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=contactsingle&parentFormName=searchLeads', 'Leads.do?command=SearchOpp', 'Search_Opp','700','450','yes','no');">Contact</a>
     </td>
     <td width="100%">
       <table>

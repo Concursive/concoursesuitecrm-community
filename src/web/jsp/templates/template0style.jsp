@@ -1,6 +1,6 @@
-<%@ page  import="java.util.*,org.aspcfs.cfsmodule.*,org.aspcfs.controller.*" %>
+<%@ page  import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.controller.*" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
-<jsp:useBean id="ModuleBean" class="org.aspcfs.cfsmodule.ModuleBean" scope="request"/>
+<jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>
 <%
   response.setHeader("Pragma", "no-cache"); // HTTP 1.0
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1

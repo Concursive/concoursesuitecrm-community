@@ -1,4 +1,4 @@
-<jsp:useBean id="ModuleBean" class="org.aspcfs.cfsmodule.ModuleBean" scope="request"/>
+<jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>
 <%
   response.setHeader("Pragma", "no-cache"); // HTTP 1.0
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
@@ -66,7 +66,7 @@ A:visited:hover{color:#FF3300;text-decoration:underline;}
     <td>
     </td>
     <td>
-      <p align="right"><a href="#Profile" class="s">My Profile</a> | <a href="/Login.do?command=Logout" class="s"> Logout</a> |
+      <p align="right"><a href="#Profile" class="s">My Profile</a> | <a href="Login.do?command=Logout" class="s"> Logout</a> |
       <a href="#Help" class="s"> Help</a></p>
     </td>
   </tr>

@@ -1,11 +1,11 @@
-<jsp:useBean id="OrgList" class="org.aspcfs.modules.OrganizationList" scope="request"/>
+<jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SeverityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="TicketTypeSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].searchcodeId.focus();">
-<form name="searchTicket" action="/TroubleTickets.do?command=SearchTickets&auto-populate=true" method="post">
-<a href="/TroubleTickets.do">Tickets</a> > 
+<form name="searchTicket" action="TroubleTickets.do?command=SearchTickets&auto-populate=true" method="post">
+<a href="TroubleTickets.do">Tickets</a> > 
 Search Form<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -76,7 +76,7 @@ Search Form<br>
 </table>
 <br>
 <input type=submit value="Search">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Home'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
 <input type="reset" value="Reset">
 </form>
 </body>

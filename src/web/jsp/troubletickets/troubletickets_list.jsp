@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="CreatedByMeList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="CreatedByMeInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="AssignedToMeList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
@@ -12,10 +12,6 @@
 <a href="TroubleTickets.do">Tickets</a> > 
   View Tickets<br>
 <hr color="#BFBFBB" noshade>
-
-<!--dhv:permission name="tickets-tickets-add"><a href="/TroubleTickets.do?command=Add">Add a Ticket</a></dhv:permission-->
-<!--br-->
-<!--%= showError(request, "actionError") %-->
 
 <% if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
 
@@ -34,7 +30,6 @@
     <td><b>Priority</b></td>
     <td><b>Age</b></td>
     <td><b>Company</b></td>
-    <!--td><b><dhv:label name="tickets-problem">Issue</dhv:label></b></td-->
 		<td><b>Assigned&nbsp;To</b></td>
   </tr>
   
@@ -55,11 +50,11 @@
 	<tr>
 	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
     <td rowspan=2 width="8" valign="top" nowrap class="row<%= rowid %>">
-      <dhv:permission name="tickets-tickets-edit"><a href="/TroubleTickets.do?command=Modify&id=<%= assignedTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=Delete&id=<%= assignedTic.getId() %>');">Del</a></dhv:permission>
+      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= assignedTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=Delete&id=<%= assignedTic.getId() %>');">Del</a></dhv:permission>
     </td>
     	</dhv:permission>
 		<td width="15" valign="top" nowrap class="row<%= rowid %>">
-			<a href="/TroubleTickets.do?command=Details&id=<%=assignedTic.getId()%>"><%=assignedTic.getPaddedId()%></a>
+			<a href="TroubleTickets.do?command=Details&id=<%=assignedTic.getId()%>"><%=assignedTic.getPaddedId()%></a>
 		</td>
 		<td width="10" valign="top" nowrap class="row<%= rowid %>">
 			<%=toHtml(assignedTic.getPriorityName())%>
@@ -146,11 +141,11 @@
 	<tr>
 	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
     <td rowspan=2 width="8" valign="top" nowrap class="row<%= rowid %>">
-      <dhv:permission name="tickets-tickets-edit"><a href="/TroubleTickets.do?command=Modify&id=<%= openTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=Delete&id=<%= openTic.getId() %>');">Del</a></dhv:permission>
+      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= openTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=Delete&id=<%= openTic.getId() %>');">Del</a></dhv:permission>
     </td>
     	</dhv:permission>
 		<td width="15" valign="top" nowrap class="row<%= rowid %>">
-			<a href="/TroubleTickets.do?command=Details&id=<%=openTic.getId()%>"><%=openTic.getPaddedId()%></a>
+			<a href="TroubleTickets.do?command=Details&id=<%=openTic.getId()%>"><%=openTic.getPaddedId()%></a>
 		</td>
 		<td width="10" valign="top" nowrap class="row<%= rowid %>">
 			<%=toHtml(openTic.getPriorityName())%>
@@ -244,11 +239,11 @@
 	<tr>
 	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
     <td rowspan=2 width=8 valign="top" nowrap class="row<%= rowid %>">
-      <dhv:permission name="tickets-tickets-edit"><a href="/TroubleTickets.do?command=Modify&id=<%= thisTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=Delete&id=<%= thisTic.getId() %>');">Del</a></dhv:permission>
+      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= thisTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=Delete&id=<%= thisTic.getId() %>');">Del</a></dhv:permission>
     </td>
     	</dhv:permission>
 		<td width=50 valign="top" nowrap class="row<%= rowid %>">
-			<a href="/TroubleTickets.do?command=Details&id=<%=thisTic.getId()%>"><%=thisTic.getPaddedId()%></a>
+			<a href="TroubleTickets.do?command=Details&id=<%=thisTic.getId()%>"><%=thisTic.getPaddedId()%></a>
 		</td>
 		<td width="10" valign="top" nowrap class="row<%= rowid %>">
 			<%=toHtml(thisTic.getPriorityName())%>

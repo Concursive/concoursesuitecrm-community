@@ -1,5 +1,5 @@
-<%@ page  import="java.util.*,org.aspcfs.cfsmodule.*,org.aspcfs.controller.*,org.aspcfs.webutils.*" %>
-<jsp:useBean id="ModuleBean" class="org.aspcfs.cfsmodule.ModuleBean" scope="request"/>
+<%@ page  import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.controller.*,org.aspcfs.utils.web.*" %>
+<jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>
 <%
   ClientType clientType = new ClientType(request);
   response.setHeader("Pragma", "no-cache"); // HTTP 1.0

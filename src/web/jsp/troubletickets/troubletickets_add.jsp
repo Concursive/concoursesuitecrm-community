@@ -1,12 +1,12 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*" %>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SeverityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="OrgList" class="org.aspcfs.modules.OrganizationList" scope="request"/>
+<jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="SubList1" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="SubList2" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="SubList3" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
@@ -62,8 +62,8 @@
       }
   }
 </script>
-<form name="addticket" action="/TroubleTickets.do?command=Insert&auto-populate=true" method="post">
-<a href="/TroubleTickets.do">Tickets</a> > 
+<form name="addticket" action="TroubleTickets.do?command=Insert&auto-populate=true" method="post">
+<a href="TroubleTickets.do">Tickets</a> > 
 Add Ticket<br>
 <hr color="#BFBFBB" noshade>
 <% if (request.getParameter("contact") != null) {%>
@@ -71,7 +71,7 @@ Add Ticket<br>
 <%} else {%>
 <input type="submit" value="Insert" name="Save">
 <%}%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Home'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
 <input type="reset" value="Reset">	
 <br>
 <%= showError(request, "actionError") %>
@@ -128,7 +128,7 @@ Add Ticket<br>
 	checked
 	<%}%>
 	
-	onClick="javascript:this.form.action='/TroubleTickets.do?command=Add&auto-populate=true#newcontact';this.form.submit()">Add new
+	onClick="javascript:this.form.action='TroubleTickets.do?command=Add&auto-populate=true#newcontact';this.form.submit()">Add new
 	<a name="newcontact"></a> 
 	
 	</td>
@@ -355,7 +355,7 @@ Add Ticket<br>
 <%} else {%>
 <input type="submit" value="Insert" name="Save">
 <%}%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Home'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
 <input type="reset" value="Reset">
 
 </form>

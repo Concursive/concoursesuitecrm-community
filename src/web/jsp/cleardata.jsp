@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.controller.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.admin.base.*,org.aspcfs.controller.*" %>
 <% 
   Hashtable globalStatus = (Hashtable)getServletConfig().getServletContext().getAttribute("SystemStatus");
   
