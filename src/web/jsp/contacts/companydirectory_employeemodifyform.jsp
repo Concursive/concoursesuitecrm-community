@@ -1,10 +1,12 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.StateSelect,com.darkhorseventures.webutils.CountrySelect" %>
 <jsp:useBean id="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="StateSelect" class="com.darkhorseventures.webutils.StateSelect" scope="request"/>
+<jsp:useBean id="CountrySelect" class="com.darkhorseventures.webutils.CountrySelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
@@ -201,7 +203,9 @@
       State/Province
     </td>
     <td>
-      <input type=text size=28 name="address<%= acount %>state" maxlength=80 value="<%= toHtmlValue(thisAddress.getState()) %>">
+      <%=StateSelect.getHtml("address" + acount + "state", thisAddress.getState())%>
+      <% StateSelect = new StateSelect(); %>
+      <!--input type=text size=28 name="address<%= acount %>state" maxlength=80 value="<%= toHtmlValue(thisAddress.getState()) %>"-->
     </td>
   </tr>
   <tr>
@@ -217,7 +221,9 @@
       Country
     </td>
     <td>
-      <input type=text size=28 name="address<%= acount %>country" maxlength=80 value="<%= toHtmlValue(thisAddress.getCountry()) %>">
+      <%=CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry())%>
+      <% CountrySelect = new CountrySelect(); %>
+      <!--input type=text size=28 name="address<%= acount %>country" maxlength=80 value="<%= toHtmlValue(thisAddress.getCountry()) %>"-->
     </td>
   </tr>
   <tr><td colspan="2">&nbsp;</td></tr>
@@ -261,7 +267,9 @@
       State/Province
     </td>
     <td>
-      <input type=text size=28 name="address<%= acount %>state" maxlength=80>
+      <%=StateSelect.getHtml("address" + acount + "state")%>
+      <% StateSelect = new StateSelect(); %>
+      <!--input type=text size=28 name="address<%= acount %>state" maxlength=80-->
     </td>
   </tr>
   <tr>
@@ -277,7 +285,9 @@
       Country
     </td>
     <td>
-      <input type=text size=28 name="address<%= acount %>country" maxlength=80>
+      <%=CountrySelect.getHtml("address" + acount + "country")%>
+      <% CountrySelect = new CountrySelect(); %>
+      <!--input type=text size=28 name="address<%= acount %>country" maxlength=80-->
     </td>
   </tr>
 </table>

@@ -5,6 +5,8 @@
 <jsp:useBean id="ContactPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="StateSelect" class="com.darkhorseventures.webutils.StateSelect" scope="request"/>
+<jsp:useBean id="CountrySelect" class="com.darkhorseventures.webutils.CountrySelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
@@ -203,7 +205,8 @@ Add Contact<br>
       State/Province
     </td>
     <td>
-      <input type=text size=12 name="address1state" maxlength=80>
+      <%=StateSelect.getHtml("address1state")%>
+      <!--input type=text size=12 name="address1state" maxlength=80-->
     </td>
   </tr>
   <tr class="containerBody">
@@ -219,7 +222,8 @@ Add Contact<br>
       Country
     </td>
     <td>
-      <input type=text size=28 name="address1country" maxlength=80>
+      <%=CountrySelect.getHtml("address1country")%>
+      <!--input type=text size=28 name="address1country" maxlength=80-->
     </td>
   </tr>
   <tr class="containerBody">
@@ -262,7 +266,8 @@ Add Contact<br>
       State/Province
     </td>
     <td>
-      <input type=text size=12 name="address2state" maxlength=80>
+      <%=StateSelect.getHtml("address2state")%>
+      <!--input type=text size=12 name="address2state" maxlength=80-->
     </td>
   </tr>
   <tr class="containerBody">
@@ -278,7 +283,8 @@ Add Contact<br>
       Country
     </td>
     <td>
-      <input type=text size=28 name="address2country" maxlength=80>
+      <%=CountrySelect.getHtml("address2country")%>
+      <!--input type=text size=28 name="address2country" maxlength=80-->
     </td>
   </tr>
 </table>
