@@ -20,7 +20,7 @@
   }
   
   function download() {
-    window.location.href = 'LeadsDocuments.do?command=Details&headerId=' + thisHeaderId + '&fid=' + thisFileId + '<%= addLinkParams(request, "viewSource") %>';
+    window.location.href = 'LeadsDocuments.do?command=Download&headerId=' + thisHeaderId + '&fid=' + thisFileId + '<%= addLinkParams(request, "viewSource") %>';
   }
   
   function modify() {
