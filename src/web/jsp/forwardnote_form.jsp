@@ -7,7 +7,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
-      <strong>Forwarding Information</strong>
+      <strong>CFS Message Details</strong>
     </td>
   </tr>
   
@@ -26,7 +26,7 @@
   
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Forward Subject
+      Subject
     </td>
     <td width=100%>
       <input type=text name="subject" value="<%= toHtmlValue(NoteDetails.getSubject()) %>" size=50>
@@ -35,8 +35,8 @@
   </tr>
   
   <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Text to be forwarded
+    <td nowrap valign="top" class="formLabel">
+      Text
     </td>
     <td width=100%>
       <textarea name="body" rows=10 style="width:100%;"><%= NoteDetails.getBody() %></textarea>

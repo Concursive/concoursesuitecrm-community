@@ -28,37 +28,41 @@ public final class ForwardNote extends CFSModule {
 		list.setBuildPermissions(false);
     
     		Connection db = null;
-    		try {
-     			 db = getConnection(context);
+		
+		try {
+			 db = getConnection(context);
 			 
-			 if (Integer.parseInt(linkModId) == Constants.CONTACTS_CALLS) {
-				Call thisCall = new Call(db, linkRecId);
-				thisNote.setBody("Type: " + thisCall.getCallType() + "\nLength: " + thisCall.getLengthText() + 
-					"\nSubject: " + thisCall.getSubject() + "\nNotes: " + thisCall.getNotes() + "\nEntered: " 
-					+ thisCall.getEnteredName() + " - " + thisCall.getEnteredString() + "\nModified: " + 
-					thisCall.getModifiedName() + " - " + thisCall.getModifiedString());
-				context.getRequest().setAttribute("CallDetails", thisCall);
-			 }
-			 
-			 else if (Integer.parseInt(linkModId) == Constants.CFSNOTE) {
-				thisNote = new CFSNote(db, linkRecId);
-				thisNote.setBody("----Original Message----\nFrom: " + thisNote.getSentName() + "\nTo: " +
-					thisUser.getNameFirst() + " " + thisUser.getNameLast() + 
-					"\nSubject: " + thisNote.getSubject() + "\n\n" + thisNote.getBody());
-				
-				if (!(thisNote.getSubject().startsWith("Fwd:"))) {
-					thisNote.setSubject("Fwd: " + thisNote.getSubject());
-				}
+			 if (linkModId != null && linkRecId != null) {
+			 	//forwarding a call
+				 if (Integer.parseInt(linkModId) == Constants.CONTACTS_CALLS) {
+					Call thisCall = new Call(db, linkRecId);
+					thisNote.setBody("Contact Name: " + thisCall.getContactName() + "\nType: " + thisCall.getCallType() + "\nLength: " + thisCall.getLengthText() + 
+						"\nSubject: " + thisCall.getSubject() + "\nNotes: " + thisCall.getNotes() + "\nEntered: " 
+						+ thisCall.getEnteredName() + " - " + thisCall.getEnteredString() + "\nModified: " + 
+						thisCall.getModifiedName() + " - " + thisCall.getModifiedString());
+					context.getRequest().setAttribute("CallDetails", thisCall);
+				 }
+				 //forwarding a note
+				 else if (Integer.parseInt(linkModId) == Constants.CFSNOTE) {
+					thisNote = new CFSNote(db, linkRecId);
+					thisNote.setBody("----Original Message----\nFrom: " + thisNote.getSentName() + "\nSent: " + thisNote.getEnteredDateTimeString() + "\nTo: " +
+						thisUser.getNameFirst() + " " + thisUser.getNameLast() + 
+						"\nSubject: " + thisNote.getSubject() + "\n\n" + thisNote.getBody());
+					
+					if (!(thisNote.getSubject().startsWith("Fwd:"))) {
+						thisNote.setSubject("Fwd: " + thisNote.getSubject());
+					}
+				 }
 			 }
 		 
 			 list.buildList(db);
       
       
-    		} catch (Exception e) {
-      			errorMessage = e;
-    		} finally {
-      			this.freeConnection(context, db);
-    		}
+		} catch (Exception e) {
+			errorMessage = e;
+		} finally {
+			this.freeConnection(context, db);
+		}
 
     		if (errorMessage == null) {
 			context.getRequest().setAttribute("UserList", list);

@@ -5,6 +5,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <form name="listView" method="post" action="/MyCFSInbox.do?command=Inbox">
+<a href="javascript:popURL('/ForwardNote.do?command=ShowForm&popup=true','Inbox_message','600','290','yes','yes');">New Message</a>
 <br>
 <center><%= InboxInfo.getAlphabeticalPageLinks() %></center>
 

@@ -3,6 +3,7 @@
 <jsp:useBean id="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <form name="addCall" action="/LeadsCalls.do?id=<%= CallDetails.getId() %>&oppId=<%= OpportunityDetails.getId() %>" method="post">
 <a href="/Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -33,7 +34,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
-      <strong>Call Details</strong>
+      <strong>Call Details</strong> [ <a href="javascript:popURL('/ForwardNote.do?command=ShowForm&linkRecordId=<%=CallDetails.getId()%>&linkModuleId=8&popup=true','Forward_Call','600','290','yes','yes');">Forward</a> ]
     </td>     
   </tr>
   <tr class="containerBody">
@@ -88,9 +89,20 @@
   </tr>
   
   <tr class="containerBody">
-    <td align=center colspan=2>
-      <i>Created <%= toHtml(CallDetails.getEnteredString()) %> by <%= toHtml(CallDetails.getEnteredName()) %><br>
-      Modifed <%= toHtml(CallDetails.getModifiedString()) %> by <%= toHtml(CallDetails.getModifiedName()) %></i>
+    <td nowrap class="formLabel">
+      Entered
+    </td>
+    <td>
+      <%= toHtml(CallDetails.getEnteredName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getEnteredString()) %>
+    </td>
+  </tr>
+  
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Modified
+    </td>
+    <td>
+      <%= toHtml(CallDetails.getModifiedName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getModifiedString()) %>
     </td>
   </tr>
 </table>
