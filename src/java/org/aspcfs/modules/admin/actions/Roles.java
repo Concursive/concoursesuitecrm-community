@@ -54,7 +54,7 @@ public final class Roles extends CFSModule {
       roleList.setPagedListInfo(roleInfo);
       roleList.setBuildUsers(false);
       roleList.setBuildUserCount(true);
-      roleList.setRoleType(Constants.ROLETYPE_REGULAR); //regular users
+      roleList.setRoleType(Constants.ROLETYPE_REGULAR);
       roleList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;

@@ -127,7 +127,7 @@ public class Address {
   /**
    *  Sets the otherState attribute of the Address object
    *
-   *@param  tmp         The new otherState value
+   *@param  tmp  The new otherState value
    */
   public void setOtherState(String tmp) {
     if (tmp != null) {
@@ -494,7 +494,7 @@ public class Address {
   /**
    *  Sets the orderId attribute of the Address object
    *
-   * @param  tmp  The new orderId value
+   *@param  tmp  The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -504,7 +504,7 @@ public class Address {
   /**
    *  Sets the orderId attribute of the Address object
    *
-   * @param  tmp  The new orderId value
+   *@param  tmp  The new orderId value
    */
   public void setOrderId(String tmp) {
     this.orderId = Integer.parseInt(tmp);
@@ -514,7 +514,7 @@ public class Address {
   /**
    *  Gets the orderId attribute of the Address object
    *
-   * @return    The orderId value
+   *@return    The orderId value
    */
   public int getOrderId() {
     return orderId;

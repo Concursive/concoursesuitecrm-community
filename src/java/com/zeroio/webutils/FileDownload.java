@@ -145,6 +145,14 @@ public class FileDownload {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context        Description of the Parameter
+   *@param  bytes          Description of the Parameter
+   *@param  contentType    Description of the Parameter
+   *@exception  Exception  Description of the Exception
+   */
   public void sendFile(ActionContext context, byte[] bytes, String contentType) throws Exception {
     context.getResponse().setContentType(contentType);
     if (contentType.startsWith("application")) {
