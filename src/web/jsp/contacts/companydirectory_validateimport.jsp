@@ -215,7 +215,7 @@
     Line <%= lineCount++ %> 
   </td>
   <td class="containerBody">
-    <input type="text" value="<%= toHtml(line) %>" READONLY size="100%">
+    <input type="text" value="<%= toHtml(line) %>" READONLY size="70">
   </td>
   </tr>
   <% } %>

@@ -53,14 +53,14 @@ View Imports
     <th rowspan="2" valign="middle">
       <strong>Status</strong>
     </th>
-    <th colspan="3" align="center">
+    <th colspan="3" style="text-align:center !important">
       <strong>Results</strong>
     </th>
     <th rowspan="2" valign="middle" nowrap>
       <strong><a href="ExternalContactsImports.do?command=View&column=m.entered">Entered</a></strong>
       <%= ExternalContactsImportListInfo.getSortIcon("m.entered") %>
     </th>
-    <th rowspan="2" valign="middle" nowrap>
+    <th rowspan="2" valign="middle">
       <strong>Modified</strong>
     </th>
   </tr>
@@ -90,40 +90,40 @@ View Imports
      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
       <a href="javascript:displayMenu('menuImport','<%= thisImport.getId() %>', '<%= thisImport.getStatusId() == Import.RUNNING ? "1" : "0" %>','<%= thisImport.getStatusId() == Import.UNPROCESSED ? "1" : "0"%>','<%= thisImport.canDelete()? "1" : "0"%>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-    <td width="100%">
+    <td width="100%" nowrap>
       <a href="ExternalContactsImports.do?command=Details&importId=<%= thisImport.getId() %>"><%= toHtmlValue(thisImport.getName()) %></a>
       <dhv:evaluate if="<%= !thisImport.canProcess() && thisImport.getFile().hasVersion(Import.ERROR_FILE_VERSION) %>">
-      &nbsp;&nbsp;<%= thisImport.getFile().getImageTag() %>[ <a href="javascript:window.location.href='ExternalContactsImports.do?command=Download&importId=<%= thisImport.getId() %>&fid=<%= thisImport.getFile().getId() %>&ver=<%= Import.ERROR_FILE_VERSION %>';">Download Error File</a> ]
+      &nbsp;<%= thisImport.getFile().getImageTag() %><br />[<a href="javascript:window.location.href='ExternalContactsImports.do?command=Download&importId=<%= thisImport.getId() %>&fid=<%= thisImport.getFile().getId() %>&ver=<%= Import.ERROR_FILE_VERSION %>';">Download Error File</a>]
       </dhv:evaluate>
     </td>
-    <td nowrap>
+    <td>
       <%= toString(thisImport.getStatusString()) %>
     </td>
-    <td nowrap>
+    <td nowrap align="center">
       <%= thisImport.getTotalImportedRecords() + thisImport.getTotalFailedRecords() %>
     </td>
-    <td nowrap>
+    <td nowrap align="center">
       <%= thisImport.getTotalImportedRecords() %>
     </td>
-    <td nowrap>
+    <td nowrap align="center">
       <%= thisImport.getTotalFailedRecords() %>
     </td>
-    <td nowrap align="center">
-      <dhv:tz timestamp="<%= thisImport.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+    <td align="center" nowrap>
+      <dhv:tz timestamp="<%= thisImport.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.SHORT %>"/>
     </td>
-    <td nowrap align="center">
-      <dhv:tz timestamp="<%= thisImport.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+    <td align="center" nowrap>
+      <dhv:tz timestamp="<%= thisImport.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.SHORT %>"/>
     </td>
   </tr>
 <%}
 }else{%>
       <tr>
         <td class="containerBody" colspan="8" valign="center">
-          No Imports found in this view.
+          No imports found.
         </td>
       </tr>
 <%}%>
 </table>
-&nbsp;<br>
+<br />
 <dhv:pagedListControl object="ExternalContactsImportListInfo" tdClass="row1"/>
 
