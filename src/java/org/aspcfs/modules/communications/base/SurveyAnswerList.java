@@ -306,7 +306,7 @@ public class SurveyAnswerList extends Vector {
       pagedListInfo.setDefaultSort("sr.entered DESC", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY response_id, question_id ");
+      sqlOrder.append("ORDER BY sa.response_id, sa.question_id ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -315,7 +315,9 @@ public class SurveyAnswerList extends Vector {
     } else {
       sqlSelect.append("SELECT ");
     }
-    sqlSelect.append("sa.*, c.namelast as lastname, c.namefirst as firstname, c.contact_id as contactid, sr.entered as entered " +
+    sqlSelect.append(
+        "sa.*, c.namelast as lastname, c.namefirst as firstname, " +
+        "c.contact_id as contactid, sr.entered as entered " +
         "FROM active_survey_answers sa, active_survey_responses sr " +
         "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
         "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id "
