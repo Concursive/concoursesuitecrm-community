@@ -1532,7 +1532,7 @@ public class Campaign extends GenericBean {
    *@param  userRangeId       Description of the Parameter
    *@exception  SQLException  Description of Exception
    */
-  public void insertRecipients(Connection db, int userId, String userRangeId) throws SQLException {
+  public void insertRecipients(Connection db, int userId, String userRangeId, int personalId) throws SQLException {
     SearchCriteriaListList groupData = new SearchCriteriaListList();
     groupData.setCampaignId(this.id);
     groupData.buildList(db);
@@ -1540,12 +1540,11 @@ public class Campaign extends GenericBean {
     while (i.hasNext()) {
       SearchCriteriaList thisGroup = (SearchCriteriaList) i.next();
       ContactList groupContacts = new ContactList();
-      groupContacts.setScl(thisGroup, userId, userRangeId);
+      groupContacts.setScl(thisGroup, userId, userRangeId, personalId);
       groupContacts.setBuildDetails(false);
       groupContacts.setBuildTypes(false);
       groupContacts.setCheckExcludedFromCampaign(this.getId());
       groupContacts.buildList(db);
-
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Campaign-> GroupContacts has " + groupContacts.size() + " items");
       }
@@ -1970,7 +1969,7 @@ public class Campaign extends GenericBean {
    *@exception  SQLException  Description of Exception
    *@since                    1.17
    */
-  public int activate(Connection db, int userId, String userRangeId) throws SQLException {
+  public int activate(Connection db, int userId, String userRangeId, int personalId) throws SQLException {
     int resultCount = 0;
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
@@ -2006,7 +2005,7 @@ public class Campaign extends GenericBean {
       if (resultCount == 1) {
         active = true;
         //Lock in the recipients
-        insertRecipients(db, userId, userRangeId);
+        insertRecipients(db, userId, userRangeId, personalId);
 
         //Lock in the survey
         if (this.surveyId > -1) {
