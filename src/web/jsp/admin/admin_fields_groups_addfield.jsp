@@ -33,9 +33,6 @@ New Field<br>
   </tr>
   <tr>
     <td class="containerBack">
-      <a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>">Back to Folder</a><br>
-      &nbsp;<br>
-      
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td colspan="2">

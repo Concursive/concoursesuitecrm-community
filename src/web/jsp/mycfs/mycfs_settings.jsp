@@ -14,11 +14,6 @@ Locale<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
 <input type="reset" value="Reset">
 </dhv:permission>
-
-<dhv:permission name="myhomepage-profile-settings-edit" none="true">
-<a href="/MyCFS.do?command=MyProfile">Back to My Profile</a>
-</dhv:permission>
-
 <br>
 &nbsp;
 <input type="hidden" name="modified" value="<%= User.getModifiedString() %>">
@@ -36,14 +31,6 @@ Locale<br>
     <td nowrap class="formLabel">End of Day</td>
     <td><input type="text" name="dayEnd" value=""></td>
   </tr>
-<%--  <tr>
-    <td nowrap class="formLabel">
-      Locale
-    </td>
-    <td>
-      <% Locale.setTypeLocale(); %><%= Locale.getHtml("locale", 0) %>
-    </td>
-  </tr>--%>
   <tr>
     <td nowrap class="formLabel">
       Time Zone

@@ -103,9 +103,6 @@ function ShowSpan(thisID)
 
 Modify Ticket<br>
 <hr color="#BFBFBB" noshade>
-
-<a href="TroubleTickets.do?command=Home">Back to Ticket List</a><br>&nbsp;
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 

@@ -14,11 +14,6 @@ Password<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
 <input type="reset" value="Reset">
 </dhv:permission>
-
-<dhv:permission name="myhomepage-profile-password-edit" none="true">
-<a href="MyCFS.do?command=MyProfile">Back to My Profile</a>
-</dhv:permission>
-
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

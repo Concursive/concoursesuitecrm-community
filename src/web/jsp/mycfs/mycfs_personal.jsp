@@ -49,11 +49,6 @@ Personal Information<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 </dhv:permission>
-
-<dhv:permission name="myhomepage-profile-personal-edit" none="true">
-<a href="MyCFS.do?command=MyProfile">Back to My Profile</a>
-</dhv:permission>
-
 <br>
 <%= showError(request, "actionError") %>
 <input type="hidden" name="empid" value="<%= EmployeeBean.getId() %>">

@@ -56,9 +56,6 @@
 <%}%>
 Modify Call<br>
 <hr color="#BFBFBB" noshade>
-
-
-<a href="/Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>

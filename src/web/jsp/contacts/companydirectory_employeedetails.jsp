@@ -3,7 +3,6 @@
 <jsp:useBean id="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<!--a href="/CompanyDirectory.do?command=ListEmployees">Back to Employee List</a><p-->
 <form name="details" action="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>&action=modify" method="post">
 <a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
 <a href="/CompanyDirectory.do?command=ListEmployees">View Employees</a> >
