@@ -5,21 +5,22 @@
    Make sure to override all preferences for the current system.
    Root/Administrator access may be required
 -->
-<project name="cfs" default="init" basedir="">
-
+<project name="CFS" default="init" basedir=".">
+  
   <!-- enable environment variables -->
   <property environment="env"/>
   
   <!-- computed properties -->
   <property name="base.dir" value="${basedir}"/>
-  <property name="bin.dir" value="${base.dir}/bin"/>
-  <property name="lib.dir" value="${base.dir}/lib"/>
-  <property name="src.dir" value="${base.dir}/src"/>
-  <property name="classes.dir" value="${src.dir}/java"/>
-  <property name="web.dir" value="${src.dir}/web"/>
-  <property name="build.dir" value="${base.dir}/build"/>
-  <property name="build.lib.dir" value="${build.dir}/lib"/>
-  <property name="dist.dir" value="${base.dir}/dist"/>
+  <property name="bin.dir" value="${base.dir}${file.separator}bin"/>
+  <property name="lib.dir" value="${base.dir}${file.separator}lib"/>
+  <property name="src.dir" value="${base.dir}${file.separator}src"/>
+  <property name="classes.dir" value="${src.dir}${file.separator}java"/>
+  <property name="web.dir" value="${src.dir}${file.separator}web"/>
+  <property name="build.dir" value="${base.dir}${file.separator}build"/>
+  <property name="build.lib.dir" value="${build.dir}${file.separator}lib"/>
+  <property name="build.classes.dir" value="${build.dir}${file.separator}classes"/>
+  <property name="dist.dir" value="${base.dir}${file.separator}dist"/>
 
   <!-- classpath as both object and a property -->
   <path id="cfs2.classpath">
@@ -32,6 +33,10 @@
 
   <!-- Environment variables must be set before continuing -->
   <target name="init.environment">
+    <tstamp><format property="date.short" pattern="yyyyMMdd-HHmmss"/></tstamp>
+    <tstamp><format property="date.long" pattern="yyyy-MM-dd hh:mm:ss aa"/></tstamp>
+    <!-- log the build -->
+    <record name="${base.dir}/build.log" append="no"/>
     <fail unless="env.CATALINA_HOME">Initialization aborted, environment variable CATALINA_HOME is not defined.</fail>
     <property name="CATALINA_HOME" value="${env.CATALINA_HOME}"/>
     <fail unless="env.CFS_HOME">Initialization aborted, environment variable CFS_HOME is not defined.</fail>
@@ -53,6 +58,11 @@
   
   <!-- Load the properties for this system, stop here if not found -->
   <target name="init.loadproperties" depends="init.buildfile.create">
+    <!-- IF cvs build.env is newer than CFS_HOME build.env, so abort now and have user update -->
+    <uptodate property="build.config.uptodate"
+            srcfile="${base.dir}/build.env"
+            targetfile="${CFS_HOME}/WEB-INF/build.env"/>
+    <fail unless="build.config.uptodate">Initialization aborted, update ${CFS_HOME}${file.separator}WEB-INF${file.separator}build.env with any new changes from ${base.dir}${file.separator}build.env.</fail>
     <loadproperties srcFile="${CFS_HOME}/WEB-INF/build.env">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.StripLineComments">
@@ -60,11 +70,16 @@
         </filterreader>
       </filterchain>
     </loadproperties>
+    <fail unless="build.config.present">Initialization aborted, build properties file not found at ${CFS_HOME}${file.separator}WEB-INF${file.separator}build.env</fail>
+    <fail unless="CONTROL">Initialization aborted, edit the properties file at ${CFS_HOME}${file.separator}WEB-INF${file.separator}build.env</fail>
+  </target>
+  
+  <target name="log" depends="init.loadproperties">
+    <mkdir dir="${CFS_HOME}/WEB-INF/logs"/>
+    <record name="${CFS_HOME}/WEB-INF/logs/build-${date.short}.log" append="no"/>
   </target>
   
   <target name="init" depends="init.loadproperties">
-    <fail unless="build.config.present">Initialization aborted, build properties file not found at ${CFS_HOME}/WEB-INF/build.env</fail>
-    <fail unless="CONTROL">Initialization aborted, edit the properties file at ${CFS_HOME}/WEB-INF/build.env</fail>
     <!-- Default properties if not set in file above -->
     <property name="SITEHOME" value="/home"/>
     <property name="SITECODE" value="cfs"/>
@@ -84,22 +99,26 @@
     <property name="PASSWORD" value="password"/>
     
     <!-- Begin output -->
-    <tstamp><format property="NOW" pattern="yyyy-MM-dd hh:mm:ss" /></tstamp>
-    <echo message="CFS Installation Script"/>
-    <echo message="Date: ${NOW}"/>
-    <echo message="System: ${os.name}"/>
+    <echo message="Project: ${ant.project.name}"/>
+    <echo message="Date: ${date.long}"/>
+    <echo message="User: ${user.name}"/>
+    <echo message="System: ${os.name} ${os.arch} ${os.version}"/>
+    <echo message="Processors: ${env.NUMBER_OF_PROCESSORS}"/>
     <echo message="Ant version: ${ant.version}"/>
-    <echo message="Java version: ${ant.java.version}"/>
+    <echo message="Java version: ${java.version}"/>
     <echo message="Source Path: ${base.dir}"/>
     <echo message="Destination Path: ${CFS_HOME}"/>
   </target>
   
-  <target name="classes-check">
+  <target name="classes-check" depends="init">
     <!-- See if files are up-to-date so only new files are installed during development -->
     <uptodate property="classes-uptodate">
       <srcfiles dir="${classes.dir}" includes="**/*.java"/>
-      <mapper type="merge" to="${CFS_HOME}/WEB-INF/lib/*.jar"/>
+      <mapper type="merge" to="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
     </uptodate>
+  </target>
+  
+  <target name="site-check" depends="init">
     <uptodate property="site-uptodate" >
       <srcfiles dir="${web.dir}" >
         <include name="css/**" />
@@ -117,12 +136,18 @@
      </uptodate>
   </target>
 
+  <!-- Compile the Java source code -->
   <target name="compile" 
           description="Compile source"
           depends="init"
           unless="classes-uptodate">
-    <echo message=" Compiling Source: ${classes.dir}"/>
-    <javac srcdir="${classes.dir}" verbose="off">
+    <!-- Get rid of any classes in the source dir that shouldn't be there -->
+    <delete>
+        <fileset dir= "${classes.dir}" includes="**/*.class"/>
+    </delete>
+    <delete dir="${build.classes.dir}"/>
+    <mkdir dir="${build.classes.dir}"/>
+    <javac srcdir="${classes.dir}" destdir="${build.classes.dir}" verbose="off">
       <classpath>
         <path refid="cfs2.classpath"/>
         <pathelement location="${lib.dir}/jfreechart.jar"/>
@@ -131,72 +156,66 @@
         <pathelement location="${lib.dir}/jakarta-poi.jar"/>
       </classpath>
     </javac>
-<!--
-    <echo message=" Compiling Source: ${classes.dir}/org/aspcfs"/>
-    <javac srcdir="${classes.dir}/org/aspcfs" verbose="off">
-        <classpath>
-            <path refid="cfs2.classpath"/>
-            <pathelement location="${lib.dir}/darkhorseventures.jar"/>
-            <pathelement location="${lib.dir}/isavvix.jar"/>
-            <pathelement location="${lib.dir}/zeroio-iteam.jar"/>
-            <pathelement location="${lib.dir}/jfreechart.jar"/>
-            <pathelement location="${lib.dir}/utils.jar"/>
-            <pathelement location="${lib.dir}/ccp_integration.jar"/>
-        </classpath>
-    </javac>
--->
   </target>
   
+  <!-- Generate the .jar files -->
   <target name="jar" 
           description="Create .jar files"
-          depends="init">
+          depends="init"
+          unless="classes-uptodate">
+    <delete dir="${build.lib.dir}"/>
     <mkdir dir="${build.lib.dir}"/>
     <!-- darkhorseventures.jar -->
-    <delete file="${build.lib.dir}/darkhorseventures.jar"/>
     <jar jarfile="${build.lib.dir}/darkhorseventures.jar"
-          basedir="${classes.dir}"
+          basedir="${build.classes.dir}"
           includes="com/darkhorseventures/**/*.class"/>
-    <delete>
-        <fileset dir= "${classes.dir}/com/darkhorseventures" includes="**/*.class"/>
-    </delete>
     <!-- isavvix.jar -->
-    <delete file="${build.lib.dir}/isavvix.jar"/>
     <jar jarfile="${build.lib.dir}/isavvix.jar"
-          basedir="${classes.dir}"
+          basedir="${build.classes.dir}"
           includes="com/isavvix/**/*.class"/>
-    <delete>
-        <fileset dir= "${classes.dir}/com/isavvix" includes="**/*.class"/>
-    </delete>
     <!-- zeroio-iteam.jar -->
-    <delete file="${build.lib.dir}/zeroio-iteam.jar"/>
     <jar jarfile="${build.lib.dir}/zeroio-iteam.jar"
-          basedir="${classes.dir}"
+          basedir="${build.classes.dir}"
           includes="com/zeroio/**/*.class"/>
-    <delete>
-        <fileset dir= "${classes.dir}/com/zeroio" includes="**/*.class"/>
-    </delete>
     <!-- aspcfs.jar -->
-    <delete file="${build.lib.dir}/aspcfs.jar"/>
     <jar jarfile="${build.lib.dir}/aspcfs.jar"
-          basedir="${classes.dir}"
+          basedir="${build.classes.dir}"
           includes="org/aspcfs/**/*.class"/>
-    <delete>
-        <fileset dir= "${classes.dir}/org/aspcfs" includes="**/*.class"/>
-    </delete>
-  </target>
-  
-  <target name="compile.clean" 
-          description="Delete compiled class files"
-          depends="init">
-    <delete>
-        <fileset dir= "${classes.dir}" includes="**/*.class"/>
-    </delete>
   </target>
   
   <target name="build"
           description="Generate all data for deployment"
-          depends="init,compile,jar,compile.clean">
+          depends="init,compile,jar">
+    <mkdir dir="${build.lib.dir}"/>
   </target>
+  
+  <target name="deploy"
+          description="Build all data and copy to CFS_HOME"
+          depends="log,init,classes-check,build">
+    <!-- Copy the .jars, only if new -->
+    <copy todir="${CFS_HOME}/WEB-INF/lib">
+      <fileset dir="${build.lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+    <!-- Copy the web data, ownly if new -->
+    
+    <!-- Copy the meta-data, only if new -->
+    
+    
+    
+    <!-- Merge meta-data with build.env, only if 1 of the following -->
+    <!-- cvs web.xml is newer than CFS_HOME web.xml, so generate new CFS_HOME web.xml -->
+    <!-- CFS_HOME build.env is newer than CFS_HOME web.xml, so generate new CFS_HOME web.xml -->
+    
+  </target>
+  
+    <target name="clean"
+          description="Delete all files generated by build"
+          depends="init">
+    <delete dir="${build.dir}"/>
+  </target>
+  
   
   <!-- separate app installation stuff -->
   <target name="check-apps-configuration">
@@ -317,7 +336,7 @@
           description="Install library files to site." 
           depends="compile">
     <echo message="Installing JAR files"/>
-    <echo message=" Source: ${SRC_APP}/WEB-INF/lib/*.jar"/>
+    <echo message=" Source: ${SRC_APP}${file.separator}WEB-INF${file.separator}lib${file.separator}*.jar"/>
     <echo message=" Destination: ${CFS_HOME}"/>
     <!-- Need to delete jar files that are no longer in source lib -->
     <!-- Fails under windows because Tomcat has these in-use
