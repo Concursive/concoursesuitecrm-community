@@ -167,6 +167,7 @@ public class Contact extends GenericBean {
       throw new SQLException("Contact ID not specified.");
     }
     StringBuffer sql = new StringBuffer();
+    //NOTE: Update the UserList query if any changes are made to the contact query
     sql.append(
         "SELECT c.*, d.description as departmentname, t.description as type_name, " +
         "o.name as org_name, o.enabled as orgenabled " +
@@ -2103,16 +2104,17 @@ public class Contact extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
-
     PreparedStatement pst = db.prepareStatement(
-        "SELECT * " +
+        "SELECT user_id " +
         "FROM access " +
         "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
+      userId = rs.getInt("user_id");
       setHasAccount(true);
     } else {
+      userId = -1;
       setHasAccount(false);
     }
     rs.close();
