@@ -47,6 +47,19 @@ public class CFSModule {
     tmpInfo.setParameters(context);
     return tmpInfo;
   }
+  
+  protected PagedListInfo getPagedListInfo(ActionContext context, String viewName, String defaultColumn, String defaultOrder) {
+    PagedListInfo tmpInfo = (PagedListInfo) context.getSession().getAttribute(viewName);
+    if (tmpInfo == null) {
+      tmpInfo = new PagedListInfo();
+      tmpInfo.setId(viewName);
+      tmpInfo.setColumnToSortBy(defaultColumn);
+      tmpInfo.setSortOrder(defaultOrder);
+      context.getSession().setAttribute(viewName, tmpInfo);
+    }
+    tmpInfo.setParameters(context);
+    return tmpInfo;
+  }
 
   /**
    *  Retrieves a connection from the connection pool
