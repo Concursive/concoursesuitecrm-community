@@ -118,14 +118,12 @@ su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/revenue.init "
 
 ) >>${LOG} 2>&1 
 
-#grep -q "^${APACHE_HOOK}" ${APACHE_CONF}
-grep -q "ERROR" ${LOG}
-if [ "0" == "$?" ] ; then
-	echo "finished"
+if [ -n "`grep -i ERROR ${LOG}`" ] ; then 
+  echo "ERROR OCCURRED, check log!"; 
 else
-	echo "ERROR occurred"
+  echo "finished"
 fi
-
+  
 # Additional initializations
 echo -n "Inserting permissions and roles... "
 (
