@@ -289,6 +289,24 @@ public class CallResultList extends ArrayList {
     }
     return select;
   }
+
+
+  /**
+   *  Gets the idFromValue attribute of the CallResultList object
+   *
+   *@param  value  Description of the Parameter
+   *@return        The idFromValue value
+   */
+  public int getIdFromValue(String value) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      CallResult thisResult = (CallResult) i.next();
+      if (value.equals(thisResult.getDescription())) {
+        return thisResult.getId();
+      }
+    }
+    return -1;
+  }
 }
 
 
