@@ -7,7 +7,7 @@
 <%@ include file="../../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <a href="Accounts.do">Account Management</a> > 
-<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Search">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 Vehicle Inventory List<br>
 <hr color="#BFBFBB" noshade>

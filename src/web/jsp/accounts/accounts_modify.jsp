@@ -244,12 +244,12 @@
 <a href="Accounts.do">Account Management</a> > 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<a href="Accounts.do?command=View">View Accounts</a> >
+	<a href="Accounts.do?command=Search">Search Results</a> >
 	<%} else if (request.getParameter("return").equals("dashboard")) {%>
 	<a href="Accounts.do?command=Dashboard">Dashboard</a> >
 	<%}%>
 <%} else {%>
-<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <%}%>
 Modify Account<br>
@@ -270,7 +270,7 @@ Modify Account<br>
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=View';this.form.dosubmit.value='false';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
@@ -966,7 +966,7 @@ Modify Account<br>
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=View';this.form.dosubmit.value='false';">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">

@@ -1,38 +1,18 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*" %>
 <jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
-<jsp:useBean id="OrgListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="SearchOrgListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <a href="Accounts.do">Account Management</a> > 
-View Accounts<br>
+Search Results<br>
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="accounts-accounts-add"><a href="Accounts.do?command=Add">Add an Account</a></dhv:permission>
 <dhv:permission name="accounts-accounts-add" none="true"><br></dhv:permission>
-<center><%= OrgListInfo.getAlphabeticalPageLinks() %></center>
-<table width="100%" border="0">
-  <tr>
-    <form name="listView" method="post" action="Accounts.do?command=View">
-    <td align="left" valign="bottom">
-      <select size="1" name="listView" onChange="javascript:document.forms['listView'].submit();">
-        <option <%= OrgListInfo.getOptionValue("all") %>>All Accounts</option>
-        <option <%= OrgListInfo.getOptionValue("my") %>>My Accounts </option>
-        <option <%= OrgListInfo.getOptionValue("disabled") %>>Disabled Accounts </option>
-        <% if (!(OrgListInfo.getSavedCriteria().isEmpty())) { %>
-          <option <%= OrgListInfo.getOptionValue("search") %>>Search Results</option>
-        <%}%>
-      </select>
-			<% TypeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
-      <%= TypeSelect.getHtmlSelect("listFilter1", OrgListInfo.getFilterKey("listFilter1")) %>
-    </td>
-    <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OrgListInfo"/>
-    </td>
-    </form>
-  </tr>
-</table>
+<center><%= SearchOrgListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchOrgListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete">
@@ -41,8 +21,8 @@ View Accounts<br>
     </th>
     </dhv:permission>
     <th width="30%" nowrap>
-      <strong><a href="Accounts.do?command=View&column=o.name">Account Name</a></strong>
-      <%= OrgListInfo.getSortIcon("o.name") %>
+      <strong><a href="Accounts.do?command=Search&column=o.name">Account Name</a></strong>
+      <%= SearchOrgListInfo.getSortIcon("o.name") %>
     </th>
     <th width="20%" nowrap>
       <strong>Phone</strong>
@@ -66,7 +46,7 @@ View Accounts<br>
     <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete">
     <td width=8 valign="center" nowrap class="row<%= rowid %>">
       <dhv:evaluate exp="<%=(thisOrg.getEnabled())%>">
-      	<dhv:permission name="accounts-accounts-edit"><a href="Accounts.do?command=Modify&orgId=<%= thisOrg.getOrgId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-edit,accounts-accounts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-delete"><a href="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=thisOrg.getId()%>&popup=true','Accounts.do?command=View', 'Delete_account','330','200','yes','no');">Del</a></dhv:permission>
+      	<dhv:permission name="accounts-accounts-edit"><a href="Accounts.do?command=Modify&orgId=<%= thisOrg.getOrgId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-edit,accounts-accounts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-delete"><a href="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=thisOrg.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','330','200','yes','no');">Del</a></dhv:permission>
       </dhv:evaluate>
       <dhv:evaluate exp="<%=!(thisOrg.getEnabled())%>">
         <dhv:permission name="accounts-accounts-edit"><a href="Accounts.do?command=Enable&orgId=<%= thisOrg.getOrgId() %>&return=list">Enable</a></dhv:permission>
@@ -109,11 +89,10 @@ View Accounts<br>
 <%} else {%>
   <tr class="containerBody">
     <td colspan="5">
-      No accounts found.
+      No  Accounts found for the specified search parameters. <a href="Accounts.do?command=SearchForm">Modify Search</a>. 
     </td>
   </tr>
 <%}%>
 </table>
 <br>
-<dhv:pagedListControl object="OrgListInfo" tdClass="row1"/>
-
+<dhv:pagedListControl object="SearchOrgListInfo" tdClass="row1"/>

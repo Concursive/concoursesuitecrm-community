@@ -4,7 +4,7 @@
 <form name="details" action="ExternalContacts.do?command=ModifyContact&id=<%= ContactDetails.getId() %>" method="post">
 <dhv:evaluate exp="<%= !isPopup(request) %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
-<a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
+<a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
 Contact Details<br>
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>

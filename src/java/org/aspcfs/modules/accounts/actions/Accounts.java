@@ -396,16 +396,26 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandSearchForm(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-view"))) {
       return ("PermissionError");
     }
-
-    //reset the offset and current letter of the paged list in order to make sure we search ALL accounts
-    PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
-    orgListInfo.setCurrentLetter("");
-    orgListInfo.setCurrentOffset(0);
-
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      //Account type lookup
+      LookupList typeSelect = new LookupList(db, "lookup_account_types");
+      typeSelect.addItem(0, "All Types");
+      context.getRequest().setAttribute("TypeSelect", typeSelect);
+      //reset the offset and current letter of the paged list in order to make sure we search ALL accounts
+      PagedListInfo orgListInfo = this.getPagedListInfo(context, "SearchOrgListInfo");
+      orgListInfo.setCurrentLetter("");
+      orgListInfo.setCurrentOffset(0);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
     addModuleBean(context, "Search Accounts", "Accounts Search");
     return ("SearchOK");
   }
@@ -564,7 +574,7 @@ public final class Accounts extends CFSModule {
         return ("PermissionError");
       }
 
-      return (executeCommandView(context));
+      return (executeCommandSearchForm(context));
     }
 
     addModuleBean(context, "Dashboard", "Dashboard");
@@ -600,56 +610,6 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  View: Lists Accounts that are in the system. Can be limited based on
-   *  criteria selection
-   *
-   *@param  context  Description of Paramet47hu *@return Description of the
-   *      Returned Value
-   *@return          Description of the Returned Value
-   */
-  public String executeCommandView(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-view")) {
-      return ("PermissionError");
-    }
-    Connection db = null;
-    OrganizationList organizationList = new OrganizationList();
-    //Prepare pagedListInfo
-    PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
-    orgListInfo.setLink("Accounts.do?command=View");
-    //Need to reset any sub PagedListInfos since this is a new account
-    this.resetPagedListInfo(context);
-    try {
-      db = this.getConnection(context);
-      //Account type lookup
-      LookupList typeSelect = new LookupList(db, "lookup_account_types");
-      typeSelect.addItem(0, "All Types");
-      context.getRequest().setAttribute("TypeSelect", typeSelect);
-      //Build the organization list
-      organizationList.setPagedListInfo(orgListInfo);
-      organizationList.setMinerOnly(false);
-      organizationList.setTypeId(orgListInfo.getFilterKey("listFilter1"));
-      if ("my".equals(orgListInfo.getListView())) {
-        organizationList.setOwnerId(this.getUserId(context));
-      }else if ("search".equals(orgListInfo.getListView())) {
-        return executeCommandSearch(context);
-      }else if ("disabled".equals(orgListInfo.getListView())) {
-        organizationList.setIncludeEnabled(0);
-      }
-      organizationList.buildList(db);
-      context.getRequest().setAttribute("OrgList", organizationList);
-      addModuleBean(context, "View Accounts", "Accounts View");
-      return ("ListOK");
-    } catch (Exception errorMessage) {
-      //Go through the SystemError process
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
-  }
-
-
-  /**
    *  Search Accounts
    *
    *@param  context  Description of the Parameter
@@ -659,27 +619,31 @@ public final class Accounts extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-view")) {
       return ("PermissionError");
     }
-    Connection db = null;
+
+    String source = (String) context.getRequest().getParameter("source");
     OrganizationList organizationList = new OrganizationList();
+    addModuleBean(context, "View Accounts", "Search Results");
+
     //Prepare pagedListInfo
-    PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
-    orgListInfo.setLink("Accounts.do?command=View");
-    PagedListInfo searchListInfo = this.getPagedListInfo(context, "SearchAccountsListInfo");
+    PagedListInfo searchListInfo = this.getPagedListInfo(context, "SearchOrgListInfo");
+    searchListInfo.setLink("Accounts.do?command=Search");
 
     //Need to reset any sub PagedListInfos since this is a new account
     this.resetPagedListInfo(context);
+    Connection db = null;
     try {
       db = this.getConnection(context);
-      //Account type lookup
-      LookupList typeSelect = new LookupList(db, "lookup_account_types");
-      typeSelect.addItem(0, "All Types");
-      context.getRequest().setAttribute("TypeSelect", typeSelect);
+
+      //return if no criteria is selected
+      if ((searchListInfo.getListView() == null || "".equals(searchListInfo.getListView())) && !"searchForm".equals(source)) {
+        return "ListOK";
+      }
 
       //Build the organization list
       organizationList.setPagedListInfo(searchListInfo);
       organizationList.setMinerOnly(false);
       organizationList.setTypeId(searchListInfo.getFilterKey("listFilter1"));
-      orgListInfo.setSearchCriteria(organizationList);
+      searchListInfo.setSearchCriteria(organizationList);
       if ("my".equals(searchListInfo.getListView())) {
         organizationList.setOwnerId(this.getUserId(context));
       }
@@ -688,15 +652,11 @@ public final class Accounts extends CFSModule {
       }
       organizationList.buildList(db);
 
-      //set the view to search
-      orgListInfo.setListView("search");
-
       context.getRequest().setAttribute("OrgList", organizationList);
-      addModuleBean(context, "View Accounts", "Accounts View");
       return ("ListOK");
-    } catch (Exception errorMessage) {
+    } catch (Exception e) {
       //Go through the SystemError process
-      context.getRequest().setAttribute("Error", errorMessage);
+      context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
@@ -751,12 +711,9 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-add"))) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
     boolean recordInserted = false;
@@ -794,22 +751,17 @@ public final class Accounts extends CFSModule {
       } else {
         processErrors(context, newOrg.getErrors());
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "View Accounts", "Accounts Insert ok");
-      if (recordInserted) {
-        return ("InsertOK");
-      } else {
-        return (executeCommandAdd(context));
-      }
+    addModuleBean(context, "View Accounts", "Accounts Insert ok");
+    if (recordInserted) {
+      return ("InsertOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return (executeCommandAdd(context));
     }
   }
 
@@ -826,7 +778,6 @@ public final class Accounts extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-edit"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
     Organization updatedOrg = null;
@@ -860,33 +811,29 @@ public final class Accounts extends CFSModule {
         //update all contacts which are associated with this organization
         ContactList.updateOrgName(db, newOrg);
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "View Accounts", "Modify Account");
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        return (executeCommandModify(context));
-      } else if (resultCount == 1) {
-        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-          return (executeCommandView(context));
-        } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("dashboard")) {
-          return (executeCommandDashboard(context));
-        } else {
-          if (context.getRequest().getParameter("popup") != null) {
-            return ("PopupCloseOK");
-          }
-          return ("UpdateOK");
-        }
+    if (resultCount == -1) {
+      return (executeCommandModify(context));
+    } else if (resultCount == 1) {
+      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+        return (executeCommandSearch(context));
+      } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("dashboard")) {
+        return (executeCommandDashboard(context));
       } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
+        if (context.getRequest().getParameter("popup") != null) {
+          return ("PopupCloseOK");
+        }
+        return ("UpdateOK");
       }
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
   }
 
@@ -933,7 +880,7 @@ public final class Accounts extends CFSModule {
         return ("DeleteOK");
       } else {
         processErrors(context, thisOrganization.getErrors());
-        return (executeCommandView(context));
+        return (executeCommandSearch(context));
       }
     } else {
       System.out.println(errorMessage);
@@ -974,10 +921,10 @@ public final class Accounts extends CFSModule {
     addModuleBean(context, "Accounts", "Delete Account");
     if (errorMessage == null) {
       if (recordEnabled) {
-        return (executeCommandView(context));
+        return (executeCommandSearch(context));
       } else {
         processErrors(context, thisOrganization.getErrors());
-        return (executeCommandView(context));
+        return (executeCommandSearch(context));
       }
     } else {
       System.out.println(errorMessage);
@@ -1565,14 +1512,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandRebuildFormElements(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     String index = null;
-
     if (context.getRequest().getParameter("index") != null) {
       index = context.getRequest().getParameter("index");
     }
-
     try {
       db = this.getConnection(context);
       if (Integer.parseInt(index) == 0) {
@@ -1594,13 +1538,12 @@ public final class Accounts extends CFSModule {
         LookupList emailTypeList = new LookupList(db, "lookup_contactemail_types");
         context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      
     } finally {
       this.freeConnection(context, db);
     }
     return ("RebuildElementsOK");
   }
-
 }
 

@@ -6,7 +6,7 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <a href="Accounts.do">Account Management</a> > 
-<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 Opportunities<br>
 <hr color="#BFBFBB" noshade>

@@ -9,7 +9,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
 <a href="Accounts.do">Account Management</a> > 
-<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Search">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
 Vehicle Inventory List<br>
 <hr color="#BFBFBB" noshade>

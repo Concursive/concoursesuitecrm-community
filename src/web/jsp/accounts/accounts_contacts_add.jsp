@@ -67,7 +67,7 @@
   <form name="addContact" action="Contacts.do?command=Save&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" method="post">
   <dhv:evaluate exp="<%= !popUp %>">
   <a href="Accounts.do">Account Management</a> > 
-  <a href="Accounts.do?command=View">View Accounts</a> >
+  <a href="Accounts.do?command=Search">Search Results</a> >
   <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
   <a href="Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Contacts</a> >
   Add Contact<br>

@@ -116,10 +116,10 @@
   <a href="ExternalContacts.do">General Contacts</a> > 
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>
-    <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
+    <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
     <%}%>
   <%} else {%>
-  <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
+  <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
   <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
   <%}%>
   Modify Contact<br>
@@ -135,7 +135,7 @@
       <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';">
     <%}%>
   <%} else {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
@@ -297,7 +297,7 @@
   <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';">
     <%}%>
   <% }else{ %>
     <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">

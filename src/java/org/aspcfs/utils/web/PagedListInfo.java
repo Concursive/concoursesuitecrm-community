@@ -55,7 +55,7 @@ public class PagedListInfo implements Serializable {
    *
    *@since    1.0
    */
-  public PagedListInfo() { }
+  public PagedListInfo() {}
 
 
   /**
@@ -368,7 +368,10 @@ public class PagedListInfo implements Serializable {
    */
   public boolean setParameters(ActionContext context) {
 
-    if (context.getRequest().getParameter("pagedListInfoId") != null && !(context.getRequest().getParameter("pagedListInfoId").equals("")) && !(context.getRequest().getParameter("pagedListInfoId").equals(this.getId()))) {
+    //check for multiple pagedLists on a single page
+    if (context.getRequest().getParameter("pagedListInfoId") != null && !(context.getRequest().getParameter("pagedListInfoId").equals("")) &&
+    !(context.getRequest().getParameter("pagedListInfoId").equals("null")) &&
+    !(context.getRequest().getParameter("pagedListInfoId").equals(this.getId()))) {
       return false;
     }
 

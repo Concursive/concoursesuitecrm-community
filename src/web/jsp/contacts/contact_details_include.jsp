@@ -13,7 +13,7 @@
 <dhv:evaluate exp="<%= !isPopup(request) %>">
 <dhv:permission name="contacts-external_contacts-add"><input type="button" value="Clone" onClick="javascript:this.form.action='ExternalContacts.do?command=Clone&id=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
 </dhv:evaluate>
-<dhv:sharing primaryBean="ContactDetails" action="delete" all="true"><input type="button" name="cmd" value="Delete" onClick="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true','ExternalContacts.do?command=ListContacts', 'Delete_contact','320','200','yes','no');"></dhv:sharing>
+<dhv:sharing primaryBean="ContactDetails" action="delete" all="true"><input type="button" name="cmd" value="Delete" onClick="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true','ExternalContacts.do?command=SearchContacts', 'Delete_contact','320','200','yes','no');"></dhv:sharing>
 <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete"><br>&nbsp;</dhv:permission>
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -22,12 +22,12 @@
 	    <strong>Email Addresses</strong>
 	  </th>
   </tr>
-<%  
+<%
   Iterator iemail = ContactDetails.getEmailAddressList().iterator();
   if (iemail.hasNext()) {
     while (iemail.hasNext()) {
       ContactEmailAddress thisEmailAddress = (ContactEmailAddress)iemail.next();
-%>    
+%>
     <tr class="containerBody">
       <td class="formLabel" nowrap>
         <%= toHtml(thisEmailAddress.getTypeName()) %>
@@ -36,7 +36,7 @@
         <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>
       </td>
     </tr>
-<%    
+<%
     }
   } else {
 %>
@@ -59,7 +59,7 @@
   if (inumber.hasNext()) {
     while (inumber.hasNext()) {
       ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)inumber.next();
-%>    
+%>
     <tr class="containerBody">
       <td class="formLabel" nowrap>
         <%= toHtml(thisPhoneNumber.getTypeName()) %>
@@ -68,7 +68,7 @@
         <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>
       </td>
     </tr>
-<%    
+<%
     }
   } else {
 %>
@@ -86,7 +86,7 @@
 	    <strong>Addresses</strong>
 	  </th>
   </tr>
-<%  
+<%
   Iterator iaddress = ContactDetails.getAddressList().iterator();
   if (iaddress.hasNext()) {
     while (iaddress.hasNext()) {
@@ -100,7 +100,7 @@
         <%= toHtml(thisAddress.toString()) %>&nbsp;
       </td>
     </tr>
-<%    
+<%
     }
   } else {
 %>
@@ -166,9 +166,8 @@
 <dhv:evaluate exp="<%= !isPopup(request) %>">
 <dhv:permission name="contacts-external_contacts-add"><input type="button" value="Clone" onClick="javascript:this.form.action='ExternalContacts.do?command=Clone&id=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
 </dhv:evaluate>
-<dhv:sharing primaryBean="ContactDetails" action="delete" all="true"><input type="button" name="cmd" value="Delete" onClick="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true','ExternalContacts.do?command=ListContacts', 'Delete_contact','320','200','yes','no');"></dhv:sharing>
+<dhv:sharing primaryBean="ContactDetails" action="delete" all="true"><input type="button" name="cmd" value="Delete" onClick="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true','ExternalContacts.do?command=SearchContacts', 'Delete_contact','320','200','yes','no');"></dhv:sharing>
 </dhv:evaluate>
-
 </td></tr>
 </table>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>

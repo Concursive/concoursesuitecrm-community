@@ -1,4 +1,14 @@
-<jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="SearchOrgListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<script language="JavaScript">
+  function clearForm() {
+    document.forms['searchAccount'].searchName.value="";
+    document.forms['searchAccount'].searchAccountNumber.value="";
+    document.forms['searchAccount'].listView.options.selectedIndex = 0;
+    document.forms['searchAccount'].listFilter1.options.selectedIndex = 0;
+    document.forms['searchAccount'].searchName.focus();
+  }
+</script>
 <body onLoad="javascript:document.forms[0].searchName.focus();">
 <form name="searchAccount" action="Accounts.do?command=Search" method="post">
 <a href="Accounts.do">Account Management</a> > 
@@ -15,20 +25,41 @@ Search Accounts<br>
       Name
     </td>
     <td>
-      <input type="text" size="35" name="searchName">
+      <input type="text" size="35" name="searchName" value="<%= SearchOrgListInfo.getSearchOptionValue("searchName") %>">
     </td>
   </tr>
   <tr>
     <td class="formLabel">
-      Account Number
+      Number
     </td>
     <td>
-      <input type="text" size="35" name="searchAccountNumber">
+      <input type="text" size="35" name="searchAccountNumber" value="<%= SearchOrgListInfo.getSearchOptionValue("searchAccountNumber") %>">
+    </td>
+  </tr>
+  <tr>
+    <td class="formLabel">
+      Type
+    </td>
+    <td>
+      <%= TypeSelect.getHtmlSelect("listFilter1", SearchOrgListInfo.getFilterKey("listFilter1")) %>
+    </td>
+  </tr>
+  <tr>
+    <td class="formLabel">
+      From
+    </td>
+    <td align="left" valign="bottom">
+      <select size="1" name="listView">
+        <option <%= SearchOrgListInfo.getOptionValue("all") %>>All Accounts</option>
+        <option <%= SearchOrgListInfo.getOptionValue("my") %>>My Accounts </option>
+        <option <%= SearchOrgListInfo.getOptionValue("disabled") %>>Disabled Accounts </option>
+      </select>
     </td>
   </tr>
 </table>
 &nbsp;<br>
 <input type="submit" value="Search">
-<input type="reset" value="Reset">
+<input type="button" value="Clear" onClick="javascript:clearForm();">
+<input type="hidden" name="source" value="searchForm">
 </form>
 </body>

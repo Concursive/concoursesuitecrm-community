@@ -31,7 +31,6 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandView(ActionContext context) {
-    Exception errorMessage = null;
     String contactId = context.getRequest().getParameter("contactId");
     addModuleBean(context, "External Contacts", "Calls");
     PagedListInfo callListInfo = this.getPagedListInfo(context, "CallListInfo");
@@ -52,18 +51,14 @@ public final class ExternalContactsCalls extends CFSModule {
       callList.setContactId(contactId);
       callList.buildList(db);
       context.getRequest().setAttribute("ContactDetails", thisContact);
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("CallList", callList);
-      return this.getReturn(context, "View");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("CallList", callList);
+    return this.getReturn(context, "View");
   }
 
 
@@ -75,16 +70,12 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
-
-    Exception errorMessage = null;
     boolean recordInserted = false;
-
     String contactId = context.getRequest().getParameter("contactId");
     Contact thisContact = null;
     Call thisCall = (Call) context.getFormBean();
     thisCall.setEnteredBy(getUserId(context));
     thisCall.setModifiedBy(getUserId(context));
-
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -97,21 +88,16 @@ public final class ExternalContactsCalls extends CFSModule {
       if (!recordInserted) {
         processErrors(context, thisCall.getErrors());
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (context.getRequest().getParameter("actionSource") != null) {
-        return this.getReturn(context, "InsertCall");
-      }
-      return this.getReturn(context, "Insert");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (context.getRequest().getParameter("actionSource") != null) {
+      return this.getReturn(context, "InsertCall");
     }
+    return this.getReturn(context, "Insert");
   }
 
 
@@ -123,8 +109,6 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandDetails(ActionContext context) {
-
-    Exception errorMessage = null;
     addModuleBean(context, "External Contacts", "Calls");
 
     String callId = context.getRequest().getParameter("id");
@@ -145,19 +129,14 @@ public final class ExternalContactsCalls extends CFSModule {
       }
       thisCall = new Call(db, callId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("CallDetails", thisCall);
-      return this.getReturn(context, "Details");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("CallDetails", thisCall);
+    return this.getReturn(context, "Details");
   }
 
 
@@ -168,7 +147,6 @@ public final class ExternalContactsCalls extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
-    Exception errorMessage = null;
     HtmlDialog htmlDialog = new HtmlDialog();
     Call thisCall = null;
     String id = context.getRequest().getParameter("id");
@@ -195,18 +173,14 @@ public final class ExternalContactsCalls extends CFSModule {
         htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
       }
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      context.getSession().setAttribute("Dialog", htmlDialog);
-      return ("ConfirmDeleteOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getSession().setAttribute("Dialog", htmlDialog);
+    return ("ConfirmDeleteOK");
   }
 
 
@@ -218,10 +192,7 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
-
-    Exception errorMessage = null;
     boolean recordDeleted = false;
-
     String contactId = context.getRequest().getParameter("contactId");
     Call thisCall = null;
 
@@ -238,25 +209,21 @@ public final class ExternalContactsCalls extends CFSModule {
       thisCall = new Call(db, context.getRequest().getParameter("id"));
 
       recordDeleted = thisCall.delete(db);
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
 
-    if (errorMessage == null) {
-      boolean inLinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
-      if (recordDeleted) {
-        context.getRequest().setAttribute("contactId", contactId);
-        context.getRequest().setAttribute("refreshUrl", "ExternalContactsCalls.do?command=View&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
-        return this.getReturn(context, "Delete");
-      } else {
-        processErrors(context, thisCall.getErrors());
-        return (executeCommandView(context));
-      }
+    boolean inLinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
+    if (recordDeleted) {
+      context.getRequest().setAttribute("contactId", contactId);
+      context.getRequest().setAttribute("refreshUrl", "ExternalContactsCalls.do?command=View&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
+      return this.getReturn(context, "Delete");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      processErrors(context, thisCall.getErrors());
+      return (executeCommandView(context));
     }
   }
 
@@ -269,9 +236,6 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandAdd(ActionContext context) {
-
-    Exception errorMessage = null;
-
     String contactId = context.getRequest().getParameter("contactId");
     PagedListInfo callListInfo = this.getPagedListInfo(context, "CallListInfo");
     callListInfo.setLink("ExternalContactCalls.do?command=View&contactId=" + contactId);
@@ -296,23 +260,18 @@ public final class ExternalContactsCalls extends CFSModule {
       LookupList callTypeList = new LookupList(db, "lookup_call_types");
       callTypeList.addItem(0, "--None--");
       context.getRequest().setAttribute("CallTypeList", callTypeList);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "External Contacts", "Calls");
-      //if a different module reuses this action then do a explicit return
-      if (context.getRequest().getParameter("actionSource") != null) {
-        return this.getReturn(context, "AddCall");
-      }
-      return this.getReturn(context, "Add");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    addModuleBean(context, "External Contacts", "Calls");
+    //if a different module reuses this action then do a explicit return
+    if (context.getRequest().getParameter("actionSource") != null) {
+      return this.getReturn(context, "AddCall");
     }
+    return this.getReturn(context, "Add");
   }
 
 
@@ -324,8 +283,6 @@ public final class ExternalContactsCalls extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
-
-    Exception errorMessage = null;
     addModuleBean(context, "External Contacts", "Calls");
 
     String contactId = context.getRequest().getParameter("contactId");
@@ -352,18 +309,14 @@ public final class ExternalContactsCalls extends CFSModule {
       LookupList callTypeList = new LookupList(db, "lookup_call_types");
       callTypeList.addItem(0, "--None--");
       context.getRequest().setAttribute("CallTypeList", callTypeList);
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("CallDetails", thisCall);
-      return this.getReturn(context, "Modify");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("CallDetails", thisCall);
+    return this.getReturn(context, "Modify");
   }
 
 
@@ -375,9 +328,6 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
-
-    Exception errorMessage = null;
-
     Call thisCall = (Call) context.getFormBean();
     String contactId = context.getRequest().getParameter("contactId");
     Contact thisContact = null;
@@ -402,35 +352,30 @@ public final class ExternalContactsCalls extends CFSModule {
         callTypeList.addItem(0, "--None--");
         context.getRequest().setAttribute("CallTypeList", callTypeList);
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
-      boolean inlinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
-      if (popup && !inlinePopup) {
-        return ("PopupCloseOK");
-      } else if (resultCount == -1) {
-        processErrors(context, thisCall.getErrors());
-        context.getRequest().setAttribute("CallDetails", thisCall);
-        return ("ModifyOK");
-      } else if (resultCount == 1) {
-        context.getRequest().removeAttribute("CallDetails");
-        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-          return (executeCommandView(context));
-        } else {
-          return ("UpdateOK");
-        }
+    boolean popup = "true".equals(context.getRequest().getParameter("popup"));
+    boolean inlinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
+    if (popup && !inlinePopup) {
+      return ("PopupCloseOK");
+    } else if (resultCount == -1) {
+      processErrors(context, thisCall.getErrors());
+      context.getRequest().setAttribute("CallDetails", thisCall);
+      return ("ModifyOK");
+    } else if (resultCount == 1) {
+      context.getRequest().removeAttribute("CallDetails");
+      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+        return (executeCommandView(context));
       } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
+        return ("UpdateOK");
       }
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
   }
 

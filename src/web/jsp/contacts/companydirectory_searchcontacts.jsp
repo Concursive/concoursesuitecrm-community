@@ -1,3 +1,4 @@
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
 <jsp:useBean id="ContactPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -5,6 +6,18 @@
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SearchContactsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript">
+  function clearForm() {
+    document.forms['searchContact'].searchFirstName.value="";
+    document.forms['searchContact'].searchMiddleName.value="";
+    document.forms['searchContact'].searchLastName.value="";
+    document.forms['searchContact'].searchCompany.value="";
+    document.forms['searchContact'].searchTitle.value="";
+    document.forms['searchContact'].listView.options.selectedIndex = 0;
+    document.forms['searchContact'].listFilter1.options.selectedIndex = 0;
+    document.forms['searchContact'].searchFirstName.focus();
+  }
+</script>
 <body onLoad="javascript:document.forms[0].searchFirstName.focus();">
 <form name="searchContact" action="ExternalContacts.do?command=SearchContacts&auto-populate=true" method="post">
 <a href="ExternalContacts.do">General Contacts</a> > 
@@ -58,6 +71,14 @@ Search Contacts<br>
   </tr>
   <tr>
     <td nowrap class="formLabel">
+      Type
+    </td>
+    <td>
+      <%= ContactTypeList.getHtmlSelect("listFilter1", SearchContactsInfo.getFilterKey("listFilter1")) %>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
       From 
     </td>
     <td>
@@ -72,8 +93,7 @@ Search Contacts<br>
 </table>
 <br>
 <input type="submit" value="Search">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=ListContacts'">
-<input type="reset" value="Reset">
+<input type="button" value="Clear" onClick="javascript:clearForm();">
 <input type="hidden" name="doSearch" value="true">
 <input type="hidden" name="source" value="searchForm">
 </form>
