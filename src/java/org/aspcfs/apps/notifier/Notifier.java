@@ -604,7 +604,7 @@ public class Notifier extends ReportBuilder {
     if (contactReport == null || contactReport.size() == 0) {
       return false;
     }
-    String filePath = (String) config.get("FILELIBRARY") + fs + dbName + fs + "communications" + fs +  CFSModule.getDatePath(new java.util.Date()) + fs;
+    String filePath = (String) config.get("FILELIBRARY") + fs + dbName + fs + "campaign" + fs +  CFSModule.getDatePath(new java.util.Date()) + fs;
     String baseFilename = contactReport.generateFilename();
     File f = new File(filePath);
     f.mkdirs();
@@ -645,7 +645,7 @@ public class Notifier extends ReportBuilder {
     thisItem.setLinkItemId(thisCampaign.getId());
     thisItem.setEnteredBy(thisCampaign.getEnteredBy());
     thisItem.setModifiedBy(thisCampaign.getModifiedBy());
-    thisItem.setSubject(thisCampaign.getName());
+    thisItem.setSubject("Campaign Mail Merge");
     thisItem.setClientFilename("cfs-" + baseFilename + ".zip");
     thisItem.setFilename(baseFilename);
     thisItem.setSize(fileSize);
