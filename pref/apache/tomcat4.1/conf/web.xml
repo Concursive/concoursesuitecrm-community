@@ -89,7 +89,7 @@
   <!-- following initialization parameters (default values are in square    -->
   <!-- brackets):                                                           -->
   <!--                                                                      -->
-  <!--   checkInterval       If development is false and relaoding is true, -->
+  <!--   checkInterval       If development is false and reloading is true, -->
   <!--                       background compiles are enabled. checkInterval -->
   <!--                       is the time in seconds between checks to see   -->
   <!--                       if a JSP page needs to be recompiled. [300]    -->
@@ -114,6 +114,10 @@
   <!--   ieClassId           The class-id value to be sent to Internet      -->
   <!--                       Explorer when using <jsp:plugin> tags.         -->
   <!--                       [clsid:8AD9C840-044E-11D1-B3E9-00805F499D93]   -->
+  <!--                                                                      -->
+  <!--   fork                Tell Ant to fork compiles of JSP pages so that -->
+  <!--                       a separate JVM is used for JSP page compiles   -->
+  <!--                       from the one Tomcat is running in. [true]      -->
   <!--                                                                      -->
   <!--   javaEncoding        Java file encoding to use for generating java  -->
   <!--                       source files. [UTF8]                           -->

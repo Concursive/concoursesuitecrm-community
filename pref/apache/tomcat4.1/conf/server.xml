@@ -40,7 +40,7 @@
     <Connector className="org.apache.coyote.tomcat4.CoyoteConnector"
                port="8009" minProcessors="5" maxProcessors="75"
                enableLookups="true" redirectPort="8443"
-               acceptCount="10" debug="0" connectionTimeout="20000"
+               acceptCount="10" debug="0" connectionTimeout="0"
                useURIValidationHack="false"
                protocolHandlerClassName="org.apache.jk.server.JkCoyoteHandler">
     </Connector>
