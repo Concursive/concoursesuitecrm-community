@@ -73,13 +73,19 @@ public class DataImport {
         Object reader = Class.forName(readerClass).newInstance();
         HashMap invalidReaderProperties = xml.populateObject(reader, xml.getFirstElement(xml.getDocumentElement(), "reader"));
         displayItems(invalidReaderProperties, "Invalid Reader Property");
-        validateHandler(reader);
+        if (!validateHandler(reader)) {
+          logger.info("Reader has not been configured");
+          System.exit(0);
+        }
 
         //Instantiate the writer
         Object writer = Class.forName(writerClass).newInstance();
         HashMap invalidWriterProperties = xml.populateObject(writer, xml.getFirstElement(xml.getDocumentElement(), "writer"));
         displayItems(invalidWriterProperties, "Invalid Writer Property");
-        validateHandler(writer);
+        if (!validateHandler(writer)) {
+          logger.info("Writer has not been configured");
+          System.exit(0);
+        }
 
         //Execute the read/write process
         ((DataReader) reader).execute((DataWriter) writer);

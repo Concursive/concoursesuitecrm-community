@@ -23,10 +23,12 @@ public class ObjectUtils {
    */
   public static boolean setParam(Object target, String param, Object value) {
     try {
-      param = param.substring(0, 1).toUpperCase() + param.substring(1);
-      Class[] argTypes = new Class[]{value.getClass()};
-      Method method = target.getClass().getMethod("set" + param, argTypes);
-      method.invoke(target, new Object[]{value});
+      if (value != null) {
+        param = param.substring(0, 1).toUpperCase() + param.substring(1);
+        Class[] argTypes = new Class[]{value.getClass()};
+        Method method = target.getClass().getMethod("set" + param, argTypes);
+        method.invoke(target, new Object[]{value});
+      }
     } catch (Exception e) {
       //e.printStackTrace(System.out);
       return false;

@@ -1,6 +1,6 @@
 package com.darkhorseventures.apps.dataimport;
 
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  *  A record to be created by a DataReader and saved by a DataWriter, contains
@@ -32,6 +32,18 @@ public class DataRecord extends ArrayList {
   
   public void addField(String thisName, String thisValue, String thisLookupValue) {
     this.add(new DataField(thisName, thisValue, thisLookupValue));
+  }
+  
+  public boolean removeField(String fieldName) {
+    Iterator fields = this.iterator();
+    while (fields.hasNext()) {
+      DataField thisField = (DataField)fields.next();
+      if (fieldName.equals(thisField.getName())) {
+        fields.remove();
+        return true;
+      }
+    }
+    return false;
   }
 
 }

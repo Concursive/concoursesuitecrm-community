@@ -1,5 +1,6 @@
-package com.darkhorseventures.apps.dataimport;
+package com.darkhorseventures.apps.dataimport.cfshttpxmlwriter;
 
+import com.darkhorseventures.apps.dataimport.*;
 import java.util.*;
 import java.util.logging.*;
 import com.darkhorseventures.utils.*;
@@ -25,7 +26,9 @@ public class CFSHttpXMLWriter implements DataWriter {
   private int systemId = -1;
   private int clientId = -1;
 
-
+  private ArrayList transaction = new ArrayList();
+  private boolean autoCommit = true;
+  
   /**
    *  Sets the url attribute of the CFSHttpXMLWriter object
    *
@@ -34,8 +37,7 @@ public class CFSHttpXMLWriter implements DataWriter {
   public void setUrl(String tmp) {
     this.url = tmp;
   }
-
-
+  
   /**
    *  Sets the id attribute of the CFSHttpXMLWriter object
    *
@@ -83,6 +85,12 @@ public class CFSHttpXMLWriter implements DataWriter {
     this.clientId = Integer.parseInt(tmp);
   }
 
+  public void setAutoCommit(boolean flag) {
+    autoCommit = flag;
+    if (autoCommit && transaction.size() > 0) {
+      commit();
+    }
+  }
 
   /**
    *  Gets the url attribute of the CFSHttpXMLWriter object
@@ -178,6 +186,14 @@ public class CFSHttpXMLWriter implements DataWriter {
    *@return       Description of the Return Value
    */
   public boolean save(DataRecord record) {
+    transaction.add(record);
+    if (autoCommit) {
+      return commit();
+    }
+    return true;
+  }
+  
+  public boolean commit() {
     try {
       //Construct XML insert
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -209,30 +225,42 @@ public class CFSHttpXMLWriter implements DataWriter {
       }
       
       //Add the object
-      Element transaction = document.createElement("transaction");
-      app.appendChild(transaction);
-      
-      Element object = document.createElement(record.getName());
-      object.setAttribute("action", "insert");
-      transaction.appendChild(object);
-      
-      Iterator recordItems = record.iterator();
-      while (recordItems.hasNext()) {
-        DataField thisField = (DataField)recordItems.next();
-        Element field = document.createElement(thisField.getName());
-        if (thisField.hasValueLookup()) {
-          object.setAttribute("lookup", thisField.getValueLookup());
+      Iterator dataRecordItems = transaction.iterator();
+      while (dataRecordItems.hasNext()) {
+        DataRecord record = (DataRecord)dataRecordItems.next();
+        
+        Element transaction = document.createElement("transaction");
+        app.appendChild(transaction);
+        
+        Element object = document.createElement(record.getName());
+        object.setAttribute("action", record.getAction());
+        transaction.appendChild(object);
+        
+        Iterator fieldItems = record.iterator();
+        while (fieldItems.hasNext()) {
+          DataField thisField = (DataField)fieldItems.next();
+          Element field = document.createElement(thisField.getName());
+          if (thisField.hasValueLookup()) {
+            object.setAttribute("lookup", thisField.getValueLookup());
+          }
+          field.appendChild(document.createTextNode(thisField.getValue()));
+          object.appendChild(field);
         }
-        field.appendChild(document.createTextNode(thisField.getValue()));
-        object.appendChild(field);
       }
       
       String response = HTTPUtils.sendPacket(url, XMLUtils.toString(document));
-      System.out.println(response);
+      this.transaction.clear();
+      this.setAutoCommit(true);
+      //System.out.println(response);
     } catch (Exception ex) {
       logger.info(ex.toString());
       return false;
     }
+    return true;
+  }
+  
+  public boolean rollback() {
+    transaction.clear();
     return true;
   }
   

@@ -275,7 +275,8 @@ public class XMLUtils {
           String value = getNodeText(theObject);
           if (ObjectUtils.setParam(target, param, value)) {
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("XMLUtils-> set" + param + "(" + value + ")");
+              String displayParam = param.substring(0, 1).toUpperCase() + param.substring(1);
+              System.out.println("XMLUtils-> set" + displayParam + "(" + value + ")");
             }
             //For synchronization, if an object is populated and a lookup will need
             //to be done for the client id, then the lookup attribute will exist

@@ -8,6 +8,7 @@
 INSERT INTO sync_system (application_name) VALUES ('Vport Telemarketing');
 INSERT INTO sync_system (application_name) VALUES ('Land Mark: Auto Guide PocketPC');
 INSERT INTO sync_system (application_name) VALUES ('Street Smart Speakers: Web Portal');
+INSERT INTO sync_system (application_name) VALUES ('CFSHttpXMLWriter');
 
 /* VPORT */
 
@@ -480,3 +481,16 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
        record_status_id
 )'
 );
+
+
+/* CFSWriter */
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'user', 'com.darkhorseventures.cfsbase.User');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'contact', 'com.darkhorseventures.cfsbase.Contact');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'ticket', 'com.darkhorseventures.cfsbase.Ticket');
+
+

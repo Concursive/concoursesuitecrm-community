@@ -29,6 +29,7 @@ public class UserList extends Vector {
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
   
+  private int enteredBy = -1;
   private int roleId = -1;
   private int managerId = -1;
   private User managerUser = null;
@@ -152,6 +153,9 @@ public class UserList extends Vector {
     this.emptyHtmlSelectRecord = tmp;
   }
 
+  public void setEnteredBy(int tmp) {
+    this.enteredBy = tmp;
+  }
 
   /**
    *  Sets the RoleId attribute of the UserList object
@@ -792,6 +796,9 @@ public void setRevenueType(int revenueType) {
     if (!(includeAliases)) {
       sqlFilter.append("AND a.alias = -1 ");
     }
+    if (enteredBy > -1) {
+      sqlFilter.append("AND a.enteredby = ? ");
+    }
     if (roleId > -1) {
       sqlFilter.append("AND r.role_id = ? ");
     }
@@ -841,6 +848,9 @@ public void setRevenueType(int revenueType) {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    if (enteredBy > -1) {
+      pst.setInt(++i, enteredBy);
+    }
     if (roleId > -1) {
       pst.setInt(++i, roleId);
     }
