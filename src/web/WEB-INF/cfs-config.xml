@@ -615,7 +615,7 @@
     <forward name="ReportsOK" resource="/accounts/accounts_reports.jsp" layout="nav"/>
     <forward name="ModifyFieldsOK" resource="/accounts/accounts_fields_modify.jsp" layout="nav"/>
     <forward name="UpdateFieldsOK" resource="/accounts/accounts_fields.jsp" layout="nav"/>
-    <forward name="DeleteFieldsOK" resource="Accounts.do?command=Fields"/>
+    <forward name="DeleteFieldsOK" resource="/Accounts.do?command=Fields"/>
     <forward name="GenerateFormOK" resource="/accounts/accounts_reports_generate.jsp" layout="nav"/>
     <forward name="DeleteReportOK" resource="/Accounts.do?command=Reports"/>
     <forward name="DeleteReportERROR" resource="/Accounts.do?command=Reports"/>
@@ -852,7 +852,7 @@
     <forward name="FieldsOK" resource="/accounts/accounts_tickets_fields.jsp" layout="nav"/>
     <forward name="ModifyFieldsOK" resource="/accounts/accounts_tickets_fields_modify.jsp" layout="nav"/>
     <forward name="UpdateFieldsOK" resource="/accounts/accounts_tickets_fields.jsp" layout="nav"/>
-    <forward name="DeleteFieldsOK" resource="AccountTicketFolders.do?command=Fields"/>
+    <forward name="DeleteFieldsOK" resource="/AccountTicketFolders.do?command=Fields"/>
   </action>
   <action name="AccountsDocuments" class="org.aspcfs.modules.accounts.actions.AccountsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
