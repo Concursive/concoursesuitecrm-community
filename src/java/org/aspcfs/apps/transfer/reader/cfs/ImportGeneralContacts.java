@@ -242,6 +242,7 @@ public class ImportGeneralContacts implements DataReader {
       newContactRecord.addField("orgId", "0");
       newContactRecord.addField("enteredBy", userId);
       newContactRecord.addField("modifiedBy", userId);
+      newContactRecord.addField("enabled", "false");
       writer.save(newContactRecord);
       /*
        *  XMLUtils responseXML = new XMLUtils(writer.getLastResponse(), true);
