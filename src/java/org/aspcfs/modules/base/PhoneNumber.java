@@ -191,7 +191,7 @@ public int getContactId() {
    *@since     1.7
    */
   public boolean isValid() {
-    return (type > -1 && number != null && !number.trim().equals(""));
+    return ((type > -1 && number != null && !number.trim().equals("")) || !enabled);
   }
 
 
