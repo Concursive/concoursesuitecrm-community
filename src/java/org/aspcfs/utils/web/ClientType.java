@@ -104,7 +104,10 @@ public class ClientType implements Serializable {
         //User-Agent: mozilla/4.0 (compatible; msie 6.0; msie 5.5; windows 98) opera 7.02  [en]
         //User-Agent: mozilla/3.0 (windows 98; u) opera 7.02  [en]
         this.id = OPERA;
-        parseVersion(header.substring(header.indexOf("opera") + 5, header.indexOf("[")).trim());
+        parseVersion(header.substring(
+            header.indexOf("opera") + 5, 
+            header.indexOf("[", header.indexOf("opera"))
+            ).trim());
       } else if (header.indexOf("mozilla") > -1) {
         //User-Agent: mozilla/5.0 (x11; u; linux i686; en-us; rv:1.3b) gecko/20030211
         //User-Agent: mozilla/5.0 (macintosh; u; ppc mac os x; en-us; rv:1.0.1) gecko/20021104 chimera/0.6
@@ -327,6 +330,9 @@ public class ClientType implements Serializable {
    *@return              Description of the Return Value
    */
   public double parseVersion(String versionText) {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("ClientType-> Version to parse: " + versionText);
+    }
     try {
       return Double.parseDouble(versionText);
     } catch (Exception e) {
