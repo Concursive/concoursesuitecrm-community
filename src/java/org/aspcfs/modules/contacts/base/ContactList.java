@@ -1265,7 +1265,7 @@ public class ContactList extends Vector {
       
       if (ignoreTypeIdList.size() > 0) {
         Iterator iList = ignoreTypeIdList.iterator();
-        sqlFilter.append("AND c.type_id not in (");
+        sqlFilter.append("AND (c.type_id not in (");
         while (iList.hasNext()) {
           String placeHolder = (String) iList.next();
           sqlFilter.append("?");
@@ -1273,7 +1273,7 @@ public class ContactList extends Vector {
             sqlFilter.append(",");
           }
         }
-        sqlFilter.append(") ");
+        sqlFilter.append(") OR c.type_id is NULL) ");
       }
     } else {
       if (typeId != -1) {
