@@ -17,7 +17,7 @@ SELECT nextval ('access_user_id_seq');
 INSERT INTO access (user_id,username,password,role_id,contact_id,manager_id,enteredby,modifiedby) 
 VALUES (1,'super','f8788660ff31d110c242b3d7659ce1eb',1,-1,-1,1,1);
 INSERT INTO access (user_id,username,password,role_id,contact_id,manager_id,enteredby,modifiedby) 
-VALUES (0,'admin','f8788660ff31d110c242b3d7659ce1eb',1,-1,-1,1,1);
+VALUES (0,'dhvadmin','f8788660ff31d110c242b3d7659ce1eb',1,-1,-1,1,1);
 
 BEGIN TRANSACTION;
 CREATE TEMP TABLE "tr" ("tmp_relname" name, "tmp_reltriggers" smallint);
