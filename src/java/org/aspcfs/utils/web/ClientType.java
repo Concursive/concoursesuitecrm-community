@@ -176,7 +176,5 @@ public class ClientType {
   public double getBrowserVersion() {
     return version;
   }
-  
-  
 }
 

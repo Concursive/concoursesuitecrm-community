@@ -17,8 +17,8 @@
   
   <action name="ProcessSurvey" class="com.darkhorseventures.cfsmodule.ProcessSurvey">
     <forward name="SystemError" resource="/error_system.jsp"/>
-    <forward name="ViewOK" resource="/display_survey.jsp"/>
-    <forward name="InsertOK" resource="/survey_thanks.jsp"/>
+    <forward name="ViewOK" resource="/display_survey.jsp" layout="styleNoSession"/>
+    <forward name="InsertOK" resource="/survey_thanks.jsp" layout="styleNoSession"/>
   </action>
 	
   <action name="ProcessMessage" class="com.darkhorseventures.cfsmodule.ProcessMessage">
@@ -415,7 +415,7 @@
     <forward name="AddOK" resource="/campaign_messages_add.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/CampaignManagerMessage.do?command=View"/>
     <forward name="PreviewOK" resource="/campaign_messages_preview.jsp"/>
-    <forward name="PreviewSurveyOK" resource="/display_survey.jsp"/>
+    <forward name="PreviewSurveyOK" resource="/display_survey.jsp" layout="styleNoSession"/>
     <forward name="DeleteOK" resource="/CampaignManagerMessage.do?command=View"/>
   </action>
   <action name="CampaignManagerSurvey" class="com.darkhorseventures.cfsmodule.CampaignManagerSurvey">

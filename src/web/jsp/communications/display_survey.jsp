@@ -8,8 +8,6 @@
 
 <head>
 <title>Thank you for visiting our survey page</title>
-<link rel="stylesheet" href="css/template0ie.css" type="text/css">
-<link rel="stylesheet" href="css/template0.css" type="text/css">
 
 <script language="JavaScript">
   function checkForm(form) {
