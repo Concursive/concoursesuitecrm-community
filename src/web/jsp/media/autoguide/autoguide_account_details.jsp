@@ -153,10 +153,8 @@
 <dhv:evaluate exp="<%= !InventoryItem.hasPictureId() %>">
         <img src="images/vehicle_unavailable.gif" border="0"/>
 </dhv:evaluate>
-        <br>
       </span>
-      <br>
-      <a href="javascript:popURLReturn('AutoGuide.do?command=UploadForm&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>', 'AccountsAutoGuide.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&id=<%= InventoryItem.getId() %>', 'Photo_Upload','500','300','no','no');">Upload Photo</a>
+      <br><a href="javascript:popURLReturn('AutoGuide.do?command=UploadForm&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>', 'AccountsAutoGuide.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&id=<%= InventoryItem.getId() %>', 'Photo_Upload','500','300','no','no');">Upload Photo</a>
     </td>
   </tr>
 </table>

@@ -1,7 +1,6 @@
 .PhotoList
 {
 	border-top: #ffd98d 1px solid;
-	font-size: x-small;
 	vertical-align: baseline;
 	border-bottom: #ffd98d 1px solid;
 	text-align: center;
@@ -15,7 +14,6 @@
 }
 .PhotoListAdditionalRow
 {
-	font-size: x-small;
 	vertical-align: baseline;
 	border-bottom: #ffd98d 1px solid;
 	text-align: center;
@@ -29,7 +27,6 @@
 }
 .PhotoDetail
 {
-	font-size: x-small;
 	vertical-align: top;
 	text-align: center;
 }
@@ -42,7 +39,6 @@
 }
 .rowUnderline
 {
-	font-size: x-small;
 	vertical-align: baseline;
 	border-bottom: #ffd98d 1px solid;
 }

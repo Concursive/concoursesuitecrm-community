@@ -59,18 +59,18 @@
   <tr>
 </dhv:evaluate>
     <td class="PhotoList<%= (rowcount == 1?"":"AdditionalRow") %>">
-        <span>
-          <a href="AccountsAutoGuide.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId()%>"><img src="<%= (thisItem.hasPictureId()?"AutoGuide.do?command=ShowImage&id=" + thisItem.getId() + "&fid=" + thisItem.getPictureId():"images/vehicle_unavailable.gif") %>" border="0"/></a><br>
-          <a href="javascript:popURLReturn('AutoGuide.do?command=UploadForm&id=<%= thisItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>', 'AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>','Photo_Upload','500','300','no','no');">Upload Photo</a><br>
-          &nbsp;<br>
+      <span>
+        <a href="AccountsAutoGuide.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId()%>"><img src="<%= (thisItem.hasPictureId()?"AutoGuide.do?command=ShowImage&id=" + thisItem.getId() + "&fid=" + thisItem.getPictureId():"images/vehicle_unavailable.gif") %>" border="0"/></a><br>
+        <a href="javascript:popURLReturn('AutoGuide.do?command=UploadForm&id=<%= thisItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>', 'AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>','Photo_Upload','500','300','no','no');">Upload Photo</a><br>
+        &nbsp;<br>
 <dhv:evaluate exp="<%= hasText(thisItem.getStockNo()) %>">
-          #<%= toHtml(thisItem.getStockNo()) %><br>
+        #<%= toHtml(thisItem.getStockNo()) %><br>
 </dhv:evaluate>
-          <%= thisItem.getVehicle().getYear() %> <%= toHtml(thisItem.getVehicle().getMake().getName()) %> <%= toHtml(thisItem.getVehicle().getModel().getName()) %>
+        <%= thisItem.getVehicle().getYear() %> <%= toHtml(thisItem.getVehicle().getMake().getName()) %> <%= toHtml(thisItem.getVehicle().getModel().getName()) %>
 <dhv:evaluate exp="<%= (thisItem.getSellingPrice() > 0) %>">
-          <br><%= thisItem.getSellingPriceString() %>
+        <br><%= thisItem.getSellingPriceString() %>
 </dhv:evaluate>
-        </span>
+      </span>
     </td>
 <dhv:evaluate exp="<%= count%3 == 0 %>">
   </tr>

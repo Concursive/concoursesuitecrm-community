@@ -155,7 +155,6 @@
 <dhv:evaluate exp="<%= !InventoryItem.hasPictureId() %>">
         <img src="images/vehicle_unavailable.gif" border="0"/>
 </dhv:evaluate>
-        <br>
       </span>
 <dhv:evaluate exp="<%= InventoryItem.hasPictureId() %>">   
       <br><a href="AutoGuide.do?command=DownloadImage&id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>">D/L Hi-Res</a> (<%= InventoryItem.getPicture().getVersion(1.0d).getRelativeSize() %>k)<br>

@@ -50,18 +50,14 @@
   <tr>
 </dhv:evaluate>
     <td class="PhotoList<%= (rowcount == 1?"":"AdditionalRow") %>">
-      <p>
+      <span>
         <a href="AutoGuide.do?command=Details&id=<%= thisItem.getId()%>"><img src="<%= (thisItem.hasPictureId()?"AutoGuide.do?command=ShowImage&id=" + thisItem.getId() + "&fid=" + thisItem.getPictureId():"images/vehicle_unavailable.gif") %>" border="0"/></a>
-      </p>
-      <p>
-        <span>
-          <%= toHtml(thisItem.getOrganization().getName()) %>
-          <br><%= thisItem.getVehicle().getYear() %> <%= toHtml(thisItem.getVehicle().getMake().getName()) %> <%= toHtml(thisItem.getVehicle().getModel().getName()) %>
+        <%= toHtml(thisItem.getOrganization().getName()) %>
+        <br><%= thisItem.getVehicle().getYear() %> <%= toHtml(thisItem.getVehicle().getMake().getName()) %> <%= toHtml(thisItem.getVehicle().getModel().getName()) %>
 <dhv:evaluate exp="<%= (thisItem.getSellingPrice() > 0) %>">
-          <br><%= thisItem.getSellingPriceString() %>
+        <br><%= thisItem.getSellingPriceString() %>
 </dhv:evaluate>          
-        </span>
-      </p>
+      </span>
     </td>
 <dhv:evaluate exp="<%= count%3 == 0 %>">  
   </tr>
