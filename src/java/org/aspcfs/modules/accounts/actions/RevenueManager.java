@@ -514,10 +514,13 @@ public final class RevenueManager extends CFSModule {
     if (errorMessage == null) {
       if (resultCount == -1) {
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
-        //return ("ModifyOK");
 	return (executeCommandModify(context));
       } else if (resultCount == 1) {
-        return ("UpdateOK");
+	      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+		      return (executeCommandView(context));
+	      } else {
+		      return ("UpdateOK");
+	      }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
