@@ -22,6 +22,10 @@ Attachment
         <li>Click "Update Campaign Attachment" to save changes</li>
         <li>Surveys can be created or edited in the <a href="CampaignManagerAttachment.do">Create Attachments</a> utility</li>
       </ul>
+<dhv:permission name="campaign-campaigns-edit">
+<input type="submit" value="Update Campaign Attachments" name="Save"><br>
+&nbsp;<br>
+</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan="2" valign="center" align="left">
@@ -48,10 +52,9 @@ Attachment
   </tr>
   
 </table>
-
 <dhv:permission name="campaign-campaigns-edit">
 <br>
-<input type='submit' value="Update Campaign Attachments" name="Save">
+<input type="submit" value="Update Campaign Attachments" name="Save">
 </dhv:permission>
   </td>
   </tr>

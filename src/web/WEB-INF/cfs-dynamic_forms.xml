@@ -1,83 +1,91 @@
 <application>
-  <!-- Form used in the survey module -->
+  <!-- Add or Modify a Survey Form -->
   <form name="survey" 
-        defaultField="name" 
-        button0text="Save" 
-        button0link="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" 
-        button1text="Preview" 
-        button1link="CampaignManagerSurvey.do?command=Preview&amp;auto-populate=true" 
         action="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" 
-        cancel="CampaignManagerSurvey.do?command=View" 
+        cancel="CampaignManagerSurvey.do?command=ViewReturn&amp;auto-populate=true" 
         returnLinkText="Communications Manager &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details&lt;hr color=&quot;#BFBFBB&quot; noshade&gt;"> 
-    <tab name="Page 1" next="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true&amp;pg=1" id="0">
-      <group name="Create a New Survey">
-        <field name="name" display="Name" type="text" parameters="size=50^maxlength=80" required="on"/>
-	<field name="description" display="Description" type="text" parameters="size=50^maxlength=80"/>
-	<field name="type" display="Type" type="select" lookupList="Open-Ended^Quantitative (no comments)^Quantitative (with comments)" required="on"/>
-	<field name="itemLength" display="Number of Items" type="select" lookupList="5^9" textAsCode="on" required="on"/>
-	<field name="intro" display="Introduction Text" type="textarea"/>
-	<field name="id" display="id" type="hidden"/>
+    <button text="Save" link="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true"/>
+    <tab id="0" name="Page 1" 
+         prev=""
+         next="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true&amp;pg=1" 
+         defaultField="name">
+      <group name="Survey Details">
+        <field name="name" display="Name" type="text" parameters="size=50^maxlength=80" required="true"/>
+        <field name="description" display="Description" type="text" parameters="size=50^maxlength=80"/>
+        <field name="type" display="Type" type="select" lookupList="Open-Ended^Quantitative (no comments)^Quantitative (with comments)" required="true"/>
+        <field name="itemLength" display="Number of Items" type="select" lookupList="5^9" textAsCode="on" required="true"/>
+        <field name="intro" display="Introduction Text" type="textarea"/>
+        <field name="id" display="id" type="hidden"/>
+        <field name="modified" display="modified" type="hidden"/>
       </group>
     </tab>
-    <tab name="Page 2" prev="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true" id="1">
+    <tab id="1" name="Page 2" 
+         prev="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true"
+         next="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true&amp;pg=2"
+         defaultField="questions1text">
       <group name="Survey Items">
-	<field name="items" display="Item" type="rowlist" lengthVar="itemLength" parameters="size=50^maxlength=80" required="on"/>
+        <field name="questions" display="Item" type="rowlist" lengthVar="itemLength" parameters="size=50^maxlength=80" required="true"/>
+      </group>
+    </tab>
+    <tab id="2" name="Preview"
+         prev="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true&amp;pg=1">
+      <group name="Survey Preview">
+        <field name="intro" type="displaytext"/>
+        <field name="questions" type="displayrowlist" lengthVar="itemLength"/>
       </group>
     </tab>
   </form>
   
+  <!-- View Survey Details -->
   <form name="surveydetails" 
-        button0text="Modify" 
-        button0link="CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true" 
-        button1text="Delete Survey" 
-        button1link="CampaignManagerSurvey.do?command=Delete&amp;auto-populate=true" 
         action="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" 
-        cancel="CampaignManagerSurvey.do?command=View" 
         returnLinkText="Communications Manager &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details&lt;hr color=&quot;#BFBFBB&quot; noshade&gt;">
+    <button text="Modify" link="CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true"/>
+    <button text="Delete Survey" link="CampaignManagerSurvey.do?command=Delete&amp;auto-populate=true"/>
+    <button text="Preview" link="CampaignManagerSurvey.do?command=Preview&amp;auto-populate=true"/>
     <tab name="Page 1" id="0">
       <group name="Survey Details">
         <field name="name" display="Name" type="displaytext"/>
-	<field name="description" display="Description" type="displaytext"/>
-	<field name="typeName" display="Type" type="displaytext"/>
-	<field name="itemLength" display="Number of Items" type="displaytext"/>
-	<field name="intro" display="Introduction Text" type="displaytext"/>
-	<field name="enteredByName" display="Entered By" type="displaytext"/>
-	<field name="enteredDateTimeString" display="Date" type="displaytext"/>
-	<field name="modifiedByName" display="Last Modified By" type="displaytext"/>
-	<field name="modifiedDateTimeString" display="Date" type="displaytext"/>
-	<field name="id" display="id" type="hidden"/>
+        <field name="description" display="Description" type="displaytext"/>
+        <field name="typeName" display="Type" type="displaytext"/>
+        <field name="itemLength" display="Number of Items" type="displaytext"/>
+        <field name="enteredBy" display="Entered By" type="lookupUserId"/>
+        <field name="enteredDateTimeString" display="Date" type="displaytext"/>
+        <field name="modifiedBy" display="Last Modified By" type="lookupUserId"/>
+        <field name="modifiedDateTimeString" display="Date" type="displaytext"/>
+        <field name="id" display="id" type="hidden"/>
+        <field name="modified" display="modified" type="hidden"/>
+      </group>
+      <group name="Survey Introduction Text">
+        <field name="intro" display="" type="displaytext"/>
+      </group>
+      <group name="Survey Questions">
+        <field name="questions" display="Question" type="displayRowlist"/>
       </group>
     </tab>
   </form>
   
+  <!-- See a stand-alone Preview of the survey -->
   <form name="surveypreview" 
-        cancel="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true">
+        returnLinkText="Communications Manager &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details &gt; Preview&lt;hr color=&quot;#BFBFBB&quot; noshade&gt;">
+    <button text="Back to Details" link="CampaignManagerSurvey.do?command=Details&amp;auto-populate=true"/>
     <tab name="Page 1" id="0">
       <group name="Survey Preview">
-        <field name="intro" type="survey_intro"/>
-	<field name="items" type="rowlist_question" lengthVar="itemLength"/>
-      </group>
-    </tab>
-    <tab name="Page 2" id="1">
-      <group name="Hidden Items">
-	<field name="items" display="Item" type="rowlist" lengthVar="itemLength"/>
-	<field name="name" display="Name" type="text" parameters="size=50^maxlength=80" required="on"/>
-	<field name="description" display="Description" type="text" parameters="size=50^maxlength=80"/>
-	<field name="type" display="Type" type="select" lookupList="Open-Ended^Quantitative (no comments)^Quantitative (with comments)" required="on"/>
-	<field name="itemLength" display="Number of Items" type="select" lookupList="5^9" textAsCode="on" required="on"/>
-	<field name="intro" display="Introduction Text" type="textarea"/>
-	<field name="id" display="id" type="hidden"/>
+        <field name="intro" type="displaytext"/>
+        <field name="questions" type="displayrowlist" lengthVar="itemLength"/>
+        <field name="id" display="id" type="hidden"/>
+        <field name="modified" display="modified" type="hidden"/>
       </group>
     </tab>
   </form>
   
+  <!-- Actual survey that is taken by user -->
   <form name="surveyview" 
-        action="ProcessSurvey.do?command=Insert&amp;auto-populate=true" 
-        cancel="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true">
+        action="ProcessSurvey.do?command=Insert&amp;auto-populate=true">
     <tab name="Page 1" id="0">
       <group name="Survey Preview">
-        <field name="intro" type="survey_intro"/>
-	<field name="items" type="rowlist_question" lengthVar="itemLength"/>
+        <field name="intro" type="displaytext"/>
+        <field name="questions" type="displayrowlist" lengthVar="itemLength"/>
       </group>
     </tab>
   </form>

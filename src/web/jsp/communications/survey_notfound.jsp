@@ -17,13 +17,13 @@
 <table cellpadding="4" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td>
-      <strong>Survey Submitted</strong>
+      <strong>Survey Not Found</strong>
     </td>
   </tr>
   <tr>
     <td>
-      Thank you for taking the time to submit the survey.<br>
-      Your answers have been stored in our database.
+      The requested survey could not be found.<br>
+      Please contact the person that sent you this link for more information.
     </td>
   </tr>
 </table>

@@ -10,40 +10,70 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 /**
- *  Contains a list of email addresses... currently used to build the list from
- *  the database with any of the parameters to limit the results.
+ *  Contains a list of survey answers for a campaign
  *
+ *@author     chris price
+ *@created    August 13, 2002
+ *@version    $Id$
  */
 public class SurveyAnswerList extends Vector {
-	
-	private int surveyId = -1;
-	private int questionId = -1;
 
+  private int questionId = -1;
+  private int hasComments = -1;
+
+  /**
+   *  Constructor for the SurveyAnswerList object
+   */
   public SurveyAnswerList() { }
-  
-public int getSurveyId() {
-	return surveyId;
-}
-public void setSurveyId(int surveyId) {
-	this.surveyId = surveyId;
-}
 
+
+  /**
+   *  Constructor for the SurveyAnswerList object
+   *
+   *@param  request  Description of the Parameter
+   */
   public SurveyAnswerList(HttpServletRequest request) {
     int i = 0;
     while (request.getParameter("quest" + (++i) + "id") != null) {
       SurveyAnswer thisAnswer = new SurveyAnswer();
       thisAnswer.buildRecord(request, i);
       this.addElement(thisAnswer);
-      System.out.println("Added an answer: " + thisAnswer.getQuestionId());
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Added an answer: " + thisAnswer.getQuestionId());
+      }
     }
   }
- public int getQuestionId() {
-	return questionId;
-}
-public void setQuestionId(int questionId) {
-	this.questionId = questionId;
-}
- 
+
+
+  /**
+   *  Gets the questionId attribute of the SurveyAnswerList object
+   *
+   *@return    The questionId value
+   */
+  public int getQuestionId() {
+    return questionId;
+  }
+
+
+  /**
+   *  Sets the questionId attribute of the SurveyAnswerList object
+   *
+   *@param  questionId  The new questionId value
+   */
+  public void setQuestionId(int questionId) {
+    this.questionId = questionId;
+  }
+
+  public void setHasComments(int tmp) { this.hasComments = tmp; }
+  public int getHasComments() { return hasComments; }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
@@ -56,50 +86,57 @@ public void setQuestionId(int questionId) {
       pst.close();
     }
   }
-  
+
+
+  /**
+   *  Gets the object attribute of the SurveyAnswerList object
+   *
+   *@param  rs                Description of the Parameter
+   *@return                   The object value
+   *@exception  SQLException  Description of the Exception
+   */
   public SurveyAnswer getObject(ResultSet rs) throws SQLException {
     SurveyAnswer thisAnswer = new SurveyAnswer(rs);
     return thisAnswer;
   }
 
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-    int items = -1;
 
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT sa.* " +
-        "FROM survey_answer sa ");
-    sql.append("WHERE sa.survey_id > -1 ");
-    createFilter(sql);
-    //sql.append("ORDER BY level, o.option_name ");
+      "SELECT sa.* " +
+      "FROM active_survey_answers sa " +
+      "WHERE sa.question_id = ? ");
+    if (hasComments > -1) {
+      if (hasComments == Constants.TRUE) {
+        sql.append("AND comments <> '' ");
+      } else {
+        sql.append("AND comments = '' ");
+      }
+    }  
+      sql.append("ORDER BY response_id, question_id ");
     pst = db.prepareStatement(sql.toString());
-    items = prepareFilter(pst);
+    pst.setInt(1, questionId);
     ResultSet rs = pst.executeQuery();
     return rs;
   }
-  
-  private void createFilter(StringBuffer sqlFilter) {
-    if (sqlFilter == null) {
-      sqlFilter = new StringBuffer();
-    }
-    if (surveyId > -1) {
-      sqlFilter.append("AND sa.survey_id = ? ");
-    }
-    if (questionId > -1) {
-      sqlFilter.append("AND sa.question_id = ? ");
-    }
-  }
 
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
-    int i = 0;
-    if (surveyId > -1) {
-      pst.setInt(++i, surveyId);
-    }
-    if (questionId > -1) {
-      pst.setInt(++i, questionId);
-    }
-    return i;
-  }
 
+  public boolean insert(Connection db, int responseId) throws SQLException {
+    Iterator ans = this.iterator();
+    while (ans.hasNext()) {
+      SurveyAnswer thisAnswer = (SurveyAnswer) ans.next();
+      thisAnswer.insert(db, responseId);
+    }
+    return true;
+  }
 }
 

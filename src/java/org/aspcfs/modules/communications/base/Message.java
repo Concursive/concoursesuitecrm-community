@@ -9,6 +9,7 @@ import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.utils.StringUtils;
 
 /**
  *  Represents an HTML message than can be emailed, faxed, or printed.  Messages
@@ -210,7 +211,7 @@ public class Message extends GenericBean {
    *@since
    */
   public void setMessageText(String tmp) {
-    this.messageText = tmp;
+    this.messageText = StringUtils.toHtmlText(tmp);
   }
 
 
@@ -632,7 +633,7 @@ public class Message extends GenericBean {
       }
     } catch (SQLException e) {
       db.rollback();
-      System.out.println(e.toString());
+      throw new SQLException(e.toString());
     } finally {
       db.setAutoCommit(true);
       st.close();

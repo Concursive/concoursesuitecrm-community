@@ -22,8 +22,9 @@
   
   <action name="ProcessSurvey" class="com.darkhorseventures.cfsmodule.ProcessSurvey">
     <forward name="SystemError" resource="/error_system.jsp"/>
-    <forward name="ViewOK" resource="/display_survey.jsp" layout="styleNoSession"/>
+    <forward name="ViewOK" resource="/display_active_survey.jsp" layout="styleNoSession"/>
     <forward name="InsertOK" resource="/survey_thanks.jsp" layout="styleNoSession"/>
+    <forward name="NotFoundError" resource="/survey_notfound.jsp" layout="styleNoSession"/>
   </action>
 	
   <action name="ProcessMessage" class="com.darkhorseventures.cfsmodule.ProcessMessage">
@@ -428,7 +429,7 @@
     <forward name="PreviewGroupsOK" resource="/campaign_center_groups_preview.jsp" layout="style"/>
     <forward name="ToggleOK" resource="/CampaignManager.do?command=PreviewGroups"/>
     <forward name="PrepareDownloadOK" resource="/campaign_download.jsp" layout="nav"/>
-    <forward name="PopupOK" resource="/campaign_survey_comments.jsp" layout="style"/>
+    <forward name="PopupCommentsOK" resource="/campaign_survey_comments.jsp" layout="style"/>
   </action>
   <action name="CampaignManagerGroup" class="com.darkhorseventures.cfsmodule.CampaignManagerGroup">
     <bean name="SearchForm" class="com.darkhorseventures.cfsbase.SearchFormBean" scope="request"/>
@@ -470,11 +471,11 @@
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="ViewOK" resource="/campaign_surveys_view.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/campaign_surveys_add.jsp" layout="nav"/>
-    <forward name="DetailsOK" resource="/campaign_surveys_add.jsp" layout="nav"/>
-    <forward name="PreviewOK" resource="/campaign_surveys_preview.jsp" layout="nav"/>
-    <forward name="ModifyOK" resource="/campaign_surveys_add.jsp" layout="nav"/>
-    <forward name="InsertOK" resource="/CampaignManagerSurvey.do?command=View"/>
+    <forward name="AddOK" resource="/dynamic_form.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/dynamic_form.jsp" layout="nav"/>
+    <forward name="PreviewOK" resource="/dynamic_form.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/dynamic_form.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/CampaignManagerSurvey.do?command=ViewReturn"/>
     <forward name="DeleteOK" resource="/CampaignManagerSurvey.do?command=View"/>
   </action>
   <action name="CampaignManagerAttachment" class="com.darkhorseventures.cfsmodule.CampaignManagerAttachment">

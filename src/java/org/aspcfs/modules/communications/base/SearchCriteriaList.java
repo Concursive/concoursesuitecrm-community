@@ -750,7 +750,7 @@ public class SearchCriteriaList extends HashMap {
         "SELECT COUNT(*) AS group_count " +
         "FROM campaign " +
         "WHERE status_id <> " + Campaign.FINISHED + " " +
-        "AND id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = " + this.getId() + ")");
+        "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = " + this.getId() + ")");
       rs.next();
       inactiveCount = rs.getInt("group_count");
       rs.close();
@@ -774,7 +774,7 @@ public class SearchCriteriaList extends HashMap {
         "SELECT COUNT(*) AS group_count " +
         "FROM campaign " +
         "WHERE active = " + DatabaseUtils.getTrue(db) + " " +
-        "AND id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = " + this.getId() + ")");
+        "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = " + this.getId() + ")");
       rs.next();
       activeCount = rs.getInt("group_count");
       rs.close();
@@ -799,6 +799,7 @@ public class SearchCriteriaList extends HashMap {
       if (commit) {
         db.rollback();
       }
+      throw new SQLException(e.toString());
     } finally {
       if (commit) {
         db.setAutoCommit(true);

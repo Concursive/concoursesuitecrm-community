@@ -233,6 +233,9 @@ public final class CampaignManagerGroup extends CFSModule {
       if (recordDeleted) {
         return ("DeleteOK");
       } else {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("CampaignManager-> Error deleting group");
+        }
         processErrors(context, thisSCL.getErrors());
         return (executeCommandView(context));
       }

@@ -6,35 +6,34 @@ import com.darkhorseventures.controller.*;
 import java.util.Iterator;
 import com.darkhorseventures.utils.ObjectUtils;
 import com.darkhorseventures.utils.StringUtils;
-import com.darkhorseventures.cfsbase.SurveyItem;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
- *  Description of the Class
+ *  Represents an HTML Form in which items are dynamically added in code
  *
  *@author     chris price
  *@created    August 8, 2002
  *@version    $Id$
  */
 public class CustomForm extends CustomFieldCategory {
-  public String action = "";
-  public String cancel = "";
-  public String defaultField = "";
-  public boolean reset = false;
-  public String selectedTabName = "";
-  public int selectedTabId = 0;
-  public String returnLink = "";
-  public String returnLinkText = "";
-  public StringBuffer jsCheckInfo = new StringBuffer();
-  public ArrayList buttonNames = new ArrayList();
-  public ArrayList buttonLinks = new ArrayList();
+
+  private String action = null;
+  private String cancel = null;
+  private boolean reset = false;
+  private String selectedTabName = "";
+  private int selectedTabId = 0;
+  private String returnLink = "";
+  private String returnLinkText = "";
+  private StringBuffer jsFormCheck = new StringBuffer();
+  private StringBuffer jsTabCheck = new StringBuffer();
+  private LinkedHashMap buttonList = new LinkedHashMap();
 
 
   /**
    *  Constructor for the CustomForm object
    */
   public CustomForm() { }
-
 
   /**
    *  Sets the action attribute of the CustomForm object
@@ -43,16 +42,6 @@ public class CustomForm extends CustomFieldCategory {
    */
   public void setAction(String action) {
     this.action = action;
-  }
-
-
-  /**
-   *  Sets the defaultField attribute of the CustomForm object
-   *
-   *@param  defaultField  The new defaultField value
-   */
-  public void setDefaultField(String defaultField) {
-    this.defaultField = defaultField;
   }
 
 
@@ -127,22 +116,12 @@ public class CustomForm extends CustomFieldCategory {
 
 
   /**
-   *  Sets the buttonNames attribute of the CustomForm object
+   *  Sets the buttonList attribute of the CustomForm object
    *
-   *@param  tmp  The new buttonNames value
+   *@param  tmp  The new buttonList value
    */
-  public void setButtonNames(ArrayList tmp) {
-    this.buttonNames = tmp;
-  }
-
-
-  /**
-   *  Sets the buttonLinks attribute of the CustomForm object
-   *
-   *@param  tmp  The new buttonLinks value
-   */
-  public void setButtonLinks(ArrayList tmp) {
-    this.buttonLinks = tmp;
+  public void setButtonList(LinkedHashMap tmp) {
+    this.buttonList = tmp;
   }
 
 
@@ -163,16 +142,6 @@ public class CustomForm extends CustomFieldCategory {
    */
   public String getCancel() {
     return cancel;
-  }
-
-
-  /**
-   *  Gets the defaultField attribute of the CustomForm object
-   *
-   *@return    The defaultField value
-   */
-  public String getDefaultField() {
-    return defaultField;
   }
 
 
@@ -231,28 +200,37 @@ public class CustomForm extends CustomFieldCategory {
    *
    *@return    The jsCheckInfo value
    */
-  public String getJsCheckInfo() {
-    return jsCheckInfo.toString();
+  public String getJsFormCheck() {
+    return jsFormCheck.toString();
   }
 
-
-  /**
-   *  Gets the buttonNames attribute of the CustomForm object
-   *
-   *@return    The buttonNames value
-   */
-  public ArrayList getButtonNames() {
-    return buttonNames;
+  public boolean hasJsFormCheck() {
+    return (this.getJsFormCheck() != null && !"".equals(this.getJsFormCheck()));
+  }
+  
+  public String getJsTabCheck() {
+    return jsTabCheck.toString();
   }
 
+  public boolean hasJsTabCheck() {
+    return (this.getJsTabCheck() != null && !"".equals(this.getJsTabCheck()));
+  }
+  
+  public boolean hasCancel() {
+    return (this.getCancel() != null && !"".equals(this.getCancel()));
+  }
+  
+  public boolean hasAction() {
+    return (this.getAction() != null && !"".equals(this.getAction()));
+  }
 
   /**
-   *  Gets the buttonLinks attribute of the CustomForm object
+   *  Gets the buttonList attribute of the CustomForm object
    *
-   *@return    The buttonLinks value
+   *@return    The buttonList value
    */
-  public ArrayList getButtonLinks() {
-    return buttonLinks;
+  public LinkedHashMap getButtonList() {
+    return buttonList;
   }
 
 
@@ -267,7 +245,6 @@ public class CustomForm extends CustomFieldCategory {
     Iterator tabs = this.iterator();
     while (tabs.hasNext()) {
       CustomFormTab thisTab = (CustomFormTab) tabs.next();
-
       if (!(this.getSelectedTabName().equals(thisTab.getName()))) {
         Iterator groups = thisTab.iterator();
         while (groups.hasNext()) {
@@ -276,18 +253,16 @@ public class CustomForm extends CustomFieldCategory {
           if (fields.hasNext()) {
             while (fields.hasNext()) {
               CustomField thisField = (CustomField) fields.next();
-
-              if (thisField.getType() == CustomField.ROWLIST) {
-                for (int count = 1; count <= ((ArrayList) thisField.getElementData()).size(); count++) {
-                  SurveyItem thisItem = (SurveyItem) ((ArrayList) thisField.getElementData()).get(count - 1);
-                  hiddenResult.append("<input type=\"hidden\" name=\"" + thisField.getName() + count + "id\" value=\"" + thisItem.getId() + "\">\n");
-                  hiddenResult.append("<input type=\"hidden\" name=\"" + thisField.getName() + count + "text\" value=\"" + StringUtils.toHtmlValue(thisItem.getDescription()) + "\">\n");
-                }
-              } else {
-                if (thisField.getType() != CustomField.TEXTAREA) {
-                  hiddenResult.append("<input type=\"hidden\" name=\"" + thisField.getName() + "\" value=\"" + StringUtils.toHtmlValue(thisField.getEnteredValue()) + "\">\n");
+              if (thisField.getType() != CustomField.DISPLAYTEXT && 
+                  thisField.getType() != CustomField.DISPLAYROWLIST) {
+                if (thisField.getType() == CustomField.ROWLIST) {
+                  for (int count = 1; count <= ((ArrayList) thisField.getElementData()).size(); count++) {
+                    Object thisItem = ((ArrayList) thisField.getElementData()).get(count - 1);
+                    hiddenResult.append("<input type=\"hidden\" name=\"" + thisField.getName() + count + "id\" value=\"" + ObjectUtils.getParam(thisItem, "id") + "\">\n");
+                    hiddenResult.append("<input type=\"hidden\" name=\"" + thisField.getName() + count + "text\" value=\"" + StringUtils.toHtmlValue(ObjectUtils.getParam(thisItem, "description")) + "\">\n");
+                  }
                 } else {
-                  hiddenResult.append("<input type=\"hidden\" name=\"" + thisField.getName() + "\" value=\"" + thisField.getEnteredValue() + "\">\n");
+                  hiddenResult.append("<input type=\"hidden\" name=\"" + thisField.getName() + "\" value=\"" + StringUtils.toPseudoHtmlValue(thisField.getEnteredValue()) + "\">\n");
                 }
               }
             }
@@ -300,40 +275,45 @@ public class CustomForm extends CustomFieldCategory {
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  thisField  Description of Parameter
-   */
-  public void buildJsCheckInfo(CustomField thisField) {
+  public void buildJsFormCheck(CustomField thisField) {
     if (thisField.getRequired() == true) {
-
-      System.out.println("checking " + thisField.getName());
-
-      if (jsCheckInfo.length() == 0) {
-        jsCheckInfo.append("function checkForm(form) {\n");
-        jsCheckInfo.append("    formTest = true;\n");
-        jsCheckInfo.append("    message = \"\";\n");
+      if (jsFormCheck.length() == 0) {
+        jsFormCheck.append("function checkForm(form) {\n");
+        jsFormCheck.append("    formTest = true;\n");
+        jsFormCheck.append("    message = \"\";\n");
       }
+      appendJsField(thisField, jsFormCheck);
+    }
+  }
+  
+  public void buildJsTabCheck(CustomField thisField) {
+    if (thisField.getRequired() == true) {
+      if (jsTabCheck.length() == 0) {
+        jsTabCheck.append("function checkTab(form) {\n");
+        jsTabCheck.append("    formTest = true;\n");
+        jsTabCheck.append("    message = \"\";\n");
+      }
+      appendJsField(thisField, jsTabCheck);
+    }
+  }
 
-      if (thisField.getType() == CustomField.TEXT) {
-        jsCheckInfo.append("    if (form." + thisField.getName() + ".value == \"\") {\n");
-        jsCheckInfo.append("        message += \"- " + thisField.getDisplay() + "\\r\\n\";\n");
+  public static void appendJsField(CustomField thisField, StringBuffer jsCheckInfo) {
+    if (thisField.getType() == CustomField.TEXT) {
+      jsCheckInfo.append("    if (form." + thisField.getName() + ".value == \"\") {\n");
+      jsCheckInfo.append("        message += \"- " + thisField.getDisplay() + "\\r\\n\";\n");
+      jsCheckInfo.append("        formTest = false;\n");
+      jsCheckInfo.append("    }\n");
+    } else if (thisField.getType() == CustomField.SELECT) {
+      jsCheckInfo.append("    if (form." + thisField.getName() + ".selectedIndex ==0) {\n");
+      jsCheckInfo.append("        message += \"- " + thisField.getDisplay() + "\\r\\n\";\n");
+      jsCheckInfo.append("        formTest = false;\n");
+      jsCheckInfo.append("    }\n");
+    } else if (thisField.getType() == CustomField.ROWLIST) {
+      for (int rowListCount = 1; rowListCount <= thisField.getMaxRowItems(); rowListCount++) {
+        jsCheckInfo.append("    if (form." + thisField.getName() + rowListCount + "text.value == \"\") {\n");
+        jsCheckInfo.append("        message += \"- " + thisField.getDisplay() + rowListCount + "\\r\\n\";\n");
         jsCheckInfo.append("        formTest = false;\n");
         jsCheckInfo.append("    }\n");
-      } else if (thisField.getType() == CustomField.SELECT) {
-        jsCheckInfo.append("    if (form." + thisField.getName() + ".selectedIndex ==0) {\n");
-        jsCheckInfo.append("        message += \"- " + thisField.getDisplay() + "\\r\\n\";\n");
-        jsCheckInfo.append("        formTest = false;\n");
-        jsCheckInfo.append("    }\n");
-      } else if (thisField.getType() == CustomField.ROWLIST) {
-        for (int rowListCount = 1; rowListCount <= thisField.getMaxRowItems(); rowListCount++) {
-          jsCheckInfo.append("    if (form." + thisField.getName() + rowListCount + "text.value == \"\") {\n");
-          jsCheckInfo.append("        message += \"- " + thisField.getDisplay() + rowListCount + "\\r\\n\";\n");
-          jsCheckInfo.append("        formTest = false;\n");
-          jsCheckInfo.append("    }\n");
-        }
-
       }
     }
   }
@@ -345,23 +325,23 @@ public class CustomForm extends CustomFieldCategory {
    *@return    Description of the Returned Value
    */
   public String displayButtons() {
-    Iterator k = this.getButtonNames().iterator();
-    Iterator m = this.getButtonLinks().iterator();
     StringBuffer result = new StringBuffer();
     String thisName = null;
     String thisLink = null;
 
-    if (k.hasNext()) {
-      while (k.hasNext()) {
-        thisName = (String) k.next();
-        thisLink = (String) m.next();
-
-        if (thisName != null && !(thisName.equals("")) && !(thisLink.equals("")) && thisLink != null) {
-          result.append("<input type=\"submit\" value=\"" + thisName + "\" onClick=\"javascript:this.form.action='" + thisLink + "'\">\n");
-        }
+    Iterator buttonI = this.getButtonList().keySet().iterator();
+    while (buttonI.hasNext()) {
+      thisName = (String) buttonI.next();
+      thisLink = (String) buttonList.get(thisName);
+      if (thisName != null && !(thisName.equals("")) && !(thisLink.equals("")) && thisLink != null) {
+        result.append("<input type=\"submit\" value=\"" + thisName + "\" onClick=\"javascript:this.form.action='" + thisLink + "';this.form.clickFrom.value='" + thisName.toLowerCase() + "'\">\n");
       }
     }
-
+    
+    if (this.hasCancel()) {
+      result.append("<input type=\"button\" value=\"Cancel\" onClick=\"javascript:this.form.action='" + this.getCancel() + "';this.form.submit()\">");
+    }
+    //TODO: Maybe add a RESET button
     return result.toString();
   }
 
@@ -374,51 +354,87 @@ public class CustomForm extends CustomFieldCategory {
    */
   public int populate(Object tmp) {
     int updatedFields = 0;
-    jsCheckInfo = new StringBuffer();
+    jsFormCheck = new StringBuffer();
+    jsTabCheck = new StringBuffer();
 
     Iterator tabs = this.iterator();
     while (tabs.hasNext()) {
       CustomFormTab thisTab = (CustomFormTab) tabs.next();
-
       Iterator groups = thisTab.iterator();
       while (groups.hasNext()) {
         CustomFormGroup thisGroup = (CustomFormGroup) groups.next();
         Iterator fields = thisGroup.iterator();
         while (fields.hasNext()) {
           CustomField thisField = (CustomField) fields.next();
-          if (thisField.getType() == CustomField.ROWLIST || thisField.getType() == CustomField.ROWLIST_QUESTION) {
+          if (thisField.getType() == CustomField.ROWLIST ||
+              thisField.getType() == CustomField.DISPLAYROWLIST) {
             thisField.setElementData(ObjectUtils.getObject(tmp, thisField.getName()));
             thisField.setMaxRowItems(ObjectUtils.getParam(tmp, thisField.getLengthVar()));
           }
 
           thisField.setEnteredValue(ObjectUtils.getParam(tmp, thisField.getName()));
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("CustomForm-> Set field: " + thisField.getName() + " " + ObjectUtils.getParam(tmp, thisField.getName()) + " = " + thisField.getEnteredValue());
+          }
 
           //for select boxes??
           if (thisField.getType() == CustomField.SELECT) {
             thisField.setSelectedItemId(ObjectUtils.getParam(tmp, thisField.getName()));
           }
 
+          //Add required fields to javascript code... for this tab
           if (this.getSelectedTabId() == thisTab.getId()) {
-            System.out.println("==> " + thisField.getName());
-            buildJsCheckInfo(thisField);
+            buildJsTabCheck(thisField);
           }
-
+          //Add required fields to javascript code... for whole form
+          buildJsFormCheck(thisField);
           updatedFields++;
         }
       }
     }
 
-    if (jsCheckInfo.length() != 0) {
-      jsCheckInfo.append("    if (formTest == false) {\n");
-      jsCheckInfo.append("        alert(\"Form could not be saved, please check the following:\\r\\n\\r\\n\" + message);\n");
-      jsCheckInfo.append("        return false;\n");
-      jsCheckInfo.append("    } else {\n");
-      jsCheckInfo.append("        return true;\n");
-      jsCheckInfo.append("    }\n");
-      jsCheckInfo.append("}\n");
+    if (jsFormCheck.length() != 0) {
+      jsFormCheck.append("    if (formTest == false) {\n");
+      jsFormCheck.append("        alert(\"Form could not be saved, please check the following:\\r\\n\\r\\n\" + message);\n");
+      jsFormCheck.append("        return false;\n");
+      jsFormCheck.append("    } else {\n");
+      jsFormCheck.append("        return true;\n");
+      jsFormCheck.append("    }\n");
+      jsFormCheck.append("}\n");
+    }
+    
+    if (jsTabCheck.length() != 0) {
+      jsTabCheck.append("    if (formTest == false) {\n");
+      jsTabCheck.append("        alert(\"Before going to the next page, please check the following:\\r\\n\\r\\n\" + message);\n");
+      jsTabCheck.append("        return false;\n");
+      jsTabCheck.append("    } else {\n");
+      jsTabCheck.append("        return true;\n");
+      jsTabCheck.append("    }\n");
+      jsTabCheck.append("}\n");
     }
 
     return updatedFields;
+  }
+
+
+  /**
+   *  Gets the jsFormDefault attribute of the CustomForm object
+   *
+   *@return    The jsFormDefault value
+   */
+  public String getJsFormDefault() {
+    Iterator tabs = this.iterator();
+    while (tabs.hasNext()) {
+      CustomFormTab thisTab = (CustomFormTab) tabs.next();
+      if (thisTab.getId() == selectedTabId && thisTab.hasDefaultField()) {
+        return (
+            "window.onload = function () {" +
+            "document." + this.getName() + "." + thisTab.getDefaultField() + ".focus();" +
+            "}"
+            );
+      }
+    }
+    return "";
   }
 }
 

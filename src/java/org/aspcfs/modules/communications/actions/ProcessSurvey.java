@@ -14,6 +14,7 @@ import com.darkhorseventures.webutils.*;
 import com.darkhorseventures.controller.CustomForm;
 import com.darkhorseventures.utils.*;
 
+
 /**
  *  Allows respondants to take part in a survey in which they were invited to
  *
@@ -32,18 +33,35 @@ public final class ProcessSurvey extends CFSModule {
    */
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
-    Survey thisSurvey = null;
+    ActiveSurvey thisSurvey = null;
     ConnectionPool sqlDriver = null;
     Connection db = null;
 
-    CustomForm thisForm = getDynamicForm(context, "surveyview");
-    String passedId = context.getRequest().getParameter("id");
-
     try {
+      CustomForm thisForm = getDynamicForm(context, "surveyview");
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
-      thisSurvey = new Survey(db, Integer.parseInt(passedId));
+      
+      String dbName = auth.getConnectionElement(context).getDbName();
+      String filename = getPath(context) + dbName + fs + "keys" + fs + "survey.key";
+      String codedId = context.getRequest().getParameter("id");
+      String uncodedId = PrivateString.decrypt(filename, codedId);
+      int surveyId = -1;
+      
+      StringTokenizer st = new StringTokenizer(uncodedId, ",");
+      while (st.hasMoreTokens()) {
+        String pair = (st.nextToken());
+        StringTokenizer stPair = new StringTokenizer(pair, "=");
+        String param = stPair.nextToken();
+        String value = stPair.nextToken();
+        if ("id".equals(param)) {
+          surveyId = Integer.parseInt(value);
+        }
+      }
+      
+      thisSurvey = new ActiveSurvey(db, surveyId);
       thisForm.populate(thisSurvey);
+      context.getRequest().setAttribute("CustomFormInfo", thisForm);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -52,18 +70,16 @@ public final class ProcessSurvey extends CFSModule {
 
     if (errorMessage == null) {
       if (thisSurvey != null) {
-        context.getRequest().setAttribute("Survey", thisSurvey);
-        context.getRequest().setAttribute("CustomFormInfo", thisForm);
+        context.getRequest().setAttribute("ActiveSurvey", thisSurvey);
         return ("ViewOK");
       } else {
         context.getRequest().setAttribute("Error", "No Survey Found.");
-        return ("SystemError");
+        return ("NotFoundError");
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("NotFoundError");
     }
-
   }
 
 
@@ -76,23 +92,38 @@ public final class ProcessSurvey extends CFSModule {
    */
   public String executeCommandInsert(ActionContext context) {
     Exception errorMessage = null;
-    ConnectionPool sqlDriver = null;
     Connection db = null;
-
-    Survey thisSurvey = new Survey();
-    thisSurvey.setAnswerItems(context.getRequest());
 
     try {
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
-
-      //Insert the answers
-      Iterator ans = thisSurvey.getAnswers().iterator();
-      while (ans.hasNext()) {
-        SurveyAnswer thisAnswer = (SurveyAnswer) ans.next();
-        thisAnswer.insert(db, -1, Integer.parseInt(context.getRequest().getParameter("id")));
+      
+      String dbName = auth.getConnectionElement(context).getDbName();
+      String filename = getPath(context) + dbName + fs + "keys" + fs + "survey.key";
+      String codedId = context.getRequest().getParameter("id");
+      String uncodedId = PrivateString.decrypt(filename, codedId);
+      
+      int surveyId = -1;
+      int contactId = -1;
+      
+      StringTokenizer st = new StringTokenizer(uncodedId, ",");
+      while (st.hasMoreTokens()) {
+        String pair = (st.nextToken());
+        StringTokenizer stPair = new StringTokenizer(pair, "=");
+        String param = stPair.nextToken();
+        String value = stPair.nextToken();
+        if ("id".equals(param)) {
+          surveyId = Integer.parseInt(value);
+        } else if ("cid".equals(param)) {
+          contactId = Integer.parseInt(value);
+        }
       }
       
+      SurveyResponse thisResponse = new SurveyResponse(context);
+      thisResponse.setActiveSurveyId(surveyId);
+      thisResponse.setContactId(contactId);
+      thisResponse.setUniqueCode(codedId);
+      thisResponse.insert(db);
     } catch (Exception e) {
       errorMessage = e;
     } finally {

@@ -19,7 +19,7 @@ public class SurveyAnswer {
   private String comments = "";
   private int quantAns = -1;
   private String textAns = "";
-  private int surveyId = -1;
+  private int responseId = -1;
 
 
   /**
@@ -55,7 +55,6 @@ public class SurveyAnswer {
     if (request.getParameter("quest" + parseItem + "qans") != null) {
       this.setQuantAns(request.getParameter("quest" + parseItem + "qans"));
     }
-    //this.setTextAns(request.getParameter("address" + parseItem + "country"));
   }
 
 
@@ -80,22 +79,22 @@ public class SurveyAnswer {
 
 
   /**
-   *  Gets the surveyId attribute of the SurveyAnswer object
+   *  Gets the responseId attribute of the SurveyAnswer object
    *
-   *@return    The surveyId value
+   *@return    The responseId value
    */
-  public int getSurveyId() {
-    return surveyId;
+  public int getResponseId() {
+    return responseId;
   }
 
 
   /**
-   *  Sets the surveyId attribute of the SurveyAnswer object
+   *  Sets the responseId attribute of the SurveyAnswer object
    *
-   *@param  surveyId  The new surveyId value
+   *@param  responseId  The new responseId value
    */
-  public void setSurveyId(int surveyId) {
-    this.surveyId = surveyId;
+  public void setResponseId(int responseId) {
+    this.responseId = responseId;
   }
 
 
@@ -116,13 +115,12 @@ public class SurveyAnswer {
    *@exception  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
-    this.setId(rs.getInt("id"));
+    this.setId(rs.getInt("answer_id"));
+    this.setResponseId(rs.getInt("response_id"));
     this.setQuestionId(rs.getInt("question_id"));
     this.setComments(rs.getString("comments"));
     this.setQuantAns(rs.getInt("quant_ans"));
     this.setTextAns(rs.getString("text_ans"));
-    this.setSurveyId(rs.getInt("survey_id"));
-    //this.setEnteredBy(rs.getInt("enteredby"));
   }
 
 
@@ -133,94 +131,28 @@ public class SurveyAnswer {
    *@param  passedId          Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public SurveyAnswer(Connection db, String passedId) throws SQLException {
-    if (passedId == null) {
+  public SurveyAnswer(Connection db, int passedId) throws SQLException {
+    if (passedId < 1) {
       throw new SQLException("Question Answer ID not specified.");
     }
 
-    Statement st = null;
+    PreparedStatement pst = null;
     ResultSet rs = null;
-    StringBuffer sql = new StringBuffer();
-    sql.append("SELECT * " +
-        "FROM survey_answer s " +
-        "WHERE id = " + passedId + " ");
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+    String sql = 
+      "SELECT * " +
+      "FROM active_survey_answers s " +
+      "WHERE answer_id = ? ";
+    pst = db.prepareStatement(sql);
+    pst.setInt(1, passedId);
+    rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     } else {
       rs.close();
-      st.close();
+      pst.close();
       throw new SQLException("Question Answer record not found.");
     }
     rs.close();
-    st.close();
-  }
-
-
-  /**
-   *  Sets the newAverage attribute of the SurveyAnswer object
-   *
-   *@param  db                The new newAverage value
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
-  private int setNewAverage(Connection db) throws SQLException {
-    if (questionId == -1) {
-      throw new SQLException("Question ID not specified.");
-    }
-
-    Statement st = null;
-    ResultSet rs = null;
-    StringBuffer sql = new StringBuffer();
-    sql.append("SELECT avg(quant_ans) as av " +
-        "FROM survey_answer s " +
-        "WHERE question_id = " + this.getQuestionId() + " ");
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
-
-    if (rs.next()) {
-      PreparedStatement pst = db.prepareStatement(
-          "UPDATE survey_item " +
-          "SET average = ? " +
-          "WHERE id = ? ");
-      int i = 0;
-      pst.setDouble(++i, rs.getDouble("av"));
-      pst.setInt(++i, this.getQuestionId());
-      pst.execute();
-      pst.close();
-    }
-
-    //newAvg = new Double((double)total/rs.getFetchSize());
-    //System.out.println(newAvg + " " + rs.getFetchSize());
-    //newAverage = (Double)(newAverage/((Double)count));
-
-    rs.close();
-    st.close();
-
-    return 1;
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  private void updateTotal(Connection db) throws SQLException {
-    if (questionId == -1) {
-      throw new SQLException("Question ID not specified.");
-    }
-
-    PreparedStatement pst = db.prepareStatement(
-        "UPDATE survey_item " +
-        "SET total" + quantAns + " = total" + quantAns + "+1 " +
-        "WHERE id = ? ");
-    int i = 0;
-    pst.setInt(++i, this.getQuestionId());
-    System.out.println(pst.toString());
-    pst.execute();
     pst.close();
   }
 
@@ -330,49 +262,82 @@ public class SurveyAnswer {
    *
    *@param  db                Description of the Parameter
    *@param  enteredBy         Description of the Parameter
-   *@param  surveyId          Description of the Parameter
+   *@param  responseId          Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void insert(Connection db, int enteredBy, int surveyId) throws SQLException {
+  public void insert(Connection db, int responseId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO survey_answer " +
-        "(question_id, comments, quant_ans, text_ans, enteredBy, survey_id) " +
-        "VALUES " +
-        "(?, ?, ?, ?, ?, ?) ");
+      "INSERT INTO active_survey_answers " +
+      "(response_id, question_id, comments, quant_ans, text_ans) " +
+      "VALUES " +
+      "(?, ?, ?, ?, ?) ");
     int i = 0;
+    pst.setInt(++i, responseId);
     pst.setInt(++i, questionId);
     pst.setString(++i, comments);
     pst.setInt(++i, quantAns);
     pst.setString(++i, textAns);
-    pst.setInt(++i, enteredBy);
-    pst.setInt(++i, surveyId);
-
     pst.execute();
     pst.close();
 
-    //id = DatabaseUtils.getCurrVal(db, "aurvey_answer_id_seq");
-    setNewAverage(db);
-    updateTotal(db);
+    //id = DatabaseUtils.getCurrVal(db, "active_survey_ans_answer_id_seq");
+    if (this.quantAns > -1) {
+      this.updateSurveyAverage(db);
+      this.updateAnswerTotal(db);
+    }
+  }
+
+  private int updateSurveyAverage(Connection db) throws SQLException {
+    if (questionId == -1) {
+      throw new SQLException("Question ID not specified.");
+    }
+
+    double thisAverage = 0;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    String sql = 
+      "SELECT avg(quant_ans) as av " +
+      "FROM active_survey_answers s " +
+      "WHERE question_id = ? ";
+    pst = db.prepareStatement(sql);
+    pst.setInt(1, this.getQuestionId());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      thisAverage = rs.getDouble("av");
+    }
+    rs.close();
+    
+    pst = db.prepareStatement(
+      "UPDATE active_survey_questions " +
+      "SET average = ? " +
+      "WHERE question_id = ? ");
+    int i = 0;
+    pst.setDouble(++i, thisAverage);
+    pst.setInt(++i, this.getQuestionId());
+    pst.execute();
+    pst.close();
+
+    return 1;
+  }
+  
+  private boolean updateAnswerTotal(Connection db) throws SQLException {
+    PreparedStatement pst = null;
+    String sql = 
+      "UPDATE active_survey_questions " +
+      "SET total" + this.getQuantAns() + " = total" + this.getQuantAns() + " + 1 " +
+      "WHERE question_id = ? ";
+    pst = db.prepareStatement(sql);
+    pst.setInt(1, this.getQuestionId());
+    pst.execute();
+    pst.close();
+    return true;
   }
 
 
-  /**
-   *  public void update(Connection db, int modifiedBy) throws SQLException {
-   *  PreparedStatement pst = db.prepareStatement( "UPDATE contact_emailaddress
-   *  " + "SET emailaddress_type = ?, email = ?, modifiedby = ?, " + "modified =
-   *  CURRENT_TIMESTAMP " + "WHERE emailaddress_id = ? "); int i = 0;
-   *  pst.setInt(++i, this.getType()); pst.setString(++i, this.getEmail());
-   *  pst.setInt(++i, modifiedBy); pst.setInt(++i, this.getId()); pst.execute();
-   *  pst.close(); }
-   *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "DELETE FROM survey_answer " +
-        "WHERE id = ? ");
+        "DELETE FROM active_survey_answers " +
+        "WHERE answer_id = ? ");
     int i = 0;
     pst.setInt(++i, this.getId());
     pst.execute();

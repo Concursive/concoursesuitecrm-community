@@ -62,7 +62,7 @@ Surveys
       <tr>
         <dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete">
         <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="campaign-campaigns-surveys-edit"><a href="/CampaignManagerSurvey.do?command=Modify&id=<%=thisSurvey.getId()%>">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-surveys-delete"><a href="javascript:confirmDelete('/CampaignManagerSurvey.do?command=Delete&id=<%=thisSurvey.getId()%>');">Del</a></dhv:permission>
+          <dhv:permission name="campaign-campaigns-surveys-edit"><a href="CampaignManagerSurvey.do?command=Modify&id=<%=thisSurvey.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-surveys-delete"><a href="javascript:confirmDelete('/CampaignManagerSurvey.do?command=Delete&id=<%=thisSurvey.getId()%>');">Del</a></dhv:permission>
         </td>
 	</dhv:permission>
         <td class="row<%= rowid %>" nowrap>
@@ -72,7 +72,7 @@ Surveys
           <%=toHtml(thisSurvey.getTypeName())%>
         </td>
         <td class="row<%= rowid %>" nowrap>
-          <%= toHtml(thisSurvey.getEnteredByName()) %>
+          <dhv:username id="<%= thisSurvey.getEnteredBy() %>"/>
         </td>
         <td class="row<%= rowid %>" nowrap>
           <%= toHtml(thisSurvey.getModifiedDateTimeString()) %>

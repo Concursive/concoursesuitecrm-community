@@ -1,7 +1,7 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
-<jsp:useBean id="Survey" class="com.darkhorseventures.cfsbase.Survey" scope="request"/>
+<jsp:useBean id="ActiveSurvey" class="com.darkhorseventures.cfsbase.ActiveSurvey" scope="request"/>
 <jsp:useBean id="RecipientList" class="com.darkhorseventures.cfsbase.RecipientList" scope="request"/>
 <jsp:useBean id="CampaignDashboardRecipientInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
@@ -33,7 +33,7 @@ Campaign Details
     </td>
   </tr>
   <tr class="containerBody">
-    <td class="formLabel">
+    <td valign="top" class="formLabel">
       Message
     </td>
     <td width="100%">
@@ -77,7 +77,7 @@ Campaign Details
   </tr>
 </table>
 
-<% if (Survey != null && Campaign.getSurveyId() > 0) { %>
+<% if (Campaign.getActiveSurveyId() > 0) { %>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -99,12 +99,11 @@ Campaign Details
     <td width="24" nowrap >7</td>
   </tr>
   <%
-	Iterator z = Survey.getItems().iterator();
+	Iterator z = ActiveSurvey.getQuestions().iterator();
 	
 	if ( z.hasNext() ) {
 		int rowid = 0;
 		int count = 0;
-	
 		while (z.hasNext()) {
 			count++;		
 			if (rowid != 1) {
@@ -112,26 +111,29 @@ Campaign Details
 			} else {
 				rowid = 2;
 			}
-	
-		SurveyItem thisItem = (SurveyItem)z.next();
-		
-  %>
-  
+      ActiveSurveyQuestion thisItem = (ActiveSurveyQuestion)z.next();
+%>
   <tr>
     <td align=right nowrap><%=count%></td>
     <td><%= toHtml(thisItem.getDescription()) %></td>
     <td width="24" nowrap>
-    
-    <% if (Survey.getType() == 3) {%>
-    <a href="javascript:popURLReturn('/CampaignManager.do?command=ShowComments&surveyId=<%=Survey.getId()%>&questionId=<%=thisItem.getId()%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','600','450','yes','no');">
-    <%}%>
+<% 
+      if (ActiveSurvey.getType() == 3) {
+%>
+    <a href="javascript:popURLReturn('/CampaignManager.do?command=ShowComments&surveyId=<%=ActiveSurvey.getId()%>&questionId=<%=thisItem.getId()%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','600','450','yes','no');">
+<%
+      }
+%>
     <%= toHtml(thisItem.getAverageValue()) %>
-    <% if (Survey.getType() == 3) {%>
+<% 
+      if (ActiveSurvey.getType() == 3) {
+%>
     </a>
-    <%}%>
-    
+<%
+      }
+%>
     </td>
-    <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(0) + "")%></td>
+    <td width="24" nowrap ><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(0)))%></td>
     <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(1) + "")%></td>
     <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(2) + "")%></td>
     <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(3) + "")%></td>
@@ -140,17 +142,15 @@ Campaign Details
     <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(6) + "")%></td>
   </tr>
 
-	<%	}
-	}%>
-
-
+<%	
+    }
+	}
+%>
 </table>
 
-
-
-
-<%}%>
-
+<%
+}
+%>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -192,9 +192,8 @@ Campaign Details
 			} else {
 				rowid = 2;
 			}
-		
-    Recipient thisRecipient = (Recipient)j.next();
-		Contact thisContact = thisRecipient.getContact();
+      Recipient thisRecipient = (Recipient)j.next();
+      Contact thisContact = thisRecipient.getContact();
 %>      
   <tr>
     <td align=right nowrap>

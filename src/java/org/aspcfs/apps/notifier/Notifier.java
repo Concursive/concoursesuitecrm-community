@@ -26,8 +26,8 @@ import java.util.zip.*;
  */
 public class Notifier extends ReportBuilder {
 
-  Hashtable config = new Hashtable();
-
+  private Hashtable config = new Hashtable();
+  public static final String fs = System.getProperty("file.separator");
 
   /**
    *  Constructor for the Notifier object public Notifier() { } ** Starts the
@@ -60,7 +60,7 @@ public class Notifier extends ReportBuilder {
         ResultSet rsSites = stSites.executeQuery(
             "SELECT * " +
             "FROM sites " +
-            "WHERE enabled = true ");
+            "WHERE enabled = " + DatabaseUtils.getTrue(dbSites));
         while (rsSites.next()) {
           Hashtable siteInfo = new Hashtable();
           siteInfo.put("driver", rsSites.getString("driver"));
@@ -89,6 +89,9 @@ public class Notifier extends ReportBuilder {
               (String) siteInfo.get("password"));
           thisNotifier.baseName = (String) siteInfo.get("sitecode");
 
+          //TODO: Generate site XML for notifier
+          //TODO: Check site XML for components to execute on this database connection
+          
           System.out.println("Running Alerts...");
           thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db));
           //thisNotifier.output.append(thisNotifier.buildCallAlerts(db));
@@ -269,6 +272,13 @@ public class Notifier extends ReportBuilder {
     thisList.buildList(db);
     System.out.println("...got the list: " + thisList.size() + " active");
 
+    //Get this database's key
+    String filePath = (String) config.get("FileLibrary") + fs + dbName + fs + "keys" + fs;
+    File f = new File(filePath);
+		f.mkdirs();
+    PrivateString thisKey = new PrivateString(filePath + "survey.key");
+    
+    //Process each campaign that is active and not processed
     Iterator i = thisList.iterator();
     int notifyCount = 0;
     while (i.hasNext()) {
@@ -285,11 +295,11 @@ public class Notifier extends ReportBuilder {
       recipientList.setBuildContact(false);
       recipientList.buildList(db);
 
+      //Generate a campaign run --> Information about when a campaign was processed
       int runId = -1;
       Iterator iList = recipientList.iterator();
       if (iList.hasNext()) {
         thisCampaign.setStatusId(Campaign.STARTED);
-        thisCampaign.setStatus(Campaign.STARTED_TEXT);
         thisCampaign.update(db);
         runId = thisCampaign.insertRun(db);
       } else {
@@ -297,6 +307,7 @@ public class Notifier extends ReportBuilder {
         thisCampaign.setStatus("No Recipients");
         thisCampaign.update(db);
       }
+      //Send each recipient a message
       while (iList.hasNext()) {
         ++campaignCount;
         System.out.println("  Getting contact ...");
@@ -315,7 +326,20 @@ public class Notifier extends ReportBuilder {
           thisNotification.setFrom(thisCampaign.getReplyTo());
           thisNotification.setSubject(thisCampaign.getSubject());
           thisNotification.setMessageIdToSend(thisCampaign.getMessageId());
-          thisNotification.setMessageToSend(thisCampaign.getMessage());
+          //If a survey is attached, encode the url for this recipient
+          Template template = new Template();
+          template.setText(thisCampaign.getMessage());
+          String value = template.getValue("surveyId");
+          if (value != null) {
+            template.addParseElement("${surveyId=" + value + "}",  java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "id=" + value + ",cid=" + thisContact.getId())));
+          }
+          template.addParseElement("${name}", StringUtils.toHtml(thisContact.getNameFirstLast()));
+          template.addParseElement("${firstname}", StringUtils.toHtml(thisContact.getNameFirst()));
+          template.addParseElement("${lastname}", StringUtils.toHtml(thisContact.getNameLast()));
+          template.addParseElement("${company}", StringUtils.toHtml(thisContact.getCompany()));
+          template.addParseElement("${department}", StringUtils.toHtml(thisContact.getDepartmentName()));
+          thisNotification.setMessageToSend(template.getParsedText());
+          //thisNotification.setMessageToSend(thisCampaign.getMessage());
           thisNotification.setType(thisCampaign.getSendMethodId());
           thisNotification.notifyContact(db);
           if (thisNotification.getFaxLogEntry() != null) {
@@ -343,7 +367,6 @@ public class Notifier extends ReportBuilder {
         outputLetterLog(thisCampaign, letterLog, dbName, db);
         outputFaxLog(faxLog);
         thisCampaign.setStatusId(Campaign.FINISHED);
-        thisCampaign.setStatus(Campaign.FINISHED_TEXT);
         thisCampaign.update(db);
         thisCampaign.setRecipientCount(campaignCount);
         thisCampaign.setSentCount(sentCount);
@@ -426,7 +449,6 @@ public class Notifier extends ReportBuilder {
    */
   private boolean outputFaxLog(Vector faxLog) {
     System.out.println("Notifier-> Outputting fax log");
-    String fs = System.getProperty("file.separator");
     if (faxLog == null || faxLog.size() == 0) {
       return false;
     }
@@ -497,7 +519,6 @@ public class Notifier extends ReportBuilder {
     if (contactReport == null || contactReport.size() == 0) {
       return false;
     }
-    String fs = System.getProperty("file.separator");
     String filePath = (String) config.get("FileLibrary") + fs + dbName + fs + "communications" + fs + "id" + thisCampaign.getId() + fs + CFSModule.getDatePath(new java.util.Date()) + fs;
     String baseFilename = contactReport.generateFilename();
     File f = new File(filePath);
@@ -517,7 +538,20 @@ public class Notifier extends ReportBuilder {
     //Stream communications data to Zip file
     ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(filePath + baseFilename));
     ZipUtils.addTextEntry(zip, "contacts-" + baseFilename + ".csv", contactReport.getRep().getDelimited());
-    ZipUtils.addTextEntry(zip, "letter-" + baseFilename + ".txt", thisCampaign.getMessage());
+    
+    //Get this database's key
+    String keyFilePath = (String) config.get("FileLibrary") + fs + dbName + fs + "keys" + fs;
+    File keys = new File(keyFilePath);
+		keys.mkdirs();
+    PrivateString thisKey = new PrivateString(keyFilePath + "survey.key");
+    
+    Template template = new Template();
+    template.setText(thisCampaign.getMessage());
+    String value = template.getValue("surveyId");
+    if (value != null) {
+      template.addParseElement("${surveyId=" + value + "}", java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "id=" + value)));
+    }
+    ZipUtils.addTextEntry(zip, "letter-" + baseFilename + ".txt", template.getParsedText());
     zip.close();
     int fileSize = (int) (new File(filePath + baseFilename)).length();
     

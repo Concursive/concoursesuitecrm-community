@@ -65,17 +65,17 @@ CREATE TABLE ticket_category (
 CREATE TABLE ticket (
   ticketid SERIAL PRIMARY KEY,
   org_id INT NOT NULL REFERENCES organization, 
-  contact_id INT, 
+  contact_id INT NOT NULL REFERENCES contact(contact_id), 
   problem TEXT NOT NULL,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL,
+  enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
   closed TIMESTAMP,
-  pri_code INT NOT NULL DEFAULT -1, 
+  pri_code INT NOT NULL DEFAULT -1 REFERENCES ticket_priority(code), 
   level_code INT NOT NULL DEFAULT -1,
   department_code INT NOT NULL DEFAULT -1,
-  source_code INT NOT NULL DEFAULT -1, 
+  source_code INT REFERENCES ticket_source(source_code), 
   cat_code INT NOT NULL DEFAULT 0,
   subcat_code1 INT NOT NULL DEFAULT 0,
   subcat_code2 INT NOT NULL DEFAULT 0,
@@ -83,7 +83,7 @@ CREATE TABLE ticket (
   assigned_to int default -1,
   comment TEXT,
   solution TEXT,
-  scode INT NOT NULL DEFAULT -1, 
+  scode INT NOT NULL DEFAULT -1 REFERENCES ticket_severity(code), 
   critical TIMESTAMP,
   notified TIMESTAMP,
   custom_data TEXT
@@ -93,18 +93,18 @@ CREATE INDEX "ticket_cidx" ON "ticket" USING btree ("assigned_to", "closed");
 
 CREATE TABLE ticketlog (
   id serial
-  ,ticketid int NOT NULL
+  ,ticketid int NOT NULL REFERENCES ticket(ticketid)
   ,assigned_to int
   ,comment text
   ,closed BOOLEAN NOT NULL 
-  ,pri_code int NOT NULL 
+  ,pri_code int NOT NULL REFERENCES ticket_priority(code)
   ,level_code int NOT NULL 
   ,department_code int NOT NULL 
   ,cat_code int NOT NULL 
-  ,scode int NOT NULL 
+  ,scode int NOT NULL REFERENCES ticket_severity(code)
   ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-  ,enteredby INT NOT NULL
+  ,enteredby INT NOT NULL REFERENCES access(user_id)
   ,modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-  ,modifiedby INT NOT NULL
+  ,modifiedby INT NOT NULL REFERENCES access(user_id)
 );
 

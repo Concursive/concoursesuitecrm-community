@@ -59,7 +59,7 @@ public final class CampaignManager extends CFSModule {
     Exception errorMessage = null;
 
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignDashboardListInfo");
-    pagedListInfo.setLink("/CampaignManager.do?command=Dashboard");
+    pagedListInfo.setLink("CampaignManager.do?command=Dashboard");
 
     try {
       db = this.getConnection(context);
@@ -530,7 +530,7 @@ public final class CampaignManager extends CFSModule {
       SurveyList surveyList = new SurveyList();
       surveyList.setEnteredBy(this.getUserId(context));
       surveyList.buildList(db);
-      surveyList.addItem(0, "--None--");
+      surveyList.addItem(-1, "--None--");
       context.getRequest().setAttribute("SurveyList", surveyList);
 
     } catch (Exception e) {
@@ -857,7 +857,7 @@ public final class CampaignManager extends CFSModule {
       campaign = new Campaign(db, campaignId);
       campaign.setSurveyId(surveyId);
       campaign.setModifiedBy(this.getUserId(context));
-      resultCount = campaign.updateMessage(db);
+      resultCount = campaign.updateSurvey(db);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1051,7 +1051,7 @@ public final class CampaignManager extends CFSModule {
         return ("CancelOK");
       } else {
         context.getRequest().setAttribute("Error",
-            "<p><b>This campaign could not be cancelled because it has already started processing.</b></p>" +
+            "<p><b>This campaign could not be cancelled because it has already started processing or has completed.</b></p>" +
             "<p>Once the server starts sending the messages, the campaign cannot be stopped.</p>" +
             "<p><a href=\"/CampaignManager.do?command=Dashboard\">Back to Dashboard</a></p>");
         return ("UserError");
@@ -1127,7 +1127,6 @@ public final class CampaignManager extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
-    Survey thisSurvey = null;
 
     String id = context.getRequest().getParameter("id");
 
@@ -1142,12 +1141,12 @@ public final class CampaignManager extends CFSModule {
       Campaign campaign = new Campaign(db, id);
       context.getRequest().setAttribute("Campaign", campaign);
 
-      if (campaign.getSurveyId() > 0) {
-        thisSurvey = new Survey(db, campaign.getSurveyId());
+      int surveyId = -1;
+      if ((surveyId = ActiveSurvey.getId(db, campaign.getId())) > 0) {
+        ActiveSurvey thisSurvey = new ActiveSurvey(db, surveyId);
+        context.getRequest().setAttribute("ActiveSurvey", thisSurvey);
       }
-
-      context.getRequest().setAttribute("Survey", thisSurvey);
-
+      
       RecipientList recipients = new RecipientList();
       recipients.setCampaignId(campaign.getId());
       recipients.setBuildContact(true);
@@ -1326,32 +1325,25 @@ public final class CampaignManager extends CFSModule {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public String executeCommandShowComments(ActionContext context) throws SQLException {
-    int surveyId = Integer.parseInt(context.getRequest().getParameter("surveyId"));
-
-    SurveyAnswerList answerList = new SurveyAnswerList();
-
-    if (context.getRequest().getParameter("questionId") != null) {
-      answerList.setQuestionId(Integer.parseInt(context.getRequest().getParameter("questionId")));
-    }
-
-    answerList.setSurveyId(surveyId);
-
+  public String executeCommandShowComments(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
 
     try {
+      SurveyAnswerList answerList = new SurveyAnswerList();
+      answerList.setQuestionId(Integer.parseInt(context.getRequest().getParameter("questionId")));
+      answerList.setHasComments(Constants.TRUE);
       db = getConnection(context);
       answerList.buildList(db);
+      context.getRequest().setAttribute("SurveyAnswerList", answerList);
     } catch (Exception e) {
       errorMessage = e;
       e.printStackTrace(System.out);
     } finally {
       this.freeConnection(context, db);
     }
-
-    context.getRequest().setAttribute("SurveyAnswerList", answerList);
-    return ("PopupOK");
+    
+    return ("PopupCommentsOK");
   }
 
 

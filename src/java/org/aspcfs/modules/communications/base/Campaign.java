@@ -93,6 +93,14 @@ public class Campaign extends GenericBean {
   public int getSurveyId() {
     return surveyId;
   }
+  
+  public int getActiveSurveyId() {
+    if (active) {
+      return surveyId;
+    } else {
+      return -1;
+    }
+  }
 
 
   /**
@@ -124,36 +132,33 @@ public class Campaign extends GenericBean {
    *@since                    1.1
    */
   public Campaign(Connection db, String campaignId) throws SQLException {
-
-    Statement st = null;
-    ResultSet rs = null;
-
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT c.*, msg.name as messageName, dt.description as delivery " +
-        "FROM campaign c " +
-        "LEFT JOIN message msg ON (c.message_id = msg.id) " +
-        "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
-        "WHERE c.id > -1 ");
-    if (campaignId != null && !campaignId.equals("")) {
-      sql.append("AND c.id = " + campaignId + " ");
-    } else {
+    if (campaignId == null) {
       throw new SQLException("Campaign ID not specified.");
     }
+    PreparedStatement pst = null;
+    ResultSet rs = null;
 
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+    String sql = 
+      "SELECT c.*, msg.name as messageName, dt.description as delivery " +
+      "FROM campaign c " +
+      "LEFT JOIN message msg ON (c.message_id = msg.id) " +
+      "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
+      "WHERE c.campaign_id = ? ";
+    pst = db.prepareStatement(sql);
+    pst.setInt(1, Integer.parseInt(campaignId));
+    rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     } else {
       rs.close();
-      st.close();
+      pst.close();
       throw new SQLException("Campaign record not found.");
     }
     rs.close();
-    st.close();
+    pst.close();
 
     buildRecipientCount(db);
+    buildSurveyId(db);
     setGroupList(db);
     buildFileCount(db);
   }
@@ -378,6 +383,15 @@ public class Campaign extends GenericBean {
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
+    
+    switch (statusId) {
+      case IDLE: status = IDLE_TEXT; break;
+      case QUEUE: status = QUEUE_TEXT; break;
+      case STARTED: status = STARTED_TEXT; break;
+      case ERROR: status = "Unspecified error"; break;
+      case FINISHED: status = FINISHED_TEXT; break;
+      default: break;
+    }
   }
 
 
@@ -550,18 +564,6 @@ public class Campaign extends GenericBean {
       }
     }
 
-    /*
-     *  Enumeration parameters = request.getParameterNames();
-     *  while (parameters.hasMoreElements()) {
-     *  String param = (String) parameters.nextElement();
-     *  if (request.getParameter(param).equalsIgnoreCase("on")) {
-     *  if (sb != null || sb.length() > 0) {
-     *  sb.append("*");
-     *  }
-     *  sb.append(param);
-     *  }
-     *  }
-     */
     groupList = sb.toString();
   }
 
@@ -578,12 +580,13 @@ public class Campaign extends GenericBean {
     StringBuffer groups = new StringBuffer();
     boolean b = false;
 
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
-        "SELECT group_id " +
-        "FROM campaign_list_groups " +
-        "WHERE campaign_id = " + this.getId() + " ");
-
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT group_id " +
+      "FROM campaign_list_groups " +
+      "WHERE campaign_id = ? "
+    );
+    pst.setInt(1, this.getId());
+    ResultSet rs = pst.executeQuery();
     while (rs.next()) {
       ++groupCount;
       if (b) {
@@ -597,7 +600,7 @@ public class Campaign extends GenericBean {
     this.setGroupList(groups.toString());
 
     rs.close();
-    st.close();
+    pst.close();
   }
 
 
@@ -1159,23 +1162,36 @@ public class Campaign extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  Retrieves the file id for this campaign.  A file will exist if a campaign gets executed
+   *  and is configured to output a file.  For example, when the "letter" option is
+   *  selected, a .zip file gets created in which the user can download.
    *
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
    */
   public void buildFileCount(Connection db) throws SQLException {
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
-        "SELECT count(*) " +
-        "FROM project_files pf " +
-        "WHERE link_module_id = " + Constants.COMMUNICATIONS + " " +
-        "AND link_item_id = " + id + " ");
+    //TODO: Move this code to the Files object and call getFileCount
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT count(*) " +
+      "FROM project_files " +
+      "WHERE link_module_id = ? " +
+      "AND link_item_id = ? ");
+    pst.setInt(1, Constants.COMMUNICATIONS);
+    pst.setInt(2, id);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       files = (rs.getInt(1));
     }
     rs.close();
-    st.close();
+    pst.close();
+  }
+  
+  public void buildSurveyId(Connection db) throws SQLException {
+    if (active) {
+      surveyId = ActiveSurvey.getId(db, this.id);
+    } else {
+      surveyId = Survey.getId(db, this.id);
+    }
   }
 
 
@@ -1289,8 +1305,7 @@ public class Campaign extends GenericBean {
       pst.execute();
       pst.close();
 
-      id = DatabaseUtils.getCurrVal(db, "campaign_id_seq");
-
+      id = DatabaseUtils.getCurrVal(db, "campaign_campaign_id_seq");
       this.update(db, true);
 
       if (this.getGroupList() != null && !this.getGroupList().equals("")) {
@@ -1367,7 +1382,7 @@ public class Campaign extends GenericBean {
       st.executeUpdate(
           "UPDATE campaign " +
           "SET modified = CURRENT_TIMESTAMP " +
-          "WHERE id = " + id);
+          "WHERE campaign_id = " + id);
       st.close();
 
       db.commit();
@@ -1439,7 +1454,7 @@ public class Campaign extends GenericBean {
         st.executeUpdate(
             "UPDATE campaign " +
             "SET modified = CURRENT_TIMESTAMP " +
-            "WHERE id = " + id);
+            "WHERE campaign_id = " + id);
         st.close();
       }
       db.commit();
@@ -1493,38 +1508,58 @@ public class Campaign extends GenericBean {
    *@since                    1.5
    */
   public boolean delete(Connection db) throws SQLException {
-
-    Statement st = db.createStatement();
-
+    PreparedStatement pst = null;
+    SQLException message = null;
     try {
       db.setAutoCommit(false);
-      st.executeUpdate(
-          "DELETE FROM campaign_list_groups WHERE campaign_id = " + this.getId());
-      st.executeUpdate(
-          "DELETE FROM scheduled_recipient WHERE campaign_id = " + this.getId());
-      st.executeUpdate(
-          "DELETE FROM campaign_run WHERE campaign_id = " + this.getId());
-      st.executeUpdate(
-          "DELETE FROM excluded_recipient WHERE campaign_id = " + this.getId());
-      st.executeUpdate(
-          "DELETE FROM campaign WHERE id = " + this.getId());
-      //TODO: Remove reference to any surveys if this campaign is inactive
-      //TODO: If campaign was active, then delete the related active_survey if it has one
+      pst = db.prepareStatement(
+          "DELETE FROM campaign_list_groups WHERE campaign_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+          
+      pst = db.prepareStatement(
+          "DELETE FROM scheduled_recipient WHERE campaign_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
       
-      //After the campaign is deleted, check to see if the attached survey can be deleted
-      Survey thisSurvey = new Survey(db, this.getSurveyId());
-      if (!thisSurvey.getEnabled()) {
+      pst = db.prepareStatement(
+          "DELETE FROM campaign_run WHERE campaign_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      
+      pst = db.prepareStatement(
+          "DELETE FROM excluded_recipient WHERE campaign_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      
+      //Delete any inactive survey links
+      pst = db.prepareStatement(
+          "DELETE FROM campaign_survey_link WHERE campaign_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      
+      //Delete the attached survey
+      int activeSurveyId = (ActiveSurvey.getId(db, id));
+      if (activeSurveyId > -1) {
+        ActiveSurvey thisSurvey = new ActiveSurvey(db, activeSurveyId);
         thisSurvey.delete(db);
       }
-      //No need to check for messages to delete because an active campaign contains
-      //a copy, and an inactive campaign doesn't allow the message to be deleted
+      
+      pst = db.prepareStatement(
+          "DELETE FROM campaign WHERE campaign_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      System.out.println(e.toString());
+      message = e;
     } finally {
       db.setAutoCommit(true);
-      st.close();
+      pst.close();
+    }
+    if (message != null) {
+      throw new SQLException(message.getMessage());
     }
     return true;
   }
@@ -1539,38 +1574,66 @@ public class Campaign extends GenericBean {
    *@since                    1.17
    */
   public int cancel(Connection db) throws SQLException {
-    int resultCount = 0;
-
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
 
+    boolean commit = true;
+    int resultCount = 0;
     PreparedStatement pst = null;
-    pst = db.prepareStatement(
+    
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET status_id = ?, " +
         "status = ?, " +
         "active = ?, " +
-        "modifiedby = " + modifiedBy + ", " +
+        "modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        "WHERE id = " + id + " " +
+        "WHERE campaign_id = ? " +
         "AND status_id IN (" + QUEUE + ", " + ERROR + ") ");
-    int i = 0;
-    pst.setInt(++i, CANCELLED);
-    pst.setString(++i, CANCELLED_TEXT);
-    pst.setBoolean(++i, false);
-    resultCount = pst.executeUpdate();
-    pst.close();
-
-    if (resultCount == 1) {
-      Statement st = db.createStatement();
-      st.executeUpdate(
+      int i = 0;
+      pst.setInt(++i, CANCELLED);
+      pst.setString(++i, CANCELLED_TEXT);
+      pst.setBoolean(++i, false);
+      pst.setInt(++i, modifiedBy);
+      pst.setInt(++i, id);
+      resultCount = pst.executeUpdate();
+  
+      if (resultCount == 1) {
+        pst = db.prepareStatement(
           "DELETE FROM scheduled_recipient " +
-          "WHERE campaign_id = " + id + " " +
+          "WHERE campaign_id = ? " +
           "AND sent_date IS NULL ");
-      st.close();
+        pst.setInt(1, id);
+        pst.execute();
+        
+        //Remove attached survey if campaign has one
+        int activeSurveyId = ActiveSurvey.getId(db, id);
+        if (activeSurveyId > -1) {
+          ActiveSurvey activeSurvey = new ActiveSurvey(db, activeSurveyId);
+          activeSurvey.delete(db);
+        }
+      }
+  
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.toString());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+      pst.close();
     }
-
     return resultCount;
   }
 
@@ -1587,68 +1650,103 @@ public class Campaign extends GenericBean {
    */
   public int activate(Connection db, int userId, String userRangeId) throws SQLException {
     int resultCount = 0;
-
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
-
-    String thisMessageReplyTo = null;
-    String thisMessageSubject = null;
-    String thisMessageText = null;
-
+    SQLException message = null;
     PreparedStatement pst = null;
-    pst = db.prepareStatement(
-        "SELECT subject, body, reply_addr " +
-        "FROM message " +
-        "WHERE id = ? ");
-    pst.setInt(1, this.getMessageId());
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      thisMessageSubject = rs.getString("subject");
-      thisMessageText = rs.getString("body");
-      thisMessageReplyTo = rs.getString("reply_addr");
-    }
-    rs.close();
-    pst.close();
 
-    Template template = new Template();
-    template.setText(thisMessageText);
-    template.addParseElement("${survey_url}", "<a href=\"http://" + this.getServerName() + "/ProcessSurvey.do?id=" + this.getSurveyId() + "\">http://" + this.getServerName() + "/ProcessSurvey.do?id=" + this.getSurveyId() + "</a>");
-
-    //TODO: setAutoCommit(false);
-    pst = db.prepareStatement(
+    try {
+      db.setAutoCommit(false);
+      
+      //See if the campaign is not already active
+      pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET status_id = ?, " +
         "status = ?, " +
-        "active = " + DatabaseUtils.getTrue(db) + ", " +
-        "reply_addr = ?, " +
-        "subject = ?, " +
-        "message = ?, " +
-        "modifiedby = " + modifiedBy + ", " +
+        "modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        "WHERE id = ? " + 
+        "WHERE campaign_id = ? " + 
         "AND modified = ? " +
-        "AND active = " + DatabaseUtils.getFalse(db));
-    int i = 0;
-    pst.setInt(++i, QUEUE);
-    pst.setString(++i, QUEUE_TEXT);
-    pst.setString(++i, thisMessageReplyTo);
-    pst.setString(++i, thisMessageSubject);
-    pst.setString(++i, template.getParsedText());
-    pst.setInt(++i, id);
-    pst.setTimestamp(++i, modified);
-    resultCount = pst.executeUpdate();
-    pst.close();
-
-    if (resultCount == 1) {
-      insertRecipients(db, userId, userRangeId);
-      //TODO: Copy the survey if it has one
-      
-      //TODO: commit();
-    } else {
-      //TODO: rollback();
+        "AND active = ? ");
+      int i = 0;
+      pst.setInt(++i, QUEUE);
+      pst.setString(++i, QUEUE_TEXT);
+      pst.setInt(++i, modifiedBy);
+      pst.setInt(++i, id);
+      pst.setTimestamp(++i, modified);
+      pst.setBoolean(++i, false);
+      resultCount = pst.executeUpdate();
+      pst.close();
+  
+      //Activate the campaign...
+      if (resultCount == 1) {
+        active = true;
+        //Lock in the recipients
+        insertRecipients(db, userId, userRangeId);
+        
+        //Lock in the survey
+        if (this.surveyId > -1) {
+          Survey thisSurvey = new Survey(db, surveyId);
+          ActiveSurvey activeSurvey = new ActiveSurvey(thisSurvey);
+          activeSurvey.setEnteredBy(userId);
+          activeSurvey.setModifiedBy(userId);
+          activeSurvey.setCampaignId(id);
+          activeSurvey.insert(db);
+          this.surveyId = activeSurvey.getId();
+        }
+        
+        //Lock in the message
+        Message thisMessage = new Message(db, this.getMessageId());
+     
+        //Replace tags
+        Template template = new Template();
+        if (this.surveyId > -1) {
+          template.addParseElement("${survey_url}", "<a href=\"http://" + this.getServerName() + "/ProcessSurvey.do?id=${surveyId=" + this.getActiveSurveyId() + "}\">http://" + this.getServerName() + "/ProcessSurvey.do?id=${surveyId=" + this.getActiveSurveyId() + "}</a>");
+          if (thisMessage.getMessageText().indexOf("${survey_url}") == -1) {
+            template.setText(thisMessage.getMessageText() + "<br><br>You can take the survey at the following web-site: ${survey_url}");
+          } else {
+            template.setText(thisMessage.getMessageText());
+          }
+        } else {
+          template.setText(thisMessage.getMessageText());
+        }
+    
+        //Finalize the campaign activation
+        pst = db.prepareStatement(
+          "UPDATE campaign " +
+          "SET active = ?, " +
+          "reply_addr = ?, " +
+          "subject = ?, " +
+          "message = ?, " +
+          "modifiedby = ?, " +
+          "modified = CURRENT_TIMESTAMP " +
+          "WHERE campaign_id = ? ");
+        i = 0;
+        pst.setBoolean(++i, true);
+        pst.setString(++i, thisMessage.getReplyTo());
+        pst.setString(++i, thisMessage.getMessageSubject());
+        pst.setString(++i, template.getParsedText());
+        pst.setInt(++i, modifiedBy);
+        pst.setInt(++i, id);
+        resultCount = pst.executeUpdate();
+        pst.close();
+    
+        db.commit();
+      }
+    } catch (SQLException e) {
+      message = e;
+      db.rollback();
+    } catch (Exception ee) {
+      db.rollback();
+      ee.printStackTrace(System.out);
+    } finally {
+      db.setAutoCommit(true);
     }
-    //TODO: setAutoCommit(true);
+    
+    if (message != null) {
+      throw new SQLException (message.getMessage());
+    }
     return resultCount;
   }
 
@@ -1667,13 +1765,12 @@ public class Campaign extends GenericBean {
       return -1;
     }
 
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "INSERT INTO campaign_run " +
-        "(campaign_id, total_contacts, total_sent) " +
-        "VALUES (?, ?, ?) ");
+    String sql = 
+      "INSERT INTO campaign_run " +
+      "(campaign_id, total_contacts, total_sent) " +
+      "VALUES (?, ?, ?) ";
     int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql.toString());
+    PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, this.getId());
     pst.setInt(++i, this.getRecipientCount());
     pst.setInt(++i, this.getSentCount());
@@ -1695,23 +1792,24 @@ public class Campaign extends GenericBean {
    *@since                    1.17
    */
   public int updateDetails(Connection db) throws SQLException {
-    int resultCount = 0;
-
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
+    
+    int resultCount = 0;
 
     PreparedStatement pst = null;
     pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET name = ?, " +
         "description = ?, " +
-        "modifiedby = " + modifiedBy + ", " +
+        "modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        "WHERE id = " + id);
+        "WHERE campaign_id = " + id);
     int i = 0;
     pst.setString(++i, name);
     pst.setString(++i, description);
+    pst.setInt(++i, modifiedBy);
     resultCount = pst.executeUpdate();
     pst.close();
 
@@ -1728,27 +1826,72 @@ public class Campaign extends GenericBean {
    *@since                    1.17
    */
   public int updateMessage(Connection db) throws SQLException {
-    int resultCount = 0;
-
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
+    
+    int resultCount = 0;
 
     PreparedStatement pst = null;
     int i = 0;
     pst = db.prepareStatement(
         "UPDATE campaign " +
-        "SET message_id = " + messageId + ", " +
-        "survey_id = " + surveyId + ", " +
+        "SET message_id = ?, " +
         "reply_addr = null, " +
         "subject = null, " +
         "message = null, " +
-        "modifiedby = " + modifiedBy + ", " +
+        "modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        "WHERE id = " + id);
+        "WHERE campaign_id = ? ");
+    pst.setInt(++i, messageId);
+    pst.setInt(++i, modifiedBy);
+    pst.setInt(++i, id);
     resultCount = pst.executeUpdate();
     pst.close();
 
+    return resultCount;
+  }
+  
+  public int updateSurvey(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Campaign ID was not specified");
+    }
+    
+    int resultCount = 0;
+
+    PreparedStatement pst = null;
+    try {
+      db.setAutoCommit(false);
+      pst = db.prepareStatement(
+          "UPDATE campaign " +
+          "SET modifiedby = ?, " +
+          "modified = CURRENT_TIMESTAMP " +
+          "WHERE campaign_id = ? ");
+      pst.setInt(1, modifiedBy);
+      pst.setInt(2, id);
+      resultCount = pst.executeUpdate();
+      
+      pst = db.prepareStatement("DELETE FROM campaign_survey_link WHERE campaign_id = ? ");
+      pst.setInt(1, id);
+      pst.execute();
+      
+      if (surveyId > -1) {
+        pst = db.prepareStatement(
+          "INSERT INTO campaign_survey_link " +
+          "(campaign_id, survey_id) VALUES (?, ?) ");
+        pst.setInt(1, id);
+        pst.setInt(2, surveyId);
+        pst.execute();
+      }
+      
+      pst.close();
+      db.commit();
+      db.setAutoCommit(true);
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    }
     return resultCount;
   }
 
@@ -1772,11 +1915,12 @@ public class Campaign extends GenericBean {
     int i = 0;
     pst = db.prepareStatement(
         "UPDATE campaign " +
-        "SET message_id = " + messageId + ", " +
+        "SET message_id = ?, " +
         "active_date = ?, " +
         "send_method_id = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        "WHERE id = " + id);
+        "WHERE campaign_id = " + id);
+    pst.setInt(++i, messageId);
     pst.setDate(++i, activeDate);
     pst.setInt(++i, sendMethodId);
     resultCount = pst.executeUpdate();
@@ -1828,26 +1972,21 @@ public class Campaign extends GenericBean {
 
     if (status == null) {
       if (active) {
-        status = QUEUE_TEXT;
-        statusId = QUEUE;
+        this.setStatusId(QUEUE);
       } else {
-        status = IDLE_TEXT;
-        statusId = IDLE;
+        this.setStatusId(IDLE);
       }
     }
 
     PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-
-    sql.append(
+    String sql =
         "UPDATE campaign " +
         "SET description = ?, active_date = ?, " +
         "enabled = ?, modified = CURRENT_TIMESTAMP, modifiedby = ?, " +
-        "active = ?, status_id = ?, status = ?, message_id = ? ");
-    sql.append("WHERE id = ? ");
-
+        "active = ?, status_id = ?, status = ?, message_id = ? " +
+        "WHERE campaign_id = ? ";
     int i = 0;
-    pst = db.prepareStatement(sql.toString());
+    pst = db.prepareStatement(sql);
     pst.setString(++i, this.getDescription());
 
     if (activeDate == null) {
@@ -1866,6 +2005,11 @@ public class Campaign extends GenericBean {
     resultCount = pst.executeUpdate();
     pst.close();
 
+    //The original survey is no longer needed
+    if (statusId == FINISHED) {
+      Survey.removeLink(db, this.id);
+    }
+    
     return resultCount;
   }
 
@@ -1879,7 +2023,7 @@ public class Campaign extends GenericBean {
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //campaign table
-    this.setId(rs.getInt("id"));
+    this.setId(rs.getInt("campaign_id"));
     name = rs.getString("name");
     description = rs.getString("description");
     groupId = rs.getInt("list_id");
@@ -1897,7 +2041,6 @@ public class Campaign extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
-    surveyId = rs.getInt("survey_id");
 
     //message table
     messageName = rs.getString("messageName");

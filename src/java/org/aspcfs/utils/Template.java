@@ -89,7 +89,7 @@ public class Template {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Template-> Replacing text: " + key + ", " + value);
         }
-        text = StringHelper.replace(text, key, value);
+        text = StringUtils.replace(text, key, value);
       }
     }
     return text;
@@ -118,6 +118,34 @@ public class Template {
       parseElements = new HashMap();
     }
     parseElements.put(key, value);
+  }
+  
+  public String getValue(String key) {
+    String value = null;
+    int keyIndex = text.indexOf("${" + key + "=");
+    if ( keyIndex > -1) {
+      StringBuffer parsedValue = new StringBuffer();
+      boolean start = false;
+      boolean end = false;
+      while (keyIndex < text.length() && !end) {
+        String val = text.substring(keyIndex, ++keyIndex);
+        if (!start && "=".equals(val)) {
+          start = true;
+        } else {
+          if (start) {
+            if ("}".equals(val)) {
+              end = true;
+            } else {
+              parsedValue.append(val);
+            }
+          }
+        }
+      }
+      if (parsedValue.length() > 0) {
+        value = parsedValue.toString();
+      }
+    }
+    return value;
   }
 
 }

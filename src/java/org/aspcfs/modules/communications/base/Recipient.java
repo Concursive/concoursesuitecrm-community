@@ -59,33 +59,26 @@ public class Recipient extends GenericBean {
    *@since
    */
   public Recipient(Connection db, int recipientId) throws SQLException {
-
-    Statement st = null;
-    ResultSet rs = null;
-
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT * " +
-        "FROM scheduled_recipient r " +
-        "WHERE r.id > -1 ");
-
-    if (recipientId > -1) {
-      sql.append("AND r.id = " + recipientId + " ");
-    } else {
+    if (recipientId == -1) {
       throw new SQLException("Recipient ID not specified.");
     }
-
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+    
+    String sql = 
+      "SELECT * " +
+      "FROM scheduled_recipient r " +
+      "WHERE r.id = ? ";
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, recipientId);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     } else {
       rs.close();
-      st.close();
+      pst.close();
       throw new SQLException("Recipient record not found.");
     }
     rs.close();
-    st.close();
+    pst.close();
   }
 
   public void setId(int tmp) { this.id = tmp; }
@@ -214,23 +207,19 @@ public class Recipient extends GenericBean {
   }
   
   public int update(Connection db) throws SQLException {
-    int resultCount = 0;
-
     if (id == -1) {
       throw new SQLException("Recipient ID was not specified");
     }
 
+    int resultCount = 0;
     PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-
-    sql.append(
-        "UPDATE scheduled_recipient " +
-        "SET run_id = ?, status_id = ?, status = ?, status_date = ?, " +
-        "scheduled_date = ?, sent_date = ?, reply_date = ?, bounce_date = ? " +
-        "WHERE id = ? ");
-
+    String sql =
+      "UPDATE scheduled_recipient " +
+      "SET run_id = ?, status_id = ?, status = ?, status_date = ?, " +
+      "scheduled_date = ?, sent_date = ?, reply_date = ?, bounce_date = ? " +
+      "WHERE id = ? ";
     int i = 0;
-    pst = db.prepareStatement(sql.toString());
+    pst = db.prepareStatement(sql);
     pst.setInt(++i, runId);
     pst.setInt(++i, statusId);
     pst.setString(++i, status);
@@ -260,19 +249,19 @@ public class Recipient extends GenericBean {
     } else {
       pst.setTimestamp(++i, bounceDate);
     }
-
     pst.setInt(++i, id);
 
     resultCount = pst.executeUpdate();
     pst.close();
-
     return resultCount;
   }
   
   public boolean delete(Connection db) throws SQLException {
-    Statement st = db.createStatement();
-    st.executeUpdate("DELETE FROM scheduled_recipient WHERE id = " + id);
-    st.close();
+    PreparedStatement pst = db.prepareStatement(
+      "DELETE FROM scheduled_recipient WHERE id = ?");
+    pst.setInt(1, id);
+    pst.executeUpdate();
+    pst.close();
     return true;
   }
   

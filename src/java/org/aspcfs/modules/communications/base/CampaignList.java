@@ -324,7 +324,7 @@ public class CampaignList extends Vector {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM campaign c " +
-        "WHERE c.id > -1 ");
+        "WHERE c.campaign_id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -345,7 +345,7 @@ public class CampaignList extends Vector {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
             sqlFilter.toString() +
-            "AND name < ? ");
+            "AND c.name < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -355,10 +355,15 @@ public class CampaignList extends Vector {
         }
         rs.close();
         pst.close();
+        pagedListInfo.setDefaultSort("c.name", null);
+      } else {
+        //Determine column to sort by
+        if (completeOnly) {
+          pagedListInfo.setDefaultSort("active_date", "desc");
+        } else {
+          pagedListInfo.setDefaultSort("active_date", null);
+        }
       }
-
-      //Determine column to sort by
-      pagedListInfo.setDefaultSort("c.modified", "desc");
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY c.modified desc ");
@@ -375,7 +380,7 @@ public class CampaignList extends Vector {
         "FROM campaign c " +
         "LEFT JOIN message msg ON (c.message_id = msg.id) " +
         "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
-        "WHERE c.id > -1 ");
+        "WHERE c.campaign_id > -1 ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -427,11 +432,11 @@ public class CampaignList extends Vector {
     }
 
     if (incompleteOnly) {
-      sqlFilter.append("AND ( c.message_id < 1 OR c.id NOT IN (SELECT DISTINCT campaign_id FROM campaign_list_groups) OR active_date IS NULL OR active = ?) ");
+      sqlFilter.append("AND ( c.message_id < 1 OR c.campaign_id NOT IN (SELECT DISTINCT campaign_id FROM campaign_list_groups) OR active_date IS NULL OR active = ?) ");
     }
 
     if (completeOnly) {
-      sqlFilter.append("AND ( c.message_id > 0 AND c.id IN (SELECT DISTINCT campaign_id FROM campaign_list_groups) AND active_date IS NOT NULL AND active = ?) ");
+      sqlFilter.append("AND ( c.message_id > 0 AND c.campaign_id IN (SELECT DISTINCT campaign_id FROM campaign_list_groups) AND active_date IS NOT NULL AND active = ?) ");
     }
 
     if (owner > -1) {
@@ -443,7 +448,7 @@ public class CampaignList extends Vector {
     }
 
     if (idRange != null) {
-      sqlFilter.append("AND c.id IN (" + idRange + ") ");
+      sqlFilter.append("AND c.campaign_id IN (" + idRange + ") ");
     }
 
     if (ready == TRUE) {

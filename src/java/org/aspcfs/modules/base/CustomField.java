@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001 Dark Horse Ventures
+ *  Copyright 2001-2002 Dark Horse Ventures
  *  TODO: Currency entry using k, m, b for 50,000, etc.
  *  TODO: Phone numbers -- When you enter phone numbers in various phone fields,
  *  preserve whatever phone number format you enter.
@@ -16,9 +16,9 @@ import org.theseus.actions.*;
 import java.sql.*;
 import com.darkhorseventures.webutils.*;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.utils.ObjectUtils;
 import java.util.*;
 import java.text.*;
-import com.darkhorseventures.cfsbase.SurveyItem;
 
 /**
  *  Represents a CustomField, used for both the definition of a custom field and
@@ -49,11 +49,13 @@ public class CustomField extends GenericBean {
   public final static int ROWLIST = 16;
   public final static int HIDDEN = 17;
   public final static int DISPLAYTEXT = 18;
-  
+
   //survey preview stuff
-  public final static int SURVEY_INTRO = 19;
-  public final static int ROWLIST_QUESTION = 20;
-  
+  public final static int DISPLAYROWLIST = 20;
+
+  //lookup context ids
+  public final static int LOOKUP_USERID = 21;
+
   //Properties for a Field
   private int id = -1;
   private int groupId = -1;
@@ -79,12 +81,13 @@ public class CustomField extends GenericBean {
   private int enteredNumber = 0;
   private double enteredDouble = 0;
   private Object elementData = null;
-  
+
   private String display = null;
   private String lengthVar = null;
   private int maxRowItems = 0;
   private String delimiter = "\r\n";
   private boolean textAsCode = false;
+
 
   /**
    *  Constructor for the CustomField object
@@ -104,9 +107,16 @@ public class CustomField extends GenericBean {
   public CustomField(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-public void setElementData(Object elementData) {
-	this.elementData = elementData;
-}
+
+
+  /**
+   *  Sets the elementData attribute of the CustomField object
+   *
+   *@param  elementData  The new elementData value
+   */
+  public void setElementData(Object elementData) {
+    this.elementData = elementData;
+  }
 
 
   /**
@@ -123,9 +133,16 @@ public void setElementData(Object elementData) {
     }
     buildRecord(rs);
   }
-public void setTextAsCode(boolean textAsCode) {
-	this.textAsCode = textAsCode;
-}
+
+
+  /**
+   *  Sets the textAsCode attribute of the CustomField object
+   *
+   *@param  textAsCode  The new textAsCode value
+   */
+  public void setTextAsCode(boolean textAsCode) {
+    this.textAsCode = textAsCode;
+  }
 
 
   /**
@@ -137,17 +154,38 @@ public void setTextAsCode(boolean textAsCode) {
   public void setId(int tmp) {
     this.id = tmp;
   }
-public String getLengthVar() {
-	return lengthVar;
-}
-public void setLengthVar(String lengthVar) {
-	this.lengthVar = lengthVar;
-}
 
 
-public void setParameter(String parameterName, String value) {
-	parameters.put(parameterName, value);
-}
+  /**
+   *  Gets the lengthVar attribute of the CustomField object
+   *
+   *@return    The lengthVar value
+   */
+  public String getLengthVar() {
+    return lengthVar;
+  }
+
+
+  /**
+   *  Sets the lengthVar attribute of the CustomField object
+   *
+   *@param  lengthVar  The new lengthVar value
+   */
+  public void setLengthVar(String lengthVar) {
+    this.lengthVar = lengthVar;
+  }
+
+
+  /**
+   *  Sets the parameter attribute of the CustomField object
+   *
+   *@param  parameterName  The new parameter value
+   *@param  value          The new parameter value
+   */
+  public void setParameter(String parameterName, String value) {
+    parameters.put(parameterName, value);
+  }
+
 
   /**
    *  Sets the Id attribute of the CustomField object
@@ -159,18 +197,46 @@ public void setParameter(String parameterName, String value) {
     this.id = Integer.parseInt(tmp);
   }
 
-public String getDelimiter() {
-	return delimiter;
-}
-public void setDelimiter(String delimiter) {
-	this.delimiter = delimiter;
-}
-public boolean getTextAsCode() {
-	return textAsCode;
-}
-public void setTextAsCode(String textAsCode) {
-	this.textAsCode = textAsCode.equalsIgnoreCase("ON");
-}
+
+  /**
+   *  Gets the delimiter attribute of the CustomField object
+   *
+   *@return    The delimiter value
+   */
+  public String getDelimiter() {
+    return delimiter;
+  }
+
+
+  /**
+   *  Sets the delimiter attribute of the CustomField object
+   *
+   *@param  delimiter  The new delimiter value
+   */
+  public void setDelimiter(String delimiter) {
+    this.delimiter = delimiter;
+  }
+
+
+  /**
+   *  Gets the textAsCode attribute of the CustomField object
+   *
+   *@return    The textAsCode value
+   */
+  public boolean getTextAsCode() {
+    return textAsCode;
+  }
+
+
+  /**
+   *  Sets the textAsCode attribute of the CustomField object
+   *
+   *@param  textAsCode  The new textAsCode value
+   */
+  public void setTextAsCode(String textAsCode) {
+    this.textAsCode = textAsCode.equalsIgnoreCase("ON");
+  }
+
 
   /**
    *  Sets the GroupId attribute of the CustomField object
@@ -193,15 +259,44 @@ public void setTextAsCode(String textAsCode) {
     this.groupId = Integer.parseInt(tmp);
   }
 
-public void setMaxRowItems(int maxRowItems) {
-	this.maxRowItems = maxRowItems;
-}
-public int getMaxRowItems() {
-	return maxRowItems;
-}
-public void setMaxRowItems(String maxRowItems) {
-	this.maxRowItems = Integer.parseInt(maxRowItems);
-}
+
+  /**
+   *  Sets the maxRowItems attribute of the CustomField object
+   *
+   *@param  maxRowItems  The new maxRowItems value
+   */
+  public void setMaxRowItems(int maxRowItems) {
+    this.maxRowItems = maxRowItems;
+  }
+
+
+  /**
+   *  Gets the maxRowItems attribute of the CustomField object
+   *
+   *@return    The maxRowItems value
+   */
+  public int getMaxRowItems() {
+    if (maxRowItems == 0) {
+      try {
+        return ((ArrayList) elementData).size();
+      } catch (Exception e) {
+      }
+    }
+    return maxRowItems;
+  }
+
+
+  /**
+   *  Sets the maxRowItems attribute of the CustomField object
+   *
+   *@param  maxRowItems  The new maxRowItems value
+   */
+  public void setMaxRowItems(String maxRowItems) {
+    if (maxRowItems != null) {
+      this.maxRowItems = Integer.parseInt(maxRowItems);
+    }
+  }
+
 
   /**
    *  Sets the Name attribute of the CustomField object
@@ -212,20 +307,46 @@ public void setMaxRowItems(String maxRowItems) {
   public void setName(String tmp) {
     this.name = tmp;
   }
-  
+
+
+  /**
+   *  Gets the display attribute of the CustomField object
+   *
+   *@return    The display value
+   */
   public String getDisplay() {
-	return display;
-  }
-  public String getDisplayHtml() {
-	return toHtml(display);
-  }
-  public void setDisplay(String display) {
-	this.display = display;
+    return display;
   }
 
+
+  /**
+   *  Gets the displayHtml attribute of the CustomField object
+   *
+   *@return    The displayHtml value
+   */
+  public String getDisplayHtml() {
+    return toHtml(display);
+  }
+
+
+  /**
+   *  Sets the display attribute of the CustomField object
+   *
+   *@param  display  The new display value
+   */
+  public void setDisplay(String display) {
+    this.display = display;
+  }
+
+
+  /**
+   *  Sets the additionalText attribute of the CustomField object
+   *
+   *@param  additionalText  The new additionalText value
+   */
   public void setAdditionalText(String additionalText) {
-	this.additionalText = additionalText;
-}
+    this.additionalText = additionalText;
+  }
 
 
 
@@ -258,30 +379,31 @@ public void setMaxRowItems(String maxRowItems) {
    *@since
    */
   public void setType(String tmp) {
-     try {
-	     this.type = Integer.parseInt(tmp);
-     } catch (Exception e) {
-	     if (tmp.equalsIgnoreCase("text")) {
-		     this.type = TEXT;
-	     } else if (tmp.equalsIgnoreCase("select")) {
-		     this.type = SELECT;
-	     } else if (tmp.equalsIgnoreCase("checkbox")) {
-		     this.type = CHECKBOX;
-	     } else if (tmp.equalsIgnoreCase("textarea")) {
-		     this.type = TEXTAREA;
-	     } else if (tmp.equalsIgnoreCase("rowlist")) {
-		     this.type = ROWLIST;
-	     } else if (tmp.equalsIgnoreCase("hidden")) {
-		     this.type = HIDDEN;
-	     } else if (tmp.equalsIgnoreCase("displaytext")) {
-		     this.type = DISPLAYTEXT;
-	     } else if (tmp.equalsIgnoreCase("survey_intro")) {
-		     this.type = SURVEY_INTRO;
-	     } else if (tmp.equalsIgnoreCase("rowlist_question")) {
-		     this.type = ROWLIST_QUESTION;
-	     }
-     }
+    try {
+      this.type = Integer.parseInt(tmp);
+    } catch (Exception e) {
+      if (tmp.equalsIgnoreCase("text")) {
+        this.type = TEXT;
+      } else if (tmp.equalsIgnoreCase("select")) {
+        this.type = SELECT;
+      } else if (tmp.equalsIgnoreCase("checkbox")) {
+        this.type = CHECKBOX;
+      } else if (tmp.equalsIgnoreCase("textarea")) {
+        this.type = TEXTAREA;
+      } else if (tmp.equalsIgnoreCase("rowlist")) {
+        this.type = ROWLIST;
+      } else if (tmp.equalsIgnoreCase("hidden")) {
+        this.type = HIDDEN;
+      } else if (tmp.equalsIgnoreCase("displaytext")) {
+        this.type = DISPLAYTEXT;
+      } else if (tmp.equalsIgnoreCase("lookupuserid")) {
+        this.type = LOOKUP_USERID;
+      } else if (tmp.equalsIgnoreCase("displayrowlist")) {
+        this.type = DISPLAYROWLIST;
+      }
+    }
   }
+
 
   /**
    *  Sets the ValidationType attribute of the CustomField object
@@ -312,7 +434,7 @@ public void setMaxRowItems(String maxRowItems) {
    *@since
    */
   public void setRequired(String tmp) {
-    this.required = tmp.equalsIgnoreCase("ON");
+    this.required = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -413,9 +535,17 @@ public void setMaxRowItems(String maxRowItems) {
   public void setSelectedItemId(int tmp) {
     this.selectedItemId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the selectedItemId attribute of the CustomField object
+   *
+   *@param  tmp  The new selectedItemId value
+   */
   public void setSelectedItemId(String tmp) {
-    this.selectedItemId = Integer.parseInt(tmp);
+    if (tmp != null) {
+      this.selectedItemId = Integer.parseInt(tmp);
+    }
   }
 
 
@@ -426,7 +556,11 @@ public void setMaxRowItems(String maxRowItems) {
    *@since
    */
   public void setEnteredValue(String tmp) {
-    this.enteredValue = (tmp.trim());
+    if (tmp != null) {
+      this.enteredValue = (tmp.trim());
+    } else {
+      this.enteredValue = null;
+    }
   }
 
 
@@ -459,20 +593,21 @@ public void setMaxRowItems(String maxRowItems) {
         ++count;
         LookupElement thisElement = new LookupElement();
         thisElement.setDescription(listField.trim());
-	
-	if (textAsCode) {
-		thisElement.setCode(Integer.parseInt(thisElement.getDescription()));
-	} else {
-		thisElement.setCode(count);
-	}
-	
+
+        if (textAsCode) {
+          thisElement.setCode(Integer.parseInt(thisElement.getDescription()));
+        } else {
+          thisElement.setCode(count);
+        }
+
         thisElement.setLevel(count);
         thisElement.setDefaultItem(false);
         ((LookupList) elementData).add(thisElement);
       }
     }
   }
-  
+
+
   /**
    *  Sets the Parameters attribute of the CustomField object
    *
@@ -481,13 +616,13 @@ public void setMaxRowItems(String maxRowItems) {
    */
   public void setParameters(ActionContext context) {
     String newValue = null;
-    
-    if (context.getRequest().getParameter("cf" + id) != null) { 
-	    newValue = context.getRequest().getParameter("cf" + id);
+
+    if (context.getRequest().getParameter("cf" + id) != null) {
+      newValue = context.getRequest().getParameter("cf" + id);
     } else if (context.getRequest().getAttribute("cf" + id) != null) {
-	    newValue = (String)context.getRequest().getAttribute("cf" + id);
+      newValue = (String) context.getRequest().getAttribute("cf" + id);
     }
-    
+
     if (newValue != null) {
       newValue = newValue.trim();
       switch (type) {
@@ -575,10 +710,16 @@ public void setMaxRowItems(String maxRowItems) {
   public String getName() {
     return name;
   }
-  
+
+
+  /**
+   *  Gets the additionalText attribute of the CustomField object
+   *
+   *@return    The additionalText value
+   */
   public String getAdditionalText() {
-	return additionalText;
-}
+    return additionalText;
+  }
 
 
 
@@ -791,10 +932,22 @@ public void setMaxRowItems(String maxRowItems) {
   }
 
 
+  /**
+   *  Gets the valueHtml attribute of the CustomField object
+   *
+   *@return    The valueHtml value
+   */
   public String getValueHtml() {
     return getValueHtml(true);
   }
-  
+
+
+  /**
+   *  Gets the valueHtml attribute of the CustomField object
+   *
+   *@param  enableLinks  Description of the Parameter
+   *@return              The valueHtml value
+   */
   public String getValueHtml(boolean enableLinks) {
     if (type != SELECT && (enteredValue == null || enteredValue.equals(""))) {
       return toHtml(enteredValue);
@@ -835,35 +988,50 @@ public void setMaxRowItems(String maxRowItems) {
     }
   }
 
+
+  /**
+   *  Gets the rowListElement attribute of the CustomField object
+   *
+   *@param  index     Description of the Parameter
+   *@param  editable  Description of the Parameter
+   *@return           The rowListElement value
+   */
   public String getRowListElement(int index, boolean editable) {
-	  String hiddenElementName = name + index + "id";
-	  String textElementName = name + index + "text";
-	  SurveyItem tmpResult = null;
-	  
-	  String maxlength = this.getParameter("maxlength");
-	  String size = "";
-	  if (!maxlength.equals("")) {
-	    if (Integer.parseInt(maxlength) > 40) {
-	      size = "40";
-	    } else {
-	      size = maxlength;
-	    }
-	  }
-	  
-	  if (((ArrayList)elementData).size() >= index) {
-		  tmpResult = (SurveyItem)((ArrayList)elementData).get(index-1);
-          } else {
-		  tmpResult = new SurveyItem();
-          }
-	  
-	  if (editable) {
-		  return ("<input type=\"hidden\" name=\"" + hiddenElementName + "\" value=\"" + tmpResult.getId() + "\">\n<input type=\"text\" name=\"" + textElementName + "\" " + (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
-		  	(size.equals("") ? "" : "size=\"" + size + "\" ") + " value=\"" + toHtmlValue(tmpResult.getDescription()) + "\"> ");
-	  } else {
-		  return (toHtmlValue(tmpResult.getDescription()));
-          }
+    String hiddenElementName = name + index + "id";
+    String textElementName = name + index + "text";
+    Object tmpResult = null;
+
+    String maxlength = this.getParameter("maxlength");
+    String size = "";
+    if (!maxlength.equals("")) {
+      if (Integer.parseInt(maxlength) > 40) {
+        size = "40";
+      } else {
+        size = maxlength;
+      }
+    }
+
+    if (((ArrayList) elementData).size() >= index) {
+      tmpResult = ((ArrayList) elementData).get(index - 1);
+    } else {
+      tmpResult = new Object();
+    }
+
+    int rowElementId = -1;
+    try {
+      rowElementId = Integer.parseInt(ObjectUtils.getParam(tmpResult, "id"));
+    } catch (Exception e) {
+      //supposed to be an int
+    }
+    if (editable) {
+      return ("<input type=\"hidden\" name=\"" + hiddenElementName + "\" value=\"" + rowElementId + "\">\n<input type=\"text\" name=\"" + textElementName + "\" " + (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
+          (size.equals("") ? "" : "size=\"" + size + "\" ") + " value=\"" + toHtmlValue(ObjectUtils.getParam(tmpResult, "description")) + "\"> ");
+    } else {
+      return (toHtmlValue(ObjectUtils.getParam(tmpResult, "description")));
+    }
   }
-       
+
+
   /**
    *  Gets the HtmlElement attribute of the CustomField object when drawing
    *  forms.
@@ -883,9 +1051,9 @@ public void setMaxRowItems(String maxRowItems) {
         case TEXTAREA:
           return ("<textarea cols=\"70\" rows=\"8\" name=\"" + elementName + "\">" + toString(enteredValue) + "</textarea>");
         case SELECT:
-	if ( !( ((LookupList) elementData).containsKey(-1) ) ) {
-          ((LookupList) elementData).addItem(-1, "-- None --");
-	}
+          if (!(((LookupList) elementData).containsKey(-1))) {
+            ((LookupList) elementData).addItem(-1, "-- None --");
+          }
           return ((LookupList) elementData).getHtmlSelect(elementName, selectedItemId);
         case CHECKBOX:
           return ("<input type=\"checkbox\" name=\"" + elementName + "\" value=\"ON\" " + (selectedItemId == 1 ? "checked" : "") + ">");
@@ -894,13 +1062,11 @@ public void setMaxRowItems(String maxRowItems) {
               "<a href=\"javascript:popCalendar('forms[0]', '" + elementName + "');\">Date</a> (mm/dd/yyyy)");
         case PERCENT:
           return ("<input type=\"text\" name=\"" + elementName + "\" size=\"8\" value=\"" + toHtmlValue(enteredValue) + "\"> " + "%");
-	case HIDDEN:
+        case HIDDEN:
           return ("<input type=\"hidden\" name=\"" + elementName + "\" value=\"" + toHtmlValue(enteredValue) + "\">");
-	case DISPLAYTEXT:
+        case DISPLAYTEXT:
           return (toHtmlValue(enteredValue));
-	case SURVEY_INTRO:
-          return (toHtmlValue(enteredValue));
-	default:
+        default:
           String maxlength = this.getParameter("maxlength");
           String size = "";
           if (!maxlength.equals("")) {
@@ -1003,6 +1169,10 @@ public void setMaxRowItems(String maxRowItems) {
         default:
           return "";
     }
+  }
+  
+  public boolean hasDisplay() {
+    return (display != null && !"".equals(display));
   }
 
 

@@ -27,16 +27,14 @@ public final class ProcessMessage extends CFSModule {
       String dbName = st.nextToken();
       String messageId = st.nextToken();
 
-      System.out.println("Getting driver");
       sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
       ConnectionElement ce = new ConnectionElement();
+      //TODO: Remove this hard-coded url
       ce.setUrl("jdbc:postgresql://127.0.0.1:5432/" + dbName);
       ce.setUsername("cfsdba");
       ce.setPassword("");
       ce.setDbName(dbName);
-      System.out.println("Getting connection");
       db = sqlDriver.getConnection(ce);
-      System.out.println("Got connection");
 
       Message thisMessage = new Message(db, messageId);
       context.getRequest().setAttribute("Message", thisMessage);
@@ -45,9 +43,9 @@ public final class ProcessMessage extends CFSModule {
       errorMessage = e;
       System.out.println(e.toString());
     } finally {
-      if (sqlDriver != null && db != null)
+      if (sqlDriver != null && db != null) {
         sqlDriver.free(db);
-      System.out.println("Freeing connection");
+      }
     }
 
     if (errorMessage != null) {

@@ -23,6 +23,10 @@ Message
         <li>Click "Update Campaign Message" to save changes</li>
         <li>Messages can be created or edited in the <a href="CampaignManagerMessage.do?command=View">Create Messages</a> utility</li>
       </ul>
+<dhv:permission name="campaign-campaigns-edit">
+<input type="submit" value="Update Campaign Message" name="Save"><br>
+&nbsp;<br>
+</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan="2" valign="center" align="left">
@@ -51,7 +55,7 @@ Message
 </table>
 <dhv:permission name="campaign-campaigns-edit">
 <br>
-<input type='submit' value="Update Campaign Message" name="Save">
+<input type="submit" value="Update Campaign Message" name="Save">
 </dhv:permission>
   </td>
   </tr>

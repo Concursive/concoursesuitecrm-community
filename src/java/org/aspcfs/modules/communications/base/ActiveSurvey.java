@@ -11,150 +11,166 @@ import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
- *  Represents a copied survey that can have items and answers and
+ *  Represents a copied survey that can have questions and answers and
  *  belongs to an active Campaign
  *
  */
-public class ActiveSurvey extends Survey {
+public class ActiveSurvey extends SurveyBase {
 
-  private SurveyItemList items = new SurveyItemList();
+  protected int id = -1;
+  private int campaignId = -1;
+  //TODO: Change to ActiveSurveyQuestionList
+  private ActiveSurveyQuestionList questions = new ActiveSurveyQuestionList();
   private SurveyAnswerList answers = new SurveyAnswerList();
 
   private int enteredBy = -1;
   private int modifiedBy = -1;
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp entered = null;
+  private boolean enabled = true;
 
   public ActiveSurvey() { }
+  
+  public ActiveSurvey(Survey is) {
+    this.setName(is.getName());
+    this.setDescription(is.getDescription());
+    this.setIntro(is.getIntro());
+    this.setItemLength(is.getItemLength());
+    this.setType(is.getType());
+    this.setTypeName(is.getTypeName());
+    this.setQuestions(is.getQuestions());
+  }
 
   public ActiveSurvey(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
+  
+  public ActiveSurvey(Connection db, int surveyId) throws SQLException {
+    if (surveyId < 1) {
+      throw new SQLException("ActiveSurvey ID not specified.");
+    }
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    String sql = 
+      "SELECT s.*, " +
+      "st.description as typename " +
+      "FROM active_survey s " +
+      "LEFT JOIN lookup_survey_types st ON (s.type = st.code) " +
+      "WHERE s.active_survey_id = ? ";
+    pst = db.prepareStatement(sql);
+    pst.setInt(1, surveyId);
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    } else {
+      rs.close();
+      pst.close();
+      throw new SQLException("ActiveSurvey record not found.");
+    }
+    rs.close();
+    pst.close();
 
+    questions.setActiveSurveyId(this.getId());
+    questions.buildList(db);
+  }
+  
+  
+  public void setId(int tmp) { this.id = tmp; }
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
+  public void setCampaignId(int tmp) { this.campaignId = tmp; }
+  public int getCampaignId() { return campaignId; }
+
+  public int getId() { return id; }
+  
+  public static int getId(Connection db, int activeCampaignId) throws SQLException {
+    int surveyId = -1;
+    String sql = 
+      "SELECT active_survey_id " +
+      "FROM active_survey " +
+      "WHERE campaign_id = ? ";
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, activeCampaignId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      surveyId = rs.getInt("active_survey_id");
+    }
+    rs.close();
+    return surveyId;
+  }
+
+  public void setEnteredBy(int tmp) { this.enteredBy = tmp; }
+  public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
+  public int getEnteredBy() { return enteredBy; }
+  public int getModifiedBy() { return modifiedBy; }
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+  public String getModifiedString() {
+    try {
+      return DateFormat.getDateInstance(DateFormat.SHORT).format(modified);
+    } catch (NullPointerException e) {
+    }
+    return ("");
+  }
+  public String getModifiedDateTimeString() {
+    try {
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(modified);
+    } catch (NullPointerException e) {
+    }
+    return ("");
+  }
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+  public String getEnteredString() {
+    try {
+      return DateFormat.getDateInstance(DateFormat.SHORT).format(entered);
+    } catch (NullPointerException e) {
+    }
+    return ("");
+  }
+  public String getEnteredDateTimeString() {
+    try {
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
+    } catch (NullPointerException e) {
+    }
+    return ("");
+  }
+  
+  public void setEnabled(boolean tmp) { this.enabled = tmp; }
+  public boolean getEnabled() { return enabled; }
+  
   public SurveyAnswerList getAnswers() {
     return answers;
   }
 
 
-  /**
-   *  Sets the answers attribute of the Survey object
-   *
-   *@param  answers  The new answers value
-   */
   public void setAnswers(SurveyAnswerList answers) {
     this.answers = answers;
   }
+  
 
 
-  /**
-   *  Constructor for the Survey object
-   *
-   *@param  db                Description of the Parameter
-   *@param  surveyId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  public ActiveSurvey(Connection db, int surveyId) throws SQLException {
-    if (surveyId < 1) {
-      throw new SQLException("Survey ID not specified.");
-    }
-    Statement st = null;
-    ResultSet rs = null;
-
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT s.*, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
-        "st.description as typename " +
-        "FROM active_survey s " +
-        "LEFT JOIN contact ct_eb ON (s.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (s.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN lookup_survey_types st ON (s.type = st.code) " +
-        "WHERE s.active_survey_id = " + surveyId + " ");
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
-    if (rs.next()) {
-      buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
-      throw new SQLException("Survey record not found.");
-    }
-    rs.close();
-    st.close();
-
-    items.setSurveyId(this.getId());
-    items.buildList(db);
+  public void setQuestions(SurveyQuestionList inactiveQuestions) {
+    questions = new ActiveSurveyQuestionList(inactiveQuestions);
+    questions.setActiveSurveyId(id);
   }
 
 
-  /**
-   *  Sets the requestItems attribute of the Survey object
-   *
-   *@param  request  The new requestItems value
-   */
-  public void setRequestItems(HttpServletRequest request) {
-    items = new SurveyItemList(request);
-  }
-
-
-  /**
-   *  Sets the answerItems attribute of the Survey object
-   *
-   *@param  request  The new answerItems value
-   */
   public void setAnswerItems(HttpServletRequest request) {
     answers = new SurveyAnswerList(request);
   }
 
 
-  /**
-   *  Gets the itemsId attribute of the Survey object
-   *
-   *@return    The itemsId value
-   */
-  public int getItemsId() {
-    return itemsId;
+  public ActiveSurveyQuestionList getQuestions() {
+    return questions;
   }
 
 
-  /**
-   *  Sets the itemsId attribute of the Survey object
-   *
-   *@param  itemsId  The new itemsId value
-   */
-  public void setItemsId(int itemsId) {
-    this.itemsId = itemsId;
-  }
-
-
-  /**
-   *  Sets the itemsId attribute of the Survey object
-   *
-   *@param  itemsId  The new itemsId value
-   */
-  public void setItemsId(String itemsId) {
-    this.itemsId = Integer.parseInt(itemsId);
-  }
-
-
-  /**
-   *  Gets the items attribute of the Survey object
-   *
-   *@return    The items value
-   */
-  public SurveyItemList getItems() {
-    return items;
-  }
-
-
-  /**
-   *  Sets the items attribute of the Survey object
-   *
-   *@param  items  The new items value
-   */
-  public void setItems(SurveyItemList items) {
-    this.items = items;
+  public void setQuestions(ActiveSurveyQuestionList items) {
+    this.questions = questions;
   }
 
   /**
@@ -165,16 +181,16 @@ public class ActiveSurvey extends Survey {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    StringBuffer sql = new StringBuffer();
-    sql.append(
+    String sql = 
         "INSERT INTO active_survey " +
-        "(items_id, name, description, intro, itemLength, type, enteredBy, modifiedBy) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
+        "(campaign_id, name, description, intro, itemLength, type, " +
+        "enteredBy, modifiedBy) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
     try {
       db.setAutoCommit(false);
       int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setInt(++i, itemsId);
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setInt(++i, campaignId);
       pst.setString(++i, name);
       pst.setString(++i, description);
       pst.setString(++i, intro);
@@ -185,13 +201,13 @@ public class ActiveSurvey extends Survey {
       pst.execute();
       pst.close();
 
-      id = DatabaseUtils.getCurrVal(db, "survey_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "active_survey_active_survey_seq");
 
       //Insert the questions
-      Iterator x = items.iterator();
+      Iterator x = questions.iterator();
       while (x.hasNext()) {
-        SurveyItem thisItem = (SurveyItem) x.next();
-        thisItem.insert(db, this.getId(), this.getType());
+        ActiveSurveyQuestion thisQuestion = (ActiveSurveyQuestion) x.next();
+        thisQuestion.insert(db, this.getId(), this.getType());
       }
 
       db.commit();
@@ -207,69 +223,19 @@ public class ActiveSurvey extends Survey {
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
   public boolean delete(Connection db) throws SQLException {
     boolean commit = true;
     Statement st = null;
-    ResultSet rs = null;
     try {
       commit = db.getAutoCommit();
-      
-      //Check to see if a survey is being used by any Inactive campaigns
-      //If so, the survey can't be deleted
-      int inactiveCount = 0;
-      st = db.createStatement();
-      rs = st.executeQuery(
-        "SELECT COUNT(*) AS survey_count " +
-        "FROM campaign " +
-        "WHERE survey_id = " + this.getId() + " " +
-        "AND status_id <> " + Campaign.FINISHED);
-      rs.next();
-      inactiveCount = rs.getInt("survey_count");
-      rs.close();
-      if (inactiveCount > 0) {
-        st.close();
-        errors.put("actionError", "Survey could not be deleted because " +
-          inactiveCount + " " +
-          (inactiveCount == 1?"campaign is":"campaigns are") +
-          " being built that " +
-          (inactiveCount == 1?"uses":"use") +
-          " this survey.");
-        return false;
-      }
-      
-      //If not, Check to see if a survey is being used by any Active Campaigns
-      //If so, the campaign will be marked disabled and hidden to the user
-      int activeCount = 0;
-      rs = st.executeQuery(
-        "SELECT COUNT(*) AS survey_count " +
-        "FROM campaign " +
-        "WHERE survey_id = " + this.getId() + " " +
-        "AND active = " + DatabaseUtils.getTrue(db));
-      rs.next();
-      activeCount = rs.getInt("survey_count");
-      rs.close();
-      
       if (commit) {
         db.setAutoCommit(false);
       }
-      if (activeCount > 0) {
-        st.executeUpdate(
-          "UPDATE survey " +
-          "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
-          "WHERE id = " + this.getId() + " " +
-          "AND enabled = " + DatabaseUtils.getTrue(db));
-      } else {
-        st.executeUpdate("DELETE FROM survey WHERE id = " + this.getId());
-        st.executeUpdate("DELETE FROM survey_answer WHERE question_id in (select id from survey_item where survey_id = " + this.getId() + ") ");
-        st.executeUpdate("DELETE FROM survey_item WHERE survey_id = " + this.getId());
-      }
+      st = db.createStatement();
+      st.executeUpdate("DELETE FROM active_survey_answers WHERE response_id IN (SELECT response_id FROM active_survey_responses WHERE active_survey_id = " + this.getId() + ")");
+      st.executeUpdate("DELETE FROM active_survey_responses WHERE active_survey_id = " + this.getId());
+      st.executeUpdate("DELETE FROM active_survey_questions WHERE active_survey_id = " + this.getId());
+      st.executeUpdate("DELETE FROM active_survey WHERE active_survey_id = " + this.getId());
       if (commit) {
         db.commit();
       }
@@ -283,79 +249,24 @@ public class ActiveSurvey extends Survey {
       if (commit) {
         db.setAutoCommit(true);
       }
-      st.close();
+      if (st != null) {
+        st.close();
+      }
     }
     return true;
   }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@param  override          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
-  protected int update(Connection db, boolean override) throws SQLException {
-    int resultCount = 0;
-
-    if (this.getId() == -1) {
-      throw new SQLException("Survey ID was not specified");
-    }
-
-    PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-
-    sql.append(
-        "UPDATE active_survey " +
-        "SET message_id = ?, items_id = ?, name = ?, description = ?, intro = ?, itemlength = ?, " +
-        "type = ?, " +
-        "enabled = ?, " +
-        "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
-        "WHERE id = ? ");
-    //if (!override) {
-    //  sql.append("AND modified = ? ");
-    //}
-
-    int i = 0;
-    pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, this.getMessageId());
-    pst.setInt(++i, this.getItemsId());
-    pst.setString(++i, this.getName());
-    pst.setString(++i, this.getDescription());
-    pst.setString(++i, this.getIntro());
-    pst.setInt(++i, this.getItemLength());
-    pst.setInt(++i, this.getType());
-    pst.setBoolean(++i, this.getEnabled());
-    pst.setInt(++i, this.getModifiedBy());
-    pst.setInt(++i, this.getId());
-
-    resultCount = pst.executeUpdate();
-    pst.close();
-
-    return resultCount;
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
-  public int update(Connection db) throws SQLException {
+  
+   public int update(Connection db) throws SQLException {
     int resultCount = -1;
 
     try {
       db.setAutoCommit(false);
 
-      Iterator x = items.iterator();
+      /* Iterator x = questions.iterator();
       while (x.hasNext()) {
-        SurveyItem thisItem = (SurveyItem) x.next();
-        thisItem.process(db, this.getId(), this.getType());
-      }
+        ActiveSurveyQuestion thisQuestion = (ActiveSurveyQuestion) x.next();
+        thisQuestion.process(db, this.getId(), this.getType());
+      } */
 
       resultCount = this.update(db, false);
       db.commit();
@@ -370,16 +281,42 @@ public class ActiveSurvey extends Survey {
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
+  protected int update(Connection db, boolean override) throws SQLException {
+    int resultCount = 0;
+    if (this.getId() == -1) {
+      throw new SQLException("ActiveSurvey ID was not specified");
+    }
+
+    PreparedStatement pst = null;
+    String sql = 
+      "UPDATE active_survey " +
+      "SET campaign_id = ?, name = ?, description = ?, intro = ?, itemlength = ?, " +
+      "type = ?, " +
+      "enabled = ?, " +
+      "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+      "WHERE active_survey_id = ? ";
+    int i = 0;
+    pst = db.prepareStatement(sql);
+    pst.setInt(++i, campaignId);
+    pst.setString(++i, this.getName());
+    pst.setString(++i, this.getDescription());
+    pst.setString(++i, this.getIntro());
+    pst.setInt(++i, this.getItemLength());
+    pst.setInt(++i, this.getType());
+    pst.setBoolean(++i, this.getEnabled());
+    pst.setInt(++i, this.getModifiedBy());
+    pst.setInt(++i, this.getId());
+    resultCount = pst.executeUpdate();
+    pst.close();
+
+    return resultCount;
+  }
+
+
   protected void buildRecord(ResultSet rs) throws SQLException {
-    this.setId(rs.getInt("id"));
-    messageId = rs.getInt("message_id");
-    itemsId = rs.getInt("items_id");
+    //active_survey table
+    this.setId(rs.getInt("active_survey_id"));
+    campaignId = rs.getInt("campaign_id");
     name = rs.getString("name");
     description = rs.getString("description");
     intro = rs.getString("intro");
@@ -391,10 +328,8 @@ public class ActiveSurvey extends Survey {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
 
-    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
-    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
+    //lookup_survey_types table
     typeName = rs.getString("typename");
   }
-
 }
 

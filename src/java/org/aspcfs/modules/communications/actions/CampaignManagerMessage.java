@@ -393,10 +393,9 @@ public final class CampaignManagerMessage extends CFSModule {
     addModuleBean(context, "ManageCampaigns", "Build New Campaign");
     Connection db = null;
 
-    CustomForm thisForm = getDynamicForm(context, "surveyview");
-    String surveyId = context.getRequest().getParameter("id");
-
     try {
+      CustomForm thisForm = getDynamicForm(context, "surveyview");
+      String surveyId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
       Survey thisSurvey = null;
       if (Integer.parseInt(surveyId) > 0) {

@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.utils.StringUtils" %>
 <jsp:useBean id="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script type="text/javascript" src="/javascript/stringbuilder.js"></script>
@@ -85,7 +85,7 @@ Modify Message
       &nbsp;<br>
 		<dhv:browser id="ie" minVersion="5.5" include="false">
 		  HTML tags are allowed in text entry<br>
-      <textarea name="messageText" rows="10" cols="75" wrap="physical"><%= Message.getMessageText() %></textarea>
+      <textarea name="messageText" rows="10" cols="75" wrap="physical"><%= StringUtils.toHtmlTextValue(Message.getMessageText()) %></textarea>
     </dhv:browser>
 		<dhv:browser id="ie" minVersion="5.5" include="true">
 		  <input type="hidden" name="messageText" value="">

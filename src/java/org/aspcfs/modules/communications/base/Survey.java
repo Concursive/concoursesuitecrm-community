@@ -11,36 +11,22 @@ import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
- *  Represents a survey that can have items and answers.
+ *  Represents a survey that can have introductory text and questions.
  *
  *@author     chris price
  *@created    August 7, 2002
  *@version    $Id$
  */
-public class Survey extends GenericBean {
+public class Survey extends SurveyBase {
 
   protected int id = -1;
-  protected String name = "";
-  protected String description = "";
-  protected String intro = "";
-  protected int itemLength = -1;
-  protected int type = -1;
-  protected int itemsId = -1;
-  protected int messageId = -1;
-
-  //TODO: Change to SurveyQuestionList
-  protected SurveyItemList items = new SurveyItemList();
-  //TODO: Remove answers from Survey
-  protected SurveyAnswerList answers = new SurveyAnswerList();
+  protected SurveyQuestionList questions = new SurveyQuestionList();
 
   protected int enteredBy = -1;
   protected int modifiedBy = -1;
   protected java.sql.Timestamp modified = null;
   protected java.sql.Timestamp entered = null;
   protected boolean enabled = true;
-  protected String enteredByName = "";
-  protected String modifiedByName = "";
-  protected String typeName = "";
 
 
   /**
@@ -61,66 +47,6 @@ public class Survey extends GenericBean {
 
 
   /**
-   *  Gets the answers attribute of the Survey object
-   *
-   *@return    The answers value
-   */
-  public SurveyAnswerList getAnswers() {
-    return answers;
-  }
-
-
-  /**
-   *  Sets the answers attribute of the Survey object
-   *
-   *@param  answers  The new answers value
-   */
-  public void setAnswers(SurveyAnswerList answers) {
-    this.answers = answers;
-  }
-
-
-  /**
-   *  Gets the enteredByName attribute of the Survey object
-   *
-   *@return    The enteredByName value
-   */
-  public String getEnteredByName() {
-    return enteredByName;
-  }
-
-
-  /**
-   *  Gets the modifiedByName attribute of the Survey object
-   *
-   *@return    The modifiedByName value
-   */
-  public String getModifiedByName() {
-    return modifiedByName;
-  }
-
-
-  /**
-   *  Sets the enteredByName attribute of the Survey object
-   *
-   *@param  tmp  The new enteredByName value
-   */
-  public void setEnteredByName(String tmp) {
-    this.enteredByName = tmp;
-  }
-
-
-  /**
-   *  Sets the modifiedByName attribute of the Survey object
-   *
-   *@param  tmp  The new modifiedByName value
-   */
-  public void setModifiedByName(String tmp) {
-    this.modifiedByName = tmp;
-  }
-
-
-  /**
    *  Constructor for the Survey object
    *
    *@param  db                Description of the Parameter
@@ -130,26 +56,14 @@ public class Survey extends GenericBean {
   public Survey(Connection db, int surveyId) throws SQLException {
     Statement st = null;
     ResultSet rs = null;
-
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT s.*, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, st.description as typename " +
-        "FROM survey s " +
-        "LEFT JOIN contact ct_eb ON (s.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (s.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN lookup_survey_types st ON (s.type = st.code) " +
-        "WHERE s.id > -1 ");
-
-    if (surveyId > -1) {
-      sql.append("AND s.id = " + surveyId + " ");
-    } else {
-      throw new SQLException("Survey ID not specified.");
-    }
-
+    String sql = 
+      "SELECT s.*, " +
+      "st.description as typename " +
+      "FROM survey s " +
+      "LEFT JOIN lookup_survey_types st ON (s.type = st.code) " +
+      "WHERE s.survey_id = " + surveyId;
     st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+    rs = st.executeQuery(sql);
     if (rs.next()) {
       buildRecord(rs);
     } else {
@@ -160,8 +74,8 @@ public class Survey extends GenericBean {
     rs.close();
     st.close();
 
-    items.setSurveyId(this.getId());
-    items.buildList(db);
+    questions.setSurveyId(this.getId());
+    questions.buildList(db);
   }
 
 
@@ -185,117 +99,17 @@ public class Survey extends GenericBean {
    *@param  request  The new requestItems value
    */
   public void setRequestItems(HttpServletRequest request) {
-    items = new SurveyItemList(request);
+    questions = new SurveyQuestionList(request);
   }
 
 
-  /**
-   *  Sets the answerItems attribute of the Survey object
-   *
-   *@param  request  The new answerItems value
-   */
-  public void setAnswerItems(HttpServletRequest request) {
-    answers = new SurveyAnswerList(request);
+  public SurveyQuestionList getQuestions() {
+    return questions;
   }
 
 
-  /**
-   *  Gets the itemsId attribute of the Survey object
-   *
-   *@return    The itemsId value
-   */
-  public int getItemsId() {
-    return itemsId;
-  }
-
-
-  /**
-   *  Sets the itemsId attribute of the Survey object
-   *
-   *@param  itemsId  The new itemsId value
-   */
-  public void setItemsId(int itemsId) {
-    this.itemsId = itemsId;
-  }
-
-
-  /**
-   *  Sets the itemsId attribute of the Survey object
-   *
-   *@param  itemsId  The new itemsId value
-   */
-  public void setItemsId(String itemsId) {
-    this.itemsId = Integer.parseInt(itemsId);
-  }
-
-
-  /**
-   *  Gets the messageId attribute of the Survey object
-   *
-   *@return    The messageId value
-   */
-  public int getMessageId() {
-    return messageId;
-  }
-
-
-  /**
-   *  Sets the messageId attribute of the Survey object
-   *
-   *@param  messageId  The new messageId value
-   */
-  public void setMessageId(int messageId) {
-    this.messageId = messageId;
-  }
-
-
-  /**
-   *  Sets the messageId attribute of the Survey object
-   *
-   *@param  messageId  The new messageId value
-   */
-  public void setMessageId(String messageId) {
-    this.messageId = Integer.parseInt(messageId);
-  }
-
-
-  /**
-   *  Gets the typeName attribute of the Survey object
-   *
-   *@return    The typeName value
-   */
-  public String getTypeName() {
-    return typeName;
-  }
-
-
-  /**
-   *  Sets the typeName attribute of the Survey object
-   *
-   *@param  typeName  The new typeName value
-   */
-  public void setTypeName(String typeName) {
-    this.typeName = typeName;
-  }
-
-
-  /**
-   *  Gets the items attribute of the Survey object
-   *
-   *@return    The items value
-   */
-  public SurveyItemList getItems() {
-    return items;
-  }
-
-
-  /**
-   *  Sets the items attribute of the Survey object
-   *
-   *@param  items  The new items value
-   */
-  public void setItems(SurveyItemList items) {
-    this.items = items;
+  public void setQuestions(SurveyQuestionList items) {
+    this.questions = questions;
   }
 
 
@@ -307,58 +121,31 @@ public class Survey extends GenericBean {
   public int getId() {
     return id;
   }
-
-
-  /**
-   *  Gets the name attribute of the Survey object
-   *
-   *@return    The name value
-   */
-  public String getName() {
-    return name;
+  
+  public static int getId(Connection db, int campaignId) throws SQLException {
+    int surveyId = -1;
+    String sql = 
+      "SELECT survey_id " +
+      "FROM campaign_survey_link " +
+      "WHERE campaign_id = ? ";
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, campaignId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      surveyId = rs.getInt("survey_id");
+    }
+    rs.close();
+    return surveyId;
   }
 
-
-  /**
-   *  Gets the description attribute of the Survey object
-   *
-   *@return    The description value
-   */
-  public String getDescription() {
-    return description;
+  public static void removeLink(Connection db, int campaignId) throws SQLException {
+    String sql = "DELETE FROM campaign_survey_link WHERE campaign_id = ? ";
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, campaignId);
+    pst.execute();
+    pst.close();
   }
-
-
-  /**
-   *  Gets the intro attribute of the Survey object
-   *
-   *@return    The intro value
-   */
-  public String getIntro() {
-    return intro;
-  }
-
-
-  /**
-   *  Gets the itemLength attribute of the Survey object
-   *
-   *@return    The itemLength value
-   */
-  public int getItemLength() {
-    return itemLength;
-  }
-
-
-  /**
-   *  Gets the type attribute of the Survey object
-   *
-   *@return    The type value
-   */
-  public int getType() {
-    return type;
-  }
-
-
+  
   /**
    *  Gets the enteredBy attribute of the Survey object
    *
@@ -430,76 +217,6 @@ public class Survey extends GenericBean {
 
 
   /**
-   *  Sets the name attribute of the Survey object
-   *
-   *@param  tmp  The new name value
-   */
-  public void setName(String tmp) {
-    this.name = tmp;
-  }
-
-
-  /**
-   *  Sets the description attribute of the Survey object
-   *
-   *@param  tmp  The new description value
-   */
-  public void setDescription(String tmp) {
-    this.description = tmp;
-  }
-
-
-  /**
-   *  Sets the intro attribute of the Survey object
-   *
-   *@param  tmp  The new intro value
-   */
-  public void setIntro(String tmp) {
-    this.intro = tmp;
-  }
-
-
-  /**
-   *  Sets the itemLength attribute of the Survey object
-   *
-   *@param  tmp  The new itemLength value
-   */
-  public void setItemLength(int tmp) {
-    this.itemLength = tmp;
-  }
-
-
-  /**
-   *  Sets the itemLength attribute of the Survey object
-   *
-   *@param  tmp  The new itemLength value
-   */
-  public void setItemLength(String tmp) {
-    this.itemLength = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the type attribute of the Survey object
-   *
-   *@param  tmp  The new type value
-   */
-  public void setType(int tmp) {
-    this.type = tmp;
-  }
-
-
-  /**
-   *  Sets the type attribute of the Survey object
-   *
-   *@param  tmp  The new type value
-   */
-  public void setType(String tmp) {
-    this.type = Integer.parseInt(tmp);
-  }
-
-
-  /**
    *  Sets the enteredBy attribute of the Survey object
    *
    *@param  tmp  The new enteredBy value
@@ -528,6 +245,11 @@ public class Survey extends GenericBean {
     this.modified = tmp;
   }
 
+  public void setModified(String tmp) {
+    if (tmp != null) {
+      this.modified = java.sql.Timestamp.valueOf(tmp);
+    }
+  }
 
   /**
    *  Sets the entered attribute of the Survey object
@@ -573,28 +295,20 @@ public class Survey extends GenericBean {
     StringBuffer result = new StringBuffer();
 
     if (request != null) {
-
       java.util.Enumeration e = request.getParameterNames();
-
       ArrayList params = new ArrayList();
-
-      java.lang.reflect.Field[] f = this.getClass().getDeclaredFields();
-
+      java.lang.reflect.Field[] f = this.getClass().getFields();
       for (int i = 0; i < f.length; i++) {
         params.add(f[i].getName());
       }
-
       while (e.hasMoreElements()) {
         String tempString = e.nextElement().toString();
         String[] parameterValues = request.getParameterValues(tempString);
-
         if (params.contains(tempString)) {
           result.append("<input type=\"hidden\" name=\"" + tempString + "\" value=\"" + parameterValues[0] + "\">\n");
-          System.out.println(tempString);
         }
       }
     }
-
     return (result.toString());
   }
 
@@ -635,33 +349,31 @@ public class Survey extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "INSERT INTO survey " +
-        "(items_id, name, description, intro, itemLength, type, enteredBy, modifiedBy) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
+    String sql = 
+      "INSERT INTO survey " +
+      "(name, description, intro, itemLength, type, enteredBy, modifiedBy) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?) ";
     try {
       db.setAutoCommit(false);
       int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setInt(++i, itemsId);
+      PreparedStatement pst = db.prepareStatement(sql);
       pst.setString(++i, name);
       pst.setString(++i, description);
       pst.setString(++i, intro);
       pst.setInt(++i, itemLength);
       pst.setInt(++i, type);
       pst.setInt(++i, enteredBy);
-      pst.setInt(++i, modifiedBy);
+      pst.setInt(++i, enteredBy);
       pst.execute();
       pst.close();
 
-      id = DatabaseUtils.getCurrVal(db, "survey_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "survey_survey_id_seq");
 
       //Insert the questions
-      Iterator x = items.iterator();
+      Iterator x = questions.iterator();
       while (x.hasNext()) {
-        SurveyItem thisItem = (SurveyItem) x.next();
-        thisItem.insert(db, this.getId(), this.getType());
+        SurveyQuestion thisQuestion = (SurveyQuestion) x.next();
+        thisQuestion.insert(db, this.getId(), this.getType());
       }
 
       db.commit();
@@ -697,9 +409,8 @@ public class Survey extends GenericBean {
       st = db.createStatement();
       rs = st.executeQuery(
         "SELECT COUNT(*) AS survey_count " +
-        "FROM campaign " +
-        "WHERE survey_id = " + this.getId() + " " +
-        "AND status_id <> " + Campaign.FINISHED);
+        "FROM campaign_survey_link " +
+        "WHERE survey_id = " + this.getId());
       rs.next();
       inactiveCount = rs.getInt("survey_count");
       rs.close();
@@ -714,32 +425,11 @@ public class Survey extends GenericBean {
         return false;
       }
       
-      //If not, Check to see if a survey is being used by any Active Campaigns
-      //If so, the campaign will be marked disabled and hidden to the user
-      int activeCount = 0;
-      rs = st.executeQuery(
-        "SELECT COUNT(*) AS survey_count " +
-        "FROM campaign " +
-        "WHERE survey_id = " + this.getId() + " " +
-        "AND active = " + DatabaseUtils.getTrue(db));
-      rs.next();
-      activeCount = rs.getInt("survey_count");
-      rs.close();
-      
       if (commit) {
         db.setAutoCommit(false);
       }
-      if (activeCount > 0) {
-        st.executeUpdate(
-          "UPDATE survey " +
-          "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
-          "WHERE id = " + this.getId() + " " +
-          "AND enabled = " + DatabaseUtils.getTrue(db));
-      } else {
-        st.executeUpdate("DELETE FROM survey WHERE id = " + this.getId());
-        st.executeUpdate("DELETE FROM survey_answer WHERE question_id in (select id from survey_item where survey_id = " + this.getId() + ") ");
-        st.executeUpdate("DELETE FROM survey_item WHERE survey_id = " + this.getId());
-      }
+      st.executeUpdate("DELETE FROM survey_questions WHERE survey_id = " + this.getId());
+      st.executeUpdate("DELETE FROM survey WHERE survey_id = " + this.getId());
       if (commit) {
         db.commit();
       }
@@ -747,7 +437,6 @@ public class Survey extends GenericBean {
       if (commit) {
         db.rollback();
       }
-      System.out.println(e.toString());
       throw new SQLException(e.toString());
     } finally {
       if (commit) {
@@ -763,75 +452,50 @@ public class Survey extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@param  override          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
-  protected int update(Connection db, boolean override) throws SQLException {
-    int resultCount = 0;
-
-    if (this.getId() == -1) {
-      throw new SQLException("Survey ID was not specified");
-    }
-
-    PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-
-    sql.append(
-        "UPDATE survey " +
-        "SET message_id = ?, items_id = ?, name = ?, description = ?, intro = ?, itemlength = ?, " +
-        "type = ?, " +
-        "enabled = ?, " +
-        "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
-        "WHERE id = ? ");
-    //if (!override) {
-    //  sql.append("AND modified = ? ");
-    //}
-
-    int i = 0;
-    pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, this.getMessageId());
-    pst.setInt(++i, this.getItemsId());
-    pst.setString(++i, this.getName());
-    pst.setString(++i, this.getDescription());
-    pst.setString(++i, this.getIntro());
-    pst.setInt(++i, this.getItemLength());
-    pst.setInt(++i, this.getType());
-    pst.setBoolean(++i, this.getEnabled());
-    pst.setInt(++i, this.getModifiedBy());
-    pst.setInt(++i, this.getId());
-
-    //if (!override) {
-    //  pst.setTimestamp(++i, modified);
-    //}
-
-    resultCount = pst.executeUpdate();
-    pst.close();
-
-    return resultCount;
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
   public int update(Connection db) throws SQLException {
-    int resultCount = -1;
+    int resultCount = 0;
+    
+    if (this.getId() == -1) {
+      throw new SQLException("Survey ID was not specified");
+    }
 
     try {
       db.setAutoCommit(false);
 
-      Iterator x = items.iterator();
+      //Update the questions
+      questions.delete(db, this.getId());
+      Iterator x = questions.iterator();
       while (x.hasNext()) {
-        SurveyItem thisItem = (SurveyItem) x.next();
-        thisItem.process(db, this.getId(), this.getType());
+        SurveyQuestion thisQuestion = (SurveyQuestion) x.next();
+        thisQuestion.insert(db, this.getId(), this.getType());
       }
 
-      resultCount = this.update(db, false);
+      //Update the survey
+      PreparedStatement pst = null;
+      String sql = 
+        "UPDATE survey " +
+        "SET name = ?, description = ?, intro = ?, itemlength = ?, " +
+        "type = ?, " +
+        "enabled = ?, " +
+        "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+        "WHERE survey_id = ? AND modified = ? ";
+      int i = 0;
+      pst = db.prepareStatement(sql.toString());
+      pst.setString(++i, this.getName());
+      pst.setString(++i, this.getDescription());
+      pst.setString(++i, this.getIntro());
+      pst.setInt(++i, this.getItemLength());
+      pst.setInt(++i, this.getType());
+      pst.setBoolean(++i, this.getEnabled());
+      pst.setInt(++i, this.getModifiedBy());
+      pst.setInt(++i, this.getId());
+      pst.setTimestamp(++i, modified);
+      resultCount = pst.executeUpdate();
+      pst.close();
+      
       db.commit();
     } catch (Exception e) {
       db.rollback();
@@ -851,9 +515,8 @@ public class Survey extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
-    this.setId(rs.getInt("id"));
-    messageId = rs.getInt("message_id");
-    itemsId = rs.getInt("items_id");
+    //survey table
+    this.setId(rs.getInt("survey_id"));
     name = rs.getString("name");
     description = rs.getString("description");
     intro = rs.getString("intro");
@@ -865,8 +528,7 @@ public class Survey extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
 
-    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
-    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
+    //lookup_survey_types table
     typeName = rs.getString("typename");
   }
 

@@ -25,7 +25,7 @@ public class SearchCriteriaListList extends ArrayList {
   private int owner = -1;
   private String ownerIdRange = null;
   private int campaignId = -1;
-
+  private int enabled = Constants.TRUE;
 
   /**
    *  Constructor for the SearchCriteriaListList object
@@ -229,6 +229,10 @@ public class SearchCriteriaListList extends ArrayList {
     if (campaignId != -1) {
       sqlFilter.append("AND id in (SELECT group_id FROM campaign_list_groups WHERE campaign_id = " + campaignId + ") ");
     }
+    
+    if (enabled == Constants.TRUE || enabled == Constants.FALSE) {
+      sqlFilter.append("AND enabled = ? ");
+    }
   }
 
 
@@ -246,6 +250,14 @@ public class SearchCriteriaListList extends ArrayList {
 
     if (owner != -1) {
       pst.setInt(++i, owner);
+    }
+    
+    if (enabled == Constants.TRUE || enabled == Constants.FALSE) {
+      switch (enabled) {
+        case Constants.TRUE: pst.setBoolean(++i, true); break;
+        case Constants.FALSE: pst.setBoolean(++i, false); break;
+        default: break;
+      }
     }
 
     return i;
