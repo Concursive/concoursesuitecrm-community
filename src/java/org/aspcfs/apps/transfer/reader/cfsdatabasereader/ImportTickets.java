@@ -39,6 +39,7 @@ public class ImportTickets implements CFSDatabaseReaderImportModule {
     
     logger.info("ImportTickets-> Inserting Ticket Log");
     TicketLogList ticketLogList = new TicketLogList();
+    ticketLogList.setDoSystemMessages(false);
     ticketLogList.buildList(db);
     logger.info("ImportTickets-> " + ticketLogList.size());
     mappings.saveList(writer, ticketLogList, "insert");

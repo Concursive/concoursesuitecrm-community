@@ -26,6 +26,7 @@ public class TicketLogList extends Vector {
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
+  private boolean doSystemMessages = true;
 
 
   /**
@@ -75,6 +76,12 @@ public class TicketLogList extends Vector {
   public void setTicketId(int tmp) {
     this.ticketId = tmp;
   }
+public boolean getDoSystemMessages() {
+	return doSystemMessages;
+}
+public void setDoSystemMessages(boolean doSystemMessages) {
+	this.doSystemMessages = doSystemMessages;
+}
 
 
   /**
@@ -247,7 +254,11 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
       }
       ++count;
       TicketLog thisTicketLog = new TicketLog(rs);
-      systemResult = this.setSystemMessages(thisTicketLog, prevTicketLog);
+      
+      if (doSystemMessages) {
+              systemResult = this.setSystemMessages(thisTicketLog, prevTicketLog);
+      }
+      
       if (thisTicketLog.getEntryText() != null && !(thisTicketLog.getEntryText().equals(""))) {
         this.addElement(thisTicketLog);
       }
