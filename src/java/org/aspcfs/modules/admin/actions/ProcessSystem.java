@@ -32,6 +32,9 @@ public final class ProcessSystem extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandReloadSystemPrefs(ActionContext context) {
+    if (!"127.0.0.1".equals(context.getIpAddress())) {
+      return ("PermissionError");
+    }
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     Connection db = null;
     Iterator i = this.getSystemIterator(context);
@@ -56,6 +59,9 @@ public final class ProcessSystem extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandClearSystems(ActionContext context) {
+    if (!"127.0.0.1".equals(context.getIpAddress())) {
+      return ("PermissionError");
+    }
     Iterator i = this.getSystemIterator(context);
     while (i.hasNext()) {
       SystemStatus thisStatus = (SystemStatus) i.next();
@@ -73,6 +79,9 @@ public final class ProcessSystem extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandClearGraphData(ActionContext context) {
+    if (!"127.0.0.1".equals(context.getIpAddress())) {
+      return ("PermissionError");
+    }
     clearGraphData(context);
     deleteGraphFiles(context);
     return "ProcessOK";
@@ -133,6 +142,9 @@ public final class ProcessSystem extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandViewCron(ActionContext context) {
+    if (!"127.0.0.1".equals(context.getIpAddress())) {
+      return ("PermissionError");
+    }
     try {
       CrontabEntryBean[] entryList = CrontabEntryDAO.getInstance().findAll();
       //ArrayList entries = (ArrayList)Arrays.asList(entryList);
@@ -171,6 +183,9 @@ public final class ProcessSystem extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandPrecompileJSPs(ActionContext context) {
+    if (!"127.0.0.1".equals(context.getIpAddress())) {
+      return ("PermissionError");
+    }
     File baseDir = new File(context.getServletContext().getRealPath("/"));
     precompileDirectory(context, baseDir, "/");
     return "ProcessOK";
