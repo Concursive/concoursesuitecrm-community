@@ -48,6 +48,7 @@ public class TicketList extends ArrayList implements SyncableList {
   //search filters
   private String searchText = "";
 
+
   /**
    *  Constructor for the TicketList object
    *
@@ -143,6 +144,16 @@ public class TicketList extends ArrayList implements SyncableList {
    */
   public void setAssignedTo(int assignedTo) {
     this.assignedTo = assignedTo;
+  }
+
+
+  /**
+   *  Sets the assignedTo attribute of the TicketList object
+   *
+   *@param  assignedTo  The new assignedTo value
+   */
+  public void setAssignedTo(String assignedTo) {
+    this.assignedTo = Integer.parseInt(assignedTo);
   }
 
 
@@ -885,7 +896,6 @@ public class TicketList extends ArrayList implements SyncableList {
         pst.setTimestamp(++i, adjustedDate);
       }
     }
-
 
     if (searchText != null && !(searchText.equals(""))) {
       pst.setString(++i, searchText);
