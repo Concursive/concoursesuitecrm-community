@@ -378,9 +378,57 @@ public final class CampaignManagerMessage extends CFSModule {
     }
 
     if (errorMessage == null) {
-	 return "PreviewOK";
-      } else {
-	 return "PreviewOK";
+      return "PreviewOK";
+    } else {
+      return "PreviewOK";
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandClone(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-messages-add"))) {
+      return ("PermissionError");
+    }
+
+    addModuleBean(context, "View Messages", "Clone Message");
+    Exception errorMessage = null;
+
+    String passedId = context.getRequest().getParameter("id");
+
+    Connection db = null;
+    Message newMessage = null;
+    try {
+      db = this.getConnection(context);
+      newMessage = new Message(db, passedId);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    String submenu = context.getRequest().getParameter("submenu");
+    if (submenu == null) {
+      submenu = (String) context.getRequest().getAttribute("submenu");
+    }
+    if (submenu == null) {
+      submenu = "ManageMessages";
+    }
+    context.getRequest().setAttribute("submenu", submenu);
+    addModuleBean(context, submenu, "Modify Message");
+
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("Message", newMessage);
+      return ("AddOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     }
   }
 

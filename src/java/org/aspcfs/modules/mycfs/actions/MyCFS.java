@@ -975,10 +975,10 @@ public final class MyCFS extends CFSModule {
 
     if (errorMessage == null) {
       context.getRequest().setAttribute("NewsList", newsList);
-      return ("HomeOK");
+      return "HomeOK";
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return "SystemError";
     }
   }
 
