@@ -559,6 +559,11 @@ public class ControllerServlet extends HttpServlet
     if (System.getProperty("DEBUG") != null) {
       System.out.println("> Looking up resource: " + lookup);
     }
+    /*if (request.getParameter("moduleAction") != null) {
+      String actualActionPath = (String) request.getParameter("moduleAction");
+      action = (Action) actions.get(actualActionPath);
+      System.out.println("MODULE ACTION FOUND -- > REDIRECTING .... TO " + actualActionPath);
+    }*/
     Resource resource = action.getResource(lookup);
     if (resource != null) {
       if ((resource.getXSL() != null) && (resource.getXSL().length() > 0)) {
