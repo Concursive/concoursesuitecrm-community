@@ -265,13 +265,14 @@ public class Setup extends CFSModule {
     //Display a default recommended file path
     if (path == null) {
       if (os.startsWith("Windows")) {
-        path = "c:\\dh_crm\\fileLibrary\\";
-      //TODO: Add Mac path
-      //} else if (os.startsWith("Mac")) {
-        
+        //Windows
+        path = "c:\\DarkHorse\\crm\\fileLibrary\\";
+      } else if (os.startsWith("Mac")) {
+        //Mac OSX
+        path = "/Library/Application Support/Dark Horse/crm/fileLibrary/";
       } else {
         //Linux, Solaris, SunOS, OS/2, HP-UX, AIX, FreeBSD, etc
-        path = "/var/lib/dh_crm/fileLibrary/";
+        path = "/var/lib/darkhorse/crm/fileLibrary/";
       }
     }
     context.getRequest().setAttribute("fileLibrary", path);
