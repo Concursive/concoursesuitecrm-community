@@ -47,6 +47,8 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
       DataRecord thisRecord = mappings.createDataRecord(thisOpp, "insert");
       writer.save(thisRecord);
       
+              logger.info("ImportOpportunities (Calls)-> Inserting Calls for " + thisOpp.getId());
+      
               CallList callList = new CallList();
               callList.setOppId(thisOpp.getId());
               callList.buildList(db);
