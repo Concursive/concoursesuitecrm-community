@@ -191,5 +191,18 @@
       <property>entered</property>
       <property>enabled</property>
     </map>
+    <map class="com.darkhorseventures.cfsbase.Call" id="call">
+      <property alias="guid">id</property>
+      <property lookup="account">orgId</property>
+      <property lookup="contact">contactId</property>
+      <property lookup="lookupCallTypes">callTypeId</property>
+      <property lookup="opportunity">oppId</property>
+      <property>length</property>
+      <property>subject</property>
+      <property>notes</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>alertDate</property>
+    </map>
   </mappings>
 </CFSDatabaseReader>

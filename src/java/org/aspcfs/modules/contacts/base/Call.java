@@ -7,6 +7,7 @@ import org.theseus.actions.*;
 import java.sql.*;
 import java.text.*;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.utils.DateUtils;
 
 /**
  *  Description of the Class
@@ -65,45 +66,15 @@ public class Call extends GenericBean {
    *@since
    */
   public Call(Connection db, String callId) throws SQLException {
-
-    Statement st = null;
-    ResultSet rs = null;
-
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT c.*, t.*, " +
-        "e.namefirst as efirst, e.namelast as elast, " +
-        "m.namefirst as mfirst, m.namelast as mlast, " +
-        "ct.namefirst as ctfirst, ct.namelast as ctlast " +
-        "FROM call_log c " +
-        "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
-        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code), " +
-        "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
-        "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
-        "WHERE c.enteredby = a1.user_id " +
-        "AND c.modifiedby = a2.user_id ");
-
-    if (callId != null && !callId.equals("")) {
-      sql.append("AND call_id = " + callId + " ");
-    } else {
-      throw new SQLException("Call ID not specified.");
-    }
-
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
-    if (rs.next()) {
-      buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
-      throw new SQLException("Call record not found.");
-    }
-    rs.close();
-    st.close();
+          queryRecord(db, Integer.parseInt(callId));
   }
   
   public Call(Connection db, int callId) throws SQLException {
-
+          queryRecord(db, callId);
+  }
+          
+          
+  public void queryRecord(Connection db, int callId) throws SQLException {
     Statement st = null;
     ResultSet rs = null;
 
@@ -197,6 +168,8 @@ public class Call extends GenericBean {
    *@param  tmp  The new alertDate value
    */
   public void setAlertDate(String tmp) {
+    this.alertDate = DateUtils.parseDateString(tmp);
+    /**
     try {
       java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
       alertDate = new java.sql.Date(new java.util.Date().getTime());
@@ -204,6 +177,7 @@ public class Call extends GenericBean {
     } catch (Exception e) {
       alertDate = null;
     }
+    */
   }
 
 
@@ -247,7 +221,7 @@ public class Call extends GenericBean {
    *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
-    this.entered = java.sql.Timestamp.valueOf(tmp);
+    this.entered = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -257,7 +231,7 @@ public class Call extends GenericBean {
    *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
-    this.modified = java.sql.Timestamp.valueOf(tmp);
+    this.modified = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -393,6 +367,9 @@ public class Call extends GenericBean {
     this.enteredBy = tmp;
   }
 
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
 
   /**
    *  Sets the ModifiedBy attribute of the Call object
@@ -402,6 +379,10 @@ public class Call extends GenericBean {
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
+  }
+  
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
   }
 
 
@@ -698,9 +679,21 @@ public class Call extends GenericBean {
 
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, this.getOrgId());
-    pst.setInt(++i, this.getContactId());
-    pst.setInt(++i, this.getOppId());
+        if (this.getOrgId() > 0) {
+                pst.setInt(++i, this.getOrgId());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
+        if (this.getContactId() > 0) {
+                pst.setInt(++i, this.getContactId());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
+        if (this.getOppId() > 0) {
+                pst.setInt(++i, this.getOppId());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
     pst.setInt(++i, this.getCallTypeId());
     pst.setInt(++i, this.getLength());
     pst.setString(++i, this.getSubject());
@@ -850,8 +843,17 @@ public class Call extends GenericBean {
     //call_log table
     id = rs.getInt("call_id");
     orgId = rs.getInt("org_id");
+    if (rs.wasNull()) {
+            orgId = -1;
+    }
     contactId = rs.getInt("contact_id");
+    if (rs.wasNull()) {
+            contactId = -1;
+    }    
     oppId = rs.getInt("opp_id");
+    if (rs.wasNull()) {
+            oppId = -1;
+    }
     length = rs.getInt("length");
     subject = rs.getString("subject");
     notes = rs.getString("notes");

@@ -29,7 +29,8 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
     //writer.setAutoCommit(false);
     OpportunityList oppList = new OpportunityList();
     oppList.buildList(db);
-    mappings.saveList(writer, oppList, "insert");
+    saveOppList(db, oppList);
+    //mappings.saveList(writer, oppList, "insert");
     //writer.commit();
     
     //update owners
@@ -45,7 +46,7 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
       Opportunity thisOpp = (Opportunity)opps.next();
       DataRecord thisRecord = mappings.createDataRecord(thisOpp, "insert");
       writer.save(thisRecord);
-      /**
+      
               CallList callList = new CallList();
               callList.setOppId(thisOpp.getId());
               callList.buildList(db);
@@ -56,7 +57,6 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
                       DataRecord thisCallRecord = mappings.createDataRecord(thisCall, "insert");
                       writer.save(thisCallRecord);
               }
-       */
       
     }
   }
