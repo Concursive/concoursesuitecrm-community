@@ -7,22 +7,7 @@
 <link rel="stylesheet" href="css/template0<%= User.getBrowserIdAndOS() %>.css" type="text/css">
 <link rel="stylesheet" href="css/template0.css" type="text/css">
 
-<script type="text/javascript">
-function loadFrames(){
-     if(document.getElementById){
-     
-        <% if ("true".equals((String)getServletConfig().getServletContext().getAttribute("ForceSSL"))) { %>
-            parent.frames["middleframe"].document.location.href = "https://<%= request.getServerName() %>/loadmiddleframe.jsp";
-            parent.frames["bottomframe"].document.location.href = "https://<%= request.getServerName() %>/loadbottomframe.jsp";
-        <%} else {%>
-            parent.frames["middleframe"].document.location.href = "loadmiddleframe.jsp";
-            parent.frames["bottomframe"].document.location.href = "loadbottomframe.jsp";
-        <%}%>
-     }
-   }
-</script>
-
-<body onLoad="javascript:loadFrames();" id="body">
+<body id="body">
    <%=Dialog.getFrameHtml(1)%>
    <%if(Dialog.getSynchFrameCounter()==0){
       session.removeAttribute("Dialog");

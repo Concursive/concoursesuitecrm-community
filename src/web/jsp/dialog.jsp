@@ -11,12 +11,14 @@
     
         <% if ("true".equals((String)getServletConfig().getServletContext().getAttribute("ForceSSL"))) { %>
           <frame name="topframe" src="https://<%= request.getServerName() %>/loadframes.jsp">
-          <frame marginheight="0" name="middleframe" src="https://<%= request.getServerName() %>/error_user.jsp">
-          <frame name="bottomframe" src="https://<%= request.getServerName() %>/error_user.jsp">          
+          
+          <frame marginheight="0" name="middleframe" src="https://<%= request.getServerName() %>/loadmiddleframe.jsp">
+          <frame name="bottomframe" src="https://<%= request.getServerName() %>/loadbottomframe.jsp">          
         <%} else {%>
           <frame name="topframe" src="loadframes.jsp">
-          <frame marginheight="0" name="middleframe" src="">
-          <frame name="bottomframe" src="">
+          
+          <frame marginheight="0" name="middleframe" src="loadmiddleframe.jsp">
+          <frame name="bottomframe" src="loadbottomframe.jsp">
         <%}%>
     </frameset>
   </html>
