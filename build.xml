@@ -665,6 +665,7 @@
         user="${GATEKEEPER.USER}"
         password="${GATEKEEPER.PASSWORD}"
         servletJar="${env.CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"
+        webPath="${env.CFS_HOME}"
         baseFile="${src.sql.dir}${fs}${SITE.DBTYPE}${fs}upgrade${fs}${arg1}">
     </upgradeDatabase>
   </target>

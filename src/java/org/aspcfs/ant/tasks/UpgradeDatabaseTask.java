@@ -26,6 +26,8 @@ import org.aspcfs.utils.StringUtils;
  *      Exp $
  */
 public class UpgradeDatabaseTask extends Task {
+
+  public final static String fs = System.getProperty("file.separator");
   private String sitecode = null;
   private String driver = null;
   private String url = null;
@@ -33,6 +35,7 @@ public class UpgradeDatabaseTask extends Task {
   private String password = null;
   private String baseFile = null;
   private String servletJar = null;
+  private String webPath = null;
 
 
   /**
@@ -106,6 +109,16 @@ public class UpgradeDatabaseTask extends Task {
 
 
   /**
+   *  Sets the webPath attribute of the UpgradeDatabaseTask object
+   *
+   *@param  tmp  The new webPath value
+   */
+  public void setWebPath(String tmp) {
+    this.webPath = tmp;
+  }
+
+
+  /**
    *  This method is called by Ant when the upgradeDatabaseTask is used
    *
    *@exception  BuildException  Description of the Exception
@@ -115,6 +128,7 @@ public class UpgradeDatabaseTask extends Task {
     if ("\\".equals(fsEval)) {
       fsEval = "\\\\";
       servletJar = StringUtils.replace(servletJar, "\\", "\\\\");
+      webPath = StringUtils.replace(webPath, "\\", "\\\\");
     }
     System.out.println("Checking databases to upgrade");
     try {
@@ -133,11 +147,11 @@ public class UpgradeDatabaseTask extends Task {
       ce.setDriver(driver);
       Connection db = sqlDriver.getConnection(ce);
       //If a script exists for the gatekeeper, run it
-      executeScript(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : "gk.bsh"), fsEval);
+      executeScript(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : "gk.bsh"), fsEval, null);
       executeSql(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : "gk.sql"), fsEval);
       //Run the rest of the databases
       PreparedStatement pst = db.prepareStatement(
-          "SELECT DISTINCT dbhost, dbuser, dbpw, driver " +
+          "SELECT DISTINCT dbhost, dbname, dbuser, dbpw, driver " +
           "FROM sites " +
           "WHERE sitecode = ? ");
       pst.setString(1, sitecode);
@@ -145,6 +159,7 @@ public class UpgradeDatabaseTask extends Task {
       while (rs.next()) {
         HashMap siteInfo = new HashMap();
         siteInfo.put("url", rs.getString("dbhost"));
+        siteInfo.put("dbName", rs.getString("dbname"));
         siteInfo.put("user", rs.getString("dbuser"));
         siteInfo.put("password", rs.getString("dbpw"));
         siteInfo.put("driver", rs.getString("driver"));
@@ -165,7 +180,7 @@ public class UpgradeDatabaseTask extends Task {
         ce.setDriver((String) siteInfo.get("driver"));
         db = sqlDriver.getConnection(ce);
         //Try to run a specified bean shell script if found
-        executeScript(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : ".bsh"), fsEval);
+        executeScript(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : ".bsh"), fsEval, (String) siteInfo.get("dbName"));
         //Try to run the specified sql file
         executeSql(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : ".sql"), fsEval);
         sqlDriver.free(db);
@@ -180,16 +195,21 @@ public class UpgradeDatabaseTask extends Task {
   /**
    *  Executes the specified BeanShell script on the given database connection
    *
-   *@param  db          Description of the Parameter
-   *@param  scriptFile  Description of the Parameter
+   *@param  db             Description of the Parameter
+   *@param  scriptFile     Description of the Parameter
+   *@param  fsEval         Description of the Parameter
+   *@param  dbName         Description of the Parameter
+   *@exception  Exception  Description of the Exception
    */
-  private void executeScript(Connection db, String scriptFile, String fsEval) throws Exception {
+  private void executeScript(Connection db, String scriptFile, String fsEval, String dbName) throws Exception {
     if (scriptFile.endsWith(".bsh") && new File(scriptFile).exists()) {
       Interpreter script = new Interpreter();
       script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "aspcfs.jar\")");
       script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "darkhorseventures.jar\")");
       script.eval("addClassPath(\"" + servletJar + "\")");
       script.set("db", db);
+      script.set("fileLibraryPath", webPath);
+      script.set("dbFileLibraryPath", webPath + fs + "WEB-INF" + fs + "fileLibrary" + fs + dbName);
       System.out.println("Executing: " + scriptFile);
       script.source(scriptFile);
     }
@@ -201,6 +221,7 @@ public class UpgradeDatabaseTask extends Task {
    *
    *@param  db             Description of the Parameter
    *@param  sqlFile        Description of the Parameter
+   *@param  fsEval         Description of the Parameter
    *@exception  Exception  Description of the Exception
    */
   private void executeSql(Connection db, String sqlFile, String fsEval) throws Exception {
