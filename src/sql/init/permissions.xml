@@ -102,7 +102,7 @@
       <permission name="projects-enterprise" attributes="v---" description="Enterprise View"/>
       <permission name="projects-projects" attributes="vaed" description="Project Records"/>
     </category>
-    <category id="8" name="Tickets" folders="true" lookups="true" reports="true">
+    <category id="8" name="Tickets" folders="true" lookups="true" reports="true" scheduledEvents="true" objectEvents="true" categories="true">
       <lookup constantId="1" class="lookupList" table="lookup_ticketsource" description="Ticket Source"/>
       <lookup constantId="2" class="lookupList" table="ticket_severity" description="Ticket Severity"/>
       <lookup constantId="3" class="lookupList" table="ticket_priority" description="Ticket Priority"/>
