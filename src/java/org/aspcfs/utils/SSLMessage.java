@@ -75,24 +75,37 @@ public class SSLMessage {
     }
 
     try {
-      //Prepare SSL... the host key needs to be in the keyring
       System.setProperty("java.protocol.handler.pkgs", 
         "com.sun.net.ssl.internal.www.protocol");
-      Class classFactory = Class.forName("com.sun.net.ssl.internal.ssl.Provider");
-      if( (null != classFactory) && (null == Security.getProvider("SunJSSE")) )
-          Security.addProvider((Provider)classFactory.newInstance());
       if (System.getProperty("DEBUG") != null) {
         System.out.println("SSLMessage-> Keystore: " + keystore + ":" + keystorePassword);
       }
       
-      SSLContext sslContext = SSLContext.getInstance("TLS");
-      KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
-      KeyStore keyStore = KeyStore.getInstance("JKS");
       char[] passphrase = keystorePassword.toCharArray();
-      
+      KeyStore keyStore = KeyStore.getInstance("JKS");
       keyStore.load(new FileInputStream(keystore), passphrase);
+      
+      if (keyStore.containsAlias("aspcfs") == false) {
+        System.out.println("Cannot locate identity.");
+      }
+
+
+      
+      //Holds this peer's private key
+      KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
       keyManagerFactory.init(keyStore, passphrase);
-      sslContext.init(keyManagerFactory.getKeyManagers(), null, null);
+      KeyManager[] arKeyManager = keyManagerFactory.getKeyManagers();
+
+      
+      //Holds other peers' certificates
+      TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+      trustManagerFactory.init(keyStore);
+      TrustManager[] arTrustManager = trustManagerFactory.getTrustManagers();
+
+      SSLContext sslContext = SSLContext.getInstance("SSL");
+      SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+      sslContext.init(arKeyManager, arTrustManager, secureRandom);
+
       SSLSocketFactory factory = sslContext.getSocketFactory();
       
       /* SSLSocketFactory factory =
