@@ -24,6 +24,7 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     this.writer = writer; 
     this.mappings = mappings;
+    boolean processOK = true;
     
     logger.info("ImportOpportunities-> Inserting Opps");
     OpportunityList oppList = new OpportunityList();
