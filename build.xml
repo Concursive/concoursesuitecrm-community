@@ -411,9 +411,6 @@
         <path refid="cfs2.classpath"/>
       </classpath>
       <transaction src="${src.sql.dir}/${GATEKEEPER.DBTYPE}/new_gatekeeper.sql"/>
-      <transaction>
-        INSERT INTO events (minute, task, extrainfo) values ('*/5', 'org.aspcfs.apps.notifier.Notifier', '${CFS_HOME}${fs}WEB-INF${fs}notifier.xml');
-      </transaction>
     </sql>
   </target>
   
