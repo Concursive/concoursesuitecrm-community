@@ -34,3 +34,8 @@ psql ${DB} -f ${DB}-tasklink_contact.sql
 psql ${DB} -f ${DB}-tasklink_ticket.sql
 psql ${DB} -f ${DB}-tasklink_project.sql
 
+# The task sequence needs to be updated since the restore script doesn't
+# update the sequence when new records are inserted
+psql ${DB} -c "SELECT max(task_id) FROM task"
+echo psql ${DB} -c "SELECT setval('task_task_id_seq', x)"
+
