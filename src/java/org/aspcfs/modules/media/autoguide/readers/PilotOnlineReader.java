@@ -559,13 +559,13 @@ public class PilotOnlineReader implements DataReader {
     }
     
     //Local Debug
-	if (!processOK) {
-	Iterator logData = processLog.iterator();
-	while (logData.hasNext()) {
-	  String logItem = (String)logData.next();
-	  System.out.println(logItem);
-	}
-	}
+    if (System.getProperty("DEBUG") != null) {
+      Iterator logData = processLog.iterator();
+      while (logData.hasNext()) {
+        String logItem = (String)logData.next();
+        System.out.println(logItem);
+      }
+    }
 
     return processOK;
   }
