@@ -5,7 +5,7 @@
    Make sure to override all preferences for the current system.
    Root/Administrator access may be required
 -->
-<project name="CFS" default="init" basedir=".">
+<project name="CFS" default="usage" basedir=".">
   
   <!-- enable environment variables -->
   <property environment="env"/>
@@ -29,8 +29,27 @@
   <property name="build.jsp.dir" value="${build.dir}${fs}jsp"/>
   <property name="build.jspclasses.dir" value="${build.dir}${fs}jspclasses"/>
   <property name="build.sql.dir" value="${build.dir}${fs}sql"/>
+  <property name="build.docs.dir" value="${build.dir}${fs}docs"/>
   <property name="dist.dir" value="${base.dir}${fs}dist"/>
 
+  <!-- Typical usage -->
+  <target name="usage">
+    <echo message="Further instructions will appear if settings are missing"/>
+    <echo message=""/>
+    <echo message="ant init: verify system environment needed by install"/>
+    <echo message="ant compile: compile all .java source files"/>
+    <echo message="ant build: create .jars for compiled classes"/>
+    <echo message="ant deploy: compile, build, copy, and configure web application"/>
+    <echo message="ant installgk: create tables for gatekeeper database"/>
+    <echo message="ant installdb: create tables, insert base records and permissions into new database"/>
+    <echo message="    install.database: just create the tables and base data"/>
+    <echo message="    install.permissions: just install the permissions"/>
+    <echo message="    install.addsite: just add a site to the gatekeeper database"/>
+    <echo message="ant test: compile deployed JSPs to check for errors"/>
+    <echo message="ant clean: delete the temporary build folder used by the install"/>
+    <echo message="ant docs: generate JavaDocs for all packages"/>
+  </target>
+  
   <!-- Environment variables must be set before continuing -->
   <target name="init.environment">
     <tstamp><format property="date.short" pattern="yyyyMMdd-HHmmss"/></tstamp>
@@ -105,19 +124,19 @@
     <property name="KEYSTORE.ORGANIZATION" value="ASPCFS.org"/>
     <property name="KEYSTORE.COUNTRY" value="US"/>
     <!-- Gatekeeper database -->
-    <property name="GATEKEEPER.DBTYPE" value="postgresql"/>
-    <property name="GATEKEEPER.DRIVER" value="org.postgresql.Driver"/>
-    <property name="GATEKEEPER.URL" value="jdbc:postgresql://127.0.0.1:5432/cfs2gk"/>
-    <property name="GATEKEEPER.USER" value="postgres"/>
+    <property name="GATEKEEPER.APPCODE" value=""/>
+    <property name="GATEKEEPER.DBTYPE" value=""/>
+    <property name="GATEKEEPER.DRIVER" value=""/>
+    <property name="GATEKEEPER.URL" value=""/>
+    <property name="GATEKEEPER.USER" value=""/>
     <property name="GATEKEEPER.PASSWORD" value=""/>
-    <property name="GATEKEEPER.APPCODE" value="cfs"/>
     <!-- Additional sites/databases -->
-    <property name="SITE.DBTYPE" value="${MSSQL}"/>
-    <property name="SITE.DRIVER" value="com.microsoft.jdbc.sqlserver.SQLServerDriver"/>
-    <property name="SITE.URL" value="jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs;SelectMethod=cursor"/>
-    <property name="SITE.USER" value="username"/>
-    <property name="SITE.PASSWORD" value="password"/>
-    <property name="SITE.APPCODE" value="cfs"/>
+    <property name="SITE.APPCODE" value=""/>
+    <property name="SITE.DBTYPE" value=""/>
+    <property name="SITE.DRIVER" value=""/>
+    <property name="SITE.URL" value=""/>
+    <property name="SITE.USER" value=""/>
+    <property name="SITE.PASSWORD" value=""/>
     <!-- External Servers -->
     <property name="MAILSERVER" value="127.0.0.1"/>
     <property name="FAXSERVER" value="127.0.0.1"/>
@@ -348,8 +367,8 @@
   
   
   <!-- Install the gatekeeper to store all of the database references -->
-  <target name="install.gatekeeper" depends="init">
-    <echo message="Attempting to create gatekeeper tables and permissions, the gatekeeper user and database must already have been created at the database."/>
+  <target name="installgk" depends="init">
+    <echo message="Attempting to create gatekeeper tables and database permissions, the gatekeeper user and database must already have been created at the database."/>
     <sql
         driver="${GATEKEEPER.DRIVER}"
         url="${GATEKEEPER.URL}"
@@ -362,14 +381,27 @@
     </sql>
   </target>
   
-  <!-- Prepare files for any database type -->
-  <target name="install.prepare.init" depends="init">
+  <target name="install.prepare.dbname">
     <!-- Ask for the database name -->
-    <input message="Please enter new database name: " addproperty="DATABASE.NAME"/>
+    <input message="Enter database name: " addproperty="DATABASE.NAME"/>
     <!-- Display all information about database here, except password -->
-    
+  
+  </target>
+  
+  <!-- Ask about gatekeeper record -->
+  <target name="install.gatekeeper.init" depends="init">
+    <input message="Add a gatekeeper site record? "
+           validargs="y,n"
+           addproperty="SKIP.GATEKEEPER"/>
+    <condition property="DATABASE.SKIP_GATEKEEPER">
+      <equals arg1="n" arg2="${SKIP.GATEKEEPER}"/>
+    </condition>
+  </target>
+  
+  <!-- Prepare files for any database type -->
+  <target name="install.prepare.init" depends="init,install.prepare.dbname">
     <!-- Verify database can be overwritten -->
-    <input message="All data is going to be deleted from '${DATABASE.NAME}' if it exists, continue? "
+    <input message="The database '${DATABASE.NAME}' will be modified if it exists, continue? "
            validargs="y,n"
            addproperty="DATABASE.DELETE"/>
     <condition property="ABORT">
@@ -383,9 +415,6 @@
     <condition property="DBTYPE.MSSQL">
       <equals arg1="${SITE.DBTYPE}" arg2="${MSSQL}" casesensitive="false" trim="true"/>
     </condition>
-    <!-- TODO: Update the SITE.URL by inserting or merging the DATABASE.NAME -->
-    
-    
     <!-- Copy template files to be used -->
     <delete dir="${build.sql.dir}" failonerror="false"/>
     <mkdir dir="${build.sql.dir}"/>
@@ -397,7 +426,7 @@
   </target>
   
   <!-- Prepare the PostgreSQL files -->
-  <target name="install.prepare.postgresql" depends="install.prepare.init" if="${DBTYPE.POSTGRESQL}">
+  <target name="install.check.postgresql" depends="install.prepare.init" if="DBTYPE.POSTGRESQL">
     <replace dir="${build.sql.dir}" token="@TRUE@" value="true">
       <include name="*.sql"/>
     </replace>
@@ -407,7 +436,7 @@
   </target>
   
   <!-- Prepare the MicrosoftSQL files -->
-  <target name="install.prepare.mssql" depends="install.prepare.init" if="${DBTYPE.MSSQL}">
+  <target name="install.check.mssql" depends="install.prepare.init" if="DBTYPE.MSSQL">
     <replace dir="${build.sql.dir}" token="@TRUE@" value="1">
       <include name="*.sql"/>
     </replace>
@@ -416,18 +445,18 @@
     </replace>
   </target>
   
-  <target name="install.prepare" depends="install.prepare.postgresql,install.prepare.mssql">
+  <target name="install.prepare" depends="install.check.postgresql,install.check.mssql">
     <echo message="SQL files prepared for database type: ${SITE.DBTYPE}"/>
   </target>
   
-  <target name="install.database" depends="install.prepare">
+  <target name="install.database" depends="init,install.prepare">
     <echo message="Building database"/>
     <!-- TODO: Optionally create database -->
     
     <!-- Create database and initialize data -->
     <sql
         driver="${SITE.DRIVER}"
-        url="${SITE.URL}"
+        url="${SITE.URL}${DATABASE.NAME}"
         userid="${SITE.USER}"
         password="${SITE.PASSWORD}">
       <classpath>
@@ -470,6 +499,69 @@
     </sql>
     <delete dir="${build.sql.dir}" failonerror="false"/>
   </target>
+  
+  <!-- Install permissions -->
+  <target name="install.permissions" depends="init,install.prepare">
+    <echo message="Process file: ${src.sql.dir}${fs}init${fs}permissions.xml"/>
+    <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/darkhorseventures.jar"/>
+      </classpath>
+      <sysproperty key="processConfigFile" value="${src.sql.dir}${fs}init${fs}permissions.xml"/>
+      <sysproperty key="driver" value="${SITE.DRIVER}"/>
+      <sysproperty key="url" value="${SITE.URL}${DATABASE.NAME}"/>
+      <sysproperty key="user" value="${SITE.USER}"/>
+      <arg value="${src.sql.dir}${fs}init${fs}permissions-dataimport.xml"/>
+    </java>
+  </target>
+  
+  <target name="install.addsite" depends="init,install.prepare.dbname,install.gatekeeper.init" unless="DATABASE.SKIP_GATEKEEPER">
+    <input message="Please enter the virtual host URL for this site, ex &lt;site&gt;.aspcfs.org: " 
+           addproperty="SITE.VIRTUAL_HOST"/>
+    <sql
+        driver="${GATEKEEPER.DRIVER}"
+        url="${GATEKEEPER.URL}"
+        userid="${GATEKEEPER.USER}"
+        password="${GATEKEEPER.PASSWORD}">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+      </classpath>
+      <![CDATA[
+        INSERT INTO sites (sitecode, vhost, dbhost, dbname, dbuser, dbpw, driver) 
+        VALUES ('${SITE.APPCODE}', '${SITE.VIRTUAL_HOST}', '${SITE.URL}${DATABASE.NAME}', '${DATABASE.NAME}', '${SITE.USER}', '${SITE.PASSWORD}', '${SITE.DRIVER}');
+      ]]>
+    </sql>
+  </target>
+  
+  <target name="installdb" depends="install.database,install.permissions,install.addsite">
+  
+  </target>
+  
+  <!-- Generate Java Docs -->
+  <target name="docs" description="Generate JavaDocs" depends="compile">
+    <mkdir dir="${build.docs.dir}"/>
+    <javadoc sourcepath="${src.classes.dir}"
+          packagenames="com.*,org.*"
+          destdir="${build.docs.dir}"
+          excludepackagenames="javax.servlet">
+      <tag name="created" description="Date file was created"/>
+      <header>Copyright 2001-2003 Dark Horse Ventures, License Applies</header>
+      <footer>Copyright 2001-2003 Dark Horse Ventures</footer>
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <!--
+        <pathelement location="${SRC_LIB}/aspcfs.jar"/>
+        -->
+      </classpath>
+    </javadoc>
+  </target>
+  
+  
+  
+  
+  
   
   
   
@@ -620,29 +712,8 @@
     <echo message="Cleaning up files"/>
   </target>
 
-  <!-- Generate Java Docs -->
-  <target name="docs" description="Install Documentation files to site." 
-        depends="compile">
-    <echo message="Installing Class Documentation files"/>
-    <echo message=" Source: ${SRC_APP}"/>
-    <echo message=" Destination: ${CFS_HOME}"/>
-    <mkdir dir="${CFS_HOME}/docs"/>
-    <echo message=" JavaDocs Source: ${SRC_CLASSES}"/>
-    <javadoc sourcepath="${SRC_CLASSES}"
-          packagenames="com.*,org.*"
-          destdir="${CFS_HOME}/docs"
-          excludepackagenames="javax.servlet">
-      <header>Copyright 2001-2003 Dark Horse Ventures</header>
-      <footer>Copyright 2001-2003 Dark Horse Ventures</footer>
-      <classpath>
-        <path refid="cfs2.classpath"/>
-        <pathelement location="${SRC_LIB}/darkhorseventures.jar"/>
-      </classpath>
-    </javadoc>
-  </target>
-  
   <!-- Test code -->
-  <target name="installdb" description="Creates a new database">
+  <target name="installdb.old" description="Creates a new database">
     <echo message="Building database"/>
     
     <!-- Prepare files for any database type -->
