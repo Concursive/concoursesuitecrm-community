@@ -97,8 +97,10 @@
         <srcfiles dir="${SRC}">
           <include name="bin/com/darkhorseventures/**/*.java" />
           <include name="bin/notifier" />
+          <include name="bin/html2ps" />
           <include name="bin/dataImport" />
           <include name="bin/dataImport-config.xml" />
+          <include name="bin/CFSDatabaseReader.xml" />
           <include name="scripts/env.*" />
         </srcfiles>
     </uptodate>
@@ -294,12 +296,16 @@ determined user is ${USER}
       <fileset dir="${SRC_BIN}">
         <include name="notifier" />
         <include name="html2ps" />
+        <include name="dataImport" />
+        <include name="dataImport-config.xml" />
+        <include name="CFSDatabaseReader.xml" />
       </fileset>
     </copy>
     <chmod perm="a+x" >
       <fileset dir="${DEST_BIN}">
         <include name="notifier" />
         <include name="html2ps" />
+        <include name="dataImport" />
       </fileset>
     </chmod>
     <copy todir="${DEST_BIN}\scripts" >
