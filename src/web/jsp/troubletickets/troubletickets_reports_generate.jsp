@@ -99,7 +99,7 @@ New Export
     <td colspan="4">
       <select name="sort">
         <option value="t.ticketid">Ticket ID</option>
-        <option value="t.org_id">Organization Name</option>
+        <option value="o.name">Organization Name</option>
       </select>
     </td>
   </tr>
