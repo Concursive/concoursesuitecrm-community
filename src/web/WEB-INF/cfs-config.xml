@@ -161,6 +161,7 @@
     <forward name="AddOK" resource="/leads_documents_upload.jsp" layout="nav"/>
     <forward name="UploadOK" resource="/LeadsDocuments.do?command=View"/>
     <forward name="AddVersionOK" resource="/leads_documents_upload_version.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/leads_documents_details.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
     <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
     <forward name="DeleteERROR" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>

@@ -1,7 +1,7 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OpportunityDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
-<jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
+<jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <a href="Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
@@ -27,63 +27,61 @@
   </tr>
   <tr>
     <td class="containerBack">
-      <a href="LeadsDocuments.do?command=Add&oppId=<%= OpportunityDetails.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br>
+      <a href="LeadsDocuments.do?command=View&oppId=<%= OpportunityDetails.getId() %>">Back to Documents List</a><br>
       <%= showAttribute(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
+    <td colspan="7">
+      <strong>All Versions of this File</strong>
+    </td>
+  </tr>
+  <tr class="pagedlist">
     <td width="10" align="center">Action</td>
-    <td colspan="2">Item</td>
+    <td>Item</td>
     <td>Size</td>
     <td>Version</td>
     <td>Submitted</td>
     <td>Sent By</td>
+    <td>D/L</td>
   </tr>
 <%
-  Iterator j = FileItemList.iterator();
+  Iterator versionList = FileItem.getVersionList().iterator();
   
-  if ( j.hasNext() ) {
-    int rowid = 0;
-    while (j.hasNext()) {
-      if (rowid != 1) rowid = 1; else rowid = 2;
-      FileItem thisFile = (FileItem)j.next();
+  int rowid = 0;
+  while (versionList.hasNext()) {
+    if (rowid != 1) rowid = 1; else rowid = 2;
+    FileItem thisVersion = (FileItem)versionList.next();
 %>      
     <tr class="row<%= rowid %>">
-      <td valign="middle" align="center" rowspan="2" nowrap>
-        <a href="LeadsCalls.do?command=Modify&fid=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>">Edit</a>|<a href="javascript:confirmDelete('LeadsDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>');">Del</a></td>
-      <td valign="top">
-        <a href="LeadsDocuments.do?command=Details&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></a>
+      <td rowspan="2" nowrap>
+        <a href="LeadsDocuments.do?command=Download&oppId=<%= OpportunityDetails.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>">Download</a>
       </td>
-      <td valign=center valign="middle" nowrap>
-        [<a href="LeadsDocuments.do?command=AddVersion&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
+      <td>
+        <a href="LeadsDocuments.do?command=Download&oppId=<%= OpportunityDetails.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>"><%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %></a>
       </td>
-      <td align="center" valign="middle" nowrap>
-        <%= thisFile.getRelativeSize() %> k&nbsp;
+      <td align="right">
+        <%= thisVersion.getRelativeSize() %> k&nbsp;
       </td>
-      <td align="center" valign="middle">
-        <%= thisFile.getVersion() %>&nbsp;
+      <td align="right">
+        <%= thisVersion.getVersion() %>&nbsp;
       </td>
-      <td valign="middle" nowrap>
-        <%= thisFile.getModifiedDateTimeString() %>
+      <td nowrap>
+        <%= thisVersion.getEnteredDateTimeString() %>
       </td>
-      <td valign="middle">
-        <dhv:username id="<%= thisFile.getEnteredBy() %>"/>
+      <td>
+        <dhv:username id="<%= thisVersion.getEnteredBy() %>"/>
+      </td>
+      <td align="right">
+        <%= thisVersion.getDownloads() %>
       </td>
     </tr>
     <tr class="row<%= rowid %>">
-      <td valign="middle" align="left" colspan="6">
-        <i><%= toHtml(thisFile.getSubject()) %></i>
+      <td colspan="6">
+        <i><%= thisVersion.getSubject() %></i>
       </td>
     </tr>
-<%}%>
-  </table>
-<%} else {%>
-    <tr class="containerBody">
-      <td colspan="7" valign="center">
-        No documents found.
-      </td>
-    </tr>
-  </table>
-<%}%>
+  <%}%>
+</table>
 </td>
 </tr>
 </table>

@@ -226,21 +226,21 @@ public final class LeadsDocuments extends CFSModule {
     }
   }
 
-/*
+  
   public String executeCommandDetails(ActionContext context) {
     Exception errorMessage = null;
-
-    String itemId = (String)context.getRequest().getParameter("fid");
-
     Connection db = null;
+    
+    String itemId = (String)context.getRequest().getParameter("fid");
+    
     try {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
-      FileItemList documents = new FileItemList();
+      /*FileItemList documents = new FileItemList();
       documents.setLinkModuleId(Constants.PIPELINE);
       documents.setLinkItemId(opportunityId);
       documents.buildList(db);
-      context.getRequest().setAttribute("FileItemList", documents);
+      context.getRequest().setAttribute("FileItemList", documents);*/
       
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.PIPELINE);
       thisItem.buildVersionList(db);
@@ -252,27 +252,28 @@ public final class LeadsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "View Opportunities", "");
+    addModuleBean(context, "View Opportunities", "Document Details");
     if (errorMessage == null) {
-      return ("ProjectCenterOK");
+      return ("DetailsOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
   }
   
+  
   public String executeCommandDownload(ActionContext context) {
     Exception errorMessage = null;
 
-    String id = (String)context.getRequest().getParameter("id");
     String itemId = (String)context.getRequest().getParameter("fid");
     String version = (String)context.getRequest().getParameter("ver");
     FileItem thisItem = null;
     
     Connection db = null;
+    int opportunityId = -1;
     try {
       db = getConnection(context);
-      int opportunityId = addOpportunity(context, db);
+      opportunityId = addOpportunity(context, db);
       thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.PIPELINE);
       if (version != null) {
         thisItem.buildVersionList(db);
@@ -293,7 +294,7 @@ public final class LeadsDocuments extends CFSModule {
       }
       
       itemToDownload.setEnteredBy(this.getUserId(context));
-      String filePath = this.getPath(context, "opportunities", itemToDownload.getProjectId()) + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename();
+      String filePath = this.getPath(context, "opportunities", opportunityId) + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename();
       
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);
@@ -304,7 +305,7 @@ public final class LeadsDocuments extends CFSModule {
         db = getConnection(context);
         itemToDownload.updateCounter(db);
       } else {
-        System.err.println("PMF-> Trying to send a file that does not exist");
+        System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
       }
     } catch (java.net.SocketException se) {
       //User either cancelled the download or lost connection
@@ -312,7 +313,7 @@ public final class LeadsDocuments extends CFSModule {
       errorMessage = e;
       System.out.println(e.toString());
     } finally {
-      this.freeConnection(context, db);
+      if (db != null) this.freeConnection(context, db);
     }
     
     addModuleBean(context, "View Opportunities", "");
@@ -322,10 +323,9 @@ public final class LeadsDocuments extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-
   }
 
-
+/*
   public String executeCommandModify(ActionContext context) {
     Exception errorMessage = null;
 
