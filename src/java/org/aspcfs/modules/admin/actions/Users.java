@@ -127,34 +127,50 @@ public final class Users extends CFSModule {
 
 		Connection db = null;
 		int resultCount = 0;
-		PreparedStatement pst = null;
-		StringBuffer sql = new StringBuffer();
+		String sql = null;
 		
 		int fromPerson = Integer.parseInt(context.getRequest().getParameter("ownerFrom"));
 		int toPerson = Integer.parseInt(context.getRequest().getParameter("ownerTo"));
-		
 		String whichTable = context.getRequest().getParameter("whichTable");
-
-		sql.append(
-				"UPDATE " + whichTable + " " +
-				"SET owner = ? " +
-				"WHERE owner = ? ");
+    
+    if ("ticket".equals(whichTable)) {
+      sql =
+        "UPDATE ticket " +
+        "SET assigned_to = ? " +
+        "WHERE assigned_to = ? AND closed IS NULL ";
+      
+    } else if ("activity".equals(whichTable)) {
+      sql =
+        "UPDATE project_assignments " +
+        "SET user_assign_id = ?, assign_date = CURRENT_TIMESTAMP " +
+        "WHERE user_assign_id = ? AND status_id NOT IN (SELECT code FROM lookup_project_status WHERE type in (3,4)) ";
+      
+    } else if ("opportunity-open".equals(whichTable)) {
+      sql =
+        "UPDATE opportunity " +
+        "SET owner = ? " +
+        "WHERE owner = ? AND closed IS NOT NULL ";
+        
+    } else if (whichTable != null && !whichTable.equals("")) {
+      sql =
+        "UPDATE " + whichTable + " " +
+        "SET owner = ? " +
+        "WHERE owner = ? ";
+    }
 
 		try {
-			db = this.getConnection(context);
-			
-			int i = 0;
-			pst = db.prepareStatement(sql.toString());
-			pst.setInt(++i, toPerson);
-			pst.setInt(++i, fromPerson);
-			
-			resultCount = pst.executeUpdate();
-			pst.close();
-		}
-		catch (SQLException e) {
+      if (sql != null) {
+        db = this.getConnection(context);
+        int i = 0;
+        PreparedStatement pst = db.prepareStatement(sql.toString());
+        pst.setInt(++i, toPerson);
+        pst.setInt(++i, fromPerson);
+        resultCount = pst.executeUpdate();
+        pst.close();
+      }
+		}	catch (SQLException e) {
 			errorMessage = e;
-		}
-		finally {
+		}	finally {
 			this.freeConnection(context, db);
 		}
 		
@@ -165,11 +181,12 @@ public final class Users extends CFSModule {
 			} else {
 				//FOR GRAPH CLEARING
 				
-				if ( whichTable.equals("opportunity") ) {
+				if ( whichTable.startsWith("opportunity") ) {
 					invalidateUserInMemory(fromPerson, context);
 					invalidateUserInMemory(toPerson, context);
 				}
 				
+        context.getRequest().setAttribute("count", "" + resultCount);
 				return("DoReassignOK");
 			}
 		}

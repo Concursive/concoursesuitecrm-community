@@ -428,7 +428,7 @@
     <forward name="UserUpdateOK" resource="/Users.do?command=UserDetails"/>
     <forward name="UserModifyOK" resource="/admin_usermodifyform.jsp" layout="nav"/>
     <forward name="ReassignOK" resource="/admin_reassign.jsp" layout="nav"/>
-    <forward name="DoReassignOK" resource="/Users.do?command=ListUsers"/>
+    <forward name="DoReassignOK" resource="/Users.do?command=Reassign"/>
     <forward name="NewAccountFirstOK" resource="/admin_newusercontact.jsp" layout="nav"/>
     <forward name="UserDetailsModifyOK" resource="/admin_userdetails.jsp" layout="nav"/>
   </action>  
