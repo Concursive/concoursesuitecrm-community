@@ -243,6 +243,10 @@
           depends="init,compile.delete"
           unless="classes.uptodate">
     <!-- Compile the code -->
+    <!--
+    <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on"
+           debug="true" debuglevel="lines, vars, source">
+    -->
     <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on">
       <classpath>
         <path refid="cfs2.classpath"/>
@@ -565,7 +569,7 @@
         <fileset dir= "${dist.dir}/cfs/WEB-INF/reports" includes="*.xml"/>
     </delete>
     <!-- Archive the folder -->
-    <war destfile="${dist.dir}/crm.war"
+    <war destfile="${dist.dir}/darkhorse.war"
          webxml="${src.web.dir}/WEB-INF/web.xml"
          basedir="${dist.dir}/cfs"
          compress="true"
@@ -901,6 +905,35 @@
       <arg value="${build.pref.dir}${fs}import-accountcontacts.xml"/>
     </java>
   </target>
+  
+  <!-- General Contact Importer based on CSV spec -->
+  <target name="import.accounts" depends="init">
+    <fail unless="arg1">Missing arg1: CSV file to import not specified</fail>
+    <fail unless="arg2">Missing arg2: Virtual Host to import to not specified</fail>
+    <fail unless="arg3">Missing arg3: Import code not specified</fail>
+    <mkdir dir="${build.pref.dir}"/>
+    <copy file="${pref.dir}/cfs/transfer/import-accounts.xml" todir="${build.pref.dir}" overwrite="true"/>
+    <replace file="${build.pref.dir}/import-accounts.xml"
+             token="@PROPERTY.FILE@" value="${pref.dir}/cfs/transfer/import-mappings.xml"/>
+    <replace file="${build.pref.dir}/import-accounts.xml"
+             token="@CSV.FILE@" value="${arg1}"/>
+    <replace file="${build.pref.dir}/import-accounts.xml"
+             token="@URL@" value="${arg2}"/>
+    <replace file="${build.pref.dir}/import-accounts.xml"
+             token="@CODE@" value="${arg3}"/>
+    <replace file="${build.pref.dir}/import-accounts.xml"
+             token="@SYSTEM.ID@" value="4"/>
+    <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${CFS_HOME}/WEB-INF/lib">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+      <arg value="${build.pref.dir}${fs}import-accounts.xml"/>
+    </java>
+  </target>
+  
   
   <!-- Test the XML HTTP API -->
   <target name="import.unittest" depends="init">
