@@ -1,5 +1,5 @@
 #!/bin/sh
-//bin/true; exec java -classpath .:lib/bsh.jar:build/lib/aspcfs.jar:/usr/java/tomcat/common/lib/servlet-api.jar bsh.Interpreter "$0" "$@"
+//bin/true; exec java -classpath .:/usr/local/tomcat/common/lib/servlet-api.jar:lib/bsh.jar:build/lib/aspcfs.jar:/usr/java/tomcat/common/lib/servlet-api.jar bsh.Interpreter "$0" "$@"
 
 /* Servlet API is required and may not be set */
 
