@@ -105,6 +105,9 @@ public class ConnectionPool implements Runnable {
     initializeCleanupTimer();
   }
 
+  public void setDriver(String tmp) {
+    this.driver = tmp;
+  }
 
   /**
    *  Sets the Url attribute of the ConnectionPool object

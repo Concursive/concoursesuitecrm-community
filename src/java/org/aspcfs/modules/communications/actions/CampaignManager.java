@@ -891,5 +891,9 @@ public final class CampaignManager extends CFSModule {
       return ("SystemError");
     }
   }
+  
+  public String executeCommandPrepareDownload(ActionContext context) {
+    return ("PrepareDownloadOK");
+  }
 }
 

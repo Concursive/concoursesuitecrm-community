@@ -57,23 +57,26 @@
 		Campaign campaign = (Campaign)j.next();
 	%>      
 	<tr class="containerBody">
-    <td width=8 valign=center nowrap class="row<%= rowid %>">
-      <%= (campaign.hasRun()?"&nbsp;":"<a href=\"javascript:confirmForward('/CampaignManager.do?command=Cancel&id=" + campaign.getId() +"&notify=true')\">Cancel</a>") %>
+    <td width="8" valign="center" align="center" nowrap class="row<%= rowid %>">
+      <%= (!campaign.hasRun() && !campaign.hasFiles()?"&nbsp":"") %>
+      <%= (campaign.hasRun() && !campaign.hasFiles()?"&nbsp":"") %>
+      <%= (campaign.hasRun()?"":"<a href=\"javascript:confirmForward('/CampaignManager.do?command=Cancel&id=" + campaign.getId() +"&notify=true')\">Cancel</a>") %>
+      <%= (campaign.hasFiles()?"<a href=\"/CampaignManager.do?command=PrepareDownload&id=" + campaign.getId() + "\">Download<br>Available</a>":"") %>
     </td>
-    <td valign=center width=40% nowrap class="row<%= rowid %>">
+    <td valign="center" width="40%" nowrap class="row<%= rowid %>">
       <a href="CampaignManager.do?command=Details&id=<%=campaign.getId()%>&reset=true"><%=toHtml(campaign.getName())%></a>
       <%= ("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id"))?" <font color=\"red\">(Added)</font>":"") %>
     </td>
-    <td valign=center width=20% nowrap class="row<%= rowid %>">
+    <td valign="center" width="20%" nowrap class="row<%= rowid %>">
       <%=toHtml(campaign.getActiveDateString())%>
     </td>
-    <td valign=center width=25% nowrap class="row<%= rowid %>">
+    <td valign="center" width="25%" nowrap class="row<%= rowid %>">
       <%=campaign.getRecipientCount()%>
     </td>
-    <td valign=center width=25% nowrap class="row<%= rowid %>">
+    <td valign="center" width="25%" nowrap class="row<%= rowid %>">
       <%=toHtml(campaign.getStatus())%>
     </td>
-    <td valign=center width=10 nowrap class="row<%= rowid %>">
+    <td valign="center" width="10" nowrap class="row<%= rowid %>">
       <%=toHtml(campaign.getActiveYesNo())%>
     </td>
 	</tr>

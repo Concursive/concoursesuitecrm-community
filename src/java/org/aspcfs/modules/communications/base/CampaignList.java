@@ -284,14 +284,10 @@ public void setIdRange(String idRange) {
     StringBuffer sqlOrder = new StringBuffer();
 
     sqlSelect.append(
-        "SELECT c.*, msg.name as messageName, dt.description as delivery FROM campaign c " +
+        "SELECT c.*, msg.name as messageName, dt.description as delivery " +
+        "FROM campaign c " +
         "LEFT JOIN message msg ON (c.message_id = msg.id) " +
-	"LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
-        //"LEFT JOIN scheduled_recipient rl ON (c.list_id = rl.id) " +
-    //"LEFT JOIN campaign_run cr ON (c.runId = run_id.id) " +
-    //"LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
-    //"LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
-    //"LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
+        "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
         "WHERE c.id > -1 ");
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
@@ -449,6 +445,7 @@ public void setIdRange(String idRange) {
       Campaign thisCampaign = (Campaign)i.next();
       thisCampaign.buildRecipientCount(db);
       thisCampaign.setGroupList(db);
+      thisCampaign.buildFileCount(db);
     }
   }
 

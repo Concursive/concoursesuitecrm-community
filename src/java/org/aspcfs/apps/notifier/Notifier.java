@@ -12,6 +12,9 @@ import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import com.zeroio.iteam.base.*;
+import java.io.*;
+import java.util.*;
+import java.util.zip.*;
 
 /**
  *  Application that processes various kinds of Alerts in CFS, generating
@@ -493,6 +496,10 @@ public class Notifier extends ReportBuilder {
     }
     String fs = System.getProperty("file.separator");
     String filePath = (String) config.get("FileLibrary") + fs + dbName + fs + "communications" + fs + "id" + thisCampaign.getId() + fs + CFSModule.getDatePath(new java.util.Date()) + fs;
+    String baseFilename = contactReport.generateFilename();
+    File f = new File(filePath);
+		f.mkdirs();
+    
     String[] fields = {"nameLast", "nameMiddle", "nameFirst", "company", "title", "department", "businessPhone", "businessAddress", "city", "state", "zip", "country"};
     contactReport.setCriteria(fields);
     contactReport.setFilePath(filePath);
@@ -502,33 +509,23 @@ public class Notifier extends ReportBuilder {
     contactReport.buildReportBaseInfo();
     contactReport.buildReportHeaders();
     contactReport.buildReportData(null);
-    int fileSize = contactReport.save();
-    CFSModule.saveTextFile(thisCampaign.getMessage(), filePath + contactReport.getFilenameToUse() + ".txt");
-
-//    FileInputStream fis = new FileInputStream(selectedFile);
-//    long size = selectedFile.length();   /* size of the file */
-//    byte[] content = new byte[(int)size];  /*byte array to hold contents */
-//    int length = fis.read(content);   /*read into byte array*/
-//    fis.close();
-//    ZipEntry ze = new ZipEntry(filename);  /* new zip entry */
-//    ze.setMethod(ZipEntry.DEFLATED);  /*compression is deflated */
-//    FileOutputStream fos = new FileOutputStream("Krish.zip");
-//    ZipOutputStream zos = new ZipOutputStream(fos);
-//    zos.putNextEntry(ze);
-//    zos.write(content, 0, (int)size);   /*write into zip file*/
-//    zos.closeEntry();
-//    zos.finish();
-//    zos.close();
-//    fos.close(); 
-
+    CFSModule.saveTextFile(contactReport.getRep().getHtml(), filePath + baseFilename + ".html");
+    
+    //Stream communications data to Zip file
+    ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(filePath + baseFilename));
+    ZipUtils.addTextEntry(zip, "contacts-" + baseFilename + ".csv", contactReport.getRep().getDelimited());
+    ZipUtils.addTextEntry(zip, "letter-" + baseFilename + ".txt", thisCampaign.getMessage());
+    zip.close();
+    int fileSize = (int) (new File(filePath + baseFilename)).length();
+    
     FileItem thisItem = new FileItem();
     thisItem.setLinkModuleId(Constants.COMMUNICATIONS);
     thisItem.setLinkItemId(thisCampaign.getId());
     thisItem.setEnteredBy(thisCampaign.getEnteredBy());
     thisItem.setModifiedBy(thisCampaign.getModifiedBy());
     thisItem.setSubject(thisCampaign.getName());
-    thisItem.setClientFilename(contactReport.getFilenameToUse());
-    thisItem.setFilename(contactReport.getFilenameToUse());
+    thisItem.setClientFilename("cfs-" + baseFilename + ".zip");
+    thisItem.setFilename(baseFilename);
     thisItem.setSize(fileSize);
     thisItem.insert(db);
 

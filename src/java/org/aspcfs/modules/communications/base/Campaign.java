@@ -43,6 +43,7 @@ public class Campaign extends GenericBean {
 	private String message = null;
 	private int sendMethodId = -1;
 	private String deliveryName = null;
+  private int files = 0;
 
   public final static int IDLE = 1;
   public final static int QUEUE = 2;
@@ -97,9 +98,8 @@ public class Campaign extends GenericBean {
         "SELECT c.*, msg.name as messageName, dt.description as delivery " +
         "FROM campaign c " +
         "LEFT JOIN message msg ON (c.message_id = msg.id) " +
-	"LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
+        "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
         "WHERE c.id > -1 ");
-
     if (campaignId != null && !campaignId.equals("")) {
       sql.append("AND c.id = " + campaignId + " ");
     } else {
@@ -120,6 +120,7 @@ public class Campaign extends GenericBean {
 
     buildRecipientCount(db);
     setGroupList(db);
+    buildFileCount(db);
   }
 
 
@@ -995,6 +996,10 @@ public class Campaign extends GenericBean {
   public boolean hasRun() {
     return (statusId == FINISHED);
   }
+  
+  public boolean hasFiles() {
+    return (files > 0);
+  }
 
 
   /**
@@ -1012,6 +1017,22 @@ public class Campaign extends GenericBean {
 
     if (rs.next()) {
       this.setRecipientCount(rs.getInt(1));
+    }
+
+    rs.close();
+    st.close();
+  }
+  
+  public void buildFileCount(Connection db) throws SQLException {
+    Statement st = db.createStatement();
+    ResultSet rs = st.executeQuery(
+        "SELECT count(*) " +
+        "FROM project_files pf " +
+        "WHERE link_module_id = " + Constants.COMMUNICATIONS + " " +
+        "AND link_item_id = " + id + " ");
+
+    if (rs.next()) {
+      files = (rs.getInt(1));
     }
 
     rs.close();

@@ -300,15 +300,20 @@ public class ContactReport extends ContactList {
 	}
   
   public int save() throws Exception {
-    SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddhhmmss");
-		filenameToUse = formatter.format(new java.util.Date());
+    this.generateFilename();
 		File f = new File(filePath);
 		f.mkdirs();
 		
-		File fileLink = new File(filePath + filenameToUse + ".csv");
-		
 		rep.saveHtml(filePath + filenameToUse + ".html");
 		rep.saveDelimited(filePath + filenameToUse + ".csv");
+    
+    File fileLink = new File(filePath + filenameToUse + ".csv");
     return ((int)fileLink.length());
+  }
+  
+  public String generateFilename() throws Exception {
+    SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddhhmmss");
+		filenameToUse = formatter.format(new java.util.Date());
+    return filenameToUse;
   }
 }

@@ -1,3 +1,11 @@
+/* 3/12/2002 */
+
+CREATE INDEX "project_files_cidx" ON "project_files" 
+  USING btree ("link_module_id", "link_item_id");
+
+
+/* 3/7/2002 */
+
 CREATE TABLE lookup_delivery_options (
   code SERIAL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,

@@ -247,6 +247,9 @@ CREATE TABLE project_files (
   modifiedBy INTEGER NOT NULL
 );
 
+CREATE INDEX "project_files_cidx" ON "project_files" 
+  USING btree ("link_module_id", "link_item_id");
+
 CREATE TABLE project_files_version (
 	item_id INTEGER,
   client_filename VARCHAR(255) NOT NULL,

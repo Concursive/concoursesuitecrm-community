@@ -321,6 +321,7 @@
     <forward name="DetailsOK" resource="/campaign_details.jsp" layout="nav"/>
     <forward name="PreviewGroupsOK" resource="/campaign_center_groups_preview.jsp" layout="nav"/>
     <forward name="ToggleOK" resource="/CampaignManager.do?command=PreviewGroups"/>
+    <forward name="PrepareDownloadOK" resource="/campaign_download.jsp" layout="nav"/>
   </action>
   <action name="CampaignManagerGroup" class="com.darkhorseventures.cfsmodule.CampaignManagerGroup">
     <bean name="SearchForm" class="com.darkhorseventures.cfsbase.SearchFormBean" scope="request"/>
