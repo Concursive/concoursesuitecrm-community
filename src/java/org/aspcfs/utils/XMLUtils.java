@@ -351,14 +351,10 @@ public class XMLUtils {
       //transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
       //transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
 
-
       Source source = new DOMSource(node);
-
       StringWriter writer = new StringWriter();
       Result result = new StreamResult(writer);
-
       transformer.transform(source, result);
-
       return writer.toString();
     } catch (Exception e) {
       e.printStackTrace(System.out);
