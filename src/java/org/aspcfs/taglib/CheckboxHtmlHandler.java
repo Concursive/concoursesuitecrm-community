@@ -68,7 +68,7 @@ public class CheckboxHtmlHandler extends TagSupport {
       this.pageContext.getOut().write(
           "<input type=\"checkbox\" name=\"" + name + "\"" +
           (value != null ? " value=\"" + value + "\"" : "") +
-          (checked ? " checked" : "") + "/>");
+          (checked ? " checked" : "") + " />");
     } catch (Exception e) {
     }
     return SKIP_BODY;
