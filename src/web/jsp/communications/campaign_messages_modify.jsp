@@ -22,12 +22,12 @@
     background: buttonface;
   }  
 </style>
+<form name="modMessage" action="CampaignManagerMessage.do?command=Update&auto-populate=true" method="post">
 <a href="CampaignManager.do">Communications Manager</a> >
-<a href="/CampaignManagerMessage.do?command=View">Message List</a> >
-<a href="/CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>">Message Details</a> >
+<a href="CampaignManagerMessage.do?command=View">Message List</a> >
+<a href="CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>">Message Details</a> >
 Modify Message
 <hr color="#BFBFBB" noshade>
-<form name="modMessage" action="/CampaignManagerMessage.do?command=Update&auto-populate=true" method="post">
 <input type="hidden" name="id" value="<%= Message.getId() %>">
 <input type="hidden" name="modified" value="<%= Message.getModified() %>">
 

@@ -23,11 +23,11 @@
   }  
 </style>
 <body onLoad="javascript:document.forms[0].name.focus();">
+<form name="addMessage" method="post" action="/CampaignManagerMessage.do?command=Insert&auto-populate=true">
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="/CampaignManagerMessage.do?command=View">Message List</a> >
 Add Message
 <hr color="#BFBFBB" noshade>
-<form name="addMessage" method="post" action="/CampaignManagerMessage.do?command=Insert&auto-populate=true">
 <input type="submit" value="Save Message" onclick="javascript:save();">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=View'">
 <input type="reset" value="Reset">

@@ -8,9 +8,9 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/images.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/tasks.js"></SCRIPT>
 <body onLoad="javascript:document.forms['addTask'].description.focus();">
+<form name="addTask" action="/MyTasks.do?command=Insert&auto-populate=true" method="post" onSubmit="return validateTask();">
 <a href="MyCFS.do?command=Home">My Home Page</a> > My Tasks<br>
 <hr color="#BFBFBB" noshade>
-<form name="addTask" action="/MyTasks.do?command=Insert&auto-populate=true" method="post" onSubmit="return validateTask();">
  <table cellpadding="4" cellspacing="0" border="1" width="45%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td valign=center align=left colspan="3">
