@@ -152,18 +152,14 @@ public class GraphSummaryList extends Hashtable {
   public String[] getYearRange(int size, int y) {
     String[] valKeys = new String[size];
 
-    java.util.Date d = new java.util.Date();
-    d.setYear(y - 1900);
-    java.util.Calendar rightNow = java.util.Calendar.getInstance();
-    rightNow.setTime(d);
+    Calendar rightNow = Calendar.getInstance();
+    rightNow.set(Calendar.YEAR, y);
 
-    int year = rightNow.get(java.util.Calendar.YEAR);
+    int year = rightNow.get(Calendar.YEAR);
     int month = 0;
 
     for (int x = 0; x < size; x++) {
-      valKeys[x] = ("" + year) + ("" + month);
-      //rightNow.add(java.util.Calendar.MONTH, +1);
-      year = rightNow.get(java.util.Calendar.YEAR);
+      valKeys[x] = String.valueOf(year) + String.valueOf(month);
       month++;
     }
     return valKeys;
