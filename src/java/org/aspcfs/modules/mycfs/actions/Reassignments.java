@@ -36,7 +36,7 @@ public final class Reassignments extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandReassign(ActionContext context) {
-    if (!(hasPermission(context, "admin-reassign-view"))) {
+    if (!(hasPermission(context, "myhomepage-reassign-view"))) {
       return ("PermissionError");
     }
 
@@ -151,7 +151,7 @@ public final class Reassignments extends CFSModule {
    */
   public String executeCommandDoReassign(ActionContext context) {
 
-    if (!(hasPermission(context, "admin-reassign-edit"))) {
+    if (!(hasPermission(context, "myhomepage-reassign-edit"))) {
       return ("PermissionError");
     }
 

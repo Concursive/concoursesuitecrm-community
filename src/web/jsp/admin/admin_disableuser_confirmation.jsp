@@ -35,8 +35,8 @@ If you click "Proceed", the following actions will occur:
 <li>The direct manager will be notified via email.
 </ul>
 
-<dhv:permission name="admin-reassign-edit">
-If you are also responsible for the data re-assignments of this User, you can goto "Re-Assignments" above, or just <a href="Users.do?command=Reassign&userId=<%=User.getId()%>">click here</a>  to make
+<dhv:permission name="myhomepage-reassign-edit">
+If you are also responsible for the data re-assignments of this User, you can go to "Re-Assignments" in MYCFS, or just <a href="Reassignments.do?command=Reassign&userId=<%=User.getId()%>">click here</a> to make
 those changes.
 </dhv:permission>
 <br>&nbsp;
