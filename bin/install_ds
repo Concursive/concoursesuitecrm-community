@@ -98,6 +98,8 @@ su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/sync.init "
 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_task.sql "
 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_revenue.sql "
+
 #############################################################################
 #
 # Verify directories

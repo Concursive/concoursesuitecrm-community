@@ -26,7 +26,7 @@ CREATE INDEX "custom_field_cat_idx" ON "custom_field_category" USING btree ("mod
 
 /* Each category can have multiple groups of fields */
 CREATE TABLE custom_field_group (
-  category_id INTEGER NOT NULL,
+  category_id INTEGER NOT NULL REFERENCES custom_field_category(category_id),
   group_id SERIAL,
   group_name VARCHAR(255) NOT NULL,
   level INTEGER DEFAULT 0,
@@ -42,7 +42,7 @@ CREATE INDEX "custom_field_grp_idx" ON "custom_field_group" USING btree ("catego
 
 /* Each folder has defined custom fields */
 CREATE TABLE custom_field_info (
-  group_id INTEGER NOT NULL,
+  group_id INTEGER NOT NULL REFERENCES custom_field_group(group_id),
   field_id SERIAL,
   field_name VARCHAR(255) NOT NULL,
   level INTEGER DEFAULT 0,
@@ -61,7 +61,7 @@ CREATE INDEX "custom_field_inf_idx" ON "custom_field_info" USING btree ("group_i
 
 /* List of values for type lookup table */
 CREATE TABLE custom_field_lookup (
-  field_id INTEGER NOT NULL,
+  field_id INTEGER NOT NULL REFERENCES custom_field_info(field_id),
   code SERIAL PRIMARY KEY,
   description VARCHAR(255) NOT NULL,
   default_item BOOLEAN DEFAULT false,
@@ -82,9 +82,9 @@ CREATE TABLE custom_field_record (
   department_id INTEGER DEFAULT -1,
   role_id INTEGER DEFAULT -1,*/
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL,
+  enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
   enabled BOOLEAN DEFAULT true
 );
 
@@ -92,7 +92,7 @@ CREATE INDEX "custom_field_rec_idx" ON "custom_field_record" USING btree ("link_
 
 /* The saved custom field data related to a record_id (link_id) */
 CREATE TABLE custom_field_data (
-  record_id INTEGER NOT NULL,
+  record_id INTEGER NOT NULL REFERENCES custom_field_record(record_id),
   field_id INTEGER NOT NULL,
   selected_item_id INTEGER DEFAULT 0,
   entered_value TEXT,

@@ -861,7 +861,7 @@ public final class Accounts extends CFSModule {
       String orgId = context.getRequest().getParameter("orgId");
       int tempid = Integer.parseInt(orgId);
       db = this.getConnection(context);
-
+      newOrg.setEnteredBy(getUserId(context));
       newOrg.setModifiedBy(getUserId(context));
       resultCount = newOrg.update(db);
 

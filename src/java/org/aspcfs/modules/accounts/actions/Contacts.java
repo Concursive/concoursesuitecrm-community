@@ -294,6 +294,7 @@ public final class Contacts extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      newContact.setEnteredBy(getUserId(context));
       newContact.setModifiedBy(getUserId(context));
       resultCount = newContact.update(db);
       if (resultCount == -1) {
