@@ -25,7 +25,7 @@ public class RegistrationList extends ArrayList {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM registration " +
-        "WHERE email = ?, profile = ?, enabled = ? ");
+        "WHERE email = ? AND profile = ? AND enabled = ? ");
     pst.setString(1, email);
     pst.setString(2, profile);
     pst.setBoolean(3, enabled);
