@@ -1106,8 +1106,6 @@ CREATE TABLE quote_notes (
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL
 );
 
--- TODO: NEED TO CHANGE THE INSERTS SO THEY DO NOT USE THE SERIAL ID
-
 -- TODO: UPDATE THE LEVELS
 
 INSERT INTO lookup_asset_status VALUES (1, 'In use', false, 10, true);
@@ -1228,8 +1226,6 @@ INSERT INTO lookup_creditcard_types VALUES (4, 'Discover', false, 0, true);
 INSERT INTO product_category (category_name, enteredby, modifiedby, enabled) VALUES ('Labor Categories', 0, 0, true);
 
 UPDATE sync_table SET object_key = 'id' WHERE element_name = 'customFieldRecord';
-
--- rebuild help
 
 CREATE INDEX contact_import_id_idx ON contact USING btree (import_id);
 
@@ -2835,6 +2831,489 @@ SELECT pg_catalog.setval ('customer_product_history_history_id_seq', 1, false);
 
 
 SELECT pg_catalog.setval ('quote_notes_notes_id_seq', 1, false);
+
+
+DROP TABLE help_tips;
+DROP TABLE help_notes;
+DROP TABLE help_business_rules;
+DROP TABLE help_faqs;
+DROP TABLE help_related_links;
+DROP TABLE help_features;
+DROP TABLE lookup_help_features;
+DROP TABLE help_tableofcontentitem_links;
+DROP TABLE help_tableof_contents;
+DROP TABLE help_contents;
+DROP TABLE help_module;
+
+CREATE TABLE help_module (
+    module_id serial NOT NULL,
+    category_id integer,
+    module_brief_description text,
+    module_detail_description text
+);
+
+
+
+CREATE TABLE help_contents (
+    help_id serial NOT NULL,
+    category_id integer,
+    link_module_id integer,
+    module character varying(255),
+    section character varying(255),
+    subsection character varying(255),
+    title character varying(255),
+    description text,
+    nextcontent integer,
+    prevcontent integer,
+    upcontent integer,
+    enteredby integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enabled boolean DEFAULT true
+);
+
+
+
+CREATE TABLE help_tableof_contents (
+    content_id serial NOT NULL,
+    displaytext character varying(255),
+    firstchild integer,
+    nextsibling integer,
+    parent integer,
+    category_id integer,
+    contentlevel integer NOT NULL,
+    contentorder integer NOT NULL,
+    enteredby integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enabled boolean DEFAULT true
+);
+
+
+
+CREATE TABLE help_tableofcontentitem_links (
+    link_id serial NOT NULL,
+    global_link_id integer NOT NULL,
+    linkto_content_id integer NOT NULL,
+    enteredby integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enabled boolean DEFAULT true
+);
+
+
+
+CREATE TABLE lookup_help_features (
+    code serial NOT NULL,
+    description character varying(1000) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true
+);
+
+
+
+CREATE TABLE help_features (
+    feature_id serial NOT NULL,
+    link_help_id integer NOT NULL,
+    link_feature_id integer,
+    description character varying(1000) NOT NULL,
+    enteredby integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    completedate timestamp(3) without time zone,
+    completedby integer,
+    enabled boolean DEFAULT true NOT NULL,
+    "level" integer DEFAULT 0
+);
+
+
+
+CREATE TABLE help_related_links (
+    relatedlink_id serial NOT NULL,
+    owning_module_id integer,
+    linkto_content_id integer,
+    displaytext character varying(255) NOT NULL,
+    enteredby integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enabled boolean DEFAULT true NOT NULL
+);
+
+
+
+CREATE TABLE help_faqs (
+    faq_id serial NOT NULL,
+    owning_module_id integer NOT NULL,
+    question character varying(1000) NOT NULL,
+    answer character varying(1000) NOT NULL,
+    enteredby integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    completedate timestamp(3) without time zone,
+    completedby integer,
+    enabled boolean DEFAULT true NOT NULL
+);
+
+
+
+CREATE TABLE help_business_rules (
+    rule_id serial NOT NULL,
+    link_help_id integer NOT NULL,
+    description character varying(1000) NOT NULL,
+    enteredby integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    completedate timestamp(3) without time zone,
+    completedby integer,
+    enabled boolean DEFAULT true NOT NULL
+);
+
+
+
+CREATE TABLE help_notes (
+    note_id serial NOT NULL,
+    link_help_id integer NOT NULL,
+    description character varying(1000) NOT NULL,
+    enteredby integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    completedate timestamp(3) without time zone,
+    completedby integer,
+    enabled boolean DEFAULT true NOT NULL
+);
+
+
+
+CREATE TABLE help_tips (
+    tip_id serial NOT NULL,
+    link_help_id integer NOT NULL,
+    description character varying(1000) NOT NULL,
+    enteredby integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enabled boolean DEFAULT true NOT NULL
+);
+
+
+
+ALTER TABLE ONLY help_module
+    ADD CONSTRAINT help_module_pkey PRIMARY KEY (module_id);
+
+
+
+ALTER TABLE ONLY help_module
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES permission_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT help_contents_pkey PRIMARY KEY (help_id);
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES permission_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$2" FOREIGN KEY (link_module_id) REFERENCES help_module(module_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$3" FOREIGN KEY (nextcontent) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$4" FOREIGN KEY (prevcontent) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$5" FOREIGN KEY (upcontent) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$6" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$7" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_tableof_contents
+    ADD CONSTRAINT help_tableof_contents_pkey PRIMARY KEY (content_id);
+
+
+
+ALTER TABLE ONLY help_tableof_contents
+    ADD CONSTRAINT "$1" FOREIGN KEY (firstchild) REFERENCES help_tableof_contents(content_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_tableof_contents
+    ADD CONSTRAINT "$2" FOREIGN KEY (nextsibling) REFERENCES help_tableof_contents(content_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_tableof_contents
+    ADD CONSTRAINT "$3" FOREIGN KEY (parent) REFERENCES help_tableof_contents(content_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_tableof_contents
+    ADD CONSTRAINT "$4" FOREIGN KEY (category_id) REFERENCES permission_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_tableof_contents
+    ADD CONSTRAINT "$5" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_tableof_contents
+    ADD CONSTRAINT "$6" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_tableofcontentitem_links
+    ADD CONSTRAINT help_tableofcontentitem_links_pkey PRIMARY KEY (link_id);
+
+
+
+ALTER TABLE ONLY help_tableofcontentitem_links
+    ADD CONSTRAINT "$1" FOREIGN KEY (global_link_id) REFERENCES help_tableof_contents(content_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_tableofcontentitem_links
+    ADD CONSTRAINT "$2" FOREIGN KEY (linkto_content_id) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_tableofcontentitem_links
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_tableofcontentitem_links
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY lookup_help_features
+    ADD CONSTRAINT lookup_help_features_pkey PRIMARY KEY (code);
+
+
+
+ALTER TABLE ONLY help_features
+    ADD CONSTRAINT help_features_pkey PRIMARY KEY (feature_id);
+
+
+
+ALTER TABLE ONLY help_features
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_help_id) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_features
+    ADD CONSTRAINT "$2" FOREIGN KEY (link_feature_id) REFERENCES lookup_help_features(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_features
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_features
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_features
+    ADD CONSTRAINT "$5" FOREIGN KEY (completedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_related_links
+    ADD CONSTRAINT help_related_links_pkey PRIMARY KEY (relatedlink_id);
+
+
+
+ALTER TABLE ONLY help_related_links
+    ADD CONSTRAINT "$1" FOREIGN KEY (owning_module_id) REFERENCES help_module(module_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_related_links
+    ADD CONSTRAINT "$2" FOREIGN KEY (linkto_content_id) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_related_links
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_related_links
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_faqs
+    ADD CONSTRAINT help_faqs_pkey PRIMARY KEY (faq_id);
+
+
+
+ALTER TABLE ONLY help_faqs
+    ADD CONSTRAINT "$1" FOREIGN KEY (owning_module_id) REFERENCES help_module(module_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_faqs
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_faqs
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_faqs
+    ADD CONSTRAINT "$4" FOREIGN KEY (completedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_business_rules
+    ADD CONSTRAINT help_business_rules_pkey PRIMARY KEY (rule_id);
+
+
+
+ALTER TABLE ONLY help_business_rules
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_help_id) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_business_rules
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_business_rules
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_business_rules
+    ADD CONSTRAINT "$4" FOREIGN KEY (completedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_notes
+    ADD CONSTRAINT help_notes_pkey PRIMARY KEY (note_id);
+
+
+
+ALTER TABLE ONLY help_notes
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_help_id) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_notes
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_notes
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_notes
+    ADD CONSTRAINT "$4" FOREIGN KEY (completedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_tips
+    ADD CONSTRAINT help_tips_pkey PRIMARY KEY (tip_id);
+
+
+
+ALTER TABLE ONLY help_tips
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_help_id) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_tips
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+ALTER TABLE ONLY help_tips
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+
+SELECT pg_catalog.setval ('help_module_module_id_seq', 14, true);
+
+
+
+SELECT pg_catalog.setval ('help_contents_help_id_seq', 334, true);
+
+
+
+SELECT pg_catalog.setval ('help_tableof_contents_content_id_seq', 97, true);
+
+
+
+SELECT pg_catalog.setval ('help_tableofcontentitem_links_link_id_seq', 87, true);
+
+
+
+SELECT pg_catalog.setval ('lookup_help_features_code_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval ('help_features_feature_id_seq', 617, true);
+
+
+
+SELECT pg_catalog.setval ('help_related_links_relatedlink_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval ('help_faqs_faq_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval ('help_business_rules_rule_id_seq', 19, true);
+
+
+
+SELECT pg_catalog.setval ('help_notes_note_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval ('help_tips_tip_id_seq', 2, true);
+
 
 INSERT INTO database_version (script_filename, script_version) VALUES ('postgresql_2004-06-15.sql', '2004-06-15');
 

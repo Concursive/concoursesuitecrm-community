@@ -12,6 +12,7 @@ import java.util.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.controller.ApplicationPrefs;
 import bsh.*;
+import org.aspcfs.apps.help.ImportHelp;
 
 /**
  *  Actions that facilitate upgrading an installation of Dark Horse CRM
@@ -87,6 +88,7 @@ public class Upgrade extends CFSModule {
       context.getRequest().setAttribute("installLog", installLog);
       Connection db = null;
       try {
+        boolean buildHelp = false;
         // Get a connection from the connection pool for this user
         db = this.getConnection(context);
         // Prepare bean shell script, if needed
@@ -119,6 +121,16 @@ public class Upgrade extends CFSModule {
                 }
                 break;
           }
+          buildHelp = true;
+        }
+        if (buildHelp) {
+          // Install the help (blank tables should already exist)
+          ImportHelp help = new ImportHelp();
+          help.buildHelpInformation(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "help.xml");
+          help.buildExistingPermissionCategories(db);
+          help.insertHelpRecords(db);
+          help.buildTableOfContents();
+          help.insertTableOfContents(db);
         }
         ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
         if (!prefs.save()) {

@@ -2030,8 +2030,6 @@ INSERT INTO product_category (category_name, enteredby, modifiedby, enabled) VAL
 
 UPDATE sync_table SET object_key = 'id' WHERE element_name = 'customFieldRecord';
 
--- rebuild help
-
  CREATE  INDEX [import_entered_idx] ON [import]([entered]) ON [PRIMARY]
 GO
 
@@ -3396,6 +3394,590 @@ ALTER TABLE [trouble_asset_replacement] ADD
 		[form_id]
 	)
 GO
+
+DROP TABLE help_tips;
+DROP TABLE help_notes;
+DROP TABLE help_business_rules;
+DROP TABLE help_faqs;
+DROP TABLE help_related_links;
+DROP TABLE help_features;
+DROP TABLE lookup_help_features;
+DROP TABLE help_tableofcontentitem_links;
+DROP TABLE help_tableof_contents;
+DROP TABLE help_contents;
+DROP TABLE help_module;
+
+CREATE TABLE [lookup_help_features] (
+	[code] [int] IDENTITY (1, 1) NOT NULL ,
+	[description] [varchar] (1000) NOT NULL ,
+	[default_item] [bit] NULL ,
+	[level] [int] NULL ,
+	[enabled] [bit] NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [help_module] (
+	[module_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[category_id] [int] NULL ,
+	[module_brief_description] [text] NULL ,
+	[module_detail_description] [text] NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+CREATE TABLE [help_tableof_contents] (
+	[content_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[displaytext] [varchar] (255) NULL ,
+	[firstchild] [int] NULL ,
+	[nextsibling] [int] NULL ,
+	[parent] [int] NULL ,
+	[category_id] [int] NULL ,
+	[contentlevel] [int] NOT NULL ,
+	[contentorder] [int] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[entered] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[enabled] [bit] NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [help_contents] (
+	[help_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[category_id] [int] NULL ,
+	[link_module_id] [int] NULL ,
+	[module] [varchar] (255) NULL ,
+	[section] [varchar] (255) NULL ,
+	[subsection] [varchar] (255) NULL ,
+	[title] [varchar] (255) NULL ,
+	[description] [text] NULL ,
+	[nextcontent] [int] NULL ,
+	[prevcontent] [int] NULL ,
+	[upcontent] [int] NULL ,
+	[enteredby] [int] NOT NULL ,
+	[entered] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[enabled] [bit] NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+CREATE TABLE [help_faqs] (
+	[faq_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[owning_module_id] [int] NOT NULL ,
+	[question] [varchar] (1000) NOT NULL ,
+	[answer] [varchar] (1000) NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[entered] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[completedate] [datetime] NULL ,
+	[completedby] [int] NULL ,
+	[enabled] [bit] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [help_business_rules] (
+	[rule_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[link_help_id] [int] NOT NULL ,
+	[description] [varchar] (1000) NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[entered] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[completedate] [datetime] NULL ,
+	[completedby] [int] NULL ,
+	[enabled] [bit] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [help_features] (
+	[feature_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[link_help_id] [int] NOT NULL ,
+	[link_feature_id] [int] NULL ,
+	[description] [varchar] (1000) NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[entered] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[completedate] [datetime] NULL ,
+	[completedby] [int] NULL ,
+	[enabled] [bit] NOT NULL ,
+	[level] [int] NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [help_notes] (
+	[note_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[link_help_id] [int] NOT NULL ,
+	[description] [varchar] (1000) NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[entered] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[completedate] [datetime] NULL ,
+	[completedby] [int] NULL ,
+	[enabled] [bit] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [help_related_links] (
+	[relatedlink_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[owning_module_id] [int] NULL ,
+	[linkto_content_id] [int] NULL ,
+	[displaytext] [varchar] (255) NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[entered] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[enabled] [bit] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [help_tableofcontentitem_links] (
+	[link_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[global_link_id] [int] NOT NULL ,
+	[linkto_content_id] [int] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[entered] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[enabled] [bit] NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [help_tips] (
+	[tip_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[link_help_id] [int] NOT NULL ,
+	[description] [varchar] (1000) NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[entered] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[enabled] [bit] NOT NULL 
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [lookup_help_features] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [help_module] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[module_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [help_tableof_contents] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[content_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [help_contents] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[help_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [help_faqs] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[faq_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [help_business_rules] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[rule_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [help_features] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[feature_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [help_notes] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[note_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [help_related_links] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[relatedlink_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [help_tableofcontentitem_links] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[link_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [help_tips] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[tip_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_help_features] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_he__defau__150615B5] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_he__level__15FA39EE] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_he__enabl__16EE5E27] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [help_tableof_contents] WITH NOCHECK ADD 
+	CONSTRAINT [DF__help_tabl__enter__06B7F65E] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__help_tabl__modif__08A03ED0] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__help_tabl__enabl__09946309] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [help_contents] WITH NOCHECK ADD 
+	CONSTRAINT [DF__help_cont__enter__7C3A67EB] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__help_cont__modif__7E22B05D] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__help_cont__enabl__7F16D496] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [help_faqs] WITH NOCHECK ADD 
+	CONSTRAINT [DF__help_faqs__enter__2EC5E7B8] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__help_faqs__modif__30AE302A] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__help_faqs__enabl__3296789C] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [help_business_rules] WITH NOCHECK ADD 
+	CONSTRAINT [DF__help_busi__enter__375B2DB9] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__help_busi__modif__3943762B] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__help_busi__enabl__3B2BBE9D] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [help_features] WITH NOCHECK ADD 
+	CONSTRAINT [DF__help_feat__enter__1CA7377D] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__help_feat__modif__1E8F7FEF] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__help_feat__enabl__2077C861] DEFAULT (1) FOR [enabled],
+	CONSTRAINT [DF__help_feat__level__216BEC9A] DEFAULT (0) FOR [level]
+GO
+
+ALTER TABLE [help_notes] WITH NOCHECK ADD 
+	CONSTRAINT [DF__help_note__enter__3FF073BA] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__help_note__modif__41D8BC2C] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__help_note__enabl__43C1049E] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [help_related_links] WITH NOCHECK ADD 
+	CONSTRAINT [DF__help_rela__enter__2724C5F0] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__help_rela__modif__290D0E62] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__help_rela__enabl__2A01329B] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [help_tableofcontentitem_links] WITH NOCHECK ADD 
+	CONSTRAINT [DF__help_tabl__enter__0F4D3C5F] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__help_tabl__modif__113584D1] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__help_tabl__enabl__1229A90A] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [help_tips] WITH NOCHECK ADD 
+	CONSTRAINT [DF__help_tips__enter__4885B9BB] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__help_tips__modif__4A6E022D] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__help_tips__enabl__4B622666] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [help_module] ADD 
+	 FOREIGN KEY 
+	(
+		[category_id]
+	) REFERENCES [permission_category] (
+		[category_id]
+	)
+GO
+
+ALTER TABLE [help_tableof_contents] ADD 
+	 FOREIGN KEY 
+	(
+		[category_id]
+	) REFERENCES [permission_category] (
+		[category_id]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[firstchild]
+	) REFERENCES [help_tableof_contents] (
+		[content_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[nextsibling]
+	) REFERENCES [help_tableof_contents] (
+		[content_id]
+	),
+	 FOREIGN KEY 
+	(
+		[parent]
+	) REFERENCES [help_tableof_contents] (
+		[content_id]
+	)
+GO
+
+ALTER TABLE [help_contents] ADD 
+	 FOREIGN KEY 
+	(
+		[category_id]
+	) REFERENCES [permission_category] (
+		[category_id]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[link_module_id]
+	) REFERENCES [help_module] (
+		[module_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[nextcontent]
+	) REFERENCES [help_contents] (
+		[help_id]
+	),
+	 FOREIGN KEY 
+	(
+		[prevcontent]
+	) REFERENCES [help_contents] (
+		[help_id]
+	),
+	 FOREIGN KEY 
+	(
+		[upcontent]
+	) REFERENCES [help_contents] (
+		[help_id]
+	)
+GO
+
+ALTER TABLE [help_faqs] ADD 
+	 FOREIGN KEY 
+	(
+		[completedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[owning_module_id]
+	) REFERENCES [help_module] (
+		[module_id]
+	)
+GO
+
+ALTER TABLE [help_business_rules] ADD 
+	 FOREIGN KEY 
+	(
+		[completedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[link_help_id]
+	) REFERENCES [help_contents] (
+		[help_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	)
+GO
+
+ALTER TABLE [help_features] ADD 
+	 FOREIGN KEY 
+	(
+		[completedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[link_help_id]
+	) REFERENCES [help_contents] (
+		[help_id]
+	),
+	 FOREIGN KEY 
+	(
+		[link_feature_id]
+	) REFERENCES [lookup_help_features] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	)
+GO
+
+ALTER TABLE [help_notes] ADD 
+	 FOREIGN KEY 
+	(
+		[completedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[link_help_id]
+	) REFERENCES [help_contents] (
+		[help_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	)
+GO
+
+ALTER TABLE [help_related_links] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[linkto_content_id]
+	) REFERENCES [help_contents] (
+		[help_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[owning_module_id]
+	) REFERENCES [help_module] (
+		[module_id]
+	)
+GO
+
+ALTER TABLE [help_tableofcontentitem_links] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[global_link_id]
+	) REFERENCES [help_tableof_contents] (
+		[content_id]
+	),
+	 FOREIGN KEY 
+	(
+		[linkto_content_id]
+	) REFERENCES [help_contents] (
+		[help_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	)
+GO
+
+ALTER TABLE [help_tips] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[link_help_id]
+	) REFERENCES [help_contents] (
+		[help_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	)
+GO
+
+
 
 INSERT [database_version] ([script_filename],[script_version])VALUES('mssql_2004-06-15.sql','2004-06-15');
 
