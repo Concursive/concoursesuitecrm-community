@@ -5,19 +5,18 @@ function addValues(){
     var count = 0;
     var x = 0;
     
-    searchText = document.modifyList.newValue.value;
-    
-    var newOption = searchText;
-    
-    //if (searchList.length == 0 || searchList.options[0].value == "-1"){
-    //  alert("try");
-    //  searchList.options[0] = new Option(newOption);
-    //} else {
-      searchList.options[searchList.length] = new Option(newOption, ("*" + searchText));
-    //}
+    if (document.modifyList.newValue.value != null && document.modifyList.newValue.value.length > 0) {
+            searchText = document.modifyList.newValue.value;
+            var newOption = searchText;
+            searchList.options[searchList.length] = new Option(newOption, ("*" + searchText));
+    } else {
+             alert ("You must provide a value for the new option");
+    }
     
     document.modifyList.newValue.value = "";
     document.modifyList.newValue.focus();
+    
+    return true;
 }
 
 function removeValues(){
