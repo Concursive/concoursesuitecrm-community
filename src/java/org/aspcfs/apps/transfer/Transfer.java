@@ -21,20 +21,36 @@ public class Transfer {
 
 
   /**
-   *  Sample app to execute a data import process.
+   *  Application to execute the reader and writer specified by the supplied
+   *  config file
    *
    *@param  args  Description of the Parameter
    */
   public static void main(String args[]) {
-    //Initialize app from the config file
     if (args.length == 0) {
       System.out.println("Usage: Transfer [config file]");
       System.exit(2);
     }
-
     Transfer transfer = new Transfer();
     transfer.execute(args[0]);
     System.exit(0);
+  }
+
+
+  /**
+   *  This method can be executed by another class because it does not call
+   *  System.exit()
+   *
+   *@param  args  Description of the Parameter
+   */
+  public static void doTask(String args[]) {
+    if (args.length == 0) {
+      System.out.println("Usage: Transfer [config file]");
+      System.out.println("ExitValue: 2");
+    }
+    Transfer transfer = new Transfer();
+    transfer.execute(args[0]);
+    System.out.println("ExitValue: 0");
   }
 
 
@@ -46,12 +62,6 @@ public class Transfer {
    *@param  configParam  Description of the Parameter
    */
   public void execute(String configParam) {
-    /*
-     *  Handler[] handlers = Logger.getLogger("").getHandlers();
-     *  for ( int index = 0; index < handlers.length; index++ ) {
-     *  handlers[index].setLevel( Level.ALL );
-     *  }
-     */
     logger.info("Reading configuration file: " + configParam + "...");
     try {
       File configFile = new File(configParam);

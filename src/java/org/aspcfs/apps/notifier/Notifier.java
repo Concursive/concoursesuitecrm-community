@@ -52,35 +52,63 @@ public class Notifier extends ReportBuilder {
    *@param  args  Description of Parameter
    */
   public static void main(String args[]) {
-    String filename = args[0];
-    if (filename == null) {
-      filename = "notifier.xml";
+    if (args.length == 0) {
+      System.out.println("Usage: Notifier [config file]");
+      System.out.println("ExitValue: 2");
     }
-
     Notifier thisNotifier = new Notifier();
+    thisNotifier.execute(args);
+    System.exit(0);
+  }
+
+
+  /**
+   *  This method can be executed by another class because it does not call
+   *  System.exit()
+   *
+   *@param  args  Description of the Parameter
+   */
+  public static void doTask(String args[]) {
+    if (args.length == 0) {
+      System.out.println("Usage: Notifier [config file]");
+      System.out.println("ExitValue: 2");
+    }
+    Notifier thisNotifier = new Notifier();
+    thisNotifier.execute(args);
+    System.out.println("ExitValue: 0");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  args  Description of the Parameter
+   */
+  private void execute(String args[]) {
+    String filename = args[0];
     if (args.length > 1) {
       //Task was specified on command line
       for (int taskCount = 1; taskCount < args.length; taskCount++) {
-        thisNotifier.getTaskList().add(args[taskCount]);
+        this.getTaskList().add(args[taskCount]);
       }
     } else {
       //Temporary default list of tasks
-      thisNotifier.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyOpportunityOwners");
-      thisNotifier.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients");
-      //thisNotifier.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCallOwners");
+      this.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyOpportunityOwners");
+      this.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients");
+      //this.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCallOwners");
     }
 
-    AppUtils.loadConfig(filename, thisNotifier.config);
-    thisNotifier.baseName = (String) thisNotifier.config.get("GATEKEEPER.URL");
-    thisNotifier.dbUser = (String) thisNotifier.config.get("GATEKEEPER.USER");
-    thisNotifier.dbPass = (String) thisNotifier.config.get("GATEKEEPER.PASSWORD");
+    AppUtils.loadConfig(filename, this.config);
+    this.baseName = (String) this.config.get("GATEKEEPER.URL");
+    this.dbUser = (String) this.config.get("GATEKEEPER.USER");
+    this.dbPass = (String) this.config.get("GATEKEEPER.PASSWORD");
 
     try {
-      Class.forName((String) thisNotifier.config.get("GATEKEEPER.DRIVER"));
+      Class.forName((String) this.config.get("GATEKEEPER.DRIVER"));
       ArrayList siteList = new ArrayList();
 
       Connection dbSites = DriverManager.getConnection(
-          thisNotifier.baseName, thisNotifier.dbUser, thisNotifier.dbPass);
+          this.baseName, this.dbUser, this.dbPass);
       PreparedStatement pstSites = dbSites.prepareStatement(
           "SELECT * " +
           "FROM sites " +
@@ -112,19 +140,19 @@ public class Notifier extends ReportBuilder {
             (String) siteInfo.get("host"),
             (String) siteInfo.get("user"),
             (String) siteInfo.get("password"));
-        thisNotifier.baseName = (String) siteInfo.get("sitecode");
+        this.baseName = (String) siteInfo.get("sitecode");
 
         //TODO: The intent is to move these all out as separate tasks and
         //have a TaskContext with an interface
-        if (thisNotifier.getTaskList().size() == 1) {
-          Iterator classes = thisNotifier.getTaskList().iterator();
+        if (this.getTaskList().size() == 1) {
+          Iterator classes = this.getTaskList().iterator();
           while (classes.hasNext()) {
             try {
               //Construct the object, which executes the task
               Class thisClass = Class.forName((String) classes.next());
               Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), HashMap.class, HashMap.class};
               Constructor constructor = thisClass.getConstructor(paramClass);
-              Object[] paramObject = new Object[]{db, siteInfo, thisNotifier.getConfig()};
+              Object[] paramObject = new Object[]{db, siteInfo, this.getConfig()};
               Object theTask = constructor.newInstance(paramObject);
               theTask = null;
             } catch (Exception e) {
@@ -132,19 +160,19 @@ public class Notifier extends ReportBuilder {
             }
           }
         }
-        if (thisNotifier.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyOpportunityOwners")) {
-          thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db, siteInfo));
+        if (this.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyOpportunityOwners")) {
+          this.output.append(this.buildOpportunityAlerts(db, siteInfo));
         }
-        if (thisNotifier.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients")) {
-          thisNotifier.output.append(thisNotifier.buildCommunications(db, siteInfo));
+        if (this.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients")) {
+          this.output.append(this.buildCommunications(db, siteInfo));
         }
-        if (thisNotifier.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyCallOwners")) {
-          thisNotifier.output.append(thisNotifier.buildCallAlerts(db, siteInfo));
+        if (this.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyCallOwners")) {
+          this.output.append(this.buildCallAlerts(db, siteInfo));
         }
         db.close();
       }
-      System.out.println(thisNotifier.output.toString());
-      //thisNotifier.sendAdminReport(thisNotifier.output.toString());
+      System.out.println(this.output.toString());
+      //this.sendAdminReport(this.output.toString());
       java.util.Date end = new java.util.Date();
     } catch (Exception exc) {
       exc.printStackTrace(System.out);
