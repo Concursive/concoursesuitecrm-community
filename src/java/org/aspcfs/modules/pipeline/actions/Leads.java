@@ -495,16 +495,12 @@ public final class Leads extends CFSModule {
     }
 
     //Determine the user whose data is being shown, by default it's the current user
-    if (overrideId > -1) {
-      if (overrideId == getUserId(context) || overrideId == viewpointInfo.getVpUserId()) {
-        context.getSession().removeAttribute("leadsoverride");
-        context.getSession().removeAttribute("leadsothername");
-        context.getSession().removeAttribute("leadspreviousId");
-      }
-    } else if (context.getSession().getAttribute("leadsoverride") != null) {
+    if(overrideId < 0){
+    if (context.getSession().getAttribute("leadsoverride") != null) {
       overrideId = StringUtils.parseInt((String) context.getSession().getAttribute("leadsoverride"), -1);
     } else {
       overrideId = userId;
+    }
     }
     String checkFileName = null;
     Connection db = null;
@@ -542,7 +538,7 @@ public final class Leads extends CFSModule {
       shortChildList = thisRec.getShortChildList();
 
       //Track the id in the request and the session
-      if (idToUse != this.getUserId(context) && idToUse != viewpointInfo.getVpUserId()) {
+        if (context.getRequest().getParameter("oid") != null && !"true".equals((String)context.getRequest().getParameter("reset"))) {
         context.getRequest().setAttribute("override", String.valueOf(idToUse));
         context.getRequest().setAttribute("othername", thisRec.getContact().getNameFull());
         context.getRequest().setAttribute("previousId", String.valueOf(thisRec.getManagerId()));

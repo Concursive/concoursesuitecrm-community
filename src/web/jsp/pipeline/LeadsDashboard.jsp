@@ -55,9 +55,11 @@ Dashboard<br>
       <table width="285" border="0" cellspacing="0" cellpadding="3">
         <tr>
           <td align="center" width="100%">
-            <% if (!(((String)request.getSession().getAttribute("leadsoverride")) == null)) {%>
+            <% if (!(((String)request.getSession().getAttribute("leadsoverride")) == null)) {
+              int prevId =  Integer.parseInt((String)request.getSession().getAttribute("leadspreviousId"));
+              %>
             <input type="hidden" name="oid" value="<%=((String)request.getSession().getAttribute("leadsoverride"))%>">
-            <a href="Leads.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("leadspreviousId"))%>">Up One Level</a> |
+            <a href="Leads.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("leadspreviousId"))%><%= PipelineViewpointInfo.getVpUserId() == prevId ? "&reset=true" : ""%>">Up One Level</a> |
             <a href="Leads.do?command=Dashboard&reset=true">Back to My Dashboard</a>
             <%} else {%>
                 &nbsp;
