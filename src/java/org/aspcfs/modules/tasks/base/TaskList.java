@@ -178,16 +178,17 @@ public class TaskList extends ArrayList {
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlTail = new StringBuffer();
-    createFilter(sqlFilter);
     sqlSelect.append(
         "SELECT duedate, count(*) AS nocols " +
         "FROM task t " +
         "WHERE t.task_id > -1 ");
+    createFilter(sqlFilter);
     sqlFilter.append("AND duedate IS NOT NULL ");
-    sqlFilter.append("AND t.complete = false ");
+    sqlFilter.append("AND t.complete = ? ");
     sqlTail.append("GROUP BY duedate");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
-    prepareFilter(pst);
+    int i = prepareFilter(pst);
+    pst.setBoolean(i++, false);
     rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       System.out.println("TaskList-> Building Record Count ");
