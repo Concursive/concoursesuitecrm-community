@@ -12,8 +12,8 @@ of the required applications and have them already installed.
 
 Operating System:
 
-  Tested with Linux and Microsoft Windows, should work with any operating system
-  with a Java VM.
+  Tested with Linux, Mac OSX and Microsoft Windows, should work with any 
+  operating system with a Java VM.
 
 Java VM:
 
@@ -45,7 +45,7 @@ NOTE: Dark Horse CRM works best with at least a 500 MHz processor and
       following environment variable:
       JAVA_OPTS="-Xms256m -Xmx256m"
       
-      Under Linux, you probably need to enable headless mode so that Dark Horse
+      Under Linux, you will need to enable headless mode so that Dark Horse
       CRM can dynamically create graphics by setting the following environment
       variable:
       CATALINA_OPTS=-Djava.awt.headless=true
@@ -154,7 +154,7 @@ If the Dark Horse CRM application comes up, but it reports a database connection
 problem, review the database server settings.  The application must be able
 to connect using TCP/IP.
 
-If you have still have problems or questions, please join the Dark Horse CRM
+If you still have problems or questions, please join the Dark Horse CRM
 community site: http://community.darkhorsecrm.com
 
 For support and sales information please visit the Dark Horse CRM
