@@ -66,19 +66,6 @@ public class ActionContext
   }
 
 
-
-  /**
-   *  Sets a HttpSession attribute
-   *
-   *@param  name   The new Attribute value
-   *@param  value  The new Attribute value
-   */
-  public void setAttribute(String name, Object value) {
-    getSession().setAttribute(name, value);
-  }
-
-
-
   /**
    *  Sets a request attribute that can be used by JSP pages to display an error
    *  message or take some other course of action if the attribute exists when
@@ -224,34 +211,6 @@ public class ActionContext
   public HttpSession getSession() {
     return session;
   }
-
-
-
-  /**
-   *  Returns an HttpSession attribute
-   *
-   *@param  name  Description of Parameter
-   *@return       The Attribute value
-   */
-  public Object getAttribute(String name) {
-    return getSession().getAttribute(name);
-  }
-
-
-
-  /**
-   *  Removes an HttpSession attribute. Returns true if the attribute was
-   *  removed, or false if no attribute by the name exists.
-   *
-   *@param  name  Description of Parameter
-   *@return       Description of the Returned Value
-   */
-  public boolean removeAttribute(String name) {
-    if (getSession().getAttribute(name) != null) {
-      getSession().removeAttribute(name);
-      return true;
-    }
-    return false;
-  }
+ 
 }
 
