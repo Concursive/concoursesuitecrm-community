@@ -1,5 +1,6 @@
 <%-- Displays any global items for this setup page --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>
 <%
   String image = "<img alt=\"Current Step\" src=\"images/bullet.gif\" align=\"absmiddle\"/>&nbsp;";
@@ -76,9 +77,7 @@
       Your information will not be provided to others.<br>
       <br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="#">Review Privacy Statement</a><br>
-      <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="#">Review Security Statement</a><br>
+      <a href="javascript:popURL('privacy_statement.html','CRM_Privacy','400','400','yes','yes');">Review Privacy Statement</a><br>
       &nbsp;
     </td>
   </tr>
