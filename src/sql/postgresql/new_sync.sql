@@ -14,7 +14,9 @@ CREATE TABLE sync_client (
   enteredby INT NOT NULL,
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL,
-  anchor TIMESTAMP(3) DEFAULT NULL
+  anchor TIMESTAMP(3) DEFAULT NULL,
+  enabled BOOLEAN DEFAULT false,
+  code VARCHAR(255)
 );
 
 CREATE TABLE sync_system (
