@@ -122,6 +122,14 @@ public class DatabaseUtils {
     return id;
   }
   
+  public static int parseInt(String tmp, int defaultValue) {
+    try {
+      return Integer.parseInt(tmp);
+    } catch (Exception e) {
+      return defaultValue;
+    }
+  }
+  
   public static boolean parseBoolean(String tmp) {
     return (tmp.equalsIgnoreCase("ON") || 
            tmp.equalsIgnoreCase("TRUE") ||
