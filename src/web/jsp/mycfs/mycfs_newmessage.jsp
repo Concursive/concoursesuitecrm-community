@@ -73,7 +73,6 @@ function sendMessage() {
     <td width=100%>
       <input type=checkbox name="mailrecipients">
       Email copy to recipient(s)<br>
-      <%--<input type=checkbox name="savecopy"> Save copy to outbox--%>
       </td> 
    </tr>
 
