@@ -16,13 +16,13 @@
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <body leftmargin="0" rightmargin="0" margin="0" marginwidth="0" topmargin="0" marginheight="0">
 <div id="header">
-<table border="0" width="100%">
+<table border="0" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <th align="left" valign="top">
-      <table border="0" cellpadding="2" cellspacing="0">
+      <table border="0" cellpadding="0" cellspacing="2">
         <tr>
           <th align="left" valign="top">
-            <dhv:label name="logo">&nbsp;</dhv:label>
+            <dhv:label name="logo"/>
           </th>
           <th align="left" valign="top" nowrap>
 <%

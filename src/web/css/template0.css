@@ -160,7 +160,7 @@ A:visited:hover{color:#FF3300;}
   text-align: left;
   border-bottom: 1px solid #000;
   border-right: 1px solid #666;
-  background-color: #f5f7ff;
+  background-color: #DEE0FA;
 }
 .pagedList td {
   border-bottom: 1px solid #666 !important;
@@ -174,12 +174,12 @@ A:visited:hover{color:#FF3300;}
   text-align: left;
   border-bottom: 1px solid #000;
   border-right: 1px solid #666;
-  background-color: #f5f7ff;
+  background-color: #DEE0FA;
 }
 .formLabel { 
   text-align: right !important;
   width: 100 !important;
-  background-color: #f2f2f2 !important;
+  background-color: #EDEDED !important;
   border-bottom: 1px solid #666 !important;
   border-right: 1px solid #666 !important;
 }
@@ -213,7 +213,7 @@ A:visited:hover{color:#FF3300;}
 .title2 { background: #D4D4D4; }
 
 .column { color: #000080; font-weight: bold; }
-.row1 { background: #f2f2f2; }
+.row1 { background: #EDEDED; }
 .row1hl { background: #FFFDED; }
 .row2 { background: #FFFFFF; }
 .row2hl { background: #FFFDED; }
