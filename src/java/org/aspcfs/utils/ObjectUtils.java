@@ -56,8 +56,25 @@ public class ObjectUtils {
         return ObjectUtils.getParam(innerObject, param.substring(dotPos + 1));
       } else {
         param = param.substring(0, 1).toUpperCase() + param.substring(1);
-        Method method = target.getClass().getMethod("get" + param, null);
-        Object result = method.invoke(target, null);
+        Object result = null;
+        if (param.indexOf("(") > -1) {
+          if (param.indexOf("\"") > -1) {
+            //treat as string
+            String value = param.substring(param.indexOf("\"") + 1, param.lastIndexOf("\""));
+            Class[] argTypes = new Class[]{String.class};
+            Method method = target.getClass().getMethod("get" + param, argTypes);
+            result = method.invoke(target, new Object[]{value});
+          } else {
+            //treat as int
+            String value = param.substring(param.indexOf("(") + 1, param.indexOf(")"));
+            Class[] argTypes = new Class[]{int.class};
+            Method method = target.getClass().getMethod("get" + param, argTypes);
+            result = method.invoke(target, new Object[]{value});
+          }
+        } else {
+          Method method = target.getClass().getMethod("get" + param, null);
+          result = method.invoke(target, null);
+        }
         if (result == null) {
           return null;
         } else if (result instanceof String) {
