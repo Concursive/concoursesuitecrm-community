@@ -25,12 +25,114 @@ function popContactsListMultiple(displayFieldId,highLightedId) {
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
   
+  var selectedIds = "";
+  
+  for (count=0; count<(document.getElementById(displayFieldId).length); count++) {
+          
+          if (document.getElementById(displayFieldId).options[count].value > -1) {
+                  if (selectedIds.length > 0) {
+                          selectedIds = selectedIds + "|";
+                  }
+                          
+                  selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value;
+          }
+          
+  }
+  
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  var newwin=window.open('/ContactsList.do?command=ContactList&listType=list&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId, title, params);
+  var newwin=window.open('/ContactsList.do?command=ContactList&previousSelection=' + selectedIds + '&listType=list&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId, title, params);
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;
   }
+}
+
+function checkKey(displayFieldId, key) {
+        var pattern1 = /\*/;
+        var pattern2 = /9\*1\*/;
+        
+        for (count=0; count<(opener.document.getElementById(displayFieldId).length); count++) {
+                var item = opener.document.getElementById(displayFieldId).options[count].value;
+                
+                if (key.length == 0 || key == null) {
+                
+                //leave the non-contact-select options in there
+                //null checks are for "other" select options
+                
+                    return true;
+                }
+        
+                item = campaignModifyPatternToValue(item);
+                
+            if (item == key) {
+                    return true;
+            }
+        }
+
+    return false;
+}        
+
+function checkArrayKey(array, key) {
+        
+        key = campaignModifyPatternToValue(key);
+        
+        if (array.length == 0 && (key.length == 0 || key == null)) {
+        
+        //leave the non-contact-select options in there
+        //null checks are for "other" select options
+        
+                return true;
+        }
+        
+        if (key == -1) {
+                return true;
+        }
+        
+        for (count=0; count<(array.length); count++) {
+            if (array[count] == key || key.length == 0 || key == null) {
+                    return true;
+            }
+        }
+        
+    return false;
+}
+
+function campaignModifyPatternToValue(value) {
+      var pattern1 = /\*/;
+      var pattern2 = /9\*1\*/;
+      var result = "";
+      
+      if (pattern1.test(value)) {
+              if (pattern2.test(value)) {
+                      result = value.split("*");
+                      return result[2];
+              } else {
+                      return -1;
+              }
+      }
+      
+      return value;
+}
+
+function removeOptions(displayFieldId, ids) {
+      var limit = opener.document.getElementById(displayFieldId).options.length;
+      var item = "";
+      var tempArray = new Array()
+	    var offset = 0;
+  
+      for (x=0; x<limit; x++) {
+              
+            item = opener.document.getElementById(displayFieldId).options[x].value;  
+            
+            if (!(checkArrayKey(ids, item))) {
+                    
+                    opener.removeValue(x);
+                    limit = opener.document.getElementById(displayFieldId).options.length;
+                    x=0;
+            }
+      }
+      
+
 }
 
 function popContactsListMultipleCampaign(displayFieldId,highLightedId) {
@@ -42,8 +144,30 @@ function popContactsListMultipleCampaign(displayFieldId,highLightedId) {
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
   
+  var selectedIds = "";
+  var pattern = /^9\*1\*/;
+  
+  
+  
+  for (count=0; count<(document.getElementById(displayFieldId).length); count++) {
+          if (pattern.test(document.getElementById(displayFieldId).options[count].value)) {
+                  if (selectedIds.length > 0) {
+                          selectedIds = selectedIds + "|";
+                  }
+                  
+                  selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value.substring(4);
+          } else if (document.getElementById(displayFieldId).options[count].value.length > 0 && document.getElementById(displayFieldId).options[count].value > -1) {
+                  if (selectedIds.length > 0) {
+                          selectedIds = selectedIds + "|";
+                  }
+                          
+                  selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value;
+          }
+          
+  }
+  
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  var newwin=window.open('/ContactsList.do?command=ContactList&listType=list&campaign=true&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId, title, params);
+  var newwin=window.open('/ContactsList.do?command=ContactList&previousSelection=' + selectedIds + '&listType=list&campaign=true&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId, title, params);
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;
@@ -59,7 +183,7 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
     if(listType == "list"){
       opener.deleteOptions(displayFieldId);
       for(i=0; i < recipientEmails.length; i++) {
-          opener.insertOption(recipientEmails[i],"",displayFieldId);
+          opener.insertOption(recipientEmails[i],recipientIds[i],displayFieldId);
       }
     }
     else if(listType == "single"){
@@ -69,15 +193,16 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
   }
   
   function setParentListCampaign(recipientEmails,recipientIds,listType,displayFieldId,hiddenFieldId){
-	  //if(recipientEmails.length == 0 && listType == "list"){
-    //  opener.deleteOptions(displayFieldId);
-		//  opener.insertOption("None Selected","",displayFieldId);
-	  //}
+	  if(recipientEmails.length == 0 && listType == "list"){
+      removeOptions(displayFieldId, recipientIds);
+		  //opener.insertOption("None Selected","",displayFieldId);
+	  }
     
     var i = 0;
     var searchList = opener.document.searchForm.searchCriteria;
-
+    
     if(listType == "list"){
+      
       if (searchList.length == 0 || searchList.options[0].value == "-1") {
               opener.deleteOptions(displayFieldId);
       } else {
@@ -88,10 +213,18 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
         }
       }
       
+      //remove contacts that have been un-checked
+      removeOptions(displayFieldId, recipientIds);
+      
       for(i=0; i < recipientEmails.length; i++) {
           var newCriteria = "9|1|" + recipientIds[i];
-          opener.insertOption("Contact Name (is) " + recipientEmails[i],"",displayFieldId);
-          opener.searchCriteria[opener.searchCriteria.length] = newCriteria;
+          
+          //don't insert duplicate options
+          if (!(checkKey(displayFieldId, recipientIds[i]))) {
+                  opener.insertOption("Contact Name (is) " + recipientEmails[i],recipientIds[i],displayFieldId);
+                  opener.searchCriteria[opener.searchCriteria.length] = newCriteria;
+          }
+          
 			}
       
 		}

@@ -329,6 +329,7 @@ public class SearchCriteriaElement {
       pst.setString(++i, this.getOperator());
       pst.setInt(++i, this.getOperatorId());
       pst.setString(++i, this.getText());
+      
       pst.execute();
       pst.close();
 

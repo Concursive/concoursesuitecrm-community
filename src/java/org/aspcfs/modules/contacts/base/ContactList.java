@@ -1025,6 +1025,31 @@ public class ContactList extends Vector {
     rs.close();
     pst.close();
     buildResources(db);
+    
+    if (this.getScl() != null) {
+            joinGlobalContacts(db);
+    }
+  }
+  
+  public void joinGlobalContacts(Connection db) throws SQLException {
+    Iterator i = this.getScl().keySet().iterator();
+    while (i.hasNext()) {
+      Integer group = (Integer) i.next();
+      SearchCriteriaGroup thisGroup = (SearchCriteriaGroup) this.getScl().get(group);
+      
+      Iterator j = thisGroup.iterator();
+      
+      while (j.hasNext()) {
+        SearchCriteriaElement thisElement = (SearchCriteriaElement) j.next();
+        
+        if (thisElement.getFieldId() == 9) {
+                Contact newContact = new Contact(db, thisElement.getText());
+                if (!(this.contains(newContact))) {
+                        this.add(newContact);
+                }
+        }
+      }
+    }
   }
   
   

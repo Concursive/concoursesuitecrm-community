@@ -160,6 +160,46 @@ function addValues(){
 	document.searchForm.searchValue.focus();
 }
 
+function removeValue(index) {
+	var searchList = document.searchForm.searchCriteria;
+	var tempArray = new Array();
+	var offset = 0;
+	var count = 0;
+	
+	
+	if (searchCriteria.length != searchList.length) {
+		for (count=0; count<(searchList.length); count++) {
+			searchCriteria[count] = searchList.options[count].value;
+		}
+	}      
+  
+    searchCriteria[index] = "skip";
+		searchList.options[index] = null;
+		for (i=0; i < searchCriteria.length; i++){
+			if (searchCriteria[i] == "skip") {
+				offset = 1;
+				delete searchCriteria[i];
+				tempArray[i] = searchCriteria[i+offset];
+			}
+			else 
+				if (i+offset == searchCriteria.length) {
+					break;
+				}
+				else {
+					tempArray[i] = searchCriteria[i+offset];
+				}
+		}
+		delete searchCriteria
+		searchCriteria = new Array();
+		for (i=0; i < tempArray.length; i++){
+			if (tempArray[i] != null) {
+				searchCriteria[i] = tempArray[i];
+			}
+		}
+}
+  
+  
+
 function removeValues(){
 	var searchList = document.searchForm.searchCriteria
 	var tempArray = new Array()
@@ -222,6 +262,7 @@ function editValues(){
 }
 
 function saveValues(){
+        
 	var criteria = "";
 	var count=0;
 	var searchList = document.searchForm.searchCriteria;
@@ -229,15 +270,17 @@ function saveValues(){
 	if (searchList.options.length == 0 || searchList.options[0].value == "-1"){
 		criteria = "";
 	} else {
+          
 		if (searchCriteria.length != searchList.length) {
 			delete searchCriteria
 			searchCriteria = new Array();
-		
+      
 			for (count=0; count<(searchList.length); count++) {
 				searchCriteria[count] = searchList.options[count].value;
 			}
 		}
 	
+  
 		for (i = 0; i < searchCriteria.length; i++){
 			criteria += searchCriteria[i];
 			criteria += "^";

@@ -115,7 +115,14 @@ public class Contact extends GenericBean {
     queryRecord(db, contactId);
   }
 
-
+  public boolean equals(Object obj) {
+          if (this.getId() == ((Contact)obj).getId()) {
+                  return true;
+          }
+          
+          return false;
+  }
+  
   /**
    *  Description of the Method
    *

@@ -29,26 +29,20 @@ public final class ContactsList extends CFSModule {
   public String executeCommandContactList(ActionContext context) {
 
     PagedListInfo contactListInfo = this.getPagedListInfo(context, "ContactListInfo");
+    contactListInfo.setEnableJavaScript(true);
+    
     Exception errorMessage = null;
     Connection db = null;
     ContactList contactList = null;
-    contactListInfo.setEnableJavaScript(true);
-    String firstFilter = "",secondFilter = "";
-    String selectedIds = "",hiddenFieldId="",displayFieldId="",listType="";
+    boolean listDone = false;
+    
+    String firstFilter = "", secondFilter = "";
+    String selectedIds = "", hiddenFieldId="", displayFieldId="", listType="";
 
-    HashMap selectedList = (HashMap) context.getSession().getAttribute("selectedContacts");
+    listType = context.getRequest().getParameter("listType");
+    displayFieldId = context.getRequest().getParameter("displayFieldId");
     
-    /*
-     *  Flush the selectedList if its a new selection
-     */
-    if (context.getRequest().getParameter("flushtemplist") != null) {
-      if (((String) context.getRequest().getParameter("flushtemplist")).equalsIgnoreCase("true")) {
-        if (context.getSession().getAttribute("finalContacts") != null) {
-          selectedList = (HashMap) ((HashMap) context.getSession().getAttribute("finalContacts")).clone();
-        }
-      }
-    }
-    
+    //not sure if this is needed
     if (context.getRequest().getParameter("selectedIds") != null) {
       selectedIds = context.getRequest().getParameter("selectedIds");
     }
@@ -57,24 +51,68 @@ public final class ContactsList extends CFSModule {
       hiddenFieldId = context.getRequest().getParameter("hiddenFieldId");
     }
     
-    listType = context.getRequest().getParameter("listType");
-    displayFieldId = context.getRequest().getParameter("displayFieldId");
-    
+    //filter for departments & project teams
     if (!contactListInfo.hasListFilters()) {
-      //filter for departments & project teams
       contactListInfo.addFilter(1, "0");
     }
+    
+    HashMap selectedList = new HashMap();
+    //initialize from page, if list...
+    //put in session
+    
+    if (context.getRequest().getParameter("previousSelection") != null) {
+        int j = 0;
+        
+        StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("previousSelection"), "|");
 
+        while (st.hasMoreTokens()) {
+          //selectedList.put( new Integer(st.nextToken()), "chris@darkhorseventures.com" );
+          
+          selectedList.put( new Integer(st.nextToken()), "" );
+          
+          j++;
+        }
+    }  else {
+        //get selected list from the session
+        selectedList = (HashMap) context.getSession().getAttribute("selectedContacts");
+        
+    }
+    
+    //DEBUG iterate thru session object
+    /**
+    if (selectedList != null && selectedList.size() > 0) {
+            Iterator keyIterator = selectedList.keySet().iterator();
+            while(keyIterator.hasNext()) {
+                    Integer tempKey = (Integer)keyIterator.next();
+                    System.out.println("KEY: " + tempKey + ", " + selectedList.get(tempKey));
+            }
+    }
+    */
+    //end DEBUG
+    
+    //what is "finalContacts"?
+    
+    //Flush the selectedList if its a new selection
+    if (context.getRequest().getParameter("flushtemplist") != null) {
+      if (((String) context.getRequest().getParameter("flushtemplist")).equalsIgnoreCase("true")) {
+        if (context.getSession().getAttribute("finalContacts") != null && context.getRequest().getParameter("previousSelection") == null ) {
+          selectedList = (HashMap) ((HashMap) context.getSession().getAttribute("finalContacts")).clone();
+        }
+      }
+    }
+    
     HashMap finalContactList = (HashMap) context.getSession().getAttribute("finalContacts");
-    boolean listDone = false;
+    
     try {
       db = this.getConnection(context);
+      
       //Build Department List if empty
       if (context.getSession().getAttribute("DepartmentList") == null) {
         LookupList departmentList = new LookupList(db, "lookup_department");
         departmentList.addItem(-1, "--All Departments--");
         context.getSession().setAttribute("DepartmentList", departmentList);
       }
+      
       //Build Project List if empty
       if (context.getSession().getAttribute("ProjectListSelect") == null) {
         ProjectList projects = new ProjectList();
@@ -98,14 +136,24 @@ public final class ContactsList extends CFSModule {
        *  Multiple Emails: email as a value of selected entry from comboBox i.e contactemail_rowCount
        */
       int rowCount = 1;
+      
+      //list
       if (listType.equalsIgnoreCase("list")) {
         while (context.getRequest().getParameter("hiddencontactid" + rowCount) != null) {
           int contactId = 0;
           String emailAddress = "";
           contactId = Integer.parseInt(context.getRequest().getParameter("hiddencontactid" + rowCount));
+          
           if (context.getRequest().getParameter("checkcontact" + rowCount) != null) {
             if (context.getRequest().getParameter("contactemail" + rowCount) != null) {
-              emailAddress = context.getRequest().getParameter("contactemail" + rowCount);
+                    
+              //we want this "emailAddress" variable to be the email only if we are not in Campaign Mgr. 
+              if (context.getRequest().getParameter("campaign") == null) {
+                      emailAddress = context.getRequest().getParameter("contactemail" + rowCount);
+              } else if (!(((String) context.getRequest().getParameter("campaign")).equalsIgnoreCase("true"))) {
+                      emailAddress = context.getRequest().getParameter("contactemail" + rowCount);
+              }
+              
             }
 
             //If User does not have a emailAddress replace with Name(LastFirst)

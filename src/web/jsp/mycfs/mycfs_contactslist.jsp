@@ -26,6 +26,7 @@
 <form name="contactListView" method="post" action="/ContactsList.do?command=ContactList">
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
 <input type=hidden name="letter">
+
 <table width="20%" border="0">
   <tr>
     
@@ -106,7 +107,6 @@
   <%}%>
 	<input type=hidden name="hiddencontactid<%=count%>" value=<%=thisContact.getId()%>>
   <input type=hidden name="hiddenname<%=count%>" value="<%=toHtml(thisContact.getNameLastFirst())%>">
-  <input type=hidden name="campaign" value="<%=Campaign.toString()%>">
   
     </td>
     <td nowrap>
@@ -176,6 +176,7 @@ else{%>
       <input type=hidden name="displayFieldId" value="<%=DisplayFieldId%>">
       <input type=hidden name="hiddenFieldId" value="<%=HiddenFieldId%>">
       <input type=hidden name="listType" value="<%=ListType%>">
+      <input type=hidden name="campaign" value="<%=Campaign.toString()%>">
     </table>
     
     <%if(ListType.equalsIgnoreCase("list")){%>
@@ -188,9 +189,7 @@ else{%>
     <br>
     <br>
     </form>
-    <%}
-      else {
-      %>
+    <%} else {%>
       
       <% if (((String) request.getParameter("campaign")).equalsIgnoreCase("true")) { %>
         <body OnLoad="javascript:setParentListCampaign(recipientEmails,recipientIds,'<%=ListType%>','<%=DisplayFieldId%>','<%=HiddenFieldId%>','<%=User.getBrowserId()%>');window.close()">
@@ -208,6 +207,7 @@ else{%>
           Object id = i.next();
           Object st = selectedContacts.get(id);
           String email = st.toString();
+          
           if(email.startsWith("P:")){
             email = email.substring(2);
           }
@@ -219,7 +219,14 @@ else{%>
           <%	
           }%>
       </body>
-      <%}
-    %>
+      
+      <%
+          if (((String) request.getParameter("campaign")).equalsIgnoreCase("true")) {     
+                  session.removeAttribute("selectedContacts");
+                  session.removeAttribute("finalContacts");
+          }
+      %>
+      
+      <%}%>
 
 
