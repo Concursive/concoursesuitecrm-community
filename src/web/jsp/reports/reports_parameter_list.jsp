@@ -15,16 +15,16 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Reports.do">Report Queue</a> >
-<a href="Reports.do?command=RunReport">Modules</a> >
-<a href="Reports.do?command=ListReports&categoryId=<%= category.getId() %>">Reports</a> >
+<a href="Reports.do">Reports</a> >
+<a href="Reports.do">Queue</a> >
+<a href="Reports.do?command=RunReport">Add</a> >
+<a href="Reports.do?command=ListReports&categoryId=<%= category.getId() %>"><%= toHtml(category.getCategory()) %></a> >
 <a href="Reports.do?command=CriteriaList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>">Criteria List</a> >
 Parameters
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<strong><%= toHtml(category.getCategory()) %></strong><br>
 <strong><%= toHtml(report.getTitle()) %>:</strong>
 <%= toHtml(report.getDescription()) %>
 <p>The following parameters must be specified for this report:</p>

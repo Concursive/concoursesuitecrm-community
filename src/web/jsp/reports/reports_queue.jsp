@@ -20,7 +20,8 @@
 <table class="trails">
 <tr>
 <td>
-Report Queue
+<a href="Reports.do">Reports</a> >
+Queue
 </td>
 </tr>
 </table>

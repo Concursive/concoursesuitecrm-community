@@ -11,9 +11,10 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Reports.do">Report Queue</a> >
-<a href="Reports.do?command=RunReport">Modules</a> >
-<a href="Reports.do?command=ListReports&categoryId=<%= category.getId() %>">Reports</a> >
+<a href="Reports.do">Reports</a> >
+<a href="Reports.do">Queue</a> >
+<a href="Reports.do?command=RunReport">Add</a> >
+<a href="Reports.do?command=ListReports&categoryId=<%= category.getId() %>"><%= toHtml(category.getCategory()) %></a> >
 <a href="Reports.do?command=CriteriaList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>">Criteria List</a> >
 <a href="Reports.do?command=ParameterList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=<%= request.getParameter("criteriaId") %>">Parameters</a> >
 Report Added
@@ -21,9 +22,10 @@ Report Added
 </tr>
 </table>
 <%-- End Trails --%>
-<p>The following report has been added to the report queue.  The report can be
+The following report has been added to the report queue.  The report can be
 retrieved from the <a href="Reports.do?command=ViewQueue">queue</a> once the server 
-has finished processing the report.</p>
+has finished processing the report.<br>
+<br>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">

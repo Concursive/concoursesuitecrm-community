@@ -10,15 +10,16 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Reports.do">Report Queue</a> >
-<a href="Reports.do?command=RunReport">Modules</a> >
-Reports
+<a href="Reports.do">Reports</a> >
+<a href="Reports.do">Queue</a> >
+<a href="Reports.do?command=RunReport">Add</a> >
+<%= toHtml(category.getCategory()) %>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<strong><%= toHtml(category.getCategory()) %></strong><br>
-Choose a report to run:<br>
+Choose a report from the following list, the next step will be to set criteria
+for the report:<br>
 <br>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>

@@ -8,13 +8,14 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Reports.do">Report Queue</a> >
-Modules
+<a href="Reports.do">Reports</a> >
+<a href="Reports.do">Queue</a> >
+Add
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-Choose a module to see a list of corresponding reports:<br>
+To add a report to the queue, choose a module to see a list of corresponding reports:<br>
 <br>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
