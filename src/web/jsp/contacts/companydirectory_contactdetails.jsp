@@ -4,7 +4,7 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
-<form name="details" action="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>&action=modify" method="post">
+<form name="details" action="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>&cmd=modify" method="post">
 <a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 Contact Details<br>

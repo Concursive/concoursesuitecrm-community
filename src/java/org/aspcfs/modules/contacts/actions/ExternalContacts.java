@@ -895,6 +895,11 @@ public final class ExternalContacts extends CFSModule {
     try {
       db = this.getConnection(context);
       buildFormElements(context, db);
+        OrganizationList orgList = new OrganizationList();
+        orgList.setMinerOnly(false);
+        orgList.setShowMyCompany(true);
+        orgList.buildList(db);
+        context.getRequest().setAttribute("OrgList", orgList);          
       cloneContact = new Contact(db, contactId);
       cloneContact.resetBaseInfo();
       context.getRequest().setAttribute("ContactDetails", cloneContact);
