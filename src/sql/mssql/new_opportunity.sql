@@ -68,7 +68,7 @@ CREATE TABLE opportunity_header (
 
 CREATE TABLE opportunity_component (
   id INT IDENTITY PRIMARY KEY,
-  opp_id int references opportunity_header(opp_id),
+  opp_id INT REFERENCES opportunity_header(opp_id),
   owner INT NOT NULL REFERENCES access(user_id),
   description VARCHAR(80),
   closedate DATETIME NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE opportunity_component (
   guessvalue FLOAT,
   highvalue FLOAT,
   stage INT REFERENCES lookup_stage(code),
-  stagedate date NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  stagedate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   commission FLOAT,
   type CHAR(1),
   alertdate DATETIME,
