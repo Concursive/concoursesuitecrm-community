@@ -92,24 +92,19 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandAddTicket(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-tickets-add"))) {
+    if (!hasPermission(context, "accounts-accounts-tickets-add")) {
       return ("PermissionError");
     }
-
     int errorCode = 0;
     Exception errorMessage = null;
     Connection db = null;
     Ticket newTic = null;
     Organization newOrg = null;
-
     String temporgId = context.getRequest().getParameter("orgId");
     int tempid = Integer.parseInt(temporgId);
-
     try {
       db = this.getConnection(context);
       newOrg = new Organization(db, tempid);
-
       if (context.getRequest().getParameter("refresh") != null || (context.getRequest().getParameter("contact") != null && context.getRequest().getParameter("contact").equals("on"))) {
         newTic = (Ticket) context.getFormBean();
         newTic.getHistory().setTicketId(newTic.getId());
@@ -118,16 +113,13 @@ public final class AccountTickets extends CFSModule {
         newTic = new Ticket();
         newTic.setOrgId(tempid);
       }
-
       buildFormElements(context, db, newTic);
-
     } catch (Exception e) {
       errorCode = 1;
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorCode == 0) {
       addModuleBean(context, "View Accounts", "Add a Ticket");
       context.getRequest().setAttribute("OrgDetails", newOrg);
@@ -136,7 +128,6 @@ public final class AccountTickets extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-
   }
 
 
@@ -385,6 +376,7 @@ public final class AccountTickets extends CFSModule {
       UserList userList = new UserList();
       userList.setEmptyHtmlSelectRecord("-- None --");
       userList.setBuildContact(true);
+      userList.setBuildContactDetails(false);
       userList.setDepartment(newTic.getDepartmentCode());
       userList.setExcludeDisabledIfUnselected(true);
       userList.buildList(db);
@@ -406,14 +398,13 @@ public final class AccountTickets extends CFSModule {
       context.getRequest().setAttribute("SubList1", subList1);
 
       ContactList contactList = new ContactList();
-
       if (newTic != null && newTic.getOrgId() != -1) {
         contactList.setBuildDetails(false);
+        contactList.setBuildTypes(false);
         contactList.setOrgId(newTic.getOrgId());
         contactList.setEmptyHtmlSelectRecord("-- None --");
         contactList.buildList(db);
       }
-
       context.getRequest().setAttribute("ContactList", contactList);
 
       TicketCategoryList subList2 = new TicketCategoryList();
@@ -582,10 +573,8 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   protected void buildFormElements(ActionContext context, Connection db, Ticket newTic) throws SQLException {
-
     LookupList departmentList = new LookupList(db, "lookup_department");
     departmentList.addItem(0, "-- None --");
-    //departmentList.setJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=AddTicket&auto-populate=true#department';document.forms[0].submit()");
     departmentList.setJsEvent("onChange=\"javascript:updateUserList();\"");
     context.getRequest().setAttribute("DepartmentList", departmentList);
 
@@ -602,7 +591,6 @@ public final class AccountTickets extends CFSModule {
     TicketCategoryList categoryList = new TicketCategoryList();
     categoryList.setCatLevel(0);
     categoryList.setParentCode(0);
-    //categoryList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=AddTicket&auto-populate=true&refresh=1#categories';document.forms[0].submit()");
     categoryList.setHtmlJsEvent("onChange=\"javascript:updateSubList1();\"");
     categoryList.buildList(db);
     context.getRequest().setAttribute("CategoryList", categoryList);
@@ -610,30 +598,30 @@ public final class AccountTickets extends CFSModule {
     UserList userList = new UserList();
     userList.setEmptyHtmlSelectRecord("-- None --");
     userList.setBuildContact(true);
+    userList.setBuildContactDetails(false);
     userList.setExcludeDisabledIfUnselected(true);
-    userList.setDepartment(newTic.getDepartmentCode());
-    userList.buildList(db);
+    if (newTic.getDepartmentCode() > 0) {
+      userList.setDepartment(newTic.getDepartmentCode());
+      userList.buildList(db);
+    }
     context.getRequest().setAttribute("UserList", userList);
 
     ContactList contactList = new ContactList();
-    //contactList.setTypeId(Integer.parseInt(typeId));
     contactList.setBuildDetails(false);
+    contactList.setBuildTypes(false);
     contactList.setOrgId(Integer.parseInt(context.getRequest().getParameter("orgId")));
     contactList.buildList(db);
     context.getRequest().setAttribute("ContactList", contactList);
 
     TicketCategoryList subList1 = new TicketCategoryList();
-
     subList1.setCatLevel(1);
     subList1.setParentCode(newTic.getCatCode());
-    //subList1.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=AddTicket&auto-populate=true&refresh=2#categories';document.forms[0].submit()");
     subList1.setHtmlJsEvent("onChange=\"javascript:updateSubList2();\"");
     subList1.buildList(db);
     context.getRequest().setAttribute("SubList1", subList1);
 
     TicketCategoryList subList2 = new TicketCategoryList();
     subList2.setCatLevel(2);
-
     if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(context.getRequest().getParameter("refresh")) == 1) {
       subList2.setParentCode(0);
       newTic.setSubCat1(0);
@@ -645,15 +633,12 @@ public final class AccountTickets extends CFSModule {
     } else {
       subList2.setParentCode(newTic.getSubCat1());
     }
-
-    //subList2.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=AddTicket&auto-populate=true&refresh=3#categories';document.forms[0].submit()");
     subList2.setHtmlJsEvent("onChange=\"javascript:updateSubList3();\"");
     subList2.buildList(db);
     context.getRequest().setAttribute("SubList2", subList2);
 
     TicketCategoryList subList3 = new TicketCategoryList();
     subList3.setCatLevel(3);
-
     if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(context.getRequest().getParameter("refresh")) == 2)) {
       subList3.setParentCode(0);
       newTic.setSubCat2(0);
@@ -664,14 +649,11 @@ public final class AccountTickets extends CFSModule {
     } else {
       subList3.setParentCode(newTic.getSubCat2());
     }
-
     subList3.buildList(db);
     context.getRequest().setAttribute("SubList3", subList3);
-
     if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(context.getRequest().getParameter("refresh")) == 3)) {
       newTic.setSubCat3(0);
     }
-
     context.getRequest().setAttribute("TicketDetails", newTic);
   }
 
@@ -735,6 +717,7 @@ public final class AccountTickets extends CFSModule {
       userList.setEmptyHtmlSelectRecord("-- None --");
       if ((departmentCode != null) && (!"0".equals(departmentCode))) {
         userList.setBuildContact(true);
+        userList.setBuildContactDetails(false);
         userList.setDepartment(Integer.parseInt(departmentCode));
         userList.buildList(db);
       }
@@ -764,6 +747,7 @@ public final class AccountTickets extends CFSModule {
       ContactList contactList = new ContactList();
       if (orgId != null && !"-1".equals(orgId)) {
         contactList.setBuildDetails(false);
+        contactList.setBuildTypes(false);
         contactList.setPersonalId(getUserId(context));
         contactList.setOrgId(Integer.parseInt(orgId));
         contactList.buildList(db);
