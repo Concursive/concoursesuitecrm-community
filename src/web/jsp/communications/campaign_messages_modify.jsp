@@ -1,28 +1,45 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.StringUtils" %>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script type="text/javascript" src="javascript/stringbuilder.js"></script>
-<script type="text/javascript" src="javascript/getxhtml.js"></script>
-<script type="text/javascript" src="javascript/richedit.js"></script>
-<script type="text/javascript" src="javascript/coolbuttons.js"></script>
-<script>
-  function save() {
-	<dhv:browser id="ie" minVersion="5.0" os="win" include="true">
-    var edit = document.all.edit;
-    document.all.messageText.value = edit.getHTML();
-    edit.focus();
-  </dhv:browser>
-  }
-</script>
-<style>
-  td.coolButton {
-    font: menu;
-  }
-  table.coolBar {
-    background: buttonface;
-  }  
+<%-- HtmlArea --%>
+<script type="text/javascript" src="htmlarea/htmlarea.js"></script>
+<script type="text/javascript" src="htmlarea/htmlarea-lang-en.js"></script>
+<script type="text/javascript" src="htmlarea/dialog.js"></script>
+<style type="text/css">
+@import url(htmlarea/htmlarea.css);
+textarea { background-color: #fff; border: 1px solid 00f; }
 </style>
+<script type="text/javascript">
+var editor = null;
+function initEditor() {
+  editor = new HTMLArea("messageText");
+  editor.generate();
+}
+function insertHTML() {
+  var html = prompt("Enter some HTML code here");
+  if (html) {
+    editor.insertHTML(html);
+  }
+}
+function highlight() {
+  editor.surroundHTML('<span style="background:yellow">', '</span>');
+}
+</script>
+<%-- End HtmlArea + look at body onLoad --%>
+<%
+  boolean enhancedEditor = false;
+  if (("ie".equals(User.getBrowserId()) && User.getBrowserVersion() >= 5.5) ||
+      ("moz".equals(User.getBrowserId()) && User.getBrowserVersion() >= 1.3)) {
+    enhancedEditor = true;
+%>
+<body onLoad="initEditor();document.forms[0].name.focus();">
+<% 
+  } else {
+%>
+<body onLoad="document.forms[0].name.focus();">
+<%}%>
 <form name="modMessage" action="CampaignManagerMessage.do?command=Update&auto-populate=true" method="post">
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManagerMessage.do?command=View">Message List</a> >
@@ -31,13 +48,10 @@ Modify Message
 <hr color="#BFBFBB" noshade>
 <input type="hidden" name="id" value="<%= Message.getId() %>">
 <input type="hidden" name="modified" value="<%= Message.getModified() %>">
-
-<% if (request.getParameter("return") != null) {%>
-<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
-<%}%>
-
+<dhv:evaluate if="<%= request.getParameter("return") != null %>">
+  <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
+</dhv:evaluate>
 <input type="submit" value="Update Message" name="Save" onclick="javascript:save();">
-
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
@@ -59,11 +73,10 @@ Modify Message
       Name
     </td>
     <td valign="center" width="100%">
-      <input type=text size=50 maxlength=80 name="name" value="<%= toHtmlValue(Message.getName()) %>">
+      <input type="text" size="50" maxlength="80" name="name" value="<%= toHtmlValue(Message.getName()) %>">
 			<font color="red">*</font> <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
-  
   <tr>
     <td valign="top" align="right" class="formLabel">
       Internal Description
@@ -72,7 +85,6 @@ Modify Message
       <input type="text" size="50" maxlength="255" name="description" value="<%= toHtmlValue(Message.getDescription()) %>">
     </td>
   </tr>
-	
 	<tr>
     <td valign="top" align="right" class="formLabel">
       Message
@@ -83,51 +95,16 @@ Modify Message
       (Email address)<br>
       Subject: <input type="text" size="50" maxlength="255" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
 			<font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %><br>
-      &nbsp;<br>
-		<dhv:browser id="ie" minVersion="5.0" os="win" include="false">
-		  HTML tags are allowed in text entry<br>
-      <textarea name="messageText" rows="10" cols="75" wrap="physical"><%= StringUtils.toHtmlTextValue(Message.getMessageText()) %></textarea>
-    </dhv:browser>
-		<dhv:browser id="ie" minVersion="5.0" os="win" include="true">
-		  <input type="hidden" name="messageText" value="">
-      <table cellspacing="0" id="toolBar" class="coolBar">
-        <tr>
-          <td class="coolButton" onclick="document.all.edit.setBold(); document.all.edit.frameWindow.focus();">
-            &nbsp;<b>Bold</b>&nbsp;
-          </td>
-          <td class="coolButton" onclick="document.all.edit.setItalic(); document.all.edit.frameWindow.focus();">
-            &nbsp;<i>Italic</i>&nbsp;
-          </td>
-          <td class="coolButton" onclick="document.all.edit.setUnderline(); document.all.edit.frameWindow.focus();">
-            &nbsp;<u>Underline</u>&nbsp;
-          </td>
-          <td>|</td>
-          <td class="coolButton" onclick="document.all.edit.setColor('#000000'); document.all.edit.frameWindow.focus();">
-            &nbsp;<font color="#000000">Black</font>&nbsp;
-          </td>
-          <td class="coolButton" onclick="document.all.edit.setColor('#0000FF'); document.all.edit.frameWindow.focus();">
-            &nbsp;<font color="#0000FF">Blue</font>&nbsp;
-          </td>
-          <td class="coolButton" onclick="document.all.edit.setColor('#00FF00'); document.all.edit.frameWindow.focus();">
-            &nbsp;<font color="#00FF00">Green</font>&nbsp;
-          </td>
-          <td class="coolButton" onclick="document.all.edit.setColor('#FF7E00'); document.all.edit.frameWindow.focus();">
-            &nbsp;<font color="#FF7E00">Orange</font>&nbsp;
-          </td>
-          <td class="coolButton" onclick="document.all.edit.setColor('#FF0000'); document.all.edit.frameWindow.focus();">
-            &nbsp;<font color="#FF0000">Red</font>&nbsp;
-          </td>
-          <td class="coolButton" onclick="document.all.edit.setColor('#FFFF00'); document.all.edit.frameWindow.focus();">
-            &nbsp;<font color="#FFFF00">Yellow</font>&nbsp;
-          </td>
-        </tr>
-      </table>
-      <iframe id="edit" frameborder="0" class="richEdit" style="border: 1px solid #cccccc; width: 100%; height: 250;" onblur="return false">
-         <body style="color: black; background: white;font: 8pt verdana;">
-           <%= Message.getMessageText() %>
-         </body>
-      </iframe>
-			</dhv:browser>
+      <dhv:evaluate if="<%= !enhancedEditor %>">
+        &nbsp;<br>
+        <b>Plain Text</b> editing mode: html tags are not supported in message editor<br>
+        <input type="hidden" name="formatLineFeeds" value="true"/>
+        <textarea id="messageText" name="messageText" style="width:550; border: inset 2pt" rows="20"><%= StringUtils.toHtmlTextValue(Message.getMessageText()) %></textarea>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= enhancedEditor %>">
+        <input type="hidden" name="formatLineFeeds" value="false"/>
+        <textarea id="messageText" name="messageText" style="width:550" rows="20"><%= toString(Message.getMessageText()) %></textarea>
+      </dhv:evaluate>
     </td>
   </tr>
 </table>
@@ -142,11 +119,4 @@ Modify Message
 <%}%>
 <input type="reset" value="Reset">
 </form>
-<script type="text/javascript">
-  var all = document.all;
-  var l = all.length;
-  for (var i = 0; i < l; i++) {
-    if (all[i].tagName != "INPUT" && all[i].tagName != "TEXTAREA")
-      all[i].unselectable = "on";
-  }
-</script>
+</body>
