@@ -1556,9 +1556,6 @@ public class Organization extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public void buildRevenueYTD(Connection db, int year, int type, int ownerId) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT sum(rv.amount) as s " +
@@ -1568,7 +1565,7 @@ public class Organization extends GenericBean {
       sql.append("AND rv.type = ? ");
     }
 
-    pst = db.prepareStatement(sql.toString());
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, orgId);
     pst.setInt(++i, year);
@@ -1576,7 +1573,7 @@ public class Organization extends GenericBean {
     if (type > 0) {
       pst.setInt(++i, type);
     }
-    rs = pst.executeQuery();
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       this.setYTD(rs.getDouble("s"));
     }
