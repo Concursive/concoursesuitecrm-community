@@ -28,7 +28,8 @@ public class ContactReport extends ContactList {
 	protected int modifiedBy = -1;
 	protected int limitId = -1;
 	protected ArrayList criteria = null;
-	String[] params = null;
+	protected String[] params = new String[] {"id", "nameLast", "nameFirst", "company", "type", "nameMiddle", "title", "department", "entered", "enteredBy", "modified", "modifiedBy", "owner", "businessEmail", "businessPhone", "businessAddress", "city", "state", "zip", "country", "notes"};
+
 	
 	protected OrganizationReport orgReportJoin = new OrganizationReport();
 	protected boolean joinOrgs = false;
@@ -71,11 +72,9 @@ public class ContactReport extends ContactList {
 	public void setCriteria(String[] criteriaString) {
 		if (criteriaString != null) {
 			params = criteriaString;
-			criteria = new ArrayList(Arrays.asList(params));
-		} else {
-			criteria = new ArrayList();
-		}
-	
+		} 
+		
+		criteria = new ArrayList(Arrays.asList(params));
 		this.criteria = criteria;
 	}
 	

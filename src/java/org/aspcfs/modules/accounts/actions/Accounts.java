@@ -318,6 +318,7 @@ public final class Accounts extends CFSModule {
         contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         contactReport.setPersonalId(this.getUserId(context));
 
+	contactReport.setCriteria(null);
         contactReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
 
         if (ownerCriteria.equals("my")) {

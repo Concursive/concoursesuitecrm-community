@@ -28,7 +28,8 @@ public class OpportunityReport extends OpportunityList {
 	protected int enteredBy = -1;
 	protected int modifiedBy = -1;
 	protected ArrayList criteria = null;
-	String[] params = null;
+	protected String[] params = new String[] {"id", "description", "contact", "owner", "amount1", "amount2", "amount3", "stageName", "stageDate", "probability", "revenueStart", "terms", "alertDate", "commission", "entered", "enteredBy", "modified", "modifiedBy"};
+
 	
 	protected OrganizationReport orgReportJoin = new OrganizationReport();
 	protected boolean joinOrgs = false;
@@ -72,11 +73,9 @@ public class OpportunityReport extends OpportunityList {
 	public void setCriteria(String[] criteriaString) {
 		if (criteriaString != null) {
 			params = criteriaString;
-			criteria = new ArrayList(Arrays.asList(params));
-		} else {
-			criteria = new ArrayList();
 		}
-	
+		
+		criteria = new ArrayList(Arrays.asList(params));
 		this.criteria = criteria;
 	}
 	
