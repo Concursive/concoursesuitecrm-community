@@ -473,7 +473,6 @@ public final class ExternalContacts extends CFSModule {
     Connection db = null;
     ContactList contactList = new ContactList();
     ContactTypeList contactTypeList = new ContactTypeList();
-    context.getSession().removeAttribute("ContactMessageListInfo");
     try {
       db = this.getConnection(context);
 
@@ -493,7 +492,7 @@ public final class ExternalContacts extends CFSModule {
       //set properties on contact list
       contactList.setBuildDetails(true);
       contactList.setBuildTypes(false);
-      contactList.setPagedListInfo(externalContactsInfo);
+      contactList.setPagedListInfo(searchContactsInfo);
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
       contactList.setTypeId(externalContactsInfo.getFilterKey("listFilter1"));
 
@@ -510,7 +509,11 @@ public final class ExternalContacts extends CFSModule {
         contactList.setOwner(this.getUserId(context));
         contactList.setPersonalId(ContactList.IGNORE_PERSONAL);
       }
+      
       contactList.buildList(db);
+      
+      //set the view to search
+      externalContactsInfo.setListView("search");
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -600,7 +603,9 @@ public final class ExternalContacts extends CFSModule {
 
       String contactId = context.getRequest().getParameter("contactId");
 
-      context.getSession().removeAttribute("ContactMessageListInfo");
+      if("true".equals(context.getRequest().getParameter("contactId"))){
+        context.getSession().removeAttribute("ContactMessageListInfo");
+      }
       PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ContactMessageListInfo");
       pagedListInfo.setLink("ExternalContacts.do?command=ViewMessages&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
 
@@ -1638,7 +1643,9 @@ public final class ExternalContacts extends CFSModule {
       contactTypeList.setShowDisabled(false);
       contactTypeList.setIncludeDefinedByUser(this.getUserId(context));
       contactTypeList.setIncludeSelectedByUser(Integer.parseInt(contactId));
-      contactTypeList.setIncludeIds(previousSelection.replace('|', ','));
+      if(previousSelection != null){
+        contactTypeList.setIncludeIds(previousSelection.replace('|', ','));
+      }
       if ("accounts".equals(category)) {
         contactTypeList.setCategory(ContactType.ACCOUNT);
       } else {
