@@ -98,17 +98,17 @@
     <submenu name="details">
       <long_html value="Details"/>
       <permission value=""/>
-      <link value="Leads.do?command=DetailsOpp&amp;id=${id}"/>
+      <link value="Leads.do?command=DetailsOpp&amp;headerId=${id}"/>
     </submenu>
     <submenu name="calls">
       <long_html value="Calls"/>
       <permission value="pipeline-opportunities-calls-view"/>
-      <link value="LeadsCalls.do?command=View&amp;oppId=${id}"/>
+      <link value="LeadsCalls.do?command=View&amp;headerId=${id}"/>
     </submenu>
     <submenu name="documents">
       <long_html value="Documents"/>
       <permission value="pipeline-opportunities-documents-view"/>
-      <link value="LeadsDocuments.do?command=View&amp;oppId=${id}"/>
+      <link value="LeadsDocuments.do?command=View&amp;headerId=${id}"/>
     </submenu>
 <!--
     <submenu name="relationships">
@@ -208,6 +208,11 @@
       <long_html value="Login History"/>
       <permission value="admin-users-view"/>
       <link value="Users.do?command=ViewLog&amp;id=${id}"/>
+    </submenu>
+    <submenu name="viewpoints">
+      <long_html value="Viewpoints"/>
+      <permission value="admin-users-view"/>
+      <link value="Viewpoints.do?command=ListViewpoints&amp;userId=${id}"/>
     </submenu>
   </container>    
   

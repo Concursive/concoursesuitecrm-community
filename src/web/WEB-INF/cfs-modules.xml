@@ -527,6 +527,7 @@
     <action name="AdminFieldsGroup"/>
     <action name="Users"/>
     <action name="Roles"/>
+    <action name="Viewpoints"/>
     <page title="System Administration"/>
     <permission value="admin-view"/>
     <long_html value="System Administration"/>

@@ -282,7 +282,8 @@ CREATE TABLE permission_category (
   enabled boolean NOT NULL DEFAULT true,
   active boolean NOT NULL DEFAULT true,
   folders boolean NOT NULL DEFAULT false,
-  lookups boolean NOT NULL DEFAULT false
+  lookups boolean NOT NULL DEFAULT false,
+  viewpoints BOOLEAN DEFAULT false
 );
 
 CREATE TABLE permission (
@@ -296,7 +297,8 @@ CREATE TABLE permission (
   description VARCHAR(255) NOT NULL DEFAULT '',
   level INT NOT NULL DEFAULT 0,
   enabled BOOLEAN NOT NULL DEFAULT true,
-  active BOOLEAN NOT NULL DEFAULT true
+  active BOOLEAN NOT NULL DEFAULT true,
+  viewpoints BOOLEAN DEFAULT false
 );
 
 CREATE TABLE role_permission (
@@ -484,7 +486,7 @@ CREATE TABLE contact_type_levels (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE lookup_lists_lookup(
+CREATE TABLE lookup_lists_lookup (
   id SERIAL PRIMARY KEY,
   module_id INTEGER NOT NULL REFERENCES permission_category(category_id),
   lookup_id INT NOT NULL,
@@ -494,4 +496,25 @@ CREATE TABLE lookup_lists_lookup(
   description TEXT,
   entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   category_id INT NOT NULL
+);
+
+CREATE TABLE viewpoint(
+  viewpoint_id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES access(user_id),
+  vp_user_id INT NOT NULL REFERENCES access(user_id),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  enabled BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE viewpoint_permission (
+ vp_permission_id SERIAL PRIMARY KEY,
+ viewpoint_id INT NOT NULL references viewpoint(viewpoint_id),
+ permission_id INT NOT NULL references permission(permission_id),
+ viewpoint_view BOOLEAN NOT NULL DEFAULT false,
+ viewpoint_add BOOLEAN NOT NULL DEFAULT false,
+ viewpoint_edit BOOLEAN NOT NULL DEFAULT false,
+ viewpoint_delete BOOLEAN NOT NULL DEFAULT false
 );

@@ -101,35 +101,41 @@ public final class ProcessPacket extends CFSModule {
 
         //2nd connection when transactions need to do additional processing
         dbLookup = this.getConnection(context);
-        dbLookup.setAutoCommit(false);
-
+        
         //Process the transactions
         LinkedList transactionList = new LinkedList();
         xml.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
         Iterator trans = transactionList.iterator();
-        while (trans.hasNext()) {
-          //Configure the transaction
-          Element thisElement = (Element) trans.next();
-          Transaction thisTransaction = new Transaction();
-          thisTransaction.setPacketContext(packetContext);
-
-          SyncTable metaMapping = new SyncTable();
-          metaMapping.setName("meta");
-          metaMapping.setMappedClassName("org.aspcfs.modules.service.base.TransactionMeta");
-          thisTransaction.addMapping("meta", metaMapping);
-          thisTransaction.build(thisElement);
-          //Execute the transaction
-          int statusCode = thisTransaction.execute(db, dbLookup);
-          //Build a status from the transaction response
-          TransactionStatus thisStatus = new TransactionStatus();
-          thisStatus.setStatusCode(statusCode);
-          thisStatus.setId(thisTransaction.getId());
-          thisStatus.setMessage(thisTransaction.getErrorMessage());
-          thisStatus.setRecordList(thisTransaction.getRecordList());
-          statusMessages.add(thisStatus);
+        try {
+          dbLookup.setAutoCommit(false);
+          while (trans.hasNext()) {
+            //Configure the transaction
+            Element thisElement = (Element) trans.next();
+            Transaction thisTransaction = new Transaction();
+            thisTransaction.setPacketContext(packetContext);
+  
+            SyncTable metaMapping = new SyncTable();
+            metaMapping.setName("meta");
+            metaMapping.setMappedClassName("org.aspcfs.modules.service.base.TransactionMeta");
+            thisTransaction.addMapping("meta", metaMapping);
+            thisTransaction.build(thisElement);
+            //Execute the transaction
+            int statusCode = thisTransaction.execute(db, dbLookup);
+            //Build a status from the transaction response
+            TransactionStatus thisStatus = new TransactionStatus();
+            thisStatus.setStatusCode(statusCode);
+            thisStatus.setId(thisTransaction.getId());
+            thisStatus.setMessage(thisTransaction.getErrorMessage());
+            thisStatus.setRecordList(thisTransaction.getRecordList());
+            statusMessages.add(thisStatus);
+          }
+          dbLookup.commit();
+        } catch (SQLException e) {
+          dbLookup.rollback();
+          throw new SQLException(e.getMessage());
+        } finally {
+          dbLookup.setAutoCommit(true);
         }
-        dbLookup.commit();
-        dbLookup.setAutoCommit(true);
         //Each transaction provides a status that needs to be returned to the client
         if (statusMessages.size() == 0 && transactionList.size() == 0) {
           TransactionStatus thisStatus = new TransactionStatus();

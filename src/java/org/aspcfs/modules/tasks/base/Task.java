@@ -1009,11 +1009,9 @@ public class Task extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     String sql = null;
-
     if (!isValid(db)) {
       return false;
     }
-
     try {
       db.setAutoCommit(false);
       sql = "INSERT INTO task " +
@@ -1054,7 +1052,6 @@ public class Task extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -1082,7 +1079,6 @@ public class Task extends GenericBean {
     if (!isValid(db)) {
       return -1;
     }
-
     try {
       db.setAutoCommit(false);
       Task previousTask = new Task(db, id);
@@ -1124,7 +1120,6 @@ public class Task extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -1149,7 +1144,6 @@ public class Task extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Task ID not specified");
     }
-
     try {
       db.setAutoCommit(false);
       sql = "DELETE FROM tasklink_contact " +
@@ -1282,7 +1276,6 @@ public class Task extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -1330,7 +1323,6 @@ public class Task extends GenericBean {
     } catch (SQLException e) {
       if (commit) {
         db.rollback();
-        db.setAutoCommit(true);
       }
       throw new SQLException(e.getMessage());
     } finally {

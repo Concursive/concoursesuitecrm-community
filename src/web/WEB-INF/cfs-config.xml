@@ -200,8 +200,6 @@
     <forward name="ListContactsOK" resource="/contacts/companydirectory_listcontacts.jsp" layout="nav"/>
     <forward name="ContactDetailsOK" resource="/contacts/companydirectory_contactdetails.jsp" layout="nav"/>
     <forward name="SearchContactsFormOK" resource="/contacts/companydirectory_searchcontacts.jsp" layout="nav"/>
-    <forward name="ListOppsOK" resource="/contacts/companydirectory_listopps.jsp" layout="nav"/>
-    <forward name="AddOppOK" resource="/contacts/companydirectory_addopp.jsp" layout="nav"/>
     <forward name="FieldsEmptyOK" resource="/contacts/companydirectory_nofields.jsp" layout="nav"/>
     <forward name="FieldsOK" resource="/contacts/companydirectory_fields.jsp" layout="nav"/>
     <forward name="FieldRecordListOK" resource="/contacts/companydirectory_fields_list.jsp" layout="nav"/>
@@ -225,7 +223,7 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
   <action name="ExternalContactsOpps" class="org.aspcfs.modules.contacts.actions.ExternalContactsOpps">
-    <bean name="OppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
+    <bean name="oppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
     <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
@@ -328,7 +326,6 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
-    <forward name="HomeOK" resource="/pipeline/leads.jsp" layout="nav"/>
     <forward name="AddOK" resource="/pipeline/leads_add.jsp" layout="nav"/>
     <forward name="SearchOK" resource="/pipeline/LeadsSearchOpp.jsp" layout="nav"/>
     <forward name="DashboardOK" resource="/pipeline/LeadsDashboard.jsp" layout="nav"/>
@@ -371,6 +368,7 @@
     <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="ViewOK" resource="/pipeline/leads_listcalls.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/pipeline/leads_addcall.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/pipeline/leads_detailscall.jsp" layout="nav"/>
     <forward name="ModifyPopupOK" resource="/pipeline/leads_modifycall.jsp" layout="style"/>
     <forward name="ModifyOK" resource="/pipeline/leads_modifycall.jsp" layout="nav"/>
@@ -906,6 +904,23 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
+  
+  <action name="Viewpoints" class="org.aspcfs.modules.admin.actions.Viewpoints">
+    <bean name="viewpoint" class="org.aspcfs.modules.admin.base.Viewpoint" scope="request" />
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
+    <forward name="ListViewpointsOK" resource="/admin/admin_listviewpoints.jsp" layout="nav"/>
+    <forward name="ViewpointInsertFormOK" resource="/admin/admin_addviewpoint.jsp" layout="nav"/>
+    <forward name="ViewpointAddOK" resource="/Viewpoints.do?command=ListViewpoints"/>
+    <forward name="ViewpointDetailsOK" resource="/admin/admin_viewpoint_details.jsp" layout="nav"/>
+    <forward name="ViewpointDetailsModifyOK" resource="/admin/admin_viewpoint_details.jsp" layout="nav"/>
+    <forward name="ViewpointUpdateOK" resource="/Viewpoints.do?command=ListViewpoints"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+  </action>
+  
   <!-- End Setup Module -->
   
   <action name="Help" class="org.aspcfs.modules.help.actions.Help">

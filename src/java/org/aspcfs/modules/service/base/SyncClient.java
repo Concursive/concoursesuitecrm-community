@@ -63,13 +63,12 @@ public class SyncClient extends GenericBean {
     rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Call record not found.");
     }
     rs.close();
     pst.close();
+    if (id == -1) {
+      throw new SQLException("Sync Client record not found.");
+    }
   }
   
   public boolean checkNormalSync(Connection db) throws SQLException {

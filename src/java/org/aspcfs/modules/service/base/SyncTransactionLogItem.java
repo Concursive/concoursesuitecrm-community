@@ -75,13 +75,12 @@ public class SyncTransactionLogItem {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Sync Transaction Log not found");
     }
     rs.close();
     pst.close();
+    if (id == -1) {
+      throw new SQLException("Sync Transaction Log not found");
+    }
   }
 
 

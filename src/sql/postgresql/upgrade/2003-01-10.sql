@@ -95,6 +95,7 @@ Modules update Author : Mathur ; Dated : 01/06/03
 */
 
 drop table permission_category;
+DROP sequence permission_cate_category_id_seq;
 
 CREATE TABLE permission_category (
   category_id SERIAL PRIMARY KEY,
@@ -131,15 +132,15 @@ insert into permission_category (category_id, category, level, folders, lookups)
 insert into permission_category (category_id, category, level, folders, lookups) VALUES (2, 'Contacts & Resources', 30, 't', 't');
 insert into permission_category (category_id, category, level, enabled, folders, lookups) VALUES (3, 'Auto Guide', 120, 'f', 'f', 'f');
 insert into permission_category (category_id, category, level, folders, lookups) VALUES (4, 'Pipeline Management', 40, 'f', 't');
-insert into permission_category (category_id, category, level, enabled, folders, lookups) VALUES (5, 'Demo', 110, 'f', 'f', 'f');
+insert into permission_category (category_id, category, level, enabled, folders, lookups) VALUES (11, 'Demo', 110, 'f', 'f', 'f');
 insert into permission_category (category_id, category, level, folders, lookups) VALUES (6, 'Campaign Manager', 60, 'f', 'f');
 insert into permission_category (category_id, category, level, folders, lookups) VALUES (7, 'Project Management', 70, 'f', 'f');
 insert into permission_category (category_id, category, level, folders, lookups) VALUES (8, 'Tickets', 80, 'f', 't');
 insert into permission_category (category_id, category, level, folders, lookups) VALUES (9, 'Admin', 90, 'f', 'f');
 insert into permission_category (category_id, category, level, folders, lookups) VALUES (10, 'Help', 100, 'f', 'f');
-insert into permission_category (category_id, category, level, folders, lookups) VALUES (11, 'System', 10, 'f', 'f');
-insert into permission_category (category_id, category, level, folders, lookups) VALUES (12, 'My Home Page', 20, 'f', 'f');
-
+insert into permission_category (category_id, category, level, folders, lookups) VALUES (13, 'System', 10, 'f', 'f');
+insert into permission_category (category_id, category, level, folders, lookups) VALUES (14, 'My Home Page', 20, 'f', 'f');
+SELECT setval ('"permission_cate_category_id_seq"', 14, true);
 
 ALTER TABLE permission ADD FOREIGN KEY (category_id) REFERENCES permission_category(category_id);
 ALTER TABLE custom_field_category ADD FOREIGN KEY (module_id) REFERENCES module_field_categorylink(category_id);

@@ -108,13 +108,12 @@ public class TicketLog extends GenericBean {
     rs = st.executeQuery(sql.toString());
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
-      throw new SQLException("Ticket Log not found");
     }
     rs.close();
     st.close();
+    if (id == -1) {
+      throw new SQLException("Ticket Log not found");
+    }
   }
 
 
@@ -786,17 +785,12 @@ public class TicketLog extends GenericBean {
    *@since
    */
   public void insert(Connection db) throws SQLException {
-
     if (ticketId == -1) {
       throw new SQLException("Log Entry must be associated to a Ticket " + this.getId());
     }
-
     StringBuffer sql = new StringBuffer();
-
     try {
-
       db.setAutoCommit(false);
-
       sql.append(
           "INSERT INTO TICKETLOG (pri_code, level_code, department_code, cat_code, scode, ticketid, comment, closed, ");
       if (entered != null) {
@@ -814,7 +808,6 @@ public class TicketLog extends GenericBean {
         sql.append("?, ");
       }
       sql.append("?, ?) ");
-
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       if (this.getPriorityCode() > -1) {
@@ -862,7 +855,6 @@ public class TicketLog extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -951,18 +943,16 @@ public class TicketLog extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Ticket Log ID not specified.");
     }
-
-    Statement st = db.createStatement();
-
     try {
       db.setAutoCommit(false);
+      Statement st = db.createStatement();
       st.executeUpdate("DELETE FROM ticketlog WHERE id = " + this.getId());
+      st.close();
       db.commit();
     } catch (SQLException e) {
       db.rollback();
     } finally {
       db.setAutoCommit(true);
-      st.close();
     }
     return true;
   }

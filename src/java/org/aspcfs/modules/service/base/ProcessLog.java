@@ -293,13 +293,12 @@ public class ProcessLog extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Process Log not found");
     }
     rs.close();
     pst.close();
+    if (id == -1) {
+      throw new SQLException("Process Log not found");
+    }
   }
 
 

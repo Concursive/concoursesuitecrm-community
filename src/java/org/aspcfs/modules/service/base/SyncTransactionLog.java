@@ -77,13 +77,12 @@ public class SyncTransactionLog extends ArrayList {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Sync Transaction Log not found");
     }
     rs.close();
     pst.close();
+    if (id == -1) {
+      throw new SQLException("Sync Transaction Log not found");
+    }
   }
 
 
@@ -292,7 +291,6 @@ public class SyncTransactionLog extends ArrayList {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -311,10 +309,8 @@ public class SyncTransactionLog extends ArrayList {
     if (this.getId() == -1) {
       throw new SQLException("Access Log ID not specified.");
     }
-
     try {
       db.setAutoCommit(false);
-
       if (this.size() > 0) {
         Iterator items = this.iterator();
         while (items.hasNext()) {
@@ -322,7 +318,6 @@ public class SyncTransactionLog extends ArrayList {
           thisItem.delete(db);
         }
       }
-
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM sync_log " +
           "WHERE log_id = ? ");

@@ -1555,12 +1555,10 @@ public class Ticket extends GenericBean {
    *@since
    */
   public boolean insert(Connection db) throws SQLException {
-
     if (!isValid(db)) {
       return false;
     }
     StringBuffer sql = new StringBuffer();
-
     try {
       db.setAutoCommit(false);
       sql.append(
@@ -1623,22 +1621,17 @@ public class Ticket extends GenericBean {
       }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
-
       pst.execute();
       pst.close();
-
       id = DatabaseUtils.getCurrVal(db, "ticket_ticketid_seq");
-
       if (this.getEntered() == null) {
         this.update(db);
       } else {
         this.update(db, true);
       }
-
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -1802,32 +1795,37 @@ public class Ticket extends GenericBean {
    */
   public int reopen(Connection db) throws SQLException {
     int resultCount = 0;
-
-    db.setAutoCommit(false);
-    PreparedStatement pst = null;
-    String sql =
-        "UPDATE ticket " +
-        "SET closed = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ? " +
-        "WHERE ticketid = ? ";
-    int i = 0;
-    pst = db.prepareStatement(sql);
-    pst.setNull(++i, java.sql.Types.TIMESTAMP);
-    pst.setInt(++i, this.getModifiedBy());
-    pst.setInt(++i, this.getId());
-    resultCount = pst.executeUpdate();
-    pst.close();
-
-    TicketLog thisEntry = new TicketLog();
-    thisEntry.setEnteredBy(this.getModifiedBy());
-    thisEntry.setDepartmentCode(this.getDepartmentCode());
-    thisEntry.setAssignedTo(this.getAssignedTo());
-    thisEntry.setPriorityCode(this.getPriorityCode());
-    thisEntry.setSeverityCode(this.getSeverityCode());
-    thisEntry.setEntryText(this.getComment());
-    thisEntry.setTicketId(this.getId());
-    thisEntry.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
-
-    db.commit();
+    try {
+      db.setAutoCommit(false);
+      PreparedStatement pst = null;
+      String sql =
+          "UPDATE ticket " +
+          "SET closed = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ? " +
+          "WHERE ticketid = ? ";
+      int i = 0;
+      pst = db.prepareStatement(sql);
+      pst.setNull(++i, java.sql.Types.TIMESTAMP);
+      pst.setInt(++i, this.getModifiedBy());
+      pst.setInt(++i, this.getId());
+      resultCount = pst.executeUpdate();
+      pst.close();
+  
+      TicketLog thisEntry = new TicketLog();
+      thisEntry.setEnteredBy(this.getModifiedBy());
+      thisEntry.setDepartmentCode(this.getDepartmentCode());
+      thisEntry.setAssignedTo(this.getAssignedTo());
+      thisEntry.setPriorityCode(this.getPriorityCode());
+      thisEntry.setSeverityCode(this.getSeverityCode());
+      thisEntry.setEntryText(this.getComment());
+      thisEntry.setTicketId(this.getId());
+      thisEntry.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
     return resultCount;
   }
 
@@ -1844,19 +1842,17 @@ public class Ticket extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Ticket ID not specified.");
     }
-
-    Statement st = db.createStatement();
-
     try {
       db.setAutoCommit(false);
+      Statement st = db.createStatement();
       st.executeUpdate("DELETE FROM ticketlog WHERE ticketid = " + this.getId());
       st.executeUpdate("DELETE FROM ticket WHERE ticketid = " + this.getId());
+      st.close();
       db.commit();
     } catch (SQLException e) {
       db.rollback();
     } finally {
       db.setAutoCommit(true);
-      st.close();
     }
     return true;
   }
@@ -1871,22 +1867,17 @@ public class Ticket extends GenericBean {
    *@since
    */
   public int update(Connection db) throws SQLException {
-
     int i = -1;
-
     if (!isValid(db)) {
       return -1;
     }
-
     try {
       db.setAutoCommit(false);
-
       if (entered != null) {
         i = this.update(db, false);
       } else {
         i = this.update(db, true);
       }
-
       TicketLog thisEntry = new TicketLog();
       thisEntry.setEnteredBy(this.getModifiedBy());
       thisEntry.setDepartmentCode(this.getDepartmentCode());
@@ -1907,15 +1898,13 @@ public class Ticket extends GenericBean {
         TicketLog thisLog = (TicketLog) hist.next();
         thisLog.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
       }
-
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    db.setAutoCommit(true);
     return i;
   }
 

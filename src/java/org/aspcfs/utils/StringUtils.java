@@ -1,5 +1,6 @@
 package org.aspcfs.utils;
 
+import java.util.ArrayList;
 import java.util.zip.*;
 import java.io.*;
 
@@ -148,8 +149,8 @@ public class StringUtils {
 
 
   /**
-   *  This method converts HTML back to text.  Used especially for converting
-   *  a hidden html form element into a text area
+   *  This method converts HTML back to text. Used especially for converting a
+   *  hidden html form element into a text area
    *
    *@param  s  Description of the Parameter
    *@return    Description of the Return Value
@@ -411,6 +412,54 @@ public class StringUtils {
     } catch (Exception e) {
       return defaultValue;
     }
+  }
+
+
+  /**
+   *  Reads a line of text in the Excel CSV format<br>
+   *  Each field is separated by a comma, except some fields have quotes
+   *  around them because the field has commas or spaces.<br>
+   *  TODO: Test to see how quotes within fields are treated
+   *
+   *@param  line  Description of the Parameter
+   *@return       Description of the Return Value
+   */
+  public static ArrayList parseExcelCSVLine(String line) {
+    if (line == null) {
+      return null;
+    }
+    ArrayList thisRecord = new ArrayList();
+    boolean quote = false;
+    boolean completeField = false;
+    StringBuffer value = new StringBuffer("");
+    for (int i = 0; i < line.length(); i++) {
+      char thisChar = line.charAt(i);
+      if (thisChar == ',') {
+        if (quote == false) {
+          completeField = true;
+        } else {
+          value.append(thisChar);
+        }
+      } else if (thisChar == '\"') {
+        if (quote) {
+          quote = false;
+        } else {
+          quote = true;
+        }
+      } else {
+        value.append(thisChar);
+      }
+      if (i == line.length() - 1) {
+        completeField = true;
+      }
+      if (completeField) {
+        thisRecord.add(value.toString());
+        value = new StringBuffer("");
+        quote = false;
+        completeField = false;
+      }
+    }
+    return thisRecord;
   }
 }
 

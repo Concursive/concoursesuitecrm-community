@@ -51,4 +51,4 @@ BODY  { font-family: verdana, arial, sans-serif; font-size: 8pt; background: whi
   
 TABLE, TD, TH, LI, P, UL, OL, TEXTAREA, INPUT, SELECT  { font-family: verdana, arial, sans-serif; font-size: 8pt }
 .list { background-color: #D4D4D4 }
-.formLabel { text-align: right; width: 100 }
+.formLabel { text-align: right; width: 100; background-color: #EDEDED }
