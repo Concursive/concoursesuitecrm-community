@@ -3,7 +3,6 @@
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="DeliveryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="document.inputForm.activeDate.focus()">
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
 <a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
@@ -49,4 +48,3 @@ Schedule
   </td>
   </tr>
 </table>
-</body>
