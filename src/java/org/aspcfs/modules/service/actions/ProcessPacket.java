@@ -102,6 +102,7 @@ public final class ProcessPacket extends CFSModule {
     }
 
     try {
+      //TODO: Change encoding to US-ASCII
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = dbf.newDocumentBuilder();
       Document document = builder.newDocument();

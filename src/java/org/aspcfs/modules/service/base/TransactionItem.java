@@ -33,7 +33,7 @@ public class TransactionItem {
   private final static byte SYNC_START = 6;
   private final static byte SYNC_END = 7;
   private final static byte SYNC_DELETE = 8;
-  private final static byte GET_TIME = 9;
+  private final static byte GET_DATETIME = 9;
 
   private String name = null;
   private Object object = null;
@@ -168,8 +168,8 @@ public class TransactionItem {
       setAction(this.SYNC_START);
     } else if ("syncEnd".equals(tmp)) {
       setAction(this.SYNC_END);
-    } else if ("getTime".equals(tmp)) {
-      setAction(this.GET_TIME);
+    } else if ("getDateTime".equals(tmp)) {
+      setAction(this.GET_DATETIME);
     }
   }
 
@@ -299,20 +299,18 @@ public class TransactionItem {
       syncClientMap.setTableId(((SyncTable) mapping.get(name)).getId());
     }
 
-/*     if ((action == INSERT && meta != null) ||
-        action == SELECT ||
-        action == SYNC) {
- */
-      if (recordList == null) {
-        recordList = new RecordList(name);
-      }
-//    }
+    if (recordList == null) {
+      recordList = new RecordList(name);
+    }
 
-    if (action == GET_TIME) {
-      System.out.println("TransactionItem-> Getting the time");
-      Record thisRecord = new Record();
-      thisRecord.put("time", String.valueOf(new java.sql.Timestamp(new java.util.Date().getTime())));
-      System.out.println("TransactionItem-> Got a record of time");
+    if (action == GET_DATETIME) {
+      System.out.println("TransactionItem-> Getting the date & time");
+      Record thisRecord = new Record("info");
+      thisRecord.put("dateTime", String.valueOf(new java.sql.Timestamp(new java.util.Date().getTime())));
+      //this.addFields(thisRecord, meta, objectItem);
+      //Record thisRecord = new Record(recordAction);
+      //this.addFields(thisRecord, meta, object);
+      recordList.add(thisRecord);
     } else if (action == SYNC_START) {
       ObjectUtils.setParam(object, "id", String.valueOf(auth.getClientId()));
       ObjectUtils.setParam(object, "anchor", auth.getLastAnchor());
