@@ -93,10 +93,10 @@
       </srcfiles>
 		</uptodate>
     
-    <uptodate property="zeroio-jar-uptodate" 
+    <!--uptodate property="zeroio-jar-uptodate" 
 				targetfile="${SRC_LIB}/zeroio-iteam.jar">
 			<srcfiles dir="${SRC_CLASSES}/com/zeroio" includes="**/*.java"/>
-		</uptodate>
+		</uptodate-->
     
 		<uptodate property="ChartServlet-uptodate" 
 				targetfile="${DEST_DOCROOT}/WEB-INF/classes/ChartServlet.class">
