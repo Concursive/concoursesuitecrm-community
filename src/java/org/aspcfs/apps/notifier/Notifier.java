@@ -413,7 +413,7 @@ public class Notifier extends ReportBuilder {
 				String uniqueId = formatter1.format(new java.util.Date());
 				
 				String baseFilename = baseDirectory + (String)config.get("BaseFilename") + uniqueId + messageId + "-" + faxNumber;
-        out.println("perl html2ps -o " + baseFilename + ".ps http://" + (String)config.get("CFSWebServer") + "/ProcessMessage.do?id=" + databaseName + "\\|" + messageId + " >/dev/null 2>&1");
+        out.println("perl /usr/local/bin/html2ps -o " + baseFilename + ".ps http://" + (String)config.get("CFSWebServer") + "/ProcessMessage.do?id=" + databaseName + "\\|" + messageId + " >/dev/null 2>&1");
         out.println("gs -q -sDEVICE=tiffg4 -dNOPAUSE -dBATCH -sOutputFile=" + baseFilename + ".tiff " + baseFilename + ".ps");
 				out.println("rm " + baseFilename + ".ps");
 				
