@@ -350,6 +350,7 @@ public String getOwnerNameAbbr() {
 	      pst.setNull(++i, java.sql.Types.INTEGER);
       }
 			pst.setInt(++i, owner);
+      pst.setString(++i, description);
         if (entered != null) {
                 pst.setTimestamp(++i, entered);
         }
