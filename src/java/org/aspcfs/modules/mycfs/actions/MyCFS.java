@@ -15,6 +15,7 @@ import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 import org.aspcfs.modules.mycfs.beans.CalendarBean;
+import org.aspcfs.modules.mycfs.base.CalendarEventList;
 import org.aspcfs.modules.tasks.base.Task;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.accounts.base.NewsArticleList;
@@ -803,6 +804,12 @@ public final class MyCFS extends CFSModule {
       calendarInfo.update(db, context);
       companyCalendar = new CalendarView(calendarInfo);
       companyCalendar.addHolidaysByRange();
+      //check if the user's account is expiring
+      User thisUser = this.getUser(context, this.getUserId(context));
+      if(thisUser.getExpires() != null){
+      String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
+      companyCalendar.addEvent(expiryDate, "Your user account expires", CalendarEventList.EVENT_TYPES[9]);
+      }
 
       //create events depending on alert type
       String selectedAlertType = calendarInfo.getCalendarDetailsView();
@@ -873,7 +880,12 @@ public final class MyCFS extends CFSModule {
       companyCalendar = new CalendarView(calendarInfo);
       //companyCalendar.updateParams();
       companyCalendar.addHolidaysByRange();
-
+      //check if the user's account is expiring
+      User thisUser = this.getUser(context, this.getUserId(context));
+      if(thisUser.getExpires() != null){
+      String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
+      companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[9], expiryDate, new Integer(1));
+      }
       //Use reflection to invoke methods on scheduler classes
       String param1 = "org.aspcfs.utils.web.CalendarView";
       String param2 = "java.sql.Connection";

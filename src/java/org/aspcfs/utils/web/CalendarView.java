@@ -1105,7 +1105,10 @@ public class CalendarView {
             Object eventCategory = i.next();
             if (((Integer) events.get(eventCategory)).intValue() > 0) {
               ++count;
-              html.append("<tr><td>" + CalendarEvent.getIcon(String.valueOf(eventCategory)) + "</td><td> " + events.get(eventCategory) + "</td></tr>");
+              html.append("<tr><td>" + CalendarEvent.getIcon(String.valueOf(eventCategory)) + "</td>");
+              if(!((String) eventCategory).equals(CalendarEventList.EVENT_TYPES[9])){ 
+                html.append("<td> " + events.get(eventCategory) + "</td></tr>");
+              }
             }
           }
           html.append("</table>");

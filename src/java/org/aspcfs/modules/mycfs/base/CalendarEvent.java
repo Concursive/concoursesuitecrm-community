@@ -388,6 +388,8 @@ public class CalendarEvent implements Comparable {
       return "<img border=0 src=\"images/event-timed.gif\" align=texttop width=12 height=12 title=\"Event\">";
     } else if (thisCategory.equalsIgnoreCase("holiday")) {
       return "<img border=0 src=\"images/event-holiday.gif\" align=texttop width=12 height=12 title=\"US Bank Holiday\">";
+    } else if (thisCategory.equalsIgnoreCase("System Alerts")) {
+      return "<img border=0 src=\"images/box-hold.gif\" align=texttop width=16 height=15 title=\"User Account Expires\">";
     } else if (thisCategory.equalsIgnoreCase("Opportunity")) {
       return "<img border=0 src=\"images/alertopp.gif\" align=texttop title=\"Opportunities\">";
     } else if (thisCategory.equalsIgnoreCase("Contact Calls") || thisCategory.equalsIgnoreCase("Opportunity Calls")) {
@@ -414,6 +416,8 @@ public class CalendarEvent implements Comparable {
       return "Events";
     } else if (thisCategory.equalsIgnoreCase("holiday")) {
       return "US Bank Holiday";
+    } else if (thisCategory.equalsIgnoreCase("System Alerts")) {
+      return "User Account Expiry Alert";
     } else if (thisCategory.equalsIgnoreCase("Opportunity")) {
       return "Opportunities";
     } else if (thisCategory.equalsIgnoreCase("Contact Calls") || thisCategory.equalsIgnoreCase("Opportunity Calls")) {
