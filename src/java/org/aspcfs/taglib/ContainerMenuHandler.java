@@ -1,3 +1,4 @@
+//Copyright 2002 Dark Horse Ventures
 package com.darkhorseventures.taglib;
 
 import javax.servlet.jsp.*;
@@ -6,7 +7,9 @@ import java.util.*;
 import com.darkhorseventures.cfsbase.UserBean;
 import com.darkhorseventures.utils.XMLUtils;
 import com.darkhorseventures.utils.Template;
+import com.darkhorseventures.utils.ConnectionElement;
 import com.darkhorseventures.controller.SubmenuItem;
+import com.darkhorseventures.controller.SystemStatus;
 import java.io.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
@@ -88,6 +91,11 @@ public class ContainerMenuHandler extends TagSupport {
         }
       }
       UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+      SystemStatus systemStatus = null;
+      if (ce != null) {
+        systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      }
       if (containerMenu.containsKey(this.name)) {
         LinkedList submenuItems = (LinkedList) containerMenu.get(this.name);
         Iterator i = submenuItems.iterator();
@@ -96,7 +104,8 @@ public class ContainerMenuHandler extends TagSupport {
           SubmenuItem thisItem = (SubmenuItem) i.next();
           if (thisItem.getPermission() == null ||
               (thisItem.getPermission() != null && thisItem.getPermission().equals("")) ||
-              (thisUser != null && thisUser.hasPermission(thisItem.getPermission()))) {
+              (thisUser != null && systemStatus != null && 
+               systemStatus.hasPermission(thisUser.getUserId(), thisItem.getPermission()))) {
             if (itemOutput) {
               this.pageContext.getOut().write(" | ");
             }

@@ -18,9 +18,7 @@ import javax.servlet.*;
  */
 public class UserBean extends GenericBean {
   private int userId = -1;
-
-  private SystemStatus systemStatus = null;
-  private User userRecord = null;
+  private int actualUserId = -1;
   private String template = null;
   private String cssFile = "";
   private java.util.Date permissionCheck = new java.util.Date();
@@ -28,37 +26,18 @@ public class UserBean extends GenericBean {
   private String idRange = "";
   private ClientType clientType = null;
   private ConnectionElement connectionElement = null;
-  private int actualUserId = -1;
 
+  //TODO: Remove these from the user's session because they can't be serialized
+  private User userRecord = null;
 
-  /**
-   *  Builds the userbean from the passed in User Record to speed up the login
-   *
-   *@param  thisSystem  Description of the Parameter
-   *@param  newUserId   Description of the Parameter
-   *@since              1.10
-   */
-  public UserBean(SystemStatus thisSystem, int newUserId) {
-    if (thisSystem == null) {
-      System.out.println("UserBean -> SystemStatus is null error");
-    }
-    systemStatus = thisSystem;
-    userId = newUserId;
-    updateUserRecord();
+  public UserBean() {}
+
+  public void setUserId(int tmp) {
+    userId = tmp;
   }
-
-
-  /**
-   *  Constructor for the UserBean object
-   *
-   *@param  newUserId  Description of the Parameter
-   */
-  public UserBean(int newUserId) {
-    systemStatus = new SystemStatus();
-    userId = newUserId;
-  }
-
-
+  
+  public void setIdRange(String tmp) { this.idRange = tmp; }
+  
   /**
    *  Sets the CssFile attribute of the userBean object
    *
@@ -136,16 +115,6 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Sets the systemStatus attribute of the UserBean object
-   *
-   *@param  systemStatus  The new systemStatus value
-   */
-  public void setSystemStatus(SystemStatus systemStatus) {
-    this.systemStatus = systemStatus;
-  }
-
-
-  /**
    *  Sets the actualUserId attribute of the UserBean object
    *
    *@param  actualUserId  The new aliasId value
@@ -164,15 +133,15 @@ public class UserBean extends GenericBean {
     return actualUserId;
   }
 
-
-  /**
-   *  Gets the systemStatus attribute of the UserBean object
-   *
-   *@return    The systemStatus value
-   */
-  public SystemStatus getSystemStatus() {
-    return systemStatus;
+  public SystemStatus getSystemStatus(ServletConfig config) {
+    return (this.getSystemStatus(config.getServletContext()));
   }
+  
+  public SystemStatus getSystemStatus(ServletContext context) {
+    Hashtable globalStatus = (Hashtable)context.getAttribute("SystemStatus");
+    return (SystemStatus)globalStatus.get(connectionElement.getUrl());
+  }
+
 
 
   /**
@@ -192,9 +161,6 @@ public class UserBean extends GenericBean {
    *@since     1.10
    */
   public User getUserRecord() {
-    if (userRecord == null) {
-      updateUserRecord();
-    }
     return userRecord;
   }
 
@@ -360,34 +326,6 @@ public class UserBean extends GenericBean {
    */
   public java.util.Date getHierarchyCheck() {
     return hierarchyCheck;
-  }
-
-
-  /**
-   *  Method that returns whether the user has the specified permission.
-   *
-   *@param  thisPermission  Description of Parameter
-   *@return                 Description of the Returned Value
-   *@since                  1.14
-   */
-  public boolean hasPermission(String thisPermission) {
-    return (getUserRecord().hasPermission(thisPermission));
-  }
-
-
-  /**
-   *  Description of the Method
-   */
-  public void updateUserRecord() {
-    System.out.println("UserBean-> Check 0");
-    userRecord = systemStatus.getHierarchyList().getUser(userId);
-    System.out.println("UserBean-> Check 1");
-    UserList shortChildList = userRecord.getShortChildList();
-    System.out.println("UserBean-> Check 2");
-    UserList fullChildList = userRecord.getFullChildList(shortChildList, new UserList());
-    System.out.println("UserBean-> Check 3");
-    idRange = fullChildList.getUserListIds(userRecord.getId());
-    System.out.println("UserBean-> Check 4");
   }
 }
 

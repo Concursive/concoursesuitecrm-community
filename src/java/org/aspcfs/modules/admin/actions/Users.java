@@ -10,7 +10,7 @@ import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
 
 /**
- *  Action methods for managing users
+ *  Methods for managing users
  *
  *@author     mrajkowski
  *@created    September 17, 2001
@@ -23,7 +23,6 @@ public final class Users extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandListUsers(context);
@@ -65,7 +64,6 @@ public final class Users extends CFSModule {
       list.setPagedListInfo(listInfo);
       list.setBuildContact(false);
       list.setBuildHierarchy(false);
-      list.setBuildPermissions(false);
       list.buildList(db);
 
     } catch (Exception e) {
@@ -139,7 +137,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Generates the User for display
+   *  Action that loads a user for display
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -193,7 +191,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Generates the form data for inserting a new user
+   *  Action that generates the form data for inserting a new user
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -259,7 +257,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Action that generates a filtered contact list for use in a combobox
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -291,7 +289,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Adds the user to the database
+   *  Action that adds a user to the database based on submitted html form
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -352,11 +350,13 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Deletes the user from the database
+   *  Action that deletes a user from the database. No longer used because
+   *  referential integrity is kept.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    *@since           1.12
+   *@deprecated
    */
   public String executeCommandDeleteUser(ActionContext context) {
 
@@ -395,7 +395,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Action to disable a user that is currently enabled.
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -467,7 +467,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Action to enable a user that is currently disabled.
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -559,7 +559,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Setup the form for modifying a user
+   *  Action to generate the form for modifying a user
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -614,7 +614,7 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Update the user record
+   *  Action that updates the user record based on the submitted form
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -654,7 +654,9 @@ public final class Users extends CFSModule {
           resultCount = newUser.generateRandomPassword(db, context);
         }
         updateSystemHierarchyCheck(db, context);
-        updateSystemPermissionCheck(context);
+        //NOTE: I believe this is no longer required since permissions are
+        //cached an are no longer part of the user object
+        //updateSystemPermissionCheck(db, context);
       }
     } catch (SQLException e) {
       errorMessage = e;

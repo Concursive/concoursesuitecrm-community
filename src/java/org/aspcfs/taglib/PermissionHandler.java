@@ -4,14 +4,16 @@ import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.controller.*;
+import com.darkhorseventures.utils.ConnectionElement;
 import java.util.StringTokenizer;
+import java.util.Hashtable;
 
 /**
  *  This Class evaluates whether the current User's session has the given
  *  permissions. The user may need any single permission, one of several given
  *  permissions, or all of the given permissions to check.
  *
- *@author     MATT
+ *@author     Matt Rajkowski
  *@created    October 12, 2001
  *@version $Id$
  */
@@ -72,11 +74,13 @@ public class PermissionHandler extends TagSupport {
     int checks = 0;
     UserBean thisUser = (UserBean)pageContext.getSession().getAttribute("User");
     if (thisUser != null) {
+      ConnectionElement ce = thisUser.getConnectionElement();
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
       StringTokenizer st = new StringTokenizer(permissionName, ",");
       while (st.hasMoreTokens()) {
         String thisPermission = st.nextToken();
         ++checks;
-        if (thisUser.hasPermission(thisPermission)) {
+        if (systemStatus.hasPermission(thisUser.getUserId(), thisPermission)) {
           ++matches;
         }
       }

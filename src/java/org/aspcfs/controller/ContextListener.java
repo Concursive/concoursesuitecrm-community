@@ -49,6 +49,9 @@ public class ContextListener implements ServletContextListener {
     } catch (Exception e) {
       System.err.println(e.toString());
     }
+    
+    CustomFormList forms = new CustomFormList(context, (String) context.getAttribute("DynamicFormConfig"));
+    context.setAttribute("DynamicFormList", forms);
   }
 
 

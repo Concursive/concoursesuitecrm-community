@@ -26,18 +26,15 @@ import java.util.*;
  *@version    $Id$
  */
 public class ConnectionPool implements Runnable {
-
+  public static final int BUSY_CONNECTION = 1;
+  public static final int AVAILABLE_CONNECTION = 2;
+  
   //5 minutes then connection is closed
 
-  //private String baseURL = "jdbc:postgresql://127.0.0.1:5432/databasename";
-  //private String baseURL = "jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs";
-  //private String username = "postgres";
-  //private String password = "";
-
-  String url = "";
-  String username = "";
-  String password = "";
-  String driver = "org.postgresql.Driver";
+  private String url = "";
+  private String username = "";
+  private String password = "";
+  private String driver = "org.postgresql.Driver";
   
   private java.util.Date startDate = new java.util.Date();
   private Hashtable availableConnections;
@@ -183,6 +180,10 @@ public class ConnectionPool implements Runnable {
   public void setRequireParameters(boolean tmp) {
     this.requireParameters = tmp;
   }
+  
+  public void setRequireParameters(String tmp) {
+    requireParameters = "true".equalsIgnoreCase(tmp);
+  }
 
   public String getUrl() {
     return url;
@@ -199,7 +200,6 @@ public class ConnectionPool implements Runnable {
   public String getDriver() {
     return driver;
   }
-
 
   /**
    *  Gets the Connection attribute of the ConnectionPool object when the
@@ -432,9 +432,16 @@ public class ConnectionPool implements Runnable {
    *@since    1.1
    */
   public synchronized void closeAllConnections() {
-    closeConnections(2, availableConnections);
+    if (debug) {
+      System.out.println("ConnectionPool-> Closing available connections");
+    }
+    closeConnections(AVAILABLE_CONNECTION, availableConnections);
     availableConnections = new Hashtable();
-    closeConnections(1, busyConnections);
+    
+    if (debug) {
+      System.out.println("ConnectionPool-> Closing busy connections");
+    }
+    closeConnections(BUSY_CONNECTION, busyConnections);
     busyConnections = new Hashtable();
   }
 
@@ -660,7 +667,7 @@ public class ConnectionPool implements Runnable {
       Enumeration e = connections.elements();
       while (e.hasMoreElements()) {
         Connection connection = null;
-        if (connectionType == 1) {
+        if (connectionType == AVAILABLE_CONNECTION) {
           connection = (Connection)e.nextElement();
         } else {
           ConnectionElement ce = (ConnectionElement)e.nextElement();

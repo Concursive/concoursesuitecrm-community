@@ -3,6 +3,8 @@ package com.darkhorseventures.controller;
 import java.util.HashMap;
 import javax.servlet.http.HttpSession;
 import org.theseus.actions.ActionContext;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
 /**
  *  Handles all sessions running on the web server
@@ -60,6 +62,30 @@ public class SessionManager {
    */
   public void addUser(ActionContext context, int userId) {
     UserSession thisSession = new UserSession(context);
+    if (sessions.get(new Integer(userId)) == null) {
+      synchUpdate(thisSession, userId, ADD);
+    } else {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("SessionManager -- > User " + userId + " already has a session");
+      }
+    }
+  }
+
+
+  /**
+   *  Adds a feature to the User attribute of the SessionManager object,
+   *  for classes that do not have access to an ActionContext, like the
+   *  SecurityHook
+   *
+   *@param  request  The feature to be added to the User attribute
+   *@param  userId   The feature to be added to the User attribute
+   */
+  public void addUser(HttpServletRequest request, int userId) {
+    HttpSession session = request.getSession();
+    UserSession thisSession = new UserSession();
+    thisSession.setId(session.getId());
+    thisSession.setIpAddress(request.getRemoteAddr());
+    thisSession.setCreationTime(session.getCreationTime());
     if (sessions.get(new Integer(userId)) == null) {
       synchUpdate(thisSession, userId, ADD);
     } else {

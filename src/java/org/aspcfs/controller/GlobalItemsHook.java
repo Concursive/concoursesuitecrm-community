@@ -26,7 +26,8 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
    *@since           1.0
    */
   public String generateItems(Servlet servlet, HttpServletRequest request) {
-
+    ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) servlet.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     UserBean thisUser = (UserBean)request.getSession().getAttribute("User");
     int userId = thisUser.getUserId();
     int departmentId = thisUser.getUserRecord().getContact().getDepartment();
@@ -36,7 +37,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     int itemCount = 0;
 
     //Site Search
-    if (thisUser.hasPermission("globalitems-search-view")) {
+    if (systemStatus.hasPermission(userId, "globalitems-search-view")) {
       ++itemCount;
       items.append(
         "<!-- Site Search -->" +
@@ -59,10 +60,8 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     }
 
     //My Items
-    if (thisUser.hasPermission("globalitems-myitems-view")) {
-      
+    if (systemStatus.hasPermission(userId, "globalitems-myitems-view")) {
       ConnectionPool sqlDriver = (ConnectionPool)servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool");
-      ConnectionElement ce = (ConnectionElement)request.getSession().getAttribute("ConnectionElement");
       Connection db = null;
       
       //Output
@@ -82,7 +81,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         ResultSet rs = null;
         
         //External Contact Calls
-        if (thisUser.hasPermission("contacts-external_contacts-calls-view")) {
+        if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-view")) {
           int callCount = 0;
           sql = 
             "SELECT COUNT(*) as callcount FROM call_log WHERE alertdate = ? AND enteredby = ?";
@@ -101,7 +100,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         }
         
         //Project Activities
-        if (thisUser.hasPermission("projects-view")) {
+        if (systemStatus.hasPermission(userId, "projects-view")) {
           int activityCount = 0;
           sql = 
             "SELECT count(*) as activitycount FROM project_assignments WHERE complete_date IS NULL AND user_assign_id = ?";
@@ -119,7 +118,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         }
         
         //Tickets Assigned to me
-        if (thisUser.hasPermission("tickets-view")) {
+        if (systemStatus.hasPermission(userId, "tickets-view")) {
           int ticketCount = 0;
           sql = 
             "SELECT COUNT(*) as ticketcount FROM ticket WHERE assigned_to = ? AND closed IS NULL";
@@ -137,7 +136,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         }
         
         //Tickets Unassigned
-        if (thisUser.hasPermission("tickets-view")) {
+        if (systemStatus.hasPermission(userId, "tickets-view")) {
           int ticketCount = 0;
           sql = 
             "SELECT COUNT(*) as ticketcount " +
@@ -157,7 +156,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         }
 	
 	      //CFS Inbox Items
-        if (thisUser.hasPermission("myhomepage-inbox-view")) {
+        if (systemStatus.hasPermission(userId, "myhomepage-inbox-view")) {
           int inboxCount = 0;
           CFSNoteList newMessages = new CFSNoteList();
           newMessages.setSentTo(contactId);
@@ -169,7 +168,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         }
       
       //Tasks Items
-      if (thisUser.hasPermission("myhomepage-inbox-view")) {
+      if (systemStatus.hasPermission(userId, "myhomepage-inbox-view")) {
           int taskCount = TaskList.queryPendingCount(db,contactId);
           items.append("<a href='MyTasks.do?command=ListTasks' class='s'>Tasks</a> (" + paint(taskCount) + " incomplete)<br>");
           ++myItems;
@@ -198,7 +197,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     }
 
     //Recent Items
-    if (thisUser.hasPermission("globalitems-recentitems-view")) {
+    if (systemStatus.hasPermission(userId, "globalitems-recentitems-view")) {
       ++itemCount;
       items.append(
         "<!-- Recent Items -->" +

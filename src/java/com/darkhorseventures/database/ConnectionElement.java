@@ -1,5 +1,7 @@
 package com.darkhorseventures.utils;
 
+import java.io.Serializable;
+
 /**
  *  A Connection Element has three purposes (so far).<p>
  *
@@ -12,9 +14,10 @@ package com.darkhorseventures.utils;
  *
  *@author     mrajkowski
  *@created    July 10, 2001
- *@version    $Id$
+ *@version    $Id: ConnectionElement.java,v 1.4 2002/11/14 20:49:27 mrajkowski
+ *      Exp $
  */
-public class ConnectionElement implements Cloneable {
+public class ConnectionElement implements Cloneable, Serializable {
 
   private String url = "jdbc:postgresql://127.0.0.1:5432/database";
   private String dbName = "";
@@ -95,8 +98,36 @@ public class ConnectionElement implements Cloneable {
     this.allowCloseOnIdle = tmp;
   }
 
-  public void setDbName(String tmp) { this.dbName = tmp; }
-  public void setDriver(String tmp) { this.driver = tmp; }
+
+  /**
+   *  Sets the dbName attribute of the ConnectionElement object
+   *
+   *@param  tmp  The new dbName value
+   */
+  public void setDbName(String tmp) {
+    this.dbName = tmp;
+  }
+
+
+  /**
+   *  Sets the driver attribute of the ConnectionElement object
+   *
+   *@param  tmp  The new driver value
+   */
+  public void setDriver(String tmp) {
+    this.driver = tmp;
+  }
+
+
+  /**
+   *  Sets the activeDate attribute of the ConnectionElement object
+   *
+   *@param  tmp  The new activeDate value
+   */
+  public void setActiveDate(java.util.Date tmp) {
+    this.activeDate = tmp;
+  }
+
 
   /**
    *  Gets the Url attribute of the ConnectionElement object. <p>
@@ -155,14 +186,41 @@ public class ConnectionElement implements Cloneable {
   public boolean getAllowCloseOnIdle() {
     return allowCloseOnIdle;
   }
-  
-  public String getDbName() { return dbName; }
-  public String getDriver() { return driver; }
-  
+
+
+  /**
+   *  Gets the dbName attribute of the ConnectionElement object
+   *
+   *@return    The dbName value
+   */
+  public String getDbName() {
+    return dbName;
+  }
+
+
+  /**
+   *  Gets the driver attribute of the ConnectionElement object
+   *
+   *@return    The driver value
+   */
+  public String getDriver() {
+    return driver;
+  }
+
+
+  /**
+   *  Description of the Method
+   */
   public void renew() {
     activeDate = new java.util.Date();
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public Object clone() {
     try {
       return super.clone();

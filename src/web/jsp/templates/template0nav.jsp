@@ -9,7 +9,7 @@
 <html>
 
 <head>
-<META HTTP-EQUIV="refresh" content="<%= User.getSystemStatus().getSessionTimeout() + 60 %>;URL=<%= request.getScheme() %>://<%= request.getServerName() %>/MyCFS.do?command=Home">
+<META HTTP-EQUIV="refresh" content="<%= User.getSystemStatus(getServletConfig()).getSessionTimeout() + 60 %>;URL=<%= request.getScheme() %>://<%= request.getServerName() %>/MyCFS.do?command=Home">
 <title>CFS<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
 <link rel="stylesheet" href="css/template0<%= User.getBrowserIdAndOS() %>.css" type="text/css">
 <link rel="stylesheet" href="css/template0.css" type="text/css">
@@ -61,7 +61,7 @@
     while (i.hasNext()) {
     	SubmenuItem thisItem = (SubmenuItem)i.next();
 	
-    	if (User.hasPermission(thisItem.getPermission())) {
+    	if (User.getSystemStatus(getServletConfig()).hasPermission(User.getUserId(), thisItem.getPermission())) {
 %>
           <td height="25" align="center" valign="middle" width="0"><b><font color="#FFFFFF" size="1"><%= (thisItem.getAlternateHtml()) %></font></b></td>
           <td width="20">&nbsp;</td>

@@ -10,6 +10,8 @@ import com.darkhorseventures.cfsmodule.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
+import com.darkhorseventures.utils.ConnectionElement;
+import com.darkhorseventures.controller.SystemStatus;
 
 /**
  *  When a template requiring navigation is requested, this class generates the
@@ -89,6 +91,9 @@ public class MainMenuHook implements ControllerMainMenuHook {
     if (thisUser == null) {
       return;
     }
+    
+    ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getAttribute("SystemStatus")).get(ce.getUrl());
 
     ModuleBean thisModule = (ModuleBean)request.getAttribute("ModuleBean");
     if (thisModule == null) {
@@ -106,7 +111,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
     Iterator menuItemsList = menuItems.iterator();
     while (menuItemsList.hasNext()) {
       MainMenuItem thisMenu = (MainMenuItem)menuItemsList.next();
-      if ("".equals(thisMenu.getPermission()) || thisUser.hasPermission(thisMenu.getPermission())) {
+      if ("".equals(thisMenu.getPermission()) || systemStatus.hasPermission(thisUser.getUserId(), thisMenu.getPermission())) {
         if (thisMenu.hasActionName(actionPath)) {
           //The user is on this link/module
           thisModule.setName(thisMenu.getPageTitle());

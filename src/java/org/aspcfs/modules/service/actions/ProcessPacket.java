@@ -88,7 +88,7 @@ public final class ProcessPacket extends CFSModule {
         packetContext.setConnectionElement(ce);
         
         //Initialize the systemStatus for this request to re-use objects, if not already initialized
-        SystemStatus systemStatus = this.retrieveSystemStatus(context, db, ce);
+        SystemStatus systemStatus = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
         
         //Prepare the objectHooks that are cached
         ObjectHookManager hookManager = systemStatus.getHookManager();

@@ -23,20 +23,34 @@ import com.darkhorseventures.webutils.LookupList;
  *@version    $Id$
  */
 public class SystemStatus {
-
-  private Date permissionCheck = new Date();
-  private Date hierarchyCheck = new Date();
-  private UserList hierarchyList = new UserList();
-  private boolean hierarchyUpdating = false;
-  private ArrayList ignoredFields = new ArrayList();
-  private Hashtable fieldLabels = new Hashtable();
-  private ObjectHookManager hookManager = new ObjectHookManager();
+  //Unique to this system
   private ConnectionElement connectionElement = null;
   private String fileLibraryPath = null;
-  private SessionManager sessionManager = new SessionManager();
+  
+  //Role permission cache
+  private Date permissionCheck = new Date();
+  private Hashtable rolePermissions = new Hashtable();
+  private boolean permissionUpdating = false;
+  
+  //User list cache
+  private Date hierarchyCheck = new Date();
+  private UserList hierarchyList = new UserList();
+  private Hashtable userList = new Hashtable();
+  private boolean hierarchyUpdating = false;
+  
+  //Cached lookup tables
   private Hashtable lookups = new Hashtable();
+  
+  //Site Preferences
+  private ArrayList ignoredFields = new ArrayList();
+  private Hashtable fieldLabels = new Hashtable();
   private int sessionTimeout = 5400;
-
+  
+  //Object Hook to Workflow Manager 
+  private ObjectHookManager hookManager = new ObjectHookManager();
+  
+  //Session Manager
+  private SessionManager sessionManager = new SessionManager();
 
 
   /**
@@ -68,6 +82,7 @@ public class SystemStatus {
   public void queryRecord(Connection db) throws SQLException {
     buildHierarchyList(db);
     buildPreferences(db);
+    buildRolePermissions(db);
   }
 
 
@@ -160,6 +175,8 @@ public class SystemStatus {
    *@since     1.1
    */
   public Date getPermissionCheck() {
+    while (permissionUpdating) {
+    }
     return permissionCheck;
   }
 
@@ -240,7 +257,8 @@ public class SystemStatus {
    */
   public void buildHierarchyList(Connection db) throws SQLException {
     hierarchyList.clear();
-
+    userList.clear();
+    
     //Get the top level managers
     if (System.getProperty("DEBUG") != null) {
       System.out.println("SystemStatus-> buildHierarchyList: A");
@@ -248,7 +266,6 @@ public class SystemStatus {
     UserList tmpListA = new UserList();
     tmpListA.setBuildContact(false);
     tmpListA.setBuildHierarchy(false);
-    tmpListA.setBuildPermissions(false);
     tmpListA.setTopLevel(true);
     tmpListA.buildList(db);
 
@@ -259,7 +276,6 @@ public class SystemStatus {
     UserList tmpListB = new UserList();
     tmpListB.setBuildContact(false);
     tmpListB.setBuildHierarchy(false);
-    tmpListB.setBuildPermissions(false);
     tmpListB.setTopLevel(false);
     tmpListB.buildList(db);
 
@@ -274,6 +290,7 @@ public class SystemStatus {
         this.addChildUsers(userToAdd, tmpListB);
       } else {
         hierarchyList.add(thisUser);
+        userList.put(new Integer(thisUser.getId()), thisUser);
         //System.out.println("SystemStatus-> System User Added: " + thisUser.getUsername());
       }
     }
@@ -305,6 +322,25 @@ public class SystemStatus {
           this.setHierarchyCheck(new java.util.Date());
         }
         hierarchyUpdating = false;
+      }
+    }
+  }
+  
+  public void updateRolePermissions(Connection db) throws SQLException {
+    java.util.Date checkDate = new java.util.Date();
+    if (checkDate.after(this.getPermissionCheck())) {
+      synchronized (this) {
+        permissionUpdating = true;
+        if (checkDate.after(permissionCheck)) {
+          try {
+            this.buildRolePermissions(db);
+          } catch (SQLException e) {
+            permissionUpdating = false;
+            throw e;
+          }
+          this.setPermissionCheck(new java.util.Date());
+        }
+        permissionUpdating = false;
       }
     }
   }
@@ -382,6 +418,42 @@ public class SystemStatus {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildRolePermissions(Connection db) throws SQLException {
+    rolePermissions.clear();
+    RoleList roles = new RoleList();
+    roles.buildList(db);
+    Iterator roleIterator = roles.iterator();
+    while (roleIterator.hasNext()) {
+      Role thisRole = (Role) roleIterator.next();
+      ArrayList permissions = new ArrayList();
+      UserPermissionList permissionList = new UserPermissionList(db, thisRole.getId());
+      Iterator i = permissionList.iterator();
+      while (i.hasNext()) {
+        Permission thisPermission = (Permission) i.next();
+        if (thisPermission.getAdd()) {
+          permissions.add(thisPermission.getName() + "-add");
+        }
+        if (thisPermission.getView()) {
+          permissions.add(thisPermission.getName() + "-view");
+        }
+        if (thisPermission.getEdit()) {
+          permissions.add(thisPermission.getName() + "-edit");
+        }
+        if (thisPermission.getDelete()) {
+          permissions.add(thisPermission.getName() + "-delete");
+        }
+      }
+      rolePermissions.put(new Integer(thisRole.getId()), permissions);
+    }
+  }
+
+
+  /**
    *  Builds the lookupList on demand and caches it in the lookups HashTable.
    *
    *@param  db                Description of the Parameter
@@ -424,16 +496,14 @@ public class SystemStatus {
    *@param  addFrom   The feature to be added to the ChildUsers attribute
    */
   private void addChildUsers(User thisUser, UserList addFrom) {
+    if (thisUser.getShortChildList() == null) {
+      thisUser.setChildUsers(new UserList());
+    }
     Iterator i = addFrom.iterator();
     while (i.hasNext()) {
       User tmpUser = (User) i.next();
-      if (thisUser.getShortChildList() == null) {
-        thisUser.setChildUsers(new UserList());
-      }
       if (tmpUser.getManagerId() == thisUser.getId()) {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("SystemStatus-> Found a match for : " + thisUser.getUsername());
-        }
+        userList.put(new Integer(tmpUser.getId()), tmpUser);
         thisUser.getShortChildList().add(tmpUser);
         tmpUser.setManagerUser(thisUser);
         this.addChildUsers(tmpUser, addFrom);
@@ -454,6 +524,29 @@ public class SystemStatus {
    */
   public void processHook(ActionContext context, int action, Object previousObject, Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
     hookManager.process(context, action, previousObject, object, sqlDriver, ce);
+  }
+
+  public User getUser(int id) {
+    return (User)userList.get(new Integer(id));
+  }
+
+  /**
+   *  Method checks the cached role permissions to see if the user
+   *  has the specified permission.
+   *
+   *@param  userId          Description of the Parameter
+   *@param  thisPermission  Description of the Parameter
+   *@return                 Description of the Return Value
+   */
+  public boolean hasPermission(int userId, String thisPermission) {
+    while (permissionUpdating) {
+    }
+    int roleId = this.getUser(userId).getRoleId();
+    ArrayList permissions = (ArrayList) rolePermissions.get(new Integer(roleId));
+    if (permissions == null) {
+      return false;
+    }
+    return permissions.contains(thisPermission);
   }
 }
 

@@ -86,8 +86,6 @@ public class InitHook implements ControllerInitHook {
       }
       config.getServletContext().setAttribute("DynamicFormConfig", 
         config.getInitParameter("DynamicFormConfig"));
-      CustomFormList forms = new CustomFormList(config.getServletContext(), config.getInitParameter("DynamicFormConfig"));
-      config.getServletContext().setAttribute("DynamicFormList", forms);
     }
     
     if (config.getInitParameter("MailServer") != null) {

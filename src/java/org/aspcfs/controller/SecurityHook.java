@@ -18,6 +18,8 @@ import java.sql.*;
  */
 public class SecurityHook implements ControllerHook {
 
+  public final static String fs = System.getProperty("file.separator");
+  
   /**
    *  Checks to see if a User session object exists, if not then the security
    *  check fails.<p>
@@ -60,7 +62,30 @@ public class SecurityHook implements ControllerHook {
         if (ce == null) {
           System.out.println("SecurityHook-> Fatal: CE is null");
         }
-        SystemStatus systemStatus = (SystemStatus) ((Hashtable) servlet.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+        
+        Hashtable globalStatus = (Hashtable) servlet.getServletConfig().getServletContext().getAttribute("SystemStatus");
+        if (globalStatus == null) {
+          //NOTE: This shouldn't occur
+          System.out.println("SecurityHook-> Fatal: SystemStatus Hashtable is null!");
+        }
+        
+        SystemStatus systemStatus = (SystemStatus) globalStatus.get(ce.getUrl());
+        if (systemStatus == null) {
+          //NOTE: This happens when the context is reloaded and the user's
+          //session was serialized and reloaded
+          Connection db = null;
+          try {
+            db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).getConnection(ce);
+            systemStatus = SecurityHook.retrieveSystemStatus(servlet.getServletConfig().getServletContext(), db, ce);
+            systemStatus.getSessionManager().addUser(request, userSession.getUserId());
+          } catch (Exception e) {
+          } finally {
+            ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).free(db);
+          }
+        }
+        request.setAttribute("moduleAction", action);
+        
+        //Check the session manager to see if this session is valid
         SessionManager thisManager = systemStatus.getSessionManager();
         UserSession sessionInfo = thisManager.getUserSession(userSession.getActualUserId());
         if (sessionInfo != null && !sessionInfo.getId().equals(request.getSession().getId()) && !action.toUpperCase().startsWith("LOGIN")) {
@@ -72,19 +97,19 @@ public class SecurityHook implements ControllerHook {
           request.setAttribute("LoginBean", failedSession);
           return "SecurityCheck";
         }
-        request.setAttribute("moduleAction", action);
-
+        
+        //Calling getHierarchyCheck() and getPermissionCheck() will block the
+        //user until hierarchy and permisions have been rebuilt
         if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck()) ||
             userSession.getPermissionCheck().before(systemStatus.getPermissionCheck())) {
           Connection db = null;
           try {
             db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).getConnection(ce);
-
             if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
               if (System.getProperty("DEBUG") != null) {
                 System.out.println("SecurityHook-> ** Getting you a new user record");
               }
-              User updatedUser = systemStatus.getHierarchyList().getUser(userSession.getUserId());
+              User updatedUser = systemStatus.getUser(userSession.getUserId());
               userSession.setUserRecord(updatedUser);
               userSession.setHierarchyCheck(new java.util.Date());
               if (System.getProperty("DEBUG") != null) {
@@ -93,21 +118,14 @@ public class SecurityHook implements ControllerHook {
             }
 
             User updatedUser = userSession.getUserRecord();
-            if (System.getProperty("DEBUG") != null) {
-              System.out.println("SecurityHook-> ** Getting you new permissions");
-            }
             if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
               updatedUser.setBuildContact(true);
             } else {
               updatedUser.setBuildContact(false);
             }
-            updatedUser.setBuildPermissions(true);
             updatedUser.setBuildHierarchy(false);
             updatedUser.buildResources(db);
             userSession.setPermissionCheck(new java.util.Date());
-            if (System.getProperty("DEBUG") != null) {
-              System.out.println("SecurityHook-> Updating user session with new permissions");
-            }
           } catch (SQLException e) {
           } finally {
             ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).free(db);
@@ -118,5 +136,27 @@ public class SecurityHook implements ControllerHook {
     }
   }
 
+  public static synchronized SystemStatus retrieveSystemStatus(ServletContext context, Connection db, ConnectionElement ce) throws SQLException {
+    //SystemStatusList is created in InitHook
+    Hashtable statusList = (Hashtable) context.getAttribute("SystemStatus");
+    //Create the SystemStatus object if it does not exist for this connection,
+    if (!statusList.containsKey(ce.getUrl())) {
+      //synchronized (this) {
+        if (!statusList.containsKey(ce.getUrl())) {
+          SystemStatus newSystemStatus = new SystemStatus();
+          newSystemStatus.setConnectionElement((ConnectionElement) ce.clone());
+          newSystemStatus.setFileLibraryPath(
+              context.getRealPath("/") + "WEB-INF" + fs +
+              "fileLibrary" + fs + ce.getDbName() + fs);
+          newSystemStatus.queryRecord(db);
+          statusList.put(ce.getUrl(), newSystemStatus);
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("CFSModule-> Added new System Status object: " + ce.getUrl());
+          }
+        }
+      //}
+    }
+    return (SystemStatus) statusList.get(ce.getUrl());
+  }
 }
 

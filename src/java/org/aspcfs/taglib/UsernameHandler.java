@@ -52,11 +52,7 @@ public class UsernameHandler extends TagSupport {
       if (systemStatus == null) {
         System.out.println("UsernameHandler-> SystemStatus is null");
       }
-      UserList thisList = systemStatus.getHierarchyList();
-      if (thisList == null) {
-        System.out.println("UsernameHandler-> UserList is null");
-      }
-      User thisUser = thisList.getUser(userId);
+      User thisUser = systemStatus.getUser(userId);
       if (thisUser != null) {
         Contact thisContact = thisUser.getContact();
         this.pageContext.getOut().write(thisContact.getNameFirstLast());

@@ -1,8 +1,8 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
@@ -11,30 +11,74 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 
-public class RoleList extends Vector {
-  
+/**
+ *  Builds a list of user Roles
+ *
+ *@author     matt rajkowski
+ *@created    < January 14, 2002
+ *@version    $Id$
+ */
+public class RoleList extends ArrayList {
+
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
   private int enabledState = Constants.TRUE;
-  
+
+
+  /**
+   *  Constructor for the RoleList object
+   */
   public RoleList() { }
-  
+
+
+  /**
+   *  Sets the pagedListInfo attribute of the RoleList object
+   *
+   *@param  tmp  The new pagedListInfo value
+   */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
-  
+
+
+  /**
+   *  Sets the emptyHtmlSelectRecord attribute of the RoleList object
+   *
+   *@param  tmp  The new emptyHtmlSelectRecord value
+   */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
   }
-  
+
+
+  /**
+   *  Sets the enabledState attribute of the RoleList object
+   *
+   *@param  booleanInt  The new enabledState value
+   */
   public void setEnabledState(int booleanInt) {
     enabledState = booleanInt;
   }
-  
+
+
+  /**
+   *  Gets the htmlSelect attribute of the RoleList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@return             The htmlSelect value
+   */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
   }
-  
+
+
+  /**
+   *  Gets the htmlSelect attribute of the RoleList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelect value
+   */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect roleListSelect = new HtmlSelect();
     if (emptyHtmlSelectRecord != null) {
@@ -42,14 +86,21 @@ public class RoleList extends Vector {
     }
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      Role thisRole = (Role)i.next();
+      Role thisRole = (Role) i.next();
       roleListSelect.addItem(
           thisRole.getId(),
           thisRole.getRole());
     }
     return roleListSelect.getHtml(selectName, defaultKey);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildList(Connection db) throws SQLException {
 
     PreparedStatement pst = null;
@@ -63,9 +114,9 @@ public class RoleList extends Vector {
 
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-      "SELECT COUNT(*) AS recordcount " +
-      "FROM role r " +
-      "WHERE r.role_id > -1 ");
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM role r " +
+        "WHERE r.role_id > -1 ");
     createFilter(sqlFilter);
 
     if (pagedListInfo != null) {
@@ -106,17 +157,17 @@ public class RoleList extends Vector {
 
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
-      "SELECT * " +
-      "FROM role r " +
-      "WHERE r.role_id > -1 ");
+        "SELECT * " +
+        "FROM role r " +
+        "WHERE r.role_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    
+
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
+
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -126,19 +177,25 @@ public class RoleList extends Vector {
       }
       ++count;
       Role thisRole = new Role(rs);
-      this.addElement(thisRole);
+      this.add(thisRole);
     }
     rs.close();
     pst.close();
-    
+
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      Role thisRole = (Role)i.next();
+      Role thisRole = (Role) i.next();
       thisRole.buildUserList(db);
     }
 
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  sqlFilter  Description of the Parameter
+   */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
@@ -147,7 +204,15 @@ public class RoleList extends Vector {
       sqlFilter.append("AND enabled = ? ");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (enabledState > -1) {
@@ -155,5 +220,6 @@ public class RoleList extends Vector {
     }
     return i;
   }
-  
+
 }
+

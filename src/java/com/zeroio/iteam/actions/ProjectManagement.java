@@ -455,8 +455,9 @@ public final class ProjectManagement extends CFSModule {
         context.getRequest().setAttribute("categoryList", categoryList);
       } else if ("Lists".equals(section)) {
         String categoryId = context.getRequest().getParameter("cid");
-        if (categoryId == null) categoryId = context.getRequest().getParameter("categoryId");
-        
+        if (categoryId == null) {
+          categoryId = context.getRequest().getParameter("categoryId");
+        }
         LookupElement thisCategory = new LookupElement(db, Integer.parseInt(categoryId), "lookup_task_category");
         context.getRequest().setAttribute("category", thisCategory);
         

@@ -12,7 +12,7 @@ import com.darkhorseventures.utils.DatabaseUtils;
 /**
  *  A list of User objects.
  *
- *@author     mrajkowski
+ *@author     matt rajkowski
  *@created    September 19, 2001
  *@version    $Id$
  */
@@ -34,7 +34,6 @@ public class UserList extends Vector {
   private int managerId = -1;
   private User managerUser = null;
   private boolean buildContact = false;
-  private boolean buildPermissions = false;
   private boolean buildHierarchy = false;
   private boolean topLevel = false;
   private int department = -1;
@@ -331,17 +330,6 @@ public class UserList extends Vector {
    */
   public void setBuildContact(boolean tmp) {
     this.buildContact = tmp;
-  }
-  
-  
-  /**
-   *  Sets the BuildPermissions attribute of the UserList object
-   *
-   *@param  tmp  The new BuildPermissions value
-   *@since       1.17
-   */
-  public void setBuildPermissions(boolean tmp) {
-    this.buildPermissions = tmp;
   }
   
   
@@ -832,7 +820,7 @@ public class UserList extends Vector {
       "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
       "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
       "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
-      "o.enabled as orgenabled, o.name as org_name " +
+      "o.name as org_name, o.enabled as orgenabled " +
       "FROM access a " +
       "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
       "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
@@ -867,12 +855,11 @@ public class UserList extends Vector {
    *@since                    1.4
    */
   private void buildResources(Connection db) throws SQLException {
-    if (buildContact || buildPermissions || buildHierarchy) {
+    if (buildContact || buildHierarchy) {
       Iterator i = this.iterator();
       while (i.hasNext()) {
         User thisUser = (User) i.next();
         thisUser.setBuildContact(buildContact);
-        thisUser.setBuildPermissions(buildPermissions);
         thisUser.setBuildHierarchy(buildHierarchy);
         thisUser.buildResources(db);
       }

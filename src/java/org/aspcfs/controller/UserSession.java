@@ -22,8 +22,14 @@ public class UserSession {
 
   /**
    *  Constructor for the UserSession object
+   */
+  public UserSession() { }
+
+
+  /**
+   *  Constructor for the UserSession object
    *
-   *@param  context      Description of the Parameter
+   *@param  context  Description of the Parameter
    */
   public UserSession(ActionContext context) {
     build(context);
@@ -43,7 +49,7 @@ public class UserSession {
   /**
    *  Sets the maxInactiveTimeInterval attribute of the UserSession object
    *
-   *@param  maxInactiveTimeInterval  The new maxInactiveTimeInterval value
+   *@param  maxInactiveInterval      The new maxInactiveInterval value
    */
   public void setMaxInactiveInterval(int maxInactiveInterval) {
     this.maxInactiveInterval = maxInactiveInterval;

@@ -96,7 +96,7 @@ public final class ProjectManagementTeam extends CFSModule {
       while (iTeam.hasNext()) {
         TeamMember thisMember = (TeamMember)iTeam.next();
         Contact thisContact = userList.getUser(thisMember.getUserId()).getContact();
-        selCurrentTeam.addItem(thisMember.getUserId(), thisContact.getNameFirst() + " " + thisContact.getNameLast());
+        selCurrentTeam.addItem(thisMember.getUserId(), thisContact.getNameFull());
       }
       context.getRequest().setAttribute("CurrentTeam", selCurrentTeam);
       

@@ -109,13 +109,13 @@ public final class Login extends CFSModule {
       db = sqlDriver.getConnection(ce);
 
       //A good place to initialize this SystemStatus, must be done before getting a user
-      SystemStatus thisSystem = this.retrieveSystemStatus(context, db, ce);
+      SystemStatus thisSystem = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Login-> Getting SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
       }
 
       pst = db.prepareStatement(
-          "SELECT * " +
+          "SELECT password, expires, alias, user_id " +
           "FROM access " +
           "WHERE lower(username) = ? " +
           "AND enabled = ? ");
@@ -142,32 +142,27 @@ public final class Login extends CFSModule {
       pst.close();
 
       if (userId > -1) {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("Login-> Getting user " + userId + " from memory");
-        }
-
-        thisUser = new UserBean(thisSystem, (aliasId > 0 ? aliasId : userId));
-        if (thisUser != null) {
+        thisUser = new UserBean();
+        thisUser.setUserId(aliasId > 0 ? aliasId : userId);
+        thisUser.setActualUserId(userId);
+        
+        User userRecord = thisSystem.getUser(thisUser.getUserId());
+        if (userRecord != null) {
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("Login-> updating user");
+            System.out.println("SystemStatus-> Retrieved user from memory: " + userRecord.getUsername());
           }
-
-          thisUser.setActualUserId(userId);
-          thisUser.getUserRecord().setIp(context.getIpAddress());
-          thisUser.getUserRecord().updateLogin(db);
-          //thisUser.setClientType(context.getBrowser());
+          thisUser.setConnectionElement(ce);
           thisUser.setClientType(context.getRequest());
           thisUser.setTemplate("template0");
-          thisUser.getUserRecord().setBuildContact(false);
-          thisUser.getUserRecord().setBuildHierarchy(false);
-          thisUser.getUserRecord().setBuildPermissions(true);
-          thisUser.getUserRecord().buildResources(db);
-          thisUser.setConnectionElement(ce);
+          thisUser.setIdRange(userRecord.getIdRange());
+          thisUser.setUserRecord(userRecord);
+          
+          userRecord.setIp(context.getIpAddress());
+          userRecord.updateLogin(db);
         }
       }
     } catch (Exception e) {
       loginBean.setMessage("* Access: " + e.getMessage());
-      //e.printStackTrace(System.out);
       thisUser = null;
     }
 
@@ -179,18 +174,10 @@ public final class Login extends CFSModule {
       return "LoginRetry";
     }
 
-    ///////////////////////////////////////////////////////////
-    //	Get user permissions (or dfeault permissions).
-    //	(Continue if no permissions)
-    //
-
-    //thisUser.addPermission("modules{mycfs,companydirectory,contacts,leads,opportunities,accounts,troubletickets}", true);
-    //thisUser.addPermission("globalitems{search,myitems,recentitems}", true);
-
     context.getSession().setAttribute("User", thisUser);
     context.getSession().setAttribute("ConnectionElement", ce);
 
-    //Check to see if user is already logged in . If not then add him to the valid users list
+    //Check to see if user is already logged in. If not then add him to the valid users list
     SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     SessionManager sessionManager = thisSystem.getSessionManager();
     if (sessionManager.isUserLoggedIn(userId)) {

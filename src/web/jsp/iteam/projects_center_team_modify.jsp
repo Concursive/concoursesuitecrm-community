@@ -207,8 +207,7 @@
 	<%= DepartmentList.getHtmlSelect("selDepartment", -1) %>
       </td>
       <td width="33%" align="center">
-        <select size='10' name='selTotalList' onChange="switchList(this.form, 'add')">
-          <option value="None">-----------------------</option>
+        <select size='10' name='selTotalList' onChange="switchList(this.form, 'add')" style="width:150px">
         </select>
       </td>
       <td width="33%" align="center"><font size="2"><%= CurrentTeam.getHtml("selProjectList", 0) %></font></td>

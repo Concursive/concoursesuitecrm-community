@@ -27,7 +27,7 @@ import com.darkhorseventures.utils.DateUtils;
  *
  *  For a new record, the password 1 and 2 fields are required.
  *
- *@author     mrajkowski
+ *@author     matt rajkowski
  *@created    September 17, 2001
  *@version    $Id$
  */
@@ -55,7 +55,6 @@ public class User extends GenericBean {
   protected int modifiedBy = -1;
   protected boolean enabled = true;
   protected Contact contact = new Contact();
-  protected ArrayList permissions = new ArrayList();
   protected UserList childUsers = null;
   protected double YTD = 0;
   
@@ -71,7 +70,6 @@ public class User extends GenericBean {
   protected String aliasName = null;
 
   protected boolean buildContact = false;
-  protected boolean buildPermissions = false;
   protected boolean buildHierarchy = false;
 
   protected String previousUsername = null;
@@ -85,7 +83,7 @@ public class User extends GenericBean {
   protected GraphSummaryList revenue = new GraphSummaryList();
   private int assistant = -1;
   private int alias = -1;
-  
+
   //check to see if manager user is enabled
   private boolean managerUserEnabled = true;
 
@@ -120,7 +118,6 @@ public class User extends GenericBean {
    */
   public User(Connection db, String userId) throws SQLException {
     buildRecord(db, Integer.parseInt(userId));
-    buildResources(db);
   }
 
 
@@ -136,7 +133,6 @@ public class User extends GenericBean {
   public User(Connection db, String userId, boolean doHierarchy) throws SQLException {
     this.buildHierarchy = doHierarchy;
     buildRecord(db, Integer.parseInt(userId));
-    buildResources(db);
   }
 
 
@@ -259,42 +255,53 @@ public class User extends GenericBean {
   public void setExpires(String tmp) {
     this.expires = DateUtils.parseDateString(tmp);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public int generateRandomPassword(Connection db, ActionContext context) throws SQLException {
-      int resultCount = -1;
-      User modUser = null;
-      Contact targetContact = null;
-      
-      String newPassword = randomstring(6,8);
-      this.setPassword1(newPassword);
-      this.setPassword2(newPassword);
-      resultCount = this.newPassword(db, context);
-      
-      if (resultCount > -1) {
-          modUser = new User();
-          modUser.setBuildContact(true);
-          modUser.buildRecord(db, modifiedBy);
-          
-          targetContact = new Contact(db, this.getContactId());
-                    
-          //send email
-          SMTPMessage mail = new SMTPMessage();
-          mail.setHost((String)System.getProperty("MailServer"));
-          mail.setFrom("cfs-root@darkhorseventures.com");
-          mail.setType("text/html");      
-          mail.setTo(targetContact.getEmailAddress("Business"));
-          mail.setSubject("CFS password changed");
-          mail.setBody("Your CFS User account password has been changed by " + modUser.getUsername() + " (" + modUser.getContact().getNameLastFirst() + ").<br><br>" +
-            " Your new CFS password is the following:<br>" + newPassword + "<br><br>" +
-            "It is reccomended that you change your password next time you login to CFS." );
-        
-          if (mail.send() == 2) {
-            System.err.println(mail.getErrorMsg());
-          }         
+    int resultCount = -1;
+    User modUser = null;
+    Contact targetContact = null;
+
+    String newPassword = randomstring(6, 8);
+    this.setPassword1(newPassword);
+    this.setPassword2(newPassword);
+    resultCount = this.newPassword(db, context);
+
+    if (resultCount > -1) {
+      modUser = new User();
+      modUser.setBuildContact(true);
+      modUser.buildRecord(db, modifiedBy);
+
+      targetContact = new Contact(db, this.getContactId());
+
+      //send email
+      SMTPMessage mail = new SMTPMessage();
+      mail.setHost((String) System.getProperty("MailServer"));
+      mail.setFrom("cfs-root@darkhorseventures.com");
+      mail.setType("text/html");
+      mail.setTo(targetContact.getEmailAddress("Business"));
+      mail.setSubject("CFS password changed");
+      mail.setBody("Your CFS User account password has been changed by " + modUser.getUsername() + " (" + modUser.getContact().getNameLastFirst() + ").<br><br>" +
+          " Your new CFS password is the following:<br>" + newPassword + "<br><br>" +
+          "It is reccomended that you change your password next time you login to CFS.");
+
+      if (mail.send() == 2) {
+        System.err.println(mail.getErrorMsg());
       }
-      
-      return resultCount;
+    }
+
+    return resultCount;
   }
+
+
   /**
    *  Sets the Assistant attribute of the User object
    *
@@ -348,16 +355,6 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the permissions attribute of the User object
-   *
-   *@param  permissions  The new permissions value
-   */
-  public void setPermissions(ArrayList permissions) {
-    this.permissions = permissions;
-  }
-
-
-  /**
    *  Sets the Gmr attribute of the User object
    *
    *@param  tmp  The new Gmr value
@@ -367,12 +364,26 @@ public class User extends GenericBean {
     this.gmr = tmp;
   }
 
+
+  /**
+   *  Sets the managerUserEnabled attribute of the User object
+   *
+   *@param  managerUserEnabled  The new managerUserEnabled value
+   */
   public void setManagerUserEnabled(boolean managerUserEnabled) {
     this.managerUserEnabled = managerUserEnabled;
   }
+
+
+  /**
+   *  Gets the managerUserEnabled attribute of the User object
+   *
+   *@return    The managerUserEnabled value
+   */
   public boolean getManagerUserEnabled() {
     return managerUserEnabled;
   }
+
 
   /**
    *  Gets the revenueLock attribute of the User object
@@ -683,17 +694,27 @@ public class User extends GenericBean {
     this.roleId = tmp;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  newManager        Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean reassign(Connection db, int newManager) throws SQLException {
     int result = -1;
     this.setManagerId(newManager);
     result = this.update(db);
-    
+
     if (result == -1) {
       return false;
     }
-    
+
     return true;
   }
+
 
   /**
    *  Sets the RoleId attribute of the User object
@@ -886,17 +907,6 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the BuildPermissions attribute of the User object
-   *
-   *@param  tmp  The new BuildPermissions value
-   *@since       1.29
-   */
-  public void setBuildPermissions(boolean tmp) {
-    this.buildPermissions = tmp;
-  }
-
-
-  /**
    *  Sets the BuildHierarchy attribute of the User object
    *
    *@param  tmp  The new BuildHierarchy value
@@ -937,16 +947,6 @@ public class User extends GenericBean {
    */
   public void setChildUsers(UserList tmp) {
     this.childUsers = tmp;
-  }
-
-
-  /**
-   *  Gets the permissions attribute of the User object
-   *
-   *@return    The permissions value
-   */
-  public ArrayList getPermissions() {
-    return permissions;
   }
 
 
@@ -1572,7 +1572,7 @@ public class User extends GenericBean {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Beginning insert");
       }
-      
+
       //new contact at the same time
       if (contactId < 1) {
         Contact newContact = this.getContact();
@@ -1584,14 +1584,13 @@ public class User extends GenericBean {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("User-> Inserting new Contact");
         }
-        
+
         contactId = newContact.getId();
-        
+
         if (System.getProperty("DEBUG") != null) {
           System.out.println("User-> New Contact ID: " + newContact.getId());
         }
-        
-      }      
+      }
 
       StringBuffer sql = new StringBuffer();
       sql.append(
@@ -1669,9 +1668,9 @@ public class User extends GenericBean {
       }
 
       pst = db.prepareStatement(
-        "UPDATE contact " +
-        "SET user_id = ? " +
-        "WHERE contact_id = ? ");
+          "UPDATE contact " +
+          "SET user_id = ? " +
+          "WHERE contact_id = ? ");
       pst.setInt(1, id);
       pst.setInt(2, contact.getId());
       pst.executeUpdate();
@@ -1724,9 +1723,9 @@ public class User extends GenericBean {
 
     int resultCount = 0;
     PreparedStatement pst = db.prepareStatement(
-      "UPDATE access " +
-      "SET enabled = ? " +
-      "WHERE user_id = ? ");
+        "UPDATE access " +
+        "SET enabled = ? " +
+        "WHERE user_id = ? ");
     pst.setBoolean(1, false);
     pst.setInt(2, this.getId());
     resultCount = pst.executeUpdate();
@@ -1739,7 +1738,15 @@ public class User extends GenericBean {
       return true;
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean enable(Connection db) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("ID not specified.");
@@ -1747,9 +1754,9 @@ public class User extends GenericBean {
 
     int resultCount = 0;
     PreparedStatement pst = db.prepareStatement(
-      "UPDATE access " +
-      "SET enabled = ? " +
-      "WHERE user_id = ? ");
+        "UPDATE access " +
+        "SET enabled = ? " +
+        "WHERE user_id = ? ");
     pst.setBoolean(1, true);
     pst.setInt(2, this.getId());
     resultCount = pst.executeUpdate();
@@ -1761,12 +1768,11 @@ public class User extends GenericBean {
     } else {
       return true;
     }
-  }  
+  }
 
 
   /**
-   *  This method builds are extra data for a user... Permissions, Children
-   *  Users, etc.
+   *  This method builds are extra data for a user... Children Users, etc.
    *
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
@@ -1775,11 +1781,8 @@ public class User extends GenericBean {
   public void buildResources(Connection db) throws SQLException {
     if (buildContact || buildHierarchy) {
       if (this.getContactId() > -1) {
-        contact = new Contact(db, "" + this.getContactId());
+        contact = new Contact(db, this.getContactId());
       }
-    }
-    if (buildPermissions) {
-      buildPermissions(db);
     }
     if (buildHierarchy) {
       buildChildren(db);
@@ -1825,18 +1828,6 @@ public class User extends GenericBean {
     thisLog.setUsername(this.getUsername());
     thisLog.setIp(this.getIp());
     thisLog.insert(db);
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  thisPermission  Description of Parameter
-   *@return                 Description of the Returned Value
-   *@since                  1.18
-   */
-  public boolean hasPermission(String thisPermission) {
-    return permissions.contains(thisPermission);
   }
 
 
@@ -2015,7 +2006,7 @@ public class User extends GenericBean {
     pst.setString(++i, encryptPassword(password1));
     if (modifiedBy > -1) {
       pst.setInt(++i, modifiedBy);
-    }    
+    }
     pst.setInt(++i, getId());
     resultCount = pst.executeUpdate();
     pst.close();
@@ -2039,10 +2030,10 @@ public class User extends GenericBean {
     if (contact == null || contact.getId() == -1) {
       errors.put("contactId", "User is not associated with a Contact");
     }
-    
+
     if (contactId < 1 && contact.getNameLast().length() == 0) {
       errors.put("contactIdError", "Contact needs to be selected or newly created first");
-    }        
+    }
 
     if (password1 == null || password1.trim().equals("")) {
       errors.put("password1Error", "Password cannot be left blank");
@@ -2113,7 +2104,7 @@ public class User extends GenericBean {
     if (roleId < 0) {
       errors.put("roleError", "Role needs to be selected");
     }
-    
+
     //Check hierarchy context for circular references
     if (managerId > 0 && id > -1 && alias == -1) {
       if (managerId == id) {
@@ -2142,7 +2133,7 @@ public class User extends GenericBean {
           StringBuffer sb = new StringBuffer();
           sb.append("Cannot create a circular hierarchy, review current hierarchy:\r\n");
           while (!names.empty()) {
-            sb.append((String)names.pop());
+            sb.append((String) names.pop());
             if (!names.empty()) {
               sb.append(" < ");
             }
@@ -2193,16 +2184,16 @@ public class User extends GenericBean {
 
     String managerNameFirst = rs.getString("mgr_namefirst");
     String managerNameLast = rs.getString("mgr_namelast");
-    
+
     //check to see if manager user is enabled
     if (managerId > -1) {
       managerUserEnabled = rs.getBoolean("mgr_enabled");
     }
-    
+
     if (managerNameFirst != null || managerNameLast != null) {
       this.manager = Contact.getNameLastFirst(managerNameLast, managerNameFirst);
     }
-    
+
     String aliasNameFirst = rs.getString("als_namefirst");
     String aliasNameLast = rs.getString("als_namelast");
     if (aliasNameFirst != null) {
@@ -2240,35 +2231,6 @@ public class User extends GenericBean {
     rs.close();
     pst.close();
     return duplicate;
-  }
-
-
-  /**
-   *  Updates this user's permissions from the database
-   *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.28
-   */
-  private void buildPermissions(Connection db) throws SQLException {
-    permissions.clear();
-    UserPermissionList permissionList = new UserPermissionList(db, getRoleId());
-    Iterator i = permissionList.iterator();
-    while (i.hasNext()) {
-      Permission thisPermission = (Permission) i.next();
-      if (thisPermission.getAdd()) {
-        permissions.add(thisPermission.getName() + "-add");
-      }
-      if (thisPermission.getView()) {
-        permissions.add(thisPermission.getName() + "-view");
-      }
-      if (thisPermission.getEdit()) {
-        permissions.add(thisPermission.getName() + "-edit");
-      }
-      if (thisPermission.getDelete()) {
-        permissions.add(thisPermission.getName() + "-delete");
-      }
-    }
   }
 
 
@@ -2404,33 +2366,55 @@ public class User extends GenericBean {
     PasswordHash passwordHash = new PasswordHash();
     return passwordHash.encrypt(tmp);
   }
-  
-  /**
-  * The following functions are used to generate a random password
-  */
-  
-	public static int rand(int lo, int hi)
-	{
-		int n = hi - lo + 1;
-		int i = rn.nextInt() % n;
-		if (i < 0) {
-			i = -i;
-		}
-		
-		return lo + i;
-	}
 
-	
-	public static String randomstring(int lo, int hi)
-	{
-		int n = rand(lo, hi);
-		byte b[] = new byte[n];
-		for (int i = 0; i < n; i++) {
-			b[i] = (byte)rand('a', 'z');
-		}
-		
-		return new String(b, 0);
-	}  
-  
+
+  /**
+   *  The following functions are used to generate a random password
+   *
+   *@param  lo  Description of the Parameter
+   *@param  hi  Description of the Parameter
+   *@return     Description of the Return Value
+   */
+
+  public static int rand(int lo, int hi) {
+    int n = hi - lo + 1;
+    int i = rn.nextInt() % n;
+    if (i < 0) {
+      i = -i;
+    }
+
+    return lo + i;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  lo  Description of the Parameter
+   *@param  hi  Description of the Parameter
+   *@return     Description of the Return Value
+   */
+  public static String randomstring(int lo, int hi) {
+    int n = rand(lo, hi);
+    byte b[] = new byte[n];
+    for (int i = 0; i < n; i++) {
+      b[i] = (byte) rand('a', 'z');
+    }
+
+    return new String(b, 0);
+  }
+
+
+  /**
+   *  Returns a comma delimited string of all users in this user's hierarchy
+   *  for querying records.
+   *
+   *@return    The idRange value
+   */
+  public String getIdRange() {
+    UserList shortChildList = this.getShortChildList();
+    UserList fullChildList = this.getFullChildList(shortChildList, new UserList());
+    return (fullChildList.getUserListIds(id));
+  }
 }
 

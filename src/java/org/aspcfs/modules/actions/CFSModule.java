@@ -19,7 +19,8 @@ import java.io.*;
  *
  *@author     mrajkowski
  *@created    July 15, 2001
- *@version    $Id$
+ *@version    $Id: CFSModule.java,v 1.34.2.2 2002/12/20 22:22:40 mrajkowski Exp
+ *      $
  */
 public class CFSModule {
 
@@ -48,7 +49,17 @@ public class CFSModule {
     tmpInfo.setParameters(context);
     return tmpInfo;
   }
-  
+
+
+  /**
+   *  Gets the pagedListInfo attribute of the CFSModule object
+   *
+   *@param  context        Description of the Parameter
+   *@param  viewName       Description of the Parameter
+   *@param  defaultColumn  Description of the Parameter
+   *@param  defaultOrder   Description of the Parameter
+   *@return                The pagedListInfo value
+   */
   protected PagedListInfo getPagedListInfo(ActionContext context, String viewName, String defaultColumn, String defaultOrder) {
     PagedListInfo tmpInfo = (PagedListInfo) context.getSession().getAttribute(viewName);
     if (tmpInfo == null) {
@@ -61,6 +72,7 @@ public class CFSModule {
     tmpInfo.setParameters(context);
     return tmpInfo;
   }
+
 
   /**
    *  Retrieves a connection from the connection pool
@@ -154,11 +166,18 @@ public class CFSModule {
     return ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getNameFirst();
   }
 
+
+  /**
+   *  Gets the systemStatus attribute of the CFSModule object
+   *
+   *@param  context  Description of the Parameter
+   *@return          The systemStatus value
+   */
   protected SystemStatus getSystemStatus(ActionContext context) {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     return (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
   }
-   
+
 
   /**
    *  Gets the User attribute of the CFSModule object
@@ -171,8 +190,7 @@ public class CFSModule {
   protected User getUser(ActionContext context, int userId) {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-    UserList thisList = systemStatus.getHierarchyList();
-    return thisList.getUser(userId);
+    return systemStatus.getUser(userId);
   }
 
 
@@ -185,7 +203,8 @@ public class CFSModule {
    */
   protected boolean hasPermission(ActionContext context, String permission) {
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-    return (thisUser.hasPermission(permission));
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    return (systemStatus.hasPermission(thisUser.getUserId(), permission));
   }
 
 
@@ -250,8 +269,8 @@ public class CFSModule {
   /**
    *  Gets the Path attribute of the CFSModule object
    *
-   *@param  context           Description of Parameter
-   *@return                   The Path value
+   *@param  context  Description of Parameter
+   *@return          The Path value
    *@since
    */
   protected String getPath(ActionContext context) {
@@ -295,8 +314,8 @@ public class CFSModule {
 
 
   /**
-   *  Gets the Path attribute of the CFSModule object, no longer used because the
-   *  item id would result in too many directories on a large system
+   *  Gets the Path attribute of the CFSModule object, no longer used because
+   *  the item id would result in too many directories on a large system
    *
    *@param  context           Description of Parameter
    *@param  moduleFolderName  Description of Parameter
@@ -310,9 +329,16 @@ public class CFSModule {
         "fileLibrary" + fs +
         getDbName(context) + fs +
         moduleFolderName + fs);
-        //"id" + moduleItemId + fs);
+    //"id" + moduleItemId + fs);
   }
-  
+
+
+  /**
+   *  Gets the dbNamePath attribute of the CFSModule class
+   *
+   *@param  context  Description of the Parameter
+   *@return          The dbNamePath value
+   */
   public static String getDbNamePath(ActionContext context) {
     return (
         context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
@@ -346,11 +372,18 @@ public class CFSModule {
     String datePathToUse2 = formatter2.format(fileDate);
     return datePathToUse1 + fs + datePathToUse2 + fs;
   }
-  
+
+
+  /**
+   *  Gets the datePath attribute of the CFSModule class
+   *
+   *@param  filenameDate  Description of the Parameter
+   *@return               The datePath value
+   */
   public static String getDatePath(String filenameDate) {
     if (filenameDate.length() > 7) {
-      return (filenameDate.substring(0,4) + fs + 
-             filenameDate.substring(4,8) + fs);
+      return (filenameDate.substring(0, 4) + fs +
+          filenameDate.substring(4, 8) + fs);
     } else {
       return null;
     }
@@ -448,20 +481,25 @@ public class CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Call whenever any module modifies anything to do with permissions, for
+   *  example, if a role's permissions are modified.
    *
-   *@param  context  Description of Parameter
-   *@since
+   *@param  context           Description of Parameter
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
-  protected void updateSystemPermissionCheck(ActionContext context) {
+  protected void updateSystemPermissionCheck(Connection db, ActionContext context) throws SQLException {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-    systemStatus.setPermissionCheck(new java.util.Date());
+    systemStatus.updateRolePermissions(db);
   }
 
 
   /**
-   *  Description of the Method
+   *  Call whenever any module modifies anything to do with user's data, for
+   *  example, if a user record is updated, or a user's contact info is updated.
+   *  TODO: Add a method for updating just the user's contact info and not the
+   *  whole hierarchy.
    *
    *@param  db                Description of Parameter
    *@param  context           Description of Parameter
@@ -607,7 +645,14 @@ public class CFSModule {
       }
     }
   }
-  
+
+
+  /**
+   *  Gets the recentItem attribute of the CFSModule object
+   *
+   *@param  itemObject  Description of the Parameter
+   *@return             The recentItem value
+   */
   public RecentItem getRecentItem(Object itemObject) {
     //Build the recent item object
     RecentItem thisItem = null;
@@ -660,21 +705,21 @@ public class CFSModule {
     } else if (itemObject instanceof com.zeroio.iteam.base.Project) {
       com.zeroio.iteam.base.Project thisProject = (com.zeroio.iteam.base.Project) itemObject;
       thisItem = new RecentItem(
-        RecentItem.PROJECT,
-        thisProject.getTitle(),
-        "/ProjectManagement.do?command=ProjectCenter&pid=" + thisProject.getId());
+          RecentItem.PROJECT,
+          thisProject.getTitle(),
+          "/ProjectManagement.do?command=ProjectCenter&pid=" + thisProject.getId());
     } else if (itemObject instanceof Campaign) {
-      Campaign thisCampaign = (Campaign)itemObject;
+      Campaign thisCampaign = (Campaign) itemObject;
       if (thisCampaign.getActive()) {
         thisItem = new RecentItem(
-          RecentItem.CAMPAIGN,
-          thisCampaign.getSubject(),
-          "/CampaignManager.do?command=Details&id=" + thisCampaign.getId() + "&reset=true");
+            RecentItem.CAMPAIGN,
+            thisCampaign.getSubject(),
+            "/CampaignManager.do?command=Details&id=" + thisCampaign.getId() + "&reset=true");
       } else {
         thisItem = new RecentItem(
-          RecentItem.CAMPAIGN,
-          thisCampaign.getSubject(),
-          "/CampaignManager.do?command=ViewDetails&id=" + thisCampaign.getId() + "&reset=true");
+            RecentItem.CAMPAIGN,
+            thisCampaign.getSubject(),
+            "/CampaignManager.do?command=ViewDetails&id=" + thisCampaign.getId() + "&reset=true");
       }
     }
     return thisItem;
@@ -699,9 +744,9 @@ public class CFSModule {
   /**
    *  Gets the dynamicForm attribute of the CFSModule object
    *
-   *@param  context  Description of the Parameter
-   *@param  which    Description of the Parameter
-   *@return          The dynamicForm value
+   *@param  context   Description of the Parameter
+   *@param  formName  Description of the Parameter
+   *@return           The dynamicForm value
    */
   public CustomForm getDynamicForm(ActionContext context, String formName) {
     CustomForm thisForm = new CustomForm();
@@ -710,46 +755,64 @@ public class CFSModule {
     }
     return thisForm;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@param  object   Description of the Parameter
+   */
   protected void processInsertHook(ActionContext context, Object object) {
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     this.getSystemStatus(context).processHook(context, ObjectHookAction.INSERT, null, object, sqlDriver, ce);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context         Description of the Parameter
+   *@param  previousObject  Description of the Parameter
+   *@param  object          Description of the Parameter
+   */
   protected void processUpdateHook(ActionContext context, Object previousObject, Object object) {
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     this.getSystemStatus(context).processHook(context, ObjectHookAction.UPDATE, previousObject, object, sqlDriver, ce);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context         Description of the Parameter
+   *@param  previousObject  Description of the Parameter
+   */
   protected void processDeleteHook(ActionContext context, Object previousObject) {
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     this.getSystemStatus(context).processHook(context, ObjectHookAction.DELETE, previousObject, null, sqlDriver, ce);
   }
-  
-  public SystemStatus retrieveSystemStatus(ActionContext context, Connection db, ConnectionElement ce) throws SQLException {
-    //SystemStatusList is created in InitHook
-    Hashtable statusList = (Hashtable)context.getServletContext().getAttribute("SystemStatus");
-    //Create the SystemStatus object if it does not exist for this connection,
-    if (!statusList.containsKey(ce.getUrl())) {
-      synchronized (this) {
-        if (!statusList.containsKey(ce.getUrl())) {
-          SystemStatus newSystemStatus = new SystemStatus();
-          newSystemStatus.setConnectionElement((ConnectionElement)ce.clone());
-          newSystemStatus.setFileLibraryPath( 
-            context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
-              "fileLibrary" + fs + ce.getDbName() + fs);
-          newSystemStatus.queryRecord(db);
-          statusList.put(ce.getUrl(), newSystemStatus);
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("Login-> Added new System Status object: " + ce.getUrl());
-          }
-        }
-      }
+
+
+  /**
+   *  Checks that ownerId is the current user or in the current user's
+   *  hierarchy.
+   *
+   *@param  context  Description of the Parameter
+   *@param  ownerId  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  protected boolean hasAuthority(ActionContext context, int ownerId) {
+    int userId = this.getUserId(context);
+    if (userId == ownerId) {
+      return true;
     }
-    return (SystemStatus)statusList.get(ce.getUrl());
+    User userRecord = this.getUser(context, userId);
+    User childRecord = userRecord.getChild(ownerId);
+    return (childRecord != null);
   }
 }
 

@@ -17,20 +17,32 @@ import com.darkhorseventures.webutils.*;
  *@version    $Id$
  */
 public final class Roles extends CFSModule {
-  
+
+  /**
+   *  Default action, calls list roles
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandListRoles(context);
   }
 
-  
+
+  /**
+   *  Action to list roles
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandListRoles(ActionContext context) {
-	  
-	if (!(hasPermission(context, "admin-roles-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "admin-roles-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
-    
+
     PagedListInfo roleInfo = this.getPagedListInfo(context, "RoleListInfo");
     roleInfo.setLink("/Roles.do?command=ListRoles");
 
@@ -55,33 +67,39 @@ public final class Roles extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Action to view role details
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandRoleDetails(ActionContext context) {
-	  
-	if (!(hasPermission(context, "admin-roles-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "admin-roles-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
-    
+
     String roleId = context.getRequest().getParameter("id");
     String action = context.getRequest().getParameter("action");
 
     Connection db = null;
-    
+
     try {
       db = this.getConnection(context);
-      
+
       PermissionList permissionList = new PermissionList(db);
       context.getRequest().setAttribute("PermissionList", permissionList);
-      
+
       Role thisRole = new Role(db, Integer.parseInt(roleId));
       context.getRequest().setAttribute("Role", thisRole);
-      
+
       if (action != null && action.equals("modify")) {
-        
+
       }
-      
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -101,24 +119,34 @@ public final class Roles extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Action to process updating a role based on html form
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUpdateRole(ActionContext context) {
-	  
-	if (!(hasPermission(context, "admin-roles-edit"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "admin-roles-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
-    
-    Role thisRole = (Role)context.getFormBean();
+
+    Role thisRole = (Role) context.getFormBean();
     thisRole.setRequestItems(context.getRequest());
     thisRole.setModifiedBy(getUserId(context));
-    
+
     try {
       db = this.getConnection(context);
       resultCount = thisRole.update(db);
+      if (resultCount == 1) {
+        updateSystemPermissionCheck(db, context);
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -131,7 +159,6 @@ public final class Roles extends CFSModule {
         processErrors(context, thisRole.getErrors());
         return executeCommandRoleDetails(context);
       } else if (resultCount == 1) {
-        updateSystemPermissionCheck(context);
         return ("RoleUpdateOK");
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
@@ -142,7 +169,14 @@ public final class Roles extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Action to generate delete dialog box for user
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -161,18 +195,17 @@ public final class Roles extends CFSModule {
       db = this.getConnection(context);
       thisRole = new Role(db, id);
       htmlDialog.setTitle("Confirm");
-      
+
       htmlDialog.setRelationships(thisRole.processDependencies(db));
-      
+
       if (htmlDialog.getRelationships().size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='Roles.do?command=DeleteRole&id=" + id + "'");
-      }
-      else {
+      } else {
         htmlDialog.setHeader("This role cannot be deleted because at least one user is assigned to it.");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
-      }      
-      
+      }
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -185,14 +218,21 @@ public final class Roles extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-  }  
-  
+  }
+
+
+  /**
+   *  Action to generate a role insert form
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandInsertRoleForm(ActionContext context) {
-	  
-	if (!(hasPermission(context, "admin-roles-add"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "admin-roles-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     addModuleBean(context, "Roles", "Insert a Role");
     Connection db = null;
@@ -200,13 +240,13 @@ public final class Roles extends CFSModule {
       db = this.getConnection(context);
       PermissionList thisPermissionList = new PermissionList(db);
       context.getRequest().setAttribute("PermissionList", thisPermissionList);
-      
-      } catch (Exception e) {
+
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     if (errorMessage == null) {
       return ("RoleInsertFormOK");
     } else {
@@ -214,21 +254,28 @@ public final class Roles extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Action to insert a role, based on html form entered by user
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandInsertRole(ActionContext context) {
-	  
-	if (!(hasPermission(context, "admin-roles-add"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "admin-roles-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     boolean recordInserted = false;
-    
-    Role thisRole = (Role)context.getFormBean();
+
+    Role thisRole = (Role) context.getFormBean();
     thisRole.setRequestItems(context.getRequest());
     thisRole.setEnteredBy(getUserId(context));
     thisRole.setModifiedBy(getUserId(context));
-    
+
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -236,10 +283,10 @@ public final class Roles extends CFSModule {
       if (recordInserted) {
         PermissionList permissionList = new PermissionList(db);
         context.getRequest().setAttribute("PermissionList", permissionList);
-        
+
         thisRole = new Role(db, thisRole.getId());
         context.getRequest().setAttribute("Role", thisRole);
-        
+
       } else {
         processErrors(context, thisRole.getErrors());
       }
@@ -261,18 +308,25 @@ public final class Roles extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Action to delete a specific role
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDeleteRole(ActionContext context) {
-	  
-	if (!(hasPermission(context, "admin-roles-delete"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "admin-roles-delete"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Role thisRole = null;
     String roleId = context.getRequest().getParameter("id");
-    
+
     Connection db = null;
     try {
       if (Integer.parseInt(roleId) == 1) {
@@ -295,7 +349,7 @@ public final class Roles extends CFSModule {
       } else {
         processErrors(context, thisRole.getErrors());
         context.getRequest().setAttribute("refreshUrl", "Roles.do?command=ListRoles");
-        return ("DeleteOK");        
+        return ("DeleteOK");
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
