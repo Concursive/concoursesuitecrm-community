@@ -76,6 +76,8 @@ public class Contact extends GenericBean {
   private boolean hasEnabledAccount = true;
 
   private boolean primaryContact = false;
+  private boolean employee = false;
+  private boolean personal = false;
   private boolean hasOpportunities = false;
   private LookupList types = new LookupList();
   private ArrayList typeList = null;
@@ -220,6 +222,46 @@ public class Contact extends GenericBean {
    */
   public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
     this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
+  }
+
+
+  /**
+   *  Sets the employee attribute of the Contact object
+   *
+   *@param  employee  The new employee value
+   */
+  public void setEmployee(boolean employee) {
+    this.employee = employee;
+  }
+
+
+  /**
+   *  Sets the personal attribute of the Contact object
+   *
+   *@param  personal  The new personal value
+   */
+  public void setPersonal(boolean personal) {
+    this.personal = personal;
+  }
+
+
+  /**
+   *  Gets the employee attribute of the Contact object
+   *
+   *@return    The employee value
+   */
+  public boolean getEmployee() {
+    return employee;
+  }
+
+
+  /**
+   *  Gets the personal attribute of the Contact object
+   *
+   *@return    The personal value
+   */
+  public boolean getPersonal() {
+    return personal;
   }
 
 
@@ -2255,8 +2297,8 @@ public class Contact extends GenericBean {
         errors.put("lastcompanyError", "Last Name or Company Name is required");
       }
     }
-    
-    if(orgId != -1 && typeList.contains(String.valueOf(PERSONAL_TYPE))){
+
+    if (orgId != -1 && typeList.contains(String.valueOf(PERSONAL_TYPE))) {
       errors.put("personalContactError", "Account Contact cannot be personal");
     }
     if (hasErrors()) {
@@ -2413,6 +2455,8 @@ public class Contact extends GenericBean {
     custom1 = rs.getInt("custom1");
     url = rs.getString("url");
     primaryContact = rs.getBoolean("primary_contact");
+    employee = rs.getBoolean("employee");
+    personal = rs.getBoolean("personal");
 
     //lookup_department table
     departmentName = rs.getString("departmentname");
