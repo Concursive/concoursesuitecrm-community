@@ -85,8 +85,10 @@ Modify Component<br>
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
-	<%}%>
-<%} else {%>
+	<%}else if(request.getParameter("return").equals("details")){%>
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&oppId=<%= LeadsComponentDetails.getOppId() %>';this.form.dosubmit.value='false';">
+<%}
+ } else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= LeadsComponentDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="reset" value="Reset">
@@ -276,8 +278,10 @@ Modify Component<br>
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
-	<%}%>
-<%} else {%>
+	<%}else if(request.getParameter("return").equals("details")){%>
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&oppId=<%= LeadsComponentDetails.getOppId() %>';this.form.dosubmit.value='false';">
+ <%}
+ } else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= LeadsComponentDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="reset" value="Reset">
