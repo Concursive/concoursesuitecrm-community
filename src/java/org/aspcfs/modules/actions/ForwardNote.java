@@ -120,7 +120,7 @@ public final class ForwardNote extends CFSModule {
 				mail.setTo(tempUser.getContact().getEmailAddress("Business"));
 				
 				mail.setSubject(tempNote.getSubject());
-				mail.setBody("The following message was sent to your CFS Inbox by " + tempNote.getSentName() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + tempNote.getBody());
+				mail.setBody("The following message was sent to your CFS Inbox by " + tempNote.getSentName() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + toHtml(tempNote.getBody()));
 				
 				if (mail.send() == 2) {
 					System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
@@ -149,5 +149,62 @@ public final class ForwardNote extends CFSModule {
 			return ("SystemError");
 		}
 	}
+	
+	  public static String toHtml(String s) {
+    if (s != null) {
+      if (s.trim().equals("")) {
+        return ("&nbsp;");
+      } else {
+        return toHtmlValue(s);
+      }
+    } else {
+      return("&nbsp;");
+    }
+  }
+  
+  public static String toHtmlValue(String s) {
+    if (s != null) {
+      String htmlReady = s.trim();
+      htmlReady = replace(htmlReady, "\"", "&quot;");
+      htmlReady = replace(htmlReady, "<", "&lt;");
+      htmlReady = replace(htmlReady, ">", "&gt;");
+      htmlReady = replace(htmlReady, "\r\n", "<br>");
+      htmlReady = replace(htmlReady, "\n\r", "<br>");
+      htmlReady = replace(htmlReady, "\n", "<br>");
+      htmlReady = replace(htmlReady, "\r", "<br>");
+      htmlReady = replace(htmlReady, "/&lt;", "<");
+      htmlReady = replace(htmlReady, "/&gt;", ">");
+      return(htmlReady);
+    } else {
+      return("");
+    }
+  }
+  
+  public static String replace(String str, String o, String n) {
+    boolean all = true;
+    if (str != null && o != null && o.length() > 0 && n != null) { 
+      StringBuffer result = null;
+      int oldpos = 0;
+      do {
+          int pos = str.indexOf(o, oldpos);
+          if (pos < 0)
+              break;
+          if (result == null)
+              result = new StringBuffer();
+          result.append(str.substring(oldpos, pos));
+          result.append(n);
+          pos += o.length();
+          oldpos = pos;
+      } while (all);
+      if (oldpos == 0) {
+          return str;
+      } else {
+          result.append(str.substring(oldpos));
+          return new String(result);
+      }
+    } else {
+      return str;
+    }
+  }
 
 }
