@@ -39,6 +39,22 @@ public class CFSModule {
       "You can hit the back button to review the changes that could not be committed, " +
       "but you must reload the record and make the changes again.";
 
+      
+  /**
+   *  This is the default call by all actions if a command= paramter is not
+   *  passed along with the request. Descendant classes should override this
+   *  method to carry out default behavior that should occur BEFORE the initial
+   *  JSP page is displayed. This is most useful when the initial page needs to
+   *  show a list of items that are populated from the database, such as a
+   *  drop-down list of activity for a client, etc.
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
+  public String executeCommandDefault(ActionContext context) {
+    return "DefaultOK";
+  }
+
 
   /**
    *  Gets the PagedListInfo attribute of the CFSModule object
@@ -361,7 +377,7 @@ public class CFSModule {
    *@since
    */
   protected String getPath(ActionContext context) {
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     return prefs.get("FILELIBRARY");
   }
 
@@ -374,7 +390,7 @@ public class CFSModule {
    *@return                   The path value
    */
   protected String getPath(ActionContext context, String moduleFolderName) {
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     return (prefs.get("FILELIBRARY") +
         (this.getDbName(context) == null ? "" : this.getDbName(context) + fs) +
         (moduleFolderName == null ? "" : moduleFolderName + fs));
@@ -390,7 +406,7 @@ public class CFSModule {
    *@return                   The path value
    */
   protected String getPath(ActionContext context, ConnectionElement ce, String moduleFolderName) {
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     return (prefs.get("FILELIBRARY") +
         (this.getDbName(ce) == null ? "" : this.getDbName(ce) + fs) +
         moduleFolderName + fs);
@@ -404,7 +420,7 @@ public class CFSModule {
    *@return          The dbNamePath value
    */
   public static String getDbNamePath(ActionContext context) {
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     return (prefs.get("FILELIBRARY") + getDbName(context) + fs);
   }
 
@@ -1071,7 +1087,7 @@ public class CFSModule {
    *@return          The pref value
    */
   protected static String getPref(ActionContext context, String param) {
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     if (prefs != null) {
       return prefs.get(param);
     } else {
