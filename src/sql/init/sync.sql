@@ -767,12 +767,14 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'savedCriteriaElementList', 'com.darkhorseventures.webutils.CustomLookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'searchFieldElement', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'searchFieldElementList', 'com.darkhorseventures.webutils.CustomLookupList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'revenue', 'com.darkhorseventures.cfsbase.Revenue');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'revenueList', 'com.darkhorseventures.cfsbase.RevenueList');
  
-INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'searchFieldElement', 'com.darkhorseventures.webutils.CustomLookupElement');
-INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'searchFieldElementList', 'com.darkhorseventures.webutils.CustomLookupList');
+
  

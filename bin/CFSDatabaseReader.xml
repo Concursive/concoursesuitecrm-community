@@ -450,7 +450,7 @@
       <property field="operatorid"/>
       <property field="value"/>
     </map>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="searchFieldElement" table="search_fields" uniqueField="id">
+    <!--map class="com.darkhorseventures.webutils.CustomLookupList" id="searchFieldElement" table="search_fields" uniqueField="id">
       <property alias="guid" field="id"/>
       <property field="field"/>
       <property field="description"/>
@@ -472,6 +472,6 @@
       <property>description</property>
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
-    </map>
+    </map-->
   </mappings>
 </CFSDatabaseReader>
