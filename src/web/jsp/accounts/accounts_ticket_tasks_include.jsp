@@ -16,7 +16,7 @@
 <input type="hidden" name="ticketId" value="<%= request.getParameter("ticketId") %>">
 <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
 <input type="hidden" name="type" value="<%= Constants.TICKET_OBJECT %>">
-<input type="hidden" name="return" value="AccountTickets.do?command=TicketDetails&id=<%= request.getParameter("ticketId") %>">
+<input type="hidden" name="return" value="AccountTicketTasks.do?command=List&ticketId=<%= request.getParameter("ticketId") %>">
 </form>
 </body>
 
