@@ -135,7 +135,17 @@ public class AuthenticationItem {
 
 
   /**
-   *  Sets the XML encoding attribute of the AuthenticationItem object.  The
+   *  Sets the authCode attribute of the AuthenticationItem object
+   *
+   *@param  tmp  The new authCode value
+   */
+  public void setAuthCode(String tmp) {
+    this.authCode = tmp;
+  }
+
+
+  /**
+   *  Sets the XML encoding attribute of the AuthenticationItem object. The
    *  encoding determines the encoding for all XML that will be returned.
    *
    *@param  tmp  The new encoding value
@@ -206,7 +216,17 @@ public class AuthenticationItem {
 
 
   /**
-   *  Gets the XML encoding attribute of the AuthenticationItem object.  The
+   *  Gets the authCode attribute of the AuthenticationItem object
+   *
+   *@return    The authCode value
+   */
+  public String getAuthCode() {
+    return authCode;
+  }
+
+
+  /**
+   *  Gets the XML encoding attribute of the AuthenticationItem object. The
    *  encoding specifies the preferred XML encoding for the client.
    *
    *@return    The encoding value
@@ -255,31 +275,44 @@ public class AuthenticationItem {
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
     gk.setDriver(gkDriver);
-    ConnectionElement ce = null;
-    String sql =
-        "SELECT * FROM sites " +
-        "WHERE sitecode = ? " +
-        "AND vhost = ? ";
-    Connection db = sqlDriver.getConnection(gk);
-    PreparedStatement pst = db.prepareStatement(sql);
-    pst.setString(1, siteCode);
-    pst.setString(2, serverName);
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      String siteDbHost = rs.getString("dbhost");
-      String siteDbName = rs.getString("dbname");
-      String siteDbUser = rs.getString("dbuser");
-      String siteDbPw = rs.getString("dbpw");
-      String siteDriver = rs.getString("driver");
-      authCode = rs.getString("code");
-      ce = new ConnectionElement(siteDbHost, siteDbUser, siteDbPw);
-      ce.setDbName(siteDbName);
-      ce.setDriver(siteDriver);
+    if (!"true".equals((String) context.getServletContext().getAttribute("WEBSERVER.ASPMODE"))) {
+      // This system is not configured with the sites table, must be a binary version
+      gk.setDbName(prefs.get("GATEKEEPER.DATABASE"));
+      return gk;
     }
-    rs.close();
-    pst.close();
-    sqlDriver.free(db);
-    return ce;
+    Connection db = null;
+    try {
+      ConnectionElement ce = null;
+      db = sqlDriver.getConnection(gk);
+      PreparedStatement pst = db.prepareStatement(
+          "SELECT * " +
+          "FROM sites " +
+          "WHERE sitecode = ? " +
+          "AND vhost = ? ");
+      pst.setString(1, siteCode);
+      pst.setString(2, serverName);
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        String siteDbHost = rs.getString("dbhost");
+        String siteDbName = rs.getString("dbname");
+        String siteDbUser = rs.getString("dbuser");
+        String siteDbPw = rs.getString("dbpw");
+        String siteDriver = rs.getString("driver");
+        authCode = rs.getString("code");
+        ce = new ConnectionElement(siteDbHost, siteDbUser, siteDbPw);
+        ce.setDbName(siteDbName);
+        ce.setDriver(siteDriver);
+      }
+      rs.close();
+      pst.close();
+      return ce;
+    } catch (Exception e) {
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (db != null) {
+        sqlDriver.free(db);
+      }
+    }
   }
 
 
@@ -324,8 +357,11 @@ public class AuthenticationItem {
    */
   public boolean isAuthenticated(ActionContext context, boolean checkCode) {
     String serverName = context.getRequest().getServerName();
-    if ((id != null && id.equals(serverName)) || !checkCode) {
-      if (!checkCode || (code != null && authCode != null && code.equals(authCode))) {
+    if (!checkCode) {
+      return true;
+    }
+    if (id != null && id.equals(serverName)) {
+      if (code != null && authCode != null && code.equals(authCode)) {
         return true;
       }
     }
