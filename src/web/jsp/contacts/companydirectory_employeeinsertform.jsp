@@ -113,7 +113,7 @@
 &nbsp;<br>  
 
 <%--  include basic contact form --%>
-<%@ include file="../contacts/contact_form.jsp" %>
+<%@ include file="../contacts/contact_include.jsp" %>
 
 <br>
   <input type="submit" value="Save" name="Save" onClick="this.form.dosubmit.value='true';">

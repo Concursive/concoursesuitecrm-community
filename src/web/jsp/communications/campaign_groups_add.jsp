@@ -46,7 +46,7 @@ Add a Group
 &nbsp;<br>
 
 <%-- include jsp for contact criteria --%>
-<%@ include file="group_criteria_form.jsp" %>
+<%@ include file="group_criteria_include.jsp" %>
 
 &nbsp;<br>
 <input type="submit" value="Save">

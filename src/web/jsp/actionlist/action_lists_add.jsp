@@ -52,12 +52,12 @@ New Action List<br>
 <br>
 
 <%-- include the basic form for adding a action list --%>
-<%@ include file="action_lists_form.jsp" %>
+<%@ include file="action_lists_include.jsp" %>
 
 &nbsp;<br>
 <dhv:evaluate if="<%= ActionList.getId() == -1 %>">
 <%-- include jsp for contact criteria --%>
-<%@ include file="../communications/group_criteria_form.jsp" %>
+<%@ include file="../communications/group_criteria_include.jsp" %>
 <br>
 </dhv:evaluate>
 

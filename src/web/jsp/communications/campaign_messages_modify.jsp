@@ -62,7 +62,7 @@ Modify Message
 <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
-<%@ include file="message_form.jsp" %>
+<%@ include file="message_include.jsp" %>
 <br>
 <input type="submit" value="Update Message" name="Save" onclick="javascript:save();">
 <% if (request.getParameter("return") != null) {%>

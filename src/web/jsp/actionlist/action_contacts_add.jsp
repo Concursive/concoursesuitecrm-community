@@ -26,7 +26,7 @@ Add Contacts<br>
 <input type="button" value="Preview" onClick="javascript:popPreview()">
 <br>
 <%-- include jsp for contact criteria --%>
-<%@ include file="../communications/group_criteria_form.jsp" %>
+<%@ include file="../communications/group_criteria_include.jsp" %>
 <br>
 <input type="hidden" name="actionId" value="<%= ActionList.getId() %>">
 <input type="submit" value="Save">

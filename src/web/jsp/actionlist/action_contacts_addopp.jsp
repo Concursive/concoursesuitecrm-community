@@ -62,7 +62,7 @@ function checkForm(form) {
 <%= showError(request, "actionError") %>
 </dhv:evaluate>
 <%--  include basic opportunity form --%>
-<%@ include file="../pipeline/opportunity_form.jsp" %>
+<%@ include file="../pipeline/opportunity_include.jsp" %>
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:window.close();">

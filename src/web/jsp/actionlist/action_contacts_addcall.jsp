@@ -12,7 +12,7 @@
 <dhv:evaluate if="<%= hasText((String) request.getAttribute("actionError")) %>">
 <%= showError(request, "actionError") %>
 </dhv:evaluate>
-<%@ include file="../contacts/call_form.jsp" %>
+<%@ include file="../contacts/call_include.jsp" %>
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="button" value="Cancel" onClick="javascript:window.close();">

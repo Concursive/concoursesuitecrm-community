@@ -87,7 +87,7 @@ Add Opportunity<br>
 <%= showError(request, "actionError") %>
 
 <%--  include basic opportunity form --%>
-<%@ include file="../pipeline/opportunity_form.jsp" %>
+<%@ include file="../pipeline/opportunity_include.jsp" %>
 
 &nbsp;
 <br>

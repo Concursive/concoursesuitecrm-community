@@ -25,7 +25,7 @@ Modify Action List<br>
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
   <input type="hidden" name="letter">
   
-  <%@ include file="../mycfs/contactlist_form.jsp" %>
+  <%@ include file="../mycfs/contactlist_include.jsp" %>
   <br>
   <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','contactListView');">
   <input type="button" value="Cancel"  onClick="javascript:window.location.href='MyActionContacts.do?command=List&actionId=<%= request.getParameter("actionId") %>'">

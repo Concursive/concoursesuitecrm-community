@@ -20,7 +20,7 @@
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
   <input type="hidden" name="letter">
   
-  <%@ include file="contactlist_form.jsp" %>
+  <%@ include file="contactlist_include.jsp" %>
   
 <% if("list".equals(request.getParameter("listType"))){ %>
   <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','contactListView');">

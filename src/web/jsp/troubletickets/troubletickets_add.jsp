@@ -14,7 +14,7 @@ Add Ticket<br>
   <%= showAttribute(request, "closedError") %>
 <%}%>
 <%-- include basic troubleticket add form --%>
-<%@ include file="troubletickets_form.jsp" %>
+<%@ include file="troubletickets_include.jsp" %>
 <br>
 <input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">

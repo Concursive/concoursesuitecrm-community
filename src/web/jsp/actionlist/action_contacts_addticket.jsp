@@ -9,7 +9,7 @@
   <%= showAttribute(request, "closedError") %>
 <%}%>
 <%-- include basic troubleticket add form --%>
-<%@ include file="../troubletickets/troubletickets_form.jsp" %>
+<%@ include file="../troubletickets/troubletickets_include.jsp" %>
 <br>
 <input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
 <input type="submit" value="Cancel" onClick="javascript:window.close();">

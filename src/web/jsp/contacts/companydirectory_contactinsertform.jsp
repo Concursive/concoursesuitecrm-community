@@ -190,7 +190,7 @@
 </table>
 &nbsp;<br>
 <%--  include basic contact form --%>
-<%@ include file="contact_form.jsp" %>
+<%@ include file="contact_include.jsp" %>
 <br>
   <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
   <dhv:evaluate exp="<%= !isPopup(request) %>">

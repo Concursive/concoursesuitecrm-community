@@ -49,7 +49,7 @@ Start by choosing an existing message or create a new one:<br>
   </select>  
 <% } %>
 <%-- include the message form from create messages --%>
-<%@ include file="../communications/message_form.jsp" %>
+<%@ include file="../communications/message_include.jsp" %>
 <br>
 <input type="submit" value="Send Message">
 <input type="button" value="Cancel" onClick="javascript:window.close();">

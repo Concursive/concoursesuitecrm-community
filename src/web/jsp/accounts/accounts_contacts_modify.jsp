@@ -189,7 +189,7 @@ Modify Contact<br>
 &nbsp;<br>  
 
 <%--  include basic contact form --%>
-<%@ include file="../contacts/contact_form.jsp" %>
+<%@ include file="../contacts/contact_include.jsp" %>
 
 <br>
    <input type="submit" value="Update" name="Save" onClick="return checkForm(this.form)">
