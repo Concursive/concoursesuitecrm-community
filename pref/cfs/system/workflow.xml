@@ -15,8 +15,10 @@
   <processes>
     <process name="dhv.ticket.insert" description="Ticket change notification" startId="1" type="OBJECT_EVENT" module="Tickets">
       <parameters>
+        <!--
         <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
         <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
+        -->
       </parameters>
       <components>
         <component id="1" parent="0" class="org.aspcfs.modules.troubletickets.components.LoadTicketDetails" enabled="true"/>
@@ -74,8 +76,10 @@ Comment: ${this.comment}
     
     <process name="dhv.report.ticketList.overdue" description="Overdue ticket notification" startId="1" type="SCHEDULED_EVENT" module="Tickets">
       <parameters>
+        <!--
         <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
         <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
+        -->
       </parameters>
       <components>
         <component id="1" parent="0" class="org.aspcfs.modules.troubletickets.components.GenerateTicketList">
@@ -90,7 +94,9 @@ Comment: ${this.comment}
         </component>
         <component id="2" parent="1" class="org.aspcfs.modules.troubletickets.components.SendTicketListReport" enabled="true">
           <parameters>
-            <parameter name="notification.to" value="mrajkowski@darkhorseventures.com" enabled="false"/>
+            <!--
+            <parameter name="notification.to" value="support@darkhorseventures.com" enabled="false"/>
+            -->
             <parameter name="notification.users.to" value="${this.enteredBy}"/>
             <parameter name="notification.contacts.to" value="${this.contactId}" enabled="false"/>
             <!-- not implemented
