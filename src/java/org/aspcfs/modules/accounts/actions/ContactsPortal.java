@@ -49,9 +49,10 @@ public final class ContactsPortal extends CFSModule {
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
       User thisPortalUser = new User();
-      thisPortalUser.buildRecord(db, thisContact.getUserId());
+      if (thisContact.getUserId() > -1) {
+        thisPortalUser.buildRecord(db, thisContact.getUserId());
+      }
       setOrganization(context, db, thisContact.getOrgId());
-
       context.getRequest().setAttribute("ContactDetails", thisContact);
       context.getRequest().setAttribute("portalUserDetails", thisPortalUser);
     } catch (Exception e) {
