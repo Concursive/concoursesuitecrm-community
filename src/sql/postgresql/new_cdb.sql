@@ -11,7 +11,7 @@ CREATE TABLE system_prefs (
   data TEXT DEFAULT '' NOT NULL
 );
 
-INSERT INTO system_prefs (category, data) VALUES ('graphic', '/images/virginian-pilot.gif');
+INSERT INTO system_prefs (category, data) VALUES ('graphic', '/images/logo.gif');
 INSERT INTO system_prefs (category, data) VALUES ('template', 'template0');
 INSERT INTO system_prefs (category, data) VALUES ('css', 'template0');
 INSERT INTO system_prefs (category, data) VALUES ('license', 'fdb61e1f82a9e32b89263c81db0115d5');
@@ -341,44 +341,6 @@ insert into lookup_delivery_options (description,level) values ('Email then Lett
 insert into lookup_delivery_options (description,level) values ('Email, Fax, then Letter',6);
 
 
-CREATE TABLE opportunity (
-  opp_id				serial PRIMARY KEY
-  ,owner				INT not null
-  ,description			VARCHAR(80)
-  ,acctlink			INT not null default -1
-  ,contactlink			INT not null default -1
-  ,closedate			date not null
-  ,closeprob			float
-  ,terms				float
-  ,units				char(1)
-  ,lowvalue			float
-  ,guessvalue			float
-  ,highvalue			float
-  ,stage				INT
-  ,stagedate			date
-  ,commission			float
-  ,type				char(1)
-  ,alertdate			date
-  ,entered 			TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-  ,enteredby 			INT NOT NULL
-  ,modified 			TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-  ,modifiedby 			INT NOT NULL
-  ,custom1     			int default -1
-  ,custom2 			int default -1
-  ,closed 			TIMESTAMP,
-  custom_data TEXT
-);
-
-INSERT INTO lookup_stage (order_id,description) VALUES (1,'Prospecting');
-INSERT INTO lookup_stage (order_id,description) VALUES (2,'Qualification');
-INSERT INTO lookup_stage (order_id,description) VALUES (3,'Needs Analysis');
-INSERT INTO lookup_stage (order_id,description) VALUES (4,'Value Proposition');
-INSERT INTO lookup_stage (order_id,description) VALUES (5,'Perception Analysis');
-INSERT INTO lookup_stage (order_id,description) VALUES (6,'Proposal/Price Quote');
-INSERT INTO lookup_stage (order_id,description) VALUES (7,'Negotiation/Review');
-INSERT INTO lookup_stage (order_id,description) VALUES (8,'Closed Won');
-INSERT INTO lookup_stage (order_id,description) VALUES (9,'Closed Lost');
-
 CREATE TABLE contact (
   contact_id serial PRIMARY KEY,
   user_id INT,
@@ -578,23 +540,6 @@ CREATE TABLE notification (
   errorMessage TEXT
 );
 
-CREATE TABLE message (
-  id serial PRIMARY KEY,
-  name VARCHAR(80) NOT NULL,
-  description VARCHAR(255),
-  template_id INT,
-	subject VARCHAR(255) DEFAULT NULL,
-  body TEXT,
-  reply_addr VARCHAR(100),
-  url VARCHAR(100),
-  img VARCHAR(80),  
-  enabled BOOLEAN NOT NULL DEFAULT 't',
-  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL,
-  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL
-);
-
 CREATE TABLE cfsinbox_message (
   id serial PRIMARY KEY,
   subject VARCHAR(255) DEFAULT NULL,
@@ -618,112 +563,5 @@ CREATE TABLE cfsinbox_messagelink (
 );
   
 
-CREATE TABLE message_template (
-  id serial PRIMARY KEY,
-  name VARCHAR(80) NOT NULL,
-  description VARCHAR(255),
-  template_file varchar(80),
-  num_imgs INT,
-  num_urls INT,
-  enabled BOOLEAN NOT NULL DEFAULT 't',
-  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL,
-  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL
-);
 
-CREATE TABLE campaign (
-  id serial PRIMARY KEY,
-  name VARCHAR(80) NOT NULL,
-  description VARCHAR(255),
-  list_id int,
-  message_id int DEFAULT -1,
-	reply_addr VARCHAR(255) DEFAULT NULL,
-	subject VARCHAR(255) DEFAULT NULL,
-	message TEXT DEFAULT NULL,
-  status_id INT DEFAULT 0,
-  status VARCHAR(255),
-  active BOOLEAN DEFAULT false,
-  active_date DATE DEFAULT NULL,
-	send_method_id INT DEFAULT -1 NOT NULL,
-  inactive_date DATE DEFAULT NULL,
-  approval_date TIMESTAMP DEFAULT NULL,
-  approvedby INT DEFAULT -1,
-  enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL,
-  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL
-);
-
-
-CREATE TABLE saved_criterialist (
-  id SERIAL PRIMARY KEY,
-  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INTEGER NOT NULL,
-  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INTEGER NOT NULL,
-  owner INTEGER NOT NULL,
-  name VARCHAR(80) NOT NULL,
-  contact_source INTEGER NOT NULL DEFAULT -1
-);
-
-
-CREATE TABLE saved_criteriaelement (
-  id INTEGER NOT NULL,
-  field INTEGER NOT NULL DEFAULT -1,
-  operator VARCHAR(50) NOT NULL,
-  operatorid INTEGER NOT NULL DEFAULT -1,
-  value VARCHAR(80) NOT NULL
-);
-
-CREATE TABLE recipient_list (
-  id serial PRIMARY KEY,
-  name VARCHAR(80) NOT NULL,
-  description VARCHAR(255),
-  search_id int,
-  dynamic BOOLEAN NOT NULL DEFAULT true,
-  enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL,
-  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL
-);
- 
-
-CREATE TABLE campaign_run (
-  id serial PRIMARY KEY,
-  campaign_id INTEGER NOT NULL DEFAULT -1,
-  status INTEGER NOT NULL DEFAULT 0,
-  run_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  total_contacts INTEGER DEFAULT 0,
-  total_sent INTEGER DEFAULT 0,
-  total_replied INTEGER DEFAULT 0,
-  total_bounced INTEGER DEFAULT 0
-);
-
-CREATE TABLE scheduled_recipient (
-  id serial PRIMARY KEY,
-  campaign_id INT NOT NULL DEFAULT -1,
-  contact_id INT NOT NULL,
-  run_id INT DEFAULT -1,
-  status_id INT DEFAULT 0,
-  status VARCHAR(255),
-  status_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  scheduled_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  sent_date TIMESTAMP DEFAULT NULL,
-  reply_date TIMESTAMP DEFAULT NULL,
-  bounce_date TIMESTAMP DEFAULT NULL
-);
-
-CREATE TABLE excluded_recipient (
-  id serial PRIMARY KEY,
-  campaign_id INT NOT NULL DEFAULT -1,
-  contact_id INT NOT NULL
-);
-
-CREATE TABLE campaign_list_groups (
-  campaign_id int not null,
-  group_id int not null
-);
 
