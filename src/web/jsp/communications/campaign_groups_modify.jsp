@@ -120,11 +120,11 @@ listOfOperators[0] = stringOperators
 listOfOperators[1] = dateOperators
 listOfOperators[2] = numberOperators
 </script>
+<form name="searchForm" method="post" action="/CampaignManagerGroup.do?command=Update&auto-populate=true&id=<%= SCL.getId() %>" onSubmit="return checkForm(this);" >
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="/CampaignManagerGroup.do?command=View">Group List</a> >
 Group Details
 <hr color="#BFBFBB" noshade>
-<form name="searchForm" method="post" action="/CampaignManagerGroup.do?command=Update&auto-populate=true&id=<%= SCL.getId() %>" onSubmit="return checkForm(this);" >
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">
@@ -139,14 +139,6 @@ Group Details
       <input type="text" size="40" name="groupName" value="<%=toHtmlValue(SCL.getGroupName())%>"><font color=red>*</font> <%= showAttribute(request, "groupNameError") %>
     </td>
   </tr>
-  <tr>
-    <td class="formLabel" nowrap>
-      Contact Source
-    </td>
-    <td width="100%">
-      <%= ContactSource.getHtml("contactSource", SCL.getContactSource()) %>
-    </td>
-  </tr>
 </table>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -157,7 +149,13 @@ Group Details
   </tr>
 	<tr>
     <td align="left" valign="center" width="40%">
-      Field Name
+    <table width=100% border=0 cellpadding=2 cellspacing=0>
+    <tr>
+    <td width=98 nowrap>
+    Field
+    </td>
+    
+    <td width=100% valign=center>
       <script language="JavaScript">
         var page = "" // start assembling next part of page and form
         page += "<SELECT NAME='fieldSelect' onChange='updateOperators()'> "
@@ -171,11 +169,17 @@ Group Details
         }
         page += "</SELECT>" // close selection item tag
         document.write(page) // lay out this part of the page
-      </script>      
-      <br>
-      &nbsp;<br>
-      
-		  Operator
+      </script>       
+    </td>
+    
+    </tr>
+    
+    <tr>
+    <td width=98 nowrap>
+    Operator
+    </td>
+    
+    <td width=100% valign=center>
       <script language="JavaScript">
         var page = "" // start assembling next part of page and form
         var fieldSelectIndex = searchField[document.searchForm.fieldSelect.options.selectedIndex].type
@@ -190,20 +194,54 @@ Group Details
         }
         page += "</SELECT>" // close selection item tag
         document.write(page) // lay out this part of the page
-      </script>
-      <span name="new0" ID="new0" style="position:relative; visibility:hidden"><br>&nbsp;<br>Select&nbsp;&nbsp;<%=ContactTypeList.getHtmlSelect("typeId",0)%></span>
-      <br>
-      &nbsp;<br>
-      
-		  Search Text
-      <input type="text" name="searchValue" value="" size=25  maxlength=125>
-      <span name="new1" ID="new1" style="position:relative; visibility:hidden"><a href="javascript:popCalendar('searchForm', 'searchValue');">Date</a></span>
-      
-      <br>
-      &nbsp;<br>
-      <center>
-        <input type="button" value="Add >" onclick="javascript:addValues()">
-      </center>
+      </script>   
+    </td>
+    
+    </tr>
+    
+    <tr><td valign=center>
+    &nbsp;
+    </td><td valign=center>
+    <span name="new0" ID="new0" style="position:relative; visibility:hidden"><%=ContactTypeList.getHtmlSelect("typeId",0)%></span>
+    </td></tr>
+    
+    <tr>
+    <td width=98 nowrap>
+    Search Text
+    </td>
+    
+    <td width=100% valign=center>
+    <input type="text" name="searchValue" value="" size=25  maxlength=125> 
+    </td>
+    
+    </tr>    
+    
+    <tr><td valign=center>
+    &nbsp;
+    </td><td align=right valign=center>
+    <span name="new1" ID="new1" style="position:relative; visibility:hidden"><a href="javascript:popCalendar('searchForm', 'searchValue');">Date</a></span>
+    </td></tr>
+    
+    <tr>
+    <td width=98 nowrap>
+    From
+    </td>
+    
+    <td width=100% valign=center>
+    <%= ContactSource.getHtml("contactSource", SCL.getContactSource()) %>
+    </td>
+    
+    </tr> 
+    
+    <tr>
+    <td align=center colspan=2 nowrap>
+    <br>
+    <input type="button" value="Add >" onclick="javascript:addValues()">
+    </td>
+    </tr>      
+    
+    
+    </table>
     </td>
     
 		<td align="center" valign="center" width="50%">
@@ -218,8 +256,8 @@ Group Details
       <br>
       <!--a href="javascript:popURLCampaign('/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true','Contacts','600','290','yes','yes');">Add Contacts</a><br-->
       <a href="javascript:popContactsListMultipleCampaign('listViewId','1');">Add Contacts</a><br>
-      
       &nbsp;<br>
+      <input type="hidden" name="previousSelection" value="">
       <input type="button" value="Remove" onclick="removeValues()">
 		</td>
 	</tr>
