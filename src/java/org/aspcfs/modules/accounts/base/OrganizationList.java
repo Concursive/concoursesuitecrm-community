@@ -650,11 +650,10 @@ public class OrganizationList extends Vector {
       if (thisOrganization.getNameLast() != null) {
         thisOrganization.populatePrimaryContact(db);
       }
-
+      
       if (buildRevenueYTD && revenueYear > -1 && revenueOwnerId > -1) {
         thisOrganization.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType(), this.getRevenueOwnerId());
-
-        if (thisOrganization.getYTD() > 0) {
+        if (thisOrganization.getYTD() != 0) {
           this.add(thisOrganization);
         }
       } else {
