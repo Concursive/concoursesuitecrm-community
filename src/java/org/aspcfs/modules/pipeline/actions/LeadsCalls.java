@@ -33,7 +33,6 @@ public final class LeadsCalls extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-calls-view")) {
       return ("PermissionError");
     }
-
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
@@ -56,17 +55,6 @@ public final class LeadsCalls extends CFSModule {
 
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
-
-      ContactList contactList = new ContactList();
-      contactList.setPersonalId(userId);
-      contactList.setBuildDetails(false);
-      contactList.setOrgId(oppHeader.getAccountLink());
-      contactList.buildList(db);
-      context.getRequest().setAttribute("ContactList", contactList);
-
-      LookupList callTypeList = new LookupList(db, "lookup_call_types");
-      callTypeList.addItem(0, "--None--");
-      context.getRequest().setAttribute("CallTypeList", callTypeList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
