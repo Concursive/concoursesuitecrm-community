@@ -22,11 +22,10 @@ import java.util.*;
 import java.util.zip.*;
 import java.lang.reflect.*;
 
-
 /**
  *  Application that processes various kinds of Alerts in CFS, generating
- *  notifications for users.  This application should not be maintained,
- *  but re-implemented to be module.
+ *  notifications for users. This application should not be maintained, but
+ *  re-implemented to be module.
  *
  *@author     matt rajkowski
  *@created    October 16, 2001
@@ -36,14 +35,15 @@ public class Notifier extends ReportBuilder {
 
   private HashMap config = new HashMap();
   private ArrayList taskList = new ArrayList();
-  
+
   /**
    *  Description of the Field
    */
   public final static String fs = System.getProperty("file.separator");
   public final static String lf = System.getProperty("line.separator");
-  public final static String NOREPLY_DISCLAIMER = 
+  public final static String NOREPLY_DISCLAIMER =
       "* THIS IS AN AUTOMATED MESSAGE, PLEASE DO NOT REPLY";
+
 
   /**
    *  Constructor for the Notifier object public Notifier() { } ** Starts the
@@ -56,7 +56,7 @@ public class Notifier extends ReportBuilder {
     if (filename == null) {
       filename = "notifier.xml";
     }
-    
+
     Notifier thisNotifier = new Notifier();
     if (args.length > 1) {
       //Task was specified on command line
@@ -69,7 +69,7 @@ public class Notifier extends ReportBuilder {
       thisNotifier.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients");
       //thisNotifier.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCallOwners");
     }
-    
+
     AppUtils.loadConfig(filename, thisNotifier.config);
     thisNotifier.baseName = (String) thisNotifier.config.get("GATEKEEPER.URL");
     thisNotifier.dbUser = (String) thisNotifier.config.get("GATEKEEPER.USER");
@@ -115,7 +115,7 @@ public class Notifier extends ReportBuilder {
             (String) siteInfo.get("user"),
             (String) siteInfo.get("password"));
         thisNotifier.baseName = (String) siteInfo.get("sitecode");
-        
+
         //TODO: The intent is to move these all out as separate tasks and
         //have a TaskContext with an interface
         if (thisNotifier.getTaskList().size() == 1) {
@@ -123,10 +123,10 @@ public class Notifier extends ReportBuilder {
           while (classes.hasNext()) {
             try {
               //Construct the object, which executes the task
-              Class thisClass = Class.forName((String)classes.next());
-              Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), HashMap.class};
+              Class thisClass = Class.forName((String) classes.next());
+              Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), HashMap.class, HashMap.class};
               Constructor constructor = thisClass.getConstructor(paramClass);
-              Object[] paramObject = new Object[]{db, siteInfo};
+              Object[] paramObject = new Object[]{db, siteInfo, thisNotifier.getConfig()};
               Object theTask = constructor.newInstance(paramObject);
               theTask = null;
             } catch (Exception e) {
@@ -160,6 +160,7 @@ public class Notifier extends ReportBuilder {
    *  stored so that repeat notifications are not sent.
    *
    *@param  db                Description of Parameter
+   *@param  siteInfo          Description of the Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
@@ -214,14 +215,14 @@ public class Notifier extends ReportBuilder {
         }
         thisNotification.setFrom("cfs-messenger@" + (String) siteInfo.get("vhost"));
         thisNotification.setSiteCode(baseName);
-        thisNotification.setSubject("CFS Opportunity" + (relationshipName != null?": " + StringUtils.toHtml(relationshipName):""));
+        thisNotification.setSubject("CFS Opportunity" + (relationshipName != null ? ": " + StringUtils.toHtml(relationshipName) : ""));
         thisNotification.setMessageToSend(
             NOREPLY_DISCLAIMER + "<br>" +
             "<br>" +
             "The following opportunity component in CFS has an alert set:<br>" +
             "<br>" +
-            (relationshipType != null?
-             relationshipType + ": " + StringUtils.toHtml(relationshipName) + "<br>":"") +
+            (relationshipType != null ?
+            relationshipType + ": " + StringUtils.toHtml(relationshipName) + "<br>" : "") +
             "Opportunity Name: " + StringUtils.toHtml(thisOpportunity.getDescription()) + "<br>" +
             "Component Description: " + StringUtils.toHtml(thisComponent.getDescription()) + "<br>" +
             "Close Date: " + thisComponent.getCloseDateString() + "<br>" +
@@ -249,6 +250,7 @@ public class Notifier extends ReportBuilder {
    *  already been alerted.
    *
    *@param  db                Description of Parameter
+   *@param  siteInfo          Description of the Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
@@ -644,21 +646,44 @@ public class Notifier extends ReportBuilder {
 
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  siteInfo  Description of the Parameter
+   *@param  url       Description of the Parameter
+   *@return           Description of the Return Value
+   */
   public String generateCFSUrl(HashMap siteInfo, String url) {
     String schema = "http";
     if ("true".equals((String) config.get("ForceSSL"))) {
       schema = "https";
     }
-    return ("<a href=\"" + schema + "://" + (String) siteInfo.get("vhost") + "/" + url + "\">" + 
-      "View in CFS" +
-      "</a>");
+    return ("<a href=\"" + schema + "://" + (String) siteInfo.get("vhost") + "/" + url + "\">" +
+        "View in CFS" +
+        "</a>");
   }
-  
+
+
+  /**
+   *  Gets the taskList attribute of the Notifier object
+   *
+   *@return    The taskList value
+   */
   public ArrayList getTaskList() {
     return taskList;
   }
-}
 
+
+  /**
+   *  Gets the config attribute of the Notifier object
+   *
+   *@return    The config value
+   */
+  public HashMap getConfig() {
+    return config;
+  }
+}
 
 

@@ -25,7 +25,7 @@ public class AutoGuideMaintenance {
    *@param  db      Description of the Parameter
    *@param  config  Description of the Parameter
    */
-  public AutoGuideMaintenance(Connection db, HashMap config) {
+  public AutoGuideMaintenance(Connection db, HashMap siteInfo, HashMap config) {
     try {
       String filePath = (String) config.get("FileLibrary") + fs + (String) config.get("name") + fs + "autoguide" + fs;
       ArrayList deleteList = new ArrayList();
