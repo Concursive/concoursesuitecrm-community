@@ -692,12 +692,22 @@ public class CustomFieldGroup extends ArrayList {
    */
   public void delete(Connection db) throws SQLException {
     String sql =
-        "DELETE FROM custom_field_info " +
-        "WHERE group_id IN (SELECT group_id FROM custom_field_group WHERE category_id = ?) ";
+        "DELETE FROM custom_field_lookup " +
+        "WHERE field_id IN (SELECT field_id FROM custom_field_info " +
+        "WHERE group_id IN (SELECT group_id FROM custom_field_group WHERE category_id = ?)) ";
     PreparedStatement pst = db.prepareStatement(sql);
     int i = 0;
     pst.setInt(++i, categoryId);
-    pst.execute();
+    pst.executeUpdate();
+    pst.close();
+    
+    sql =
+        "DELETE FROM custom_field_info " +
+        "WHERE group_id IN (SELECT group_id FROM custom_field_group WHERE category_id = ?) ";
+    pst = db.prepareStatement(sql);
+    i = 0;
+    pst.setInt(++i, categoryId);
+    pst.executeUpdate();
     pst.close();
 
     sql =
@@ -706,7 +716,7 @@ public class CustomFieldGroup extends ArrayList {
     pst = db.prepareStatement(sql);
     i = 0;
     pst.setInt(++i, categoryId);
-    pst.execute();
+    pst.executeUpdate();
     pst.close();
   }
 
