@@ -59,7 +59,8 @@ public class Model {
   public int getModifiedBy() { return modifiedBy; }
   public Make getMake() { return make; }
   public String getGuid() {
-    return ObjectUtils.generateGuid(entered, enteredBy, id);
+    //return ObjectUtils.generateGuid(entered, enteredBy, id);
+    return String.valueOf(id);
   }
 
   public boolean exists(Connection db) throws SQLException {

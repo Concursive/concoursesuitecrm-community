@@ -74,7 +74,8 @@ public class Vehicle {
   public java.sql.Timestamp getModified() { return modified; }
   public int getModifiedBy() { return modifiedBy; }
   public String getGuid() {
-    return ObjectUtils.generateGuid(entered, enteredBy, id);
+    //return ObjectUtils.generateGuid(entered, enteredBy, id);
+    return String.valueOf(id);
   }
   public Make getMake() { return make; }
   public Model getModel() { return model; }

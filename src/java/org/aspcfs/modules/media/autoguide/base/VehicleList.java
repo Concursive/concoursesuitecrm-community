@@ -77,6 +77,7 @@ public class VehicleList extends ArrayList {
       " LEFT JOIN autoguide_model model ON v.model_id = model.model_id ");
     sql.append("WHERE vehicle_id > -1 ");
     createFilter(sql);
+    sql.append("ORDER BY vehicle_id ");
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();

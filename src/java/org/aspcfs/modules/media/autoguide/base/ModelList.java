@@ -68,7 +68,7 @@ public class ModelList extends ArrayList {
       "FROM autoguide_model model LEFT JOIN autoguide_make make ON model.make_id = make.make_id ");
     sql.append("WHERE model.model_id > -1 ");
     createFilter(sql);
-    sql.append("ORDER BY model_name ");
+    sql.append("ORDER BY model_id ");
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();

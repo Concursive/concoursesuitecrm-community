@@ -38,6 +38,7 @@ public class TransactionItem {
   private String name = null;
   private Object object = null;
   private int action = -1;
+  private int identity = -1;
   private StringBuffer errorMessage = new StringBuffer();
   private RecordList recordList = null;
   private TransactionMeta meta = null;
@@ -79,7 +80,7 @@ public class TransactionItem {
    *@param  thisMeta    The feature to be added to the Fields attribute
    *@param  thisObject  The feature to be added to the Fields attribute
    */
-  public static void addFields(Record thisRecord, TransactionMeta thisMeta, Object thisObject) {
+  public void addFields(Record thisRecord, TransactionMeta thisMeta, Object thisObject) {
     if (thisMeta != null && thisMeta.getFields() != null) {
       Iterator fields = thisMeta.getFields().iterator();
       while (fields.hasNext()) {
@@ -98,6 +99,9 @@ public class TransactionItem {
         thisRecord.put(thisField, thisValue);
       }
       thisRecord.setRecordId(ObjectUtils.getParam(thisObject, "id"));
+      if (thisRecord.containsKey("guid")) {
+        thisRecord.put("guid", String.valueOf(identity++));
+      }
     }
   }
 
@@ -180,6 +184,11 @@ public class TransactionItem {
       String thisAction = objectElement.getAttribute("type");
       if (thisAction == null || thisAction.trim().equals("")) {
         thisAction = objectElement.getAttribute("action");
+      }
+      String thisIdentity = objectElement.getAttribute("identity");
+      try {
+        identity = Integer.parseInt(thisIdentity);
+      } catch (Exception e) {
       }
       this.setAction(thisAction);
     }
