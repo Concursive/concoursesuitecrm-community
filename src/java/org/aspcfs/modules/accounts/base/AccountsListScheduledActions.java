@@ -91,7 +91,7 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
     alertOrgs.setOwnerId(this.getUserId());
     alertOrgs.setHasExpireDate(false);
     alertOrgs.setHasAlertDate(true);
-    alertOrgs.buildList(db);
+    alertOrgs.buildShortList(db);
     Iterator n = alertOrgs.iterator();
     while (n.hasNext()) {
       Organization thisOrg = (Organization) n.next();
@@ -123,7 +123,7 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
     Iterator n = contractEndOrgs.iterator();
     while (n.hasNext()) {
       Organization thisOrg = (Organization) n.next();
-      companyCalendar.addEvent(thisOrg.getContractEndDateStringLongYear(), "", thisOrg.getName() + ": " + "Contract Expiration", CalendarEventList.EVENT_TYPES[3], thisOrg.getOrgId());
+      companyCalendar.addEvent(thisOrg.getContractEndDateStringLongYear(), "", thisOrg.getName() + ": " + "Contract Expiration", CalendarEventList.EVENT_TYPES[4], thisOrg.getOrgId());
     }
   }
 
@@ -169,7 +169,7 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
    */
   public void addContractEndDateCount(CalendarView companyCalendar, Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("AccountsListScheduledActions --> Building Account Contract End Dates ");
+      System.out.println("AccountsListScheduledActions --> Building Account Contract End Count ");
     }
 
     OrganizationList contractEndOrgs = new OrganizationList();
@@ -181,7 +181,7 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
     Iterator i = s.iterator();
     while (i.hasNext()) {
       String thisDay = (String) i.next();
-      companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[3], thisDay, dayEvents.get(thisDay));
+      companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[4], thisDay, dayEvents.get(thisDay));
     }
 
   }
