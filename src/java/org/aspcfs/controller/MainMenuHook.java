@@ -143,13 +143,17 @@ public class MainMenuHook implements ControllerMainMenuHook {
           }
         } else {
           //The user is not on this link, set the off state of the menu
-          menu.append("<td nowrap onClick=\"javascript:window.location.href='" + thisMenu.getLink() + "'\">");
+          menu.append("<td nowrap");
+          if (thisMenu.getShortHtmlRollover()) {
+            menu.append(" class=\"menutabUnselectedLinkOff\"");
+            menu.append(" onmouseover=\"swapClass(this,'menutabUnselectedLinkOn')\" onmouseout=\"swapClass(this,'menutabUnselectedLinkOff')\"");
+          }
+          menu.append(" onClick=\"javascript:window.location.href='" + thisMenu.getLink() + "'\">");
           menu.append(thisMenu.getShortHtml());
-          //menu.append("<a href='" + thisMenu.getLink() + "'>" + thisMenu.getShortHtml() + "</a>");
           menu.append("</td>");
 
           graphicMenu.append("<a href='" + thisMenu.getLink() + "'");
-          if (thisMenu.hasRollover()) {
+          if (thisMenu.hasGraphicRollover()) {
             graphicMenu.append(" onMouseOut=\"MM_swapImgRestore()\" onMouseOver=\"MM_swapImage('" + thisMenu.getShortHtml() + "','','images/" + thisMenu.getGraphicRollover() + "',1)\"");
           }
           graphicMenu.append(">");
@@ -259,8 +263,10 @@ public class MainMenuHook implements ControllerMainMenuHook {
         mainItem.setPermission(child.getAttribute("value"));
       } else if (childName.equals("long_html")) {
         mainItem.setLongHtml(child.getAttribute("value"));
+        mainItem.setLongHtmlRollover(child.getAttribute("rollover"));
       } else if (childName.equals("short_html")) {
         mainItem.setShortHtml(child.getAttribute("value"));
+        mainItem.setShortHtmlRollover(child.getAttribute("rollover"));
       } else if (childName.equals("link")) {
         mainItem.setLink(child.getAttribute("value"));
         mainItem.setClassNormal(child.getAttribute("classNormal"));
