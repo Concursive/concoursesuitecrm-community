@@ -91,7 +91,7 @@ function reloadCalendar(){
             &nbsp;
           </td>
           <td valign="top">
-            No scheduled actions found.
+            There are currently no items pending for you.
           </td>
         </tr>
         <tr style="visibility:none">
@@ -175,7 +175,7 @@ function reloadCalendar(){
             &nbsp;
           </td>
           <td valign="top">
-            No scheduled actions found.
+            There are currently no items pending for you.
           </td>
         </tr>
 <%
