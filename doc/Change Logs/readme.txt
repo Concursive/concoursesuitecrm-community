@@ -1,11 +1,11 @@
 Centric CRM 2.9
 Copyright 2004 Dark Horse Ventures
-Change Log
-September 17, 2004
+
+Change Log - October 29, 2004
 ----------------------------------------------------------------------------
 
-Summary: 
-- This release introduces several new features, including:
+This release introduces several new features since 2.8, including:
+
   - Project Management module
   - Contact activities
   - Account contact importing from CSV files
@@ -18,15 +18,12 @@ Summary:
   - Account importer added (similar to Contact importer)
   - Assigned tickets with an estimated resolution date now show on calendar
   - More MIME-type graphics added
-  - Changed name to Centric CRM, marking the beginning of the Open Source 
-    version
+  - Changed product name to Centric CRM
 
-Fixes:
-- This release also fixes several items that appeared, including:
-  - The alphabet searching failed on several database configurations
-  
-Developer Changes:
-- Refactored the following:
+
+There are a couple of changes for developers:
+
+  - HTTP XML API has been activated
   - New formMessage tag for displaying action errors on a page
   
 
