@@ -5,6 +5,7 @@ package com.darkhorseventures.cfsbase;
 import java.sql.*;
 import java.util.*;
 import com.darkhorseventures.webutils.PagedListInfo;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Description of the Class
@@ -62,9 +63,6 @@ public class RecipientList extends Vector {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
 
-    sqlSelect.append(
-      "SELECT r.* FROM scheduled_recipient r " +
-      "WHERE r.id > -1 ");
     sqlCount.append(
       "SELECT COUNT(*) AS recordcount " +
       "FROM scheduled_recipient r " +
@@ -101,28 +99,36 @@ public class RecipientList extends Vector {
 			}
 
 			//Determine column to sort by
-			if (pagedListInfo.getColumnToSortBy() == null || pagedListInfo.getColumnToSortBy().equals("")) {
-				pagedListInfo.setColumnToSortBy("id");
-			}
-			sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + " ");
-			if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
-				sqlOrder.append(pagedListInfo.getSortOrder() + " ");
-			}
-
-			//Determine items per page
-			if (pagedListInfo.getItemsPerPage() > 0) {
-				sqlOrder.append("LIMIT " + pagedListInfo.getItemsPerPage() + " ");
-			}
-
-			sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
+			pagedListInfo.setDefaultSort("id", null);
+      pagedListInfo.appendSqlTail(db, sqlOrder);
 		}	else {
 			sqlOrder.append("ORDER BY id ");
 		}
-
+    
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+      "r.* FROM scheduled_recipient r " +
+      "WHERE r.id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
+
+    int count = 0;
     while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          count >= pagedListInfo.getItemsPerPage()) {
+        break;
+      }
+      ++count;
       Recipient thisRecipient = new Recipient(rs);
       this.addElement(thisRecipient);
     }

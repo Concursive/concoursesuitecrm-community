@@ -1282,6 +1282,8 @@ public class Campaign extends GenericBean {
           if (rs.next()) {
             doInsert = false;
           }
+          rs.close();
+          st.close();
 
           if (doInsert) {
             PreparedStatement pstx = null;
@@ -1455,7 +1457,7 @@ public class Campaign extends GenericBean {
         "UPDATE campaign " +
         "SET status_id = ?, " +
         "status = ?, " +
-        "active = false, " +
+        "active = ?, " +
         "modifiedby = " + modifiedBy + ", " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE id = " + id + " " +
@@ -1463,6 +1465,7 @@ public class Campaign extends GenericBean {
     int i = 0;
     pst.setInt(++i, CANCELLED);
     pst.setString(++i, CANCELLED_TEXT);
+    pst.setBoolean(++i, false);
     resultCount = pst.executeUpdate();
     pst.close();
 
@@ -1506,9 +1509,9 @@ public class Campaign extends GenericBean {
     pst.setInt(1, this.getMessageId());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      thisMessageReplyTo = rs.getString("reply_addr");
       thisMessageSubject = rs.getString("subject");
       thisMessageText = rs.getString("body");
+      thisMessageReplyTo = rs.getString("reply_addr");
     }
     rs.close();
     pst.close();

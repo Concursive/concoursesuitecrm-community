@@ -136,10 +136,8 @@ public class CustomFieldRecordList extends Vector {
       sqlFilter = new StringBuffer();
     }
 
-    if (includeEnabled == TRUE) {
-      sqlFilter.append("AND cfr.enabled = true ");
-    } else if (includeEnabled == FALSE) {
-      sqlFilter.append("AND cfr.enabled = false ");
+    if (includeEnabled == TRUE || includeEnabled == FALSE) {
+      sqlFilter.append("AND cfr.enabled = ? ");
     }
     
     if (categoryId > -1) {
@@ -150,6 +148,12 @@ public class CustomFieldRecordList extends Vector {
 
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    
+    if (includeEnabled == TRUE) {
+      pst.setBoolean(++i, true);
+    } else if (includeEnabled == FALSE) {
+      pst.setBoolean(++i, false);
+    }
     
     if (categoryId > -1) {
       pst.setInt(++i, categoryId);

@@ -23,8 +23,8 @@
       <strong>Action</strong>
     </td>
     <td valign=center width="70%" align=left>
-      <a href="/CampaignManager.do?command=View&column=name"><strong>Name</strong></a>
-      <%= CampaignListInfo.getSortIcon("name") %>
+      <a href="/CampaignManager.do?command=View&column=c.name"><strong>Name</strong></a>
+      <%= CampaignListInfo.getSortIcon("c.name") %>
     </td>  
     <td valign=center width="30%" align=left>
       <a href="/CampaignManager.do?command=View&column=active_date"><strong>Start Date</strong></a>

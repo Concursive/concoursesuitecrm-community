@@ -23,8 +23,8 @@
       <strong>Action</strong>
     </td>
     <td valign=center align=left>
-      <a href="/CampaignManager.do?command=Dashboard&column=name"><strong>Name</strong></a>
-      <%= CampaignDashboardListInfo.getSortIcon("name") %>
+      <a href="/CampaignManager.do?command=Dashboard&column=c.name"><strong>Name</strong></a>
+      <%= CampaignDashboardListInfo.getSortIcon("c.name") %>
     </td>  
     <td valign=center align=left>
       <a href="/CampaignManager.do?command=Dashboard&column=active_date"><strong>Start Date</strong></a>
@@ -37,7 +37,7 @@
       <a href="/CampaignManager.do?command=Dashboard&column=status"><strong>Status</strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("status") %>
     </td>
-    <td width=10 valign=center align=left>
+    <td width=10 valign=center align=left nowrap>
       <a href="/CampaignManager.do?command=Dashboard&column=active"><strong>Active?</strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("active") %>
     </td> 

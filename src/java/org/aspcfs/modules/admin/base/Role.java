@@ -496,7 +496,7 @@ public class Role extends GenericBean {
       if (hasUsers(db, false)) {
         recordCount = st.executeUpdate(
             "UPDATE role " +
-            "SET enabled = false " +
+            "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
             "WHERE role_id = " + id + " ");
       } else {
         deletePermissions(db);
