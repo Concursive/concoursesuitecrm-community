@@ -23,6 +23,7 @@ public class SiteUtils {
    */
   public static SiteList getSiteList(HashMap config) {
     SiteList siteList = new SiteList();
+    String appCode = (String) config.get("GATEKEEPER.APPCODE");
     String baseName = (String) config.get("GATEKEEPER.URL");
     String dbUser = (String) config.get("GATEKEEPER.USER");
     String dbPass = (String) config.get("GATEKEEPER.PASSWORD");
@@ -35,6 +36,7 @@ public class SiteUtils {
         Class.forName((String) config.get("GATEKEEPER.DRIVER"));
         Connection dbSites = DriverManager.getConnection(
             baseName, dbUser, dbPass);
+        siteList.setSiteCode(appCode);
         siteList.setEnabled(ReportConstants.TRUE);
         siteList.buildList(dbSites);
         dbSites.close();
