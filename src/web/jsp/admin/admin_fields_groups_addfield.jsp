@@ -79,7 +79,7 @@ New Field<br>
           </td>
           <td>
             Enter values to appear in the selection list, each on a separate line.<br>
-            <textarea cols="50" rows="8" name="lookupList" wrap="SOFT"><%= toString(CustomField.getLookupList()) %></textarea>
+            <textarea cols="50" rows="8" name="lookupListText" wrap="SOFT"><%= toString(CustomField.getLookupList()) %></textarea>
             <%= showAttribute(request, "lookupListError") %>
           </td>
         </tr>
