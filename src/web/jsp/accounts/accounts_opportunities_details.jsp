@@ -7,7 +7,6 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="oppdet" action="Opportunities.do?command=ModifyOpp&id=<%=HeaderDetails.getId()%>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -28,6 +27,7 @@ Opportunity Details<br>
   </tr>
   <tr>
     <td class="containerBack">
+<form name="oppdet" action="Opportunities.do?command=ModifyOpp&id=<%=HeaderDetails.getId()%>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
 <dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='Opportunities.do?command=Modify&oppId=<%=HeaderDetails.getId()%>&orgId=<%= HeaderDetails.getAccountLink() %>';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=HeaderDetails.getOppId()%>&popup=true','Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=AddOppComponent&id=<%=HeaderDetails.getId()%>&orgId=<%= HeaderDetails.getAccountLink() %>';submit();"></dhv:permission>
@@ -61,8 +61,8 @@ Opportunity Details<br>
     </td>
   </tr>    
   </table>
-  <br>
 </form>
+<br>
 <dhv:pagedListStatus showExpandLink="false" title="<%= showError(request, "actionError") %>" object="AccountsComponentListInfo"/>
  <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
