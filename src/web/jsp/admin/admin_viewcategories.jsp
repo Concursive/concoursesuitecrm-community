@@ -139,17 +139,26 @@ function activate(){
 <%
   HashMap categories  = CategoryEditor.getCategoryList();
   boolean done = false;
-  for (int k = 1; k < 4; k++) {
+  TicketCategoryDraft thisCat = null;
+  for (int k = 0; k < 4; k++) {
     if (selectedCategories.get(new Integer(k)) != null) {
-    TicketCategoryDraft tmpCat = (TicketCategoryDraft) categories.get((Integer) (selectedCategories.get(new Integer(k))));
-    TicketCategoryDraft parentCat = (TicketCategoryDraft) categories.get(new Integer(tmpCat.getParentCode()));
+    thisCat = (TicketCategoryDraft) categories.get((Integer) (selectedCategories.get(new Integer(k))));
+    if(thisCat.getParentCode() != 0){
+    TicketCategoryDraft parentCat = (TicketCategoryDraft) categories.get(new Integer(thisCat.getParentCode()));
     if(!parentCat.getEnabled()){
     %>
       document.getElementById('edit' + <%= k %>).disabled = true;
     <% }else{ %>
       document.getElementById('edit' + <%= k %>).disabled = false;
     <% } 
+     }
     }else{
+    if(thisCat != null && !thisCat.getEnabled()){
+    %>
+      document.getElementById('edit' + <%= k %>).disabled = true;
+    <% }else{ %>
+      document.getElementById('edit' + <%= k %>).disabled = false;
+    <% }
       break;
     }
  }
