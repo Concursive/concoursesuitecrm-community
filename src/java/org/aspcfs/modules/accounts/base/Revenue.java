@@ -319,8 +319,22 @@ public String getOwnerNameAbbr() {
   
 		sql.append(
 			"INSERT INTO revenue " +
-			"(org_id, transaction_id, month, year, amount, type, owner, description, enteredBy, modifiedBy) " +
-			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+			"(org_id, transaction_id, month, year, amount, type, owner, description, ");
+                if (entered != null) {
+                        sql.append("entered, ");
+                }
+                if (modified != null) {
+                        sql.append("modified, ");
+                }
+      sql.append("enteredBy, modifiedBy ) ");      
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
+                if (entered != null) {
+                        sql.append("?, ");
+                }
+                if (modified != null) {
+                        sql.append("?, ");
+                }
+      sql.append("?, ?) ");
 		try {
 			db.setAutoCommit(false);
 		int i = 0;
@@ -336,9 +350,14 @@ public String getOwnerNameAbbr() {
 	      pst.setNull(++i, java.sql.Types.INTEGER);
       }
 			pst.setInt(++i, owner);
-			pst.setString(++i, description);
-			pst.setInt(++i, enteredBy);
-			pst.setInt(++i, enteredBy);
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
+        if (modified != null) {
+                pst.setTimestamp(++i, modified);
+        }
+      pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());
 			pst.execute();
 			pst.close();
 		

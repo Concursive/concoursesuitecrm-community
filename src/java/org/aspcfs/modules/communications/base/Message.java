@@ -508,14 +508,36 @@ public java.sql.Timestamp getModified() {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO MESSAGE " +
-          "(enteredby, modifiedby, name) " +
-          "VALUES (?, ?, ?) ");
+          "(name, ");
+      if (entered != null) {
+          sql.append("entered, ");
+      }
+      if (modified != null) {
+          sql.append("modified, ");
+      }
+      sql.append("enteredBy, modifiedBy ) ");          
+      sql.append("VALUES (?, ");
+        if (entered != null) {
+                sql.append("?, ");
+        }
+        if (modified != null) {
+                sql.append("?, ");
+        }
+      sql.append("?, ?) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
+      pst.setString(++i, this.getName());
+      
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
+        if (modified != null) {
+                pst.setTimestamp(++i, modified);
+        }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
-      pst.setString(++i, this.getName());
+      
       pst.execute();
       pst.close();
 

@@ -104,14 +104,25 @@ public void setBrowser(String tmp) { this.browser = tmp; }
       db.setAutoCommit(false);
 
       sql.append(
-          "INSERT INTO access_log (user_id, username, ip, browser) " +
-          "VALUES ( ?, ?, ?, ? ) ");
+          "INSERT INTO access_log (user_id, username, ip, ");
+                if (entered != null) {
+                        sql.append("entered, ");
+                }
+      sql.append("browser ) ");          
+      sql.append("VALUES (?, ?, ?, ");
+                if (entered != null) {
+                        sql.append("?, ");
+                }
+      sql.append("?) ");      
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getUserId());
       pst.setString(++i, this.getUsername());
       pst.setString(++i, this.getIp());
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
       pst.setString(++i, this.getBrowser());
       pst.execute();
       pst.close();

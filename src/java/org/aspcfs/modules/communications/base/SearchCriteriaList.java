@@ -616,8 +616,23 @@ public java.sql.Timestamp getModified() {
     try {
       db.setAutoCommit(false);
       sql.append(
-          "INSERT INTO saved_criterialist ( owner, name, contact_source, enteredby, modifiedby ) " +
-          "VALUES ( ?, ?, ?, ?, ? ) ");
+          "INSERT INTO saved_criterialist ( owner, name, contact_source, ");
+                if (entered != null) {
+                        sql.append("entered, ");
+                }
+                if (modified != null) {
+                        sql.append("modified, ");
+                }
+      sql.append("enteredBy, modifiedBy ) ");    
+      sql.append("VALUES (?, ?, ?, ");
+                if (entered != null) {
+                        sql.append("?, ");
+                }
+                if (modified != null) {
+                        sql.append("?, ");
+                }
+      sql.append("?, ?) ");
+      
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
 
@@ -627,6 +642,12 @@ public java.sql.Timestamp getModified() {
                 pst.setInt(++i, this.getContactSource());
         } else {
                 pst.setNull(++i, java.sql.Types.INTEGER);
+        }
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
+        if (modified != null) {
+                pst.setTimestamp(++i, modified);
         }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());

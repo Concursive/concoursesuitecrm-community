@@ -731,13 +731,25 @@ public class TicketLog extends GenericBean {
       db.setAutoCommit(false);
 
       sql.append(
-          "INSERT INTO TICKETLOG (enteredby, modifiedby, pri_code, level_code, department_code, cat_code, scode, ticketid, comment, closed ) " +
-          "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ");
-
+          "INSERT INTO TICKETLOG (pri_code, level_code, department_code, cat_code, scode, ticketid, comment, closed, ");
+                if (entered != null) {
+                        sql.append("entered, ");
+                }
+                if (modified != null) {
+                        sql.append("modified, ");
+                }
+      sql.append("enteredBy, modifiedBy ) ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
+                if (entered != null) {
+                        sql.append("?, ");
+                }
+                if (modified != null) {
+                        sql.append("?, ");
+                }
+      sql.append("?, ?) ");
+      
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getModifiedBy());
         if (this.getPriorityCode() > -1) {
                 pst.setInt(++i, this.getPriorityCode());
         } else {
@@ -766,6 +778,14 @@ public class TicketLog extends GenericBean {
       }
       pst.setString(++i, this.getEntryText());
       pst.setBoolean(++i, this.getClosed());
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
+        if (modified != null) {
+                pst.setTimestamp(++i, modified);
+        }
+      pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());      
       pst.execute();
       pst.close();
 
