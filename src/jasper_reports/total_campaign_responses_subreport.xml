@@ -18,8 +18,9 @@
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<parameter name="campaign_id" isForPrompting="false" class="java.lang.Integer"/>
-	<queryString><![CDATA[SELECT count(*) as total_responses
-FROM campaign_run WHERE campaign_id = $P{campaign_id}]]></queryString>
+  <queryString><![CDATA[SELECT count(sr.contact_id) as total_responses
+FROM active_survey_responses sr, active_survey sa
+WHERE campaign_id = $P{campaign_id} AND (sr.active_survey_id = sa.active_survey_id)]]></queryString>
 	<field name="total_responses" class="java.lang.Integer"/>
 		<background>
 			<band height="0"  isSplitAllowed="true" >
