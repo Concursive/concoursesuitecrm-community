@@ -6,6 +6,7 @@ import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.webutils.HtmlSelect;
 import java.util.StringTokenizer;
+import java.util.Enumeration;
 
 /**
  *  Allows information to be stored in an object for the pagedlist. <p>
@@ -261,6 +262,10 @@ public void setSavedCriteria(HashMap savedCriteria) {
    *@since           1.1
    */
   public void setParameters(ActionContext context) {
+	   
+    Enumeration parameters = context.getRequest().getParameterNames();
+    boolean reset = false;
+
 
     String tmpSortOrder = context.getRequest().getParameter("order");
     if (tmpSortOrder != null) {
@@ -345,6 +350,22 @@ public void setSavedCriteria(HashMap savedCriteria) {
     if (context.getRequest().getParameter("listFilter1") != null && resetList) {
       resetList();
     }
+    
+    	while (parameters.hasMoreElements()) {
+		String param = (String) parameters.nextElement();
+	
+		if (param.startsWith("search")) {	
+			if (!(reset)) {
+				this.getSavedCriteria().clear();
+				this.setListView("search");
+				reset = true;
+			}
+			
+			this.getSavedCriteria().put(param, context.getRequest().getParameter(param));
+			//System.out.println("putting " + context.getRequest().getParameter(param) + " @ " + param);
+		}
+		
+	}
   }
 
 

@@ -615,58 +615,19 @@ public final class Leads extends CFSModule {
     Connection db = null;
     OpportunityList oppList = new OpportunityList();
 
-    //search stuff
-
-    String passedDesc = context.getRequest().getParameter("searchDescription");
-    String passedOrg = context.getRequest().getParameter("searchOrgId");
-    String passedStage = context.getRequest().getParameter("searchStage");
-
-    //reset the results if it's a new search
-    if ( (passedDesc != null && !(passedDesc.equals(""))) || (passedOrg != null && !(passedOrg.equals(""))) || (passedStage != null && !(passedStage.equals(""))) ) {
-	    oppListInfo.getSavedCriteria().clear();
-	    oppListInfo.setListView("search");
-    }
-
-    if (passedDesc != null && !(passedDesc.equals(""))) {
-      oppListInfo.getSavedCriteria().put("searchDescription", passedDesc);
-      passedDesc = "%" + passedDesc + "%";
-      oppList.setDescription(passedDesc);
-    } else if (oppListInfo.getCriteriaValue("searchDescription") != null && ("search".equals(oppListInfo.getListView()))) {
-	passedDesc = "%" + oppListInfo.getCriteriaValue("searchDescription") + "%";
-	oppList.setDescription(passedDesc);
-    }
-    
-    if (passedOrg != null && !(passedOrg.equals(""))) {
-      if (Integer.parseInt(passedOrg) != -1) {
-	      oppListInfo.getSavedCriteria().put("searchOrgId", passedOrg);
-	      oppList.setOrgId(passedOrg);
-      }
-    } else if (oppListInfo.getCriteriaValue("searchOrgId") != null && ("search".equals(oppListInfo.getListView()))) {
-	passedOrg = oppListInfo.getCriteriaValue("searchOrgId");
-	oppList.setOrgId(passedOrg);
-    }
-    
-    if (passedStage != null && !(passedStage.equals(""))) {
-      if (Integer.parseInt(passedStage) != -1) {
-	      oppListInfo.getSavedCriteria().put("searchStage", passedStage);
-	      oppList.setStage(passedStage);
-      }
-    } else if (oppListInfo.getCriteriaValue("searchStage") != null && ("search".equals(oppListInfo.getListView()))) {
-	passedStage = oppListInfo.getCriteriaValue("searchStage");
-	oppList.setStage(passedStage);
-    }
-
-    //end search stuff
-
     try {
       db = this.getConnection(context);
+      
+      if ("search".equals(oppListInfo.getListView())) {
+	      oppList.setApplyPagedSearch(true);
+      }
+      
       oppList.setPagedListInfo(oppListInfo);
 
-      if ("all".equals(oppListInfo.getListView())) {
-        oppList.setOwnerIdRange(this.getUserRange(context));
+      if ("my".equals(oppListInfo.getListView())) {
+	oppList.setOwner(this.getUserId(context));
       } else {
-	//search works only on your own opps??      
-        oppList.setOwner(this.getUserId(context));
+	oppList.setOwnerIdRange(this.getUserRange(context));
       }
 
       oppList.buildList(db);

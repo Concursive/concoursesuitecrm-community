@@ -8,6 +8,7 @@ import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.utils.ObjectUtils;
 
 /**
  *  Contains a list of organizations... currently used to build the list from
@@ -46,6 +47,7 @@ public class OrganizationList extends Vector {
   private int revenueYear = -1;
   private int revenueOwnerId = -1;
   private boolean buildRevenueYTD = false;
+  private boolean applyPagedSearch = false;
 
   /**
    *  Constructor for the OrganizationList object, creates an empty list. After
@@ -88,6 +90,27 @@ public class OrganizationList extends Vector {
    *@since       1.1
    */
   public void setPagedListInfo(PagedListInfo tmp) {
+    
+    if (applyPagedSearch && !(tmp.getSavedCriteria().isEmpty()) ) {
+	    
+	Iterator hashIterator = tmp.getSavedCriteria().keySet().iterator();
+	
+		while(hashIterator.hasNext()) {
+			String tempKey = (String)hashIterator.next();
+			
+			if (tmp.getCriteriaValue(tempKey) != null && !(tmp.getCriteriaValue(tempKey).trim().equals(""))) {
+				
+				//its an int
+				if (tempKey.startsWith("searchcode")) {
+					ObjectUtils.setParam(this, tempKey.substring(10), tmp.getCriteriaValue(tempKey));
+				} else {
+					ObjectUtils.setParam(this, tempKey.substring(6), "%" + tmp.getCriteriaValue(tempKey) + "%");
+				}
+			}
+		}
+	    
+    }
+    
     this.pagedListInfo = tmp;
   }
   
@@ -141,6 +164,12 @@ public void setIncludeEnabled(int includeEnabled) {
   public void setHtmlJsEvent(String HtmlJsEvent) {
     this.HtmlJsEvent = HtmlJsEvent;
   }
+public boolean getApplyPagedSearch() {
+	return applyPagedSearch;
+}
+public void setApplyPagedSearch(boolean applyPagedSearch) {
+	this.applyPagedSearch = applyPagedSearch;
+}
 
 public String getAccountNumber() {
 	return accountNumber;

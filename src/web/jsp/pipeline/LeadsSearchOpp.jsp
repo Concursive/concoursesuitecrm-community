@@ -26,7 +26,7 @@ Description
       Organization
     </td>
 	<td bgColor="white">
-	<%= OrgList.getHtmlSelectDefaultNone("searchOrgId") %>
+	<%= OrgList.getHtmlSelectDefaultNone("searchcodeOrgId") %>
 	</td>
   </tr>
   
@@ -35,7 +35,7 @@ Description
       Current Stage
     </td>
 	<td bgColor="white">
-	<%=StageList.getHtmlSelectDefaultNone("searchStage")%>
+	<%=StageList.getHtmlSelectDefaultNone("searchcodeStage")%>
 	</td>
     </tr>
     

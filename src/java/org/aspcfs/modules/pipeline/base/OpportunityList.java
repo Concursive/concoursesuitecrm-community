@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.utils.ObjectUtils;
 
 /**
  *  Contains a list of contacts... currently used to build the list from the
@@ -40,6 +41,7 @@ public class OpportunityList extends Vector {
   private java.sql.Date alertRangeStart = null;
   private java.sql.Date alertRangeEnd = null;
   private int stage = -1;
+  private boolean applyPagedSearch = false;
 
   /**
    *  Constructor for the ContactList object
@@ -56,6 +58,27 @@ public class OpportunityList extends Vector {
    *@since       1.1
    */
   public void setPagedListInfo(PagedListInfo tmp) {
+    
+    if (applyPagedSearch && !(tmp.getSavedCriteria().isEmpty()) ) {
+	    
+	Iterator hashIterator = tmp.getSavedCriteria().keySet().iterator();
+	
+		while(hashIterator.hasNext()) {
+			String tempKey = (String)hashIterator.next();
+			
+			if (tmp.getCriteriaValue(tempKey) != null && !(tmp.getCriteriaValue(tempKey).trim().equals(""))) {
+				
+				//its an int
+				if (tempKey.startsWith("searchcode")) {
+					ObjectUtils.setParam(this, tempKey.substring(10), tmp.getCriteriaValue(tempKey));
+				} else {
+					ObjectUtils.setParam(this, tempKey.substring(6), "%" + tmp.getCriteriaValue(tempKey) + "%");
+				}
+			}
+		}
+	    
+    }
+    
     this.pagedListInfo = tmp;
   }
 
@@ -112,6 +135,12 @@ public void setStage(String stage) {
     this.description = description;
   }
 
+public boolean getApplyPagedSearch() {
+	return applyPagedSearch;
+}
+public void setApplyPagedSearch(boolean applyPagedSearch) {
+	this.applyPagedSearch = applyPagedSearch;
+}
 
   /**
    *  Sets the EnteredBy attribute of the OpportunityList object
