@@ -590,6 +590,7 @@
     <forward name="MessageJSListOK" resource="/communications/campaign_center_js_messagelist.jsp"/>
     <forward name="SurveyJSListOK" resource="/communications/campaign_center_js_surveylist.jsp"/>
     <forward name="ResponseOK" resource="/communications/campaign_survey_response_list.jsp" layout="nav"/>
+    <forward name="ResponseDetailsOK" resource="/communications/campaign_survey_response_details.jsp" layout="nav"/>
   </action>
   <action name="CampaignManagerGroup" class="org.aspcfs.modules.communications.actions.CampaignManagerGroup">
     <bean name="SearchForm" class="org.aspcfs.modules.communications.beans.SearchFormBean" scope="request"/>
