@@ -33,7 +33,15 @@
   </tr>
 </table>
 <br>
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<tr>
+<td class="containerBack">
+
 <%= NoteDetails.getBody() %>
+
+</td>
+</tr>
+</table>
 
 <br>
 <input type=hidden name="command" value="">
