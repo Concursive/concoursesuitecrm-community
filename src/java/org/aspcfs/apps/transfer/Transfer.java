@@ -29,10 +29,12 @@ public class Transfer {
     //Initialize app from the config file
     if (args.length == 0) {
       System.out.println("Usage: Transfer [config file]");
+      System.exit(2);
     }
 
     Transfer transfer = new Transfer();
     transfer.execute(args[0]);
+    System.exit(0);
   }
 
 
