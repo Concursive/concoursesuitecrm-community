@@ -32,7 +32,7 @@ function sendMessage() {
     }
 }
 </script>
-<form name="newMessageForm" action=<%=sendUrl%> method="post" onSubmit="return sendMessage();">
+<form name="newMessageForm" action="<%= sendUrl %>" method="post" onSubmit="return sendMessage();">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
