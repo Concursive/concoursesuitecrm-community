@@ -218,6 +218,7 @@ function removeValues(){
 	
 	
 	if (searchCriteria.length != searchList.length) {
+    alert("one");
 		for (count=0; count<(searchList.length); count++) {
 			searchCriteria[count] = searchList.options[count].value;
 		}
@@ -230,6 +231,9 @@ function removeValues(){
   } else {
 		searchCriteria[searchList.selectedIndex] = "skip";
 		searchList.options[searchList.selectedIndex] = null;
+    
+    alert("two");
+    
 		for (i=0; i < searchCriteria.length; i++){
 			if (searchCriteria[i] == "skip") {
 				offset = 1;
@@ -244,7 +248,9 @@ function removeValues(){
 					tempArray[i] = searchCriteria[i+offset];
 				}
 		}
+    alert("three");
 		delete searchCriteria;
+    alert("four");
 		searchCriteria = new Array();
 		for (i=0; i < tempArray.length; i++){
 			if (tempArray[i] != null) {
