@@ -457,6 +457,7 @@
         <include name="*.sql" />
       </fileset>
     </copy>
+    <replace file="${build.sql.dir}/gatekeeper.sql" token="@CFS_HOME@" value="${CFS_HOME}"/>
   </target>
   
   <!-- Prepare the PostgreSQL files -->
@@ -680,7 +681,7 @@
         </fileset>
       </classpath>
       <arg value="${env.CFS_HOME}${fs}WEB-INF${fs}notifier.xml"/>
-      <arg value="org.aspcfs.apps.notifier.task.AutoGuideMaintenance"/>
+      <arg value="org.aspcfs.modules.media.autoguide.tasks.AutoGuideMaintenance"/>
     </java>
   </target>
   
