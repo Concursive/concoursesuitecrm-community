@@ -147,7 +147,8 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the allChildren attribute of the XMLUtils class
+   *  Gets all of the children of the XML node, regardless of name, and adds
+   *  them to the specified array
    *
    *@param  e            Description of Parameter
    *@param  elementList  Description of Parameter
@@ -164,7 +165,8 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the allChildren attribute of the XMLUtils class
+   *  Gets all of the children of the XML node, with a specific name, and adds
+   *  them to the specified array
    *
    *@param  e            Description of Parameter
    *@param  name         Description of Parameter
@@ -261,21 +263,21 @@ public class XMLUtils {
       }
     }
     return null;
-/*
-    if (nodeText == null) {
-      return null;
-    } else {
-      int begin = 0;
-      int end = nodeText.length();
-      if (nodeText.startsWith(System.getProperty("line.separator"))) {
-        begin = (System.getProperty("line.separator").length());
-      }
-      if (nodeText.endsWith(System.getProperty("line.separator"))) {
-        end = end - (System.getProperty("line.separator").length());
-      }
-      return nodeText.substring(begin, end);
-    }
-*/
+    /*
+     *  if (nodeText == null) {
+     *  return null;
+     *  } else {
+     *  int begin = 0;
+     *  int end = nodeText.length();
+     *  if (nodeText.startsWith(System.getProperty("line.separator"))) {
+     *  begin = (System.getProperty("line.separator").length());
+     *  }
+     *  if (nodeText.endsWith(System.getProperty("line.separator"))) {
+     *  end = end - (System.getProperty("line.separator").length());
+     *  }
+     *  return nodeText.substring(begin, end);
+     *  }
+     */
   }
 
 
