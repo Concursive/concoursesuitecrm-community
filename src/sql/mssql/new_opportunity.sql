@@ -92,7 +92,8 @@ CREATE TABLE opportunity_component (
   alert VARCHAR(100) DEFAULT NULL,
   enabled BIT NOT NULL DEFAULT 1,
   notes TEXT,
-  alertdate_timezone VARCHAR(255)
+  alertdate_timezone VARCHAR(255),
+  closedate_timezone VARCHAR(255)
 );
 
 CREATE INDEX "oppcomplist_closedate" ON "opportunity_component" (closedate);

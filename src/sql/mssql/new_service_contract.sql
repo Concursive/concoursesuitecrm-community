@@ -93,7 +93,10 @@ CREATE TABLE service_contract (
   enabled BIT DEFAULT 1,
   contract_value FLOAT,
   total_hours_remaining FLOAT,
-  service_model_notes TEXT
+  service_model_notes TEXT,
+  initial_start_date_timezone VARCHAR(255),
+  current_start_date_timezone VARCHAR(255),
+  current_end_date_timezone VARCHAR(255)
 );
 
 CREATE TABLE service_contract_hours (
@@ -170,5 +173,8 @@ CREATE TABLE asset   (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
   enabled BIT DEFAULT 1,
-  purchase_cost FLOAT
+  purchase_cost FLOAT,
+  date_listed_timezone VARCHAR(255),
+  expiration_date_timezone VARCHAR(255),
+  purchase_date_timezone VARCHAR(255)
 );
