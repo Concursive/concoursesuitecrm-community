@@ -63,7 +63,7 @@
     <echo message="ant docs: generate JavaDocs for all packages"/>
   </target>
     
-  <target name="cdall" depends="init,deploy,installdb,test">
+  <target name="cdall" depends="init,deploy,installgk,installdb,test">
     <echo>Install Complete</echo>
   </target>
   
