@@ -1,3 +1,5 @@
+<%@ page import="java.util.StringTokenizer" %>
+<%@ page import="java.util.StringBuffer" %>
 <%!
 
 public static String replace(String str, String o, String n) {
@@ -113,10 +115,8 @@ public static String replace(String str, String o, String n) {
     return "";
   }
   
-  
   public static String sqlReplace(String s) {
     //s = replace(s, "<br>", "\r");
-    
     String newString = "";
     char[] input = s.toCharArray();
     int arraySize = input.length;
@@ -139,7 +139,7 @@ public static String replace(String str, String o, String n) {
   public static String showError(HttpServletRequest request, String errorEntry) {
     if (request.getAttribute(errorEntry) != null) {
       return "&nbsp;<br><img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getAttribute(errorEntry)) + "</font><br>&nbsp;<br>";
-    }else if (request.getParameter(errorEntry) != null) {
+    } else if (request.getParameter(errorEntry) != null) {
       return "&nbsp;<br><img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getParameter(errorEntry)) + "</font><br>&nbsp;<br>";
     } else {
       return "&nbsp;";
@@ -148,5 +148,37 @@ public static String replace(String str, String o, String n) {
   
   public static boolean hasText(String in) {
     return (in != null && !("".equals(in)));
+  }
+  
+  public static String addHiddenParams(HttpServletRequest request, String tmp){
+    StringBuffer sb = new StringBuffer();
+    StringTokenizer tokens = new StringTokenizer(tmp, "|");
+    while(tokens.hasMoreTokens()){
+       String param = tokens.nextToken();
+       if(request.getParameter(param) != null){
+        sb.append("<input type=\"hidden\" name=\"" + param + "\" value=\"" + request.getParameter(param) + "\">");
+       }
+    }
+    return sb.toString();
+  }
+  
+  public static String addLinkParams(HttpServletRequest request, String tmp){
+    StringBuffer sb = new StringBuffer();
+    StringTokenizer tokens = new StringTokenizer(tmp, "|");
+    while(tokens.hasMoreTokens()){
+     String param = tokens.nextToken();
+     if(request.getParameter(param) != null){
+       sb.append("&" + param + "=" + request.getParameter(param));
+     }
+    }
+    return sb.toString();
+  }
+  
+  public static boolean isPopup(HttpServletRequest request){
+    return "true".equals(request.getParameter("popup"));
+  }
+  
+  public static boolean isInLinePopup(HttpServletRequest request){
+    return "inline".equals(request.getParameter("popupType"));
   }
 %>  
