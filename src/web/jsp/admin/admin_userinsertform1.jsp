@@ -35,7 +35,7 @@ Add User<br>
           <input type="hidden" name="contactId" id="contactLink">
       </td>
       <td align="left" nowrap>
-        <a href="javascript:popURL('ExternalContacts.do?command=InsertContactForm&popup=true', 'New_Contact','500','600','yes','yes');">Add New</a></dhv:permission>
+        <a href="javascript:popURL('ExternalContacts.do?command=InsertContactForm&popup=true', 'New_Contact','500','600','yes','yes');">Add New</a>
         <%if (request.getAttribute("contactIdError") != null) {%>
           <br><%= showAttribute(request, "contactIdError") %>
         <%}%>
