@@ -15,6 +15,14 @@ import javax.servlet.http.*;
 import com.darkhorseventures.cfsbase.Constants;
 import com.zeroio.iteam.base.FileItem;
 
+/**
+ *  Represents a vehicle for the purpose of scheduling advertisements, including
+ *  details, options and ad run dates
+ *
+ *@author     matt
+ *@created    May 17, 2002
+ *@version    $Id$
+ */
 public class Inventory {
 
   private int id = -1;
@@ -41,34 +49,53 @@ public class Inventory {
   private OptionList options = null;
   private AdRunList adRuns = null;
   private int pictureId = -1;
-  
+
+
+  /**
+   *  Constructor for the Inventory object
+   */
   public Inventory() { }
 
+
+  /**
+   *  Constructor for the Inventory object
+   *
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public Inventory(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-  
+
+
+  /**
+   *  Constructor for the Inventory object
+   *
+   *@param  db                Description of Parameter
+   *@param  inventoryId       Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public Inventory(Connection db, int inventoryId) throws SQLException {
     StringBuffer sql = new StringBuffer();
-    sql.append(  
-      "SELECT i.inventory_id, i.vehicle_id AS inventory_vehicle_id, " +
-      "i.account_id, vin, mileage, is_new, " +
-      "condition, comments, stock_no, ext_color, int_color, invoice_price, " +
-      "selling_price, sold, i.status, i.entered, i.enteredby, i.modified, i.modifiedby, " +
-      "v.vehicle_id, v.year, v.make_id AS vehicle_make_id, " +
-      "v.model_id AS vehicle_model_id, v.entered AS vehicle_entered, " +
-      "v.enteredby AS vehicle_enteredby, v.modified AS vehicle_modified, " +
-      "v.modifiedby AS vehicle_modifiedby, " +
-      "model.model_id, model.make_id AS model_make_id, model.model_name, " +
-      "model.entered, model.enteredby, " + 
-      "model.modified, model.modifiedby, " +
-      "make.make_id, make.make_name, " +
-      "make.entered AS make_entered, make.enteredby AS make_enteredby, " +
-      "make.modified AS make_modified, make.modifiedby AS make_modifiedby " +
-      "FROM autoguide_inventory i " +
-      " LEFT JOIN autoguide_vehicle v ON i.vehicle_id = v.vehicle_id " +
-      " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
-      " LEFT JOIN autoguide_model model ON v.model_id = model.model_id ");
+    sql.append(
+        "SELECT i.inventory_id, i.vehicle_id AS inventory_vehicle_id, " +
+        "i.account_id, vin, mileage, is_new, " +
+        "condition, comments, stock_no, ext_color, int_color, invoice_price, " +
+        "selling_price, sold, i.status, i.entered, i.enteredby, i.modified, i.modifiedby, " +
+        "v.vehicle_id, v.year, v.make_id AS vehicle_make_id, " +
+        "v.model_id AS vehicle_model_id, v.entered AS vehicle_entered, " +
+        "v.enteredby AS vehicle_enteredby, v.modified AS vehicle_modified, " +
+        "v.modifiedby AS vehicle_modifiedby, " +
+        "model.model_id, model.make_id AS model_make_id, model.model_name, " +
+        "model.entered, model.enteredby, " +
+        "model.modified, model.modifiedby, " +
+        "make.make_id, make.make_name, " +
+        "make.entered AS make_entered, make.enteredby AS make_enteredby, " +
+        "make.modified AS make_modified, make.modifiedby AS make_modifiedby " +
+        "FROM autoguide_inventory i " +
+        " LEFT JOIN autoguide_vehicle v ON i.vehicle_id = v.vehicle_id " +
+        " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
+        " LEFT JOIN autoguide_model model ON v.model_id = model.model_id ");
     sql.append("WHERE i.inventory_id = ? ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, inventoryId);
@@ -86,87 +113,538 @@ public class Inventory {
     this.buildPictureId(db);
   }
 
-  public void setId(int tmp) { id = tmp; }
-  public void setId(String tmp) { id = Integer.parseInt(tmp); }
-  public void setVehicleId(int tmp) { this.vehicleId = tmp; }
-  public void setVehicleId(String tmp) { this.vehicleId = Integer.parseInt(tmp); }
-  
-  public void setAccountId(int tmp) { this.accountId = tmp; }
-  public void setAccountId(String tmp) { this.accountId = Integer.parseInt(tmp); }
-  public void setVin(String tmp) { this.vin = tmp; }
-  public void setMileage(int tmp) { this.mileage = tmp; }
-  public void setMileage(String tmp) { 
+
+  /**
+   *  Sets the id attribute of the Inventory object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(int tmp) {
+    id = tmp;
+  }
+
+
+  /**
+   *  Sets the id attribute of the Inventory object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(String tmp) {
+    id = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the vehicleId attribute of the Inventory object
+   *
+   *@param  tmp  The new vehicleId value
+   */
+  public void setVehicleId(int tmp) {
+    this.vehicleId = tmp;
+  }
+
+
+  /**
+   *  Sets the vehicleId attribute of the Inventory object
+   *
+   *@param  tmp  The new vehicleId value
+   */
+  public void setVehicleId(String tmp) {
+    this.vehicleId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the accountId attribute of the Inventory object
+   *
+   *@param  tmp  The new accountId value
+   */
+  public void setAccountId(int tmp) {
+    this.accountId = tmp;
+  }
+
+
+  /**
+   *  Sets the accountId attribute of the Inventory object
+   *
+   *@param  tmp  The new accountId value
+   */
+  public void setAccountId(String tmp) {
+    this.accountId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the vin attribute of the Inventory object
+   *
+   *@param  tmp  The new vin value
+   */
+  public void setVin(String tmp) {
+    this.vin = tmp;
+  }
+
+
+  /**
+   *  Sets the mileage attribute of the Inventory object
+   *
+   *@param  tmp  The new mileage value
+   */
+  public void setMileage(int tmp) {
+    this.mileage = tmp;
+  }
+
+
+  /**
+   *  Sets the mileage attribute of the Inventory object
+   *
+   *@param  tmp  The new mileage value
+   */
+  public void setMileage(String tmp) {
     this.mileage = StringUtils.getIntegerNumber(tmp);
   }
-  public void setIsNew(boolean tmp) { this.isNew = tmp; }
-  public void setIsNew(String tmp) { 
-    this.isNew = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp)); 
+
+
+  /**
+   *  Sets the isNew attribute of the Inventory object
+   *
+   *@param  tmp  The new isNew value
+   */
+  public void setIsNew(boolean tmp) {
+    this.isNew = tmp;
   }
-  public void setCondition(String tmp) { this.condition = tmp; }
-  public void setComments(String tmp) { this.comments = tmp; }
-  public void setStockNo(String tmp) { this.stockNo = tmp; }
-  public void setExteriorColor(String tmp) { this.exteriorColor = tmp; }
-  public void setInteriorColor(String tmp) { this.interiorColor = tmp; }
-  public void setInvoicePrice(double tmp) { this.invoicePrice = tmp; }
-  public void setInvoicePrice(String tmp) { 
+
+
+  /**
+   *  Sets the isNew attribute of the Inventory object
+   *
+   *@param  tmp  The new isNew value
+   */
+  public void setIsNew(String tmp) {
+    this.isNew = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+  }
+
+
+  /**
+   *  Sets the condition attribute of the Inventory object
+   *
+   *@param  tmp  The new condition value
+   */
+  public void setCondition(String tmp) {
+    this.condition = tmp;
+  }
+
+
+  /**
+   *  Sets the comments attribute of the Inventory object
+   *
+   *@param  tmp  The new comments value
+   */
+  public void setComments(String tmp) {
+    this.comments = tmp;
+  }
+
+
+  /**
+   *  Sets the stockNo attribute of the Inventory object
+   *
+   *@param  tmp  The new stockNo value
+   */
+  public void setStockNo(String tmp) {
+    this.stockNo = tmp;
+  }
+
+
+  /**
+   *  Sets the exteriorColor attribute of the Inventory object
+   *
+   *@param  tmp  The new exteriorColor value
+   */
+  public void setExteriorColor(String tmp) {
+    this.exteriorColor = tmp;
+  }
+
+
+  /**
+   *  Sets the interiorColor attribute of the Inventory object
+   *
+   *@param  tmp  The new interiorColor value
+   */
+  public void setInteriorColor(String tmp) {
+    this.interiorColor = tmp;
+  }
+
+
+  /**
+   *  Sets the invoicePrice attribute of the Inventory object
+   *
+   *@param  tmp  The new invoicePrice value
+   */
+  public void setInvoicePrice(double tmp) {
+    this.invoicePrice = tmp;
+  }
+
+
+  /**
+   *  Sets the invoicePrice attribute of the Inventory object
+   *
+   *@param  tmp  The new invoicePrice value
+   */
+  public void setInvoicePrice(String tmp) {
     this.invoicePrice = StringUtils.getDoubleNumber(tmp);
   }
-  public void setSellingPrice(double tmp) { this.sellingPrice = tmp; }
-  public void setSellingPrice(String tmp) { 
+
+
+  /**
+   *  Sets the sellingPrice attribute of the Inventory object
+   *
+   *@param  tmp  The new sellingPrice value
+   */
+  public void setSellingPrice(double tmp) {
+    this.sellingPrice = tmp;
+  }
+
+
+  /**
+   *  Sets the sellingPrice attribute of the Inventory object
+   *
+   *@param  tmp  The new sellingPrice value
+   */
+  public void setSellingPrice(String tmp) {
     sellingPrice = StringUtils.getDoubleNumber(tmp);
   }
-  public void setSold(boolean tmp) { this.sold = tmp; }
-  public void setSold(String tmp) { 
+
+
+  /**
+   *  Sets the sold attribute of the Inventory object
+   *
+   *@param  tmp  The new sold value
+   */
+  public void setSold(boolean tmp) {
+    this.sold = tmp;
+  }
+
+
+  /**
+   *  Sets the sold attribute of the Inventory object
+   *
+   *@param  tmp  The new sold value
+   */
+  public void setSold(String tmp) {
     this.sold = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
-  public void setStatus(String tmp) { this.status = tmp; }
-  public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
+
+
+  /**
+   *  Sets the status attribute of the Inventory object
+   *
+   *@param  tmp  The new status value
+   */
+  public void setStatus(String tmp) {
+    this.status = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the Inventory object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the Inventory object
+   *
+   *@param  tmp  The new entered value
+   */
   public void setEntered(String tmp) {
     this.entered = java.sql.Timestamp.valueOf(tmp);
   }
-  public void setEnteredBy(int tmp) { this.enteredBy = tmp; }
-  public void setEnteredBy(String tmp) { this.enteredBy = Integer.parseInt(tmp); }
-  public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
+
+
+  /**
+   *  Sets the enteredBy attribute of the Inventory object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(int tmp) {
+    this.enteredBy = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredBy attribute of the Inventory object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the modified attribute of the Inventory object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the Inventory object
+   *
+   *@param  tmp  The new modified value
+   */
   public void setModified(String tmp) {
     this.modified = java.sql.Timestamp.valueOf(tmp);
   }
-  public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
-  public void setModifiedBy(String tmp) { this.modifiedBy = Integer.parseInt(tmp); }
-  public void setVehicle(Vehicle tmp) { this.vehicle = tmp; }
-  public void setOrganization(Organization tmp) { this.organization = tmp; }
-  public void setOptions(OptionList tmp) { this.options = tmp; }
+
+
+  /**
+   *  Sets the modifiedBy attribute of the Inventory object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(int tmp) {
+    this.modifiedBy = tmp;
+  }
+
+
+  /**
+   *  Sets the modifiedBy attribute of the Inventory object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the vehicle attribute of the Inventory object
+   *
+   *@param  tmp  The new vehicle value
+   */
+  public void setVehicle(Vehicle tmp) {
+    this.vehicle = tmp;
+  }
+
+
+  /**
+   *  Sets the organization attribute of the Inventory object
+   *
+   *@param  tmp  The new organization value
+   */
+  public void setOrganization(Organization tmp) {
+    this.organization = tmp;
+  }
+
+
+  /**
+   *  Sets the options attribute of the Inventory object
+   *
+   *@param  tmp  The new options value
+   */
+  public void setOptions(OptionList tmp) {
+    this.options = tmp;
+  }
+
+
+  /**
+   *  Sets the requestItems attribute of the Inventory object
+   *
+   *@param  request  The new requestItems value
+   */
   public void setRequestItems(HttpServletRequest request) {
     options = new OptionList(request);
     adRuns = new AdRunList(request);
   }
-  public void setAdRuns(AdRunList tmp) { this.adRuns = tmp; }
-  public void setPictureId(int tmp) { this.pictureId = tmp; }
 
 
-  public int getId() { return id; }
-  public int getVehicleId() { return vehicleId; }
-  public int getAccountId() { return accountId; }
-  public String getVin() { return vin; }
-  public int getMileage() { return mileage; }
-  public String getMileageString() { 
+  /**
+   *  Sets the adRuns attribute of the Inventory object
+   *
+   *@param  tmp  The new adRuns value
+   */
+  public void setAdRuns(AdRunList tmp) {
+    this.adRuns = tmp;
+  }
+
+
+  /**
+   *  Sets the pictureId attribute of the Inventory object
+   *
+   *@param  tmp  The new pictureId value
+   */
+  public void setPictureId(int tmp) {
+    this.pictureId = tmp;
+  }
+
+
+  /**
+   *  Gets the id attribute of the Inventory object
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the vehicleId attribute of the Inventory object
+   *
+   *@return    The vehicleId value
+   */
+  public int getVehicleId() {
+    return vehicleId;
+  }
+
+
+  /**
+   *  Gets the accountId attribute of the Inventory object
+   *
+   *@return    The accountId value
+   */
+  public int getAccountId() {
+    return accountId;
+  }
+
+
+  /**
+   *  Gets the vin attribute of the Inventory object
+   *
+   *@return    The vin value
+   */
+  public String getVin() {
+    return vin;
+  }
+
+
+  /**
+   *  Gets the mileage attribute of the Inventory object
+   *
+   *@return    The mileage value
+   */
+  public int getMileage() {
+    return mileage;
+  }
+
+
+  /**
+   *  Gets the mileageString attribute of the Inventory object
+   *
+   *@return    The mileageString value
+   */
+  public String getMileageString() {
     if (mileage > -1) {
       return String.valueOf(mileage);
     } else {
       return "";
     }
   }
-  public boolean getIsNew() { return isNew; }
-  public String getCondition() { return condition; }
-  public String getComments() { return comments; }
-  public String getStockNo() { return stockNo; }
-  public String getExteriorColor() { return exteriorColor; }
-  public String getInteriorColor() { return interiorColor; }
-  public double getInvoicePrice() { return invoicePrice; }
+
+
+  /**
+   *  Gets the isNew attribute of the Inventory object
+   *
+   *@return    The isNew value
+   */
+  public boolean getIsNew() {
+    return isNew;
+  }
+
+
+  /**
+   *  Gets the condition attribute of the Inventory object
+   *
+   *@return    The condition value
+   */
+  public String getCondition() {
+    return condition;
+  }
+
+
+  /**
+   *  Gets the comments attribute of the Inventory object
+   *
+   *@return    The comments value
+   */
+  public String getComments() {
+    return comments;
+  }
+
+
+  /**
+   *  Gets the stockNo attribute of the Inventory object
+   *
+   *@return    The stockNo value
+   */
+  public String getStockNo() {
+    return stockNo;
+  }
+
+
+  /**
+   *  Gets the exteriorColor attribute of the Inventory object
+   *
+   *@return    The exteriorColor value
+   */
+  public String getExteriorColor() {
+    return exteriorColor;
+  }
+
+
+  /**
+   *  Gets the interiorColor attribute of the Inventory object
+   *
+   *@return    The interiorColor value
+   */
+  public String getInteriorColor() {
+    return interiorColor;
+  }
+
+
+  /**
+   *  Gets the invoicePrice attribute of the Inventory object
+   *
+   *@return    The invoicePrice value
+   */
+  public double getInvoicePrice() {
+    return invoicePrice;
+  }
+
+
+  /**
+   *  Gets the invoicePriceString attribute of the Inventory object
+   *
+   *@return    The invoicePriceString value
+   */
   public String getInvoicePriceString() {
     NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
     return ("$" + numberFormatter.format(invoicePrice));
   }
-  public double getSellingPrice() { return sellingPrice; }
+
+
+  /**
+   *  Gets the sellingPrice attribute of the Inventory object
+   *
+   *@return    The sellingPrice value
+   */
+  public double getSellingPrice() {
+    return sellingPrice;
+  }
+
+
+  /**
+   *  Gets the sellingPriceString attribute of the Inventory object
+   *
+   *@return    The sellingPriceString value
+   */
   public String getSellingPriceString() {
     if (sellingPrice > 0) {
       NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
@@ -175,31 +653,176 @@ public class Inventory {
       return "";
     }
   }
-  public boolean getSold() { return sold; }
-  public String getStatus() { return status; }
-  public java.sql.Timestamp getEntered() { return entered; }
-  public int getEnteredBy() { return enteredBy; }
-  public java.sql.Timestamp getModified() { return modified; }
-  public int getModifiedBy() { return modifiedBy; }
+
+
+  /**
+   *  Gets the sold attribute of the Inventory object
+   *
+   *@return    The sold value
+   */
+  public boolean getSold() {
+    return sold;
+  }
+
+
+  /**
+   *  Gets the status attribute of the Inventory object
+   *
+   *@return    The status value
+   */
+  public String getStatus() {
+    return status;
+  }
+
+
+  /**
+   *  Gets the entered attribute of the Inventory object
+   *
+   *@return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Gets the enteredBy attribute of the Inventory object
+   *
+   *@return    The enteredBy value
+   */
+  public int getEnteredBy() {
+    return enteredBy;
+  }
+
+
+  /**
+   *  Gets the modified attribute of the Inventory object
+   *
+   *@return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Gets the modifiedBy attribute of the Inventory object
+   *
+   *@return    The modifiedBy value
+   */
+  public int getModifiedBy() {
+    return modifiedBy;
+  }
+
+
+  /**
+   *  Gets the guid attribute of the Inventory object
+   *
+   *@return    The guid value
+   */
   public String getGuid() {
     return ObjectUtils.generateGuid(entered, enteredBy, id);
   }
-  public Vehicle getVehicle() { return vehicle; }
-  public Organization getOrganization() { return organization; }
-  public OptionList getOptions() { return options; }
-  public boolean hasOptions() { 
-    return (options != null && options.size() > 0); 
+
+
+  /**
+   *  Gets the vehicle attribute of the Inventory object
+   *
+   *@return    The vehicle value
+   */
+  public Vehicle getVehicle() {
+    return vehicle;
   }
+
+
+  /**
+   *  Gets the organization attribute of the Inventory object
+   *
+   *@return    The organization value
+   */
+  public Organization getOrganization() {
+    return organization;
+  }
+
+
+  /**
+   *  Gets the options attribute of the Inventory object
+   *
+   *@return    The options value
+   */
+  public OptionList getOptions() {
+    return options;
+  }
+
+
+  /**
+   *  Gets the adRuns attribute of the Inventory object
+   *
+   *@return    The adRuns value
+   */
+  public AdRunList getAdRuns() {
+    return adRuns;
+  }
+
+
+  /**
+   *  Gets the pictureId attribute of the Inventory object
+   *
+   *@return    The pictureId value
+   */
+  public int getPictureId() {
+    return pictureId;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Returned Value
+   */
+  public boolean hasOptions() {
+    return (options != null && options.size() > 0);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  optionId  Description of Parameter
+   *@return           Description of the Returned Value
+   */
   public boolean hasOption(int optionId) {
     return (options != null && options.hasOption(optionId));
   }
-  public AdRunList getAdRuns() { return adRuns; }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Returned Value
+   */
   public boolean hasAdRuns() {
     return (adRuns != null && adRuns.size() > 0);
   }
-  public int getPictureId() { return pictureId; }
-  public boolean hasPictureId() { return pictureId > -1; }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Returned Value
+   */
+  public boolean hasPictureId() {
+    return pictureId > -1;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -230,7 +853,7 @@ public class Inventory {
     pst.close();
 
     id = DatabaseUtils.getCurrVal(db, "autoguide_inve_inventory_id_seq");
-    
+
     if (options != null) {
       options.setInventoryId(id);
       options.insert(db);
@@ -241,31 +864,39 @@ public class Inventory {
     }
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-/* 
-    if (!isValid(db)) {
-      return -1;
-    }
- */
+    /*
+     *  if (!isValid(db)) {
+     *  return -1;
+     *  }
+     */
     if (this.getId() == -1) {
       throw new SQLException("ID was not specified");
     }
-    
+
     try {
       db.setAutoCommit(false);
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
 
       sql.append(
-        "UPDATE autoguide_inventory " +
-        "SET vehicle_id = ?, vin = ?, mileage = ?, is_new = ?, condition = ?, comments = ?, " +
-        "stock_no = ?, ext_color = ?, int_color = ?, invoice_price = ?, selling_price = ?, sold = ?, status = ?, " +
-        "modifiedby = ?, modified = CURRENT_TIMESTAMP ");
+          "UPDATE autoguide_inventory " +
+          "SET vehicle_id = ?, vin = ?, mileage = ?, is_new = ?, condition = ?, comments = ?, " +
+          "stock_no = ?, ext_color = ?, int_color = ?, invoice_price = ?, selling_price = ?, sold = ?, status = ?, " +
+          "modifiedby = ?, modified = CURRENT_TIMESTAMP ");
       sql.append("WHERE inventory_id = ? ");
-      //sql.append("AND modified = ? ");
-        
+      sql.append("AND modified = ? ");
+
       int i = 0;
       pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getVehicleId());
@@ -283,7 +914,7 @@ public class Inventory {
       pst.setString(++i, this.getStatus());
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getId());
-      //pst.setTimestamp(++i, this.getModified());
+      pst.setTimestamp(++i, this.getModified());
       resultCount = pst.executeUpdate();
       pst.close();
 
@@ -293,14 +924,14 @@ public class Inventory {
         }
         options.setInventoryId(id);
         options.update(db);
-        
+
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Inventory-> Options updated, updating ad runs...");
         }
         adRuns.setInventoryId(id);
         adRuns.update(db);
       }
-      
+
       db.commit();
     } catch (Exception e) {
       db.rollback();
@@ -313,6 +944,13 @@ public class Inventory {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean delete(Connection db) throws SQLException {
     if (id == -1) {
       throw new SQLException("ID was not specified");
@@ -329,28 +967,29 @@ public class Inventory {
     pst.setInt(1, id);
     recordCount = pst.executeUpdate();
     pst.close();
-    
+
     //Options
     if (options != null) {
       options.setInventoryId(id);
       options.delete(db);
     }
-    
+
     //Ad Runs
     if (adRuns != null) {
       adRuns.setInventoryId(id);
       adRuns.delete(db);
     }
-    
+
     //TODO: Pictures -- need filepath at this point
-/*     if (pictureId > -1) {
-      FileItemList previousFiles = new FileItemList();
-      previousFiles.setLinkModuleId(Constants.AUTOGUIDE);
-      previousFiles.setLinkItemId(id);
-      previousFiles.buildList(db);
-      previousFiles.delete(db, filePath);
-    }
- */
+    /*
+     *  if (pictureId > -1) {
+     *  FileItemList previousFiles = new FileItemList();
+     *  previousFiles.setLinkModuleId(Constants.AUTOGUIDE);
+     *  previousFiles.setLinkItemId(id);
+     *  previousFiles.buildList(db);
+     *  previousFiles.delete(db, filePath);
+     *  }
+     */
     if (recordCount == 0) {
       //errors.put("actionError", "Record could not be deleted because it no longer exists.");
       return false;
@@ -360,6 +999,81 @@ public class Inventory {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void buildOrganizationInfo(Connection db) throws SQLException {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Inventory-> Building org info: " + accountId);
+    }
+    if (accountId == -1) {
+      accountId = 0;
+    }
+    organization = new Organization(db, accountId);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void buildOptions(Connection db) throws SQLException {
+    options = new OptionList();
+    options.setInventoryId(id);
+    options.buildList(db);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void buildAdRuns(Connection db) throws SQLException {
+    adRuns = new AdRunList();
+    adRuns.setInventoryId(id);
+    adRuns.buildList(db);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void generateVehicleId(Connection db) throws SQLException {
+    vehicleId = this.getVehicle().generateId(db);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void buildPictureId(Connection db) throws SQLException {
+    FileItem fileItem = new FileItem(db, -1, id, Constants.AUTOGUIDE);
+    pictureId = fileItem.getId();
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Inventory-> PictureID: " + pictureId);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("inventory_id");
     vehicleId = rs.getInt("inventory_vehicle_id");
@@ -381,40 +1095,6 @@ public class Inventory {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     vehicle = new Vehicle(rs);
-  }
-
-  public void buildOrganizationInfo(Connection db) throws SQLException {
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("Inventory-> Building org info: " + accountId);
-    }
-    if (accountId == -1) {
-      accountId = 0;
-    }
-    organization = new Organization(db, accountId);
-  }
-  
-  public void buildOptions(Connection db) throws SQLException {
-    options = new OptionList();
-    options.setInventoryId(id);
-    options.buildList(db);
-  }
-  
-  public void buildAdRuns(Connection db) throws SQLException {
-    adRuns = new AdRunList();
-    adRuns.setInventoryId(id);
-    adRuns.buildList(db);
-  }
-  
-  public void generateVehicleId(Connection db) throws SQLException {
-    vehicleId = this.getVehicle().generateId(db);
-  }
-  
-  public void buildPictureId(Connection db) throws SQLException {
-    FileItem fileItem = new FileItem(db, -1, id, Constants.AUTOGUIDE);
-    pictureId = fileItem.getId();
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("Inventory-> PictureID: " + pictureId);
-    }
   }
 }
 

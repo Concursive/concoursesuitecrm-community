@@ -9,6 +9,13 @@ import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.cfsbase.Constants;
 
+/**
+ *  Represents a list of vehicles
+ *
+ *@author     matt
+ *@created    May 17, 2002
+ *@version    $Id$
+ */
 public class VehicleList extends ArrayList {
 
   public static String tableName = "autoguide_vehicle";
@@ -17,29 +24,167 @@ public class VehicleList extends ArrayList {
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
   private int year = -1;
-  
+
+
+  /**
+   *  Constructor for the VehicleList object
+   */
   public VehicleList() { }
 
-  public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public static ArrayList buildYearList(Connection db) throws SQLException {
+    ArrayList years = new ArrayList();
+    String sql =
+        "SELECT DISTINCT year FROM autoguide_vehicle ORDER BY year DESC";
+    PreparedStatement pst = db.prepareStatement(sql);
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+      String thisYear = String.valueOf(rs.getInt("year"));
+      years.add(thisYear);
+    }
+    rs.close();
+    pst.close();
+    return years;
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the VehicleList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the VehicleList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
   }
-  public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the VehicleList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the VehicleList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
   }
-  public void setSyncType(int tmp) { this.syncType = tmp; }
-  public void setSyncType(String tmp) { this.syncType = Integer.parseInt(tmp); }
-  public void setYear(int tmp) { this.year = tmp; }
-  public void setYear(String tmp) { this.year = Integer.parseInt(tmp); }
-  
-  public String getTableName() { return tableName; }
-  public String getUniqueField() { return uniqueField; }
-  
+
+
+  /**
+   *  Sets the syncType attribute of the VehicleList object
+   *
+   *@param  tmp  The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   *  Sets the syncType attribute of the VehicleList object
+   *
+   *@param  tmp  The new syncType value
+   */
+  public void setSyncType(String tmp) {
+    this.syncType = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the year attribute of the VehicleList object
+   *
+   *@param  tmp  The new year value
+   */
+  public void setYear(int tmp) {
+    this.year = tmp;
+  }
+
+
+  /**
+   *  Sets the year attribute of the VehicleList object
+   *
+   *@param  tmp  The new year value
+   */
+  public void setYear(String tmp) {
+    this.year = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the tableName attribute of the VehicleList object
+   *
+   *@return    The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   *  Gets the uniqueField attribute of the VehicleList object
+   *
+   *@return    The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   *  Gets the object attribute of the VehicleList object
+   *
+   *@param  rs                Description of Parameter
+   *@return                   The object value
+   *@exception  SQLException  Description of Exception
+   */
+  public Vehicle getObject(ResultSet rs) throws SQLException {
+    Vehicle thisVehicle = new Vehicle(rs);
+    return thisVehicle;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public void select(Connection db) throws SQLException {
     buildList(db);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
@@ -48,33 +193,39 @@ public class VehicleList extends ArrayList {
       this.add(thisVehicle);
     }
     rs.close();
-    if (pst != null) pst.close();
+    if (pst != null) {
+      pst.close();
+    }
   }
-  
-  public Vehicle getObject(ResultSet rs) throws SQLException {
-    Vehicle thisVehicle = new Vehicle(rs);
-    return thisVehicle;
-  }
-   
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  pst               Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
-    
-    StringBuffer sql = new StringBuffer(); 
-    sql.append(  
-      "SELECT v.vehicle_id, v.year, v.make_id AS vehicle_make_id, " +
-      "v.model_id AS vehicle_model_id, v.entered AS vehicle_entered, " +
-      "v.enteredby AS vehicle_enteredby, v.modified AS vehicle_modified, " +
-      "v.modifiedby AS vehicle_modifiedby, " +
-      "model.model_id, model.make_id AS model_make_id, model.model_name, " +
-      "model.entered, model.enteredby, " + 
-      "model.modified, model.modifiedby, " +
-      "make.make_id, make.make_name, " +
-      "make.entered AS make_entered, make.enteredby AS make_enteredby, " +
-      "make.modified AS make_modified, make.modifiedby AS make_modifiedby " +
-      "FROM autoguide_vehicle v " +
-      " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
-      " LEFT JOIN autoguide_model model ON v.model_id = model.model_id ");
+
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT v.vehicle_id, v.year, v.make_id AS vehicle_make_id, " +
+        "v.model_id AS vehicle_model_id, v.entered AS vehicle_entered, " +
+        "v.enteredby AS vehicle_enteredby, v.modified AS vehicle_modified, " +
+        "v.modifiedby AS vehicle_modifiedby, " +
+        "model.model_id, model.make_id AS model_make_id, model.model_name, " +
+        "model.entered, model.enteredby, " +
+        "model.modified, model.modifiedby, " +
+        "make.make_id, make.make_name, " +
+        "make.entered AS make_entered, make.enteredby AS make_enteredby, " +
+        "make.modified AS make_modified, make.modifiedby AS make_modifiedby " +
+        "FROM autoguide_vehicle v " +
+        " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
+        " LEFT JOIN autoguide_model model ON v.model_id = model.model_id ");
     sql.append("WHERE vehicle_id > -1 ");
     createFilter(sql);
     sql.append("ORDER BY vehicle_id ");
@@ -83,7 +234,13 @@ public class VehicleList extends ArrayList {
     rs = pst.executeQuery();
     return rs;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  sqlFilter  Description of Parameter
+   */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
@@ -103,7 +260,15 @@ public class VehicleList extends ArrayList {
       sqlFilter.append("AND v.year = ? ");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  pst               Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (syncType == Constants.SYNC_INSERTS) {
@@ -121,21 +286,6 @@ public class VehicleList extends ArrayList {
       pst.setInt(++i, year);
     }
     return i;
-  }
-  
-  public static ArrayList buildYearList(Connection db) throws SQLException {
-    ArrayList years = new ArrayList();
-    String sql = 
-      "SELECT DISTINCT year FROM autoguide_vehicle ORDER BY year DESC";
-    PreparedStatement pst = db.prepareStatement(sql);
-    ResultSet rs = pst.executeQuery();
-    while (rs.next()) {
-      String thisYear = String.valueOf(rs.getInt("year"));
-      years.add(thisYear);
-    }
-    rs.close();
-    pst.close();
-    return years;
   }
 }
 

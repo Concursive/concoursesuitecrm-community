@@ -8,6 +8,13 @@ import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.ObjectUtils;
 
+/**
+ *  Represents a vehicle manufacturer
+ *
+ *@author     matt
+ *@created    May 17, 2002
+ *@version    $Id$
+ */
 public class Make {
 
   private int id = -1;
@@ -16,24 +23,49 @@ public class Make {
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
-  
+
+
+  /**
+   *  Constructor for the Make object
+   */
   public Make() { }
 
+
+  /**
+   *  Constructor for the Make object
+   *
+   *@param  tmp  Description of Parameter
+   */
   public Make(String tmp) {
     name = tmp;
   }
 
+
+  /**
+   *  Constructor for the Make object
+   *
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public Make(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-  
+
+
+  /**
+   *  Constructor for the Make object
+   *
+   *@param  db                Description of Parameter
+   *@param  thisMakeId        Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public Make(Connection db, int thisMakeId) throws SQLException {
-    StringBuffer sql = new StringBuffer(); 
-    sql.append(  
-      "SELECT make.make_id, make.make_name, " +
-      "make.entered as make_entered, make.enteredby as make_enteredby, " +
-      "make.modified as make_modified, make.modifiedby as make_modifiedby " +
-      "FROM autoguide_make make ");
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT make.make_id, make.make_name, " +
+        "make.entered as make_entered, make.enteredby as make_enteredby, " +
+        "make.modified as make_modified, make.modifiedby as make_modifiedby " +
+        "FROM autoguide_make make ");
     sql.append("WHERE make_id = ? ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, thisMakeId);
@@ -45,40 +77,202 @@ public class Make {
     pst.close();
   }
 
-  public void setId(int tmp) { this.id = tmp; }
-  public void setId(String tmp) { this.id = Integer.parseInt(tmp); }
-  public void setName(String tmp) { this.name = tmp; }
-  public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
+
+  /**
+   *  Sets the id attribute of the Make object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(int tmp) {
+    this.id = tmp;
+  }
+
+
+  /**
+   *  Sets the id attribute of the Make object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the name attribute of the Make object
+   *
+   *@param  tmp  The new name value
+   */
+  public void setName(String tmp) {
+    this.name = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the Make object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the Make object
+   *
+   *@param  tmp  The new entered value
+   */
   public void setEntered(String tmp) {
     this.entered = java.sql.Timestamp.valueOf(tmp);
   }
-  public void setEnteredBy(int tmp) { this.enteredBy = tmp; }
-  public void setEnteredBy(String tmp) { this.enteredBy = Integer.parseInt(tmp); }
-  public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
+
+
+  /**
+   *  Sets the enteredBy attribute of the Make object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(int tmp) {
+    this.enteredBy = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredBy attribute of the Make object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the modified attribute of the Make object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the Make object
+   *
+   *@param  tmp  The new modified value
+   */
   public void setModified(String tmp) {
     this.modified = java.sql.Timestamp.valueOf(tmp);
   }
-  public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
-  public void setModifiedBy(String tmp) { this.modifiedBy = Integer.parseInt(tmp); }
-  
-  public int getId() { return id; }
-  public String getName() { return name; }
-  public java.sql.Timestamp getEntered() { return entered; }
-  public int getEnteredBy() { return enteredBy; }
-  public java.sql.Timestamp getModified() { return modified; }
-  public int getModifiedBy() { return modifiedBy; }
+
+
+  /**
+   *  Sets the modifiedBy attribute of the Make object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(int tmp) {
+    this.modifiedBy = tmp;
+  }
+
+
+  /**
+   *  Sets the modifiedBy attribute of the Make object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the id attribute of the Make object
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the name attribute of the Make object
+   *
+   *@return    The name value
+   */
+  public String getName() {
+    return name;
+  }
+
+
+  /**
+   *  Gets the entered attribute of the Make object
+   *
+   *@return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Gets the enteredBy attribute of the Make object
+   *
+   *@return    The enteredBy value
+   */
+  public int getEnteredBy() {
+    return enteredBy;
+  }
+
+
+  /**
+   *  Gets the modified attribute of the Make object
+   *
+   *@return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Gets the modifiedBy attribute of the Make object
+   *
+   *@return    The modifiedBy value
+   */
+  public int getModifiedBy() {
+    return modifiedBy;
+  }
+
+
+  /**
+   *  Gets the guid attribute of the Make object
+   *
+   *@return    The guid value
+   */
   public String getGuid() {
     //return ObjectUtils.generateGuid(entered, enteredBy, id);
     return String.valueOf(id);
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean exists(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "SELECT make.make_id, make.make_name, " +
-      "make.entered as make_entered, make.enteredby as make_enteredby, " +
-      "make.modified as make_modified, make.modifiedby as make_modifiedby " +
-      "FROM autoguide_make make " +
-      "WHERE lower(make_name) = ? ");
+        "SELECT make.make_id, make.make_name, " +
+        "make.entered as make_entered, make.enteredby as make_enteredby, " +
+        "make.modified as make_modified, make.modifiedby as make_modifiedby " +
+        "FROM autoguide_make make " +
+        "WHERE lower(make_name) = ? ");
     pst.setString(1, name.toLowerCase());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -89,6 +283,14 @@ public class Make {
     return (id > -1);
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -108,6 +310,13 @@ public class Make {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean delete(Connection db) throws SQLException {
     if (id == -1) {
       throw new SQLException("ID was not specified");
@@ -168,6 +377,12 @@ public class Make {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("make_id");
     name = rs.getString("make_name");
