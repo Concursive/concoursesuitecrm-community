@@ -119,27 +119,33 @@ public final class Leads extends CFSModule {
 	
     Exception errorMessage = null;
     boolean recordInserted = false;
+    Contact linkedContact = null;
     
     String association = context.getRequest().getParameter("opp_type");
-    
     Opportunity newOpp = (Opportunity) context.getFormBean();
+    
     //set types
     newOpp.setTypeList(context.getRequest().getParameterValues("selectedList"));
     newOpp.setEnteredBy(getUserId(context));
     newOpp.setOwner(getUserId(context));
     newOpp.setModifiedBy(getUserId(context));
     
-    //some stuff to make contact list selector work, for now...
-    String contactLink = context.getRequest().getParameter("contact");
-    
     if (association.equals("contact")) {
-            newOpp.setAccountLink("-1");
-            newOpp.setContactLink(contactLink);
+      newOpp.setAccountLink("-1");
+    } else if (association.equals("org")) {
+      newOpp.setContactLink("-1");
     }
 
     Connection db = null;
     try {
       db = this.getConnection(context);
+      
+      //set the name for displaying on the form in case there are any errors
+      if (newOpp.getContactLink() > -1) {
+        linkedContact = new Contact(db, newOpp.getContactLink());
+        newOpp.setContactName(linkedContact.getNameLastFirst());
+      }
+      
       recordInserted = newOpp.insert(db, context);
       if (recordInserted) {
         newOpp = new Opportunity(db, "" + newOpp.getId());

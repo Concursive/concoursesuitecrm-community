@@ -533,7 +533,12 @@ public class Opportunity extends GenericBean {
    *@since
    */
   public void setTerms(String terms) {
-    this.terms = Double.parseDouble(terms);
+    try {
+      this.terms = Double.parseDouble(terms);
+    } catch (NumberFormatException ne) {
+      errors.put("termsError", terms+" is invalid input for this field");
+    }    
+    
   }
 
 
@@ -610,6 +615,7 @@ public class Opportunity extends GenericBean {
   public void setLow(String low) {
     low = replace(low, ",", "");
     low = replace(low, "$", "");
+    
     this.low = Double.parseDouble(low);
   }
 
@@ -623,7 +629,12 @@ public class Opportunity extends GenericBean {
   public void setGuess(String guess) {
     guess = replace(guess, ",", "");
     guess = replace(guess, "$", "");
-    this.guess = Double.parseDouble(guess);
+    
+    try {
+      this.guess = Double.parseDouble(guess);
+    } catch (NumberFormatException ne) {
+      errors.put("guessError", guess+" is invalid input for this field");
+    }
   }
 
 
@@ -636,6 +647,7 @@ public class Opportunity extends GenericBean {
   public void setHigh(String high) {
     high = replace(high, ",", "");
     high = replace(high, "$", "");
+    
     this.high = Double.parseDouble(high);
   }
 
@@ -700,7 +712,13 @@ public class Opportunity extends GenericBean {
     if (closeProb != null && closeProb.endsWith("%")) {
       closeProb = closeProb.substring(0, closeProb.length() - 1);
     }
-    this.closeProb = ((Double.parseDouble(closeProb)) / 100);
+    
+    try {
+      this.closeProb = ((Double.parseDouble(closeProb)) / 100);
+    } catch (NumberFormatException ne) {
+      errors.put("closeProbError", closeProb+" is invalid input for this field");
+    }
+    
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity-> Close prob: " + closeProb);
     }
@@ -1657,13 +1675,13 @@ public class Opportunity extends GenericBean {
    *@since
    */
   protected boolean isValid(Connection db) throws SQLException {
-    errors.clear();
+    //errors.clear();
 
     if (description == null || description.trim().equals("")) {
       errors.put("descriptionError", "Description cannot be left blank");
     }
 
-    if (closeProb == 0) {
+    if (closeProb == 0 && !(errors.containsKey("closeProbError"))) {
       errors.put("closeProbError", "Close Probability cannot be left blank");
     } else {
       if (closeProb > 100) {
@@ -1677,11 +1695,11 @@ public class Opportunity extends GenericBean {
       errors.put("closeDateError", "Close Date cannot be left blank");
     }
 
-    if (guess == 0) {
+    if (guess == 0 && !(errors.containsKey("guessError"))) {
       errors.put("guessError", "Amount needs to be entered");
     }
 
-    if (terms == 0) {
+    if (terms == 0 && !(errors.containsKey("termsError"))) {
       errors.put("termsError", "Terms needs to be entered");
     } else {
       if (terms < 0) {

@@ -102,8 +102,8 @@ Add Opportunity<br>
       Associate With
     </td>
     <td width="100%">
-        <input type="radio" name="opp_type" value="org">Account<br>
-        <input type="radio" name="opp_type" value="contact">Contact
+        <input type="radio" name="opp_type" value="org" <dhv:evaluate exp="<%=(OppDetails.getAccountLink() > -1)%>">checked</dhv:evaluate>>Account<br>
+        <input type="radio" name="opp_type" value="contact" <dhv:evaluate exp="<%=(OppDetails.getContactLink() > -1)%>">checked</dhv:evaluate>>Contact
     </td>
   </tr>
   <tr class="containerBody">
@@ -111,7 +111,7 @@ Add Opportunity<br>
       Account
     </td>
     <td width="100%">
-      <%= OrgList.getHtmlSelectDefaultNone("accountLink")%>
+      <%= OrgList.getHtmlSelectDefaultNone("accountLink", OppDetails.getAccountLink())%>
       <font color=red>*</font> <%= showAttribute(request, "orgError") %>
     </td>
   </tr>
@@ -124,10 +124,10 @@ Add Opportunity<br>
       <table>
         <tr>
           <td>
-            <div id="changecontact"><%=(OppDetails.getContactLink()+"").equals("-1")?"None Selected":OppDetails.getContactLink()+""%></div>
+            <div id="changecontact"><%=(OppDetails.getContactLink()+"").equals("-1")?"None Selected":OppDetails.getContactName()+""%></div>
           </td>
           <td>
-            <input type="hidden" name="contact" id="contactLink" value="<%=(OppDetails.getContactLink() == -1)?-1:OppDetails.getContactLink()%>">
+            <input type="hidden" name="contactLink" id="contactLink" value="<%=(OppDetails.getContactLink() == -1)?-1:OppDetails.getContactLink()%>">
           </td>
         </tr>
       </table>
@@ -139,7 +139,7 @@ Add Opportunity<br>
       Description
     </td>
     <td width="100%">
-      <input type=text size=50 name="description" value="">
+      <input type=text size=50 name="description" value="<%= toHtmlValue(OppDetails.getDescription()) %>">
       <font color=red>*</font> <%= showAttribute(request, "descriptionError") %>
     </td>
   </tr>
@@ -162,7 +162,7 @@ Add Opportunity<br>
       Prob. of Close
     </td>
     <td>
-      <input type=text size=5 name="closeProb" value="">%
+      <input type=text size=5 name="closeProb" value="<%= OppDetails.getCloseProbValue() %>">%
       <font color=red>*</font> <%= showAttribute(request, "closeProbError") %>
     </td>
   </tr>
@@ -171,7 +171,7 @@ Add Opportunity<br>
       Est. Close Date
     </td>
     <td>
-      <input type=text size=10 name="closeDate" value="">
+      <input type=text size=10 name="closeDate" value="<%= toHtmlValue(OppDetails.getCloseDateString()) %>">
       <a href="javascript:popCalendar('addOpportunity', 'closeDate');">Date</a> (mm/dd/yyyy)
       <font color=red>*</font> <%= showAttribute(request, "closeDateError") %>
     </td>
@@ -181,7 +181,7 @@ Add Opportunity<br>
       Low Estimate
     </td>
     <td>
-      <input type=text size=10 name="low" value="">
+      <input type=text size=10 name="low" value="<%= toHtmlValue(OppDetails.getLowAmount()) %>">
     </td>
   </tr>
   <tr class="containerBody">
@@ -189,7 +189,7 @@ Add Opportunity<br>
       Best Guess Estimate
     </td>
     <td>
-      <input type=text size=10 name="guess" value="">
+      <input type=text size=10 name="guess" value="<%= toHtmlValue(OppDetails.getGuessAmount()) %>">
       <font color=red>*</font> <%= showAttribute(request, "guessError") %>
     </td>
   </tr>
@@ -198,7 +198,7 @@ Add Opportunity<br>
       High Estimate
     </td>
     <td>
-      <input type=text size=10 name="high" value="">
+      <input type=text size=10 name="high" value="<%= toHtmlValue(OppDetails.getHighAmount()) %>">
     </td>
   </tr>
   <tr class="containerBody">
@@ -206,7 +206,7 @@ Add Opportunity<br>
       Est. Term
     </td>
     <td>
-      <input type=text size=5 name="terms" value="">
+      <input type=text size=5 name="terms" value="<%= toHtmlValue(OppDetails.getTermsString()) %>">
       <%= UnitTypeList.getHtml() %>
       <font color="red">*</font> <%= showAttribute(request, "termsError") %>
     </td>
@@ -216,7 +216,7 @@ Add Opportunity<br>
       Current Stage
     </td>
     <td>
-       <%=StageList.getHtmlSelect("stage",0)%>
+       <%=StageList.getHtmlSelect("stage",OppDetails.getStage())%>
       <input type=checkbox name="closeNow">Close opportunity
     </td>
   </tr>
@@ -225,7 +225,7 @@ Add Opportunity<br>
       Est. Commission
     </td>
     <td>
-      <input type=text size=5 name="commission" value="">%
+      <input type=text size=5 name="commission" value="<%= OppDetails.getCommissionValue() %>">%
     </td>
   </tr>
   
@@ -234,7 +234,7 @@ Add Opportunity<br>
       Alert Description
     </td>
     <td valign=center colspan=1>
-      <input type=text size=50 name="alertText" value=""><br>
+      <input type=text size=50 name="alertText" value="<%= toHtmlValue(OppDetails.getAlertText()) %>"><br>
     </td>
   </tr>
   
@@ -243,7 +243,7 @@ Add Opportunity<br>
       Alert Date
     </td>
     <td>
-      <input type=text size=10 name="alertDate" value="">
+      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OppDetails.getAlertDateString()) %>">
       <a href="javascript:popCalendar('addOpportunity', 'alertDate');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>
