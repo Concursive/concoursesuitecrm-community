@@ -43,7 +43,7 @@
       <%= toHtml(ContactDetails.getTitle()) %>
     </td>
   </tr>
-</dhv:evalute>
+</dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Entered
