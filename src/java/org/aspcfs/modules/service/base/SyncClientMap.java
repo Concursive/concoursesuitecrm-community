@@ -14,7 +14,7 @@ import java.util.Iterator;
 /**
  *  Description of the Class
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    June 3, 2002
  *@version    $Id$
  */
@@ -302,14 +302,13 @@ public class SyncClientMap {
 
 
   /**
-   *  Description of the Method
+   *  Lookup the server's id, hitting the database
    *
    *@param  db                Description of Parameter
    *@param  referenceTable    Description of Parameter
    *@param  clientCuid        Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
-   *@deprecated
    */
   public int lookupServerId(Connection db, int referenceTable, String clientCuid) throws SQLException {
     int resultId = -1;
@@ -336,7 +335,7 @@ public class SyncClientMap {
 
 
   /**
-   *  Description of the Method
+   *  Searches for the server's id from the clientManager cache
    *
    *@param  clientManager   Description of Parameter
    *@param  referenceTable  Description of Parameter

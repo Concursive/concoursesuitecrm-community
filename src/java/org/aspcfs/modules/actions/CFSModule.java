@@ -174,6 +174,14 @@ public class CFSModule {
       return null;
     }
   }
+  
+  public static String getDbName(ConnectionElement ce) {
+    if (ce != null) {
+      return ce.getDbName();
+    } else {
+      return null;
+    }
+  }
 
 
   /**
@@ -196,6 +204,14 @@ public class CFSModule {
         context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
         "fileLibrary" + fs +
         (this.getDbName(context) == null?"":this.getDbName(context) + fs) +
+        moduleFolderName + fs);
+  }
+  
+  protected String getPath(ActionContext context, ConnectionElement ce, String moduleFolderName) {
+    return (
+        context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
+        "fileLibrary" + fs +
+        (this.getDbName(ce) == null?"":this.getDbName(ce) + fs) +
         moduleFolderName + fs);
   }
 

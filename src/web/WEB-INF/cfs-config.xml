@@ -204,6 +204,7 @@
     <forward name="MarkCompleteOK" resource="/AutoGuide.do?command=Details"/>
     <forward name="MarkIncompleteOK" resource="/AutoGuide.do?command=Details"/>
   </action>
+  <action name="ProcessFTP" class="com.darkhorseventures.autoguide.module.ProcessFTP"/>
   
   <!-- Pipeline Management Module -->
   <action name="Leads" class="com.darkhorseventures.cfsmodule.Leads">

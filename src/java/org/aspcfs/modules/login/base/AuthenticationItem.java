@@ -11,6 +11,7 @@ public class AuthenticationItem {
   private int clientId = -1;
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
+  private String authCode = "unset";
 
   public AuthenticationItem() { }
   
@@ -39,52 +40,60 @@ public class AuthenticationItem {
   public Connection getConnection(ActionContext context) throws SQLException {
 	  return getConnection(context, true);
   }
-	  
-  public Connection getConnection(ActionContext context, boolean checkCode) throws SQLException {
+  
+  public ConnectionElement getConnectionElement(ActionContext context) throws SQLException {
     String gkHost = (String)context.getServletContext().getAttribute("GKHOST");
     String gkUser = (String)context.getServletContext().getAttribute("GKUSER");
     String gkUserPw = (String)context.getServletContext().getAttribute("GKUSERPW");
     String siteCode = (String)context.getServletContext().getAttribute("SiteCode");
     String gkDriver = (String)context.getServletContext().getAttribute("GKDRIVER");
     String serverName = context.getRequest().getServerName();
-    if (System.getProperty("DEBUG") != null) System.out.println("AuthenticationItem-> ServerName: " + serverName);
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("AuthenticationItem-> ServerName: " + serverName);
+    }
+    ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
+    ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
+    gk.setDriver(gkDriver);
+    ConnectionElement ce = null;
     
+    String sql = 
+      "SELECT * FROM sites " +
+      "WHERE sitecode = ? " +
+      "AND vhost = ? ";
+    Connection db = sqlDriver.getConnection(gk);
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setString(1, siteCode);
+    pst.setString(2, serverName);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      String siteDbHost = rs.getString("dbhost");
+      String siteDbName = rs.getString("dbname");
+      String siteDbUser = rs.getString("dbuser");
+      String siteDbPw = rs.getString("dbpw");
+      String siteDriver = rs.getString("driver");
+      authCode = rs.getString("code");
+      ce = new ConnectionElement(siteDbHost, siteDbUser, siteDbPw);
+      ce.setDbName(siteDbName);
+      ce.setDriver(siteDriver);
+    }
+    rs.close();
+    pst.close();
+    sqlDriver.free(db);
+    return ce;
+  }
+  
+  public Connection getConnection(ActionContext context, boolean checkCode) throws SQLException {
+    String serverName = context.getRequest().getServerName();
     if ( (id != null && id.equals(serverName)) || !checkCode ) {
-      String authCode = null;
-      ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
-      ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
-      gk.setDriver(gkDriver);
-      ConnectionElement ce = null;
-      
-      String sql = 
-        "SELECT * FROM sites " +
-        "WHERE sitecode = ? " +
-        "AND vhost = ? ";
-      Connection db = sqlDriver.getConnection(gk);
-      PreparedStatement pst = db.prepareStatement(sql);
-      pst.setString(1, siteCode);
-      pst.setString(2, serverName);
-      ResultSet rs = pst.executeQuery();
-      if (rs.next()) {
-        String siteDbHost = rs.getString("dbhost");
-        String siteDbName = rs.getString("dbname");
-        String siteDbUser = rs.getString("dbuser");
-        String siteDbPw = rs.getString("dbpw");
-        String siteDriver = rs.getString("driver");
-        authCode = rs.getString("code");
-        ce = new ConnectionElement(siteDbHost, siteDbUser, siteDbPw);
-        ce.setDbName(siteDbName);
-        ce.setDriver(siteDriver);
-      }
-      rs.close();
-      pst.close();
-      sqlDriver.free(db);
-      
-      if (!checkCode || code.equals(authCode)) {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("AuthenticationItem-> Site: " + id + "/" + code);
+      ConnectionElement ce = this.getConnectionElement(context);
+      if (ce != null) {
+        if (!checkCode || code.equals(authCode)) {
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("AuthenticationItem-> Site: " + serverName + "/" + ce.getDbName());
+          }
+          ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
+          return sqlDriver.getConnection(ce);
         }
-        return sqlDriver.getConnection(ce);
       }
     }
     return null;
