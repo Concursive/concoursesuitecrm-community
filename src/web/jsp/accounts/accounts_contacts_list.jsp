@@ -27,7 +27,7 @@ Contacts<br>
 <dhv:permission name="accounts-accounts-contacts-add"><a href="Contacts.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add a Contact</a></dhv:permission>
 <center><%= ContactListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactListInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <tr class="title">
   <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete">
   <td width="8">

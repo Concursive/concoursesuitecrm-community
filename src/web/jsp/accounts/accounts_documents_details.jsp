@@ -3,7 +3,6 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -25,13 +24,13 @@ Document Details<br>
   <tr>
     <td class="containerBack">
       <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="7">
       <strong>All Versions of this Document</strong>
     </td>
   </tr>
-  <tr class="pagedlist">
+  <tr class="title2">
     <td width="10" align="center">Action</td>
     <td>Item</td>
     <td>Size</td>

@@ -43,7 +43,7 @@ File Attachments
       <input type="button" value="Back to Attachment Overview" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'"><br>
       &nbsp;<br>
       <%-- List of Documents --%>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td colspan="4">
             <strong>Attached files...</strong>

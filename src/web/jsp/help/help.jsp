@@ -4,7 +4,7 @@
 <jsp:useBean id="Help" class="org.aspcfs.modules.help.base.HelpItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
-  <tr bgColor="#DEE0FA">
+  <tr class="title">
     <td>
       <strong>Help for this page</strong>
     </td>

@@ -18,8 +18,8 @@ Revenue Dashboard<br>
     <td width="275" valign="top">
       <%-- Graphic --%>
       <table width="275" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr bgcolor="#DEE0FA">
-          <td width=255 valign=center colspan="1" align="center">
+        <tr class="title">
+          <td width="255" valign="center" align="center">
 		<% if (((String)request.getSession().getAttribute("revenueoverride")) == null) {%>
       My Dashboard
 		<%} else {%>

@@ -4,7 +4,7 @@
 <%@ include file="../initPage.jsp" %>
 <a href="<%= request.getParameter("return") %>">Back</a>
 <p>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td>
       Your message has been sent to the following recipients:

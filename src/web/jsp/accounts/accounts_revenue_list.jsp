@@ -4,7 +4,7 @@
 <jsp:useBean id="RevenueList" class="org.aspcfs.modules.accounts.base.RevenueList" scope="request"/>
 <jsp:useBean id="RevenueListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -41,7 +41,7 @@ Revenue<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <tr class="title">
   <dhv:permission name="accounts-accounts-revenue-edit,accounts-accounts-revenue-delete">
   <td width="8">

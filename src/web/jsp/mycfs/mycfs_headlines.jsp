@@ -43,7 +43,7 @@ Headlines<br>
 <center><%= HeadlineListInfo.getAlphabeticalPageLinks() %></center>
 <br>
 <form name="delAccount" action="MyCFS.do?command=DeleteHeadline" method="post">
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="myhomepage-miner-delete">
       <td width="3%" valign="center" align="left">

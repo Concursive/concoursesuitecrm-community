@@ -46,7 +46,7 @@
         <tr class="title">
           <td width="100%">
           
-          <table width="100%" cellspacing="0" cellpadding="0" border="1" class="pagedList" bordercolorlight="#000000" bordercolor="#FFFFFF">
+          <table width="100%" cellspacing="0" cellpadding="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
             <tr>
               <td>
             <table width="100%" cellspacing="4" cellpadding="0" border="0" class="title">
@@ -97,7 +97,7 @@
 <%-- Next section --%>
 <br>
 <dhv:permission name="myhomepage-miner-view">
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td>
       <input type="hidden" name="command" value="Home">

@@ -6,7 +6,7 @@
 <jsp:useBean id="statusFilterSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="MakeSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <%@ include file="../../initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <center><%= AutoGuideDirectoryInfo.getAlphabeticalPageLinks() %><br>
 <%= showError(request, "actionError") %></center>
 <table width="100%" border="0">
@@ -28,7 +28,7 @@
   </tr>
 </table>
 
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
 <%--
     <dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete">

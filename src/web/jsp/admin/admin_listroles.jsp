@@ -10,7 +10,7 @@ View Roles<br>
 <dhv:permission name="admin-roles-add"><a href="Roles.do?command=InsertRoleForm">Add New Role</a></dhv:permission>
 <center><%= RoleListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="RoleListInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="admin-roles-edit,admin-roles-delete">
     <td>

@@ -50,7 +50,7 @@ Login History<br>
 	</tr>
   <%}%>
 <%} else {%>
-  <tr bgcolor="containerBody"><td colspan="3">No login history found.</td></tr>
+  <tr class="containerBody"><td colspan="3">No login history found.</td></tr>
 <%}%>
   </table>
   <br>

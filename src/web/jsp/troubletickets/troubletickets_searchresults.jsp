@@ -3,13 +3,13 @@
 <jsp:useBean id="TicList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="TicListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <a href="TroubleTickets.do">Tickets</a> > 
 <a href="TroubleTickets.do?command=SearchTickets&reset=true">Search Form</a> >
 Search Results
 <hr color="#BFBFBB" noshade>
 <dhv:pagedListStatus title="Current Search Results" object="TicListInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<td valign="center" align="left">

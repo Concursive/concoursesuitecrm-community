@@ -41,7 +41,7 @@ Calls<br>
     <td class="containerBack">
       <dhv:permission name="contacts-external_contacts-calls-add"><a href="LeadsCalls.do?command=Add&headerId=<%= opportunityHeader.getId() %>">Add a Call</a><br></dhv:permission>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsCallListInfo"/>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
         <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete">
           <td>

@@ -12,7 +12,7 @@ View Employees<br>
 <dhv:permission name="contacts-internal_contacts-add" none="true"><br></dhv:permission>
 <center><%= CompanyDirectoryInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CompanyDirectoryInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
   <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete">
     <td>
@@ -55,8 +55,8 @@ View Employees<br>
         <dhv:permission name="contacts-internal_contacts-edit"><a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId()%>&action=modify&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-internal_contacts-delete"><a href="javascript:popURLReturn('/CompanyDirectory.do?command=ConfirmDelete&id=<%=thisEmployee.getId()%>&popup=true','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');">Del</a></dhv:permission>
       </td>
     </dhv:permission>
-    <td class="row<%= rowid %>" nowrap><font class="columntext1">
-      <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLastFirst()) %></a></font>
+    <td class="row<%= rowid %>" nowrap>
+      <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLastFirst()) %></a>
       <dhv:evaluate exp="<%=!(thisEmployee.hasEnabledAccount())%>"><font color="red">*</font></dhv:evaluate>          
         <%= thisEmployee.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "&nbsp;") %>
     </td>

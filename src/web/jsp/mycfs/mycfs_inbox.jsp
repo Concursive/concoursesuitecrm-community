@@ -27,13 +27,13 @@ My Mailbox<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td class="title">
+    <td>
       <strong>Action</strong>
     </td>
     <dhv:evaluate if="<%= InboxInfo.getListView().equalsIgnoreCase("new") %>">
-      <td class="title">
+      <td>
         <strong>Status</strong>
       </td>
     </dhv:evaluate>

@@ -7,13 +7,13 @@
 <jsp:useBean id="OpenList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="OpenInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <a href="TroubleTickets.do">Tickets</a> > 
 View Tickets<br>
 <hr color="#BFBFBB" noshade>
 <% if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus showExpandLink="true" title="Tickets Assigned to Me" object="AssignedToMeInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<td valign="center" align="left">
@@ -36,30 +36,30 @@ View Tickets<br>
 		  rowid = (rowid != 1?1:2);
       Ticket assignedTic = (Ticket)k.next();
 %>   
-	<tr>
-	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
-    <td rowspan="2" width="8" valign="top" nowrap class="row<%= rowid %>">
+	<tr class="row<%= rowid %>">
+  <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
+    <td rowspan="2" width="8" valign="top" nowrap>
       <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= assignedTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('TroubleTickets.do?command=Delete&id=<%= assignedTic.getId() %>');">Del</a></dhv:permission>
     </td>
-    	</dhv:permission>
-		<td width="15" valign="top" nowrap class="row<%= rowid %>">
+  </dhv:permission>
+		<td width="15" valign="top" nowrap>
 			<a href="TroubleTickets.do?command=Details&id=<%= assignedTic.getId() %>"><%= assignedTic.getPaddedId() %></a>
 		</td>
-		<td width="10" valign="top" nowrap class="row<%= rowid %>">
+		<td width="10" valign="top" nowrap>
 			<%= toHtml(assignedTic.getPriorityName()) %>
 		</td>
-		<td width="8%" align="right" valign="top" nowrap class="row<%= rowid %>">
+		<td width="8%" align="right" valign="top" nowrap>
 			<%= assignedTic.getAgeOf() %>
 		</td>
-		<td width="90%" valign="top" class="row<%= rowid %>">
+		<td width="90%" valign="top">
 			<%= toHtml(assignedTic.getCompanyName()) %><dhv:evaluate exp="<%= !(assignedTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
-		<td width="150" nowrap valign="top" class="row<%= rowid %>">
+		<td width="150" nowrap valign="top">
 			<%= toHtml(assignedTic.getOwnerName()) %><dhv:evaluate exp="<%= !(assignedTic.getHasEnabledOwnerAccount()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 	</tr>
-  <tr>
-    <td colspan="6" valign="top" class="row<%= rowid %>">
+  <tr class="row<%= rowid %>">
+    <td colspan="6" valign="top">
 <%
   if (1==1) {
     Iterator files = assignedTic.getFiles().iterator();
@@ -94,7 +94,7 @@ View Tickets<br>
 <%}%>
 <% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || OpenInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus showExpandLink="true" title="Other Tickets in My Department" object="OpenInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
   <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<td valign="center" align="left">
@@ -181,7 +181,7 @@ View Tickets<br>
 <%}%>
 <% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection())) || CreatedByMeInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus showExpandLink="true" title="Tickets Created by Me" object="CreatedByMeInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
   <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<td valign="center" align="left">

@@ -10,7 +10,7 @@ Dashboard
 <center><%= CampaignDashboardListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
-    <form name="listView" method="post" action="/CampaignManager.do?command=Dashboard">
+    <form name="listView" method="post" action="CampaignManager.do?command=Dashboard">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= CampaignDashboardListInfo.getOptionValue("my") %>>My Running Campaigns</option>
@@ -23,7 +23,7 @@ Dashboard
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	<tr class="title">
     <td width="8" align="left" nowrap>
       <strong>Action</strong>

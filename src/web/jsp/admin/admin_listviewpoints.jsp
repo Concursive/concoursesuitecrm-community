@@ -27,7 +27,7 @@ Viewpoints<br>
 <dhv:permission name="admin-roles-add"><a href="Viewpoints.do?command=InsertViewpointForm&userId=<%= UserRecord.getId() %>">Add New Viewpoint</a></dhv:permission>
 <center><%= ViewpointListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ViewpointListInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="admin-roles-edit,admin-roles-delete">
     <td valign="center" width="8" nowrap>
@@ -65,8 +65,8 @@ Viewpoints<br>
           <dhv:permission name="admin-roles-edit"><a href="Viewpoints.do?command=ViewpointDetails&id=<%= thisViewpoint.getId() %>&userId=<%= UserRecord.getId() %>">Edit</a></dhv:permission><dhv:permission name="admin-roles-edit,admin-roles-delete" all="true">|</dhv:permission><dhv:permission name="admin-roles-delete"><a href="javascript:popURLReturn('Viewpoints.do?command=ConfirmDelete&id=<%=thisViewpoint.getId()%>&userId=<%= UserRecord.getId() %>&popup=true','Viewpoints.do?command=ListViewpoints&userId=<%= UserRecord.getId()%>', 'Delete_Viewpoint','320','200','yes','no');">Del</a></dhv:permission>
         </td>
         </dhv:permission>
-        <td class="row<%= rowid %>" width="150"><font class="columntext1">
-          <a href="Viewpoints.do?command=ViewpointDetails&id=<%= thisViewpoint.getId() %>&userId=<%= UserRecord.getId()%>"><%= thisViewpoint.getVpUser().getContact().getNameLastFirst() %></a></font>
+        <td class="row<%= rowid %>" width="150">
+          <a href="Viewpoints.do?command=ViewpointDetails&id=<%= thisViewpoint.getId() %>&userId=<%= UserRecord.getId()%>"><%= thisViewpoint.getVpUser().getContact().getNameLastFirst() %></a>
         </td>
         <td class="row<%= rowid %>">
           <%= toDateTimeString(thisViewpoint.getEntered()) %>

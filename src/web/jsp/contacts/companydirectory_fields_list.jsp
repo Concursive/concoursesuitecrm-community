@@ -39,7 +39,7 @@ List of Folder Records<br>
       <tr class="title">
         <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
         <dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete">
-          <td valign=center align=left bgcolor="#DEE0FA">
+          <td valign="center">
             <strong>Action</strong>
           </td>
         </dhv:permission>

@@ -56,7 +56,7 @@ Upload Document<br>
   <tr>
     <td class="containerBack">
       <%= showError(request, "actionError") %>
-	<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	  <tr class="title">
 	    <td colspan="2">
 	      <img border="0" src="images/file.gif" align="absmiddle"><b>Upload a New Document</b>

@@ -10,7 +10,6 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <a href="Leads.do">Pipeline Management</a> > 
 View Opportunities<br>
 <hr color="#BFBFBB" noshade>
@@ -41,34 +40,34 @@ View Opportunities<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
     <dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete">
-    <td valign=center>
+    <td valign="center">
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td valign=center nowrap>
+    <td valign="center" nowrap>
       <strong><a href="Leads.do?command=ViewOpp&column=acct_name">Organization</a></strong>
       <%= OpportunityListInfo.getSortIcon("acct_name") %>
     </td>    
-    <td valign=center nowrap>
+    <td valign="center" nowrap>
       <strong><a href="Leads.do?command=ViewOpp&column=x.description">Component</a></strong>
       <%= OpportunityListInfo.getSortIcon("x.description") %>
     </td>
-    <td valign=center nowrap>
+    <td valign="center" nowrap>
       <strong><a href="Leads.do?command=ViewOpp&column=guessvalue">Amount</a></strong>
       <%= OpportunityListInfo.getSortIcon("guessvalue") %>
     </td>
-    <td valign=center nowrap>
+    <td valign="center" nowrap>
       <strong><a href="Leads.do?command=ViewOpp&column=closeprob">Prob.</a></strong>
       <%= OpportunityListInfo.getSortIcon("closeprob") %>
     </td>
-    <td valign=center nowrap>
+    <td valign="center" nowrap>
       <strong><a href="Leads.do?command=ViewOpp&column=closedate">Start</a></strong>
       <%= OpportunityListInfo.getSortIcon("closedate") %>
     </td>
-    <td valign=center nowrap>
+    <td valign="center" nowrap>
       <strong><a href="Leads.do?command=ViewOpp&column=terms">Term</a></strong>
       <%= OpportunityListInfo.getSortIcon("terms") %>
     </td>

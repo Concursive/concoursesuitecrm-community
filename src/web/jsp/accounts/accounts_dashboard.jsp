@@ -2,7 +2,7 @@
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.mycfs.beans.CalendarBean" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="NewUserList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/tasks.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></script>
 <%@ include file="../initPage.jsp" %>
 <% 
   String returnPage = (String)request.getAttribute("Return");
@@ -39,7 +39,7 @@
         <tr class="title">
           <td width="100%">
           
-          <table width="100%" cellspacing="0" cellpadding="0" border="1" class="pagedList" bordercolorlight="#000000" bordercolor="#FFFFFF">
+          <table width="100%" cellspacing="0" cellpadding="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
             <tr>
               <td>
             <table width="100%" cellspacing="4" cellpadding="0" border="0" class="title">

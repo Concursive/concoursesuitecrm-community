@@ -27,8 +27,8 @@
 </script>
 <form method="post" name="inputForm" action="Help.do?command=Process&auto-populate=true" onSubmit="return checkForm(this);">
   <table border="0" width="100%" cellspacing="0" cellpadding="4">
-    <tr>
-      <td bgColor="#DEE0FA">
+    <tr class="title">
+      <td>
         <font color="#000000"><b>Help for this page</b></font>
       </td>
     </tr>
