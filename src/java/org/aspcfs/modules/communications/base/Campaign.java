@@ -9,6 +9,7 @@ import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.Template;
 import com.darkhorseventures.utils.DateUtils;
+import com.zeroio.iteam.base.FileItemList;
 
 /**
  *  Description of the Class
@@ -1247,18 +1248,17 @@ public class Campaign extends GenericBean {
    *@since                    1.10
    */
   public void buildRecipientCount(Connection db) throws SQLException {
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
-        "SELECT count(id) " +
-        "FROM scheduled_recipient sr " +
-        "WHERE campaign_id = " + id + " ");
-
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT count(id) " +
+      "FROM scheduled_recipient sr " +
+      "WHERE campaign_id = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       this.setRecipientCount(rs.getInt(1));
     }
-
     rs.close();
-    st.close();
+    pst.close();
   }
 
 
@@ -1272,20 +1272,7 @@ public class Campaign extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public void buildFileCount(Connection db) throws SQLException {
-    //TODO: Move this code to the Files object and call getFileCount
-    PreparedStatement pst = db.prepareStatement(
-        "SELECT count(*) " +
-        "FROM project_files " +
-        "WHERE link_module_id = ? " +
-        "AND link_item_id = ? ");
-    pst.setInt(1, Constants.COMMUNICATIONS);
-    pst.setInt(2, id);
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      files = (rs.getInt(1));
-    }
-    rs.close();
-    pst.close();
+    files = FileItemList.retrieveRecordCount(db, Constants.COMMUNICATIONS, id);
   }
 
 
