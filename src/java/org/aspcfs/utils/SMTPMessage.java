@@ -2,10 +2,12 @@ package com.darkhorseventures.utils;
 
 // JavaMail docs at http://developer.java.sun.com/developer/onlineTraining/JavaMail/contents.html
 
-import java.util.Vector;
-import java.util.Properties;
+import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
+import javax.activation.*;
+import java.io.*;
+import com.zeroio.iteam.base.*;
 
 /**
  *  A wrapper around Sun's JavaMail API. Makes sending email a snap.
@@ -18,13 +20,14 @@ public class SMTPMessage {
 
   private String host = "";
   private String from = "";
-  private Vector to = new Vector();
-  private Vector cc = new Vector();
+  private ArrayList to = new ArrayList();
+  private ArrayList cc = new ArrayList();
   private String subject = "";
   private String body = "";
   private String type = "text";
   private String errorMsg = "";
-  private Vector replyTo = new Vector();
+  private ArrayList replyTo = new ArrayList();
+  private FileItemList attachments = new FileItemList();
 
 
   /**
@@ -68,6 +71,7 @@ public class SMTPMessage {
     addTo(tmp);
   }
 
+
   /**
    *  Sets the Cc attribute of the SMTPMessage object
    *
@@ -89,7 +93,8 @@ public class SMTPMessage {
   public void setSubject(String tmp) {
     subject = tmp;
   }
-  
+
+
   /**
    *  Sets the Body attribute of the SMTPMessage object
    *
@@ -100,12 +105,37 @@ public class SMTPMessage {
     body = tmp;
   }
 
-public Vector getReplyTo() {
-	return replyTo;
-}
-public void setReplyTo(Vector replyTo) {
-	this.replyTo = replyTo;
-}
+
+  /**
+   *  Gets the replyTo attribute of the SMTPMessage object
+   *
+   *@return    The replyTo value
+   */
+  public ArrayList getReplyTo() {
+    return replyTo;
+  }
+
+
+  /**
+   *  Sets the replyTo attribute of the SMTPMessage object
+   *
+   *@param  replyTo  The new replyTo value
+   */
+  public void setReplyTo(ArrayList replyTo) {
+    this.replyTo = replyTo;
+  }
+
+
+  /**
+   *  Sets the attachments attribute of the SMTPMessage object
+   *
+   *@param  tmp  The new attachments value
+   */
+  public void setAttachments(FileItemList tmp) {
+    this.attachments = tmp;
+  }
+
+
 
   /**
    *  Sets the Type attribute of the SMTPMessage object. Use "text" for standard
@@ -137,12 +167,19 @@ public void setReplyTo(Vector replyTo) {
    *@since
    */
   public void addTo(String tmp) {
-    to.addElement(tmp);
+    to.add(tmp);
   }
-  
+
+
+  /**
+   *  Adds a feature to the ReplyTo attribute of the SMTPMessage object
+   *
+   *@param  tmp  The feature to be added to the ReplyTo attribute
+   */
   public void addReplyTo(String tmp) {
-	  replyTo.addElement(tmp);
+    replyTo.add(tmp);
   }
+
 
   /**
    *  Adds a feature to the Cc attribute of the SMTPMessage object
@@ -151,23 +188,38 @@ public void setReplyTo(Vector replyTo) {
    *@since
    */
   public void addCc(String tmp) {
-    cc.addElement(tmp);
+    cc.add(tmp);
   }
 
 
   /**
-   *  Description of the Method
+   *  Adds a feature to the FileAttachment attribute of the SMTPMessage object
+   *
+   *@param  tmp  The feature to be added to the FileAttachment attribute
+   */
+  public void addFileAttachment(FileItem tmp) {
+    attachments.add(tmp);
+  }
+
+
+  /**
+   *  Sends an email based on this objects properties
    *
    *@return    Description of the Returned Value
-   *@since
    */
   public int send() {
     //throws Exception {
 
-    if (host == null || host.equals("")) errorMsg = "Host not specified";
-    if (from == null || from.equals("")) errorMsg = "Reply to address not specified";
-    if (to.size() == 0) errorMsg = "Recipients not specified";
-      
+    if (host == null || host.equals("")) {
+      errorMsg = "Host not specified";
+    }
+    if (from == null || from.equals("")) {
+      errorMsg = "Reply to address not specified";
+    }
+    if (to.size() == 0) {
+      errorMsg = "Recipients not specified";
+    }
+
     if (errorMsg != null && !errorMsg.equals("")) {
       return 1;
     }
@@ -190,37 +242,81 @@ public void setReplyTo(Vector replyTo) {
 
       // Set the from address
       message.setFrom(new InternetAddress(from));
-      
+
       //Set the Reply to addresses
       if (replyTo.size() > 0) {
-	      InternetAddress[] tempReply = new InternetAddress[replyTo.size()];
-		for (int i = 0; i < replyTo.size(); i++) {
-			tempReply[i] = new InternetAddress((String)replyTo.get(i));
-		}
-		
-		message.setReplyTo(tempReply);
+        InternetAddress[] tempReply = new InternetAddress[replyTo.size()];
+        for (int i = 0; i < replyTo.size(); i++) {
+          tempReply[i] = new InternetAddress((String) replyTo.get(i));
+        }
+        message.setReplyTo(tempReply);
       }
-	      
+
       // Set the to address(es)
       for (int i = 0; i < to.size(); i++) {
         message.addRecipient(Message.RecipientType.TO,
-            new InternetAddress((String)to.get(i)));
+            new InternetAddress((String) to.get(i)));
       }
 
       // Set the cc address(es)
       for (int i = 0; i < cc.size(); i++) {
         message.addRecipient(Message.RecipientType.CC,
-            new InternetAddress((String)cc.get(i)));
+            new InternetAddress((String) cc.get(i)));
       }
 
       // Set the subject
       message.setSubject(subject);
 
-      // Set the content
-      if (!type.equals("text")) {
+      //Set the content
+      if ("text".equals(type) || "text/plain".equals(type)) {
+        //A text only message
+        message.setText(body);
+      } else if (!"text/html".equals(type)) {
+        //A custom message test
         message.setContent(body, type);
       } else {
-        message.setText(body);
+        //An HTML message with text, html, images, and attachments
+        //This is the root of the email in which the various parts will be added
+        MimeMultipart mpRoot = new MimeMultipart("mixed");
+
+        //Attach the content to the root
+        MimeBodyPart contentPartRoot = new MimeBodyPart();
+        MimeMultipart mpContent = new MimeMultipart("alternative");
+        contentPartRoot.setContent(mpContent);
+        mpRoot.addBodyPart(contentPartRoot);
+
+        //Text message -- always include for those without HTML viewers
+        MimeBodyPart textPart = new MimeBodyPart();
+        textPart.setText(body);
+        textPart.setContent(body, "text/plain");
+        mpContent.addBodyPart(textPart);
+
+        //Html message
+        MimeMultipart multipart = new MimeMultipart("related");
+        BodyPart messageBodyPart = new MimeBodyPart();
+        //TODO: replace image source with embedded tags, put in array
+        //messageBodyPart.setContent("<img src=\"cid:memememe\">" + body, "text/html");
+        messageBodyPart.setContent(body, "text/html");
+        multipart.addBodyPart(messageBodyPart);
+
+        //Process the array tags, either local image or download the image, and embed the content
+        /*
+         *  BodyPart embeddedBodyPart = new MimeBodyPart();
+         *  DataSource fds = new FileDataSource("/home/matt/cfs2/production/webapps/cfs2/images/refresh.gif");
+         *  embeddedBodyPart.setDataHandler(new DataHandler(fds));
+         *  embeddedBodyPart.setHeader("Content-ID", "<memememe>");
+         *  multipart.addBodyPart(embeddedBodyPart);
+         */
+        //Add the complete html to the content
+        MimeBodyPart mbp = new MimeBodyPart();
+        mbp.setContent(multipart);
+        mpContent.addBodyPart(mbp);
+
+        //Attach the files to the root
+        this.addFileAttachments(mpRoot);
+
+        //Add add the parts to the message
+        message.setContent(mpRoot);
       }
 
       // Send message
@@ -229,6 +325,29 @@ public void setReplyTo(Vector replyTo) {
     } catch (javax.mail.MessagingException me) {
       errorMsg = me.toString();
       return 2;
+    }
+  }
+
+
+  /**
+   *  Adds file attachments to the email message using the FileItem object
+   *
+   *@param  root                    The feature to be added to the
+   *      FileAttachments attribute
+   *@exception  MessagingException  Description of the Exception
+   */
+  private void addFileAttachments(MimeMultipart root) throws MessagingException {
+    if (attachments != null) {
+      Iterator files = attachments.iterator();
+      while (files.hasNext()) {
+        FileItem fileItem = (FileItem) files.next();
+        BodyPart attachmentBodyPart = new MimeBodyPart();
+        FileDataSource source = new FileDataSource(fileItem.getFullFilePath());
+        attachmentBodyPart.setDisposition(Part.ATTACHMENT);
+        attachmentBodyPart.setDataHandler(new DataHandler(source));
+        attachmentBodyPart.setFileName(fileItem.getClientFilename());
+        root.addBodyPart(attachmentBodyPart);
+      }
     }
   }
 }
