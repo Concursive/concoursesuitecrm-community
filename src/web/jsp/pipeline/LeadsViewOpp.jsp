@@ -17,7 +17,7 @@ View Opportunities<br>
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>
 </dhv:evaluate>
-<dhv:permission name="pipeline-opportunities-add"><a href="Leads.do?command=AddOpp&source=list">Add an Opportunity</a></dhv:permission>
+<dhv:permission name="pipeline-opportunities-add"><a href="Leads.do?command=Prepare&source=list">Add an Opportunity</a></dhv:permission>
 <center><%= OpportunityListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
