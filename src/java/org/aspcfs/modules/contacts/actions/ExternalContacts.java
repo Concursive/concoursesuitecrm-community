@@ -53,7 +53,7 @@ public final class ExternalContacts extends CFSModule {
     Connection db = null;
 
     FileItemList files = new FileItemList();
-    files.setLinkModuleId(Constants.CONTACTS_REPORTS);
+    files.setLinkModuleId(Constants.DOCUMENTS_CONTACTS_REPORTS);
     files.setLinkItemId(-1);
 
     PagedListInfo rptListInfo = this.getPagedListInfo(context, "ContactRptListInfo");

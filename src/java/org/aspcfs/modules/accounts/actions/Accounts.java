@@ -53,7 +53,7 @@ public final class Accounts extends CFSModule {
 
     FileItemList files = new FileItemList();
     //want to show accounts reports only
-    files.setLinkModuleId(Constants.ACCOUNTS_REPORTS);
+    files.setLinkModuleId(Constants.DOCUMENTS_ACCOUNTS_REPORTS);
     files.setLinkItemId(-1);
 
     PagedListInfo rptListInfo = this.getPagedListInfo(context, "RptListInfo");

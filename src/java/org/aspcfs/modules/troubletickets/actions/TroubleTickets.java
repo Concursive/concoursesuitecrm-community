@@ -200,7 +200,7 @@ public final class TroubleTickets extends CFSModule {
     Connection db = null;
 
     FileItemList files = new FileItemList();
-    files.setLinkModuleId(Constants.TICKETS_REPORTS);
+    files.setLinkModuleId(Constants.DOCUMENTS_TICKETS_REPORTS);
     files.setLinkItemId(-1);
 
     PagedListInfo rptListInfo = this.getPagedListInfo(context, "TicketRptListInfo");

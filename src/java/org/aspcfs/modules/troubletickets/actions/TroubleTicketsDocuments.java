@@ -31,7 +31,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       db = getConnection(context);
       int ticketId = addTicket(context, db);
       FileItemList documents = new FileItemList();
-      documents.setLinkModuleId(Constants.TICKETS);
+      documents.setLinkModuleId(Constants.DOCUMENTS_TICKETS);
       documents.setLinkItemId(ticketId);
 
       PagedListInfo docListInfo = this.getPagedListInfo(context, "TicketDocumentListInfo");
@@ -129,7 +129,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
         FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
 
         FileItem thisItem = new FileItem();
-        thisItem.setLinkModuleId(Constants.TICKETS);
+        thisItem.setLinkModuleId(Constants.DOCUMENTS_TICKETS);
         thisItem.setLinkItemId(ticketId);
         thisItem.setEnteredBy(getUserId(context));
         thisItem.setModifiedBy(getUserId(context));
@@ -200,7 +200,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       db = getConnection(context);
       int ticketId = addTicket(context, db);
 
-      FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.TICKETS);
+      FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       context.getRequest().setAttribute("FileItem", thisFile);
     } catch (Exception e) {
       errorMessage = e;
@@ -254,7 +254,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
         FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
 
         FileItem thisItem = new FileItem();
-        thisItem.setLinkModuleId(Constants.TICKETS);
+        thisItem.setLinkModuleId(Constants.DOCUMENTS_TICKETS);
         thisItem.setLinkItemId(ticketId);
         thisItem.setId(Integer.parseInt(itemId));
         thisItem.setEnteredBy(getUserId(context));
@@ -311,7 +311,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       db = getConnection(context);
       int ticketId = addTicket(context, db);
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.TICKETS);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
 
@@ -349,7 +349,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       ticketId = addTicket(context, db);
-      thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.TICKETS);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       if (version != null) {
         thisItem.buildVersionList(db);
       }
@@ -447,7 +447,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       db = getConnection(context);
       int ticketId = addTicket(context, db);
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.TICKETS);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
 
@@ -486,7 +486,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       db = getConnection(context);
       ticketId = addTicket(context, db);
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.TICKETS);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       thisItem.setClientFilename(filename);
       thisItem.setSubject(subject);
       recordInserted = thisItem.update(db);
@@ -528,7 +528,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       db = getConnection(context);
       int ticketId = addTicket(context, db);
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.TICKETS);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
         recordDeleted = thisItem.delete(db, this.getPath(context, "tickets", thisItem.getLinkItemId()));
       }

@@ -231,7 +231,7 @@ public final class ProjectManagementLists extends CFSModule {
       context.getRequest().setAttribute("IncludeSection", ("lists_categories_add").toLowerCase());
 
       TaskCategory newCategory = (TaskCategory) context.getFormBean();
-      newCategory.setLinkModuleId(Constants.PROJECTS);
+      newCategory.setLinkModuleId(Constants.TASK_CATEGORY_PROJECTS);
       newCategory.setLinkItemId(thisProject.getId());
       recordInserted = newCategory.insert(db);
       if (!recordInserted) {
@@ -275,7 +275,7 @@ public final class ProjectManagementLists extends CFSModule {
       context.getRequest().setAttribute("IncludeSection", ("lists_categories_add").toLowerCase());
 
       TaskCategory updatedCategory = (TaskCategory) context.getFormBean();
-      updatedCategory.setLinkModuleId(Constants.PROJECTS);
+      updatedCategory.setLinkModuleId(Constants.TASK_CATEGORY_PROJECTS);
       updatedCategory.setLinkItemId(thisProject.getId());
       resultCount = updatedCategory.update(db);
       if (resultCount == -1) {

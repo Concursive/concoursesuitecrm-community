@@ -79,7 +79,7 @@ public final class ProcessDocument extends CFSModule {
       if ("ticket".equals(type)) {
         id = (String) parts.get("tid");
         newFilePath = this.getPath(context, "tickets");
-        linkModuleId = Constants.TICKETS;
+        linkModuleId = Constants.DOCUMENTS_TICKETS;
       }
       if (id == null) {
         errors.put("idError", "Object id was not specified for uploaded file");

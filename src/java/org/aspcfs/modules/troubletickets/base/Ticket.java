@@ -162,7 +162,7 @@ public class Ticket extends GenericBean {
 
   public void buildFiles(Connection db) throws SQLException {
     files.clear();
-    files.setLinkModuleId(Constants.TICKETS);
+    files.setLinkModuleId(Constants.DOCUMENTS_TICKETS);
     files.setLinkItemId(this.getId());
     files.buildList(db);
   }

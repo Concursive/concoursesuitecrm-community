@@ -108,7 +108,7 @@ public class TaskCategory extends GenericBean {
       pst.execute();
       this.id = DatabaseUtils.getCurrVal(db, "lookup_task_category_code_seq");
       pst.close();
-      if (linkModuleId == Constants.PROJECTS) {
+      if (linkModuleId == Constants.TASK_CATEGORY_PROJECTS) {
         pst = db.prepareStatement(
           "INSERT INTO taskcategory_project " +
           "(category_id, project_id) " +

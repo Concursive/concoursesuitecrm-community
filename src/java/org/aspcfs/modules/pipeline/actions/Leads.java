@@ -1234,7 +1234,7 @@ public final class Leads extends CFSModule {
     Connection db = null;
 
     FileItemList files = new FileItemList();
-    files.setLinkModuleId(Constants.LEADS_REPORTS);
+    files.setLinkModuleId(Constants.DOCUMENTS_LEADS_REPORTS);
     files.setLinkItemId(-1);
 
     PagedListInfo rptListInfo = this.getPagedListInfo(context, "LeadRptListInfo");
