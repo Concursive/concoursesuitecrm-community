@@ -464,7 +464,8 @@ public class Notifier extends ReportBuilder {
         if (!"false".equals((String) config.get("FaxEnabled"))) {
           //Faxing is enabled
           String baseFilename = baseDirectory + (String) config.get("BaseFilename") + uniqueId + messageId + "-" + faxNumber;
-          String url = "http://" + (String) siteInfo.get("vhost") + "/ProcessMessage.do?code=" + (String) siteInfo.get("code") + "&messageId=" + messageId + (contactId != null?"&contactId=" + contactId:"");
+          //Must escape the & for Linux shell script
+          String url = "http://" + (String) siteInfo.get("vhost") + "/ProcessMessage.do?code=" + (String) siteInfo.get("code") + "\&messageId=" + messageId + (contactId != null?"\&contactId=" + contactId:"");
           if (HTTPUtils.convertUrlToPostscriptFile(url, baseFilename) == 1) {
             continue;
           }
