@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.tasks.base.*,org.aspcfs.modules.base.EmailAddress" %>
+<%@ page import="java.util.*,org.aspcfs.modules.tasks.base.*,org.aspcfs.modules.base.EmailAddress, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="TaskList" class="org.aspcfs.modules.tasks.base.TaskList" scope="request"/>
 <jsp:useBean id="TaskListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -117,7 +117,7 @@
    %>      
   <tr class="row<%= rowid %>">
     <td align="center" valign="top">
-          <a href='javascript:window.location.href="MyTasksForward.do?command=ForwardMessage&forwardType=15&id=<%=thisTask.getId()%>&return=" +escape("MyTasks.do?command=ListTasks")+ "&sendUrl="+ escape("MyTasksForward.do?command=SendMessage");'>Fwd</a>|<a href="javascript:popURLReturn('/MyTasks.do?command=ConfirmDelete&id=<%=thisTask.getId()%>&popup=true','MyTasks.do?command=ListTasks', 'Delete_message','320','200','yes','no');">Del</a>
+          <a href='javascript:window.location.href="MyTasksForward.do?command=ForwardMessage&forwardType=<%= Constants.TASKS %>&id=<%=thisTask.getId()%>&return=" +escape("MyTasks.do?command=ListTasks")+ "&sendUrl="+ escape("MyTasksForward.do?command=SendMessage");'>Fwd</a>|<a href="javascript:popURLReturn('/MyTasks.do?command=ConfirmDelete&id=<%=thisTask.getId()%>&popup=true','MyTasks.do?command=ListTasks', 'Delete_message','320','200','yes','no');">Del</a>
     </td>
         <td nowrap align="center" valign="top">
       <%= thisTask.getPriority()==-1?"-NA-":(new Integer(thisTask.getPriority())).toString() %>
