@@ -11,42 +11,42 @@
   <!-- 
   Web default 
   -->
-  <action name="ProcessImage" class="com.darkhorseventures.cfsmodule.ProcessImage">
+  <action name="ProcessImage" class="org.aspcfs.modules.communications.actions.ProcessImage">
     <forward name="SystemError" resource="/error_system.jsp"/>
   </action>
   
-  <action name="ProcessEditData" class="com.darkhorseventures.cfsmodule.ProcessEditData">
+  <action name="ProcessEditData" class="org.aspcfs.modules.healthcare.edit.actions.ProcessEditData">
     <forward name="ProcessDataOK" resource="/processdata_test.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp"/>
   </action>
   
-  <action name="ProcessSurvey" class="com.darkhorseventures.cfsmodule.ProcessSurvey">
+  <action name="ProcessSurvey" class="org.aspcfs.modules.communications.actions.ProcessSurvey">
     <forward name="SystemError" resource="/error_system.jsp"/>
     <forward name="ViewOK" resource="/display_active_survey.jsp" layout="styleNoSession"/>
     <forward name="InsertOK" resource="/survey_thanks.jsp" layout="styleNoSession"/>
     <forward name="NotFoundError" resource="/survey_notfound.jsp" layout="styleNoSession"/>
   </action>
 	
-  <action name="ProcessMessage" class="com.darkhorseventures.cfsmodule.ProcessMessage">
+  <action name="ProcessMessage" class="org.aspcfs.modules.communications.actions.ProcessMessage">
     <forward name="PreviewOK" resource="/campaign_messages_preview.jsp"/>
   </action>
 	
-  <action name="ProcessPacket" class="com.darkhorseventures.cfsmodule.ProcessPacket">
+  <action name="ProcessPacket" class="org.aspcfs.modules.service.actions.ProcessPacket">
     <forward name="PacketOK" resource="/system_process_packet.jsp"/>
   </action>
   
-  <action name="ProcessDocument" class="com.darkhorseventures.cfs.documents.module.ProcessDocument">
+  <action name="ProcessDocument" class="com.darkhorseventures.service.actions.ProcessDocument">
     <forward name="UploadOK" resource="/system_process_ok.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp"/>
     <forward name="UserError" resource="/error_user.jsp"/>
   </action>
   
-  <action name="ProcessSystem" class="com.darkhorseventures.cfsmodule.ProcessSystem">
+  <action name="ProcessSystem" class="org.aspcfs.modules.admin.actions.ProcessSystem">
     <forward name="ProcessOK" resource="/system_process_ok.jsp"/>
   </action>
   
-  <action name="Login" class="com.darkhorseventures.cfsmodule.Login">
-    <bean name="LoginBean" class="com.darkhorseventures.cfsmodule.LoginBean" scope="request"/>
+  <action name="Login" class="org.aspcfs.modules.login.actions.Login">
+    <bean name="LoginBean" class="org.aspcfs.modules.login.beans.LoginBean" scope="request"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -56,7 +56,7 @@
   </action>
   
   <!-- MyCFS Module -->
-  <action name="MyCFS" class="com.darkhorseventures.cfsmodule.MyCFS">
+  <action name="MyCFS" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -69,8 +69,8 @@
     <forward name="HeadlineOK" resource="/mycfs_headlines.jsp" layout="nav"/>
     <forward name="MyProfileOK" resource="/mycfs_profile.jsp" layout="nav"/>
   </action>
-  <action name="MyCFSProfile" class="com.darkhorseventures.cfsmodule.MyCFS">
-    <bean name="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
+  <action name="MyCFSProfile" class="org.aspcfs.modules.mycfs.actions.MyCFS">
+    <bean name="EmployeeBean" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -78,8 +78,8 @@
     <forward name="ProfileOK" resource="/mycfs_personal.jsp" layout="nav"/>
     <forward name="UpdateProfileOK" resource="/MyCFS.do?command=MyProfile"/>
   </action>
-  <action name="MyCFSInbox" class="com.darkhorseventures.cfsmodule.MyCFS">
-    <bean name="NoteDetails" class="com.darkhorseventures.cfsbase.CFSNote" scope="request"/>
+  <action name="MyCFSInbox" class="org.aspcfs.modules.mycfs.actions.MyCFS">
+    <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -92,7 +92,7 @@
     <forward name="SendMessageCloseOK" resource="/error_user.jsp" layout="nav"/>
     <forward name="ForwardMessageOK" resource="/mycfs_newmessage.jsp" layout="nav"/>
   </action>
-  <action name="Reassignments" class="com.darkhorseventures.cfsmodule.Reassignments">
+  <action name="Reassignments" class="org.aspcfs.modules.mycfs.actions.Reassignments">
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -101,7 +101,7 @@
     <forward name="DoReassignOK" resource="/Reassignments.do?command=Reassign"/>
   </action>
   
-  <action name="ContactsList" class="com.darkhorseventures.cfsmodule.ContactsList">
+  <action name="ContactsList" class="org.aspcfs.modules.contacts.actions.ContactsList">
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -109,7 +109,7 @@
     <forward name="CFSContactListOK" resource="/mycfs_contactslist.jsp" layout="style"/>
    </action>
   
-  <action name="LookupSelector" class="com.darkhorseventures.cfsmodule.LookupSelector">
+  <action name="LookupSelector" class="org.aspcfs.modules.actions.LookupSelector">
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -117,8 +117,8 @@
     <forward name="PopLookupOK" resource="/lookup_selector.jsp" layout="style"/>
    </action>
    
-  <action name="ForwardNote" class="com.darkhorseventures.cfsmodule.ForwardNote">
-    <bean name="NoteDetails" class="com.darkhorseventures.cfsbase.CFSNote" scope="request"/>
+  <action name="ForwardNote" class="org.aspcfs.modules.actions.ForwardNote">
+    <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -128,8 +128,8 @@
   </action>
   
   
-  <action name="MyTasks" class="com.darkhorseventures.cfsmodule.MyTasks">
-    <bean name="Task" class="com.darkhorseventures.cfsbase.Task" scope="request" />
+  <action name="MyTasks" class="org.aspcfs.modules.tasks.actions.MyTasks">
+    <bean name="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -143,8 +143,8 @@
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
     </action>
   
-  <action name="MyTasksForward" class="com.darkhorseventures.cfsmodule.MyCFS">
-    <bean name="NoteDetails" class="com.darkhorseventures.cfsbase.CFSNote" scope="request"/>
+  <action name="MyTasksForward" class="org.aspcfs.modules.mycfs.actions.MyCFS">
+    <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -152,8 +152,8 @@
     <forward name="ForwardMessageOK" resource="/mycfs_newmessage.jsp" layout="nav"/>
   </action>
   
-  <action name="MyCFSPassword" class="com.darkhorseventures.cfsmodule.MyCFS">
-    <bean name="User" class="com.darkhorseventures.cfsbase.User" scope="request" />
+  <action name="MyCFSPassword" class="org.aspcfs.modules.mycfs.actions.MyCFS">
+    <bean name="User" class="org.aspcfs.modules.admin.base.User" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -161,7 +161,7 @@
     <forward name="PasswordOK" resource="/mycfs_password.jsp" layout="nav"/>
     <forward name="UpdatePasswordOK" resource="/MyCFS.do?command=MyProfile"/>
   </action>
-  <action name="MyCFSSettings" class="com.darkhorseventures.cfsmodule.MyCFS">
+  <action name="MyCFSSettings" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -173,8 +173,8 @@
   
   
   <!-- Contacts & Resources Module -->
-  <action name="CompanyDirectory" class="com.darkhorseventures.cfsmodule.CompanyDirectory">
-    <bean name="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
+  <action name="CompanyDirectory" class="org.aspcfs.modules.contacts.actions.CompanyDirectory">
+    <bean name="EmployeeBean" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
@@ -189,8 +189,8 @@
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
-  <action name="ExternalContacts" class="com.darkhorseventures.cfsmodule.ExternalContacts">
-    <bean name="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
+  <action name="ExternalContacts" class="org.aspcfs.modules.contacts.actions.ExternalContacts">
+    <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -221,8 +221,8 @@
     <forward name="DefaultError" resource="/CompanyDirectory.do?command=ListEmployees"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
-  <action name="ExternalContactsOpps" class="com.darkhorseventures.cfsmodule.ExternalContactsOpps">
-    <bean name="OppDetails" class="com.darkhorseventures.cfsbase.OpportunityBean" scope="request"/>
+  <action name="ExternalContactsOpps" class="org.aspcfs.modules.contacts.actions.ExternalContactsOpps">
+    <bean name="OppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -237,8 +237,8 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
   
-  <action name="ExternalContactsOppComponents" class="com.darkhorseventures.cfsmodule.ExternalContactsOpps">
-    <bean name="OppComponentDetails" class="com.darkhorseventures.cfsbase.OpportunityComponent" scope="request"/>
+  <action name="ExternalContactsOppComponents" class="org.aspcfs.modules.contacts.actions.ExternalContactsOpps">
+    <bean name="OppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -252,8 +252,8 @@
     <forward name="ComponentUpdateOK" resource="ExternalContactsOppComponents.do?command=DetailsComponent"/>
   </action>
   
-  <action name="ExternalContactsCalls" class="com.darkhorseventures.cfsmodule.ExternalContactsCalls">
-    <bean name="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
+  <action name="ExternalContactsCalls" class="org.aspcfs.modules.contacts.actions.ExternalContactsCalls">
+    <bean name="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -267,8 +267,8 @@
     <forward name="ModifyPopupOK" resource="/companydirectory_modifycall.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
-  <action name="ExternalContactsCallsForward" class="com.darkhorseventures.cfsmodule.MyCFS">
-    <bean name="NoteDetails" class="com.darkhorseventures.cfsbase.CFSNote" scope="request"/>
+  <action name="ExternalContactsCallsForward" class="org.aspcfs.modules.mycfs.actions.MyCFS">
+    <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -276,7 +276,7 @@
     <forward name="SendMessageOK" resource="/mycfs_confirmsend.jsp" layout="nav"/>
     <forward name="ForwardMessageOK" resource="/mycfs_newmessage.jsp" layout="nav"/>
    </action>
-   <action name="ExternalContactsPrototype" class="com.darkhorseventures.cfs.prototype.module.Prototype">
+   <action name="ExternalContactsPrototype" class="org.aspcfs.prototype.actions.Prototype">
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
@@ -285,8 +285,8 @@
   <!-- End Contacts & Resources Module -->
   
   <!-- Auto Guide Module -->
-  <action name="AccountsAutoGuide" class="com.darkhorseventures.autoguide.module.AutoGuide">
-    <bean name="InventoryDetails" class="com.darkhorseventures.autoguide.base.Inventory" scope="request"/>
+  <action name="AccountsAutoGuide" class="org.aspcfs.modules.media.autoguide.actions.AutoGuide">
+    <bean name="InventoryDetails" class="org.aspcfs.modules.media.autoguide.base.Inventory" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -300,7 +300,7 @@
     <forward name="DetailsOK" resource="/autoguide_account_details.jsp" layout="nav"/>
     <forward name="DeleteOK" resource="/AccountsAutoGuide.do?command=AccountList"/>
   </action>
-  <action name="AutoGuide" class="com.darkhorseventures.autoguide.module.AutoGuide">
+  <action name="AutoGuide" class="org.aspcfs.modules.media.autoguide.actions.AutoGuide">
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -316,11 +316,11 @@
     <forward name="MarkCompleteOK" resource="/AutoGuide.do?command=Details"/>
     <forward name="MarkIncompleteOK" resource="/AutoGuide.do?command=Details"/>
   </action>
-  <action name="ProcessFTP" class="com.darkhorseventures.autoguide.module.ProcessFTP"/>
+  <action name="ProcessFTP" class="org.aspcfs.modules.media.autoguide.actions.ProcessFTP"/>
   
   <!-- Pipeline Management Module -->
-  <action name="Leads" class="com.darkhorseventures.cfsmodule.Leads">
-    <bean name="OppDetails" class="com.darkhorseventures.cfsbase.OpportunityBean" scope="request"/>
+  <action name="Leads" class="org.aspcfs.modules.pipeline.actions.Leads">
+    <bean name="OppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -344,8 +344,8 @@
     <forward name="ModifyOppPopupOK" resource="/LeadsModify.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
-  <action name="LeadsComponents" class="com.darkhorseventures.cfsmodule.Leads">
-    <bean name="LeadsComponentDetails" class="com.darkhorseventures.cfsbase.OpportunityComponent" scope="request"/>
+  <action name="LeadsComponents" class="org.aspcfs.modules.pipeline.actions.Leads">
+    <bean name="LeadsComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -361,8 +361,8 @@
     <forward name="ComponentUpdateOK" resource="LeadsComponents.do?command=DetailsComponent"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>    
-  <action name="LeadsCalls" class="com.darkhorseventures.cfsmodule.LeadsCalls">
-    <bean name="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
+  <action name="LeadsCalls" class="org.aspcfs.modules.pipeline.actions.LeadsCalls">
+    <bean name="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -375,7 +375,7 @@
     <forward name="DeleteOK" resource="/LeadsCalls.do?command=View"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
-  <action name="LeadsDocuments" class="com.darkhorseventures.cfsmodule.LeadsDocuments">
+  <action name="LeadsDocuments" class="org.aspcfs.modules.pipeline.actions.LeadsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
@@ -401,8 +401,8 @@
   
   
   <!-- Accounts Module -->  
-  <action name="Accounts" class="com.darkhorseventures.cfsmodule.Accounts">
-    <bean name="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
+  <action name="Accounts" class="org.aspcfs.modules.accounts.actions.Accounts">
+    <bean name="OrgDetails" class="org.aspcfs.modules.accouts.base.Organization" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -436,8 +436,8 @@
     <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
     <forward name="RebuildElementsOK" resource="/accounts_js_buildelements.jsp"/>
   </action>
-  <action name="Contacts" class="com.darkhorseventures.cfsmodule.Contacts">
-    <bean name="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
+  <action name="Contacts" class="org.aspcfs.modules.contacts.actions.Contacts">
+    <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -452,8 +452,8 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
-  <action name="RevenueManager" class="com.darkhorseventures.cfsmodule.RevenueManager">
-    <bean name="Revenue" class="com.darkhorseventures.cfsbase.Revenue" scope="request"/>
+  <action name="RevenueManager" class="org.aspcfs.modules.accounts.actions.RevenueManager">
+    <bean name="Revenue" class="org.aspcfs.modules.accounts.base.Revenue" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -467,8 +467,8 @@
     <forward name="DashboardOK" resource="/accounts_revenue_dashboard.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/RevenueManager.do?command=View"/>
   </action>
-  <action name="Opportunities" class="com.darkhorseventures.cfsmodule.Opportunities">
-    <bean name="OppDetails" class="com.darkhorseventures.cfsbase.OpportunityBean" scope="request"/>
+  <action name="Opportunities" class="org.aspcfs.modules.pipeline.actions.Opportunities">
+    <bean name="OppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -482,8 +482,8 @@
     <forward name="ModifyOK" resource="/accounts_opportunities_modify.jsp" layout="nav"/>
   </action>
   
-  <action name="OpportunitiesComponents" class="com.darkhorseventures.cfsmodule.Opportunities">
-    <bean name="OppComponentDetails" class="com.darkhorseventures.cfsbase.OpportunityComponent" scope="request"/>
+  <action name="OpportunitiesComponents" class="org.aspcfs.modules.pipeline.actions.Opportunities">
+    <bean name="OppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -497,8 +497,8 @@
     <forward name="ComponentUpdateOK" resource="ExternalContactsOppComponents.do?command=DetailsComponent"/>
   </action>  
   
-  <action name="AccountTickets" class="com.darkhorseventures.cfsmodule.AccountTickets">
-    <bean name="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
+  <action name="AccountTickets" class="org.aspcfs.modules.accounts.actions.AccountTickets">
+    <bean name="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="AddTicketOK" resource="/accounts_tickets_add.jsp" layout="nav"/>
     <forward name="InsertTicketOK" resource="/accounts_tickets_details.jsp" layout="nav"/>
@@ -514,7 +514,7 @@
     <forward name="DepartmentJSListOK" resource="/troubletickets_js_departmentlist.jsp"/>
     <forward name="OrganizationJSListOK" resource="/troubletickets_js_contactlist.jsp"/>
   </action>
-  <action name="AccountsDocuments" class="com.darkhorseventures.cfsmodule.AccountsDocuments">
+  <action name="AccountsDocuments" class="org.aspcfs.modules.accounts.actions.AccountsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
@@ -530,7 +530,7 @@
     <forward name="DeleteOK" resource="/AccountsDocuments.do?command=View"/>
     <forward name="DeleteERROR" resource="/AccountsDocuments.do?command=View"/>
   </action>
-  <action name="AccountsPrototype" class="com.darkhorseventures.cfs.prototype.module.Prototype">
+  <action name="AccountsPrototype" class="org.aspcfs.modules.prototype.actions.Prototype">
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>  
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
@@ -540,8 +540,8 @@
   
   
   <!-- Campaign Module -->
-  <action name="CampaignManager" class="com.darkhorseventures.cfsmodule.CampaignManager">
-    <bean name="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
+  <action name="CampaignManager" class="org.aspcfs.modules.communications.actions.CampaignManager">
+    <bean name="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -586,8 +586,8 @@
     <forward name="MessageJSListOK" resource="/campaign_center_js_messagelist.jsp"/>
     <forward name="SurveyJSListOK" resource="/campaign_center_js_surveylist.jsp"/>
   </action>
-  <action name="CampaignManagerGroup" class="com.darkhorseventures.cfsmodule.CampaignManagerGroup">
-    <bean name="SearchForm" class="com.darkhorseventures.cfsbase.SearchFormBean" scope="request"/>
+  <action name="CampaignManagerGroup" class="org.aspcfs.modules.communications.actions.CampaignManagerGroup">
+    <bean name="SearchForm" class="org.aspcfs.modules.communications.beans.SearchFormBean" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -603,8 +603,8 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
-  <action name="CampaignManagerMessage" class="com.darkhorseventures.cfsmodule.CampaignManagerMessage">
-    <bean name="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
+  <action name="CampaignManagerMessage" class="org.aspcfs.modules.communications.actions.CampaignManagerMessage">
+    <bean name="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -619,8 +619,8 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
-  <action name="CampaignManagerSurvey" class="com.darkhorseventures.cfsmodule.CampaignManagerSurvey">
-    <bean name="Survey" class="com.darkhorseventures.cfsbase.Survey" scope="request" />
+  <action name="CampaignManagerSurvey" class="org.aspcfs.modules.communications.actions.CampaignManagerSurvey">
+    <bean name="Survey" class="org.aspcfs.modules.communciations.base.Survey" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -637,7 +637,7 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="MockInsertOK" resource="/survey_thanks.jsp" layout="style"/>
   </action>
-  <action name="CampaignManagerAttachment" class="com.darkhorseventures.cfsmodule.CampaignManagerAttachment">
+  <action name="CampaignManagerAttachment" class="org.aspcfs.modules.communications.actions.CampaignManagerAttachment">
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -645,7 +645,7 @@
     <forward name="DefaultOK" resource="/campaign_attachments.jsp" layout="nav"/>
   </action>
   
-  <action name="CampaignDocuments" class="com.darkhorseventures.cfsmodule.CampaignDocuments">
+  <action name="CampaignDocuments" class="org.aspcfs.modules.communications.actions.CampaignDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
@@ -664,7 +664,7 @@
   <!-- End Campaign Module -->
   
   <!-- Project Management Module -->
-  <action name="ProjectManagement" class="com.darkhorseventures.cfsmodule.ProjectManagement">
+  <action name="ProjectManagement" class="com.zeroio.iteam.actions.ProjectManagement">
     <bean name="Project" class="com.zeroio.iteam.base.Project" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
@@ -677,7 +677,7 @@
     <forward name="UpdateProjectOK" resource="/ProjectManagement.do?command=ProjectCenter"/>
     <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
   </action>
-  <action name="ProjectManagementRequirements" class="com.darkhorseventures.cfsmodule.ProjectManagementRequirements">
+  <action name="ProjectManagementRequirements" class="com.zeroio.iteam.actions.ProjectManagementRequirements">
     <bean name="Requirement" class="com.zeroio.iteam.base.Requirement" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
@@ -687,7 +687,7 @@
     <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
     <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
   </action>
-  <action name="ProjectManagementTeam" class="com.darkhorseventures.cfsmodule.ProjectManagementTeam">
+  <action name="ProjectManagementTeam" class="com.zeroio.iteam.actions.ProjectManagementTeam">
     <bean name="TeamMemberList" class="com.zeroio.iteam.base.TeamMemberList" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
@@ -697,7 +697,7 @@
     <forward name="MakeUserListOK" resource="/projects_makeuserlist.jsp"/>
     <forward name="ModifyOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Team"/>
   </action>
-  <action name="ProjectManagementAssignments" class="com.darkhorseventures.cfsmodule.ProjectManagementAssignments">
+  <action name="ProjectManagementAssignments" class="com.zeroio.iteam.actions.ProjectManagementAssignments">
     <bean name="Assignment" class="com.zeroio.iteam.base.Assignment" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
@@ -710,7 +710,7 @@
     <forward name="PopupOK" resource="/projects_center_assignments_modify.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
-  <action name="ProjectManagementIssues" class="com.darkhorseventures.cfsmodule.ProjectManagementIssues">
+  <action name="ProjectManagementIssues" class="com.zeroio.iteam.actions.ProjectManagementIssues">
     <bean name="Issue" class="com.zeroio.iteam.base.Issue" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
@@ -721,7 +721,7 @@
     <forward name="PopupOK" resource="/projects_center_issues_details.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
-  <action name="ProjectManagementIssueReply" class="com.darkhorseventures.cfsmodule.ProjectManagementIssues">
+  <action name="ProjectManagementIssueReply" class="com.zeroio.iteam.actions.ProjectManagementIssues">
     <bean name="IssueReply" class="com.zeroio.iteam.base.IssueReply" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
@@ -731,7 +731,7 @@
     <forward name="AddOK" resource="/ProjectManagementIssues.do?command=Details"/>
     <forward name="DownloadOK" resource="/ProjectManagementIssues.do?command=Details"/>
   </action>
-  <action name="ProjectManagementFiles" class="com.darkhorseventures.cfsmodule.ProjectManagementFiles">
+  <action name="ProjectManagementFiles" class="com.zeroio.iteam.actions.ProjectManagementFiles">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
@@ -743,8 +743,8 @@
     <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
     <forward name="DeleteERROR" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
   </action>
-  <action name="ProjectManagementLists" class="com.darkhorseventures.cfsmodule.ProjectManagementLists">
-    <bean name="Task" class="com.darkhorseventures.cfsbase.Task" scope="request" />
+  <action name="ProjectManagementLists" class="com.zeroio.iteam.actions.ProjectManagementLists">
+    <bean name="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -753,8 +753,8 @@
     <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
     <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
   </action>
-  <action name="ProjectManagementListsCategory" class="com.darkhorseventures.cfsmodule.ProjectManagementLists">
-    <bean name="category" class="com.darkhorseventures.cfsbase.TaskCategory" scope="request" />
+  <action name="ProjectManagementListsCategory" class="com.zeroio.iteam.actions.ProjectManagementLists">
+    <bean name="category" class="org.aspcfs.modules.tasks.base.TaskCategory" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -767,8 +767,8 @@
   
   
   <!-- Ticket Module -->
-  <action name="TroubleTickets" class="com.darkhorseventures.cfsmodule.TroubleTickets">
-    <bean name="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
+  <action name="TroubleTickets" class="org.aspcfs.modules.troubletickets.actions.TroubleTickets">
+    <bean name="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -791,7 +791,7 @@
     <forward name="DeleteReportOK" resource="/TroubleTickets.do?command=Reports"/>
     <forward name="DeleteReportERROR" resource="/TroubleTickets.do?command=Reports"/>
   </action>
-  <action name="TroubleTicketsDocuments" class="com.darkhorseventures.cfsmodule.TroubleTicketsDocuments">
+  <action name="TroubleTicketsDocuments" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
@@ -802,7 +802,7 @@
   
   
   <!-- Setup Module -->
-  <action name="Admin" class="com.darkhorseventures.cfsmodule.Admin">
+  <action name="Admin" class="org.aspcfs.modules.admin.actions.Admin">
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -817,8 +817,8 @@
     <forward name="ModifyTimeoutOK" resource="/admin_modify_timeout.jsp" layout="nav"/>
   </action>
   
-  <action name="AdminFieldsFolder" class="com.darkhorseventures.cfsmodule.AdminFields">
-    <bean name="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
+  <action name="AdminFieldsFolder" class="org.aspcfs.modules.admin.actions.AdminFields">
+    <bean name="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -833,8 +833,8 @@
     <forward name="DeleteFolderERROR" resource="/AdminFieldsGroup.do?command=ListGroups"/>
     <forward name="ToggleOK" resource="/AdminFieldsFolder.do?command=ListFolders"/>
   </action>
-  <action name="AdminFieldsGroup" class="com.darkhorseventures.cfsmodule.AdminFields">
-    <bean name="Group" class="com.darkhorseventures.cfsbase.CustomFieldGroup" scope="request"/>
+  <action name="AdminFieldsGroup" class="org.aspcfs.modules.admin.actions.AdminFields">
+    <bean name="Group" class="org.aspcfs.utils.web.CustomFieldGroup" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -849,8 +849,8 @@
     <forward name="DeleteGroupERROR" resource="/AdminFieldsGroup.do?command=ListGroups"/>
     <forward name="MoveGroupOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
   </action>
-  <action name="AdminFields" class="com.darkhorseventures.cfsmodule.AdminFields">
-    <bean name="CustomField" class="com.darkhorseventures.cfsbase.CustomField" scope="request"/>
+  <action name="AdminFields" class="org.aspcfs.modules.admin.actions.AdminFields">
+    <bean name="CustomField" class="org.aspcfs.modules.base.CustomField" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -864,8 +864,8 @@
     <forward name="DeleteFieldERROR" resource="/AdminFieldsGroup.do?command=ListGroups"/>
     <forward name="MoveFieldOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
   </action>
-  <action name="Users" class="com.darkhorseventures.cfsmodule.Users">
-    <bean name="UserRecord" class="com.darkhorseventures.cfsbase.User" scope="request" />
+  <action name="Users" class="org.aspcfs.modules.admin.actions.Users">
+    <bean name="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -885,8 +885,8 @@
     <forward name="ContactJSListOK" resource="/admin_jsuser_contactlist.jsp"/>
     <forward name="ViewLogOK" resource="/admin_userlog.jsp" layout="nav"/>
   </action>  
-  <action name="Roles" class="com.darkhorseventures.cfsmodule.Roles">
-    <bean name="Role" class="com.darkhorseventures.cfsbase.Role" scope="request" />
+  <action name="Roles" class="org.aspcfs.modules.admin.actions.Roles">
+    <bean name="Role" class="org.aspcfs.modules.admin.base.Role" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -902,8 +902,8 @@
   </action>
   <!-- End Setup Module -->
   
-  <action name="Help" class="com.darkhorseventures.cfsmodule.Help">
-    <bean name="Help" class="com.darkhorseventures.cfsbase.HelpItem" scope="request" />
+  <action name="Help" class="org.aspcfs.modules.help.actions.Help">
+    <bean name="Help" class="org.aspcfs.modules.help.base.HelpItem" scope="request" />
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -913,7 +913,7 @@
     <forward name="ViewAllOK" resource="/help_viewall.jsp" layout="style"/>
   </action>
   
-  <action name="Search" class="com.darkhorseventures.cfsmodule.Search">
+  <action name="Search" class="org.aspcfs.modules.search.actions.Search">
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -922,12 +922,12 @@
   <!-- 
   Handheld default 
   -->
-  <action name="LoginHH" class="com.darkhorseventures.cfsmodule.Login">
-    <bean name="LoginBean" class="com.darkhorseventures.cfsbase.LoginBean" scope="request"/>
+  <action name="LoginHH" class="org.aspcfs.modules.login.actions.Login">
+    <bean name="LoginBean" class="org.aspcfs.modules.login.beans.LoginBean" scope="request"/>
     <forward name="LoginOK" resource="/MyCFSHH.do?command=Home"/>
     <forward name="LoginRetry" resource="/loginhh.jsp"/>
   </action>
-  <action name="MyCFSHH" class="com.darkhorseventures.cfsmodule.MyCFS">
+  <action name="MyCFSHH" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <forward name="HomeOK" resource="/mycfshh.jsp" layout="nav"/>
   </action>
 </mvc-app>
