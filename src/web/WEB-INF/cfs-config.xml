@@ -35,6 +35,12 @@
     <forward name="PacketOK" resource="/system_process_packet.jsp"/>
   </action>
   
+  <action name="ProcessDocument" class="com.darkhorseventures.cfs.documents.module.ProcessDocument">
+    <forward name="UploadOK" resource="/system_process_ok.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp"/>
+    <forward name="UserError" resource="/error_user.jsp"/>
+  </action>
+  
   <action name="ProcessSystem" class="com.darkhorseventures.cfsmodule.ProcessSystem">
     <forward name="ProcessOK" resource="/system_process_ok.jsp"/>
   </action>

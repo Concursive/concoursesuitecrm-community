@@ -325,6 +325,15 @@ public class CFSModule {
     String datePathToUse2 = formatter2.format(fileDate);
     return datePathToUse1 + fs + datePathToUse2 + fs;
   }
+  
+  public static String getDatePath(String filenameDate) {
+    if (filenameDate.length() > 7) {
+      return (filenameDate.substring(0,4) + fs + 
+             filenameDate.substring(4,8) + fs);
+    } else {
+      return null;
+    }
+  }
 
 
   /**
@@ -408,6 +417,7 @@ public class CFSModule {
         System.out.println(" Object Validation Error-> " + errorKey + "=" + errorMsg);
       }
     }
+    context.getRequest().setAttribute("errors", errors);
   }
 
 
