@@ -21,7 +21,7 @@ CREATE PROC sp_generate_inserts
 (
 	@table_name varchar(776),  		-- The table/view for which the INSERT statements will be generated using the existing data
 	@target_table varchar(776) = NULL, 	-- Use this parameter to specify a different table name into which the data will be inserted
-	@include_column_list bit = 1,		-- Use this parameter to include/ommit column list in the generated INSERT statement
+	@include_column_list bit = 0,		-- Use this parameter to include/ommit column list in the generated INSERT statement 1-on 0-off
 	@from varchar(800) = NULL, 		-- Use this parameter to filter the rows based on a filter condition (using WHERE)
 	@include_timestamp bit = 0, 		-- Specify 1 for this parameter, if you want to include the TIMESTAMP/ROWVERSION column's data in the INSERT statement
 	@debug_mode bit = 0,			-- If @debug_mode is set to 1, the SQL statements constructed by this procedure will be printed for later examination
