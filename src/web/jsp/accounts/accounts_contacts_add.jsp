@@ -8,8 +8,7 @@
 <jsp:useBean id="StateSelect" class="com.darkhorseventures.webutils.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="com.darkhorseventures.webutils.CountrySelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
-
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
       formTest = true;
@@ -26,13 +25,12 @@
       }
     }
 </script>
-
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
-<form name="addContact" action="/Contacts.do?command=Insert&auto-populate=true" method="post">
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="/Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
+<form name="addContact" action="Contacts.do?command=Insert&auto-populate=true" method="post">
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
 Add Contact<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -50,8 +48,9 @@ Add Contact<br>
   <tr>
     <td class="containerBack">
 <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
-<input type=submit value="Save" onClick="return checkForm(this.form)">
-<input type=reset value="Reset">
+<input type="submit" value="Save" onClick="return checkForm(this.form)">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Contacts.do?command=View'">
+<input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -288,8 +287,9 @@ Add Contact<br>
   </tr>
 </table>
 <br>
-<input type=submit value="Save" onClick="return checkForm(this.form)">
-<input type=reset value="Reset">
+<input type="submit" value="Save" onClick="return checkForm(this.form)">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Contacts.do?command=View'">
+<input type="reset" value="Reset">
     </td>
   </tr>
 </table>
