@@ -390,9 +390,9 @@ ORDER BY o.entered, lat.level]]></queryString>
 						y="16"
 						width="547"
 						height="0"
-						forecolor="#000000"
+						forecolor="#999999"
 						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
+						positionType="Float"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
@@ -412,7 +412,7 @@ ORDER BY o.entered, lat.level]]></queryString>
 		</background>
 		<title>
 			<band height="38"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="0"
 						y="0"
@@ -426,7 +426,7 @@ ORDER BY o.entered, lat.level]]></queryString>
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="14" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Serif" pdfFontName="Times-Bold" size="14" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Accounts by Date Added\r\n" + 
 (new SimpleDateFormat("M/dd/yyyy")).format($P{date_start}) +

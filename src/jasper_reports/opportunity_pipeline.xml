@@ -103,7 +103,7 @@ x.description asc, oc.closedate asc]]></queryString>
 		<variableExpression><![CDATA[($V{groupcount} != null ? 
 new Integer( ($V{groupcount}.intValue() + 1) ) :
 new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
-		<group  name="stagename" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="49" >
+		<group  name="stagename" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="51" >
 			<groupExpression><![CDATA[$F{stagename}]]></groupExpression>
 			<groupHeader>
 			<band height="18"  isSplitAllowed="true" >
@@ -166,7 +166,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 			</band>
 			</groupFooter>
 		</group>
-		<group  name="header_opp_id" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
+		<group  name="header_opp_id" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="33" >
 			<groupExpression><![CDATA[$F{header_opp_id}]]></groupExpression>
 			<groupHeader>
 			<band height="16"  isSplitAllowed="true" >
@@ -302,7 +302,7 @@ $F{first_name} + ": " + $F{header_description}]]></textFieldExpression>
 		</background>
 		<title>
 			<band height="42"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="0"
 						y="0"
@@ -316,7 +316,7 @@ $F{first_name} + ": " + $F{header_description}]]></textFieldExpression>
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="14" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Serif" pdfFontName="Times-Bold" size="14" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Current Opportunities by Stage for " + 
 $P{user_name} + "\r\n" +
@@ -339,7 +339,7 @@ $P{user_name} + "\r\n" +
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="16"  isSplitAllowed="true" >
+			<band height="18"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
 						x="20"
@@ -430,6 +430,22 @@ $P{user_name} + "\r\n" +
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[($P{userid_range_source}.equals("my") ? "" : $F{owner_first_name} + " " + $F{owner_last_name})]]></textFieldExpression>
 				</textField>
+				<line direction="TopDown">
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="17"
+						width="552"
+						height="0"
+						forecolor="#999999"
+						backcolor="#FFFFFF"
+						positionType="Float"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+				</line>
 			</band>
 		</detail>
 		<columnFooter>

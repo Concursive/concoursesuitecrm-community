@@ -73,7 +73,7 @@ ORDER BY dept,t.entered]]></queryString>
 		<variableExpression><![CDATA[($V{count} != null ? 
 new Integer($V{count}.intValue() + 1) :
 new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
-		<group  name="department" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="53" >
+		<group  name="department" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="54" >
 			<groupExpression><![CDATA[$F{dept}]]></groupExpression>
 			<groupHeader>
 			<band height="37"  isSplitAllowed="true" >
@@ -310,11 +310,11 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 		</background>
 		<title>
 			<band height="45"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="99"
+						x="0"
 						y="0"
-						width="552"
+						width="740"
 						height="38"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -324,7 +324,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="14" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Serif" pdfFontName="Times-Bold" size="14" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Tickets by Department" + "\r\n" +
 (new SimpleDateFormat("M/dd/yyyy")).format($P{date_start}) +
@@ -343,7 +343,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="17"  isSplitAllowed="true" >
+			<band height="18"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
 						x="3"
@@ -506,6 +506,22 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{closed} != null ?  " "+(java.lang.Math.round(($F{closed}.getTime()- $F{entered}.getTime()) / 3600000) - (24 *java.lang.Math.round(java.lang.Math.round((($F{closed}.getTime() - $F{entered}.getTime()) / 3600000))/ 24)) )+"h": " "+(java.lang.Math.round((System.currentTimeMillis()- $F{entered}.getTime()) / 3600000) - (24 *java.lang.Math.round(java.lang.Math.round(((System.currentTimeMillis() - $F{entered}.getTime()) / 3600000))/ 24))) +"h"]]></textFieldExpression>
 				</textField>
+				<line direction="TopDown">
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="17"
+						width="740"
+						height="0"
+						forecolor="#999999"
+						backcolor="#FFFFFF"
+						positionType="Float"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+				</line>
 			</band>
 		</detail>
 		<columnFooter>
@@ -553,7 +569,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
-						x="701"
+						x="702"
 						y="4"
 						width="36"
 						height="19"
