@@ -9,7 +9,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.zeroio.iteam.base.FileItemList;
 import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.database.Connection;
 import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.LookupList;
