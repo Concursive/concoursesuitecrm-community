@@ -39,8 +39,8 @@ public class ServiceContract extends GenericBean {
   private int contactId = -1;
   private String description = null;
   private String contractBillingNotes = null;
-  private double totalHoursRemaining = 0;
   //special case as -1 is also valid
+  private double totalHoursRemaining = 0;
   private int responseTime = -1;
   private int telephoneResponseModel = -1;
   private int onsiteResponseModel = -1;
