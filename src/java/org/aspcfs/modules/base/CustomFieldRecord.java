@@ -9,7 +9,6 @@ import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.controller.SystemStatus;
 
-
 /**
  *  Represents all of the data that is entered for a CustomFieldCategory
  *
@@ -28,8 +27,7 @@ public class CustomFieldRecord {
   private int modifiedBy = -1;
   private boolean enabled = false;
 
-  //A single record for display purposes only, maybe will be multiple
-  //records someday
+  //A single record for display purposes only, may be multiple records someday
   private CustomField fieldData = null;
 
   //Properties for related data
@@ -400,38 +398,36 @@ public class CustomFieldRecord {
     sql.append(
         "INSERT INTO custom_field_record " +
         "(link_module_id, link_item_id, category_id, ");
-                if (entered != null) {
-                        sql.append("entered, ");
-                }
-                if (modified != null) {
-                        sql.append("modified, ");
-                }
-      sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ");
-                if (entered != null) {
-                        sql.append("?, ");
-                }
-                if (modified != null) {
-                        sql.append("?, ");
-                }
-      sql.append("?, ?) ");
+    if (entered != null) {
+      sql.append("entered, ");
+    }
+    if (modified != null) {
+      sql.append("modified, ");
+    }
+    sql.append("enteredBy, modifiedBy ) ");
+    sql.append("VALUES (?, ?, ?, ");
+    if (entered != null) {
+      sql.append("?, ");
+    }
+    if (modified != null) {
+      sql.append("?, ");
+    }
+    sql.append("?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, linkModuleId);
     pst.setInt(++i, linkItemId);
     pst.setInt(++i, categoryId);
-        if (entered != null) {
-                pst.setTimestamp(++i, entered);
-        }
-        if (modified != null) {
-                pst.setTimestamp(++i, modified);
-        }
-      pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getModifiedBy());
-      
+    if (entered != null) {
+      pst.setTimestamp(++i, entered);
+    }
+    if (modified != null) {
+      pst.setTimestamp(++i, modified);
+    }
+    pst.setInt(++i, this.getEnteredBy());
+    pst.setInt(++i, this.getModifiedBy());
     pst.execute();
     pst.close();
-
     id = DatabaseUtils.getCurrVal(db, "custom_field_reco_record_id_seq");
   }
 
@@ -446,6 +442,7 @@ public class CustomFieldRecord {
    */
   public boolean delete(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
+    //Delete the related data
     sql.append(
         "DELETE FROM custom_field_data " +
         "WHERE record_id IN (SELECT record_id FROM custom_field_record WHERE link_module_id = ? ");
@@ -459,7 +456,6 @@ public class CustomFieldRecord {
       sql.append("AND record_id = ? ");
     }
     sql.append(") ");
-
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, linkModuleId);
@@ -474,7 +470,7 @@ public class CustomFieldRecord {
     }
     pst.executeUpdate();
     pst.close();
-
+    //Delete the records
     sql.setLength(0);
     sql.append(
         "DELETE FROM custom_field_record " +
@@ -539,22 +535,21 @@ public class CustomFieldRecord {
   public void buildColumns(Connection db, CustomFieldCategory thisCategory) throws SQLException {
     //Get the first CustomField, then populate it
     String sql =
-        "   SELECT " + (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
-        "    * " +
-        "   FROM custom_field_info cfi " +
-        "   WHERE cfi.group_id IN " +
-        "     (SELECT " + (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
-        "        group_id " +
-        "      FROM custom_field_group " +
-        "      WHERE category_id = ? " +
-        "      AND enabled = " + DatabaseUtils.getTrue(db) + " " +
-        "      ORDER BY level, group_id, group_name " +
+        "SELECT " + (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
+        "* " +
+        "FROM custom_field_info cfi " +
+        "WHERE cfi.group_id IN " +
+        " (SELECT " + (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
+        "    group_id " +
+        "  FROM custom_field_group " +
+        "  WHERE category_id = ? " +
+        "  AND enabled = " + DatabaseUtils.getTrue(db) + " " +
+        "  ORDER BY level, group_id, group_name " +
         (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "") +
-        "     ) " +
-        "   AND enabled = " + DatabaseUtils.getTrue(db) + " " +
-        "   ORDER BY level, field_id, field_name " +
+        " ) " +
+        "AND enabled = " + DatabaseUtils.getTrue(db) + " " +
+        "ORDER BY level, field_id, field_name " +
         (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "");
-
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, thisCategory.getId());
     ResultSet rs = pst.executeQuery();

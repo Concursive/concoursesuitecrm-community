@@ -5,6 +5,7 @@ import org.w3c.dom.*;
 import java.sql.*;
 import org.aspcfs.controller.objectHookManager.ObjectHookManager;
 import org.aspcfs.utils.XMLUtils;
+import org.aspcfs.utils.ObjectUtils;
 
 /**
  *  A Transaction is an array of TransactionItems.  When a system requests
@@ -153,16 +154,32 @@ public class Transaction extends ArrayList {
     Exception exception = null;
     try {
       db.setAutoCommit(false);
+      //Create a shared context for items within a transaction
+      TransactionContext transactionContext = new TransactionContext();
+      //Process the transaction items
       Iterator items = this.iterator();
       while (items.hasNext()) {
         TransactionItem thisItem = (TransactionItem) items.next();
         thisItem.setMeta(meta);
+        thisItem.setTransactionContext(transactionContext);
         thisItem.execute(db, dbLookup);
+        //If the item generated an error, then add it to the list to show the client
         if (thisItem.hasError()) {
           appendErrorMessage(thisItem.getErrorMessage());
         }
+        //If the item generated a record list, then retrieve it so the records can be
+        //returned to the client
         if (thisItem.hasRecordList() && recordList == null) {
           recordList = thisItem.getRecordList();
+        }
+        //If the item allows its key to be shared with other items, then add it
+        //to the transactionContext
+        if (thisItem.getShareKey()) {
+          String keyName = ((SyncTable) packetContext.getObjectMap().get(thisItem.getName())).getKey();
+          if (keyName != null) {
+            transactionContext.getPropertyMap().put(thisItem.getName() + "." + keyName,
+                ObjectUtils.getParam(thisItem.getObject(), keyName));
+          }
         }
       }
       db.commit();

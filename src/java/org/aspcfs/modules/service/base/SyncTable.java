@@ -7,7 +7,8 @@ import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 
 /**
- *  Represents an entry in the sync_table database table
+ *  Represents an entry in the sync_table database table, used for mapping XML
+ *  object names to Java classes during an XML Transaction
  *
  *@author     matt rajkowski
  *@created    June 24, 2002
@@ -15,6 +16,7 @@ import org.aspcfs.utils.DatabaseUtils;
  */
 public class SyncTable extends GenericBean {
 
+  //object properties
   private int id = -1;
   private int systemId = -1;
   private String name = null;
@@ -24,7 +26,8 @@ public class SyncTable extends GenericBean {
   private String createStatement = null;
   private int orderId = -1;
   private boolean syncItem = false;
-
+  private String key = null;
+  //build properties
   private boolean buildTextFields = true;
 
 
@@ -48,18 +51,19 @@ public class SyncTable extends GenericBean {
   /**
    *  Looks up a table_id for the given System ID and Class Name.
    *
-   *@param  db          Description of Parameter
-   *@param  systemName  Description of Parameter
-   *@param  className   Description of Parameter
-   *@return             Description of the Returned Value
+   *@param  db                Description of Parameter
+   *@param  className         Description of Parameter
+   *@param  systemId          Description of the Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of the Exception
    */
   public static int lookupTableId(Connection db, int systemId, String className) throws SQLException {
     int tableId = -1;
     String sql =
-      "SELECT table_id " +
-      "FROM sync_table " +
-      "WHERE system_id = ? " +
-      "AND mapped_class_name = ? ";
+        "SELECT table_id " +
+        "FROM sync_table " +
+        "WHERE system_id = ? " +
+        "AND mapped_class_name = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, systemId);
     pst.setString(2, className);
@@ -110,6 +114,16 @@ public class SyncTable extends GenericBean {
    */
   public void setMappedClassName(String tmp) {
     this.mappedClassName = tmp;
+  }
+
+
+  /**
+   *  Sets the key attribute of the SyncTable object
+   *
+   *@param  tmp  The new key value
+   */
+  public void setKey(String tmp) {
+    this.key = tmp;
   }
 
 
@@ -204,6 +218,16 @@ public class SyncTable extends GenericBean {
 
 
   /**
+   *  Gets the key attribute of the SyncTable object
+   *
+   *@return    The key value
+   */
+  public String getKey() {
+    return key;
+  }
+
+
+  /**
    *  Gets the entered attribute of the SyncTable object
    *
    *@return    The entered value
@@ -281,6 +305,7 @@ public class SyncTable extends GenericBean {
     }
     orderId = rs.getInt("order_id");
     syncItem = rs.getBoolean("sync_item");
+    key = rs.getString("object_key");
   }
 }
 

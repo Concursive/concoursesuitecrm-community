@@ -32,7 +32,8 @@ CREATE TABLE sync_table (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   create_statement TEXT,
   order_id INT DEFAULT -1,
-  sync_item BIT DEFAULT 0
+  sync_item BIT DEFAULT 0,
+  object_key VARCHAR(50)
 );
 
 CREATE TABLE sync_map (

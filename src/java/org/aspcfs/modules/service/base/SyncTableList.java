@@ -8,7 +8,7 @@ import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 
 /**
- *  Description of the Class
+ *  Used for building and storing a list of SyncTable objects
  *
  *@author     matt rajkowski
  *@created    June, 2002
@@ -170,7 +170,7 @@ public class SyncTableList extends ArrayList {
     if (buildTextFields) {
       sql.append(", create_statement ");
     }
-    sql.append(", order_id, sync_item ");
+    sql.append(", order_id, sync_item, object_key ");
     sql.append(
         "FROM sync_table ");
     sql.append("WHERE table_id > -1 ");

@@ -297,9 +297,11 @@ public class XMLUtils {
       for (int j = 0; j < objectElements.getLength(); j++) {
         Node theObject = (Node) objectElements.item(j);
         if (theObject.getNodeType() == Node.ELEMENT_NODE) {
+          //For each parameter/value pair, try to set the value on the object
           String param = theObject.getNodeName();
           String value = getNodeText(theObject);
           if (ObjectUtils.setParam(target, param, value)) {
+            //The value was set successfully
             if (System.getProperty("DEBUG") != null) {
               String displayParam = param.substring(0, 1).toUpperCase() + param.substring(1);
               System.out.println("XMLUtils-> set" + displayParam + "(" + value + ")");
@@ -309,12 +311,21 @@ public class XMLUtils {
             String lookup = ((Element) theObject).getAttribute("lookup");
             if (lookup != null) {
               ignoredProperties.put(param + "^" + lookup + "Guid", value);
+            } else if (value != null && value.indexOf("$C{") > -1) {
+              //The value is a TransactionContext parameter to be used by other
+              //TransactionItems during processing, so add it to the ignoredList
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("XMLUtils-> set" + param + "(" + value + ") **CONTEXT");
+              }
+              ignoredProperties.put(param, value);
             }
           } else {
-            ignoredProperties.put(param, value);
+            //The value was not set successfully, so add it to the ignored list,
+            //however the value may be processed later under certain conditions
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("XMLUtils-> set" + param + "(" + value + ") **INVALID");
+              System.out.println("XMLUtils-> set" + param + "(" + value + ") **IGNORED");
             }
+            ignoredProperties.put(param, value);
           }
         }
       }

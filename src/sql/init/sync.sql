@@ -13,8 +13,8 @@ INSERT INTO sync_system (application_name) VALUES ('Fluency');
 
 /* VPORT */
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (1, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, object_key)
+ VALUES (1, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', 'id');
 
 /* AUTO GUIDE */
 
@@ -628,8 +628,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'contactList', 'org.aspcfs.modules.contacts.base.ContactList');
  
-INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, object_key)
+ VALUES (4, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', 'id');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'ticketList', 'org.aspcfs.modules.troubletickets.base.TicketList');
 
@@ -856,8 +856,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  
 /* Fluency */
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (5, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, object_key)
+ VALUES (5, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', 'id');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (5, 'ticketCategory', 'org.aspcfs.modules.troubletickets.base.TicketCategory');

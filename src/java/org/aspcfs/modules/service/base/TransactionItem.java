@@ -52,6 +52,8 @@ public class TransactionItem {
   private HashMap ignoredProperties = null;
   private SyncClientMap syncClientMap = null;
   private PacketContext packetContext = null;
+  private TransactionContext transactionContext = null;
+  private boolean shareKey = false;
 
 
   /**
@@ -95,8 +97,8 @@ public class TransactionItem {
   /**
    *  Sets the object attribute of the TransactionItem object from XML based on
    *  the mapping data. If the element tag is "contact" and there is a mapping
-   *  to "org.aspcfs.modules.contacts.base.Contact", then the Object is created and
-   *  populated from the XML.
+   *  to "org.aspcfs.modules.contacts.base.Contact", then the Object is created
+   *  and populated from the XML.
    *
    *@param  element        The new object value
    *@param  mapping        The new object value
@@ -164,15 +166,21 @@ public class TransactionItem {
    */
   public void setAction(Element objectElement) {
     if (objectElement.hasAttributes()) {
+      //Get the action for this item (Insert, Update, Delete, Select, etc.)
       String thisAction = objectElement.getAttribute("type");
       if (thisAction == null || thisAction.trim().equals("")) {
         thisAction = objectElement.getAttribute("action");
       }
+      this.setAction(thisAction);
+      //If specified, get the client's next id that should be used when
+      //sending insert statements to the client
       String thisIdentity = objectElement.getAttribute("identity");
       try {
         identity = Integer.parseInt(thisIdentity);
       } catch (Exception e) {
       }
+      //If specified, get the number of max records to return, and the offset
+      //to begin returning records at -- useful for large datasets
       String thisCurrentOffset = objectElement.getAttribute("offset");
       String thisItemsPerPage = objectElement.getAttribute("items");
       if ((thisCurrentOffset != null && !"".equals(thisCurrentOffset)) ||
@@ -181,7 +189,9 @@ public class TransactionItem {
         pagedListInfo.setItemsPerPage(thisItemsPerPage);
         pagedListInfo.setCurrentOffset(thisCurrentOffset);
       }
-      this.setAction(thisAction);
+      //See if the primary key of this object should be exposed to other
+      //items within the same transaction
+      shareKey = "true".equals(objectElement.getAttribute("shareKey"));
     }
   }
 
@@ -203,6 +213,26 @@ public class TransactionItem {
    */
   public void setPacketContext(PacketContext tmp) {
     this.packetContext = tmp;
+  }
+
+
+  /**
+   *  Sets the transactionContext attribute of the TransactionItem object
+   *
+   *@param  tmp  The new transactionContext value
+   */
+  public void setTransactionContext(TransactionContext tmp) {
+    this.transactionContext = tmp;
+  }
+
+
+  /**
+   *  Sets the shareKey attribute of the TransactionItem object
+   *
+   *@param  tmp  The new shareKey value
+   */
+  public void setShareKey(boolean tmp) {
+    this.shareKey = tmp;
   }
 
 
@@ -254,6 +284,27 @@ public class TransactionItem {
   public TransactionMeta getMeta() {
     return meta;
   }
+
+
+  /**
+   *  Gets the transactionContext attribute of the TransactionItem object
+   *
+   *@return    The transactionContext value
+   */
+  public TransactionContext getTransactionContext() {
+    return transactionContext;
+  }
+
+
+  /**
+   *  Gets the shareKey attribute of the TransactionItem object
+   *
+   *@return    The shareKey value
+   */
+  public boolean getShareKey() {
+    return shareKey;
+  }
+
 
 
   /**
@@ -401,10 +452,10 @@ public class TransactionItem {
       }
     } else if (action == CUSTOM_ACTION) {
       //Execute a custom action: instantiate the specified object
-      
+
       //execute the object if it implements CustomActionHandler
       //public boolean process(PacketContext packetContext, Connection db, HashMap values)
-      
+
       //Prepare the objects for execution
       Class[] paramClass = new Class[]{packetContext.getClass(), Class.forName("java.sql.Connection"), ignoredProperties.getClass()};
       Object[] paramObject = new Object[]{packetContext, db, ignoredProperties};
@@ -448,6 +499,8 @@ public class TransactionItem {
         if (action == INSERT || action == UPDATE) {
           //Populate any client GUIDs with the correct server ID
           setGuidParameters(db);
+          //Populate any items from the TransactionContext
+          setContextParameters();
         }
         if (action == DELETE) {
           //Set the object's id to be deleted, based on the client guid
@@ -634,6 +687,33 @@ public class TransactionItem {
               }
             } else {
               throw new SQLException("Sync reference does not exist, you must sync referenced tables first");
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  /**
+   *  Sets the contextParameters, these are values from other objects within the
+   *  same transaction
+   */
+  private void setContextParameters() {
+    //Go through the ignored property values and see if any need data from the context
+    if (ignoredProperties != null && ignoredProperties.size() > 0) {
+      Iterator ignoredList = ignoredProperties.keySet().iterator();
+      while (ignoredList.hasNext()) {
+        String param = (String) ignoredList.next();
+        if (param != null) {
+          String value = (String) ignoredProperties.get(param);
+          if (value != null && value.indexOf("$C{") > -1) {
+            value = (String) transactionContext.getPropertyMap().get(value.substring(value.indexOf("${C") + 4, value.indexOf("}")));
+            if (value != null) {
+              ObjectUtils.setParam(object, param, value);
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("TransactionItem-> Setting context parameter: " + param + " data: " + value);
+              }
             }
           }
         }
