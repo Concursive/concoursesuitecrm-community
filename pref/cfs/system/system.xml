@@ -1,6 +1,13 @@
 <aspcfs>
- <config name="system.fields.ignore">
-   <param name="accounts-employees"/>
- </config>
+  <!-- Each config is a unique name and must only be listed once -->
+  <config name="system.fields.ignore">
+    <!-- An unlimited number of parameters can exist under each config -->
+    <param name="accounts-employees"/>
+  </config>
+  <config name="system.fields.label.invalid">
+    <param name="logo.example">
+      <value><![CDATA[<img border="0" src="images/dev21.jpg">]]></value>
+    </param>
+  </config>
 </aspcfs>
 
