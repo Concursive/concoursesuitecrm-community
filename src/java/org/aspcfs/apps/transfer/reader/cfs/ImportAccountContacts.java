@@ -23,6 +23,7 @@ public class ImportAccountContacts extends CSVReader {
 
   private int OWNER = 0;
   private int NAME_SALUTATION = 0;
+  private int CONTACT_NAME = 0;
   private int FIRST_NAME = 0;
   private int MIDDLE_NAME = 0;
   private int LAST_NAME = 0;
@@ -44,6 +45,7 @@ public class ImportAccountContacts extends CSVReader {
   private int HOME_ZIP = 0;
   private int HOME_COUNTRY = 0;
   private int BUSINESS_PHONE = 0;
+  private int BUSINESS_PHONE_EXT = 0;
   private int BUSINESS_2_PHONE = 0;
   private int BUSINESS_FAX = 0;
   private int HOME_PHONE = 0;
@@ -56,6 +58,7 @@ public class ImportAccountContacts extends CSVReader {
   private int PERSONAL_EMAIL = 0;
   private int OTHER_EMAIL = 0;
   private int NOTES = 0;
+  private int EMPLOYEES = 0;
 
 
   /**
@@ -139,6 +142,7 @@ public class ImportAccountContacts extends CSVReader {
       AddressFormatter addressFormatter = new AddressFormatter();
       EmailAddressFormatter emailFormatter = new EmailAddressFormatter();
       PhoneNumberFormatter phoneFormatter = new PhoneNumberFormatter();
+      ContactNameFormatter contactNameFormatter = new ContactNameFormatter();
 
       //Parse the text file
       BufferedReader in = new BufferedReader(new FileReader(csvFile));
@@ -152,6 +156,7 @@ public class ImportAccountContacts extends CSVReader {
           //Process the column mappings
           OWNER = findColumn(thisRecord, new String[]{"OWNER", "Owner"});
           NAME_SALUTATION = findColumn(thisRecord, new String[]{"NAME_SALUTATION", "Salutation"});
+          CONTACT_NAME = findColumn(thisRecord, new String[]{"CONTACT", "Contact"});
           FIRST_NAME = findColumn(thisRecord, new String[]{"FIRST_NAME", "FirstName", "First Name"});
           MIDDLE_NAME = findColumn(thisRecord, new String[]{"MIDDLE_NAME", "Middle Name"});
           LAST_NAME = findColumn(thisRecord, new String[]{"LAST_NAME", "LastName", "Last Name"});
@@ -173,6 +178,7 @@ public class ImportAccountContacts extends CSVReader {
           HOME_ZIP = findColumn(thisRecord, new String[]{"HOME_ZIP", "Home Postal Code"});
           HOME_COUNTRY = findColumn(thisRecord, new String[]{"HOME_COUNTRY", "Home Country"});
           BUSINESS_PHONE = findColumn(thisRecord, new String[]{"BUSINESS_PHONE", "BusinessPhone", "Business Phone", "Phone"});
+          BUSINESS_PHONE_EXT = findColumn(thisRecord, new String[]{"BUSINESS_PHONE_EXT", "BusinessPhoneExt", "Business Phone Ext"});
           BUSINESS_2_PHONE = findColumn(thisRecord, new String[]{"BUSINESS_2_PHONE", "Business2 Phone"});
           BUSINESS_FAX = findColumn(thisRecord, new String[]{"BUSINESS_FAX", "BusinessFax", "Business Fax", "Fax"});
           HOME_PHONE = findColumn(thisRecord, new String[]{"HOME_HOME", "Home Phone"});
@@ -185,6 +191,7 @@ public class ImportAccountContacts extends CSVReader {
           PERSONAL_EMAIL = findColumn(thisRecord, new String[]{"PERSONAL_EMAIL", "Home Email", "Personal Email"});
           OTHER_EMAIL = findColumn(thisRecord, new String[]{"OTHER_EMAIL", "Other Email"});
           NOTES = findColumn(thisRecord, new String[]{"NOTES", "Notes"});
+          EMPLOYEES = findColumn(thisRecord, new String[]{"EMPLOYEES", "Employees"});
           continue;
         }
         ++contactId;
@@ -207,11 +214,18 @@ public class ImportAccountContacts extends CSVReader {
         thisContact.setModifiedBy(userId);
         //Contact Fields
         thisContact.setNameSalutation(getValue(thisRecord, NAME_SALUTATION));
-        thisContact.setNameFirst(getValue(thisRecord, FIRST_NAME));
-        thisContact.setNameMiddle(getValue(thisRecord, MIDDLE_NAME));
-        thisContact.setNameLast(getValue(thisRecord, LAST_NAME));
-        thisContact.setNameSuffix(getValue(thisRecord, SUFFIX));
+        
+        // Simple parse to format a name, only supports one format
+        if (CONTACT_NAME > 0) {
+          contactNameFormatter.format(thisContact, getValue(thisRecord, CONTACT_NAME));
+        } else {
+          thisContact.setNameFirst(getValue(thisRecord, FIRST_NAME));
+          thisContact.setNameMiddle(getValue(thisRecord, MIDDLE_NAME));
+          thisContact.setNameLast(getValue(thisRecord, LAST_NAME));
+          thisContact.setNameSuffix(getValue(thisRecord, SUFFIX));
+        }
         thisContact.setCompany(getValue(thisRecord, COMPANY_NAME));
+        thisContact.setOrgName(getValue(thisRecord, COMPANY_NAME));
         thisContact.setTitle(getValue(thisRecord, TITLE));
 
         //ContactAddress Record Fields
@@ -263,7 +277,12 @@ public class ImportAccountContacts extends CSVReader {
         businessPhone.setType(1);
         businessPhone.setEnteredBy(userId);
         businessPhone.setModifiedBy(userId);
-        businessPhone.setNumber(getValue(thisRecord, BUSINESS_PHONE));
+        
+        if (getValue(thisRecord, BUSINESS_PHONE_EXT) != null && !"".equals(getValue(thisRecord, BUSINESS_PHONE_EXT))) {
+          businessPhone.setNumber(getValue(thisRecord, BUSINESS_PHONE) + " x" + getValue(thisRecord, BUSINESS_PHONE_EXT));
+        } else {
+          businessPhone.setNumber(getValue(thisRecord, BUSINESS_PHONE));
+        }
         if (businessPhone.isValid()) {
           phoneFormatter.format(businessPhone, thisLocale);
           phoneNumberList.add(businessPhone);
@@ -412,7 +431,8 @@ public class ImportAccountContacts extends CSVReader {
           thisOrganization.setOrgId(orgId);
           organizationMap.put(thisOrganization.getName(), new Integer(thisOrganization.getOrgId()));
         }
-
+        thisOrganization.setEmployees(getValue(thisRecord, EMPLOYEES));
+        
         //Business Phone
         OrganizationPhoneNumber organizationPhone = new OrganizationPhoneNumber();
         organizationPhone.setOrgId(thisOrganization.getOrgId());
