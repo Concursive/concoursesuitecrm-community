@@ -1297,7 +1297,7 @@ public class CustomField extends GenericBean {
         "INSERT INTO custom_field_data " +
         "(record_id, field_id, selected_item_id, entered_value, entered_number, ");
     sql.append("entered_float ) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ");
     sql.append("?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());

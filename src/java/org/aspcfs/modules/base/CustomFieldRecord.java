@@ -424,6 +424,7 @@ public class CustomFieldRecord {
         }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
+      
     pst.execute();
     pst.close();
 
