@@ -6,7 +6,7 @@ function popContactsListSingle(hiddenFieldId, displayFieldId) {
 function popContactsListSingle(hiddenFieldId, displayFieldId, params) {
   title  = 'Contacts';
   width  =  '700';
-  height =  '450';
+  height =  '400';
   resize =  'yes';
   bars   =  'no';
   var posx = (screen.width - width)/2;
@@ -29,7 +29,7 @@ function popContactsListMultiple(displayFieldId, highLightedId){
 function popContactsListMultiple(displayFieldId, highLightedId, params) {
   title  = 'Contacts';
   width  =  '700';
-  height =  '450';
+  height =  '400';
   resize =  'yes';
   bars   =  'no';
   var posx = (screen.width - width)/2;
@@ -124,7 +124,7 @@ function removeOptions(displayFieldId, ids) {
 function popContactsListMultipleCampaign(displayFieldId,highLightedId) {
   title  = 'Contacts';
   width  =  '700';
-  height =  '450';
+  height =  '400';
   resize =  'yes';
   bars   =  'no';
   var posx = (screen.width - width)/2;
