@@ -3,8 +3,8 @@
 <jsp:useBean id="FileList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <jsp:useBean id="ContactRptListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <a href="ExternalContacts.do">General Contacts</a> > 
 Reports<br>
 <hr color="#BFBFBB" noshade>
@@ -13,7 +13,7 @@ Reports<br>
 <center><%= ContactRptListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
-    <form name="listView" method="post" action="/ExternalContacts.do?command=Reports">
+    <form name="listView" method="post" action="ExternalContacts.do?command=Reports">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= ContactRptListInfo.getOptionValue("my") %>>My Reports</option>
@@ -34,18 +34,18 @@ Reports<br>
     </td>
     </dhv:permission>
     <td>
-      <strong>File Subject</strong>
+      <strong>Subject</strong>
     </td>
     <td>
       <strong>Size</strong>
     </td>
-    <td>
+    <td nowrap>
       <strong>Create Date</strong>
     </td>
-     <td>
+     <td nowrap>
       <strong>Created By</strong>
     </td>
-    <td>
+    <td nowrap>
       <strong>D/L</strong>
     </td>
   </tr>
@@ -59,23 +59,23 @@ Reports<br>
 %>      
   <tr>
     <dhv:permission name="contacts-external_contacts-reports-view,contacts-external_contacts-reports-delete">
-      <td width="8" valign="center" nowrap class="row<%= rowid %>">
+      <td valign="center" class="row<%= rowid %>" nowrap>
         <dhv:permission name="contacts-external_contacts-reports-view"><a href="ExternalContacts.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="contacts-external_contacts-reports-view,contacts-external_contacts-reports-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-reports-delete"><a href="javascript:confirmDelete('ExternalContacts.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
       </td>
     </dhv:permission>
-    <td width="40%" class="row<%= rowid %>">
+    <td width="100%" class="row<%= rowid %>">
       <a href="javascript:popURL('ExternalContacts.do?command=ShowReportHtml&pid=-1&fid=<%= thisItem.getId() %>&popup=true&popup=true','Report','600','400','yes','yes');"><%=toHtml(thisItem.getSubject())%></a>
     </td>
-    <td width="20" class="row<%= rowid %>">
+    <td align="right" class="row<%= rowid %>" nowrap>
       <%= thisItem.getRelativeSize() %>k
     </td>
-    <td width="30%" class="row<%= rowid %>">
-      <%=toHtml(thisItem.getEnteredDateTimeString())%>
+    <td class="row<%= rowid %>" nowrap>
+      <%= toHtml(thisItem.getEnteredDateTimeString()) %>
     </td>
-    <td width="30%" class="row<%= rowid %>">
-      <%=toHtml(thisItem.getEnteredByString())%>
+    <td class="row<%= rowid %>" nowrap>
+      <%= toHtml(thisItem.getEnteredByString()) %>
     </td>
-    <td width="8" class="row<%= rowid %>">
+    <td align="right" class="row<%= rowid %>" nowrap>
       <%= thisItem.getDownloads() %>
     </td>
  </tr>
