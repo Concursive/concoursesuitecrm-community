@@ -43,8 +43,8 @@
     <tr>
      <td>
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayTicketMenu('menuTicket', '<%=  thisTicket.getId() %>', '<%= thisTicket.getContactId() %>');"
-       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>)"><img src="images/select.gif" name="select<%= menuCount %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayTicketMenu('selectTicket<%= menuCount %>','menuTicket','<%=  thisTicket.getId() %>', '<%= thisTicket.getContactId() %>');"
+       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuTicket');"><img src="images/select.gif" name="selectTicket<%= menuCount %>" id="selectTicket<%= menuCount %>" align="absmiddle" border="0"></a>
      </td>
      <td nowrap>
        <%= thisTicket.getId() %>

@@ -95,8 +95,8 @@
     <tr>
      <td>
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayAccountMenu('menuAccount', '<%= thisOrg.getOrgId() %>');"
-         onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>)"><img src="images/select.gif" name="select<%= menuCount %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayAccountMenu('selectAcct<%= menuCount %>','menuAccount', '<%= thisOrg.getOrgId() %>');"
+         onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuAccount');"><img src="images/select.gif" name="selectAcct<%= menuCount %>" id="selectAcct<%= menuCount %>" align="absmiddle" border="0"></a>
      </td>
      <td nowrap>
        <%= thisOrg.getName() %>
