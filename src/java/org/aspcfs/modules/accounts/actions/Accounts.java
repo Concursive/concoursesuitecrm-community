@@ -569,7 +569,11 @@ public final class Accounts extends CFSModule {
   public String executeCommandDashboard(ActionContext context) {
 	  
 	if (!(hasPermission(context, "accounts-dashboard-view"))) {
-	    return ("PermissionError");
+		if (!(hasPermission(context, "accounts-accounts-view"))) {
+			return ("PermissionError");
+		}
+		
+		return (executeCommandView(context));
     	}
 	
     addModuleBean(context, "Dashboard", "Dashboard");

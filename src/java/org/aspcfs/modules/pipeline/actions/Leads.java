@@ -135,7 +135,11 @@ public final class Leads extends CFSModule {
   public String executeCommandDashboard(ActionContext context) {
 	  
   	if (!(hasPermission(context, "pipeline-dashboard-view"))) {
-	    return ("PermissionError");
+		if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+	    		return ("PermissionError");
+    		}
+	    
+	    return (executeCommandViewOpp(context));
     	}
 
     addModuleBean(context, "Dashboard", "Dashboard");
