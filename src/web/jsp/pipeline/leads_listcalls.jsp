@@ -7,7 +7,9 @@
 <jsp:useBean id="CallTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactList" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<dhv:permission name="pipeline-opportunities-calls-add">
 <body onLoad="javascript:document.forms[0].subject.focus();">
+</dhv:permission>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
