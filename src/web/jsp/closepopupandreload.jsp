@@ -20,7 +20,7 @@
   
   if (location == null) {
 %>
-<body onload="window.opener.location.reload(); window.close();">
+<body onload="window.opener.location=window.opener.location; window.close();">
 <% 
   } else if("Calendar".equalsIgnoreCase(returnPage)) {
 %>
