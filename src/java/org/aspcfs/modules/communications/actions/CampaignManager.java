@@ -1613,7 +1613,7 @@ public final class CampaignManager extends CFSModule {
       if ((surveyId = ActiveSurvey.getId(db, campaign.getId())) > 0) {
         ActiveSurveyQuestionList thisList = new ActiveSurveyQuestionList();
         thisList.setActiveSurveyId(surveyId);
-        thisList.setSurveyId(surveyId);
+        thisList.setActiveSurveyId(surveyId);
         thisList.setPagedListInfo(pagedListInfo);
         thisList.buildList(db);
         thisList.buildResponse(db, Integer.parseInt(contactId));
