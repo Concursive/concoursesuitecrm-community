@@ -405,6 +405,7 @@ public class DatabaseUtils {
       st.execute(sql.toString());
     }
     st.close();
+    in.close();
   }
 }
 

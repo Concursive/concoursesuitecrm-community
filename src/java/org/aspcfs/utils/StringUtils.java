@@ -373,6 +373,7 @@ public class StringUtils {
       text.append(line);
       text.append(ls);
     }
+    in.close();
     return text.toString();
   }
 
