@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="NewsList" class="java.util.Vector" scope="request"/>
 <jsp:useBean id="IndSelect" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -93,6 +94,9 @@
 </td>
 <!-- end ZZ:row one -->
 </tr>
+
+<dhv:permission name="myhomepage-miner-view">
+
 <!-- ZZ:row two (spans both row-one columns) -->
 <tr>
 <td colspan=2>
@@ -145,6 +149,9 @@
 %>
 <!-- end ZZ:row two -->
 </tr>
+
+</dhv:permission>
+
 <!-- End Table ZZ -->
 </table>
 

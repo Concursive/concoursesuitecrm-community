@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.User" scope="request"/>
 <jsp:useBean id="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
@@ -7,9 +8,16 @@
 <jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <form action='/MyCFSProfile.do?command=UpdateProfile&auto-populate=true' method='post'>
+<dhv:permission name="myhomepage-profile-personal-edit">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile'">
 <input type="reset" value="Reset">
+</dhv:permission>
+
+<dhv:permission name="myhomepage-profile-personal-edit" none="true">
+<a href="/MyCFS.do?command=MyProfile">Back to My Profile</a>
+</dhv:permission>
+
 <br>
 &nbsp;
 <input type="hidden" name="empid" value="<%= EmployeeBean.getId() %>">
@@ -62,7 +70,7 @@
       <input type="hidden" name="email<%= ecount %>id" value="<%= thisEmailAddress.getId() %>">
       <%= ContactEmailTypeList.getHtmlSelect("email" + ecount + "type", thisEmailAddress.getType()) %>
       <input type=text size=40 name="email<%= ecount %>address" maxlength=255 value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
-      <input type="checkbox" name="email<%= ecount %>delete" value="on">mark to remove
+      <dhv:permission name="myhomepage-profile-personal-edit"><input type="checkbox" name="email<%= ecount %>delete" value="on">mark to remove</dhv:permission>
     </td>
   </tr>
 <%    
@@ -97,7 +105,7 @@
       <input type=text size=3 name="phone<%= icount %>pre" maxlength=3 value="<%= toHtmlValue(thisPhoneNumber.getPrefix()) %>">-
       <input type=text size=4 name="phone<%= icount %>number" maxlength=4 value="<%= toHtmlValue(thisPhoneNumber.getPostfix()) %>">ext.
       <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10" value="<%= toHtmlValue(thisPhoneNumber.getExtension()) %>">
-      <input type="checkbox" name="phone<%= icount %>delete" value="on">mark to remove
+      <dhv:permission name="myhomepage-profile-personal-edit"><input type="checkbox" name="phone<%= icount %>delete" value="on">mark to remove</dhv:permission>
     </td>
   </tr>    
 <%    
@@ -134,7 +142,7 @@
     </td>
     <td>
       <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", thisAddress.getType()) %>
-      <input type="checkbox" name="address<%= acount %>delete" value="on">mark to remove
+      <dhv:permission name="myhomepage-profile-personal-edit"><input type="checkbox" name="address<%= acount %>delete" value="on">mark to remove</dhv:permission>
     </td>
   </tr>
   <tr>
@@ -246,8 +254,10 @@
     </td>
   </tr>
 </table>
+<dhv:permission name="myhomepage-profile-personal-edit">
 <br>
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile'">
 <input type="reset" value="Reset">
+</dhv:permission>
 </form>

@@ -155,7 +155,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         }
 	
 	//CFS Inbox Items
-        if (thisUser.hasPermission("myhomepage-view")) {
+        if (thisUser.hasPermission("myhomepage-inbox-view")) {
           int inboxCount = 0;
           sql = 
             "SELECT COUNT(*) as inboxcount " +
