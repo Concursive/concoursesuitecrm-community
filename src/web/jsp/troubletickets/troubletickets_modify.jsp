@@ -79,13 +79,21 @@ function checkForm(form) {
 <tr>
 <td>
 <a href="TroubleTickets.do">Help Desk</a> > 
-<% if (request.getParameter("return") != null) {%>
-	<% if (request.getParameter("return").equals("list")) {%>
-	<a href="TroubleTickets.do?command=Home">View Tickets</a> >
-  <%}%>
+<% if (("list".equals((String)request.getParameter("return"))) ||
+      ("searchResults".equals((String)request.getParameter("return")))) {%>
+    <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
+      <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
+      <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+    <%}else{%> 
+      <a href="TroubleTickets.do?command=Home">View Tickets</a> >
+    <%}%>
 <%} else {%>
-<a href="TroubleTickets.do?command=Home">View Tickets</a> >
-<a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>">Ticket Details</a> >
+  <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
+    <a href="TroubleTickets.do?command=SearchTickets">Search Tickets</a> >
+  <%}else{%> 
+    <a href="TroubleTickets.do?command=Home">View Tickets</a> >
+  <%}%>
+    <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>">Ticket Details</a> >
 <%}%>
 Modify Ticket
 </td>

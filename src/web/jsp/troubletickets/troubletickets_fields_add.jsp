@@ -11,7 +11,12 @@
 <tr>
 <td>
 <a href="TroubleTickets.do">Help Desk</a> > 
-<a href="TroubleTickets.do?command=Home">View Tickets</a> >
+<% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
+  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
+  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+<%}else{%> 
+  <a href="TroubleTickets.do?command=Home">View Tickets</a> >
+<%}%>
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>">Ticket Details</a> >
 <dhv:evaluate if="<%= (Category.getAllowMultipleRecords()) %>">
   <a href="TroubleTicketsFolders.do?command=Fields&ticketId=<%= TicketDetails.getId() %>&catId=<%= Category.getId() %>">List of Folder Records</a> >

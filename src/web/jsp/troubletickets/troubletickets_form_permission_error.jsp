@@ -10,7 +10,12 @@
 <tr>
 <td>
 <a href="TroubleTickets.do?">Tickets</a> > 
-<a href="TroubleTickets.do?command=Home">View Tickets</a> >
+<% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
+  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
+  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+<%}else{%> 
+  <a href="TroubleTickets.do?command=Home">View Tickets</a> >
+<%}%>
 Activity Log
 </td>
 </tr>

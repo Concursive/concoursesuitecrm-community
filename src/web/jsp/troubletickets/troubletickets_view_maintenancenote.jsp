@@ -16,9 +16,15 @@
 <tr>
 <td>
 <a href="TroubleTickets.do?">Help Desk</a> > 
-<a href="TroubleTickets.do?command=Home">View Tickets</a> >
+<% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
+  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
+  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+<%}else{%> 
+  <a href="TroubleTickets.do?command=Home">View Tickets</a> >
+<%}%>
 <a href="TroubleTickets.do?command=Details&id=<%= ticketDetails.getId() %>">Ticket Details</a> >
-Activity Log
+<a href="TroubleTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>">Maintenance Notes</a> >
+View Maintenance Note
 </td>
 </tr>
 </table>

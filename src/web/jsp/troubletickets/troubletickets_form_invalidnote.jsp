@@ -9,9 +9,15 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="TroubleTickets.do?">Tickets</a> > 
-<a href="TroubleTickets.do?command=Home">View Tickets</a> >
-Activity Log
+<a href="TroubleTickets.do?">Help Desk</a> > 
+<% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
+  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
+  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+<%}else{%> 
+  <a href="TroubleTickets.do?command=Home">View Tickets</a> >
+<%}%>
+<a href="TroubleTickets.do?command=Details&id=<%= ticketDetails.getId() %>">Ticket Details</a> >
+Maintenance Notes
 </td>
 </tr>
 </table>
@@ -22,16 +28,12 @@ Activity Log
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
-  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" >
+  <br />
   <tr>
-    <th >
-	    <strong>All information required for maintenance notes were not provided in the ticket</strong>
-	  </th>
-  </tr>
-  <tr class="row2">
-    <td>
-	    When all required information is entered, this page shows the asset maintenance notes.
-	  </td>
+    <th align="left">
+      All information required for maintenance notes was not provided in the ticket.<br />When all required information is entered, this page shows the asset maintenance notes.
+    </th>
   </tr>
   </table>
  </td>
