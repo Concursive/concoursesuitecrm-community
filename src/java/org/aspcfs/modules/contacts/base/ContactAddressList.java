@@ -144,30 +144,24 @@ public class ContactAddressList extends AddressList {
    *@since                    1.1
    */
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
         "SELECT * " +
         "FROM contact_address a, lookup_contactaddress_types l " +
         "WHERE a.address_type = l.code ");
-
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM contact_address a, lookup_contactaddress_types l " +
         "WHERE a.address_type = l.code ");
-
     createFilter(sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() +
@@ -178,9 +172,8 @@ public class ContactAddressList extends AddressList {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
-
+      pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
@@ -196,7 +189,6 @@ public class ContactAddressList extends AddressList {
         rs.close();
         pst.close();
       }
-
       //Determine column to sort by
       if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals("")) {
         sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + ", city ");
@@ -206,15 +198,12 @@ public class ContactAddressList extends AddressList {
       } else {
         sqlOrder.append("ORDER BY city ");
       }
-
       //Determine items per page
       if (pagedListInfo.getItemsPerPage() > 0) {
         sqlOrder.append("LIMIT " + pagedListInfo.getItemsPerPage() + " ");
       }
-
       sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
     }
-
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -225,6 +214,5 @@ public class ContactAddressList extends AddressList {
     rs.close();
     pst.close();
   }
-
 }
 

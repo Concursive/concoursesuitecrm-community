@@ -41,8 +41,7 @@ public final class ExternalContactsCalls extends CFSModule {
     addModuleBean(context, "External Contacts", "Calls");
 
     PagedListInfo callListInfo = this.getPagedListInfo(context, "CallListInfo");
-    callListInfo.setLink("/ExternalContactCalls.do?command=View&contactId=" + contactId);
-    callListInfo.setItemsPerPage(0);
+    callListInfo.setLink("/ExternalContactsCalls.do?command=View&contactId=" + contactId);
 
     Connection db = null;
     CallList callList = new CallList();
@@ -240,6 +239,9 @@ public final class ExternalContactsCalls extends CFSModule {
     Exception errorMessage = null;
 
     String contactId = context.getRequest().getParameter("contactId");
+    PagedListInfo callListInfo = this.getPagedListInfo(context, "CallListInfo");
+    callListInfo.setLink("/ExternalContactCalls.do?command=View&contactId=" + contactId);
+    
     Contact thisContact = null;
 
     Connection db = null;
@@ -281,27 +283,23 @@ public final class ExternalContactsCalls extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
-
-    if (!(hasPermission(context, "contacts-external_contacts-calls-edit"))) {
+    if (!hasPermission(context, "contacts-external_contacts-calls-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     addModuleBean(context, "External Contacts", "Calls");
 
     String contactId = context.getRequest().getParameter("contactId");
     Contact thisContact = null;
 
-    int callId = -1;
-    String passedId = context.getRequest().getParameter("id");
-    callId = Integer.parseInt(passedId);
+    int callId = Integer.parseInt(context.getRequest().getParameter("id"));
 
     Connection db = null;
     Call thisCall = null;
 
     try {
       db = this.getConnection(context);
-      thisCall = new Call(db, "" + callId);
+      thisCall = new Call(db, callId);
 
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -314,9 +312,7 @@ public final class ExternalContactsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
-
       if (!hasAuthority(context, thisContact.getOwner())) {
         return ("PermissionError");
       }

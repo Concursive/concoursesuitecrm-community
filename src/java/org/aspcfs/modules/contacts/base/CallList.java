@@ -17,7 +17,7 @@ import org.aspcfs.modules.base.Constants;
  *@created    January 8, 2002
  *@version    $Id$
  */
-public class CallList extends Vector {
+public class CallList extends ArrayList {
 
   public final static String tableName = "call_log";
   public final static String uniqueField = "call_id";
@@ -28,7 +28,7 @@ public class CallList extends Vector {
   protected PagedListInfo pagedListInfo = null;
   protected int contactId = -1;
   protected int orgId = -1;
-  protected int oppId = -1;
+  protected int oppHeaderId = -1;
   protected int enteredBy = -1;
   protected boolean hasAlertDate = false;
   protected java.sql.Date alertDate = null;
@@ -89,14 +89,8 @@ public class CallList extends Vector {
   }
 
 
-  /**
-   *  Sets the OppId attribute of the CallList object
-   *
-   *@param  oppId  The new OppId value
-   *@since
-   */
-  public void setOppId(int oppId) {
-    this.oppId = oppId;
+  public void setOppHeaderId(int oppHeaderId) {
+    this.oppHeaderId = oppHeaderId;
   }
 
 
@@ -133,14 +127,8 @@ public class CallList extends Vector {
   }
 
 
-  /**
-   *  Sets the OppId attribute of the CallList object
-   *
-   *@param  oppId  The new OppId value
-   *@since
-   */
-  public void setOppId(String oppId) {
-    this.oppId = Integer.parseInt(oppId);
+  public void setOppHeaderId(String oppHeaderId) {
+    this.oppHeaderId = Integer.parseInt(oppHeaderId);
   }
 
 
@@ -350,14 +338,8 @@ public class CallList extends Vector {
   }
 
 
-  /**
-   *  Gets the OppId attribute of the CallList object
-   *
-   *@return    The OppId value
-   *@since
-   */
-  public int getOppId() {
-    return oppId;
+  public int getOppHeaderId() {
+    return oppHeaderId;
   }
 
 
@@ -406,22 +388,15 @@ public class CallList extends Vector {
    *@exception  SQLException  Description of the Exception
    */
   public void buildShortList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
-
     createFilter(sqlFilter);
-
     sqlSelect.append(
-        "c.call_id, c.subject, c.opp_id, c.contact_id, c.opp_id, c.alertdate " +
-        "FROM call_log c, " +
-        "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
-        "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
-        "WHERE c.enteredby = a1.user_id " +
-        "AND c.modifiedby = a2.user_id ");
+        "c.call_id, c.subject, c.contact_id, c.opp_id, c.opp_id, c.alertdate " +
+        "FROM call_log c " +
+        "WHERE c.call_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
     prepareFilter(pst);
     rs = pst.executeQuery();
@@ -429,14 +404,8 @@ public class CallList extends Vector {
       Call thisCall = new Call();
       thisCall.setId(rs.getInt("call_id"));
       thisCall.setSubject(rs.getString("subject"));
-      thisCall.setContactId(rs.getInt("contact_id"));
-      if (rs.wasNull()) {
-        thisCall.setContactId(-1);
-      }
-      thisCall.setOppId(rs.getInt("opp_id"));
-      if (rs.wasNull()) {
-        thisCall.setOppId(-1);
-      }
+      thisCall.setContactId(DatabaseUtils.getInt(rs, "contact_id"));
+      thisCall.setOppHeaderId(DatabaseUtils.getInt(rs, "opp_id"));
       thisCall.setAlertDate(rs.getDate("alertdate"));
       this.add(thisCall);
     }
@@ -453,29 +422,23 @@ public class CallList extends Vector {
    *@since
    */
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) as recordcount " +
-        "FROM call_log c, " +
-        "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
-        "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id), " +
-        "lookup_call_types t " +
-        "WHERE c.call_type_id = t.code " +
-        "AND c.enteredby = a1.user_id " +
-        "AND c.modifiedby = a2.user_id ");
-
+        "FROM call_log c " +
+        "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
+        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
+        "LEFT JOIN contact e ON (c.enteredby = e.user_id) " +
+        "LEFT JOIN contact m ON (c.modifiedby = m.user_id) " +
+        "WHERE call_id > -1 ");
     createFilter(sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -485,9 +448,8 @@ public class CallList extends Vector {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
-
+      pst.close();
       //Determine column to sort by
       pagedListInfo.setDefaultSort("c.entered", "desc");
       pagedListInfo.appendSqlTail(db, sqlOrder);
@@ -501,31 +463,26 @@ public class CallList extends Vector {
     } else {
       sqlSelect.append("SELECT ");
     }
-
     sqlSelect.append(
         "c.*, t.*, " +
-        "e.namefirst as efirst, e.namelast as elast, " +
-        "m.namefirst as mfirst, m.namelast as mlast, " +
-        "ct.namefirst as ctfirst, ct.namelast as ctlast " +
+        "e.namelast as elast, e.namefirst as efirst, " +
+        "m.namelast as mlast, m.namefirst as mfirst, " +
+        "ct.namelast as ctlast, ct.namefirst as ctfirst " +
         "FROM call_log c " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
-        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code), " +
-        "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
-        "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
-        "WHERE c.enteredby = a1.user_id " +
-        "AND c.modifiedby = a2.user_id ");
-
+        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
+        "LEFT JOIN contact e ON (c.enteredby = e.user_id) " +
+        "LEFT JOIN contact m ON (c.modifiedby = m.user_id) " +
+        "WHERE call_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("CallList --> Building List ");
     }
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -535,7 +492,7 @@ public class CallList extends Vector {
       }
       ++count;
       Call thisCall = new Call(rs);
-      this.addElement(thisCall);
+      this.add(thisCall);
     }
     rs.close();
     pst.close();
@@ -576,7 +533,7 @@ public class CallList extends Vector {
       sqlFilter.append("AND c.alertdate IS NOT NULL ");
     }
 
-    if (oppId != -1) {
+    if (oppHeaderId != -1) {
       sqlFilter.append("AND c.opp_id = ? ");
     }
 
@@ -615,8 +572,8 @@ public class CallList extends Vector {
       pst.setInt(++i, contactId);
     }
 
-    if (oppId != -1) {
-      pst.setInt(++i, oppId);
+    if (oppHeaderId != -1) {
+      pst.setInt(++i, oppHeaderId);
     }
 
     if (enteredBy != -1) {

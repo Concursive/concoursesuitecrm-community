@@ -1824,7 +1824,6 @@ public class Contact extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -1882,11 +1881,10 @@ public class Contact extends GenericBean {
       db.commit();
     } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    db.setAutoCommit(true);
     return resultCount;
   }
 
@@ -1966,7 +1964,6 @@ public class Contact extends GenericBean {
           errors.put("actionError", "Contact disabled from view, since it has related message records");
           this.disableContact(db);
           db.commit();
-          db.setAutoCommit(true);
           return true;
         }
 
@@ -1999,7 +1996,6 @@ public class Contact extends GenericBean {
         System.out.println(e.toString());
       } finally {
         db.setAutoCommit(true);
-        pst.close();
       }
       return true;
     }
@@ -2090,18 +2086,15 @@ public class Contact extends GenericBean {
    */
   public void buildTypes(Connection db) throws SQLException {
     ResultSet rs = null;
-
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT ctl.type_id " +
         "FROM contact_type_levels ctl " +
         "WHERE ctl.contact_id = ? ORDER BY ctl.level ");
-
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, id);
     rs = pst.executeQuery();
-
     while (rs.next()) {
       types.add(new LookupElement(db, rs.getInt("type_id"), "lookup_contact_types"));
     }
@@ -2364,7 +2357,7 @@ public class Contact extends GenericBean {
     int recordCount = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT count(*) as count " +
-        "FROM opportunity " +
+        "FROM opportunity_header " +
         "WHERE contactlink = ? ");
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
@@ -2458,7 +2451,6 @@ public class Contact extends GenericBean {
     ResultSet rs = null;
     DependencyList dependencyList = new DependencyList();
     try {
-      db.setAutoCommit(false);
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "SELECT count(*) as oppcount " +
@@ -2500,8 +2492,9 @@ public class Contact extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "SELECT count(*) as foldercount " +
-          "FROM custom_field_record cfr WHERE cfr.link_module_id = " + Constants.CONTACTS +
-          " and cfr.link_item_id = ? ");
+          "FROM custom_field_record cfr " +
+          "WHERE cfr.link_module_id = " + Constants.CONTACTS + " " +
+          "AND cfr.link_item_id = ? ");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -2517,7 +2510,8 @@ public class Contact extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "SELECT count(*) as ticketcount " +
-          "FROM ticket WHERE contact_id = ? ");
+          "FROM ticket " +
+          "WHERE contact_id = ? ");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -2529,7 +2523,6 @@ public class Contact extends GenericBean {
       }
       rs.close();
       pst.close();
-
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
     }

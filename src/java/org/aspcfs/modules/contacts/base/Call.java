@@ -14,6 +14,7 @@ import org.aspcfs.utils.DateUtils;
  *
  *@author     chris
  *@created    January 8, 2002
+ *@version    $Id$
  */
 public class Call extends GenericBean {
 
@@ -21,7 +22,7 @@ public class Call extends GenericBean {
   private int orgId = -1;
   private int contactId = -1;
   private int callTypeId = -1;
-  private int oppId = -1;
+  private int oppHeaderId = -1;
   private String callType = "";
   private int length = 0;
   private String subject = "";
@@ -67,14 +68,29 @@ public class Call extends GenericBean {
    *@since
    */
   public Call(Connection db, String callId) throws SQLException {
-          queryRecord(db, Integer.parseInt(callId));
+    queryRecord(db, Integer.parseInt(callId));
   }
-  
+
+
+  /**
+   *  Constructor for the Call object
+   *
+   *@param  db                Description of the Parameter
+   *@param  callId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public Call(Connection db, int callId) throws SQLException {
-          queryRecord(db, callId);
+    queryRecord(db, callId);
   }
-          
-          
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  callId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void queryRecord(Connection db, int callId) throws SQLException {
     Statement st = null;
     ResultSet rs = null;
@@ -82,9 +98,9 @@ public class Call extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT c.*, t.*, " +
-        "e.namefirst as efirst, e.namelast as elast, " +
-        "m.namefirst as mfirst, m.namelast as mlast, " +
-        "ct.namefirst as ctfirst, ct.namelast as ctlast " +
+        "e.namelast as elast, e.namefirst as efirst, " +
+        "m.namelast as mlast, m.namefirst as mfirst, " +
+        "ct.namelast as ctlast, ct.namefirst as ctfirst " +
         "FROM call_log c " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
         "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
@@ -101,33 +117,32 @@ public class Call extends GenericBean {
     rs = st.executeQuery(sql.toString());
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
-      throw new SQLException("Call record not found.");
     }
     rs.close();
     st.close();
+    if (id == -1) {
+      throw new SQLException("Call record not found.");
+    }
   }
 
 
   /**
-   *  Sets the oppId attribute of the Call object
+   *  Sets the oppHeaderId attribute of the Call object
    *
-   *@param  oppId  The new oppId value
+   *@param  oppHeaderId  The new oppHeaderId value
    */
-  public void setOppId(int oppId) {
-    this.oppId = oppId;
+  public void setOppHeaderId(int oppHeaderId) {
+    this.oppHeaderId = oppHeaderId;
   }
 
 
   /**
-   *  Sets the oppId attribute of the Call object
+   *  Sets the oppHeaderId attribute of the Call object
    *
-   *@param  oppId  The new oppId value
+   *@param  oppHeaderId  The new oppHeaderId value
    */
-  public void setOppId(String oppId) {
-    this.oppId = Integer.parseInt(oppId);
+  public void setOppHeaderId(String oppHeaderId) {
+    this.oppHeaderId = Integer.parseInt(oppHeaderId);
   }
 
 
@@ -150,7 +165,8 @@ public class Call extends GenericBean {
   public void setId(int tmp) {
     this.id = tmp;
   }
-  
+
+
   /**
    *  Sets the alertDate attribute of the Call object
    *
@@ -168,15 +184,7 @@ public class Call extends GenericBean {
    */
   public void setAlertDate(String tmp) {
     this.alertDate = DateUtils.parseDateString(tmp);
-    /**
-    try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
-      alertDate = new java.sql.Date(new java.util.Date().getTime());
-      alertDate.setTime(tmpDate.getTime());
-    } catch (Exception e) {
-      alertDate = null;
-    }
-    */
+
   }
 
 
@@ -244,12 +252,26 @@ public class Call extends GenericBean {
     this.orgId = tmp;
   }
 
-public String getAlertText() {
-	return alertText;
-}
-public void setAlertText(String alertText) {
-	this.alertText = alertText;
-}
+
+  /**
+   *  Gets the alertText attribute of the Call object
+   *
+   *@return    The alertText value
+   */
+  public String getAlertText() {
+    return alertText;
+  }
+
+
+  /**
+   *  Sets the alertText attribute of the Call object
+   *
+   *@param  alertText  The new alertText value
+   */
+  public void setAlertText(String alertText) {
+    this.alertText = alertText;
+  }
+
 
   /**
    *  Sets the OrgId attribute of the Call object
@@ -372,9 +394,16 @@ public void setAlertText(String alertText) {
     this.enteredBy = tmp;
   }
 
+
+  /**
+   *  Sets the enteredBy attribute of the Call object
+   *
+   *@param  tmp  The new enteredBy value
+   */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
   }
+
 
   /**
    *  Sets the ModifiedBy attribute of the Call object
@@ -385,19 +414,25 @@ public void setAlertText(String alertText) {
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
   }
-  
+
+
+  /**
+   *  Sets the modifiedBy attribute of the Call object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
   }
 
 
   /**
-   *  Gets the oppId attribute of the Call object
+   *  Gets the oppHeaderId attribute of the Call object
    *
-   *@return    The oppId value
+   *@return    The oppHeaderId value
    */
-  public int getOppId() {
-    return oppId;
+  public int getOppHeaderId() {
+    return oppHeaderId;
   }
 
 
@@ -453,19 +488,24 @@ public void setAlertText(String alertText) {
   }
 
 
+  /**
+   *  Gets the alertDateStringLongYear attribute of the Call class
+   *
+   *@param  alertDate  Description of the Parameter
+   *@return            The alertDateStringLongYear value
+   */
   public static String getAlertDateStringLongYear(java.sql.Date alertDate) {
     String tmp = "";
     try {
       SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
       formatter.applyPattern("M/d/yyyy");
       return formatter.format(alertDate);
-    }
-    catch (NullPointerException e) {
+    } catch (NullPointerException e) {
     }
     return tmp;
   }
-  
-  
+
+
   /**
    *  Gets the entered attribute of the Call object
    *
@@ -684,9 +724,17 @@ public void setAlertText(String alertText) {
    *@since
    */
   public boolean insert(Connection db, ActionContext context) throws SQLException {
-          return(insert(db));
+    return (insert(db));
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean insert(Connection db) throws SQLException {
     if (!isValid(db)) {
       return false;
@@ -694,47 +742,47 @@ public void setAlertText(String alertText) {
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "INSERT INTO call_log " +
-      "(org_id, contact_id, opp_id, call_type_id, length, subject, notes, alertdate, alert, ");
-                if (entered != null) {
-                        sql.append("entered, ");
-                }
-                if (modified != null) {
-                        sql.append("modified, ");
-                }      
-      sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
-                if (entered != null) {
-                        sql.append("?, ");
-                }
-                if (modified != null) {
-                        sql.append("?, ");
-                }
-      sql.append("?, ?) ");
+        "INSERT INTO call_log " +
+        "(org_id, contact_id, opp_id, call_type_id, length, subject, notes, alertdate, alert, ");
+    if (entered != null) {
+      sql.append("entered, ");
+    }
+    if (modified != null) {
+      sql.append("modified, ");
+    }
+    sql.append("enteredBy, modifiedBy ) ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    if (entered != null) {
+      sql.append("?, ");
+    }
+    if (modified != null) {
+      sql.append("?, ");
+    }
+    sql.append("?, ?) ");
     int i = 0;
-    
+
     PreparedStatement pst = db.prepareStatement(sql.toString());
-        if (this.getOrgId() > 0) {
-                pst.setInt(++i, this.getOrgId());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-        if (this.getContactId() > 0) {
-                pst.setInt(++i, this.getContactId());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-        if (this.getOppId() > 0) {
-                pst.setInt(++i, this.getOppId());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-        if (this.getCallTypeId() > 0) {
-                pst.setInt(++i, this.getCallTypeId());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-        
+    if (this.getOrgId() > 0) {
+      pst.setInt(++i, this.getOrgId());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    if (this.getContactId() > 0) {
+      pst.setInt(++i, this.getContactId());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    if (this.getOppHeaderId() > 0) {
+      pst.setInt(++i, this.getOppHeaderId());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    if (this.getCallTypeId() > 0) {
+      pst.setInt(++i, this.getCallTypeId());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+
     pst.setInt(++i, this.getLength());
     pst.setString(++i, this.getSubject());
     pst.setString(++i, this.getNotes());
@@ -744,20 +792,21 @@ public void setAlertText(String alertText) {
       pst.setDate(++i, this.getAlertDate());
     }
     pst.setString(++i, this.getAlertText());
-        if (entered != null) {
-                pst.setTimestamp(++i, entered);
-        }
-        if (modified != null) {
-                pst.setTimestamp(++i, modified);
-        }
-      pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getModifiedBy());
+    if (entered != null) {
+      pst.setTimestamp(++i, entered);
+    }
+    if (modified != null) {
+      pst.setTimestamp(++i, modified);
+    }
+    pst.setInt(++i, this.getEnteredBy());
+    pst.setInt(++i, this.getModifiedBy());
     pst.execute();
     pst.close();
 
     id = DatabaseUtils.getCurrVal(db, "call_log_call_id_seq");
     return true;
   }
+
 
   /**
    *  Description of the Method
@@ -823,13 +872,13 @@ public void setAlertText(String alertText) {
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
-    
-        if (this.getCallTypeId() > 0) {
-                pst.setInt(++i, this.getCallTypeId());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-        
+
+    if (this.getCallTypeId() > 0) {
+      pst.setInt(++i, this.getCallTypeId());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+
     pst.setInt(++i, length);
     pst.setString(++i, subject);
     pst.setString(++i, notes);
@@ -860,13 +909,13 @@ public void setAlertText(String alertText) {
    */
   protected boolean isValid(Connection db) throws SQLException {
     errors.clear();
-    
+
     if ((subject == null || subject.trim().equals("")) &&
         (notes == null || notes.trim().equals(""))) {
       errors.put("actionError", "Cannot insert a blank record");
     }
 
-    if (contactId == -1 && orgId == -1 && oppId == -1) {
+    if (contactId == -1 && orgId == -1 && oppHeaderId == -1) {
       errors.put("actionError", "Call is not associated with a valid record");
     }
 
@@ -892,18 +941,9 @@ public void setAlertText(String alertText) {
   protected void buildRecord(ResultSet rs) throws SQLException {
     //call_log table
     id = rs.getInt("call_id");
-    orgId = rs.getInt("org_id");
-    if (rs.wasNull()) {
-            orgId = -1;
-    }
-    contactId = rs.getInt("contact_id");
-    if (rs.wasNull()) {
-            contactId = -1;
-    }    
-    oppId = rs.getInt("opp_id");
-    if (rs.wasNull()) {
-            oppId = -1;
-    }
+    orgId = DatabaseUtils.getInt(rs, "org_id");
+    contactId = DatabaseUtils.getInt(rs, "contact_id");
+    oppHeaderId = DatabaseUtils.getInt(rs, "opp_id");
     length = rs.getInt("length");
     subject = rs.getString("subject");
     notes = rs.getString("notes");
@@ -914,29 +954,12 @@ public void setAlertText(String alertText) {
     modifiedBy = rs.getInt("modifiedby");
     alertText = rs.getString("alert");
     //lookup_call_types table
-    callTypeId = rs.getInt("code");
-    if (rs.wasNull()) {
-            callTypeId = -1;
-    }
+    callTypeId = DatabaseUtils.getInt(rs, "code");
     callType = rs.getString("description");
     //contact table
-    enteredName = fullName(rs.getString("efirst"), rs.getString("elast"));
-    modifiedName = fullName(rs.getString("mfirst"), rs.getString("mlast"));
-    contactName = fullName(rs.getString("ctfirst"), rs.getString("ctlast"));
+    enteredName = Contact.getNameLastFirst(rs.getString("elast"), rs.getString("efirst"));
+    modifiedName = Contact.getNameLastFirst(rs.getString("mlast"), rs.getString("mfirst"));
+    contactName = Contact.getNameLastFirst(rs.getString("ctlast"), rs.getString("ctfirst"));
   }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  fn  Description of Parameter
-   *@param  ln  Description of Parameter
-   *@return     Description of the Returned Value
-   *@since
-   */
-  private String fullName(String fn, String ln) {
-    return ((fn.trim() + " " + ln.trim()).trim());
-  }
-
 }
 
