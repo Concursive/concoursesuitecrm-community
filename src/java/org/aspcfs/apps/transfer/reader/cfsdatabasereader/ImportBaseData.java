@@ -188,7 +188,6 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       writer.save(thisRecord);
       writer.commit();
 
-      /**
       OrganizationEmailAddressList emailList = new OrganizationEmailAddressList();
       emailList.setOrgId(thisOrg.getId());
       emailList.buildList(db);
@@ -202,7 +201,6 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
               writer.save(anotherRecord);
               writer.commit();
       }
-      */
       
       OrganizationPhoneNumberList phoneList = new OrganizationPhoneNumberList();
       phoneList.setOrgId(thisOrg.getId());
