@@ -162,7 +162,7 @@ function HideSpan(thisID)
     <td nowrap valign=top class="formLabel">
       Select fields to include
     </td>
-    <td width=50%>
+    <td width=200>
       <select size=5 multiple name="fields">
       <option value="accountNumber" >Account No.</option>
       <option value="url" >URL</option>
@@ -193,7 +193,7 @@ function HideSpan(thisID)
       </table>
       </td>
       
-      <td width=50%>
+      <td width=100%>
       <select size=5 name="selectedList" multiple>
       <option value="id" >Account ID</option>
       <option value="accountName" >Account Name</option>
