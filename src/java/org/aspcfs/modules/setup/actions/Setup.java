@@ -32,6 +32,7 @@ import java.net.InetAddress;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.jcrontab.datasource.Event;
 import java.util.TimeZone;
+import java.util.Properties;
 import org.aspcfs.modules.service.base.*;
 
 /**
@@ -174,6 +175,22 @@ public class Setup extends CFSModule {
       bean.setWebserver(
           HTTPUtils.getServerName(context.getRequest().getScheme() + "://" +
           HTTPUtils.getServerUrl(context.getRequest())));
+      //Configure proxy server
+      ApplicationPrefs prefs = getApplicationPrefs(context);
+      Properties systemSettings = System.getProperties();
+      if (bean.getProxy()) {
+        systemSettings.put("proxySet", "true");
+        systemSettings.put("http.proxyHost", bean.getProxyHost());
+        systemSettings.put("http.proxyPort", bean.getProxyPort());
+        prefs.add("PROXYSERVER", "true");
+        prefs.add("PROXYSERVER.HOST", bean.getProxyHost());
+        prefs.add("PROXYSERVER.PORT", bean.getProxyPort());
+      } else {
+        systemSettings.put("proxySet", "false");
+        prefs.add("PROXYSERVER", null);
+        prefs.add("PROXYSERVER.HOST", null);
+        prefs.add("PROXYSERVER.PORT", null);
+      }
       //Make sure the server received the key ok
       if (bean.getSsl()) {
         response = HTTPUtils.sendPacket("https://registration.darkhorsecrm.com/LicenseServer.do?command=SubmitRegistration", bean.toXmlString());
@@ -282,15 +299,16 @@ public class Setup extends CFSModule {
     }
     //Display a default recommended file path
     if (path == null) {
+      File instance = new File(context.getServletContext().getRealPath("/"));
       if (os.startsWith("Windows")) {
         //Windows
-        path = "c:\\DarkHorse\\crm\\fileLibrary\\";
+        path = "c:\\DarkHorse\\crm\\fileLibrary\\" + instance.getName() + "\\";
       } else if (os.startsWith("Mac")) {
         //Mac OSX
-        path = "/Library/Application Support/Dark Horse/crm/fileLibrary/";
+        path = "/Library/Application Support/Dark Horse/crm/fileLibrary/" + instance.getName() + "/";
       } else {
         //Linux, Solaris, SunOS, OS/2, HP-UX, AIX, FreeBSD, etc
-        path = "/var/lib/darkhorse/crm/fileLibrary/";
+        path = "/var/lib/darkhorse/crm/fileLibrary/" + instance.getName() + "/";
       }
     }
     context.getRequest().setAttribute("fileLibrary", path);
@@ -323,16 +341,12 @@ public class Setup extends CFSModule {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Setup-> ConfigureDirectory path = " + fileLibrary);
       }
-      // Use the instance path to support multiple instances since each
-      // instance requires a different path
-      File instance = new File(context.getServletContext().getRealPath("/"));
-      // Use the instance name in the fileLibrary
-      File targetDirectory = new File(fileLibrary + instance.getName() + fs);
+      File targetDirectory = new File(fileLibrary);
       if (targetDirectory.exists()) {
         //Let's use the target directory
         ApplicationPrefs prefs = getApplicationPrefs(context);
-        prefs.setFilename(fileLibrary + instance.getName() + fs + "build.properties");
-        prefs.add("FILELIBRARY", fileLibrary + instance.getName() + fs);
+        prefs.setFilename(fileLibrary + "build.properties");
+        prefs.add("FILELIBRARY", fileLibrary);
         prefs.save();
         return "ConfigureDirectoryOK";
       } else {
@@ -362,17 +376,13 @@ public class Setup extends CFSModule {
       if (!path.endsWith(fs)) {
         path += fs;
       }
-      // Use the instance path to support multiple instances since each
-      // instance requires a different path
-      File instance = new File(context.getServletContext().getRealPath("/"));
-      // Use the instance name in the fileLibrary
-      File targetDirectory = new File(path + instance.getName() + fs);
+      File targetDirectory = new File(path);
       if (!targetDirectory.exists()) {
         targetDirectory.mkdirs();
       }
       ApplicationPrefs prefs = getApplicationPrefs(context);
-      prefs.setFilename(path + instance.getName() + fs + "build.properties");
-      prefs.add("FILELIBRARY", path + instance.getName() + fs);
+      prefs.setFilename(path + "build.properties");
+      prefs.add("FILELIBRARY", path);
       prefs.save();
       return "ConfigureDirectoryOK";
     } catch (Exception e) {

@@ -291,6 +291,14 @@ public class ApplicationPrefs {
         cp.setMaxDeadTimeSeconds(this.get("CONNECTION_POOL.MAX_DEAD_TIME.SECONDS"));
       }
     }
+    // Tell system if proxy is set
+    if (this.has("PROXYSERVER") && "true".equals(this.get("PROXYSERVER"))) {
+      System.getProperties().put("proxySet", "true");
+      System.getProperties().put("http.proxyHost", this.get("PROXYSERVER.HOST"));
+      System.getProperties().put("http.proxyPort", this.get("PROXYSERVER.PORT"));
+    } else {
+      System.getProperties().put("proxySet", "false");
+    }
     // Default LAYOUT prefs
     if (!this.has("LAYOUT.TEMPLATE")) {
       this.add("LAYOUT.TEMPLATE", "template0");

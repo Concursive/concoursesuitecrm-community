@@ -29,6 +29,9 @@ public class RegistrationBean extends GenericBean {
   private String text = null;
   private String profile = null;
   private String webserver = null;
+  private boolean proxy = false;
+  private String proxyHost = null;
+  private String proxyPort = null;
 
 
   /**
@@ -148,6 +151,76 @@ public class RegistrationBean extends GenericBean {
    */
   public void setWebserver(String tmp) {
     this.webserver = tmp;
+  }
+
+
+  /**
+   *  Gets the proxy attribute of the RegistrationBean object
+   *
+   *@return    The proxy value
+   */
+  public boolean getProxy() {
+    return proxy;
+  }
+
+
+  /**
+   *  Sets the proxy attribute of the RegistrationBean object
+   *
+   *@param  tmp  The new proxy value
+   */
+  public void setProxy(boolean tmp) {
+    this.proxy = tmp;
+  }
+
+
+  /**
+   *  Sets the proxy attribute of the RegistrationBean object
+   *
+   *@param  tmp  The new proxy value
+   */
+  public void setProxy(String tmp) {
+    this.proxy = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the proxyHost attribute of the RegistrationBean object
+   *
+   *@return    The proxyHost value
+   */
+  public String getProxyHost() {
+    return proxyHost;
+  }
+
+
+  /**
+   *  Sets the proxyHost attribute of the RegistrationBean object
+   *
+   *@param  tmp  The new proxyHost value
+   */
+  public void setProxyHost(String tmp) {
+    this.proxyHost = tmp;
+  }
+
+
+  /**
+   *  Gets the proxyPort attribute of the RegistrationBean object
+   *
+   *@return    The proxyPort value
+   */
+  public String getProxyPort() {
+    return proxyPort;
+  }
+
+
+  /**
+   *  Sets the proxyPort attribute of the RegistrationBean object
+   *
+   *@param  tmp  The new proxyPort value
+   */
+  public void setProxyPort(String tmp) {
+    this.proxyPort = tmp;
   }
 
 
