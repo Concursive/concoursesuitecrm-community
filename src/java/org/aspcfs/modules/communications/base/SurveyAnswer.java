@@ -374,10 +374,12 @@ public class SurveyAnswer {
       rs.close();
       pst.close();
 
-      Iterator i = itemList.iterator();
-      while (i.hasNext()) {
-        SurveyAnswerItem thisItem = (SurveyAnswerItem) i.next();
-        thisItem.buildItemDetails(db);
+      if (itemList != null) {
+        Iterator i = itemList.iterator();
+        while (i.hasNext()) {
+          SurveyAnswerItem thisItem = (SurveyAnswerItem) i.next();
+          thisItem.buildItemDetails(db);
+        }
       }
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());

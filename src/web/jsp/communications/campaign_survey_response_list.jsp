@@ -29,7 +29,7 @@ Response
 <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="SurveyResponseListInfo"/>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td align="left" nowrap>
+    <td align="left" width="30" nowrap>
       <strong><a href="CampaignManager.do?command=ViewResponse&id=<%= Campaign.getId() %>&column=c.namelast">Name</a></strong>
       <%= SurveyResponseListInfo.getSortIcon("c.namelast") %>
       </td>
@@ -50,17 +50,17 @@ Response
       SurveyResponse thisResponse = (SurveyResponse)j.next();
 %>      
     <tr class="row<%= rowid %>">
-      <td valign="middle" width="35%" align="left" nowrap>
+      <td valign="middle" width="30" align="left" nowrap>
         <a href="CampaignManager.do?command=ResponseDetails&id=<%= Campaign.getId() %>&contactId=<%= thisResponse.getContactId() %>"><%= toHtml(thisResponse.getContact().getNameLastFirst()) %></a>
       </td>
-      <td align="right" valign="middle" align="left" nowrap>
+      <td valign="middle" align="left" nowrap>
         <%= toDateString(thisResponse.getEntered()) %>&nbsp;
       </td>
-      <td align="center"><%= toHtml(thisResponse.getIpAddress()) %>&nbsp;</td>
-      <td align="center" valign="middle" align="left"  nowrap>
+      <td align="left"><%= toHtml(thisResponse.getIpAddress()) %>&nbsp;</td>
+      <td align="left" valign="middle" align="left"  nowrap>
         <%= thisResponse.getContact().getEmailAddress("BUSSINESS") %> &nbsp;
       </td>
-      <td align="right" valign="middle" align="left" nowrap>
+      <td align="left" valign="middle" align="left" nowrap>
         <%= thisResponse.getContact().getPhoneNumber("BUSSINESS") %>&nbsp;
       </td>
     </tr>
