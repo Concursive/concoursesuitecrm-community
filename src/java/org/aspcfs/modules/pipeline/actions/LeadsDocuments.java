@@ -93,7 +93,7 @@ public final class LeadsDocuments extends CFSModule {
       
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
-      multiPart.setUsePathParam(true);
+      multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
@@ -197,7 +197,7 @@ public final class LeadsDocuments extends CFSModule {
       
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
-      multiPart.setUsePathParam(true);
+      multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
