@@ -1,6 +1,17 @@
 /*
- *  Copyright 2002 Dark Horse Ventures
- *  Class begins with "Process" so it bypasses security
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package org.aspcfs.modules.healthcare.edit.actions;
 
@@ -24,7 +35,8 @@ import org.w3c.dom.*;
  *
  *@author     chris
  *@created    February 11, 2003
- *@version    $Id$
+ *@version    $Id: ProcessTransaction.java,v 1.13 2004/03/29 21:30:08 mrajkowski
+ *      Exp $
  */
 public final class ProcessTransaction extends CFSModule {
 
@@ -50,7 +62,7 @@ public final class ProcessTransaction extends CFSModule {
       //get a database connection using the vhost context info
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
-      
+
       // The connection element is needed to retrieve the systemSystem object later
       ce = auth.getConnectionElement(context);
       thisSystem = this.getSystemStatus(context, ce);
@@ -58,12 +70,12 @@ public final class ProcessTransaction extends CFSModule {
         //Since typical login was bypassed, make sure the system status is in memory
         thisSystem = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
       }
-      
+
       //Insert the record
       recordInserted = thisRecord.insert(db);
       //The object might have specified some validation errors
       if (thisRecord.hasErrors()) {
-        
+
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -121,7 +133,15 @@ public final class ProcessTransaction extends CFSModule {
     }
     return ("PacketOK");
   }
-  
+
+
+  /**
+   *  Gets the value attribute of the ProcessTransaction object
+   *
+   *@param  thisSystem  Description of the Parameter
+   *@param  param       Description of the Parameter
+   *@return             The value value
+   */
   private String getValue(SystemStatus thisSystem, String param) {
     return thisSystem.getValue("org.aspcfs.modules.healthcare.edit.actions.ProcessTransaction", param);
   }

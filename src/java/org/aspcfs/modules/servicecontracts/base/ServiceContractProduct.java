@@ -1,5 +1,18 @@
-//Copyright 2004 Dark Horse Ventures
-
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.servicecontracts.base;
 
 import java.util.*;
@@ -40,7 +53,7 @@ public class ServiceContractProduct extends GenericBean {
    *  Constructor for the ServiceContractProduct object
    *
    *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
+   *@param  tmpId             Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public ServiceContractProduct(Connection db, int tmpId) throws SQLException {
@@ -235,9 +248,10 @@ public class ServiceContractProduct extends GenericBean {
     int i = 0;
     pst.setInt(++i, id);
     rs = pst.executeQuery();
-    if (rs.next())
+    if (rs.next()) {
       buildRecord(rs);
-    
+    }
+
     rs.close();
     pst.close();
   }

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.troubletickets.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
@@ -17,7 +32,8 @@ import java.sql.*;
  *
  *@author     kbhoopal
  *@created    June 30, 2004
- *@version    $Id$
+ *@version    $Id: TicketListScheduledActions.java,v 1.4 2004/08/31 12:48:26
+ *      mrajkowski Exp $
  */
 public class TicketListScheduledActions extends TicketList implements ScheduledActions {
 
@@ -25,26 +41,52 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
   private ActionContext context = null;
   private CFSModule module = null;
 
+
   /**
    *  Constructor for the TicketListScheduledActions object
    */
   public TicketListScheduledActions() { }
 
+
+  /**
+   *  Sets the module attribute of the TicketListScheduledActions object
+   *
+   *@param  tmp  The new module value
+   */
   public void setModule(CFSModule tmp) {
     this.module = tmp;
   }
-  
+
+
+  /**
+   *  Sets the context attribute of the TicketListScheduledActions object
+   *
+   *@param  tmp  The new context value
+   */
   public void setContext(ActionContext tmp) {
     this.context = tmp;
   }
-  
+
+
+  /**
+   *  Gets the context attribute of the TicketListScheduledActions object
+   *
+   *@return    The context value
+   */
   public ActionContext getContext() {
     return context;
   }
-  
+
+
+  /**
+   *  Gets the module attribute of the TicketListScheduledActions object
+   *
+   *@return    The module value
+   */
   public CFSModule getModule() {
     return module;
   }
+
 
   /**
    *  Sets the userId attribute of the TicketListScheduledActions object
@@ -98,7 +140,7 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
         TicketEventList thisList = (TicketEventList) companyCalendar.getEventList(alertDate, CalendarEventList.EVENT_TYPES[11]);
         thisList.getOpenProductTickets().add(thisTicket);
       }
-      
+
       // List 2
       this.clear();
       this.setOrgId(-1);
@@ -138,9 +180,9 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
     try {
       //get User
       User thisUser = module.getUser(context, module.getUserId(context));
-      
+
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
-      
+
       this.setOrgId(thisUser.getContact().getOrgId());
       this.setOnlyOpen(true);
       this.setOnlyWithProducts(true);
@@ -180,3 +222,4 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
     }
   }
 }
+

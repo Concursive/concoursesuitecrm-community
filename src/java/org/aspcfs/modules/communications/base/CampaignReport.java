@@ -1,5 +1,18 @@
-//Copyright 2003 Dark Horse Ventures
-
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.communications.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -45,7 +58,7 @@ public class CampaignReport {
 
 
   /**
-   *Constructor for the CampaignReport object
+   *  Constructor for the CampaignReport object
    */
   public CampaignReport() { }
 
@@ -312,8 +325,10 @@ public class CampaignReport {
   /**
    *  Adds the Campaign Header
    *
-   *@param  sheet         The feature to be added to the CampaignHeader attribute
-   *@param  thisCampaign  The feature to be added to the CampaignHeader attribute
+   *@param  sheet         The feature to be added to the CampaignHeader
+   *      attribute
+   *@param  thisCampaign  The feature to be added to the CampaignHeader
+   *      attribute
    */
   private void addCampaignHeader(HSSFSheet sheet, Campaign thisCampaign) {
     // ***************header data******************//
@@ -355,9 +370,12 @@ public class CampaignReport {
   /**
    *  Adds the Summary Report sheet
    *
-   *@param  db                The feature to be added to the SummaryReport attribute
-   *@param  campaign          The feature to be added to the SummaryReport attribute
-   *@param  questionList      The feature to be added to the SummaryReport attribute
+   *@param  db                The feature to be added to the SummaryReport
+   *      attribute
+   *@param  campaign          The feature to be added to the SummaryReport
+   *      attribute
+   *@param  questionList      The feature to be added to the SummaryReport
+   *      attribute
    *@exception  SQLException  Description of the Exception
    */
   public void addSummaryReport(Connection db, Campaign campaign, ActiveSurveyQuestionList questionList) throws SQLException {
@@ -399,22 +417,22 @@ public class CampaignReport {
     if (!questionList.isEmpty()) {
       //survey questions
       thisRow = sheet.createRow((short) (sheet.getLastRowNum() + 3));
-      
+
       thisCell = thisRow.createCell((short) 0);
-          
+
       //create a style for the survey details
       HSSFCellStyle headerStyle = workBook.createCellStyle();
       HSSFFont font = workBook.createFont();
       font.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);
       thisCell.setCellStyle(headerStyle);
       thisCell.setCellValue("Survey Details");
-  
+
       //add questions
       addQuestionSummary(db, sheet, questionList);
-  
+
       //add note
       thisRow = sheet.createRow((short) (sheet.getLastRowNum() + 3));
-  
+
       thisCell = thisRow.createCell((short) 0);
       thisCell.setCellValue("Note: Detailed reports for each question are available in the corresponding sheets contained in this report.");
     }
@@ -424,9 +442,12 @@ public class CampaignReport {
   /**
    *  Adds Summary Report for each question
    *
-   *@param  db                The feature to be added to the QuestionsSummary attribute
-   *@param  sheet             The feature to be added to the QuestionsSummary attribute
-   *@param  questionList      The feature to be added to the QuestionsSummary attribute
+   *@param  db                The feature to be added to the QuestionsSummary
+   *      attribute
+   *@param  sheet             The feature to be added to the QuestionsSummary
+   *      attribute
+   *@param  questionList      The feature to be added to the QuestionsSummary
+   *      attribute
    *@exception  SQLException  Description of the Exception
    */
   public void addQuestionSummary(Connection db, HSSFSheet sheet, ActiveSurveyQuestionList questionList) throws SQLException {
@@ -566,8 +587,10 @@ public class CampaignReport {
   /**
    *  Adds all possible answers to a question(if it applies)
    *
-   *@param  sheet     The feature to be added to the PossibleAnswersToReport attribute
-   *@param  question  The feature to be added to the PossibleAnswersToReport attribute
+   *@param  sheet     The feature to be added to the PossibleAnswersToReport
+   *      attribute
+   *@param  question  The feature to be added to the PossibleAnswersToReport
+   *      attribute
    */
   public void addPossibleAnswersToReport(HSSFSheet sheet, ActiveSurveyQuestion question) {
     //create a header row
@@ -603,9 +626,12 @@ public class CampaignReport {
   /**
    *  Adds response to a question
    *
-   *@param  db                The feature to be added to the ResponsesToReport attribute
-   *@param  sheet             The feature to be added to the ResponsesToReport attribute
-   *@param  question          The feature to be added to the ResponsesToReport attribute
+   *@param  db                The feature to be added to the ResponsesToReport
+   *      attribute
+   *@param  sheet             The feature to be added to the ResponsesToReport
+   *      attribute
+   *@param  question          The feature to be added to the ResponsesToReport
+   *      attribute
    *@exception  SQLException  Description of the Exception
    */
   public void addResponsesToReport(Connection db, HSSFSheet sheet, ActiveSurveyQuestion question) throws SQLException {
@@ -643,9 +669,12 @@ public class CampaignReport {
   /**
    *  Adds an Open Ended response
    *
-   *@param  db                The feature to be added to the OpenEndedResponse attribute
-   *@param  sheet             The feature to be added to the OpenEndedResponse attribute
-   *@param  question          The feature to be added to the OpenEndedResponse attribute
+   *@param  db                The feature to be added to the OpenEndedResponse
+   *      attribute
+   *@param  sheet             The feature to be added to the OpenEndedResponse
+   *      attribute
+   *@param  question          The feature to be added to the OpenEndedResponse
+   *      attribute
    *@exception  SQLException  Description of the Exception
    */
   public void addOpenEndedResponse(Connection db, HSSFSheet sheet, ActiveSurveyQuestion question) throws SQLException {
@@ -687,9 +716,12 @@ public class CampaignReport {
   /**
    *  Adds a Response to a Quantitative question
    *
-   *@param  db                The feature to be added to the QuantResponse attribute
-   *@param  sheet             The feature to be added to the QuantResponse attribute
-   *@param  question          The feature to be added to the QuantResponse attribute
+   *@param  db                The feature to be added to the QuantResponse
+   *      attribute
+   *@param  sheet             The feature to be added to the QuantResponse
+   *      attribute
+   *@param  question          The feature to be added to the QuantResponse
+   *      attribute
    *@exception  SQLException  Description of the Exception
    */
   public void addQuantResponse(Connection db, HSSFSheet sheet, ActiveSurveyQuestion question) throws SQLException {
@@ -735,9 +767,12 @@ public class CampaignReport {
   /**
    *  Adds a Response to a Quantitative question with Comments
    *
-   *@param  db                The feature to be added to the QuantWithCommentsResponse attribute
-   *@param  sheet             The feature to be added to the QuantWithCommentsResponse attribute
-   *@param  question          The feature to be added to the QuantWithCommentsResponse attribute
+   *@param  db                The feature to be added to the
+   *      QuantWithCommentsResponse attribute
+   *@param  sheet             The feature to be added to the
+   *      QuantWithCommentsResponse attribute
+   *@param  question          The feature to be added to the
+   *      QuantWithCommentsResponse attribute
    *@exception  SQLException  Description of the Exception
    */
   public void addQuantWithCommentsResponse(Connection db, HSSFSheet sheet, ActiveSurveyQuestion question) throws SQLException {
@@ -787,9 +822,12 @@ public class CampaignReport {
   /**
    *  Adds a Response to an ItemList
    *
-   *@param  db                The feature to be added to the ItemListResponse attribute
-   *@param  sheet             The feature to be added to the ItemListResponse attribute
-   *@param  question          The feature to be added to the ItemListResponse attribute
+   *@param  db                The feature to be added to the ItemListResponse
+   *      attribute
+   *@param  sheet             The feature to be added to the ItemListResponse
+   *      attribute
+   *@param  question          The feature to be added to the ItemListResponse
+   *      attribute
    *@exception  SQLException  Description of the Exception
    */
   public void addItemListResponse(Connection db, HSSFSheet sheet, ActiveSurveyQuestion question) throws SQLException {

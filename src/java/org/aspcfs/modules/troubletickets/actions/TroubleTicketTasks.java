@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.troubletickets.actions;
 
 import javax.servlet.*;
@@ -77,11 +92,11 @@ public final class TroubleTicketTasks extends CFSModule {
     Connection db = null;
     Task thisTask = null;
     String id = context.getRequest().getParameter("id");
-    try{
+    try {
       db = this.getConnection(context);
       thisTask = new Task(db, Integer.parseInt(id));
       context.getRequest().setAttribute("Task", thisTask);
-    }catch (Exception e){
+    } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
@@ -142,9 +157,9 @@ public final class TroubleTicketTasks extends CFSModule {
       addModuleBean(context, "View Tickets", "Ticket Save OK");
       return ("SaveOK");
     }
-    if ("insert".equals(action)){
+    if ("insert".equals(action)) {
       return executeCommandAdd(context);
-    }else{
+    } else {
       return executeCommandModify(context);
     }
   }
@@ -162,11 +177,11 @@ public final class TroubleTicketTasks extends CFSModule {
     }
 
     TicketTask thisTicketTask = (TicketTask) context.getFormBean();
-    if (thisTicketTask.getEnteredBy() != -1){
-      Task  thisTask = thisTicketTask;
+    if (thisTicketTask.getEnteredBy() != -1) {
+      Task thisTask = thisTicketTask;
       context.getRequest().setAttribute("Task", thisTask);
     }
-    
+
     addModuleBean(context, "View Tickets", "Add Ticket");
     return ("AddTaskOK");
   }
@@ -189,7 +204,7 @@ public final class TroubleTicketTasks extends CFSModule {
     try {
       db = this.getConnection(context);
       thisTask = (Task) context.getFormBean();
-      if (thisTask.getId() == -1){
+      if (thisTask.getId() == -1) {
         thisTask = new Task(db, Integer.parseInt(id));
       }
       thisTask.checkEnabledOwnerAccount(db);
@@ -270,10 +285,10 @@ public final class TroubleTicketTasks extends CFSModule {
         htmlDialog.setTitle("Confirm");
         htmlDialog.setHeader("You are not permitted to delete this task because it is not owned by you or by a user reporting to you.");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
-      }else{
+      } else {
         DependencyList dependencies = thisTask.processDependencies(db);
         htmlDialog.addMessage(dependencies.getHtmlString());
-  
+
         if (dependencies.size() == 0) {
           htmlDialog.setTitle("Confirm");
           htmlDialog.setShowAndConfirm(false);

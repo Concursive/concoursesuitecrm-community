@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright(c) 2001 iSavvix Corporation (http://www.isavvix.com/) All rights
  *  reserved Permission to use, copy, modify and distribute this material for
  *  any purpose and without fee is hereby granted, provided that the above
@@ -15,7 +15,6 @@
  *  ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL DAMAGES RELATING TO
  *  THE SOFTWARE.
  */
-
 package com.isavvix.tools;
 
 import java.io.File;

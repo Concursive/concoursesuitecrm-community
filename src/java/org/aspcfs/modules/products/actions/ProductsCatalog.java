@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.products.actions;
 
 import javax.servlet.*;
@@ -58,7 +73,7 @@ public final class ProductsCatalog extends CFSModule {
       String moduleId = context.getRequest().getParameter("moduleId");
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      
+
       String params = (String) context.getRequest().getParameter("params");
       String displayFieldId = (String) context.getRequest().getParameter("displayFieldId");
       String hiddenFieldId = (String) context.getRequest().getParameter("hiddenFieldId");
@@ -99,13 +114,13 @@ public final class ProductsCatalog extends CFSModule {
       String moduleId = context.getRequest().getParameter("moduleId");
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      
+
       category = new ProductCategory();
       category.setBuildChildList(true);
       category.setBuildProductList(true);
       category.setBuildEnabledProducts(Constants.TRUE);
       category.queryRecord(db, categoryId);
-      
+
       int parentId = category.getParentId();
       while (parentId != -1) {
         ProductCategory parent = new ProductCategory(db, parentId);
@@ -152,7 +167,7 @@ public final class ProductsCatalog extends CFSModule {
       String moduleId = context.getRequest().getParameter("moduleId");
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      
+
       if (categoryIdString != null && !"".equals(categoryIdString)) {
 
         categoryId = Integer.parseInt(categoryIdString);
@@ -173,7 +188,7 @@ public final class ProductsCatalog extends CFSModule {
         categoryList = new ProductCategoryList();
         categoryList.setParentId(categoryId);
         categoryList.buildList(db);
-        if(categoryList.size() > 0 ){
+        if (categoryList.size() > 0) {
           categoryList.removeNonProductCategories(db);
         }
 
@@ -189,11 +204,11 @@ public final class ProductsCatalog extends CFSModule {
         productList.setEnabled(Constants.TRUE);
         productList.setBuildResources(true);
         productList.buildList(db);
-        
+
         categoryList = new ProductCategoryList();
         categoryList.setTopOnly(Constants.TRUE);
         categoryList.buildList(db);
-        if(categoryList.size() > 0 ){
+        if (categoryList.size() > 0) {
           categoryList.removeNonProductCategories(db);
         }
       }
@@ -237,7 +252,7 @@ public final class ProductsCatalog extends CFSModule {
       String moduleId = context.getRequest().getParameter("moduleId");
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      
+
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
@@ -295,7 +310,7 @@ public final class ProductsCatalog extends CFSModule {
       String moduleId = context.getRequest().getParameter("moduleId");
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      
+
       quote = new Quote(db, quoteId);
       if (quote.getShortDescription() != null) {
         abbreviation.append(quote.getShortDescription());
@@ -384,7 +399,7 @@ public final class ProductsCatalog extends CFSModule {
       // Populate the permission category for trails
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      
+
       productList = new ProductCatalogList();
       productList.setPagedListInfo(productCatalogListInfo);
       productList.setBuildResources(true);
@@ -422,7 +437,7 @@ public final class ProductsCatalog extends CFSModule {
       String moduleId = context.getRequest().getParameter("moduleId");
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      
+
       int id = Integer.parseInt((String) context.getRequest().getParameter("productId"));
       productDetails = new ProductCatalog(db, id);
 
@@ -461,7 +476,7 @@ public final class ProductsCatalog extends CFSModule {
       String moduleId = context.getRequest().getParameter("moduleId");
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      
+
       categoryList = new ProductCategoryList();
       categoryList.buildList(db);
       context.getRequest().setAttribute("categoryList", categoryList);
@@ -497,7 +512,7 @@ public final class ProductsCatalog extends CFSModule {
       String moduleId = context.getRequest().getParameter("moduleId");
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      
+
       ProductCatalog thisProduct = (ProductCatalog) context.getFormBean();
       thisProduct.setEnteredBy(getUserId(context));
       thisProduct.setModifiedBy(getUserId(context));
@@ -536,7 +551,7 @@ public final class ProductsCatalog extends CFSModule {
       String moduleId = context.getRequest().getParameter("moduleId");
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      
+
       int id = Integer.parseInt((String) context.getRequest().getParameter("productId"));
       productDetails = new ProductCatalog(db, id);
 
@@ -574,7 +589,7 @@ public final class ProductsCatalog extends CFSModule {
       String moduleId = context.getRequest().getParameter("moduleId");
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      
+
       ProductCatalog thisProduct = (ProductCatalog) context.getFormBean();
       thisProduct.setModifiedBy(getUserId(context));
       inserted = thisProduct.update(db);
@@ -609,18 +624,18 @@ public final class ProductsCatalog extends CFSModule {
       String moduleId = context.getRequest().getParameter("moduleId");
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      
+
       int id = Integer.parseInt((String) context.getRequest().getParameter("productId"));
       productDetails = new ProductCatalog(db, id);
 
       htmlDialog.setTitle("Dark Horse CRM: Products - Product");
       DependencyList dependencies = productDetails.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
-      if (dependencies.canDelete()){
+      if (dependencies.canDelete()) {
         htmlDialog.setHeader("The product you are requesting to delete has the following dependencies within Dark Horse CRM:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='ProductsCatalog.do?command=DeleteProduct&action=delete&productId=" + id + "&moduleId=" + moduleId + "'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
-      }else{
+      } else {
         htmlDialog.setHeader("This product cannot be deleted because it has the following dependencies within Dark Horse CRM:");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
       }
@@ -657,7 +672,7 @@ public final class ProductsCatalog extends CFSModule {
       // Populate the permission category for trails
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permissionCategory);
-      
+
       id = Integer.parseInt((String) context.getRequest().getParameter("productId"));
       productDetails = new ProductCatalog(db, id);
       recordDeleted = productDetails.delete(db, "");

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.service.base;
 
 import java.util.*;
@@ -8,9 +23,9 @@ import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.ObjectUtils;
 
 /**
- *  A Transaction is an array of TransactionItems.  When a system requests
- *  a transaction to be performed on an object -- for example, 
- *  inserting records -- a Transaction is built from XML.<p>
+ *  A Transaction is an array of TransactionItems. When a system requests a
+ *  transaction to be performed on an object -- for example, inserting records
+ *  -- a Transaction is built from XML.<p>
  *
  *  After the object is built, the transaction items can be executed.
  *
@@ -25,6 +40,7 @@ public class Transaction extends ArrayList {
   private RecordList recordList = null;
   private TransactionMeta meta = null;
   private PacketContext packetContext = null;
+
 
   /**
    *  Constructor for the Transaction object
@@ -56,10 +72,15 @@ public class Transaction extends ArrayList {
   }
 
 
+  /**
+   *  Sets the packetContext attribute of the Transaction object
+   *
+   *@param  tmp  The new packetContext value
+   */
   public void setPacketContext(PacketContext tmp) {
     packetContext = tmp;
   }
-  
+
 
   /**
    *  Gets the id attribute of the Transaction object
@@ -147,6 +168,7 @@ public class Transaction extends ArrayList {
    *  Executes all of the TransactionItems in the array
    *
    *@param  db                Description of Parameter
+   *@param  dbLookup          Description of the Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */

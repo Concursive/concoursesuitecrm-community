@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.apps.transfer.reader.cfs;
 
 import org.aspcfs.apps.transfer.reader.csvreader.CSVReader;
@@ -17,7 +32,8 @@ import org.aspcfs.modules.accounts.base.*;
  *
  *@author     matt rajkowski
  *@created    June 9, 2003
- *@version    $Id$
+ *@version    $Id: ImportAccountContacts.java,v 1.7 2004/06/16 17:24:53
+ *      mrajkowski Exp $
  */
 public class ImportAccountContacts extends CSVReader {
 
@@ -214,7 +230,7 @@ public class ImportAccountContacts extends CSVReader {
         thisContact.setModifiedBy(userId);
         //Contact Fields
         thisContact.setNameSalutation(getValue(thisRecord, NAME_SALUTATION));
-        
+
         // Simple parse to format a name, only supports one format
         if (CONTACT_NAME > 0) {
           contactNameFormatter.format(thisContact, getValue(thisRecord, CONTACT_NAME));
@@ -277,7 +293,7 @@ public class ImportAccountContacts extends CSVReader {
         businessPhone.setType(1);
         businessPhone.setEnteredBy(userId);
         businessPhone.setModifiedBy(userId);
-        
+
         if (getValue(thisRecord, BUSINESS_PHONE_EXT) != null && !"".equals(getValue(thisRecord, BUSINESS_PHONE_EXT))) {
           businessPhone.setNumber(getValue(thisRecord, BUSINESS_PHONE) + " x" + getValue(thisRecord, BUSINESS_PHONE_EXT));
         } else {
@@ -432,7 +448,7 @@ public class ImportAccountContacts extends CSVReader {
           organizationMap.put(thisOrganization.getName(), new Integer(thisOrganization.getOrgId()));
         }
         thisOrganization.setEmployees(getValue(thisRecord, EMPLOYEES));
-        
+
         //Business Phone
         OrganizationPhoneNumber organizationPhone = new OrganizationPhoneNumber();
         organizationPhone.setOrgId(thisOrganization.getOrgId());

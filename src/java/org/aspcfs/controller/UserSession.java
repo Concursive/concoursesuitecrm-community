@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.controller;
 
 import java.util.*;
@@ -200,7 +215,7 @@ public class UserSession {
    *@exception  SQLException  Description of the Exception
    */
   public void buildViewpoints(Connection db, String permName, int userId) throws SQLException {
-    if(viewpoints == null){
+    if (viewpoints == null) {
       viewpoints = new HashMap();
     }
     //build the viewpoints
@@ -220,21 +235,21 @@ public class UserSession {
         Permission thisPermission = (Permission) vpPermList.get((String) j.next());
         String pName = thisPermission.getName();
         if (permName.equals(pName)) {
-            if (viewpoints.containsKey(pName)) {
-              ArrayList vpUsers = (ArrayList) viewpoints.get(pName);
-              viewpoints.remove(pName);
-              vpUsers.add(new Integer(thisVp.getVpUserId()));
-              viewpoints.put(pName, vpUsers);
+          if (viewpoints.containsKey(pName)) {
+            ArrayList vpUsers = (ArrayList) viewpoints.get(pName);
+            viewpoints.remove(pName);
+            vpUsers.add(new Integer(thisVp.getVpUserId()));
+            viewpoints.put(pName, vpUsers);
+          } else {
+            ArrayList vpUsers = new ArrayList();
+            //if user is aliased insert the alias user Id
+            if (thisVp.getVpUser().getAlias() != -1) {
+              vpUsers.add(new Integer(thisVp.getVpUser().getAlias()));
             } else {
-              ArrayList vpUsers = new ArrayList();
-              //if user is aliased insert the alias user Id
-              if(thisVp.getVpUser().getAlias() != -1){
-                vpUsers.add(new Integer(thisVp.getVpUser().getAlias()));
-              }else{
-                vpUsers.add(new Integer(thisVp.getVpUserId()));
-              }
-              viewpoints.put(pName, vpUsers);
+              vpUsers.add(new Integer(thisVp.getVpUserId()));
             }
+            viewpoints.put(pName, vpUsers);
+          }
         }
       }
     }

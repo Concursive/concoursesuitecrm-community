@@ -1,5 +1,18 @@
-//Copyright 2001 Dark Horse Ventures
-
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.communications.base;
 
 import java.util.StringTokenizer;
@@ -35,7 +48,7 @@ public class SearchCriteriaElement {
    *
    *@since    1.1
    */
-  public SearchCriteriaElement(){}
+  public SearchCriteriaElement() { }
 
 
   /**
@@ -46,7 +59,7 @@ public class SearchCriteriaElement {
    *@since               1.1
    */
   public SearchCriteriaElement(String elementText) {
-	  
+
     StringTokenizer st = new StringTokenizer(elementText, "[*|]");
     if (st.hasMoreTokens()) {
       fieldId = Integer.parseInt((String) st.nextToken());
@@ -60,7 +73,6 @@ public class SearchCriteriaElement {
     if (st.hasMoreTokens()) {
       sourceId = Integer.parseInt((String) st.nextToken());
     }
-     
   }
 
 
@@ -72,7 +84,7 @@ public class SearchCriteriaElement {
    *@since
    */
   public SearchCriteriaElement(ResultSet rs) throws SQLException {
-	  
+
     buildRecord(rs);
   }
 
@@ -350,7 +362,7 @@ public class SearchCriteriaElement {
    */
   public void buildOperatorData(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-       "SELECT * " +
+        "SELECT * " +
         "FROM field_types " +
         "WHERE id = ?");
     pst.setInt(1, this.getOperatorId());
@@ -417,8 +429,8 @@ public class SearchCriteriaElement {
     tmp.append("Text: " + text + "\r\n");
     return tmp.toString();
   }
-  
-  
+
+
   /**
    *  Populates object from ResultSet data
    *
@@ -427,7 +439,7 @@ public class SearchCriteriaElement {
    *@since
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
-    //saved_criteriaelement table 
+    //saved_criteriaelement table
     fieldId = rs.getInt("field");
     operator = rs.getString("operator");
     operatorId = rs.getInt("operatorid");

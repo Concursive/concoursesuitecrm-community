@@ -1,5 +1,18 @@
-//Copyright 2002-2003 Dark Horse Ventures
-
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.pipeline.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -307,7 +320,7 @@ public class OpportunityHeader extends GenericBean {
 
 
   /**
-   *  Gets the calculated name that relates to this opportunity.  An opportunity
+   *  Gets the calculated name that relates to this opportunity. An opportunity
    *  can be linked to Contacts and Accounts.
    *
    *@return    The displayName value
@@ -870,7 +883,7 @@ public class OpportunityHeader extends GenericBean {
         db.rollback();
       }
       throw new SQLException(e.getMessage());
-    }finally {
+    } finally {
       if (commit) {
         db.setAutoCommit(true);
       }
@@ -1161,8 +1174,8 @@ public class OpportunityHeader extends GenericBean {
 
 
   /**
-   *  Retrieves count of all components
-   *  Optionally retrieves only count of components owned by a specific user
+   *  Retrieves count of all components Optionally retrieves only count of
+   *  components owned by a specific user
    *
    *@param  db                Description of the Parameter
    *@param  ownerId           Description of the Parameter
@@ -1205,6 +1218,7 @@ public class OpportunityHeader extends GenericBean {
 
   /**
    *  Builds the total value of the components.<br>
+   *
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.products.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -12,9 +27,9 @@ import org.aspcfs.utils.DateUtils;
 /**
  *  Description of the Class
  *
- * @author     ananth
- * @created    April 12, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    April 12, 2004
+ *@version    $Id$
  */
 public class Package extends GenericBean {
   private int id = -1;
@@ -39,7 +54,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the categoryId attribute of the Package object
    *
-   * @param  tmp  The new categoryId value
+   *@param  tmp  The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -49,7 +64,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the categoryId attribute of the Package object
    *
-   * @param  tmp  The new categoryId value
+   *@param  tmp  The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -59,7 +74,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the categoryId attribute of the Package object
    *
-   * @return    The categoryId value
+   *@return    The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -69,7 +84,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the id attribute of the Package object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -79,7 +94,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the id attribute of the Package object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -89,7 +104,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the name attribute of the Package object
    *
-   * @param  tmp  The new name value
+   *@param  tmp  The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -99,7 +114,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the abbreviation attribute of the Package object
    *
-   * @param  tmp  The new abbreviation value
+   *@param  tmp  The new abbreviation value
    */
   public void setAbbreviation(String tmp) {
     this.abbreviation = tmp;
@@ -109,7 +124,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the shortDescription attribute of the Package object
    *
-   * @param  tmp  The new shortDescription value
+   *@param  tmp  The new shortDescription value
    */
   public void setShortDescription(String tmp) {
     this.shortDescription = tmp;
@@ -119,7 +134,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the longDescription attribute of the Package object
    *
-   * @param  tmp  The new longDescription value
+   *@param  tmp  The new longDescription value
    */
   public void setLongDescription(String tmp) {
     this.longDescription = tmp;
@@ -129,7 +144,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the thumbnailImageId attribute of the Package object
    *
-   * @param  tmp  The new thumbnailImageId value
+   *@param  tmp  The new thumbnailImageId value
    */
   public void setThumbnailImageId(int tmp) {
     this.thumbnailImageId = tmp;
@@ -139,7 +154,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the thumbnailImageId attribute of the Package object
    *
-   * @param  tmp  The new thumbnailImageId value
+   *@param  tmp  The new thumbnailImageId value
    */
   public void setThumbnailImageId(String tmp) {
     this.thumbnailImageId = Integer.parseInt(tmp);
@@ -149,7 +164,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the smallImageId attribute of the Package object
    *
-   * @param  tmp  The new smallImageId value
+   *@param  tmp  The new smallImageId value
    */
   public void setSmallImageId(int tmp) {
     this.smallImageId = tmp;
@@ -159,7 +174,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the smallImageId attribute of the Package object
    *
-   * @param  tmp  The new smallImageId value
+   *@param  tmp  The new smallImageId value
    */
   public void setSmallImageId(String tmp) {
     this.smallImageId = Integer.parseInt(tmp);
@@ -169,7 +184,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the largeImageId attribute of the Package object
    *
-   * @param  tmp  The new largeImageId value
+   *@param  tmp  The new largeImageId value
    */
   public void setLargeImageId(int tmp) {
     this.largeImageId = tmp;
@@ -179,7 +194,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the largeImageId attribute of the Package object
    *
-   * @param  tmp  The new largeImageId value
+   *@param  tmp  The new largeImageId value
    */
   public void setLargeImageId(String tmp) {
     this.largeImageId = Integer.parseInt(tmp);
@@ -189,7 +204,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the listOrder attribute of the Package object
    *
-   * @param  tmp  The new listOrder value
+   *@param  tmp  The new listOrder value
    */
   public void setListOrder(int tmp) {
     this.listOrder = tmp;
@@ -199,7 +214,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the listOrder attribute of the Package object
    *
-   * @param  tmp  The new listOrder value
+   *@param  tmp  The new listOrder value
    */
   public void setListOrder(String tmp) {
     this.listOrder = Integer.parseInt(tmp);
@@ -209,7 +224,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the entered attribute of the Package object
    *
-   * @param  tmp  The new entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -219,7 +234,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the entered attribute of the Package object
    *
-   * @param  tmp  The new entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -229,7 +244,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the Package object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -239,7 +254,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the Package object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -249,7 +264,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the modified attribute of the Package object
    *
-   * @param  tmp  The new modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -259,7 +274,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the modified attribute of the Package object
    *
-   * @param  tmp  The new modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -269,7 +284,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the Package object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -279,7 +294,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the Package object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -289,7 +304,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the startDate attribute of the Package object
    *
-   * @param  tmp  The new startDate value
+   *@param  tmp  The new startDate value
    */
   public void setStartDate(Timestamp tmp) {
     this.startDate = tmp;
@@ -299,7 +314,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the startDate attribute of the Package object
    *
-   * @param  tmp  The new startDate value
+   *@param  tmp  The new startDate value
    */
   public void setStartDate(String tmp) {
     this.startDate = DatabaseUtils.parseTimestamp(tmp);
@@ -309,7 +324,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the expirationDate attribute of the Package object
    *
-   * @param  tmp  The new expirationDate value
+   *@param  tmp  The new expirationDate value
    */
   public void setExpirationDate(Timestamp tmp) {
     this.expirationDate = tmp;
@@ -319,7 +334,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the expirationDate attribute of the Package object
    *
-   * @param  tmp  The new expirationDate value
+   *@param  tmp  The new expirationDate value
    */
   public void setExpirationDate(String tmp) {
     this.expirationDate = DatabaseUtils.parseTimestamp(tmp);
@@ -329,7 +344,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the enabled attribute of the Package object
    *
-   * @param  tmp  The new enabled value
+   *@param  tmp  The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -339,7 +354,7 @@ public class Package extends GenericBean {
   /**
    *  Sets the enabled attribute of the Package object
    *
-   * @param  tmp  The new enabled value
+   *@param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -349,7 +364,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the id attribute of the Package object
    *
-   * @return    The id value
+   *@return    The id value
    */
   public int getId() {
     return id;
@@ -359,7 +374,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the name attribute of the Package object
    *
-   * @return    The name value
+   *@return    The name value
    */
   public String getName() {
     return name;
@@ -369,7 +384,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the abbreviation attribute of the Package object
    *
-   * @return    The abbreviation value
+   *@return    The abbreviation value
    */
   public String getAbbreviation() {
     return abbreviation;
@@ -379,7 +394,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the shortDescription attribute of the Package object
    *
-   * @return    The shortDescription value
+   *@return    The shortDescription value
    */
   public String getShortDescription() {
     return shortDescription;
@@ -389,7 +404,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the longDescription attribute of the Package object
    *
-   * @return    The longDescription value
+   *@return    The longDescription value
    */
   public String getLongDescription() {
     return longDescription;
@@ -399,7 +414,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the thumbnailImageId attribute of the Package object
    *
-   * @return    The thumbnailImageId value
+   *@return    The thumbnailImageId value
    */
   public int getThumbnailImageId() {
     return thumbnailImageId;
@@ -409,7 +424,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the smallImageId attribute of the Package object
    *
-   * @return    The smallImageId value
+   *@return    The smallImageId value
    */
   public int getSmallImageId() {
     return smallImageId;
@@ -419,7 +434,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the largeImageId attribute of the Package object
    *
-   * @return    The largeImageId value
+   *@return    The largeImageId value
    */
   public int getLargeImageId() {
     return largeImageId;
@@ -429,7 +444,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the listOrder attribute of the Package object
    *
-   * @return    The listOrder value
+   *@return    The listOrder value
    */
   public int getListOrder() {
     return listOrder;
@@ -439,7 +454,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the entered attribute of the Package object
    *
-   * @return    The entered value
+   *@return    The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -449,7 +464,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the enteredBy attribute of the Package object
    *
-   * @return    The enteredBy value
+   *@return    The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -459,7 +474,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the modified attribute of the Package object
    *
-   * @return    The modified value
+   *@return    The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -469,7 +484,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the modifiedBy attribute of the Package object
    *
-   * @return    The modifiedBy value
+   *@return    The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -479,7 +494,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the startDate attribute of the Package object
    *
-   * @return    The startDate value
+   *@return    The startDate value
    */
   public Timestamp getStartDate() {
     return startDate;
@@ -489,7 +504,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the expirationDate attribute of the Package object
    *
-   * @return    The expirationDate value
+   *@return    The expirationDate value
    */
   public Timestamp getExpirationDate() {
     return expirationDate;
@@ -499,7 +514,7 @@ public class Package extends GenericBean {
   /**
    *  Gets the enabled attribute of the Package object
    *
-   * @return    The enabled value
+   *@return    The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -507,17 +522,17 @@ public class Package extends GenericBean {
 
 
   /**
-   *Constructor for the Package object
+   *  Constructor for the Package object
    */
   public Package() { }
 
 
   /**
-   *Constructor for the Package object
+   *  Constructor for the Package object
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public Package(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -525,10 +540,10 @@ public class Package extends GenericBean {
 
 
   /**
-   *Constructor for the Package object
+   *  Constructor for the Package object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public Package(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -538,9 +553,9 @@ public class Package extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -572,8 +587,8 @@ public class Package extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     // order_entry table
@@ -600,9 +615,9 @@ public class Package extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     boolean result = false;
@@ -632,9 +647,9 @@ public class Package extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
@@ -705,9 +720,9 @@ public class Package extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -760,9 +775,9 @@ public class Package extends GenericBean {
   /**
    *  Gets the valid attribute of the Package object
    *
-   * @param  db                Description of the Parameter
-   * @return                   The valid value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   The valid value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean isValid(Connection db) throws SQLException {
     if (this.getId() == -1) {

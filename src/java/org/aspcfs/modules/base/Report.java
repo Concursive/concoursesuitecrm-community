@@ -1,6 +1,21 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.base;
 
-import org.aspcfs.utils.StringHelper;
+import org.aspcfs.utils.StringUtils;
 import java.util.*;
 import java.io.*;
 
@@ -60,8 +75,7 @@ public class Report {
    *
    *@since    1.0
    */
-  public Report() {
-  }
+  public Report() { }
 
 
   //Set
@@ -288,7 +302,7 @@ public class Report {
       html.append("<tr>");
       i = columns.iterator();
       while (i.hasNext()) {
-        ReportColumn thisColumn = (ReportColumn)i.next();
+        ReportColumn thisColumn = (ReportColumn) i.next();
         html.append("<td");
         if (thisColumn.isFormatted()) {
           html.append(" " + thisColumn.getFormatting());
@@ -306,11 +320,11 @@ public class Report {
     i = rows.iterator();
     while (i.hasNext()) {
       html.append("<tr>");
-      ReportRow thisRow = (ReportRow)i.next();
-      Vector cells = (Vector)thisRow.getCells();
+      ReportRow thisRow = (ReportRow) i.next();
+      Vector cells = (Vector) thisRow.getCells();
       Iterator j = cells.iterator();
       while (j.hasNext()) {
-        ReportCell thisCell = (ReportCell)j.next();
+        ReportCell thisCell = (ReportCell) j.next();
         html.append("<td");
         if (thisCell.isFormatted()) {
           html.append(" " + thisCell.getFormatting());
@@ -354,16 +368,16 @@ public class Report {
         (showColumnHeaders)) {
       i = columns.iterator();
       while (i.hasNext()) {
-        ReportColumn thisColumn = (ReportColumn)i.next();
+        ReportColumn thisColumn = (ReportColumn) i.next();
         String tmp = checkNull(thisColumn.getName());
         //ascii.append(tmp);
-	ascii.append(prepareToWrite(tmp));
+        ascii.append(prepareToWrite(tmp));
         //if (i.hasNext()) {
-          //ascii.append(delimitedCharacter);
-	//  newLine = false;
+        //ascii.append(delimitedCharacter);
+        //  newLine = false;
         //} else {
-	//  newline = true;
-	//}
+        //  newline = true;
+        //}
       }
       ascii.append("\r\n");
       newLine = true;
@@ -372,20 +386,20 @@ public class Report {
     //Draw the data
     i = rows.iterator();
     while (i.hasNext()) {
-      ReportRow thisRow = (ReportRow)i.next();
-      Vector cells = (Vector)thisRow.getCells();
+      ReportRow thisRow = (ReportRow) i.next();
+      Vector cells = (Vector) thisRow.getCells();
       Iterator j = cells.iterator();
       while (j.hasNext()) {
-        ReportCell thisCell = (ReportCell)j.next();
+        ReportCell thisCell = (ReportCell) j.next();
         String tmp = checkNull(thisCell.getData());
         //ascii.append(tmp);
-	ascii.append(prepareToWrite(tmp));
+        ascii.append(prepareToWrite(tmp));
         //if (j.hasNext()) {
-	//  newLine = false;
-          //ascii.append(delimitedCharacter);
+        //  newLine = false;
+        //ascii.append(delimitedCharacter);
         //} else {
-	//  newLine = true;
-	//}
+        //  newLine = true;
+        //}
       }
       ascii.append("\r\n");
       newLine = true;
@@ -472,7 +486,7 @@ public class Report {
     Arrays.sort(sortArray, comparator);
     rows.clear();
     for (int i = 0; i < sortArray.length; i++) {
-      rows.addElement((ReportRow)sortArray[i]);
+      rows.addElement((ReportRow) sortArray[i]);
     }
   }
 
@@ -527,6 +541,12 @@ public class Report {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  tmp  Description of the Parameter
+   *@return      Description of the Return Value
+   */
   private String checkNull(String tmp) {
     if (tmp == null) {
       return "";
@@ -554,7 +574,7 @@ public class Report {
      */
     public int compare(Object left, Object right) {
       return (
-          ((ReportRow)left).getCell(compareColumn).compareTo(((ReportRow)right).getCell(compareColumn)));
+          ((ReportRow) left).getCell(compareColumn).compareTo(((ReportRow) right).getCell(compareColumn)));
     }
   }
 
@@ -577,52 +597,60 @@ public class Report {
      */
     public int compare(Object left, Object right) {
       return (
-          ((ReportRow)left).getCell(compareColumn).compareIntTo(((ReportRow)right).getCell(compareColumn)));
+          ((ReportRow) left).getCell(compareColumn).compareIntTo(((ReportRow) right).getCell(compareColumn)));
     }
   }
-  
-  private static String prepareToWrite(String value){
-	StringBuffer ascii = new StringBuffer();
-        boolean quote = false;
-        if (value.length() > 0){
-            for (int i=0; i<value.length(); i++){
-                char c = value.charAt(i);
-                if (c=='"' || c==',' || c=='\n' || c=='\r'){
-                    quote = true;
-                }
-            }
-        } else if (newLine) {
-            // always quote an empty token that is the first
-            // on the line, as it may be the only thing on the 
-            // line.  If it were not quoted in that case,
-            // an empty line has no tokens.
-            quote = true;
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  value  Description of the Parameter
+   *@return        Description of the Return Value
+   */
+  private static String prepareToWrite(String value) {
+    StringBuffer ascii = new StringBuffer();
+    boolean quote = false;
+    if (value.length() > 0) {
+      for (int i = 0; i < value.length(); i++) {
+        char c = value.charAt(i);
+        if (c == '"' || c == ',' || c == '\n' || c == '\r') {
+          quote = true;
         }
-        if (newLine){
-            newLine = false;
-        } else {
-            ascii.append(",");
-        }
-        if (quote){
-            ascii.append(escapeAndQuote(value));
-        } else {
-            ascii.append(value);
-        }
-	
-	return ascii.toString();
+      }
+    } else if (newLine) {
+      // always quote an empty token that is the first
+      // on the line, as it may be the only thing on the
+      // line.  If it were not quoted in that case,
+      // an empty line has no tokens.
+      quote = true;
+    }
+    if (newLine) {
+      newLine = false;
+    } else {
+      ascii.append(",");
+    }
+    if (quote) {
+      ascii.append(escapeAndQuote(value));
+    } else {
+      ascii.append(value);
     }
 
-    /**
-     * enclose the value in quotes and escape the quote
-     * and comma characters that are inside.
-     *
-     * @param value needs to be escaped and quoted
-     * @return the value, escaped and quoted.
-     */
-    private static String escapeAndQuote(String value){
-        String s = StringHelper.replace(value, "\"", "\"\"");
-        return (new StringBuffer(2 + s.length())).append("\"").append(s).append("\"").toString();
-    }
+    return ascii.toString();
+  }
+
+
+  /**
+   *  enclose the value in quotes and escape the quote and comma characters that
+   *  are inside.
+   *
+   *@param  value  needs to be escaped and quoted
+   *@return        the value, escaped and quoted.
+   */
+  private static String escapeAndQuote(String value) {
+    String s = StringUtils.replace(value, "\"", "\"\"");
+    return (new StringBuffer(2 + s.length())).append("\"").append(s).append("\"").toString();
+  }
 
 
   /**
@@ -642,7 +670,7 @@ public class Report {
      *@since
      */
     public int compare(Object left, Object right) {
-      return (((ReportRow)left).getCell(compareColumn).compareDateTo(((ReportRow)right).getCell(compareColumn)));
+      return (((ReportRow) left).getCell(compareColumn).compareDateTo(((ReportRow) right).getCell(compareColumn)));
     }
   }
 }

@@ -28,7 +28,7 @@ import org.jcrontab.Crontab;
 
 /**
  * This class helps the testing process to make easier testing
- * @author $Author$
+ * @author Israel Olalla
  * @version $Revision$
  */
 public class Log {

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.media.autoguide.readers;
 
 import org.aspcfs.apps.transfer.*;
@@ -43,6 +58,7 @@ public class PilotOnlineReader implements DataReader {
 
   private ArrayList picturesToProcess = new ArrayList();
   private ArrayList processLog = new ArrayList();
+
 
   /**
    *  Sets the driver attribute of the PilotOnlineReader object
@@ -131,15 +147,75 @@ public class PilotOnlineReader implements DataReader {
     this.ftpPictures = tmp;
   }
 
-  public void setLogUrl(String tmp) { this.logUrl = tmp; }
-  public void setLogId(String tmp) { this.logId = tmp; }
-  public void setLogCode(String tmp) { this.logCode = tmp; }
 
-  public void setLogSystemId(int tmp) { this.logSystemId = tmp; }
-  public void setLogSystemId(String tmp) { this.logSystemId = Integer.parseInt(tmp); }
-  
-  public void setLogClientId(int tmp) { this.logClientId = tmp; }
-  public void setLogClientId(String tmp) { this.logClientId = Integer.parseInt(tmp); }
+  /**
+   *  Sets the logUrl attribute of the PilotOnlineReader object
+   *
+   *@param  tmp  The new logUrl value
+   */
+  public void setLogUrl(String tmp) {
+    this.logUrl = tmp;
+  }
+
+
+  /**
+   *  Sets the logId attribute of the PilotOnlineReader object
+   *
+   *@param  tmp  The new logId value
+   */
+  public void setLogId(String tmp) {
+    this.logId = tmp;
+  }
+
+
+  /**
+   *  Sets the logCode attribute of the PilotOnlineReader object
+   *
+   *@param  tmp  The new logCode value
+   */
+  public void setLogCode(String tmp) {
+    this.logCode = tmp;
+  }
+
+
+  /**
+   *  Sets the logSystemId attribute of the PilotOnlineReader object
+   *
+   *@param  tmp  The new logSystemId value
+   */
+  public void setLogSystemId(int tmp) {
+    this.logSystemId = tmp;
+  }
+
+
+  /**
+   *  Sets the logSystemId attribute of the PilotOnlineReader object
+   *
+   *@param  tmp  The new logSystemId value
+   */
+  public void setLogSystemId(String tmp) {
+    this.logSystemId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the logClientId attribute of the PilotOnlineReader object
+   *
+   *@param  tmp  The new logClientId value
+   */
+  public void setLogClientId(int tmp) {
+    this.logClientId = tmp;
+  }
+
+
+  /**
+   *  Sets the logClientId attribute of the PilotOnlineReader object
+   *
+   *@param  tmp  The new logClientId value
+   */
+  public void setLogClientId(String tmp) {
+    this.logClientId = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -311,7 +387,7 @@ public class PilotOnlineReader implements DataReader {
   public boolean execute(DataWriter writer) {
     boolean processOK = true;
     processLog.add("INFO: PilotOnlineReader-> Started " + new java.util.Date());
-    
+
     //Connect to database
     ConnectionPool sqlDriver = null;
     Connection db = null;
@@ -335,40 +411,40 @@ public class PilotOnlineReader implements DataReader {
       organizationList.buildList(db);
       Calendar runDateStart = Calendar.getInstance();
       Calendar runDateEnd = Calendar.getInstance();
-      
+
       switch (runDateStart.get(Calendar.DAY_OF_WEEK)) {
-        case Calendar.SATURDAY:
-          runDateStart.add(Calendar.DATE, -3);
-          runDateEnd.add(Calendar.DATE, -3);
-          break;
-        case Calendar.SUNDAY:
-          runDateStart.add(Calendar.DATE, -4);
-          runDateEnd.add(Calendar.DATE, -4);
-          break;
-        case Calendar.MONDAY:
-          runDateStart.add(Calendar.DATE, -5);
-          runDateEnd.add(Calendar.DATE, -5);
-          break;
-        case Calendar.TUESDAY: 
-          runDateStart.add(Calendar.DATE, 1);
-          runDateEnd.add(Calendar.DATE, 1);
-          break;
-        case Calendar.WEDNESDAY:
-          break;
-        case Calendar.THURSDAY:
-          runDateStart.add(Calendar.DATE, -1);
-          runDateEnd.add(Calendar.DATE, -1);
-          break;
-        case Calendar.FRIDAY:
-          runDateStart.add(Calendar.DATE, -2);
-          runDateEnd.add(Calendar.DATE, -2);
-          break;
-        default:
-          while (runDateStart.get(Calendar.DAY_OF_WEEK) != Calendar.WEDNESDAY) {
+          case Calendar.SATURDAY:
+            runDateStart.add(Calendar.DATE, -3);
+            runDateEnd.add(Calendar.DATE, -3);
+            break;
+          case Calendar.SUNDAY:
+            runDateStart.add(Calendar.DATE, -4);
+            runDateEnd.add(Calendar.DATE, -4);
+            break;
+          case Calendar.MONDAY:
+            runDateStart.add(Calendar.DATE, -5);
+            runDateEnd.add(Calendar.DATE, -5);
+            break;
+          case Calendar.TUESDAY:
             runDateStart.add(Calendar.DATE, 1);
             runDateEnd.add(Calendar.DATE, 1);
-          }
-          break;
+            break;
+          case Calendar.WEDNESDAY:
+            break;
+          case Calendar.THURSDAY:
+            runDateStart.add(Calendar.DATE, -1);
+            runDateEnd.add(Calendar.DATE, -1);
+            break;
+          case Calendar.FRIDAY:
+            runDateStart.add(Calendar.DATE, -2);
+            runDateEnd.add(Calendar.DATE, -2);
+            break;
+          default:
+            while (runDateStart.get(Calendar.DAY_OF_WEEK) != Calendar.WEDNESDAY) {
+              runDateStart.add(Calendar.DATE, 1);
+              runDateEnd.add(Calendar.DATE, 1);
+            }
+            break;
       }
       //Define the final date range
       runDateStart.add(Calendar.DATE, -2);
@@ -383,7 +459,7 @@ public class PilotOnlineReader implements DataReader {
       runDateEnd.set(Calendar.MINUTE, 0);
       runDateEnd.set(Calendar.SECOND, 0);
       runDateEnd.set(Calendar.MILLISECOND, 0);
-      
+
       processLog.add("INFO: Processing organizations/vehicles: " + organizationList.size() + " for " + runDateStart.getTime() + " through " + runDateEnd.getTime());
       int vehicleCount = 0;
       Iterator organizations = organizationList.iterator();
@@ -473,18 +549,18 @@ public class PilotOnlineReader implements DataReader {
             thisPicture);
         File destinationPicture = new File(pictureDestinationPath + thisPicture + ".jpg");
         if (sourcePicture.exists() && !destinationPicture.exists()) {
-	  try {
+          try {
             ImageUtils.saveThumbnail(sourcePicture, destinationPicture, 285.0, -1.0);
-	  } catch(Exception e) {
-	    ++failureCount;
+          } catch (Exception e) {
+            ++failureCount;
             e.printStackTrace(System.out);
-	    processLog.add("ERROR: Processing picture-> " + e.getMessage());
-	  }
+            processLog.add("ERROR: Processing picture-> " + e.getMessage());
+          }
         }
       }
       if (failureCount == picturesToProcess.size()) {
-	processLog.add("ERROR: No pictures scaled");
-	processOK = false;
+        processLog.add("ERROR: No pictures scaled");
+        processOK = false;
       }
     }
 
@@ -531,9 +607,9 @@ public class PilotOnlineReader implements DataReader {
     } else {
       processLog.add("ERROR: FTP Sending data-> Skipped because of previous error");
     }
-    
+
     processLog.add("INFO: PilotOnlineReader-> Finished " + new java.util.Date());
-    
+
     if (logUrl != null) {
       try {
         CFSHttpXMLWriter serverLog = new CFSHttpXMLWriter();
@@ -550,12 +626,12 @@ public class PilotOnlineReader implements DataReader {
         logRecord.addField("version", this.getVersion());
         logRecord.addField("systemId", logSystemId);
         logRecord.addField("clientId", logClientId);
-        logRecord.addField("status", (processOK?0:1));
+        logRecord.addField("status", (processOK ? 0 : 1));
         //Add the data to the record
         StringBuffer logText = new StringBuffer();
         Iterator logData = processLog.iterator();
         while (logData.hasNext()) {
-          String logItem = (String)logData.next();
+          String logItem = (String) logData.next();
           logText.append(logItem);
           if (logData.hasNext()) {
             logText.append(System.getProperty("line.separator"));
@@ -567,12 +643,12 @@ public class PilotOnlineReader implements DataReader {
         e.printStackTrace();
       }
     }
-    
+
     //Local Debug
     if (System.getProperty("DEBUG") != null) {
       Iterator logData = processLog.iterator();
       while (logData.hasNext()) {
-        String logItem = (String)logData.next();
+        String logItem = (String) logData.next();
         System.out.println(logItem);
       }
     }

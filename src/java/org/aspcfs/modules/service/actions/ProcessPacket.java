@@ -1,6 +1,17 @@
 /*
- *  Copyright 2002 Dark Horse Ventures
- *  Class begins with "Process" so it bypasses security
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package org.aspcfs.modules.service.actions;
 
@@ -67,13 +78,13 @@ public final class ProcessPacket extends CFSModule {
       //it's being used for the ConnectionElement only.
       //Keep this session low (5 minutes)
       context.getSession().setMaxInactiveInterval(300);
-      
+
       //Since this module bypasses the user login module, set this "user's"
       //connection info to simulate the login; currently required for getConnection
       context.getSession().setAttribute("ConnectionElement", ce);
-      
+
       db = this.getConnection(context);
-      
+
       if (!"true".equals(getPref(context, "WEBSERVER.ASPMODE"))) {
         // If binary version then perform a lookup in the system table to set the authcode
         //auth.setAuthCode();
@@ -108,7 +119,7 @@ public final class ProcessPacket extends CFSModule {
 
         //2nd connection when transactions need to do additional processing
         dbLookup = this.getConnection(context);
-        
+
         //Process the transactions
         LinkedList transactionList = new LinkedList();
         xml.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
@@ -120,7 +131,7 @@ public final class ProcessPacket extends CFSModule {
             Element thisElement = (Element) trans.next();
             Transaction thisTransaction = new Transaction();
             thisTransaction.setPacketContext(packetContext);
-  
+
             SyncTable metaMapping = new SyncTable();
             metaMapping.setName("meta");
             metaMapping.setMappedClassName("org.aspcfs.modules.service.base.TransactionMeta");

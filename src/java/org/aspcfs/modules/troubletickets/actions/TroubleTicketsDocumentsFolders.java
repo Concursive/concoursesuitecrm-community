@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.troubletickets.actions;
 
 import javax.servlet.*;
@@ -19,17 +34,18 @@ import com.zeroio.iteam.actions.*;
 /**
  *  Description of the Class
  *
- * @author     partha
- * @created    July 28, 2004
- * @version    $Id$
+ *@author     partha
+ *@created    July 28, 2004
+ *@version    $Id: TroubleTicketsDocumentsFolders.java,v 1.2 2004/08/05 20:37:41
+ *      mrajkowski Exp $
  */
 public final class TroubleTicketsDocumentsFolders extends CFSModule {
 
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     Exception errorMessage = null;
@@ -60,8 +76,8 @@ public final class TroubleTicketsDocumentsFolders extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     Exception errorMessage = null;
@@ -113,8 +129,8 @@ public final class TroubleTicketsDocumentsFolders extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -151,8 +167,8 @@ public final class TroubleTicketsDocumentsFolders extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     Exception errorMessage = null;
@@ -186,8 +202,8 @@ public final class TroubleTicketsDocumentsFolders extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     //Parameters
@@ -218,8 +234,8 @@ public final class TroubleTicketsDocumentsFolders extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSaveMove(ActionContext context) {
     //Parameters
@@ -259,12 +275,13 @@ public final class TroubleTicketsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Adds a feature to the Ticket attribute of the TroubleTicketsDocumentsFolders object
+   *  Adds a feature to the Ticket attribute of the
+   *  TroubleTicketsDocumentsFolders object
    *
-   * @param  context           The feature to be added to the Ticket attribute
-   * @param  db                The feature to be added to the Ticket attribute
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  context           The feature to be added to the Ticket attribute
+   *@param  db                The feature to be added to the Ticket attribute
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   private int addTicket(ActionContext context, Connection db) throws SQLException {
     String ticketId = (String) context.getRequest().getParameter("tId");
@@ -276,13 +293,14 @@ public final class TroubleTicketsDocumentsFolders extends CFSModule {
 
 
   /**
-   *  Adds a feature to the Ticket attribute of the TroubleTicketsDocumentsFolders object
+   *  Adds a feature to the Ticket attribute of the
+   *  TroubleTicketsDocumentsFolders object
    *
-   * @param  context           The feature to be added to the Ticket attribute
-   * @param  db                The feature to be added to the Ticket attribute
-   * @param  ticketId          The feature to be added to the Ticket attribute
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  context           The feature to be added to the Ticket attribute
+   *@param  db                The feature to be added to the Ticket attribute
+   *@param  ticketId          The feature to be added to the Ticket attribute
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   private int addTicket(ActionContext context, Connection db, String ticketId) throws SQLException {
     context.getRequest().setAttribute("tId", ticketId);

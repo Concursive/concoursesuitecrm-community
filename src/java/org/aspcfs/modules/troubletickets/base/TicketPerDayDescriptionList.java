@@ -1,5 +1,18 @@
-//Copyright 2001 Dark Horse Ventures
-
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.troubletickets.base;
 
 import java.util.*;
@@ -39,6 +52,7 @@ public class TicketPerDayDescriptionList extends ArrayList {
    *  Constructor for the TicketPerDayDescriptionList object
    *
    *@param  request  Description of the Parameter
+   *@param  errors   Description of the Parameter
    */
   public TicketPerDayDescriptionList(HttpServletRequest request, HashMap errors) {
     int i = 1;
@@ -47,19 +61,19 @@ public class TicketPerDayDescriptionList extends ArrayList {
     totalLaborHours = 0;
     totalLaborMinutes = 0;
     while (request.getParameter("activityDate" + i) != null) {
-        if (!(request.getParameter("activityDate" + i).trim().equals(""))) {
-          TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
-          try{
-            thisPerDayDescription.buildRecord(request, i);
-            this.totalTravelHours = totalTravelHours + thisPerDayDescription.getTravelHours();
-            this.totalTravelMinutes = totalTravelMinutes + thisPerDayDescription.getTravelMinutes();
-            this.totalLaborHours = totalLaborHours + thisPerDayDescription.getLaborHours();
-            this.totalLaborMinutes = totalLaborMinutes + thisPerDayDescription.getLaborMinutes();
-          }catch(Exception e){
-            errors.put("activityDate" + i + "Error","invalid date");
-          }
-          this.add(thisPerDayDescription);
+      if (!(request.getParameter("activityDate" + i).trim().equals(""))) {
+        TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
+        try {
+          thisPerDayDescription.buildRecord(request, i);
+          this.totalTravelHours = totalTravelHours + thisPerDayDescription.getTravelHours();
+          this.totalTravelMinutes = totalTravelMinutes + thisPerDayDescription.getTravelMinutes();
+          this.totalLaborHours = totalLaborHours + thisPerDayDescription.getLaborHours();
+          this.totalLaborMinutes = totalLaborMinutes + thisPerDayDescription.getLaborMinutes();
+        } catch (Exception e) {
+          errors.put("activityDate" + i + "Error", "invalid date");
         }
+        this.add(thisPerDayDescription);
+      }
       i++;
     }
     totalTravelHours = totalTravelHours + totalTravelMinutes / 60;

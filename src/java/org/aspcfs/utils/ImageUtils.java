@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.utils;
 
 import java.io.*;
@@ -46,30 +61,29 @@ public class ImageUtils {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("ImageUtils-> Ratio: " + ratio);
     }
-    
+
     //Soften
     try {
       float softenFactor = 0.05f;
-      float[] softenArray = {0, softenFactor, 0, softenFactor, 1-(softenFactor*4), softenFactor, 0, softenFactor, 0};
+      float[] softenArray = {0, softenFactor, 0, softenFactor, 1 - (softenFactor * 4), softenFactor, 0, softenFactor, 0};
       Kernel kernel = new Kernel(3, 3, softenArray);
       ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
       thumbnailImage = cOp.filter(thumbnailImage, null);
     } catch (Exception e) {
     }
-     
+
     //Sharpen
-    /* float[] sharpenArray = { 0, -1, 0, -1, 5, -1, 0, -1, 0 };
-    Kernel kernel = new Kernel(3, 3, sharpenArray);
-    ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-    thumbnailImage = cOp.filter(thumbnailImage, null);
+    /*
+     *  float[] sharpenArray = { 0, -1, 0, -1, 5, -1, 0, -1, 0 };
+     *  Kernel kernel = new Kernel(3, 3, sharpenArray);
+     *  ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+     *  thumbnailImage = cOp.filter(thumbnailImage, null);
      */
-    
     //Scale
     AffineTransform at = AffineTransform.getScaleInstance(ratio, ratio);
     AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
     thumbnailImage = op.filter(thumbnailImage, null);
-    
-    
+
     ImageIO.write(thumbnailImage, "jpg", thumbnailFile);
   }
 
@@ -121,8 +135,8 @@ public class ImageUtils {
 
 
   /**
-   *  Uses HtmlDoc command line tool, pipes an HTML URL to GhostScript
-   *  which outputs a JPEG file with the given dimensions.
+   *  Uses HtmlDoc command line tool, pipes an HTML URL to GhostScript which
+   *  outputs a JPEG file with the given dimensions.
    *
    *@param  url        Description of the Parameter
    *@param  filename   Description of the Parameter
@@ -187,8 +201,8 @@ public class ImageUtils {
 
 
   /**
-   *  Uses HtmlDoc command line tool, pipes an HTML URL to GhostScript
-   *  which outputs a JPEG file.
+   *  Uses HtmlDoc command line tool, pipes an HTML URL to GhostScript which
+   *  outputs a JPEG file.
    *
    *@param  url       Description of the Parameter
    *@param  filename  Description of the Parameter

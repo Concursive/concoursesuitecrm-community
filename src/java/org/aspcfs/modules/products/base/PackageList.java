@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.products.base;
 
 import java.util.ArrayList;
@@ -11,9 +26,9 @@ import org.aspcfs.modules.base.SyncableList;
 /**
  *  Description of the Class
  *
- * @author     ananth
- * @created    April 12, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    April 12, 2004
+ *@version    $Id$
  */
 public class PackageList extends ArrayList implements SyncableList {
   public final static String tableName = "package";
@@ -30,7 +45,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Sets the id attribute of the PackageList object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -40,7 +55,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Sets the id attribute of the PackageList object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -50,7 +65,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Gets the id attribute of the PackageList object
    *
-   * @return    The id value
+   *@return    The id value
    */
   public int getId() {
     return id;
@@ -61,7 +76,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Sets the lastAnchor attribute of the PackageList object
    *
-   * @param  tmp  The new lastAnchor value
+   *@param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -71,7 +86,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Sets the lastAnchor attribute of the PackageList object
    *
-   * @param  tmp  The new lastAnchor value
+   *@param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = DatabaseUtils.parseTimestamp(tmp);
@@ -81,7 +96,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Sets the nextAnchor attribute of the PackageList object
    *
-   * @param  tmp  The new nextAnchor value
+   *@param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -91,7 +106,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Sets the nextAnchor attribute of the PackageList object
    *
-   * @param  tmp  The new nextAnchor value
+   *@param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = DatabaseUtils.parseTimestamp(tmp);
@@ -101,7 +116,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Sets the syncType attribute of the PackageList object
    *
-   * @param  tmp  The new syncType value
+   *@param  tmp  The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -111,7 +126,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Sets the syncType attribute of the PackageList object
    *
-   * @param  tmp  The new syncType value
+   *@param  tmp  The new syncType value
    */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
@@ -121,7 +136,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Sets the pagedListInfo attribute of the PackageList object
    *
-   * @param  tmp  The new pagedListInfo value
+   *@param  tmp  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -131,7 +146,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Sets the enabled attribute of the PackageList object
    *
-   * @param  tmp  The new enabled value
+   *@param  tmp  The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -141,7 +156,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Sets the enabled attribute of the PackageList object
    *
-   * @param  tmp  The new enabled value
+   *@param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -151,7 +166,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Sets the categoryId attribute of the PackageList object
    *
-   * @param  tmp  The new categoryId value
+   *@param  tmp  The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -161,7 +176,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Sets the categoryId attribute of the PackageList object
    *
-   * @param  tmp  The new categoryId value
+   *@param  tmp  The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -171,7 +186,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Gets the tableName attribute of the PackageList object
    *
-   * @return    The tableName value
+   *@return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -181,7 +196,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Gets the uniqueField attribute of the PackageList object
    *
-   * @return    The uniqueField value
+   *@return    The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -191,7 +206,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Gets the lastAnchor attribute of the PackageList object
    *
-   * @return    The lastAnchor value
+   *@return    The lastAnchor value
    */
   public Timestamp getLastAnchor() {
     return lastAnchor;
@@ -201,7 +216,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Gets the nextAnchor attribute of the PackageList object
    *
-   * @return    The nextAnchor value
+   *@return    The nextAnchor value
    */
   public Timestamp getNextAnchor() {
     return nextAnchor;
@@ -211,7 +226,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Gets the syncType attribute of the PackageList object
    *
-   * @return    The syncType value
+   *@return    The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -221,7 +236,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Gets the pagedListInfo attribute of the PackageList object
    *
-   * @return    The pagedListInfo value
+   *@return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -231,7 +246,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Gets the enabled attribute of the PackageList object
    *
-   * @return    The enabled value
+   *@return    The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -241,7 +256,7 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Gets the categoryId attribute of the PackageList object
    *
-   * @return    The categoryId value
+   *@return    The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -250,7 +265,7 @@ public class PackageList extends ArrayList implements SyncableList {
 
 
   /**
-   *Constructor for the PackageList object
+   *  Constructor for the PackageList object
    */
   public PackageList() { }
 
@@ -258,8 +273,8 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -329,8 +344,8 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -344,8 +359,8 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   *@param  sqlFilter  Description of the Parameter
+   *@param  db         Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     if (id > -1) {
@@ -381,9 +396,9 @@ public class PackageList extends ArrayList implements SyncableList {
   /**
    *  Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

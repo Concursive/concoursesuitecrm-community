@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.orders.base;
 
 import java.sql.*;
@@ -8,12 +23,13 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 
 /**
- *  This represents a list of Products that the customer requested.
- *  This is associated with a particular order
+ *  This represents a list of Products that the customer requested. This is
+ *  associated with a particular order
  *
- * @author     ananth
- * @created    March 18, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    March 18, 2004
+ *@version    $Id: OrderProductList.java,v 1.2 2004/05/04 15:52:27 mrajkowski
+ *      Exp $
  */
 public class OrderProductList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
@@ -26,7 +42,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Sets the pagedListInfo attribute of the OrderProductList object
    *
-   * @param  tmp  The new pagedListInfo value
+   *@param  tmp  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -36,7 +52,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Sets the orderId attribute of the OrderProductList object
    *
-   * @param  tmp  The new orderId value
+   *@param  tmp  The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -46,7 +62,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Sets the orderId attribute of the OrderProductList object
    *
-   * @param  tmp  The new orderId value
+   *@param  tmp  The new orderId value
    */
   public void setOrderId(String tmp) {
     this.orderId = Integer.parseInt(tmp);
@@ -56,7 +72,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Sets the statusId attribute of the OrderProductList object
    *
-   * @param  tmp  The new statusId value
+   *@param  tmp  The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -66,7 +82,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Sets the statusId attribute of the OrderProductList object
    *
-   * @param  tmp  The new statusId value
+   *@param  tmp  The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -76,7 +92,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Sets the buildResources attribute of the OrderProductList object
    *
-   * @param  tmp  The new buildResources value
+   *@param  tmp  The new buildResources value
    */
   public void setBuildResources(boolean tmp) {
     this.buildResources = tmp;
@@ -86,7 +102,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Sets the buildResources attribute of the OrderProductList object
    *
-   * @param  tmp  The new buildResources value
+   *@param  tmp  The new buildResources value
    */
   public void setBuildResources(String tmp) {
     this.buildResources = DatabaseUtils.parseBoolean(tmp);
@@ -96,7 +112,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Sets the productId attribute of the OrderProductList object
    *
-   * @param  tmp  The new productId value
+   *@param  tmp  The new productId value
    */
   public void setProductId(int tmp) {
     this.productId = tmp;
@@ -106,7 +122,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Sets the productId attribute of the OrderProductList object
    *
-   * @param  tmp  The new productId value
+   *@param  tmp  The new productId value
    */
   public void setProductId(String tmp) {
     this.productId = Integer.parseInt(tmp);
@@ -116,7 +132,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Gets the productId attribute of the OrderProductList object
    *
-   * @return    The productId value
+   *@return    The productId value
    */
   public int getProductId() {
     return productId;
@@ -126,7 +142,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Gets the pagedListInfo attribute of the OrderProductList object
    *
-   * @return    The pagedListInfo value
+   *@return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -136,7 +152,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Gets the orderId attribute of the OrderProductList object
    *
-   * @return    The orderId value
+   *@return    The orderId value
    */
   public int getOrderId() {
     return orderId;
@@ -146,7 +162,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Gets the statusId attribute of the OrderProductList object
    *
-   * @return    The statusId value
+   *@return    The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -156,7 +172,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Gets the buildResources attribute of the OrderProductList object
    *
-   * @return    The buildResources value
+   *@return    The buildResources value
    */
   public boolean getBuildResources() {
     return buildResources;
@@ -164,7 +180,7 @@ public class OrderProductList extends ArrayList {
 
 
   /**
-   *Constructor for the OrderProductList object
+   *  Constructor for the OrderProductList object
    */
   public OrderProductList() { }
 
@@ -172,8 +188,8 @@ public class OrderProductList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     System.out.println("inside the build function");
@@ -267,7 +283,7 @@ public class OrderProductList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
+   *@param  sqlFilter  Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -277,11 +293,11 @@ public class OrderProductList extends ArrayList {
     if (orderId > -1) {
       sqlFilter.append("AND op.order_id = ? ");
     }
-    
+
     if (productId > -1) {
       sqlFilter.append("AND op.product_id = ? ");
     }
-    
+
     if (statusId > -1) {
       sqlFilter.append("AND op.status_id = ? ");
     }
@@ -291,9 +307,9 @@ public class OrderProductList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -304,7 +320,7 @@ public class OrderProductList extends ArrayList {
     if (productId > -1) {
       pst.setInt(++i, productId);
     }
-    
+
     if (statusId > -1) {
       pst.setInt(++i, statusId);
     }
@@ -315,8 +331,8 @@ public class OrderProductList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -330,8 +346,8 @@ public class OrderProductList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator i = this.iterator();

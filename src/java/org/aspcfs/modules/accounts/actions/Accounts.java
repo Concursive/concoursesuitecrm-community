@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.accounts.actions;
 
 import javax.servlet.*;
@@ -400,9 +415,9 @@ public final class Accounts extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-view"))) {
       return ("PermissionError");
     }
-    
+
     //Bypass search form for portal users
-    if (isPortalUser(context)){
+    if (isPortalUser(context)) {
       return (executeCommandSearch(context));
     }
 
@@ -452,9 +467,9 @@ public final class Accounts extends CFSModule {
       db = this.getConnection(context);
       buildFormElements(context, db);
       Organization newOrg = (Organization) context.getFormBean();
-      if (newOrg.getEnteredBy() != -1){
-       newOrg.setTypeListToTypes(db); 
-       context.getRequest().setAttribute("OrgDetails", newOrg);
+      if (newOrg.getEnteredBy() != -1) {
+        newOrg.setTypeListToTypes(db);
+        context.getRequest().setAttribute("OrgDetails", newOrg);
       }
     } catch (Exception e) {
       errorCode = 1;
@@ -541,8 +556,8 @@ public final class Accounts extends CFSModule {
 
     try {
       String temporgId = context.getRequest().getParameter("orgId");
-      if (!isRecordAccessPermitted(context,Integer.parseInt(temporgId))){
-         return ("PermissionError");
+      if (!isRecordAccessPermitted(context, Integer.parseInt(temporgId))) {
+        return ("PermissionError");
       }
 
       int tempid = Integer.parseInt(temporgId);
@@ -591,7 +606,7 @@ public final class Accounts extends CFSModule {
       }
 
       //Bypass dashboard and search form for portal users
-      if (isPortalUser(context)){
+      if (isPortalUser(context)) {
         return (executeCommandSearch(context));
       }
 
@@ -658,7 +673,7 @@ public final class Accounts extends CFSModule {
       //For portal usr set source as 'searchForm' explicitly since
       //the search form is bypassed.
       //temporary solution for page redirection for portal user.
-      if (isPortalUser(context)){
+      if (isPortalUser(context)) {
         source = "searchForm";
       }
       //return if no criteria is selected
@@ -670,7 +685,7 @@ public final class Accounts extends CFSModule {
       organizationList.setPagedListInfo(searchListInfo);
       organizationList.setMinerOnly(false);
       organizationList.setTypeId(searchListInfo.getFilterKey("listFilter1"));
-      searchListInfo.setSearchCriteria(organizationList,UserUtils.getUserLocale(context.getRequest()));
+      searchListInfo.setSearchCriteria(organizationList, UserUtils.getUserLocale(context.getRequest()));
       if ("my".equals(searchListInfo.getListView())) {
         organizationList.setOwnerId(this.getUserId(context));
       }
@@ -680,10 +695,11 @@ public final class Accounts extends CFSModule {
       if ("all".equals(searchListInfo.getListView())) {
         organizationList.setIncludeEnabled(-1);
       }
-      
-      if (isPortalUser(context))
+
+      if (isPortalUser(context)) {
         organizationList.setOrgId(getPortalUserPermittedOrgId(context));
-      
+      }
+
       organizationList.buildList(db);
 
       context.getRequest().setAttribute("OrgList", organizationList);
@@ -717,7 +733,7 @@ public final class Accounts extends CFSModule {
     int passedId = Integer.parseInt(context.getRequest().getParameter("orgId"));
 
     //find record permissions for portal users
-    if (!isRecordAccessPermitted(context,passedId)){
+    if (!isRecordAccessPermitted(context, passedId)) {
       return ("PermissionError");
     }
     //Prepare PagedListInfo
@@ -787,7 +803,7 @@ public final class Accounts extends CFSModule {
         addRecentItem(context, newOrg);
       } else {
         processErrors(context, newOrg.getErrors());
-        processWarnings(context,newOrg.getWarnings());
+        processWarnings(context, newOrg.getWarnings());
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -843,7 +859,7 @@ public final class Accounts extends CFSModule {
       resultCount = newOrg.update(db);
       if (resultCount == -1) {
         processErrors(context, newOrg.getErrors());
-        processWarnings(context,newOrg.getWarnings());
+        processWarnings(context, newOrg.getWarnings());
       } else {
         //if this is an individual account, populate and update the primary contact
         if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
@@ -1008,10 +1024,10 @@ public final class Accounts extends CFSModule {
       htmlDialog.addMessage(dependencies.getHtmlString());
       if (thisOrg.getHasOpportunities() || thisOrg.getHasPortalUsers()) {
         String headerMessage = "";
-        if (thisOrg.getHasPortalUsers()){
+        if (thisOrg.getHasPortalUsers()) {
           headerMessage = "This account cannot be deleted because its contacts have (or had) portal access.  <br />";
         }
-        if (thisOrg.getHasOpportunities()){
+        if (thisOrg.getHasOpportunities()) {
           headerMessage = "Please re-assign or delete any opportunities associated with this account first.";
         }
         htmlDialog.setHeader(headerMessage);
@@ -1071,10 +1087,10 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
       newOrg = (Organization) context.getFormBean();
-      if (newOrg.getId() == -1){
+      if (newOrg.getId() == -1) {
         newOrg = new Organization(db, tempid);
-      }else{
-       newOrg.setTypeListToTypes(db); 
+      } else {
+        newOrg.setTypeListToTypes(db);
       }
       SystemStatus systemStatus = this.getSystemStatus(context);
 
@@ -1596,7 +1612,7 @@ public final class Accounts extends CFSModule {
         context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
       }
     } catch (Exception errorMessage) {
-      
+
     } finally {
       this.freeConnection(context, db);
     }

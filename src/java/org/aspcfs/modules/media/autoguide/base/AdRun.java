@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.media.autoguide.base;
 
 import java.sql.*;
@@ -44,6 +59,14 @@ public class AdRun {
     buildRecord(rs);
   }
 
+
+  /**
+   *  Constructor for the AdRun object
+   *
+   *@param  db                Description of the Parameter
+   *@param  adRunId           Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public AdRun(Connection db, int adRunId) throws SQLException {
     String sql =
         "SELECT ad.ad_run_id, ad.inventory_id, " +
@@ -64,6 +87,7 @@ public class AdRun {
     rs.close();
     pst.close();
   }
+
 
   /**
    *  Sets the id attribute of the AdRun object
@@ -93,11 +117,17 @@ public class AdRun {
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the accountInventoryId attribute of the AdRun object
+   *
+   *@param  tmp  The new accountInventoryId value
+   */
   public void setAccountInventoryId(int tmp) {
     setInventoryId(tmp);
   }
-  
+
 
 
   /**
@@ -108,7 +138,13 @@ public class AdRun {
   public void setInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
   }
-  
+
+
+  /**
+   *  Sets the accountInventoryId attribute of the AdRun object
+   *
+   *@param  tmp  The new accountInventoryId value
+   */
   public void setAccountInventoryId(String tmp) {
     setInventoryId(tmp);
   }
@@ -137,7 +173,7 @@ public class AdRun {
     } catch (Exception e) {
       runDate = null;
     }
-    
+
     if (!success) {
       try {
         java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
@@ -284,7 +320,13 @@ public class AdRun {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
-  
+
+
+  /**
+   *  Sets the enteredBy attribute of the AdRun object
+   *
+   *@param  tmp  The new enteredBy value
+   */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
   }
@@ -308,7 +350,13 @@ public class AdRun {
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
   }
-  
+
+
+  /**
+   *  Sets the modifiedBy attribute of the AdRun object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
   }
@@ -362,7 +410,13 @@ public class AdRun {
   public int getInventoryId() {
     return inventoryId;
   }
-  
+
+
+  /**
+   *  Gets the accountInventoryId attribute of the AdRun object
+   *
+   *@return    The accountInventoryId value
+   */
   public int getAccountInventoryId() {
     return inventoryId;
   }
@@ -511,7 +565,7 @@ public class AdRun {
     pst.setInt(++i, enteredBy);
     pst.execute();
     pst.close();
-    
+
     id = DatabaseUtils.getCurrVal(db, "autoguide_ad_run_ad_run_id_seq");
   }
 
@@ -520,6 +574,7 @@ public class AdRun {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@return                   Description of the Return Value
    *@exception  SQLException  Description of Exception
    */
   public int update(Connection db) throws SQLException {
@@ -532,12 +587,12 @@ public class AdRun {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("AdRun-> Updating record: id(" + id + ")");
       }
-      String sql = 
-        "UPDATE autoguide_ad_run " +
-        "SET run_date = ?, ad_type = ?, include_photo = ?, complete_date = ?, " +
-        "completedby = ?, " +
-        "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
-        "WHERE ad_run_id = ? ";
+      String sql =
+          "UPDATE autoguide_ad_run " +
+          "SET run_date = ?, ad_type = ?, include_photo = ?, complete_date = ?, " +
+          "completedby = ?, " +
+          "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+          "WHERE ad_run_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       int i = 0;
       pst.setDate(++i, runDate);
@@ -584,6 +639,7 @@ public class AdRun {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@param  intHierarchyList  Description of the Parameter
    *@exception  SQLException  Description of Exception
    */
   public void markIncomplete(Connection db, String intHierarchyList) throws SQLException {

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.quotes.base;
 
 import java.sql.*;
@@ -10,9 +25,10 @@ import org.aspcfs.utils.DateUtils;
 /**
  *  Description of the Class
  *
- * @author     ananth
- * @created    March 24, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    March 24, 2004
+ *@version    $Id: QuoteProductOptionList.java,v 1.2 2004/05/04 15:52:27
+ *      mrajkowski Exp $
  */
 public class QuoteProductOptionList extends ArrayList {
   private int itemId = -1;
@@ -22,7 +38,7 @@ public class QuoteProductOptionList extends ArrayList {
   /**
    *  Sets the itemId attribute of the QuoteProductOptionList object
    *
-   * @param  tmp  The new itemId value
+   *@param  tmp  The new itemId value
    */
   public void setItemId(int tmp) {
     this.itemId = tmp;
@@ -32,7 +48,7 @@ public class QuoteProductOptionList extends ArrayList {
   /**
    *  Sets the itemId attribute of the QuoteProductOptionList object
    *
-   * @param  tmp  The new itemId value
+   *@param  tmp  The new itemId value
    */
   public void setItemId(String tmp) {
     this.itemId = Integer.parseInt(tmp);
@@ -42,7 +58,7 @@ public class QuoteProductOptionList extends ArrayList {
   /**
    *  Sets the statusId attribute of the QuoteProductOptionList object
    *
-   * @param  tmp  The new statusId value
+   *@param  tmp  The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -52,7 +68,7 @@ public class QuoteProductOptionList extends ArrayList {
   /**
    *  Sets the statusId attribute of the QuoteProductOptionList object
    *
-   * @param  tmp  The new statusId value
+   *@param  tmp  The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -62,7 +78,7 @@ public class QuoteProductOptionList extends ArrayList {
   /**
    *  Gets the itemId attribute of the QuoteProductOptionList object
    *
-   * @return    The itemId value
+   *@return    The itemId value
    */
   public int getItemId() {
     return itemId;
@@ -72,7 +88,7 @@ public class QuoteProductOptionList extends ArrayList {
   /**
    *  Gets the statusId attribute of the QuoteProductOptionList object
    *
-   * @return    The statusId value
+   *@return    The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -80,7 +96,7 @@ public class QuoteProductOptionList extends ArrayList {
 
 
   /**
-   *Constructor for the QuoteProductOptionList object
+   *  Constructor for the QuoteProductOptionList object
    */
   public QuoteProductOptionList() { }
 
@@ -88,8 +104,8 @@ public class QuoteProductOptionList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -132,7 +148,7 @@ public class QuoteProductOptionList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
+   *@param  sqlFilter  Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -152,9 +168,9 @@ public class QuoteProductOptionList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -172,8 +188,8 @@ public class QuoteProductOptionList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -187,8 +203,8 @@ public class QuoteProductOptionList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator i = this.iterator();

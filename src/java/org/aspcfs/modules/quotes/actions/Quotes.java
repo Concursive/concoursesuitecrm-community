@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.quotes.actions;
 
 import javax.servlet.*;
@@ -29,6 +44,7 @@ import org.aspcfs.modules.actionlist.base.*;
 import org.aspcfs.modules.quotes.base.*;
 import org.aspcfs.controller.*;
 import org.aspcfs.modules.quotes.beans.*;
+
 /**
  *  Description of the Class
  *
@@ -184,7 +200,7 @@ public final class Quotes extends CFSModule {
       //Build the quote list
       quoteList.setPagedListInfo(searchListInfo);
       quoteList.setTypeId(searchListInfo.getFilterKey("listFilter1"));
-      searchListInfo.setSearchCriteria(quoteList,UserUtils.getUserLocale(context.getRequest()));
+      searchListInfo.setSearchCriteria(quoteList, UserUtils.getUserLocale(context.getRequest()));
       /*
        *  if ("my".equals(searchListInfo.getListView())) {
        *  quoteList.setOwnerId(this.getUserId(context));
@@ -377,46 +393,44 @@ public final class Quotes extends CFSModule {
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
-/*  public String executeCommandSaveNotes(ActionContext context) {
-    int quoteId = -1;
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
-    String customerString = (String) context.getRequest().getParameter("customer");
-    User user = this.getUser(context, this.getUserId(context));
-    int orgId = user.getContact().getOrgId();
-    Quote quote = null;
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
-      quoteId = Integer.parseInt(quoteIdString);
-      System.out.println("Quote Id in the SaveNotes method is -> " + quoteId);
-      quote = new Quote(db, quoteId);
-      quote.buildProducts(db);
-      quote.setModifiedBy(this.getUserId(context));
-
-      QuoteNotesBean notes = (QuoteNotesBean) context.getFormBean();
-      java.util.Date currentTime = Calendar.getInstance().getTime();
-
-      StringBuffer oldNotes = new StringBuffer("");
-      oldNotes.append(quote.getNotes() + "\r\n\r\n");
-      oldNotes.append("On ->" + currentTime.toString() + " Modified By ->" + user.getContact().getNameFirstLast() + "\r\n");
-      oldNotes.append(notes.getNotes());
-      quote.setNotes(oldNotes.toString());
-      System.out.println("This is the new quote Notes in the SaveNotes action method \n" + oldNotes.toString());
-      quote.update(db);
-      if ("yes".equals(customerString)) {
-        return executeCommandCustomerDisplay(context);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
-    return executeCommandDisplay(context);
-  }
-*/
-
+  /*
+   *  public String executeCommandSaveNotes(ActionContext context) {
+   *  int quoteId = -1;
+   *  String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+   *  String customerString = (String) context.getRequest().getParameter("customer");
+   *  User user = this.getUser(context, this.getUserId(context));
+   *  int orgId = user.getContact().getOrgId();
+   *  Quote quote = null;
+   *  Connection db = null;
+   *  try {
+   *  db = this.getConnection(context);
+   *  quoteId = Integer.parseInt(quoteIdString);
+   *  System.out.println("Quote Id in the SaveNotes method is -> " + quoteId);
+   *  quote = new Quote(db, quoteId);
+   *  quote.buildProducts(db);
+   *  quote.setModifiedBy(this.getUserId(context));
+   *  QuoteNotesBean notes = (QuoteNotesBean) context.getFormBean();
+   *  java.util.Date currentTime = Calendar.getInstance().getTime();
+   *  StringBuffer oldNotes = new StringBuffer("");
+   *  oldNotes.append(quote.getNotes() + "\r\n\r\n");
+   *  oldNotes.append("On ->" + currentTime.toString() + " Modified By ->" + user.getContact().getNameFirstLast() + "\r\n");
+   *  oldNotes.append(notes.getNotes());
+   *  quote.setNotes(oldNotes.toString());
+   *  System.out.println("This is the new quote Notes in the SaveNotes action method \n" + oldNotes.toString());
+   *  quote.update(db);
+   *  if ("yes".equals(customerString)) {
+   *  return executeCommandCustomerDisplay(context);
+   *  }
+   *  } catch (Exception e) {
+   *  e.printStackTrace();
+   *  context.getRequest().setAttribute("Error", e);
+   *  return ("SystemError");
+   *  } finally {
+   *  this.freeConnection(context, db);
+   *  }
+   *  return executeCommandDisplay(context);
+   *  }
+   */
   /**
    *  Description of the Method
    *
@@ -536,7 +550,7 @@ public final class Quotes extends CFSModule {
     return executeCommandList(context);
   }
 
-  
+
   /**
    *  Adds a feature to the Quote attribute of the Quotes object
    *
@@ -567,14 +581,14 @@ public final class Quotes extends CFSModule {
       db = this.getConnection(context);
       //Retrieve the ticket
       ticket = new Ticket(db, ticketId);
-      if(!ticket.getProblem().equals("New Ad Design Request") && ticket.getCustomerProductId() != -1){
+      if (!ticket.getProblem().equals("New Ad Design Request") && ticket.getCustomerProductId() != -1) {
         CustomerProduct customerProduct = new CustomerProduct(db, ticket.getCustomerProductId());
         ProductCatalog product = new ProductCatalog(db, productId);
-        quoteDetails.append("Ad ID selected : "+customerProduct.getId()+"\r\n");
-        quoteDetails.append("Ad Description : "+customerProduct.getDescription()+"\r\n");
-        quoteDetails.append("Product ID selected : "+product.getId()+"\r\n");
-        quoteDetails.append("Product Dimensions : "+product.getShortDescription()+"\r\n\r\n");
-        quoteDetails.append(ticket.getProblem()+"\r\n");
+        quoteDetails.append("Ad ID selected : " + customerProduct.getId() + "\r\n");
+        quoteDetails.append("Ad Description : " + customerProduct.getDescription() + "\r\n");
+        quoteDetails.append("Product ID selected : " + product.getId() + "\r\n");
+        quoteDetails.append("Product Dimensions : " + product.getShortDescription() + "\r\n\r\n");
+        quoteDetails.append(ticket.getProblem() + "\r\n");
       }
       //Retrieve the lookup list for the quote status
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -583,16 +597,16 @@ public final class Quotes extends CFSModule {
       //Create a new instance of Quote
       quote = new Quote();
       quote.setOrgId(ticket.getOrgId());
-      System.out.println("This is the quote Id "+quote.getQuoteId());
+      System.out.println("This is the quote Id " + quote.getQuoteId());
       quote.setContactId(ticket.getContactId());
-      System.out.println("This is the contactId "+quote.getContactId());
+      System.out.println("This is the contactId " + quote.getContactId());
       quote.setEnteredBy(ticket.getEnteredBy());
       quote.setModifiedBy(user.getId());
 
 //      System.out.println("After the ticket has been created "+ticket.getId());
 //      context.getRequest().setAttribute("ticket", ticket);
       // Retrieve the folder data and convert it to a StringBuffer
-      if(ticket.getProblem().equals("New Ad Design Request")){
+      if (ticket.getProblem().equals("New Ad Design Request")) {
         int categoryId = CustomFieldCategory.getIdFromName(db, moduleId, categoryName);
         CustomFieldRecordList recordList = new CustomFieldRecordList();
         recordList.setLinkModuleId(Constants.FOLDERS_TICKETS);
@@ -602,7 +616,7 @@ public final class Quotes extends CFSModule {
         System.out.println("After the record list has been created with size" + recordList.size());
         if (recordList.size() > 0) {
           record = (CustomFieldRecord) recordList.get(0);
-  //        System.out.println("Inside the if statement... checking the records..--> record ID ->"+record.getId());
+          //        System.out.println("Inside the if statement... checking the records..--> record ID ->"+record.getId());
           // Query the field description and resulting data
           questionnaire = new CustomFieldCategory(db, categoryId);
           questionnaire.setLinkModuleId(Constants.FOLDERS_TICKETS);

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.apps.notifier;
 
 import org.aspcfs.apps.common.*;
@@ -48,6 +63,7 @@ public class Notifier extends ReportBuilder {
    */
   public final static String fs = System.getProperty("file.separator");
   public final static String lf = System.getProperty("line.separator");
+
 
   /**
    *  Constructor for the Notifier object public Notifier() { } ** Starts the
@@ -114,11 +130,11 @@ public class Notifier extends ReportBuilder {
         //Get the time range for the reports
         Calendar calToday = Calendar.getInstance();
         today = new java.sql.Timestamp(calToday.getTimeInMillis());
-        
+
         Calendar calYesterday = Calendar.getInstance();
         calYesterday.set(Calendar.HOUR_OF_DAY, -25);
         yesterday = new java.sql.Timestamp(calYesterday.getTimeInMillis());
-        
+
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Notifier-> Start Date: " + today.toString() + "\nAlert End Date: " + yesterday.toString());
         }
@@ -615,7 +631,7 @@ public class Notifier extends ReportBuilder {
     if (contactReport == null || contactReport.size() == 0) {
       return false;
     }
-    String filePath = (String) config.get("FILELIBRARY") + fs + dbName + fs + "campaign" + fs +  CFSModule.getDatePath(new java.util.Date()) + fs;
+    String filePath = (String) config.get("FILELIBRARY") + fs + dbName + fs + "campaign" + fs + CFSModule.getDatePath(new java.util.Date()) + fs;
     String baseFilename = contactReport.generateFilename();
     File f = new File(filePath);
     f.mkdirs();

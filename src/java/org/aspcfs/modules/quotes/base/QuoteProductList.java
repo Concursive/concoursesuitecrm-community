@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.quotes.base;
 
 import java.sql.*;
@@ -303,10 +318,11 @@ public class QuoteProductList extends ArrayList {
    *  Gets the quoteProductFromProductId attribute of the QuoteProductList
    *  object
    *
-   *@param  id  Description of the Parameter
-   *@return     The quoteProductFromProductId value
+   *@param  id                Description of the Parameter
+   *@return                   The quoteProductFromProductId value
+   *@exception  SQLException  Description of the Exception
    */
-  public QuoteProduct getQuoteProductFromProductId(int id) throws SQLException{
+  public QuoteProduct getQuoteProductFromProductId(int id) throws SQLException {
     QuoteProduct result = null;
     Iterator iterator = (Iterator) this.iterator();
     while (iterator.hasNext()) {
@@ -318,13 +334,21 @@ public class QuoteProductList extends ArrayList {
     }
     return result;
   }
-  
-  public void populate(Connection db, ActionContext context) throws SQLException{
-    for(int i=1;;i++){
-      String productIdString = (String) context.getRequest().getParameter("product_"+i);
-      String quantityString = (String) context.getRequest().getParameter("qty_"+i);
-      if(productIdString != null && !"".equals(productIdString)){
-        if(quantityString != null && !"".equals(quantityString)){
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void populate(Connection db, ActionContext context) throws SQLException {
+    for (int i = 1; ; i++) {
+      String productIdString = (String) context.getRequest().getParameter("product_" + i);
+      String quantityString = (String) context.getRequest().getParameter("qty_" + i);
+      if (productIdString != null && !"".equals(productIdString)) {
+        if (quantityString != null && !"".equals(quantityString)) {
           ProductCatalog product = new ProductCatalog(db, Integer.parseInt(productIdString));
           product.setBuildProductOptions(true);
           product.buildProductOptions(db);
@@ -334,7 +358,7 @@ public class QuoteProductList extends ArrayList {
           quoteProduct.setQuantity(Integer.parseInt(quantityString));
           this.add(quoteProduct);
         }
-      }else{
+      } else {
         break;
       }
     }

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.healthcare.edit.actions;
 
 import javax.servlet.*;
@@ -101,8 +116,8 @@ public final class ProcessCalculation extends CFSModule {
       //get connections to the remote production database
       sqlDriver = new ConnectionPool();
       sqlDriver.setMaxConnections(2);
-      sqlDriver.setMaxIdleTimeSeconds(60*10);
-      sqlDriver.setMaxDeadTimeSeconds(60*60);
+      sqlDriver.setMaxIdleTimeSeconds(60 * 10);
+      sqlDriver.setMaxDeadTimeSeconds(60 * 60);
       sqlDriver.setAllowShrinking(true);
       if (System.getProperty("DEBUG") != null) {
         sqlDriver.setDebug(true);
@@ -288,7 +303,7 @@ public final class ProcessCalculation extends CFSModule {
           }
           ArrayList previousValues = new ArrayList();
           int foundId = -1;
-          
+
           //try to find if MTD info is in there already and matches the payorId for this office (taxId)
           Iterator op = officeRecords.iterator();
           while (op.hasNext() && foundId == -1) {
@@ -454,6 +469,7 @@ public final class ProcessCalculation extends CFSModule {
    *
    *@param  context  Description of the Parameter
    *@param  param    Description of the Parameter
+   *@param  ce       Description of the Parameter
    *@return          The value value
    */
   private int getValueAsInt(ActionContext context, ConnectionElement ce, String param) {
@@ -466,6 +482,7 @@ public final class ProcessCalculation extends CFSModule {
    *
    *@param  context  Description of the Parameter
    *@param  param    Description of the Parameter
+   *@param  ce       Description of the Parameter
    *@return          The value value
    */
   private String getValue(ActionContext context, ConnectionElement ce, String param) {

@@ -1,5 +1,18 @@
-//Copyright 2001 Dark Horse Ventures
-
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.communications.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -64,11 +77,11 @@ public class Recipient extends GenericBean {
     if (recipientId == -1) {
       throw new SQLException("Recipient ID not specified.");
     }
-    
-    String sql = 
-      "SELECT * " +
-      "FROM scheduled_recipient r " +
-      "WHERE r.id = ? ";
+
+    String sql =
+        "SELECT * " +
+        "FROM scheduled_recipient r " +
+        "WHERE r.id = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, recipientId);
     ResultSet rs = pst.executeQuery();
@@ -82,54 +95,289 @@ public class Recipient extends GenericBean {
     }
   }
 
-  public void setId(int tmp) { this.id = tmp; }
-  public void setCampaignId(int tmp) { this.campaignId = tmp; }
-  public void setContactId(int tmp) { this.contactId = tmp; }
-  public void setRunId(int tmp) { this.runId = tmp; }
-  public void setStatusId(int tmp) { this.statusId = tmp; }
-  public void setStatus(String tmp) { this.status = tmp; }
-  public void setStatusDate(java.sql.Timestamp tmp) { this.statusDate = tmp; }
-  public void setScheduledDate(java.sql.Timestamp tmp) { this.scheduledDate = tmp; }
-  public void setSentDate(java.sql.Timestamp tmp) { this.sentDate = tmp; }
-  public void setReplyDate(java.sql.Timestamp tmp) { this.replyDate = tmp; }
-  public void setBounceDate(java.sql.Timestamp tmp) { this.bounceDate = tmp; }
-  public void setContact(Contact tmp) { this.contact = tmp; }
 
-  public int getId() { return id; }
-  public int getCampaignId() { return campaignId; }
-  public int getContactId() { return contactId; }
-  public int getRunId() { return runId; }
-  public int getStatusId() { return statusId; }
-  public String getStatus() { return status; }
-  public java.sql.Timestamp getStatusDate() { return statusDate; }
-  public java.sql.Timestamp getScheduledDate() { return scheduledDate; }
-  public java.sql.Timestamp getSentDate() { return sentDate; }
-  public String getSentDateString() { 
+  /**
+   *  Sets the id attribute of the Recipient object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(int tmp) {
+    this.id = tmp;
+  }
+
+
+  /**
+   *  Sets the campaignId attribute of the Recipient object
+   *
+   *@param  tmp  The new campaignId value
+   */
+  public void setCampaignId(int tmp) {
+    this.campaignId = tmp;
+  }
+
+
+  /**
+   *  Sets the contactId attribute of the Recipient object
+   *
+   *@param  tmp  The new contactId value
+   */
+  public void setContactId(int tmp) {
+    this.contactId = tmp;
+  }
+
+
+  /**
+   *  Sets the runId attribute of the Recipient object
+   *
+   *@param  tmp  The new runId value
+   */
+  public void setRunId(int tmp) {
+    this.runId = tmp;
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the Recipient object
+   *
+   *@param  tmp  The new statusId value
+   */
+  public void setStatusId(int tmp) {
+    this.statusId = tmp;
+  }
+
+
+  /**
+   *  Sets the status attribute of the Recipient object
+   *
+   *@param  tmp  The new status value
+   */
+  public void setStatus(String tmp) {
+    this.status = tmp;
+  }
+
+
+  /**
+   *  Sets the statusDate attribute of the Recipient object
+   *
+   *@param  tmp  The new statusDate value
+   */
+  public void setStatusDate(java.sql.Timestamp tmp) {
+    this.statusDate = tmp;
+  }
+
+
+  /**
+   *  Sets the scheduledDate attribute of the Recipient object
+   *
+   *@param  tmp  The new scheduledDate value
+   */
+  public void setScheduledDate(java.sql.Timestamp tmp) {
+    this.scheduledDate = tmp;
+  }
+
+
+  /**
+   *  Sets the sentDate attribute of the Recipient object
+   *
+   *@param  tmp  The new sentDate value
+   */
+  public void setSentDate(java.sql.Timestamp tmp) {
+    this.sentDate = tmp;
+  }
+
+
+  /**
+   *  Sets the replyDate attribute of the Recipient object
+   *
+   *@param  tmp  The new replyDate value
+   */
+  public void setReplyDate(java.sql.Timestamp tmp) {
+    this.replyDate = tmp;
+  }
+
+
+  /**
+   *  Sets the bounceDate attribute of the Recipient object
+   *
+   *@param  tmp  The new bounceDate value
+   */
+  public void setBounceDate(java.sql.Timestamp tmp) {
+    this.bounceDate = tmp;
+  }
+
+
+  /**
+   *  Sets the contact attribute of the Recipient object
+   *
+   *@param  tmp  The new contact value
+   */
+  public void setContact(Contact tmp) {
+    this.contact = tmp;
+  }
+
+
+  /**
+   *  Gets the id attribute of the Recipient object
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the campaignId attribute of the Recipient object
+   *
+   *@return    The campaignId value
+   */
+  public int getCampaignId() {
+    return campaignId;
+  }
+
+
+  /**
+   *  Gets the contactId attribute of the Recipient object
+   *
+   *@return    The contactId value
+   */
+  public int getContactId() {
+    return contactId;
+  }
+
+
+  /**
+   *  Gets the runId attribute of the Recipient object
+   *
+   *@return    The runId value
+   */
+  public int getRunId() {
+    return runId;
+  }
+
+
+  /**
+   *  Gets the statusId attribute of the Recipient object
+   *
+   *@return    The statusId value
+   */
+  public int getStatusId() {
+    return statusId;
+  }
+
+
+  /**
+   *  Gets the status attribute of the Recipient object
+   *
+   *@return    The status value
+   */
+  public String getStatus() {
+    return status;
+  }
+
+
+  /**
+   *  Gets the statusDate attribute of the Recipient object
+   *
+   *@return    The statusDate value
+   */
+  public java.sql.Timestamp getStatusDate() {
+    return statusDate;
+  }
+
+
+  /**
+   *  Gets the scheduledDate attribute of the Recipient object
+   *
+   *@return    The scheduledDate value
+   */
+  public java.sql.Timestamp getScheduledDate() {
+    return scheduledDate;
+  }
+
+
+  /**
+   *  Gets the sentDate attribute of the Recipient object
+   *
+   *@return    The sentDate value
+   */
+  public java.sql.Timestamp getSentDate() {
+    return sentDate;
+  }
+
+
+  /**
+   *  Gets the sentDateString attribute of the Recipient object
+   *
+   *@return    The sentDateString value
+   */
+  public String getSentDateString() {
     try {
       return DateFormat.getDateInstance(DateFormat.SHORT).format(sentDate);
     } catch (NullPointerException e) {
     }
     return ("");
   }
-  public java.sql.Timestamp getReplyDate() { return replyDate; }
-  public String getReplyDateString() { 
+
+
+  /**
+   *  Gets the replyDate attribute of the Recipient object
+   *
+   *@return    The replyDate value
+   */
+  public java.sql.Timestamp getReplyDate() {
+    return replyDate;
+  }
+
+
+  /**
+   *  Gets the replyDateString attribute of the Recipient object
+   *
+   *@return    The replyDateString value
+   */
+  public String getReplyDateString() {
     try {
       return DateFormat.getDateInstance(DateFormat.SHORT).format(replyDate);
     } catch (NullPointerException e) {
     }
     return ("");
   }
-  public java.sql.Timestamp getBounceDate() { return bounceDate; }
-  public Contact getContact() { return contact; }
 
 
+  /**
+   *  Gets the bounceDate attribute of the Recipient object
+   *
+   *@return    The bounceDate value
+   */
+  public java.sql.Timestamp getBounceDate() {
+    return bounceDate;
+  }
+
+
+  /**
+   *  Gets the contact attribute of the Recipient object
+   *
+   *@return    The contact value
+   */
+  public Contact getContact() {
+    return contact;
+  }
+
+
+  /**
+   *  Gets the valid attribute of the Recipient object
+   *
+   *@param  db                Description of the Parameter
+   *@return                   The valid value
+   *@exception  SQLException  Description of the Exception
+   */
   protected boolean isValid(Connection db) throws SQLException {
     errors.clear();
 
     if (campaignId == -1) {
       errors.put("campaignError", "Campaign is required");
     }
-    
+
     if (contactId == -1) {
       errors.put("contactError", "Contact is required");
     }
@@ -140,7 +388,15 @@ public class Recipient extends GenericBean {
       return true;
     }
   }
-  
+
+
+  /**
+   *  Gets the duplicate attribute of the Recipient object
+   *
+   *@param  db                Description of the Parameter
+   *@return                   The duplicate value
+   *@exception  SQLException  Description of the Exception
+   */
   protected boolean isDuplicate(Connection db) throws SQLException {
     boolean result = false;
     String sql =
@@ -159,7 +415,14 @@ public class Recipient extends GenericBean {
     pst.close();
     return result;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");
     campaignId = rs.getInt("campaign_id");
@@ -172,6 +435,7 @@ public class Recipient extends GenericBean {
     replyDate = rs.getTimestamp("reply_date");
     bounceDate = rs.getTimestamp("bounce_date");
   }
+
 
   /**
    *  Description of the Method
@@ -186,7 +450,7 @@ public class Recipient extends GenericBean {
     if (!isValid(db)) {
       return false;
     }
-    
+
     if (isDuplicate(db)) {
       return false;
     }
@@ -206,7 +470,15 @@ public class Recipient extends GenericBean {
     id = DatabaseUtils.getCurrVal(db, "scheduled_recipient_id_seq");
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public int update(Connection db) throws SQLException {
     if (id == -1) {
       throw new SQLException("Recipient ID was not specified");
@@ -215,10 +487,10 @@ public class Recipient extends GenericBean {
     int resultCount = 0;
     PreparedStatement pst = null;
     String sql =
-      "UPDATE scheduled_recipient " +
-      "SET run_id = ?, status_id = ?, status = ?, status_date = ?, " +
-      "scheduled_date = ?, sent_date = ?, reply_date = ?, bounce_date = ? " +
-      "WHERE id = ? ";
+        "UPDATE scheduled_recipient " +
+        "SET run_id = ?, status_id = ?, status = ?, status_date = ?, " +
+        "scheduled_date = ?, sent_date = ?, reply_date = ?, bounce_date = ? " +
+        "WHERE id = ? ";
     int i = 0;
     pst = db.prepareStatement(sql);
     pst.setInt(++i, runId);
@@ -234,7 +506,7 @@ public class Recipient extends GenericBean {
     } else {
       pst.setTimestamp(++i, scheduledDate);
     }
-    
+
     if (sentDate == null) {
       pst.setNull(++i, java.sql.Types.DATE);
     } else {
@@ -256,16 +528,31 @@ public class Recipient extends GenericBean {
     pst.close();
     return resultCount;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "DELETE FROM scheduled_recipient WHERE id = ?");
+        "DELETE FROM scheduled_recipient WHERE id = ?");
     pst.setInt(1, id);
     pst.executeUpdate();
     pst.close();
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildContact(Connection db) throws SQLException {
     contact = new Contact();
     contact.setId(contactId);

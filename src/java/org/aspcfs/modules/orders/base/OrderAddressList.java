@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.orders.base;
 
 import java.util.Vector;
@@ -9,9 +24,10 @@ import org.aspcfs.modules.base.AddressList;
 /**
  *  Description of the Class
  *
- * @author     ananth
- * @created    March 23, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    March 23, 2004
+ *@version    $Id: OrderAddressList.java,v 1.2 2004/05/04 15:52:27 mrajkowski
+ *      Exp $
  */
 public class OrderAddressList extends AddressList {
   public final static String tableName = "order_address";
@@ -21,7 +37,7 @@ public class OrderAddressList extends AddressList {
   /**
    *  Gets the tableName attribute of the OrderAddressList object
    *
-   * @return    The tableName value
+   *@return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -31,7 +47,7 @@ public class OrderAddressList extends AddressList {
   /**
    *  Gets the uniqueField attribute of the OrderAddressList object
    *
-   * @return    The uniqueField value
+   *@return    The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -39,7 +55,7 @@ public class OrderAddressList extends AddressList {
 
 
   /**
-   *Constructor for the OrderAddressList object
+   *  Constructor for the OrderAddressList object
    */
   public OrderAddressList() { }
 
@@ -47,8 +63,8 @@ public class OrderAddressList extends AddressList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;

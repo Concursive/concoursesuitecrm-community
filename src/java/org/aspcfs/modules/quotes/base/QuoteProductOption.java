@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.quotes.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -643,7 +658,7 @@ public class QuoteProductOption extends GenericBean {
           "   quantity, price_currency, price_amount, recurring_currency, " +
           "   recurring_amount, recurring_type, extended_price, total_price, status_id) "
           );
-  
+
       sql.append(" VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -661,61 +676,61 @@ public class QuoteProductOption extends GenericBean {
       pst.execute();
       pst.close();
       this.setId(DatabaseUtils.getCurrVal(db, "quote_product_options_quote_product_option_id_seq"));
-      
-      if( this.getBooleanValue() != false ){
+
+      if (this.getBooleanValue() != false) {
         sql = new StringBuffer("");
         sql.append(
-          " INSERT INTO quote_product_option_boolean ( quote_product_option_id, value )"+
-          " VALUES ( ? , ? ) "
-        );
+            " INSERT INTO quote_product_option_boolean ( quote_product_option_id, value )" +
+            " VALUES ( ? , ? ) "
+            );
         pst = db.prepareStatement(sql.toString());
         pst.setInt(1, id);
         pst.setBoolean(2, this.getBooleanValue());
         pst.execute();
         pst.close();
       }
-      if( ((int)this.getFloatValue()) > 0 ){
+      if (((int) this.getFloatValue()) > 0) {
         sql = new StringBuffer("");
         sql.append(
-          " INSERT INTO quote_product_option_float ( quote_product_option_id, value )"+
-          " VALUES ( ? , ? ) "
-        );
+            " INSERT INTO quote_product_option_float ( quote_product_option_id, value )" +
+            " VALUES ( ? , ? ) "
+            );
         pst = db.prepareStatement(sql.toString());
         pst.setInt(1, id);
         pst.setDouble(2, this.getFloatValue());
         pst.execute();
         pst.close();
       }
-      if( this.getTimestampValue() != null ){
+      if (this.getTimestampValue() != null) {
         sql = new StringBuffer("");
         sql.append(
-          " INSERT INTO quote_product_option_timestamp ( quote_product_option_id, value )"+
-          " VALUES ( ? , ? ) "
-        );
+            " INSERT INTO quote_product_option_timestamp ( quote_product_option_id, value )" +
+            " VALUES ( ? , ? ) "
+            );
         pst = db.prepareStatement(sql.toString());
         pst.setInt(1, id);
         pst.setTimestamp(2, this.getTimestampValue());
         pst.execute();
         pst.close();
       }
-      if( this.getIntegerValue() != -1){
+      if (this.getIntegerValue() != -1) {
         sql = new StringBuffer("");
         sql.append(
-          " INSERT INTO quote_product_option_integer ( quote_product_option_id, value )"+
-          " VALUES ( ? , ? ) "
-        );
+            " INSERT INTO quote_product_option_integer ( quote_product_option_id, value )" +
+            " VALUES ( ? , ? ) "
+            );
         pst = db.prepareStatement(sql.toString());
         pst.setInt(1, id);
         DatabaseUtils.setInt(pst, 2, this.getIntegerValue());
         pst.execute();
         pst.close();
       }
-      if(this.getTextValue()  != null){
+      if (this.getTextValue() != null) {
         sql = new StringBuffer("");
         sql.append(
-          " INSERT INTO quote_product_option_text ( quote_product_option_id, value )"+
-          " VALUES ( ? , ? ) "
-        );
+            " INSERT INTO quote_product_option_text ( quote_product_option_id, value )" +
+            " VALUES ( ? , ? ) "
+            );
         pst = db.prepareStatement(sql.toString());
         pst.setInt(1, id);
         pst.setString(2, this.getTextValue());
@@ -723,7 +738,7 @@ public class QuoteProductOption extends GenericBean {
         pst.close();
       }
       db.commit();
-    } catch(Exception e) {
+    } catch (Exception e) {
       db.rollback();
       throw new SQLException(e.getMessage());
     } finally {
@@ -747,43 +762,43 @@ public class QuoteProductOption extends GenericBean {
       throw new SQLException("Quote Product Option ID not specified");
     }
     try {
-    if( this.getBooleanValue() != false ){
-      pst = db.prepareStatement(" DELETE FROM quote_product_option_boolean WHERE quote_product_option_id = ? ");
-      pst.setInt(1, this.getId());
-      pst.execute();
-      pst.close();
-    }
+      if (this.getBooleanValue() != false) {
+        pst = db.prepareStatement(" DELETE FROM quote_product_option_boolean WHERE quote_product_option_id = ? ");
+        pst.setInt(1, this.getId());
+        pst.execute();
+        pst.close();
+      }
 //  System.out.println("QuoteProductOption:");
 
-    if( ((int)this.getFloatValue()) > 0 ){
-      pst = db.prepareStatement(" DELETE FROM quote_product_option_float WHERE quote_product_option_id = ? ");
-      pst.setInt(1, this.getId());
-      pst.execute();
-      pst.close();
-    }
-    if( this.getTimestampValue() != null ){
-      pst = db.prepareStatement(" DELETE FROM quote_product_option_timestamp WHERE quote_product_option_id = ? ");
-      pst.setInt(1, this.getId());
-      pst.execute();
-      pst.close();
-    }
-    if( this.getIntegerValue() != -1){
-      pst = db.prepareStatement(" DELETE FROM quote_product_option_integer WHERE quote_product_option_id = ? ");
-      pst.setInt(1, this.getId());
-      pst.execute();
-      pst.close();
-    }
-    if(this.getTextValue()  != null){
-      pst = db.prepareStatement(" DELETE FROM quote_product_option_text WHERE quote_product_option_id = ? ");
-      pst.setInt(1, this.getId());
-      pst.execute();
-      pst.close();
-    }
+      if (((int) this.getFloatValue()) > 0) {
+        pst = db.prepareStatement(" DELETE FROM quote_product_option_float WHERE quote_product_option_id = ? ");
+        pst.setInt(1, this.getId());
+        pst.execute();
+        pst.close();
+      }
+      if (this.getTimestampValue() != null) {
+        pst = db.prepareStatement(" DELETE FROM quote_product_option_timestamp WHERE quote_product_option_id = ? ");
+        pst.setInt(1, this.getId());
+        pst.execute();
+        pst.close();
+      }
+      if (this.getIntegerValue() != -1) {
+        pst = db.prepareStatement(" DELETE FROM quote_product_option_integer WHERE quote_product_option_id = ? ");
+        pst.setInt(1, this.getId());
+        pst.execute();
+        pst.close();
+      }
+      if (this.getTextValue() != null) {
+        pst = db.prepareStatement(" DELETE FROM quote_product_option_text WHERE quote_product_option_id = ? ");
+        pst.setInt(1, this.getId());
+        pst.execute();
+        pst.close();
+      }
 
-    pst = db.prepareStatement(" DELETE FROM quote_product_options WHERE quote_product_option_id = ? ");
-    pst.setInt(1, this.getId());
-    result = pst.execute();
-    pst.close();
+      pst = db.prepareStatement(" DELETE FROM quote_product_options WHERE quote_product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      result = pst.execute();
+      pst.close();
 
     } catch (SQLException e) {
       db.rollback();
@@ -836,66 +851,66 @@ public class QuoteProductOption extends GenericBean {
     resultCount = pst.executeUpdate();
     pst.close();
     int result1Count = -1;
-    if( this.getBooleanValue() != false ){
+    if (this.getBooleanValue() != false) {
       sql = new StringBuffer("");
       sql.append(
-        " UPDATE quote_product_option_boolean "+
-        " SET value = ? " +
-        " WHERE quote_product_option_id = ? "
-      );
+          " UPDATE quote_product_option_boolean " +
+          " SET value = ? " +
+          " WHERE quote_product_option_id = ? "
+          );
       pst = db.prepareStatement(sql.toString());
       pst.setBoolean(1, this.getBooleanValue());
       DatabaseUtils.setInt(pst, 2, this.getId());
       result1Count = pst.executeUpdate();
       pst.close();
     }
-    if( ((int)this.getFloatValue()) > 0 ){
+    if (((int) this.getFloatValue()) > 0) {
       sql = new StringBuffer("");
       sql.append(
-        " UPDATE quote_product_option_float "+
-        " SET value = ? " +
-        " WHERE quote_product_option_id = ? "
-      );
+          " UPDATE quote_product_option_float " +
+          " SET value = ? " +
+          " WHERE quote_product_option_id = ? "
+          );
       pst = db.prepareStatement(sql.toString());
       pst.setDouble(1, this.getFloatValue());
       DatabaseUtils.setInt(pst, 2, this.getId());
       result1Count = pst.executeUpdate();
       pst.close();
     }
-    if( this.getTimestampValue() != null ){
+    if (this.getTimestampValue() != null) {
       sql = new StringBuffer("");
       sql.append(
-        " UPDATE quote_product_option_timestamp "+
-        " SET value = ? " +
-        " WHERE quote_product_option_id = ? "
-      );
+          " UPDATE quote_product_option_timestamp " +
+          " SET value = ? " +
+          " WHERE quote_product_option_id = ? "
+          );
       pst = db.prepareStatement(sql.toString());
       pst.setTimestamp(1, this.getTimestampValue());
       DatabaseUtils.setInt(pst, 2, this.getId());
       result1Count = pst.executeUpdate();
       pst.close();
     }
-    if( this.getIntegerValue() != -1){
+    if (this.getIntegerValue() != -1) {
       sql = new StringBuffer("");
       sql.append(
-        " UPDATE quote_product_option_integer "+
-        " SET value = ? " +
-        " WHERE quote_product_option_id = ? "
-      );
+          " UPDATE quote_product_option_integer " +
+          " SET value = ? " +
+          " WHERE quote_product_option_id = ? "
+          );
       pst = db.prepareStatement(sql.toString());
       DatabaseUtils.setInt(pst, 1, this.getIntegerValue());
       DatabaseUtils.setInt(pst, 2, this.getId());
       result1Count = pst.executeUpdate();
       pst.close();
-    
+
     }
-    if(this.getTextValue()  != null){
+    if (this.getTextValue() != null) {
       sql = new StringBuffer("");
       sql.append(
-        " UPDATE quote_product_option_text "+
-        " SET value = ? " +
-        " WHERE quote_product_option_id = ? "
-      );
+          " UPDATE quote_product_option_text " +
+          " SET value = ? " +
+          " WHERE quote_product_option_id = ? "
+          );
       pst = db.prepareStatement(sql.toString());
       pst.setString(1, this.getTextValue());
       DatabaseUtils.setInt(pst, 2, this.getId());

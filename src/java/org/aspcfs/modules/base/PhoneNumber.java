@@ -1,5 +1,18 @@
-//Copyright 2001 Dark Horse Ventures
-
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.base;
 
 import java.sql.*;
@@ -558,8 +571,8 @@ public class PhoneNumber {
    *  - phone1ext (If the number has an extension) a string<br>
    *  - phone1delete (exists if record should be deleted)
    *
-   *@param  request    An HttpServletRequest object
    *@param  parseItem  The phone number item to parse
+   *@param  context    Description of the Parameter
    *@since             1.8
    */
   public void buildRecord(ActionContext context, int parseItem) {
@@ -614,8 +627,9 @@ public class PhoneNumber {
   /**
    *  Description of the Method
    *
-   *@param  tmp  Description of the Parameter
-   *@return      Description of the Return Value
+   *@param  tmp      Description of the Parameter
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public final static String convertToFormattedNumber(ActionContext context, String tmp) {
     String tmpNum = "";
@@ -629,20 +643,20 @@ public class PhoneNumber {
     String defaultCountry = ApplicationPrefs.getPref(context.getServletContext(), "SYSTEM.COUNTRY");
     //it's a US number
     if ((tmpNum.indexOf("+") == -1) &&
-        ("UNITED STATES".equals(defaultCountry))){
+        ("UNITED STATES".equals(defaultCountry))) {
       //1-XXX numbers, strip off the beginning "1"
-      if ((tmpNum.length() == 11) && 
-          (tmpNum.charAt(0) == '1')){
+      if ((tmpNum.length() == 11) &&
+          (tmpNum.charAt(0) == '1')) {
         tmpNum = tmpNum.substring(1);
       }
-      if (tmpNum.length() == 10){
+      if (tmpNum.length() == 10) {
         result.append("(");
         result.append(tmpNum.substring(0, 3));
         result.append(") ");
         result.append(tmpNum.substring(3, 6));
         result.append("-");
         result.append(tmpNum.substring(6, 10));
-      }else{
+      } else {
         result.append(tmpNum);
       }
     } else {

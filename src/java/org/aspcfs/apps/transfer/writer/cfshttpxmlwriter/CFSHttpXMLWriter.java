@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.apps.transfer.writer.cfshttpxmlwriter;
 
 import org.aspcfs.apps.transfer.*;
@@ -261,7 +276,7 @@ public class CFSHttpXMLWriter implements DataWriter {
       clientRecord.addField("type", "Java CFS Http XML Writer");
       clientRecord.addField("version", String.valueOf(this.getVersion()));
       this.save(clientRecord);
-  
+
       try {
         System.out.println("CFSHttpXMLWriter - > " + lastResponse);
         XMLUtils responseXML = new XMLUtils(lastResponse, true);
@@ -408,67 +423,69 @@ public class CFSHttpXMLWriter implements DataWriter {
       Document document = builder.newDocument();
       Element app = document.createElement("app");
       document.appendChild(app);
-  
+
       //Add the authentication
       Element auth = document.createElement("authentication");
       app.appendChild(auth);
-  
+
       Element authId = document.createElement("id");
       authId.appendChild(document.createTextNode(id));
       auth.appendChild(authId);
-  
+
       Element authCode = document.createElement("code");
       authCode.appendChild(document.createTextNode(code));
       auth.appendChild(authCode);
-  
+
       Element authSystemId = document.createElement("systemId");
       authSystemId.appendChild(document.createTextNode(String.valueOf(systemId)));
       auth.appendChild(authSystemId);
-  
+
       if (clientId > -1) {
         Element authClientId = document.createElement("clientId");
         authClientId.appendChild(document.createTextNode(String.valueOf(clientId)));
         auth.appendChild(authClientId);
       }
-  
+
       //Read the record
       //Begin the transaction
       Element transaction = document.createElement("transaction");
       transaction.setAttribute("id", String.valueOf(++transactionCount));
       app.appendChild(transaction);
-  
+
       //Add the meta node: fields that will be returned
       Element meta = document.createElement("meta");
       transaction.appendChild(meta);
-  
+
       //Add the object node
       Element object = document.createElement(record.getName());
       object.setAttribute("action", record.getAction());
       transaction.appendChild(object);
-  
+
       Iterator fieldItems = record.iterator();
       while (fieldItems.hasNext()) {
         DataField thisField = (DataField) fieldItems.next();
-  
+
         //Add the property to the meta node
         Element property = document.createElement("property");
         property.appendChild(document.createTextNode(thisField.getName()));
         meta.appendChild(property);
-  
+
         //Ignore the field to add to the object node
-        /* Element field = null;
-        if (thisField.hasAlias()) {
-          field = document.createElement(thisField.getAlias());
-        } else {
-          field = document.createElement(thisField.getName());
-        }
-        if (thisField.hasValueLookup()) {
-          field.setAttribute("lookup", thisField.getValueLookup());
-        }
-        if (thisField.hasValue()) {
-          field.appendChild(document.createTextNode(thisField.getValue()));
-        }
-        object.appendChild(field); */
+        /*
+         *  Element field = null;
+         *  if (thisField.hasAlias()) {
+         *  field = document.createElement(thisField.getAlias());
+         *  } else {
+         *  field = document.createElement(thisField.getName());
+         *  }
+         *  if (thisField.hasValueLookup()) {
+         *  field.setAttribute("lookup", thisField.getValueLookup());
+         *  }
+         *  if (thisField.hasValue()) {
+         *  field.appendChild(document.createTextNode(thisField.getValue()));
+         *  }
+         *  object.appendChild(field);
+         */
       }
       lastResponse = HTTPUtils.sendPacket(url, XMLUtils.toString(document));
       System.out.println(lastResponse);
@@ -477,7 +494,13 @@ public class CFSHttpXMLWriter implements DataWriter {
     }
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean close() {
     return true;
   }

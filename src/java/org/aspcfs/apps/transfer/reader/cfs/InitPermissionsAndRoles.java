@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.apps.transfer.reader.cfs;
 
 import java.sql.*;
@@ -21,7 +36,8 @@ import org.aspcfs.utils.*;
  *
  *@author     matt rajkowski
  *@created    January 23, 2003
- *@version    $Id$
+ *@version    $Id: InitPermissionsAndRoles.java,v 1.19 2004/06/15 14:27:26
+ *      mrajkowski Exp $
  */
 public class InitPermissionsAndRoles implements DataReader {
   public final static String fs = System.getProperty("file.separator");
@@ -297,7 +313,7 @@ public class InitPermissionsAndRoles implements DataReader {
         thisRecord.setAction("insert");
         thisRecord.addField("role", (String) role.getAttribute("name"));
         thisRecord.addField("description", (String) role.getAttribute("description"));
-        thisRecord.addField("type", (((role.getAttribute("type") == null) || ("".equals(role.getAttribute("type"))))? "0" : (String)role.getAttribute("type")));
+        thisRecord.addField("type", (((role.getAttribute("type") == null) || ("".equals(role.getAttribute("type")))) ? "0" : (String) role.getAttribute("type")));
         if ("false".equals((String) role.getAttribute("enabled"))) {
           thisRecord.addField("enabled", "false");
         } else {
@@ -338,7 +354,8 @@ public class InitPermissionsAndRoles implements DataReader {
    *
    *@author     matt rajkowski
    *@created    January 23, 2003
-   *@version    $Id$
+   *@version    $Id: InitPermissionsAndRoles.java,v 1.19 2004/06/15 14:27:26
+   *      mrajkowski Exp $
    */
   class CategoryElementComparator implements Comparator {
     /**

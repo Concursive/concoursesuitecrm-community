@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.contacts.actions;
 
 import javax.servlet.*;
@@ -25,7 +40,6 @@ import org.aspcfs.modules.base.DependencyList;
  *      $
  */
 public final class ExternalContactsOpps extends CFSModule {
-
 
   /**
    *  Description of the Method
@@ -125,7 +139,7 @@ public final class ExternalContactsOpps extends CFSModule {
       } else {
         thisContact = (Contact) context.getRequest().getAttribute("ContactDetails");
       }
-      
+
       if (id != null && !"-1".equals(id)) {
         if (!hasPermission(context, "contacts-external_contacts-opportunities-add") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-add")))) {
           return ("PermissionError");
@@ -189,7 +203,7 @@ public final class ExternalContactsOpps extends CFSModule {
       if (!recordInserted) {
         processErrors(context, newOpp.getHeader().getErrors());
         processErrors(context, newOpp.getComponent().getErrors());
-        processWarnings(context,newOpp.getComponent().getWarnings());
+        processWarnings(context, newOpp.getComponent().getWarnings());
         LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
         context.getRequest().setAttribute("TypeSelect", typeSelect);
         context.getRequest().setAttribute("TypeList", newOpp.getComponent().getTypeList());
@@ -299,12 +313,12 @@ public final class ExternalContactsOpps extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      
+
       //check permissions
       if (!hasPermission(context, permission) || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-opportunities-edit")))) {
-      return ("PermissionError");
+        return ("PermissionError");
       }
-      
+
       if (newComponent.getId() > 0) {
         newComponent.setModifiedBy(getUserId(context));
         if (!(hasAuthority(db, context, thisContact) || hasAuthority(context, newComponent.getOwner()))) {
@@ -323,7 +337,7 @@ public final class ExternalContactsOpps extends CFSModule {
         newComponent.queryRecord(db, newComponent.getId());
       } else {
         processErrors(context, newComponent.getErrors());
-        processWarnings(context,newComponent.getWarnings());
+        processWarnings(context, newComponent.getWarnings());
         //rebuild the form
         LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
         context.getRequest().setAttribute("TypeSelect", typeSelect);

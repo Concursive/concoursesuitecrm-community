@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.controller;
 
 import javax.servlet.*;
@@ -58,7 +73,7 @@ public class SecurityHook implements ControllerHook {
         action.toUpperCase().startsWith("PROCESS")) {
       return null;
     }
-    
+
     //Version check
     if (applicationPrefs.isUpgradeable()) {
       return "UpgradeCheck";
@@ -121,14 +136,14 @@ public class SecurityHook implements ControllerHook {
       //Check the session manager to see if this session is valid
       SessionManager thisManager = systemStatus.getSessionManager();
       UserSession sessionInfo = thisManager.getUserSession(userSession.getActualUserId());
-      //The context reloaded and didn't reload the sessionManager userSession, 
+      //The context reloaded and didn't reload the sessionManager userSession,
       //so add the user back
       if (sessionInfo == null) {
         request.getSession().setMaxInactiveInterval(systemStatus.getSessionTimeout());
         thisManager.addUser(request, userSession.getActualUserId());
       }
       //If the user has a different session than what's in the manager, log the user out
-      if (sessionInfo != null && 
+      if (sessionInfo != null &&
           !sessionInfo.getId().equals(request.getSession().getId())) {
         if (request.getSession(false) != null) {
           request.getSession(false).invalidate();

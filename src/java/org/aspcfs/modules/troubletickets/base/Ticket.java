@@ -1,5 +1,18 @@
-//Copyright 2001 Dark Horse Ventures
-
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.troubletickets.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -430,7 +443,7 @@ public class Ticket extends GenericBean {
   /**
    *  Sets the assignedDateTimeZone attribute of the Ticket object
    *
-   * @param  tmp  The new assignedDateTimeZone value
+   *@param  tmp  The new assignedDateTimeZone value
    */
   public void setAssignedDateTimeZone(String tmp) {
     this.assignedDateTimeZone = tmp;
@@ -440,7 +453,7 @@ public class Ticket extends GenericBean {
   /**
    *  Sets the resolutionDateTimeZone attribute of the Ticket object
    *
-   * @param  tmp  The new resolutionDateTimeZone value
+   *@param  tmp  The new resolutionDateTimeZone value
    */
   public void setResolutionDateTimeZone(String tmp) {
     this.resolutionDateTimeZone = tmp;
@@ -450,7 +463,7 @@ public class Ticket extends GenericBean {
   /**
    *  Gets the assignedDateTimeZone attribute of the Ticket object
    *
-   * @return    The assignedDateTimeZone value
+   *@return    The assignedDateTimeZone value
    */
   public String getAssignedDateTimeZone() {
     return assignedDateTimeZone;
@@ -460,7 +473,7 @@ public class Ticket extends GenericBean {
   /**
    *  Gets the resolutionDateTimeZone attribute of the Ticket object
    *
-   * @return    The resolutionDateTimeZone value
+   *@return    The resolutionDateTimeZone value
    */
   public String getResolutionDateTimeZone() {
     return resolutionDateTimeZone;

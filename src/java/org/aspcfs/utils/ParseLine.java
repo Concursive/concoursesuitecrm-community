@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.utils;
 
 import java.util.ArrayList;
@@ -8,8 +23,8 @@ import java.util.*;
 import org.aspcfs.modules.base.Import;
 
 /**
- *  Parses a Line based on the delimiters or file type
- *  Assumes that all the fields have quotes around them.
+ *  Parses a Line based on the delimiters or file type Assumes that all the
+ *  fields have quotes around them.
  *
  *@author     Mathur
  *@created    April 6, 2004
@@ -21,13 +36,13 @@ public class ParseLine {
 
 
   /**
-   *Constructor for the ParseLine object
+   *  Constructor for the ParseLine object
    */
   public ParseLine() { }
 
 
   /**
-   *Constructor for the ParseLine object
+   *  Constructor for the ParseLine object
    *
    *@param  delimiter  Description of the Parameter
    */
@@ -113,9 +128,11 @@ public class ParseLine {
         completeField = true;
       }
       if (completeField) {
-        /* if (System.getProperty("DEBUG") != null) {
-          System.out.println("ParseLine -> FOUND COLUMN: " + value.toString());
-        } */
+        /*
+         *  if (System.getProperty("DEBUG") != null) {
+         *  System.out.println("ParseLine -> FOUND COLUMN: " + value.toString());
+         *  }
+         */
         thisRecord.add(value.toString());
         value = new StringBuffer("");
         quote = false;

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.accounts.actions;
 
 import javax.servlet.*;
@@ -137,9 +152,9 @@ public final class ContactsPortal extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (inserted){
+    if (inserted) {
       return executeCommandView(context);
-    }else{
+    } else {
       return executeCommandAdd(context);
     }
   }
@@ -172,12 +187,12 @@ public final class ContactsPortal extends CFSModule {
         return ("ContactPortalError");
       }
 
-      thisPortalUser = (User)context.getRequest().getAttribute("portalUserDetails");
-      if (thisPortalUser == null){
-          thisPortalUser = new User();
-          thisPortalUser.buildRecord(db, thisContact.getUserId());
+      thisPortalUser = (User) context.getRequest().getAttribute("portalUserDetails");
+      if (thisPortalUser == null) {
+        thisPortalUser = new User();
+        thisPortalUser.buildRecord(db, thisContact.getUserId());
       }
-      
+
       setOrganization(context, db, thisContact.getOrgId());
 
       RoleList roleList = new RoleList();
@@ -230,9 +245,9 @@ public final class ContactsPortal extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (resultCount == 1){
+    if (resultCount == 1) {
       return executeCommandView(context);
-    }else{
+    } else {
       return executeCommandModify(context);
     }
   }
@@ -283,7 +298,7 @@ public final class ContactsPortal extends CFSModule {
       db = this.getConnection(context);
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
-      setOrganization(context, db, thisContact.getOrgId());      
+      setOrganization(context, db, thisContact.getOrgId());
       //Cannot change portal login information if the
       //user contact does not have email
       ContactEmailAddressList emailList = thisContact.getEmailAddressList();
@@ -412,13 +427,14 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Inserts portal user information and mails the portal login information to the user
+   *  Inserts portal user information and mails the portal login information to
+   *  the user
    *
    *@param  context           Description of the Parameter
    *@param  db                Description of the Parameter
    *@param  thisContact       Description of the Parameter
    *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   *@exception  Exception     Description of the Exception
    */
   private boolean insertUser(ActionContext context, Connection db, Contact thisContact) throws Exception {
 
@@ -440,16 +456,16 @@ public final class ContactsPortal extends CFSModule {
     newUser.setTimeZone(getPref(context, "SYSTEM.TIMEZONE"));
     newUser.setCurrency(getPref(context, "SYSTEM.CURRENCY"));
     newUser.setLanguage(getPref(context, "SYSTEM.LANGUAGE"));
-    recordInserted = newUser.insert(db,context);
+    recordInserted = newUser.insert(db, context);
 
     if (recordInserted) {
       //subsequently use this email address to email the user
       //of the portal access information
       int emailAddressId = Integer.parseInt(context.getRequest().getParameter("emailAddressId"));
       ContactEmailAddress emailAddress = null;
-      if (emailAddressId != -1){
-         emailAddress = new ContactEmailAddress(db, emailAddressId);
-      }else{
+      if (emailAddressId != -1) {
+        emailAddress = new ContactEmailAddress(db, emailAddressId);
+      } else {
         emailAddress = getAddressToEmail(thisContact);
       }
       addRecentItem(context, newUser);
@@ -480,14 +496,15 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Updates portal user information and mails the portal login information to the user
+   *  Updates portal user information and mails the portal login information to
+   *  the user
    *
    *@param  context           Description of the Parameter
    *@param  db                Description of the Parameter
    *@param  thisContact       Description of the Parameter
    *@param  thisUser          Description of the Parameter
    *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   *@exception  Exception     Description of the Exception
    */
   private int updateUser(ActionContext context, Connection db, Contact thisContact, User thisUser) throws Exception {
 
@@ -539,17 +556,17 @@ public final class ContactsPortal extends CFSModule {
     newUser.setId(Integer.parseInt(context.getRequest().getParameter("userId")));
     int resultCount = -1;
     resultCount = newUser.updatePortalUser(db);
-    
+
     if (resultCount == 1) {
       newUser = new User(db, newUser.getId());
-  
+
       //subsequently use this email address to email the user
       //of the portal access information
       int emailAddressId = Integer.parseInt(context.getRequest().getParameter("emailAddressId"));
       ContactEmailAddress emailAddress = null;
-      if (emailAddressId != -1){
-         emailAddress = new ContactEmailAddress(db, emailAddressId);
-      }else{
+      if (emailAddressId != -1) {
+        emailAddress = new ContactEmailAddress(db, emailAddressId);
+      } else {
         emailAddress = getAddressToEmail(thisContact);
       }
       context.getRequest().setAttribute("UserRecord", newUser);
@@ -563,7 +580,7 @@ public final class ContactsPortal extends CFSModule {
       mail.setTo(emailAddress.getEmail());
       mail.setSubject("Login information");
       String mailBody = "";
-      mailBody = 
+      mailBody =
           "Your self-service login information has changed.<br />" +
           "<br />";
       if (roleChanged) {

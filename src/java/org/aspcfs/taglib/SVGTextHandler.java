@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.taglib;
 
 import javax.servlet.jsp.*;
@@ -13,9 +28,10 @@ import java.util.*;
  *  This tag will dynamically build a graphic based on the specified svg
  *  template. If the file already exists it will not generate a new one.
  *
- * @author     ananth
- * @created    April 2, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    April 2, 2004
+ *@version    $Id: SVGTextHandler.java,v 1.2 2004/05/04 15:46:14 mrajkowski Exp
+ *      $
  */
 public class SVGTextHandler extends TagSupport {
 
@@ -28,7 +44,7 @@ public class SVGTextHandler extends TagSupport {
   /**
    *  Sets the template attribute of the SVGTextHandler object
    *
-   * @param  tmp  The new template value
+   *@param  tmp  The new template value
    */
   public void setTemplate(String tmp) {
     this.template = tmp;
@@ -38,7 +54,7 @@ public class SVGTextHandler extends TagSupport {
   /**
    *  Sets the text attribute of the SVGTextHandler object
    *
-   * @param  tmp  The new text value
+   *@param  tmp  The new text value
    */
   public void setText(String tmp) {
     this.text = tmp;
@@ -49,8 +65,8 @@ public class SVGTextHandler extends TagSupport {
   /**
    *  Description of the Method
    *
-   * @param  str  Description of the Parameter
-   * @return      Description of the Return Value
+   *@param  str  Description of the Parameter
+   *@return      Description of the Return Value
    */
   private static String toSafeName(String str) {
     StringBuffer sb = new StringBuffer();
@@ -68,9 +84,9 @@ public class SVGTextHandler extends TagSupport {
   /**
    *  Gets the version attribute of the SVGTextHandler object
    *
-   * @param  context  Description of the Parameter
-   * @param  svgPath  Description of the Parameter
-   * @return          The version value
+   *@param  context  Description of the Parameter
+   *@param  svgPath  Description of the Parameter
+   *@return          The version value
    */
   private String getVersion(ServletContext context, String svgPath) {
     HashMap svgMap = (HashMap) context.getAttribute("svgTextHandlerMap");
@@ -106,8 +122,8 @@ public class SVGTextHandler extends TagSupport {
    *  Using the specified properties, an SVG is parsed and a bitmap image is
    *  output for display in a web browser.
    *
-   * @return                   Description of the Return Value
-   * @exception  JspException  Description of the Exception
+   *@return                   Description of the Return Value
+   *@exception  JspException  Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
@@ -143,7 +159,7 @@ public class SVGTextHandler extends TagSupport {
   /**
    *  Description of the Method
    *
-   * @return    Description of the Return Value
+   *@return    Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

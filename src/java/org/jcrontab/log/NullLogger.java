@@ -27,7 +27,7 @@ package org.jcrontab.log;
 /**
  * This is the Null Logger basically is here to avoid logging, 
  * usually this shouldn't be used
- * @author $Author$
+ * @author Israel Olalla
  * @version $Revision$
  */
 public class NullLogger implements Logger {

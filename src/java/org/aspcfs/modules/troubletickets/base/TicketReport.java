@@ -1,5 +1,18 @@
-//Copyright 2001-2002 Dark Horse Ventures
-
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.troubletickets.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -118,9 +131,10 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayEstimatedResolutionDate attribute of the TicketReport object
+   *  Sets the displayEstimatedResolutionDate attribute of the TicketReport
+   *  object
    *
-   * @param  tmp  The new displayEstimatedResolutionDate value
+   *@param  tmp  The new displayEstimatedResolutionDate value
    */
   public void setDisplayEstimatedResolutionDate(boolean tmp) {
     this.displayEstimatedResolutionDate = tmp;
@@ -128,9 +142,10 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayEstimatedResolutionDate attribute of the TicketReport object
+   *  Sets the displayEstimatedResolutionDate attribute of the TicketReport
+   *  object
    *
-   * @param  tmp  The new displayEstimatedResolutionDate value
+   *@param  tmp  The new displayEstimatedResolutionDate value
    */
   public void setDisplayEstimatedResolutionDate(String tmp) {
     this.displayEstimatedResolutionDate = DatabaseUtils.parseBoolean(tmp);
@@ -140,7 +155,7 @@ public class TicketReport extends TicketList {
   /**
    *  Sets the displayResolutionDate attribute of the TicketReport object
    *
-   * @param  tmp  The new displayResolutionDate value
+   *@param  tmp  The new displayResolutionDate value
    */
   public void setDisplayResolutionDate(boolean tmp) {
     this.displayResolutionDate = tmp;
@@ -150,7 +165,7 @@ public class TicketReport extends TicketList {
   /**
    *  Sets the displayResolutionDate attribute of the TicketReport object
    *
-   * @param  tmp  The new displayResolutionDate value
+   *@param  tmp  The new displayResolutionDate value
    */
   public void setDisplayResolutionDate(String tmp) {
     this.displayResolutionDate = DatabaseUtils.parseBoolean(tmp);
@@ -160,7 +175,7 @@ public class TicketReport extends TicketList {
   /**
    *  Sets the displayAssignmentDate attribute of the TicketReport object
    *
-   * @param  tmp  The new displayAssignmentDate value
+   *@param  tmp  The new displayAssignmentDate value
    */
   public void setDisplayAssignmentDate(boolean tmp) {
     this.displayAssignmentDate = tmp;
@@ -170,7 +185,7 @@ public class TicketReport extends TicketList {
   /**
    *  Sets the displayAssignmentDate attribute of the TicketReport object
    *
-   * @param  tmp  The new displayAssignmentDate value
+   *@param  tmp  The new displayAssignmentDate value
    */
   public void setDisplayAssignmentDate(String tmp) {
     this.displayAssignmentDate = DatabaseUtils.parseBoolean(tmp);
@@ -180,7 +195,7 @@ public class TicketReport extends TicketList {
   /**
    *  Sets the displayComment attribute of the TicketReport object
    *
-   * @param  tmp  The new displayComment value
+   *@param  tmp  The new displayComment value
    */
   public void setDisplayComment(boolean tmp) {
     this.displayComment = tmp;
@@ -190,7 +205,7 @@ public class TicketReport extends TicketList {
   /**
    *  Sets the displayComment attribute of the TicketReport object
    *
-   * @param  tmp  The new displayComment value
+   *@param  tmp  The new displayComment value
    */
   public void setDisplayComment(String tmp) {
     this.displayComment = DatabaseUtils.parseBoolean(tmp);
@@ -200,7 +215,7 @@ public class TicketReport extends TicketList {
   /**
    *  Sets the displayIssueNotes attribute of the TicketReport object
    *
-   * @param  tmp  The new displayIssueNotes value
+   *@param  tmp  The new displayIssueNotes value
    */
   public void setDisplayIssueNotes(boolean tmp) {
     this.displayIssueNotes = tmp;
@@ -210,7 +225,7 @@ public class TicketReport extends TicketList {
   /**
    *  Sets the displayIssueNotes attribute of the TicketReport object
    *
-   * @param  tmp  The new displayIssueNotes value
+   *@param  tmp  The new displayIssueNotes value
    */
   public void setDisplayIssueNotes(String tmp) {
     this.displayIssueNotes = DatabaseUtils.parseBoolean(tmp);
@@ -220,7 +235,7 @@ public class TicketReport extends TicketList {
   /**
    *  Gets the displayIssueNotes attribute of the TicketReport object
    *
-   * @return    The displayIssueNotes value
+   *@return    The displayIssueNotes value
    */
   public boolean getDisplayIssueNotes() {
     return displayIssueNotes;
@@ -228,9 +243,10 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayEstimatedResolutionDate attribute of the TicketReport object
+   *  Gets the displayEstimatedResolutionDate attribute of the TicketReport
+   *  object
    *
-   * @return    The displayEstimatedResolutionDate value
+   *@return    The displayEstimatedResolutionDate value
    */
   public boolean getDisplayEstimatedResolutionDate() {
     return displayEstimatedResolutionDate;
@@ -240,7 +256,7 @@ public class TicketReport extends TicketList {
   /**
    *  Gets the displayResolutionDate attribute of the TicketReport object
    *
-   * @return    The displayResolutionDate value
+   *@return    The displayResolutionDate value
    */
   public boolean getDisplayResolutionDate() {
     return displayResolutionDate;
@@ -250,7 +266,7 @@ public class TicketReport extends TicketList {
   /**
    *  Gets the displayAssignmentDate attribute of the TicketReport object
    *
-   * @return    The displayAssignmentDate value
+   *@return    The displayAssignmentDate value
    */
   public boolean getDisplayAssignmentDate() {
     return displayAssignmentDate;
@@ -260,7 +276,7 @@ public class TicketReport extends TicketList {
   /**
    *  Gets the displayComment attribute of the TicketReport object
    *
-   * @return    The displayComment value
+   *@return    The displayComment value
    */
   public boolean getDisplayComment() {
     return displayComment;
@@ -430,7 +446,7 @@ public class TicketReport extends TicketList {
   /**
    *  Gets the displayLocation attribute of the TicketReport object
    *
-   * @return    The displayLocation value
+   *@return    The displayLocation value
    */
   public boolean getDisplayLocation() {
     return displayLocation;
@@ -590,7 +606,7 @@ public class TicketReport extends TicketList {
   /**
    *  Sets the displayLocation attribute of the TicketReport object
    *
-   * @param  tmp  The new displayLocation value
+   *@param  tmp  The new displayLocation value
    */
   public void setDisplayLocation(boolean tmp) {
     this.displayLocation = tmp;
@@ -1160,6 +1176,7 @@ public class TicketReport extends TicketList {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public void buildReportData(Connection db, ActionContext context) throws SQLException {
@@ -1274,6 +1291,7 @@ public class TicketReport extends TicketList {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public void buildReportFull(Connection db, ActionContext context) throws SQLException {

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.pipeline.actions;
 
 import javax.servlet.*;
@@ -275,7 +290,7 @@ public final class LeadsCalls extends CFSModule {
       }
       //Store current status id to reset the object upon server error or warning
       tmpStatusId = thisCall.getStatusId();
-      if ((tmpStatusId == Call.COMPLETE_FOLLOWUP_PENDING) && (!"pending".equals(context.getRequest().getParameter("view")))){
+      if ((tmpStatusId == Call.COMPLETE_FOLLOWUP_PENDING) && (!"pending".equals(context.getRequest().getParameter("view")))) {
         thisCall.setCheckAlertDate(false);
       }
       //update or insert the call
@@ -330,7 +345,7 @@ public final class LeadsCalls extends CFSModule {
       return this.getReturn(context, "Insert");
     } else if (resultCount == 1) {
       if ("list".equals(context.getRequest().getParameter("return"))) {
-      return (executeCommandView(context));
+        return (executeCommandView(context));
       } else {
         return ("UpdateOK");
       }
@@ -467,7 +482,7 @@ public final class LeadsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       thisCall = (Call) context.getFormBean();
-      if (thisCall.getId() == -1 ){
+      if (thisCall.getId() == -1) {
         thisCall = new Call(db, callId);
       }
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
@@ -476,7 +491,7 @@ public final class LeadsCalls extends CFSModule {
       if (!hasViewpointAuthority(db, context, "pipeline", thisCall.getEnteredBy(), userId)) {
         return "PermissionError";
       }
-      
+
       if (oppHeader.getAccountLink() > -1) {
         ContactList contactList = new ContactList();
         contactList.setOwner(userId);
@@ -486,7 +501,7 @@ public final class LeadsCalls extends CFSModule {
         contactList.buildList(db);
         context.getRequest().setAttribute("ContactList", contactList);
       }
-      
+
       addModifyFormElements(db, context, thisCall);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -614,7 +629,7 @@ public final class LeadsCalls extends CFSModule {
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-    
+
     addModuleBean(context, "View Opportunities", "Complete Activity");
     //Process parameters
     String headerId = context.getRequest().getParameter("headerId");
@@ -629,7 +644,7 @@ public final class LeadsCalls extends CFSModule {
 
       OpportunityHeader oppHeader = new OpportunityHeader(db, Integer.parseInt(headerId));
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
-      
+
       if (oppHeader.getAccountLink() > -1) {
         ContactList contactList = new ContactList();
         contactList.setOwner(userId);
@@ -684,11 +699,11 @@ public final class LeadsCalls extends CFSModule {
     int callId = Integer.parseInt(context.getRequest().getParameter("id"));
     Connection db = null;
     Call thisCall = null;
-    
+
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-    
+
     try {
       db = this.getConnection(context);
       //Load the previous Call to get details for completed activity
@@ -717,7 +732,7 @@ public final class LeadsCalls extends CFSModule {
       //Priority Lookup
       LookupList priorityList = systemStatus.getLookupList(db, "lookup_call_priority");
       context.getRequest().setAttribute("PriorityList", priorityList);
-      
+
       //contact list
       if (oppHeader.getAccountLink() > -1) {
         ContactList contactList = new ContactList();
@@ -739,11 +754,15 @@ public final class LeadsCalls extends CFSModule {
 
 
   /**
-   *  Adds a feature to the ModifyFormElements attribute of the LeadsCalls object
+   *  Adds a feature to the ModifyFormElements attribute of the LeadsCalls
+   *  object
    *
-   *@param  db                The feature to be added to the ModifyFormElements attribute
-   *@param  context           The feature to be added to the ModifyFormElements attribute
-   *@param  thisCall          The feature to be added to the ModifyFormElements attribute
+   *@param  db                The feature to be added to the ModifyFormElements
+   *      attribute
+   *@param  context           The feature to be added to the ModifyFormElements
+   *      attribute
+   *@param  thisCall          The feature to be added to the ModifyFormElements
+   *      attribute
    *@exception  SQLException  Description of the Exception
    */
   private void addModifyFormElements(Connection db, ActionContext context, Call thisCall) throws SQLException {

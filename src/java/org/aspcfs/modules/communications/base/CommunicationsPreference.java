@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.communications.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -18,9 +33,10 @@ import org.aspcfs.utils.web.*;
 /**
  *  Description of the Class
  *
- * @author     partha
- * @created    August 6, 2004
- * @version    $Id$
+ *@author     partha
+ *@created    August 6, 2004
+ *@version    $Id: CommunicationsPreference.java,v 1.2 2004/08/31 12:48:26
+ *      mrajkowski Exp $
  */
 public class CommunicationsPreference extends GenericBean {
 
@@ -52,7 +68,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the id attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -62,7 +78,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the id attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -72,7 +88,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the contactId attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new contactId value
+   *@param  tmp  The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -82,7 +98,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the contactId attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new contactId value
+   *@param  tmp  The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -92,7 +108,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the startDay attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new startDay value
+   *@param  tmp  The new startDay value
    */
   public void setStartDay(int tmp) {
     this.startDay = tmp;
@@ -102,7 +118,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the startDay attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new startDay value
+   *@param  tmp  The new startDay value
    */
   public void setStartDay(String tmp) {
     this.startDay = Integer.parseInt(tmp);
@@ -112,7 +128,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the endDay attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new endDay value
+   *@param  tmp  The new endDay value
    */
   public void setEndDay(int tmp) {
     this.endDay = tmp;
@@ -122,7 +138,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the endDay attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new endDay value
+   *@param  tmp  The new endDay value
    */
   public void setEndDay(String tmp) {
     this.endDay = Integer.parseInt(tmp);
@@ -132,7 +148,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the startTimeHour attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new startTimeHour value
+   *@param  tmp  The new startTimeHour value
    */
   public void setStartTimeHour(int tmp) {
     this.startTimeHour = tmp;
@@ -142,7 +158,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the startTimeHour attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new startTimeHour value
+   *@param  tmp  The new startTimeHour value
    */
   public void setStartTimeHour(String tmp) {
     this.startTimeHour = Integer.parseInt(tmp);
@@ -152,7 +168,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the level attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new level value
+   *@param  tmp  The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -162,7 +178,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the level attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new level value
+   *@param  tmp  The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -172,7 +188,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the timeZone attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new timeZone value
+   *@param  tmp  The new timeZone value
    */
   public void setTimeZone(String tmp) {
     this.timeZone = tmp;
@@ -182,7 +198,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the timeZone attribute of the CommunicationsPreference object
    *
-   * @return    The timeZone value
+   *@return    The timeZone value
    */
   public String getTimeZone() {
     int counter = 0;
@@ -202,7 +218,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the level attribute of the CommunicationsPreference object
    *
-   * @return    The level value
+   *@return    The level value
    */
   public int getLevel() {
     return level;
@@ -212,8 +228,8 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the startTimeHour attribute of the CommunicationsPreference object
    *
-   * @param  hour  The new startTimeHour value
-   * @param  tmp   The new startTimeHour value
+   *@param  hour  The new startTimeHour value
+   *@param  tmp   The new startTimeHour value
    */
   public void setStartTimeHour(int hour, int tmp) {
     Calendar calendar = Calendar.getInstance();
@@ -228,8 +244,8 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the startTimeHour attribute of the CommunicationsPreference object
    *
-   * @param  hourString  The new startTimeHour value
-   * @param  tmpString   The new startTimeHour value
+   *@param  hourString  The new startTimeHour value
+   *@param  tmpString   The new startTimeHour value
    */
   public void setStartTimeHour(String hourString, String tmpString) {
     int hour = Integer.parseInt(hourString);
@@ -245,7 +261,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the startTimeMinute attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new startTimeMinute value
+   *@param  tmp  The new startTimeMinute value
    */
   public void setStartTimeMinute(int tmp) {
     this.startTimeMinute = tmp;
@@ -255,7 +271,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the startTimeMinute attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new startTimeMinute value
+   *@param  tmp  The new startTimeMinute value
    */
   public void setStartTimeMinute(String tmp) {
     this.startTimeMinute = Integer.parseInt(tmp);
@@ -265,7 +281,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the endTimeHour attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new endTimeHour value
+   *@param  tmp  The new endTimeHour value
    */
   public void setEndTimeHour(int tmp) {
     this.endTimeHour = tmp;
@@ -275,7 +291,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the endTimeHour attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new endTimeHour value
+   *@param  tmp  The new endTimeHour value
    */
   public void setEndTimeHour(String tmp) {
     this.endTimeHour = Integer.parseInt(tmp);
@@ -285,8 +301,8 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the endTimeHour attribute of the CommunicationsPreference object
    *
-   * @param  hour  The new endTimeHour value
-   * @param  tmp   The new endTimeHour value
+   *@param  hour  The new endTimeHour value
+   *@param  tmp   The new endTimeHour value
    */
   public void setEndTimeHour(int hour, int tmp) {
     Calendar calendar = Calendar.getInstance();
@@ -301,8 +317,8 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the endTimeHour attribute of the CommunicationsPreference object
    *
-   * @param  hourString  The new endTimeHour value
-   * @param  tmpString   The new endTimeHour value
+   *@param  hourString  The new endTimeHour value
+   *@param  tmpString   The new endTimeHour value
    */
   public void setEndTimeHour(String hourString, String tmpString) {
     int hour = Integer.parseInt(hourString);
@@ -318,7 +334,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the endTimeMinute attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new endTimeMinute value
+   *@param  tmp  The new endTimeMinute value
    */
   public void setEndTimeMinute(int tmp) {
     this.endTimeMinute = tmp;
@@ -328,7 +344,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the endTimeMinute attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new endTimeMinute value
+   *@param  tmp  The new endTimeMinute value
    */
   public void setEndTimeMinute(String tmp) {
     this.endTimeMinute = Integer.parseInt(tmp);
@@ -338,7 +354,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the type attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new type value
+   *@param  tmp  The new type value
    */
   public void setType(String tmp) {
     this.type = tmp;
@@ -348,7 +364,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the startDayName attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new startDayName value
+   *@param  tmp  The new startDayName value
    */
   public void setStartDayName(String tmp) {
     this.startDayName = tmp;
@@ -358,7 +374,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the endDayName attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new endDayName value
+   *@param  tmp  The new endDayName value
    */
   public void setEndDayName(String tmp) {
     this.endDayName = tmp;
@@ -368,7 +384,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the entered attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -378,7 +394,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the entered attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -388,7 +404,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -398,7 +414,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -408,7 +424,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the modified attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -418,7 +434,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the modified attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -428,7 +444,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -438,7 +454,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -448,7 +464,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the enabled attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new enabled value
+   *@param  tmp  The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -458,7 +474,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the enabled attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new enabled value
+   *@param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -468,7 +484,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the typeId attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new typeId value
+   *@param  tmp  The new typeId value
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -478,7 +494,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Sets the typeId attribute of the CommunicationsPreference object
    *
-   * @param  tmp  The new typeId value
+   *@param  tmp  The new typeId value
    */
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
@@ -488,7 +504,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the typeId attribute of the CommunicationsPreference object
    *
-   * @return    The typeId value
+   *@return    The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -498,7 +514,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the entered attribute of the CommunicationsPreference object
    *
-   * @return    The entered value
+   *@return    The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -508,7 +524,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the enteredBy attribute of the CommunicationsPreference object
    *
-   * @return    The enteredBy value
+   *@return    The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -518,7 +534,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the modified attribute of the CommunicationsPreference object
    *
-   * @return    The modified value
+   *@return    The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -528,7 +544,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the modifiedBy attribute of the CommunicationsPreference object
    *
-   * @return    The modifiedBy value
+   *@return    The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -538,7 +554,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the enabled attribute of the CommunicationsPreference object
    *
-   * @return    The enabled value
+   *@return    The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -548,7 +564,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the id attribute of the CommunicationsPreference object
    *
-   * @return    The id value
+   *@return    The id value
    */
   public int getId() {
     return id;
@@ -558,7 +574,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the contactId attribute of the CommunicationsPreference object
    *
-   * @return    The contactId value
+   *@return    The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -568,7 +584,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the startDay attribute of the CommunicationsPreference object
    *
-   * @return    The startDay value
+   *@return    The startDay value
    */
   public int getStartDay() {
     return startDay;
@@ -578,7 +594,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the endDay attribute of the CommunicationsPreference object
    *
-   * @return    The endDay value
+   *@return    The endDay value
    */
   public int getEndDay() {
     return endDay;
@@ -588,7 +604,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the startTimeHour attribute of the CommunicationsPreference object
    *
-   * @return    The startTimeHour value
+   *@return    The startTimeHour value
    */
   public int getStartTimeHour() {
     return startTimeHour;
@@ -598,8 +614,8 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the startTimeHour attribute of the CommunicationsPreference object
    *
-   * @param  str  Description of the Parameter
-   * @return      The startTimeHour value
+   *@param  str  Description of the Parameter
+   *@return      The startTimeHour value
    */
   public String getStartTimeHour(String str) {
     String result = "";
@@ -623,7 +639,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the startTimeMinute attribute of the CommunicationsPreference object
    *
-   * @return    The startTimeMinute value
+   *@return    The startTimeMinute value
    */
   public int getStartTimeMinute() {
     return startTimeMinute;
@@ -633,7 +649,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the endTimeHour attribute of the CommunicationsPreference object
    *
-   * @return    The endTimeHour value
+   *@return    The endTimeHour value
    */
   public int getEndTimeHour() {
     return endTimeHour;
@@ -643,8 +659,8 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the endTimeHour attribute of the CommunicationsPreference object
    *
-   * @param  str  Description of the Parameter
-   * @return      The endTimeHour value
+   *@param  str  Description of the Parameter
+   *@return      The endTimeHour value
    */
   public String getEndTimeHour(String str) {
     String result = "";
@@ -668,7 +684,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the endTimeMinute attribute of the CommunicationsPreference object
    *
-   * @return    The endTimeMinute value
+   *@return    The endTimeMinute value
    */
   public int getEndTimeMinute() {
     return endTimeMinute;
@@ -678,7 +694,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the type attribute of the CommunicationsPreference object
    *
-   * @return    The type value
+   *@return    The type value
    */
   public String getType() {
     return type;
@@ -688,7 +704,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the startDayName attribute of the CommunicationsPreference object
    *
-   * @return    The startDayName value
+   *@return    The startDayName value
    */
   public String getStartDayName() {
     return startDayName;
@@ -698,7 +714,7 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the endDayName attribute of the CommunicationsPreference object
    *
-   * @return    The endDayName value
+   *@return    The endDayName value
    */
   public String getEndDayName() {
     return endDayName;
@@ -706,18 +722,18 @@ public class CommunicationsPreference extends GenericBean {
 
 
   /**
-   *Constructor for the CommunicationsPreference object
+   *  Constructor for the CommunicationsPreference object
    *
-   * @exception  SQLException  Description of the Exception
+   *@exception  SQLException  Description of the Exception
    */
   public CommunicationsPreference() throws SQLException { }
 
 
   /**
-   *Constructor for the CommunicationsPreference object
+   *  Constructor for the CommunicationsPreference object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public CommunicationsPreference(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -725,11 +741,11 @@ public class CommunicationsPreference extends GenericBean {
 
 
   /**
-   *Constructor for the CommunicationsPreference object
+   *  Constructor for the CommunicationsPreference object
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public CommunicationsPreference(Connection db, String id) throws SQLException {
     queryRecord(db, Integer.parseInt(id));
@@ -737,11 +753,11 @@ public class CommunicationsPreference extends GenericBean {
 
 
   /**
-   *Constructor for the CommunicationsPreference object
+   *  Constructor for the CommunicationsPreference object
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public CommunicationsPreference(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -751,9 +767,9 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  preferenceId      Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  preferenceId      Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int preferenceId) throws SQLException {
     if (preferenceId == -1) {
@@ -780,8 +796,8 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //communication_preference table
@@ -807,9 +823,9 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -913,9 +929,9 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -949,36 +965,36 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the dayOfWeek attribute of the CommunicationsPreference class
    *
-   * @param  day  Description of the Parameter
-   * @return      The dayOfWeek value
+   *@param  day  Description of the Parameter
+   *@return      The dayOfWeek value
    */
   public static String getDayOfWeek(int day) {
     String result = "";
     switch (day) {
-      case Calendar.MONDAY:
-        result = "Mon";
-        break;
-      case Calendar.TUESDAY:
-        result = "Tue";
-        break;
-      case Calendar.WEDNESDAY:
-        result = "Wed";
-        break;
-      case Calendar.THURSDAY:
-        result = "Thu";
-        break;
-      case Calendar.FRIDAY:
-        result = "Fri";
-        break;
-      case Calendar.SATURDAY:
-        result = "Sat";
-        break;
-      case Calendar.SUNDAY:
-        result = "Sun";
-        break;
-      default:
-        result = "NONE";
-        break;
+        case Calendar.MONDAY:
+          result = "Mon";
+          break;
+        case Calendar.TUESDAY:
+          result = "Tue";
+          break;
+        case Calendar.WEDNESDAY:
+          result = "Wed";
+          break;
+        case Calendar.THURSDAY:
+          result = "Thu";
+          break;
+        case Calendar.FRIDAY:
+          result = "Fri";
+          break;
+        case Calendar.SATURDAY:
+          result = "Sat";
+          break;
+        case Calendar.SUNDAY:
+          result = "Sun";
+          break;
+        default:
+          result = "NONE";
+          break;
     }
     return result;
   }
@@ -987,9 +1003,9 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the htmlSelect attribute of the CommunicationsPreference class
    *
-   * @param  selectName  Description of the Parameter
-   * @param  defaultKey  Description of the Parameter
-   * @return             The htmlSelect value
+   *@param  selectName  Description of the Parameter
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelect value
    */
   public static String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect currentList = new HtmlSelect();
@@ -1007,10 +1023,10 @@ public class CommunicationsPreference extends GenericBean {
   /**
    *  Gets the htmlSelectLevel attribute of the CommunicationsPreference class
    *
-   * @param  selectName   Description of the Parameter
-   * @param  defaultKey   Description of the Parameter
-   * @param  lowestLevel  Description of the Parameter
-   * @return              The htmlSelectLevel value
+   *@param  selectName   Description of the Parameter
+   *@param  defaultKey   Description of the Parameter
+   *@param  lowestLevel  Description of the Parameter
+   *@return              The htmlSelectLevel value
    */
   public static String getHtmlSelectLevel(String selectName, int defaultKey, int lowestLevel) {
     HtmlSelect currentList = new HtmlSelect();

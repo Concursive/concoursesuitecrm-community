@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.orders.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -10,11 +25,13 @@ import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 
 /**
- *  This represents a Product Option of a particular product associated with a particular Order
+ *  This represents a Product Option of a particular product associated with a
+ *  particular Order
  *
- * @author     ananth
- * @created    March 18, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    March 18, 2004
+ *@version    $Id: OrderProductOption.java,v 1.2 2004/05/04 15:52:27 mrajkowski
+ *      Exp $
  */
 public class OrderProductOption extends GenericBean {
   private int id = -1;
@@ -36,7 +53,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the id attribute of the OrderProductOption object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -46,7 +63,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the id attribute of the OrderProductOption object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -56,7 +73,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the itemId attribute of the OrderProductOption object
    *
-   * @param  tmp  The new itemId value
+   *@param  tmp  The new itemId value
    */
   public void setItemId(int tmp) {
     this.itemId = tmp;
@@ -66,7 +83,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the itemId attribute of the OrderProductOption object
    *
-   * @param  tmp  The new itemId value
+   *@param  tmp  The new itemId value
    */
   public void setItemId(String tmp) {
     this.itemId = Integer.parseInt(tmp);
@@ -76,7 +93,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the productOptionId attribute of the OrderProductOption object
    *
-   * @param  tmp  The new productOptionId value
+   *@param  tmp  The new productOptionId value
    */
   public void setProductOptionId(int tmp) {
     this.productOptionId = tmp;
@@ -86,7 +103,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the productOptionId attribute of the OrderProductOption object
    *
-   * @param  tmp  The new productOptionId value
+   *@param  tmp  The new productOptionId value
    */
   public void setProductOptionId(String tmp) {
     this.productOptionId = Integer.parseInt(tmp);
@@ -96,7 +113,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the quantity attribute of the OrderProductOption object
    *
-   * @param  tmp  The new quantity value
+   *@param  tmp  The new quantity value
    */
   public void setQuantity(int tmp) {
     this.quantity = tmp;
@@ -106,7 +123,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the quantity attribute of the OrderProductOption object
    *
-   * @param  tmp  The new quantity value
+   *@param  tmp  The new quantity value
    */
   public void setQuantity(String tmp) {
     this.quantity = Integer.parseInt(tmp);
@@ -116,7 +133,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the priceCurrency attribute of the OrderProductOption object
    *
-   * @param  tmp  The new priceCurrency value
+   *@param  tmp  The new priceCurrency value
    */
   public void setPriceCurrency(int tmp) {
     this.priceCurrency = tmp;
@@ -126,7 +143,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the priceCurrency attribute of the OrderProductOption object
    *
-   * @param  tmp  The new priceCurrency value
+   *@param  tmp  The new priceCurrency value
    */
   public void setPriceCurrency(String tmp) {
     this.priceCurrency = Integer.parseInt(tmp);
@@ -136,7 +153,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the priceAmount attribute of the OrderProductOption object
    *
-   * @param  tmp  The new priceAmount value
+   *@param  tmp  The new priceAmount value
    */
   public void setPriceAmount(double tmp) {
     this.priceAmount = tmp;
@@ -146,7 +163,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the priceAmount attribute of the OrderProductOption object
    *
-   * @param  tmp  The new priceAmount value
+   *@param  tmp  The new priceAmount value
    */
   public void setPriceAmount(String tmp) {
     this.priceAmount = Double.parseDouble(tmp);
@@ -156,7 +173,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the recurringCurrency attribute of the OrderProductOption object
    *
-   * @param  tmp  The new recurringCurrency value
+   *@param  tmp  The new recurringCurrency value
    */
   public void setRecurringCurrency(int tmp) {
     this.recurringCurrency = tmp;
@@ -166,7 +183,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the recurringCurrency attribute of the OrderProductOption object
    *
-   * @param  tmp  The new recurringCurrency value
+   *@param  tmp  The new recurringCurrency value
    */
   public void setRecurringCurrency(String tmp) {
     this.recurringCurrency = Integer.parseInt(tmp);
@@ -176,7 +193,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the recurringAmount attribute of the OrderProductOption object
    *
-   * @param  tmp  The new recurringAmount value
+   *@param  tmp  The new recurringAmount value
    */
   public void setRecurringAmount(double tmp) {
     this.recurringAmount = tmp;
@@ -186,7 +203,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the recurringAmount attribute of the OrderProductOption object
    *
-   * @param  tmp  The new recurringAmount value
+   *@param  tmp  The new recurringAmount value
    */
   public void setRecurringAmount(String tmp) {
     this.recurringAmount = Double.parseDouble(tmp);
@@ -196,7 +213,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the recurringType attribute of the OrderProductOption object
    *
-   * @param  tmp  The new recurringType value
+   *@param  tmp  The new recurringType value
    */
   public void setRecurringType(int tmp) {
     this.recurringType = tmp;
@@ -206,7 +223,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the recurringType attribute of the OrderProductOption object
    *
-   * @param  tmp  The new recurringType value
+   *@param  tmp  The new recurringType value
    */
   public void setRecurringType(String tmp) {
     this.recurringType = Integer.parseInt(tmp);
@@ -216,7 +233,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the extendedPrice attribute of the OrderProductOption object
    *
-   * @param  tmp  The new extendedPrice value
+   *@param  tmp  The new extendedPrice value
    */
   public void setExtendedPrice(double tmp) {
     this.extendedPrice = tmp;
@@ -226,7 +243,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the extendedPrice attribute of the OrderProductOption object
    *
-   * @param  tmp  The new extendedPrice value
+   *@param  tmp  The new extendedPrice value
    */
   public void setExtendedPrice(String tmp) {
     this.extendedPrice = Double.parseDouble(tmp);
@@ -236,7 +253,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the totalPrice attribute of the OrderProductOption object
    *
-   * @param  tmp  The new totalPrice value
+   *@param  tmp  The new totalPrice value
    */
   public void setTotalPrice(double tmp) {
     this.totalPrice = tmp;
@@ -246,7 +263,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the totalPrice attribute of the OrderProductOption object
    *
-   * @param  tmp  The new totalPrice value
+   *@param  tmp  The new totalPrice value
    */
   public void setTotalPrice(String tmp) {
     this.totalPrice = Double.parseDouble(tmp);
@@ -256,7 +273,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the statusId attribute of the OrderProductOption object
    *
-   * @param  tmp  The new statusId value
+   *@param  tmp  The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -266,7 +283,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the statusId attribute of the OrderProductOption object
    *
-   * @param  tmp  The new statusId value
+   *@param  tmp  The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -276,7 +293,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the productId attribute of the OrderProductOption object
    *
-   * @param  tmp  The new productId value
+   *@param  tmp  The new productId value
    */
   public void setProductId(int tmp) {
     this.productId = tmp;
@@ -286,7 +303,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Sets the productId attribute of the OrderProductOption object
    *
-   * @param  tmp  The new productId value
+   *@param  tmp  The new productId value
    */
   public void setProductId(String tmp) {
     this.productId = Integer.parseInt(tmp);
@@ -296,7 +313,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the id attribute of the OrderProductOption object
    *
-   * @return    The id value
+   *@return    The id value
    */
   public int getId() {
     return id;
@@ -306,7 +323,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the itemId attribute of the OrderProductOption object
    *
-   * @return    The itemId value
+   *@return    The itemId value
    */
   public int getItemId() {
     return itemId;
@@ -316,7 +333,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the productOptionId attribute of the OrderProductOption object
    *
-   * @return    The productOptionId value
+   *@return    The productOptionId value
    */
   public int getProductOptionId() {
     return productOptionId;
@@ -326,7 +343,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the quantity attribute of the OrderProductOption object
    *
-   * @return    The quantity value
+   *@return    The quantity value
    */
   public int getQuantity() {
     return quantity;
@@ -336,7 +353,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the priceCurrency attribute of the OrderProductOption object
    *
-   * @return    The priceCurrency value
+   *@return    The priceCurrency value
    */
   public int getPriceCurrency() {
     return priceCurrency;
@@ -346,7 +363,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the priceAmount attribute of the OrderProductOption object
    *
-   * @return    The priceAmount value
+   *@return    The priceAmount value
    */
   public double getPriceAmount() {
     return priceAmount;
@@ -356,7 +373,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the recurringCurrency attribute of the OrderProductOption object
    *
-   * @return    The recurringCurrency value
+   *@return    The recurringCurrency value
    */
   public int getRecurringCurrency() {
     return recurringCurrency;
@@ -366,7 +383,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the recurringAmount attribute of the OrderProductOption object
    *
-   * @return    The recurringAmount value
+   *@return    The recurringAmount value
    */
   public double getRecurringAmount() {
     return recurringAmount;
@@ -376,7 +393,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the recurringType attribute of the OrderProductOption object
    *
-   * @return    The recurringType value
+   *@return    The recurringType value
    */
   public int getRecurringType() {
     return recurringType;
@@ -386,7 +403,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the extendedPrice attribute of the OrderProductOption object
    *
-   * @return    The extendedPrice value
+   *@return    The extendedPrice value
    */
   public double getExtendedPrice() {
     return extendedPrice;
@@ -396,7 +413,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the totalPrice attribute of the OrderProductOption object
    *
-   * @return    The totalPrice value
+   *@return    The totalPrice value
    */
   public double getTotalPrice() {
     return totalPrice;
@@ -406,7 +423,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the statusId attribute of the OrderProductOption object
    *
-   * @return    The statusId value
+   *@return    The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -416,7 +433,7 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the productId attribute of the OrderProductOption object
    *
-   * @return    The productId value
+   *@return    The productId value
    */
   public int getProductId() {
     return productId;
@@ -424,17 +441,17 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *Constructor for the OrderProductOption object
+   *  Constructor for the OrderProductOption object
    */
   public OrderProductOption() { }
 
 
   /**
-   *Constructor for the OrderProductOption object
+   *  Constructor for the OrderProductOption object
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public OrderProductOption(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -442,10 +459,10 @@ public class OrderProductOption extends GenericBean {
 
 
   /**
-   *Constructor for the OrderProductOption object
+   *  Constructor for the OrderProductOption object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public OrderProductOption(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -455,9 +472,9 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (this.id == -1) {
@@ -488,8 +505,8 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     // order_product_options table
@@ -512,9 +529,9 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
@@ -554,9 +571,9 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -580,9 +597,9 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -592,15 +609,15 @@ public class OrderProductOption extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(" UPDATE order_product_options " +
-               " SET quantity = ?, " +
-               "     price_currency = ?, " +
-               "     price_amount = ?, " +
-               "     recurring_currency = ?, " + 
-               "     recurring_amount = ?, " +
-               "     recurring_type = ?, " +
-               "     extended_price = ?, " +
-               "     total_price = ?, " +
-               "     status_id = ? " );
+        " SET quantity = ?, " +
+        "     price_currency = ?, " +
+        "     price_amount = ?, " +
+        "     recurring_currency = ?, " +
+        "     recurring_amount = ?, " +
+        "     recurring_type = ?, " +
+        "     extended_price = ?, " +
+        "     total_price = ?, " +
+        "     status_id = ? ");
     sql.append(" WHERE order_product_option_id = ? ");
 
     int i = 0;
@@ -625,9 +642,9 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -647,9 +664,9 @@ public class OrderProductOption extends GenericBean {
   /**
    *  Gets the valid attribute of the OrderProductOption object
    *
-   * @param  db                Description of the Parameter
-   * @return                   The valid value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   The valid value
+   *@exception  SQLException  Description of the Exception
    */
   protected boolean isValid(Connection db) throws SQLException {
     return true;

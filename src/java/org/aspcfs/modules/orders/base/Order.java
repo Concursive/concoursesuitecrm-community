@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.orders.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -11,9 +26,9 @@ import org.aspcfs.modules.base.DependencyList;
 /**
  *  An Order comprises of products and product options.
  *
- * @author     ananth
- * @created    March 18, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    March 18, 2004
+ *@version    $Id$
  */
 public class Order extends GenericBean {
   private int id = -1;
@@ -53,7 +68,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the id attribute of the Order object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -63,7 +78,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the id attribute of the Order object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -73,7 +88,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the parentId attribute of the Order object
    *
-   * @param  tmp  The new parentId value
+   *@param  tmp  The new parentId value
    */
   public void setParentId(int tmp) {
     this.parentId = tmp;
@@ -83,7 +98,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the parentId attribute of the Order object
    *
-   * @param  tmp  The new parentId value
+   *@param  tmp  The new parentId value
    */
   public void setParentId(String tmp) {
     this.parentId = Integer.parseInt(tmp);
@@ -93,7 +108,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the orgId attribute of the Order object
    *
-   * @param  tmp  The new orgId value
+   *@param  tmp  The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -103,7 +118,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the orgId attribute of the Order object
    *
-   * @param  tmp  The new orgId value
+   *@param  tmp  The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -113,7 +128,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the billingContactId attribute of the Order object
    *
-   * @param  tmp  The new billingContactId value
+   *@param  tmp  The new billingContactId value
    */
   public void setBillingContactId(int tmp) {
     this.billingContactId = tmp;
@@ -123,7 +138,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the billingContactId attribute of the Order object
    *
-   * @param  tmp  The new billingContactId value
+   *@param  tmp  The new billingContactId value
    */
   public void setBillingContactId(String tmp) {
     this.billingContactId = Integer.parseInt(tmp);
@@ -133,7 +148,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the sourceId attribute of the Order object
    *
-   * @param  tmp  The new sourceId value
+   *@param  tmp  The new sourceId value
    */
   public void setSourceId(int tmp) {
     this.sourceId = tmp;
@@ -143,7 +158,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the sourceId attribute of the Order object
    *
-   * @param  tmp  The new sourceId value
+   *@param  tmp  The new sourceId value
    */
   public void setSourceId(String tmp) {
     this.sourceId = Integer.parseInt(tmp);
@@ -153,7 +168,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the quoteId attribute of the Order object
    *
-   * @param  tmp  The new quoteId value
+   *@param  tmp  The new quoteId value
    */
   public void setQuoteId(int tmp) {
     this.quoteId = tmp;
@@ -163,7 +178,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the quoteId attribute of the Order object
    *
-   * @param  tmp  The new quoteId value
+   *@param  tmp  The new quoteId value
    */
   public void setQuoteId(String tmp) {
     this.quoteId = Integer.parseInt(tmp);
@@ -173,7 +188,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the grandTotal attribute of the Order object
    *
-   * @param  tmp  The new grandTotal value
+   *@param  tmp  The new grandTotal value
    */
   public void setGrandTotal(double tmp) {
     this.grandTotal = tmp;
@@ -183,7 +198,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the statusId attribute of the Order object
    *
-   * @param  tmp  The new statusId value
+   *@param  tmp  The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -193,7 +208,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the statusId attribute of the Order object
    *
-   * @param  tmp  The new statusId value
+   *@param  tmp  The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -203,7 +218,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the statusDate attribute of the Order object
    *
-   * @param  tmp  The new statusDate value
+   *@param  tmp  The new statusDate value
    */
   public void setStatusDate(Timestamp tmp) {
     this.statusDate = tmp;
@@ -213,7 +228,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the orderTermsId attribute of the Order object
    *
-   * @param  tmp  The new orderTermsId value
+   *@param  tmp  The new orderTermsId value
    */
   public void setOrderTermsId(int tmp) {
     this.orderTermsId = tmp;
@@ -223,7 +238,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the orderTermsId attribute of the Order object
    *
-   * @param  tmp  The new orderTermsId value
+   *@param  tmp  The new orderTermsId value
    */
   public void setOrderTermsId(String tmp) {
     this.orderTermsId = Integer.parseInt(tmp);
@@ -233,7 +248,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the orderTypeId attribute of the Order object
    *
-   * @param  tmp  The new orderTypeId value
+   *@param  tmp  The new orderTypeId value
    */
   public void setOrderTypeId(int tmp) {
     this.orderTypeId = tmp;
@@ -243,7 +258,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the orderTypeId attribute of the Order object
    *
-   * @param  tmp  The new orderTypeId value
+   *@param  tmp  The new orderTypeId value
    */
   public void setOrderTypeId(String tmp) {
     this.orderTypeId = Integer.parseInt(tmp);
@@ -253,7 +268,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the expirationDate attribute of the Order object
    *
-   * @param  tmp  The new expirationDate value
+   *@param  tmp  The new expirationDate value
    */
   public void setExpirationDate(Timestamp tmp) {
     this.expirationDate = tmp;
@@ -263,7 +278,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the description attribute of the Order object
    *
-   * @param  tmp  The new description value
+   *@param  tmp  The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -273,7 +288,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the notes attribute of the Order object
    *
-   * @param  tmp  The new notes value
+   *@param  tmp  The new notes value
    */
   public void setNotes(String tmp) {
     this.notes = tmp;
@@ -283,7 +298,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the Order object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -293,7 +308,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the Order object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -303,7 +318,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the Order object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -313,7 +328,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the Order object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -323,7 +338,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the entered attribute of the Order object
    *
-   * @param  tmp  The new entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -333,7 +348,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the modified attribute of the Order object
    *
-   * @param  tmp  The new modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -343,7 +358,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the name attribute of the Order object
    *
-   * @param  tmp  The new name value
+   *@param  tmp  The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -353,7 +368,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the nameLast attribute of the Order object
    *
-   * @param  tmp  The new nameLast value
+   *@param  tmp  The new nameLast value
    */
   public void setNameLast(String tmp) {
     this.nameLast = tmp;
@@ -363,7 +378,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the nameFirst attribute of the Order object
    *
-   * @param  tmp  The new nameFirst value
+   *@param  tmp  The new nameFirst value
    */
   public void setNameFirst(String tmp) {
     this.nameFirst = tmp;
@@ -373,7 +388,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the nameMiddle attribute of the Order object
    *
-   * @param  tmp  The new nameMiddle value
+   *@param  tmp  The new nameMiddle value
    */
   public void setNameMiddle(String tmp) {
     this.nameMiddle = tmp;
@@ -383,7 +398,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the buildProducts attribute of the Order object
    *
-   * @param  tmp  The new buildProducts value
+   *@param  tmp  The new buildProducts value
    */
   public void setBuildProducts(boolean tmp) {
     this.buildProducts = tmp;
@@ -393,7 +408,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the productList attribute of the Order object
    *
-   * @param  tmp  The new productList value
+   *@param  tmp  The new productList value
    */
   public void setProductList(OrderProductList tmp) {
     this.productList = tmp;
@@ -403,7 +418,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the salesId attribute of the Order object
    *
-   * @param  tmp  The new salesId value
+   *@param  tmp  The new salesId value
    */
   public void setSalesId(int tmp) {
     this.salesId = tmp;
@@ -413,7 +428,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the salesId attribute of the Order object
    *
-   * @param  tmp  The new salesId value
+   *@param  tmp  The new salesId value
    */
   public void setSalesId(String tmp) {
     this.salesId = Integer.parseInt(tmp);
@@ -423,7 +438,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the orderedBy attribute of the Order object
    *
-   * @param  tmp  The new orderedBy value
+   *@param  tmp  The new orderedBy value
    */
   public void setOrderedBy(int tmp) {
     this.orderedBy = tmp;
@@ -433,7 +448,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the orderedBy attribute of the Order object
    *
-   * @param  tmp  The new orderedBy value
+   *@param  tmp  The new orderedBy value
    */
   public void setOrderedBy(String tmp) {
     this.orderedBy = Integer.parseInt(tmp);
@@ -443,7 +458,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the contractDate attribute of the Order object
    *
-   * @param  tmp  The new contractDate value
+   *@param  tmp  The new contractDate value
    */
   public void setContractDate(Timestamp tmp) {
     this.contractDate = tmp;
@@ -453,7 +468,7 @@ public class Order extends GenericBean {
   /**
    *  Sets the contractDate attribute of the Order object
    *
-   * @param  tmp  The new contractDate value
+   *@param  tmp  The new contractDate value
    */
   public void setContractDate(String tmp) {
     this.contractDate = DatabaseUtils.parseTimestamp(tmp);
@@ -463,7 +478,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the contractDate attribute of the Order object
    *
-   * @return    The contractDate value
+   *@return    The contractDate value
    */
   public Timestamp getContractDate() {
     return contractDate;
@@ -473,7 +488,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the salesId attribute of the Order object
    *
-   * @return    The salesId value
+   *@return    The salesId value
    */
   public int getSalesId() {
     return salesId;
@@ -483,7 +498,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the orderedBy attribute of the Order object
    *
-   * @return    The orderedBy value
+   *@return    The orderedBy value
    */
   public int getOrderedBy() {
     return orderedBy;
@@ -493,7 +508,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the id attribute of the Order object
    *
-   * @return    The id value
+   *@return    The id value
    */
   public int getId() {
     return id;
@@ -503,7 +518,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the parentId attribute of the Order object
    *
-   * @return    The parentId value
+   *@return    The parentId value
    */
   public int getParentId() {
     return parentId;
@@ -513,7 +528,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the orgId attribute of the Order object
    *
-   * @return    The orgId value
+   *@return    The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -523,7 +538,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the billingContactId attribute of the Order object
    *
-   * @return    The billingContactId value
+   *@return    The billingContactId value
    */
   public int getBillingContactId() {
     return billingContactId;
@@ -533,7 +548,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the sourceId attribute of the Order object
    *
-   * @return    The sourceId value
+   *@return    The sourceId value
    */
   public int getSourceId() {
     return sourceId;
@@ -543,7 +558,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the quoteId attribute of the Order object
    *
-   * @return    The quoteId value
+   *@return    The quoteId value
    */
   public int getQuoteId() {
     return quoteId;
@@ -553,7 +568,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the statusId attribute of the Order object
    *
-   * @return    The statusId value
+   *@return    The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -563,7 +578,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the statusDate attribute of the Order object
    *
-   * @return    The statusDate value
+   *@return    The statusDate value
    */
   public Timestamp getStatusDate() {
     return statusDate;
@@ -573,7 +588,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the orderTermsId attribute of the Order object
    *
-   * @return    The orderTermsId value
+   *@return    The orderTermsId value
    */
   public int getOrderTermsId() {
     return orderTermsId;
@@ -583,7 +598,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the orderTypeId attribute of the Order object
    *
-   * @return    The orderTypeId value
+   *@return    The orderTypeId value
    */
   public int getOrderTypeId() {
     return orderTypeId;
@@ -593,7 +608,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the expirationDate attribute of the Order object
    *
-   * @return    The expirationDate value
+   *@return    The expirationDate value
    */
   public Timestamp getExpirationDate() {
     return expirationDate;
@@ -603,7 +618,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the description attribute of the Order object
    *
-   * @return    The description value
+   *@return    The description value
    */
   public String getDescription() {
     return description;
@@ -613,7 +628,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the notes attribute of the Order object
    *
-   * @return    The notes value
+   *@return    The notes value
    */
   public String getNotes() {
     return notes;
@@ -623,7 +638,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the enteredBy attribute of the Order object
    *
-   * @return    The enteredBy value
+   *@return    The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -633,7 +648,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the modifiedBy attribute of the Order object
    *
-   * @return    The modifiedBy value
+   *@return    The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -643,7 +658,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the entered attribute of the Order object
    *
-   * @return    The entered value
+   *@return    The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -653,7 +668,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the modified attribute of the Order object
    *
-   * @return    The modified value
+   *@return    The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -663,7 +678,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the grandTotal attribute of the Order object
    *
-   * @return    The grandTotal value
+   *@return    The grandTotal value
    */
   public double getGrandTotal() {
     return grandTotal;
@@ -673,7 +688,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the name attribute of the Order object
    *
-   * @return    The name value
+   *@return    The name value
    */
   public String getName() {
     return name;
@@ -683,7 +698,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the nameLast attribute of the Order object
    *
-   * @return    The nameLast value
+   *@return    The nameLast value
    */
   public String getNameLast() {
     return nameLast;
@@ -693,7 +708,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the nameFirst attribute of the Order object
    *
-   * @return    The nameFirst value
+   *@return    The nameFirst value
    */
   public String getNameFirst() {
     return nameFirst;
@@ -703,7 +718,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the nameMiddle attribute of the Order object
    *
-   * @return    The nameMiddle value
+   *@return    The nameMiddle value
    */
   public String getNameMiddle() {
     return nameMiddle;
@@ -713,7 +728,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the buildProducts attribute of the Order object
    *
-   * @return    The buildProducts value
+   *@return    The buildProducts value
    */
   public boolean getBuildProducts() {
     return buildProducts;
@@ -723,7 +738,7 @@ public class Order extends GenericBean {
   /**
    *  Gets the productList attribute of the Order object
    *
-   * @return    The productList value
+   *@return    The productList value
    */
   public OrderProductList getProductList() {
     return productList;
@@ -731,17 +746,17 @@ public class Order extends GenericBean {
 
 
   /**
-   *Constructor for the Order object
+   *  Constructor for the Order object
    */
   public Order() { }
 
 
   /**
-   *Constructor for the Order object
+   *  Constructor for the Order object
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public Order(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -749,10 +764,10 @@ public class Order extends GenericBean {
 
 
   /**
-   *Constructor for the Order object
+   *  Constructor for the Order object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public Order(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -762,9 +777,9 @@ public class Order extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -800,8 +815,8 @@ public class Order extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     // order_entry table
@@ -838,8 +853,8 @@ public class Order extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildProducts(Connection db) throws SQLException {
     System.out.println("building product list");
@@ -868,9 +883,9 @@ public class Order extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
@@ -937,9 +952,9 @@ public class Order extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -970,9 +985,9 @@ public class Order extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -1032,9 +1047,9 @@ public class Order extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -1103,9 +1118,9 @@ public class Order extends GenericBean {
   /**
    *  Gets the valid attribute of the Order object
    *
-   * @param  db                Description of the Parameter
-   * @return                   The valid value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   The valid value
+   *@exception  SQLException  Description of the Exception
    */
   protected boolean isValid(Connection db) throws SQLException {
     return true;

@@ -1,5 +1,18 @@
-//Copyright 2001 Dark Horse Ventures
-
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.troubletickets.base;
 
 import java.util.*;
@@ -1075,10 +1088,10 @@ public class TicketList extends ArrayList implements SyncableList {
       sqlFilter.append("AND t.ticketid IN (SELECT ticket_id FROM ticketlink_project WHERE project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
           "AND status IS NULL)) ");
     }
-    if ((projectId == -1) && (forProjectUser == -1)){
+    if ((projectId == -1) && (forProjectUser == -1)) {
       sqlFilter.append("AND t.ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) ");
     }
-    
+
     //Sync API
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
@@ -1292,8 +1305,8 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Creates a hashmap of the number of tickets based
-   *  on the estimated resolution date
+   *  Creates a hashmap of the number of tickets based on the estimated
+   *  resolution date
    *
    *@param  db                Description of the Parameter
    *@param  timeZone          Description of the Parameter

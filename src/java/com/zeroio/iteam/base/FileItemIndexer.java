@@ -1,9 +1,17 @@
 /*
- *  Copyright 2000-2004 Matt Rajkowski
- *  matt.rajkowski@teamelements.com
- *  http://www.teamelements.com
- *  This class cannot be modified, distributed or used without
- *  permission from Matt Rajkowski and Team Elements
+ *  Copyright(c) 2004 Team Elements LLC (http://www.teamelements.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Team Elements LLC. Permission to use, copy, and modify this
+ *  material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. TEAM
+ *  ELEMENTS MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL TEAM ELEMENTS LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR ANY
+ *  DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package com.zeroio.iteam.base;
 
@@ -21,7 +29,8 @@ import org.aspcfs.modules.base.Constants;
  *
  *@author     matt rajkowski
  *@created    May 27, 2004
- *@version    $Id$
+ *@version    $Id: FileItemIndexer.java,v 1.3 2004/09/13 19:01:28 mrajkowski Exp
+ *      $
  */
 public class FileItemIndexer implements Indexer {
 
@@ -31,6 +40,7 @@ public class FileItemIndexer implements Indexer {
    *
    *@param  writer            Description of the Parameter
    *@param  db                Description of the Parameter
+   *@param  path              Description of the Parameter
    *@exception  SQLException  Description of the Exception
    *@exception  IOException   Description of the Exception
    */
@@ -110,7 +120,14 @@ public class FileItemIndexer implements Indexer {
     Term searchTerm = new Term("fileId", String.valueOf(fileItem.getId()));
     return searchTerm;
   }
-  
+
+
+  /**
+   *  Gets the deleteTerm attribute of the FileItemIndexer class
+   *
+   *@param  fileItem  Description of the Parameter
+   *@return           The deleteTerm value
+   */
   public static Term getDeleteTerm(FileItem fileItem) {
     Term searchTerm = new Term("fileId", String.valueOf(fileItem.getId()));
     return searchTerm;

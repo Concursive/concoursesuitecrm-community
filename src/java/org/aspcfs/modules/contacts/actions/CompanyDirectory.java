@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.contacts.actions;
 
 import javax.servlet.*;
@@ -15,13 +30,12 @@ import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
 
-
 /**
  *  The CFS Company Directory module.
  *
- * @author     mrajkowski
- * @created    July 9, 2001
- * @version    $Id: CompanyDirectory.java,v 1.9 2001/07/20 19:02:11 mrajkowski
+ *@author     mrajkowski
+ *@created    July 9, 2001
+ *@version    $Id: CompanyDirectory.java,v 1.9 2001/07/20 19:02:11 mrajkowski
  *      Exp $
  */
 public final class CompanyDirectory extends CFSModule {
@@ -29,9 +43,9 @@ public final class CompanyDirectory extends CFSModule {
   /**
    *  Includes an HTML page for output
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since           1.0
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since           1.0
    */
   public String executeCommandDefault(ActionContext context) {
     String module = context.getRequest().getParameter("module");
@@ -46,9 +60,9 @@ public final class CompanyDirectory extends CFSModule {
    *  This method retrieves a list of employees from the database and populates
    *  a Vector of the employees retrieved.
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since           1.0
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since           1.0
    */
   public String executeCommandListEmployees(ActionContext context) {
 
@@ -95,9 +109,9 @@ public final class CompanyDirectory extends CFSModule {
    *
    *  This method handles output for both viewing and modifying a contact.
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since           1.0
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since           1.0
    */
   public String executeCommandEmployeeDetails(ActionContext context) {
 
@@ -138,8 +152,8 @@ public final class CompanyDirectory extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandModifyEmployee(ActionContext context) {
 
@@ -181,8 +195,8 @@ public final class CompanyDirectory extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     Exception errorMessage = null;
@@ -206,11 +220,11 @@ public final class CompanyDirectory extends CFSModule {
     }
     try {
       db = this.getConnection(context);
-      
+
       //set the access type as public
       AccessTypeList accessTypes = this.getSystemStatus(context).getAccessTypeList(db, AccessType.EMPLOYEES);
       thisEmployee.setAccessType(accessTypes.getDefaultItem());
-      
+
       if (thisEmployee.getId() == -1) {
         thisEmployee.setOrgId(0);
         addModuleBean(context, "Internal Contacts", "Internal Insert");
@@ -284,8 +298,8 @@ public final class CompanyDirectory extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -338,9 +352,9 @@ public final class CompanyDirectory extends CFSModule {
   /**
    *  Preparation for displaying the insert employee contact form
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since           1.10
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since           1.10
    */
   public String executeCommandPrepare(ActionContext context) {
 
@@ -366,7 +380,7 @@ public final class CompanyDirectory extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if(context.getRequest().getParameter("actionSource") != null){
+      if (context.getRequest().getParameter("actionSource") != null) {
         return this.getReturn(context, "EmployeePrepare");
       }
       return ("PrepareOK");
@@ -380,9 +394,9 @@ public final class CompanyDirectory extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since           1.10
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since           1.10
    */
   public String executeCommandDeleteEmployee(ActionContext context) {
 

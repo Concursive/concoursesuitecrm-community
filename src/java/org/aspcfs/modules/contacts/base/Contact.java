@@ -1,5 +1,18 @@
-//Copyright 2001-2002 Dark Horse Ventures
-
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.contacts.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -89,7 +102,7 @@ public class Contact extends GenericBean {
   private boolean buildDetails = true;
   private boolean buildTypes = true;
 
-  
+
   /**
    *  Constructor for the Contact object
    *
@@ -1107,16 +1120,21 @@ public class Contact extends GenericBean {
 
 
 
-  public boolean isApproved(){
+  /**
+   *  Gets the approved attribute of the Contact object
+   *
+   *@return    The approved value
+   */
+  public boolean isApproved() {
     return (statusId == Import.PROCESSED_UNAPPROVED ? false : true);
   }
-  
-  
+
+
   /**
    *  Since dynamic fields cannot be auto-populated, passing the request to this
    *  method will populate the indicated fields.
    *
-   *@param  request  The new RequestItems value
+   *@param  context  The new requestItems value
    *@since           1.15
    */
   public void setRequestItems(ActionContext context) {
@@ -1543,8 +1561,8 @@ public class Contact extends GenericBean {
     }
     return out.toString().trim();
   }
-  
-  
+
+
   /**
    *  Gets the NameLastFirst attribute of the Contact object
    *
@@ -1988,8 +2006,8 @@ public class Contact extends GenericBean {
     phoneNumberList.setContactId(this.getId());
     phoneNumberList.buildList(db);
   }
-  
-  
+
+
   /**
    *  Inserts this object into the database, and populates this Id. For
    *  maintenance, only the required fields are inserted, then an update is
@@ -2288,7 +2306,7 @@ public class Contact extends GenericBean {
         pst.setInt(1, this.getId());
         pst.execute();
         pst.close();
-        
+
         // delete the action item log data for this contact
         pst = db.prepareStatement(
             "DELETE FROM action_item_log " +
@@ -2296,7 +2314,7 @@ public class Contact extends GenericBean {
         pst.setInt(1, this.getId());
         pst.execute();
         pst.close();
-        
+
         // delete from any action list this contact appeared on
         pst = db.prepareStatement(
             "DELETE FROM action_item " +
@@ -2304,7 +2322,7 @@ public class Contact extends GenericBean {
         pst.setInt(1, this.getId());
         pst.execute();
         pst.close();
-        
+
         // finally, delete the contact
         pst = db.prepareStatement(
             "DELETE FROM contact " +

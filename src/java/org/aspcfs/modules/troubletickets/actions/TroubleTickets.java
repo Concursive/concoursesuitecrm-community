@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.troubletickets.actions;
 
 import javax.servlet.*;
@@ -479,7 +494,7 @@ public final class TroubleTickets extends CFSModule {
     }
     context.getRequest().setAttribute("TicketDetails", newTic);
     addModuleBean(context, "ViewTickets", "View Tickets");
-    
+
     return this.getReturn(context, "Modify");
   }
 
@@ -516,7 +531,7 @@ public final class TroubleTickets extends CFSModule {
       if (newTic.getProductId() != -1) {
         ProductCatalog product = new ProductCatalog(db, newTic.getProductId());
         context.getRequest().setAttribute("product", product);
-        
+
         QuoteList quoteList = new QuoteList();
         quoteList.setTicketId(newTic.getId());
         quoteList.buildList(db);
@@ -736,8 +751,8 @@ public final class TroubleTickets extends CFSModule {
     context.getRequest().setAttribute("AssignedToMeList", assignedToMeList);
     context.getRequest().setAttribute("OpenList", openList);
     context.getRequest().setAttribute("AllTicketsList", allTicketsList);
-      addModuleBean(context, "ViewTickets", "View Tickets");
-      return ("HomeOK");
+    addModuleBean(context, "ViewTickets", "View Tickets");
+    return ("HomeOK");
   }
 
 
@@ -760,7 +775,7 @@ public final class TroubleTickets extends CFSModule {
 
     ticListInfo.setLink("TroubleTickets.do?command=SearchTickets");
     ticList.setPagedListInfo(ticListInfo);
-    ticListInfo.setSearchCriteria(ticList,UserUtils.getUserLocale(context.getRequest()));
+    ticListInfo.setSearchCriteria(ticList, UserUtils.getUserLocale(context.getRequest()));
 
     try {
       db = this.getConnection(context);
@@ -796,7 +811,7 @@ public final class TroubleTickets extends CFSModule {
     }
     addModuleBean(context, "SearchTickets", "Search Tickets");
     context.getRequest().setAttribute("TicList", ticList);
-    context.getSession().setAttribute("searchTickets","yes");
+    context.getSession().setAttribute("searchTickets", "yes");
     addModuleBean(context, "SearchTickets", "Search Tickets");
     return ("ResultsOK");
   }
@@ -864,7 +879,7 @@ public final class TroubleTickets extends CFSModule {
     Ticket newTic = (Ticket) context.getFormBean();
     newTic.setEnteredBy(getUserId(context));
     newTic.setModifiedBy(getUserId(context));
-    
+
     if (newContact != null && newContact.equals("on")) {
       //If there are any changes here, also check AccountTickets where a new contact is created
       nc = new Contact();
@@ -904,13 +919,13 @@ public final class TroubleTickets extends CFSModule {
         newTicket = new Ticket(db, newTic.getId());
         context.getRequest().setAttribute("TicketDetails", newTicket);
 
-        if (newTicket.getProductId() != -1){
+        if (newTicket.getProductId() != -1) {
           ProductCatalog product = new ProductCatalog(db, newTicket.getProductId());
           context.getRequest().setAttribute("product", product);
         }
-        
+
         // check wether of not the customer product id exists
-        if (newTicket.getCustomerProductId() != -1){
+        if (newTicket.getCustomerProductId() != -1) {
           CustomerProduct customerProduct = new CustomerProduct(db, newTicket.getCustomerProductId());
           customerProduct.buildFileList(db);
           context.getRequest().setAttribute("customerProduct", customerProduct);
@@ -1050,7 +1065,7 @@ public final class TroubleTickets extends CFSModule {
       newTic.setModifiedBy(getUserId(context));
       //Get the previousTicket, update the ticket, then send both to a hook
       Ticket previousTicket = new Ticket(db, newTic.getId());
- 
+
       resultCount = newTic.update(db);
       if (resultCount == 1) {
         processUpdateHook(context, previousTicket, newTic);
@@ -1392,9 +1407,9 @@ public final class TroubleTickets extends CFSModule {
       db = this.getConnection(context);
       String id = (String) context.getRequest().getParameter("id");
       HashMap map = new HashMap();
-      map.put("ticketid",new Integer(id));
+      map.put("ticketid", new Integer(id));
       String reportPath = getWebInfPath(context, "reports");
-      map.put("path",reportPath);
+      map.put("path", reportPath);
       String filename = "ticket.xml";
       byte[] bytes = JasperReportUtils.getReportAsBytes(reportPath + filename, map, db);
       if (bytes != null) {

@@ -1,5 +1,18 @@
-//Copyright 2003 Dark Horse Ventures
-
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.reports.base;
 
 import java.util.*;
@@ -117,6 +130,7 @@ public class ParameterList extends ArrayList {
    *  parameters
    *
    *@param  request  The new parameters value
+   *@return          Description of the Return Value
    */
   public boolean setParameters(HttpServletRequest request) {
     Iterator i = this.iterator();
@@ -202,7 +216,7 @@ public class ParameterList extends ArrayList {
             param.setValue(date);
           }
         } catch (Exception e) {
-          errors.put(param.getName() +"Error","no input or invalid date");
+          errors.put(param.getName() + "Error", "no input or invalid date");
         }
       }
       if (System.getProperty("DEBUG") != null) {
@@ -213,7 +227,7 @@ public class ParameterList extends ArrayList {
     this.addParam("country", UserUtils.getUserLocale(request).getCountry());
     this.addParam("language", UserUtils.getUserLocale(request).getLanguage());
     this.addParam("userid", String.valueOf(UserUtils.getUserId(request)));
-    if (hasErrors()){
+    if (hasErrors()) {
       return false;
     }
     return true;

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.contacts.actions;
 
 import javax.servlet.*;
@@ -47,7 +62,7 @@ public final class ExternalContactsCalls extends CFSModule {
       if ("calendar".equals(source)) {
         context.getSession().removeAttribute("CalCallsListInfo");
         context.getSession().removeAttribute("CalCompletedCallsListInfo");
-      }else{
+      } else {
         context.getSession().removeAttribute("CallsListInfo");
         context.getSession().removeAttribute("CompletedCallsListInfo");
       }
@@ -109,21 +124,21 @@ public final class ExternalContactsCalls extends CFSModule {
             HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId|source"));
         completedCallListInfo.setExpandedSelection(true);
       } else {
-      completedCallListInfo.setLink("ExternalContactsCalls.do?command=View&contactId=" + contactId +
-          HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
-      if (sectionId == null) {
-        if (!completedCallListInfo.getExpandedSelection()) {
-          if (completedCallListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
-            completedCallListInfo.setItemsPerPage(MINIMIZED_ITEMS_PER_PAGE);
+        completedCallListInfo.setLink("ExternalContactsCalls.do?command=View&contactId=" + contactId +
+            HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+        if (sectionId == null) {
+          if (!completedCallListInfo.getExpandedSelection()) {
+            if (completedCallListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
+              completedCallListInfo.setItemsPerPage(MINIMIZED_ITEMS_PER_PAGE);
+            }
+          } else {
+            if (completedCallListInfo.getItemsPerPage() == MINIMIZED_ITEMS_PER_PAGE) {
+              completedCallListInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
+            }
           }
-        } else {
-          if (completedCallListInfo.getItemsPerPage() == MINIMIZED_ITEMS_PER_PAGE) {
-            completedCallListInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
-          }
+        } else if (sectionId.equals(completedCallListInfo.getId())) {
+          completedCallListInfo.setExpandedSelection(true);
         }
-      } else if (sectionId.equals(completedCallListInfo.getId())) {
-        completedCallListInfo.setExpandedSelection(true);
-      }
       }
 
       completedCallList.setPagedListInfo(completedCallListInfo);
@@ -211,7 +226,7 @@ public final class ExternalContactsCalls extends CFSModule {
       }
       //Store current status id to reset the object upon server error or warning
       tmpStatusId = thisCall.getStatusId();
-      if ((tmpStatusId == Call.COMPLETE_FOLLOWUP_PENDING) && (!"pending".equals(context.getRequest().getParameter("view")))){
+      if ((tmpStatusId == Call.COMPLETE_FOLLOWUP_PENDING) && (!"pending".equals(context.getRequest().getParameter("view")))) {
         thisCall.setCheckAlertDate(false);
       }
       //update or insert the call
@@ -317,7 +332,7 @@ public final class ExternalContactsCalls extends CFSModule {
       }
       thisCall = new Call(db, callId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
-      
+
       if (thisCall.getAlertDate() != null) {
         SystemStatus systemStatus = this.getSystemStatus(context);
         //Need the call types for display purposes
@@ -329,7 +344,7 @@ public final class ExternalContactsCalls extends CFSModule {
       //Need the result types for display purposes
       CallResult thisResult = new CallResult(db, thisCall.getResultId());
       context.getRequest().setAttribute("CallResult", thisResult);
-      
+
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -627,7 +642,7 @@ public final class ExternalContactsCalls extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("Note", newNote);
-    return this.getReturn(context,"ForwardCall");
+    return this.getReturn(context, "ForwardCall");
   }
 
 
@@ -751,11 +766,15 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   /**
-   *  Adds a feature to the ModifyFormElements attribute of the ExternalContactsCalls object
+   *  Adds a feature to the ModifyFormElements attribute of the
+   *  ExternalContactsCalls object
    *
-   *@param  db                The feature to be added to the ModifyFormElements attribute
-   *@param  context           The feature to be added to the ModifyFormElements attribute
-   *@param  thisCall          The feature to be added to the ModifyFormElements attribute
+   *@param  db                The feature to be added to the ModifyFormElements
+   *      attribute
+   *@param  context           The feature to be added to the ModifyFormElements
+   *      attribute
+   *@param  thisCall          The feature to be added to the ModifyFormElements
+   *      attribute
    *@exception  SQLException  Description of the Exception
    */
   private void addModifyFormElements(Connection db, ActionContext context, Call thisCall) throws SQLException {

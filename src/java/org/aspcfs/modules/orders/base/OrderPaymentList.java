@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.orders.base;
 
 import java.sql.*;
@@ -8,9 +23,10 @@ import org.aspcfs.utils.DatabaseUtils;
 /**
  *  This represents a list of Order Payments
  *
- * @author     ananth
- * @created    March 19, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    March 19, 2004
+ *@version    $Id: OrderPaymentList.java,v 1.2 2004/05/04 15:52:27 mrajkowski
+ *      Exp $
  */
 public class OrderPaymentList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
@@ -21,7 +37,7 @@ public class OrderPaymentList extends ArrayList {
   /**
    *  Sets the orderId attribute of the OrderPaymentList object
    *
-   * @param  tmp  The new orderId value
+   *@param  tmp  The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -31,7 +47,7 @@ public class OrderPaymentList extends ArrayList {
   /**
    *  Sets the orderId attribute of the OrderPaymentList object
    *
-   * @param  tmp  The new orderId value
+   *@param  tmp  The new orderId value
    */
   public void setOrderId(String tmp) {
     this.orderId = Integer.parseInt(tmp);
@@ -41,7 +57,7 @@ public class OrderPaymentList extends ArrayList {
   /**
    *  Sets the paymentMethodId attribute of the OrderPaymentList object
    *
-   * @param  tmp  The new paymentMethodId value
+   *@param  tmp  The new paymentMethodId value
    */
   public void setPaymentMethodId(int tmp) {
     this.paymentMethodId = tmp;
@@ -51,7 +67,7 @@ public class OrderPaymentList extends ArrayList {
   /**
    *  Sets the paymentMethodId attribute of the OrderPaymentList object
    *
-   * @param  tmp  The new paymentMethodId value
+   *@param  tmp  The new paymentMethodId value
    */
   public void setPaymentMethodId(String tmp) {
     this.paymentMethodId = Integer.parseInt(tmp);
@@ -61,7 +77,7 @@ public class OrderPaymentList extends ArrayList {
   /**
    *  Sets the pagedListInfo attribute of the OrderPaymentList object
    *
-   * @param  tmp  The new pagedListInfo value
+   *@param  tmp  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -71,7 +87,7 @@ public class OrderPaymentList extends ArrayList {
   /**
    *  Gets the orderId attribute of the OrderPaymentList object
    *
-   * @return    The orderId value
+   *@return    The orderId value
    */
   public int getOrderId() {
     return orderId;
@@ -81,7 +97,7 @@ public class OrderPaymentList extends ArrayList {
   /**
    *  Gets the paymentMethodId attribute of the OrderPaymentList object
    *
-   * @return    The paymentMethodId value
+   *@return    The paymentMethodId value
    */
   public int getPaymentMethodId() {
     return paymentMethodId;
@@ -91,7 +107,7 @@ public class OrderPaymentList extends ArrayList {
   /**
    *  Gets the pagedListInfo attribute of the OrderPaymentList object
    *
-   * @return    The pagedListInfo value
+   *@return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -99,7 +115,7 @@ public class OrderPaymentList extends ArrayList {
 
 
   /**
-   *Constructor for the OrderPaymentList object
+   *  Constructor for the OrderPaymentList object
    */
   public OrderPaymentList() { }
 
@@ -107,8 +123,8 @@ public class OrderPaymentList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -174,8 +190,8 @@ public class OrderPaymentList extends ArrayList {
         "       op.entered, op.enteredby, op.modified, op.modifiedby " +
         " FROM order_payment op " +
         " WHERE op.payment_id > -1 "
-      );
-      
+        );
+
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -201,7 +217,7 @@ public class OrderPaymentList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
+   *@param  sqlFilter  Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -219,9 +235,9 @@ public class OrderPaymentList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

@@ -1,3 +1,19 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
+ 
 package org.aspcfs.ant.tasks;
 
 import org.apache.tools.ant.BuildException;
@@ -12,10 +28,11 @@ import org.aspcfs.modules.service.base.TransactionStatus;
 import org.aspcfs.modules.service.base.Record;
 
 /**
- *  This Ant Task registers this application with the Dark Horse CRM registration
- *  server.
+ *  This Ant Task registers this application with the Dark Horse CRM
+ *  registration server.
  *
  *@author     matt rajkowski
+ *@created    September 16, 2004
  *@version    $Id$
  */
 public class RegisterTask extends Task {
@@ -28,12 +45,65 @@ public class RegisterTask extends Task {
   private String profile = null;
   private String webPath = null;
 
-  public void setOrganization(String tmp) { this.organization = tmp; }
-  public void setFirstName(String tmp) { this.firstName = tmp; }
-  public void setLastName(String tmp) { this.lastName = tmp; }
-  public void setEmail(String tmp) { this.email = tmp; }
-  public void setProfile(String tmp) { this.profile = tmp; }
-  public void setWebPath(String tmp) { this.webPath = tmp; }
+
+  /**
+   *  Sets the organization attribute of the RegisterTask object
+   *
+   *@param  tmp  The new organization value
+   */
+  public void setOrganization(String tmp) {
+    this.organization = tmp;
+  }
+
+
+  /**
+   *  Sets the firstName attribute of the RegisterTask object
+   *
+   *@param  tmp  The new firstName value
+   */
+  public void setFirstName(String tmp) {
+    this.firstName = tmp;
+  }
+
+
+  /**
+   *  Sets the lastName attribute of the RegisterTask object
+   *
+   *@param  tmp  The new lastName value
+   */
+  public void setLastName(String tmp) {
+    this.lastName = tmp;
+  }
+
+
+  /**
+   *  Sets the email attribute of the RegisterTask object
+   *
+   *@param  tmp  The new email value
+   */
+  public void setEmail(String tmp) {
+    this.email = tmp;
+  }
+
+
+  /**
+   *  Sets the profile attribute of the RegisterTask object
+   *
+   *@param  tmp  The new profile value
+   */
+  public void setProfile(String tmp) {
+    this.profile = tmp;
+  }
+
+
+  /**
+   *  Sets the webPath attribute of the RegisterTask object
+   *
+   *@param  tmp  The new webPath value
+   */
+  public void setWebPath(String tmp) {
+    this.webPath = tmp;
+  }
 
 
   /**

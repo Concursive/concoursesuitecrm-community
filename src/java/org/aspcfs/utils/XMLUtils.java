@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.utils;
 
 import javax.servlet.*;
@@ -334,9 +349,9 @@ public class XMLUtils {
   public static String toXMLValue(String s) {
     if (s != null) {
       String xmlReady = s.trim();
-      xmlReady = StringHelper.replace(xmlReady, "\"", "&quot;");
-      xmlReady = StringHelper.replace(xmlReady, "<", "&lt;");
-      xmlReady = StringHelper.replace(xmlReady, ">", "&gt;");
+      xmlReady = StringUtils.replace(xmlReady, "\"", "&quot;");
+      xmlReady = StringUtils.replace(xmlReady, "<", "&lt;");
+      xmlReady = StringUtils.replace(xmlReady, ">", "&gt;");
       return (xmlReady);
     } else {
       return ("");
@@ -345,8 +360,8 @@ public class XMLUtils {
 
 
   /**
-   *  Converts an XML String by replacing XML characters with
-   *  the String equivalent
+   *  Converts an XML String by replacing XML characters with the String
+   *  equivalent
    *
    *@param  xml  Description of the Parameter
    *@return      Description of the Return Value
@@ -354,9 +369,9 @@ public class XMLUtils {
   public static String toString(String xml) {
     if (xml != null) {
       String stringReady = xml.trim();
-      stringReady = StringHelper.replace(stringReady, "&quot;", "\"");
-      stringReady = StringHelper.replace(stringReady, "&lt;", "<");
-      stringReady = StringHelper.replace(stringReady, "&gt;", ">");
+      stringReady = StringUtils.replace(stringReady, "&quot;", "\"");
+      stringReady = StringUtils.replace(stringReady, "&lt;", "<");
+      stringReady = StringUtils.replace(stringReady, "&gt;", ">");
       return (stringReady);
     } else {
       return ("");

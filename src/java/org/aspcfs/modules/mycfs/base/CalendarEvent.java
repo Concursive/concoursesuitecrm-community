@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.mycfs.base;
 
 import java.util.*;
@@ -338,7 +353,7 @@ public class CalendarEvent implements Comparable {
       return "<img border=0 src=\"images/box-hold.gif\" align=texttop title=\"Pending Calls\">";
     } else if (thisCategory.equalsIgnoreCase("Assignments")) {
       return "<img border=0 src=\"images/alertassignment.gif\" align=texttop title=\"Assignments\">";
-    } else if (thisCategory.equalsIgnoreCase("Account Alerts") || thisCategory.equalsIgnoreCase("Account Contract Alerts")){
+    } else if (thisCategory.equalsIgnoreCase("Account Alerts") || thisCategory.equalsIgnoreCase("Account Contract Alerts")) {
       return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" align=texttop title=\"Accounts\">";
     } else if (thisCategory.equalsIgnoreCase("Tasks")) {
       return "<img src=\"images/box.gif\" border=0 align=texttop width=\"14\" height=\"14\" title=\"Tasks\">";

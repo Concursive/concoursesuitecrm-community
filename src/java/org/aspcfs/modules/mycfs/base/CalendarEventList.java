@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.mycfs.base;
 
 import java.util.*;
@@ -8,7 +23,8 @@ import org.aspcfs.utils.ObjectUtils;
  *
  *@author
  *@created    December 18, 2002
- *@version    $Id$
+ *@version    $Id: CalendarEventList.java,v 1.12 2004/08/31 12:48:26 mrajkowski
+ *      Exp $
  */
 public class CalendarEventList extends HashMap {
 
@@ -16,17 +32,17 @@ public class CalendarEventList extends HashMap {
   private HashMap eventTypes = null;
   //anything added to this array should be added at the end
   public final static String[] EVENT_TYPES = {
-      "Tasks",  
-      "Calls", 
-      "Opportunities", 
-      "Account Alerts", 
-      "Account Contract Alerts", 
-      "Contact Calls", 
-      "Opportunity Calls", 
-      "Holiday", 
-      "Assignments", 
-      "System Alerts", 
-      "Quotes", 
+      "Tasks",
+      "Calls",
+      "Opportunities",
+      "Account Alerts",
+      "Account Contract Alerts",
+      "Contact Calls",
+      "Opportunity Calls",
+      "Holiday",
+      "Assignments",
+      "System Alerts",
+      "Quotes",
       "Tickets",
       "Ticket Requests",
       "Pending Calls"};
@@ -117,7 +133,8 @@ public class CalendarEventList extends HashMap {
 
 
   /**
-   *  Associates a count with a event Type specifying the number of events of that type for that day.
+   *  Associates a count with a event Type specifying the number of events of
+   *  that type for that day.
    *
    *@param  eventType   The feature to be added to the EventCount attribute
    *@param  eventCount  The feature to be added to the EventCount attribute
@@ -134,9 +151,11 @@ public class CalendarEventList extends HashMap {
 
 
   /**
-   *  Adds a feature to the CategoryEventList attribute of the CallEventList object
+   *  Adds a feature to the CategoryEventList attribute of the CallEventList
+   *  object
    *
-   *@param  eventType  The feature to be added to the CategoryEventList attribute
+   *@param  eventType  The feature to be added to the CategoryEventList
+   *      attribute
    *@return            Description of the Return Value
    */
   public Object addCategoryEventList(String eventType) {

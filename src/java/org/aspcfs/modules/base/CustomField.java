@@ -1,13 +1,17 @@
 /*
- *  Copyright 2001-2002 Dark Horse Ventures
- *  TODO: Currency entry using k, m, b for 50,000, etc.
- *  TODO: Phone numbers -- When you enter phone numbers in various phone fields,
- *  preserve whatever phone number format you enter.
- *  However, if your Locale is set to English (United States) or English (Canada),
- *  ten digit phone numbers and eleven digit numbers that start with '1' are
- *  automatically formatted as (800) 555-1212 when you save the record.
- *  If you do not want this formatting for a ten or eleven digit number,
- *  enter a '+' before the number, e.g., +49 8178 94 07-0.
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package org.aspcfs.modules.base;
 

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.troubletickets.actions;
 
 import javax.servlet.*;
@@ -25,7 +40,8 @@ import org.aspcfs.modules.base.*;
  *
  *@author     kbhoopal
  *@created    March 17, 2004
- *@version    $Id$
+ *@version    $Id: TroubleTicketActivityLog.java,v 1.6 2004/09/01 15:30:26
+ *      mrajkowski Exp $
  */
 public final class TroubleTicketActivityLog extends CFSModule {
 
@@ -86,9 +102,9 @@ public final class TroubleTicketActivityLog extends CFSModule {
       onsiteModelList.addItem(-1, "-- None --");
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
       context.getRequest().setAttribute("ticketDetails", thisTicket);
-      TicketActivityLog thisMaintenance = (TicketActivityLog)context.getRequest().getAttribute("activityDetails");
-      if (thisMaintenance != null){
-        if (thisMaintenance.getEnteredBy() == -1){
+      TicketActivityLog thisMaintenance = (TicketActivityLog) context.getRequest().getAttribute("activityDetails");
+      if (thisMaintenance != null) {
+        if (thisMaintenance.getEnteredBy() == -1) {
           // Load the activity log elements
           thisMaintenance = new TicketActivityLog();
           context.getRequest().setAttribute("activityDetails", thisMaintenance);
@@ -118,22 +134,22 @@ public final class TroubleTicketActivityLog extends CFSModule {
     Connection db = null;
     // Begin with data needed for all forms
     try {
-      thisTicket = (Ticket)context.getFormBean();
-      if (thisTicket.getId() == -1){
+      thisTicket = (Ticket) context.getFormBean();
+      if (thisTicket.getId() == -1) {
         String ticketId = context.getRequest().getParameter("id");
         String formId = context.getRequest().getParameter("formId");
         db = this.getConnection(context);
-  
+
         // Load the ticket
         thisTicket = new Ticket(db, Integer.parseInt(ticketId));
         context.getRequest().setAttribute("ticketDetails", thisTicket);
-  
+
         // Load onsite model list
         LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
         onsiteModelList.addItem(-1, "-- None --");
         context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
         context.getRequest().setAttribute("return", context.getRequest().getParameter("return"));
-  
+
         // Load the activity log elements
         TicketActivityLog thisMaintenance = new TicketActivityLog();
         thisMaintenance.queryRecord(db, Integer.parseInt(formId));
@@ -184,7 +200,7 @@ public final class TroubleTicketActivityLog extends CFSModule {
       thisMaintenance.setRequest(context.getRequest());
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
       inserted = thisMaintenance.insert(db);
-      if (!inserted){
+      if (!inserted) {
         context.getRequest().setAttribute("ticketDetails", thisTicket);
         context.getRequest().setAttribute("activityDetails", thisMaintenance);
         processErrors(context, thisMaintenance.getErrors());
@@ -196,9 +212,9 @@ public final class TroubleTicketActivityLog extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (!inserted){
+    if (!inserted) {
       return executeCommandAdd(context);
-    }else{
+    } else {
       return executeCommandList(context);
     }
   }

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.products.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -16,9 +31,10 @@ import org.aspcfs.modules.orders.base.*;
 /**
  *  Description of the Class
  *
- * @author     ananth
- * @created    April 20, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    April 20, 2004
+ *@version    $Id: CustomerProduct.java,v 1.3 2004/06/03 16:04:04 mrajkowski Exp
+ *      $
  */
 public class CustomerProduct extends GenericBean {
 
@@ -49,7 +65,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the buildHistoryList attribute of the CustomerProduct object
    *
-   * @param  tmp  The new buildHistoryList value
+   *@param  tmp  The new buildHistoryList value
    */
   public void setBuildHistoryList(boolean tmp) {
     this.buildHistoryList = tmp;
@@ -59,7 +75,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the buildHistoryList attribute of the CustomerProduct object
    *
-   * @param  tmp  The new buildHistoryList value
+   *@param  tmp  The new buildHistoryList value
    */
   public void setBuildHistoryList(String tmp) {
     this.buildHistoryList = DatabaseUtils.parseBoolean(tmp);
@@ -69,7 +85,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the buildHistoryList attribute of the CustomerProduct object
    *
-   * @return    The buildHistoryList value
+   *@return    The buildHistoryList value
    */
   public boolean getBuildHistoryList() {
     return buildHistoryList;
@@ -79,7 +95,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the lastOrder attribute of the CustomerProduct object
    *
-   * @param  tmp  The new lastOrder value
+   *@param  tmp  The new lastOrder value
    */
   public void setLastOrder(Order tmp) {
     this.lastOrder = tmp;
@@ -89,7 +105,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the lastOrder attribute of the CustomerProduct object
    *
-   * @return    The lastOrder value
+   *@return    The lastOrder value
    */
   public Order getLastOrder() {
     return lastOrder;
@@ -99,7 +115,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the lastOrdered attribute of the CustomerProduct object
    *
-   * @param  tmp  The new lastOrdered value
+   *@param  tmp  The new lastOrdered value
    */
   public void setLastOrdered(Timestamp tmp) {
     this.lastOrdered = tmp;
@@ -109,7 +125,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the lastOrdered attribute of the CustomerProduct object
    *
-   * @param  tmp  The new lastOrdered value
+   *@param  tmp  The new lastOrdered value
    */
   public void setLastOrdered(String tmp) {
     this.lastOrdered = DatabaseUtils.parseTimestamp(tmp);
@@ -119,7 +135,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the lastOrdered attribute of the CustomerProduct object
    *
-   * @return    The lastOrdered value
+   *@return    The lastOrdered value
    */
   public Timestamp getLastOrdered() {
     return lastOrdered;
@@ -129,7 +145,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the historyList attribute of the CustomerProduct object
    *
-   * @param  tmp  The new historyList value
+   *@param  tmp  The new historyList value
    */
   public void setHistoryList(CustomerProductHistoryList tmp) {
     this.historyList = tmp;
@@ -139,7 +155,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the historyList attribute of the CustomerProduct object
    *
-   * @return    The historyList value
+   *@return    The historyList value
    */
   public CustomerProductHistoryList getHistoryList() {
     return historyList;
@@ -149,7 +165,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the buildFileList attribute of the CustomerProduct object
    *
-   * @param  tmp  The new buildFileList value
+   *@param  tmp  The new buildFileList value
    */
   public void setBuildFileList(boolean tmp) {
     this.buildFileList = tmp;
@@ -159,7 +175,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the buildFileList attribute of the CustomerProduct object
    *
-   * @param  tmp  The new buildFileList value
+   *@param  tmp  The new buildFileList value
    */
   public void setBuildFileList(String tmp) {
     this.buildFileList = DatabaseUtils.parseBoolean(tmp);
@@ -169,7 +185,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the fileItemList attribute of the CustomerProduct object
    *
-   * @param  tmp  The new fileItemList value
+   *@param  tmp  The new fileItemList value
    */
   public void setFileItemList(FileItemList tmp) {
     this.fileItemList = tmp;
@@ -179,7 +195,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the buildFileList attribute of the CustomerProduct object
    *
-   * @return    The buildFileList value
+   *@return    The buildFileList value
    */
   public boolean getBuildFileList() {
     return buildFileList;
@@ -189,7 +205,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the fileItemList attribute of the CustomerProduct object
    *
-   * @return    The fileItemList value
+   *@return    The fileItemList value
    */
   public FileItemList getFileItemList() {
     return fileItemList;
@@ -199,7 +215,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the enabled attribute of the CustomerProduct object
    *
-   * @param  tmp  The new enabled value
+   *@param  tmp  The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -209,7 +225,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the enabled attribute of the CustomerProduct object
    *
-   * @param  tmp  The new enabled value
+   *@param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -219,7 +235,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the enabled attribute of the CustomerProduct object
    *
-   * @return    The enabled value
+   *@return    The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -229,7 +245,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the id attribute of the CustomerProduct object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -239,7 +255,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the id attribute of the CustomerProduct object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -249,7 +265,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the orgId attribute of the CustomerProduct object
    *
-   * @param  tmp  The new orgId value
+   *@param  tmp  The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -259,7 +275,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the orgId attribute of the CustomerProduct object
    *
-   * @param  tmp  The new orgId value
+   *@param  tmp  The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -269,7 +285,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the orderId attribute of the CustomerProduct object
    *
-   * @param  tmp  The new orderId value
+   *@param  tmp  The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -279,7 +295,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the orderId attribute of the CustomerProduct object
    *
-   * @param  tmp  The new orderId value
+   *@param  tmp  The new orderId value
    */
   public void setOrderId(String tmp) {
     this.orderId = Integer.parseInt(tmp);
@@ -289,7 +305,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the orderItemId attribute of the CustomerProduct object
    *
-   * @param  tmp  The new orderItemId value
+   *@param  tmp  The new orderItemId value
    */
   public void setOrderItemId(int tmp) {
     this.orderItemId = tmp;
@@ -299,7 +315,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the orderItemId attribute of the CustomerProduct object
    *
-   * @param  tmp  The new orderItemId value
+   *@param  tmp  The new orderItemId value
    */
   public void setOrderItemId(String tmp) {
     this.orderItemId = Integer.parseInt(tmp);
@@ -309,7 +325,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the description attribute of the CustomerProduct object
    *
-   * @param  tmp  The new description value
+   *@param  tmp  The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -319,7 +335,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the statusId attribute of the CustomerProduct object
    *
-   * @param  tmp  The new statusId value
+   *@param  tmp  The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -329,7 +345,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the statusId attribute of the CustomerProduct object
    *
-   * @param  tmp  The new statusId value
+   *@param  tmp  The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -339,7 +355,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the statusDate attribute of the CustomerProduct object
    *
-   * @param  tmp  The new statusDate value
+   *@param  tmp  The new statusDate value
    */
   public void setStatusDate(Timestamp tmp) {
     this.statusDate = tmp;
@@ -349,7 +365,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the statusDate attribute of the CustomerProduct object
    *
-   * @param  tmp  The new statusDate value
+   *@param  tmp  The new statusDate value
    */
   public void setStatusDate(String tmp) {
     this.statusDate = DatabaseUtils.parseTimestamp(tmp);
@@ -359,7 +375,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the entered attribute of the CustomerProduct object
    *
-   * @param  tmp  The new entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -369,7 +385,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the entered attribute of the CustomerProduct object
    *
-   * @param  tmp  The new entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -379,7 +395,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the CustomerProduct object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -389,7 +405,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the CustomerProduct object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -399,7 +415,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the modified attribute of the CustomerProduct object
    *
-   * @param  tmp  The new modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -409,7 +425,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the modified attribute of the CustomerProduct object
    *
-   * @param  tmp  The new modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -419,7 +435,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the CustomerProduct object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -429,7 +445,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the CustomerProduct object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -439,7 +455,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the id attribute of the CustomerProduct object
    *
-   * @return    The id value
+   *@return    The id value
    */
   public int getId() {
     return id;
@@ -449,7 +465,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the orgId attribute of the CustomerProduct object
    *
-   * @return    The orgId value
+   *@return    The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -459,7 +475,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the orderId attribute of the CustomerProduct object
    *
-   * @return    The orderId value
+   *@return    The orderId value
    */
   public int getOrderId() {
     return orderId;
@@ -469,7 +485,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the orderItemId attribute of the CustomerProduct object
    *
-   * @return    The orderItemId value
+   *@return    The orderItemId value
    */
   public int getOrderItemId() {
     return orderItemId;
@@ -479,7 +495,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the description attribute of the CustomerProduct object
    *
-   * @return    The description value
+   *@return    The description value
    */
   public String getDescription() {
     return description;
@@ -489,7 +505,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the statusId attribute of the CustomerProduct object
    *
-   * @return    The statusId value
+   *@return    The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -499,7 +515,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the statusDate attribute of the CustomerProduct object
    *
-   * @return    The statusDate value
+   *@return    The statusDate value
    */
   public Timestamp getStatusDate() {
     return statusDate;
@@ -509,7 +525,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the entered attribute of the CustomerProduct object
    *
-   * @return    The entered value
+   *@return    The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -519,7 +535,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the enteredBy attribute of the CustomerProduct object
    *
-   * @return    The enteredBy value
+   *@return    The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -529,7 +545,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the modified attribute of the CustomerProduct object
    *
-   * @return    The modified value
+   *@return    The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -539,7 +555,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the modifiedBy attribute of the CustomerProduct object
    *
-   * @return    The modifiedBy value
+   *@return    The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -547,17 +563,17 @@ public class CustomerProduct extends GenericBean {
 
 
   /**
-   *Constructor for the CustomerProduct object
+   *  Constructor for the CustomerProduct object
    */
   public CustomerProduct() { }
 
 
   /**
-   *Constructor for the CustomerProduct object
+   *  Constructor for the CustomerProduct object
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public CustomerProduct(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -565,10 +581,10 @@ public class CustomerProduct extends GenericBean {
 
 
   /**
-   *Constructor for the CustomerProduct object
+   *  Constructor for the CustomerProduct object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public CustomerProduct(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -578,8 +594,8 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildFileList(Connection db) throws SQLException {
     fileItemList.setLinkModuleId(Constants.DOCUMENTS_CUSTOMER_PRODUCT);
@@ -597,8 +613,8 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildHistoryList(Connection db) throws SQLException {
     historyList.setOrgId(this.getOrgId());
@@ -606,12 +622,11 @@ public class CustomerProduct extends GenericBean {
     historyList.buildList(db);
     if (historyList.size() > 1) {
       /*
-        The history list size will be 1, if the customer product has never been used and the history item refers to the
-        time the customer product was uploaded.
-        
-        The history list size will be > 1, if the customer product has been used atleast once. If it has been used before,
-        then get the last history item in the list which corresponds to the last order that used it
-      */
+       *  The history list size will be 1, if the customer product has never been used and the history item refers to the
+       *  time the customer product was uploaded.
+       *  The history list size will be > 1, if the customer product has been used atleast once. If it has been used before,
+       *  then get the last history item in the list which corresponds to the last order that used it
+       */
       CustomerProductHistory thisHistory = (CustomerProductHistory) historyList.get(historyList.size() - 1);
       lastOrdered = thisHistory.getProductStartDate();
       lastOrder = new Order(db, thisHistory.getOrderId());
@@ -622,9 +637,9 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -658,8 +673,8 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     // customer_product table
@@ -681,9 +696,9 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
@@ -741,9 +756,9 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -786,9 +801,9 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -827,9 +842,9 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
@@ -847,7 +862,7 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @return    Description of the Return Value
+   *@return    Description of the Return Value
    */
   public boolean hasHistory() {
     if (historyList != null) {
@@ -864,14 +879,22 @@ public class CustomerProduct extends GenericBean {
   /**
    *  Gets the valid attribute of the CustomerProduct object
    *
-   * @param  db                Description of the Parameter
-   * @return                   The valid value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   The valid value
+   *@exception  SQLException  Description of the Exception
    */
   protected boolean isValid(Connection db) throws SQLException {
     return true;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void queryRecordFromItemId(Connection db, int id) throws SQLException {
     if (id == -1) {
       throw new SQLException("Invalid Order Product Number");
@@ -880,8 +903,8 @@ public class CustomerProduct extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         " SELECT cp.* " +
         " FROM customer_product cp " +
-        " LEFT JOIN customer_product_history hist "+
-        " ON ( cp.customer_product_id = hist.customer_product_id ) "+
+        " LEFT JOIN customer_product_history hist " +
+        " ON ( cp.customer_product_id = hist.customer_product_id ) " +
         " WHERE hist.order_item_id = ? "
         );
     pst.setInt(1, id);
@@ -891,7 +914,7 @@ public class CustomerProduct extends GenericBean {
     }
     rs.close();
     pst.close();
-    
+
     if (this.getId() == -1) {
       throw new SQLException("Customer Product not found");
     }

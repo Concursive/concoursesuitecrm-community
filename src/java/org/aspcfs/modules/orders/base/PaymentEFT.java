@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.orders.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -11,9 +26,9 @@ import org.aspcfs.modules.base.DependencyList;
 /**
  *  This represents a Payment's Electronic Funds Transfer Details
  *
- * @author     ananth
- * @created    March 18, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    March 18, 2004
+ *@version    $Id$
  */
 public class PaymentEFT extends GenericBean {
   private int id = -1;
@@ -33,7 +48,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the id attribute of the PaymentEFT object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -43,7 +58,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the id attribute of the PaymentEFT object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -53,7 +68,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the paymentId attribute of the PaymentEFT object
    *
-   * @param  tmp  The new paymentId value
+   *@param  tmp  The new paymentId value
    */
   public void setPaymentId(int tmp) {
     this.paymentId = tmp;
@@ -63,7 +78,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the paymentId attribute of the PaymentEFT object
    *
-   * @param  tmp  The new paymentId value
+   *@param  tmp  The new paymentId value
    */
   public void setPaymentId(String tmp) {
     this.paymentId = Integer.parseInt(tmp);
@@ -73,7 +88,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the bankName attribute of the PaymentEFT object
    *
-   * @param  tmp  The new bankName value
+   *@param  tmp  The new bankName value
    */
   public void setBankName(String tmp) {
     this.bankName = tmp;
@@ -84,7 +99,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the routingNumber attribute of the PaymentEFT object
    *
-   * @param  tmp  The new routingNumber value
+   *@param  tmp  The new routingNumber value
    */
   public void setRoutingNumber(String tmp) {
     this.routingNumber = tmp;
@@ -95,7 +110,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the accountNumber attribute of the PaymentEFT object
    *
-   * @param  tmp  The new accountNumber value
+   *@param  tmp  The new accountNumber value
    */
   public void setAccountNumber(String tmp) {
     this.accountNumber = tmp;
@@ -105,7 +120,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the nameOnAccount attribute of the PaymentEFT object
    *
-   * @param  tmp  The new nameOnAccount value
+   *@param  tmp  The new nameOnAccount value
    */
   public void setNameOnAccount(String tmp) {
     this.nameOnAccount = tmp;
@@ -115,7 +130,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the companyNameOnAccount attribute of the PaymentEFT object
    *
-   * @param  tmp  The new companyNameOnAccount value
+   *@param  tmp  The new companyNameOnAccount value
    */
   public void setCompanyNameOnAccount(String tmp) {
     this.companyNameOnAccount = tmp;
@@ -125,7 +140,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the entered attribute of the PaymentEFT object
    *
-   * @param  tmp  The new entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -135,7 +150,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the entered attribute of the PaymentEFT object
    *
-   * @param  tmp  The new entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -145,7 +160,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the PaymentEFT object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -155,7 +170,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the PaymentEFT object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -165,7 +180,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the modified attribute of the PaymentEFT object
    *
-   * @param  tmp  The new modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -175,7 +190,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the modified attribute of the PaymentEFT object
    *
-   * @param  tmp  The new modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -185,7 +200,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the PaymentEFT object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -195,7 +210,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the PaymentEFT object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -206,7 +221,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Gets the id attribute of the PaymentEFT object
    *
-   * @return    The id value
+   *@return    The id value
    */
   public int getId() {
     return id;
@@ -216,7 +231,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Gets the paymentId attribute of the PaymentEFT object
    *
-   * @return    The paymentId value
+   *@return    The paymentId value
    */
   public int getPaymentId() {
     return paymentId;
@@ -226,7 +241,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Gets the bankName attribute of the PaymentEFT object
    *
-   * @return    The bankName value
+   *@return    The bankName value
    */
   public String getBankName() {
     return bankName;
@@ -236,7 +251,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Gets the routingNumber attribute of the PaymentEFT object
    *
-   * @return    The routingNumber value
+   *@return    The routingNumber value
    */
   public String getRoutingNumber() {
     return routingNumber;
@@ -246,7 +261,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Gets the accountNumber attribute of the PaymentEFT object
    *
-   * @return    The accountNumber value
+   *@return    The accountNumber value
    */
   public String getAccountNumber() {
     return accountNumber;
@@ -256,7 +271,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Gets the nameOnAccount attribute of the PaymentEFT object
    *
-   * @return    The nameOnAccount value
+   *@return    The nameOnAccount value
    */
   public String getNameOnAccount() {
     return nameOnAccount;
@@ -266,7 +281,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Gets the companyNameOnAccount attribute of the PaymentEFT object
    *
-   * @return    The companyNameOnAccount value
+   *@return    The companyNameOnAccount value
    */
   public String getCompanyNameOnAccount() {
     return companyNameOnAccount;
@@ -276,7 +291,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Gets the entered attribute of the PaymentEFT object
    *
-   * @return    The entered value
+   *@return    The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -286,7 +301,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Gets the enteredBy attribute of the PaymentEFT object
    *
-   * @return    The enteredBy value
+   *@return    The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -296,7 +311,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Gets the modified attribute of the PaymentEFT object
    *
-   * @return    The modified value
+   *@return    The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -306,7 +321,7 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Gets the modifiedBy attribute of the PaymentEFT object
    *
-   * @return    The modifiedBy value
+   *@return    The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -315,17 +330,17 @@ public class PaymentEFT extends GenericBean {
 
 
   /**
-   *Constructor for the PaymentEFT object
+   *  Constructor for the PaymentEFT object
    */
   public PaymentEFT() { }
 
 
   /**
-   *Constructor for the PaymentEFT object
+   *  Constructor for the PaymentEFT object
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public PaymentEFT(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -333,10 +348,10 @@ public class PaymentEFT extends GenericBean {
 
 
   /**
-   *Constructor for the PaymentEFT object
+   *  Constructor for the PaymentEFT object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public PaymentEFT(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -346,9 +361,9 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -356,10 +371,10 @@ public class PaymentEFT extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT eft.bank_id, eft.payment_id, " + 
-        "        eft.bank_name, eft.routing_number, " + 
-        "        eft.account_number, eft.name_on_account, " + 
-        "        eft.company_name_on_account, eft.entered, " + 
+        " SELECT eft.bank_id, eft.payment_id, " +
+        "        eft.bank_name, eft.routing_number, " +
+        "        eft.account_number, eft.name_on_account, " +
+        "        eft.company_name_on_account, eft.entered, " +
         "        eft.enteredby, eft.modified, eft.modifiedby " +
         " FROM payment_eft eft " +
         " WHERE eft.bank_id = ? "
@@ -380,8 +395,8 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     //payment_eft table
@@ -403,9 +418,9 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
@@ -463,9 +478,9 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -492,9 +507,9 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -504,16 +519,16 @@ public class PaymentEFT extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(" UPDATE order_eft " +
-               " SET bank_name = ?, " + 
-               "     routing_number = ?, " + 
-               "     account_number = ?, " +
-               "     name_on_account= ?, " + 
-               "     company_name_on_account = ? " + 
-               "     entered = ?, " + 
-               "     enteredby = ?, " + 
-               "     modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
-               "     modifiedby = ?, " + 
-               " WHERE bank_id = ? ");
+        " SET bank_name = ?, " +
+        "     routing_number = ?, " +
+        "     account_number = ?, " +
+        "     name_on_account= ?, " +
+        "     company_name_on_account = ? " +
+        "     entered = ?, " +
+        "     enteredby = ?, " +
+        "     modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+        "     modifiedby = ?, " +
+        " WHERE bank_id = ? ");
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -535,9 +550,9 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Gets the valid attribute of the PaymentEFT object
    *
-   * @param  db                Description of the Parameter
-   * @return                   The valid value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   The valid value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean isValid(Connection db) throws SQLException {
     return true;

@@ -1,4 +1,18 @@
-//Copyright 2002 Dark Horse Ventures
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.service.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -7,9 +21,9 @@ import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 
 /**
- *  A SyncClient represents a uniquely identifiable system that is
- *  performing synchronization with the server.
- *  The server maintains specific information about clients as well.  
+ *  A SyncClient represents a uniquely identifiable system that is performing
+ *  synchronization with the server. The server maintains specific information
+ *  about clients as well.
  *
  *@author     matt rajkowski
  *@created    April 10, 2002
@@ -25,6 +39,7 @@ public class SyncClient extends GenericBean {
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
   private java.sql.Timestamp anchor = null;
+
 
   /**
    *  Constructor for the SyncClient object
@@ -70,7 +85,15 @@ public class SyncClient extends GenericBean {
       throw new SQLException("Sync Client record not found.");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean checkNormalSync(Connection db) throws SQLException {
     boolean result = false;
     PreparedStatement pst = null;
@@ -81,7 +104,7 @@ public class SyncClient extends GenericBean {
         "FROM sync_client " +
         "WHERE client_id = ? ");
     if (anchor == null) {
-      sql.append("AND anchor is null "); 
+      sql.append("AND anchor is null ");
     } else {
       sql.append("AND anchor = ? ");
     }
@@ -101,6 +124,14 @@ public class SyncClient extends GenericBean {
     return result;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean updateSyncAnchor(Connection db) throws SQLException {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
@@ -115,6 +146,7 @@ public class SyncClient extends GenericBean {
     pst.close();
     return true;
   }
+
 
   /**
    *  Sets the id attribute of the SyncClient object
@@ -215,7 +247,15 @@ public class SyncClient extends GenericBean {
     this.modifiedBy = Integer.parseInt(tmp);
   }
 
-  public void setAnchor(java.sql.Timestamp tmp) { this.anchor = tmp; }
+
+  /**
+   *  Sets the anchor attribute of the SyncClient object
+   *
+   *@param  tmp  The new anchor value
+   */
+  public void setAnchor(java.sql.Timestamp tmp) {
+    this.anchor = tmp;
+  }
 
 
   /**
@@ -286,8 +326,16 @@ public class SyncClient extends GenericBean {
   public int getModifiedBy() {
     return modifiedBy;
   }
-  
-  public java.sql.Timestamp getAnchor() { return anchor; }
+
+
+  /**
+   *  Gets the anchor attribute of the SyncClient object
+   *
+   *@return    The anchor value
+   */
+  public java.sql.Timestamp getAnchor() {
+    return anchor;
+  }
 
 
   /**

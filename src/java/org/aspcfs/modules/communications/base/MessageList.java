@@ -1,5 +1,18 @@
-//Copyright 2001-2002 Dark Horse Ventures
-
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.communications.base;
 
 import java.util.ArrayList;
@@ -268,7 +281,7 @@ public class MessageList extends ArrayList {
       Message thisMessage = (Message) i.next();
       messageListSelect.addItem(
           thisMessage.getId(),
-          (thisMessage.getName()!= null && !"".equals(thisMessage.getName()))?thisMessage.getName():"\"Unnamed Message\"");
+          (thisMessage.getName() != null && !"".equals(thisMessage.getName())) ? thisMessage.getName() : "\"Unnamed Message\"");
     }
     return messageListSelect.getHtml(selectName, defaultKey);
   }
@@ -431,8 +444,9 @@ public class MessageList extends ArrayList {
   /**
    *  Sets the PreparedStatement parameters that were added in createFilter
    *
-   *@param  pst  Description of Parameter
-   *@return      Description of the Returned Value
+   *@param  pst               Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -466,8 +480,8 @@ public class MessageList extends ArrayList {
 
 
   /**
-   *  Checks to see if the specified messageId is in this collection of
-   *  Message objects
+   *  Checks to see if the specified messageId is in this collection of Message
+   *  objects
    *
    *@param  messageId  Message ID to look for
    *@return            Returns true if found, else false

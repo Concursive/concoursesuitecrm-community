@@ -1,4 +1,20 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.apps.help;
+
 import java.io.*;
 import java.sql.*;
 import java.util.*;
@@ -10,11 +26,11 @@ import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 
 /**
- *  Extracts all the contents of of the help system 
- * (Table of Contents, context sensitive help, module related help) from the database
- * and builds an XML file from it. 
- * The XML file preserves all the relationships that exist in the database either
- * by using explicit attributes or by their relative position in the XML Document  
+ *  Extracts all the contents of of the help system (Table of Contents, context
+ *  sensitive help, module related help) from the database and builds an XML
+ *  file from it. The XML file preserves all the relationships that exist in the
+ *  database either by using explicit attributes or by their relative position
+ *  in the XML Document
  *
  *@author     kbhoopal
  *@created    November 25, 2003
@@ -40,7 +56,7 @@ public class ExportHelp {
 
     helpModules = new ArrayList();
     buildHelpInformation(args);
-    
+
     System.exit(0);
 
   }
@@ -49,23 +65,24 @@ public class ExportHelp {
   /**
    *  The main program for the ExportHelp class
    *
-   *@param  args Command line parameters to connect to the database
+   *@param  args  Command line parameters to connect to the database
    */
   public static void main(String[] args) {
 
-    if (( args.length != 4) && ( args.length != 5))
+    if ((args.length != 4) && (args.length != 5)) {
       System.out.println("Synopsis: java ExportHelp [filepath][driver][uri][user] <passwd>");
-    else
+    } else {
       new ExportHelp(args);
+    }
 
   }
 
 
   /**
-   *  Connects to the data base, builds the data structure to temporarily hold 
+   *  Connects to the data base, builds the data structure to temporarily hold
    *  the help information and builds the XML document from the data structure
    *
-   *@param  uri  command line parameters to connect to the data base
+   *@param  args  Description of the Parameter
    */
   void buildHelpInformation(String[] args) {
     ConnectionPool sqlDriver = null;
@@ -80,14 +97,15 @@ public class ExportHelp {
     try {
 
       String filePath = args[0];
- 
+
       String driver = args[1];
       String uri = args[2];
       String username = args[3];
       String passwd = "";
-      if (args.length == 5)
+      if (args.length == 5) {
         passwd = args[4];
-      
+      }
+
       sqlDriver.setForceClose(false);
       sqlDriver.setMaxConnections(5);
       //Test a single connection
@@ -120,11 +138,10 @@ public class ExportHelp {
 
 
   /**
-   *  Extracts help modules and related context sensitive help items
-   *  for those represented in the Table of Contents
+   *  Extracts help modules and related context sensitive help items for those
+   *  represented in the Table of Contents
    *
    *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
   void buildTOCIncludedHelpModules(Connection db) throws SQLException {
@@ -151,8 +168,8 @@ public class ExportHelp {
 
 
   /**
-   *  Extracts help modules and related context sensitive help items
-   *  of those ecluded from the Table of Contents
+   *  Extracts help modules and related context sensitive help items of those
+   *  ecluded from the Table of Contents
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
@@ -176,8 +193,9 @@ public class ExportHelp {
     rs.close();
     pst.close();
 
-    if (categoryIds.size() == 0)
-      return ;
+    if (categoryIds.size() == 0) {
+      return;
+    }
 
     String nonTocCategories = "(";
     Iterator itr = categoryIds.iterator();
@@ -190,10 +208,9 @@ public class ExportHelp {
     nonTocCategories = nonTocCategories + ")";
 
     /*
-     * Query to extract module description of those modules not represented in the
-     * the Table of Contents
+     *  Query to extract module description of those modules not represented in the
+     *  the Table of Contents
      */
-    
     pst = db.prepareStatement(
         "SELECT module_id, category, hm.category_id as catId, module_brief_description, module_detail_description " +
         "FROM help_module hm, permission_category pc " +
@@ -215,6 +232,8 @@ public class ExportHelp {
 
   /**
    *  Builds the XML document for the help information
+   *
+   *@param  filePath  Description of the Parameter
    */
   void buildXML(String filePath) {
     try {

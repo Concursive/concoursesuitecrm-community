@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.controller;
 
 import javax.servlet.*;
@@ -321,15 +336,15 @@ public class ApplicationPrefs {
     if (!this.has("SYSTEM.COUNTRY")) {
       this.add("SYSTEM.COUNTRY", "UNITED STATES");
     }
-    
+
     // TODO: WARNING: THIS NEEDS TO BE REMOVED
-    System.setProperty("CURRENCY",this.get("SYSTEM.CURRENCY"));
+    System.setProperty("CURRENCY", this.get("SYSTEM.CURRENCY"));
     String[] locale = this.get("SYSTEM.LANGUAGE").split("_");
-    if (locale[0] != null){
-      System.setProperty("LANGUAGE",locale[0]);
+    if (locale[0] != null) {
+      System.setProperty("LANGUAGE", locale[0]);
     }
-    if (locale[1] != null){
-      System.setProperty("COUNTRY",locale[1]);
+    if (locale[1] != null) {
+      System.setProperty("COUNTRY", locale[1]);
     }
     //Define whether the app requires SSL for browser clients
     addParameter(context, "ForceSSL", this.get("FORCESSL"), "false");

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.utils;
 
 import com.darkhorseventures.framework.actions.ActionContext;
@@ -45,9 +60,9 @@ import javax.xml.transform.stream.StreamResult;
 /**
  *  Provides essestial utilities when working with Scalable Vector Graphics
  *
- * @author     ananth
- * @created    April 2, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    April 2, 2004
+ *@version    $Id$
  */
 public class SVGUtils {
   private final static String ls = System.getProperty("line.separator", "\n");
@@ -67,7 +82,7 @@ public class SVGUtils {
   /**
    *  Sets the textItems attribute of the SVGUtils object
    *
-   * @param  tmp  The new textItems value
+   *@param  tmp  The new textItems value
    */
   public void setTextItems(Vector tmp) {
     this.textItems = tmp;
@@ -77,7 +92,7 @@ public class SVGUtils {
   /**
    *  Gets the textItems attribute of the SVGUtils object
    *
-   * @return    The textItems value
+   *@return    The textItems value
    */
   public Vector getTextItems() {
     return textItems;
@@ -87,7 +102,7 @@ public class SVGUtils {
   /**
    *  Sets the renderer attribute of the SVGUtils object
    *
-   * @param  tmp  The new renderer value
+   *@param  tmp  The new renderer value
    */
   public void setRenderer(StaticRenderer tmp) {
     this.renderer = tmp;
@@ -97,7 +112,7 @@ public class SVGUtils {
   /**
    *  Sets the userAgent attribute of the SVGUtils object
    *
-   * @param  tmp  The new userAgent value
+   *@param  tmp  The new userAgent value
    */
   public void setUserAgent(UserAgent tmp) {
     this.userAgent = tmp;
@@ -107,7 +122,7 @@ public class SVGUtils {
   /**
    *  Sets the loader attribute of the SVGUtils object
    *
-   * @param  tmp  The new loader value
+   *@param  tmp  The new loader value
    */
   public void setLoader(DocumentLoader tmp) {
     this.loader = tmp;
@@ -117,7 +132,7 @@ public class SVGUtils {
   /**
    *  Sets the ctx attribute of the SVGUtils object
    *
-   * @param  tmp  The new ctx value
+   *@param  tmp  The new ctx value
    */
   public void setCtx(BridgeContext tmp) {
     this.ctx = tmp;
@@ -127,7 +142,7 @@ public class SVGUtils {
   /**
    *  Sets the svgDoc attribute of the SVGUtils object
    *
-   * @param  tmp  The new svgDoc value
+   *@param  tmp  The new svgDoc value
    */
   public void setSvgDoc(Document tmp) {
     this.svgDoc = tmp;
@@ -137,7 +152,7 @@ public class SVGUtils {
   /**
    *  Sets the builder attribute of the SVGUtils object
    *
-   * @param  tmp  The new builder value
+   *@param  tmp  The new builder value
    */
   public void setBuilder(GVTBuilder tmp) {
     this.builder = tmp;
@@ -147,7 +162,7 @@ public class SVGUtils {
   /**
    *  Sets the gvtRoot attribute of the SVGUtils object
    *
-   * @param  tmp  The new gvtRoot value
+   *@param  tmp  The new gvtRoot value
    */
   public void setGvtRoot(GraphicsNode tmp) {
     this.gvtRoot = tmp;
@@ -157,7 +172,7 @@ public class SVGUtils {
   /**
    *  Sets the textElement attribute of the SVGUtils object
    *
-   * @param  tmp  The new textElement value
+   *@param  tmp  The new textElement value
    */
   public void setTextElement(SVGElement tmp) {
     this.textElement = tmp;
@@ -167,7 +182,7 @@ public class SVGUtils {
   /**
    *  Gets the renderer attribute of the SVGUtils object
    *
-   * @return    The renderer value
+   *@return    The renderer value
    */
   public StaticRenderer getRenderer() {
     return renderer;
@@ -177,7 +192,7 @@ public class SVGUtils {
   /**
    *  Gets the userAgent attribute of the SVGUtils object
    *
-   * @return    The userAgent value
+   *@return    The userAgent value
    */
   public UserAgent getUserAgent() {
     return userAgent;
@@ -187,7 +202,7 @@ public class SVGUtils {
   /**
    *  Gets the loader attribute of the SVGUtils object
    *
-   * @return    The loader value
+   *@return    The loader value
    */
   public DocumentLoader getLoader() {
     return loader;
@@ -197,7 +212,7 @@ public class SVGUtils {
   /**
    *  Gets the ctx attribute of the SVGUtils object
    *
-   * @return    The ctx value
+   *@return    The ctx value
    */
   public BridgeContext getCtx() {
     return ctx;
@@ -207,7 +222,7 @@ public class SVGUtils {
   /**
    *  Gets the svgDoc attribute of the SVGUtils object
    *
-   * @return    The svgDoc value
+   *@return    The svgDoc value
    */
   public Document getSvgDoc() {
     return svgDoc;
@@ -217,7 +232,7 @@ public class SVGUtils {
   /**
    *  Gets the builder attribute of the SVGUtils object
    *
-   * @return    The builder value
+   *@return    The builder value
    */
   public GVTBuilder getBuilder() {
     return builder;
@@ -227,7 +242,7 @@ public class SVGUtils {
   /**
    *  Gets the gvtRoot attribute of the SVGUtils object
    *
-   * @return    The gvtRoot value
+   *@return    The gvtRoot value
    */
   public GraphicsNode getGvtRoot() {
     return gvtRoot;
@@ -237,7 +252,7 @@ public class SVGUtils {
   /**
    *  Gets the textElement attribute of the SVGUtils object
    *
-   * @return    The textElement value
+   *@return    The textElement value
    */
   public SVGElement getTextElement() {
     return textElement;
@@ -245,16 +260,16 @@ public class SVGUtils {
 
 
   /**
-   *Constructor for the SVGUtils object
+   *  Constructor for the SVGUtils object
    */
   public SVGUtils() { }
 
 
   /**
-   *Constructor for the SVGUtils object
+   *  Constructor for the SVGUtils object
    *
-   * @param  svgFileName    Description of the Parameter
-   * @exception  Exception  Description of the Exception
+   *@param  svgFileName    Description of the Parameter
+   *@exception  Exception  Description of the Exception
    */
   public SVGUtils(String svgFileName) throws Exception {
     buildSVGDOM(svgFileName);
@@ -265,8 +280,8 @@ public class SVGUtils {
   /**
    *  Description of the Method
    *
-   * @param  svgFileName    Description of the Parameter
-   * @exception  Exception  Description of the Exception
+   *@param  svgFileName    Description of the Parameter
+   *@exception  Exception  Description of the Exception
    */
   public void buildSVGDOM(String svgFileName) throws Exception {
     try {
@@ -298,7 +313,7 @@ public class SVGUtils {
   /**
    *  Sets the text attribute of the SVGUtils class
    *
-   * @param  replace  The new text value
+   *@param  replace  The new text value
    */
   public void setText(String replace) {
     // get all the child nodes this node has
@@ -333,13 +348,12 @@ public class SVGUtils {
 
 
   /**
-   *  This method assumes that there is only one 'tspan'
-   *  element for every 'text' element. Hence if there is more
-   *  than one 'tspan' element, then all the tspans are replaced
-   *  with the value replace
+   *  This method assumes that there is only one 'tspan' element for every
+   *  'text' element. Hence if there is more than one 'tspan' element, then all
+   *  the tspans are replaced with the value replace
    *
-   * @param  node     The new nodeText value
-   * @param  replace  The new nodeText value
+   *@param  node     The new nodeText value
+   *@param  replace  The new nodeText value
    */
   public void setNodeText(Node node, String replace) {
     // get all the <tspan> nodes this node has
@@ -368,7 +382,7 @@ public class SVGUtils {
   /**
    *  Sets the allTextElements attribute of the SVGUtils object
    *
-   * @param  replace  The new allTextElements value
+   *@param  replace  The new allTextElements value
    */
   public void setAllTextElements(Vector replace) {
     SVGElement textLayer = (SVGElement) svgDoc.getElementById("TEXT");
@@ -387,7 +401,7 @@ public class SVGUtils {
   /**
    *  Gets the textItems attribute of the SVGUtils object
    *
-   * @return    The textItems value
+   *@return    The textItems value
    */
   public Vector getTextElements() {
     SVGElement textLayer = (SVGElement) svgDoc.getElementById("TEXT");
@@ -421,8 +435,8 @@ public class SVGUtils {
   /**
    *  Description of the Method
    *
-   * @param  out            Description of the Parameter
-   * @exception  Exception  Description of the Exception
+   *@param  out            Description of the Parameter
+   *@exception  Exception  Description of the Exception
    */
   public void saveAsJPEG(File out) throws Exception {
     JPEGTranscoder t = new JPEGTranscoder();
@@ -439,11 +453,11 @@ public class SVGUtils {
   /**
    *  Description of the Method
    *
-   * @param  originalFile   Description of the Parameter
-   * @param  thumbnailFile  Description of the Parameter
-   * @param  maxWidth       Description of the Parameter
-   * @param  maxHeight      Description of the Parameter
-   * @exception  Exception  Description of the Exception
+   *@param  originalFile   Description of the Parameter
+   *@param  thumbnailFile  Description of the Parameter
+   *@param  maxWidth       Description of the Parameter
+   *@param  maxHeight      Description of the Parameter
+   *@exception  Exception  Description of the Exception
    */
   public void saveAsJPEG(File originalFile, File thumbnailFile, float maxWidth, float maxHeight)
        throws Exception {
@@ -480,8 +494,8 @@ public class SVGUtils {
   /**
    *  Description of the Method
    *
-   * @param  context        Description of the Parameter
-   * @exception  Exception  Description of the Exception
+   *@param  context        Description of the Parameter
+   *@exception  Exception  Description of the Exception
    */
   public void saveAsJPEG(ActionContext context) throws Exception {
     try {
@@ -505,14 +519,14 @@ public class SVGUtils {
   /**
    *  Gets the fileSavePath attribute of the SVGUtils class
    *
-   * @param  saveInDir  Description of the Parameter
-   * @return            The fileSavePath value
+   *@param  saveInDir  Description of the Parameter
+   *@return            The fileSavePath value
    */
-  public static String [] getFileSavePath(String saveInDir) {
+  public static String[] getFileSavePath(String saveInDir) {
     String path = null;
     String tmpPath = null;
     String filenameToUse = null;
-    String names [] = {"", ""};
+    String names[] = {"", ""};
     tmpPath = saveInDir;
     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
     String datePathToUse1 = formatter1.format(new java.util.Date());
@@ -536,7 +550,8 @@ public class SVGUtils {
   /**
    *  Description of the Method
    *
-   * @exception  Exception  Description of the Exception
+   *@param  svgFile        Description of the Parameter
+   *@exception  Exception  Description of the Exception
    */
   public void saveAsSVG(File svgFile) throws Exception {
     TransformerFactory transformerFactory = TransformerFactory.newInstance();

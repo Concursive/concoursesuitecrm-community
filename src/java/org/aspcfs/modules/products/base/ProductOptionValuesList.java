@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.products.base;
 
 import java.util.ArrayList;
@@ -12,9 +27,9 @@ import org.aspcfs.modules.base.SyncableList;
 /**
  *  List class for Option Values.
  *
- * @author     partha
- * @created    March 19, 2004
- * @version    $Id: ProductOptionValuesList.java,v 1.1.2.2 2004/03/19 20:46:00
+ *@author     partha
+ *@created    March 19, 2004
+ *@version    $Id: ProductOptionValuesList.java,v 1.1.2.2 2004/03/19 20:46:00
  *      partha Exp $
  */
 public class ProductOptionValuesList extends ArrayList implements SyncableList {
@@ -36,7 +51,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   //other supplimentary fields
   private int optionId = -1;
   private int productId = -1;
-  
+
   private String optionName = null;
   private String productName = null;
 
@@ -44,7 +59,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the productId attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new productId value
+   *@param  tmp  The new productId value
    */
   public void setProductId(int tmp) {
     this.productId = tmp;
@@ -54,7 +69,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the productId attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new productId value
+   *@param  tmp  The new productId value
    */
   public void setProductId(String tmp) {
     this.productId = Integer.parseInt(tmp);
@@ -64,7 +79,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Gets the productId attribute of the ProductOptionValuesList object
    *
-   * @return    The productId value
+   *@return    The productId value
    */
   public int getProductId() {
     return productId;
@@ -75,7 +90,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the optionId attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new optionId value
+   *@param  tmp  The new optionId value
    */
   public void setOptionId(int tmp) {
     this.optionId = tmp;
@@ -85,7 +100,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the optionId attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new optionId value
+   *@param  tmp  The new optionId value
    */
   public void setOptionId(String tmp) {
     this.optionId = Integer.parseInt(tmp);
@@ -95,7 +110,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Gets the optionId attribute of the ProductOptionValuesList object
    *
-   * @return    The optionId value
+   *@return    The optionId value
    */
   public int getOptionId() {
     return optionId;
@@ -105,7 +120,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Gets the tableName attribute of the ProductOptionValuesList object
    *
-   * @return    The tableName value
+   *@return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -115,7 +130,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Gets the uniqueField attribute of the ProductOptionValuesList object
    *
-   * @return    The uniqueField value
+   *@return    The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -125,7 +140,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Gets the pagedListInfo attribute of the ProductOptionValuesList object
    *
-   * @return    The pagedListInfo value
+   *@return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -135,7 +150,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Gets the id attribute of the ProductOptionValuesList object
    *
-   * @return    The id value
+   *@return    The id value
    */
   public int getId() {
     return id;
@@ -145,7 +160,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Gets the syncType attribute of the ProductOptionValuesList object
    *
-   * @return    The syncType value
+   *@return    The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -155,7 +170,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Gets the lastAnchor attribute of the ProductOptionValuesList object
    *
-   * @return    The lastAnchor value
+   *@return    The lastAnchor value
    */
   public Timestamp getLastAnchor() {
     return lastAnchor;
@@ -165,7 +180,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Gets the nextAnchor attribute of the ProductOptionValuesList object
    *
-   * @return    The nextAnchor value
+   *@return    The nextAnchor value
    */
   public Timestamp getNextAnchor() {
     return nextAnchor;
@@ -175,7 +190,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Gets the optionName attribute of the ProductOptionValuesList object
    *
-   * @return    The optionName value
+   *@return    The optionName value
    */
   public String getOptionName() {
     return optionName;
@@ -185,7 +200,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Gets the productName attribute of the ProductOptionValuesList object
    *
-   * @return    The productName value
+   *@return    The productName value
    */
   public String getProductName() {
     return productName;
@@ -195,7 +210,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the pagedListInfo attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new pagedListInfo value
+   *@param  tmp  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -205,7 +220,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the id attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -215,7 +230,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the id attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -225,7 +240,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the syncType attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new syncType value
+   *@param  tmp  The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -235,7 +250,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the syncType attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new syncType value
+   *@param  tmp  The new syncType value
    */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
@@ -245,7 +260,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the lastAnchor attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new lastAnchor value
+   *@param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -255,7 +270,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the lastAnchor attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new lastAnchor value
+   *@param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = DatabaseUtils.parseTimestamp(tmp);
@@ -265,7 +280,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the nextAnchor attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new nextAnchor value
+   *@param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -275,7 +290,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the nextAnchor attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new nextAnchor value
+   *@param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = DatabaseUtils.parseTimestamp(tmp);
@@ -285,7 +300,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the optionName attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new optionName value
+   *@param  tmp  The new optionName value
    */
   public void setOptionName(String tmp) {
     this.optionName = tmp;
@@ -295,7 +310,7 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Sets the productName attribute of the ProductOptionValuesList object
    *
-   * @param  tmp  The new productName value
+   *@param  tmp  The new productName value
    */
   public void setProductName(String tmp) {
     this.productName = tmp;
@@ -311,8 +326,8 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -390,9 +405,9 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  basePath          Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  basePath          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void delete(Connection db, String basePath) throws SQLException {
     Iterator optionValues = this.iterator();
@@ -406,8 +421,8 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   *@param  sqlFilter  Description of the Parameter
+   *@param  db         Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     if (id > -1) {
@@ -431,9 +446,9 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
   /**
    *  Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

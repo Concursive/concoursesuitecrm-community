@@ -1,6 +1,17 @@
 /*
- *  Copyright 2002 Dark Horse Ventures
- *  Uses iteam objects from matt@zeroio.com http://www.mavininteractive.com
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package org.aspcfs.modules.pipeline.actions;
 
@@ -25,15 +36,16 @@ import com.zeroio.iteam.actions.*;
  *
  *@author     Mathur
  *@created    January 15, 2003
- *@version    $Id$
+ *@version    $Id: LeadsDocuments.java,v 1.17 2004/08/05 20:37:41 mrajkowski Exp
+ *      $
  */
 public final class LeadsDocuments extends CFSModule {
 
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-view")) {
@@ -92,8 +104,8 @@ public final class LeadsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-add")) {
@@ -126,8 +138,8 @@ public final class LeadsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandUpload(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-add")) {
@@ -206,8 +218,8 @@ public final class LeadsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandAddVersion(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-add")) {
@@ -246,8 +258,8 @@ public final class LeadsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandUploadVersion(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-add")) {
@@ -322,8 +334,8 @@ public final class LeadsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-view")) {
@@ -364,8 +376,8 @@ public final class LeadsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-view")) {
@@ -465,8 +477,8 @@ public final class LeadsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-edit")) {
@@ -499,8 +511,8 @@ public final class LeadsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-edit")) {
@@ -543,8 +555,8 @@ public final class LeadsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-delete")) {
@@ -581,12 +593,12 @@ public final class LeadsDocuments extends CFSModule {
   /**
    *  Adds a feature to the Opportunity attribute of the LeadsDocuments object
    *
-   * @param  context           The feature to be added to the Opportunity
+   *@param  context           The feature to be added to the Opportunity
    *      attribute
-   * @param  db                The feature to be added to the Opportunity
+   *@param  db                The feature to be added to the Opportunity
    *      attribute
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   private int addOpportunity(ActionContext context, Connection db) throws SQLException {
     String opportunityId = (String) context.getRequest().getParameter("headerId");
@@ -600,14 +612,14 @@ public final class LeadsDocuments extends CFSModule {
   /**
    *  Adds a feature to the Opportunity attribute of the LeadsDocuments object
    *
-   * @param  context           The feature to be added to the Opportunity
+   *@param  context           The feature to be added to the Opportunity
    *      attribute
-   * @param  db                The feature to be added to the Opportunity
+   *@param  db                The feature to be added to the Opportunity
    *      attribute
-   * @param  opportunityId     The feature to be added to the Opportunity
+   *@param  opportunityId     The feature to be added to the Opportunity
    *      attribute
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   private int addOpportunity(ActionContext context, Connection db, String opportunityId) throws SQLException {
     context.getRequest().setAttribute("headerId", opportunityId);
@@ -620,8 +632,8 @@ public final class LeadsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-edit")) {
@@ -656,8 +668,8 @@ public final class LeadsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSaveMove(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-documents-edit")) {

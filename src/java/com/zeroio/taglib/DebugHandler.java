@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright(c) 2004 Team Elements LLC (http://www.teamelements.com/) All
  *  rights reserved. This material cannot be distributed without written
  *  permission from Team Elements LLC. Permission to use, copy, and modify this
@@ -13,7 +13,6 @@
  *  DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
  *  DAMAGES RELATING TO THE SOFTWARE.
  */
-
 package com.zeroio.taglib;
 
 import javax.servlet.jsp.*;

@@ -1,6 +1,17 @@
 /*
- *  Copyright 2004 Dark Horse Ventures
- *  Class begins with "Process" so it bypasses security
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package org.aspcfs.modules.communications.actions;
 
@@ -23,11 +34,12 @@ import org.aspcfs.modules.login.base.AuthenticationItem;
  *
  *@author     mrajkowski
  *@created    April 1, 2004
- *@version    $Id$
+ *@version    $Id: ProcessFileItemImage.java,v 1.3 2004/08/04 20:01:57
+ *      mrajkowski Exp $
  */
 public final class ProcessFileItemImage extends CFSModule {
 
-  public static final String PROCESS_FILE_ITEM_NAME = "processFileItemImages";
+  public final static String PROCESS_FILE_ITEM_NAME = "processFileItemImages";
 
 
   /**
@@ -49,7 +61,7 @@ public final class ProcessFileItemImage extends CFSModule {
     String id = (String) context.getRequest().getParameter("id");
     String path = (String) context.getRequest().getParameter("path");
     String version = (String) context.getRequest().getParameter("version");
-    
+
     FileItem thisItem = null;
     // Lookup the file, start the download
     Connection db = null;
@@ -76,7 +88,7 @@ public final class ProcessFileItemImage extends CFSModule {
       // Finished with connection
       this.freeConnection(context, db);
       db = null;
-      
+
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);
       fileDownload.setDisplayName(fileItem.getClientFilename());

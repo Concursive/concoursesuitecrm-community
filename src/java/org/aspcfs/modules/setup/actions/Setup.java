@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.setup.actions;
 
 import org.aspcfs.modules.actions.CFSModule;
@@ -246,13 +261,13 @@ public class Setup extends CFSModule {
       //Check the request
       String license = context.getRequest().getParameter("license");
       if (license == null) {
-        context.getRequest().setAttribute("actionError", 
+        context.getRequest().setAttribute("actionError",
             "The entered key did not validate, try entering it again.");
         return "ValidateRETRY";
       }
       //See if <license> and </license> are included
       if (license != null && (license.indexOf("<license>") == -1 || license.indexOf("</license>") == -1)) {
-        context.getRequest().setAttribute("actionError", 
+        context.getRequest().setAttribute("actionError",
             "The entered key did not validate because the key did not start with <license> and did not end with </license>, try entering it again.");
         return "ValidateRETRY";
       }
@@ -580,27 +595,27 @@ public class Setup extends CFSModule {
           //pg_dump -xOdR  cfs2gk > gatekeeper.sql
           //pg_dump -xOdR  cdb_cfs > postgresql.sql
           switch (DatabaseUtils.getType(db)) {
-            case DatabaseUtils.POSTGRESQL:
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("Setup-> Installing PostgreSQL Schema");
-              }
-              DatabaseUtils.executeSQL(db, 
-                context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql.sql");
-              break;
-            case DatabaseUtils.MSSQL:
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("Setup-> Installing MSSQL Schema");
-              }
-              DatabaseUtils.executeSQL(db, 
-                context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "mssql.sql");
-              break;
-            default:
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("Setup-> * Database could not be determined: " + DatabaseUtils.getType(db));
-              }
-              break;
+              case DatabaseUtils.POSTGRESQL:
+                if (System.getProperty("DEBUG") != null) {
+                  System.out.println("Setup-> Installing PostgreSQL Schema");
+                }
+                DatabaseUtils.executeSQL(db,
+                    context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql.sql");
+                break;
+              case DatabaseUtils.MSSQL:
+                if (System.getProperty("DEBUG") != null) {
+                  System.out.println("Setup-> Installing MSSQL Schema");
+                }
+                DatabaseUtils.executeSQL(db,
+                    context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "mssql.sql");
+                break;
+              default:
+                if (System.getProperty("DEBUG") != null) {
+                  System.out.println("Setup-> * Database could not be determined: " + DatabaseUtils.getType(db));
+                }
+                break;
           }
-          
+
         } catch (SQLException cre) {
           if (System.getProperty("DEBUG") != null) {
             System.out.println(cre.getMessage());
@@ -1080,3 +1095,4 @@ public class Setup extends CFSModule {
     }
   }
 }
+

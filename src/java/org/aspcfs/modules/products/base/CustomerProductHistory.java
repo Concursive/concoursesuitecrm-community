@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.products.base;
 
 import com.darkhorseventures.framework.beans.*;
@@ -11,9 +26,10 @@ import org.aspcfs.modules.base.DependencyList;
 /**
  *  Description of the Class
  *
- * @author     ananth
- * @created    April 20, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    April 20, 2004
+ *@version    $Id: CustomerProductHistory.java,v 1.3 2004/06/03 16:04:04
+ *      mrajkowski Exp $
  */
 public class CustomerProductHistory extends GenericBean {
 
@@ -41,7 +57,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the shortDescription attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new shortDescription value
+   *@param  tmp  The new shortDescription value
    */
   public void setShortDescription(String tmp) {
     this.shortDescription = tmp;
@@ -51,7 +67,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the shortDescription attribute of the CustomerProductHistory object
    *
-   * @return    The shortDescription value
+   *@return    The shortDescription value
    */
   public String getShortDescription() {
     return shortDescription;
@@ -61,7 +77,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the productName attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new productName value
+   *@param  tmp  The new productName value
    */
   public void setProductName(String tmp) {
     this.productName = tmp;
@@ -71,7 +87,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the categoryName attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new categoryName value
+   *@param  tmp  The new categoryName value
    */
   public void setCategoryName(String tmp) {
     this.categoryName = tmp;
@@ -81,7 +97,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the priceAmount attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new priceAmount value
+   *@param  tmp  The new priceAmount value
    */
   public void setPriceAmount(double tmp) {
     this.priceAmount = tmp;
@@ -91,7 +107,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the productName attribute of the CustomerProductHistory object
    *
-   * @return    The productName value
+   *@return    The productName value
    */
   public String getProductName() {
     return productName;
@@ -101,7 +117,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the categoryName attribute of the CustomerProductHistory object
    *
-   * @return    The categoryName value
+   *@return    The categoryName value
    */
   public String getCategoryName() {
     return categoryName;
@@ -111,7 +127,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the priceAmount attribute of the CustomerProductHistory object
    *
-   * @return    The priceAmount value
+   *@return    The priceAmount value
    */
   public double getPriceAmount() {
     return priceAmount;
@@ -121,7 +137,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the orderItemId attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new orderItemId value
+   *@param  tmp  The new orderItemId value
    */
   public void setOrderItemId(int tmp) {
     this.orderItemId = tmp;
@@ -131,7 +147,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the orderItemId attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new orderItemId value
+   *@param  tmp  The new orderItemId value
    */
   public void setOrderItemId(String tmp) {
     this.orderItemId = Integer.parseInt(tmp);
@@ -141,7 +157,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the orderItemId attribute of the CustomerProductHistory object
    *
-   * @return    The orderItemId value
+   *@return    The orderItemId value
    */
   public int getOrderItemId() {
     return orderItemId;
@@ -151,7 +167,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the id attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -161,7 +177,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the id attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -171,7 +187,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the customerProductId attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new customerProductId value
+   *@param  tmp  The new customerProductId value
    */
   public void setCustomerProductId(int tmp) {
     this.customerProductId = tmp;
@@ -181,7 +197,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the customerProductId attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new customerProductId value
+   *@param  tmp  The new customerProductId value
    */
   public void setCustomerProductId(String tmp) {
     this.customerProductId = Integer.parseInt(tmp);
@@ -191,7 +207,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the orgId attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new orgId value
+   *@param  tmp  The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -201,7 +217,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the orgId attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new orgId value
+   *@param  tmp  The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -211,7 +227,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the orderId attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new orderId value
+   *@param  tmp  The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -221,7 +237,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the orderId attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new orderId value
+   *@param  tmp  The new orderId value
    */
   public void setOrderId(String tmp) {
     this.orderId = Integer.parseInt(tmp);
@@ -231,7 +247,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the productStartDate attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new productStartDate value
+   *@param  tmp  The new productStartDate value
    */
   public void setProductStartDate(Timestamp tmp) {
     this.productStartDate = tmp;
@@ -241,7 +257,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the productStartDate attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new productStartDate value
+   *@param  tmp  The new productStartDate value
    */
   public void setProductStartDate(String tmp) {
     this.productStartDate = DatabaseUtils.parseTimestamp(tmp);
@@ -251,7 +267,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the productEndDate attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new productEndDate value
+   *@param  tmp  The new productEndDate value
    */
   public void setProductEndDate(Timestamp tmp) {
     this.productEndDate = tmp;
@@ -261,7 +277,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the productEndDate attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new productEndDate value
+   *@param  tmp  The new productEndDate value
    */
   public void setProductEndDate(String tmp) {
     this.productEndDate = DatabaseUtils.parseTimestamp(tmp);
@@ -271,7 +287,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the entered attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(Timestamp tmp) {
     this.entered = tmp;
@@ -281,7 +297,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the entered attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -291,7 +307,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -301,7 +317,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -311,7 +327,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the modified attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(Timestamp tmp) {
     this.modified = tmp;
@@ -321,7 +337,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the modified attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -331,7 +347,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -341,7 +357,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -351,7 +367,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the enabled attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new enabled value
+   *@param  tmp  The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -361,7 +377,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Sets the enabled attribute of the CustomerProductHistory object
    *
-   * @param  tmp  The new enabled value
+   *@param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -371,7 +387,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the id attribute of the CustomerProductHistory object
    *
-   * @return    The id value
+   *@return    The id value
    */
   public int getId() {
     return id;
@@ -381,7 +397,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the customerProductId attribute of the CustomerProductHistory object
    *
-   * @return    The customerProductId value
+   *@return    The customerProductId value
    */
   public int getCustomerProductId() {
     return customerProductId;
@@ -391,7 +407,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the orgId attribute of the CustomerProductHistory object
    *
-   * @return    The orgId value
+   *@return    The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -401,7 +417,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the orderId attribute of the CustomerProductHistory object
    *
-   * @return    The orderId value
+   *@return    The orderId value
    */
   public int getOrderId() {
     return orderId;
@@ -411,7 +427,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the productStartDate attribute of the CustomerProductHistory object
    *
-   * @return    The productStartDate value
+   *@return    The productStartDate value
    */
   public Timestamp getProductStartDate() {
     return productStartDate;
@@ -421,7 +437,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the productEndDate attribute of the CustomerProductHistory object
    *
-   * @return    The productEndDate value
+   *@return    The productEndDate value
    */
   public Timestamp getProductEndDate() {
     return productEndDate;
@@ -431,7 +447,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the entered attribute of the CustomerProductHistory object
    *
-   * @return    The entered value
+   *@return    The entered value
    */
   public Timestamp getEntered() {
     return entered;
@@ -441,7 +457,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the enteredBy attribute of the CustomerProductHistory object
    *
-   * @return    The enteredBy value
+   *@return    The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -451,7 +467,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the modified attribute of the CustomerProductHistory object
    *
-   * @return    The modified value
+   *@return    The modified value
    */
   public Timestamp getModified() {
     return modified;
@@ -461,7 +477,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the modifiedBy attribute of the CustomerProductHistory object
    *
-   * @return    The modifiedBy value
+   *@return    The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -471,7 +487,7 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the enabled attribute of the CustomerProductHistory object
    *
-   * @return    The enabled value
+   *@return    The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -479,17 +495,17 @@ public class CustomerProductHistory extends GenericBean {
 
 
   /**
-   *Constructor for the CustomerProductHistory object
+   *  Constructor for the CustomerProductHistory object
    */
   public CustomerProductHistory() { }
 
 
   /**
-   *Constructor for the CustomerProductHistory object
+   *  Constructor for the CustomerProductHistory object
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public CustomerProductHistory(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -497,10 +513,10 @@ public class CustomerProductHistory extends GenericBean {
 
 
   /**
-   *Constructor for the CustomerProductHistory object
+   *  Constructor for the CustomerProductHistory object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public CustomerProductHistory(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -510,9 +526,9 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  id                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -549,8 +565,8 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     // customer_product_history table
@@ -577,9 +593,9 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
@@ -638,9 +654,9 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -667,9 +683,9 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -708,9 +724,9 @@ public class CustomerProductHistory extends GenericBean {
   /**
    *  Gets the valid attribute of the CustomerProductHistory object
    *
-   * @param  db                Description of the Parameter
-   * @return                   The valid value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   The valid value
+   *@exception  SQLException  Description of the Exception
    */
   protected boolean isValid(Connection db) throws SQLException {
     return true;

@@ -27,7 +27,7 @@ package org.jcrontab.log;
 /**
  * This interface defines the basic behaviour of a Jcrontab Logger This class 
  * Is simple to make it easier to integrate with other packages.
- * @author $Author$
+ * @author Isreal Olalla
  * @version $Revision$
  */
  

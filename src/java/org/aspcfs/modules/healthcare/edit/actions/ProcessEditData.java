@@ -1,6 +1,17 @@
 /*
- *  Copyright 2002 Dark Horse Ventures
- *  Class begins with "Process" so it bypasses security
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package org.aspcfs.modules.healthcare.edit.actions;
 
@@ -27,7 +38,8 @@ import com.zeroio.iteam.base.FileItem;
  *
  *@author     chris
  *@created    January 15, 2003
- *@version    $Id$
+ *@version    $Id: ProcessEditData.java,v 1.19 2004/07/21 19:00:43 mrajkowski
+ *      Exp $
  */
 public final class ProcessEditData extends CFSModule {
 
@@ -37,8 +49,8 @@ public final class ProcessEditData extends CFSModule {
 
 
   /**
-   *  This action processes a supplied CSV report and inserts the data
-   *  into folder tables
+   *  This action processes a supplied CSV report and inserts the data into
+   *  folder tables
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value

@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.taglib;
 
 import javax.servlet.jsp.*;
@@ -8,11 +23,12 @@ import com.darkhorseventures.database.*;
 import java.util.*;
 
 /**
- *  This Class evaluates whether the current SystemStatus preference is
- *  to include the body objects.
+ *  This Class evaluates whether the current SystemStatus preference is to
+ *  include the body objects.
  *
  *@author     Matt Rajkowski
  *@created    February 25, 2002
+ *@version    $Id$
  */
 public class FieldHandler extends TagSupport {
   private String sectionName = null;
@@ -57,8 +73,8 @@ public class FieldHandler extends TagSupport {
 
 
   /**
-   *  Checks the SystemStatus preference for the section name. A
-   *  comma-separated list of fields can be used for matching.
+   *  Checks the SystemStatus preference for the section name. A comma-separated
+   *  list of fields can be used for matching.
    *
    *@return                   Description of the Returned Value
    *@exception  JspException  Description of Exception
@@ -68,11 +84,11 @@ public class FieldHandler extends TagSupport {
     boolean result = false;
     int matches = 0;
     int checks = 0;
-    ConnectionElement ce = (ConnectionElement)pageContext.getSession().getAttribute("ConnectionElement");
+    ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
     if (ce == null) {
       System.out.println("FieldHandler-> ConnectionElement is null");
     }
-    SystemStatus systemStatus = (SystemStatus)((Hashtable)pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     if (systemStatus == null) {
       System.out.println("FieldHandler-> SystemStatus is null");
     }

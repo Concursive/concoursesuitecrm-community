@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.contacts.base;
 
 import java.util.ArrayList;
@@ -215,9 +230,16 @@ public class ContactTypeList extends ArrayList {
     this.showDisabled = showDisabled;
   }
 
-public void setIncludeIds(String includeIds) {
-	this.includeIds = includeIds;
-}
+
+  /**
+   *  Sets the includeIds attribute of the ContactTypeList object
+   *
+   *@param  includeIds  The new includeIds value
+   */
+  public void setIncludeIds(String includeIds) {
+    this.includeIds = includeIds;
+  }
+
 
   /**
    *  Gets the showDisabled attribute of the ContactTypeList object
@@ -373,7 +395,7 @@ public void setIncludeIds(String includeIds) {
     contactTypeSelect.setJsEvent(jsEvent);
     contactTypeSelect.setSelectSize(this.getSize());
     contactTypeSelect.setMultiple(this.getMultiple());
-    
+
     int category = -1;
     Iterator i = this.iterator();
     while (i.hasNext()) {
@@ -381,14 +403,14 @@ public void setIncludeIds(String includeIds) {
       if (thisContactType.getCategory() != category) {
         category = thisContactType.getCategory();
         switch (category) {
-          case ContactType.GENERAL: 
-            contactTypeSelect.addGroup("Contact Types");
-            break;
-          case ContactType.ACCOUNT:
-            contactTypeSelect.addGroup("Account Contact Types");
-            break;
-          default:
-            break;
+            case ContactType.GENERAL:
+              contactTypeSelect.addGroup("Contact Types");
+              break;
+            case ContactType.ACCOUNT:
+              contactTypeSelect.addGroup("Account Contact Types");
+              break;
+            default:
+              break;
         }
       }
       if (thisContactType.getEnabled() == true || thisContactType.getId() == EMPLOYEE_TYPE) {
@@ -494,7 +516,7 @@ public void setIncludeIds(String includeIds) {
       }
       rs.close();
       pst.close();
-      
+
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
@@ -581,7 +603,7 @@ public void setIncludeIds(String includeIds) {
     } else {
       sqlFilter.append("AND lct.user_id IS NULL ");
     }
-    
+
   }
 
 

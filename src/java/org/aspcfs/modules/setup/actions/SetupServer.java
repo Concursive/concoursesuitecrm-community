@@ -1,3 +1,18 @@
+/*
+ *  Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  rights reserved. This material cannot be distributed without written
+ *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  this material for internal use is hereby granted, provided that the above
+ *  copyright notice and this permission notice appear in all copies. DARK HORSE
+ *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+ *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+ *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+ *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+ *  DAMAGES RELATING TO THE SOFTWARE.
+ */
 package org.aspcfs.modules.setup.actions;
 
 import org.aspcfs.modules.actions.CFSModule;
@@ -16,6 +31,13 @@ import org.aspcfs.modules.login.base.AuthenticationItem;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.modules.service.base.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author     matt rajkowski
+ *@created    September 16, 2004
+ *@version    $Id$
+ */
 public class SetupServer extends CFSModule {
 
   /**
@@ -62,10 +84,10 @@ public class SetupServer extends CFSModule {
           } else {
             if (license.getText().startsWith("ENTERPRISE-")) {
               license.setEdition("Enterprise Edition");
-              license.setText2(StringUtils.randomString(7,7) + "-1");
+              license.setText2(StringUtils.randomString(7, 7) + "-1");
             } else {
               license.setEdition("Free Edition (5-seat binary)");
-              license.setText2(StringUtils.randomString(7,7) + "5");
+              license.setText2(StringUtils.randomString(7, 7) + "5");
             }
           }
           //save the registration
@@ -124,7 +146,14 @@ public class SetupServer extends CFSModule {
     }
     return "SubmitProcessOK";
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandRequestLicense(ActionContext context) {
     try {
       //Receive the xml from the request
@@ -196,3 +225,4 @@ public class SetupServer extends CFSModule {
     return "UpdateProcessOK";
   }
 }
+
