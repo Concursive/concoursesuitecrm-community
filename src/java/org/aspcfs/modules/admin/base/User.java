@@ -1922,27 +1922,21 @@ public class User extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public void buildRevenueYTD(Connection db, int year, int type) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-
-    String range = ((UserList) this.getFullChildList(this.getShortChildList(), new UserList())).getUserListIds(this.getId());
-
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT sum(rv.amount) as s " +
         "FROM revenue rv " +
-        "WHERE rv.owner IN (" + range + ") AND rv.year = ? ");
-
+        "WHERE rv.owner IN (" + this.getIdRange() + ") AND rv.year = ? ");
     if (type > 0) {
       sql.append("AND rv.type = ? ");
     }
-    pst = db.prepareStatement(sql.toString());
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, year);
     if (type > 0) {
       pst.setInt(++i, type);
     }
-    rs = pst.executeQuery();
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       this.setYTD(rs.getDouble("s"));
     }
