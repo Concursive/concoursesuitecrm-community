@@ -685,7 +685,7 @@ public class CalendarView {
         displayYear = today.get(Calendar.YEAR);
       } else if (!source.equalsIgnoreCase("Calendar")) {
         if (calendarInfo.getCalendarView().equalsIgnoreCase("day")) {
-          displayMonth = cal.get(Calendar.MONTH) + 1;
+          displayMonth = cal.get(Calendar.MONTH) + 1 + calendarInfo.getMonthDisplacement();
           displayDay = Integer.parseInt(getDay());
           displayYear = cal.get(Calendar.YEAR);
         } else if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
@@ -730,7 +730,7 @@ public class CalendarView {
         displayYear = today.get(Calendar.YEAR);
       } else if (!source.equalsIgnoreCase("Calendar")) {
         if (calendarInfo.getCalendarView().equalsIgnoreCase("day")) {
-          displayMonth = cal.get(Calendar.MONTH) + 1;
+          displayMonth = cal.get(Calendar.MONTH) + 1 + calendarInfo.getMonthDisplacement();
           displayDay = Integer.parseInt(getDay());
           displayYear = cal.get(Calendar.YEAR);
         } else if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
@@ -1205,7 +1205,7 @@ public class CalendarView {
         dayCount = 7;
       } else if (calendarInfo.getCalendarView().equalsIgnoreCase("day")) {
         dayCount = 1;
-        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getMonthSelected() - 1, calendarInfo.getDaySelected());
+        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getMonthSelected() - 1 + calendarInfo.getMonthDisplacement(), calendarInfo.getDaySelected());
       } else if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
         dayCount = 7;
         tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getStartMonthOfWeek() - 1, calendarInfo.getStartDayOfWeek());
