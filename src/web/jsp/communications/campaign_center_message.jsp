@@ -16,7 +16,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications Manager</a> > 
+<a href="CampaignManager.do">Communications</a> > 
 <a href="CampaignManager.do?command=View">Campaign List</a> >
 <a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Message

@@ -8,7 +8,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications Manager</a> >
+<a href="CampaignManager.do">Communications</a> >
 <a href="CampaignManagerMessage.do?command=View">Message List</a> >
 Message Details
 </td>

@@ -239,7 +239,7 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="trails">
 <tr>
 <td width="100%">
-<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do">Accounts</a> > 
 Add Account
 </td>
 </tr>

@@ -16,7 +16,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Admin.do">Setup</a> >
+<a href="Admin.do">Admin</a> >
 View Roles
 </td>
 </tr>

@@ -30,7 +30,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline Management</a> > 
+<a href="Leads.do">Pipeline</a> > 
 <a href="LeadsReports.do?command=ExportList">Export Data</a> > 
 New Export
 </td>

@@ -4,7 +4,7 @@
 <table class="trails">
 <tr>
 <td>
-Setup
+Admin
 </td>
 </tr>
 </table>

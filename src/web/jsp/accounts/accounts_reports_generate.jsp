@@ -37,7 +37,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do">Accounts</a> > 
 <a href="Accounts.do?command=Reports">Export Data</a> >
 New Export
 </td>

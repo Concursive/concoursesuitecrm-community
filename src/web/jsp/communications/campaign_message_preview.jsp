@@ -17,7 +17,7 @@ function downloadMessage(campaignId){
 <table class="trails">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications Manager</a> >
+<a href="CampaignManager.do">Communications</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
 <a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Message

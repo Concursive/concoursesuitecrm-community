@@ -15,7 +15,7 @@
 Your search for <b><%= request.getParameter("search") %></b> returned:
 <br>&nbsp;<br> 
 <dhv:permission name="contacts-external_contacts-view">
-<strong><%= ContactList.size() %></strong> result(s) in <strong>General Contacts</strong>.
+<strong><%= ContactList.size() %></strong> result(s) in <strong>Contacts</strong>.
 <%
 Iterator i = ContactList.iterator();
 if (i.hasNext()) {

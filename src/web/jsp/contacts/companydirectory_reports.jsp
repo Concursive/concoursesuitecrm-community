@@ -17,7 +17,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="ExternalContacts.do">General Contacts</a> > 
+<a href="ExternalContacts.do">Contacts</a> > 
 Export Data
 </td>
 </tr>

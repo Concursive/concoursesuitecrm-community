@@ -12,7 +12,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Admin.do">Setup</a> > 
+<a href="Admin.do">Admin</a> > 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<a href="Users.do?command=ListUsers">View Users</a> >

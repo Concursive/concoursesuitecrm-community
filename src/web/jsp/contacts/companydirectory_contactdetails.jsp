@@ -7,7 +7,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="ExternalContacts.do">General Contacts</a> > 
+<a href="ExternalContacts.do">Contacts</a> > 
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
 Contact Details
 </td>

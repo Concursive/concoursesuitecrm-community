@@ -26,7 +26,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Admin.do">Setup</a> >
+<a href="Admin.do">Admin</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>"><%= PermissionCategory.getCategory() %></a> >
 <a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 

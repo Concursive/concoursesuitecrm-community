@@ -8,7 +8,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Admin.do">Setup</a> >
+<a href="Admin.do">Admin</a> >
 <a href="Roles.do">View Roles</a> >
 Update Role
 </td>

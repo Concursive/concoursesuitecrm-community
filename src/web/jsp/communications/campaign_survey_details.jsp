@@ -7,7 +7,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications Manager</a> >
+<a href="CampaignManager.do">Communications</a> >
 <a href="CampaignManagerAttachment.do">Create Attachments</a> >
 <a href="CampaignManagerSurvey.do?command=View">Surveys</a> >
 Survey Details

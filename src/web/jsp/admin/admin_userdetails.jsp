@@ -8,7 +8,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Admin.do">Setup</a> >
+<a href="Admin.do">Admin</a> >
 <a href="Users.do?command=ListUsers">View Users</a> >
 User Details
 </td>

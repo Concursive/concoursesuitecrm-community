@@ -3,7 +3,7 @@
 <table class="trails">
 <tr>
 <td>
-Communications Manager
+Communications
 </td>
 </tr>
 </table>

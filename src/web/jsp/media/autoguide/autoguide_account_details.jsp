@@ -11,7 +11,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do">Accounts</a> > 
 <a href="Accounts.do?command=Search">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="AccountsAutoGuide.do?command=AccountList&orgId=<%=OrgDetails.getOrgId()%>">Vehicle Inventory List</a> >

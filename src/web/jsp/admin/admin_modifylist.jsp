@@ -22,7 +22,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Admin.do">Setup</a> >
+<a href="Admin.do">Admin</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=moduleId%>"><%=PermissionCategory.getCategory()%></a> >
 <a href="Admin.do?command=EditLists&moduleId=<%=moduleId%>">Lookup Lists</a> > 

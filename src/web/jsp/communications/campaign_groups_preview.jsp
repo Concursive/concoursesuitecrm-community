@@ -9,7 +9,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications Manager</a> >
+<a href="CampaignManager.do">Communications</a> >
 <a href="CampaignManagerGroup.do?command=View">View Groups</a> >
 <a href="CampaignManagerGroup.do?command=Details&id=<%= request.getAttribute("id") %>">Group Details</a> >
 Contact List

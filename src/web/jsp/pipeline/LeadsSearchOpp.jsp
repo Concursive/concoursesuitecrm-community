@@ -10,7 +10,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline Management</a> > 
+<a href="Leads.do">Pipeline</a> > 
 Search Opportunities
 </td>
 </tr>

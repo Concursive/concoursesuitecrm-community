@@ -7,7 +7,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do">Accounts</a> > 
 <% if (request.getParameter("return") == null) { %>
 <a href="Accounts.do?command=Search">Search Results</a> >
 <%} else if (request.getParameter("return").equals("dashboard")) {%>

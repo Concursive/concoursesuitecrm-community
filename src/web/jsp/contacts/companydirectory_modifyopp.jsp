@@ -9,7 +9,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="ExternalContacts.do">General Contacts</a> > 
+<a href="ExternalContacts.do">Contacts</a> > 
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>">Contact Details</a> >
 <% if (request.getParameter("return") != null) {%>

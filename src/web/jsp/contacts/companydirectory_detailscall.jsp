@@ -11,7 +11,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="ExternalContacts.do">General Contacts</a> > 
+<a href="ExternalContacts.do">Contacts</a> > 
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 <a href="ExternalContactsCalls.do?command=View&contactId=<%=ContactDetails.getId()%>">Calls</a> >

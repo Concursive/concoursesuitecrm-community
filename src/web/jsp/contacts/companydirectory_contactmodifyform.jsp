@@ -117,7 +117,7 @@
 <table class="trails">
 <tr>
 <td>
-  <a href="ExternalContacts.do">General Contacts</a> > 
+  <a href="ExternalContacts.do">Contacts</a> > 
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>
     <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >

@@ -10,7 +10,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <body<% if (CustomField.getName() == null) { %> onLoad="document.forms[0].name.focus();"<%}%>>
 <form name="details" action="AdminFields.do?command=AddField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true" method="post">
-<a href="Admin.do">Setup</a> >
+<a href="Admin.do">Admin</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>"><%= PermissionCategory.getCategory() %></a> >
 <a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 

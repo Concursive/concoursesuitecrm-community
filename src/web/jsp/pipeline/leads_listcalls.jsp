@@ -19,7 +19,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline Management</a> > 
+<a href="Leads.do">Pipeline</a> > 
 <a href="Leads.do?command=ViewOpp">View Components</a> >
 <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
 Calls

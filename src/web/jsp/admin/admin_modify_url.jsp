@@ -6,7 +6,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Admin.do">Setup</a> >
+<a href="Admin.do">Admin</a> >
 <a href="AdminConfig.do?command=ListGlobalParams">Configure System</a> >
 Modify Setting
 </td>

@@ -262,7 +262,7 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do">Accounts</a> > 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<a href="Accounts.do?command=Search">Search Results</a> >

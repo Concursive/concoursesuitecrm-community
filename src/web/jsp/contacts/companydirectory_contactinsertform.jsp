@@ -96,7 +96,7 @@
 <table class="trails">
 <tr>
 <td>
-  <a href="ExternalContacts.do">General Contacts</a> > 
+  <a href="ExternalContacts.do">Contacts</a> > 
     Add Contact
 </td>
 </tr>
@@ -164,7 +164,7 @@
             <input type="hidden" name="category" value="<%= request.getParameter("category") %>">
           </td>
           <td valign="top">
-            <%-- Check for cloned contact in case of General Contacts --%>
+            <%-- Check for cloned contact in case of Contacts --%>
             <% if(request.getParameter("id") == null) {%>
               [<a href="javascript:setCategoryPopContactType('selectedList', <%= ContactDetails.getId() %>);">Select</a>]
             <%}else{%>

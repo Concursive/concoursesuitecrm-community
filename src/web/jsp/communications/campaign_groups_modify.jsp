@@ -165,7 +165,7 @@ listOfOperators[2] = numberOperators
 <table class="trails">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications Manager</a> >
+<a href="CampaignManager.do">Communications</a> >
 <a href="CampaignManagerGroup.do?command=View">View Groups</a> >
 <dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
 <a href="CampaignManagerGroup.do?command=Details&id=<%= SCL.getId() %>">Group Details</a> >

@@ -75,7 +75,7 @@ function checkForm(form) {
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline Management</a> > 
+<a href="Leads.do">Pipeline</a> > 
 <a href="Leads.do?command=ViewOpp">View Components</a> >
 <% if ("list".equals(request.getParameter("return"))) {%>
   <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>">Opportunity Details</a> > 

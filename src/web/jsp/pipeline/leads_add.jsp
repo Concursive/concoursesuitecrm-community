@@ -85,7 +85,7 @@ function checkForm(form) {
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline Management</a> > 
+<a href="Leads.do">Pipeline</a> > 
 Add Opportunity
 </td>
 </tr>
