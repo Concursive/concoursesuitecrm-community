@@ -359,11 +359,7 @@ public class LookupElement {
       seqName = tableName;
     }
     
-    System.out.println("Field ID is " + fieldId);
-    
-    if (fieldId > -1) {
-            code = DatabaseUtils.getCurrVal(db, seqName + "_code_seq");
-    }
+    code = DatabaseUtils.getCurrVal(db, seqName + "_code_seq");
     
     return true;
   }

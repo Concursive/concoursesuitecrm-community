@@ -91,6 +91,7 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
         thisRecord.setName(thisMap.getId());
         thisRecord.setAction("insert");
         thisRecord.addField("tableName", thisMap.getTable());
+        System.out.println("Chris: " + thisMap.getUniqueField());
         thisRecord.addField("uniqueField", thisMap.getUniqueField());
         //Each record has a bunch of fields
         properties = thisMap.iterator();
