@@ -1563,7 +1563,7 @@ Resolution Date]]></text>
 			</band>
 			</groupFooter>
 		</group>
-		<group  name="activitylog" isStartNewColumn="true" isStartNewPage="true" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="800" >
+		<group  name="activitylog" isStartNewColumn="true" isStartNewPage="true" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="500" >
 			<groupExpression><![CDATA[null]]></groupExpression>
 			<groupHeader>
 			<band height="24"  isSplitAllowed="true" >
@@ -1599,7 +1599,7 @@ Resolution Date]]></text>
 			</band>
 			</groupFooter>
 		</group>
-		<group  name="maintenancelog" isStartNewColumn="true" isStartNewPage="true" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="800" >
+		<group  name="maintenancelog" isStartNewColumn="true" isStartNewPage="true" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="500" >
 			<groupExpression><![CDATA[null]]></groupExpression>
 			<groupHeader>
 			<band height="29"  isSplitAllowed="true" >
@@ -1635,7 +1635,7 @@ Resolution Date]]></text>
 			</band>
 			</groupFooter>
 		</group>
-		<group  name="history" isStartNewColumn="true" isStartNewPage="true" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="800" >
+		<group  name="history" isStartNewColumn="true" isStartNewPage="true" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="500" >
 			<groupExpression><![CDATA[null]]></groupExpression>
 			<groupHeader>
 			<band height="25"  isSplitAllowed="true" >
