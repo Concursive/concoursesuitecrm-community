@@ -90,6 +90,15 @@ public class OrganizationPhoneNumber extends PhoneNumber {
   }
   
   public void insert(Connection db, int orgId, int enteredBy) throws SQLException {
+          queryRecord(db, orgId, enteredBy);
+  }
+  
+  
+  public void insert(Connection db) {
+          queryRecord(db, this.getOrgId(), this.getEnteredBy());
+  }
+          
+  public void queryRecord(Connection db, int orgId, inte enteredBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO organization_phone " +
         "(org_id, phone_type, number, extension, enteredby, modifiedby) " +
