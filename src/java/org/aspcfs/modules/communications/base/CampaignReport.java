@@ -946,6 +946,7 @@ public class CampaignReport {
     thisItem.setSubject("Exported Report");
     thisItem.setClientFilename("campaignreports-" + filenameToUse + ".xls");
     thisItem.setFilename(filenameToUse + "-" + enteredBy);
+    thisItem.setVersion(1.0);
     thisItem.setSize(fileSize);
     thisItem.insert(db);
     return true;
