@@ -29,7 +29,7 @@
 <input type="reset" value="Reset">
 <br>&nbsp;
 <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
-<input type="hidden" name="modified" value="<%= ContactDetails.getModified().toString() %>">
+<input type="hidden" name="modified" value="<%= ContactDetails.getModified() %>">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>

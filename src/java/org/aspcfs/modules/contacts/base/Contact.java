@@ -42,9 +42,7 @@ public class Contact extends GenericBean {
   private String endOfDay = "";
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
-  //private String entered = "";
   private int enteredBy = -1;
-  //private String modified = null;
   private int modifiedBy = -1;
   private boolean enabled = true;
   private boolean hasAccount = false;
@@ -161,6 +159,25 @@ public class Contact extends GenericBean {
 
 public java.sql.Timestamp getEntered() { return entered; }
 public java.sql.Timestamp getModified() { return modified; }
+
+public String getModifiedString() {
+	String tmp = "";
+	try {
+		return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+	} catch (NullPointerException e) {
+	}
+	return tmp;
+}
+
+
+public String getEnteredString() {
+	String tmp = "";
+	try {
+		return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+	} catch (NullPointerException e) {
+	}
+	return tmp;
+}
 
 public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
 public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }

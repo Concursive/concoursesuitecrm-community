@@ -94,7 +94,7 @@
       Entered
     </td>
     <td>
-      <%= toHtml(OrgDetails.getEnteredByName()) %>&nbsp;-&nbsp;<%= OrgDetails.getDateEntered() %>
+      <%= toHtml(OrgDetails.getEnteredByName()) %>&nbsp;-&nbsp;<%= OrgDetails.getEnteredString() %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -102,7 +102,7 @@
       Modified
     </td>
     <td>
-      <%= toHtml(OrgDetails.getModifiedByName()) %>&nbsp;-&nbsp;<%= OrgDetails.getModified() %>
+      <%= toHtml(OrgDetails.getModifiedByName()) %>&nbsp;-&nbsp;<%= OrgDetails.getModifiedString() %>
     </td>
   </tr>
 </table>

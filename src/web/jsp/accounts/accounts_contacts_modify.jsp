@@ -28,7 +28,7 @@
   <tr>
     <td class="containerBack">
 <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
-<input type="hidden" name="modified" value="<%= ContactDetails.getModified().toString() %>">
+<input type="hidden" name="modified" value="<%= ContactDetails.getModified() %>">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Contacts.do?command=Details&id=<%= ContactDetails.getId() %>'">
 <input type="reset" value="Reset">

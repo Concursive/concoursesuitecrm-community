@@ -60,7 +60,7 @@
       Entered
     </td>
     <td>
-      <%= ContactDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= ContactDetails.getEntered().toString() %>
+      <%= ContactDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= ContactDetails.getEnteredString() %>
     </td>
   </tr>
   
@@ -69,7 +69,7 @@
       Modified
     </td>
     <td>
-      <%= ContactDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= ContactDetails.getModified().toString() %>
+      <%= ContactDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= ContactDetails.getModifiedString() %>
     </td>
   </tr>
   
