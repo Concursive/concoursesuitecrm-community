@@ -363,6 +363,8 @@ public final class Accounts extends CFSModule {
           orgReport.setFolderId(folderId);
         }
 
+        orgReport.setEnteredBy(getUserId(context));
+        orgReport.setModifiedBy(getUserId(context));
         orgReport.buildReportFull(db);
         orgReport.saveAndInsert(db);
       }

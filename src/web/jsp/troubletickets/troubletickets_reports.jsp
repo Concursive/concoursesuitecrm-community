@@ -89,7 +89,7 @@ Reports<br>
 <%}%>
 </table>
 <br>
-<dhv:pagedListControl object="TicketsRptListInfo" tdClass="row1"/>
+<dhv:pagedListControl object="TicketRptListInfo" tdClass="row1"/>
 <%} else {%>
   <tr bgcolor="white"><td colspan=6 valign=center>No reports found.</td></tr>
 </table>
