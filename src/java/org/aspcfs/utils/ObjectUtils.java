@@ -45,11 +45,11 @@ public class ObjectUtils {
     }
   }
   
-  public static String generateGuid(java.util.Date inDate, int id) {
+  public static String generateGuid(java.util.Date inDate, int id1, int id2) {
     SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddHHmmssSS");
-    if (id < 0) {
-      id = 0;
+    if (id1 < 0) {
+      id1 = 0;
     }
-    return (formatter.format(inDate) + id);
+    return (formatter.format(inDate) + String.valueOf(id1) + String.valueOf(id2));
   }
 }

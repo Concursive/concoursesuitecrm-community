@@ -1,0 +1,37 @@
+/**
+ *  CFS Manager Functionality
+ *
+ *@author     mrajkowski
+ *@created    April 23, 2002
+ *@version    $Id$
+ */
+ 
+There are many maintenance actions that need to be performed in CFS. These include scheduled tasks, development tasks, and production tasks.
+
+** Scheduled Tasks:
+
+- Clear user graph data for all systems
+Every night the cached graph data needs to be reset for every system because the data is based on daily values.
+
+
+** Production Tasks:
+
+- Add a new system to CFS
+- Manage licenses for a system
+
+
+
+** Development Tasks:
+
+- Cached synchronization mappings
+When ProcessPacket.do is first executed, all of the class mappings in the SyncClient table are read in and stored for performance.  The mappings need to be reset whenever data is added to the sync_client table.
+Ex. context.getServletContext().removeAttribute("SyncObjectMap");
+
+- Cached main menu data
+When CFS is first loaded, the main menu XML file is parsed and the main menu hook class is stored in memory. In order for new menu items to be recognized, the MainMenuHook object needs to reload the XML.
+Ex. mainMenuHook.reload();
+  
+- Clear user hierarchy for any/all systems
+  
+  
+  

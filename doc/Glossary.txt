@@ -1,0 +1,11 @@
+/**
+ *  Glossary
+ *
+ *@author     mrajkowski
+ *@created    April 23, 2002
+ *@version    $Id$
+ */
+ 
+System: A CFS virtual host.  Data for each system in CFS is cached in a Hashtable of SystemStatus objects.  Each SystemStatus object represents a unique company or virtual host.  Data includes a cached user hierarchy list.
+
+

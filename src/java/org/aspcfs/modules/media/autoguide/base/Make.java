@@ -68,8 +68,7 @@ public class Make extends GenericBean {
   public java.sql.Timestamp getModified() { return modified; }
   public int getModifiedBy() { return modifiedBy; }
   public String getGuid() {
-    return ObjectUtils.generateGuid(entered, enteredBy);
-    //return String.valueOf(entered.getTime());
+    return ObjectUtils.generateGuid(entered, enteredBy, id);
   }
 
   public boolean exists(Connection db) throws SQLException {
