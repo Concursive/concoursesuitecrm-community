@@ -51,6 +51,7 @@ CREATE TABLE autoguide_account_inventory (
   int_color VARCHAR(20) NULL,
   invoice_price FLOAT NULL,
   selling_price FLOAT NULL,
+  sold BOOLEAN DEFAULT false,
   status VARCHAR(20) NULL,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,

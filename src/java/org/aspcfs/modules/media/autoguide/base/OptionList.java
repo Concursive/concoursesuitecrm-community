@@ -58,9 +58,6 @@ public class OptionList extends ArrayList {
     while (i.hasNext()) {
       Option thisOption = (Option)i.next();
       if (thisOption.getId() == optionId) {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("TRUE");
-        }
         return true;
       }
     }

@@ -30,7 +30,12 @@ CREATE TABLE sync_table (
   sync_item BOOLEAN DEFAULT false
 );
 
-/* RUN sync.init as well */
+/* 
+  ASPCFS updates to do:
+  Run sync.init as well
+  Move the fileLibrary folder to WEB-INF
+  Update the web.xml file with the ContainerMenuConfig
+*/
 
 /* 05/09/2002 - ds21 up to date */
 
