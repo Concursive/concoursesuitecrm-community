@@ -780,7 +780,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       pagedListInfo.setDefaultSort("pctlg.product_name", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY entered ");
+      sqlOrder.append("ORDER BY pctlg.product_name ");
     }
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -812,7 +812,6 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
         " ON ( pctlg.type_id = pctlgtype.code ) " +
         " WHERE pctlg.product_id > 0  "
         );
-    sqlOrder.append(" ORDER BY pctlgpricing.price_amount ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();

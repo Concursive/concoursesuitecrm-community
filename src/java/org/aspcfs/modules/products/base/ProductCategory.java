@@ -20,6 +20,7 @@ import org.aspcfs.modules.actionlist.base.ActionList;
 import org.aspcfs.modules.actionlist.base.ActionItemLog;
 import org.aspcfs.modules.actionlist.base.ActionItemLogList;
 import org.aspcfs.modules.base.CustomFieldRecordList;
+import org.aspcfs.modules.products.base.ProductCategoryList;
 
 /**
  *  This is a generic Product Category that contains Product Catalogs.
@@ -53,6 +54,133 @@ public class ProductCategory extends GenericBean {
   //other supplimentary fields
   private String parentName = null;
   private String typeName = null;
+
+  private boolean buildChildList = false;
+  private boolean buildProductList = false;
+  private int buildEnabledProducts = Constants.UNDEFINED;
+  private ProductCategoryList childList = new ProductCategoryList();
+  private ProductCatalogList productList = new ProductCatalogList();
+
+
+  /**
+   *  Sets the buildChildList attribute of the ProductCategory object
+   *
+   *@param  tmp  The new buildChildList value
+   */
+  public void setBuildChildList(boolean tmp) {
+    this.buildChildList = tmp;
+  }
+
+
+  /**
+   *  Sets the buildChildList attribute of the ProductCategory object
+   *
+   *@param  tmp  The new buildChildList value
+   */
+  public void setBuildChildList(String tmp) {
+    this.buildChildList = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the buildProductList attribute of the ProductCategory object
+   *
+   *@param  tmp  The new buildProductList value
+   */
+  public void setBuildProductList(boolean tmp) {
+    this.buildProductList = tmp;
+  }
+
+
+  /**
+   *  Sets the buildProductList attribute of the ProductCategory object
+   *
+   *@param  tmp  The new buildProductList value
+   */
+  public void setBuildProductList(String tmp) {
+    this.buildProductList = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the buildEnabledProducts attribute of the ProductCategory object
+   *
+   *@return    The buildEnabledProducts value
+   */
+  public int getBuildEnabledProducts() {
+    return buildEnabledProducts;
+  }
+
+
+  /**
+   *  Sets the buildEnabledProducts attribute of the ProductCategory object
+   *
+   *@param  tmp  The new buildEnabledProducts value
+   */
+  public void setBuildEnabledProducts(int tmp) {
+    this.buildEnabledProducts = tmp;
+  }
+
+
+  /**
+   *  Gets the buildChildList attribute of the ProductCategory object
+   *
+   *@return    The buildChildList value
+   */
+  public boolean getBuildChildList() {
+    return buildChildList;
+  }
+
+
+  /**
+   *  Gets the buildProductList attribute of the ProductCategory object
+   *
+   *@return    The buildProductList value
+   */
+  public boolean getBuildProductList() {
+    return buildProductList;
+  }
+
+
+  /**
+   *  Sets the childList attribute of the ProductCategory object
+   *
+   *@param  tmp  The new childList value
+   */
+  public void setChildList(ProductCategoryList tmp) {
+    this.childList = tmp;
+  }
+
+
+  /**
+   *  Sets the productList attribute of the ProductCategory object
+   *
+   *@param  tmp  The new productList value
+   */
+  public void setProductList(ProductCatalogList tmp) {
+    this.productList = tmp;
+  }
+
+
+  /**
+   *  Gets the childList attribute of the ProductCategory object
+   *
+   *@return    The childList value
+   */
+  public ProductCategoryList getChildList() {
+    return childList;
+  }
+
+
+  /**
+   *  Gets the productList attribute of the ProductCategory object
+   *
+   *@return    The productList value
+   */
+  public ProductCatalogList getProductList() {
+    return productList;
+  }
+
 
   /**
    *  Gets the id attribute of the ProductCategory object
@@ -573,6 +701,7 @@ public class ProductCategory extends GenericBean {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
   }
 
+
   /**
    *  Sets the parentName attribute of the ProductCategory object
    *
@@ -591,6 +720,7 @@ public class ProductCategory extends GenericBean {
   public void setTypeName(String tmp) {
     this.typeName = tmp;
   }
+
 
   /**
    *  Constructor for the ProductCategory object
@@ -625,6 +755,35 @@ public class ProductCategory extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildChildList(Connection db) throws SQLException {
+    // gets the child categories of this category
+    childList.setParentId(this.getId());
+    childList.setBuildProducts(true);
+    childList.buildList(db);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildProductList(Connection db) throws SQLException {
+    // gets all products of this category
+    productList.setCategoryId(this.getId());
+    productList.setEnabled(buildEnabledProducts);
+    productList.setBuildResources(true);
+    productList.buildList(db);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
    *@param  id                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
@@ -632,7 +791,7 @@ public class ProductCategory extends GenericBean {
     if (id == -1) {
       throw new SQLException("Invalid Product Category Number");
     }
-    
+
     PreparedStatement pst = db.prepareStatement(
         "SELECT " +
         " pctgy.*, " +
@@ -643,7 +802,7 @@ public class ProductCategory extends GenericBean {
         " ON ( pctgy.parent_id = pctgy2.category_id ) " +
         " LEFT JOIN lookup_product_category_type AS pctgytype " +
         " ON ( pctgy.type_id = pctgytype.code ) " +
-        " WHERE pctgy.category_id = ? "+
+        " WHERE pctgy.category_id = ? " +
         " ORDER BY pctgy.category_name "
         );
     pst.setInt(1, id);
@@ -655,6 +814,12 @@ public class ProductCategory extends GenericBean {
     pst.close();
     if (this.id == -1) {
       throw new SQLException("Product Category not found");
+    }
+    if (buildChildList) {
+      this.buildChildList(db);
+    }
+    if (buildProductList) {
+      this.buildProductList(db);
     }
   }
 
@@ -669,29 +834,29 @@ public class ProductCategory extends GenericBean {
    */
   public int addCategory(Connection db, int cat2id) throws SQLException {
     int result = -1;
-    int i=0;
+    int i = 0;
     if (cat2id == -1 || this.getId() == -1) {
       throw new SQLException("Invalid category ID ");
     }
     //To simplify the query procedure, insert two records for category_map
     //Insert the first record
     PreparedStatement pst = db.prepareStatement(
-      " INSERT INTO product_category_map(category1_id, category2_id) " +
-      " VALUES( ? , ? );"
-    );
-    pst.setInt(++i,this.getId());
-    pst.setInt(++i,cat2id);
+        " INSERT INTO product_category_map(category1_id, category2_id) " +
+        " VALUES( ? , ? );"
+        );
+    pst.setInt(++i, this.getId());
+    pst.setInt(++i, cat2id);
     result = pst.executeUpdate();
     pst.close();
-    
-    i=0;
+
+    i = 0;
     //Insert the second record
     pst = db.prepareStatement(
-      " INSERT INTO product_category_map(category1_id, category2_id) " +
-      " VALUES( ? , ? );"
-    );
-    pst.setInt(++i,cat2id);
-    pst.setInt(++i,this.getId());
+        " INSERT INTO product_category_map(category1_id, category2_id) " +
+        " VALUES( ? , ? );"
+        );
+    pst.setInt(++i, cat2id);
+    pst.setInt(++i, this.getId());
     result += pst.executeUpdate();
     pst.close();
     return result;
@@ -702,20 +867,20 @@ public class ProductCategory extends GenericBean {
    *  Adds a feature to the Catalog attribute of the ProductCategory object
    *
    *@param  db                The feature to be added to the Catalog attribute
-   *@param  catalog_id        The feature to be added to the Catalog attribute
+   *@param  catalogId         The feature to be added to the Catalog attribute
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
   public int addCatalog(Connection db, int catalogId) throws SQLException {
     int result = -1;
-    int i=0;
+    int i = 0;
     if (catalogId == -1 || this.getId() == -1) {
       throw new SQLException("Invalid catalog id or category id ");
     }
     PreparedStatement pst = db.prepareStatement(
-      " INSERT INTO product_catalog_category_map( product_id, category_id) " +
-      " VALUES ( ? , ? );"
-    );
+        " INSERT INTO product_catalog_category_map( product_id, category_id) " +
+        " VALUES ( ? , ? );"
+        );
     pst.setInt(++i, catalogId);
     pst.setInt(++i, this.getId());
     result = pst.executeUpdate();
@@ -1179,4 +1344,62 @@ public class ProductCategory extends GenericBean {
     }
     return result;
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  categoryId        Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static String lookupDateConfiguratorClass(Connection db, int categoryId) throws SQLException {
+    String className = "";
+    try {
+      PreparedStatement pst = db.prepareStatement(
+          " SELECT class_name " +
+          " FROM product_date_configurator " +
+          " WHERE category_id = ? "
+          );
+      int i = 0;
+      pst.setInt(++i, categoryId);
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        className = rs.getString("class_name");
+      }
+      rs.close();
+      pst.close();
+    } catch (SQLException e) {
+      e.printStackTrace(System.out);
+    }
+    return className;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean checkForProducts(Connection db) throws SQLException {
+    this.buildChildList(db);
+    this.buildProductList(db);
+
+    if (this.getProductList().size() > 0) {
+      return true;
+    }
+
+    if (!this.getChildList().filterProductCategories(db)) {
+      return false;
+    }
+
+    if (this.getChildList().size() <= 0 && this.getProductList().size() <= 0) {
+      return false;
+    }
+    return true;
+  }
 }
+

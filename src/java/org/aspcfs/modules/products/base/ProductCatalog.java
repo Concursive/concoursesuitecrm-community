@@ -388,16 +388,6 @@ public class ProductCatalog extends GenericBean {
 
 
   /**
-   *  Gets the categoryId attribute of the ProductCatalog object
-   *
-   *@return    The categoryId value
-   */
-  public int getCategoryId() {
-    return categoryId;
-  }
-
-
-  /**
    *  Gets the categoryName attribute of the ProductCatalog object
    *
    *@return    The categoryName value
@@ -874,26 +864,6 @@ public class ProductCatalog extends GenericBean {
    */
   public void setExpirationDate(Timestamp tmp) {
     this.expirationDate = tmp;
-  }
-
-
-  /**
-   *  Sets the categoryId attribute of the ProductCatalog object
-   *
-   *@param  tmp  The new categoryId value
-   */
-  public void setCategoryId(int tmp) {
-    this.categoryId = tmp;
-  }
-
-
-  /**
-   *  Sets the categoryId attribute of the ProductCatalog object
-   *
-   *@param  tmp  The new categoryId value
-   */
-  public void setCategoryId(String tmp) {
-    this.categoryId = Integer.parseInt(tmp);
   }
 
 

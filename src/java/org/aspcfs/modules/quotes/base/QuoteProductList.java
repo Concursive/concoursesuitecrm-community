@@ -6,13 +6,16 @@ import javax.servlet.http.HttpServletRequest;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
+import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.modules.products.base.*;
 
 /**
- *  This represents a list of quote products 
+ *  This represents a list of quote products
  *
- * @author     ananth
- * @created    March 24, 2004
- * @version    $Id$
+ *@author     ananth
+ *@created    March 24, 2004
+ *@version    $Id: QuoteProductList.java,v 1.1.2.2 2004/04/24 14:37:47 partha
+ *      Exp $
  */
 public class QuoteProductList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
@@ -24,7 +27,7 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Sets the pagedListInfo attribute of the QuoteProductList object
    *
-   * @param  tmp  The new pagedListInfo value
+   *@param  tmp  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -34,7 +37,7 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Sets the quoteId attribute of the QuoteProductList object
    *
-   * @param  tmp  The new quoteId value
+   *@param  tmp  The new quoteId value
    */
   public void setQuoteId(int tmp) {
     this.quoteId = tmp;
@@ -44,7 +47,7 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Sets the quoteId attribute of the QuoteProductList object
    *
-   * @param  tmp  The new quoteId value
+   *@param  tmp  The new quoteId value
    */
   public void setQuoteId(String tmp) {
     this.quoteId = Integer.parseInt(tmp);
@@ -54,7 +57,7 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Sets the statusId attribute of the QuoteProductList object
    *
-   * @param  tmp  The new statusId value
+   *@param  tmp  The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -64,7 +67,7 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Sets the statusId attribute of the QuoteProductList object
    *
-   * @param  tmp  The new statusId value
+   *@param  tmp  The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -74,7 +77,7 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Sets the buildResources attribute of the QuoteProductList object
    *
-   * @param  tmp  The new buildResources value
+   *@param  tmp  The new buildResources value
    */
   public void setBuildResources(boolean tmp) {
     this.buildResources = tmp;
@@ -84,7 +87,7 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Sets the buildResources attribute of the QuoteProductList object
    *
-   * @param  tmp  The new buildResources value
+   *@param  tmp  The new buildResources value
    */
   public void setBuildResources(String tmp) {
     this.buildResources = DatabaseUtils.parseBoolean(tmp);
@@ -94,7 +97,7 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Gets the pagedListInfo attribute of the QuoteProductList object
    *
-   * @return    The pagedListInfo value
+   *@return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -104,7 +107,7 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Gets the quoteId attribute of the QuoteProductList object
    *
-   * @return    The quoteId value
+   *@return    The quoteId value
    */
   public int getQuoteId() {
     return quoteId;
@@ -114,7 +117,7 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Gets the statusId attribute of the QuoteProductList object
    *
-   * @return    The statusId value
+   *@return    The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -124,7 +127,7 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Gets the buildResources attribute of the QuoteProductList object
    *
-   * @return    The buildResources value
+   *@return    The buildResources value
    */
   public boolean getBuildResources() {
     return buildResources;
@@ -132,7 +135,7 @@ public class QuoteProductList extends ArrayList {
 
 
   /**
-   *Constructor for the QuoteProductList object
+   *  Constructor for the QuoteProductList object
    */
   public QuoteProductList() { }
 
@@ -140,8 +143,8 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -193,7 +196,7 @@ public class QuoteProductList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " qp.* "+
+        " qp.* " +
         " FROM quote_product qp " +
         " WHERE qp.item_id > -1 ");
 
@@ -229,7 +232,7 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
+   *@param  sqlFilter  Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -249,9 +252,9 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -269,8 +272,8 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -284,14 +287,56 @@ public class QuoteProductList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       QuoteProduct thisProduct = (QuoteProduct) i.next();
       thisProduct.delete(db);
+    }
+  }
+
+
+  /**
+   *  Gets the quoteProductFromProductId attribute of the QuoteProductList
+   *  object
+   *
+   *@param  id  Description of the Parameter
+   *@return     The quoteProductFromProductId value
+   */
+  public QuoteProduct getQuoteProductFromProductId(int id) throws SQLException{
+    QuoteProduct result = null;
+    Iterator iterator = (Iterator) this.iterator();
+    while (iterator.hasNext()) {
+      QuoteProduct quoteProduct = (QuoteProduct) iterator.next();
+      if (quoteProduct.getProductId() == id) {
+        result = quoteProduct;
+        break;
+      }
+    }
+    return result;
+  }
+  
+  public void populate(Connection db, ActionContext context) throws SQLException{
+    for(int i=1;;i++){
+      String productIdString = (String) context.getRequest().getParameter("product_"+i);
+      String quantityString = (String) context.getRequest().getParameter("qty_"+i);
+      if(productIdString != null && !"".equals(productIdString)){
+        if(quantityString != null && !"".equals(quantityString)){
+          ProductCatalog product = new ProductCatalog(db, Integer.parseInt(productIdString));
+          product.setBuildProductOptions(true);
+          product.buildProductOptions(db);
+          QuoteProduct quoteProduct = new QuoteProduct();
+          quoteProduct.setProductCatalog(product);
+          quoteProduct.setProductId(product.getId());
+          quoteProduct.setQuantity(Integer.parseInt(quantityString));
+          this.add(quoteProduct);
+        }
+      }else{
+        break;
+      }
     }
   }
 }
