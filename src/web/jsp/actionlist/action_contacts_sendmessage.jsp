@@ -21,7 +21,7 @@
       ("moz".equals(User.getBrowserId()) && User.getBrowserVersion() >= 1.3)) {
     enhancedEditor = true;
 %>
-<body onLoad="document.forms[0].name.focus();">
+<body onLoad="initEditor();document.forms[0].name.focus();">
 <% 
   } else {
 %>
