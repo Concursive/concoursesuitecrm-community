@@ -38,7 +38,7 @@ for the report:<br>
 %>
 <dhv:permission name="<%= report.getPermissionId() > -1 ? report.getPermissionName() + "-view" : "" %>">
   <tr class="row<%= ++row%2 == 0 ? "2" : "1" %>">
-    <td nowrap><a href="Reports.do?command=CriteriaList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>"><%= toHtml(report.getTitle()) %></a></td>
+    <td nowrap><a href="Reports.do?command=CriteriaList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=-1"><%= toHtml(report.getTitle()) %></a></td>
     <td width="100%"><%= toHtml(report.getDescription()) %></td>
   </tr>
 </dhv:permission>

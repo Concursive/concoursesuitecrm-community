@@ -174,6 +174,9 @@ public final class Reports extends CFSModule {
       criteriaList.setOwner(getUserId(context));
       criteriaList.buildList(db);
       context.getRequest().setAttribute("criteriaList", criteriaList);
+      if (criteriaList.size() == 0) {
+        return ("CriteriaListSKIP");
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -244,7 +247,7 @@ public final class Reports extends CFSModule {
       ParameterList params = new ParameterList();
       params.setParameters(jasperReport);
       //Load the criteria if the user selected to base on existing criteria
-      if (criteriaId != null && !criteriaId.equals("-1")) {
+      if (criteriaId != null && !criteriaId.equals("-1") &&!"".equals(criteriaId)) {
         Criteria criteria = new Criteria(db, Integer.parseInt(criteriaId));
         criteria.buildResources(db);
         params.setParameters(criteria);

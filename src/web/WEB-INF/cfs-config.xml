@@ -1072,6 +1072,7 @@
     <forward name="RunReportOK" resource="/reports/reports_run.jsp" layout="nav"/>
     <forward name="ListReportsOK" resource="/reports/reports_list.jsp" layout="nav"/>
     <forward name="CriteriaListOK" resource="/reports/reports_criteria_list.jsp" layout="nav"/>
+    <forward name="CriteriaListSKIP" resource="/Reports.do?command=ParameterList" />
     <forward name="ParameterListOK" resource="/reports/reports_parameter_list.jsp" layout="nav"/>
     <forward name="GenerateReportOK" resource="/reports/reports_queue_added.jsp" layout="nav"/>
     <forward name="ProcessReportOK" resource="/Reports.do?command=StreamReport"/>
