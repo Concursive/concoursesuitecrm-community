@@ -607,7 +607,8 @@
     <forward name="ActivateOK" resource="/CampaignManager.do?command=Dashboard"/>
     <forward name="DetailsOK" resource="/communications/campaign_details.jsp" layout="nav"/>
     <forward name="PreviewGroupsOK" resource="/communications/campaign_center_groups_preview.jsp" layout="style"/>
-    <forward name="ToggleOK" resource="/CampaignManager.do?command=PreviewGroups"/>
+    <forward name="ToggleOK" resource="/communications/toggle_recipient_js.jsp"/>
+    <forward name="ToggleERROR" resource="/empty.html"/>
     <forward name="PrepareDownloadOK" resource="/communications/campaign_download.jsp" layout="nav"/>
     <forward name="PopupCommentsOK" resource="/communications/campaign_survey_comments.jsp" layout="style"/>
     <forward name="MessageJSListOK" resource="/communications/campaign_center_js_messagelist.jsp"/>

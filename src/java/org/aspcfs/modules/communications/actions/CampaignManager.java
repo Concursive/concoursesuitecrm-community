@@ -450,12 +450,21 @@ public final class CampaignManager extends CFSModule {
     String contactId = context.getRequest().getParameter("contactId");
     try {
       db = this.getConnection(context);
-      Contact thisContact = new Contact(db, Integer.parseInt(contactId));
+      //TODO: A whole contact doesn't need to be created for this, it would
+      //be nice to optimize this
+      Contact thisContact = new Contact();
+      thisContact.setBuildDetails(false);
+      thisContact.setBuildTypes(false);
+      thisContact.setId(Integer.parseInt(contactId));
+      thisContact.build(db);
       thisContact.checkExcludedFromCampaign(db, Integer.parseInt(campaignId));
       thisContact.toggleExcluded(db, Integer.parseInt(campaignId));
+      context.getRequest().setAttribute("recipientText", 
+        thisContact.getExcludedFromCampaign()?"No":"Yes");
     } catch (Exception e) {
       errorMessage = e;
       System.out.println(e.toString());
+      return ("ToggleERROR");
     } finally {
       this.freeConnection(context, db);
     }

@@ -5,7 +5,15 @@
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="CampaignCenterPreviewInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/div.js"></script>
+<script language="JavaScript">
+  function toggleRecipient(id) {
+    //Send request to iframe
+    var url = "CampaignManager.do?command=ToggleRecipient&scl=<%= SCL.getId() %>&id=<%= Campaign.getId() %>&contactId=" + id + "&popup=true";
+    window.frames['server_commands'].location.href=url;
+    //Returning iframe will set the change+id to the new value (Yes/No)
+  }
+</script>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -65,12 +73,15 @@
       <%= toHtml(thisContact.getEmailAddress("Business")) %>
     </td>
     <td align="center" nowrap>
-      <dhv:permission name="campaign-campaigns-edit"><a href="CampaignManager.do?command=ToggleRecipient&scl=<%=SCL.getId()%>&id=<%= Campaign.getId() %>&contactId=<%= thisContact.getId()%>&popup=true"></dhv:permission><%= (thisContact.excludedFromCampaign()? "No" : "Yes") %><dhv:permission name="campaign-campaigns-edit"></a></dhv:permission>
+      <div id="change<%= thisContact.getId() %>">
+        <dhv:permission name="campaign-campaigns-edit"><a href="javascript:toggleRecipient(<%= thisContact.getId()%>)"></dhv:permission><%= (thisContact.excludedFromCampaign()? "No" : "Yes") %><dhv:permission name="campaign-campaigns-edit"></a></dhv:permission>
+      </div>
     </td>
   </tr>
+  <%}%>
+  <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   <input type="hidden" name="id" value="<%= Campaign.getId() %>">
   <input type="hidden" name="scl" value="<%= SCL.getId() %>">
-  <%}%>
 </table>
 <br>
 <dhv:pagedListControl object="CampaignCenterPreviewInfo"/>
