@@ -903,13 +903,12 @@ public final class TroubleTickets extends CFSModule {
 
     Exception errorMessage = null;
     boolean recordDeleted = false;
-
+    
     String passedId = null;
-
     Ticket thisTic = null;
-    passedId = context.getRequest().getParameter("id");
-
     Connection db = null;
+    
+    passedId = context.getRequest().getParameter("id");
 
     try {
       db = this.getConnection(context);
