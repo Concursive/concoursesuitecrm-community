@@ -86,11 +86,23 @@
   </Service>
   <!-- ASPCFS on Port 80 and 443 -->
   <Service className="org.apache.catalina.core.StandardService" debug="0" name="Web">
-    <Connector className="org.apache.coyote.tomcat4.CoyoteConnector" acceptCount="10" connectionTimeout="60000" debug="0" enableLookups="true" maxProcessors="75" minProcessors="5" port="80" redirectPort="443" useURIValidationHack="false">
+    <Connector className="org.apache.coyote.tomcat4.CoyoteConnector" 
+        acceptCount="10" connectionTimeout="60000" debug="0" enableLookups="true" 
+        maxProcessors="75" minProcessors="5" port="80" redirectPort="443" 
+        useURIValidationHack="false">
       <Factory className="org.apache.catalina.net.DefaultServerSocketFactory"/>
     </Connector>/
-    <Connector className="org.apache.coyote.tomcat4.CoyoteConnector" acceptCount="10" enableLookups="true" maxProcessors="75" minProcessors="5" port="443" debug="0" scheme="https" secure="true" useURIValidationHack="false">
-      <Factory className="org.apache.coyote.tomcat4.CoyoteServerSocketFactory" clientAuth="false" keystoreFile="/home/cfs/keystore" keystorePass="aspcfs" keystoreType="JKS" protocol="TLS" randomFile="/root/random.pem" rootFile="/root/root.pem"/>
+    <Connector className="org.apache.coyote.tomcat4.CoyoteConnector" 
+        acceptCount="10" enableLookups="true" 
+        maxProcessors="75" minProcessors="5" port="443" 
+        debug="0" scheme="https" secure="true" 
+        useURIValidationHack="false">
+      <Factory className="org.apache.coyote.tomcat4.CoyoteServerSocketFactory" 
+          clientAuth="false" 
+          keystoreFile="/home/cfs/keystore" 
+          keystorePass="aspcfs" keystoreType="JKS" protocol="TLS"
+          randomFile="/root/random.pem" 
+          rootFile="/root/root.pem"/>
     </Connector>
     <Engine className="org.apache.catalina.core.StandardEngine" debug="0" defaultHost="localhost" mapperClass="org.apache.catalina.core.StandardEngineMapper" name="Web">
       <Host className="org.apache.catalina.core.StandardHost" appBase="/home/webapps" autoDeploy="true" configClass="org.apache.catalina.startup.ContextConfig" contextClass="org.apache.catalina.core.StandardContext" debug="0" deployXML="true" errorReportValveClass="org.apache.catalina.valves.ErrorReportValve" liveDeploy="true" mapperClass="org.apache.catalina.core.StandardHostMapper" name="localhost" unpackWARs="false">
