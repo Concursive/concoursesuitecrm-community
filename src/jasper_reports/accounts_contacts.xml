@@ -14,7 +14,7 @@
 		 rightMargin="30"
 		 topMargin="20"
 		 bottomMargin="20"
-		 whenNoDataType="NoPages"
+		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<parameter name="userid" isForPrompting="false" class="java.lang.Integer">
