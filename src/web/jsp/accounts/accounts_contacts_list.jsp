@@ -10,7 +10,6 @@
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 Contacts<br>
 <hr color="#BFBFBB" noshade>
-<a href="/Accounts.do?command=View">Back to Account List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -27,9 +26,7 @@ Contacts<br>
     <td class="containerBack">
 <dhv:permission name="accounts-accounts-contacts-add"><a href="Contacts.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add a Contact</a></dhv:permission>
 <center><%= ContactListInfo.getAlphabeticalPageLinks() %></center>
-
-
-<%= showAttribute(request, "actionError") %>
+<dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="ContactListInfo"/>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <tr class="title">
   <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete">

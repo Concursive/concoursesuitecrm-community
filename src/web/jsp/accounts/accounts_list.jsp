@@ -14,18 +14,18 @@ View Accounts<br>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="/Accounts.do?command=View">
-    <td align="left">
+    <td align="left" valign="bottom">
       <select size="1" name="listView" onChange="javascript:document.forms['listView'].submit();">
         <option <%= OrgListInfo.getOptionValue("all") %>>All Accounts</option>
         <option <%= OrgListInfo.getOptionValue("my") %>>My Accounts </option>
 	<option <%= OrgListInfo.getOptionValue("disabled") %>>Disabled Accounts </option>
-	
 	<% if (!(OrgListInfo.getSavedCriteria().isEmpty())) { %>
 		<option <%= OrgListInfo.getOptionValue("search") %>>Search Results</option>
 	<%}%>
-	
       </select>
-      <%= showAttribute(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="OrgListInfo"/>
     </td>
     </form>
   </tr>

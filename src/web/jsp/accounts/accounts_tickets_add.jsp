@@ -58,14 +58,14 @@
       message = "";
       
       if ((!checkPhone(form.phone1number.value))) { 
-	message += "- The entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
-	formTest = false;
+        message += "- The entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
+        formTest = false;
       }
       if (formTest == false) {
-	alert("Form could not be saved, please check the following:\r\n\r\n" + message);
-	return false;
+        alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+        return false;
       } else {
-	return true;
+        return true;
       }
   }
   
@@ -76,8 +76,6 @@
 <a href="/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>">Tickets</a> >
 Add Ticket<br>
 <hr color="#BFBFBB" noshade>
-
-<a href="/Accounts.do?command=View">Back to Account List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>

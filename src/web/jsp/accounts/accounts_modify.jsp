@@ -89,14 +89,9 @@
 <a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <%}%>
-
-
 Modify Account<br>
 <hr color="#BFBFBB" noshade>
-
-<a href="Accounts.do?command=View">Back to Account List</a><br>&nbsp;
 </dhv:evaluate>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>

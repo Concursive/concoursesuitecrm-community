@@ -54,7 +54,6 @@
 <a href="/Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
 Add Opportunity<br>
 <hr color="#BFBFBB" noshade>
-<a href="/Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Back to Opportunity List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>

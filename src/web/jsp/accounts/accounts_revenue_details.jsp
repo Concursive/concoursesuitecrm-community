@@ -11,7 +11,6 @@
 <a href="/RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Revenue</a> >
 Revenue Details<br>
 <hr color="#BFBFBB" noshade>
-<a href="RevenueManager.do?command=View&orgId=<%= Revenue.getOrgId() %>">Back to Revenue List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>

@@ -12,14 +12,11 @@
 <a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="/RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Revenue</a> >
-
 <% if (request.getParameter("return") == null) {%>
 	<a href="/RevenueManager.do?command=Details&id=<%=Revenue.getId()%>">Revenue Details</a> >
 <%}%>
-
 Modify Revenue<br>
 <hr color="#BFBFBB" noshade>
-<a href="/RevenueManager.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Back to Revenue List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>

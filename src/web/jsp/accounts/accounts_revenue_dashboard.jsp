@@ -75,14 +75,13 @@ Revenue Dashboard<br>
 	
 	</table>
 	<br>
-	       <% if (!(((String)request.getSession().getAttribute("override")) == null)) {%>
-	       
-	       <div margintop=5 align=center width=285>
-        <input type=hidden name="oid" value="<%=((String)request.getSession().getAttribute("override"))%>">
-        <a href="RevenueManager.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("previousId"))%>">Up One Level</a> |
-        <a href="RevenueManager.do?command=Dashboard&reset=1">Back to My Dashboard</a>
+   <% if (!(((String)request.getSession().getAttribute("override")) == null)) {%>
+   <div margintop=5 align=center width=285>
+      <input type=hidden name="oid" value="<%=((String)request.getSession().getAttribute("override"))%>">
+      <a href="RevenueManager.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("previousId"))%>">Up One Level</a> |
+      <a href="RevenueManager.do?command=Dashboard&reset=1">Back to My Dashboard</a>
 	 </div>
-      <%}%>
+   <%}%>
      
 	<table width=285 cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
 	

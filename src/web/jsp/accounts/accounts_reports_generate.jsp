@@ -2,8 +2,6 @@
 <jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.CustomFieldCategoryList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/reportSelect.js"></script>
-
-
 <script language="JavaScript">
 	function checkForm(form) {
 		var test = document.generate.selectedList;
@@ -25,29 +23,27 @@
 		}
 	}
     
-    function ShowSpan(thisID)
-{
-	isNS4 = (document.layers) ? true : false;
-	isIE4 = (document.all && !document.getElementById) ? true : false;
-	isIE5 = (document.all && document.getElementById) ? true : false;
-	isNS6 = (!document.all && document.getElementById) ? true : false;
-	
-	if (isNS4){
-	elm = document.layers[thisID];
-	}
-	else if (isIE4) {
-	elm = document.all[thisID];
-	}
-	else if (isIE5 || isNS6) {
-	elm = document.getElementById(thisID);
-	elm.style.visibility="visible";
-	}
-	
-	return true;
-   
-}
+  function ShowSpan(thisID) {
+    isNS4 = (document.layers) ? true : false;
+    isIE4 = (document.all && !document.getElementById) ? true : false;
+    isIE5 = (document.all && document.getElementById) ? true : false;
+    isNS6 = (!document.all && document.getElementById) ? true : false;
+    
+    if (isNS4){
+    elm = document.layers[thisID];
+    }
+    else if (isIE4) {
+    elm = document.all[thisID];
+    }
+    else if (isIE5 || isNS6) {
+    elm = document.getElementById(thisID);
+    elm.style.visibility="visible";
+    }
+    
+    return true;
+  }
 
-function update(){
+function update() {
 	if (document.generate.type.options[document.generate.type.selectedIndex].value == 4) {
 		javascript:ShowSpan('new0');
 	} else {
@@ -55,8 +51,7 @@ function update(){
 	}
 }
 
-function HideSpan(thisID)
-{
+function HideSpan(thisID) {
 	isNS4 = (document.layers) ? true : false;
 	isIE4 = (document.all && !document.getElementById) ? true : false;
 	isIE5 = (document.all && document.getElementById) ? true : false;
@@ -77,8 +72,7 @@ function HideSpan(thisID)
    
 }
     
-	function HideSpans()
-	{
+	function HideSpans(){
 	isNS = (document.layers) ? true : false;
 	isIE = (document.all) ? true : false;
 	
@@ -101,9 +95,7 @@ function HideSpan(thisID)
 	
 	}
 </script>
-
 <body onLoad="javascript:HideSpans();javascript:document.forms[0].subject.focus();">
-
 <form name="generate" action="/Accounts.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
 <a href="/Accounts.do">Account Management</a> > 
 <a href="/Accounts.do?command=Reports">Reports</a> >
