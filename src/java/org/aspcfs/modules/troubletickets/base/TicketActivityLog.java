@@ -937,6 +937,9 @@ public class TicketActivityLog extends GenericBean {
           updateServiceContractHours(db);
         }
       }
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
       e.printStackTrace(System.out);
       db.rollback();
@@ -1004,7 +1007,9 @@ public class TicketActivityLog extends GenericBean {
 
       //Reimburse the hours in the activity items to the service contract
       reimburseHoursAfterDelete(db);
-
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
       e.printStackTrace(System.out);
       db.rollback();
@@ -1072,9 +1077,14 @@ public class TicketActivityLog extends GenericBean {
       if (request != null) {
         updateServiceContractHours(db);
       }
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
       e.printStackTrace(System.out);
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
       if (doCommit) {
