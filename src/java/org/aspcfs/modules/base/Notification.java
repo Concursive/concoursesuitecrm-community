@@ -457,12 +457,11 @@ public class Notification extends Thread {
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
           mail.setFrom(from + " <cfs-messenger@darkhorseventures.com>");
-          if (from != null) {
+          if (from != null && !from.equals("")) {
             mail.addReplyTo(from);
           } else {
             mail.addReplyTo(siteCode + "@" + this.getHostName());
           }
-          
           mail.setType("text/html");
           mail.addTo(thisUser.getContact().getEmailAddress("Business"));
           mail.setSubject(subject);
@@ -532,13 +531,13 @@ public class Notification extends Thread {
           System.out.println("Notification-> To: " + thisContact.getEmailAddress("Business"));
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
+          mail.setFrom(from + " <cfs-messenger@darkhorseventures.com>");
           if (from != null && !from.equals("")) {
-            mail.setFrom(from);
+            mail.addReplyTo(from);
           } else {
-            mail.setFrom(siteCode + "@" + this.getHostName());
+            mail.addReplyTo(siteCode + "@" + this.getHostName());
           }
           mail.setType("text/html");
-
           if (thisContact.getEmailAddress("Business").equals("")) {
             mail.addTo(thisContact.getEmailAddress("Personal"));
           } else {
@@ -546,6 +545,7 @@ public class Notification extends Thread {
           }
           mail.setSubject(subject);
           mail.setBody(messageToSend);
+          mail.setAttachments(fileAttachments);
           int errorCode = mail.send();
           if (errorCode > 0) {
             status = "Email Error";
