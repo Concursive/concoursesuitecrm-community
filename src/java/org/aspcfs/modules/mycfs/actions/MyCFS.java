@@ -152,10 +152,10 @@ public final class MyCFS extends CFSModule {
 			newOrg.setIndustry("1");
 			newOrg.setEnteredBy(getUserId(context));
 			newOrg.setMiner_only(true);
-			
+
 			db = this.getConnection(context);
-			
-			existsAlready = newOrg.checkIfExists(db,name);
+
+			existsAlready = newOrg.checkIfExists(db, name);
 			newOrg.insert(db);
 		}
 		catch (SQLException e) {
@@ -189,59 +189,61 @@ public final class MyCFS extends CFSModule {
 		int headlines = 0;
 		Exception errorMessage = null;
 		int alertsDD = getUserId(context);
-		
-		if ( context.getRequest().getParameter("userId") != null ) {
+
+		if (context.getRequest().getParameter("userId") != null) {
 			alertsDD = Integer.parseInt(context.getRequest().getParameter("userId"));
 		}
 
 		String whereClause = new String();
-		UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
-		
+		UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+
 		//this is how we get the multiple-level heirarchy...recursive function.
-		
+
 		User thisRec = thisUser.getUserRecord();
-		
+
 		UserList shortChildList = thisRec.getShortChildList();
 		UserList newUserList = thisRec.getFullChildList(shortChildList, new UserList());
-		
+
 		//newUserList.setManagerId(getUserId(context));
 		//newUserList.setBuildHierarchy(true);
-		
+
 		newUserList.setMyId(getUserId(context));
 		newUserList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
 		newUserList.setIncludeMe(true);
-		
+
 		newUserList.setJsEvent("onChange = javascript:document.forms[0].action='/MyCFS.do?command=Home';document.forms[0].submit()");
 
-		//	
+		//
 		//	Alerts Selection
 		//
-		
+
 		String alertsRequest = (String) context.getRequest().getParameter("alerts");
-		if (alertsRequest == null) { alertsRequest = "0"; }
-			
+		if (alertsRequest == null) {
+			alertsRequest = "0";
+		}
+
 		int i_alerts = Integer.parseInt(alertsRequest);
 
 		Vector newsList = new Vector();
-		
+
 		String industryCheck = context.getRequest().getParameter("industry");
-		
+
 		Connection db = null;
 		Statement st = null;
 		ResultSet rs = null;
 		ResultSet headline_rs = null;
-		
+
 		try {
 			StringBuffer sql = new StringBuffer();
-			
+
 			db = this.getConnection(context);
-			
+
 			//newUserList.buildList(db);
 			context.getRequest().setAttribute("NewUserList", newUserList);
-			
+
 			LookupList indSelect = new LookupList(db, "lookup_industry");
 			indSelect.setJsEvent("onChange=\"document.forms['miner_select'].submit();\"");
-			
+
 			indSelect.addItem(0, "Latest News");
 
 			//used to check the number of customized headlines
@@ -250,7 +252,6 @@ public final class MyCFS extends CFSModule {
 			headlineCount.append("SELECT COUNT(org_id) AS headlinecount " +
 					"FROM organization " +
 					"WHERE miner_only = 't' and industry_temp_code = 1 and enteredby = " + getUserId(context) + " ");
-
 
 			sql.append("SELECT * from news ");
 
@@ -261,22 +262,27 @@ public final class MyCFS extends CFSModule {
 			}
 			pst.close();
 			headline_rs.close();
-			
-			if (headlines > 0) { indSelect.addItem(1, "My News"); }
-			
+
+			if (headlines > 0) {
+				indSelect.addItem(1, "My News");
+			}
+
 			//new
-			
-			if (industryCheck == null && headlines > 0) { industryCheck = "1"; }
-			
+
+			if (industryCheck == null && headlines > 0) {
+				industryCheck = "1";
+			}
+
 			if (industryCheck != null && !(industryCheck.equals("0"))) {
 				whereClause = " WHERE organization.industry_temp_code = " + Integer.parseInt(industryCheck) + " ";
 
 				if (industryCheck.equals("1")) {
 					//whereClause += "OR (organization.duplicate_id = news.org_id AND organization.duplicate_id > -1) AND organization.enteredby = "
 					//		 + getUserId(context) + "AND organization.miner_only = 't' ";
-					
+
 					whereClause += " AND news.org_id in ( organization.org_id, organization.duplicate_id ) AND organization.enteredby = " + getUserId(context) + "AND organization.miner_only = 't' ";
-				} else {
+				}
+				else {
 					whereClause += " AND organization.org_id = news.org_id ";
 				}
 
@@ -285,11 +291,11 @@ public final class MyCFS extends CFSModule {
 			else if (industryCheck == null || industryCheck.equals("0")) {
 				sql.append("WHERE organization.miner_only = 'f' AND organization.org_id = news.org_id ");
 			}
-			
+
 			context.getRequest().setAttribute("IndSelect", indSelect);
-			
+
 			//end
-			
+
 			sql.append(" ORDER BY dateentered desc limit 10 ");
 
 			//System.out.println(sql.toString());
@@ -304,58 +310,57 @@ public final class MyCFS extends CFSModule {
 			rs.close();
 			st.close();
 
-      
 			//Setup the calendar
-      
-      CalendarView companyCalendar = new CalendarView(context.getRequest());
-      
+
+			CalendarView companyCalendar = new CalendarView(context.getRequest());
+
 			PagedListInfo alertPaged = new PagedListInfo();
 			alertPaged.setMaxRecords(5);
 			alertPaged.setColumnToSortBy("alertdate");
 
-      OpportunityList alertOpps = new OpportunityList();
+			OpportunityList alertOpps = new OpportunityList();
 			alertOpps.setPagedListInfo(alertPaged);
 			alertOpps.setEnteredBy(alertsDD);
 			alertOpps.setHasAlertDate(true);
 			alertOpps.buildList(db);
 			Iterator n = alertOpps.iterator();
-      while (n.hasNext()) {
-        Opportunity thisOpp = (Opportunity)n.next();
-        companyCalendar.addEvent(thisOpp.getAlertDate(),"",thisOpp.getDescription(),"Opportunity");
-      }
-			
-      CallList alertCalls = new CallList();
+			while (n.hasNext()) {
+				Opportunity thisOpp = (Opportunity) n.next();
+				companyCalendar.addEvent(thisOpp.getAlertDate(), "", thisOpp.getDescription(), "Opportunity");
+			}
+
+			CallList alertCalls = new CallList();
 			alertCalls.setPagedListInfo(alertPaged);
 			alertCalls.setEnteredBy(alertsDD);
 			alertCalls.setHasAlertDate(true);
 			alertCalls.buildList(db);
 			Iterator m = alertCalls.iterator();
-      while (m.hasNext()) {
-        Call thisCall = (Call)m.next();
-        companyCalendar.addEvent(thisCall.getAlertDate(),"",thisCall.getSubject(),"Call");
-      }
-      
-      com.zeroio.iteam.base.ProjectList projects = new com.zeroio.iteam.base.ProjectList();
+			while (m.hasNext()) {
+				Call thisCall = (Call) m.next();
+				companyCalendar.addEvent(thisCall.getAlertDate(), "", thisCall.getSubject(), "Call");
+			}
+
+			com.zeroio.iteam.base.ProjectList projects = new com.zeroio.iteam.base.ProjectList();
 			projects.setGroupId(-1);
-      projects.setOpenProjectsOnly(true);
-      projects.setProjectsWithAssignmentsOnly(true);
-      projects.setProjectsForUser(alertsDD);
-      projects.setBuildAssignments(true);
-      projects.setAssignmentsForUser(alertsDD);
-      projects.setOpenAssignmentsOnly(true);
-      projects.setBuildIssues(false);
-      projects.buildList(db);
-      Iterator projectList = projects.iterator();
-      while (projectList.hasNext()) {
-        com.zeroio.iteam.base.Project thisProject = (com.zeroio.iteam.base.Project)projectList.next();
-        Iterator assignmentList = thisProject.getAssignments().iterator();
-        while (assignmentList.hasNext()) {
-          com.zeroio.iteam.base.Assignment thisAssignment = (com.zeroio.iteam.base.Assignment)assignmentList.next();
-          companyCalendar.addEvent(thisAssignment.getDueDate(),thisAssignment.getRole(),"Assignment");
-        }
-      }
-      
-      context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
+			projects.setOpenProjectsOnly(true);
+			projects.setProjectsWithAssignmentsOnly(true);
+			projects.setProjectsForUser(alertsDD);
+			projects.setBuildAssignments(true);
+			projects.setAssignmentsForUser(alertsDD);
+			projects.setOpenAssignmentsOnly(true);
+			projects.setBuildIssues(false);
+			projects.buildList(db);
+			Iterator projectList = projects.iterator();
+			while (projectList.hasNext()) {
+				com.zeroio.iteam.base.Project thisProject = (com.zeroio.iteam.base.Project) projectList.next();
+				Iterator assignmentList = thisProject.getAssignments().iterator();
+				while (assignmentList.hasNext()) {
+					com.zeroio.iteam.base.Assignment thisAssignment = (com.zeroio.iteam.base.Assignment) assignmentList.next();
+					companyCalendar.addEvent(thisAssignment.getDueDate(), thisAssignment.getRole(), "Assignment");
+				}
+			}
+
+			context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
 		}
 		catch (SQLException e) {
 			errorMessage = e;
@@ -396,21 +401,23 @@ public final class MyCFS extends CFSModule {
 	 *@since
 	 */
 	public String executeCommandMyCFSProfile(ActionContext context) {
-    Exception errorMessage = null;
+		Exception errorMessage = null;
 		Connection db = null;
-    try {
-      db = this.getConnection(context);
-      User thisUser = new User(db, this.getUserId(context));
-      thisUser.setBuildContact(true);
-      thisUser.buildResources(db);
-      context.getRequest().setAttribute("User", thisUser);
-      context.getRequest().setAttribute("EmployeeBean", thisUser.getContact());
-    } catch (Exception e) {
-      errorMessage = e;
-      e.printStackTrace(System.out);
-    }
-    this.freeConnection(context, db);
-    
+		try {
+			db = this.getConnection(context);
+			buildFormElements(context, db);
+			User thisUser = new User(db, this.getUserId(context));
+			thisUser.setBuildContact(true);
+			thisUser.buildResources(db);
+			context.getRequest().setAttribute("User", thisUser);
+			context.getRequest().setAttribute("EmployeeBean", thisUser.getContact());
+		}
+		catch (Exception e) {
+			errorMessage = e;
+			e.printStackTrace(System.out);
+		}
+		this.freeConnection(context, db);
+
 		addModuleBean(context, "MyProfile", "");
 		return ("ProfileOK");
 	}
@@ -424,9 +431,47 @@ public final class MyCFS extends CFSModule {
 	 *@since
 	 */
 	public String executeCommandUpdateProfile(ActionContext context) {
-		return ("UpdateProfileOK");
+		Exception errorMessage = null;
+		
+		Contact thisContact = (Contact)context.getFormBean();
+		
+		Connection db = null;
+		int resultCount = 0;
+		
+		try {
+			thisContact.setRequestItems(context.getRequest());
+			thisContact.setModifiedBy(getUserId(context));
+			db = this.getConnection(context);
+			resultCount = thisContact.update(db);
+			
+			if (resultCount == -1) {
+				processErrors(context, thisContact.getErrors());
+				buildFormElements(context, db);
+			}
+			
+		} catch (Exception e) {
+			errorMessage = e;
+		} finally {
+			this.freeConnection(context, db);
+		}
+		
+		if (errorMessage == null) {
+			if (resultCount == -1) {
+				return (executeCommandMyCFSProfile(context));
+			} else if (resultCount == 1) {
+				return ("UpdateProfileOK");
+			} else {
+			context.getRequest().setAttribute("Error",
+			"<b>This record could not be updated because someone else updated it first.</b><p>" +
+			"You can hit the back button to review the changes that could not be committed, " +
+			"but you must reload the record and make the changes again.");
+			return ("UserError");
+			}
+		} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+		}
 	}
-
 
 	/**
 	 *  The user wants to change the password
@@ -444,13 +489,14 @@ public final class MyCFS extends CFSModule {
 			thisUser.setBuildContact(false);
 			thisUser.buildResources(db);
 			context.getRequest().setAttribute("User", thisUser);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			errorMessage = e;
 			e.printStackTrace(System.out);
 		}
-		
+
 		this.freeConnection(context, db);
-			
+
 		addModuleBean(context, "MyProfile", "");
 		return ("PasswordOK");
 	}
@@ -467,48 +513,53 @@ public final class MyCFS extends CFSModule {
 		Exception errorMessage = null;
 		Connection db = null;
 		int resultCount = 0;
-		
-		User tempUser = (User)context.getFormBean();
-		
+
+		User tempUser = (User) context.getFormBean();
+
 		try {
 			db = getConnection(context);
-			
+
 			User thisUser = new User(db, this.getUserId(context));
 			thisUser.setBuildContact(false);
 			thisUser.buildResources(db);
-			
+
 			resultCount = tempUser.updatePassword(db, context, thisUser.getPassword());
 
-		} catch (SQLException e) {
+		}
+		catch (SQLException e) {
 			errorMessage = e;
-		} finally {
+		}
+		finally {
 			this.freeConnection(context, db);
 		}
-		
-		
+
 		if (resultCount == -1) {
 			processErrors(context, tempUser.getErrors());
 			context.getRequest().setAttribute("NewUser", tempUser);
 		}
-		
+
 		if (errorMessage == null) {
 			if (resultCount == -1) {
 				return (executeCommandMyCFSPassword(context));
-			} else if (resultCount == 1) {
+			}
+			else if (resultCount == 1) {
 				return ("UpdatePasswordOK");
-			} else {
+			}
+			else {
 				context.getRequest().setAttribute("Error",
-				"<b>This record could not be updated because someone else updated it first.</b><p>" +
-				"You can hit the back button to review the changes that could not be committed, " +
-				"but you must reload the record and make the changes again.");
+						"<b>This record could not be updated because someone else updated it first.</b><p>" +
+						"You can hit the back button to review the changes that could not be committed, " +
+						"but you must reload the record and make the changes again.");
 				return ("UserError");
 			}
-		} else {
-		context.getRequest().setAttribute("Error", errorMessage);
-		return ("SystemError");
 		}
-		
+		else {
+			context.getRequest().setAttribute("Error", errorMessage);
+			return ("SystemError");
+		}
+
 	}
+
 
 	/**
 	 *  Description of the Method
@@ -520,20 +571,21 @@ public final class MyCFS extends CFSModule {
 	public String executeCommandMyCFSSettings(ActionContext context) {
 		Exception errorMessage = null;
 		Connection db = null;
-    try {
-      db = this.getConnection(context);
-      User thisUser = new User(db, this.getUserId(context));
-      thisUser.setBuildContact(true);
-      thisUser.buildResources(db);
-      context.getRequest().setAttribute("User", thisUser);
-      context.getRequest().setAttribute("EmployeeBean", thisUser.getContact());
-    } catch (Exception e) {
-      errorMessage = e;
-      e.printStackTrace(System.out);
-    }
-    this.freeConnection(context, db);
-    
-    addModuleBean(context, "MyProfile", "");
+		try {
+			db = this.getConnection(context);
+			User thisUser = new User(db, this.getUserId(context));
+			thisUser.setBuildContact(true);
+			thisUser.buildResources(db);
+			context.getRequest().setAttribute("User", thisUser);
+			context.getRequest().setAttribute("EmployeeBean", thisUser.getContact());
+		}
+		catch (Exception e) {
+			errorMessage = e;
+			e.printStackTrace(System.out);
+		}
+		this.freeConnection(context, db);
+
+		addModuleBean(context, "MyProfile", "");
 		return ("SettingsOK");
 	}
 
@@ -547,6 +599,30 @@ public final class MyCFS extends CFSModule {
 	 */
 	public String executeCommandUpdateSettings(ActionContext context) {
 		return ("UpdateSettingsOK");
+	}
+
+
+	/**
+	 *  Description of the Method
+	 *
+	 *@param  context           Description of Parameter
+	 *@param  db                Description of Parameter
+	 *@exception  SQLException  Description of Exception
+	 *@since
+	 */
+	protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
+		LookupList departmentList = new LookupList(db, "lookup_department");
+		departmentList.addItem(0, "--None--");
+		context.getRequest().setAttribute("DepartmentList", departmentList);
+    
+		LookupList phoneTypeList = new LookupList(db, "lookup_contactphone_types");
+		context.getRequest().setAttribute("ContactPhoneTypeList", phoneTypeList);
+
+		LookupList emailTypeList = new LookupList(db, "lookup_contactemail_types");
+		context.getRequest().setAttribute("ContactEmailTypeList", emailTypeList);
+
+		LookupList addressTypeList = new LookupList(db, "lookup_contactaddress_types");
+		context.getRequest().setAttribute("ContactAddressTypeList", addressTypeList);
 	}
 }
 

@@ -4,8 +4,9 @@
 <jsp:useBean id="ContactPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form action='/MyCFSProfile.do?command=UpdateProfile' method='post'>
+<form action='/MyCFSProfile.do?command=UpdateProfile&auto-populate=true' method='post'>
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile'">
 <input type="reset" value="Reset">
@@ -14,6 +15,9 @@
 <input type="hidden" name="empid" value="<%= EmployeeBean.getId() %>">
 <input type="hidden" name="id" value="<%= EmployeeBean.getId() %>">
 <input type="hidden" name="modified" value="<%= EmployeeBean.getModified() %>">
+<input type="hidden" name="orgId" value="<%= EmployeeBean.getOrgId() %>">
+<input type="hidden" name="typeId" value="<%= EmployeeBean.getTypeId() %>">
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>
@@ -31,6 +35,7 @@
       <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>
+  <tr><td nowrap class="formLabel">Department</td><td><%= DepartmentList.getHtmlSelect("department", EmployeeBean.getDepartment()) %></td></tr>
   <tr>
     <td nowrap class="formLabel">Title</td>
     <td><input type="text" name="title" value="<%= toHtmlValue(EmployeeBean.getTitle()) %>"></td>

@@ -38,6 +38,7 @@
     <forward name="MyProfileOK" resource="/mycfs_profile.jsp" layout="nav"/>
   </action>
   <action name="MyCFSProfile" class="com.darkhorseventures.cfsmodule.MyCFS">
+    <bean name="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
