@@ -9,7 +9,8 @@ import java.util.*;
  *
  *@author
  *@created    November 1, 2002
- *@version    $Id$
+ *@version    $Id: ActiveSurveyQuestion.java,v 1.4 2002/11/25 00:34:20 akhi_m
+ *      Exp $
  */
 public class ActiveSurveyQuestion {
   private int id = -1;
@@ -20,7 +21,7 @@ public class ActiveSurveyQuestion {
   private double average = 0.0;
   private boolean required = false;
   private ActiveSurveyQuestionItemList itemList = null;
-
+  private SurveyAnswerList answerList = null;
   private ArrayList responseTotals = new ArrayList();
   LinkedHashMap comments = null;
 
@@ -163,6 +164,26 @@ public class ActiveSurveyQuestion {
    */
   public void setItemList(ActiveSurveyQuestionItemList itemList) {
     this.itemList = itemList;
+  }
+
+
+  /**
+   *  Sets the answerList attribute of the ActiveSurveyQuestion object
+   *
+   *@param  answerList  The new answerList value
+   */
+  public void setAnswerList(SurveyAnswerList answerList) {
+    this.answerList = answerList;
+  }
+
+
+  /**
+   *  Gets the answerList attribute of the ActiveSurveyQuestion object
+   *
+   *@return    The answerList value
+   */
+  public SurveyAnswerList getAnswerList() {
+    return answerList;
   }
 
 
@@ -388,45 +409,6 @@ public class ActiveSurveyQuestion {
           thisItem.insert(db, this.getId());
         }
       }
-    }
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@param  numberOfComments  Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  public void buildComments(Connection db) throws SQLException {
-    comments = new LinkedHashMap();
-    int count = 5;
-    PreparedStatement pst = db.prepareStatement(
-        "SELECT " + (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 5 " : "") +
-        "sa.comments as comments, sr.contact_id as contactid " +
-        "FROM active_survey_answers sa, active_survey_responses sr " +
-        "WHERE question_id = ? AND (sa.response_id = sr.response_id) AND sa.comments <> '' " +
-        "ORDER BY sr.entered DESC " +
-        (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 5 " : ""));
-    int i = 0;
-    pst.setInt(++i, this.getId());
-    ResultSet rs = pst.executeQuery();
-    while (rs.next() && count > 0) {
-      ArrayList commentList = null;
-      Integer contactId = new Integer(rs.getInt("contactid"));
-      if (comments.containsKey(contactId)) {
-        commentList = (ArrayList) comments.get(contactId);
-      } else {
-        commentList = new ArrayList();
-        comments.put(contactId, commentList);
-      }
-      commentList.add(rs.getString("comments"));
-      count--;
-    }
-    rs.close();
-    if (pst != null) {
-      pst.close();
     }
   }
 
