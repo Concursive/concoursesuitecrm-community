@@ -19,6 +19,7 @@ public class PermissionCategoryList extends Vector {
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
+  private boolean customizableModulesOnly = false;
 
   private int enabledState = -1;
   private int activeState = -1;
@@ -46,6 +47,14 @@ public class PermissionCategoryList extends Vector {
   public void setActiveState(int tmp) { this.activeState = tmp; }
   public int getEnabledState() { return enabledState; }
   public int getActiveState() { return activeState; }
+  
+  public boolean getCustomizableModulesOnly() {
+    return customizableModulesOnly;
+  }
+  public void setCustomizableModulesOnly(boolean customizableModulesOnly) {
+    this.customizableModulesOnly = customizableModulesOnly;
+  }
+
 
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -139,6 +148,10 @@ public class PermissionCategoryList extends Vector {
     if (activeState != -1) {
       sqlFilter.append("AND active = ? ");
     }
+    if (customizableModulesOnly) {
+      sqlFilter.append("AND (lookups = ? OR folders = ?) ");
+    }      
+    
   }
 
   private int prepareFilter(PreparedStatement pst) throws SQLException {
@@ -148,6 +161,10 @@ public class PermissionCategoryList extends Vector {
     }
     if (activeState != -1) {
       pst.setBoolean(++i, activeState == Constants.TRUE);
+    }
+    if (customizableModulesOnly) {
+      pst.setBoolean(++i, true);
+      pst.setBoolean(++i, true);
     }
     return i;
   }
