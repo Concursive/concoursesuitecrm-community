@@ -100,11 +100,24 @@ Modify Message
           <td class="coolButton" onclick="document.all.edit.setUnderline(); document.all.edit.frameWindow.focus();">
             &nbsp;<u>Underline</u>&nbsp;
           </td>
+          <td>|</td>
           <td class="coolButton" onclick="document.all.edit.setColor('#000000'); document.all.edit.frameWindow.focus();">
             &nbsp;<font color="#000000">Black</font>&nbsp;
           </td>
           <td class="coolButton" onclick="document.all.edit.setColor('#0000FF'); document.all.edit.frameWindow.focus();">
             &nbsp;<font color="#0000FF">Blue</font>&nbsp;
+          </td>
+          <td class="coolButton" onclick="document.all.edit.setColor('#00FF00'); document.all.edit.frameWindow.focus();">
+            &nbsp;<font color="#00FF00">Green</font>&nbsp;
+          </td>
+          <td class="coolButton" onclick="document.all.edit.setColor('#FF7E00'); document.all.edit.frameWindow.focus();">
+            &nbsp;<font color="#FF7E00">Orange</font>&nbsp;
+          </td>
+          <td class="coolButton" onclick="document.all.edit.setColor('#FF0000'); document.all.edit.frameWindow.focus();">
+            &nbsp;<font color="#FF0000">Red</font>&nbsp;
+          </td>
+          <td class="coolButton" onclick="document.all.edit.setColor('#FFFF00'); document.all.edit.frameWindow.focus();">
+            &nbsp;<font color="#FFFF00">Yellow</font>&nbsp;
           </td>
         </tr>
       </table>
