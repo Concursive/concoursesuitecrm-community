@@ -41,7 +41,7 @@
       Company
     </td>
     <td align="center">
-      Enabled
+      Included
     </td>
   </tr>
 <%

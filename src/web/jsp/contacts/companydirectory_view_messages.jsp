@@ -46,7 +46,7 @@
       <%= ContactMessageListInfo.getSortIcon("name") %>
     </td>  
     <td valign=center width="20%" align=left>
-      <a href="/ExternalContacts.do?command=ViewMessages&column=active_date&contactId=<%=ContactDetails.getId()%>"><strong>Start Date</strong></a>
+      <a href="/ExternalContacts.do?command=ViewMessages&column=active_date&contactId=<%=ContactDetails.getId()%>"><strong>Run Date</strong></a>
       <%= ContactMessageListInfo.getSortIcon("active_date") %>
     </td> 
     <!--td valign=center align=left>
