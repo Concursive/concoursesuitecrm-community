@@ -49,7 +49,7 @@ function checkForm(form) {
     message += "- Commission entered is invalid\r\n";
     formTest = false;
   }
-  if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
+  if ((!form.component_alertDate.value == "") && (!checkAlertDate(form.component_alertDate.value))) { 
       alertMessage += "Alert Date is before today's date\r\n";
   }
   if (formTest == false) {
