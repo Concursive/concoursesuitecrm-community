@@ -677,6 +677,7 @@
     <forward name="CategoryJSListOK" resource="/troubletickets/troubletickets_js_categorylist.jsp"/>
     <forward name="DepartmentJSListOK" resource="/troubletickets/troubletickets_js_departmentlist.jsp"/>
     <forward name="OrganizationJSListOK" resource="/troubletickets/troubletickets_js_contactlist.jsp"/>
+    <forward name="ViewHistoryOK" resource="/accounts/accounts_tickets_history.jsp" layout="nav"/>
   </action>
   <action name="AccountTicketTasks" class="org.aspcfs.modules.accounts.actions.AccountTicketTasks">
     <bean name="TicketTask" class="org.aspcfs.modules.troubletickets.base.TicketTask" scope="request"/>
@@ -686,10 +687,26 @@
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="AddTaskOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=AccountTicketTasks"/>
     <forward name="PrepareTaskPopupOK" resource="/accounts/accounts_ticket_tasks_include.jsp" layout="style"/>
-    <forward name="ListTasksOK" resource="/accounts/accounts_tickets_details.jsp" layout="style"/>
+    <forward name="ListTasksOK" resource="/accounts/accounts_tickets_tasklist.jsp" layout="nav"/>
     <forward name="SaveOK" resource="/closepopupandreload.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+  </action>
+  <action name="AccountTicketsDocuments" class="org.aspcfs.modules.accounts.actions.AccountTicketsDocuments">
+    <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/accounts/accounts_tickets_documents_list.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/accounts/accounts_tickets_documents_upload.jsp" layout="nav"/>
+    <forward name="UploadOK" resource="/AccountTicketsDocuments.do?command=View"/>
+    <forward name="AddVersionOK" resource="/accounts/accounts_tickets_documents_addversion.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/accounts/accounts_tickets_documents_details.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/accounts/accounts_tickets_documents_modify.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/AccountTicketsDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/AccountTicketsDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/AccountTicketsDocuments.do?command=View"/>
   </action>
   <action name="AccountsDocuments" class="org.aspcfs.modules.accounts.actions.AccountsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
@@ -974,6 +991,7 @@
     <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
     <forward name="DeleteReportOK" resource="/TroubleTickets.do?command=Reports"/>
     <forward name="DeleteReportERROR" resource="/TroubleTickets.do?command=Reports"/>
+    <forward name="ViewHistoryOK" resource="/troubletickets/troubletickets_history.jsp" layout="nav"/>
   </action>
   <action name="TroubleTicketsDocuments" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
@@ -981,6 +999,15 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/troubletickets/troubletickets_documents_list.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/troubletickets/troubletickets_documents_upload.jsp" layout="nav"/>
+    <forward name="UploadOK" resource="/TroubleTicketsDocuments.do?command=View"/>
+    <forward name="AddVersionOK" resource="/troubletickets/troubletickets_documents_upload_version.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/troubletickets/troubletickets_documents_details.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/troubletickets/troubletickets_documents_modify.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/TroubleTicketsDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/TroubleTicketsDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/TroubleTicketsDocuments.do?command=View"/>
   </action>
   <action name="TroubleTicketTasks" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketTasks">
     <bean name="TicketTask" class="org.aspcfs.modules.troubletickets.base.TicketTask" scope="request"/>
@@ -990,7 +1017,7 @@
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="AddTaskOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=TroubleTicketTasks"/>
     <forward name="PrepareTaskPopupOK" resource="/troubletickets/troubletickets_taskform.jsp" layout="style"/>
-    <forward name="ListTasksOK" resource="/troubletickets/troubletickets_details.jsp" layout="style"/>
+    <forward name="ListTasksOK" resource="/troubletickets/troubletickets_tasklist.jsp" layout="nav"/>
     <forward name="SaveOK" resource="/closepopupandreload.jsp"/>
     <forward name="SendMessageOK" resource="/troubletickets/troubletickets_confirmsend.jsp" layout="nav"/>
     <forward name="ForwardMessageOK" resource="/troubletickets/troubletickets_forwardtask.jsp" layout="nav"/>
