@@ -12,104 +12,101 @@
 <a href="Admin.do">Setup</a> >
 Add User<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding=6 cellspacing=0 border=1 width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <% if (request.getAttribute("actionError") != null) { %>
   <%= showError(request, "actionError") %>
 <%}%>
-  <tr>
-    <td colspan=2 align="left" bgcolor="#DEE0FA">
-    <strong>Add a CFS User account</strong>
+  <tr class="title">
+    <td colspan="2">
+    <strong>Add a user account</strong>
     </td>
   </tr>
-  
-  
   <tr>
-    <td width="100" class="formLabel" valign="top">
+    <td class="formLabel">
       Contact
     </td>
-    <td align="left">
-      <table border="0" cellspacing="0" cellpadding="0">
-      <tr>
-        <td align="left" width="80" nowrap>
-          <a href="javascript:popContactsListSingle('contactLink','changecontact','nonUsersOnly=true&reset=true&filters=mycontacts|accountcontacts|employees');"><div id="changecontact">&nbsp;None Selected</div></a>
-          <input type="hidden" name="contactId" id="contactLink">
-      </td>
-      <td align="left" nowrap>
-        <a href="javascript:popURL('ExternalContacts.do?command=InsertContactForm&popup=true', 'New_Contact','500','600','yes','yes');">Add New</a>
-        <%if (request.getAttribute("contactIdError") != null) {%>
-          <br><%= showAttribute(request, "contactIdError") %>
-        <%}%>
-      </td>
-      </tr>
+    <td>
+      <table border="0" cellspacing="0" cellpadding="4">
+        <tr>
+          <td valign="top" nowrap>
+            <div id="changecontact">None Selected</div>
+          </td>
+          <td valign="top" width="100%" nowrap>
+            [<a href="javascript:popContactsListSingle('contactLink','changecontact','nonUsersOnly=true&reset=true&filters=mycontacts|accountcontacts|employees');">Select Contact</a>]
+            <input type="hidden" name="contactId" id="contactLink">
+            [<a href="javascript:popURL('ExternalContacts.do?command=InsertContactForm&popup=true', 'New_Contact','500','600','yes','yes');">Create new contact</a>]
+          <%if (request.getAttribute("contactIdError") != null) {%>
+            <br><%= showAttribute(request, "contactIdError") %>
+          <%}%>
+          </td>
+        </tr>
       </table>
     </td>
   </tr>
-	
-  
 	<tr>
-    <td width="100" class="formLabel">
+    <td class="formLabel">
       Unique Username
     </td>
-    <td valign="center">
-      <input type="text" name="username" value="<%= toHtmlValue(UserRecord.getUsername()) %>"><font color=red>*</font> <%= showAttribute(request, "usernameError") %>
+    <td>
+      <input type="text" name="username" value="<%= toHtmlValue(UserRecord.getUsername()) %>"><font color=red>*</font>
+      <%= showAttribute(request, "usernameError") %>
     </td>
-  </tr>   
-  
+  </tr>
 	<tr>
-    <td width="100" class="formLabel">
+    <td class="formLabel">
       Password
     </td>
-    <td valign="center">
-     <input type="password" name="password1"><font color=red>*</font> <%= showAttribute(request, "password1Error") %>
+    <td>
+     <input type="password" name="password1"><font color=red>*</font>
+     <%= showAttribute(request, "password1Error") %>
     </td>
-  </tr>    
-  
+  </tr>
 	<tr>
-    <td width="100" class="formLabel">
+    <td class="formLabel">
       Password (again)
     </td>
-    <td valign="center">
-     <input type="password" name="password2"><font color=red>*</font> <%= showAttribute(request, "password2Error") %>
+    <td>
+     <input type="password" name="password2"><font color=red>*</font>
+     <%= showAttribute(request, "password2Error") %>
     </td>
-  </tr> 
-  
+  </tr>
 	<tr>
-    <td width="100" class="formLabel">
+    <td class="formLabel">
       Role
     </td>
-    <td valign="center">
-      <%= RoleList.getHtmlSelect("roleId", UserRecord.getRoleId()) %><font color="red">*</font> <%= showAttribute(request, "roleError") %>
+    <td>
+      <%= RoleList.getHtmlSelect("roleId", UserRecord.getRoleId()) %><font color="red">*</font>
+      <%= showAttribute(request, "roleError") %>
     </td>
-  </tr>  
-  
+  </tr>
 	<tr>
-    <td width="100" class="formLabel">
+    <td class="formLabel">
       Reports To
     </td>
-    <td valign="center">
+    <td>
       <%= UserList.getHtmlSelect("managerId", UserRecord.getManagerId()) %>
       <%= showAttribute(request, "managerIdError") %>
     </td>
-  </tr>   
-  
+  </tr>
+<dhv:permission name="demo-view">
 	<tr>
-    <td width="100" class="formLabel">
+    <td class="formLabel">
       Alias User
     </td>
-    <td valign="center">
+    <td>
       <%= UserList.getHtmlSelect("alias", UserRecord.getAlias()) %>
     </td>
-  </tr>   
-  
+  </tr>
+</dhv:permission>
 	<tr>
-    <td width="100" class="formLabel">
+    <td class="formLabel">
       Expire Date
     </td>
-    <td valign="center">
-      <input type=text size=10 name="expires" value="">
+    <td>
+      <input type="text" size="10" name="expires" value="">
       <a href="javascript:popCalendar('addUser', 'expires');">Date</a> (mm/dd/yyyy)
     </td>
-  </tr>   
+  </tr>
 </table>
 <br>
 <input type="submit" value="Add User">
