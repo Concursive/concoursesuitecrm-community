@@ -187,4 +187,13 @@ CREATE TABLE field_types (
   display_text varchar(50)
 );
 
+CREATE TABLE survey_answer (
+  id SERIAL primary key,
+  question_id int not null,
+  comments VARCHAR(100) default null,
+  quant_ans int DEFAULT -1,
+  text_ans VARCHAR(100) DEFAULT null,
+  enteredby int not null
+);
+
 

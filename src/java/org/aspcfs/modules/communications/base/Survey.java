@@ -10,7 +10,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 
-
 public class Survey extends GenericBean {
 
   private int id = -1;
@@ -23,6 +22,7 @@ public class Survey extends GenericBean {
   private int messageId = -1;
   
   private SurveyItemList items = new SurveyItemList();
+  private SurveyAnswerList answers = new SurveyAnswerList();
   
   private int enteredBy = -1;
   private int modifiedBy = -1;
@@ -38,7 +38,13 @@ public class Survey extends GenericBean {
   public Survey(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-  
+  public SurveyAnswerList getAnswers() {
+	return answers;
+}
+public void setAnswers(SurveyAnswerList answers) {
+	this.answers = answers;
+}
+
   public String getEnteredByName() { return enteredByName; }
 public String getModifiedByName() { return modifiedByName; }
 public void setEnteredByName(String tmp) { this.enteredByName = tmp; }
@@ -92,6 +98,11 @@ public void setModifiedByName(String tmp) { this.modifiedByName = tmp; }
   public void setRequestItems(HttpServletRequest request) {
     items = new SurveyItemList(request);
   }
+  
+  public void setAnswerItems(HttpServletRequest request) {
+  answers = new SurveyAnswerList(request);
+}
+  
  public int getItemsId() {
 	return itemsId;
 }

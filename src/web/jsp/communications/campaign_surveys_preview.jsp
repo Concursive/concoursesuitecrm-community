@@ -72,7 +72,7 @@
 								<td width=100% valign="center">
 									<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 									<tr class="containerHeader">
-									<td colspan=7 width=100% valign="center">
+									<td colspan=7 valign="center">
 									<%= thisField.getRowListElement(k, (thisField.getType() == CustomField.ROWLIST)) %>
 									</td>
 									</tr>
@@ -88,7 +88,24 @@
 									<td valign=center align=center><input name="ans<%=k%>" type="radio"></td>
 									<%}%>
 									</tr>
+									
+									<% if (request.getParameter("type") != null) {
+										if (Integer.parseInt(request.getParameter("type")) == 3) {%>
+											<tr class="containerBody">
+											<td width=15% valign=center align=right>
+											Comments
+											</td>
+											<td colspan=6 valign=center><input type="text" size=40 name="comments<%=k%>"></td>
+											</tr>
+										<%}%>
+									<%}%>
+			
+									
 									</table>
+									
+															
+					
+									
 								</td>
 								</tr>
 								<%}%>

@@ -53,5 +53,37 @@ public final class ProcessSurvey extends CFSModule {
 	}
 
   }
+  
+  public String executeCommandInsert(ActionContext context) throws SQLException {
+	Exception errorMessage = null;
+	ConnectionPool sqlDriver = null;
+	Connection db = null;
+	
+	Survey thisSurvey = new Survey();
+	thisSurvey.setAnswerItems(context.getRequest());
+	
+	try {
+		AuthenticationItem auth = new AuthenticationItem();
+		db = auth.getConnection(context, false);
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	//Insert the answers
+	Iterator ans = thisSurvey.getAnswers().iterator();
+	while (ans.hasNext()) {
+		SurveyAnswer thisAnswer = (SurveyAnswer) ans.next();
+		thisAnswer.insert(db, -1);
+	}
+	
+	if (errorMessage == null) {
+		return ("InsertOK");
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+  }
 }
 

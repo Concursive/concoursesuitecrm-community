@@ -94,3 +94,15 @@ insert into lookup_survey_types (description) values ('Quantitative (with commen
 
 alter table campaign add column survey_id int;
 
+/** all aspcfs updated with everything before this line 6/17/02
+*/
+
+CREATE TABLE survey_answer (
+  id SERIAL primary key,
+  question_id int not null,
+  comments VARCHAR(100) default null,
+  quant_ans int DEFAULT -1,
+  text_ans VARCHAR(100) DEFAULT null,
+  enteredby int not null
+);
+

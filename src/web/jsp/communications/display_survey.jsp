@@ -1,5 +1,6 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="CustomFormInfo" class="com.darkhorseventures.controller.CustomForm" scope="request"/>
+<jsp:useBean id="Survey" class="com.darkhorseventures.cfsbase.Survey" scope="request"/>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.controller.CustomFormTab,com.darkhorseventures.controller.CustomFormGroup" %>
 <%@ include file="initPage.jsp" %>
 
@@ -11,7 +12,7 @@
 <link rel="stylesheet" href="css/template0.css" type="text/css">
 </head>
 
-<body leftmargin=0 rightmargin=0 margin=0 marginwidth=0 topmargin=0 marginheight=0>
+<body>
 
 <% if (CustomFormInfo.getReturnLink() != null && !(CustomFormInfo.getReturnLink().equals(""))) {%>
 <a href="<%=CustomFormInfo.getReturnLink()%>"><%=CustomFormInfo.getReturnLinkText()%></a>
@@ -84,6 +85,7 @@
 									<tr class="containerHeader">
 									<td colspan=7 width=100% valign="center">
 									<%= thisField.getRowListElement(k, (thisField.getType() == CustomField.ROWLIST)) %>
+									<input type="hidden" name="quest<%=k%>id" value="<%= ((SurveyItem)Survey.getItems().get(k-1)).getId() %>">
 									</td>
 									</tr>
 									
@@ -95,9 +97,20 @@
 									
 									<tr class="containerBody">
 									<% for(int z=1; z<8; z++) {%>
-									<td valign=center align=center><input name="ans<%=k%>" type="radio"></td>
+									<td valign=center align=center><input name="quest<%=k%>qans" value="<%=z%>" type="radio"></td>
 									<%}%>
 									</tr>
+									
+									
+									<%if (Survey.getType() == 3) {%>
+									<tr class="containerBody">
+									<td width=15% valign=center align=right>
+									Comments
+									</td>
+									<td colspan=6 valign=center><input type="text" size=40 name="quest<%=k%>comments"></td>
+									</tr>
+									<%}%>
+									
 									</table>
 								</td>
 								</tr>

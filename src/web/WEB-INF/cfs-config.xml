@@ -18,6 +18,7 @@
   <action name="ProcessSurvey" class="com.darkhorseventures.cfsmodule.ProcessSurvey">
     <forward name="SystemError" resource="/error_system.jsp"/>
     <forward name="ViewOK" resource="/display_survey.jsp"/>
+    <forward name="InsertOK" resource="/survey_thanks.jsp"/>
   </action>
 	
   <action name="ProcessMessage" class="com.darkhorseventures.cfsmodule.ProcessMessage">
