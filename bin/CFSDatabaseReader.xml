@@ -577,6 +577,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
+<!-- Coded directly to handle multiple lookups per field    
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="savedCriteriaElement" table="saved_criteriaelement">
       <property lookup="searchCriteriaElements" field="id">savedCriteriaListId</property>
       <property lookup="searchFieldElement" field="field">fieldId</property>
@@ -584,6 +585,7 @@
       <property lookup="fieldTypes" field="operatorid">operatorId</property>
       <property field="value">value</property>
     </map>
+-->
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="searchFieldElement" table="search_fields" uniqueField="id">
       <property alias="guid" field="id"/>
       <property field="field"/>
