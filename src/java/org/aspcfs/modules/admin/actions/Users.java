@@ -238,6 +238,8 @@ public final class Users extends CFSModule {
       RoleList roleList = new RoleList();
       roleList.setBuildUsers(false);
       roleList.setEmptyHtmlSelectRecord("-- Please Select --");
+      roleList.setRoleType(Constants.ROLETYPE_REGULAR);
+      roleList.setEnabledState(Constants.TRUE);
       roleList.buildList(db);
       context.getRequest().setAttribute("RoleList", roleList);
       //Prepare the user drop-down
@@ -578,6 +580,8 @@ public final class Users extends CFSModule {
       RoleList roleList = new RoleList();
       roleList.setBuildUsers(false);
       roleList.setEmptyHtmlSelectRecord("-- None --");
+      roleList.setEnabledState(Constants.TRUE);
+      roleList.setRoleType(Constants.ROLETYPE_REGULAR);
       roleList.buildList(db);
       context.getRequest().setAttribute("RoleList", roleList);
     } catch (Exception e) {
@@ -622,7 +626,9 @@ public final class Users extends CFSModule {
         RoleList roleList = new RoleList();
         roleList.setBuildUsers(false);
         roleList.setEmptyHtmlSelectRecord("-- None --");
-        roleList.buildList(db);
+        roleList.setEnabledState(Constants.TRUE);
+        roleList.setRoleType(Constants.ROLETYPE_REGULAR);
+      roleList.buildList(db);
         context.getRequest().setAttribute("RoleList", roleList);
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("generatePass") != null) {
