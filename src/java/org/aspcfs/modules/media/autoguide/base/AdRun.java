@@ -15,7 +15,7 @@ public class AdRun {
   private int id = -1;
   private int inventoryId = -1;
   private java.sql.Date runDate = null;
-  private int adType = -1;
+  private int adTypeId = -1;
   private String adTypeName = null;
   private boolean includePhoto = false;
   private java.sql.Date completeDate = null;
@@ -72,6 +72,10 @@ public class AdRun {
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
   }
+  
+  public void setInventoryId(String tmp) {
+    this.inventoryId = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -105,8 +109,12 @@ public class AdRun {
    *
    *@param  tmp  The new adType value
    */
+  public void setAdTypeId(int tmp) {
+    this.adTypeId = tmp;
+  }
+  
   public void setAdType(int tmp) {
-    this.adType = tmp;
+    this.adTypeId = tmp;
   }
 
 
@@ -116,7 +124,11 @@ public class AdRun {
    *@param  tmp  The new adType value
    */
   public void setAdType(String tmp) {
-    this.adType = Integer.parseInt(tmp);
+    this.adTypeId = Integer.parseInt(tmp);
+  }
+  
+  public void setAdTypeId(String tmp) {
+    this.adTypeId = Integer.parseInt(tmp);
   }
 
 
@@ -280,6 +292,10 @@ public class AdRun {
   public int getAdType() {
     return adType;
   }
+  
+  public int getAdTypeId() {
+    return adTypeId;
+  }
 
 
   /**
@@ -382,7 +398,7 @@ public class AdRun {
     int i = 0;
     pst.setInt(++i, inventoryId);
     pst.setDate(++i, runDate);
-    pst.setInt(++i, adType);
+    pst.setInt(++i, adTypeId);
     pst.setBoolean(++i, includePhoto);
     if (completeDate == null) {
       pst.setNull(++i, java.sql.Types.DATE);
@@ -391,8 +407,8 @@ public class AdRun {
       pst.setDate(++i, completeDate);
       pst.setInt(++i, completedBy);
     }
-    pst.setInt(++i, modifiedBy);
-    pst.setInt(++i, modifiedBy);
+    pst.setInt(++i, enteredBy);
+    pst.setInt(++i, enteredBy);
     pst.execute();
     pst.close();
   }
@@ -424,7 +440,7 @@ public class AdRun {
       PreparedStatement pst = db.prepareStatement(sql.toString());
       int i = 0;
       pst.setDate(++i, runDate);
-      pst.setInt(++i, adType);
+      pst.setInt(++i, adTypeId);
       pst.setBoolean(++i, includePhoto);
       if (completeDate == null) {
         pst.setNull(++i, java.sql.Types.DATE);
@@ -499,7 +515,7 @@ public class AdRun {
     id = rs.getInt("ad_run_id");
     inventoryId = rs.getInt("inventory_id");
     runDate = rs.getDate("run_date");
-    adType = rs.getInt("ad_type");
+    adTypeId = rs.getInt("ad_type");
     includePhoto = rs.getBoolean("include_photo");
     completeDate = rs.getDate("complete_date");
     completedBy = rs.getInt("completedby");

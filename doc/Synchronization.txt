@@ -132,81 +132,173 @@ Client #1 Ends Synchronization
   no longer be on the client
 
   
-Sync protocol examples:
+Sync protocol:
+
+getTime
+  <time>  set your nextAnchor to this
+  
+syncStart
+  lastAnchor
+  
+sync
+  previousAnchor
+  nextAnchor
+
+insert
+update
+
+
+syncEnd
+  nextAnchor
 
 ...Client verifies sync mode:
 
-<?xml version="1.0" standalone="yes"?> 
+<?xml version="1.0" standalone="yes"?>
 <app>
   <authentication>
-    <id>ds21.darkhorseventures.com</id> 
-    <code>BZTST27A</code> 
-    <client>autoguide</client> 
-    <clientId>*PUT YOUR ID HERE*</clientId>
+    <id>ds21.darkhorseventures.com</id>
+    <code>BZTST27A</code>
+    <systemId>2</systemId>
+    <clientId>1</clientId>
+    <lastAnchor/>
+    <nextAnchor>2002-04-20 15:30:30</nextAnchor>
   </authentication>
-  <meta>
-    <property>sync_mode</property>
-  </meta>
-  <transaction id="10">
-    <syncClient action="select">
-      <anchor/>
-    </syncClient>
+  <transaction id="5">
+    <syncClient action="syncStart"/>
   </transaction>
 </app>
 
-...Client sends changes:
+...If error, client will need to resync all data...tbd,
+...else continue with sync
+
+...Client syncs tables from internal list of tables
+
+<app>
+  <authentication>
+    <id>ds21.darkhorseventures.com</id>
+    <code>BZTST27A</code>
+    <systemId>2</systemId>
+    <clientId>93</clientId>
+    <lastAnchor/>
+    <nextAnchor>2002-5-2 20:12:26</nextAnchor>
+    </authentication>
+      <transaction id="2">
+      <meta>
+      <property>guid</property>
+      <property>name</property>
+      <property>enteredBy</property>
+      <property>modified</property>
+      <property>modifiedBy</property>
+    </meta>
+    <makeList action="sync" id entity="1"/>
+  </transaction>
+</app>
+
+<app>
+  <authentication>
+    <id>ds21.darkhorseventures.com</id>
+    <code>BZTST27A</code>
+    <systemId>2</systemId>
+    <clientId>93</clientId>
+    <lastAnchor/>
+    <nextAnchor>2002-5-2 23:12:13</nextAnchor>
+  </authentication>
+  <transaction id="3">
+    <meta>
+      <property>guid</property>
+      <property>name</property>
+      <property>make.guid</property>
+      <property>enteredBy</property>
+      <property>modified</property>
+      <property>modifiedBy</property>
+    </meta>
+    <modelList action="sync" identity="1"/>
+  </transaction>
+</app>
+
+<app>
+  <authentication>
+    <id>ds21.darkhorseventures.com</id>
+    <code>BZTST27A</code>
+    <systemId>2</systemId>
+    <clientId>93</clientId>
+    <lastAnchor/>
+    <nextAnchor>2002-4-30 20:12:7</nextAnchor>
+  </authentication>
+  <transaction id="2">
+    <meta>
+      <property>guid</property>
+      <property>year</property>
+      <property>make.guid</property>
+      <property>model.guid</property>
+      <property>enteredBy</property>
+      <property>modified</property>
+      <property>modifiedBy</property>
+      <property></property>
+    </meta>
+    <vehicleList action="sync" identity="1" offset="0" items="100">
+      <year>1985</year>
+    </vehicleList>
+  </transaction>
+</app>
+
+
+
+...Client inserts a vehicle with options and ad runs:
 
 <?xml version="1.0" standalone="yes"?> 
 <app>
   <authentication>
-    <id>ds21.darkhorseventures.com</id> 
+    <id>ds21.darkhorseventures.com</id>
     <code>BZTST27A</code> 
-    <client>autoguide</client> 
+    <systemId>2</systemId>
     <clientId>*PUT YOUR ID HERE*</clientId>
+    <lastAnchor/>
+    <nextAnchor>2002-04-27 14:30:30</nextAnchor>
   </authentication>
   <transaction id="11">
-    <vehicle action="insert">
-      <guid>200204151112105</guid>
-      <entered>4/4/2002</entered>
+    <meta>
+      <property>guid</property>
+    </meta>
+    <accountInventory action="insert">
+      <guid>10</guid>
+      <vehicleGuid>1089</vehicleGuid>
       <enteredBy>2</enteredBy>
-      <modified></modified>
-      <modifiedBy></modifiedBy>
-      <VIN>12ABCVDGDFAGSFDH</VIN>
-      <adType>2</adType>
-      <year>2000</year>
-      <makeNo>8</makeNo>
-      <modelNo>50</modelNo>
-      <mileage>34233</mileage>
-      <status></status>
-      <comments></comments>
-      <stockNo></stockNo>
-      <extColor></extColor>
-      <intColor></intColor>
-      <sellingPrice></sellingPrice>
-      <recordStatusNo></recordStatusNo>
-      <recordStatusDate></recordStatusDate>
-    </vehicle>
-    <vehicle action="update">
-      <guid>200204131317115</guid>
-      <entered>4/4/2002</entered>
-      <enteredBy>2</enteredBy>
-      <modified></modified>
-      <modifiedBy></modifiedBy>
-      <VIN>12ABCVDGDFAGSFDH</VIN>
-      <adType>2</adType>
-      <year>1999</year>
-      <makeNo>4</makeNo>
-      <modelNo>46</modelNo>
-      <mileage>44237</mileage>
-      <status></status>
-      <comments></comments>
-      <stockNo></stockNo>
-      <extColor></extColor>
-      <intColor></intColor>
-      <sellingPrice></sellingPrice>
-      <recordStatusNo></recordStatusNo>
-      <recordStatusDate></recordStatusDate>
-    </vehicle>
+      <stockNo>aaa</stockNo>
+      <mileage>123</mileage>
+      <vin>XCV</vin>
+      <sellingPrice>1234</sellingPrice>
+      <exteriorColor>red</exteriorColor>
+      <condition>condition</condition>
+      <comments>additional text</comments>
+      <sold>false</sold>
+    </accountInventory>
+    <inventoryOption action="insert">
+      <guid>1</guid>
+      <inventoryGuid>10</inventoryGuid>
+    </inventoryOption>
+    <inventoryOption action="insert">
+      <guid>2</guid>
+      <inventoryGuid>10</inventoryGuid>
+    </inventoryOption>
+    <inventoryOption action="insert">
+      <guid>3</guid>
+      <inventoryGuid>10</inventoryGuid>
+    </inventoryOption>
+    <inventoryAdRun action="insert">
+      <inventoryGuid>10</inventoryGuid>
+      <runDate>2002-05-10</runDate>
+      <adTypeGuid>3</adTypeGuid>
+      <includePhoto>true</includePhoto>
+      <enteredBy>10</enteredBy>
+    </inventoryAdRun>
+    <inventoryAdRun action="insert">
+      <inventoryGuid>10</inventoryGuid>
+      <runDate>2002-05-17</runDate>
+      <adTypeGuid>3</adTypeGuid>
+      <includePhoto>false</includePhoto>
+      <enteredBy>10</enteredBy>
+    </inventoryAdRun>
   </transaction>
 </app>
   
@@ -217,8 +309,10 @@ Sync protocol examples:
   <authentication>
     <id>ds21.darkhorseventures.com</id> 
     <code>BZTST27A</code> 
-    <client>autoguide</client> 
+    <systemId>2</systemId>
     <clientId>*PUT YOUR ID HERE*</clientId>
+    <lastAnchor/>
+    <nextAnchor>2002-04-27 14:30:30</nextAnchor>
   </authentication>
   <transaction id="12">
     <meta>
@@ -253,7 +347,7 @@ Sync protocol examples:
   <authentication>
     <id>ds21.darkhorseventures.com</id> 
     <code>BZTST27A</code> 
-    <client>autoguide</client> 
+    <systemId>2</systemId>
     <clientId>*PUT YOUR ID HERE*</clientId>
   </authentication>
   <transaction id="14">

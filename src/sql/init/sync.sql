@@ -17,14 +17,19 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 /* AUTO GUIDE */
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'syncClient', 'com.darkhorseventures.cfsbase.SyncClient', 10);
+ VALUES (2, 'syncClient', 'com.darkhorseventures.cfsbase.SyncClient', 2);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'user', 'com.darkhorseventures.cfsbase.User', 20);
+ VALUES (2, 'user', 'com.darkhorseventures.cfsbase.User', 4);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'accountInventory', 'com.darkhorseventures.autoguide.base.Inventory', 20);
+ VALUES (2, 'accountInventory', 'com.darkhorseventures.autoguide.base.Inventory', 6);
 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
+ VALUES (2, 'inventoryOption', 'com.darkhorseventures.autoguide.base.Option', 8);
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
+ VALUES (2, 'inventoryAdRun', 'com.darkhorseventures.autoguide.base.AdRun', 10);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
  VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 30,
@@ -53,6 +58,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
        make_id              int NOT NULL,
        make_name            nvarchar(20) NULL,
        record_status_id     int NULL,
+       entered              datetime NULL,
        modified             datetime NULL,
        enteredby            int NULL,
        modifiedby           int NULL,
@@ -88,6 +94,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
        make_id              int NULL,
        record_status_id     int NULL,
        model_name           nvarchar(40) NULL,
+       entered              datetime NULL,
        modified             datetime NULL,
        enteredby            int NULL,
        modifiedby           int NULL,
@@ -123,6 +130,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
        model_id             int NULL,
        make_id              int NULL,
        record_status_id     int NULL,
+       entered              datetime NULL,
        modified             datetime NULL,
        enteredby            int NULL,
        modifiedby           int NULL,
@@ -220,7 +228,6 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
        vin                  nvarchar(20) NULL,
        vehicle_id           int NULL,
        account_id           int NULL,
-       adtype               nvarchar(20) NULL,
        mileage              nvarchar(20) NULL,
        enteredby            int NULL,
        new                  bit,
@@ -232,7 +239,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
        invoice_price        money NULL,
        selling_price        money NULL,
        modified             datetime NULL,
-       status               nvarchar(20) NULL,
+       sold                 int NULL,
        modifiedby           int NULL,
        record_status_id     int NULL,
        entered              datetime NULL,
@@ -241,6 +248,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
                              REFERENCES vehicle (vehicle_id), 
        FOREIGN KEY (account_id)
                              REFERENCES account (account_id), 
+       FOREIGN KEY (modifiedby)
+                             REFERENCES users (user_id), 
        FOREIGN KEY (record_status_id)
                              REFERENCES status_master (record_status_id)
 )'
@@ -251,6 +260,14 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 'CREATE INDEX XIF10account_inventory ON account_inventory
 (
        record_status_id
+)'
+);
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
+ VALUES (2, 'XIF10account_inventory', null, 210,
+'CREATE INDEX XIF11account_inventory ON account_inventory
+(
+       modifiedby
 )'
 );
 
@@ -333,26 +350,40 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'adRunList', 'com.darkhorseventures.autoguide.base.adRunList', 310,
+ VALUES (2, 'ad_type', 'com.darkhorseventures.autoguide.base.adRunList', 385,
+'CREATE TABLE ad_type (
+       ad_type_id           int NOT NULL,
+       ad_type_name         nvarchar(20) NULL,
+       PRIMARY KEY (ad_type_id)
+)'
+);
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
+ VALUES (2, 'adRunList', 'com.darkhorseventures.autoguide.base.adRunList', 390,
 'CREATE TABLE ad_run (
-       inventory_id         int NOT NULL,
+       ad_run_id            int NOT NULL,
        record_status_id     int NULL,
-       start_date           datetime NULL,
-       end_date             datetime NULL,
+       inventory_id         int NOT NULL,
+       ad_type_id           int NULL,
+       ad_run_date          datetime NULL,
+       has_picture          int NULL,
        modified             datetime NULL,
        entered              datetime NULL,
        modifiedby           int NULL,
        enteredby            int NULL,
+       PRIMARY KEY (ad_run_id), 
        PRIMARY KEY (inventory_id), 
        FOREIGN KEY (inventory_id)
                              REFERENCES account_inventory (inventory_id), 
+       FOREIGN KEY (ad_type_id)
+                             REFERENCES ad_type (ad_type_id), 
        FOREIGN KEY (record_status_id)
                              REFERENCES status_master (record_status_id)
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF22ad_run', null, 320,
+ VALUES (2, 'XIF22ad_run', null, 400,
 'CREATE INDEX XIF22ad_run ON ad_run
 (
        record_status_id
@@ -360,7 +391,23 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'inventory_picture', null, 280,
+ VALUES (2, 'XIF36ad_run', null, 402,
+'CREATE INDEX XIF36ad_run ON ad_run
+(
+       ad_type_id
+)'
+);
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
+ VALUES (2, 'XIF37ad_run', null, 404,
+'CREATE INDEX XIF37ad_run ON ad_run
+(
+       inventory_id
+)'
+);
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
+ VALUES (2, 'inventory_picture', null, 410,
 'CREATE TABLE inventory_picture (
        picture_name         nvarchar(20) NOT NULL,
        inventory_id         int NOT NULL,
@@ -378,7 +425,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF23inventory_picture', null, 290,
+ VALUES (2, 'XIF23inventory_picture', null, 420,
 'CREATE INDEX XIF23inventory_picture ON inventory_picture
 (
        record_status_id
@@ -386,7 +433,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF32inventory_picture', null, 300,
+ VALUES (2, 'XIF32inventory_picture', null, 430,
 'CREATE INDEX XIF32inventory_picture ON inventory_picture
 (
        inventory_id
@@ -394,7 +441,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'preferences', null, 390,
+ VALUES (2, 'preferences', null, 440,
 'CREATE TABLE preferences (
        user_id              int NOT NULL,
        record_status_id     int NULL,
@@ -408,7 +455,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF29preferences', null, 400,
+ VALUES (2, 'XIF29preferences', null, 450,
 'CREATE INDEX XIF29preferences ON preferences
 (
        record_status_id
@@ -416,7 +463,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'user_account', null, 240,
+ VALUES (2, 'user_account', null, 460,
 'CREATE TABLE user_account (
        user_id              int NOT NULL,
        account_id           int NOT NULL,
@@ -433,7 +480,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF14user_account', null, 250,
+ VALUES (2, 'XIF14user_account', null, 470,
 'CREATE INDEX XIF14user_account ON user_account
 (
        user_id
@@ -441,7 +488,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF15user_account', null, 260,
+ VALUES (2, 'XIF15user_account', null, 480,
 'CREATE INDEX XIF15user_account ON user_account
 (
        account_id
@@ -449,7 +496,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF17user_account', null, 270,
+ VALUES (2, 'XIF17user_account', null, 490,
 'CREATE INDEX XIF17user_account ON user_account
 (
        record_status_id
