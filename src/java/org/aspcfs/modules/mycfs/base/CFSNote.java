@@ -8,9 +8,22 @@ import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
-
+/**
+ *  Description of the Class
+ *
+ *@author     chris price
+ *@created    February 21, 2002
+ *@version
+ */
 public class CFSNote extends GenericBean {
+
+  public final static int CALL = 1;
+
+  public final static int NEW = 0;
+  public final static int READ = 1;
+  public final static int OLD = 2;
 
   private int id = -1;
   private String subject = "";
@@ -25,22 +38,35 @@ public class CFSNote extends GenericBean {
   private boolean enabled = true;
   private String sentName = "";
   private int type = -1;
-  
+
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
-  
-  public final static int CALL = 1;
-  
-  public final static int NEW = 0;
-  public final static int READ = 1;
-  public final static int OLD = 2;
 
+
+  /**
+   *  Constructor for the CFSNote object
+   */
   public CFSNote() { }
 
+
+  /**
+   *  Constructor for the CFSNote object
+   *
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public CFSNote(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
 
+
+  /**
+   *  Constructor for the CFSNote object
+   *
+   *@param  db                Description of Parameter
+   *@param  noteId            Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public CFSNote(Connection db, String noteId) throws SQLException {
 
     Statement st = null;
@@ -48,14 +74,13 @@ public class CFSNote extends GenericBean {
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-
-		      "SELECT m.*, ml.*, ct_sent.namefirst as sent_namefirst, ct_sent.namelast as sent_namelast " +
-		      "FROM cfsinbox_message m " +
-		      "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
-		      "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
-		      "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
-		      "LEFT JOIN cfsinbox_messagelink ml ON (m.id = ml.id) " +
-		      "WHERE m.id > -1 ");
+        "SELECT m.*, ml.*, ct_sent.namefirst as sent_namefirst, ct_sent.namelast as sent_namelast " +
+        "FROM cfsinbox_message m " +
+        "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
+        "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
+        "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
+        "LEFT JOIN cfsinbox_messagelink ml ON (m.id = ml.id) " +
+        "WHERE m.id > -1 ");
 
     if (noteId != null && !noteId.equals("")) {
       sql.append("AND m.id = " + noteId + " ");
@@ -75,23 +100,15 @@ public class CFSNote extends GenericBean {
     rs.close();
     st.close();
   }
-  public String getSentName() {
-	return sentName;
-}
-public void setSentName(String sentName) {
-	this.sentName = sentName;
-}
 
-public String getStatusText () {
-	if (status == 0) {
-		return ("Unread");
-	} else if (status == 1) {
-		return ("Read");
-	} else {
-		return ("Archived");
-	}
-}
 
+  /**
+   *  Constructor for the CFSNote object
+   *
+   *@param  db                Description of Parameter
+   *@param  noteId            Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public CFSNote(Connection db, int noteId) throws SQLException {
 
     Statement st = null;
@@ -99,13 +116,13 @@ public String getStatusText () {
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-		      "SELECT m.*, ml.*, ct_sent.namefirst as sent_namefirst, ct_sent.namelast as sent_namelast " +
-		      "FROM cfsinbox_message m " +
-		      "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
-		      "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
-		      "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
-		      "LEFT JOIN cfsinbox_messagelink ml ON (m.id = ml.id) " +
-		      "WHERE m.id > -1 ");
+        "SELECT m.*, ml.*, ct_sent.namefirst as sent_namefirst, ct_sent.namelast as sent_namelast " +
+        "FROM cfsinbox_message m " +
+        "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
+        "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
+        "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
+        "LEFT JOIN cfsinbox_messagelink ml ON (m.id = ml.id) " +
+        "WHERE m.id > -1 ");
 
     if (noteId > -1) {
       sql.append("AND m.id = " + noteId + " ");
@@ -125,27 +142,241 @@ public String getStatusText () {
     rs.close();
     st.close();
   }
-  
-public int getType() {
-	return type;
-}
-public void setType(int type) {
-	this.type = type;
-}
-public void setType(String type) {
-	this.type = Integer.parseInt(type);
-}
 
 
-  public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
-  public void setModified(String tmp) { 
+  /**
+   *  Sets the sentName attribute of the CFSNote object
+   *
+   *@param  sentName  The new sentName value
+   */
+  public void setSentName(String sentName) {
+    this.sentName = sentName;
+  }
+
+
+  /**
+   *  Sets the type attribute of the CFSNote object
+   *
+   *@param  type  The new type value
+   */
+  public void setType(int type) {
+    this.type = type;
+  }
+
+
+  /**
+   *  Sets the type attribute of the CFSNote object
+   *
+   *@param  type  The new type value
+   */
+  public void setType(String type) {
+    this.type = Integer.parseInt(type);
+  }
+
+
+  /**
+   *  Sets the modified attribute of the CFSNote object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the CFSNote object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
     java.util.Date tmpDate = new java.util.Date();
     modified = new java.sql.Timestamp(tmpDate.getTime());
     modified = modified.valueOf(tmp);
   }
-  public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
 
-  public java.sql.Timestamp getEntered() { return entered; }
+
+  /**
+   *  Sets the entered attribute of the CFSNote object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the id attribute of the CFSNote object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(int tmp) {
+    this.id = tmp;
+  }
+
+
+  /**
+   *  Sets the subject attribute of the CFSNote object
+   *
+   *@param  tmp  The new subject value
+   */
+  public void setSubject(String tmp) {
+    this.subject = tmp;
+  }
+
+
+  /**
+   *  Sets the body attribute of the CFSNote object
+   *
+   *@param  tmp  The new body value
+   */
+  public void setBody(String tmp) {
+    this.body = tmp;
+  }
+
+
+  /**
+   *  Sets the replyId attribute of the CFSNote object
+   *
+   *@param  tmp  The new replyId value
+   */
+  public void setReplyId(int tmp) {
+    this.replyId = tmp;
+  }
+
+
+  /**
+   *  Sets the status attribute of the CFSNote object
+   *
+   *@param  tmp  The new status value
+   */
+  public void setStatus(int tmp) {
+    this.status = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredBy attribute of the CFSNote object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(int tmp) {
+    this.enteredBy = tmp;
+  }
+
+
+  /**
+   *  Sets the modifiedBy attribute of the CFSNote object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(int tmp) {
+    this.modifiedBy = tmp;
+  }
+
+
+  /**
+   *  Sets the viewed attribute of the CFSNote object
+   *
+   *@param  tmp  The new viewed value
+   */
+  public void setViewed(java.sql.Timestamp tmp) {
+    this.viewed = tmp;
+  }
+
+
+  /**
+   *  Sets the sent attribute of the CFSNote object
+   *
+   *@param  tmp  The new sent value
+   */
+  public void setSent(java.sql.Timestamp tmp) {
+    this.sent = tmp;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the CFSNote object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(boolean tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   *  Sets the sentTo attribute of the CFSNote object
+   *
+   *@param  sentTo  The new sentTo value
+   */
+  public void setSentTo(int sentTo) {
+    this.sentTo = sentTo;
+  }
+
+
+  /**
+   *  Sets the sentTo attribute of the CFSNote object
+   *
+   *@param  sentTo  The new sentTo value
+   */
+  public void setSentTo(String sentTo) {
+    this.sentTo = Integer.parseInt(sentTo);
+  }
+
+
+  /**
+   *  Gets the sentName attribute of the CFSNote object
+   *
+   *@return    The sentName value
+   */
+  public String getSentName() {
+    return sentName;
+  }
+
+
+  /**
+   *  Gets the statusText attribute of the CFSNote object
+   *
+   *@return    The statusText value
+   */
+  public String getStatusText() {
+    if (status == 0) {
+      return ("Unread");
+    } else if (status == 1) {
+      return ("Read");
+    } else {
+      return ("Archived");
+    }
+  }
+
+
+  /**
+   *  Gets the type attribute of the CFSNote object
+   *
+   *@return    The type value
+   */
+  public int getType() {
+    return type;
+  }
+
+
+  /**
+   *  Gets the entered attribute of the CFSNote object
+   *
+   *@return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Gets the enteredString attribute of the CFSNote object
+   *
+   *@return    The enteredString value
+   */
   public String getEnteredString() {
     try {
       return DateFormat.getDateInstance(DateFormat.SHORT).format(entered);
@@ -153,6 +384,13 @@ public void setType(String type) {
     }
     return ("");
   }
+
+
+  /**
+   *  Gets the enteredDateTimeString attribute of the CFSNote object
+   *
+   *@return    The enteredDateTimeString value
+   */
   public String getEnteredDateTimeString() {
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
@@ -160,48 +398,148 @@ public void setType(String type) {
     }
     return ("");
   }
-  public int getId() { return id; }
-public String getSubject() { return subject; }
-public String getBody() { return body; }
-public int getReplyId() { return replyId; }
-public int getStatus() { return status; }
-public int getEnteredBy() { return enteredBy; }
-public int getModifiedBy() { return modifiedBy; }
-public java.sql.Timestamp getViewed() { return viewed; }
-public java.sql.Timestamp getSent() { return sent; }
-public boolean getEnabled() { return enabled; }
-public void setId(int tmp) { this.id = tmp; }
-public void setSubject(String tmp) { this.subject = tmp; }
-public void setBody(String tmp) { this.body = tmp; }
-public void setReplyId(int tmp) { this.replyId = tmp; }
-public void setStatus(int tmp) { this.status = tmp; }
-public void setEnteredBy(int tmp) { this.enteredBy = tmp; }
-public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
-public void setViewed(java.sql.Timestamp tmp) { this.viewed = tmp; }
-public void setSent(java.sql.Timestamp tmp) { this.sent = tmp; }
-public void setEnabled(boolean tmp) { this.enabled = tmp; }
 
-public int getSentTo() {
-	return sentTo;
-}
-public void setSentTo(int sentTo) {
-	this.sentTo = sentTo;
-}
-public void setSentTo(String sentTo) {
-	this.sentTo = Integer.parseInt(sentTo);
-}
 
-  public String getModified() { 
+  /**
+   *  Gets the id attribute of the CFSNote object
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the subject attribute of the CFSNote object
+   *
+   *@return    The subject value
+   */
+  public String getSubject() {
+    return subject;
+  }
+
+
+  /**
+   *  Gets the body attribute of the CFSNote object
+   *
+   *@return    The body value
+   */
+  public String getBody() {
+    return body;
+  }
+
+
+  /**
+   *  Gets the replyId attribute of the CFSNote object
+   *
+   *@return    The replyId value
+   */
+  public int getReplyId() {
+    return replyId;
+  }
+
+
+  /**
+   *  Gets the status attribute of the CFSNote object
+   *
+   *@return    The status value
+   */
+  public int getStatus() {
+    return status;
+  }
+
+
+  /**
+   *  Gets the enteredBy attribute of the CFSNote object
+   *
+   *@return    The enteredBy value
+   */
+  public int getEnteredBy() {
+    return enteredBy;
+  }
+
+
+  /**
+   *  Gets the modifiedBy attribute of the CFSNote object
+   *
+   *@return    The modifiedBy value
+   */
+  public int getModifiedBy() {
+    return modifiedBy;
+  }
+
+
+  /**
+   *  Gets the viewed attribute of the CFSNote object
+   *
+   *@return    The viewed value
+   */
+  public java.sql.Timestamp getViewed() {
+    return viewed;
+  }
+
+
+  /**
+   *  Gets the sent attribute of the CFSNote object
+   *
+   *@return    The sent value
+   */
+  public java.sql.Timestamp getSent() {
+    return sent;
+  }
+
+
+  /**
+   *  Gets the enabled attribute of the CFSNote object
+   *
+   *@return    The enabled value
+   */
+  public boolean getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   *  Gets the sentTo attribute of the CFSNote object
+   *
+   *@return    The sentTo value
+   */
+  public int getSentTo() {
+    return sentTo;
+  }
+
+
+  /**
+   *  Gets the modified attribute of the CFSNote object
+   *
+   *@return    The modified value
+   */
+  public String getModified() {
     return modified.toString();
   }
-  public String getModifiedString() { 
+
+
+  /**
+   *  Gets the modifiedString attribute of the CFSNote object
+   *
+   *@return    The modifiedString value
+   */
+  public String getModifiedString() {
     try {
       return DateFormat.getDateInstance(DateFormat.SHORT).format(modified);
     } catch (NullPointerException e) {
     }
     return ("");
   }
-  public String getModifiedDateTimeString() { 
+
+
+  /**
+   *  Gets the modifiedDateTimeString attribute of the CFSNote object
+   *
+   *@return    The modifiedDateTimeString value
+   */
+  public String getModifiedDateTimeString() {
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(modified);
     } catch (NullPointerException e) {
@@ -209,6 +547,14 @@ public void setSentTo(String sentTo) {
     return ("");
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean insert(Connection db) throws SQLException {
 
     if (!isValid(db)) {
@@ -231,20 +577,11 @@ public void setSentTo(String sentTo) {
       pst.setString(++i, this.getBody());
       pst.setInt(++i, this.getReplyId());
       pst.setInt(++i, this.getType());
-      
       pst.execute();
       pst.close();
 
-      Statement st = db.createStatement();
-      ResultSet rs = st.executeQuery("select currval('cfsinbox_message_id_seq')");
-      if (rs.next()) {
-        this.setId(rs.getInt(1));
-      }
-      rs.close();
-      st.close();
-
+      id = DatabaseUtils.getCurrVal(db, "cfsinbox_message_id_seq");
       this.insertLink(db);
-      
       this.update(db, true);
       db.commit();
     } catch (SQLException e) {
@@ -256,7 +593,15 @@ public void setSentTo(String sentTo) {
     }
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean insertLink(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
 
@@ -271,7 +616,7 @@ public void setSentTo(String sentTo) {
       pst.setInt(++i, this.getId());
       pst.setInt(++i, this.getSentTo());
       pst.setInt(++i, this.getEnteredBy());
-      
+
       pst.execute();
       pst.close();
     } catch (SQLException e) {
@@ -282,6 +627,14 @@ public void setSentTo(String sentTo) {
     return true;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
 
@@ -303,6 +656,15 @@ public void setSentTo(String sentTo) {
     return resultCount;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  myId              Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean delete(Connection db, int myId) throws SQLException {
 
     Statement st = db.createStatement();
@@ -310,17 +672,25 @@ public void setSentTo(String sentTo) {
 
     try {
       db.setAutoCommit(false);
-      st.executeUpdate("DELETE FROM cfsinbox_messagelink WHERE id = " + this.getId() + " AND sent_to = " + myId + " ");
+      st.executeUpdate(
+        "DELETE FROM cfsinbox_messagelink " +
+        "WHERE id = " + this.getId() + " " +
+        "AND sent_to = " + myId + " ");
       db.commit();
-      
-      ResultSet rs = newSt.executeQuery("select sent_to FROM cfsinbox_messagelink where id = " + this.getId() + " ");
+
+      ResultSet rs = newSt.executeQuery(
+        "SELECT sent_to " +
+        "FROM cfsinbox_messagelink " +
+        "WHERE id = " + this.getId() + " ");
       if (!(rs.next())) {
-	db.setAutoCommit(false);
-      	newSt.executeUpdate("DELETE FROM cfsinbox_message WHERE id = " + this.getId() + " ");
-	db.commit();
+        db.setAutoCommit(false);
+        newSt.executeUpdate(
+          "DELETE FROM cfsinbox_message " +
+          "WHERE id = " + this.getId() + " ");
+        db.commit();
       }
       rs.close();
-      
+
     } catch (SQLException e) {
       db.rollback();
       System.out.println(e.toString());
@@ -332,28 +702,14 @@ public void setSentTo(String sentTo) {
     return true;
   }
 
-  protected boolean isValid(Connection db) throws SQLException {
-    errors.clear();
 
-    if (body == null || body.trim().equals("")) {
-      errors.put("bodyError", "Body is required");
-    }
-		
-    if (subject == null || subject.trim().equals("")) {
-      errors.put("messageSubjectError", "Subject is required");
-    }
-		
-    //if (replyTo == null || replyTo.trim().equals("")) {
-    //  errors.put("replyToError", "Email address is required");
-    //}
-
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-  
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public int updateStatus(Connection db) throws SQLException {
     int resultCount = 0;
 
@@ -380,6 +736,45 @@ public void setSentTo(String sentTo) {
     return resultCount;
   }
 
+
+  /**
+   *  Gets the valid attribute of the CFSNote object
+   *
+   *@param  db                Description of Parameter
+   *@return                   The valid value
+   *@exception  SQLException  Description of Exception
+   */
+  protected boolean isValid(Connection db) throws SQLException {
+    errors.clear();
+
+    if (body == null || body.trim().equals("")) {
+      errors.put("bodyError", "Body is required");
+    }
+
+    if (subject == null || subject.trim().equals("")) {
+      errors.put("messageSubjectError", "Subject is required");
+    }
+
+    //if (replyTo == null || replyTo.trim().equals("")) {
+    //  errors.put("replyToError", "Email address is required");
+    //}
+
+    if (hasErrors()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  override          Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
 
@@ -426,22 +821,25 @@ public void setSentTo(String sentTo) {
    *@since
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
+    //cfsinbox_message table
     this.setId(rs.getInt("id"));
     subject = rs.getString("subject");
     body = rs.getString("body");
     replyId = rs.getInt("reply_id");
-    status = rs.getInt("status");
-    sentName = rs.getString("sent_namefirst") + " " + rs.getString("sent_namelast");
-    
-    entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
+    sent = rs.getTimestamp("sent");
+    status = rs.getInt("status");
+    entered = rs.getTimestamp("entered");
     modified = rs.getTimestamp("modified");
+    type = rs.getInt("type");
     modifiedBy = rs.getInt("modifiedby");
+    
+    //cfsinbox_messagelink table
     sentTo = rs.getInt("sent_to");
     viewed = rs.getTimestamp("viewed");
-    sent = rs.getTimestamp("sent");
-    type = rs.getInt("type");
-    
+
+    //contact table
+    sentName = rs.getString("sent_namefirst") + " " + rs.getString("sent_namelast");
   }
 
 }

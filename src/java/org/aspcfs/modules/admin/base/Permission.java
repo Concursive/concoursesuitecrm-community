@@ -116,18 +116,21 @@ public class Permission extends GenericBean {
   public boolean getActive() { return active; }
 
   protected void buildRecord(ResultSet rs) throws SQLException {
+    //permission table
     id = rs.getInt("permission_id");
     categoryId = rs.getInt("category_id");
-    categoryName = rs.getString("category");
-    permissionLevel = rs.getInt("level");
     name = rs.getString("permission");
-    add = rs.getBoolean("permission_add");
     view = rs.getBoolean("permission_view");
+    add = rs.getBoolean("permission_add");
     edit = rs.getBoolean("permission_edit");
     delete = rs.getBoolean("permission_delete");
     description = rs.getString("description");
     enabled = rs.getBoolean("enabled");
     active = rs.getBoolean("active");
+    
+    //permission_category table
+    categoryName = rs.getString("category");
+    permissionLevel = rs.getInt("level");
   }
   
   protected void buildRecord(HttpServletRequest request, int parseItem) {

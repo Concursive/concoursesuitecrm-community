@@ -812,22 +812,19 @@ public class Call extends GenericBean {
     orgId = rs.getInt("org_id");
     contactId = rs.getInt("contact_id");
     oppId = rs.getInt("opp_id");
-    callTypeId = rs.getInt("code");
-    callType = rs.getString("description");
     length = rs.getInt("length");
     subject = rs.getString("subject");
     notes = rs.getString("notes");
-
-    entered = rs.getTimestamp("entered");
-
     alertDate = rs.getDate("alertdate");
-
+    entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
-    enteredName = fullName(rs.getString("efirst"), rs.getString("elast"));
-
     modified = rs.getTimestamp("modified");
-
     modifiedBy = rs.getInt("modifiedby");
+    
+    callTypeId = rs.getInt("code");
+    callType = rs.getString("description");
+    
+    enteredName = fullName(rs.getString("efirst"), rs.getString("elast"));
     modifiedName = fullName(rs.getString("mfirst"), rs.getString("mlast"));
     contactName = fullName(rs.getString("ctfirst"), rs.getString("ctlast"));
   }

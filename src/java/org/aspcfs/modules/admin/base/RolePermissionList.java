@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
+import com.darkhorseventures.utils.DatabaseUtils;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -46,7 +47,7 @@ public class RolePermissionList extends Hashtable {
         "FROM permission p, permission_category c, role_permission r " +
         "WHERE p.category_id = c.category_id " +
         "AND p.permission_id = r.permission_id " +
-        "AND p.enabled = true ");
+        "AND p.enabled = " + DatabaseUtils.getTrue(db) + " ");
 
     sqlOrder.append("ORDER BY r.role_id, c.level, p.level ");
         
@@ -56,8 +57,8 @@ public class RolePermissionList extends Hashtable {
     rs = pst.executeQuery();
     while (rs.next()) {
       Permission thisPermission = new Permission(rs);
-      thisPermission.setAdd(rs.getBoolean("role_add"));
       thisPermission.setView(rs.getBoolean("role_view"));
+      thisPermission.setAdd(rs.getBoolean("role_add"));
       thisPermission.setEdit(rs.getBoolean("role_edit"));
       thisPermission.setDelete(rs.getBoolean("role_delete"));
       this.put(thisPermission.getName(), thisPermission);
