@@ -2,6 +2,8 @@ package com.darkhorseventures.webutils;
 
 import org.theseus.actions.*;
 import java.util.Hashtable;
+import java.sql.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Allows information to be stored in an object for the pagedlist. <p>
@@ -26,7 +28,7 @@ public class PagedListInfo {
   String currentLetter = "";
   int currentOffset = 0;
   String listView = null;
-	Hashtable listFilters = new Hashtable();
+  Hashtable listFilters = new Hashtable();
 
 
   /**
@@ -35,7 +37,8 @@ public class PagedListInfo {
    *@since    1.0
    */
   public PagedListInfo() { }
-  
+
+
   /**
    *  Sets the ColumnToSortBy attribute of the PagedListInfo object
    *
@@ -141,11 +144,11 @@ public class PagedListInfo {
 
 
   /**
-   *  Sets the ListView attribute of the PagedListInfo object.  The ListView
-   *  property stores what view the user has selected. 
+   *  Sets the ListView attribute of the PagedListInfo object. The ListView
+   *  property stores what view the user has selected.
    *
    *@param  tmp  The new ListView value
-   *@since 1.11
+   *@since       1.11
    */
   public void setListView(String tmp) {
     this.listView = tmp;
@@ -200,7 +203,7 @@ public class PagedListInfo {
     if (tmpCurrentOffset != null) {
       this.setCurrentOffset(tmpCurrentOffset);
     }
-    
+
     String tmpListView = context.getRequest().getParameter("listView");
     if (tmpListView != null) {
       if (listView != null && !listView.equals(tmpListView)) {
@@ -209,20 +212,65 @@ public class PagedListInfo {
       }
       this.setListView(tmpListView);
     }
-		
-		int filter = 0;
-		while (context.getRequest().getParameter("listFilter" + (++filter)) != null) {
-			String tmpListFilter = context.getRequest().getParameter("listFilter" + filter);
-			String currentSetting = (String)listFilters.get(tmpListFilter);
-			if (currentSetting != null && !currentSetting.equals(tmpListFilter)) {
-				this.setCurrentLetter("");
-				this.setCurrentOffset(0);
-			}
-			listFilters.put("listFilter" + filter, tmpListFilter);
-		}
+
+    int filter = 0;
+    while (context.getRequest().getParameter("listFilter" + (++filter)) != null) {
+      String tmpListFilter = context.getRequest().getParameter("listFilter" + filter);
+      String currentSetting = (String) listFilters.get(tmpListFilter);
+      if (currentSetting != null && !currentSetting.equals(tmpListFilter)) {
+        this.setCurrentLetter("");
+        this.setCurrentOffset(0);
+      }
+      listFilters.put("listFilter" + filter, tmpListFilter);
+    }
   }
 
 
+  /**
+   *  Sets the defaultSort attribute of the PagedListInfo object
+   *
+   *@param  column  The new defaultSort value
+   *@param  order   Ex. "desc" or null
+   */
+  public void setDefaultSort(String column, String order) {
+    if (!this.hasSortConfigured()) {
+      this.setColumnToSortBy(column);
+      this.setSortOrder(order);
+    }
+  }
+
+  public boolean hasSortConfigured() {
+    return (this.getColumnToSortBy() != null && !this.getColumnToSortBy().equals(""));
+  }
+  
+  public boolean hasSortOrderConfigured() {
+    return (this.getSortOrder() != null && !this.getSortOrder().equals(""));
+  }
+  
+  public void appendSqlTail(Connection db, StringBuffer sqlStatement) {
+    //Determine sort order
+    sqlStatement.append("ORDER BY " + this.getColumnToSortBy() + " ");
+    if (this.hasSortOrderConfigured()) {
+      sqlStatement.append(this.getSortOrder() + " ");
+    }
+    
+    //Determine items per page for PostgreSQL
+    if (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL) {
+      if (this.getItemsPerPage() > 0) {
+        sqlStatement.append("LIMIT " + this.getItemsPerPage() + " ");
+      }
+      sqlStatement.append("OFFSET " + this.getCurrentOffset() + " ");
+    }
+  }
+  
+  public void doManualOffset(Connection db, ResultSet rs) throws SQLException {
+    if (this.getItemsPerPage() > 0 &&
+        DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
+      for (int skipCount = 0; skipCount < this.getCurrentOffset(); skipCount++) {
+        rs.next();
+      }
+    }
+  }
 
   /**
    *  Gets the ColumnToSortBy attribute of the PagedListInfo object
@@ -299,7 +347,7 @@ public class PagedListInfo {
    *@since     1.0
    */
   public String getNumericalPageLinks() {
-    int numPages = (int)Math.ceil((double)maxRecords / (double)itemsPerPage);
+    int numPages = (int) Math.ceil((double) maxRecords / (double) itemsPerPage);
     StringBuffer links = new StringBuffer();
     links.append(numPages + " page" + ((numPages == 1) ? "" : "s") + " in this view ");
     if (numPages > 1) {
@@ -416,7 +464,14 @@ public class PagedListInfo {
       return linkOff;
     }
   }
-  
+
+
+  /**
+   *  Gets the sortIcon attribute of the PagedListInfo object
+   *
+   *@param  columnName  Description of Parameter
+   *@return             The sortIcon value
+   */
   public String getSortIcon(String columnName) {
     if (columnName.equals(columnToSortBy)) {
       if (sortOrder != null && sortOrder.indexOf("desc") > -1) {
@@ -457,18 +512,32 @@ public class PagedListInfo {
   public String getOptionValue(String tmp) {
     return ("value=\"" + tmp + "\"" + (tmp.equals(listView) ? " selected" : ""));
   }
-	
-	public String getFilterValue(String tmp) {
-		return (String)listFilters.get(tmp);
-	}
-	
-	public int getFilterKey(String tmp) {
-		try {
-			return Integer.parseInt((String)listFilters.get(tmp));
-		} catch (Exception e) {
-			return -1;
-		}
-	}
+
+
+  /**
+   *  Gets the filterValue attribute of the PagedListInfo object
+   *
+   *@param  tmp  Description of Parameter
+   *@return      The filterValue value
+   */
+  public String getFilterValue(String tmp) {
+    return (String) listFilters.get(tmp);
+  }
+
+
+  /**
+   *  Gets the filterKey attribute of the PagedListInfo object
+   *
+   *@param  tmp  Description of Parameter
+   *@return      The filterKey value
+   */
+  public int getFilterKey(String tmp) {
+    try {
+      return Integer.parseInt((String) listFilters.get(tmp));
+    } catch (Exception e) {
+      return -1;
+    }
+  }
 
 
   /**

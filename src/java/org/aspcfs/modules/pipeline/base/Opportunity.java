@@ -97,8 +97,12 @@ public class Opportunity extends GenericBean {
     StringBuffer sql = new StringBuffer();
 
     sql.append(
-        "SELECT x.*, y.description as stagename, org.name as acct_name, ct.namelast as last_name, ct.namefirst as first_name, ct.company as ctcompany," +
-        "ct_owner.namelast || ', ' || ct_owner.namefirst as o_name, ct_eb.namelast || ', ' || ct_eb.namefirst as eb_name, ct_mb.namelast || ', ' || ct_mb.namefirst as mb_name " +
+        "SELECT x.*, y.description as stagename, org.name as acct_name, " +
+        "ct.namelast as last_name, ct.namefirst as first_name, " +
+        "ct.company as ctcompany," +
+        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
+        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst " +
         "FROM opportunity x " +
         "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
         "LEFT JOIN contact ct_owner ON (x.owner = ct_owner.user_id) " +
@@ -1510,9 +1514,9 @@ public class Opportunity extends GenericBean {
     accountName = rs.getString("acct_name");
     contactName = rs.getString("first_name") + " " + rs.getString("last_name");
     contactCompanyName = rs.getString("ctcompany");
-    ownerName = rs.getString("o_name");
-    enteredByName = rs.getString("eb_name");
-    modifiedByName = rs.getString("mb_name");
+    ownerName = rs.getString("o_namelast") + ", " + rs.getString("o_namefirst");
+    enteredByName = rs.getString("eb_namelast") + ", " + rs.getString("eb_namefirst");
+    modifiedByName = rs.getString("mb_namelast") + ", " + rs.getString("mb_namefirst");
     contactLink = rs.getInt("contactLink");
     closeDate = rs.getDate("closedate");
 

@@ -8,12 +8,14 @@ import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Description of the Class
  *
  *@author     chris
  *@created    January 8, 2002
+ *@version    $Id$
  */
 public class CallList extends Vector {
 
@@ -227,31 +229,31 @@ public class CallList extends Vector {
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-
+    
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
-        "SELECT c.*, t.*, " +
-        "e.namefirst as efirst, e.namelast as elast, " +
-        "m.namefirst as mfirst, m.namelast as mlast, " +
-        "ct.namefirst as ctfirst, ct.namelast as ctlast " +
-        "FROM call_log c " +
-        "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
-        "  LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code), " +
-        "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
-        "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
-        "WHERE c.enteredby = a1.user_id " +
-        "AND c.modifiedby = a2.user_id ");
+      "SELECT c.*, t.*, " +
+      "e.namefirst as efirst, e.namelast as elast, " +
+      "m.namefirst as mfirst, m.namelast as mlast, " +
+      "ct.namefirst as ctfirst, ct.namelast as ctlast " +
+      "FROM call_log c " +
+      "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
+      "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code), " +
+      "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
+      "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
+      "WHERE c.enteredby = a1.user_id " +
+      "AND c.modifiedby = a2.user_id ");
 
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-        "SELECT COUNT(*) as recordcount " +
-        "FROM call_log c, " +
-        "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
-        "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id), " +
-        "lookup_call_types t " +
-        "WHERE c.call_type_id = t.code " +
-        "AND c.enteredby = a1.user_id " +
-        "AND c.modifiedby = a2.user_id ");
+      "SELECT COUNT(*) as recordcount " +
+      "FROM call_log c, " +
+      "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
+      "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id), " +
+      "lookup_call_types t " +
+      "WHERE c.call_type_id = t.code " +
+      "AND c.enteredby = a1.user_id " +
+      "AND c.modifiedby = a2.user_id ");
 
     createFilter(sqlFilter);
 
@@ -268,21 +270,8 @@ public class CallList extends Vector {
       rs.close();
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() == null || pagedListInfo.getColumnToSortBy().equals("")) {
-        pagedListInfo.setColumnToSortBy("entered");
-        pagedListInfo.setSortOrder("desc");
-      }
-      sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + " ");
-      if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
-        sqlOrder.append(pagedListInfo.getSortOrder() + " ");
-      }
-
-      //Determine items per page
-      if (pagedListInfo.getItemsPerPage() > 0) {
-        sqlOrder.append("LIMIT " + pagedListInfo.getItemsPerPage() + " ");
-      }
-
-      sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
+      pagedListInfo.setDefaultSort("entered", "desc");
+      pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY entered DESC ");
     }
@@ -290,7 +279,19 @@ public class CallList extends Vector {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+    
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
+    
+    int count = 0;
     while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          count < pagedListInfo.getItemsPerPage()) {
+        break;
+      }
+      ++count;
       Call thisCall = new Call(rs);
       this.addElement(thisCall);
     }
