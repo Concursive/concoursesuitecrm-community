@@ -130,7 +130,7 @@
     <map class="com.darkhorseventures.cfsbase.Ticket" id="ticket">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
-      <property lookup="contact">contactId</property>
+      <property lookup="">contactId</property>
       <property lookup="user">owner</property>
       <property lookup="user">assignedTo</property>
       <property>problem</property>
