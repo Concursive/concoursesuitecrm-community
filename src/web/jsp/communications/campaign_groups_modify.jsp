@@ -34,6 +34,23 @@ function HideSpans()
   return true;
 }
 
+function checkForm(form) {
+	formTest = true;
+        message = "";
+
+        if (form.groupName.value == "") {
+                message += "- Group Name is required\r\n";
+                formTest = false;
+        }
+
+	if (formTest == false) {
+         	alert("Registration could not be processed, please check the following:\r\n\r\n" + message);
+                return false;
+        } else {
+                return true;
+        }
+}
+
 //  End -->
 </SCRIPT>
 
@@ -98,7 +115,7 @@ listOfOperators[1] = dateOperators
 listOfOperators[2] = numberOperators
 </script>
 <a href="/CampaignManagerGroup.do?command=View">Back to Group List</a><br>
-<form name="searchForm" method="post" action="/CampaignManagerGroup.do?command=Update&auto-populate=true&id=<%= SCL.getId() %>" onSubmit="saveValues()" >
+<form name="searchForm" method="post" action="/CampaignManagerGroup.do?command=Update&auto-populate=true&id=<%= SCL.getId() %>" onSubmit="return checkForm(this);saveValues()" >
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">

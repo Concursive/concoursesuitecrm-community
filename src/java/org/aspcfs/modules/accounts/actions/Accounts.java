@@ -175,12 +175,18 @@ public final class Accounts extends CFSModule {
 	alertOrgs.setEnteredBy(alertsDD);
 	alertOrgs.setHasAlertDate(true);
 	
+	OrganizationList expireOrgs = new OrganizationList();
+	expireOrgs.setPagedListInfo(orgAlertPaged);
+	expireOrgs.setEnteredBy(alertsDD);
+	expireOrgs.setHasExpireDate(true);
+	
 	Connection db = null;
 	Exception errorMessage = null;
 
 	try {
 		db = this.getConnection(context);
 		alertOrgs.buildList(db);
+		expireOrgs.buildList(db);
 	} catch (SQLException e) {
 		errorMessage = e;
 	}
@@ -192,6 +198,12 @@ public final class Accounts extends CFSModule {
 	while (n.hasNext()) {
 		Organization thisOrg = (Organization) n.next();
 		companyCalendar.addEvent(thisOrg.getAlertDateStringLongYear(), "", thisOrg.getName() + ": " + thisOrg.getAlertText(), "Account", thisOrg.getOrgId());
+	}
+	
+	Iterator m = expireOrgs.iterator();
+	while (m.hasNext()) {
+		Organization thatOrg = (Organization) m.next();
+		companyCalendar.addEvent(thatOrg.getContractEndDateStringLongYear(), "", thatOrg.getName() + ": " + "Contract Expiration", "Account", thatOrg.getOrgId());
 	}
 	
 	if (errorMessage == null) {

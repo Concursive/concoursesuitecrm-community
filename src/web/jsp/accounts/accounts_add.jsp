@@ -126,7 +126,7 @@
       Alert
     </td>
     <td valign=center colspan=1>
-      <input type=text size=50 name="alertText" maxlength=50><br>
+      <input type=text size=50 name="alertText" maxlength=50 value="<%= toHtmlValue(OrgDetails.getAlertText()) %>"><br>
       <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OrgDetails.getAlertDateString()) %>">
       <a href="javascript:popCalendar('addAccount', 'alertDate');">Date</a> (mm/dd/yyyy)
     </td>

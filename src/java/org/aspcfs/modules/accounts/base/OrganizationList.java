@@ -28,6 +28,7 @@ public class OrganizationList extends Vector {
 	private boolean showMyCompany = false;
 	private String ownerIdRange = null;
 	private boolean hasAlertDate = false;
+	private boolean hasExpireDate = false;
 
 
 	/**
@@ -117,6 +118,12 @@ public class OrganizationList extends Vector {
 		this.name = tmp;
 	}
 
+	public boolean getHasExpireDate() {
+		return hasExpireDate;
+	}
+	public void setHasExpireDate(boolean hasExpireDate) {
+		this.hasExpireDate = hasExpireDate;
+	}
 
 	/**
 	 *  Sets the OwnerId attribute of the OrganizationList object
@@ -378,6 +385,10 @@ public class OrganizationList extends Vector {
 		
 		if (hasAlertDate == true) {
 			sqlFilter.append("AND o.alertdate is not null ");
+		}
+		
+		if (hasExpireDate == true) {
+			sqlFilter.append("AND o.contract_end is not null ");
 		}
 
 	}
