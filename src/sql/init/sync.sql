@@ -695,4 +695,9 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'organizationPhoneNumber', 'com.darkhorseventures.cfsbase.OrganizationPhoneNumber');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'organizationPhoneNumberList', 'com.darkhorseventures.cfsbase.OrganizationPhoneNumberList');
+ 
+   INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'organizationEmailAddress', 'com.darkhorseventures.cfsbase.OrganizationEmailAddress');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'organizationEmailAddressList', 'com.darkhorseventures.cfsbase.OrganizationEmailAddressList');
 

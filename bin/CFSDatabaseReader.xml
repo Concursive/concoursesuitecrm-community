@@ -270,5 +270,15 @@
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
     </map>
+    <map class="com.darkhorseventures.cfsbase.OrganizationEmailAddress" id="organizationEmailAddressList">
+      <property alias="guid">id</property>
+      <property lookup="account">orgId</property>
+      <property lookup="contact">contactId</property>
+      <property lookup="lookupOrgEmailTypes">type</property>
+      <property>email</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+    </map>
   </mappings>
 </CFSDatabaseReader>

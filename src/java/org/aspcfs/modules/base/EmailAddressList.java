@@ -21,7 +21,7 @@ import com.darkhorseventures.webutils.PagedListInfo;
 public class EmailAddressList extends Vector {
 
   protected PagedListInfo pagedListInfo = null;
-  protected int orgId = -1;
+  private int orgId = -1;
   protected int type = -1;
   private int contactId = -1;
 
@@ -43,7 +43,7 @@ public class EmailAddressList extends Vector {
    *@param  tmp  The new OrgId value
    *@since       1.1
    */
-  protected void setOrgId(int tmp) {
+  public void setOrgId(int tmp) {
     this.orgId = tmp;
   }
 

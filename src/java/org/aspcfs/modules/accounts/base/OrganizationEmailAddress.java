@@ -16,8 +16,15 @@ public class OrganizationEmailAddress extends EmailAddress {
     buildRecord(rs);
   }
 
+  public OrganizationEmailAddress(Connection db, int emailAddressId) throws SQLException {
+          queryRecord(db, emailAddressId);
+  }
 
   public OrganizationEmailAddress(Connection db, String emailAddressId) throws SQLException {
+          queryRecord(db, Integer.parseInt(emailAddressId));
+  }
+          
+  public void queryRecord(Connection db, int emailAddressId) throws SQLException {
     isContact = false;
     if (emailAddressId == null) {
       throw new SQLException("Email Address ID not specified.");
@@ -68,6 +75,9 @@ public class OrganizationEmailAddress extends EmailAddress {
     }
   }
 
+  public void insert(Connection db) throws SQLException {
+          insert(db, this.getOrgId(), this.getEnteredBy());
+  }
 
   public void insert(Connection db, int orgId, int enteredBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -76,8 +86,16 @@ public class OrganizationEmailAddress extends EmailAddress {
         "VALUES " +
         "(?, ?, ?, ?, ?) ");
     int i = 0;
-    pst.setInt(++i, orgId);
-    pst.setInt(++i, this.getType());
+    if (orgId > -1) {
+      pst.setInt(++i, this.getOrgId());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    if (this.getType() > -1) {
+      pst.setInt(++i, this.getType());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getEmail());
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, enteredBy);
@@ -103,7 +121,11 @@ public class OrganizationEmailAddress extends EmailAddress {
         "modified = CURRENT_TIMESTAMP " +
         "WHERE emailaddress_id = ? ");
     int i = 0;
-    pst.setInt(++i, this.getType());
+    if (this.getType() > -1) {
+      pst.setInt(++i, this.getType());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getEmail());
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, this.getId());

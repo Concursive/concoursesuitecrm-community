@@ -188,21 +188,22 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       writer.save(thisRecord);
       writer.commit();
 
-      /**
-      ContactEmailAddressList emailList = new ContactEmailAddressList();
-      emailList.setContactId(thisContact.getId());
+      
+      OrganizationEmailAddressList emailList = new OrganizationEmailAddressList();
+      emailList.setOrgId(thisOrg.getId());
       emailList.buildList(db);
       
-      logger.info("ImportBaseData-> Inserting " + emailList.size() + " Contact emails");
+      logger.info("ImportBaseData-> Inserting " + emailList.size() + " Organization emails");
       
       Iterator emails = emailList.iterator();
       while (emails.hasNext()) {
-              ContactEmailAddress thisAddress = (ContactEmailAddress)emails.next();
+              OrganizationEmailAddress thisAddress = (OrganizationEmailAddress)emails.next();
               DataRecord anotherRecord = mappings.createDataRecord(thisAddress, "insert");
               writer.save(anotherRecord);
               writer.commit();
       }
       
+      /**
       ContactAddressList addressList = new ContactAddressList();
       addressList.setContactId(thisContact.getId());
       addressList.buildList(db);
@@ -216,7 +217,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
               writer.save(addressRecord);
               writer.commit();
       }
-      */
+      
       OrganizationPhoneNumberList phoneList = new OrganizationPhoneNumberList();
       phoneList.setOrgId(thisOrg.getId());
       phoneList.buildList(db);
@@ -231,7 +232,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
               writer.commit();
       }
       
-      
+      */
     }
   }
   
