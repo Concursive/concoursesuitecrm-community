@@ -683,6 +683,7 @@ public final class Accounts extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     Organization thisOrganization = null;
+    int resultCount = 0;
 
     try {
       String orgId = context.getRequest().getParameter("orgId");
@@ -713,8 +714,12 @@ public final class Accounts extends CFSModule {
       thisCategory.buildResources(db);
       thisCategory.setParameters(context);
       thisCategory.setModifiedBy(this.getUserId(context));
-      thisCategory.update(db);
-      thisCategory.buildResources(db);
+      resultCount = thisCategory.update(db);
+      if (resultCount == -1) {
+        if (System.getProperty("DEBUG") != null) System.out.println("Accounts-> ModifyField validation error");
+      } else {
+        thisCategory.buildResources(db);
+      }
       context.getRequest().setAttribute("Category", thisCategory);
       
     } catch (Exception e) {
@@ -724,8 +729,17 @@ public final class Accounts extends CFSModule {
     }
 
     if (errorMessage == null) {
-      addModuleBean(context, "View Accounts", "Modify Custom Fields");
-      return ("UpdateFieldsOK");
+      if (resultCount == -1) {
+        return ("ModifyFieldsOK");
+      } else if (resultCount == 1) {
+        return ("UpdateFieldsOK");
+      } else {
+        context.getRequest().setAttribute("Error",
+            "<b>This record could not be updated because someone else updated it first.</b><p>" +
+            "You can hit the back button to review the changes that could not be committed, " +
+            "but you must reload the record and make the changes again.");
+        return ("UserError");
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -766,8 +780,10 @@ public final class Accounts extends CFSModule {
       thisCategory.setEnteredBy(this.getUserId(context));
       thisCategory.setModifiedBy(this.getUserId(context));
       resultCode = thisCategory.insert(db);
-      //thisCategory.buildResources(db);
-      //context.getRequest().setAttribute("Category", thisCategory);
+      if (resultCode == -1) {
+        if (System.getProperty("DEBUG") != null) System.out.println("Accounts-> InsertField validation error");
+      }
+      context.getRequest().setAttribute("Category", thisCategory);
       
     } catch (Exception e) {
       errorMessage = e;
@@ -776,8 +792,11 @@ public final class Accounts extends CFSModule {
     }
 
     if (errorMessage == null) {
-      addModuleBean(context, "View Accounts", "Add Custom Fields");
-      return (this.executeCommandFields(context));
+      if (resultCode == -1) {
+        return ("AddFolderRecordOK");
+      } else {
+        return (this.executeCommandFields(context));
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

@@ -430,45 +430,48 @@ public final class AdminFields extends CFSModule {
       CustomField thisField = (CustomField)context.getFormBean();
       thisField.buildElementData(db);
       
-      String[] params = context.getRequest().getParameterValues("selectedList");
-      String[] names = new String[params.length];
-      String tblName = "";
-      int j = 0;
+      if (thisField.getLookupListRequired()) {
+      
+        String[] params = context.getRequest().getParameterValues("selectedList");
+        String[] names = new String[params.length];
+        String tblName = "";
+        int j = 0;
+    
+        StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("selectNames"), "^");
+        
+        while (st.hasMoreTokens()) {
+          names[j] = (String) st.nextToken();
+          j++;
+        }
+        
+        LookupList compareList = (LookupList)thisField.getElementData();
+        LookupList newList = new LookupList(params, names);
+        if (System.getProperty("DEBUG") != null) newList.printVals();
+        
+        Iterator i = compareList.iterator();
+        while (i.hasNext()) {
+          LookupElement thisElement = (LookupElement) i.next();
   
-      StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("selectNames"), "^");
-      
-      while (st.hasMoreTokens()) {
-        names[j] = (String) st.nextToken();
-        j++;
+          //still there, stay enabled, don't re-insert it
+          System.out.println("Here: " + thisElement.getCode() + " " + newList.getSelectedValue(thisElement.getCode()));
+  
+          //not there, disable it, leave it
+          if (newList.getSelectedValue(thisElement.getCode()).equals("") || newList.getSelectedValue(thisElement.getCode()) == null) {
+            thisElement.disableElement(db, "custom_field_lookup");
+          }
+        }
+        
+        Iterator k = newList.iterator();
+        while (k.hasNext()) {
+          LookupElement thisElement = (LookupElement) k.next();
+  
+          if (thisElement.getCode() == 0) {
+            thisElement.insertElement(db, "custom_field_lookup", thisField.getId());
+          } else {
+            thisElement.setNewOrder(db, "custom_field_lookup");
+          }
+        }
       }
-      
-      LookupList compareList = (LookupList)thisField.getElementData();
-			LookupList newList = new LookupList(params, names);
-			if (System.getProperty("DEBUG") != null) newList.printVals();
-      
-      Iterator i = compareList.iterator();
-			while (i.hasNext()) {
-				LookupElement thisElement = (LookupElement) i.next();
-
-				//still there, stay enabled, don't re-insert it
-				System.out.println("Here: " + thisElement.getCode() + " " + newList.getSelectedValue(thisElement.getCode()));
-
-				//not there, disable it, leave it
-				if (newList.getSelectedValue(thisElement.getCode()).equals("") || newList.getSelectedValue(thisElement.getCode()) == null) {
-					//thisElement.disableElement(db, tblName);
-				}
-			}
-      
-      Iterator k = newList.iterator();
-			while (k.hasNext()) {
-				LookupElement thisElement = (LookupElement) k.next();
-
-				if (thisElement.getCode() == 0) {
-					//thisElement.insertElement(db, tblName);
-				} else {
-					//thisElement.setNewOrder(db, tblName);
-				}
-			}
       
       result = thisField.updateField(db);
       this.processErrors(context, thisField.getErrors());

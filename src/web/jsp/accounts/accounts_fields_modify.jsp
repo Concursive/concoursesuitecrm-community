@@ -46,14 +46,15 @@
   if (fields.hasNext()) {
     while (fields.hasNext()) {
       CustomField thisField = (CustomField)fields.next();
-%>    
+%>
     <tr class="containerBody">
       <%-- Do not use toHtml() here, it's done by CustomField --%>
       <td valign="top" nowrap class="formLabel">
         <%= thisField.getNameHtml() %>
       </td>
       <td valign="top" width="100%">
-        <%= thisField.getHtmlElement() %>
+        <%= thisField.getHtmlElement() %> <font color="red"><%= (thisField.getRequired()?"*":"") %></font>
+        <font color='#006699'><%= toHtml(thisField.getError()) %></font>
       </td>
     </tr>
 <%    

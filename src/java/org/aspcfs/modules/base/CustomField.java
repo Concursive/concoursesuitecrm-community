@@ -7,6 +7,7 @@ import org.theseus.actions.*;
 import java.sql.*;
 import com.darkhorseventures.webutils.*;
 import java.util.*;
+import java.text.*;
 
 /**
  *  Represents a CustomField, used for both the definition of a custom field and
@@ -31,6 +32,7 @@ public class CustomField extends GenericBean {
   private java.sql.Timestamp endDate = null;
   private java.sql.Timestamp entered = null;
   private boolean enabled = false;
+  private String error = null;
 
   //Properties for related data
   private int linkModuleId = -1;
@@ -260,6 +262,17 @@ public class CustomField extends GenericBean {
 
 
   /**
+   *  Sets the Error attribute of the CustomField object
+   *
+   *@param  tmp  The new Error value
+   *@since
+   */
+  public void setError(String tmp) {
+    this.error = tmp;
+  }
+
+
+  /**
    *  Sets the LinkModuleId attribute of the CustomField object
    *
    *@param  tmp  The new LinkModuleId value
@@ -310,7 +323,7 @@ public class CustomField extends GenericBean {
    *@since
    */
   public void setEnteredValue(String tmp) {
-    this.enteredValue = tmp;
+    this.enteredValue = (tmp.trim());
   }
 
 
@@ -323,11 +336,6 @@ public class CustomField extends GenericBean {
   public void setMaxLength(String tmp) {
     if (tmp != null && !tmp.equals("")) {
       parameters.put("maxlength", tmp);
-      if (Integer.parseInt(tmp) > 150) {
-        parameters.put("width", "150");
-      } else {
-        parameters.put("width", tmp);
-      }
     }
   }
 
@@ -552,6 +560,17 @@ public class CustomField extends GenericBean {
 
 
   /**
+   *  Gets the Error attribute of the CustomField object
+   *
+   *@return    The Error value
+   *@since
+   */
+  public String getError() {
+    return error;
+  }
+
+
+  /**
    *  Gets the SelectedItemId attribute of the CustomField object
    *
    *@return    The SelectedItemId value
@@ -646,6 +665,9 @@ public class CustomField extends GenericBean {
    *@since
    */
   public String getValueHtml() {
+    if (type != SELECT && enteredValue == null) {
+      return toHtml(enteredValue);
+    }
     switch (type) {
       case URL:
         return "<a href=\"" + ((enteredValue.indexOf(":") > -1) ? "" : "http://") + enteredValue + "\" target=\"_new\">" + enteredValue + "</a>";
@@ -656,9 +678,23 @@ public class CustomField extends GenericBean {
           return enteredValue;
         }
       case SELECT:
-        return toHtml(((LookupList)elementData).getSelectedValue(selectedItemId));
+        if (elementData != null) {
+          return toHtml(((LookupList)elementData).getSelectedValue(selectedItemId));
+        } else {
+          return toHtml(enteredValue);
+        }
       case CHECKBOX:
         return (selectedItemId == 1 ? "Yes" : "No");
+      case CURRENCY:
+        try {
+          float thisAmount = Float.parseFloat(enteredValue);
+          NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+          return ("$" + numberFormatter.format(thisAmount));
+        } catch (Exception e) {
+          return ("$" + toHtml(enteredValue));
+        }
+      case PERCENT:
+        return (toHtml(enteredValue) + "%");
       default:
         return (toHtml(enteredValue));
     }
@@ -684,8 +720,23 @@ public class CustomField extends GenericBean {
       case DATE:
         return ("<input type=\"text\" name=\"" + "cf" + id + "\" value=\"" + toHtmlValue(enteredValue) + "\"> " +
             "<a href=\"javascript:popCalendar('forms[0]', 'cf" + id + "');\">Date</a> (mm/dd/yyyy)");
+      case PERCENT:
+        return ("<input type=\"text\" name=\"" + "cf" + id + "\" size=\"8\" value=\"" + toHtmlValue(enteredValue) + "\"> " + "%");
       default:
-        return ("<input type=\"text\" name=\"" + "cf" + id + "\" value=\"" + toHtmlValue(enteredValue) + "\">");
+        String maxlength = this.getParameter("maxlength");
+        String size = "";
+        if (!maxlength.equals("")) {
+          if (Integer.parseInt(maxlength) > 40) {
+            size = "40";
+          } else {
+            size = maxlength;
+          }
+        }
+        return ("<input type=\"text\" " +
+            "name=\"" + "cf" + id + "\" " +
+            (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
+            (size.equals("") ? "" : "size=\"" + size + "\" ") +
+            "value=\"" + toHtmlValue(enteredValue) + "\">");
     }
   }
 
@@ -737,6 +788,7 @@ public class CustomField extends GenericBean {
    *  Gets the TypeString attribute of the CustomField class
    *
    *@param  dataType  Description of Parameter
+   *@param  dynamic   Description of Parameter
    *@return           The TypeString value
    *@since
    */
@@ -749,7 +801,7 @@ public class CustomField extends GenericBean {
           return "Text (" + getParameter("maxlength") + ")";
         }
       case TEXTAREA:
-        return "Text (unlimited)";
+        return "Text Area (unlimited)";
       case SELECT:
         return "Lookup List";
       case CHECKBOX:
@@ -805,7 +857,15 @@ public class CustomField extends GenericBean {
 
     buildElementData(db);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   *@since
+   */
   public void buildElementData(Connection db) throws SQLException {
     if (type == SELECT) {
       elementData = new LookupList(db, "custom_field_lookup", id);
@@ -817,10 +877,15 @@ public class CustomField extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    *@since
    */
-  public void insert(Connection db) throws SQLException {
+  public int insert(Connection db) throws SQLException {
+    int result = 1;
+    if (!this.isValid()) {
+      return -1;
+    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO custom_field_data " +
@@ -834,6 +899,7 @@ public class CustomField extends GenericBean {
     pst.setString(++i, enteredValue);
     pst.execute();
     pst.close();
+    return result;
   }
 
 
@@ -854,9 +920,9 @@ public class CustomField extends GenericBean {
     try {
       db.setAutoCommit(false);
       String sql =
-        "INSERT INTO custom_field_info " +
-        "(group_id, field_name, field_type, required, parameters ) " +
-        "VALUES (?, ?, ?, ?, ?) ";
+          "INSERT INTO custom_field_info " +
+          "(group_id, field_name, field_type, required, parameters ) " +
+          "VALUES (?, ?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(++i, groupId);
@@ -910,17 +976,26 @@ public class CustomField extends GenericBean {
 
     return result;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   *@since
+   */
   public boolean updateField(Connection db) throws SQLException {
     if (!isFieldValid() || id == -1) {
       return false;
     }
 
     String sql =
-      "UPDATE custom_field_info " +
-      "SET field_name = ?, field_type = ?, required = ?, parameters = ? " +
-      "WHERE group_id = ? " +
-      "AND field_id = ? ";
+        "UPDATE custom_field_info " +
+        "SET field_name = ?, field_type = ?, required = ?, parameters = ? " +
+        "WHERE group_id = ? " +
+        "AND field_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setString(++i, this.getName());
@@ -929,13 +1004,21 @@ public class CustomField extends GenericBean {
     pst.setString(++i, this.getParameterData());
     pst.setInt(++i, this.getGroupId());
     pst.setInt(++i, this.getId());
-    //pst.execute();
-    System.out.println("CustomField-> Updating CustomField");
-    System.out.println("           -> Name: " + this.getName());
-    System.out.println("           -> Type: " + this.getTypeString());
-    System.out.println("           -> Parameters: " + this.getParameterData());
+    pst.execute();
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("CustomField-> Updating CustomField");
+    }
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("           -> Name: " + this.getName());
+    }
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("           -> Type: " + this.getTypeString());
+    }
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("           -> Parameters: " + this.getParameterData());
+    }
     pst.close();
-    
+
     return true;
   }
 
@@ -1019,8 +1102,18 @@ public class CustomField extends GenericBean {
     if (name == null || name.equals("")) {
       errors.put("nameError", "Name is required");
     }
-    if (getLengthRequired() && (getParameter("maxlength") == null)) {
-      errors.put("maxLengthError", "Length is required");
+    if (getLengthRequired()) {
+      if (getParameter("maxlength").equals("")) {
+        errors.put("maxLengthError", "Length is required");
+      } else {
+        try {
+          if (Integer.parseInt(getParameter("maxlength")) > 255) {
+            errors.put("maxLengthError", "Max length is too high");
+          }
+        } catch (Exception e) {
+          errors.put("maxLengthError", "Max length must be a number");
+        }
+      }
     }
     if (type == SELECT &&
         (elementData == null || (((LookupList)elementData).size() == 0))
@@ -1030,7 +1123,107 @@ public class CustomField extends GenericBean {
 
     return (errors.size() == 0);
   }
-  
+
+
+  /**
+   *  Gets the Valid attribute of the CustomField object
+   *
+   *@return    The Valid value
+   *@since
+   */
+  private boolean isValid() {
+    if (recordId == -1) {
+      error = "Form record id error";
+    }
+    if (type == -1) {
+      error = "Form field type error";
+    }
+    
+    //Required Fields
+    if (this.getRequired() && (this.getEnteredValue() == null || this.getEnteredValue().equals(""))) {
+      error = "Required field";
+    }
+    if (type == SELECT && this.getRequired() && this.getSelectedItemId() == -1) {
+      error = "Required field";
+    }
+    
+    //Type mis-match
+    if ((error == null || error.equals("")) && 
+        (this.getEnteredValue() != null && !this.getEnteredValue().equals(""))) {
+      if (type == INTEGER) {
+        try {
+          int testNumber = Integer.parseInt(this.getEnteredValue());
+        } catch (Exception e) {
+          error = "Value should be a whole number";
+        }
+      }
+      
+      if (type == FLOAT) {
+        try {
+          float testNumber = Float.parseFloat(this.getEnteredValue());
+        } catch (Exception e) {
+          error = "Value should be a number";
+        }
+      }
+      
+      if (type == PERCENT) {
+        try {
+          float testNumber = Float.parseFloat(this.getEnteredValue());
+        } catch (Exception e) {
+          error = "Value should be a number";
+        }
+      }
+      
+      if (type == CURRENCY) {
+        try {
+          float testNumber = Float.parseFloat(this.getEnteredValue());
+        } catch (Exception e) {
+          error = "Value should be a number";
+        }
+      }
+      
+      if (type == DATE) {
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy");
+        formatter.setLenient(false);
+        java.util.Date testDate = new java.util.Date();
+        try {
+          testDate = formatter.parse(this.getEnteredValue());
+          SimpleDateFormat formatter2 = new SimpleDateFormat("MM/dd/yyyy");
+          this.setEnteredValue(formatter2.format(testDate));
+        } catch(java.text.ParseException e) {
+          error = "Value should be a valid date";
+        }
+      }
+      
+      if (type == EMAIL) {
+        if ((this.getEnteredValue().indexOf("@") < 0) ||
+            (this.getEnteredValue().indexOf(" ") > -1) ||
+            (this.getEnteredValue().indexOf(".") < 0)) {
+          error = "Email address format error";
+        }
+      }
+      
+      if (type == URL) {
+        if (this.getEnteredValue().indexOf(".") < 0) {
+          error = "URL format error";
+        }
+      }
+    }
+
+    if (System.getProperty("DEBUG") != null && error != null) {
+      System.out.println("CustomField-> isValid Error: " + error);
+    }
+
+    return (error == null);
+  }
+
+
+  /**
+   *  Gets the ParameterData attribute of the CustomField object
+   *
+   *@return    The ParameterData value
+   *@since
+   */
   private String getParameterData() {
     StringBuffer parameterData = new StringBuffer();
     Iterator params = (parameters.keySet()).iterator();

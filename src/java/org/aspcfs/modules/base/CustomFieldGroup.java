@@ -440,13 +440,16 @@ public class CustomFieldGroup extends Vector {
    *@exception  SQLException  Description of Exception
    *@since
    */
-  public void insert(Connection db) throws SQLException {
+  public int insert(Connection db) throws SQLException {
+    int result = 1;
     Iterator i = this.iterator();
     while (i.hasNext()) {
       CustomField thisField = (CustomField)i.next();
       thisField.setRecordId(recordId);
-      thisField.insert(db);
+      int fieldResult = thisField.insert(db);
+      if (fieldResult != 1) result = fieldResult;
     }
+    return result;
   }
 
 
