@@ -388,11 +388,15 @@ public class TransactionItem {
           //Populate any client GUIDs with the correct server ID
           setGuidParameters(db);
         }
+        
+        if (action == DELETE) {
+          //Set the object's id to be deleted, based on the client guid
+          this.setObjectId(db);
+        }
 
         if (action == UPDATE) {
-          //Set the object's id to be written, based on the client guid
+          //Set the object's id to be updated, based on the client guid
           this.setObjectId(db);
-          //TODO: Does this work?  Is modified set correctly?
           //Retrieve the previous modified date to ensure integrity of update
           syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
           syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
@@ -442,6 +446,9 @@ public class TransactionItem {
             addRecords(object, recordList, "conflict");
             syncClientMap.insertConflict(db);
           }
+        } else if (action == DELETE) {
+          //TODO: syncClientMap.delete...
+          addRecords(object, recordList, "delete");
         } else {
           //It wasn't an insert or an update...
           addRecords(object, recordList, null);

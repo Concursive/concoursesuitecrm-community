@@ -522,24 +522,23 @@ public class AdRun {
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
    */
-  public void update(Connection db) throws SQLException {
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("AdRun-> Updating record: id(" + id + ")");
-    }
-
+  public int update(Connection db) throws SQLException {
+    int resultCount = 0;
     if (remove) {
       delete(db);
     } else if (id == -1) {
       insert(db);
     } else {
-      StringBuffer sql = new StringBuffer();
-      sql.append(
-          "UPDATE autoguide_ad_run " +
-          "SET run_date = ?, ad_type = ?, include_photo = ?, complete_date = ?, " +
-          "completedby = ?, " +
-          "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
-          "WHERE ad_run_id = ? ");
-      PreparedStatement pst = db.prepareStatement(sql.toString());
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("AdRun-> Updating record: id(" + id + ")");
+      }
+      String sql = 
+        "UPDATE autoguide_ad_run " +
+        "SET run_date = ?, ad_type = ?, include_photo = ?, complete_date = ?, " +
+        "completedby = ?, " +
+        "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+        "WHERE ad_run_id = ? ";
+      PreparedStatement pst = db.prepareStatement(sql);
       int i = 0;
       pst.setDate(++i, runDate);
       pst.setInt(++i, adTypeId);
@@ -553,9 +552,10 @@ public class AdRun {
       }
       pst.setInt(++i, modifiedBy);
       pst.setInt(++i, id);
-      pst.execute();
+      resultCount = pst.executeUpdate();
       pst.close();
     }
+    return resultCount;
   }
 
 
@@ -609,6 +609,9 @@ public class AdRun {
    *@exception  SQLException  Description of Exception
    */
   public void delete(Connection db) throws SQLException {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("AdRun-> Deleting record: id(" + id + ")");
+    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         "DELETE FROM autoguide_ad_run " +
