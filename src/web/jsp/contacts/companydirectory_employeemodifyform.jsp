@@ -321,11 +321,11 @@ Modify Employee<br>
     </td>
   </tr>  
   <tr>
-    <td class="formLabel">
+    <td valign="top" class="formLabel">
       Notes
     </td>
     <td>
-      <TEXTAREA NAME='notes' ROWS=3 COLS=50><%= (EmployeeBean.getNotes()) %></TEXTAREA>
+      <TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toString(EmployeeBean.getNotes()) %></TEXTAREA>
     </td>
   </tr>
 </table>

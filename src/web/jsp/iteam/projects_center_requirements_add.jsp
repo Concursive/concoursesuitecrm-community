@@ -132,7 +132,7 @@
       <td width="2" bgcolor="#000000">&nbsp;</td>
       <td width="100%" colspan="2">&nbsp;Requirements:<br>
         &nbsp;
-        <textarea rows="8" name="description" cols="80"><%= Requirement.getDescription() %></textarea><font color=red>*</font> <%= showAttribute(request, "descriptionError") %><br>
+        <textarea rows="8" name="description" cols="80"><%= toString(Requirement.getDescription()) %></textarea><font color=red>*</font> <%= showAttribute(request, "descriptionError") %><br>
         &nbsp;
       </td>
       <td width="2" bgcolor="#000000">&nbsp;</td>

@@ -213,7 +213,7 @@
       <dhv:label name="tickets-problem">Issue</dhv:label>
     </td>
     <td bgColor="white" valign="top">
-      <textarea name="problem" cols=55 rows=3><%=TicketDetails.getProblem()%></textarea>
+      <textarea name="problem" cols=55 rows=3><%= toString(TicketDetails.getProblem()) %></textarea>
       <font color="red">*</font> <%= showAttribute(request, "problemError") %>
       <input type=hidden name=refresh value="-1">
     </td>
@@ -320,7 +320,7 @@
 	</td>
 	
 	<td bgColor="white">
-	<textarea name="comment" cols="55" rows="3"><%=TicketDetails.getComment()%></textarea>
+	<textarea name="comment" cols="55" rows="3"><%= toString(TicketDetails.getComment()) %></textarea>
 	</td>
 	</tr>
 	
@@ -339,7 +339,7 @@
 	</td>
 	
 	<td bgColor="white">
-	<textarea name="solution" cols="55" rows="3"><%=TicketDetails.getSolution()%></textarea><br>
+	<textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
 	<input type=checkbox name="closeNow">Close ticket
 	</td>
 	</tr>

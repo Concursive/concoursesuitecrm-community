@@ -185,11 +185,11 @@ Modify Ticket<br>
 		</td>     
   </tr>
   <tr class="containerBody">
-		<td class="formLabel">
+		<td class="formLabel" valign="top">
       <dhv:label name="tickets-problem">Issue</dhv:label>
     </td>
 		<td valign=top>
-      <textarea name="problem" cols=55 rows=3><%=TicketDetails.getProblem()%></textarea>
+      <textarea name="problem" cols=55 rows=3><%= toString(TicketDetails.getProblem()) %></textarea>
       <font color="red">*</font> <%= showAttribute(request, "problemError") %>
       <input type=hidden name=orgId value="<%=TicketDetails.getOrgId()%>">
       <input type=hidden name=id value="<%=TicketDetails.getId()%>">
@@ -303,11 +303,11 @@ Modify Ticket<br>
 		</td>
   </tr>
 	<tr class="containerBody">
-		<td class="formLabel">
+		<td class="formLabel" valign="top">
       User Comments
     </td>
 		<td>
-      <textarea name="comment" cols="55" rows="3"><%=TicketDetails.getComment()%></textarea>
+      <textarea name="comment" cols="55" rows="3"><%= toString(TicketDetails.getComment()) %></textarea>
 		</td>
   </tr>
 </table>
@@ -319,11 +319,11 @@ Modify Ticket<br>
 		</td>     
   </tr>
 	<tr class="containerBody">
-		<td class="formLabel">
+		<td class="formLabel" valign="top">
       Solution
 		</td>
 		<td>
-      <textarea name=solution cols=55 rows=3><% if (TicketDetails.getSolution() != null) {%><%=TicketDetails.getSolution()%><%}%></textarea><br>
+      <textarea name=solution cols=55 rows=3><%= toString(TicketDetails.getSolution()) %></textarea><br>
         <input type="checkbox" name="closeNow">Close ticket
       </td>
 		</tr>

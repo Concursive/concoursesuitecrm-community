@@ -136,11 +136,11 @@ Modify Call<br>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel" width=100%>
+    <td nowrap class="formLabel" width="100%" valign="top">
       Notes
     </td>
     <td>
-      <TEXTAREA NAME='notes' ROWS=3 COLS=50><%= (CallDetails.getNotes()) %></TEXTAREA>
+      <TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toString(CallDetails.getNotes()) %></TEXTAREA>
     </td>
   </tr>
   

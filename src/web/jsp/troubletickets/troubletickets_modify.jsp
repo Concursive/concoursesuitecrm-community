@@ -173,7 +173,7 @@ function ShowSpan(thisID)
         <dhv:label name="tickets-problem">Issue</dhv:label>
       </td>
       <td valign="top" bgColor="white">
-        <textarea name="problem" cols=55 rows=3><%=TicketDetails.getProblem()%></textarea>
+        <textarea name="problem" cols=55 rows=3><%= toString(TicketDetails.getProblem()) %></textarea>
         <font color="red">*</font> <%= showAttribute(request, "problemError") %>
         <input type="hidden" name="orgId" value="<%=TicketDetails.getOrgId()%>">
         <input type="hidden" name="id" value="<%=TicketDetails.getId()%>">
@@ -299,7 +299,7 @@ function ShowSpan(thisID)
     </td>
 		
 		<td bgColor="white">
-      <textarea name="comment" cols="55" rows="3"><%=TicketDetails.getComment()%></textarea>
+      <textarea name="comment" cols="55" rows="3"><%= toString(TicketDetails.getComment()) %></textarea>
 		</td>
 		</tr>
 		
@@ -317,7 +317,7 @@ function ShowSpan(thisID)
         Solution
       </td>
       <td bgColor="white">
-        <textarea name="solution" cols="55" rows="3"><% if (TicketDetails.getSolution() != null) {%><%=TicketDetails.getSolution()%><%}%></textarea><br>
+        <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
         <input type="checkbox" name="closeNow">Close ticket
       </td>
 		</tr>

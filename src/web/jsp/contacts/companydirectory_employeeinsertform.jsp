@@ -274,8 +274,8 @@ Add Employee<br>
 	  </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">Notes</td>
-    <td><TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toHtmlValue(EmployeeBean.getNotes()) %></TEXTAREA></td>
+    <td nowrap class="formLabel" valign="top">Notes</td>
+    <td><TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toString(EmployeeBean.getNotes()) %></TEXTAREA></td>
   </tr>
 </table>
 <br>

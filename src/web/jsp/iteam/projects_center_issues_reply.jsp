@@ -60,7 +60,7 @@
       <td width="100%" colspan="2">
         &nbsp;Description:<br>
         &nbsp;
-        <textarea rows="8" name="body" cols="70"><%= IssueReply.getBody() %></textarea><font color=red>*</font> <%= showAttribute(request, "bodyError") %><br>
+        <textarea rows="8" name="body" cols="70"><%= toString(IssueReply.getBody()) %></textarea><font color=red>*</font> <%= showAttribute(request, "bodyError") %><br>
         &nbsp;
       </td>
       <td width="2" bgcolor="#808080">&nbsp;</td>

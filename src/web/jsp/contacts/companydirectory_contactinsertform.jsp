@@ -295,11 +295,11 @@ Add Contact<br>
     </td>
   </tr>  
   <tr>
-    <td class="formLabel">
+    <td valign="top" class="formLabel">
       Notes
     </td>
     <td>
-      <TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toHtmlValue(ContactDetails.getNotes()) %></TEXTAREA>
+      <TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toString(ContactDetails.getNotes()) %></TEXTAREA>
     </td>
   </tr>
 </table>

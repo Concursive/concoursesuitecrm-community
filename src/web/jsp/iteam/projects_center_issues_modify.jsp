@@ -65,7 +65,7 @@
         &nbsp;Issue
         Description:<br>
         &nbsp;
-        <textarea rows="8" name="body" cols="70"><%= Issue.getBody() %></textarea><font color=red>*</font> <%= showAttribute(request, "bodyError") %><br>
+        <textarea rows="8" name="body" cols="70"><%= toString(Issue.getBody()) %></textarea><font color=red>*</font> <%= showAttribute(request, "bodyError") %><br>
         &nbsp;
       </td>
       <td width='2' bgcolor='#808080'>&nbsp;</td>

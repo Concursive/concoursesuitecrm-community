@@ -150,7 +150,7 @@ Modify Account<br>
   </tr>
 </dhv:evaluate>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td nowrap class="formLabel" valign="top">
       Account Type(s)
     </td>
     <td>
@@ -493,11 +493,11 @@ Modify Account<br>
     </td>
   </tr>  
   <tr class="containerBody">
-    <td class="formLabel">
+    <td valign="top" class="formLabel">
       Notes
     </td>
     <td>
-      <TEXTAREA NAME='notes' ROWS=3 COLS=50><%= (OrgDetails.getNotes()) %></TEXTAREA>
+      <TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toString(OrgDetails.getNotes()) %></TEXTAREA>
     </td>
   </tr>
 </table>

@@ -41,7 +41,7 @@ function sendMessage() {
   </tr>
   
   <tr class="containerBody">
-    <td nowrap valign="center" class="formLabel">
+    <td nowrap valign="top" class="formLabel">
       Recipient(s)
       </td>
     <td align="left">
@@ -83,7 +83,7 @@ function sendMessage() {
       Body
     </td>
     <td width=100%>
-      <textarea name="body" rows=10 style="width:100%;" value="body"><%=Note.getBody().equals("")?"":Note.getBody()%></textarea>
+      <textarea name="body" rows="5" value="body"><%= toString(Note.getBody()) %></textarea>
     </td>
   </tr>
 </table>

@@ -163,7 +163,7 @@
       Text
     </td>
     <td width=100%>
-      <textarea name="body" rows=10 style="width:100%;"><%= NoteDetails.getBody() %></textarea>
+      <textarea name="body" rows="5"><%= toString(NoteDetails.getBody()) %></textarea>
     </td>
   </tr>
 </table>

@@ -128,7 +128,7 @@ Calls<br>
       Notes
     </td>
     <td>
-      <TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toHtmlValue(CallDetails.getNotes()) %></TEXTAREA>
+      <TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toString(CallDetails.getNotes()) %></TEXTAREA>
     </td>
   </tr>
   <tr class="containerBody">

@@ -74,7 +74,7 @@ Add Account<br>
   </tr>
   
    <tr>
-    <td nowrap class="formLabel">
+    <td nowrap class="formLabel" valign="top">
       Account Type(s)
     </td>
     <td>
@@ -364,8 +364,8 @@ Add Account<br>
 	  </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">Notes</td>
-    <td><TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toHtmlValue(OrgDetails.getNotes()) %></TEXTAREA></td>
+    <td valign="top" nowrap class="formLabel">Notes</td>
+    <td><TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toString(OrgDetails.getNotes()) %></TEXTAREA></td>
   </tr>
 </table>
 <br>

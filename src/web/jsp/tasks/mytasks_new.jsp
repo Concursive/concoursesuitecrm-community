@@ -31,8 +31,8 @@
   </td>
   
   <td>
-      <input type=text name="description" value="<%=toHtmlValue(Task.getDescription()!=null?Task.getDescription():"")%>" size=50>
-      <font color="red">*</font>`
+      <input type="text" name="description" value="<%=toHtmlValue(Task.getDescription()!=null?Task.getDescription():"")%>" size="50" maxlength="80">
+      <font color="red">*</font> <%= showAttribute(request, "descriptionError") %>
   </td>
   
   </tr>
@@ -44,6 +44,7 @@
     <td>
       <input type=text size=10 name="dueDate" value="<%=(Task.getDueDate()==null)?"":Task.getDueDateString()%>">
       <a href="javascript:popCalendar('addTask', 'dueDate');">Date</a> (mm/dd/yyyy)
+      <%= showAttribute(request, "dueDateError") %>
       </td> 
   </tr>
 
@@ -119,9 +120,9 @@
   </tr>
   
   <tr class="containerBody">
-    <td nowrap class="formLabel">Notes</td>
+    <td valign="top" nowrap class="formLabel">Notes</td>
     <td width=100%>
-      <textarea name="notes" style="width:50%;" rows=5 value="body"><%=Task.getNotes()!=null?Task.getNotes():""%></textarea>
+      <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= (Task.getNotes()) %></TEXTAREA>
     </td>
   </tr>
 
