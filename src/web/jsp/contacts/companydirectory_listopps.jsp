@@ -94,7 +94,7 @@
 <%}%>
 </table>
 <br>
-[<%= OpportunityPagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= OpportunityPagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
+<dhv:pagedListControl object="OpportunityPagedListInfo"/>
 </td>
 </tr>
 </table>

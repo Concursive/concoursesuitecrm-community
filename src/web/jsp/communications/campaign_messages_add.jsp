@@ -25,6 +25,7 @@
 <body onLoad="javascript:document.forms[0].name.focus();">
 <a href="/CampaignManagerMessage.do?command=View">Back to Message List</a><br>
 <form name="addMessage" method="post" action="/CampaignManagerMessage.do?command=Insert&auto-populate=true">
+&nbsp;<br>
 <input type="submit" value="Save" onclick="javascript:save();">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=View'">
 <input type="reset" value="Reset">

@@ -597,8 +597,8 @@ public final class ExternalContacts extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     Contact thisContact = null;
-
     String recordId = null;
+    boolean showRecords = true;
 
     try {
       String contactId = context.getRequest().getParameter("contactId");
@@ -624,28 +624,48 @@ public final class ExternalContacts extends CFSModule {
       context.getRequest().setAttribute("catId", selectedCatId);
 
       recordId = context.getRequest().getParameter("recId");
-
-      if (recordId == null) {
-        CustomFieldCategory thisCategory = thisList.getCategory(Integer.parseInt(selectedCatId));
-        context.getRequest().setAttribute("Category", thisCategory);
-
+      String recordDeleted = (String)context.getRequest().getAttribute("recordDeleted");
+      if (recordDeleted != null) {
+        recordId = null;
+      }
+      
+      CustomFieldCategory thisCategory = thisList.getCategory(Integer.parseInt(selectedCatId));
+      if (recordId == null && thisCategory.getAllowMultipleRecords()) {
+        //The user didn't request a specific record, so show a list
+        //of records matching this category that the user can choose from
+        PagedListInfo folderListInfo = this.getPagedListInfo(context, "ContactFolderInfo");
+        folderListInfo.setLink("/ExternalContacts.do?command=Fields&contactId=" + contactId + "&catId=" + selectedCatId);
+     
         CustomFieldRecordList recordList = new CustomFieldRecordList();
         recordList.setLinkModuleId(Constants.CONTACTS);
         recordList.setLinkItemId(thisContact.getId());
         recordList.setCategoryId(thisCategory.getId());
         recordList.buildList(db);
+        recordList.buildRecordColumns(db, thisCategory);
         context.getRequest().setAttribute("Records", recordList);
       } else {
-        CustomFieldCategory thisCategory = thisList.getCategory(Integer.parseInt(selectedCatId));
+        //The user requested a specific record, or this category only
+        //allows a single record.
         thisCategory.setLinkModuleId(Constants.CONTACTS);
         thisCategory.setLinkItemId(thisContact.getId());
-        thisCategory.setRecordId(Integer.parseInt(recordId));
+        if (recordId != null) {
+          thisCategory.setRecordId(Integer.parseInt(recordId));
+        } else {
+          thisCategory.buildRecordId(db);
+          recordId = String.valueOf(thisCategory.getRecordId());
+        }
         thisCategory.setIncludeEnabled(Constants.TRUE);
         thisCategory.setIncludeScheduled(Constants.TRUE);
         thisCategory.setBuildResources(true);
         thisCategory.buildResources(db);
-        context.getRequest().setAttribute("Category", thisCategory);
+        showRecords = false;
+        
+        if (thisCategory.getRecordId() > -1) {
+          CustomFieldRecord thisRecord = new CustomFieldRecord(db, thisCategory.getRecordId());
+          context.getRequest().setAttribute("Record", thisRecord);
+        }
       }
+      context.getRequest().setAttribute("Category", thisCategory);
 
     } catch (Exception e) {
       errorMessage = e;
@@ -655,7 +675,7 @@ public final class ExternalContacts extends CFSModule {
 
     if (errorMessage == null) {
       addModuleBean(context, "External Contacts", "Custom Fields Details");
-      if (recordId == null) {
+      if (recordId == null && showRecords) {
         return ("FieldRecordListOK");
       } else {
         return ("FieldsOK");

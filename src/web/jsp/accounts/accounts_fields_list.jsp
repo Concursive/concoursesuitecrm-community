@@ -61,7 +61,6 @@
         CustomFieldRecord thisRecord = (CustomFieldRecord)records.next();
 %>    
       <tr class="containerBody">
-      
         <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
         <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
@@ -71,7 +70,7 @@
         </dhv:evaluate>
       
         <td align="left" width="100%" nowrap class="row<%= rowid %>">
-          <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml() %></a>
+          <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
         </td>
         <td nowrap class="row<%= rowid %>">
           <%= toHtml(thisRecord.getEnteredString()) %>

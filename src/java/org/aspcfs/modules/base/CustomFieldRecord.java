@@ -355,11 +355,11 @@ public class CustomFieldRecord {
     "      FROM custom_field_group " +
     "      WHERE category_id = ? " +
     "      AND enabled = " + DatabaseUtils.getTrue(db) + " " +
-    "      ORDER BY level, field_id, field_name " +
+    "      ORDER BY level, group_id, group_name " +
            (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL?"LIMIT 1 ":"") +
     "     ) " +
     "   AND enabled = " + DatabaseUtils.getTrue(db) + " " +
-    "   ORDER BY level " +
+    "   ORDER BY level, field_id, field_name " +
         (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL?"LIMIT 1 ":"");
     
     PreparedStatement pst = db.prepareStatement(sql);

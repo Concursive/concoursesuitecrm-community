@@ -784,21 +784,23 @@ public void setMaxRowItems(String maxRowItems) {
   }
 
 
-  /**
-   *  Gets the Value attribute of the CustomField object
-   *
-   *@return    The Value value
-   *@since
-   */
   public String getValueHtml() {
+    return getValueHtml(true);
+  }
+  
+  public String getValueHtml(boolean enableLinks) {
     if (type != SELECT && (enteredValue == null || enteredValue.equals(""))) {
       return toHtml(enteredValue);
     }
     switch (type) {
         case URL:
-          return "<a href=\"" + ((enteredValue.indexOf(":") > -1) ? "" : "http://") + enteredValue + "\" target=\"_new\">" + enteredValue + "</a>";
+          if (enableLinks) {
+            return "<a href=\"" + ((enteredValue.indexOf(":") > -1) ? "" : "http://") + enteredValue + "\" target=\"_new\">" + enteredValue + "</a>";
+          } else {
+            return toHtml(enteredValue);
+          }
         case EMAIL:
-          if (enteredValue.indexOf("@") > 0) {
+          if (enableLinks && enteredValue.indexOf("@") > 0) {
             return "<a href=\"mailto:" + enteredValue + "\">" + enteredValue + "</a>";
           } else {
             return toHtml(enteredValue);

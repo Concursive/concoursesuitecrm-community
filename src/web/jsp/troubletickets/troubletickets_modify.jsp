@@ -319,21 +319,16 @@ function ShowSpan(thisID)
 	<input type=checkbox name="kbase" checked>Include this solution
 	</td>
 	</tr>
-
-		
 	</table>
 	
-	</td>
-  </tr>
-      	<tr>
-  	<td>
-  	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	
-			<tr bgcolor="#DEE0FA">
-		<td colspan=4 valign=center align=left>
-		<strong>Ticket Log History</strong>
-		</td>     
-		</tr>
+  &nbsp;
+  
+  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+    <tr bgcolor="#DEE0FA">
+      <td colspan="4" valign="center" align="left">
+        <strong>Ticket Log History</strong>
+      </td>     
+    </tr>
 	
 	<%  
 		Iterator hist = TicketDetails.getHistory().iterator();
@@ -341,48 +336,41 @@ function ShowSpan(thisID)
 			while (hist.hasNext()) {
 				TicketLog thisEntry = (TicketLog)hist.next();
 	%>    
-			<% if (thisEntry.getSystemMessage() == true) {%>
-			<tr bgColor="#F1F0E0">
-			<% } else { %>
-			<tr class="containerBody">
-			<%}%>
-			
+  <% if (thisEntry.getSystemMessage() == true) {%>
+    <tr bgColor="#F1F0E0">
+  <% } else { %>
+    <tr class="containerBody">
+  <%}%>
 			<td nowrap valign=center width=100 class="formLabel">
-			<%=toHtml(thisEntry.getEnteredByName())%>
+        <%=toHtml(thisEntry.getEnteredByName())%>
 			</td>
 			<td nowrap valign=center width=150>
-			<%=thisEntry.getEnteredString()%>
+        <%=thisEntry.getEnteredString()%>
 			</td>
 			<td valign=center>
-			<%=toHtml(thisEntry.getEntryText())%>
+        <%=toHtml(thisEntry.getEntryText())%>
 			</td>
-			</tr>
+    </tr>
 	<%    
 			}
 		} else {
 	%>
-			<tr><td>
-			<font color="#9E9E9E" colspan=3>No Log Entries.</font>
-			</td></tr>
-		<%}%>
-			
-			   	</table>
-	</td></tr>
-		
-		<tr>
-		<td colspan=3 bgColor="white">
-		
-		<% if (TicketDetails.getClosed() != null) { %>
-		        <input type=button value="Reopen">
-			<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
-		<%} else {%>
-			<input type=submit value="Update">
-			<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
-		<%}%>
-		</td>
-		
-		</tr>
-
+    <tr>
+      <td>
+        <font color="#9E9E9E" colspan="4">No Log Entries.</font>
+			</td>
+    </tr>
+  <%}%>
+</table>
+&nbsp;<br>
+<% if (TicketDetails.getClosed() != null) { %>
+  <input type=button value="Reopen">
+<%} else {%>
+  <input type="submit" value="Update">
+<%}%>
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
+  </td>
+  </tr>
 </table>
 </form>
 

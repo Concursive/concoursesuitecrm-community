@@ -5,6 +5,7 @@
 <jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="Records" class="com.darkhorseventures.cfsbase.CustomFieldRecordList" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <form name="details" action="/ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>" method="post">
 <a href="/ExternalContacts.do?command=ListContacts">Back to Contact List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -25,12 +26,19 @@
   CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
   if (CategoryList.size() > 0) {
 %>
-    <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><br>
-    
-    <dhv:permission name="contacts-external_contacts-folders-add">&nbsp;<br><a href="/ExternalContacts.do?command=AddFolderRecord&contactId=<%= ContactDetails.getId() %>&catId=<%=(String)request.getAttribute("catId") %>">Add a record to this folder</a><br></dhv:permission>
+    <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><%= (Category.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif' alt='Folder is read-only'>":"") %><br>
     &nbsp;<br>
+    <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>"><dhv:permission name="contacts-external_contacts-folders-add"><a href="/ExternalContacts.do?command=AddFolderRecord&contactId=<%= ContactDetails.getId() %>&catId=<%=(String)request.getAttribute("catId") %>">Add a record to this folder</a><br>&nbsp;<br></dhv:permission></dhv:evaluate>
     <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr class="title">
+        <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
+        <dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete">
+          <td valign=center align=left bgcolor="#DEE0FA">
+            <strong>Action</strong>
+          </td>
+        </dhv:permission>
+        </dhv:evaluate>
+        
         <td align="left">
           <strong>Record</strong>
         </td>
@@ -46,21 +54,31 @@
       </tr>
 <%
     if (Records.size() > 0) {
+      int rowid = 0;
       Iterator records = Records.iterator();
       while (records.hasNext()) {
+        rowid = (rowid == 1 ? 2 : 1);
         CustomFieldRecord thisRecord = (CustomFieldRecord)records.next();
 %>    
       <tr class="containerBody">
-        <td align="left" width="100%" nowrap>
-          <a href="/ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= Category.getName() %> #<%= thisRecord.getId() %></a>
+        <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
+        <dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete">
+        <td width="8" valign="center" nowrap class="row<%= rowid %>">
+          <dhv:permission name="contacts-external_contacts-folders-edit"><a href="/ExternalContacts.do?command=ModifyFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-folders-delete"><a href="javascript:confirmDelete('/ExternalContacts.do?command=DeleteFields&contactId=<%= ContactDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>');">Del</a></dhv:permission>
+          </td>
+        </dhv:permission>
+        </dhv:evaluate>
+        
+        <td align="left" width="100%" nowrap class="row<%= rowid %>">
+          <a href="/ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
         </td>
-        <td nowrap>
+        <td nowrap class="row<%= rowid %>">
           <%= toHtml(thisRecord.getEnteredString()) %>
         </td>
-        <td nowrap>
+        <td nowrap class="row<%= rowid %>">
           <dhv:username id="<%= thisRecord.getModifiedBy() %>" />
         </td>
-        <td nowrap>
+        <td nowrap class="row<%= rowid %>">
           <%= toHtml(thisRecord.getModifiedDateTimeString()) %>
         </td>
       </tr>
@@ -69,7 +87,7 @@
     } else {
 %>
       <tr class="containerBody">
-        <td colspan="4">
+        <td colspan="5">
           <font color="#9E9E9E">No records have been entered.</font>
         </td>
       </tr>

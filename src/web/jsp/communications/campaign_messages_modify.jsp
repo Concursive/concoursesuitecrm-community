@@ -24,6 +24,7 @@
 </style>
 <a href="/CampaignManagerMessage.do?command=View">Back to Message List</a><br>
 <form name="modMessage" action="/CampaignManagerMessage.do?command=Update&auto-populate=true" method="post">
+&nbsp;<br>
 <input type="hidden" name="id" value="<%= Message.getId() %>">
 <input type="hidden" name="modified" value="<%= Message.getModified() %>">
 <input type="submit" value="Update" name="Save" onclick="javascript:save();">

@@ -1088,7 +1088,6 @@ public final class Accounts extends CFSModule {
           CustomFieldRecord thisRecord = new CustomFieldRecord(db, thisCategory.getRecordId());
           context.getRequest().setAttribute("Record", thisRecord);
         }
-        
       }
       context.getRequest().setAttribute("Category", thisCategory);
 

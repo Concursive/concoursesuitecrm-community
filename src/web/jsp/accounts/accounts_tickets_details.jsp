@@ -2,6 +2,7 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="details" action="AccountTickets.do?command=ModifyTicket&auto-populate=true" method="post">
 <a href="Accounts.do?command=ViewTickets&orgId=<%= TicketDetails.getOrgId() %>">Back to Ticket List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -21,8 +22,8 @@
 <% if (TicketDetails.getClosed() != null) { %>
       <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Reopen"> <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font></dhv:permission>
 <%} else {%>
-      <dhv:permission name="accounts-accounts-tickets-edit"><input type="submit" value="Modify"></dhv:permission>
-      <dhv:permission name="accounts-accounts-tickets-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/AccountTickets.do?command=DeleteTicket&id=<%=TicketDetails.getId() %>'"></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&auto-populate=true';submit();"></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='/AccountTickets.do?command=DeleteTicket&id=<%=TicketDetails.getId() %>';confirmSubmit(this.form);"></dhv:permission>
 <%}%>
 <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br>&nbsp;</dhv:permission>
 
@@ -213,8 +214,8 @@
 <% if (TicketDetails.getClosed() != null) { %>
       <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Reopen"></dhv:permission>
 <%} else {%>
-      <dhv:permission name="accounts-accounts-tickets-edit"><input type="submit" value="Modify"></dhv:permission>
-      <dhv:permission name="accounts-accounts-tickets-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/AccountTickets.do?command=DeleteTicket&id=<%=TicketDetails.getId() %>'"></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&auto-populate=true';submit();"></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='/AccountTickets.do?command=DeleteTicket&id=<%=TicketDetails.getId() %>';confirmSubmit(this.form);"></dhv:permission>
 <%}%>
 
 </td></tr>

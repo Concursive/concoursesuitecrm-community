@@ -2,6 +2,7 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="OpportunityDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="oppdet" action="/Leads.do?auto-populate=true&id=<%=OpportunityDetails.getId()%>&orgId=<%= OpportunityDetails.getAccountLink() %>&contactId=<%= OpportunityDetails.getContactLink() %>" method="post">
 <a href="Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
 
@@ -30,8 +31,8 @@
 
 <input type=hidden name="command" value="<%= OpportunityDetails.getId() %>">
 
-<dhv:permission name="pipeline-opportunities-edit"><input type=button name="action" value="Modify" onClick="document.oppdet.command.value='ModifyOpp';document.oppdet.submit()"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete"><input type=button name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';document.oppdet.submit()"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-edit"><input type="button" name="action" value="Modify" onClick="document.oppdet.command.value='ModifyOpp';document.oppdet.submit();"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';confirmSubmit(this.form);"></dhv:permission>
 <dhv:permission name="pipeline-opportunities-delete,pipeline-opportunities-edit"><br>&nbsp;</dhv:permission>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -161,8 +162,8 @@
   
 </table>
 <dhv:permission name="pipeline-opportunities-delete,pipeline-opportunities-edit"><br></dhv:permission>
-<dhv:permission name="pipeline-opportunities-edit"><input type=button name="action" value="Modify" onClick="document.oppdet.command.value='ModifyOpp';document.oppdet.submit()"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete"><input type=button name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';document.oppdet.submit()"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-edit"><input type="button" name="action" value="Modify" onClick="document.oppdet.command.value='ModifyOpp';document.oppdet.submit()"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';confirmSubmit(this.form);"></dhv:permission>
 </td></tr>
 </table>
 </form>
