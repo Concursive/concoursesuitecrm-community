@@ -206,5 +206,15 @@
       <property lookup="user">modifiedBy</property>
       <property>alertDate</property>
     </map>
+    <map class="com.darkhorseventures.cfsbase.ContactEmailAddress" id="contactEmailAddress">
+      <property alias="guid">id</property>
+      <property lookup="account">orgId</property>
+      <property lookup="contact">contactId</property>
+      <property lookup="lookupContactEmailTypes">type</property>
+      <property>email</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+    </map>
   </mappings>
 </CFSDatabaseReader>

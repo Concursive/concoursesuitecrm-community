@@ -5,6 +5,7 @@ package com.darkhorseventures.cfsbase;
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.utils.DateUtils;
 
 /**
  *  Represents an email address.
@@ -25,6 +26,8 @@ public class EmailAddress {
   private int enteredBy = -1;
   private int modifiedBy = -1;
   private boolean enabled = true;
+  private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
 
 
   /**
@@ -58,6 +61,10 @@ public class EmailAddress {
   public void setOrgId(int tmp) {
     this.orgId = tmp;
   }
+  
+    public void setOrgId(String tmp) {
+    this.orgId = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -68,6 +75,10 @@ public class EmailAddress {
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
+  }
+  
+    public void setContactId(String tmp) {
+    this.contactId = Integer.parseInt(tmp);
   }
 
 
@@ -124,6 +135,10 @@ public class EmailAddress {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
+  
+    public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -134,6 +149,10 @@ public class EmailAddress {
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
+  }
+  
+    public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
   }
 
 
@@ -202,6 +221,18 @@ public class EmailAddress {
     return typeName;
   }
 
+public java.sql.Timestamp getEntered() { return entered; }
+public java.sql.Timestamp getModified() { return modified; }
+public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
+public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
+
+  public void setEntered(String tmp) {
+    this.entered = DateUtils.parseTimestampString(tmp);
+  }
+  
+  public void setModified(String tmp) {
+    this.modified = DateUtils.parseTimestampString(tmp);
+  }
 
   /**
    *  Gets the Email attribute of the EmailAddress object

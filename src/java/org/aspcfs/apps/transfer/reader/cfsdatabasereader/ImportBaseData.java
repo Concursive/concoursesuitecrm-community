@@ -65,6 +65,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     //Iterate and get emails, addresses
     
     //Copy Contacts
+    /**
     logger.info("ImportBaseData-> Inserting contacts");
     writer.setAutoCommit(false);
     ContactList contacts = new ContactList();
@@ -72,6 +73,15 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     contacts.setPersonalId(-2);
     contacts.buildList(db);
     mappings.saveList(writer, contacts, "insert");
+    */
+    
+    logger.info("ImportBaseData-> Inserting contacts");
+    writer.setAutoCommit(false);
+    ContactList contacts = new ContactList();
+    contacts.setIncludeEnabled(-1);
+    contacts.setPersonalId(-2);
+    contacts.buildList(db);
+    this.saveContactList(db, contacts);
     
     processOK = writer.commit();
     if (!processOK) {
@@ -98,6 +108,24 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       newUserList.setEnteredBy(thisUser.getId());
       newUserList.buildList(db);
       saveUserList(db, newUserList);
+    }
+  }
+  
+  private void saveContactList(Connection db, ContactList contactList) throws SQLException{
+    Iterator contacts = contactList.iterator();
+    while (contacts.hasNext()) {
+      Contact thisContact = (Contact)contacts.next();
+      DataRecord thisRecord = mappings.createDataRecord(thisContact, "insert");
+      writer.save(thisRecord);
+      
+      ContactEmailAddressList emailList = new ContactEmailAddressList();
+      emailList.setContactId(thisContact.getId());
+      emailList.buildList(db);
+      
+      logger.info("ImportBaseData-> Inserting " + emailList.size() + " Contact emails");
+      
+      Iterator emails = emailList.iterator();
+      mappings.saveList(writer, emailList, "insert");
     }
   }
   

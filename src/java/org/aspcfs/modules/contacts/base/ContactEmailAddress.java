@@ -15,12 +15,21 @@ public class ContactEmailAddress extends EmailAddress {
     isContact = true;
     buildRecord(rs);
   }
+  
+  public ContactEmailAddress(Connection db, int emailAddressId) throws SQLException {
+          queryRecord(db, emailAddressId);
+  }
 
 
   public ContactEmailAddress(Connection db, String emailAddressId) throws SQLException {
+          queryRecord(db, Integer.parseInt(emailAddressId));
+  }
+  
+  public void queryRecord(Connection db, int emailAddressId) throws SQLException {
     isContact = true;
-    if (emailAddressId == null) {
-      throw new SQLException("Email Address ID not specified.");
+    
+    if (emailAddressId < 0) {
+      throw new SQLException("Valid Email Address ID not specified.");
     }
 
     Statement st = null;
@@ -66,7 +75,10 @@ public class ContactEmailAddress extends EmailAddress {
       this.delete(db);
     }
   }
-
+  
+  public void insert(Connection db) throws SQLException  {
+          insert(db, this.getContactId(), this.getEnteredBy());
+  }
 
   public void insert(Connection db, int contactId, int enteredBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
