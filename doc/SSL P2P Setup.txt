@@ -20,7 +20,7 @@ that public certificates can be added to.
    
 To create a keystore, use the following command:
 
-% keytool -genkey -alias aspcfs -keyalg RSA -keysize 1024 -dname CN=www.aspcfs.com -keystore keystore -keypass aspcfs -storepass aspcfs
+% keytool -genkey -alias ds -keyalg RSA -keysize 1024 -validity 1000 -dname CN=*.aspcfs.com -keystore keystore -keypass aspcfs -storepass aspcfs
 
 The resulting keystore file should be placed in the ASPCFS WEB-INF folder.
 
