@@ -162,6 +162,7 @@ public class StringUtils {
       htmlReady = replace(htmlReady, "&lt;", "<");
       htmlReady = replace(htmlReady, "&gt;", ">");
       htmlReady = replace(htmlReady, "<br>", "\r\n");
+      htmlReady = replace(htmlReady, "<br />", "\r\n");
       return (htmlReady);
     } else {
       return ("");
@@ -176,8 +177,9 @@ public class StringUtils {
    *@return    Description of the Return Value
    */
   public static String toHtmlText(String s) {
-    String htmlReady = replace(s, "\r\n", "<br>");
-    return htmlReady;
+    s = replace(s, "<br>\r\n", "<br>");
+    s = replace(s, "\r\n", "<br>");
+    return s;
   }
 
 
@@ -188,8 +190,11 @@ public class StringUtils {
    *@return    Description of the Return Value
    */
   public static String toHtmlTextValue(String s) {
-    String htmlReady = replace(s, "<br>", "\r\n");
-    return htmlReady;
+    s = replace(s, "<br>\r\n", "\r\n");
+    s = replace(s, "<br />\r\n", "\r\n");
+    s = replace(s, "<br>", "\r\n");
+    s = replace(s, "<br />", "\r\n");
+    return s;
   }
 
 
