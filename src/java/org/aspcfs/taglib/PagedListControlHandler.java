@@ -114,7 +114,7 @@ public class PagedListControlHandler extends TagSupport {
         pagedListInfo.setShowForm(showForm);
         pagedListInfo.setResetList(resetList);
         JspWriter out = this.pageContext.getOut();
-        out.write("<SCRIPT LANGUAGE=\"JavaScript\" TYPE=\"text/javascript\" SRC=\"/javascript/pageListInfo.js\"></SCRIPT>");
+        out.write("<SCRIPT LANGUAGE=\"JavaScript\" TYPE=\"text/javascript\" SRC=\"javascript/pageListInfo.js\"></SCRIPT>");
         out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">");
         out.write(pagedListInfo.getListPropertiesHeader(name));
         out.write("<tr>");
