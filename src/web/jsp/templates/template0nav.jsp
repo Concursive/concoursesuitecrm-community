@@ -37,9 +37,9 @@ BODY  { font-family: verdana, arial, sans-serif; font-size: 8pt; background: whi
   .smallfooter { color: #000000; font-size: 8pt; text-align: center; }
   
   .calendar { background: #BFBFBB; }
-  .monthName { background: #3366CC; color: #FFFFFF; font-size: 12pt; font-weight: bold; text-align: center; }
-  .monthArrowPrev { background: #3366CC; color: #FFFFFF; font-size: 12pt; font-weight: bold; text-align: center; }
-  .monthArrowNext { background: #3366CC; color: #FFFFFF; font-size: 12pt; font-weight: bold; text-align: center; }
+  .monthName { background: #DEE0FA; color: #000000; font-size: 8pt; font-weight: bold; text-align: center; }
+  .monthArrowPrev { background: #DEE0FA; color: #000000; font-size: 8pt; font-weight: bold; text-align: center; }
+  .monthArrowNext { background: #DEE0FA; color: #000000; font-size: 8pt; font-weight: bold; text-align: center; }
   .weekName { background: #CCCCCC; color: #000000; font-size: 8pt; text-align: center; }
   .day { background: white; color: #000000; font-family: arial, verdana; font-size: 8pt; font-weight: normal; text-align: left; }
   .highlightday { background: #66FF66; color: #000000; font-family: arial, verdana; font-size: 8pt; font-weight: normal; text-align: left; }

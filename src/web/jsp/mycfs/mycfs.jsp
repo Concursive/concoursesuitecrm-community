@@ -22,12 +22,17 @@
 		</tr>
 	</table-->
 	
+  <%  
+    CompanyCalendar.setBorderSize(1);
+    CompanyCalendar.setCellPadding(4);
+    CompanyCalendar.setCellSpacing(0);
+  %>
 	<%= CompanyCalendar.getHtml() %>
 	
 	</td>
 
     <td bgcolor=white valign=top width=100%>
-    <table bgcolor=white width=100% border=1 cellpadding=3 cellspacing=0 bordercolorlight="#000000" bordercolor="#FFFFFF">
+    <table bgcolor=white width=100% border=1 cellpadding=4 cellspacing=0 bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr bgcolor="#DEE0FA">
     <td valign=center>
     <strong>Alerts</strong>

@@ -44,6 +44,8 @@ public class CalendarView {
   protected boolean frontPageView = false;
   protected boolean popup = false;
   protected String borderSize = "";
+  protected String cellPadding = "";
+  protected String cellSpacing = "";
 
   //Events that can be displayed on the calendar
   protected Hashtable eventList = new Hashtable();
@@ -277,7 +279,15 @@ public void setFrontPageView(boolean frontPageView) {
    *@since
    */
   public void setBorderSize(int tmp) {
-    this.borderSize = "border=" + tmp + " ";
+    this.borderSize = " border='" + tmp + "'";
+  }
+  
+  public void setCellPadding(int tmp) {
+    this.cellPadding = " cellpadding='" + tmp + "'";
+  }
+  
+  public void setCellSpacing(int tmp) {
+    this.cellSpacing = " cellspacing='" + tmp + "'";
   }
 
 
@@ -541,7 +551,7 @@ public void setFrontPageView(boolean frontPageView) {
     }
 
     //Display Calendar
-    html.append("<center><table width='" + tableWidth + "' " + borderSize + "cellspacing='1' class='" + pre + "calendar'>");
+    html.append("<center><table width='" + tableWidth + "'" + borderSize + cellSpacing + cellPadding + " class='" + pre + "calendar' bordercolorlight='#000000' bordercolor='#FFFFFF'>");
     html.append("<tr>");
 
     //Display Previous Month Arrow
