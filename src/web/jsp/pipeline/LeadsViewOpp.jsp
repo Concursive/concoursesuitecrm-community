@@ -35,7 +35,6 @@ View Components<br>
 			<% TypeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
       <%=TypeSelect.getHtmlSelect("listFilter1", OpportunityListInfo.getFilterKey("listFilter1"))%>
       <dhv:evaluate if="<%= "all".equals(OpportunityListInfo.getListView()) || "closed".equals(OpportunityListInfo.getListView()) %>">
-      &nbsp;Owner: 
       <% UserList.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); 
          HtmlSelect userSelect = UserList.getHtmlSelectObj("listFilter2", OpportunityListInfo.getFilterKey("listFilter2"));
          userSelect.addItem(-1, "All Users", 0);
