@@ -24,7 +24,6 @@ public class ContactTypeList extends Vector {
   private int size = 1;
   private boolean multiple = false;
 
-
   /**
    *  Constructor for the ContactTypeList object
    *
@@ -120,7 +119,6 @@ public class ContactTypeList extends Vector {
     this.defaultKey = Integer.parseInt(tmp);
   }
 
-
   /**
    *  Gets the showPersonal attribute of the ContactTypeList object
    *
@@ -185,7 +183,6 @@ public class ContactTypeList extends Vector {
     return defaultKey;
   }
 
-
   /**
    *  Gets the HtmlSelect attribute of the ContactTypeList object
    *
@@ -230,7 +227,7 @@ public class ContactTypeList extends Vector {
     while (i.hasNext()) {
       ContactType thisContactType = (ContactType) i.next();
 
-      if (thisContactType.getEnabled() == true) {
+      if (thisContactType.getEnabled() == true || thisContactType.getId() == EMPLOYEE_TYPE) {
         contactTypeSelect.appendItem(thisContactType.getId(), thisContactType.getDescription());
       } else if (thisContactType.getId() == defaultKey) {
         contactTypeSelect.appendItem(thisContactType.getId(), thisContactType.getDescription() + " (X)");

@@ -25,6 +25,7 @@ public class LookupList extends HtmlSelect {
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
+  private boolean showDisabledFlag = true;
 
 
   /**
@@ -108,6 +109,13 @@ public class LookupList extends HtmlSelect {
     }
     rs.close();
     st.close();
+  }
+
+  public void setShowDisabledFlag(boolean showDisabledFlag) {
+    this.showDisabledFlag = showDisabledFlag;
+  }
+  public boolean getShowDisabledFlag() {
+    return showDisabledFlag;
   }
 
 
@@ -274,13 +282,13 @@ public class LookupList extends HtmlSelect {
     while (i.hasNext()) {
       LookupElement thisElement = (LookupElement) i.next();
 
-      if (thisElement.getEnabled() == true) {
+      if (thisElement.getEnabled() == true || !showDisabledFlag) {
         thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
         if (thisElement.getDefaultItem()) {
           lookupDefault = thisElement.getCode();
         }
       } else if (thisElement.getCode() == defaultKey) {
-        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription() + " (X)");
+          thisSelect.addItem(thisElement.getCode(), thisElement.getDescription() + " (X)");
       }
 
       if (thisElement.getCode() == defaultKey) {
