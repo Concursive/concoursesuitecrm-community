@@ -67,7 +67,7 @@ Contact Details
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      UserName:
+      User Name
     </td>
     <td>
       <%=portalUserDetails.getUsername()%>
