@@ -11,6 +11,7 @@ import java.sql.*;
 import java.io.*;
 import bsh.*;
 import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  This Ant Task processes all databases for the given gatekeeper database and
@@ -270,9 +271,7 @@ public class UpgradeDatabaseTask extends Task {
     if (sqlFile.endsWith(".sql") && new File(sqlFile).exists()) {
       try {
         db.setAutoCommit(false);
-        Statement st = db.createStatement();
-        st.execute(StringUtils.loadText(sqlFile));
-        st.close();
+        DatabaseUtils.executeSQL(db, sqlFile);
         db.commit();
         System.out.println("SQL Script complete: " + sqlFile);
       } catch (SQLException sq) {
