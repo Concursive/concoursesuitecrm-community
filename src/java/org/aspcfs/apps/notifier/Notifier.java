@@ -614,7 +614,7 @@ public class Notifier extends ReportBuilder {
     contactReport.setFilePath(filePath);
     contactReport.setEnteredBy(0);
     contactReport.setModifiedBy(0);
-    contactReport.setHeader("Communications mail merge");
+    contactReport.setHeader(null);
     contactReport.buildReportBaseInfo();
     contactReport.buildReportHeaders();
     contactReport.buildReportData(null);
@@ -636,7 +636,7 @@ public class Notifier extends ReportBuilder {
     if (value != null) {
       template.addParseElement("${surveyId=" + value + "}", java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "id=" + value), "UTF-8"));
     }
-    ZipUtils.addTextEntry(zip, "letter-" + baseFilename + ".txt", template.getParsedText());
+    ZipUtils.addTextEntry(zip, "letter-" + baseFilename + ".html", template.getParsedText());
     zip.close();
     int fileSize = (int) (new File(filePath + baseFilename)).length();
 

@@ -405,7 +405,9 @@ public class ContactReport extends ContactList {
    */
   public void buildReportBaseInfo() {
     rep.setDelimitedCharacter(delimiter);
-    rep.setHeader(header + ((!header.equals("") && !subject.equals("")) ? ": " : "") + subject);
+    if (header != null) {
+      rep.setHeader(header + ((!header.equals("") && !subject.equals("")) ? ": " : "") + subject);
+    }
   }
 
 
@@ -469,6 +471,7 @@ public class ContactReport extends ContactList {
       if (param.equals("businessAddress")) {
         rep.addColumn("Business Address Line 1");
         rep.addColumn("Business Address Line 2");
+        rep.addColumn("Business Address Line 3");
       }
       if (param.equals("city")) {
         rep.addColumn("City");
@@ -750,6 +753,7 @@ public class ContactReport extends ContactList {
       if (param.equals("businessAddress")) {
         thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine1());
         thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine2());
+        thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine3());
       }
       if (param.equals("city")) {
         thisRow.addCell(thisContact.getAddress("Business").getCity());
