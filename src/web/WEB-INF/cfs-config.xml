@@ -87,6 +87,7 @@
     <forward name="SendMessageOK" resource="/mycfs/mycfs_confirmsend.jsp" layout="nav"/>
     <forward name="SendMessageCloseOK" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="ForwardMessageOK" resource="/mycfs/mycfs_forwardmessage.jsp" layout="nav"/>
+    <forward name="ReplyMessageOK" resource="/mycfs/mycfs_replymessage.jsp" layout="nav"/>
   </action>
   <action name="Reassignments" class="org.aspcfs.modules.mycfs.actions.Reassignments">
     <forward name="ReassignOK" resource="/mycfs/mycfs_reassign.jsp" layout="nav"/>
@@ -192,8 +193,10 @@
     <forward name="EmployeeDeleteOK" resource="/CompanyDirectory.do?command=ListEmployees"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="PrepareAddPopupOK" resource="/contacts/companydirectory_employeeinsertform.jsp" layout="style"/>
     <forward name="CloseInsertContactPopup" resource="/contacts/close_insertcontact_popup.jsp"/>
     <forward name="ReloadAddContactPopup" resource="/ExternalContacts.do?command=Prepare"/>
+    <forward name="TroubleTicketsCloseInsertPopup" resource="/troubletickets/close_insertcontact_popup.jsp"/>
   </action>
   <action name="ExternalContacts" class="org.aspcfs.modules.contacts.actions.ExternalContacts">
     <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
