@@ -1428,7 +1428,8 @@ public class Opportunity extends GenericBean {
 
 
   /**
-   *  Gets the AccountName attribute of the Opportunity object
+   *  Returns the actual name linked to this Opportunity, whether it is
+   *  an Account or a Contact
    *
    *@return    The AccountName value
    *@since
@@ -1436,7 +1437,7 @@ public class Opportunity extends GenericBean {
   public String getAccountName() {
     if (accountName != null) {
       return accountName;
-    } else if (!(contactName.equals(" "))) {
+    } else if (contactName != null && !contactName.trim().equals("")) {
       return this.getContactName();
     } else {
       return this.getContactCompanyName();
@@ -2008,7 +2009,7 @@ public class Opportunity extends GenericBean {
     //contact table
     String contactNameLast = rs.getString("last_name");
     String contactNameFirst = rs.getString("first_name");
-    contactName = contactNameFirst + " " + contactNameLast;
+    contactName = Contact.getNameFirstLast(contactNameFirst, contactNameLast);
     contactCompanyName = rs.getString("ctcompany");
     ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));
     enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
