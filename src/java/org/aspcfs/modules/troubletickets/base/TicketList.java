@@ -612,6 +612,29 @@ public String getUniqueField() { return uniqueField; }
 
     return i;
   }
+  
+  public static int retrieveRecordCount(Connection db, int moduleId, int itemId) throws SQLException {
+    int count = 0;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+      "SELECT COUNT(*) as itemcount " +
+      "FROM ticket t " +
+      "WHERE ticketid > 0 ");
+    if (moduleId == Constants.ACCOUNTS) {  
+      sql.append("AND t.org_id = ?");
+    }
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    if (moduleId == Constants.ACCOUNTS) {
+      pst.setInt(1, itemId);
+    }
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      count = rs.getInt("itemcount");
+    }
+    rs.close();
+    pst.close();
+    return count;
+  }
 
 }
 

@@ -190,5 +190,22 @@ public class CustomFieldRecordList extends ArrayList {
       thisRecord.buildColumns(db, thisCategory);
     }
   }
+  
+  public static int retrieveRecordCount(Connection db, int linkModuleId, int linkItemId) throws SQLException {
+    int count = 0;
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT COUNT(*) as foldercount " +
+      "FROM custom_field_record cfr " +
+      "WHERE cfr.link_module_id = ? and cfr.link_item_id = ?");
+    pst.setInt(1, linkModuleId);
+    pst.setInt(2, linkItemId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      count = rs.getInt("foldercount");
+    }
+    rs.close();
+    pst.close();
+    return count;
+  }
 }
 
