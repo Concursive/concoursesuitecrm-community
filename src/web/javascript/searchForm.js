@@ -16,7 +16,7 @@ function popPreview() {
   width  =  '700';
   height =  '450';
   resize =  'yes';
-  bars   =  'no';
+  bars   =  'yes';
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
