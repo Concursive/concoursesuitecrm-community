@@ -15,8 +15,11 @@ import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import java.io.*;
-import javax.imageio.ImageReader;
+import javax.imageio.*;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 
 
 /**
@@ -480,6 +483,7 @@ public final class AutoGuide extends CFSModule {
       //Update the database with the resulting file
       db = getConnection(context);
       
+      //TODO: Delete the thumbnail also...
       FileItemList previousFiles = new FileItemList();
       previousFiles.setLinkModuleId(Constants.AUTOGUIDE);
       previousFiles.setLinkItemId(Integer.parseInt(id));
@@ -499,12 +503,25 @@ public final class AutoGuide extends CFSModule {
       thisItem.setVersion(1.0);
       thisItem.setSize(newFileInfo.getSize());
       recordInserted = thisItem.insert(db);
+      
       if (!recordInserted) {
         processErrors(context, thisItem.getErrors());
       } else {
         //TODO: Create a thumbnail
-        //Image image = new ImageReader(newFileInfo.getRealFilename()).image;
+        File thumbnail = new File(newFileInfo.getLocalFile().getPath() + "TH");
         
+        BufferedImage image = ImageIO.read(newFileInfo.getLocalFile());
+        double ratio = 133.0/image.getWidth();
+        AffineTransform at = AffineTransform.getScaleInstance(ratio, ratio);
+        AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        BufferedImage scaledImage = op.filter(image, null);
+        ImageIO.write(scaledImage, "jpg", thumbnail);
+        
+        thisItem.setSubject("thumbnail");
+        thisItem.setFilename(newFileInfo.getRealFilename());
+        thisItem.setVersion(1.1d);
+        thisItem.setSize((int)thumbnail.length());
+        recordInserted = thisItem.insertVersion(db);
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -555,10 +572,10 @@ public final class AutoGuide extends CFSModule {
       String filePath = this.getPath(context, "autoguide") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
       
       FileDownload fileDownload = new FileDownload();
-      fileDownload.setFullPath(filePath);
+      fileDownload.setFullPath(filePath + "TH");
       fileDownload.setDisplayName(itemToDownload.getClientFilename());
       if (fileDownload.fileExists()) {
-        String imageType = "gif"; //TODO: do not hard code this
+        String imageType = "jpg"; //TODO: do not hard code this
         fileDownload.sendFile(context, "image/" + imageType);
       } else {
         System.err.println("LeadsDocuments-> Trying to send a file that does not exist");

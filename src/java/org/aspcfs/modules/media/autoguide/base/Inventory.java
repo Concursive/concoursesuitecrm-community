@@ -277,7 +277,7 @@ public class Inventory {
     }
     
     try {
-      //db.setAutoCommit(false);
+      db.setAutoCommit(false);
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
 
@@ -320,14 +320,14 @@ public class Inventory {
         options.update(db);
       }
       
-      //db.commit();
+      db.commit();
     } catch (Exception e) {
-      //db.rollback();
-      //db.setAutoCommit(true);
+      db.rollback();
+      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     }
 
-    //db.setAutoCommit(true);
+    db.setAutoCommit(true);
     return resultCount;
   }
 

@@ -1295,11 +1295,13 @@ public class Ticket extends GenericBean {
         thisNotification.setItemId(this.getId());
         thisNotification.setItemModified(null);
         thisNotification.setSubject("New Ticket Assigned: " + this.getId());
+        thisNotification.setFrom("cfs-root@darkhorseventures.com");
         thisNotification.setMessageToSend(
-            "A new ticket has been added to CFS and assigned to you:<br>&nbsp;<br>&nbsp;<br>" +
+            "A new ticket has been added to CFS and assigned to you:<br><br>" +
+            "--- Ticket Details ---<br><br>" +
             "Ticket # " + this.getId() + "<br>" +
             "Problem: " + this.getProblem() + "<br><br>" +
-            "###");
+            "Comment: " + this.getComment() + "<br><br>");
         thisNotification.setType(Notification.EMAIL);
         thisNotification.notifyUser(db);
       }
