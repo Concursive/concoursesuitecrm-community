@@ -97,7 +97,7 @@
       Alert Date
     </td>
     <td>
-      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(CallDetails.getAlertDate()) %>"> 
+      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(CallDetails.getAlertDateString()) %>"> 
       <a href="javascript:popCalendar('addCall', 'alertDate');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>
@@ -151,7 +151,7 @@
         <a href="/LeadsCalls.do?command=Modify&id=<%= thisCall.getId() %>&oppId=<%= OpportunityDetails.getId() %>">Edit</a>|<a href="javascript:confirmDelete('/LeadsCalls.do?command=Delete&id=<%= thisCall.getId() %>&oppId=<%= OpportunityDetails.getId() %>');">Del</a></td>
       <td valign=center nowrap class="row<%= rowid %>">
         <a href="/LeadsCalls.do?command=Details&id=<%= thisCall.getId() %>&oppId=<%= OpportunityDetails.getId() %>">
-        <%= toHtml(thisCall.getEntered()) %>
+        <%= toHtml(thisCall.getEnteredString()) %>
         </a>
       </td>
       <td valign=center nowrap class="row<%= rowid %>">

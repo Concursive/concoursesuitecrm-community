@@ -72,15 +72,15 @@
       Alert Date
     </td>
     <td>
-      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(CallDetails.getAlertDate()) %>"> 
+      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(CallDetails.getAlertDateString()) %>"> 
       <a href="javascript:popCalendar('addCall', 'alertDate');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>
   
   <tr class="containerBody">
     <td align=center colspan=2>
-      <i>Created <%= toHtml(CallDetails.getEntered()) %> by <%= toHtml(CallDetails.getEnteredName()) %> - 
-      Modifed <%= toHtml(CallDetails.getModified()) %> by <%= toHtml(CallDetails.getModifiedName()) %></i>
+      <i>Created <%= toHtml(CallDetails.getEnteredString()) %> by <%= toHtml(CallDetails.getEnteredName()) %> - 
+      Modifed <%= toHtml(CallDetails.getModifiedString()) %> by <%= toHtml(CallDetails.getModifiedName()) %></i>
     </td>
   </tr>
 </table>

@@ -24,14 +24,15 @@ public class Call extends GenericBean {
 	private int length = 0;
 	private String subject = "";
 	private String notes = "";
-	private String entered = "";
-	private String alertDate = "";
 	private int enteredBy = -1;
 	private String enteredName = "";
-	private String modified = null;
 	private int modifiedBy = -1;
 	private String modifiedName = "";
 	private String contactName = "";
+	
+	private java.sql.Date alertDate = null;
+	private java.sql.Timestamp entered = null;
+	private java.sql.Timestamp modified = null;
 
 
 	/**
@@ -117,18 +118,6 @@ public void setContactName(String contactName) {
 		st.close();
 	}
 
-
-	/**
-	 *  Sets the AlertDate attribute of the Call object
-	 *
-	 *@param  alertDate  The new AlertDate value
-	 *@since
-	 */
-	public void setAlertDate(String alertDate) {
-		this.alertDate = alertDate;
-	}
-
-
 	/**
 	 *  Sets the Id attribute of the Call object
 	 *
@@ -139,7 +128,43 @@ public void setContactName(String contactName) {
 		this.id = tmp;
 	}
 
+public java.sql.Date getAlertDate() {
+	return alertDate;
+}
+public void setAlertDate(java.sql.Date alertDate) {
+	this.alertDate = alertDate;
+}
 
+  public void setAlertDate(String tmp) {
+    try {
+      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
+      alertDate = new java.sql.Date(new java.util.Date().getTime());
+      alertDate.setTime(tmpDate.getTime());
+    } catch (Exception e) {
+      alertDate = null;
+    }
+  }
+
+  public String getAlertDateString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateInstance(3).format(alertDate);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+  
+    public String getAlertDateStringLongYear() {
+    String tmp = "";
+    try {
+      SimpleDateFormat formatter = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.LONG);
+      formatter.applyPattern("M/d/yyyy");
+      return formatter.format(alertDate);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+  
 	/**
 	 *  Sets the Id attribute of the Call object
 	 *
@@ -153,7 +178,41 @@ public void setContactName(String contactName) {
 		catch (Exception e) {
 		}
 	}
+	
+public java.sql.Timestamp getEntered() { return entered; }
+public java.sql.Timestamp getModified() { return modified; }
+public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
+public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 
+	public String getModifiedString() {
+		String tmp = "";
+		try {
+			return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+		}
+		catch (NullPointerException e) {
+		}
+		return tmp;
+	}
+
+
+	public String getEnteredString() {
+		String tmp = "";
+		try {
+			return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+		}
+		catch (NullPointerException e) {
+		}
+		return tmp;
+	}
+	
+	public void setEntered(String tmp) {
+		this.entered = java.sql.Timestamp.valueOf(tmp);
+	}
+
+
+	public void setModified(String tmp) {
+		this.modified = java.sql.Timestamp.valueOf(tmp);
+	}
 
 	/**
 	 *  Sets the OrgId attribute of the Call object
@@ -280,18 +339,6 @@ public void setContactName(String contactName) {
 		this.notes = tmp;
 	}
 
-
-	/**
-	 *  Sets the Entered attribute of the Call object
-	 *
-	 *@param  tmp  The new Entered value
-	 *@since
-	 */
-	public void setEntered(String tmp) {
-		this.entered = tmp;
-	}
-
-
 	/**
 	 *  Sets the EnteredBy attribute of the Call object
 	 *
@@ -302,18 +349,6 @@ public void setContactName(String contactName) {
 		this.enteredBy = tmp;
 	}
 
-
-	/**
-	 *  Sets the Modified attribute of the Call object
-	 *
-	 *@param  tmp  The new Modified value
-	 *@since
-	 */
-	public void setModified(String tmp) {
-		this.modified = tmp;
-	}
-
-
 	/**
 	 *  Sets the ModifiedBy attribute of the Call object
 	 *
@@ -323,18 +358,6 @@ public void setContactName(String contactName) {
 	public void setModifiedBy(int tmp) {
 		this.modifiedBy = tmp;
 	}
-
-
-	/**
-	 *  Gets the AlertDate attribute of the Call object
-	 *
-	 *@return    The AlertDate value
-	 *@since
-	 */
-	public String getAlertDate() {
-		return alertDate;
-	}
-
 
 	/**
 	 *  Gets the Id attribute of the Call object
@@ -450,18 +473,6 @@ public void setContactName(String contactName) {
 		return notes;
 	}
 
-
-	/**
-	 *  Gets the Entered attribute of the Call object
-	 *
-	 *@return    The Entered value
-	 *@since
-	 */
-	public String getEntered() {
-		return entered;
-	}
-
-
 	/**
 	 *  Gets the EnteredBy attribute of the Call object
 	 *
@@ -471,18 +482,6 @@ public void setContactName(String contactName) {
 	public int getEnteredBy() {
 		return enteredBy;
 	}
-
-
-	/**
-	 *  Gets the Modified attribute of the Call object
-	 *
-	 *@return    The Modified value
-	 *@since
-	 */
-	public String getModified() {
-		return modified;
-	}
-
 
 	/**
 	 *  Gets the ModifiedBy attribute of the Call object
@@ -550,10 +549,10 @@ public void setContactName(String contactName) {
 		pst.setInt(++i, this.getEnteredBy());
 		pst.setInt(++i, this.getModifiedBy());
 		
-		if (alertDate == null || alertDate.equals("")) {
+		if (alertDate == null) {
 			pst.setNull(++i, java.sql.Types.DATE);
 		} else {
-			pst.setDate(++i, convertStringToSqlDate(this.getAlertDate(), DateFormat.SHORT));
+			pst.setDate(++i, this.getAlertDate());
 		}
 
 		pst.execute();
@@ -639,13 +638,13 @@ public void setContactName(String contactName) {
 		pst.setString(++i, subject);
 		pst.setString(++i, notes);
 		pst.setInt(++i, this.getModifiedBy());
-		if (alertDate == null || alertDate.equals("")) {
+		if (alertDate == null) {
 			pst.setNull(++i, java.sql.Types.DATE);
 		} else {
-			pst.setDate(++i, convertStringToSqlDate(this.getAlertDate(), DateFormat.SHORT));
+			pst.setDate(++i, this.getAlertDate());
 		}
 		pst.setInt(++i, this.getId());
-		pst.setTimestamp(++i, java.sql.Timestamp.valueOf(this.getModified()));
+		pst.setTimestamp(++i, this.getModified());
 
 		resultCount = pst.executeUpdate();
 		pst.close();
@@ -704,35 +703,15 @@ public void setContactName(String contactName) {
 		subject = rs.getString("subject");
 		notes = rs.getString("notes");
 
-		java.sql.Timestamp tmpDateCreated = rs.getTimestamp("entered");
-		if (tmpDateCreated != null) {
-			entered = shortDateTimeFormat.format(tmpDateCreated);
-		}
-		else {
-			entered = "";
-		}
-		/**
-		java.sql.Timestamp tmpAlertDate = rs.getTimestamp("alertdate");
-		if (tmpAlertDate != null) {
-			alertDate = shortDateTimeFormat.format(tmpAlertDate);
-		}
-		else {
-			alertDate = "";
-		}
-		*/
+		entered = rs.getTimestamp("entered");
 		
-		java.sql.Date thisAlertDate = rs.getDate("alertdate");
-		if (thisAlertDate != null) {
-			alertDate = shortDateFormat.format(thisAlertDate);
-		} else {
-			alertDate = "";
-		}
+		alertDate = rs.getDate("alertdate");
 
 		enteredBy = rs.getInt("enteredby");
 		enteredName = fullName(rs.getString("efirst"), rs.getString("elast"));
 
-		java.sql.Timestamp tmpLastModified = rs.getTimestamp("modified");
-		modified = tmpLastModified.toString();
+		modified = rs.getTimestamp("modified");
+		
 		modifiedBy = rs.getInt("modifiedby");
 		modifiedName = fullName(rs.getString("mfirst"), rs.getString("mlast"));
 		contactName = fullName(rs.getString("ctfirst"), rs.getString("ctlast"));

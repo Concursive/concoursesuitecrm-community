@@ -67,14 +67,14 @@
       Alert Date
     </td>
     <td>
-      <%= toHtml(CallDetails.getAlertDate()) %>
+      <%= toHtml(CallDetails.getAlertDateString()) %>
     </td>
   </tr>
   
   <tr class="containerBody">
     <td align=center colspan=2>
-      <i>Created <%= toHtml(CallDetails.getEntered()) %> by <%= toHtml(CallDetails.getEnteredName()) %><br>
-      Modifed <%= toHtml(CallDetails.getModified()) %> by <%= toHtml(CallDetails.getModifiedName()) %></i>
+      <i>Created <%= toHtml(CallDetails.getEnteredString()) %> by <%= toHtml(CallDetails.getEnteredName()) %><br>
+      Modifed <%= toHtml(CallDetails.getModifiedString()) %> by <%= toHtml(CallDetails.getModifiedName()) %></i>
     </td>
   </tr>
 </table>

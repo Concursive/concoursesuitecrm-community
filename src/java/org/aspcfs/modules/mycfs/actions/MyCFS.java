@@ -326,7 +326,7 @@ public final class MyCFS extends CFSModule {
 			Iterator m = alertCalls.iterator();
 			while (m.hasNext()) {
 				Call thisCall = (Call) m.next();
-				companyCalendar.addEvent(thisCall.getAlertDate(), "", thisCall.getSubject(), "Call");
+				companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), "Call");
 			}
 
 			com.zeroio.iteam.base.ProjectList projects = new com.zeroio.iteam.base.ProjectList();
