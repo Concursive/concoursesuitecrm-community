@@ -43,7 +43,7 @@ History
             <% } else { %>
           <tr class="containerBody">
             <%}%>
-            <td nowrap valign="top" class="formLabel">
+            <td nowrap valign="top">
               <%= toHtml(thisEntry.getEnteredByName()) %>
             </td>
             <td nowrap valign="top">
