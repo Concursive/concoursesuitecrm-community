@@ -289,6 +289,16 @@ public class ApplicationPrefs {
         cp.setMaxDeadTimeSeconds(this.get("CONNECTION_POOL.MAX_DEAD_TIME.SECONDS"));
       }
     }
+    // Default LAYOUT prefs
+    if (!this.has("LAYOUT.TEMPLATE")) {
+      this.add("LAYOUT.TEMPLATE", "template0");
+    }
+    if (!this.has("LAYOUT.JSP.WELCOME")) {
+      this.add("LAYOUT.JSP.WELCOME", "welcome.jsp");
+    }
+    if (!this.has("LAYOUT.JSP.LOGIN")) {
+      this.add("LAYOUT.JSP.LOGIN", "login.jsp");
+    }
     //Define whether the app requires SSL for browser clients
     addParameter(context, "ForceSSL", this.get("FORCESSL"), "false");
     //Define the developer's debug code

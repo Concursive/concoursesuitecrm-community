@@ -10,6 +10,7 @@ import com.darkhorseventures.framework.actions.*;
 import com.darkhorseventures.framework.beans.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
+import org.aspcfs.controller.ApplicationPrefs;
 
 /**
  *  This servlet is the core of a web application. All requests go through it
@@ -554,6 +555,9 @@ public class ControllerServlet extends HttpServlet
     if (System.getProperty("DEBUG") != null) {
       System.out.println("> Looking up resource: " + lookup);
     }
+    // Get a handle to the application prefs
+    ApplicationPrefs applicationPrefs = (ApplicationPrefs) getServletContext().getAttribute("applicationPrefs");
+    // An action source returns the flow back to the originating action
     if (request.getParameter("actionSource") != null) {
       String actualActionPath = (String) request.getParameter("actionSource");
       action = (Action) actions.get(actualActionPath);
@@ -633,11 +637,12 @@ public class ControllerServlet extends HttpServlet
           String forwardPath = resource.getName();
 
           //If there is a layout, then forward to the template instead
+          //the template will include the resource
           if (resource.getLayout() != null && resource.getLayout().length() > 0) {
             String templateForwardPath = resource.getName();
             request.setAttribute("IncludeModule", templateForwardPath);
-            forwardPath = "/templates/template0" + resource.getLayout() + ".jsp";
-
+            forwardPath = "/templates/" + applicationPrefs.get("LAYOUT.TEMPLATE") + resource.getLayout() + ".jsp";
+            
             //Process extra layout options
             if (resource.getLayout().toLowerCase().startsWith("nav")) {
               //Build the main menu (navigation)

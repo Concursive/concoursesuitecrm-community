@@ -61,7 +61,7 @@
     <bean name="LoginBean" class="org.aspcfs.modules.login.beans.LoginBean" scope="request"/>
     <forward name="LoginOK" resource="/MyCFS.do?command=Home"/>
     <forward name="LoginVerifyOK" resource="/mycfs/mycfs_verify.jsp"/>
-    <forward name="LoginRetry" resource="/login.jsp"/>
+    <forward name="LoginRetry" resource="/index.jsp"/>
     <forward name="LicenseError" resource="/errors/error_license.jsp" layout="dhv"/>
   </action>
   

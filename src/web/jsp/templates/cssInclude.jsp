@@ -10,6 +10,7 @@
 <%@ page import="org.aspcfs.modules.login.beans.UserBean" %>
 <%@ page import="org.aspcfs.utils.web.ClientType" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%
   if (User.getClientType() == null) {
     ClientType clientType = new ClientType(request);
@@ -20,13 +21,13 @@
       ("linux".equals(User.getClientType().getOsString()) && 
        User.getBrowserVersion() < 1.2 )) {
 %>
-<link rel="stylesheet" href="css/template0-10pt.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/<%= applicationPrefs.get("LAYOUT.TEMPLATE") %>-10pt.css" type="text/css" media="screen">
 <%
   } else {
 %>
-<link rel="stylesheet" href="css/template0-8pt.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/<%= applicationPrefs.get("LAYOUT.TEMPLATE") %>-8pt.css" type="text/css" media="screen">
 <%  
   }
 %>
-<link rel="stylesheet" href="css/template0.css" type="text/css">
+<link rel="stylesheet" href="css/<%= applicationPrefs.get("LAYOUT.TEMPLATE") %>.css" type="text/css">
 <link rel="stylesheet" href="css/print.css" type="text/css" media="print">
