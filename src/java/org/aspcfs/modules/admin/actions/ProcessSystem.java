@@ -115,6 +115,7 @@ public final class ProcessSystem extends CFSModule {
         while (k.hasNext()) {
           User indUser = (User) k.next();
           indUser.setIsValid(false, true);
+          indUser.setRevenueIsValid(false, true);
         }
       }
     }
