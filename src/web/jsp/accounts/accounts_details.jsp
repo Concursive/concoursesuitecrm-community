@@ -26,27 +26,22 @@ Account Details<br>
   </tr>
   <tr>
     <td class="containerBack">
-<input type=hidden name="orgId" value="<%= OrgDetails.getOrgId() %>">
-
-<dhv:evaluate exp="<%=(OrgDetails.getEnabled())%>">
-<dhv:permission name="accounts-accounts-edit">
-<input type=button name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()">
-</dhv:permission>
+      <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
+<dhv:evaluate exp="<%= OrgDetails.getEnabled() %>">
+  <dhv:permission name="accounts-accounts-edit">
+      <input type="button" name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()">
+  </dhv:permission>
 </dhv:evaluate>
-<dhv:evaluate exp="<%=!(OrgDetails.getEnabled())%>">
-
-<dhv:permission name="accounts-accounts-edit">
-<input type=button name="action" value="Enable"	onClick="document.details.command.value='Enable';document.details.submit()">
-</dhv:permission>
-
+<dhv:evaluate exp="<%= !(OrgDetails.getEnabled()) %>">
+  <dhv:permission name="accounts-accounts-edit">
+    <input type="button" name="action" value="Enable"	onClick="document.details.command.value='Enable';document.details.submit()">
+  </dhv:permission>
 </dhv:evaluate>
-
 <dhv:permission name="accounts-accounts-delete"><input type="button" name="action" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br>&nbsp;</dhv:permission>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Primary Information</strong>
     </td>     
   </tr>
@@ -74,7 +69,7 @@ Account Details<br>
     <td nowrap class="formLabel">
       Account Number
     </td>
-    <td width=100%>
+    <td>
        <%= toHtml(OrgDetails.getAccountNumber()) %>&nbsp;
     </td>
   </tr>
@@ -99,7 +94,6 @@ Account Details<br>
     </td>
   </tr>
 </dhv:evaluate>
-
 <dhv:include name="accounts-employees" none="true">
 <dhv:evaluate exp="<%= (OrgDetails.getEmployees() > 0) %>">
   <tr class="containerBody">
@@ -112,7 +106,6 @@ Account Details<br>
   </tr>
 </dhv:evaluate>
 </dhv:include>
-
 <dhv:include name="accounts-revenue" none="true">
 <dhv:evaluate exp="<%= (OrgDetails.getRevenue() > 0) %>">
   <tr class="containerBody">
@@ -125,7 +118,6 @@ Account Details<br>
   </tr>
 </dhv:evaluate>
 </dhv:include>
-
 <dhv:evaluate exp="<%= hasText(OrgDetails.getTicker()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -151,24 +143,21 @@ Account Details<br>
     <td nowrap class="formLabel">
       Alert Description
     </td>
-    <td valign=center colspan=1>
+    <td>
        <%= toHtml(OrgDetails.getAlertText()) %>
     </td>
   </tr>
 </dhv:evaluate>
-
 <dhv:evaluate exp="<%= (OrgDetails.getAlertDate() != null) %>">
    <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert Date
     </td>
-    <td valign=center colspan=1>
+    <td>
        <%= OrgDetails.getAlertDateStringLongYear() %>
     </td>
   </tr>
 </dhv:evaluate>
-
-
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Entered
@@ -189,7 +178,7 @@ Account Details<br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Phone Numbers</strong>
 	  </td>
   </tr>
@@ -204,7 +193,7 @@ Account Details<br>
       <td nowrap class="formLabel">
         <%= toHtml(thisPhoneNumber.getTypeName()) %>
       </td>
-      <td width=100%>
+      <td>
         <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>
       </td>
     </tr>
@@ -213,13 +202,12 @@ Account Details<br>
   } else {
 %>
     <tr class="containerBody">
-      <td colspan=2>
+      <td colspan="2">
         <font color="#9E9E9E">No phone numbers entered.</font>
       </td>
     </tr>
 <%}%>
 </dhv:evaluate>
-
 <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">
 <%  
   Iterator inumber = OrgDetails.getPrimaryContact().getPhoneNumberList().iterator();
@@ -240,18 +228,17 @@ Account Details<br>
   } else {
 %>
     <tr class="containerBody">
-      <td colspan=2>
+      <td colspan="2">
         <font color="#9E9E9E">No phone numbers entered.</font>
       </td>
     </tr>
 <%}%>
 </dhv:evaluate>
-
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF"> 
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Addresses</strong>
 	  </td>
   </tr>
@@ -266,59 +253,55 @@ Account Details<br>
       <td nowrap class="formLabel">
         <%= toHtml(thisAddress.getTypeName()) %>
       </td>
-      <td width=100%>
+      <td>
         <%= toHtml(thisAddress.toString()) %>
       </td>
     </tr>
-<%    
+<%
     }
   } else {
 %>
     <tr class="containerBody">
-      <td colspan=2>
+      <td colspan="2">
         <font color="#9E9E9E">No addresses entered.</font>
       </td>
     </tr>
 <%}%>
 </dhv:evaluate>
-
 <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">
 <%  
   Iterator iaddress = OrgDetails.getPrimaryContact().getAddressList().iterator();
   if (iaddress.hasNext()) {
     while (iaddress.hasNext()) {
       ContactAddress thisAddress = (ContactAddress)iaddress.next();
-%>    
+%>
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <%= toHtml(thisAddress.getTypeName()) %>
       </td>
-      <td width=100%>
+      <td>
         <%= toHtml(thisAddress.toString()) %>
       </td>
     </tr>
-<%    
+<%
     }
   } else {
 %>
     <tr class="containerBody">
-      <td colspan=2>
+      <td colspan="2">
         <font color="#9E9E9E">No addresses entered.</font>
       </td>
     </tr>
 <%}%>
 </dhv:evaluate>
-
-
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Email Addresses</strong>
 	  </td>
   </tr>
-  
 <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
 <%
   Iterator iemail = OrgDetails.getEmailAddressList().iterator();
@@ -330,7 +313,7 @@ Account Details<br>
       <td nowrap class="formLabel">
         <%= toHtml(thisEmailAddress.getTypeName()) %>
       </td>
-      <td width=100%>
+      <td>
         <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>
       </td>
     </tr>
@@ -339,14 +322,13 @@ Account Details<br>
   } else {
 %>
     <tr class="containerBody">
-      <td colspan=2>
+      <td colspan="2">
         <font color="#9E9E9E">No email addresses entered.</font>
       </td>
     </tr>
 <%}%>
 </dhv:evaluate>
-
-<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">
+<dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() != null) %>">
 <%
   Iterator iemail = OrgDetails.getPrimaryContact().getEmailAddressList().iterator();
   if (iemail.hasNext()) {
@@ -357,7 +339,7 @@ Account Details<br>
       <td nowrap class="formLabel">
         <%= toHtml(thisEmailAddress.getTypeName()) %>
       </td>
-      <td width=100%>
+      <td>
         <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>
       </td>
     </tr>
@@ -366,18 +348,17 @@ Account Details<br>
   } else {
 %>
     <tr class="containerBody">
-      <td colspan=2>
+      <td colspan="2">
         <font color="#9E9E9E">No email addresses entered.</font>
       </td>
     </tr>
 <%}%>
 </dhv:evaluate>
-
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Additional Details</strong>
 	  </td>
   </tr>
@@ -385,28 +366,25 @@ Account Details<br>
     <td nowrap class="formLabel">
       Notes
     </td>
-    <td width=100%>
+    <td>
       <%=toHtml(OrgDetails.getNotes()) %>&nbsp;
     </td>
   </tr>
 </table>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br></dhv:permission>
 <dhv:evaluate exp="<%=(OrgDetails.getEnabled())%>">
-<dhv:permission name="accounts-accounts-edit"><input type=button name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
+  <dhv:permission name="accounts-accounts-edit"><input type=button name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate exp="<%=!(OrgDetails.getEnabled())%>">
-<dhv:permission name="accounts-accounts-edit">
-
-<input type=button name="action" value="Enable"	onClick="document.details.command.value='Enable';document.details.submit()">
-
-
-</dhv:permission>
+  <dhv:permission name="accounts-accounts-edit">
+    <input type=button name="action" value="Enable"	onClick="document.details.command.value='Enable';document.details.submit()">
+  </dhv:permission>
 </dhv:evaluate>
 <dhv:permission name="accounts-accounts-delete"><input type="button" name="action" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
 </td></tr>
 </table>
-<input type=hidden name="command" value="">
+<input type="hidden" name="command" value="">
 <% if (request.getParameter("return") != null) { %>
-<input type=hidden name="return" value="<%=request.getParameter("return")%>">
+<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
 </form>

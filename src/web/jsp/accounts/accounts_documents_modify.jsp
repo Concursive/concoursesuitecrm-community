@@ -8,20 +8,16 @@
     if (form.dosubmit.value == "false") {
       return true;
     }
-    
     var formTest = true;
     var messageText = "";
-
     if (form.subject.value == "") {
       messageText += "- Subject is required\r\n";
       formTest = false;
     }
-    
     if ((form.clientFilename.value) == "") {
       messageText += "- Filename is required\r\n";
       formTest = false;
     }
-    
     if (formTest == false) {
       messageText = "The file information could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
       form.dosubmit.value = "true";
@@ -33,11 +29,10 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
-
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="/AccountsDocuments.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Documents</a> >
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
+<a href="AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Documents</a> >
 Modify Document<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

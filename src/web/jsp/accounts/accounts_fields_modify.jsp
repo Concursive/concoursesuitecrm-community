@@ -43,7 +43,7 @@ Modify Folder Record
 %>    
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong><%= thisGroup.getName() %></strong>
 	  </td>
   </tr>
@@ -58,7 +58,7 @@ Modify Folder Record
       <td valign="top" nowrap class="formLabel">
         <%= thisField.getNameHtml() %>
       </td>
-      <td valign="top" width="100%">
+      <td valign="top">
         <%= thisField.getHtmlElement() %> <font color="red"><%= (thisField.getRequired()?"*":"") %></font>
         <font color='#006699'><%= toHtml(thisField.getError()) %></font>
         <%= toHtml(thisField.getAdditionalText()) %>
@@ -69,7 +69,7 @@ Modify Folder Record
   } else {
 %>
     <tr class="containerBody">
-      <td colspan=2>
+      <td colspan="2">
         <font color="#9E9E9E">No fields available.</font>
       </td>
     </tr>

@@ -7,20 +7,16 @@
     if (form.dosubmit.value == "false") {
       return true;
     }
-    
     var formTest = true;
     var messageText = "";
-
     if (form.subject.value == "") {
       messageText += "- Subject is required\r\n";
       formTest = false;
     }
-    
     if (form.id<%= OrgDetails.getOrgId() %>.value.length < 5) {
       messageText += "- File is required\r\n";
       formTest = false;
     }
-    
     if (formTest == false) {
       messageText = "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
       form.dosubmit.value = "true";
@@ -37,11 +33,10 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
-
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="/AccountsDocuments.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Documents</a> >
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
+<a href="AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Documents</a> >
 Upload Document<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -88,8 +83,8 @@ Upload Document<br>
     * Large files may take a while to upload.<br>
     Wait for file completion message when upload is complete.
   </p>
-  <input type='submit' value=' Upload ' name="upload">
-  <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';">
+  <input type="submit" value=" Upload " name="upload">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= OrgDetails.getOrgId() %>">
 </td>

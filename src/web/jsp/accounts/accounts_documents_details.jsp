@@ -42,10 +42,9 @@ Document Details<br>
   </tr>
 <%
   Iterator versionList = FileItem.getVersionList().iterator();
-  
   int rowid = 0;
   while (versionList.hasNext()) {
-    if (rowid != 1) rowid = 1; else rowid = 2;
+    rowid = (rowid != 1?1:2);
     FileItemVersion thisVersion = (FileItemVersion)versionList.next();
 %>      
     <tr class="row<%= rowid %>">

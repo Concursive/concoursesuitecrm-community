@@ -4,8 +4,7 @@
 <jsp:useBean id="DocListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" type="text/javascript" src="/javascript/confirmDelete.js"></script>
-
+<script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -32,9 +31,9 @@ Documents<br>
   <tr class="title">
     <td width="10" align="center">Action</td>
     <td>
-    <strong><a href="AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=subject">Item</a></strong>
+      <strong><a href="AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=subject">Item</a></strong>
       <%= DocListInfo.getSortIcon("subject") %>
-      </td>
+    </td>
     <td align="center">Ext</td>
     <td align="center">Size</td>
     <td align="center">Version</td>
@@ -45,11 +44,10 @@ Documents<br>
   </tr>
 <%
   Iterator j = FileItemList.iterator();
-  
   if ( j.hasNext() ) {
     int rowid = 0;
     while (j.hasNext()) {
-      if (rowid != 1) rowid = 1; else rowid = 2;
+      rowid = (rowid != 1?1:2);
       FileItem thisFile = (FileItem)j.next();
 %>      
     <tr class="row<%= rowid %>">
@@ -83,7 +81,7 @@ Documents<br>
   <dhv:pagedListControl object="DocListInfo"/>
 <%} else {%>
     <tr class="containerBody">
-      <td colspan="7" valign="center">
+      <td colspan="7">
         No documents found.
       </td>
     </tr>

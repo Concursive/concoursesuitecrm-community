@@ -44,17 +44,16 @@ List of Folder Records<br>
           </td>
         </dhv:permission>
         </dhv:evaluate>
-        
-        <td align="left">
+        <td>
           <strong>Record</strong>
         </td>
-        <td align="left">
+        <td>
           <strong>Entered</strong>
         </td>
-        <td align="left">
+        <td>
           <strong>Modified By</strong>
         </td>
-        <td align="left">
+        <td>
           <strong>Last Modified</strong>
         </td>
       </tr>
@@ -63,7 +62,7 @@ List of Folder Records<br>
       int rowid = 0;
       Iterator records = Records.iterator();
       while (records.hasNext()) {
-        rowid = (rowid == 1 ? 2 : 1);
+        rowid = (rowid != 1 ? 1 : 2);
         CustomFieldRecord thisRecord = (CustomFieldRecord)records.next();
 %>    
       <tr class="containerBody">
@@ -71,7 +70,7 @@ List of Folder Records<br>
         <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
           <dhv:permission name="accounts-accounts-folders-edit"><a href="Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-folders-delete"><a href="javascript:confirmDelete('Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>');">Del</a></dhv:permission>
-          </td>
+        </td>
         </dhv:permission>
         </dhv:evaluate>
       
