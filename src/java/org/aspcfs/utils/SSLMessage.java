@@ -186,6 +186,19 @@ public class SSLMessage {
         System.out.println("SSLMessage-> Opening SSLSocket");
       }
       socket = (SSLSocket) factory.createSocket(url, port);
+      
+      //Untested
+      //Get the certificate presented by the server
+/* 
+      SSLSession session = socket.getSession();
+      X509Certificate cert;	
+      try { cert = (X509Certificate)session.getPeerCertificates()[0]; }
+      catch(SSLPeerUnverifiedException e) { // If no or invalid certificate
+        System.err.println(session.getPeerHost() +
+           " did not present a valid certificate.");
+        return;
+      } 
+*/
       socket.setSoTimeout(30000);
       socket.startHandshake();
       if (System.getProperty("DEBUG") != null) {
