@@ -166,7 +166,6 @@ public final class ProcessPacket extends CFSModule {
         this.freeConnection(context, dbLookup);
       }
     }
-
     //Construct the XML response
     try {
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -174,7 +173,6 @@ public final class ProcessPacket extends CFSModule {
       Document document = builder.newDocument();
       Element app = document.createElement("aspcfs");
       document.appendChild(app);
-
       //Convert the result messages to XML
       int returnedRecordCount = 0;
       if (System.getProperty("DEBUG") != null) {
@@ -183,19 +181,23 @@ public final class ProcessPacket extends CFSModule {
       Iterator messages = statusMessages.iterator();
       while (messages.hasNext()) {
         TransactionStatus thisMessage = (TransactionStatus) messages.next();
+        //Append the response
         Element response = document.createElement("response");
         if (thisMessage.getId() > -1) {
-          response.setAttribute("id", "" + thisMessage.getId());
+          response.setAttribute("id", String.valueOf(thisMessage.getId()));
         }
         app.appendChild(response);
+        //Append the status code (0=OK, 1=Error)
         Element status = document.createElement("status");
         status.appendChild(document.createTextNode(String.valueOf(thisMessage.getStatusCode())));
         response.appendChild(status);
-
+        //Append the errorText
         Element errorText = document.createElement("errorText");
-        errorText.appendChild(document.createTextNode(thisMessage.getMessage()));
+        if (thisMessage.getStatusCode() > 0) {
+          errorText.appendChild(document.createTextNode(thisMessage.getMessage()));
+        }
         response.appendChild(errorText);
-
+        //Append any record lists to be returned
         if (!thisMessage.hasError() && thisMessage.hasRecordList()) {
           Element recordSet = document.createElement("recordSet");
           recordSet.setAttribute("name", thisMessage.getRecordList().getName());
@@ -204,7 +206,6 @@ public final class ProcessPacket extends CFSModule {
             recordSet.setAttribute("total", String.valueOf(thisMessage.getRecordList().getTotalRecords()));
           }
           response.appendChild(recordSet);
-
           returnedRecordCount += thisMessage.getRecordList().size();
           Iterator recordList = thisMessage.getRecordList().iterator();
           while (recordList.hasNext()) {
@@ -232,7 +233,6 @@ public final class ProcessPacket extends CFSModule {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ProcessPacket-> Total Records: " + returnedRecordCount);
       }
-
       context.getRequest().setAttribute("statusXML", XMLUtils.toString(document));
     } catch (Exception pce) {
       pce.printStackTrace(System.out);
