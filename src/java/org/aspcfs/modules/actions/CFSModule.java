@@ -715,7 +715,7 @@ public class CFSModule {
     if (itemObject instanceof Contact) {
       Contact thisContact = (Contact) itemObject;
 
-      if (thisContact.hasType(Contact.EMPLOYEE_TYPE)) {
+      if (thisContact.getEmployee()) {
         thisItem = new RecentItem(
             RecentItem.EMPLOYEE,
             thisContact.getNameFirstLast(),
