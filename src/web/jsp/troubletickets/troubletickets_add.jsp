@@ -46,11 +46,29 @@
     var url = "TroubleTickets.do?command=OrganizationJSList&orgId=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
-  function checkForm(form) {
+  function checkContactForm(form) {
     formTest = true;
     message = "";
     if ((!checkPhone(form.phone1number.value))) { 
       message += "- The entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
+      formTest = false;
+    }
+    if (formTest == false) {
+      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      return false;
+    } else {
+      return true;
+    }
+  }
+  function checkForm(form){
+    formTest = true;
+    message = "";
+    if (form.orgId.value == "-1") { 
+      message += "- You have to select an Organization\r\n";
+      formTest = false;
+    }
+    if (form.contactId.value == "-1") { 
+      message += "- You have to select a Contact\r\n";
       formTest = false;
     }
     if (formTest == false) {
@@ -101,9 +119,9 @@
 Add Ticket<br>
 <hr color="#BFBFBB" noshade>
 <% if (request.getParameter("contact") != null) {%>
-<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
+<input type="submit" value="Insert" name="Save" onClick="return checkContactForm(this.form)">
 <%} else {%>
-<input type="submit" value="Insert" name="Save">
+<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
 <%}%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
 <input type="reset" value="Reset">	
@@ -356,9 +374,9 @@ Add Ticket<br>
 </table>
 <br>
 <% if (request.getParameter("contact") != null) {%>
-<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
+<input type="submit" value="Insert" name="Save" onClick="return checkContactForm(this.form)">
 <%} else {%>
-<input type="submit" value="Insert" name="Save">
+<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
 <%}%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
 <input type="reset" value="Reset">
