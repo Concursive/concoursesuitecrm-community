@@ -86,7 +86,9 @@ CREATE TABLE custom_field_data (
   record_id INTEGER NOT NULL,
   field_id INTEGER NOT NULL,
   selected_item_id INTEGER DEFAULT 0,
-  entered_value TEXT
+  entered_value TEXT,
+  entered_number INTEGER,
+  entered_float FLOAT
 );
 
 CREATE INDEX "custom_field_dat_idx" ON "custom_field_data" USING btree ("record_id", "field_id");

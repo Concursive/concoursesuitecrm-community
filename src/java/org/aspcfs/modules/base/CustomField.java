@@ -40,6 +40,8 @@ public class CustomField extends GenericBean {
   private int recordId = -1;
   private int selectedItemId = -1;
   private String enteredValue = null;
+  private int enteredNumber = 0;
+  private double enteredDouble = 0;
   private Object elementData = null;
 
   //Types of custom fields
@@ -373,23 +375,26 @@ public class CustomField extends GenericBean {
    */
   public void setParameters(ActionContext context) {
     String newValue = context.getRequest().getParameter("cf" + id);
-    switch (type) {
-      case SELECT:
-        selectedItemId = Integer.parseInt(newValue);
-        enteredValue = ((LookupList)elementData).getSelectedValue(selectedItemId);
-        break;
-      case CHECKBOX:
-        if ("ON".equalsIgnoreCase(newValue)) {
-          selectedItemId = 1;
-          enteredValue = "Yes";
-        } else {
-          selectedItemId = 0;
-          enteredValue = "No";
-        }
-        break;
-      default:
-        enteredValue = newValue;
-        break;
+    if (newValue != null) {
+      newValue = newValue.trim();
+      switch (type) {
+        case SELECT:
+          selectedItemId = Integer.parseInt(newValue);
+          enteredValue = ((LookupList)elementData).getSelectedValue(selectedItemId);
+          break;
+        case CHECKBOX:
+          if ("ON".equalsIgnoreCase(newValue)) {
+            selectedItemId = 1;
+            enteredValue = "Yes";
+          } else {
+            selectedItemId = 0;
+            enteredValue = "No";
+          }
+          break;
+        default:
+          enteredValue = newValue;
+          break;
+      }
     }
   }
 
@@ -665,7 +670,7 @@ public class CustomField extends GenericBean {
    *@since
    */
   public String getValueHtml() {
-    if (type != SELECT && enteredValue == null) {
+    if (type != SELECT && (enteredValue == null || enteredValue.equals(""))) {
       return toHtml(enteredValue);
     }
     switch (type) {
@@ -675,7 +680,7 @@ public class CustomField extends GenericBean {
         if (enteredValue.indexOf("@") > 0) {
           return "<a href=\"mailto:" + enteredValue + "\">" + enteredValue + "</a>";
         } else {
-          return enteredValue;
+          return toHtml(enteredValue);
         }
       case SELECT:
         if (elementData != null) {
@@ -687,7 +692,7 @@ public class CustomField extends GenericBean {
         return (selectedItemId == 1 ? "Yes" : "No");
       case CURRENCY:
         try {
-          float thisAmount = Float.parseFloat(enteredValue);
+          double thisAmount = Double.parseDouble(enteredValue);
           NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
           return ("$" + numberFormatter.format(thisAmount));
         } catch (Exception e) {
@@ -889,14 +894,16 @@ public class CustomField extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO custom_field_data " +
-        "(record_id, field_id, selected_item_id, entered_value ) " +
-        "VALUES (?, ?, ?, ?) ");
+        "(record_id, field_id, selected_item_id, entered_value, entered_number, entered_float ) " +
+        "VALUES (?, ?, ?, ?, ?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, recordId);
     pst.setInt(++i, id);
     pst.setInt(++i, selectedItemId);
     pst.setString(++i, enteredValue);
+    pst.setInt(++i, enteredNumber);
+    pst.setDouble(++i, enteredDouble);
     pst.execute();
     pst.close();
     return result;
@@ -1153,6 +1160,8 @@ public class CustomField extends GenericBean {
       if (type == INTEGER) {
         try {
           int testNumber = Integer.parseInt(this.getEnteredValue());
+          enteredNumber = testNumber;
+          enteredDouble = Double.parseDouble("" + testNumber);
         } catch (Exception e) {
           error = "Value should be a whole number";
         }
@@ -1160,7 +1169,8 @@ public class CustomField extends GenericBean {
       
       if (type == FLOAT) {
         try {
-          float testNumber = Float.parseFloat(this.getEnteredValue());
+          double testNumber = Double.parseDouble(this.getEnteredValue());
+          enteredDouble = testNumber;
         } catch (Exception e) {
           error = "Value should be a number";
         }
@@ -1168,7 +1178,8 @@ public class CustomField extends GenericBean {
       
       if (type == PERCENT) {
         try {
-          float testNumber = Float.parseFloat(this.getEnteredValue());
+          double testNumber = Double.parseDouble(this.getEnteredValue());
+          enteredDouble = testNumber;
         } catch (Exception e) {
           error = "Value should be a number";
         }
@@ -1176,7 +1187,10 @@ public class CustomField extends GenericBean {
       
       if (type == CURRENCY) {
         try {
-          float testNumber = Float.parseFloat(this.getEnteredValue());
+          String testString = replace(this.getEnteredValue(), ",", "");
+          double testNumber = Double.parseDouble(testString);
+          this.setEnteredValue(testString);
+          enteredDouble = testNumber;
         } catch (Exception e) {
           error = "Value should be a number";
         }
@@ -1196,7 +1210,7 @@ public class CustomField extends GenericBean {
       }
       
       if (type == EMAIL) {
-        if ((this.getEnteredValue().indexOf("@") < 0) ||
+        if ((this.getEnteredValue().indexOf("@") < 1) ||
             (this.getEnteredValue().indexOf(" ") > -1) ||
             (this.getEnteredValue().indexOf(".") < 0)) {
           error = "Email address format error";
