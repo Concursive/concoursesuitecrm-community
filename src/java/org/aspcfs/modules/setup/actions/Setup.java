@@ -323,12 +323,16 @@ public class Setup extends CFSModule {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Setup-> ConfigureDirectory path = " + fileLibrary);
       }
-      File targetDirectory = new File(fileLibrary);
+      // Use the instance path to support multiple instances since each
+      // instance requires a different path
+      File instance = new File(context.getServletContext().getRealPath("/"));
+      // Use the instance name in the fileLibrary
+      File targetDirectory = new File(fileLibrary + instance.getName() + fs);
       if (targetDirectory.exists()) {
         //Let's use the target directory
         ApplicationPrefs prefs = getApplicationPrefs(context);
-        prefs.setFilename(fileLibrary + "build.properties");
-        prefs.add("FILELIBRARY", fileLibrary);
+        prefs.setFilename(fileLibrary + instance.getName() + fs + "build.properties");
+        prefs.add("FILELIBRARY", fileLibrary + instance.getName() + fs);
         prefs.save();
         return "ConfigureDirectoryOK";
       } else {
@@ -353,18 +357,22 @@ public class Setup extends CFSModule {
     }
     addModuleBean(context, null, "Storage");
     try {
-      //We have permission to make the directory, so go for it
+      // We have permission to make the directory, so go for it
       String path = context.getRequest().getParameter("fileLibrary");
-      File targetDirectory = new File(path);
-      if (!targetDirectory.exists()) {
-        targetDirectory.mkdirs();
-      }
       if (!path.endsWith(fs)) {
         path += fs;
       }
+      // Use the instance path to support multiple instances since each
+      // instance requires a different path
+      File instance = new File(context.getServletContext().getRealPath("/"));
+      // Use the instance name in the fileLibrary
+      File targetDirectory = new File(path + instance.getName() + fs);
+      if (!targetDirectory.exists()) {
+        targetDirectory.mkdirs();
+      }
       ApplicationPrefs prefs = getApplicationPrefs(context);
-      prefs.setFilename(path + "build.properties");
-      prefs.add("FILELIBRARY", path);
+      prefs.setFilename(path + instance.getName() + fs + "build.properties");
+      prefs.add("FILELIBRARY", path + instance.getName() + fs);
       prefs.save();
       return "ConfigureDirectoryOK";
     } catch (Exception e) {
