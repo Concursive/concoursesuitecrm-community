@@ -512,18 +512,6 @@ public class SystemStatus {
   }
 
 
-
-  /**
-   *  Gets the categoryEditor attribute of the SystemStatus object
-   *
-   * @param  db  Description of the Parameter
-   * @return     The categoryEditor value
-   */
-  public CategoryEditor getCategoryEditor(Connection db) {
-    return categoryEditor;
-  }
-
-
   /**
    *  A presentation object (.jsp) can see if a field should be ignored in the
    *  output
