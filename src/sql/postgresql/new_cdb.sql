@@ -87,7 +87,7 @@ CREATE TABLE state (
 
 CREATE TABLE lookup_department (
   code SERIAL PRIMARY KEY,
-  description VARCHAR(50) NOT NULL UNIQUE,
+  description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
@@ -239,7 +239,7 @@ CREATE TABLE contact (
   nameSuffix VARCHAR(80),
   assistant INT REFERENCES contact,
   birthdate DATE,
-  type_id INT DEFAULT 0,
+  type_id INT REFERENCES lookup_contact_types,
   notes TEXT,
   site INT,
   imName VARCHAR(30),

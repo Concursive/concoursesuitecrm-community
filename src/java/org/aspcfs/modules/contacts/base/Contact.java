@@ -99,7 +99,14 @@ public class Contact extends GenericBean {
    *@since                    1.1
    */
   public Contact(Connection db, String contactId) throws SQLException {
+    queryRecord(db, Integer.parseInt(contactId));
+  }
+  
+  public Contact(Connection db, int contactId) throws SQLException {
+    queryRecord(db, contactId);
+  }
 
+  private void queryRecord(Connection db, int contactId) throws SQLException {
     Statement st = null;
     ResultSet rs = null;
 
@@ -119,7 +126,7 @@ public class Contact extends GenericBean {
         "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
         "WHERE c.contact_id > -1 ");
 
-    if (contactId != null && !contactId.equals("")) {
+    if (contactId > -1) {
       sql.append("AND c.contact_id = " + contactId + " ");
     } else {
       throw new SQLException("Contact ID not specified.");
@@ -700,11 +707,7 @@ public class Contact extends GenericBean {
    *@since       1.2
    */
   public void setEnabled(String tmp) {
-    if (tmp.toLowerCase().equals("false")) {
-      this.enabled = false;
-    } else {
-      this.enabled = true;
-    }
+    enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -716,6 +719,10 @@ public class Contact extends GenericBean {
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
+  }
+  
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
   }
 
 
@@ -729,6 +736,9 @@ public class Contact extends GenericBean {
     this.modifiedBy = tmp;
   }
 
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
 
   /**
    *  Sets the HasAccount attribute of the Contact object
@@ -783,6 +793,14 @@ public class Contact extends GenericBean {
    */
   public int getUserId() {
     return userId;
+  }
+  
+  public void setUserId(int tmp) {
+    userId = tmp;
+  }
+  
+  public void setUserId(String tmp) {
+    userId = Integer.parseInt(tmp);
   }
 
 
@@ -1477,10 +1495,6 @@ public class Contact extends GenericBean {
       return false;
     }
 
-    if (typeId == -1) {
-      throw new SQLException("Contact does not have a type specified");
-    }
-
     StringBuffer sql = new StringBuffer();
 
     try {
@@ -1490,11 +1504,20 @@ public class Contact extends GenericBean {
       }
       sql.append(
           "INSERT INTO contact " +
-          "(type_id, enteredby, modifiedby, namefirst, namelast, owner) " +
-          "VALUES (?, ?, ?, ?, ?, ?) ");
+          "(user_id, type_id, enteredby, modifiedby, namefirst, namelast, owner) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setInt(++i, this.getTypeId());
+      if (userId > -1) {
+        pst.setInt(++i, this.getUserId());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+      if (typeId > 0) {
+        pst.setInt(++i, this.getTypeId());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getNameFirst());
@@ -1561,10 +1584,6 @@ public class Contact extends GenericBean {
 
     if (!isValid(db)) {
       return -1;
-    }
-
-    if (typeId == -1) {
-      throw new SQLException("Contact does not have a TYPE specified");
     }
 
     try {
@@ -1830,7 +1849,11 @@ public class Contact extends GenericBean {
     pst.setString(++i, this.getNameLast());
     pst.setString(++i, this.getNameMiddle());
     pst.setString(++i, this.getNameSuffix());
-    pst.setInt(++i, this.getTypeId());
+    if (typeId > 0) {
+      pst.setInt(++i, this.getTypeId());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getNotes());
     if (owner > -1) {
       pst.setInt(++i, this.getOwner());
@@ -1885,6 +1908,10 @@ public class Contact extends GenericBean {
   protected void buildRecord(ResultSet rs) throws SQLException {
     //contact table
     this.setId(rs.getInt("contact_id"));
+    userId = rs.getInt("user_id");
+    if (rs.wasNull()) {
+      userId = -1;
+    }
     orgId = rs.getInt("org_id");
     if (rs.wasNull()) {
       orgId = -1;
@@ -1901,6 +1928,9 @@ public class Contact extends GenericBean {
     nameMiddle = rs.getString("namemiddle");
     nameSuffix = rs.getString("namesuffix");
     typeId = rs.getInt("type_id");
+    if (rs.wasNull()) {
+      typeId = -1;
+    }
     notes = rs.getString("notes");
     site = rs.getString("site");
     imName = rs.getString("imname");
@@ -1978,6 +2008,9 @@ public class Contact extends GenericBean {
       rs = pst.executeQuery();
       if (rs.next()) {
         typeId = rs.getInt("type_id");
+        if (rs.wasNull()) {
+          typeId = -1;
+        }
       }
 
       pst.close();

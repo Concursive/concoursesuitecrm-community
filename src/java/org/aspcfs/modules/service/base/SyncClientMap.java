@@ -348,6 +348,12 @@ public class SyncClientMap {
       Hashtable clientLookup = (Hashtable) clientManager.get(new Integer(clientId));
       Hashtable tableLookup = (Hashtable) clientLookup.get(new Integer(referenceTable));
 
+      if (tableLookup == null) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("SyncClientMap-> Referenced table is null: " + referenceTable);
+        }
+      }
+      
       Iterator i = tableLookup.keySet().iterator();
       System.out.println("SyncClientMap-> Table count: " + tableLookup.size());
       while (i.hasNext()) {

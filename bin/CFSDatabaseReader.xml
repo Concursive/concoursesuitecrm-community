@@ -55,7 +55,7 @@
       <property>notes</property>
       <property>locale</property>
       <property>employeeId</property>
-      <property lookup="lookupEmploymentTypes">employmentType</property>
+      <property>employmentType</property>
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>

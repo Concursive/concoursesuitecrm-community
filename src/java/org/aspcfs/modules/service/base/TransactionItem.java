@@ -446,6 +446,11 @@ public class TransactionItem {
               //Might be a lookupElement
               insertedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")), ObjectUtils.getParam(object, "tableName"));
             }
+            if (insertedObject == null) {
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("TransactionItem-> The object was inserted, but could not be reloaded: possible invalid constructor");
+              }
+            }
             syncClientMap.insert(db, ObjectUtils.getParam(insertedObject, "modified"));
           }
           addRecords(object, recordList, "processed");

@@ -58,7 +58,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     
     //Copy Contacts
     logger.info("ImportBaseData-> Inserting contacts");
-    writer.setAutoCommit(false);
+    writer.setAutoCommit(true);
     ContactList contacts = new ContactList();
     contacts.setIncludeEnabled(-1);
     contacts.setPersonalId(-2);
@@ -66,6 +66,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     mappings.saveList(writer, contacts, "insert");
     writer.commit();
     writer.setAutoCommit(true);
+    
     return true;
   }
   
