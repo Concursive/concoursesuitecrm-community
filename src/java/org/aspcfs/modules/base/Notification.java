@@ -46,6 +46,7 @@ public class Notification extends Thread {
 
   private int id = -1;
   private String databaseName = null;
+  private String emailToNotify = null;
   private int userToNotify = -1;
   private int contactToNotify = -1;
   private String module = null;
@@ -128,6 +129,8 @@ public class Notification extends Thread {
   public void setContactToNotify(int tmp) {
     this.contactToNotify = tmp;
   }
+
+  public void setEmailToNotify(String tmp) { this.emailToNotify = tmp; }
 
 
   /**
@@ -513,6 +516,48 @@ public class Notification extends Thread {
     } catch (SQLException e) {
       errorMessage = e.toString();
       result += 1;
+    }
+  }
+  
+  
+  public void notifyAddress() {
+    if (type > -1) {
+      try {
+        if (type == EMAIL) {
+          System.out.println("Notification-> To: " + emailToNotify);
+          SMTPMessage mail = new SMTPMessage();
+          mail.setHost(host);
+          mail.setFrom(from + " <cfs-messenger@darkhorseventures.com>");
+          if (from != null && !from.equals("")) {
+            mail.addReplyTo(from);
+          } else {
+            mail.addReplyTo(siteCode + "@" + this.getHostName());
+          }
+          mail.setType("text/html");
+          mail.addTo(emailToNotify);
+          mail.setSubject(subject);
+          mail.setBody(messageToSend);
+          mail.setAttachments(fileAttachments);
+          if (mail.send() == 2) {
+            System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
+            System.err.println("ReportBuilder Error: Report could not be sent");
+            System.err.println(mail.getErrorMsg());
+          } else {
+            //insertNotification(db);
+          }
+        } else if (type == IM) {
+
+        } else if (type == FAX) {
+
+        } else if (type == SSL) {
+
+        }
+      } catch (Exception e) {
+        result = 2;
+        errorMessage = e.toString();
+      }
+    } else {
+      System.out.println("Notification-> Type not set");
     }
   }
 

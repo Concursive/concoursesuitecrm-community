@@ -67,7 +67,7 @@ public final class Login extends CFSModule {
       if (siteList.size() > 0) {
         Site thisSite = (Site) siteList.get(0);
         ce = new ConnectionElement(
-            thisSite.getDatabaseHost(), 
+            thisSite.getDatabaseUrl(), 
             thisSite.getDatabaseUsername(), 
             thisSite.getDatabasePassword());
         ce.setDbName(thisSite.getDatabaseName());

@@ -169,7 +169,7 @@ public class CFSDatasource implements DataSource {
     while (sites.hasNext()) {
       Site thisSite = (Site) sites.next();
       ConnectionElement ce = new ConnectionElement(
-          thisSite.getDatabaseHost(),
+          thisSite.getDatabaseUrl(),
           thisSite.getDatabaseUsername(),
           thisSite.getDatabasePassword());
       ce.setDriver(thisSite.getDatabaseDriver());

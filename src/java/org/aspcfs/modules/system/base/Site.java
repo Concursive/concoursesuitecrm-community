@@ -17,7 +17,7 @@ public class Site extends GenericBean {
   private int id = -1;
   private String siteCode = null;
   private String virtualHost = null;
-  private String databaseHost = null;
+  private String databaseUrl = null;
   private String databaseName = null;
   private int databasePort = -1;
   private String databaseUsername = null;
@@ -112,12 +112,12 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Sets the databaseHost attribute of the Site object
+   *  Sets the databaseUrl attribute of the Site object
    *
-   *@param  tmp  The new databaseHost value
+   *@param  tmp  The new databaseUrl value
    */
-  public void setDatabaseHost(String tmp) {
-    this.databaseHost = tmp;
+  public void setDatabaseUrl(String tmp) {
+    this.databaseUrl = tmp;
   }
 
 
@@ -242,12 +242,12 @@ public class Site extends GenericBean {
 
 
   /**
-   *  Gets the databaseHost attribute of the Site object
+   *  Gets the databaseUrl attribute of the Site object
    *
-   *@return    The databaseHost value
+   *@return    The databaseUrl value
    */
-  public String getDatabaseHost() {
-    return databaseHost;
+  public String getDatabaseUrl() {
+    return databaseUrl;
   }
 
 
@@ -332,7 +332,7 @@ public class Site extends GenericBean {
     id = rs.getInt("site_id");
     siteCode = rs.getString("sitecode");
     virtualHost = rs.getString("vhost");
-    databaseHost = rs.getString("dbhost");
+    databaseUrl = rs.getString("dbhost");
     databaseName = rs.getString("dbname");
     databasePort = rs.getInt("dbport");
     databaseUsername = rs.getString("dbuser");
