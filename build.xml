@@ -645,6 +645,27 @@
       <arg value="${env.CFS_HOME}${fs}WEB-INF${fs}notifier.xml"/>
     </java>
   </target>
+
+  <!-- Run -->
+  <target name="run.autoguide" depends="run.notifier.init" if="notifier.present">
+    <echo message="Processing sites that are enabled in the gatekeeper database"/>
+    <path id="cfs2.classpath">
+      <fileset dir="${env.CATALINA_HOME}/common/lib">
+        <include name="**/*.jar"/>
+      </fileset>
+    </path>
+    <record name="${env.CFS_HOME}/WEB-INF/autoguide-maintenance.log" append="no"/>
+    <java classname="org.aspcfs.apps.notifier.Notifier" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${env.CFS_HOME}/WEB-INF/lib">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+      <arg value="${env.CFS_HOME}${fs}WEB-INF${fs}notifier.xml"/>
+      <arg value="org.aspcfs.apps.notifier.task.AutoGuideMaintenance"/>
+    </java>
+  </target>
   
   
   
