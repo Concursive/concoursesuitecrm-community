@@ -1,10 +1,12 @@
 BODY { 
   font-family: verdana, arial, sans-serif;
   font-size: 8pt;
-  background: white; 
+  background: white;
+  color: #000000;
 }
 TABLE, TD, TH, LI, P, UL, OL, TEXTAREA, INPUT, SELECT, A { 
   font-family: verdana, arial, sans-serif; 
   font-size: 8pt;
+  color: #000000;
 }
 
