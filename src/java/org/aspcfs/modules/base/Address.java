@@ -411,7 +411,11 @@ public class Address {
     if("UNITED STATES".equals(country) || ("CANADA".equals(country))){ 
       return state;
     }
+    if ("-1".equals(otherState)) {
+      return "";
+    } else {
       return otherState;
+    }
   }
 
 
@@ -454,7 +458,11 @@ public class Address {
    *@since     1.5
    */
   public String getCountry() {
-    return country;
+    if ("-1".equals(country)) {
+      return "";
+    } else {
+      return country;
+    }
   }
 
 
