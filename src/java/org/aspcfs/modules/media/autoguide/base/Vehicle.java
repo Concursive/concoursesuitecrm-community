@@ -18,8 +18,8 @@ public class Vehicle {
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
-  private Make make = null;
-  private Model model = null;
+  private Make make = new Make();
+  private Model model = new Model();
   
   public Vehicle() { }
 

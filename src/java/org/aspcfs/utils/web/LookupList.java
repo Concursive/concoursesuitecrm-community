@@ -55,7 +55,7 @@ public class LookupList extends HtmlSelect {
     rs = st.executeQuery(sql.toString());
     while (rs.next()) {
       LookupElement thisElement = new LookupElement(rs);
-      this.addElement(thisElement);
+      this.add(thisElement);
     }
     rs.close();
     st.close();
@@ -82,7 +82,7 @@ public class LookupList extends HtmlSelect {
       }
 
       thisElement.setLevel(i);
-      this.addElement(thisElement);
+      this.add(thisElement);
     }
   }
 
@@ -116,7 +116,7 @@ public class LookupList extends HtmlSelect {
     rs = st.executeQuery(sql.toString());
     while (rs.next()) {
       LookupElement thisElement = new LookupElement(rs);
-      this.addElement(thisElement);
+      this.add(thisElement);
     }
     rs.close();
     st.close();

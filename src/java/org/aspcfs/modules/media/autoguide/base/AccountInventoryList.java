@@ -18,6 +18,7 @@ public class AccountInventoryList extends ArrayList {
   private int syncType = Constants.NO_SYNC;
   
   private boolean buildOrganizationInfo = false;
+  private int orgId = -1;
   
   public AccountInventoryList() { }
 
@@ -31,7 +32,8 @@ public class AccountInventoryList extends ArrayList {
   }
   public void setSyncType(int tmp) { this.syncType = tmp; }
   public void setSyncType(String tmp) { this.syncType = Integer.parseInt(tmp); }
-  
+  public void setOrgId(int tmp) { this.orgId = tmp; }
+
   public String getTableName() { return tableName; }
   public String getUniqueField() { return uniqueField; }
   
@@ -119,6 +121,9 @@ public class AccountInventoryList extends ArrayList {
       sqlFilter.append("AND i.entered < ? ");
       sqlFilter.append("AND i.modified < ? ");
     }
+    if (orgId > -1) {
+      sqlFilter.append("AND i.account_id = ? ");
+    }
   }
   
   private int prepareFilter(PreparedStatement pst) throws SQLException {
@@ -133,6 +138,9 @@ public class AccountInventoryList extends ArrayList {
       pst.setTimestamp(++i, lastAnchor);
       pst.setTimestamp(++i, lastAnchor);
       pst.setTimestamp(++i, nextAnchor);
+    }
+    if (orgId > -1) {
+      pst.setInt(++i, orgId);
     }
     return i;
   }

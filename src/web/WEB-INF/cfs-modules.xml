@@ -218,6 +218,7 @@
     <action name="Opportunities"/>
     <action name="AccountTickets"/>
 		<action name="AccountsDocuments"/>
+    <action name="AccountsAutoGuide"/>
     <page title="Accounts"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>
@@ -305,7 +306,7 @@
     <action name="CampaignManagerMessage"/>
     <page title="Communications Manager"/>
     <permission value="campaign-view"/>
-    <long_html value="Communications Manager"/>
+    <long_html value="Communications"/>
     <short_html value="Communications"/>
     <link value="/CampaignManager.do?command=Dashboard"/>
     <graphic width="83" height="36" on="menu-comm-on.gif" off="menu-comm-off.gif" rollover=""/>

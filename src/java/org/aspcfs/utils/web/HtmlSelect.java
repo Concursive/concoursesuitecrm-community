@@ -11,7 +11,7 @@ import java.sql.*;
  *@created    August 3, 2001
  *@version    $Id$
  */
-public class HtmlSelect extends Vector {
+public class HtmlSelect extends ArrayList {
 
 	protected String selectName = "";
 	protected int selectSize = 1;
@@ -59,6 +59,13 @@ public class HtmlSelect extends Vector {
 	
 	public HtmlSelect() { }
 	
+  public HtmlSelect(ArrayList itemsToAdd) {
+    Iterator i = itemsToAdd.iterator();
+    while (i.hasNext()) {
+      String thisItem = (String)i.next();
+      this.addItem(thisItem);
+    }
+  }
 	
 	/**
 	*  Set the name of the HTML Select element
@@ -418,7 +425,7 @@ public class HtmlSelect extends Vector {
    *@since        1.0
    */
   public void addItem(String tmp1, String tmp2) {
-    this.addElement(tmp1 + "|" + tmp2);
+    this.add(tmp1 + "|" + tmp2);
   }
 
 
@@ -430,7 +437,7 @@ public class HtmlSelect extends Vector {
    *@since       1.0
    */
   public void addItem(String tmp) {
-    this.addElement(tmp + "|" + tmp);
+    this.add(tmp + "|" + tmp);
   }
 
 
@@ -443,7 +450,7 @@ public class HtmlSelect extends Vector {
    *@since        1.0
    */
   public void addItem(int tmp1, String tmp2) {
-    this.addElement(tmp1 + "|" + tmp2);
+    this.add(tmp1 + "|" + tmp2);
   }
   
   public void addItem(int tmp1, String tmp2, int position) {

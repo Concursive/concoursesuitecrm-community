@@ -122,5 +122,20 @@ public class VehicleList extends ArrayList {
     }
     return i;
   }
+  
+  public static ArrayList buildYearList(Connection db) throws SQLException {
+    ArrayList years = new ArrayList();
+    String sql = 
+      "SELECT DISTINCT year FROM autoguide_vehicle ORDER BY year DESC";
+    PreparedStatement pst = db.prepareStatement(sql);
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+      String thisYear = String.valueOf(rs.getInt("year"));
+      years.add(thisYear);
+    }
+    rs.close();
+    pst.close();
+    return years;
+  }
 }
 

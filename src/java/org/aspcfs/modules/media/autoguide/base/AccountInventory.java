@@ -32,7 +32,7 @@ public class AccountInventory {
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
-  private Vehicle vehicle = null;
+  private Vehicle vehicle = new Vehicle();
   private Organization organization = null;
   
   public AccountInventory() { }
