@@ -218,9 +218,9 @@ public class CalendarEvent implements Comparable {
 		else if (category.equalsIgnoreCase("holiday")) {
 			return "<img border=0 src=\"/images/event-holiday.gif\" alt=\"Holiday:" + this.getSubject() + "\" align=texttop width=12 height=12>";
 		} else if (category.equalsIgnoreCase("Opportunity")) {
-			return "<img border=0 src=\"images/alertcall.gif\" alt=\"Opp:" + this.getSubject() + "\" align=texttop>";
+			return "<img border=0 src=\"images/alertopp.gif\" alt=\"Opp:" + this.getSubject() + "\" align=texttop>";
 		} else if (category.equalsIgnoreCase("Call")) {
-			return "<img border=0 src=\"images/alertopp.gif\" alt=\"Call:" + this.getSubject() + "\" align=texttop>";
+			return "<img border=0 src=\"images/alertcall.gif\" alt=\"Call:" + this.getSubject() + "\" align=texttop>";
 		}
     
 		return icon;
