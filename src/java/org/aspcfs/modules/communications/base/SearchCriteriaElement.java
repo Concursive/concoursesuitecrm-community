@@ -386,7 +386,7 @@ public class SearchCriteriaElement {
    *@exception  SQLException  SQL Exception
    *@since
    */
-  public void insert(int listid, Connection db) throws SQLException {
+  public boolean insert(int listid, Connection db) throws SQLException {
     this.buildOperatorData(db);
     try {
       PreparedStatement pst = db.prepareStatement(
@@ -410,6 +410,7 @@ public class SearchCriteriaElement {
     } finally {
       db.setAutoCommit(true);
     }
+    return true;
   }
 
 

@@ -792,7 +792,7 @@ public class TicketLog extends GenericBean {
    *@exception  SQLException  Description of Exception
    *@since
    */
-  public void insert(Connection db) throws SQLException {
+  public boolean insert(Connection db) throws SQLException {
     if (ticketId == -1) {
       throw new SQLException("Log Entry must be associated to a Ticket " + this.getId());
     }
@@ -849,6 +849,7 @@ public class TicketLog extends GenericBean {
     } finally {
       db.setAutoCommit(true);
     }
+    return true;
   }
 
 

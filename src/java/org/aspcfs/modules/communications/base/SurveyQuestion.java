@@ -336,7 +336,7 @@ public class SurveyQuestion {
    *@param  surveyId          Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void insert(Connection db, int surveyId) throws SQLException {
+  public boolean insert(Connection db, int surveyId) throws SQLException {
     try {
       db.setAutoCommit(false);
       int i = 0;
@@ -381,6 +381,7 @@ public class SurveyQuestion {
     } finally {
       db.setAutoCommit(true);
     }
+    return true;
   }
 
 

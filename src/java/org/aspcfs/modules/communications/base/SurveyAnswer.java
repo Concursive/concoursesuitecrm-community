@@ -432,7 +432,7 @@ public class SurveyAnswer {
    *@param  responseId        Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void insert(Connection db, int responseId) throws SQLException {
+  public boolean insert(Connection db, int responseId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO active_survey_answers " +
         "(response_id, question_id, comments, quant_ans, text_ans) " +
@@ -450,11 +450,11 @@ public class SurveyAnswer {
     if (itemList != null) {
       insertItemList(db, id);
     }
-
     if (this.quantAns > -1) {
       this.updateSurveyAverage(db);
       this.updateAnswerTotal(db);
     }
+    return true;
   }
 
 
