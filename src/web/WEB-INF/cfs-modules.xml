@@ -512,7 +512,7 @@
     </submenu>
     
     <submenu name="Maintenance">
-        <permission value="admin-sysconfig-view"/>
+        <permission value="admin-sysmaintenance-view"/>
         <long_html value="System Maintenance"/>
         <short_html value="System&lt;br&gt;Maintenance"/>
         <link value="#"/>

@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 Setup
 <hr color="#BFBFBB" noshade>
 Customize and configure CFS with the following options:<br>
@@ -5,6 +6,7 @@ Customize and configure CFS with the following options:<br>
 <table cellpadding="0" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td width="49%" valign="top">
+      <dhv:permission name="admin-users-view">
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td>
@@ -18,6 +20,8 @@ Customize and configure CFS with the following options:<br>
         </tr>
       </table>
       &nbsp;
+      </dhv:permission>
+      <dhv:permission name="admin-roles-view">
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td>
@@ -31,6 +35,8 @@ Customize and configure CFS with the following options:<br>
         </tr>
       </table>
       &nbsp;
+      </dhv:permission>
+      <dhv:permission name="admin-reassign-view">
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td>
@@ -43,11 +49,13 @@ Customize and configure CFS with the following options:<br>
           </td>
         </tr>
       </table>
+      </dhv:permission>
     </td>
     <td width="2%">
       &nbsp;
     </td>
     <td width="49%" valign="top">
+      <dhv:permission name="admin-sysconfig-view">
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td>
@@ -62,6 +70,8 @@ Customize and configure CFS with the following options:<br>
         </tr>
       </table>
       &nbsp;
+      </dhv:permission>
+      <dhv:permission name="admin-sysmaintenance-view">
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td>
@@ -74,6 +84,7 @@ Customize and configure CFS with the following options:<br>
           </td>
         </tr>
       </table>
+      </dhv:permission>
     </td>
   </tr>
 </table>
