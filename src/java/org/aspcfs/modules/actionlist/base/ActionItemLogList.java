@@ -13,8 +13,9 @@ import org.aspcfs.modules.contacts.base.Contact;
 /**
  *  List of Action Items
  *
- * @author     akhi_m
- * @created    April 24, 2003
+ *@author     akhi_m
+ *@created    April 24, 2003
+ *@version    $id:exp$
  */
 public class ActionItemLogList extends ArrayList {
   private int itemId = -1;
@@ -25,7 +26,7 @@ public class ActionItemLogList extends ArrayList {
   /**
    *  Sets the pagedListInfo attribute of the ActionItemLogList object
    *
-   * @param  pagedListInfo  The new pagedListInfo value
+   *@param  pagedListInfo  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -35,7 +36,7 @@ public class ActionItemLogList extends ArrayList {
   /**
    *  Sets the buildDetails attribute of the ActionItemLogList object
    *
-   * @param  buildDetails  The new buildDetails value
+   *@param  buildDetails  The new buildDetails value
    */
   public void setBuildDetails(boolean buildDetails) {
     this.buildDetails = buildDetails;
@@ -45,7 +46,7 @@ public class ActionItemLogList extends ArrayList {
   /**
    *  Sets the itemId attribute of the ActionItemLogList object
    *
-   * @param  itemId  The new itemId value
+   *@param  itemId  The new itemId value
    */
   public void setItemId(int itemId) {
     this.itemId = itemId;
@@ -55,7 +56,7 @@ public class ActionItemLogList extends ArrayList {
   /**
    *  Gets the itemId attribute of the ActionItemLogList object
    *
-   * @return    The itemId value
+   *@return    The itemId value
    */
   public int getItemId() {
     return itemId;
@@ -65,7 +66,7 @@ public class ActionItemLogList extends ArrayList {
   /**
    *  Gets the buildDetails attribute of the ActionItemLogList object
    *
-   * @return    The buildDetails value
+   *@return    The buildDetails value
    */
   public boolean getBuildDetails() {
     return buildDetails;
@@ -75,7 +76,7 @@ public class ActionItemLogList extends ArrayList {
   /**
    *  Gets the pagedListInfo attribute of the ActionItemLogList object
    *
-   * @return    The pagedListInfo value
+   *@return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -85,8 +86,8 @@ public class ActionItemLogList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -166,7 +167,7 @@ public class ActionItemLogList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
+   *@param  sqlFilter  Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -181,9 +182,9 @@ public class ActionItemLogList extends ArrayList {
   /**
    *  Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -197,11 +198,11 @@ public class ActionItemLogList extends ArrayList {
   /**
    *  Gets the itemLinked attribute of the ActionItemLogList class
    *
-   * @param  db                Description of the Parameter
-   * @param  linkItemId        Description of the Parameter
-   * @return                   The itemLinked value
-   * @exception  SQLException  Description of the Exception
-   * @deprecated
+   *@param  db                Description of the Parameter
+   *@param  linkItemId        Description of the Parameter
+   *@param  type              Description of the Parameter
+   *@return                   The itemLinked value
+   *@exception  SQLException  Description of the Exception
    */
   public static ActionList isItemLinked(Connection db, int linkItemId, int type) throws SQLException {
     ActionList thisList = null;
