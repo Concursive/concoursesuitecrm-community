@@ -10,9 +10,9 @@ A:visited:hover{color:#FF3300;}
 .r:hover{color:#ccccff;text-decoration:underline;}
 .r:visited:hover{color:#ccccff;text-decoration:underline;}
 
-.rs{color:#FFFF00;text-decoration:none;}
-.rs:active{color:#FFFF00;}
-.rs:visited{color:#FFFF00;}
+.rs{color:#FFFFFF;text-decoration:none;}
+.rs:active{color:#FFFFFF;}
+.rs:visited{color:#FFFFFF;}
 .rs:hover{color:#ccccff;text-decoration:underline;}
 .rs:visited:hover{color:#ccccff;text-decoration:underline;}
 
@@ -60,6 +60,11 @@ A:visited:hover{color:#FF3300;}
 .globalItem td {
   color: #000;
   background-color: #E7E9EB;
+}
+/* trails */
+.trails td {
+  color: #000;
+  background-color: #EDEDED;
 }
 /* Main Menu */
 .menutabs {
@@ -176,16 +181,16 @@ A:visited:hover{color:#FF3300;}
   border-right: 1px solid #666;
   background-color: #DEE0FA;
 }
+.details td {
+  border-bottom: 1px solid #666;
+  border-right: 1px solid #666;
+}
 .formLabel { 
   text-align: right !important;
   width: 100 !important;
   background-color: #EDEDED !important;
   border-bottom: 1px solid #666 !important;
   border-right: 1px solid #666 !important;
-}
-.details td {
-  border-bottom: 1px solid #666;
-  border-right: 1px solid #666;
 }
 .empty td {
   border: none !important;

@@ -41,30 +41,24 @@
       <link value="MyCFS.do?command=Home"/>
     </submenu>
     
-    <submenu name="-">
-      <permission value="myhomepage-view"/>
-      <long_html value="|"/>
-      <short_html value="&lt;image src='images/divider.gif'&gt;"/>
-    </submenu>
-    
     <submenu name="MyInbox">
       <permission value="myhomepage-inbox-view"/>
-      <long_html value="My Mailbox"/>
-      <short_html value="My&lt;br&gt;Mailbox"/>
+      <long_html value="Mailbox"/>
+      <short_html value="Mailbox"/>
       <link value="MyCFSInbox.do?command=Inbox&amp;return=1"/>
     </submenu>
     
     <submenu name="My Tasks">
      <permission value="myhomepage-tasks-view"/>
-      <long_html value="My Tasks"/>
-      <short_html value="My&lt;br&gt;Tasks"/>
+      <long_html value="Tasks"/>
+      <short_html value="Tasks"/>
       <link value="MyTasks.do"/>
     </submenu>
     
     <submenu name="My Action Lists">
      <permission value="myhomepage-action-lists-view"/>
-      <long_html value="My Action Lists"/>
-      <short_html value="My&lt;br&gt;Action Lists"/>
+      <long_html value="Action Lists"/>
+      <short_html value="Action Lists"/>
       <link value="MyActionLists.do?command=List&amp;linkModuleId=2"/>
     </submenu>
     
@@ -84,15 +78,15 @@
     
     <submenu name="Customize Headlines">
       <permission value="myhomepage-miner-view"/>
-      <long_html value="Customize Headlines"/>
-      <short_html value="Customize&lt;br&gt;Headlines"/>
+      <long_html value="Headlines"/>
+      <short_html value="Headlines"/>
       <link value="MyCFS.do?command=Headline"/>
     </submenu>
     
     <submenu name="MyProfile">
       <permission value="myhomepage-profile-view"/>
-      <long_html value="My Settings"/>
-      <short_html value="My&lt;br&gt;Settings"/>
+      <long_html value="Settings"/>
+      <short_html value="Settings"/>
       <link value="MyCFS.do?command=MyProfile"/>
     </submenu>
   </menu>
@@ -106,48 +100,36 @@
     <action name="ExternalContactsPrototype"/>
     <page title="General Contacts"/>
     <permission value="contacts-view"/>
-    <long_html value="General Contacts"/>
-    <short_html value="General&lt;br&gt;&amp;nbsp;Contacts&amp;nbsp;"/>
+    <long_html value="Contacts"/>
+    <short_html value="&amp;nbsp;Contacts&amp;nbsp;"/>
     <link value="ExternalContacts.do"/>
     <graphic width="83" height="36" on="menu-general-contacts-on.gif" off="menu-general-contacts-off.gif" rollover=""/>
     
     <submenu name="Add Contact">
       <permission value="contacts-external_contacts-add"/>
-      <long_html value="Add Contact"/>
-      <short_html value="Add&lt;br&gt;Contact"/>
+      <long_html value="Add"/>
+      <short_html value="Add"/>
       <link value="ExternalContacts.do?command=Prepare"/>
-    </submenu>
-    
-    <submenu name="-">
-      <permission value="contacts-view"/>
-      <long_html value="|"/>
-      <short_html value="&lt;image src='images/divider.gif'&gt;"/>
     </submenu>
     
     <submenu name="Search Contacts">
       <permission value="contacts-view"/>
-      <long_html value="Search Contacts"/>
-      <short_html value="Search&lt;br&gt;Contacts"/>
+      <long_html value="Search"/>
+      <short_html value="Search"/>
       <link value="ExternalContacts.do?command=SearchContactsForm"/>
     </submenu>
-    
+<!--
     <submenu name="External Contacts">
       <permission value="contacts-external_contacts-view"/>
       <long_html value="Search Results"/>
-      <short_html value="Search&lt;br&gt;Results"/>
+      <short_html value="Search Results"/>
       <link value="ExternalContacts.do?command=SearchContacts"/>
     </submenu>
-    
-    <submenu name="-">
-      <permission value="contacts-view"/>
-      <long_html value="|"/>
-      <short_html value="&lt;image src='images/divider.gif'&gt;"/>
-    </submenu>
-    
+-->
     <submenu name="Reports">
       <permission value="contacts-external_contacts-reports-view"/>
-      <long_html value="Reports"/>
-      <short_html value="Reports"/>
+      <long_html value="Export"/>
+      <short_html value="Export"/>
       <link value="ExternalContacts.do?command=Reports"/>
     </submenu>
     
@@ -161,13 +143,14 @@
     <!--submenu name="Company Profile">
       <permission value="contacts-profile-view"/>
       <long_html value="Company Profile"/>
-      <short_html value="External&lt;br&gt;Contacts"/>
+      <short_html value="External Contacts"/>
       <link value="CompanyDirectory.do?module=Company%20Profile&amp;include=companydirectory_companyprofile.htm"/>
     </submenu-->
   </menu>
   
   <menu>
     <action name="Leads"/>
+    <action name="LeadsReports"/>
     <action name="LeadsCalls"/>
     <action name="LeadsCallsForward"/>
     <action name="LeadsComponents"/>
@@ -176,29 +159,9 @@
     <page title="Pipeline Management"/>
     <permission value="pipeline-view"/>
     <long_html value="Pipeline"/>
-    <short_html value="Pipeline&lt;br&gt;Management"/>
+    <short_html value="&amp;nbsp;Pipeline&amp;nbsp;"/>
     <link value="Leads.do?command=Dashboard"/>
     <graphic width="83" height="36" on="menu-pipeline-on.gif" off="menu-pipeline-off.gif" rollover=""/>
-    
-    <submenu name="Add Opportunity">
-      <permission value="pipeline-opportunities-add"/>
-      <long_html value="Add Opportunity"/>
-      <short_html value="Add&lt;br&gt;Opportunity"/>
-      <link value="Leads.do?command=Prepare"/>
-    </submenu>
-    
-    <submenu name="Search Opportunities">
-      <permission value="pipeline-opportunities-view"/>
-      <long_html value="Search Opportunities"/>
-      <short_html value="Search&lt;br&gt;Opportunities"/>
-      <link value="Leads.do?command=SearchForm"/>
-    </submenu>
-    
-    <submenu name="-">
-      <permission value="pipeline-opportunities-view"/>
-      <long_html value="|"/>
-      <short_html value="&lt;image src='images/divider.gif'&gt;"/>
-    </submenu>
     
     <submenu name="Dashboard">
       <permission value="pipeline-dashboard-view"/>
@@ -207,13 +170,27 @@
       <link value="Leads.do?command=Dashboard"/>
     </submenu>
     
-    <submenu name="View Opportunities">
-      <permission value="pipeline-reports-view"/>
-      <long_html value="View Components"/>
-      <short_html value="View&lt;br&gt;Components"/>
-      <link value="Leads.do?command=ViewOpp"/>
+    <submenu name="Add Opportunity">
+      <permission value="pipeline-opportunities-add"/>
+      <long_html value="Add"/>
+      <short_html value="Add"/>
+      <link value="Leads.do?command=Prepare"/>
     </submenu>
     
+    <submenu name="Search Opportunities">
+      <permission value="pipeline-opportunities-view"/>
+      <long_html value="Search"/>
+      <short_html value="Search"/>
+      <link value="Leads.do?command=SearchForm"/>
+    </submenu>
+<!--
+    <submenu name="View Opportunities">
+      <permission value="pipeline-reports-view"/>
+      <long_html value="View"/>
+      <short_html value="View"/>
+      <link value="Leads.do?command=ViewOpp"/>
+    </submenu>
+-->
     <!--submenu name="Manage Lists">
       <permission value="pipeline-managelists-view"/>
       <long_html value="List Manager"/>
@@ -223,9 +200,9 @@
     
     <submenu name="Reports">
       <permission value="pipeline-reports-view"/>
-      <long_html value="Reports"/>
-      <short_html value="Reports"/>
-      <link value="Leads.do?command=Reports"/>
+      <long_html value="Export"/>
+      <short_html value="Export"/>
+      <link value="LeadsReports.do?command=Default"/>
     </submenu>
     
     <!--submenu name="Alerts">
@@ -254,43 +231,31 @@
     <page title="Account Management"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>
-    <short_html value="Account&lt;br&gt;Management"/>
+    <short_html value="&amp;nbsp;Accounts&amp;nbsp;"/>
     <link value="Accounts.do?command=Dashboard"/>
     <graphic width="83" height="36" on="menu-accounts-on.gif" off="menu-accounts-off.gif" rollover=""/>
     
     <submenu name="Add Account">
       <permission value="accounts-accounts-add"/>
-      <long_html value="Add Account"/>
-      <short_html value="Add&lt;br&gt;Account"/>
+      <long_html value="Add"/>
+      <short_html value="Add"/>
       <link value="Accounts.do?command=Add"/>
-    </submenu>
-    
-    <submenu name="-">
-      <permission value="accounts-accounts-view"/>
-      <long_html value="|"/>
-      <short_html value="&lt;image src='images/divider.gif'&gt;"/>
     </submenu>
     
     <submenu name="Search Accounts">
       <permission value="accounts-accounts-view"/>
-      <long_html value="Search Accounts"/>
-      <short_html value="Search&lt;br&gt;Accounts"/>
+      <long_html value="Search"/>
+      <short_html value="Search"/>
       <link value="Accounts.do?command=SearchForm"/>
     </submenu>
-    
+<!--
     <submenu name="View Accounts">
       <permission value="accounts-accounts-view"/>
       <long_html value="Search Results"/>
-      <short_html value="Search&lt;br&gt;Results"/>
+      <short_html value="Search Results"/>
       <link value="Accounts.do?command=Search"/>
     </submenu>
-    
-    <submenu name="-">
-      <permission value="accounts-accounts-view"/>
-      <long_html value="|"/>
-      <short_html value="&lt;image src='images/divider.gif'&gt;"/>
-    </submenu>
-    
+-->
     <submenu name="Dashboard">
       <permission value="accounts-dashboard-view"/>
       <long_html value="Dashboard"/>
@@ -307,15 +272,15 @@
     
     <submenu name="Reports">
       <permission value="accounts-accounts-reports-view"/>
-      <long_html value="Reports"/>
-      <short_html value="Reports"/>
+      <long_html value="Export"/>
+      <short_html value="Export"/>
       <link value="Accounts.do?command=Reports"/>
     </submenu>
     
     <!--submenu name="Manage Lists">
       <permission value="accounts-managelists"/>
       <long_html value="Manage Lists"/>
-      <short_html value="Manage&lt;br&gt;Lists"/>
+      <short_html value="Manage Lists"/>
       <link value="#Accounts.do?module=Manage%20Lists&amp;include=accounts_managelists.htm"/>
     </submenu-->
     
@@ -339,13 +304,13 @@
     <page title="Auto Guide"/>
     <permission value="autoguide-view"/>
     <long_html value="Auto Guide"/>
-    <short_html value="Auto Guide"/>
+    <short_html value="&amp;nbsp;Auto Guide&amp;nbsp;"/>
     <link value="AutoGuide.do"/>
     <graphic width="83" height="36" on="menu-autoguide-on.gif" off="menu-autoguide-off.gif" rollover=""/>
     <submenu name="Auto Guide">
       <permission value="autoguide-view"/>
       <long_html value="View Ad Runs"/>
-      <short_html value="View&lt;br&gt;Ad Runs"/>
+      <short_html value="View Ad Runs"/>
       <link value="AutoGuide.do"/>
     </submenu>
   </menu>
@@ -361,22 +326,9 @@
     <page title="Communications Manager"/>
     <permission value="campaign-view"/>
     <long_html value="Communications"/>
-    <short_html value="Communications&lt;br&gt;Manager"/>
+    <short_html value="&amp;nbsp;Communications&amp;nbsp;"/>
     <link value="CampaignManager.do"/>
     <graphic width="83" height="36" on="menu-comm-on.gif" off="menu-comm-off.gif" rollover=""/>
-    
-    <submenu name="Add Campaign">
-      <permission value="campaign-campaigns-add"/>
-      <long_html value="Add Campaign"/>
-      <short_html value="Add&lt;br&gt;Campaign"/>
-      <link value="CampaignManager.do?command=Add"/>
-    </submenu>
-    
-    <submenu name="-">
-      <permission value="campaign-campaigns-add"/>
-      <long_html value="|"/>
-      <short_html value="&lt;image src='images/divider.gif'&gt;"/>
-    </submenu>
     
     <submenu name="Dashboard">
       <permission value="campaign-dashboard-view"/>
@@ -384,38 +336,39 @@
       <short_html value="Dashboard"/>
       <link value="CampaignManager.do?command=Dashboard"/>
     </submenu>
-    
+
+    <submenu name="Add Campaign">
+      <permission value="campaign-campaigns-add"/>
+      <long_html value="Add"/>
+      <short_html value="Add"/>
+      <link value="CampaignManager.do?command=Add"/>
+    </submenu>
+
     <submenu name="ManageCampaigns">
       <permission value="campaign-campaigns-view"/>
-      <long_html value="Campaign Builder"/>
-      <short_html value="Campaign&lt;br&gt;Builder"/>
+      <long_html value="Campaigns"/>
+      <short_html value="Campaigns"/>
       <link value="CampaignManager.do?command=View"/>
-    </submenu>
-    
-    <submenu name="-">
-      <permission value="campaign-campaigns-add"/>
-      <long_html value="|"/>
-      <short_html value="&lt;image src='images/divider.gif'&gt;"/>
     </submenu>
     
     <submenu name="ManageGroups">
       <permission value="campaign-campaigns-groups-view"/>
-      <long_html value="Build Groups"/>
-      <short_html value="Build&lt;br&gt;Groups"/>
+      <long_html value="Groups"/>
+      <short_html value="Groups"/>
       <link value="CampaignManagerGroup.do?command=View"/>
     </submenu>
     
     <submenu name="ManageMessages">
       <permission value="campaign-campaigns-messages-view"/>
-      <long_html value="Create Messages"/>
-      <short_html value="Create&lt;br&gt;Messages"/>
+      <long_html value="Messages"/>
+      <short_html value="Messages"/>
       <link value="CampaignManagerMessage.do?command=View"/>
     </submenu>
     
     <submenu name="ManageSurveys">
       <permission value="campaign-campaigns-messages-view"/>
-      <long_html value="Create Attachments"/>
-      <short_html value="Create&lt;br&gt;Attachments"/>
+      <long_html value="Attachments"/>
+      <short_html value="Attachments"/>
       <link value="CampaignManagerAttachment.do"/>
       <!-- <link value="CampaignManagerSurvey.do?command=Add"/>!-->
     </submenu>
@@ -430,7 +383,7 @@
 		<!--submenu name="BuildNew">
       <permission value="campaign-view"/>
       <long_html value="Build New"/>
-      <short_html value="Build&lt;br&gt;New"/>
+      <short_html value="Build New"/>
       <link value="CampaignManager.do?command=BuildNew"/>
     </submenu-->
 		
@@ -444,14 +397,14 @@
     <!--submenu name="ListManager">
       <permission value="campaign-view"/>
       <long_html value="List Manager"/>
-      <short_html value="List&lt;br&gt;Manager"/>
+      <short_html value="List Manager"/>
       <link value="CampaignManager.do?command=ListManager"/>
     </submenu>
     
     <submenu name="MessageBuilder">
       <permission value="campaign-view"/>
       <long_html value="Message Builder"/>
-      <short_html value="Message&lt;br&gt;Builder"/>
+      <short_html value="Message Builder"/>
       <link value="CampaignManager.do?command=MessageBuilder"/>
     </submenu>
     </-->
@@ -467,39 +420,30 @@
     <page title="Project Management"/>
     <permission value="projects-view"/>
     <long_html value="Projects"/>
-    <short_html value="Project&lt;br&gt;Management"/>
+    <short_html value="&amp;nbsp;Projects&amp;nbsp;"/>
     <link value="ProjectManagement.do"/>
     <graphic width="83" height="36" on="menu-project-on.gif" off="menu-project-off.gif" rollover=""/>
     
     <submenu name="AddProject">
       <permission value="projects-projects-add"/>
       <long_html value="Add Project"/>
-      <short_html value="Add&lt;br&gt;Project"/>
+      <short_html value="Add Project"/>
       <link value="ProjectManagement.do?command=AddProject"/>
-    </submenu>
-    
-    <submenu name="-">
-      <permission value="projects-projects-add"/>
-      <long_html value="|"/>
-      <short_html value="&lt;image src='images/divider.gif'&gt;"/>
     </submenu>
     
     <submenu name="PersonalView">
       <permission value="projects-personal-view"/>
       <long_html value="Personal View"/>
-      <short_html value="Personal&lt;br&gt;View"/>
+      <short_html value="Personal View"/>
       <link value="ProjectManagement.do?command=PersonalView"/>
     </submenu>
-    
     <submenu name="EnterpriseView">
       <permission value="projects-enterprise-view"/>
       <long_html value="Enterprise View"/>
-      <short_html value="Enterprise&lt;br&gt;View"/>
+      <short_html value="Enterprise View"/>
       <link value="ProjectManagement.do?command=EnterpriseView"/>
     </submenu>
-    
   </menu>
-  
   <menu>
     <action name="TroubleTickets"/>
     <action name="TroubleTicketTasks"/>
@@ -510,41 +454,52 @@
     <short_html value="&amp;nbsp;Tickets&amp;nbsp;"/>
     <link value="TroubleTickets.do?command=Home"/>
     <graphic width="83" height="36" on="menu-tickets-on.gif" off="menu-tickets-off.gif" rollover=""/>
-    
-    <submenu name="AddTicket">
-      <permission value="tickets-tickets-add"/>
-      <long_html value="Add Ticket"/>
-      <short_html value="Add&lt;br&gt;Ticket"/>
-      <link value="TroubleTickets.do?command=Add"/>
-    </submenu>
-    
-    <submenu name="SearchTickets">
-      <permission value="tickets-tickets-view"/>
-      <long_html value="Search Tickets"/>
-      <short_html value="Search&lt;br&gt;Tickets"/>
-      <link value="TroubleTickets.do?command=SearchTicketsForm"/>
-    </submenu>
-    
-    <submenu name="-">
-      <permission value="tickets-tickets-view"/>
-      <long_html value="|"/>
-      <short_html value="&lt;image src='images/divider.gif'&gt;"/>
-    </submenu>
-    
     <submenu name="ViewTickets">
       <permission value="tickets-tickets-view"/>
-      <long_html value="View Tickets"/>
-      <short_html value="View&lt;br&gt;Tickets"/>
+      <long_html value="View"/>
+      <short_html value="View"/>
       <link value="TroubleTickets.do?command=Home"/>
     </submenu>
-    
+    <submenu name="AddTicket">
+      <permission value="tickets-tickets-add"/>
+      <long_html value="Add"/>
+      <short_html value="Add"/>
+      <link value="TroubleTickets.do?command=Add"/>
+    </submenu>
+    <submenu name="SearchTickets">
+      <permission value="tickets-tickets-view"/>
+      <long_html value="Search"/>
+      <short_html value="Search"/>
+      <link value="TroubleTickets.do?command=SearchTicketsForm"/>
+    </submenu>
     <submenu name="Reports">
       <permission value="tickets-tickets-reports-view"/>
-      <long_html value="Reports"/>
-      <short_html value="Reports"/>
+      <long_html value="Export"/>
+      <short_html value="Export"/>
       <link value="TroubleTickets.do?command=Reports"/>
     </submenu>
-    
+  </menu>
+  
+  <menu>
+    <action name="Reports"/>
+    <page title="Reports"/>
+    <permission value="admin-view"/>
+    <long_html value="Reports"/>
+    <short_html value="&amp;nbsp;Reports&amp;nbsp;"/>
+    <link value="Reports.do"/>
+    <graphic width="83" height="36" on="menu-reports-on.gif" off="menu-reports-off.gif" rollover=""/>
+    <submenu name="reports.queue">
+      <permission value="admin-users-add"/>
+      <long_html value="View"/>
+      <short_html value="View"/>
+      <link value="Reports.do?command=ViewQueue"/>
+    </submenu>
+    <submenu name="reports.run">
+      <permission value="admin-users-add"/>
+      <long_html value="Add"/>
+      <short_html value="Add"/>
+      <link value="Reports.do?command=RunReport"/>
+    </submenu>
   </menu>
   
   <menu>
@@ -562,38 +517,48 @@
     <action name="AdminQA"/>
     <page title="System Administration"/>
     <permission value="admin-view"/>
-    <long_html value="System Administration"/>
-    <short_html value="System&lt;br&gt;Administration"/>
+    <long_html value="Admin"/>
+    <short_html value="&amp;nbsp;Admin&amp;nbsp;"/>
     <link value="Admin.do"/>
     <graphic width="83" height="36" on="menu-sysadmin-on.gif" off="menu-sysadmin-off.gif" rollover=""/>
-    
+<!--
     <submenu name="Add User">
       <permission value="admin-users-add"/>
       <long_html value="Add User"/>
-      <short_html value="Add&lt;br&gt;User"/>
+      <short_html value="Add User"/>
       <link value="Users.do?command=InsertUserForm"/>
     </submenu>
-    
-    <submenu name="-">
-      <permission value="admin-users-add"/>
-      <long_html value="|"/>
-      <short_html value="&lt;image src='images/divider.gif'&gt;"/>
-    </submenu>
-    
+-->
     <submenu name="Users">
         <permission value="admin-users-view"/>
-        <long_html value="View Users"/>
-        <short_html value="View&lt;br&gt;Users"/>
+        <long_html value="Users"/>
+        <short_html value="Users"/>
         <link value="Users.do?command=ListUsers"/>
     </submenu>
-    
     <submenu name="Roles">
         <permission value="admin-roles-view"/>
-        <long_html value="View Roles"/>
-        <short_html value="View&lt;br&gt;Roles"/>
+        <long_html value="Roles"/>
+        <short_html value="Roles"/>
         <link value="Roles.do?command=ListRoles"/>
     </submenu>
-    
+    <submenu name="Modules">
+        <permission value="admin-sysconfig-view"/>
+        <long_html value="Modules"/>
+        <short_html value="Modules"/>
+        <link value="Admin.do?command=Config"/>
+    </submenu>
+    <submenu name="System">
+        <permission value="admin-sysconfig-view"/>
+        <long_html value="System"/>
+        <short_html value="System"/>
+        <link value="AdminConfig.do?command=ListGlobalParams"/>
+    </submenu>
+    <submenu name="Usage">
+        <permission value="admin-usage-view"/>
+        <long_html value="Usage"/>
+        <short_html value="Usage"/>
+        <link value="Admin.do?command=Usage"/>
+    </submenu>
   </menu>
   
 </application>

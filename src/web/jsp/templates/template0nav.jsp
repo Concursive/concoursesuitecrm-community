@@ -14,6 +14,7 @@
 <jsp:include page="cssInclude.jsp" flush="true"/>
 </head>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/trackMouse.js"></script>
 <body leftmargin="0" rightmargin="0" margin="0" marginwidth="0" topmargin="0" marginheight="0">
 <div id="header">
 <table border="0" width="100%" cellpadding="2" cellspacing="0">
@@ -74,20 +75,20 @@
     <td>
       <table border="0" cellspacing="0" bgcolor="#006699">
         <tr>  
-          <td height="25" valign="middle" width="5"><font size="1">&nbsp;</font></td>
+          <td height="15" valign="middle" width="5"><font size="1">&nbsp;</font></td>
 <%
     Iterator i = ModuleBean.getMenuItems().iterator();
     while (i.hasNext()) {
     	SubmenuItem thisItem = (SubmenuItem)i.next();
     	if ("".equals(thisItem.getPermission()) || User.getSystemStatus(getServletConfig()).hasPermission(User.getUserId(), thisItem.getPermission())) {
 %>
-          <td height="25" align="center" valign="middle" width="0"><b><font color="#FFFFFF" size="1"><%= (thisItem.getAlternateHtml()) %></font></b></td>
-          <td width="20">&nbsp;</td>
+          <td height="15" align="center" valign="middle" width="0"><b><font color="#FFFFFF" size="1"><%= (thisItem.getAlternateHtml()) %></font></b></td>
+          <td width="10">&nbsp;</td>
 <%
       }
     }
 %>
-          <td height="25" valign="middle"><font size="1">&nbsp;</font></td>
+          <td height="15" valign="middle"><font size="1">&nbsp;</font></td>
         </tr>
       </table>
     </td>

@@ -1,5 +1,5 @@
 <%-- Menus require these scripts --%>
-<script language="JavaScript" type="text/javascript" src="javascript/trackMouse.js"></script>
+<%-- track mouse required, moved to template0nav.jsp --%>
 <script language="JavaScript" type="text/javascript" src="javascript/ypSlideOutMenusC.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/preloadImages.js"></script>
 
