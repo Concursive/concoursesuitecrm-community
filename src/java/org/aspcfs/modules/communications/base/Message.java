@@ -698,8 +698,9 @@ public java.sql.Timestamp getModified() {
       errors.put("messageSubjectError", "Message subject is required");
     }
 
-    if (replyTo == null || replyTo.trim().equals("")) {
-      errors.put("replyToError", "Email address is required");
+    if (replyTo == null || replyTo.trim().equals("") || 
+        replyTo.indexOf("@") == -1 || replyTo.indexOf("@") == replyTo.length() - 1) {
+      errors.put("replyToError", "Full email address is required");
     }
 
     if (hasErrors()) {
