@@ -35,11 +35,12 @@ public class RevenueList extends Vector {
         "FROM revenue r " +
         "LEFT JOIN contact ct_eb ON (r.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (r.modifiedby = ct_mb.user_id) " +
-	"LEFT JOIN lookup_revenue_types r ON (r.type = rt.code) " +
+	"LEFT JOIN contact ct_own ON (r.owner = ct_own.user_id) " +
+	"LEFT JOIN lookup_revenue_types rt ON (r.type = rt.code) " +
         "WHERE r.id > -1 ");
 
     createFilter(sqlFilter);
-
+    
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -49,6 +50,9 @@ public class RevenueList extends Vector {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
+      
+      
+      
       pst.close();
       rs.close();
 
@@ -67,13 +71,16 @@ public class RevenueList extends Vector {
         rs.close();
         pst.close();
       }
-
+      
       //Determine column to sort by
       pagedListInfo.setDefaultSort("r.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY r.description ");
     }
+    
+    
+    System.out.println(sqlOrder.toString());
 
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -84,15 +91,17 @@ public class RevenueList extends Vector {
     sqlSelect.append(
         "r.*, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, rt.description as typename " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, ct_own.namelast as own_namelast, ct_own.namefirst as own_namefirst, rt.description as typename " +
         "FROM revenue r " +
         "LEFT JOIN contact ct_eb ON (r.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (r.modifiedby = ct_mb.user_id) " +
+	"LEFT JOIN contact ct_own ON (r.owner = ct_own.user_id) " +
 	"LEFT JOIN lookup_revenue_types rt ON (r.type = rt.code) " +
         "WHERE r.id > -1 ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
+    System.out.println(pst.toString());
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
@@ -131,17 +140,17 @@ public PagedListInfo getPagedListInfo() {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-      if (orgId != -1) {
-        sqlFilter.append("AND r.org_id = ? ");
-      }
+    if (orgId != -1) {
+      sqlFilter.append("AND r.org_id = ? ");
+    }
   }
 
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
       
-      if (orgId != -1) {
-        pst.setInt(++i, orgId);
-      }
+    if (orgId != -1) {
+      pst.setInt(++i, orgId);
+    }
       
     return i;
   }

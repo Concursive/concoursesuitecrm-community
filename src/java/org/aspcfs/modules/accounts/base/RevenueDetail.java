@@ -133,7 +133,7 @@ public void setOwner(int tmp) { this.owner = tmp; }
 		StringBuffer sql = new StringBuffer();
   
 		sql.append(
-			"INSERT INTO survey_detail " +
+			"INSERT INTO revenue_detail " +
 			"(revenue_id, amount, type, owner, description, enteredBy, modifiedBy) " +
 			"VALUES (?, ?, ?, ?, ?, ?, ?) ");
 		try {

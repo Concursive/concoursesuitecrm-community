@@ -29,6 +29,7 @@ public class Revenue extends GenericBean {
   
   private String enteredByName = "";
   private String modifiedByName = "";
+  private String ownerName = "";
   private String typeName = "";
 
   public Revenue() { }
@@ -45,10 +46,11 @@ public class Revenue extends GenericBean {
     sql.append(
         "SELECT r.*, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, rt.description as typename " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, ct_own.namelast as own_namelast, ct_own.namefirst as own_namefirst, rt.description as typename " +
         "FROM revenue r " +
         "LEFT JOIN contact ct_eb ON (r.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (r.modifiedby = ct_mb.user_id) " +
+	"LEFT JOIN contact ct_own ON (r.owner = ct_own.user_id) " +
 	"LEFT JOIN lookup_revenue_types rt ON (r.type = rt.code) " +
         "WHERE r.id > -1 ");
 
@@ -102,7 +104,23 @@ public class Revenue extends GenericBean {
     }
     return ("");
   }
-  
+  public String getOwnerName() {
+	return ownerName;
+}
+public void setOwnerName(String ownerName) {
+	this.ownerName = ownerName;
+}
+
+  public String getAmountValue() {
+    double value_2dp = (double) Math.round(amount * 100.0) / 100.0;
+    String toReturn = "" + value_2dp;
+    if (toReturn.endsWith(".0")) {
+      return (toReturn.substring(0, toReturn.length() - 2));
+    } else {
+      return toReturn;
+    }
+  }
+
   public int getId() { return id; }
 public int getOrgId() { return orgId; }
 public int getTransactionId() { return transactionId; }
@@ -128,6 +146,7 @@ public void setMonth(String tmp) { this.month = Integer.parseInt(tmp); }
 public void setYear(int tmp) { this.year = tmp; }
 public void setYear(String tmp) { this.year = Integer.parseInt(tmp); }
 public void setAmount(double tmp) { this.amount = tmp; }
+public void setAmount(String tmp) { this.amount = Double.parseDouble(tmp); }
 public void setDescription(String tmp) { this.description = tmp; }
 public void setEnteredBy(int tmp) { this.enteredBy = tmp; }
 public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
@@ -147,7 +166,7 @@ public int getOwner() { return owner; }
 		StringBuffer sql = new StringBuffer();
   
 		sql.append(
-			"INSERT INTO survey " +
+			"INSERT INTO revenue " +
 			"(org_id, transaction_id, month, year, amount, type, owner, description, enteredBy, modifiedBy) " +
 			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 		try {
@@ -163,7 +182,7 @@ public int getOwner() { return owner; }
 			pst.setInt(++i, owner);
 			pst.setString(++i, description);
 			pst.setInt(++i, enteredBy);
-			pst.setInt(++i, modifiedBy);
+			pst.setInt(++i, enteredBy);
 			pst.execute();
 			pst.close();
 		
@@ -273,6 +292,7 @@ public int getOwner() { return owner; }
 	
 	enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
 	modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
+	ownerName = Contact.getNameLastFirst(rs.getString("own_namelast"), rs.getString("own_namefirst"));
 	typeName = rs.getString("typename");
   }
   

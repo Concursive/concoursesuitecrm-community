@@ -1,0 +1,83 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
+<jsp:useBean id="Revenue" class="com.darkhorseventures.cfsbase.Revenue" scope="request"/>
+<jsp:useBean id="RevenueTypeList" class="com.darkhorseventures.cfsbase.RevenueTypeList" scope="request"/>
+<%@ include file="initPage.jsp" %>
+<body onLoad="javascript:document.forms[0].description.focus();">
+<form name="addRevenue" action="/RevenueManager.do?command=Insert&auto-populate=true" method="post">
+<a href="/RevenueManager.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Back to Revenue List</a><br>&nbsp;
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="containerHeader">
+    <td>
+      <strong><%= toHtml(OrgDetails.getName()) %></strong>
+    </td>
+  </tr>
+  <!--tr class="containerMenu">
+    <td>
+      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+      <dhv:container name="accounts" selected="contacts" param="<%= param1 %>" />
+    </td>
+  </tr-->
+  <tr>
+    <td class="containerBack">
+<input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
+<input type=submit value="Save">
+<input type=reset value="Reset">
+<br>
+&nbsp;
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+    <td colspan=2 valign=center align=left>
+      <strong>Add a New Revenue</strong>
+    </td>     
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Type
+    </td>
+    <td valign=center>
+      <%=RevenueTypeList.getHtmlSelect("type", Revenue.getType())%>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Description
+    </td>
+    <td valign=center>
+      <input type=text size=40 name="description" value="">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Month
+    </td>
+    <td valign=center>
+      <input type=text size=5 name="month" value="">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Year
+    </td>
+    <td valign=center>
+      <input type=text size=5 name="year" value="">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Amount
+    </td>
+    <td valign=center>
+      <input type=text size=15 name="amount" value="">
+    </td>
+  </tr>
+  
+</table>
+<br>
+<input type=submit value="Save">
+<input type=reset value="Reset">
+    </td>
+  </tr>
+</table>
+</form>
+</body>
