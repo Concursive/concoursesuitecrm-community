@@ -62,7 +62,7 @@
   <tr class="containerBody">
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
     <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="accounts-accounts-opportunities-edit"><a href="/Opportunities.do?command=Modify&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%=thisOpp.getContactLink() %>">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:confirmDelete('/Opportunities.do?command=Delete&id=<%= thisOpp.getId()%>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink() %>');">Del</a></dhv:permission>
+          <dhv:permission name="accounts-accounts-opportunities-edit"><a href="/Opportunities.do?command=Modify&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%=thisOpp.getContactLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:confirmDelete('/Opportunities.do?command=Delete&id=<%= thisOpp.getId()%>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink() %>');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
     <td width=40% valign=center class="row<%= rowid %>">

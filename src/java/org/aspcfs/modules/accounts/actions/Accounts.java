@@ -689,7 +689,7 @@ public final class Accounts extends CFSModule {
 
     Connection db = null;
     OrganizationList organizationList = new OrganizationList();
-    String passedName = context.getRequest().getParameter("name");
+    String passedName = context.getRequest().getParameter("searchName");
 
     if (passedName != null && !(passedName.trim()).equals("")) {
       passedName = "%" + passedName + "%";
@@ -872,7 +872,11 @@ public final class Accounts extends CFSModule {
       if (resultCount == -1) {
         return (executeCommandModify(context));
       } else if (resultCount == 1) {
-        return ("UpdateOK");
+	      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+		      return (executeCommandView(context));
+	      } else {
+		      return ("UpdateOK");
+	      }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");

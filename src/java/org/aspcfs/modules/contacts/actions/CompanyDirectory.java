@@ -180,7 +180,11 @@ public final class CompanyDirectory extends CFSModule {
       if (resultCount == -1) {
         return ("EmployeeDetailsModifyOK");
       } else if (resultCount == 1) {
-        return ("EmployeeDetailsUpdateOK");
+              if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+		      return (executeCommandListEmployees(context));
+	      } else {
+		      return ("EmployeeDetailsUpdateOK");
+	      }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");

@@ -25,10 +25,13 @@
 <input type="hidden" name="id" value="<%= Revenue.getId() %>">
 <input type="hidden" name="modified" value="<%= Revenue.getModified() %>">
 
+<% if (request.getParameter("return") != null) {%>
+<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+<%}%>
+
 <input type="submit" value="Update" name="Save">
 
 <% if (request.getParameter("return") != null) {%>
-<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/RevenueManager.do?command=View&orgId=<%= Revenue.getOrgId() %>'">
 	<%}%>

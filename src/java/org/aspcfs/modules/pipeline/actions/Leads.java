@@ -540,7 +540,7 @@ public final class Leads extends CFSModule {
 
     //search stuff
 
-    String passedDesc = context.getRequest().getParameter("description");
+    String passedDesc = context.getRequest().getParameter("searchDescription");
 
     if (passedDesc != null && !(passedDesc.equals(""))) {
       passedDesc = "%" + passedDesc + "%";
@@ -912,7 +912,11 @@ public final class Leads extends CFSModule {
 
     if (errorMessage == null) {
       if (resultCount == 1) {
-        return ("UpdateOppOK");
+	      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+		      return (executeCommandViewOpp(context));
+	      } else {
+		      return ("UpdateOppOK");
+	      }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");

@@ -22,12 +22,26 @@
   </tr>
   <tr>
     <td class="containerBack">
-<input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>'">
+    
+       
+    <input type="submit" value="Update" name="Save">
+    
+    <% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts'">
+	<%}%>
+    <%} else {%>
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>'">
+    <%}%>
 <input type="reset" value="Reset">
 <br>&nbsp;
 <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
 <input type="hidden" name="modified" value="<%= ContactDetails.getModified() %>">
+
+<% if (request.getParameter("return") != null) {%>
+	<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+<%}%>
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
@@ -321,8 +335,14 @@
   </tr>
 </table>
 <br>
-<input type="submit" value="Update" name="Save">
+    <input type="submit" value="Update" name="Save">
+    <% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts'">
+	<%}%>
+<%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>'">
+<%}%>
 <input type="reset" value="Reset">
   </td>
   </tr>

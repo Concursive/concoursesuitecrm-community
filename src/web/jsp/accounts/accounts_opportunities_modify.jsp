@@ -47,6 +47,7 @@
     <td class="containerBack">
 <input type="hidden" name="id" value="<%= OppDetails.getId() %>">
 <input type="hidden" name="modified" value="<%= OppDetails.getModified() %>">
+
 <input type="submit" value="Update">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=Details&id=<%= OppDetails.getId() %>'">
 <input type="reset" value="Reset">

@@ -14,11 +14,11 @@
 </td>     
 </tr>
 
-<tr><td width="150" colspan=1 valign=center>
+<tr><td width="125" class="formLabel">
 Name
 </td>
 <td colspan=1 valign=center>
-<input type=text size=35 name="name">
+<input type=text size=35 name="searchName">
 </td>
 </tr>
 

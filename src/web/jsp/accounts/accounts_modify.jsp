@@ -59,8 +59,21 @@
   <tr>
     <td class="containerBack">
 <input type="hidden" name="modified" value="<%= OrgDetails.getModified() %>">
+
+<% if (request.getParameter("return") != null) {%>
+<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+<%}%>
+
 <input type="submit" value="Update" name="Save">
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View'">
+	<%}%>
+<%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>'">
+<%}%>
+
 <input type="reset" value="Reset">
 <br>
 &nbsp;
@@ -398,7 +411,13 @@
 </table>
 <br>
 <input type="submit" value="Update" name="Save">
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View'">
+	<%}%>
+<%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>'">
+<%}%>
 <input type="reset" value="Reset">
   </td>
   </tr>

@@ -21,7 +21,7 @@
       First Name
     </td>
     <td>
-      <input type=text size=35 name="firstname" value="">
+      <input type=text size=35 name="searchFirst" value="">
     </td>
   </tr>
   
@@ -30,7 +30,7 @@
       Middle Name
     </td>
     <td>
-      <input type=text size=35 name="middlename" value="">
+      <input type=text size=35 name="searchMiddle" value="">
     </td>
   </tr>
   
@@ -39,7 +39,7 @@
       Last Name
     </td>
     <td>
-      <input type=text size=35 name="lastname" value="">
+      <input type=text size=35 name="searchLast" value="">
     </td>
   </tr>
   
@@ -48,7 +48,7 @@
       Company
     </td>
     <td>
-      <input type=text size=35 name="company" value="">
+      <input type=text size=35 name="searchCompany" value="">
     </td>
   </tr>
   
@@ -57,7 +57,7 @@
       Title
     </td>
     <td>
-      <input type=text size=35 name="title" value="">
+      <input type=text size=35 name="searchTitle" value="">
     </td>
   </tr>
 </table>

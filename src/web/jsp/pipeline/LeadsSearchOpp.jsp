@@ -9,14 +9,13 @@
     </td>     
   </tr>
   
-  <tr>
-    <td class="pagelist">
-    Opportunity<br> Description
-    </td>
-    <td valign=center width="100%">
-    <input type=text size=35 name="description">
-    </td>
-  </tr>
+  <tr><td width="125" class="formLabel">
+Description
+</td>
+<td colspan=1 valign=center>
+<input type=text size=35 name="searchDescription">
+</td>
+</tr>
 
 </table>
 &nbsp;<br>

@@ -357,11 +357,11 @@ public final class ExternalContacts extends CFSModule {
     PagedListInfo externalContactsInfo = this.getPagedListInfo(context, "ExternalContactsInfo");
     externalContactsInfo.setLink("/ExternalContacts.do?command=ListContacts");
 
-    String passedFirst = context.getRequest().getParameter("firstname");
-    String passedMiddle = context.getRequest().getParameter("middlename");
-    String passedLast = context.getRequest().getParameter("lastname");
-    String passedTitle = context.getRequest().getParameter("title");
-    String passedCompany = context.getRequest().getParameter("company");
+    String passedFirst = context.getRequest().getParameter("searchFirst");
+    String passedMiddle = context.getRequest().getParameter("searchMiddle");
+    String passedLast = context.getRequest().getParameter("searchLast");
+    String passedTitle = context.getRequest().getParameter("searchTitle");
+    String passedCompany = context.getRequest().getParameter("searchCompany");
 
     Connection db = null;
     ContactList contactList = new ContactList();
@@ -825,7 +825,11 @@ public final class ExternalContacts extends CFSModule {
       if (resultCount == -1) {
         return ("ContactDetailsModifyOK");
       } else if (resultCount == 1) {
-        return ("ContactDetailsUpdateOK");
+	      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+		      return (executeCommandListContacts(context));
+	      } else {
+		      return ("ContactDetailsUpdateOK");
+	      }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");

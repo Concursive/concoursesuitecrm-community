@@ -7,10 +7,23 @@
 <%@ include file="initPage.jsp" %>
 <form action='/CompanyDirectory.do?command=UpdateEmployee&auto-populate=true' method='post'>
 <input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>'">
+
+    <% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees'">
+	<%}%>
+    <%} else {%>
+    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>'">
+    <%}%>
+    
 <input type="reset" value="Reset">
 <br>
 &nbsp;
+
+<% if (request.getParameter("return") != null) {%>
+<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+<%}%>
+
 <input type="hidden" name="empid" value="<%= EmployeeBean.getId() %>">
 <input type="hidden" name="id" value="<%= EmployeeBean.getId() %>">
 <input type="hidden" name="modified" value="<%= EmployeeBean.getModified()%>">
@@ -256,6 +269,12 @@
 </table>
 <br>
 <input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>'">
-<input type="reset" value="Reset">
+    <% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees'">
+	<%}%>
+    <%} else {%>
+    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>'">
+    <%}%>
+    <input type="reset" value="Reset">
 </form>
