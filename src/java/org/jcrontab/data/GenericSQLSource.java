@@ -37,7 +37,7 @@ import org.jcrontab.log.Log;
  *
  *@author     iolalla
  *@created    February 4, 2003
- *@version    $Revision$
+ *@version    $Id$
  */
 public class GenericSQLSource implements DataSource {
 
@@ -136,6 +136,22 @@ public class GenericSQLSource implements DataSource {
       }
     }
     throw new DataNotFoundException("Unable to find :" + ceb);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  cp                          Description of the Parameter
+   *@return                             Description of the Return Value
+   *@exception  CrontabEntryException   Description of the Exception
+   *@exception  ClassNotFoundException  Description of the Exception
+   *@exception  SQLException            Description of the Exception
+   *@exception  DataNotFoundException   Description of the Exception
+   */
+  public synchronized CrontabEntryBean[] findAll(Object cp) throws CrontabEntryException,
+      ClassNotFoundException, SQLException, DataNotFoundException {
+    return findAll();
   }
 
 
@@ -267,8 +283,8 @@ public class GenericSQLSource implements DataSource {
 
   /**
    *  This method saves the CrontabEntryBean the actual problem with this method
-   *  is that it doesn't store comments and blank lines from the original file, any
-   *  ideas?
+   *  is that it doesn't store comments and blank lines from the original file,
+   *  any ideas?
    *
    *@param  beans                    Description of the Parameter
    *@throws  CrontabEntryException   when it can't parse the line correctly
@@ -321,8 +337,8 @@ public class GenericSQLSource implements DataSource {
 
   /**
    *  This method saves the CrontabEntryBean the actual problem with this method
-   *  is that doesn't store comments and blank lines from the original file
-   *  any ideas?
+   *  is that doesn't store comments and blank lines from the original file any
+   *  ideas?
    *
    *@param  bean                     Description of the Parameter
    *@throws  CrontabEntryException   when it can't parse the line correctly

@@ -18,9 +18,9 @@ package org.jcrontab.data;
  *  This interface says which methods a DataSource should have in order to be
  *  compatible with the DataFactory
  *
- *@author     $Author$
- *@created    February 4, 2003
- *@version    $Revision$
+ *@author     Israel Olalla
+ *@created    November, 2002
+ *@version    $Id$
  */
 
 public interface DataSource {
@@ -52,6 +52,16 @@ public interface DataSource {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  cp             Description of the Parameter
+   *@return                Description of the Return Value
+   *@exception  Exception  Description of the Exception
+   */
+  abstract CrontabEntryBean[] findAll(Object cp) throws Exception;
+
+
+  /**
    *  stores CrontabEntryBean in the DataSource
    *
    *@param  ceb                        Description of the Parameter
@@ -76,7 +86,7 @@ public interface DataSource {
   /**
    *  removes CrontabEntryBean from the DataSource
    *
-   *@param  ceb               Description of the Parameter
+   *@param  ceb         Description of the Parameter
    *@throws  Exception
    */
   abstract void remove(CrontabEntryBean[] ceb) throws Exception;

@@ -22,9 +22,9 @@ import org.jcrontab.log.Log;
  *  is an abstraction to make esaier the integration of new DataSources that
  *  help to access CrontabEntries in new ways
  *
- *@author     $Author$
- *@created    February 4, 2003
- *@version    $Revision$
+ *@author     Israel Olalla
+ *@created    November, 2002
+ *@version    $Id$
  */
 public class CrontabEntryDAO {
   /**
@@ -79,6 +79,18 @@ public class CrontabEntryDAO {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  cp             Description of the Parameter
+   *@return                Description of the Return Value
+   *@exception  Exception  Description of the Exception
+   */
+  public CrontabEntryBean[] findAll(Object cp) throws Exception {
+    return dao.findAll(cp);
+  }
+
+
+  /**
    *  searches the CrontabEntryBean from the DataSource
    *
    *@param  ceb         Description of the Parameter
@@ -93,7 +105,7 @@ public class CrontabEntryDAO {
   /**
    *  stores CrontabEntryBean in the DataSource
    *
-   *@param  list              Description of the Parameter
+   *@param  list        Description of the Parameter
    *@throws  Exception
    */
   public void store(CrontabEntryBean[] list) throws Exception {
@@ -104,7 +116,7 @@ public class CrontabEntryDAO {
   /**
    *  stores CrontabEntryBean in the DataSource
    *
-   *@param  bean              Description of the Parameter
+   *@param  bean        Description of the Parameter
    *@throws  Exception
    */
   public void store(CrontabEntryBean bean) throws Exception {
@@ -115,7 +127,7 @@ public class CrontabEntryDAO {
   /**
    *  removes CrontabEntryBean from the DataSource
    *
-   *@param  list              Description of the Parameter
+   *@param  list        Description of the Parameter
    *@throws  Exception
    */
   public void remove(CrontabEntryBean[] list) throws Exception {

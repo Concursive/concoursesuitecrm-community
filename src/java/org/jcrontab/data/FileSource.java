@@ -32,9 +32,9 @@ import org.jcrontab.Crontab;
  *  This class Is the implementation of DataSource to access Info in a
  *  FileSystem
  *
- *@author     $Author$
- *@created    February 4, 2003
- *@version    $Revision$
+ *@author     Israel Olalla
+ *@created    November, 2002
+ *@version    $Id$
  */
 public class FileSource implements DataSource {
 
@@ -129,6 +129,21 @@ public class FileSource implements DataSource {
       return true;
     }
     return false;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  cp                         Description of the Parameter
+   *@return                            Description of the Return Value
+   *@exception  CrontabEntryException  Description of the Exception
+   *@exception  IOException            Description of the Exception
+   *@exception  DataNotFoundException  Description of the Exception
+   */
+  public synchronized CrontabEntryBean[] findAll(Object cp) throws CrontabEntryException,
+      IOException, DataNotFoundException {
+    return findAll();
   }
 
 

@@ -22,9 +22,9 @@ import org.jcrontab.log.Log;
  *  This Factory builds a dao using teh given information. Initializes the
  *  system with the given properties or loads the default config
  *
- *@author     $Author$
- *@created    February 4, 2003
- *@version    $Revision$
+ *@author     Israel Olalla
+ *@created    November, 2002
+ *@version    $Id$
  */
 
 public class DataFactory {
