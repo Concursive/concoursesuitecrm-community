@@ -398,7 +398,7 @@ public class CustomFieldGroup extends ArrayList {
    */
   public void buildResources(Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("CustomFieldGroup-> buildResources");
+      //System.out.println("CustomFieldGroup-> buildResources");
     }
     this.clear();
     PreparedStatement pst = null;

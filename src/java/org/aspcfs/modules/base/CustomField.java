@@ -480,7 +480,14 @@ public void setMaxRowItems(String maxRowItems) {
    *@since
    */
   public void setParameters(ActionContext context) {
-    String newValue = context.getRequest().getParameter("cf" + id);
+    String newValue = null;
+    
+    if (context.getRequest().getParameter("cf" + id) != null) { 
+	    newValue = context.getRequest().getParameter("cf" + id);
+    } else if (context.getRequest().getAttribute("cf" + id) != null) {
+	    newValue = (String)context.getRequest().getAttribute("cf" + id);
+    }
+    
     if (newValue != null) {
       newValue = newValue.trim();
       switch (type) {
@@ -1008,7 +1015,7 @@ public void setMaxRowItems(String maxRowItems) {
    */
   public void buildResources(Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("CustomField-> buildResources");
+      //System.out.println("CustomField-> buildResources");
     }
     if (recordId > -1) {
       Statement st = db.createStatement();
@@ -1336,7 +1343,7 @@ public void setMaxRowItems(String maxRowItems) {
 
     //Required Fields
     if (this.getRequired() && (this.getEnteredValue() == null || this.getEnteredValue().equals(""))) {
-      error = "Required field";
+      error = this.getName() + ": Required field";
     }
     if (type == SELECT && this.getRequired() && this.getSelectedItemId() == -1) {
       error = "Required field";

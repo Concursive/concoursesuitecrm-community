@@ -15,6 +15,11 @@
     <forward name="SystemError" resource="/error_system.jsp"/>
   </action>
   
+  <action name="ProcessEditData" class="com.darkhorseventures.cfsmodule.ProcessEditData">
+    <forward name="ProcessDataOK" resource="/processdata_test.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp"/>
+  </action>
+  
   <action name="ProcessSurvey" class="com.darkhorseventures.cfsmodule.ProcessSurvey">
     <forward name="SystemError" resource="/error_system.jsp"/>
     <forward name="ViewOK" resource="/display_survey.jsp" layout="styleNoSession"/>

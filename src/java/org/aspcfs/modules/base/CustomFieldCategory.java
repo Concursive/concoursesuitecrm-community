@@ -652,7 +652,7 @@ public class CustomFieldCategory extends ArrayList {
    */
   public void buildResources(Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("CustomFieldCategory-> buildResources");
+      //System.out.println("CustomFieldCategory-> buildResources");
     }
     this.clear();
     PreparedStatement pst = null;

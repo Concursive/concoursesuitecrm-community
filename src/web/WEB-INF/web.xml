@@ -34,10 +34,10 @@ Replaceable parameter  typical value / description
     <servlet-name>Controller</servlet-name>
     <display-name>Controller</display-name>
     <servlet-class>org.theseus.servlets.ControllerServlet</servlet-class>
-    <init-param>
+    <!--init-param>
         <param-name>Debug</param-name>
         <param-value>2</param-value>
-    </init-param>
+    </init-param-->
     <init-param>
         <param-name>ActionConfig</param-name>
         <param-value>cfs-config.xml</param-value>
