@@ -1615,7 +1615,10 @@ public boolean getExcludeAccountContacts() {
     
     //TODO: Use cached AccessTypeList to get the public codes for Account & General contacts
     if (allContacts) {
-      sqlFilter.append("AND (c.owner IN (" + ownerIdRange + ") OR c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)) ");
+      sqlFilter.append(
+          "AND (c.owner IN (" + ownerIdRange + ") " +
+          "OR c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)) " +
+          "AND ((c.org_id = 0 AND employee = ?) OR c.org_id <> 0 OR c.org_id IS NULL) ");
     }
 
     //NOTE: Only general contacts can be personal and so AccessTypeList has to be for the General Contacts
@@ -2161,6 +2164,7 @@ public boolean getExcludeAccountContacts() {
 
     if (allContacts) {
       pst.setInt(++i, AccessType.PUBLIC);
+      pst.setBoolean(++i, true);
     }
 
     switch (personalId) {
