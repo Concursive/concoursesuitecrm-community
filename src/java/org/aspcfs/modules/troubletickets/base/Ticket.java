@@ -1649,8 +1649,8 @@ public class Ticket extends GenericBean {
 
     try {
       db.setAutoCommit(false);
-      st.executeUpdate("DELETE FROM ticket WHERE ticketid = " + this.getId());
       st.executeUpdate("DELETE FROM ticketlog WHERE ticketid = " + this.getId());
+      st.executeUpdate("DELETE FROM ticket WHERE ticketid = " + this.getId());
       db.commit();
     } catch (SQLException e) {
       db.rollback();
