@@ -225,7 +225,7 @@ public class Group extends TagSupport {
           out.write(thisRow.getEndTag());
         }
       } else {
-        out.write("<tr><td align=\"left\"> No Items Found. </td></tr>");
+        out.write("<tr><td colspan=\"3\" align=\"left\"> No Items Found. </td></tr>");
       }
     } catch (Exception e) {
       e.printStackTrace(System.out);
