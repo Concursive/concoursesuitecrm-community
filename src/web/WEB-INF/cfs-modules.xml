@@ -78,6 +78,7 @@
     <action name="ExternalContactsOpps"/>
     <action name="ExternalContactsCalls"/>
     <action name="ExternalContactsCallsForward"/>
+    <action name="ExternalContactsPrototype"/>
     <page title="Contacts &amp; Resources"/>
     <permission value="contacts-view"/>
     <long_html value="Contacts &amp; Resources"/>
@@ -152,6 +153,7 @@
     <action name="Leads"/>
     <action name="LeadsCalls"/>
     <action name="LeadsDocuments"/>
+    <action name="LeadsPrototype"/>
     <page title="Pipeline Management"/>
     <permission value="pipeline-view"/>
     <long_html value="Pipeline"/>
@@ -230,6 +232,7 @@
     <action name="AccountTickets"/>
 		<action name="AccountsDocuments"/>
     <action name="AccountsAutoGuide"/>
+    <action name="AccountsPrototype"/>
     <page title="Accounts"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>
