@@ -255,7 +255,7 @@
     <!-- Copy preference files -->
     <mkdir dir="${CFS_HOME}/WEB-INF/bin"/>
     <copy file="${bin.dir}/notifier.sh" todir="${CFS_HOME}/WEB-INF/bin"/>
-    <copy file="${pref.dir}/cfs/notifier/notifier.xml" todir="${CFS_HOME}/WEB-INF"/>
+    <copy file="${pref.dir}/cfs/notifier/notifier.xml" todir="${CFS_HOME}/WEB-INF" overwrite="true"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
              token="@FILELIBRARY@" value="${CFS_HOME}${fs}WEB-INF${fs}fileLibrary"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
