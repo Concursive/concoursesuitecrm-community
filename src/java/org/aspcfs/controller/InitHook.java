@@ -25,48 +25,49 @@ public class InitHook implements ControllerInitHook {
    *@since          1.1
    */
   public String executeControllerInit(ServletConfig config) {
+    ServletContext context = config.getServletContext();
     if (config.getInitParameter("SiteCode") != null) {
-      config.getServletContext().setAttribute("SiteCode", config.getInitParameter("SiteCode"));
+      context.setAttribute("SiteCode", config.getInitParameter("SiteCode"));
     }
     
     if (config.getInitParameter("GKDRIVER") != null) {
-      config.getServletContext().setAttribute("GKDRIVER", config.getInitParameter("GKDRIVER"));
+      context.setAttribute("GKDRIVER", config.getInitParameter("GKDRIVER"));
     } else {
-      config.getServletContext().setAttribute("GKDRIVER", "org.postgresql.Driver");
+      context.setAttribute("GKDRIVER", "org.postgresql.Driver");
     }
 
     if (config.getInitParameter("GKHOST") != null) {
-      config.getServletContext().setAttribute("GKHOST", config.getInitParameter("GKHOST"));
+      context.setAttribute("GKHOST", config.getInitParameter("GKHOST"));
     }
     if (config.getInitParameter("GKUSER") != null) {
-      config.getServletContext().setAttribute("GKUSER", config.getInitParameter("GKUSER"));
+      context.setAttribute("GKUSER", config.getInitParameter("GKUSER"));
     }
     if (config.getInitParameter("GKUSERPW") != null) {
-      config.getServletContext().setAttribute("GKUSERPW", config.getInitParameter("GKUSERPW"));
+      context.setAttribute("GKUSERPW", config.getInitParameter("GKUSERPW"));
     }
     
     if (config.getInitParameter("ForceSSL") != null) {
       if ("true".equals(config.getInitParameter("ForceSSL"))) {
-        config.getServletContext().setAttribute("ForceSSL", "true");
+        context.setAttribute("ForceSSL", "true");
       } else {
-        config.getServletContext().setAttribute("ForceSSL", "false");
+        context.setAttribute("ForceSSL", "false");
       }
     }
     
     if (config.getInitParameter("GlobalPWInfo") != null) {
-      config.getServletContext().setAttribute("GlobalPWInfo", 
+      context.setAttribute("GlobalPWInfo", 
         config.getInitParameter("GlobalPWInfo"));
     } else {
-      config.getServletContext().setAttribute("GlobalPWInfo", "#notspecified");
+      context.setAttribute("GlobalPWInfo", "#notspecified");
     }
     
     if (config.getInitParameter("ClientSSLKeystore") != null) {
-      config.getServletContext().setAttribute("ClientSSLKeystore", 
+      context.setAttribute("ClientSSLKeystore", 
         config.getInitParameter("ClientSSLKeystore"));
     }
     
     if (config.getInitParameter("ClientSSLKeystorePassword") != null) {
-      config.getServletContext().setAttribute("ClientSSLKeystorePassword", 
+      context.setAttribute("ClientSSLKeystorePassword", 
         config.getInitParameter("ClientSSLKeystorePassword"));
     }
     
@@ -75,7 +76,7 @@ public class InitHook implements ControllerInitHook {
         System.out.println("InitHook-> Setting the ContainerMenuConfig property: " + 
           config.getInitParameter("ContainerMenuConfig"));
       }
-      config.getServletContext().setAttribute("ContainerMenuConfig", 
+      context.setAttribute("ContainerMenuConfig", 
         config.getInitParameter("ContainerMenuConfig"));
     }
     
@@ -84,16 +85,17 @@ public class InitHook implements ControllerInitHook {
         System.out.println("InitHook-> Setting the DynamicFormConfig property: " + 
           config.getInitParameter("DynamicFormConfig"));
       }
-      config.getServletContext().setAttribute("DynamicFormConfig", 
-        config.getInitParameter("DynamicFormConfig"));
+      context.setAttribute("DynamicFormConfig", config.getInitParameter("DynamicFormConfig"));
+      CustomFormList forms = new CustomFormList(context, config.getInitParameter("DynamicFormConfig"));
+      context.setAttribute("DynamicFormList", forms);
     }
     
     if (config.getInitParameter("MailServer") != null) {
-      config.getServletContext().setAttribute("MailServer", 
+      context.setAttribute("MailServer", 
         config.getInitParameter("MailServer"));
       System.setProperty("MailServer", String.valueOf(config.getInitParameter("MailServer")));
     } else {
-      config.getServletContext().setAttribute("MailServer", "127.0.0.1");
+      context.setAttribute("MailServer", "127.0.0.1");
       System.setProperty("MailServer", "127.0.0.1");
     }
     

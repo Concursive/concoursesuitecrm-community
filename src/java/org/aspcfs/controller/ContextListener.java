@@ -49,9 +49,6 @@ public class ContextListener implements ServletContextListener {
     } catch (Exception e) {
       System.err.println(e.toString());
     }
-    
-    CustomFormList forms = new CustomFormList(context, (String) context.getAttribute("DynamicFormConfig"));
-    context.setAttribute("DynamicFormList", forms);
   }
 
 
@@ -77,9 +74,9 @@ public class ContextListener implements ServletContextListener {
       systemStatusList.clear();
     }
     context.removeAttribute("SystemStatus");
-
     context.removeAttribute("DynamicFormList");
     context.removeAttribute("DynamicFormConfig");
+    context.removeAttribute("ContainerMenu");
     context.removeAttribute("ContainerMenuConfig");
 
     ConnectionPool cp = (ConnectionPool) context.getAttribute("ConnectionPool");
