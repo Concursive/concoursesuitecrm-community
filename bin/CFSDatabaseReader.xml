@@ -121,7 +121,11 @@
       <property>type</property>
       <property>alertdate</property>
       <property lookup="user">enteredby</property>
+      <property lookup="user">modifiedby</property>
+      <property>custom1</property>
+      <property>custom2</property>
       <property>closed</property>
+      <property>custom_data</property>
       <property>alert</property>
       <property>enabled</property>
     </map>
