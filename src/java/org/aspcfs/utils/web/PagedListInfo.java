@@ -103,6 +103,9 @@ public class PagedListInfo {
    */
   public void setMaxRecords(int tmp) {
     maxRecords = tmp;
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("PagedListInfo-> Records in table: " + maxRecords);
+    }
   }
 
 
@@ -239,38 +242,6 @@ public class PagedListInfo {
     }
   }
 
-  public boolean hasSortConfigured() {
-    return (this.getColumnToSortBy() != null && !this.getColumnToSortBy().equals(""));
-  }
-  
-  public boolean hasSortOrderConfigured() {
-    return (this.getSortOrder() != null && !this.getSortOrder().equals(""));
-  }
-  
-  public void appendSqlTail(Connection db, StringBuffer sqlStatement) {
-    //Determine sort order
-    sqlStatement.append("ORDER BY " + this.getColumnToSortBy() + " ");
-    if (this.hasSortOrderConfigured()) {
-      sqlStatement.append(this.getSortOrder() + " ");
-    }
-    
-    //Determine items per page for PostgreSQL
-    if (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL) {
-      if (this.getItemsPerPage() > 0) {
-        sqlStatement.append("LIMIT " + this.getItemsPerPage() + " ");
-      }
-      sqlStatement.append("OFFSET " + this.getCurrentOffset() + " ");
-    }
-  }
-  
-  public void doManualOffset(Connection db, ResultSet rs) throws SQLException {
-    if (this.getItemsPerPage() > 0 &&
-        DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
-      for (int skipCount = 0; skipCount < this.getCurrentOffset(); skipCount++) {
-        rs.next();
-      }
-    }
-  }
 
   /**
    *  Gets the ColumnToSortBy attribute of the PagedListInfo object
@@ -347,7 +318,7 @@ public class PagedListInfo {
    *@since     1.0
    */
   public String getNumericalPageLinks() {
-    int numPages = (int) Math.ceil((double) maxRecords / (double) itemsPerPage);
+    int numPages = this.getNumberOfPages();
     StringBuffer links = new StringBuffer();
     links.append(numPages + " page" + ((numPages == 1) ? "" : "s") + " in this view ");
     if (numPages > 1) {
@@ -362,6 +333,16 @@ public class PagedListInfo {
       links.append("]");
     }
     return links.toString();
+  }
+
+
+  /**
+   *  Gets the numberOfPages attribute of the PagedListInfo object
+   *
+   *@return    The numberOfPages value
+   */
+  public int getNumberOfPages() {
+    return (int) Math.ceil((double) maxRecords / (double) itemsPerPage);
   }
 
 
@@ -536,6 +517,90 @@ public class PagedListInfo {
       return Integer.parseInt((String) listFilters.get(tmp));
     } catch (Exception e) {
       return -1;
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Returned Value
+   */
+  public boolean hasSortConfigured() {
+    return (this.getColumnToSortBy() != null && !this.getColumnToSortBy().equals(""));
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Returned Value
+   */
+  public boolean hasSortOrderConfigured() {
+    return (this.getSortOrder() != null && !this.getSortOrder().equals(""));
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db            Description of Parameter
+   *@param  sqlStatement  Description of Parameter
+   *@return               Description of the Returned Value
+   */
+  public void appendSqlSelectHead(Connection db, StringBuffer sqlStatement) {
+    if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+        this.getItemsPerPage() > 0) {
+      int x = this.getItemsPerPage() + this.getCurrentOffset();
+      sqlStatement.append("SELECT TOP " + x + " ");
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("PagedListInfo-> Requesting TOP " + x);
+      }
+    } else {
+      sqlStatement.append("SELECT ");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db            Description of Parameter
+   *@param  sqlStatement  Description of Parameter
+   */
+  public void appendSqlTail(Connection db, StringBuffer sqlStatement) {
+    //Determine sort order
+    sqlStatement.append("ORDER BY " + this.getColumnToSortBy() + " ");
+    if (this.hasSortOrderConfigured()) {
+      sqlStatement.append(this.getSortOrder() + " ");
+    }
+
+    //Determine items per page for PostgreSQL
+    if (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL) {
+      if (this.getItemsPerPage() > 0) {
+        sqlStatement.append("LIMIT " + this.getItemsPerPage() + " ");
+      }
+      sqlStatement.append("OFFSET " + this.getCurrentOffset() + " ");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void doManualOffset(Connection db, ResultSet rs) throws SQLException {
+    if (this.getItemsPerPage() > 0 &&
+        DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
+      for (int skipCount = 0; skipCount < this.getCurrentOffset(); skipCount++) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("PagedListInfo-> Skipping record");
+        }
+        rs.next();
+      }
     }
   }
 

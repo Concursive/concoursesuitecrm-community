@@ -2,6 +2,7 @@
 package com.darkhorseventures.cfsbase;
 
 import java.sql.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Represents a contact phone number, extending the base PhoneNumber class.
@@ -53,10 +54,11 @@ public class ContactPhoneNumber extends PhoneNumber {
     Statement st = null;
     ResultSet rs = null;
     StringBuffer sql = new StringBuffer();
-    sql.append("SELECT * " +
-        "FROM contact_phone p, lookup_contactphone_types l " +
-        "WHERE p.phone_type = l.code " +
-        "AND phone_id = " + phoneNumberId + " ");
+    sql.append(
+      "SELECT * " +
+      "FROM contact_phone p, lookup_contactphone_types l " +
+      "WHERE p.phone_type = l.code " +
+      "AND phone_id = " + phoneNumberId + " ");
     st = db.createStatement();
     rs = st.executeQuery(sql.toString());
     if (rs.next()) {
@@ -121,7 +123,17 @@ public class ContactPhoneNumber extends PhoneNumber {
     pst.close();
 
     Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery("select currval('contact_phone_phone_id_seq')");
+    ResultSet rs = null;
+      switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          rs = st.executeQuery("select currval('contact_phone_phone_id_seq')");
+          break;
+        case DatabaseUtils.MSSQL:
+          rs = st.executeQuery("SELECT @@IDENTITY");
+          break;
+        default:
+          break;
+      }
     if (rs.next()) {
       this.setId(rs.getInt(1));
     }

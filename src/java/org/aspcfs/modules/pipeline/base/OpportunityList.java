@@ -265,28 +265,11 @@ public class OpportunityList extends Vector {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
 
-    //Need to build a base SQL statement for returning records
-    sqlSelect.append(
-        "SELECT x.*, y.description as stagename, org.name as acct_name, " +
-        "ct.namelast as last_name, ct.namefirst as first_name, " +
-        "ct.company as ctcompany," +
-        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst " +
-        "FROM opportunity x " +
-        "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
-        "LEFT JOIN contact ct_owner ON (x.owner = ct_owner.user_id) " +
-        "LEFT JOIN contact ct_eb ON (x.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (x.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id), " +
-        "lookup_stage y " +
-        "WHERE x.stage = y.code AND " + whereClause);
-
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-        "SELECT COUNT(*) AS recordcount " +
-        "FROM opportunity x " +
-        "WHERE " + whereClause);
+      "SELECT COUNT(*) AS recordcount " +
+      "FROM opportunity x " +
+      "WHERE " + whereClause);
 
     createFilter(sqlFilter);
 
@@ -318,11 +301,33 @@ public class OpportunityList extends Vector {
         rs.close();
         pst.close();
       }
-
+      
       pagedListInfo.setDefaultSort("description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     }
 
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+      "x.*, y.description as stagename, org.name as acct_name, " +
+      "ct.namelast as last_name, ct.namefirst as first_name, " +
+      "ct.company as ctcompany," +
+      "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
+      "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
+      "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst " +
+      "FROM opportunity x " +
+      "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
+      "LEFT JOIN contact ct_owner ON (x.owner = ct_owner.user_id) " +
+      "LEFT JOIN contact ct_eb ON (x.enteredby = ct_eb.user_id) " +
+      "LEFT JOIN contact ct_mb ON (x.modifiedby = ct_mb.user_id) " +
+      "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id), " +
+      "lookup_stage y " +
+      "WHERE x.stage = y.code AND " + whereClause);
+      
     pst = db.prepareStatement(
       sqlSelect.toString() + 
       sqlFilter.toString() + 
@@ -338,7 +343,7 @@ public class OpportunityList extends Vector {
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
           DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count < pagedListInfo.getItemsPerPage()) {
+          count >= pagedListInfo.getItemsPerPage()) {
         break;
       }
       ++count;
@@ -412,12 +417,12 @@ public class OpportunityList extends Vector {
     }
 
     if (hasAlertDate == true) {
-      sqlFilter.append("AND x.alertdate is not null ");
+      sqlFilter.append("AND x.alertdate IS NOT NULL ");
     }
 
     if (ignoreTypeIdList.size() > 0) {
       Iterator iList = ignoreTypeIdList.iterator();
-      sqlFilter.append("AND contactlink not in (");
+      sqlFilter.append("AND contactlink NOT IN (");
       while (iList.hasNext()) {
         String placeHolder = (String) iList.next();
         sqlFilter.append("?");

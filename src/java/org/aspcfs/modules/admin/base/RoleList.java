@@ -9,6 +9,7 @@ import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 public class RoleList extends Vector {
   
@@ -55,15 +56,10 @@ public class RoleList extends Vector {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
 
-    //Need to build a base SQL statement for returning records
-    sqlSelect.append("SELECT * " +
-        "FROM role r " +
-        "WHERE enabled = true ");
-
     //Need to build a base SQL statement for counting records
     sqlCount.append("SELECT COUNT(*) AS recordcount " +
         "FROM role r " +
-        "WHERE enabled = true ");
+        "WHERE enabled = " + DatabaseUtils.getTrue(db) + " ");
 
     createFilter(sqlFilter);
 
@@ -97,28 +93,33 @@ public class RoleList extends Vector {
       }
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() == null || pagedListInfo.getColumnToSortBy().equals("")) {
-				pagedListInfo.setColumnToSortBy("role");
-			}
-			sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + " ");
-			if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
-				sqlOrder.append(pagedListInfo.getSortOrder() + " ");
-			}
-
-      //Determine items per page
-      if (pagedListInfo.getItemsPerPage() > 0) {
-        sqlOrder.append("LIMIT " + pagedListInfo.getItemsPerPage() + " ");
-      }
-
-      sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
+      pagedListInfo.setDefaultSort("role", null);
+      pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY role ");
     }
 
+    //Need to build a base SQL statement for returning records
+    sqlSelect.append("SELECT * " +
+        "FROM role r " +
+        "WHERE enabled = " + DatabaseUtils.getTrue(db) + " ");
+        
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+    
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
+    
+    int count = 0;
     while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          count >= pagedListInfo.getItemsPerPage()) {
+        break;
+      }
+      ++count;
       Role thisRole = new Role(rs);
       this.addElement(thisRole);
     }

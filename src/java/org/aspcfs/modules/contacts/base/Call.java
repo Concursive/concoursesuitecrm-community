@@ -6,6 +6,7 @@ import org.theseus.beans.*;
 import org.theseus.actions.*;
 import java.sql.*;
 import java.text.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Description of the Class
@@ -680,7 +681,17 @@ public class Call extends GenericBean {
     pst.close();
 
     Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery("select currval('call_log_call_id_seq')");
+    ResultSet rs = null;
+      switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          rs = st.executeQuery("select currval('call_log_call_id_seq')");
+          break;
+        case DatabaseUtils.MSSQL:
+          rs = st.executeQuery("SELECT @@IDENTITY");
+          break;
+        default:
+          break;
+      }
     if (rs.next()) {
       this.setId(rs.getInt(1));
     }

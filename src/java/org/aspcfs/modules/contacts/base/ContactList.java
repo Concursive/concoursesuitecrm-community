@@ -9,6 +9,7 @@ import java.text.*;
 import java.util.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Contains a list of contacts... currently used to build the list from the
@@ -100,13 +101,17 @@ public class ContactList extends Vector {
   public void setCheckExcludedFromCampaign(int checkExcludedFromCampaign) {
     this.checkExcludedFromCampaign = checkExcludedFromCampaign;
   }
-  
-public String getContactIdRange() {
-	return contactIdRange;
-}
-public void setContactIdRange(String contactIdRange) {
-	this.contactIdRange = contactIdRange;
-}
+
+
+  /**
+   *  Sets the contactIdRange attribute of the ContactList object
+   *
+   *@param  contactIdRange  The new contactIdRange value
+   */
+  public void setContactIdRange(String contactIdRange) {
+    this.contactIdRange = contactIdRange;
+  }
+
 
   /**
    *  Sets the FirstName attribute of the ContactList object
@@ -150,11 +155,23 @@ public void setContactIdRange(String contactIdRange) {
   public void setOwnerIdRange(String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
   }
-  
+
+
+  /**
+   *  Sets the accountOwnerIdRange attribute of the ContactList object
+   *
+   *@param  tmp  The new accountOwnerIdRange value
+   */
   public void setAccountOwnerIdRange(String tmp) {
     this.accountOwnerIdRange = tmp;
   }
-  
+
+
+  /**
+   *  Sets the withAccountsOnly attribute of the ContactList object
+   *
+   *@param  tmp  The new withAccountsOnly value
+   */
   public void setWithAccountsOnly(boolean tmp) {
     this.withAccountsOnly = tmp;
   }
@@ -207,7 +224,9 @@ public void setContactIdRange(String contactIdRange) {
   /**
    *  Sets the Scl attribute of the ContactList object
    *
-   *@param  scl  The new Scl value
+   *@param  scl            The new Scl value
+   *@param  thisOwnerId    The new scl value
+   *@param  thisUserRange  The new scl value
    *@since
    */
   public void setScl(SearchCriteriaList scl, int thisOwnerId, String thisUserRange) {
@@ -387,11 +406,20 @@ public void setContactIdRange(String contactIdRange) {
     if (outerHash[7].containsKey("=") == true) {
       this.typeIdRange = outerHash[7].get(new String("=")).toString();
     }
-    
+
     if (outerHash[8].containsKey("=") == true) {
       this.contactIdRange = outerHash[8].get(new String("=")).toString();
     }
-    
+  }
+
+
+  /**
+   *  Gets the contactIdRange attribute of the ContactList object
+   *
+   *@return    The contactIdRange value
+   */
+  public String getContactIdRange() {
+    return contactIdRange;
   }
 
 
@@ -468,11 +496,23 @@ public void setContactIdRange(String contactIdRange) {
   public String getOwnerIdRange() {
     return ownerIdRange;
   }
-  
+
+
+  /**
+   *  Gets the accountOwnerIdRange attribute of the ContactList object
+   *
+   *@return    The accountOwnerIdRange value
+   */
   public String getAccountOwnerIdRange() {
     return accountOwnerIdRange;
   }
-  
+
+
+  /**
+   *  Gets the withAccountsOnly attribute of the ContactList object
+   *
+   *@return    The withAccountsOnly value
+   */
   public boolean getWithAccountsOnly() {
     return withAccountsOnly;
   }
@@ -662,39 +702,36 @@ public void setContactIdRange(String contactIdRange) {
   /**
    *  Description of the Method
    *
+   *@param  thisOwnerId    Description of Parameter
+   *@param  thisUserRange  Description of Parameter
    *@since
    */
   public void buildQuery(int thisOwnerId, String thisUserRange) {
-    
-    switch(scl.getContactSource()) {
-      case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
-        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-        this.setWithAccountsOnly(true);
-        break;
-        
-      case SearchCriteriaList.SOURCE_MY_ACCOUNTS:
-        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-        this.setAccountOwnerIdRange("" + thisOwnerId);
-        break;
-        
-      case SearchCriteriaList.SOURCE_MY_ACCOUNT_HIERARCHY:
-        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-        this.setAccountOwnerIdRange(thisUserRange);
-        break;
-        
-      case SearchCriteriaList.SOURCE_MY_CONTACTS:
-        this.setOwner(thisOwnerId);
-        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-        break;
-        
-      case SearchCriteriaList.SOURCE_EMPLOYEES:
-        this.setTypeId(Contact.EMPLOYEE_TYPE);
-        break;
-        
-      default:
-        break;
+
+    switch (scl.getContactSource()) {
+        case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
+          this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+          this.setWithAccountsOnly(true);
+          break;
+        case SearchCriteriaList.SOURCE_MY_ACCOUNTS:
+          this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+          this.setAccountOwnerIdRange("" + thisOwnerId);
+          break;
+        case SearchCriteriaList.SOURCE_MY_ACCOUNT_HIERARCHY:
+          this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+          this.setAccountOwnerIdRange(thisUserRange);
+          break;
+        case SearchCriteriaList.SOURCE_MY_CONTACTS:
+          this.setOwner(thisOwnerId);
+          this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+          break;
+        case SearchCriteriaList.SOURCE_EMPLOYEES:
+          this.setTypeId(Contact.EMPLOYEE_TYPE);
+          break;
+        default:
+          break;
     }
-    
+
     String fieldName = "";
     String readyToGo = "";
 
@@ -735,7 +772,7 @@ public void setContactIdRange(String contactIdRange) {
         areacode,
         city,
         typeId,
-	contactId
+        contactId
         };
 
     if (System.getProperty("DEBUG") != null) {
@@ -824,40 +861,23 @@ public void setContactIdRange(String contactIdRange) {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
 
-    //Need to build a base SQL statement for returning records
-    sqlSelect.append(
-        "SELECT c.*, d.description as departmentname, t.description as type_name, " +
-        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
-        "o.name as org_name " +
-        "FROM contact c " +
-        "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
-        "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
-        "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
-        "WHERE c.contact_id > -1 ");
-
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-        "SELECT COUNT(*) AS recordcount " +
-        "FROM contact c " +
-        "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
-        "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
-        "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
-        "WHERE c.contact_id > -1 ");
+      "SELECT COUNT(*) AS recordcount " +
+      "FROM contact c " +
+      "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
+      "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
+      "LEFT JOIN lookup_department d ON (c.department = d.code) " +
+      "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
+      "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
+      "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
+      "WHERE c.contact_id > -1 ");
 
     createFilter(sqlFilter);
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
-          sqlFilter.toString());
+      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -884,29 +904,44 @@ public void setContactIdRange(String contactIdRange) {
       }
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() == null || pagedListInfo.getColumnToSortBy().equals("")) {
-        pagedListInfo.setColumnToSortBy("c.namelast");
-      }
-      sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + " ");
-      if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
-        sqlOrder.append(pagedListInfo.getSortOrder() + " ");
-      }
-
-      //Determine items per page
-      if (pagedListInfo.getItemsPerPage() > 0) {
-        sqlOrder.append("LIMIT " + pagedListInfo.getItemsPerPage() + " ");
-      }
-
-      sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
+      pagedListInfo.setDefaultSort("c.namelast", null);
+      pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY c.namelast ");
     }
 
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    //Need to build a base SQL statement for returning records
+    sqlSelect.append(
+        "SELECT c.*, d.description as departmentname, t.description as type_name, " +
+        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
+        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
+        "o.name as org_name " +
+        "FROM contact c " +
+        "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
+        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
+        "LEFT JOIN lookup_department d ON (c.department = d.code) " +
+        "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
+        "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
+        "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
+        "WHERE c.contact_id > -1 ");
 
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
+
+    int count = 0;
     while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          count >= pagedListInfo.getItemsPerPage()) {
+        break;
+      }
+      ++count;
       Contact thisContact = new Contact(rs);
       this.addElement(thisContact);
     }
@@ -936,6 +971,21 @@ public void setContactIdRange(String contactIdRange) {
    */
   public void addIgnoreTypeId(int tmp) {
     ignoreTypeIdList.addElement("" + tmp);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void delete(Connection db) throws SQLException {
+    Iterator contacts = this.iterator();
+    while (contacts.hasNext()) {
+      Contact thisContact = (Contact) contacts.next();
+      thisContact.delete(db);
+    }
   }
 
 
@@ -999,7 +1049,7 @@ public void setContactIdRange(String contactIdRange) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-    
+
     if (searchText == null || (searchText.equals(""))) {
       if (orgId != -1) {
         sqlFilter.append("AND c.org_id = ? ");
@@ -1100,15 +1150,15 @@ public void setContactIdRange(String contactIdRange) {
       if (ownerIdRange != null) {
         sqlFilter.append("AND c.owner IN (" + ownerIdRange + ") ");
       }
-      
+
       if (contactIdRange != null) {
         sqlFilter.append("AND c.contact_id IN (" + contactIdRange + ") ");
       }
-      
+
       if (withAccountsOnly) {
         sqlFilter.append("AND c.org_id > 0 ");
       }
-      
+
       if (accountOwnerIdRange != null) {
         sqlFilter.append("AND c.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
       }
@@ -1222,14 +1272,6 @@ public void setContactIdRange(String contactIdRange) {
     //System.out.println(pst.toString());
 
     return i;
-  }
-  
-  public void delete(Connection db) throws SQLException {
-    Iterator contacts = this.iterator();
-    while (contacts.hasNext()) {
-      Contact thisContact = (Contact)contacts.next();
-      thisContact.delete(db);
-    }
   }
 
 }

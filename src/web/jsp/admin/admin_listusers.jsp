@@ -24,7 +24,7 @@
       <strong>Action</strong>
     </td>
     <td bgcolor="#DEE0FA"><b><font class="column">
-      <a href="/Users.do?command=ListUsers&column=namelast">
+      <a href="/Users.do?command=ListUsers&column=c.namelast">
       Name</a></font></b>
       <%= UserListInfo.getSortIcon("namelast") %>
     </td>

@@ -2,6 +2,7 @@
 package com.darkhorseventures.cfsbase;
 
 import java.sql.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 public class ContactEmailAddress extends EmailAddress {
 
@@ -83,7 +84,17 @@ public class ContactEmailAddress extends EmailAddress {
     pst.close();
 
     Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery("select currval('contact_email_emailaddress__seq')");
+    ResultSet rs = null;
+      switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          rs = st.executeQuery("select currval('contact_email_emailaddress__seq')");
+          break;
+        case DatabaseUtils.MSSQL:
+          rs = st.executeQuery("SELECT @@IDENTITY");
+          break;
+        default:
+          break;
+      }
     if (rs.next()) {
       this.setId(rs.getInt(1));
     }

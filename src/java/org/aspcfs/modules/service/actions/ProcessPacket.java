@@ -41,9 +41,11 @@ public final class ProcessPacket extends CFSModule {
         while (trans.hasNext()) {
           Element thisElement = (Element)trans.next();
           Transaction thisTransaction = new Transaction();
-          thisTransaction.addMapping("account", "com.darkhorseventures.cfsbase.Account");
+          thisTransaction.addMapping("account", "com.darkhorseventures.cfsbase.Organization");
+          thisTransaction.addMapping("organization", "com.darkhorseventures.cfsbase.Organization");
           thisTransaction.addMapping("contact", "com.darkhorseventures.cfsbase.Contact");
           thisTransaction.addMapping("ticket", "com.darkhorseventures.cfsbase.Ticket");
+          thisTransaction.addMapping("folder", "com.darkhorseventures.cfsbase.CustomFieldCategory");
           thisTransaction.build(thisElement);
           int statusCode = thisTransaction.execute(db);
           StatusMessage thisStatus = new StatusMessage();

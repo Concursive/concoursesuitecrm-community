@@ -8,6 +8,7 @@ import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Represents a Contact in CFS
@@ -1379,11 +1380,13 @@ public class Contact extends GenericBean {
 
     try {
       db.setAutoCommit(false);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Contact-> Inserting contact");
+      }
       sql.append(
-          "INSERT INTO CONTACT " +
+          "INSERT INTO contact " +
           "(type_id, enteredby, modifiedby, namefirst, namelast, owner) " +
           "VALUES (?, ?, ?, ?, ?, ?) ");
-
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getTypeId());
@@ -1392,17 +1395,34 @@ public class Contact extends GenericBean {
       pst.setString(++i, this.getNameFirst());
       pst.setString(++i, this.getNameLast());
       pst.setInt(++i, this.getOwner());
-
       pst.execute();
       pst.close();
+      
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Contact-> Getting contact id");
+      }
 
       Statement st = db.createStatement();
-      ResultSet rs = st.executeQuery("select currval('contact_contact_id_seq')");
+      ResultSet rs = null;
+      switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          rs = st.executeQuery("select currval('contact_contact_id_seq')");
+          break;
+        case DatabaseUtils.MSSQL:
+          rs = st.executeQuery("SELECT @@IDENTITY");
+          break;
+        default:
+          break;
+      }
       if (rs.next()) {
         this.setId(rs.getInt(1));
       }
       rs.close();
       st.close();
+      
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Contact-> ContactID: " + this.getId());
+      }
 
       //Insert the phone numbers if there are any
       Iterator iphone = phoneNumberList.iterator();
@@ -1425,7 +1445,16 @@ public class Contact extends GenericBean {
         thisEmailAddress.insert(db, this.getId(), this.getEnteredBy());
       }
 
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Contact-> Updating contact");
+      }
+      
       this.update(db, true);
+      
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Contact-> Ready to commit");
+      }
+      
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1525,7 +1554,7 @@ public class Contact extends GenericBean {
       errors.put("actionError", "Contact disabled from view, since it has a related user account");
       st.executeUpdate(
           "UPDATE contact " +
-          "SET enabled = false " +
+          "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
           "WHERE contact_id = " + this.getId());
       st.close();
       return true;
@@ -1666,7 +1695,8 @@ public class Contact extends GenericBean {
 
     sql.append(
         "UPDATE contact " +
-        "SET company = ?, title = ?, department = ?, namesalutation = ?, namefirst = ?, namelast = ?, " +
+        "SET company = ?, title = ?, department = ?, namesalutation = ?, " +
+        "namefirst = ?, namelast = ?, " +
         "namemiddle = ?, namesuffix = ?, type_id = ?, notes = ?, owner = ?, ");
     if (orgId > -1) {
       sql.append("org_id = ?, ");

@@ -1418,7 +1418,17 @@ public class Opportunity extends GenericBean {
       pst.close();
 
       Statement st = db.createStatement();
-      ResultSet rs = st.executeQuery("select currval('opportunity_opp_id_seq')");
+      ResultSet rs = null;
+      switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          rs = st.executeQuery("select currval('opportunity_opp_id_seq')");
+          break;
+        case DatabaseUtils.MSSQL:
+          rs = st.executeQuery("SELECT @@IDENTITY");
+          break;
+        default:
+          break;
+      }
       if (rs.next()) {
         this.setId(rs.getInt(1));
       }

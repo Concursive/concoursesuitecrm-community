@@ -230,20 +230,6 @@ public class CallList extends Vector {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
     
-    //Need to build a base SQL statement for returning records
-    sqlSelect.append(
-      "SELECT c.*, t.*, " +
-      "e.namefirst as efirst, e.namelast as elast, " +
-      "m.namefirst as mfirst, m.namelast as mlast, " +
-      "ct.namefirst as ctfirst, ct.namelast as ctlast " +
-      "FROM call_log c " +
-      "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
-      "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code), " +
-      "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
-      "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
-      "WHERE c.enteredby = a1.user_id " +
-      "AND c.modifiedby = a2.user_id ");
-
     //Need to build a base SQL statement for counting records
     sqlCount.append(
       "SELECT COUNT(*) as recordcount " +
@@ -276,6 +262,26 @@ public class CallList extends Vector {
       sqlOrder.append("ORDER BY entered DESC ");
     }
 
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    
+    sqlSelect.append(
+      "c.*, t.*, " +
+      "e.namefirst as efirst, e.namelast as elast, " +
+      "m.namefirst as mfirst, m.namelast as mlast, " +
+      "ct.namefirst as ctfirst, ct.namelast as ctlast " +
+      "FROM call_log c " +
+      "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
+      "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code), " +
+      "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
+      "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
+      "WHERE c.enteredby = a1.user_id " +
+      "AND c.modifiedby = a2.user_id ");
+      
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -288,7 +294,7 @@ public class CallList extends Vector {
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
           DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count < pagedListInfo.getItemsPerPage()) {
+          count >= pagedListInfo.getItemsPerPage()) {
         break;
       }
       ++count;

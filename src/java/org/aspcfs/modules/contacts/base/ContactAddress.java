@@ -2,6 +2,7 @@
 package com.darkhorseventures.cfsbase;
 
 import java.sql.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Builds an address for a contact using a custom query that extends the fields
@@ -101,7 +102,17 @@ public class ContactAddress extends Address {
     pst.close();
     
     Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery("select currval('contact_address_address_id_seq')");
+    ResultSet rs = null;
+      switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          rs = st.executeQuery("select currval('contact_address_address_id_seq')");
+          break;
+        case DatabaseUtils.MSSQL:
+          rs = st.executeQuery("SELECT @@IDENTITY");
+          break;
+        default:
+          break;
+      }
     if (rs.next()) {
       this.setId(rs.getInt(1));
     }
