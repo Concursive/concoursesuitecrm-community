@@ -127,5 +127,27 @@
       <property>alertText</property>
       <property>enabled</property>
     </map>
+    <map class="com.darkhorseventures.cfsbase.Ticket" id="ticket">
+      <property alias="guid">id</property>
+      <property lookup="account">orgId</property>
+      <property lookup="contact">contactId</property>
+      <property lookup="user">owner</property>
+      <property lookup="user">assignedTo</property>
+      <property>problem</property>
+      <property>comment</property>
+      <property>solution</property>
+      <property>priorityCode</property>
+      <property>levelCode</property>
+      <property>departmentCode</property>
+      <property>sourceCode</property>
+      <property>catCode</property>
+      <property>subCat1</property>
+      <property>subCat2</property>
+      <property>subCat3</property>
+      <property>severityCode</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>closed</property>
+    </map>
   </mappings>
 </CFSDatabaseReader>

@@ -16,6 +16,12 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *@version    $Id$
  */
 public class TicketList extends Vector {
+        
+  public static final String tableName = "ticket";
+  public static final String uniqueField = "ticketid";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private PagedListInfo pagedListInfo = null;
   private int enteredBy = -1;
@@ -113,6 +119,10 @@ public class TicketList extends Vector {
     this.severity = Integer.parseInt(tmp);
   }
 
+public String getTableName() { return tableName; }
+public String getUniqueField() { return uniqueField; }
+public void setTableName(String tmp) { this.tableName = tmp; }
+public void setUniqueField(String tmp) { this.uniqueField = tmp; }
 
   /**
    *  Sets the priority attribute of the TicketList object
