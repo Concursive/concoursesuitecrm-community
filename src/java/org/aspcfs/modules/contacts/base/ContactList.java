@@ -691,8 +691,8 @@ public class ContactList extends Vector {
       Contact thisContact = (Contact) i.next();
       contactListSelect.addItem(
           thisContact.getId(),
-          thisContact.getNameLast() + ", " +
-          thisContact.getNameFirst() +
+          Contact.getNameLastFirst(thisContact.getNameLast(),
+          thisContact.getNameFirst()) +
           (checkUserAccess ? (thisContact.hasAccount() ? " (*)" : "") : ""));
     }
     return contactListSelect.getHtml(selectName, defaultKey);

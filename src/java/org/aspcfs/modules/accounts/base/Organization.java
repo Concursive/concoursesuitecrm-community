@@ -1377,9 +1377,9 @@ public class Organization extends GenericBean {
     alertText = rs.getString("alert");
     
     //contact table
-    ownerName = rs.getString("o_namelast") + ", " + rs.getString("o_namefirst");
-    enteredByName = rs.getString("eb_namelast") + ", " + rs.getString("eb_namefirst");
-    modifiedByName = rs.getString("mb_namelast") + ", " + rs.getString("mb_namefirst");
+    ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));
+    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
+    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
     
     //industry_temp table
     industryName = rs.getString("industry_name");

@@ -1457,7 +1457,6 @@ public class Ticket extends GenericBean {
       Iterator hist = history.iterator();
       while (hist.hasNext()) {
         TicketLog thisLog = (TicketLog) hist.next();
-        System.out.println("processing with vals: " + this.getId() + ", " + this.getEnteredBy() + ", " + this.getModifiedBy());
         thisLog.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
       }
 

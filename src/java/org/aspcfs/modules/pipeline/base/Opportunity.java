@@ -1553,9 +1553,9 @@ public class Opportunity extends GenericBean {
     String contactNameFirst = rs.getString("first_name");
     contactName = contactNameFirst + " " + contactNameLast;
     contactCompanyName = rs.getString("ctcompany");
-    ownerName = rs.getString("o_namelast") + ", " + rs.getString("o_namefirst");
-    enteredByName = rs.getString("eb_namelast") + ", " + rs.getString("eb_namefirst");
-    modifiedByName = rs.getString("mb_namelast") + ", " + rs.getString("mb_namefirst");
+    ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));
+    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
+    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
   }
 
 

@@ -913,8 +913,8 @@ public class TicketLog extends GenericBean {
     severityName = rs.getString("severityname");
    
     //contact table
-    enteredByName = rs.getString("eb_namelast") + ", " + rs.getString("eb_namefirst");
-    assignedToName = rs.getString("at_namelast") + ", " + rs.getString("at_namefirst");
+    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
+    assignedToName = Contact.getNameLastFirst(rs.getString("at_namelast"), rs.getString("at_namefirst"));
   }
 
 

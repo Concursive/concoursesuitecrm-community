@@ -493,7 +493,7 @@ public class SearchCriteriaList extends Hashtable {
         if (thisGroup.getGroupField().getDescription().equals("Contact Type") && thisElt.getContactTypeName() != null) {
           valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getContactTypeName();
         } else if (thisGroup.getGroupField().getDescription().equals("Contact ID") && thisElt.getContactNameLast() != null) {
-          valueString = "Contact Name (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getContactNameLast() + ", " + thisElt.getContactNameFirst();
+          valueString = "Contact Name (" + thisElt.getOperatorDisplayText() + ") " + Contact.getNameLastFirst(thisElt.getContactNameLast(), thisElt.getContactNameFirst());
         } else {
           valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText();
         }

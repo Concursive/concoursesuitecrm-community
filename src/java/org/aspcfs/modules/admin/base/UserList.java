@@ -363,8 +363,8 @@ public class UserList extends Vector {
       User thisUser = (User) i.next();
       userListSelect.addItem(
           thisUser.getId(),
-          thisUser.getContact().getNameLast() + ", " +
-          thisUser.getContact().getNameFirst());
+          Contact.getNameLastFirst(thisUser.getContact().getNameLast(),
+          thisUser.getContact().getNameFirst()));
     }
     return userListSelect.getHtml(selectName, defaultKey);
   }

@@ -1745,6 +1745,7 @@ public class Contact extends GenericBean {
    *@since                    1.1
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
+    //contact table
     this.setId(rs.getInt("contact_id"));
     orgId = rs.getInt("org_id");
     company = rs.getString("company");
@@ -1772,14 +1773,18 @@ public class Contact extends GenericBean {
     enabled = rs.getBoolean("enabled");
     owner = rs.getInt("owner");
     
+    //lookup_department table
     departmentName = rs.getString("departmentname");
     
+    //lookup_contact_types table
     typeName = rs.getString("type_name");
     
-    ownerName = rs.getString("o_namelast") + ", " + rs.getString("o_namefirst");
-    enteredByName = rs.getString("eb_namelast") + ", " + rs.getString("eb_namefirst");
-    modifiedByName = rs.getString("mb_namelast") + ", " + rs.getString("mb_namefirst");
+    //contact table
+    ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));
+    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
+    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
     
+    //organization table
     orgName = rs.getString("org_name");
   }
 

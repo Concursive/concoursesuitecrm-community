@@ -1635,14 +1635,14 @@ public class User extends GenericBean {
 
     String managerNameFirst = rs.getString("mgr_namefirst");
     String managerNameLast = rs.getString("mgr_namelast");
-    if (managerNameFirst != null) {
-      this.manager = managerNameLast + ", " + managerNameFirst;
+    if (managerNameFirst != null || managerNameLast != null) {
+      this.manager = Contact.getNameLastFirst(managerNameLast, managerNameFirst);
     }
 
     String aliasNameFirst = rs.getString("als_namefirst");
     String aliasNameLast = rs.getString("als_namelast");
     if (aliasNameFirst != null) {
-      this.aliasName = aliasNameLast + ", " + aliasNameFirst;
+      this.aliasName = Contact.getNameLastFirst(aliasNameLast, aliasNameFirst);
     }
   }
 
