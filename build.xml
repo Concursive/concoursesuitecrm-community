@@ -199,12 +199,12 @@
     <!-- Copy the web data, only if new -->
     <copy todir="${CFS_HOME}">
       <fileset dir="${src.web.dir}/jsp">
-        <include name="*"/>
+        <include name="**"/>
       </fileset>
     </copy>
     <copy todir="${CFS_HOME}">
       <fileset dir="${src.web.dir}/html">
-        <include name="*"/>
+        <include name="**"/>
       </fileset>
     </copy>
     <copy todir="${CFS_HOME}" >
