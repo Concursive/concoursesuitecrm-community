@@ -6,7 +6,7 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <form name="listView" method="post" action="ExternalContacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%>">
-<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 Messages<br>

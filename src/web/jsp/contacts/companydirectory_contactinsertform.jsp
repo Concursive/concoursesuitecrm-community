@@ -50,7 +50,7 @@
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
 <form name="addContact" action="ExternalContacts.do?command=InsertContact&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="ExternalContacts.do">General Contacts</a> > 
 Add Contact<br>
 <hr color="#BFBFBB" noshade>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">

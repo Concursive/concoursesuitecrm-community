@@ -6,7 +6,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <form name="details" action="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>" method="post">
-<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 <dhv:evaluate if="<%= (Category.getAllowMultipleRecords()) %>">

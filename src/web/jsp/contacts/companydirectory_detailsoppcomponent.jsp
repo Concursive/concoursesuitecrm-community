@@ -5,7 +5,7 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <form name="componentDetails" action="ExternalContactsOpps.do?command=ModifyComponent&id=<%=OppComponentDetails.getId()%>" method="post">
-<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 <a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%=ContactDetails.getId()%>">Opportunities</a> >
