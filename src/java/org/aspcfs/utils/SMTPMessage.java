@@ -27,7 +27,7 @@ public class SMTPMessage {
   private String type = "text";
   private String errorMsg = "";
   private ArrayList replyTo = new ArrayList();
-  private FileItemList attachments = new FileItemList();
+  private FileItemList attachments = null;
 
 
   /**
@@ -198,6 +198,9 @@ public class SMTPMessage {
    *@param  tmp  The feature to be added to the FileAttachment attribute
    */
   public void addFileAttachment(FileItem tmp) {
+    if (attachments == null) {
+      attachments = new FileItemList();
+    }
     attachments.add(tmp);
   }
 

@@ -4,13 +4,15 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.theseus.actions.*;
 import java.sql.*;
-import java.util.Vector;
-import java.util.Iterator;
+import java.util.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
+import com.isavvix.tools.*;
+import java.io.*;
+
 
 /**
  *  Actions for dealing with Campaigns in the Communications Module, including
@@ -1409,6 +1411,245 @@ public final class CampaignManager extends CFSModule {
       } else {
         selectedList.removeItem(scl);
       }
+    }
+  }
+  
+  public String executeCommandViewAttachmentsOverview(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    addModuleBean(context, "ManageCampaigns", "Build New Campaign");
+    Connection db = null;
+
+    String campaignId = context.getRequest().getParameter("id");
+
+    try {
+      db = this.getConnection(context);
+      Campaign campaign = new Campaign(db, campaignId);
+      context.getRequest().setAttribute("Campaign", campaign);
+
+      if (campaign.hasSurvey()) {
+        Survey survey = new Survey(db, campaign.getSurveyId());
+        context.getRequest().setAttribute("Survey", survey);
+      }
+      
+      if (campaign.hasFiles()) {
+        FileItemList files = new FileItemList();
+        files.setLinkModuleId(Constants.COMMUNICATIONS);
+        files.setLinkItemId(campaign.getId());
+        files.buildList(db);
+        context.getRequest().setAttribute("FileItemList", files);
+      }
+      
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("ViewAttachmentsOverviewOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandManageFileAttachments(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    addModuleBean(context, "ManageCampaigns", "Build New Campaign");
+    Connection db = null;
+
+    String campaignId = context.getRequest().getParameter("id");
+
+    try {
+      db = this.getConnection(context);
+      Campaign campaign = new Campaign(db, campaignId);
+      context.getRequest().setAttribute("Campaign", campaign);
+
+      FileItemList files = new FileItemList();
+      files.setLinkModuleId(Constants.COMMUNICATIONS);
+      files.setLinkItemId(campaign.getId());
+      files.buildList(db);
+      context.getRequest().setAttribute("fileItemList", files);
+      
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("ManageFileAttachmentsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandUploadFile(ActionContext context) {
+    if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    Connection db = null;
+    boolean recordInserted = false;
+    try {
+      String filePath = this.getPath(context, "communications");
+
+      //Process the form data
+      HttpMultiPartParser multiPart = new HttpMultiPartParser();
+      multiPart.setUsePathParam(false);
+      multiPart.setUseUniqueName(true);
+      multiPart.setUseDateForFolder(true);
+      multiPart.setExtensionId(getUserId(context));
+
+      HashMap parts = multiPart.parseData(
+          context.getRequest().getInputStream(), "---------------------------", filePath);
+
+      db = getConnection(context);
+
+      String id = context.getRequest().getParameter("id");
+      //String id = (String) parts.get("id");
+      String subject = "Attachment";
+      //String subject = (String) parts.get("subject");
+      //String folderId = (String) parts.get("folderId");
+      Campaign campaign = new Campaign(db, Integer.parseInt(id));
+      context.getRequest().setAttribute("Campaign", campaign);
+
+      if ((Object) parts.get("id" + id) instanceof FileInfo) {
+        //Update the database with the resulting file
+        FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
+
+        FileItem thisItem = new FileItem();
+        thisItem.setLinkModuleId(Constants.COMMUNICATIONS);
+        thisItem.setLinkItemId(campaign.getId());
+        thisItem.setEnteredBy(getUserId(context));
+        thisItem.setModifiedBy(getUserId(context));
+        thisItem.setFolderId(-1);
+        thisItem.setSubject(subject);
+        thisItem.setClientFilename(newFileInfo.getClientFileName());
+        thisItem.setFilename(newFileInfo.getRealFilename());
+        thisItem.setVersion(1.0);
+        thisItem.setSize(newFileInfo.getSize());
+
+        recordInserted = thisItem.insert(db);
+        if (!recordInserted) {
+          processErrors(context, thisItem.getErrors());
+        }
+      } else {
+        recordInserted = false;
+        HashMap errors = new HashMap();
+        errors.put("actionError", "The file could not be sent by your computer, make sure the file exists");
+        processErrors(context, errors);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return (executeCommandManageFileAttachments(context));
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandRemoveFile(ActionContext context) {
+    if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    Connection db = null;
+    boolean recordDeleted = false;
+    try {
+      String itemId = (String) context.getRequest().getParameter("fid");
+      String campaignId = (String) context.getRequest().getParameter("id");
+      db = getConnection(context);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS);
+      recordDeleted = thisItem.delete(db, this.getPath(context, "communications", thisItem.getLinkItemId()));
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return (executeCommandManageFileAttachments(context));
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandDownloadFile(ActionContext context) {
+    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+
+    String itemId = (String) context.getRequest().getParameter("fid");
+    String campaignId = (String) context.getRequest().getParameter("id");
+    FileItem thisItem = null;
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    //Start the download
+    try {
+      FileItem itemToDownload = thisItem;
+      itemToDownload.setEnteredBy(this.getUserId(context));
+      String filePath = this.getPath(context, "communications") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+      FileDownload fileDownload = new FileDownload();
+      fileDownload.setFullPath(filePath);
+      fileDownload.setDisplayName(itemToDownload.getClientFilename());
+      if (fileDownload.fileExists()) {
+        fileDownload.sendFile(context);
+        //Get a db connection now that the download is complete
+        db = getConnection(context);
+        itemToDownload.updateCounter(db);
+      } else {
+        db = null;
+        System.err.println("CampaignManager-> Trying to send a file that does not exist");
+        context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+        return (executeCommandView(context));
+      }
+    } catch (java.net.SocketException se) {
+      //User either cancelled the download or lost connection
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(se.toString());
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+    } finally {
+      if (db != null) {
+        this.freeConnection(context, db);
+      }
+    }
+
+    if (errorMessage == null) {
+      return ("-none-");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      addModuleBean(context, "ManageCampaigns", "");
+      return ("SystemError");
     }
   }
 }

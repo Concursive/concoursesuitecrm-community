@@ -489,7 +489,9 @@
     <forward name="ViewGroupsOK" resource="/campaign_center_groups.jsp" layout="nav"/>
     <forward name="ViewRecipientsOK" resource="/campaign_center_recipients.jsp" layout="nav"/>
     <forward name="ViewMessageOK" resource="/campaign_center_message.jsp" layout="nav"/>
+    <forward name="ViewAttachmentsOverviewOK" resource="/campaign_center_attachments_overview.jsp" layout="nav"/>
     <forward name="ViewAttachmentOK" resource="/campaign_center_attachments.jsp" layout="nav"/>
+    <forward name="ManageFileAttachmentsOK" resource="/campaign_center_file_attachments.jsp" layout="nav"/>
     <forward name="ViewScheduleOK" resource="/campaign_center_schedule.jsp" layout="nav"/>
     <forward name="AddGroupsOK" resource="/campaign_center_groups_add.jsp" layout="nav"/>
     <forward name="InsertGroupsOK" resource="/CampaignManager.do?command=ViewDetails"/>
@@ -497,7 +499,7 @@
     <forward name="RemoveGroupsOK" resource="/CampaignManager.do?command=ViewGroups"/>
     <forward name="AddMessageOK" resource="/campaign_center_message_add.jsp" layout="nav"/>
     <forward name="InsertMessageOK" resource="/CampaignManager.do?command=ViewDetails"/>
-    <forward name="InsertAttachmentOK" resource="/CampaignManager.do?command=ViewDetails"/>
+    <forward name="InsertAttachmentOK" resource="/CampaignManager.do?command=ViewAttachmentsOverview"/>
     <forward name="InsertScheduleOK" resource="/CampaignManager.do?command=ViewDetails"/>
     <forward name="UpdateDetailsOK" resource="/CampaignManager.do?command=ViewDetails"/>
     <forward name="CancelOK" resource="/CampaignManager.do?command=View"/>

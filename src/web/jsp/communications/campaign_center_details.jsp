@@ -80,9 +80,17 @@ Campaign Details
               </tr>
               <tr class="containerBody">
                 <td align="center">
-                  <%= (Campaign.hasSurvey()?"<font color='green'>Survey</font>":"None") %><br>
-                  &nbsp;<br>
-                  <dhv:permission name="campaign-campaigns-edit"><a href="/CampaignManager.do?command=ViewAttachment&id=<%= Campaign.getId() %>">Choose optional<br>attachments</a></dhv:permission>
+                  <dhv:evaluate if="<%= Campaign.hasSurvey() %>">
+                    <font color="green">Interactive Response</font><br>
+                  </dhv:evaluate>
+                  <dhv:evaluate if="<%= Campaign.hasFiles() %>">
+                    <font color="green">Files</font><br>
+                  </dhv:evaluate>
+                  <dhv:evaluate if="<%= !Campaign.hasSurvey() && !Campaign.hasFiles() %>">
+                    None<br>
+                    &nbsp;<br>
+                  </dhv:evaluate>
+                  <dhv:permission name="campaign-campaigns-edit"><a href="/CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>">Choose optional<br>attachments</a></dhv:permission>
                 </td>
               </tr>
             </table>

@@ -7,6 +7,7 @@ import java.net.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.theseus.actions.*;
+import com.zeroio.iteam.base.*;
 
 /**
  *  A logged message sent to a person using 1 of several transports:
@@ -67,6 +68,8 @@ public class Notification extends Thread {
   private Connection connection = null;
   private ActionContext context = null;
 
+  private FileItemList fileAttachments = null;
+  
   /**
    *  Constructor for the Notification object
    *
@@ -261,6 +264,7 @@ public class Notification extends Thread {
     this.host = tmp;
   }
 
+  public void setFileAttachments(FileItemList tmp) { this.fileAttachments = tmp; }
 
   /**
    *  Gets the Id attribute of the Notification object
@@ -334,6 +338,8 @@ public class Notification extends Thread {
   public Contact getContact() {
     return contact;
   }
+
+  public FileItemList getFileAttachments() { return fileAttachments; }
 
 
   /**
@@ -461,6 +467,7 @@ public class Notification extends Thread {
           mail.addTo(thisUser.getContact().getEmailAddress("Business"));
           mail.setSubject(subject);
           mail.setBody(messageToSend);
+          mail.setAttachments(fileAttachments);
           if (mail.send() == 2) {
             System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
             System.err.println("ReportBuilder Error: Report could not be sent");

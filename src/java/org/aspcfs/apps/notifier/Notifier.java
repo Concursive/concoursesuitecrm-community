@@ -287,6 +287,24 @@ public class Notifier extends ReportBuilder {
       ContactReport letterLog = new ContactReport();
       System.out.println("  Getting campaign ...");
       Campaign thisCampaign = (Campaign) i.next();
+      
+      //TODO: Read the file attachments list, and copy into another FileItemList
+      //with the clientFilename, and the server's filename for the notification
+      FileItemList fileItemList = new FileItemList();
+      fileItemList.setLinkModuleId(Constants.COMMUNICATIONS);
+      fileItemList.setLinkItemId(thisCampaign.getId());
+      fileItemList.buildList(db);
+      FileItemList attachments = new FileItemList();
+      Iterator files = fileItemList.iterator();
+      while (files.hasNext()) {
+        FileItem thisItem = (FileItem)files.next();
+        FileItem actualItem = new FileItem();
+        actualItem.setClientFilename(thisItem.getClientFilename());
+        actualItem.setDirectory((String) config.get("FileLibrary") + fs + dbName + fs + "communications" + fs);
+        actualItem.setFilename(thisItem.getFilename());
+        attachments.add(actualItem);
+      }
+      
       System.out.println("  Getting recipient list ...");
       RecipientList recipientList = new RecipientList();
       recipientList.setCampaignId(thisCampaign.getId());
@@ -319,6 +337,7 @@ public class Notifier extends ReportBuilder {
         thisNotification.setModule("Communications Manager");
         thisNotification.setDatabaseName(dbName);
         thisNotification.setItemId(thisCampaign.getId());
+        thisNotification.setFileAttachments(attachments);
         //thisNotification.setItemModified(thisCampaign.getActiveDate());
         if (thisNotification.isNew(db)) {
           System.out.println("Sending message ...");

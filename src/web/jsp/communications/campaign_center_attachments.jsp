@@ -3,11 +3,12 @@
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
 <jsp:useBean id="SurveyList" class="com.darkhorseventures.cfsbase.SurveyList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form name="modForm" action="/CampaignManager.do?command=InsertAttachment&id=<%= Campaign.getId() %>" method="post">
+<form name="modForm" action="CampaignManager.do?command=InsertAttachment&id=<%= Campaign.getId() %>" method="post">
 <a href="CampaignManager.do">Communications Manager</a> >
-<a href="/CampaignManager.do?command=View">Campaign List</a> >
-<a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
-Attachment
+<a href="CampaignManager.do?command=View">Campaign List</a> >
+<a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
+<a href="CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>">Attachments</a> >
+Interactive Response
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -18,18 +19,18 @@ Attachment
   <tr>
     <td width="100%" class="containerBack">
       <ul>
-        <li>Choose a survey that will be sent to the campaign groups</li>
+        <li>Choose an interactive response that will be sent to the campaign groups</li>
         <li>Click "Update Campaign Attachment" to save changes</li>
-        <li>Surveys can be created or edited in the <a href="CampaignManagerAttachment.do">Create Attachments</a> utility</li>
+        <li>Interactive Responses can be created or edited in the <a href="CampaignManagerAttachment.do">Create Attachments</a> utility</li>
       </ul>
 <dhv:permission name="campaign-campaigns-edit">
-<input type="submit" value="Update Campaign Attachments" name="Save"><br>
+<input type="submit" value="Save Changes" name="Save"><br>
 &nbsp;<br>
 </dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan="2" valign="center" align="left">
-      <strong>Select a survey for this campaign</strong>
+      <strong>Select an interactive response for this campaign</strong>
     </td>     
   </tr>
   <tr class="containerBody">
@@ -54,7 +55,7 @@ Attachment
 </table>
 <dhv:permission name="campaign-campaigns-edit">
 <br>
-<input type="submit" value="Update Campaign Attachments" name="Save">
+<input type="submit" value="Save Changes" name="Save">
 </dhv:permission>
   </td>
   </tr>
