@@ -415,12 +415,12 @@ public class Parameter extends GenericBean {
     } else if (name.startsWith("lookup_ticket_severity") && !name.endsWith("_where")) {
       //Special case because of table name
       LookupList select = new LookupList(db, "ticket_severity");
-      select.addItem(-1, "All");
+      select.addItem(-1, "Any");
       request.setAttribute(name, select);
     } else if (name.startsWith("lookup_ticket_priority") && !name.endsWith("_where")) {
       //Special case because of table name
       LookupList select = new LookupList(db, "ticket_priority");
-      select.addItem(-1, "All");
+      select.addItem(-1, "Any");
       request.setAttribute(name, select);
     } else if (name.startsWith("lookup_call_result") && !name.endsWith("_where")) {
       //TODO: Add call result object here
@@ -428,7 +428,7 @@ public class Parameter extends GenericBean {
     } else if (name.startsWith("lookup_") && !name.endsWith("_where")) {
       //Perform this one last, just in case other names start with lookup_
       LookupList select = new LookupList(db, name);
-      select.addItem(-1, "All");
+      select.addItem(-1, "Any");
       request.setAttribute(name, select);
     } else if (name.startsWith("boolean_") && !name.endsWith("_where")) {
       HtmlSelect select = new HtmlSelect();
