@@ -244,22 +244,18 @@ public final class ExternalContacts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandGenerateForm(ActionContext context) {
-
-    if (!(hasPermission(context, "contacts-external_contacts-reports-add"))) {
+    if (!hasPermission(context, "contacts-external_contacts-reports-add")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
-
-    CustomFieldCategoryList thisList = new CustomFieldCategoryList();
-    thisList.setLinkModuleId(Constants.CONTACTS);
-    thisList.setIncludeEnabled(Constants.TRUE);
-    thisList.setIncludeScheduled(Constants.TRUE);
-    thisList.setAllSelectOption(true);
-    thisList.setBuildResources(false);
-
     try {
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.CONTACTS);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setAllSelectOption(true);
+      thisList.setBuildResources(false);
       db = getConnection(context);
       thisList.buildList(db);
       context.getRequest().setAttribute("CategoryList", thisList);
@@ -268,7 +264,6 @@ public final class ExternalContacts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "Reports", "Generate new");
     return ("GenerateFormOK");
   }
@@ -281,25 +276,17 @@ public final class ExternalContacts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandShowReportHtml(ActionContext context) {
-
-    if (!(hasPermission(context, "contacts-external_contacts-reports-view"))) {
+    if (!hasPermission(context, "contacts-external_contacts-reports-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
-    String projectId = (String) context.getRequest().getParameter("pid");
-    String itemId = (String) context.getRequest().getParameter("fid");
-
     Connection db = null;
     FileItem thisItem = null;
-
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String itemId = (String) context.getRequest().getParameter("fid");
     try {
       db = getConnection(context);
-
-      //-1 is the project ID for non-projects
-      thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
-
+      thisItem = new FileItem(db, Integer.parseInt(itemId));
       String filePath = this.getPath(context, "contact-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
       String textToShow = this.includeFile(filePath);
       context.getRequest().setAttribute("ReportText", textToShow);
@@ -308,7 +295,6 @@ public final class ExternalContacts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (!hasAuthority(context, thisItem.getEnteredBy())) {
       return ("PermissionError");
     }
@@ -323,20 +309,15 @@ public final class ExternalContacts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandExportReport(ActionContext context) {
-
-    if (!(hasPermission(context, "contacts-external_contacts-reports-add"))) {
+    if (!hasPermission(context, "contacts-external_contacts-reports-add")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordInserted = false;
     Connection db = null;
     String subject = context.getRequest().getParameter("subject");
     String ownerCriteria = context.getRequest().getParameter("criteria1");
     String type = context.getRequest().getParameter("type");
-
-    //String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
-
     //setup file stuff
     String filePath = this.getPath(context, "contact-reports");
     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
@@ -344,37 +325,34 @@ public final class ExternalContacts extends CFSModule {
     SimpleDateFormat formatter2 = new SimpleDateFormat("MMdd");
     String datePathToUse2 = formatter2.format(new java.util.Date());
     filePath += datePathToUse1 + fs + datePathToUse2 + fs;
-
+    //Prepare the report
     ContactReport contactReport = new ContactReport();
     contactReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
     contactReport.setFilePath(filePath);
     contactReport.setSubject(subject);
     contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
     contactReport.setPersonalId(this.getUserId(context));
-
+    //Prepare the pagedList to provide sorting
     PagedListInfo thisInfo = new PagedListInfo();
     thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
     thisInfo.setItemsPerPage(0);
     contactReport.setPagedListInfo(thisInfo);
-
+    //Check the form selections and criteria
     if (ownerCriteria.equals("my")) {
       contactReport.setOwner(this.getUserId(context));
     } else if (ownerCriteria.equals("all")) {
       contactReport.setOwnerIdRange(this.getUserRange(context));
     }
-
     int folderId = Integer.parseInt(context.getRequest().getParameter("catId"));
     if (type.equals("4") && folderId == 0) {
       contactReport.setIncludeFolders(true);
     } else if (type.equals("4") && folderId > 0) {
       contactReport.setFolderId(folderId);
     }
-
     try {
       db = this.getConnection(context);
-
       //builds list also
-      contactReport.buildReportFull(db);
+      contactReport.buildReportFull(db, this.getUserTable(context));
       contactReport.setEnteredBy(getUserId(context));
       contactReport.setModifiedBy(getUserId(context));
       //TODO: set owner, enteredby, and modified names

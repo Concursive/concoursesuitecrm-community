@@ -241,6 +241,19 @@ public class CFSModule {
 
 
   /**
+   *  Gets the userTable attribute of the CFSModule object
+   *
+   *@param  context  Description of the Parameter
+   *@return          The userTable value
+   */
+  protected Hashtable getUserTable(ActionContext context) {
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    return systemStatus.getUserList();
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  context     Description of the Parameter

@@ -15,6 +15,7 @@ import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import java.io.*;
 import java.text.*;
+import org.aspcfs.modules.admin.base.User;
 
 /**
  *  Description of the Class
@@ -502,11 +503,23 @@ public class ContactReport extends ContactList {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  userTable         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildData(Connection db, Hashtable userTable) throws SQLException {
+    this.buildList(db);
+    this.buildReportData(db, userTable);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public void buildData(Connection db) throws SQLException {
-    this.buildList(db);
-    this.buildReportData(db);
+    this.buildData(db, null);
   }
 
 
@@ -517,6 +530,18 @@ public class ContactReport extends ContactList {
    *@exception  SQLException  Description of the Exception
    */
   public void buildReportData(Connection db) throws SQLException {
+    buildReportData(db, null);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  userTable         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildReportData(Connection db, Hashtable userTable) throws SQLException {
     boolean writeOut = false;
     Organization tempOrg = null;
 
@@ -535,61 +560,53 @@ public class ContactReport extends ContactList {
       thisCat.buildResources(db);
 
       Iterator grp = thisCat.iterator();
-      while(grp.hasNext()){
+      while (grp.hasNext()) {
         thisGroup = (CustomFieldGroup) grp.next();
         thisGroup.buildResources(db);
-        
+
         Iterator fields = thisGroup.iterator();
-          while (fields.hasNext()) {
-            CustomField thisField = (CustomField) fields.next();
-            rep.addColumn(thisField.getNameHtml());
-          }
+        while (fields.hasNext()) {
+          CustomField thisField = (CustomField) fields.next();
+          rep.addColumn(thisField.getNameHtml());
+        }
       }
     }
-
+    //Go through the contact and build all sorts of data
     Iterator x = this.iterator();
     while (x.hasNext()) {
       Contact thisContact = (Contact) x.next();
-
+      if (userTable != null) {
+        thisContact.setOwnerName(lookupName(thisContact.getOwner(), userTable));
+        thisContact.setEnteredByName(lookupName(thisContact.getEnteredBy(), userTable));
+        thisContact.setModifiedByName(lookupName(thisContact.getModifiedBy(), userTable));
+      }
       if (includeFolders) {
-
         CustomFieldRecordList recordList = new CustomFieldRecordList();
         thisGroup = new CustomFieldGroup();
-
         Iterator cat = thisList.iterator();
         while (cat.hasNext()) {
           thisCat = (CustomFieldCategory) cat.next();
-
           recordList = new CustomFieldRecordList();
           recordList.setLinkModuleId(Constants.CONTACTS);
           recordList.setLinkItemId(thisContact.getId());
           recordList.setCategoryId(thisCat.getId());
           recordList.buildList(db);
-
           Iterator rec = recordList.iterator();
-
           while (rec.hasNext()) {
-
             CustomFieldRecord thisRec = (CustomFieldRecord) rec.next();
             Iterator grp = thisCat.iterator();
             while (grp.hasNext()) {
               thisGroup = new CustomFieldGroup();
               thisGroup = (CustomFieldGroup) grp.next();
               thisGroup.buildResources(db);
-
               Iterator fields = thisGroup.iterator();
               if (fields.hasNext()) {
                 while (fields.hasNext()) {
-
                   ReportRow thisRow = new ReportRow();
-
                   CustomField thisField = (CustomField) fields.next();
-
                   thisField.setRecordId(thisRec.getId());
                   thisField.buildResources(db);
-
                   addDataRow(thisRow, thisContact);
-
                   thisRow.addCell(thisCat.getName());
                   thisRow.addCell(thisCat.getName() + " #" + thisRec.getId());
                   thisRow.addCell(thisGroup.getName());
@@ -597,57 +614,43 @@ public class ContactReport extends ContactList {
                   thisRow.addCell(thisField.getValueHtml());
                   thisRow.addCell(thisRec.getEnteredString());
                   thisRow.addCell(thisRec.getModifiedDateTimeString());
-
                   rep.addRow(thisRow);
-
                 }
               }
             }
           }
-
         }
-
       } else if (folderId > -1) {
         CustomFieldRecordList recordList = new CustomFieldRecordList();
         recordList.setLinkModuleId(Constants.CONTACTS);
         recordList.setLinkItemId(thisContact.getId());
         recordList.setCategoryId(thisCat.getId());
         recordList.buildList(db);
-
         Iterator rec = recordList.iterator();
-
         while (rec.hasNext()) {
-
           ReportRow thisRow = new ReportRow();
           addDataRow(thisRow, thisContact);
-
           CustomFieldRecord thisRec = (CustomFieldRecord) rec.next();
           Iterator grp = thisCat.iterator();
           while (grp.hasNext()) {
             thisGroup = (CustomFieldGroup) grp.next();
             thisGroup.buildResources(db);
-
             Iterator fields = thisGroup.iterator();
             if (fields.hasNext()) {
               while (fields.hasNext()) {
-
                 CustomField thisField = (CustomField) fields.next();
                 thisField.setRecordId(thisRec.getId());
                 thisField.buildResources(db);
-
                 thisRow.addCell(thisField.getValueHtml());
               }
             }
           }
-
           rep.addRow(thisRow);
         }
       } else {
         ReportRow thisRow = new ReportRow();
-
         if (joinOrgs && thisContact.getOrgId() > 0) {
           tempOrg = new Organization(db, thisContact.getOrgId());
-
           if (limitId > -1) {
             if (tempOrg.getOwner() == limitId) {
               orgReportJoin.addDataRow(thisRow, tempOrg);
@@ -658,7 +661,6 @@ public class ContactReport extends ContactList {
             writeOut = true;
           }
         }
-
         if (!joinOrgs || writeOut == true) {
           addDataRow(thisRow, thisContact);
           rep.addRow(thisRow);
@@ -666,6 +668,25 @@ public class ContactReport extends ContactList {
         writeOut = false;
       }
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  userId     Description of the Parameter
+   *@param  userTable  Description of the Parameter
+   *@return            Description of the Return Value
+   */
+  private String lookupName(int userId, Hashtable userTable) {
+    User thisUser = (User) userTable.get(new Integer(userId));
+    if (thisUser != null) {
+      Contact thisContact = thisUser.getContact();
+      if (thisContact != null) {
+        return thisContact.getNameLastFirst();
+      }
+    }
+    return "";
   }
 
 
@@ -753,12 +774,24 @@ public class ContactReport extends ContactList {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  userTable         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildReportFull(Connection db, Hashtable userTable) throws SQLException {
+    buildReportBaseInfo();
+    buildReportHeaders();
+    buildData(db, userTable);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public void buildReportFull(Connection db) throws SQLException {
-    buildReportBaseInfo();
-    buildReportHeaders();
-    buildData(db);
+    buildReportFull(db, null);
   }
 
 
