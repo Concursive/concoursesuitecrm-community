@@ -10,6 +10,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
+<script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -99,7 +100,7 @@ Add Opportunity<br>
   
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <a href="javascript:popURLReturn('/MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=contactsingle&parentFormName=addOpportunity', 'Leads.do?command=AddOpp', 'Add_Opp','700','450','yes','no');">Contact</a>
+      <a href="javascript:popContactsListSingle('contactLink','changecontact');">Contact</a>
     </td>
     <td width="100%">
       <table>
@@ -108,7 +109,7 @@ Add Opportunity<br>
             <div id="changecontact"><%=(OppDetails.getContactLink()+"").equals("-1")?"None Selected":OppDetails.getContactLink()+""%></div>
           </td>
           <td>
-            <input type=hidden name="contact" value="<%=(OppDetails.getContactLink() == -1)?-1:OppDetails.getContactLink()%>">
+            <input type="hidden" name="contact" id="contactLink" value="<%=(OppDetails.getContactLink() == -1)?-1:OppDetails.getContactLink()%>">
           </td>
         </tr>
       </table>
