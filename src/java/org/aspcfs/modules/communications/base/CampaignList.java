@@ -32,6 +32,12 @@ public class CampaignList extends Vector {
   private String ownerIdRange = null;
   private String idRange = null;
   private int ready = -1;
+  
+  public static final String tableName = "campaign";
+  public static final String uniqueField = "id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
 
   /**
@@ -168,6 +174,15 @@ public class CampaignList extends Vector {
   public void setIdRange(String idRange) {
     this.idRange = idRange;
   }
+  
+public String getTableName() { return tableName; }
+public String getUniqueField() { return uniqueField; }
+public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
+public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
+public int getSyncType() { return syncType; }
+public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
+public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
+public void setSyncType(int tmp) { this.syncType = tmp; }
 
 
   /**

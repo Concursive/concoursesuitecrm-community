@@ -394,5 +394,32 @@
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
     </map>
+    <map class="com.darkhorseventures.cfsbase.SearchCriteriaElement" id="searchCriteriaElement">
+      <property lookup="searchCriteriaList">fieldId</property>
+      <property>operatorId</property>
+      <property>text</property>
+      <property>operator</property>
+    </map>
+    <map class="com.darkhorseventures.cfsbase.Campaign" id="campaign">
+      <property alias="guid">id</property>
+      <property>name</property>
+      <property>description</property>
+      <property>messageId</property>
+      <property>groupId</property>
+      <property>runId</property>
+      <property>statusId</property>
+      <property lookup="user">owner</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+      <property>activeDate</property>
+      <property>status</property>
+      <property>active</property>
+      <property>subject</property>
+      <property>message</property>
+      <property>replyTo</property>
+      <property>sendMethodId</property>
+      <property>surveyId</property>
+      </map>
   </mappings>
 </CFSDatabaseReader>

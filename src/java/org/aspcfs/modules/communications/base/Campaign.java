@@ -8,6 +8,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.Template;
+import com.darkhorseventures.utils.DateUtils;
 
 /**
  *  Description of the Class
@@ -40,29 +41,29 @@ public class Campaign extends GenericBean {
   private int runId = -1;
   private int statusId = -1;
   private int owner = -1;
-  private java.sql.Timestamp entered = null;
-  private int enteredBy = -1;
-  private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
-  private boolean enabled = true;
+  private int enteredBy = -1;
   private java.sql.Date activeDate = null;
-  private String groupList = "";
-  private int groupCount = -1;
+  private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
+  private boolean enabled = true;
   private String status = null;
   private boolean active = false;
-  private String messageName = "";
-  private int recipientCount = -1;
-  private int sentCount = -1;
-  private ContactList contactList = null;
   private String replyTo = null;
   private String subject = null;
   private String message = null;
   private int sendMethodId = -1;
-  private String deliveryName = null;
+  
   private int files = 0;
-
+  private String deliveryName = null;
+  private ContactList contactList = null;
+  private int recipientCount = -1;
+  private int sentCount = -1;
+  private String messageName = "";
   private int surveyId = -1;
   private String serverName = "";
+  private String groupList = "";
+  private int groupCount = -1;
 
 
   /**
@@ -132,8 +133,16 @@ public class Campaign extends GenericBean {
    *@since                    1.1
    */
   public Campaign(Connection db, String campaignId) throws SQLException {
-    if (campaignId == null) {
-      throw new SQLException("Campaign ID not specified.");
+          queryRecord(db, Integer.parseInt(campaignId));
+  }
+  
+  public Campaign(Connection db, int campaignId) throws SQLException {
+          queryRecord(db, campaignId);
+  }
+  
+  public void queryRecord(Connection db, int campaignId) throws SQLException {
+    if (campaignId <= 0) {
+      throw new SQLException("Invalid ID specified.");
     }
     PreparedStatement pst = null;
     ResultSet rs = null;
@@ -145,7 +154,7 @@ public class Campaign extends GenericBean {
       "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
       "WHERE c.campaign_id = ? ";
     pst = db.prepareStatement(sql);
-    pst.setInt(1, Integer.parseInt(campaignId));
+    pst.setInt(1, campaignId);
     rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
@@ -279,11 +288,7 @@ public class Campaign extends GenericBean {
    *@since       1.1
    */
   public void setActive(String tmp) {
-    if (tmp != null) {
-      this.active = (tmp.toUpperCase().equals("ON"));
-    } else {
-      this.active = false;
-    }
+    active = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -363,7 +368,10 @@ public class Campaign extends GenericBean {
     this.groupId = tmp;
   }
 
-
+  public void setGroupId(String tmp) {
+    this.groupId = Integer.parseInt(tmp);
+  }
+  
   /**
    *  Sets the runId attribute of the Campaign object
    *
@@ -374,6 +382,9 @@ public class Campaign extends GenericBean {
     this.runId = tmp;
   }
 
+  public void setRunId(String tmp) {
+    this.runId = Integer.parseInt(tmp);
+  }
 
   /**
    *  Sets the statusId attribute of the Campaign object
@@ -383,6 +394,19 @@ public class Campaign extends GenericBean {
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
+    
+    switch (statusId) {
+      case IDLE: status = IDLE_TEXT; break;
+      case QUEUE: status = QUEUE_TEXT; break;
+      case STARTED: status = STARTED_TEXT; break;
+      case ERROR: status = "Unspecified error"; break;
+      case FINISHED: status = FINISHED_TEXT; break;
+      default: break;
+    }
+  }
+  
+  public void setStatusId(String tmp) {
+    this.statusId = Integer.parseInt(tmp);
     
     switch (statusId) {
       case IDLE: status = IDLE_TEXT; break;
@@ -405,7 +429,10 @@ public class Campaign extends GenericBean {
     this.owner = tmp;
   }
 
-
+  public void setOwner(String tmp) {
+    this.owner = Integer.parseInt(tmp);
+  }
+  
   /**
    *  Sets the ActiveDate attribute of the Campaign object
    *
@@ -415,24 +442,15 @@ public class Campaign extends GenericBean {
   public void setActiveDate(java.sql.Date tmp) {
     this.activeDate = tmp;
   }
-
-
-  /**
-   *  Sets the ActiveDate attribute of the Campaign object
+  
+    /**
+   *  Sets the entered attribute of the Ticket object
    *
-   *@param  tmp  The new ActiveDate value
-   *@since       1.17
+   *@param  tmp  The new entered value
    */
   public void setActiveDate(String tmp) {
-    try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
-      activeDate = new java.sql.Date(new java.util.Date().getTime());
-      activeDate.setTime(tmpDate.getTime());
-    } catch (Exception e) {
-      activeDate = null;
-    }
+    this.activeDate = DateUtils.parseDateString(tmp);
   }
-
 
   /**
    *  Sets the Entered attribute of the Campaign object
@@ -446,19 +464,22 @@ public class Campaign extends GenericBean {
 
 
   /**
-   *  Sets the Entered attribute of the Campaign object
+   *  Sets the entered attribute of the Ticket object
    *
-   *@param  tmp  The new Entered value
-   *@since       1.17
+   *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
-    try {
-      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).parse(tmp);
-      entered = new java.sql.Timestamp(new java.util.Date().getTime());
-      entered.setTime(tmpDate.getTime());
-    } catch (Exception e) {
-      entered = null;
-    }
+    this.entered = DateUtils.parseTimestampString(tmp);
+  }
+
+
+  /**
+   *  Sets the modified attribute of the Ticket object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -470,6 +491,10 @@ public class Campaign extends GenericBean {
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
+  }
+  
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
   }
 
 
@@ -483,20 +508,6 @@ public class Campaign extends GenericBean {
     this.modified = tmp;
   }
 
-
-  /**
-   *  Sets the Modified attribute of the Campaign object
-   *
-   *@param  tmp  The new Modified value
-   *@since       1.17
-   */
-  public void setModified(String tmp) {
-    java.util.Date tmpDate = new java.util.Date();
-    modified = new java.sql.Timestamp(tmpDate.getTime());
-    modified = modified.valueOf(tmp);
-  }
-
-
   /**
    *  Sets the modifiedBy attribute of the Campaign object
    *
@@ -505,6 +516,10 @@ public class Campaign extends GenericBean {
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
+  }
+  
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
   }
 
 
@@ -515,7 +530,7 @@ public class Campaign extends GenericBean {
    *@since       1.1
    */
   public void setEnabled(boolean tmp) {
-    this.enabled = tmp;
+    enabled = tmp;      
   }
 
 
@@ -526,11 +541,7 @@ public class Campaign extends GenericBean {
    *@since       1.1
    */
   public void setEnabled(String tmp) {
-    if (tmp.toLowerCase().equals("false")) {
-      this.enabled = false;
-    } else {
-      this.enabled = true;
-    }
+          enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -622,6 +633,10 @@ public class Campaign extends GenericBean {
   public void setSendMethodId(String tmp) {
     sendMethodId = Integer.parseInt(tmp);
   }
+  
+public java.sql.Timestamp getModified() {
+	return modified;
+}
 
 
   /**
@@ -932,18 +947,6 @@ public class Campaign extends GenericBean {
   public int getModifiedBy() {
     return modifiedBy;
   }
-
-
-  /**
-   *  Gets the Modified attribute of the Campaign object
-   *
-   *@return    The Modified value
-   *@since     1.1
-   */
-  public String getModified() {
-    return modified.toString();
-  }
-
 
   /**
    *  Gets the ModifiedString attribute of the Campaign object

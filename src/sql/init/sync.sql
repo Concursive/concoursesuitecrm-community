@@ -725,4 +725,12 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'searchCriteriaList', 'com.darkhorseventures.cfsbase.SearchCriteriaList');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'searchCriteriaListList', 'com.darkhorseventures.cfsbase.SearchCriteriaListList');
+ 
+        INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'searchCriteriaElement', 'com.darkhorseventures.cfsbase.SearchCriteriaElement');
+ 
+        INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'campaign', 'com.darkhorseventures.cfsbase.Campaign');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'campaignList', 'com.darkhorseventures.cfsbase.CampaignList');
 

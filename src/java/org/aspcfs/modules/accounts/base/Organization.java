@@ -720,11 +720,7 @@ public boolean getEnabled() {
    *@param  tmp  The new Enabled value
    */
   public void setEnabled(String tmp) {
-    if (tmp.toLowerCase().equals("false")) {
-      this.enabled = false;
-    } else {
-      this.enabled = true;
-    }
+    enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 

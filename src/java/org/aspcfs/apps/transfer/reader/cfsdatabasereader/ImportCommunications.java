@@ -44,6 +44,15 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
     if (!processOK) {
       return false;
     }
+    
+    logger.info("ImportCommunications-> Inserting Campaign Records");
+    CampaignList campaigns = new CampaignList();
+    campaigns.buildList(db);
+    mappings.saveList(writer, campaigns, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
 
     /**
     logger.info("ImportTickets-> Inserting Ticket Log");
