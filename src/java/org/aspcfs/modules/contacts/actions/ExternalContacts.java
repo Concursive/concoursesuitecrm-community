@@ -1258,11 +1258,11 @@ public final class ExternalContacts extends CFSModule {
 
       if (!thisContact.hasAccount()) {
         htmlDialog.setTitle("CFS: Confirm Delete");
-        htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='/ExternalContacts.do?command=DeleteContact&id=" + id + "'");
+        htmlDialog.setHeader("The contact you are requesting to delete has the following dependencies within CFS:");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContacts.do?command=DeleteContact&id=" + id + "'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
       } else {
-        htmlDialog.setHeader("This Contact cannot be deleted because it is associated with a User account.");
+        htmlDialog.setHeader("This contact cannot be deleted because it is associated with a User account.");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
       }
 

@@ -262,7 +262,7 @@ public final class ExternalContactsOpps extends CFSModule {
       thisOpp = new Opportunity(db, id);
       htmlDialog.setRelationships(thisOpp.processDependencies(db));
       htmlDialog.setTitle("CFS: Confirm Delete");
-      htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
+      htmlDialog.setHeader("The opportunity you are requesting to delete has the following dependencies within CFS:");
       htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContactsOpps.do?command=DeleteOpp&contactId=" + contactId + "&id=" + id + "'");
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {

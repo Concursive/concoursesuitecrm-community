@@ -416,7 +416,7 @@ public final class Opportunities extends CFSModule {
       htmlDialog.setRelationships(thisOpp.processDependencies(db));
       
         htmlDialog.setTitle("CFS: Confirm Delete");
-        htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
+        htmlDialog.setHeader("The opportunity you are requesting to delete has the following dependencies within CFS:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='Opportunities.do?command=Delete&orgId=" + orgId + "&id=" + id + "'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {

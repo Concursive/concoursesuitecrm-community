@@ -169,7 +169,7 @@ public final class Roles extends CFSModule {
         htmlDialog.setDeleteUrl("javascript:window.location.href='Roles.do?command=DeleteRole&id=" + id + "'");
       }
       else {
-        htmlDialog.setHeader("This Role cannot be deleted because at least one User is assigned to it.");
+        htmlDialog.setHeader("This role cannot be deleted because at least one user is assigned to it.");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
       }      
       

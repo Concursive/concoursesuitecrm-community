@@ -582,9 +582,9 @@ public final class CampaignManagerSurvey extends CFSModule {
 
       if (htmlDialog.getRelationships().size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='/CampaignManagerSurvey.do?command=Delete&id=" + id + "'");
+        htmlDialog.setDeleteUrl("javascript:window.location.href='CampaignManagerSurvey.do?command=Delete&id=" + id + "'");
       } else {
-        htmlDialog.setHeader("This Survey cannot be deleted because at least one Campaign is using it.");
+        htmlDialog.setHeader("This survey cannot be deleted because at least one campaign is using it.");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
       }
 

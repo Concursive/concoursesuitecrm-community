@@ -161,11 +161,11 @@ public final class CompanyDirectory extends CFSModule {
       
       if (!thisContact.hasAccount()) {
         htmlDialog.setTitle("CFS: Confirm Delete");
-        htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='/CompanyDirectory.do?command=DeleteEmployee&empid=" + id + "'");
+        htmlDialog.setHeader("The employee you are requesting to delete has the following dependencies within CFS:");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='CompanyDirectory.do?command=DeleteEmployee&empid=" + id + "'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
       } else {
-        htmlDialog.setHeader("This Employee cannot be deleted because it is associated with a User account.");
+        htmlDialog.setHeader("This employee cannot be deleted because it is associated with a user account.");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
       }        
         

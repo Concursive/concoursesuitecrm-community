@@ -280,8 +280,8 @@ public final class Leads extends CFSModule {
       htmlDialog.setRelationships(thisOpp.processDependencies(db));
       
         htmlDialog.setTitle("CFS: Confirm Delete");
-        htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='/Leads.do?command=DeleteOpp&id=" + id + "&action=delete'");
+        htmlDialog.setHeader("The opportunity you are requesting to delete has the following dependencies within CFS:");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='Leads.do?command=DeleteOpp&id=" + id + "&action=delete'");
         //htmlDialog.addButton("Disable Only", "javascript:window.location.href='/Leads.do?command=DeleteOpp&id=" + id + "&action=disable'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {
