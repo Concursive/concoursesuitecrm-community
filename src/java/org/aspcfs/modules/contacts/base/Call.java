@@ -815,9 +815,9 @@ public class Call extends GenericBean {
       errors.put("actionError", "Cannot insert a blank record");
     }
 
-    //if (contactId == -1 && orgId == -1) {
-    //  errors.put("actionError", "Record is not associated with a valid record");
-    //}
+    if (contactId == -1 && orgId == -1 && oppId == -1) {
+      errors.put("actionError", "Call is not associated with a valid record");
+    }
 
     if (length < 0) {
       errors.put("lengthError", "Length cannot be less than 0");
