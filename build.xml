@@ -349,9 +349,14 @@
         <param name="CN" value="${KEYSTORE.COMMONNAME}"/>
         <param name="OU" value="${KEYSTORE.ORGANIZATIONALUNIT}"/>
         <param name="O"  value="${KEYSTORE.ORGANIZATION}"/>
+        <param name="L"  value="${KEYSTORE.CITY}"/>
+        <param name="ST" value="${KEYSTORE.STATE}"/>
         <param name="C"  value="${KEYSTORE.COUNTRY}"/>
       </dname>
     </genkey>
+    <!-- 
+    keytool -certreq -keyalg RSA -file ${CFS_HOME}/WEB-INF/domain.csr -keystore ${CFS_HOME}/WEB-INF/keystore
+    -->
   </target>
   
   <!-- Copy all data to the web-app folder and finalize any items -->
