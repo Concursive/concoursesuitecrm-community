@@ -545,6 +545,7 @@ public final class Users extends CFSModule {
       //Prepare the user
       newUser = new User();
       newUser.setBuildContact(true);
+      newUser.setBuildContactDetails(true);
       newUser.buildRecord(db, Integer.parseInt(userId));
       //Prepare the user list
       UserList userList = new UserList();
