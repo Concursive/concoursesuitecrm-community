@@ -47,9 +47,9 @@ CREATE TABLE lookup_call_types (
 
 CREATE TABLE call_log (
   call_id SERIAL PRIMARY KEY,
-  org_id int default -1 references organization(org_id),
-  contact_id int default -1 references contact(contact_id),
-  opp_id int default -1 references opportunity(opp_id),
+  org_id int default -1,
+  contact_id int default -1,
+  opp_id int default -1,
   call_type_id int references lookup_call_types(code),
   length INTEGER,
   subject VARCHAR(255),

@@ -194,10 +194,10 @@
     </map>
     <map class="com.darkhorseventures.cfsbase.Call" id="call">
       <property alias="guid">id</property>
-      <property lookup="account">orgId</property>
-      <property lookup="contact">contactId</property>
+      <property>orgId</property>
+      <property>contactId</property>
       <property lookup="lookupCallTypes">callTypeId</property>
-      <property lookup="opportunity">oppId</property>
+      <property>oppId</property>
       <property>length</property>
       <property>subject</property>
       <property>notes</property>
