@@ -1,8 +1,3 @@
-function popContactsListSingle(hiddenFieldId, displayFieldId) {
-  popContactsListSingle(hiddenFieldId, displayFieldId, '');
-}
-
-
 function popContactsListSingle(hiddenFieldId, displayFieldId, params) {
   title  = 'Contacts';
   width  =  '700';
@@ -12,7 +7,7 @@ function popContactsListSingle(hiddenFieldId, displayFieldId, params) {
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
   var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  if(params != ''){
+  if(params != null && params != ""){
     params = '&' + params;
   }
   var newwin=window.open('ContactsList.do?command=ContactList&listType=single&flushtemplist=true&selectedIds='+document.getElementById(hiddenFieldId).value+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
@@ -20,10 +15,6 @@ function popContactsListSingle(hiddenFieldId, displayFieldId, params) {
     if (newwin.opener == null)
       newwin.opener = self;
   }
-}
-
-function popContactsListMultiple(displayFieldId, highLightedId){
-   popContactsListMultiple(displayFieldId, highLightedId, '');
 }
 
 function popContactsListMultiple(displayFieldId, highLightedId, params) {
@@ -44,7 +35,7 @@ function popContactsListMultiple(displayFieldId, highLightedId, params) {
     }
   }
   var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  if(params != ''){
+  if(params != null && params != ""){
     params = '&' + params;
   }
   var newwin=window.open('ContactsList.do?command=ContactList&previousSelection=' + selectedIds + '&listType=list&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId + params, title, windowParams);
@@ -112,8 +103,8 @@ function removeOptions(displayFieldId, ids) {
   var tempArray = new Array()
   var offset = 0;
   for (x=0; x<limit; x++) {
-    item = opener.document.getElementById(displayFieldId).options[x].value;  
-    if (!(checkArrayKey(ids, item))) {
+    item = opener.document.getElementById(displayFieldId).options[x].value;
+    if (!(checkArrayKey(ids, item)) && (item!=null && item!="")) {
       opener.removeValue(x);
       limit = opener.document.getElementById(displayFieldId).options.length;
       x=0;
@@ -121,7 +112,7 @@ function removeOptions(displayFieldId, ids) {
   }
 }
 
-function popContactsListMultipleCampaign(displayFieldId,highLightedId) {
+function popContactsListMultipleCampaign(displayFieldId,highLightedId, params) {
   title  = 'Contacts';
   width  =  '700';
   height =  '400';
@@ -144,8 +135,13 @@ function popContactsListMultipleCampaign(displayFieldId,highLightedId) {
       selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value;
     }
   }
-  var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  var newwin=window.open('ContactsList.do?command=ContactList&previousSelection=' + selectedIds + '&listType=list&campaign=true&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId, title, params);
+  if(params != null && params != ""){
+    params = '&' + params;
+  }else{
+    params = '';
+  }
+  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  var newwin=window.open('ContactsList.do?command=ContactList&previousSelection=' + selectedIds + '&listType=list&campaign=true&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId+params, title, windowParams);
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;
@@ -175,7 +171,7 @@ function setParentListCampaign(recipientEmails,recipientIds,listType,displayFiel
     //opener.insertOption("None Selected","",displayFieldId);
   }
   var i = 0;
-  var searchList = opener.document.searchForm.searchCriteria;
+  var searchList = opener.document.forms[0].searchCriteria;
   if (listType == "list") {
     if (searchList.length == 0 || searchList.options[0].value == "-1") {
       opener.deleteOptions(displayFieldId);
