@@ -170,7 +170,7 @@ Modify Ticket
               <input type="text" name="location" value="<%= toHtmlValue(TicketDetails.getLocation()) %>" size="50" maxlength="256" />
             </td>
           </tr>
-          <dhv:include name="tickets-code" none="true">
+          <dhv:include name="ticket.catCode" none="true">
           <tr class="containerBody">
             <td class="formLabel">
               Category
@@ -180,7 +180,7 @@ Modify Ticket
             </td>
           </tr>
           </dhv:include>
-          <dhv:include name="tickets-subcat1" none="true">
+          <dhv:include name="ticket.subCat1" none="true">
           <tr class="containerBody">
             <td class="formLabel">
               Sub-level 1
@@ -190,7 +190,7 @@ Modify Ticket
             </td>
           </tr>
           </dhv:include>
-          <dhv:include name="tickets-subcat2" none="true">
+          <dhv:include name="ticket.subCat2" none="true">
           <tr class="containerBody">
             <td class="formLabel">
               Sub-level 2
@@ -200,7 +200,7 @@ Modify Ticket
             </td>
           </tr>
           </dhv:include>
-          <dhv:include name="tickets-subcat3" none="true">
+          <dhv:include name="ticket.subCat3" none="true">
           <tr class="containerBody">
             <td class="formLabel">
               Sub-level 3
@@ -210,7 +210,7 @@ Modify Ticket
             </td>
           </tr>
           </dhv:include>
-          <dhv:include name="tickets-severity" none="true">
+          <dhv:include name="ticket.severity" none="true">
           <tr class="containerBody">
             <td class="formLabel">
               Severity
@@ -228,7 +228,7 @@ Modify Ticket
               <strong>Assignment</strong>
             </th>
           </tr>
-          <dhv:include name="tickets-priority" none="true">
+          <dhv:include name="ticket.priority" none="true">
           <tr class="containerBody">
             <td class="formLabel">
               Priority

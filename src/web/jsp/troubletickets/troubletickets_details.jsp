@@ -80,7 +80,7 @@ Ticket Details
       <%= toHtml(TicketDetails.getLocation()) %>
 		</td>
   </tr>
-<dhv:include name="tickets-code" none="true">
+<dhv:include name="ticket.catCode" none="true">
   <tr class="containerBody">
 		<td class="formLabel">
       Category
@@ -90,7 +90,7 @@ Ticket Details
 		</td>
   </tr>
 </dhv:include>
-<dhv:include name="tickets-severity" none="true">
+<dhv:include name="ticket.severity" none="true">
   <tr class="containerBody">
 		<td class="formLabel">
       Severity
@@ -177,7 +177,7 @@ Ticket Details
       <strong>Assignment</strong>
     </th>
   </tr>
-<dhv:include name="tickets-priority" none="true">
+<dhv:include name="ticket.priority" none="true">
   <tr class="containerBody">
 		<td class="formLabel">
       Priority

@@ -82,7 +82,7 @@ Search Form
       </table>
     </td>
   </tr>
-<dhv:include name="tickets-severity" none="true">
+<dhv:include name="ticket.severity" none="true">
   <tr>
     <td class="formLabel">
       Severity
@@ -92,7 +92,7 @@ Search Form
     </td>
 	</tr>
 </dhv:include>
-<dhv:include name="tickets-priority" none="true">
+<dhv:include name="ticket.priority" none="true">
 	<tr>
     <td class="formLabel">
       Priority
