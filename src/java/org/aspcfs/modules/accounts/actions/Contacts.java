@@ -477,26 +477,21 @@ public final class Contacts extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandViewMessages(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-contacts-messages-view"))) {
+    if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
       return ("PermissionError");
     }
-
     Connection db = null;
     Organization thisOrganization = null;
     Contact thisContact = null;
-
+    // Process the request
+    String contactId = context.getRequest().getParameter("contactId");
+    if ("true".equals(context.getRequest().getParameter("contactId"))) {
+      context.getSession().removeAttribute("AccountContactMessageListInfo");
+    }
+    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "AccountContactMessageListInfo");
+    pagedListInfo.setLink("Contacts.do?command=ViewMessages&contactId=" + contactId);
     try {
       db = this.getConnection(context);
-
-      String contactId = context.getRequest().getParameter("contactId");
-
-      if ("true".equals(context.getRequest().getParameter("contactId"))) {
-        context.getSession().removeAttribute("AccountContactMessageListInfo");
-      }
-      PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ContactMessageListInfo");
-      pagedListInfo.setLink("ExternalContacts.do?command=ViewMessages&contactId=" + contactId);
-
       thisContact = new Contact(db, contactId);
       if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
@@ -526,7 +521,6 @@ public final class Contacts extends CFSModule {
     }
     addModuleBean(context, "View Accounts", "View Contact Details");
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
-
     return this.getReturn(context, "ViewMessages");
   }
 
