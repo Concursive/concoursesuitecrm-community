@@ -11,6 +11,7 @@
 <a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>">Tickets</a> >
 Ticket Details<br>
 <hr color="#BFBFBB" noshade>
+<%-- Begin container --%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -25,13 +26,16 @@ Ticket Details<br>
   </tr>
   <tr>
   	<td class="containerBack">
+      <%-- Begin container content --%>
         <% String param2 = "id=" + TicketDetails.getId(); %>
         <strong>Ticket # <%= TicketDetails.getPaddedId() %>:</strong>
         [ <dhv:container name="accountstickets" selected="details" param="<%= param2 %>"/> ]
         <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-          <br><font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
+          <br>
+          <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
         </dhv:evaluate>
-      <br><br>
+      <br>
+      <br>
        <% if (TicketDetails.getClosed() != null) { %>
               <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>';submit();"> </dhv:permission>
         <%} else {%>
