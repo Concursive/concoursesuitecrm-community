@@ -15,14 +15,14 @@
       <permission name="myhomepage" attributes="v---" description="Access to My Home Page module"/>
       <permission name="myhomepage-dashboard" attributes="v---" description="View Performance Dashboard"/>
       <permission name="myhomepage-miner" attributes="va-d" description="Industry News records" enabled="false"/>
-      <permission name="myhomepage-inbox" attributes="v---" description="My Mailbox"/>
-      <permission name="myhomepage-tasks" attributes="vaed" description="My Tasks"/>
+      <permission name="myhomepage-inbox" attributes="v---" description="Mailbox"/>
+      <permission name="myhomepage-tasks" attributes="vaed" description="Tasks"/>
       <permission name="myhomepage-reassign" attributes="v-e-" description="Re-assign Items"/>
-      <permission name="myhomepage-profile" attributes="v---" description="My Profile"/>
+      <permission name="myhomepage-profile" attributes="v---" description="Profile"/>
       <permission name="myhomepage-profile-personal" attributes="v-e-" description="Personal Information"/>
       <permission name="myhomepage-profile-settings" attributes="v-e-" description="Settings" enabled="false"/>
       <permission name="myhomepage-profile-password" attributes="--e-" description="Password"/>
-      <permission name="myhomepage-action-lists" attributes="vaed" description="My Action Lists"/>
+      <permission name="myhomepage-action-lists" attributes="vaed" description="Action Lists"/>
       <report file="task_date.xml" type="user" permission="myhomepage-tasks" title="Task list by due date" description="What are the tasks due withing a date range?"/>
       <report file="task_nodate.xml" type="user" permission="myhomepage-tasks" title="Task list" description="What are all the tasks in the system?"/>
     </category>
