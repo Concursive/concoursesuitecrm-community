@@ -99,7 +99,11 @@ CREATE TABLE ticket (
   resolution_date DATETIME,
   cause TEXT,
   link_contract_id INTEGER REFERENCES service_contract(contract_id),
-  link_asset_id INTEGER REFERENCES asset(asset_id)
+  link_asset_id INTEGER REFERENCES asset(asset_id),
+  product_id INTEGER REFERENCES product_catalog(product_id)
+  -- DO NOT PUT ANY MORE FIELDS IN THIS TABLE HERE
+  -- THEY MUST BE APPENDED to new_tms_append_fields.sql because of referential
+  -- integrity
 );
 
 CREATE INDEX "ticket_cidx" ON "ticket" ("assigned_to", "closed");
@@ -121,6 +125,10 @@ CREATE TABLE ticketlog (
   ,enteredby INT NOT NULL REFERENCES access(user_id)
   ,modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   ,modifiedby INT NOT NULL REFERENCES access(user_id)
+  ,product_id INT REFERENCES product_catalog(product_id)
+  -- DO NOT PUT ANY MORE FIELDS IN THIS TABLE HERE
+  -- THEY MUST BE APPENDED to new_tms_append_fields.sql because of referential
+  -- integrity
 );
 
 CREATE TABLE ticket_csstm_form(
