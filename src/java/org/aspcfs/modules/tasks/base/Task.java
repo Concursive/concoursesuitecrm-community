@@ -743,10 +743,10 @@ public java.sql.Timestamp getModified() {
       pst.setInt(++i, this.getSharing());
       pst.setInt(++i, this.getOwner());
       pst.setDate(++i, this.getDueDate());
+      pst.setInt(++i, this.getEstimatedLOE());
       if(this.getEstimatedLOEType() != -1){
-        pst.setInt(++i, this.getEstimatedLOE());
+        pst.setInt(++i, this.getEstimatedLOEType());
       }
-      pst.setInt(++i, this.getEstimatedLOEType());
       pst.setBoolean(++i, this.getComplete());
       if (this.getComplete()) {
         pst.setTimestamp(++i, new Timestamp(System.currentTimeMillis()));
@@ -801,7 +801,8 @@ public java.sql.Timestamp getModified() {
 
       sql = "UPDATE task " +
           "SET enteredby = ?, priority = ?, description = ?, notes = ?, " +
-          "sharing = ?, owner = ?, duedate = ?, estimatedloe = ?, estimatedloetype = ?, " +
+          "sharing = ?, owner = ?, duedate = ?, estimatedloe = ?, " + 
+          (estimatedLOEType==-1?"":"estimatedloetype = ?, ") +
           "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ? " +
           "WHERE task_id = ? AND modified = ? ";
 
@@ -815,7 +816,9 @@ public java.sql.Timestamp getModified() {
       pst.setInt(++i, this.getOwner());
       pst.setDate(++i, this.getDueDate());
       pst.setInt(++i, this.getEstimatedLOE());
-      pst.setInt(++i, this.getEstimatedLOEType());
+      if(this.getEstimatedLOEType()!=-1){
+        pst.setInt(++i, this.getEstimatedLOEType());
+      }
       pst.setBoolean(++i, this.getComplete());
       if (previousTask.getComplete() && this.getComplete()) {
         pst.setTimestamp(++i, previousTask.getCompleteDate());
@@ -1097,6 +1100,9 @@ public java.sql.Timestamp getModified() {
     complete = rs.getBoolean("complete");
     estimatedLOE = rs.getInt("estimatedloe");
     estimatedLOEType = rs.getInt("estimatedloetype");
+    if(rs.wasNull()){
+      estimatedLOEType = -1;
+    }
     owner = rs.getInt("owner");
     completeDate = rs.getTimestamp("completeDate");
     modified = rs.getTimestamp("modified");
