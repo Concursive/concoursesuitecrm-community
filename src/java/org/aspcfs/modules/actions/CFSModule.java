@@ -979,5 +979,21 @@ public class CFSModule {
       systemStatus.updateUserContact(db, id);
     }
   }
+
+
+  /**
+   *  Gets the return attribute of the CFSModule object
+   *
+   *@param  context       Description of the Parameter
+   *@param  returnString  Description of the Parameter
+   *@return               The return value
+   */
+  protected String getReturn(ActionContext context, String returnString) {
+    boolean popup = "true".equals(context.getRequest().getParameter("popup"));
+    if (popup) {
+      return (returnString += "PopupOK");
+    }
+    return (returnString += "OK");
+  }
 }
 
