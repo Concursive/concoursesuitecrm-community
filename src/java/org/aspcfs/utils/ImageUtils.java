@@ -58,7 +58,7 @@ public class ImageUtils {
    *@param  baseFilename  Description of the Parameter
    *@return               Description of the Return Value
    */
-  public static int convertPostscriptToTiffFile(String baseFilename) {
+  public static int convertPostscriptToTiffG3File(String baseFilename) {
     Process process;
     Runtime runtime;
     java.io.InputStream input;
@@ -71,7 +71,7 @@ public class ImageUtils {
       //Linux
       command = new String[]{"/bin/sh", "-c",
         "gs -q " +
-        "-sDEVICE=tiffg4 " +
+        "-sDEVICE=tiffg3 " +
         "-dNOPAUSE " +
         "-dBATCH " +
         "-sOutputFile=" + baseFilename + ".tiff " + 
