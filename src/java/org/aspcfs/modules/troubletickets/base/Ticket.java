@@ -161,6 +161,10 @@ public class Ticket extends GenericBean {
   public void setSendNotification(boolean sendNotification) {
           this.sendNotification = sendNotification;
   }
+  
+  public void setSendNotification(String tmp) {
+    sendNotification = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+  }
 
   /**
    *  Description of the Method

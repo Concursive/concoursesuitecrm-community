@@ -180,6 +180,7 @@
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>closed</property>
+      <property value="false">sendNotification</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.CustomFieldCategory" id="customFieldCategory">
       <property alias="guid">id</property>
