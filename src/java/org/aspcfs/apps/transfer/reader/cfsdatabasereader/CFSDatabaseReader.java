@@ -9,13 +9,19 @@ import com.darkhorseventures.utils.*;
 import org.w3c.dom.*;
 
 /**
- *  Reads data by constructing CFS objects from a database connection.
- *  This reader will process objects in a specific order so that data integrity
- *  will be maintained during a copy process.
+ *  Reads data by constructing CFS objects from a database connection. This
+ *  reader will process objects in a specific order so that data integrity will
+ *  be maintained during a copy process.<p>
+ *
+ *  CFS Objects must have the following:<br>
+ *  - A method called: insert(Connection db)<br>
+ *  - A constructor like: new Object(Connection db, int id)<br>
+ *  - A modified field with a getModified() method
  *
  *@author     matt rajkowski
  *@created    September 3, 2002
- *@version    $Id$
+ *@version    $Id: CFSDatabaseReader.java,v 1.3 2002/09/05 14:49:36 mrajkowski
+ *      Exp $
  */
 public class CFSDatabaseReader implements DataReader {
 
@@ -26,18 +32,106 @@ public class CFSDatabaseReader implements DataReader {
   private String processConfigFile = "CFSDatabaseReader.xml";
   private ArrayList modules = null;
   private PropertyMapList mappings = null;
-  
 
-  public void setDriver(String tmp) { this.driver = tmp; }
-  public void setUrl(String tmp) { this.url = tmp; }
-  public void setUser(String tmp) { this.user = tmp; }
-  public void setPassword(String tmp) { this.password = tmp; }
-  public void setProcessConfigFile(String tmp) { this.processConfigFile = tmp; }
-  public String getDriver() { return driver; }
-  public String getUrl() { return url; }
-  public String getUser() { return user; }
-  public String getPassword() { return password; }
-  public String getProcessConfigFile() { return processConfigFile; }
+
+  /**
+   *  Sets the driver attribute of the CFSDatabaseReader object
+   *
+   *@param  tmp  The new driver value
+   */
+  public void setDriver(String tmp) {
+    this.driver = tmp;
+  }
+
+
+  /**
+   *  Sets the url attribute of the CFSDatabaseReader object
+   *
+   *@param  tmp  The new url value
+   */
+  public void setUrl(String tmp) {
+    this.url = tmp;
+  }
+
+
+  /**
+   *  Sets the user attribute of the CFSDatabaseReader object
+   *
+   *@param  tmp  The new user value
+   */
+  public void setUser(String tmp) {
+    this.user = tmp;
+  }
+
+
+  /**
+   *  Sets the password attribute of the CFSDatabaseReader object
+   *
+   *@param  tmp  The new password value
+   */
+  public void setPassword(String tmp) {
+    this.password = tmp;
+  }
+
+
+  /**
+   *  Sets the processConfigFile attribute of the CFSDatabaseReader object
+   *
+   *@param  tmp  The new processConfigFile value
+   */
+  public void setProcessConfigFile(String tmp) {
+    this.processConfigFile = tmp;
+  }
+
+
+  /**
+   *  Gets the driver attribute of the CFSDatabaseReader object
+   *
+   *@return    The driver value
+   */
+  public String getDriver() {
+    return driver;
+  }
+
+
+  /**
+   *  Gets the url attribute of the CFSDatabaseReader object
+   *
+   *@return    The url value
+   */
+  public String getUrl() {
+    return url;
+  }
+
+
+  /**
+   *  Gets the user attribute of the CFSDatabaseReader object
+   *
+   *@return    The user value
+   */
+  public String getUser() {
+    return user;
+  }
+
+
+  /**
+   *  Gets the password attribute of the CFSDatabaseReader object
+   *
+   *@return    The password value
+   */
+  public String getPassword() {
+    return password;
+  }
+
+
+  /**
+   *  Gets the processConfigFile attribute of the CFSDatabaseReader object
+   *
+   *@return    The processConfigFile value
+   */
+  public String getProcessConfigFile() {
+    return processConfigFile;
+  }
 
 
   /**
@@ -85,21 +179,21 @@ public class CFSDatabaseReader implements DataReader {
     try {
       File configFile = new File(processConfigFile);
       XMLUtils xml = new XMLUtils(configFile);
-      
+
       modules = new ArrayList();
       xml.getAllChildrenText(xml.getFirstChild("processes"), "module", modules);
       logger.info("CFSDatabaseReader module count: " + modules.size());
-      
+
       mappings = new PropertyMapList();
       ArrayList mapElements = new ArrayList();
       XMLUtils.getAllChildren(xml.getFirstChild("mappings"), "map", mapElements);
       Iterator mapItems = mapElements.iterator();
       while (mapItems.hasNext()) {
-        Element map = (Element)mapItems.next();
+        Element map = (Element) mapItems.next();
         PropertyMap mapProperties = new PropertyMap();
-        mapProperties.setId((String)map.getAttribute("id"));
+        mapProperties.setId((String) map.getAttribute("id"));
         //xml.getAllChildrenText(map, "property", mapProperties);
-        
+
         NodeList nl = map.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
           Node n = nl.item(i);
@@ -107,30 +201,29 @@ public class CFSDatabaseReader implements DataReader {
             String nodeText = XMLUtils.getNodeText((Element) n);
             if (nodeText != null) {
               Property thisProperty = new Property(nodeText);
-              
-              
+
               String lookupValue = ((Element) n).getAttribute("lookup");
               if (lookupValue != null && !"".equals(lookupValue)) {
                 thisProperty.setLookupValue(lookupValue);
               }
-              
+
               String alias = ((Element) n).getAttribute("alias");
               if (alias != null && !"".equals(alias)) {
                 thisProperty.setAlias(alias);
               }
-              
+
               mapProperties.add(thisProperty);
             }
           }
         }
-        mappings.put((String)map.getAttribute("class"), mapProperties);
+        mappings.put((String) map.getAttribute("class"), mapProperties);
       }
-      
+
     } catch (Exception e) {
       logger.info("Error reading module configuration-> " + e.toString());
       return false;
     }
-    
+
     return true;
   }
 
@@ -163,9 +256,9 @@ public class CFSDatabaseReader implements DataReader {
       boolean processOK = true;
       Iterator moduleList = modules.iterator();
       while (moduleList.hasNext() && processOK) {
-        String moduleClass = (String)moduleList.next();
+        String moduleClass = (String) moduleList.next();
         Object module = Class.forName(moduleClass).newInstance();
-        processOK = ((CFSDatabaseReaderImportModule)module).process(writer, db, mappings);
+        processOK = ((CFSDatabaseReaderImportModule) module).process(writer, db, mappings);
         if (!processOK) {
           logger.info("Module failed: " + moduleClass);
         }

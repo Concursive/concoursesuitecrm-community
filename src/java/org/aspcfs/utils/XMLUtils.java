@@ -26,6 +26,14 @@ public class XMLUtils {
   private StringBuffer XMLString = null;
   private boolean cacheXML = false;
 
+
+  /**
+   *  Constructs an XML Document from either a Text String or a Text Document.
+   *
+   *@param  info           Description of the Parameter
+   *@param  parseXML       Description of the Parameter
+   *@exception  Exception  Description of the Exception
+   */
   public XMLUtils(String info, boolean parseXML) throws Exception {
     if (parseXML) {
       this.parseXML(info);
@@ -33,7 +41,15 @@ public class XMLUtils {
       document = XMLUtils.createDocument(info);
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  name           Description of the Parameter
+   *@return                Description of the Return Value
+   *@exception  Exception  Description of the Exception
+   */
   public static Document createDocument(String name) throws Exception {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = dbf.newDocumentBuilder();
@@ -42,6 +58,7 @@ public class XMLUtils {
     document.appendChild(rootElement);
     return document;
   }
+
 
   /**
    *  Constructor for the XMLUtils object
@@ -280,7 +297,7 @@ public class XMLUtils {
             }
             //For synchronization, if an object is populated and a lookup will need
             //to be done for the client id, then the lookup attribute will exist
-            String lookup = ((Element)theObject).getAttribute("lookup");
+            String lookup = ((Element) theObject).getAttribute("lookup");
             if (lookup != null) {
               ignoredProperties.put(param + "^" + lookup + "Guid", value);
             }
@@ -425,6 +442,10 @@ public class XMLUtils {
   public Element getFirstChild(String name) {
     return this.getFirstChild(this.document, name);
   }
+  
+  public Element getFirstElement(String name) {
+    return this.getFirstElement(this.getDocumentElement(), name);
+  }
 
 
   /**
@@ -438,7 +459,7 @@ public class XMLUtils {
 
 
   /**
-   *  Description of the Method
+   *  Turns a String with XML into an XML document
    *
    *@param  xmlToParse     Description of Parameter
    *@exception  Exception  Description of Exception

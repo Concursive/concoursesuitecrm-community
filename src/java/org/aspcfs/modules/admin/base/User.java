@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -35,6 +35,7 @@ public class User extends GenericBean {
   protected String errmsg = "";
   protected int id = -1;
   protected String username = null;
+  protected String encryptedPassword = null;
   protected String password = null;
   protected String password1 = null;
   protected String password2 = null;
@@ -113,7 +114,7 @@ public class User extends GenericBean {
     buildRecord(db, Integer.parseInt(userId));
     buildResources(db);
   }
-
+  
 
   /**
    *  Constructor for the User object
@@ -438,6 +439,9 @@ public void setRevenueLock(boolean revenueLock) {
     this.previousUsername = tmp;
   }
 
+  public void setEncryptedPassword(String tmp) {
+    this.encryptedPassword = tmp;
+  }
 
   /**
    *  Sets the Password attribute of the User object
@@ -1047,7 +1051,11 @@ public void setRevenueLock(boolean revenueLock) {
    *@since
    */
   public String getEncryptedPassword() {
-    return this.encryptPassword(password);
+    if (encryptedPassword != null) {
+      return encryptedPassword; 
+    } else {
+      return this.encryptPassword(password);
+    }
   }
 
 
@@ -1384,23 +1392,8 @@ public void setRevenueLock(boolean revenueLock) {
       }
     }
   }
-
-
-  /**
-   *  Inserts the current user record into the database
-   *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
-   */
-  public boolean insert(Connection db, ActionContext context) throws SQLException {
-
-    if (!isValid(db, context)) {
-      return false;
-    }
-
+  
+  public boolean insert(Connection db) throws SQLException {
     try {
       db.setAutoCommit(false);
 
@@ -1418,7 +1411,12 @@ public void setRevenueLock(boolean revenueLock) {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, getUsername());
-      pst.setString(++i, encryptPassword(password1));
+      
+      if (encryptedPassword != null) {
+        pst.setString(++i, encryptedPassword);
+      } else {
+        pst.setString(++i, encryptPassword(password1));
+      }
       pst.setInt(++i, contact.getId());
       pst.setInt(++i, getAlias());
       if (getAlias() > -1) {
@@ -1466,6 +1464,24 @@ public void setRevenueLock(boolean revenueLock) {
     }
     db.setAutoCommit(true);
     return true;
+  }
+
+
+  /**
+   *  Inserts the current user record into the database
+   *
+   *@param  db                Description of Parameter
+   *@param  context           Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   *@since                    1.1
+   */
+  public boolean insert(Connection db, ActionContext context) throws SQLException {
+
+    if (!isValid(db, context)) {
+      return false;
+    }
+    return this.insert(db);
   }
 
 
@@ -1640,10 +1656,13 @@ public void setRevenueLock(boolean revenueLock) {
         "FROM access a " +
         "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
         "LEFT JOIN contact als ON (a.alias = als.user_id) " +
-        "LEFT JOIN contact m ON (a.manager_id = m.user_id), " +
-        "role r " +
-        "WHERE a.role_id = r.role_id ");
+        "LEFT JOIN contact m ON (a.manager_id = m.user_id) " +
+        "LEFT JOIN role r ON (a.role_id = r.role_id) " +
+        "WHERE a.user_id > -1 ");
     if (userId > -1) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("User-> Retrieving user ID: " + userId);
+      }
       sql.append("AND a.user_id = ? ");
     } else {
       sql.append(
@@ -1740,78 +1759,6 @@ public void setRevenueLock(boolean revenueLock) {
 
 
   /**
-   *  Method added in for SSS and other ASP customers insert: Does the usual
-   *  insert, just without an ActionContext passed to the method.
-   *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
-   */
-
-  public boolean insertNoContext(Connection db) throws SQLException {
-    try {
-      db.setAutoCommit(false);
-
-      System.out.println("User-> Beginning insert");
-
-      StringBuffer sql = new StringBuffer();
-      sql.append(
-          "INSERT INTO access " +
-          "(username, password, contact_id, alias, " +
-          "manager_id, role_id, enteredby, modifiedby, expires ) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ");
-
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setString(++i, getUsername());
-      pst.setString(++i, encryptPassword(password1));
-      pst.setInt(++i, contact.getId());
-      pst.setInt(++i, getAlias());
-      if (getAlias() > -1) {
-        pst.setInt(++i, -1);
-      } else {
-        pst.setInt(++i, getManagerId());
-      }
-      pst.setInt(++i, getRoleId());
-      pst.setInt(++i, getEnteredBy());
-      pst.setInt(++i, getModifiedBy());
-
-      if (expires == null) {
-        pst.setNull(++i, java.sql.Types.DATE);
-      } else {
-        pst.setDate(++i, this.getExpires());
-      }
-      pst.execute();
-      pst.close();
-
-      System.out.println("User-> Getting interval value");
-
-      id = DatabaseUtils.getCurrVal(db, "access_user_id_seq");
-
-      System.out.println("User-> Updating contact");
-
-      Statement st = db.createStatement();
-      st.executeUpdate(
-          "UPDATE contact " +
-          "SET user_id = " + id + " " +
-          "WHERE contact_id = " + contact.getId());
-      st.close();
-      db.commit();
-
-      System.out.println("User-> User inserted & contact record updated");
-
-    } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
-      throw new SQLException(e.getMessage());
-    }
-    db.setAutoCommit(true);
-    return true;
-  }
-
-
-  /**
    *  Gets the Valid attribute of the User object
    *
    *@param  db                Description of Parameter
@@ -1852,8 +1799,6 @@ public void setRevenueLock(boolean revenueLock) {
    *@since
    */
   protected boolean isValidChangePass(ActionContext context, String currentPass) {
-
-    System.out.println("Id " + this.getId());
 
     if (!(this.getEncryptedPassword().equals(currentPass)) || password == null || password.trim().equals("")) {
       errors.put("passwordError", "Incorrect value for current password");
@@ -1933,7 +1878,9 @@ public void setRevenueLock(boolean revenueLock) {
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     this.setUsername(rs.getString("username"));
-    this.setPassword(rs.getString("password"));
+    String thisPassword = rs.getString("password");
+    this.setPassword(thisPassword);
+    this.setEncryptedPassword(thisPassword);
     this.setRoleId(rs.getInt("role_id"));
     lastLogin = rs.getTimestamp("last_login");
     this.setManagerId(rs.getInt("manager_id"));

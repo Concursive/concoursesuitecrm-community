@@ -169,9 +169,9 @@ CREATE TABLE active_survey_answers (
   answer_id SERIAL primary key,
   response_id INT NOT NULL REFERENCES active_survey_responses(response_id),
   question_id INT NOT NULL REFERENCES active_survey_questions(question_id),
-  comments VARCHAR(100) default null,
+  comments TEXT,
   quant_ans int DEFAULT -1,
-  text_ans VARCHAR(100) DEFAULT null
+  text_ans TEXT
 );
 
 CREATE TABLE field_types (

@@ -547,34 +547,32 @@ public class TransactionItem {
       Iterator ignoredList = ignoredProperties.keySet().iterator();
       while (ignoredList.hasNext()) {
         String param = (String) ignoredList.next();
-        if (param != null) {
-          if (param.endsWith("Guid")) {
-            String value = (String) ignoredProperties.get(param);
-            param = param.substring(0, param.lastIndexOf("Guid"));
+        if (param != null && param.endsWith("Guid")) {
+          String value = (String) ignoredProperties.get(param);
+          param = param.substring(0, param.lastIndexOf("Guid"));
+          
+          if (param.indexOf("^") > -1) {
+            String lookupField = param.substring(param.indexOf("^") + 1);
+            param = param.substring(0, param.indexOf("^"));
             
-            if (param.indexOf("^") > -1) {
-              String lookupField = param.substring(param.indexOf("^") + 1);
-              param = param.substring(0, param.indexOf("^"));
-              
-              SyncTable referencedTable = (SyncTable) mapping.get(lookupField + "List");
-              if (referencedTable != null) {
-                int recordId = syncClientMap.lookupServerId(clientManager, referencedTable.getId(), value);
-                ObjectUtils.setParam(object, param, String.valueOf(recordId));
-                if (System.getProperty("DEBUG") != null) {
-                  System.out.println("TransactionItem-> Setting server parameter: " + param + " data: " + recordId);
-                }
+            SyncTable referencedTable = (SyncTable) mapping.get(lookupField + "List");
+            if (referencedTable != null) {
+              int recordId = syncClientMap.lookupServerId(clientManager, referencedTable.getId(), value);
+              ObjectUtils.setParam(object, param, String.valueOf(recordId));
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("TransactionItem-> Setting server parameter: " + param + " data: " + recordId);
+              }
+            }
+          } else {
+            SyncTable referencedTable = (SyncTable) mapping.get(param + "List");
+            if (referencedTable != null) {
+              int recordId = syncClientMap.lookupServerId(clientManager, referencedTable.getId(), value);
+              ObjectUtils.setParam(object, param + "Id", String.valueOf(recordId));
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("TransactionItem-> Setting new parameter: " + param + "Id" + " data: " + recordId);
               }
             } else {
-              SyncTable referencedTable = (SyncTable) mapping.get(param + "List");
-              if (referencedTable != null) {
-                int recordId = syncClientMap.lookupServerId(clientManager, referencedTable.getId(), value);
-                ObjectUtils.setParam(object, param + "Id", String.valueOf(recordId));
-                if (System.getProperty("DEBUG") != null) {
-                  System.out.println("TransactionItem-> Setting new parameter: " + param + "Id" + " data: " + recordId);
-                }
-              } else {
-                throw new SQLException("Sync reference does not exist, you must sync referenced tables first");
-              }
+              throw new SQLException("Sync reference does not exist, you must sync referenced tables first");
             }
           }
         }

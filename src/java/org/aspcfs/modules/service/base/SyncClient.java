@@ -300,13 +300,12 @@ public class SyncClient extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    StringBuffer sql = new StringBuffer();
-    sql.append(
+    String sql =
         "INSERT INTO sync_client " +
         "(type, version, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?) ");
+        "VALUES (?, ?, ?, ?) ";
     int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql.toString());
+    PreparedStatement pst = db.prepareStatement(sql);
     pst.setString(++i, type);
     pst.setString(++i, version);
     pst.setInt(++i, this.getEnteredBy());
