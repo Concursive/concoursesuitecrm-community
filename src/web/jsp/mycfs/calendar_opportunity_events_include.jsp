@@ -48,8 +48,8 @@
     <tr>
      <td>
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayOppMenu('menuOpp', '<%= alertOpp.getId() %>');"
-       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>)"><img src="images/select.gif" name="select<%= menuCount %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayOppMenu('selectOpp<%= menuCount %>','menuOpp', '<%= alertOpp.getId() %>');"
+       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuOpp');"><img src="images/select.gif" name="selectOpp<%= menuCount %>" id="selectOpp<%= menuCount %>" align="absmiddle" border="0"></a>
      </td>
      <td nowrap>
        <%= toHtml(alertOpp.getAlertText()) %>

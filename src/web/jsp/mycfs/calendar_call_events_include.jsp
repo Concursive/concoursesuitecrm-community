@@ -53,10 +53,10 @@
     <tr <%= toString(pendingCall.getPriorityString()).startsWith("H") ? "class=\"highlightRow\"" : ""%>>
      <td>
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayCallMenu('select<%= menuCount %>','menuCall','<%= pendingCall.getContactOrgId() %>', '<%= pendingCall.getContactId() %>', '<%= pendingCall.getId() %>','pending');" 
+       <a href="javascript:displayCallMenu('selectCall<%= menuCount %>','menuCall','<%= pendingCall.getContactOrgId() %>', '<%= pendingCall.getContactId() %>', '<%= pendingCall.getId() %>','pending');" 
           onMouseOver="over(0, <%= menuCount %>)" 
           onmouseout="out(0, <%= menuCount %>);hideMenu('menuCall');"><img 
-          src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
+          src="images/select.gif" name="selectCall<%= menuCount %>" id="selectCall<%= menuCount %>" align="absmiddle" border="0"></a>
      </td>
      <td nowrap>
        <zeroio:tz timestamp="<%= pendingCall.getAlertDate() %>" timeOnly="true"/>
@@ -130,10 +130,10 @@
   <tr>
    <td>
      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-     <a href="javascript:displayCallMenu('select<%= menuCount %>','menuCall','<%= completedCall.getContactOrgId() %>','<%= completedCall.getContactId() %>', '<%= completedCall.getId() %>', '');" 
+     <a href="javascript:displayCallMenu('selectCall<%= menuCount %>','menuCall','<%= completedCall.getContactOrgId() %>','<%= completedCall.getContactId() %>', '<%= completedCall.getId() %>', '');" 
         onMouseOver="over(0, <%= menuCount %>)" 
         onmouseout="out(0, <%= menuCount %>);hideMenu('menuCall')"><img 
-        src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
+        src="images/select.gif" name="selectCall<%= menuCount %>" id="selectCall<%= menuCount %>" align="absmiddle" border="0"></a>
    </td>
    <td nowrap>
      <zeroio:tz timestamp="<%= completedCall.getCompleteDate() %>" timeOnly="true"/>

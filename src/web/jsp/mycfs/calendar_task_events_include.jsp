@@ -4,7 +4,6 @@
 <%
   TaskEventList taskEventList = (TaskEventList) thisDay.get(category);
 %>
-
 <%-- include pending tasks --%>
 <dhv:evaluate if="<%= taskEventList.getPendingTasks().size() > 0 %>">
 <table border="0">
@@ -43,8 +42,8 @@
     <tr>
      <td>
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayTaskMenu('menuTask', '<%= Constants.TASKS %>', '<%=  pendingTask.getId() %>', '<%= pendingTask.getContactId() %>');"
-       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>)"><img src="images/select.gif" name="select<%= menuCount %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayTaskMenu('selectTask<%= menuCount %>','menuTask', '<%= Constants.TASKS %>', '<%=  pendingTask.getId() %>', '<%= pendingTask.getContactId() %>');"
+       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuTask');"><img src="images/select.gif" name="selectTask<%= menuCount %>" id="selectTask<%= menuCount %>" align="absmiddle" border="0"></a>
      </td>
      <td nowrap>
        <%= toHtml(pendingTask.getDescription()) %>
