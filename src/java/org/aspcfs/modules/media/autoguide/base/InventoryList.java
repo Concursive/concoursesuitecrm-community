@@ -154,6 +154,9 @@ public class InventoryList extends ArrayList {
   public void setBuildPictureId(boolean tmp) {
     this.buildPictureId = tmp;
   }
+  public void setBuildPictureId(String tmp) {
+    this.buildPictureId = ("on".equals(tmp) || "true".equals(tmp) || "1".equals(tmp));
+  }
 
   public void setShowSold(int tmp) { this.showSold = tmp; }
   public void setShowSold(String tmp) {
