@@ -26,8 +26,8 @@ function page_init() {
   while (list1.hasNext()) {
     Contact thisContact = (Contact)list1.next();
 %>
-  list.options[list.length] = newOpt("<%= Contact.getNameLastFirst(thisContact.getNameLast(),
-          thisContact.getNameFirst()) %>", "<%= thisContact.getId() %>");
+  list.options[list.length] = newOpt("<%= thisContact.getNameLastFirst() %>", 
+    "<%= thisContact.getId() %>");
 <%
   }
 %>
