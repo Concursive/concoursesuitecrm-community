@@ -61,7 +61,7 @@ public class SetupServer extends CFSModule {
             license.setText2(previousRegistration.getText2());
           } else {
             license.setEdition("Free Edition (5-seat binary)");
-            license.setText2(StringUtils.randomString(5,5));
+            license.setText2(StringUtils.randomString(7,7) + "5");
           }
           //save the registration
           Registration registration = new Registration();
@@ -160,6 +160,7 @@ public class SetupServer extends CFSModule {
               record.put("license", license.getCode());
               recordList.add(record);
               thisStatus.setRecordList(recordList);
+              //TODO: Log the transaction request
             }
           }
         } catch (Exception e) {
