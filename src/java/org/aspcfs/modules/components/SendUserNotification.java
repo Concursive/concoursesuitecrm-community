@@ -5,6 +5,7 @@ package com.darkhorseventures.cfs.component;
 import com.darkhorseventures.controller.*;
 import com.darkhorseventures.cfsbase.*;
 import java.sql.*;
+import com.darkhorseventures.utils.StringUtils;
 
 public class SendUserNotification extends ObjectHookComponent implements ComponentInterface {
   public static final String HOST = "notification.host";
@@ -32,9 +33,9 @@ public class SendUserNotification extends ObjectHookComponent implements Compone
       thisNotification.setItemId(context.getParameterAsInt(SendUserNotification.ITEM_ID));
       //thisNotification.setItemModified(context.getParameter(SendUserNotification.ITEM_MODIFIED));
       thisNotification.setItemModified(null);
-      thisNotification.setSubject(context.getParameter(SendUserNotification.SUBJECT));
-      thisNotification.setFrom(context.getParameter(SendUserNotification.FROM));
-      thisNotification.setMessageToSend(context.getParameter(SendUserNotification.BODY));
+      thisNotification.setSubject(toHtml(context.getParameter(SendUserNotification.SUBJECT)));
+      thisNotification.setFrom(toHtml(context.getParameter(SendUserNotification.FROM)));
+      thisNotification.setMessageToSend(toHtml(context.getParameter(SendUserNotification.BODY)));
       thisNotification.setType(Notification.EMAIL);
       String host = context.getParameter(HOST);
       if (host != null && !"".equals(host)) {
