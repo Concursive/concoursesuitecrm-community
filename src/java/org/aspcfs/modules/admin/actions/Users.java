@@ -209,12 +209,6 @@ public final class Users extends CFSModule {
     Connection db = null;
     addModuleBean(context, "Add User", "Add New User");
     try {
-      //Process the request items
-      String typeId = context.getRequest().getParameter("typeId");
-      if (typeId == null || typeId.equals("")) {
-        typeId = String.valueOf(Contact.EMPLOYEE_TYPE);
-      }
-      String contactId = context.getRequest().getParameter("contactId");
       db = this.getConnection(context);
       //Prepare the role drop-down
       RoleList roleList = new RoleList();
