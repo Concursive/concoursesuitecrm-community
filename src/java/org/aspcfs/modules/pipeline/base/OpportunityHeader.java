@@ -337,7 +337,7 @@ public class OpportunityHeader extends GenericBean {
       sb.append(accountName);
     }
     //Contact Name
-    if (contactName != null) {
+    if (contactName != null && !"".equals(contactName.trim())) {
       if (sb.length() > 0) {
         sb.append(" (" + contactName + ")");
       } else {
@@ -345,7 +345,7 @@ public class OpportunityHeader extends GenericBean {
       }
     }
     //Contact's Company Name
-    if (contactCompanyName != null) {
+    if (contactCompanyName != null && !"".equals(contactCompanyName.trim())) {
       if (sb.length() > 0) {
         sb.append(" (" + contactCompanyName + ")");
       } else {
