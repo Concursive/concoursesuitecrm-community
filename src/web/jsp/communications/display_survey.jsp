@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="CustomFormInfo" class="org.aspcfs.utils.web.CustomForm" scope="request"/>
 <jsp:useBean id="Survey" class="org.aspcfs.modules.communications.base.Survey" scope="request"/>
-<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.utils.web.CustomFormTab,org.aspcfs.utils.web.CustomFormGroup" %>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.web.*,org.aspcfs.modules.base.CustomField" %>
 <%@ include file="../initPage.jsp" %>
 <html>
 <head>

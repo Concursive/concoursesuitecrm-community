@@ -1,6 +1,6 @@
 <%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
-<jsp:useBean id="category" class="org.aspcfs.modules.TaskCategory" scope="request"/>
+<jsp:useBean id="category" class="org.aspcfs.modules.tasks.base.TaskCategory" scope="request"/>
 <jsp:useBean id="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request"/>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
