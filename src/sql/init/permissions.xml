@@ -21,7 +21,7 @@
       <permission name="myhomepage-reassign" attributes="v-e-" description="Re-assign Items"/>
       <permission name="myhomepage-profile" attributes="v---" description="My Profile"/>
       <permission name="myhomepage-profile-personal" attributes="v-e-" description="Personal Information"/>
-      <permission name="myhomepage-profile-settings" attributes="v-e-" description="Settings"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" description="Settings" enabled="false"/>
       <permission name="myhomepage-profile-password" attributes="--e-" description="Password"/>
     </category>
     <category id="2" name="General Contacts" folders="true" lookups="true">
