@@ -3,6 +3,7 @@ package org.aspcfs.taglib;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 import java.sql.Timestamp;
+import java.sql.Date;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.ObjectUtils;
 import java.util.Hashtable;
@@ -18,7 +19,8 @@ import java.text.*;
  *
  *@author     matt rajkowski
  *@created    September 3, 2003
- *@version    $Id$
+ *@version    $Id: DateTimeHandler.java,v 1.2 2003/09/26 18:49:25 mrajkowski Exp
+ *      $
  */
 public class DateTimeHandler extends TagSupport {
 
@@ -46,6 +48,16 @@ public class DateTimeHandler extends TagSupport {
    *@param  tmp  The new timestamp value
    */
   public void setTimestamp(java.util.Date tmp) {
+    this.timestamp = new java.sql.Timestamp(tmp.getTime());
+  }
+
+
+  /**
+   *  Sets the timestamp attribute of the DateTimeHandler object
+   *
+   *@param  tmp  The new timestamp value
+   */
+  public void setTimestamp(java.sql.Date tmp) {
     this.timestamp = new java.sql.Timestamp(tmp.getTime());
   }
 
@@ -173,9 +185,9 @@ public class DateTimeHandler extends TagSupport {
         //set the pattern
         if (pattern != null) {
           formatter.applyPattern(pattern);
-        }else{
+        } else {
           //default pattern for a date :9/21/2003
-          if(dateOnly){
+          if (dateOnly) {
             formatter.applyPattern("M/d/yyyy");
           }
         }
