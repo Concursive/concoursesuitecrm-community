@@ -13,7 +13,7 @@ import org.aspcfs.modules.base.Constants;
 /**
  *  Collection of Inventory objects
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    May 17, 2002
  *@version    $Id: InventoryList.java,v 1.22 2002/10/24 20:51:01 mrajkowski Exp
  *      $
@@ -34,7 +34,7 @@ public class InventoryList extends ArrayList {
   private int showSold = -1;
   private boolean showIncompleteAdRunsOnly = false;
   private int showIncompleteInventoryAds = -1;
-  //TODO: Implement these additional data filters
+  //TODO: Implement this additional data filter
   private int hasRunDate = -1;
   private int makeId = -1;
   private java.sql.Date adRunDate = null;
@@ -452,9 +452,7 @@ public class InventoryList extends ArrayList {
         " LEFT JOIN organization o ON i.account_id = o.org_id " +
         "WHERE i.inventory_id > -1 " +
         "AND i.account_id IN (SELECT org_id FROM organization) ");
-
     createFilter(sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -524,7 +522,6 @@ public class InventoryList extends ArrayList {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
