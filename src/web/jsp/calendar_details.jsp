@@ -19,36 +19,43 @@ function changeUserName(id){
   window.parent.getElementById('changeUserName').innerHtml = userName;
 }
 function switchStyle(E){
-      if(E.style.display == "none"){
-        E.style.display = '';
-      }
-      else{
-        E.style.display = 'none';
-      }
-    }
+  if(E.style.display == "none"){
+    E.style.display = '';
+  }
+  else{
+    E.style.display = 'none';
+  }
+}
 </script>
 
 <table bgcolor="#FFFFFF" width="100%" border="0" cellpadding="0" cellspacing="0" bordercolorlight="#000000" bordercolor="#FFFFFF">
-      <tr>
-         <td align="center" valign="top" nowrap><strong><%= CalendarInfo.isAgendaView()?"Next 7 Days View": Character.toUpperCase(CalendarInfo.getCalendarView().charAt(0)) + CalendarInfo.getCalendarView().substring(1) + " View " + (CalendarInfo.getCalendarView().equalsIgnoreCase("week")?" : " + toMediumDateString(CompanyCalendar.getStartOfWeekDate()) + " - " + toMediumDateString(CompanyCalendar.getEndOfWeekDate()):"")%> </strong></td>
-      </tr>
-      <dhv:evaluate exp="<%= !CalendarInfo.isAgendaView() %>">
-      <tr>
-        <td valign="top" align="left" nowrap><a href="javascript:window.parent.frames['calendar'].resetCalendar();javascript:window.location.href='MyCFS.do?command=AgendaView&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';">Back To Agenda View</a></td>
-        <table style="visibility:none" border="0" height="6"><tr height='2' style="visibility:none"><td></td></tr></table>
-      </tr>
-      </dhv:evaluate>
-      
-      <tr>
-        <td height="100%" width="100%" valign="top">
-          <table width="100%" cellspacing="0" cellpadding="0" border="0">
-          <tr>
-            <td colspan="2">
-              <strong>
-                <%= CompanyCalendar.getToday() %> (Today)
-              </strong>
-             </td>
-          </tr>
+<%-- Display header label --%>
+  <tr>
+    <td align="center" valign="top" nowrap>
+      <strong><%= CalendarInfo.isAgendaView()?"Next 7 Days View": Character.toUpperCase(CalendarInfo.getCalendarView().charAt(0)) + CalendarInfo.getCalendarView().substring(1) + " View " + (CalendarInfo.getCalendarView().equalsIgnoreCase("week")?" : " + toMediumDateString(CompanyCalendar.getStartOfWeekDate()) + " - " + toMediumDateString(CompanyCalendar.getEndOfWeekDate()):"")%></strong>
+      <dhv:evaluate if="<%= CalendarInfo.isAgendaView() %>"><br>&nbsp;</dhv:evaluate>
+    </td>
+  </tr>
+<%-- Display back link --%>
+<dhv:evaluate exp="<%= !CalendarInfo.isAgendaView() %>">
+  <tr>
+    <td valign="top" align="center" nowrap>
+      <a href="javascript:window.parent.frames['calendar'].resetCalendar();javascript:window.location.href='MyCFS.do?command=AgendaView&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';">Back To Next 7 Days View</a>
+    </td>
+    <table style="visibility:none" border="0" height="6"><tr height='2' style="visibility:none"><td></td></tr></table>
+  </tr>
+</dhv:evaluate>
+<%-- Display the days, always starting with today in Agenda View --%>
+  <tr>
+    <td width="100%" valign="top">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+<dhv:evaluate exp="<%= CalendarInfo.isAgendaView() %>">      
+        <tr>
+          <td colspan="2">
+            <strong><%= toFullDateString(Calendar.getInstance().getTime()) %> (Today)</strong>
+          </td>
+        </tr>
+</dhv:evaluate>
 <%
    Iterator days = (CompanyCalendar.getEvents(20)).iterator();
    if (days.hasNext()) {
@@ -56,7 +63,6 @@ function switchStyle(E){
      int count = 0;
      Calendar today = Calendar.getInstance();
      today.setTime(new java.util.Date());
-
      while (days.hasNext()) {
        CalendarEventList thisDay = (CalendarEventList)days.next();
        Calendar thisCal = Calendar.getInstance();
@@ -66,69 +72,86 @@ function switchStyle(E){
           (thisCal.get(Calendar.YEAR) == today.get(Calendar.YEAR)));
 %>
     <dhv:evaluate exp="<%= !isToday %>">
-       <tr>
-         <td colspan="2">
-           <strong>
-             <%=  toFullDateString(thisDay.getDate()) %>
-           </strong>
-         </td>
-       </tr>
-     </dhv:evaluate>
+        <tr>
+          <td colspan="2">
+            <strong><%= toFullDateString(thisDay.getDate()) %></strong>
+          </td>
+        </tr>
+    </dhv:evaluate>
+    <dhv:evaluate exp="<%= (CalendarInfo.isAgendaView() && isToday && thisDay.size() == 0) %>">
+        <tr>
+          <td valign="top" nowrap>
+            &nbsp;&nbsp;
+          </td>
+          <td width="100%" valign="top">
+            No scheduled actions found.
+          </td>
+        </tr>
+    </dhv:evaluate>
 <%
-       Iterator eventList ;
        boolean firstTime = true;
        for (int i = 0; i< Array.getLength(CalendarEventList.EVENT_TYPES); i++) {
        firstTime = true;
-       int categoryCount = CompanyCalendar.getEventCount(thisCal.get(Calendar.MONTH) + 1,thisCal.get(Calendar.DAY_OF_MONTH),thisCal.get(Calendar.YEAR), CalendarEventList.EVENT_TYPES[i]);
-       eventList = thisDay.iterator();
+       int categoryCount = CompanyCalendar.getEventCount(thisCal.get(Calendar.MONTH) + 1, thisCal.get(Calendar.DAY_OF_MONTH), thisCal.get(Calendar.YEAR), CalendarEventList.EVENT_TYPES[i]);
+       Iterator eventList = thisDay.iterator();
        while (eventList.hasNext()) {
-        CalendarEvent thisEvent = (CalendarEvent)eventList.next();
-        if(thisEvent.getCategory().toUpperCase().startsWith(CalendarEventList.EVENT_TYPES[i].toUpperCase())){
-        if(firstTime){
-          firstTime = false;
-        %>
-        <table cellspacing="0" cellpadding="0" border="0" marginheight="0" marginwidth="0">
-        <tr>
-          <td nowrap><%= thisEvent.getIcon(CalendarEventList.EVENT_TYPES[i])%><a href="javascript:changeImages('detailsimage<%=toFullDateString(thisDay.getDate()) + i%>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertdetails<%=toFullDateString(thisDay.getDate()) + i%>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%=count==0?"images/arrowdown.gif":"images/arrowright.gif"%>" name="detailsimage<%=toFullDateString(thisDay.getDate()) + i%>" id="<%=count==0?"0":"1"%>" border=0 title="Click To View Details"><%=CalendarEvent.getNamePlural(CalendarEventList.EVENT_TYPES[i]) %></a>&nbsp;(<%=categoryCount%>)</td>
-        </tr>
-        </table>
-        <table width="100%" cellspacing="0" cellpadding="0" marginheight="0" marginwidth="0" border="0" id="alertdetails<%= toFullDateString(thisDay.getDate()) + i %>" style="<%=count==0?"display:":"display:none"%>">
-      <%}%>
+         CalendarEvent thisEvent = (CalendarEvent)eventList.next();
+         if (thisEvent.getCategory().toUpperCase().startsWith(CalendarEventList.EVENT_TYPES[i].toUpperCase())){
+           if (firstTime) {
+             firstTime = false;
+%>
       <tr>
-      <td style="visibility:hidden" width="18">i</td>
-      <td nowrap>
-                  <li><%=thisEvent.getCategory().equalsIgnoreCase("task")?thisEvent.getIcon():""%>&nbsp;<%= thisEvent.getLink() %><%= thisEvent.getSubject() %></a></li>
-      </td></tr>
-       <%}%>
-     <%}
-      if(!firstTime){
-        %>
-        </table>
-      <%}
-     }%>
-     
-     </tr>
-     <tr style="visibility:none"><td style="visibility:none"><br></td></tr>
+        <td colspan="2">
+          <table width="100%" cellspacing="0" cellpadding="0" border="0" marginheight="0" marginwidth="0">
+            <tr>
+              <td nowrap><%= thisEvent.getIcon(CalendarEventList.EVENT_TYPES[i])%><a href="javascript:changeImages('detailsimage<%=toFullDateString(thisDay.getDate()) + i%>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertdetails<%=toFullDateString(thisDay.getDate()) + i%>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%=count==0?"images/arrowdown.gif":"images/arrowright.gif"%>" name="detailsimage<%=toFullDateString(thisDay.getDate()) + i%>" id="<%=count==0?"0":"1"%>" border=0 title="Click To View Details"><%=CalendarEvent.getNamePlural(CalendarEventList.EVENT_TYPES[i]) %></a>&nbsp;(<%= categoryCount %>)</td>
+            </tr>
+          </table>
+          <table width="100%" cellspacing="0" cellpadding="0" marginheight="0" marginwidth="0" border="0" id="alertdetails<%= toFullDateString(thisDay.getDate()) + i %>" style="<%=count==0?"display:":"display:none"%>">
+<%
+           }
+%>
+            <tr>
+              <td style="visibility:hidden" width="18">i</td>
+              <td nowrap>
+                <li><%=thisEvent.getCategory().equalsIgnoreCase("task")?thisEvent.getIcon():""%>&nbsp;<%= thisEvent.getLink() %><%= thisEvent.getSubject() %></a></li>
+              </td>
+            </tr>
+<%
+          }
+        }
+       if(!firstTime) {
+%>
+          </table>
+        </td>
+      </tr>
+<%
+         }
+       }
+%>
+        </tr>
+        <tr style="visibility:none">
+          <td style="visibility:none">
+            <br>
+          </td>
+        </tr>
 <%
       ++count;
-       }%>
-       <%}
-    else {
-         %>
-       <tr>
-         <td valign="top" nowrap>
-           &nbsp;&nbsp;
-         </td>
-         <td width="100%" valign="top">
-           No alerts found.
-         </td>
-       </tr>
+     }
+   } else {
+%>
+        <tr>
+          <td valign="top" nowrap>
+            &nbsp;&nbsp;
+          </td>
+          <td width="100%" valign="top">
+            No scheduled actions found.
+          </td>
+        </tr>
 <%
    }
 %>
-
-        </table>
-      </td>
-    </tr>
-  </table>
-<!-- End Table:Alerts -->
+      </table>
+    </td>
+  </tr>
+</table>
