@@ -4728,4 +4728,397 @@ This page lists the different roles present in the system, their role descriptio
 <tips/>
 </pageDescription>
 </module>
+<module name="Projects" contentLevel="0">
+<briefDescription>The Project management module allows individuals and organizations to share up-to-the-minute information with others. Whether you are sharing information with employees, clients, vendors, friends, and family, the information is easily and securely accessible.</briefDescription>
+<detailDescription>Project detail description</detailDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>ProjectCenter</section>
+<subSection>Setup</subSection>
+<title>Setup</title>
+<description>Within the  Setup  tab you also have the choice to  either &amp;quot;Configure Permissions&amp;quot; or &amp;quot;Customize Project&amp;quot;  for this project. &#13;
+&#13;
+Configuring Permissions allows you to define what members of your project can be allowed to view, add, change, or delete.&#13;
+&#13;
+Customizing the project allows you to show(or hide) the tabs and change the tab names according to your preferences.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>CustomizeProject</section>
+<subSection/>
+<title>Customize Project</title>
+<description>This &amp;quot;Customize Project&amp;quot; view allows you to change the names for each of the project subtabs. Changing the names of the tabs does not change any of the existing functionality for that tab.&#13;
+&#13;
+It also allows you to turn off the subtabs based on your preferences.  Turning tabs off can be helpful if you do not intend to have any information under that tab. Making things simple for your team members certainly helps to streamline the usage of your project.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>ProjectCenter</section>
+<subSection>Details</subSection>
+<title>Project Details</title>
+<description>This view displays information about a project.&#13;
+&#13;
+The General Information section displays the project status, the title (also the project name), a description, the budget and relevant dates (start date, entered, modified and estimated close date)   for the project.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>ConfigurePermissions</section>
+<subSection/>
+<title>Configure Permissions</title>
+<description>The &amp;quot;Configure Permissions&amp;quot;  screen shows you a list of all permissions that can be adjusted in your project. Each tab is represented and has a variety of permissions that can be adjusted.&#13;
+&#13;
+For example, the first group is entitled,  Project Details,  which contains three permissions that can be adjusted:&#13;
+1. View project details   defines which role(s) can view the project  Details  tab.&#13;
+2. Modify project details   defines which role(s) can modify the information on the project  Details  tab.&#13;
+3. Delete project   defines which role(s) can permanently delete this project&#13;
+&#13;
+The screen also allows you to define what members of your project can be allowed to view, add, change, or delete. Later on, when you add users to your project, you will need to know the answer to  what will each user be able to access in my project?</description>
+<features>
+<featureDescription>Users can be assigned one of the following roles, namely, Guest, Observer, Contributor and Project Lead. The Guest role is the least privileged role in a project and the Project Lead role is the most privileged role.</featureDescription>
+<featureDescription>When a role is allowed a permission, the permission is also available to more privileged roles. For e.g., if a the permission &amp;quot;View project details&amp;quot; is allowed for the &amp;quot;Guest&amp;quot;, all superior roles namely, Observer, Contributor and Project Lead also inherit this permission. Similarly, if the &amp;quot;Modify Project Details&amp;quot; is assigned to &amp;quot;Project Lead&amp;quot; no other role inherits this privilege as the &amp;quot;Project Lead&amp;quot; role is the most superior (as in most privileged) role among preconfigured roles in the projects module.</featureDescription>
+</features>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>ProjectCenter</section>
+<subSection>News</subSection>
+<title>News</title>
+<description>News articles are essentially bits of news that you can add to your project for others to review. Others can also add news items if you provide them access.&#13;
+&#13;
+To add a news article, select the  Add News Article  link. You will be presented with a form with fields that allow you to describe the news item.&#13;
+&#13;
+You can also filter the list of news items you want listed based on prec-configured criterias namely &amp;quot;Current News,&amp;quot; &amp;quot;Archived News,&amp;quot; &amp;quot;Unreleased News,&amp;quot; and &amp;quot;New Drafts.&amp;quot;</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagementNews.do</action>
+<section>Add</section>
+<subSection/>
+<title>Add News</title>
+<description>This screen allows you to add a news item.</description>
+<features>
+<featureDescription>This page contains the following fields</featureDescription>
+<featureDescription>Status: Determines whether the article is shown when users view news articles; there are three possible choices: a) Draft if you are not finished with composing the article, choose Draft and you can finish the article later; even though you will see this article in your Current News list, other users will not unless they have access to to view Draft  articles b)Unapproved if you are finished, but would like the article to be approved before allowing others to view, choose Unapproved; even though you will see this article in your Current News list, others will not unless they have access to view Unapproved  articles c)Published indicates that the article is finished, approved, and ready to be seen by other users.</featureDescription>
+<featureDescription>Position: Articles are typically displayed in the list by the most recent date first; if you would like certain articles to appear before others, no matter what their date is set to, then you can group them by position in which lower numbered articles always appear before higher numbered articles; by default 10 is used for all articles, so a number of 1-9 would appear before 10.</featureDescription>
+<featureDescription>Start Date/Time: The specific date and time in which the article should be allowed to be viewed; prior to this time, only users who can see unreleased articles have access to this article; when the date/time occurs, the article will automatically be visible in Current News for the rest of the users in your project with access to the News Article list.</featureDescription>
+<featureDescription>Archive Date/Time: The specific date and time in which the article should automatically be archived from the default view; users who have access to archived articles will be able to review these.</featureDescription>
+<featureDescription>Subject: Each article needs a headline that gets displayed.</featureDescription>
+<featureDescription>Intro: Each article can have an unlimited amount of text, however you might want to have an introduction to the article and require that the user choose to read any additional pages by selecting a  read more  link that appears when an article has an additional page.</featureDescription>
+<featureDescription>Once you have finished your news article, and have completed the fields, choose to  Save  the article. If you would like to add an additional page to the article, choose  Save and Add a Page.</featureDescription>
+<featureDescription>Viewing the  News  tab will now show your article.</featureDescription>
+</features>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>ProjectCenter</section>
+<subSection>Team</subSection>
+<title>Team</title>
+<description>Lists the currently added team members and some information about them. You will always be added when you create a new project.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>ProjectCenter</section>
+<subSection/>
+<title>Setup</title>
+<description>Within the  Setup  tab you also have the choice to  Configure Permissions  for this project. Permissions allow you to define what members of your project can be allowed to view, add, change, or delete.&#13;
+&#13;
+To setup team members, choose the  Modify Team  link. At this point you will now have a page with four (4) lists, some of which are empty. The right most list shows you the team members of your project. The left most list shows you ways in which you can add a team member.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagementTeam.do</action>
+<section>Modify</section>
+<subSection/>
+<title>Modify Team</title>
+<description>This page allows you to modify (add and remove) members from the project team.&#13;
+&#13;
+This page shows you four (4) lists, some of which are empty. The right most list shows you the team members of your project. The left most list shows you ways in which you can add a team member.</description>
+<features>
+<featureDescription>Team members can be invited from: 1. Open projects   if you have existing projects, that are open, then you can begin by adding contacts from your open projects 2. Closed projects   if you have existing projects, that have been closed, then you can begin by adding contacts from a closed project 3. Email address   if the contact is not listed in one of your projects, then you can invite them by their email address.</featureDescription>
+<featureDescription>The first list allows you to choose a method for inviting your contact. Depending on your choice, you will either be asked to choose a project in which to select a contact from, or you will be asked to input an email address. When you have selected a contact, make sure they show up in the right most list before continuing.</featureDescription>
+<featureDescription>To remove a team member from your project, simply select them in the right column and they will be removed when the team is updated.</featureDescription>
+<featureDescription>When you are finished modifying the team, choose  Update Team  to finalize the changes. If you added a contact by email address, and the CRM application is not familiar with that address, then you will be asked if you are certain you would like to invite them to the project. Choosing  Yes  will require that you input their first and last name.</featureDescription>
+<featureDescription>When contacts are added to a project, whether they are users (have accounts) of CRM or not, each contact will be sent an email inviting them to your project.</featureDescription>
+<featureDescription>When you return to the list of users, you can modify their role in the project by using the drop-down menu next to their name. As soon as the drop-down is changed, the system immediately updates the user's role.</featureDescription>
+<featureDescription>All added team members are initially identified as  invited.  This means that you would like them to be on this project, but the contact will need to be informed of this action and asked to accept the invitation. If the contact does not have an account, then they will receive an email that allows them to easily obtain an account before accepting your invitation.</featureDescription>
+</features>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>ProjectCenter</section>
+<subSection>Issues_Categories</subSection>
+<title>Discussion</title>
+<description>While news articles provide a formal way to announce and disseminate project happenings, discussion groups allow for more informal camaraderie and collaboration.&#13;
+&#13;
+Discussion groups are comprised of forums, topics and messages.&#13;
+&#13;
+Forums provide some sort of categorization among what is being discussed. For example, you might have forums for  Suggestions,   Status Reports  and  Resources.  Small projects might have just one forum, while larger projects may require multiple forums.&#13;
+&#13;
+Once a forum has been created, it's time to create a topic for discussion. A topic is simply a subject and a message. Forums can have multiple topics in which users can reply to and comment on.&#13;
+&#13;
+Once a topic has been posted, other team members can reply.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>ProjectCenter</section>
+<subSection>File_Library</subSection>
+<title>Documents</title>
+<description>The Projects module comes with a sophisticated document management tool. You can use it to store versions of documents in a hierarchy of folders. When you select the  Documents  tab you are presented with a list of folders and files that belong to the project.&#13;
+&#13;
+To create a folder, select the  New Folder  link. To store a file, select the  Submit File  link. When uploading a file you can specify a subject for the file that gets displayed in the list. You can store documents at the top level, or you can navigate into any available folder and then store a file there.&#13;
+&#13;
+Once a file exists in the document library, you will see it appear in the list. By choosing the  Select  button next to the file, you are presented with several options,namely&#13;
+&#13;
+1. View File History:  Viewing the file's history shows the versions that exist for a file and how many times each version has been downloaded.&#13;
+2. Download File:  This will begin downloading the file to your computer.&#13;
+3. View File Contents:  The file will be displayed in a popup window; only certain types can be displayed, for example PDF, Excel, HTML, Text, and Word documents.&#13;
+4. Rename File:  This will allow you to modify the subject of a file.&#13;
+5. Add Version: This allows you to upload a new version to an existing document; the existing file will not be altered and can be downloaded or deleted separately; version numbers can be indicated as: (a) Major -  Generally a substantial amount of content has    been added or modified (b) Minor -  Generally some amount of content has been added or modified (c) Changes - Generally a small amount of content has been added or modified.&#13;
+6. Move File:   This allows you to move the file to another folder.&#13;
+7. Delete File:  This will delete the file and all versions of the file; to delete just a version of the file.&#13;
+You can choose the  View File History  link for additional options</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>ProjectCenter</section>
+<subSection>Lists_Categories</subSection>
+<title>Lists</title>
+<description>Lists allow you to place items on a list that you can mark as incomplete or complete.&#13;
+&#13;
+Projects can have any number of lists and each list can have any number of items. An item on the list can also have a memo area if necessary.&#13;
+&#13;
+Lists are good for jotting down related items to be referenced later. While to-do items can be added to the list and checked off, they can also be done in the  Plan  or  Tickets  tabs.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>ProjectCenter</section>
+<subSection>Requirements</subSection>
+<title>Project Plan</title>
+<description>The plan tab is perhaps the most functionally rich feature of the projects module.&#13;
+&#13;
+Plans can be used for creating a high-level view of project milestones or objectives and then proceeding to low-level details.&#13;
+&#13;
+1. Start with an outline. Outlines can be used to organize objectives for the project. To create a new outline, click the  &amp;quot;New Outline&amp;quot; link. You are presented a number of fields that allow you to describe all the information for the outline.&#13;
+&#13;
+2. Detail the outline with activities and assignments.</description>
+<features>
+<featureDescription>This page lists all the project plans. Each item in the list provides a snapshot of the outline including the outline's start date, the start date, the description and status, the progress made in completing the items of the outline and the effort expended in completing the items of the outline.</featureDescription>
+<featureDescription>Using the drop list as a filter you can choose to view only open outlines, only closed outlines or view all outlines.</featureDescription>
+<featureDescription>When you click on the select option, you are presented with a choice view, edit or delete the outline.</featureDescription>
+</features>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagementRequirements.do</action>
+<section>Add</section>
+<subSection/>
+<title>Add Outline</title>
+<description>This page allows you to add an outline. Listed below is a description of the fields shown in this screen.&#13;
+&#13;
+a) Title  - a project milestone to be displayed.&#13;
+b) Requested By -  The name of a person that may have initiated the reason for the milestone; could be the name of a client.&#13;
+c) Department or Company - The organization that may have initiated the reason for the milestone; could be the name of a company.&#13;
+d) Expected Dates - The date in which the milestone is expected to begin and the date in which the milestone is expected to be completed on.&#13;
+e) Level of Effort  - An estimate as to how much time this milestone could take, and a field for how long the milestone actual took.&#13;
+f) Status -  Indicates whether the outline is approved and/or closed (complete.)&#13;
+g) Details - Text describing the goals of this outline&#13;
+&#13;
+When all required fields of the screen are entered, you can save the outline. The saved outline appears in the outline list.&#13;
+&#13;
+Once you create the outline, the next task would be to elaborate the outline with activities and assignments.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>ProjectCenter</section>
+<subSection>Assignments</subSection>
+<title>Plan Outline</title>
+<description>This page allows you to view outline details, add activities, and activity folders&#13;
+&#13;
+When you click on  the name of the outline, a drop-down menu appears with the option to &#13;
+a) Add Activity Folder &#13;
+b) Add Activity &#13;
+&#13;
+An Activity Folder allows you to create sections in your outline. This can be useful when you are building the outline and haven't yet decided how to group Activities.&#13;
+&#13;
+Activities are specific items to be completed toward this project objective or&#13;
+milestone.&#13;
+&#13;
+Activities have several fields: &#13;
+a) Description - A specific task to be completed; this will be displayed on the outline. &#13;
+b) Indent Level  - since the outline is hierarchical, each item on the outline can be moved to the left or right; by selecting the left/right arrows the indent level will increase and decrease; items with a higher number then the item above will appear indented.&#13;
+c) Priority - Indicates the importance of this activity; there are three (3) options: A Low, A Normal (default,) A High.&#13;
+d) Assigned To  - The activity can be assigned to any member of the project.&#13;
+e) Status -  Describes the state of this activity; there are six (6) options: &#13;
+  (i)A Not Started&#13;
+  (ii)A In Progress&#13;
+  (iii)A Complete&#13;
+  (iv)A Closed  - Similar to complete, but used when the activity    may no longer be necessary and the item was not completed.&#13;
+  (v) A On Hold -  Indicates that this activity is waiting on some other factor; for example, another activity needs to be completed before this one.&#13;
+  (vi)A Waiting on Requirements - Indicates that more information is needed in order to complete this activity.&#13;
+f) Keywords -  additional words to keep track of activities; for example, maybe the expected output of this activity: Excel, Java, Press Release, etc.; a future version of the software might allow for searching keywords.&#13;
+g) Level of Effort -  The estimated time it should take for this activity to be completed; an additional field is used to record the actual time this activity took.&#13;
+h) Due Date  - The date in which this activity should be completed by.&#13;
+&#13;
+When all of the information on the activity has been recorded, choose  Save  or  Save &amp; New.   Save  will simply record the activity, and refresh the outline.  Save &amp; New  will record the activity, refresh the outline, and then provide another form to continue adding activities.&#13;
+&#13;
+Once an activity is in the list, you can select the activity from the list and a menu will appear with the following options: &#13;
+a) Arrow buttons -  The arrows allow you to move this Activity item up and down the list, or indent the activity to the left and right.&#13;
+b) Add Activity Folder - Adds an Activity Folder below this Activity.&#13;
+c) Add Activity -  Adds another Activity below this one.&#13;
+d) View/Update this Activity - Depending on your permissions, and whether the activity is assigned to you, you can modify the activity, otherwise you can only view the activity without making changes.&#13;
+e) Delete Activity</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>ProjectCenter</section>
+<subSection>Tickets</subSection>
+<title>Tickets</title>
+<description>Once the project gets going, you might run into some unexpected issues that need to be recorded and resolved. The  Tickets  tab is a good place to capture these.&#13;
+&#13;
+This page displays a list of tickets for this project. Each item in the list gives a snapshot of the information of the ticket.&#13;
+&#13;
+The list can be filtered to view only the open tickets, only the closed tickets or to view all tickets.&#13;
+&#13;
+The snapshot includes, the ticket Id, the status, the ticket issue (only partially displayed if it is elaborate,) the priority, the team member it was assigned to, the age of ticket and when the ticket was last modified.&#13;
+&#13;
+The displayed list can be sorted based on all the underlined column headers of the list.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagementTickets.do</action>
+<section>Add</section>
+<subSection/>
+<title>Add Ticket</title>
+<description>Tickets  are issues that can be assigned to a team member. A ticket has the following fields:&#13;
+1. Issue  - The complete issue that has come up; this can be a request for information or a problem that has occurred, be specific without adding comments.&#13;
+2. Severity -  Describes the impact on the project using one of three (3) choices: (a) Normal (b) Important (c) Critical &#13;
+3. Priority -  Describes when the issue should be resolved, possibly ahead of other issues; there are three (3) choices: &#13;
+(a) Scheduled -  The team member assigned should schedule this issue and take care of it when convenient. &#13;
+(b) Next  - The team member assigned should take care of this issue ahead of other lower priority items. &#13;
+(c) Immediate  - The team member assigned should take care of this issue right away, typically because the impact is severe.&#13;
+4. Assign To -  The team member that has been assigned this ticket.&#13;
+5. User Comments -  Any additional comments to provide that are not part of the issue; a ticket can have any number of comments; each comment is dated and attributed to the user that made a comment and can later be seen in the ticket history.&#13;
+6. Solution - A description of how this ticket was resolved.&#13;
+7. Close Ticket   Indicates whether this ticket is complete and needs no further action.&#13;
+&#13;
+Once a ticket has been added, its details can be reviewed. A ticket also has a history in which you can see the progress or escalation that has occurred with the ticket. Once a ticket has been closed, it can be re-opened later, if necessary.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section/>
+<subSection/>
+<title>Projects</title>
+<description>This page provides a snap shot of all recent items (of the last 7 days) of all the projects that a you are a member of.&#13;
+&#13;
+By changing the filter, you can choose to view information over a longer time period (14 days or 30 days), or a shorter time period(24hrs or 48hrs.)</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>RSVP</section>
+<subSection/>
+<title>Invitations</title>
+<description>This page displays the projects to which you have been invited to.  By accepting an invitation, you become a team member of the project and assume a role (applicable to this project alone) assigned by the owner (or creator) of the project.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagementSearch.do</action>
+<section>ShowForm</section>
+<subSection/>
+<title>Search</title>
+<description>This page allows you to search for items in a project based on the search item. For advanced search options, you may click on the &amp;quot;tips&amp;quot; link.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>AddProject</section>
+<subSection/>
+<title>Add Project</title>
+<description>This page allows you to create a new project.&#13;
+&#13;
+The following fields are requested: &#13;
+1. Title -  A brief name for your project.&#13;
+2. Short Description -  A brief description for your project&#13;
+3. Start Date - The date in which the project started or will start 4. Estimated End Date  - The date in which you believe the project will be finished .&#13;
+5. Requested By -  The name of a person that may have initiated the reason for the project; could be the name of a client.&#13;
+6. Organization - The organization that may have initiated the reason for the project; could be the name of a company.&#13;
+7. Budget  - A high-level view of the project budget; this figure generally is an estimate.&#13;
+8. Status - Specifies whether the project has been approved or if it is closed (finished.)&#13;
+&#13;
+Once the fields have been successfully submitted, a new project is created. You should see the name of the project you created and several tabs underneath that will contain all the information for your project.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+</module>
 </helpSystem>
