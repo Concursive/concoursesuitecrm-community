@@ -21,7 +21,7 @@ import com.sun.image.codec.jpeg.*;
 import com.jrefinery.chart.*;
 import com.jrefinery.chart.data.*;
 import com.jrefinery.chart.ui.*;
-import com.jrefinery.util.ui.*;
+import com.jrefinery.data.*;
 
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
@@ -324,7 +324,7 @@ public final class Leads extends CFSModule {
     OpportunityList tempOppList = new OpportunityList();
     OpportunityList realFullOppList = new OpportunityList();
 
-    XYDataSource categoryData = null;
+    XYDataset categoryData = null;
 
     if (overrideId != null && !(overrideId.equals("null")) && !(overrideId.equals("" + thisUser.getUserId()))) {
       idToUse = Integer.parseInt(overrideId);
@@ -444,49 +444,39 @@ public final class Leads extends CFSModule {
       //add me up -- keep this
       linesToDraw = calculateLine(thisRec, linesToDraw);
 
-      categoryData = createCategoryDataSource(linesToDraw, graphString);
+      categoryData = createCategoryDataset(linesToDraw, graphString);
 
-      JFreeChart chart = JFreeChart.createXYChart(categoryData);
+      JFreeChart chart = ChartFactory.createXYChart("", "", "", categoryData, false);
 
-      chart.setChartBackgroundPaint(new GradientPaint(0, 0, Color.white, 1000, 0, Color.white));
-      Plot bPlot = chart.getPlot();
-
-      //don't know if we really need this
-      Axis vAxis = bPlot.getAxis(Plot.VERTICAL_AXIS);
-      vAxis.setLabel("");
-
-      VerticalNumberAxis vnAxis = (VerticalNumberAxis) chart.getPlot().getAxis(Plot.VERTICAL_AXIS);
+      chart.setBackgroundPaint(Color.white);
+      
+      XYPlot bPlot = chart.getXYPlot();
+      
+      VerticalNumberAxis vnAxis = (VerticalNumberAxis) chart.getXYPlot().getVerticalAxis();
       vnAxis.setAutoRangeIncludesZero(true);
 
-      HorizontalNumberAxis hnAxis = (HorizontalNumberAxis) chart.getPlot().getAxis(Plot.HORIZONTAL_AXIS);
+      HorizontalNumberAxis hnAxis = (HorizontalNumberAxis) chart.getXYPlot().getHorizontalAxis();
+      
       hnAxis.setAutoRangeIncludesZero(false);
-      hnAxis.setAutoTickValue(false);
+      hnAxis.setAutoTickUnitSelection(false);
+      hnAxis.setVerticalTickLabels(true);
       hnAxis.setAutoRange(false);
-
-      hnAxis.setLabel("");
 
       Stroke gridStroke = new BasicStroke(0.25f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0.0f, new float[]{2.0f, 2.0f}, 0.0f);
       Paint gridPaint = Color.gray;
+      
+      ValueAxis myHorizontalDateAxis = new HorizontalDateAxis(hnAxis.getLabel(), hnAxis.getLabelFont(),
+        hnAxis.getLabelPaint(), hnAxis.getLabelInsets(), true, hnAxis.getTickLabelFont(),
+        hnAxis.getTickLabelPaint(), hnAxis.getTickLabelInsets(), true, true, hnAxis.getTickMarkStroke(),
+        true, new Integer(0), new Range((d.getYear() + 1900), (d.getYear() + 1901)), false, new DateUnit(Calendar.MONTH, 1),
+        new SimpleDateFormat("MMM ' ' yy"), true, gridStroke, gridPaint, false, null, null, null);
 
-      //don't know if we really need this
-      //Axis hAxis = bPlot.getAxis(Plot.HORIZONTAL_AXIS);
-      //hAxis.setLabel("Months Out");
-
-      try {
-        Axis myHorizontalDateAxis = new HorizontalDateAxis(hnAxis.getLabel(), hnAxis.getLabelFont(),
-            hnAxis.getLabelPaint(), hnAxis.getLabelInsets(), true, hnAxis.getTickLabelFont(),
-            hnAxis.getTickLabelPaint(), hnAxis.getTickLabelInsets(), true, true, hnAxis.getTickMarkStroke(),
-            true, createDate((d.getYear() + 1900), d.getMonth(), 0), createDate((d.getYear() + 1901), d.getMonth(), 0), false, new DateUnit(Calendar.MONTH, 1),
-            new SimpleDateFormat("MMM ' ' yy"), true, gridStroke, gridPaint);
-
-        bPlot.setHorizontalAxis(myHorizontalDateAxis);
+      try{
+              bPlot.setDomainAxis(myHorizontalDateAxis);
       } catch (AxisNotCompatibleException err1) {
         System.out.println("AxisNotCompatibleException error!");
       }
-
-      chart.setLegend(null);
-      chart.setTitle("");
-
+      
       //define the chart
       int width = 275;
       int height = 200;
@@ -1308,32 +1298,6 @@ public final class Leads extends CFSModule {
     }
   }
 
-
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
-   *@since
-   */
-  private XYDataSource createCategoryDataSource() {
-
-    Object[][][] data;
-
-    data = new Object[][][]{
-        {
-        {new Integer(0), new Integer(0)},
-        {new Integer(1), new Integer(45)},
-        {new Integer(2), new Integer(3)},
-        {new Integer(3), new Integer(3)},
-        {new Integer(4), new Integer(5)},
-        {new Integer(5), new Integer(56)}
-        }
-        };
-
-    return new DefaultXYDataSource(data);
-  }
-
-
   /**
    *  Description of the Method
    *
@@ -1342,10 +1306,10 @@ public final class Leads extends CFSModule {
    *@return             Description of the Returned Value
    *@since
    */
-  private XYDataSource createCategoryDataSource(UserList passedList, String whichGraph) {
+  private XYDataset createCategoryDataset(UserList passedList, String whichGraph) {
 
     if (passedList.size() == 0) {
-      return createEmptyCategoryDataSource();
+      return createEmptyCategoryDataset();
     }
 
     Object[][][] data;
@@ -1386,8 +1350,7 @@ public final class Leads extends CFSModule {
       x++;
     }
 
-    return new DefaultXYDataSource(data);
-    //return createEmptyCategoryDataSource();
+    return new DefaultXYDataset(data);
   }
 
 
@@ -1467,7 +1430,7 @@ public final class Leads extends CFSModule {
    *@return    Description of the Returned Value
    *@since
    */
-  private XYDataSource createEmptyCategoryDataSource() {
+  private XYDataset createEmptyCategoryDataset() {
 
     Object[][][] data;
 
@@ -1482,7 +1445,7 @@ public final class Leads extends CFSModule {
         }
         };
 
-    return new DefaultXYDataSource(data);
+    return new DefaultXYDataset(data);
   }
 
 }

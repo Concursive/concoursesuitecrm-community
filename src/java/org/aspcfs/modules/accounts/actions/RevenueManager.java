@@ -20,8 +20,8 @@ import com.sun.image.codec.jpeg.*;
 
 import com.jrefinery.chart.*;
 import com.jrefinery.chart.data.*;
+import com.jrefinery.data.*;
 import com.jrefinery.chart.ui.*;
-import com.jrefinery.util.ui.*;
 
 public final class RevenueManager extends CFSModule {
 	
@@ -76,7 +76,7 @@ public final class RevenueManager extends CFSModule {
     
     OrganizationList displayList = new OrganizationList();
 
-    XYDataSource categoryData = null;
+    XYDataset categoryData = null;
     
     if (context.getRequest().getParameter("reset") != null) {
       overrideId = null;
@@ -220,48 +220,40 @@ public final class RevenueManager extends CFSModule {
       //add me up -- keep this
       linesToDraw = calculateLine(thisRec, linesToDraw, y);
 
-      categoryData = createCategoryDataSource(linesToDraw, y);
-      //categoryData = createEmptyCategoryDataSource();
+      categoryData = createCategoryDataset(linesToDraw, y);
       
-      JFreeChart chart = JFreeChart.createXYChart(categoryData);
+      JFreeChart chart = ChartFactory.createXYChart("", "", "", categoryData, false);
 
-      chart.setChartBackgroundPaint(new GradientPaint(0, 0, Color.white, 1000, 0, Color.white));
-      Plot bPlot = chart.getPlot();
+      chart.setBackgroundPaint(Color.white);
+      
+      XYPlot bPlot = chart.getXYPlot();
 
-      //don't know if we really need this
-      Axis vAxis = bPlot.getAxis(Plot.VERTICAL_AXIS);
-      vAxis.setLabel("");
-
-      VerticalNumberAxis vnAxis = (VerticalNumberAxis) chart.getPlot().getAxis(Plot.VERTICAL_AXIS);
+      VerticalNumberAxis vnAxis = (VerticalNumberAxis) chart.getXYPlot().getVerticalAxis();
       vnAxis.setAutoRangeIncludesZero(true);
-
-      HorizontalNumberAxis hnAxis = (HorizontalNumberAxis) chart.getPlot().getAxis(Plot.HORIZONTAL_AXIS);
+      
+      HorizontalNumberAxis hnAxis = (HorizontalNumberAxis) chart.getXYPlot().getHorizontalAxis();
+      
       hnAxis.setAutoRangeIncludesZero(false);
-      hnAxis.setAutoTickValue(false);
+      hnAxis.setAutoTickUnitSelection(false);
+      hnAxis.setVerticalTickLabels(true);
       hnAxis.setAutoRange(false);
-
-      hnAxis.setLabel("");
 
       Stroke gridStroke = new BasicStroke(0.25f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0.0f, new float[]{2.0f, 2.0f}, 0.0f);
       Paint gridPaint = Color.gray;
-
-      //System.out.println("Trying to use " + (d.getYear() + 1900) + " " + d.getMonth() + " " + d.getDay());
-
-      try {
-        Axis myHorizontalDateAxis = new HorizontalDateAxis(hnAxis.getLabel(), hnAxis.getLabelFont(),
-            hnAxis.getLabelPaint(), hnAxis.getLabelInsets(), true, hnAxis.getTickLabelFont(),
-            hnAxis.getTickLabelPaint(), hnAxis.getTickLabelInsets(), true, true, hnAxis.getTickMarkStroke(),
-            true, createDate((d.getYear() + 1900), 0, 0), createDate((d.getYear() + 1901), 0, 0), false, new DateUnit(Calendar.MONTH, 1),
-            new SimpleDateFormat("MMM ' ' yy"), true, gridStroke, gridPaint);
-
-        bPlot.setHorizontalAxis(myHorizontalDateAxis);
+      
+      ValueAxis myHorizontalDateAxis = new HorizontalDateAxis(hnAxis.getLabel(), hnAxis.getLabelFont(),
+        hnAxis.getLabelPaint(), hnAxis.getLabelInsets(), true, hnAxis.getTickLabelFont(),
+        hnAxis.getTickLabelPaint(), hnAxis.getTickLabelInsets(), true, true, hnAxis.getTickMarkStroke(),
+        true, new Integer(0), new Range((d.getYear() + 1900), (d.getYear() + 1901)), false, new DateUnit(Calendar.MONTH, 1),
+        new SimpleDateFormat("MMM ' ' yy"), true, gridStroke, gridPaint, false, null, null, null);
+      
+      try{
+              bPlot.setDomainAxis(myHorizontalDateAxis);
       } catch (AxisNotCompatibleException err1) {
         System.out.println("AxisNotCompatibleException error!");
       }
-
-      chart.setLegend(null);
-      chart.setTitle("");
-
+      
+      
       //define the chart
       int width = 275;
       int height = 200;
@@ -677,7 +669,7 @@ public final class RevenueManager extends CFSModule {
 */
   }
   
-  private XYDataSource createEmptyCategoryDataSource() {
+  private XYDataset createEmptyCategoryDataset() {
 
     Object[][][] data;
 
@@ -692,7 +684,7 @@ public final class RevenueManager extends CFSModule {
         }
         };
 
-    return new DefaultXYDataSource(data);
+    return new DefaultXYDataset(data);
   }
   
   private UserList prepareLines(User pertainsTo, RevenueList revList, UserList usersToGraph, int y) {
@@ -834,10 +826,10 @@ public final class RevenueManager extends CFSModule {
     return currentLines;
   }
   
-  private XYDataSource createCategoryDataSource(UserList passedList, int y) {
+  private XYDataset createCategoryDataset(UserList passedList, int y) {
 
     if (passedList.size() == 0) {
-      return createEmptyCategoryDataSource();
+      return createEmptyCategoryDataset();
     }
 
     Object[][][] data;
@@ -859,33 +851,16 @@ public final class RevenueManager extends CFSModule {
       String[] valKeys = thisUser.getRevenue().getYearRange(12, y);
 
       iteratorDate.setTime(d);
-      //iteratorDate.add(java.util.Calendar.MONTH, +1);
 
       for (count = 0; count < 12; count++) {
-        //data[x][count][0] = createDate(iteratorDate.get(java.util.Calendar.YEAR), iteratorDate.get(java.util.Calendar.MONTH), 0);
-	data[x][count][0] = createDate(iteratorDate.get(java.util.Calendar.YEAR), count, 1);
-/**
-        if (whichGraph.equals("gmr")) {
-          data[x][count][1] = thisUser.getGmr().getValue(valKeys[count]);
-        } else if (whichGraph.equals("ramr")) {
-          data[x][count][1] = thisUser.getRamr().getValue(valKeys[count]);
-        } else if (whichGraph.equals("cgmr")) {
-          data[x][count][1] = thisUser.getCgmr().getValue(valKeys[count]);
-        } else if (whichGraph.equals("cramr")) {
-          data[x][count][1] = thisUser.getCramr().getValue(valKeys[count]);
-        }
-*/
-
-	data[x][count][1] = thisUser.getRevenue().getValue(valKeys[count]);
-	
-	//System.out.println("Check from data: " + valKeys[count] + "=" + data[x][count][0] + ", " + data[x][count][1]);
+              data[x][count][0] = createDate(iteratorDate.get(java.util.Calendar.YEAR), count, 1);
+              data[x][count][1] = thisUser.getRevenue().getValue(valKeys[count]);
       }
 
       x++;
     }
 
-    return new DefaultXYDataSource(data);
-    //return createEmptyCategoryDataSource();
+    return new DefaultXYDataset(data);
   }
  
 }

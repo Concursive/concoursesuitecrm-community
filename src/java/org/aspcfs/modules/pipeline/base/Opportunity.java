@@ -1077,7 +1077,7 @@ public void setEnabled(boolean enabled) {
 	if (tempValue < 1) {
 		amountOut = "<1";
         } else {
-		amountOut = numberFormatter.format(guess);
+		amountOut = numberFormatter.format(tempValue);
 	}
 	
 	return amountOut; 
