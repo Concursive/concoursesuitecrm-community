@@ -54,12 +54,14 @@ public class ContactList extends Vector {
   private String accountOwnerIdRange = null;
   private boolean withAccountsOnly = false;
   private boolean withProjectsOnly = false;
+  private int personalId = -1;
+  //Html drop-down helper properties
   private String emptyHtmlSelectRecord = null;
   private String jsEvent = null;
 
+  //Properties for combining multiple criteria into a single contact list
   private int sclOwnerId = -1;
   private String sclOwnerIdRange = null;
-
   private HashMap companyHash = null;
   private HashMap nameFirstHash = null;
   private HashMap nameLastHash = null;
@@ -70,16 +72,11 @@ public class ContactList extends Vector {
   private HashMap typeIdHash = null;
   private HashMap contactIdHash = null;
   private HashMap accountTypeIdHash = null;
-
   boolean firstCriteria = true;
-
   private String contactIdRange = null;
-
   private SearchCriteriaList scl = null;
-
+  //Global search property
   private String searchText = "";
-
-  private int personalId = -1;
 
 
   /**
@@ -414,10 +411,11 @@ public class ContactList extends Vector {
    *@param  thisUserRange  The new scl value
    *@since
    */
-  public void setScl(SearchCriteriaList scl, int thisOwnerId, String thisUserRange) {
+  public void setScl(SearchCriteriaList scl, int thisOwnerId, String thisUserRange, int personalId) {
     this.scl = scl;
     this.sclOwnerId = thisOwnerId;
     this.sclOwnerIdRange = thisUserRange;
+    this.personalId = personalId;
     buildQuery(thisOwnerId, thisUserRange);
   }
 
@@ -1068,6 +1066,9 @@ public class ContactList extends Vector {
               month = Integer.parseInt(st.nextToken());
               day = Integer.parseInt(st.nextToken());
               year = Integer.parseInt(st.nextToken());
+              if (year < 50) {
+                year += 2000;
+              }
             }
 
             Calendar tmpCal = new GregorianCalendar(year, (month - 1), day);
@@ -1884,7 +1885,6 @@ public class ContactList extends Vector {
           sqlFilter.append(") ");
         }
       }
-
     } else {
       if (typeId != -1) {
         sqlFilter.append("AND c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id != ?) ");
