@@ -1,0 +1,801 @@
+A4,Audi,96 97 98 99 00 01 02 03 04
+A6,Audi,95 96 97 98 99 00 01 02 03 04
+A8,Audi,97 98 99 00 01 02 03 04
+Accent,Hyundai,95 96 97 98 99 00 01 02 03 04
+Access Cub,Toyota,4
+Acclaim,Plymouth,89 90 91 92 93 94 95
+Accord,Honda,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Achieva,Oldsmobile,92 93 94 95 96 97 98
+Aerio,Suzuki,02 03 04
+Aerostar,Ford,86 87 88 89 90 91 92 93 94 95 96 97
+Alero,Oldsmobile,99 00 01 02 03 04
+Allante',Cadillac,87 88 89 90 91 92 93
+Alliance,AMC,83 84 85 86 87
+allroad,Audi,01 02 03 04
+Altima,Nissan,93 94 95 96 97 98 99 00 01 02 03 04 05
+Amanti,Kia,4
+Amigo,Isuzu,89 90 91 92 93 94 98 99 00
+APV,Chevrolet,90 91 92 93
+Aries,Dodge,83 84 85 86 87
+Aries America,Dodge,88 89
+Ascender,Isuzu,03 04
+Aspire,Ford,94 95 96 97
+Astro,Chevrolet,85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Aurora,Oldsmobile,95 96 97 98 99 01 02 03
+Avalanche,Chevrolet,02 03
+Avalanche 1500,Chevrolet,4
+Avalanche 2500,Chevrolet,4
+Avalon,Toyota,95 96 97 98 99 00 01 02 03 04
+Avenger,Dodge,95 96 97 98 99 00
+Aveo,Chevrolet,4
+Aviator,Lincoln,03 04
+Axiom,Isuzu,02 03 04
+Axxess,Nissan,90
+Aztek,Pontiac,01 02 03 04
+Azzurra,Pininfarina,84 85
+B2000,Mazda,83 84 86 87
+B2200,Mazda,87 88 89 90 91 92 93
+B2300,Mazda,94 95 96 97 01 02 03
+B2500,Mazda,98 99 00 01
+B2600,Mazda,87 88 89 90 91 92 93
+B2600i,Mazda,89
+B3000,Mazda,94 95 96 98 99 00 01 02 03
+B4000,Mazda,94 95 96 97 98 99 00 01 02 03
+Baja,Subaru,03 04
+Beretta,Chevrolet,87 88 89 90 91 92 93 94 95 96
+Blackwood,Lincoln,02 03
+Blazer,Chevrolet,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Bonneville,Pontiac,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Boxster,Porsche,97 98 99 00 01 02 03 04
+Brat,Subaru,83 84 85 86 87
+Bravada,Oldsmobile,91 92 93 94 96 97 98 99 00 01 02 03 04
+Breeze,Plymouth,96 97 98 99 00
+Bronco,Ford,83 84 85 86 87 88 89 90 91 92 93 94 95 96
+Bronco II,Ford,84 85 86 87 88 89 90
+Brougham,Cadillac,87 88 89 90 91 92
+B-Series Cab Plus,Mazda,4
+B-Series Regular Plus,Mazda,4
+C70,Volvo,98 99 00 01 02 03
+Caballero,GMC,83 84 85 86 87
+Cabrio,Volkswagen,95 96 97 98 99 00 01 02
+Cabrio,Yugo,90 91
+Cabriolet,Audi,94 95 96 97 98
+Cabriolet,Volkswagen,85 86 87 88 89 90 91 92 93
+Calais,Oldsmobile,85 86 87 88 89 90 91
+Camaro,Chevrolet,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02
+Camry,Toyota,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Canyon Crew Cab,GMC,4
+Canyon Extended Cab,GMC,4
+Canyon Regular Cab,GMC,4
+Capri,Mercury,83 84 85 86 91 92 93 94
+Caprice,Chevrolet,86 87 88 89 90 91 92
+Caprice Classic,Chevrolet,83 84 85 93 94 95 96
+Caravan,Dodge,84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03
+Caravan Grand Passenger Van,Dodge,04 05
+Caravan Passenger Van,Dodge,04 05
+Caravelle,Plymouth,85 86 87 88
+Catera,Cadillac,97 98 99 00 01
+Cavalier,Chevrolet,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Cayenne,Porsche,4
+C-Class,Mercedes-Benz,94 95 96 97 98 99 00 01 02 03 04
+Celebrity,Chevrolet,83 84 85 86 87 88 89 90
+Celica,Toyota,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Celica Supra,Toyota,83 84 85
+Century,Buick,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Challenger,Dodge,83
+Charade,Daihatsu,88 89 90 91 92
+Charger,Dodge,83 84 85 86 87
+Cherokee,Jeep,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01
+Chevette,Chevrolet,83 84 85 86 87
+Ciera,Oldsmobile,83 84 85 86 87 88 89 90 91 92 93 94 95 96
+Cimarron,Cadillac,83 84 85 86 87 88
+Cirrus,Chrysler,95 96 97 98 99 00
+Citation,Chevrolet,83
+Citation II,Chevrolet,84 85
+Civic,Honda,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+CJ,Jeep,83 84 85 86
+CL,Acura,97 98 99 01 02 03
+CL-Class,Mercedes-Benz,98 99 00 01 02 03 04
+CLK-Class,Mercedes-Benz,98 99 00 01 02 03 04
+Club Wagon,Ford,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98
+Colorado Crew Cab,Chevrolet,4
+Colorado Extended Cab,Chevrolet,4
+Colorado Refular Cab,Chevrolet,4
+Colt,Dodge,83 84 85 86 87 88 89 90 91 92 93 94
+Colt,Plymouth,83 84 85 86 87 88 89 90 91 92 93 94
+Colt Vista,Dodge,84 85 86 87 88 89 90 91
+Colt Vista,Plymouth,84 85 86 87 88 89 90 91 92 93 94
+Comanche Pickup,Jeep,86 87 88 89 90 91 92
+Concord,AMC,83
+Concorde,Chrysler,93 94 95 96 97 98 99 00 01 02 03 04
+Conquest,Chrysler,87
+Conquest,Dodge,84 85 86
+Conquest,Plymouth,84 85 86
+Conquest TSi,Chrysler,88 89
+Continental,Lincoln,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02
+Contour,Ford,95 96 97 98 99 00
+Cooper,MINI,02 03 04
+Cordia,Mitsubishi,83 84 85 86 87 88
+Cordoba,Chrysler,83
+Corolla,Toyota,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Corrado,Volkswagen,90 91 92 93 94
+Corsica,Chevrolet,87 88 89 90 91 92 93 94 95 96
+Corvette,Chevrolet,84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Cougar,Mercury,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 99 00 01 02
+Country Squire,Ford,83 84 85 86 87 88 89 90 91
+Coupe,Audi,83
+Coupe,Volvo,91
+Cressida,Toyota,83 84 85 86 87 88 89 90 91 92
+Crossfire,Chrysler,4
+Crown Victoria,Ford,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+CR-V,Honda,97 98 99 00 01 02 03 04
+CTS,Cadillac,03 04
+Custom Cruiser,Oldsmobile,90 91 92
+Cutlass,Oldsmobile,83 84 97 98 99
+Cutlass Cruiser,Oldsmobile,93 94
+Cutlass Supreme,Oldsmobile,85 86 87 88 89 90 91 92 93 94 95 96 97
+Dakota,Dodge,87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03
+Dakota Club Cab,Dodge,4
+Dakota Quad Cab,Dodge,4
+Dakota Regular Cab,Dodge,4
+Daytona,Dodge,84 85 86 87 88 89 90 91 92 93
+Defender 110,Land Rover,93
+Defender 90,Land Rover,94 95 97
+del Sol,Honda,93 94 95 96 97
+Delta 88,Oldsmobile,83 84 85 86 87 88
+DeVille,Cadillac,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Diamante,Mitsubishi,92 93 94 95 96 97 98 99 00 01 02 03 04
+Diplomat,Dodge,83 84 85 86 87 88 89
+Discovery,Land Rover,94 95 96 97 98 99 03 04
+Discovery Series II,Land Rover,99 00 01 02
+DL,Subaru,83 84 85 86 87 88 89
+DL,Volvo,83 84 85
+Double Cub,Toyota,4
+Durango,Dodge,98 99 00 01 02 03 04
+Dynasty,Dodge,88 89 90 91 92 93
+E150 Wagon,Ford,4
+E350 Super Duty Wagon,Ford,4
+Eagle,AMC,83 84 85 86 87 88
+Echo,Toyota,00 01 02 03 04
+E Class,Chrysler,83 84
+E-Class,Mercedes-Benz,94 95 96 97 98 99 00 01 02 03 04
+Eclipse,Mitsubishi,90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Econoline,Ford,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03
+Elantra,Hyundai,92 93 94 95 96 97 98 99 00 01 02 03 04
+El Camino,Chevrolet,83 84 85 86 87
+Eldorado,Cadillac,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02
+Electra,Buick,83 84 85 86 87 88 89 90
+Element,Honda,03 04
+Encore,AMC,84 85 86
+Endeavor,Mitsubishi,4
+Envoy,GMC,98 99 00 02 03 04
+Envoy XL,GMC,02 03 04
+Envoy XUV,GMC,4
+Equinox,Chevrolet,5
+ES 250,Lexus,90 91
+ES 300,Lexus,92 93 94 95 96 97 98 99 00 01 02 03
+ES 330,Lexus,4
+Escalade,Cadillac,99 00 02 03 04
+Escalade ESV,Cadillac,03 04
+Escalade EXT,Cadillac,02 03 04
+Escape,Ford,01 02 03 04 05
+Escort,Ford,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02
+Estate,Buick,90
+Esteem,Suzuki,95 96 97 98 99 00 01 02
+Eurovan,Volkswagen,93 99 00 01 02 03
+Excel,Hyundai,86 87 88 89 90 91 92 93 94
+Excursion,Ford,00 01 02 03 04
+Executive,Chrysler,84
+EXP,Ford,83 84 85 86 87 88
+Expedition,Ford,97 98 99 00 01 02 03 04
+Explorer,Ford,91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Explorer Sport Trac,Ford,01 02 03 04
+Expo,Mitsubishi,92 93 94 95
+Express Van,Chevrolet,96 97 98 99 00 01 02 03 04
+F100,Ford,83
+F150,Ford,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03
+F150 Heritage Regular Cab,Ford,4
+F150 Heritage Super Cab,Ford,4
+F150 Regular Cab,Ford,4
+F150 Super Cab,Ford,4
+F150 Super Crew Cab,Ford,4
+F250,Ford,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03
+F250 Super Duty Crew Cab,Ford,4
+F250 Super Duty Regular Cab,Ford,4
+F250 Super Duty Super Cab,Ford,4
+F350,Ford,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 99 00 01 02 03
+F350 Super Duty Crew Cab,Ford,4
+F350 Super Duty Regular Cab,Ford,4
+F350 Super Duty Super Cab,Ford,4
+Fairmont,Ford,83
+Festiva,Ford,88 89 90 91 92 93
+Fiero,Pontiac,84 85 86 87 88
+Fifth Ave,Chrysler,83 84 85 86 87 88 89 90 91 92 93
+Firebird,Pontiac,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02
+Firenza,Oldsmobile,83 84 85 86 87 88
+Fleetwood,Cadillac,83 84 85 86 87 88 89 90 91 92 93 94 95 96
+Fleetwood 75,Cadillac,87
+Focus,Ford,00 01 02 03 04
+Forenzo,Suzuki,4
+Forester,Subaru,98 99 00 01 02 03 04
+Fox,Volkswagen,87 88 89 90 91 92 93
+Freelander,Land Rover,02 03 04
+Freestar,Ford,4
+Frontier,Nissan,98 99 00 01 02 03
+Frontier Crew Cab,Nissan,4
+Frontier King Cab,Nissan,4
+Fuego,Renault,83 84 85
+G20,Infiniti,91 92 93 94 95 96 99 00 01 02
+G35,Infiniti,03 04
+Galant,Mitsubishi,85 86 87 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Galant Sigma,Mitsubishi,88
+G-Class,Mercedes-Benz,02 03 04
+GL,Subaru,83 84 85 86 87 88 89
+GL,Volvo,83 84 85
+GL-10,Subaru,85 86 87 88 89
+GLC,Mazda,83 84 85 86
+GLT,Volvo,83 84
+Golf,Volkswagen,85 86 87 88 89 90 91 92 96 97 98 99 00 01 02 03 04
+Golf III,Volkswagen,93 94 95
+Grand Am,Pontiac,85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Grand Caravan,Dodge,87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03
+Grand Cherokee,Jeep,93 94 95 96 97 98 99 00 01 02 03 04
+Grand Marquis,Mercury,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Grand Prix,Pontiac,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Grand Vitara,Suzuki,99 00 01 02 03 04
+Grand Voyager,Chrysler,0
+Grand Voyager,Plymouth,87 88 89 90 91 92 93 94 95 96 97 98 99 00
+Grand Wagoneer,Jeep,84 85 86 87 88 89 90 91
+Gran Fury,Plymouth,83 84 85 86 87 88 89
+GS 300,Lexus,93 94 95 96 97 98 99 00 01 02 03 04
+GS 400,Lexus,98 99 00
+GS 430,Lexus,01 02 03 04
+G-Series Van,Chevrolet,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98
+GT,Audi,84 85 86 87
+GTA,AMC,87
+GTI,Volkswagen,85 86 87 88 89 90 91 92 95 00 01 02 03 04
+GTO,Pontiac,4
+GTV-6,Alfa Romeo,83 84 85 86
+GV,Yugo,87 88 89 90 91
+GVL,Yugo,88 89
+GVS,Yugo,88
+GVX,Yugo,87 88
+GX 470,Lexus,03 04
+H1,Hummer,93 94 95 96 97 98 99 00 01 02 03 04
+H2,Hummer,03 04
+Hatchback,Yugo,86
+Highlander,Toyota,01 02 03 04
+Hombre,Isuzu,96 97 98 99 00
+Horizon,Plymouth,83 84 85 86 87 88 89 90
+I30,Infiniti,96 97 98 99 00 01
+I35,Infiniti,02 03 04
+I-Mark,Isuzu,83 84 85 86 87 88 89
+Impala,Chevrolet,83 84 85 00 01 02 03 04
+Impala SS,Chevrolet,94 95 96
+Imperial,Chrysler,83 90 91 92 93
+Impreza,Subaru,93 94 95 96 97 98 99 00 01 02 03 04
+Impulse,Isuzu,83 84 85 86 87 88 89 90 91 92
+Insight,Honda,00 01 02 03 04
+Integra,Acura,86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01
+Intrepid,Dodge,93 94 95 96 97 98 99 00 01 02 03 04
+Intrigue,Oldsmobile,98 99 00 01 02
+Ion,Saturn,03 04
+IS 300,Lexus,01 02 03 04
+J10 Pickup,Jeep,83 84 85 86 87 88
+J20 Pickup,Jeep,83 84 85 86 87 88
+J30,Infiniti,93 94 95 96 97
+Jetta,Volkswagen,83 84 85 86 87 88 89 90 91 92 96 97 98 99 00 01 02 03 04
+Jetta III,Volkswagen,93 94 95
+Jimmy,GMC,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01
+Justy,Subaru,87 88 89 90 91 92 93 94
+L100,Saturn,01 02
+L200,Saturn,01 02 03
+L300,Saturn,01 02 03
+Lancer,Dodge,85 86 87 88 89
+Lancer,Mitsubishi,02 03 04
+Land Cruiser,Toyota,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Lanos,Daewoo,99 00 01 02
+Laser,Chrysler,84 85 86
+Laser,Plymouth,90 91 92 93 94
+LeBaron,Chrysler,83 84 85 86 87 88 89 90 91 92 93 94 95
+LeCar,Renault,83
+Legacy,Subaru,90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Leganza,Daewoo,99 00 01 02
+Legend,Acura,86 87 88 89 90 91 92 93 94 95
+LeMans,Pontiac,88 89 90 91 92 93
+LeSabre,Buick,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+LHS,Chrysler,94 95 96 97 99 00 01
+Liberte,Peugeot,87
+Liberty,Jeep,02 03 04
+LN7,Mercury,83
+Loyale,Subaru,90 91 92 93 94
+LS,Lincoln,00 01 02 03 04
+LS,Saturn,0
+LS1,Saturn,0
+LS2,Saturn,0
+LS 400,Lexus,90 91 92 93 94 95 96 97 98 99 00
+LS 430,Lexus,01 02 03 04
+L Series,Saturn,4
+LSS,Oldsmobile,97 98 99
+LTD,Ford,83 84 85 86
+Lumina,Chevrolet,90 91 92 93 94 95 96 97 98 99 00 01
+Lumina APV,Chevrolet,90 91 92 93
+LW1,Saturn,0
+LW2,Saturn,0
+LW200,Saturn,01 02 03
+LW300,Saturn,01 02 03
+LX 450,Lexus,96 97
+LX 470,Lexus,98 99 00 01 02 03 04
+Lynx,Mercury,83 84 85 86 87
+M3,BMW,4
+M30,Infiniti,90 91 92
+M45,Infiniti,03 04
+Magnum,Dodge,5
+Malibu,Chevrolet,83 97 98 99 00 01 02 03 04
+Marauder,Mercury,03 04
+Mark VI,Lincoln,83
+Mark VII,Lincoln,84 85 86 87 88 89 90 91 92
+Mark VIII,Lincoln,93 94 95 96 97 98
+Marquis,Mercury,83 84 85 86
+Matrix,Toyota,03 04
+Maxima,Nissan,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+M-Class,Mercedes-Benz,98 99 00
+MDX,Acura,01 02 03 04
+Medallion,Eagle,88 89
+Metro,Chevrolet,98 99 00 01
+Metro,Geo,89 90 91 92 93 94 95 96 97
+Miata MX-5,Mazda,90 91 92 93 94 95 96 97 99 00 01 02 03 04
+Milano,Alfa Romeo,87 88 89
+Millenia,Mazda,95 96 97 98 99 00 01 02
+Mini Ram Van,Dodge,84 85 86 87 88
+Minivan,Mitsubishi,87 88 89 90
+Minivan,Nissan,87 88 90
+Minivan,Toyota,84 85 86 87 88 89
+Mirada,Dodge,83
+Mirage,Mitsubishi,85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02
+ML-Class,Mercedes-Benz,01 02 03 04
+Monaco,Dodge,90 91 92
+Montana,Pontiac,99 00 01 02 03 04
+Monte Carlo,Chevrolet,83 84 85 86 87 88 95 96 97 98 99 00 01 02 03 04
+Monterey,Mercury,4
+Montero,Mitsubishi,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Montero Sport,Mitsubishi,97 98 99 00 01 02 03 04
+Mountaineer,Mercury,97 98 99 00 01 02 03 04
+MPV,Mazda,89 90 91 92 93 94 95 96 97 98 00 01 02 03 04
+MR2,Toyota,85 86 87 88 89 91 92 93 94 95
+MR2 Spyder,Toyota,00 01 02 03 04
+Murano,Nissan,03 04
+Mustang,Ford,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+MX-3,Mazda,92 93 94 95
+MX-6,Mazda,88 89 90 91 92 93 94 95 96 97
+Mystique,Mercury,95 96 97 98 99 00
+Navajo,Mazda,91 92 93 94
+Navigator,Lincoln,98 99 00 01 02 03 04
+Neon,Dodge,95 96 97 98 99 00 01 02 03 04
+Neon,Plymouth,95 96 97 98 99 00 01
+New 40 Series,Volvo,4
+New Beetle,Volkswagen,98 99 00 01 02 03 04
+New Cabrio,Volkswagen,99
+New Golf,Volkswagen,99
+New GTI,Volkswagen,99
+New Jetta,Volkswagen,99
+New Passat,Volkswagen,1
+New Yorker,Chrysler,83 84 85 86 87 88 89 90 91 92 93 94 95 96
+Nova,Chevrolet,85 86 87 88
+NSX,Acura,91 92 93 94 95 96 97 98 99 00 01 02 03
+NSX-T,Acura,4
+Nubira,Daewoo,99 00 01 02
+NX,Nissan,91 92 93
+Oasis,Isuzu,96 97 98 99
+Odyssey,Honda,95 96 97 98 99 00 01 02 03 04
+Omega,Oldsmobile,83 84
+Omni,Dodge,83 84 85 86
+Omni America,Dodge,87 88 89 90
+Optima,Kia,01 02 03 04
+Outback,Subaru,00 01 02 03 04
+Outlander,Mitsubishi,03 04
+Pacifica,Chrysler,4
+Parisienne,Pontiac,83 84 85 86
+Park Avenue,Buick,91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Paseo,Toyota,92 93 94 95 96 97
+Passat,Volkswagen,90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Passport,Honda,94 95 96 97 98 99 00 01 02
+Pathfinder,Nissan,87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Pathfinder Armada,Nissan,4
+Phaeton,Volkswagen,4
+Phoenix,Pontiac,83 84
+Pickup,Isuzu,83 84 85 86 87 88 89 90 91 92 93 94 95
+Pickup,Mitsubishi,83 84 85 86 87 88 89 90 91 92 93 94 95 96
+Pickup,Nissan,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97
+Pickup,Plymouth,83
+Pickup,Toyota,83 84 85 86 87 88 89 90 91 92 93 94 95
+Pilot,Honda,03 04
+Precis,Mitsubishi,87 88 89 90 91 92 93 94
+Prelude,Honda,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01
+Premier,Eagle,88 89 90 91 92
+Previa,Toyota,91 92 93 94 95 96 97
+Prius,Toyota,01 02 03 04
+Prizm,Chevrolet,98 99 00 01 02
+Prizm,Geo,89 90 91 92 93 94 95 96 97
+Probe,Ford,89 90 91 92 93 94 95 96 97
+Protege,Mazda,90 91 92 93 94 95 96 97 98 99 00 01 02 03
+Protege5,Mazda,02 03
+PT Cruiser,Chrysler,01 02 03 04 05
+Pulsar,Nissan,83 84 85 86 87 88 89 90
+Q45,Infiniti,90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Quantum,Volkswagen,83 84 85 86 87 88
+Quattro,Audi,83 84 90 91 92 93 94
+Quest,Nissan,93 94 95 96 97 98 99 00 01 02 04
+QX4,Infiniti,97 98 99 00 01 02 03
+R32,Volkswagen,4
+Rabbit,Volkswagen,83 84
+Raider,Dodge,87 88 89
+Rainier,Buick,4
+Rally Wagon,GMC,83 84 85 86 87 88 89 90 91 92 93 94 95 96
+Ram 50 Pickup,Dodge,83 84 85 86 87 88 89 90 91 92 93
+Ramcharger,Dodge,83 84 85 86 87 88 89 90 91 92 93
+Rampage,Dodge,83 84
+Ram Pickup 1500 Quad Cab,Dodge,4
+Ram Pickup 1500 Regular Cab,Dodge,4
+Ram Pickup 2500 Quad Cab,Dodge,4
+Ram Pickup 2500 Regular Cab,Dodge,4
+Ram Pickup 3500 Cab,Dodge,4
+Ram Pickup 3500 Quad Cab,Dodge,4
+Ram Van,Dodge,85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03
+Ram Wagon,Dodge,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02
+Ranger,Ford,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03
+Range Rover,Land Rover,87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Ranger Regular Cab,Ford,4
+Ranger Super Cab,Ford,4
+RAV4,Toyota,96 97 98 99 00 01 02 03 04
+Reatta,Buick,88 89 90 91
+Regal,Buick,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Regency,Oldsmobile,97 98
+Regular Cab,Toyota,4
+Reliant,Plymouth,83 84 85 86 87 88 89
+Rendezvous,Buick,02 03 04
+Rio,Kia,01 02 03 04
+Riviera,Buick,83 84 85 86 87 88 89 90 91 92 93 95 96 97 98 99
+RL,Acura,96 97 98 99 00 01 02 03 04
+Roadmaster,Buick,91 92 93 94 95 96
+Rocky,Daihatsu,90 91 92
+Rodeo,Isuzu,91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Rodeo Sport,Isuzu,01 02 03
+RSX,Acura,02 03 04
+RX,Subaru,85 86 87 88 89
+RX 300,Lexus,99 00 01 02 03
+RX 330,Lexus,4
+RX-7,Mazda,83 84 85 86 87 88 89 90 91 93 94 95
+RX-8,Mazda,4
+S10 Blazer,Chevrolet,83 84 85 86 87 88 89 90 91 92 93 94
+S10 Pickup,Chevrolet,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+S15 Jimmy,GMC,83 84 85 86 87 88 89 90 91
+S15 Pickup,GMC,83 84 85 86 87 88 89 90
+S2000,Honda,00 01 02 03 04
+S4,Audi,92 93 94 00 01 02 04
+S40,Volvo,00 01 02 03
+S6,Audi,95 02 03
+S60,Volvo,01 02 03
+S70,Volvo,98 99 00
+S8,Audi,01 02 03
+S80,Volvo,99 00 01 02 03
+S90,Volvo,97 98
+Sable,Mercury,86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Safari,GMC,85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Safari,Pontiac,87 88 89
+Safari Passenger Van,GMC,
+Samurai,Suzuki,86 87 88 89 90 91 92 93 94 95
+Santa Fe,Hyundai,01 02 03 04
+Sapporo,Plymouth,83
+Savana 1500 Passenger Van,GMC,4
+Savana 2500 Passenger Van,GMC,4
+Savana 3500 Passenger Van,GMC,4
+Savana Van,GMC,96 97 98 99 00 01 02 03
+SC,Saturn,91 92
+SC1,Saturn,93 94 95 96 97 98 99 00 01 02
+SC2,Saturn,93 94 95 96 97 98 99 00 01 02
+SC 300,Lexus,92 93 94 95 96 97 98 99 00
+SC 400,Lexus,92 93 94 95 96 97 98 99 00
+SC 430,Lexus,02 03 04
+Scirocco,Volkswagen,83 84 85 86 87 88
+S-Class,Mercedes-Benz,94 95 96 97 98 99 00 01 02 03 04
+Scorpio,Merkur,88 89
+Scoupe,Hyundai,91 92 93 94 95
+Sebring,Chrysler,95 96 97 98 99 00 01 02 03 04
+Sedona,Kia,02 03 04
+Sentra,Nissan,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Sephia,Kia,94 95 96 97 98 99 00 01
+Sequoia,Toyota,01 02 03 04
+Seville,Cadillac,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Shadow,Dodge,87 88 89 90 91 92 93 94
+Sidekick,Suzuki,89 90 91 92 93 94 95 96 97 98
+Sienna,Toyota,98 99 00 01 02 03 04
+Sierra 1500 Crew Cab,GMC,4
+Sierra 1500 Extended Cab,GMC,4
+Sierra 1500 Pickup,GMC,99 00 01 02 03
+Sierra 1500 Regular Cab,GMC,4
+Sierra 2500 Crew Cab,GMC,4
+Sierra 2500 Extended Cab,GMC,4
+Sierra 2500 HD Crew Cab,GMC,4
+Sierra 2500 HD Extended Cab,GMC,4
+Sierra 2500 Pickup,GMC,99 00 01 02 03
+Sierra 2500 Regular Cab,GMC,4
+Sierra 3500 Crew Cab,GMC,4
+Sierra 3500 Extended Cab,GMC,4
+Sierra 3500 Pickup,GMC,01 02 03
+Sierra 3500 Regular Cab,GMC,4
+Sigma,Mitsubishi,89 90
+Silhouette,Oldsmobile,90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Silverado 1500 Pickup,Chevrolet,99 00 01 02 03 04
+Silverado 2500 Pickup,Chevrolet,99 00 01 02 03 04
+Silverado 3500 Pickup,Chevrolet,01 02 03 04
+Sixty Special,Cadillac,93
+Skyhawk,Buick,83 84 85 86 87 88 89
+Skylark,Buick,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98
+SL,Saturn,91 92 93 94 95 96 97 98 99 00 01 02
+SL1,Saturn,91 92 93 94 95 96 97 98 99 00 01 02
+SL2,Saturn,91 92 93 94 95 96 97 98 99 00 01 02
+SL-Class,Mercedes-Benz,94 95 96 97 98 99 00 01 02 03 04
+SLK-Class,Mercedes-Benz,98 99 00 01 02 03 04
+SLX,Acura,96 97 98 99
+Solara,Toyota,99 00 01 02 03 04
+Somerset,Buick,86 87
+Somerset Regal,Buick,85
+Sonata,Hyundai,89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Sonoma,GMC,91 92 93 94 95 96 97 98 99 00 01 02 03
+Sonoma Crew Cab,GMC,4
+Sorento,Kia,03 04
+Spectra,Kia,00 01 02 03
+Spectrum,Chevrolet,85 86 87 88
+Spectrum,Geo,89
+Spider,Alfa Romeo,83 84 85 86 87 88 89 90 91 92 93 94
+Spider 2000,Fiat,83
+Spirit,AMC,83
+Spirit,Dodge,89 90 91 92 93 94 95
+Sportage,Kia,95 96 97 98 99 00 01 02
+Sportvan,Chevrolet,83 84 85 86 87 88 89 90 91 92 93 94 95 96
+Sportwagon,Renault,84 85 86
+Sprint,Chevrolet,85 86 87 88
+Sprinter Wagon,Dodge,4
+SRX,Cadillac,4
+SSR,Chevrolet,4
+Stanza,Nissan,83 84 85 86 87 88 89 90 91 92
+Starion,Mitsubishi,83 84 85 86 87 88 89
+Starlet,Toyota,83 84
+STD,Subaru,83 84 85 86 87
+Stealth,Dodge,91 92 93 94 95 96
+Storm,Geo,90 91 92 93
+Stratus,Dodge,95 96 97 98 99 00 01 02 03 04
+Stylus,Isuzu,91 92 93
+S-Type,Jaguar,00 01 02 03 04
+Suburban,Chevrolet,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Suburban,GMC,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99
+Summit,Eagle,89 90 91 92 93 94 95 96
+Sunbird,Pontiac,84 85 86 87 88 89 90 91 92 93 94
+Sundance,Plymouth,87 88 89 90 91 92 93 94
+Sunfire,Pontiac,95 96 97 98 99 00 01 02 03 04
+Supra,Toyota,86 87 88 89 90 91 92 93 94 95 96 97 98
+SVX,Subaru,92 93 94 95 96 97
+SW1,Saturn,93 94 95 96 97 98 99
+SW2,Saturn,93 94 95 96 97 98 99 00 01
+Swift,Suzuki,89 90 91 92 93 94 95 96 97 98 99 00 01
+T100,Toyota,93 94 95 96 97 98
+Tacma Xtracab,Toyota,4
+Tacoma,Toyota,95 96 97 98 99 00 01 02 03
+Tacoma Double Cab,Toyota,4
+Tacoma Regular Cab,Toyota,4
+Tahoe,Chevrolet,95 96 97 98 99 00 01 02 03 04
+Talon,Eagle,90 91 92 93 94 95 96 97 98
+Taurus,Ford,86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+TC,Chrysler,89 90 91
+Tempo,Ford,84 85 86 87 88 89 90 91 92 93 94
+Tercel,Toyota,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98
+Thunderbird,Ford,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 02 03 04
+Tiburon,Hyundai,97 98 99 00 01 03 04
+Titan Crew Cab,Nissan,4
+Titan King Cab,Nissan,4
+TL,Acura,95 96 97 98 99 00 01 02 03 04
+Topaz,Mercury,84 85 86 87 88 89 90 91 92 93 94
+Toronado,Oldsmobile,83 84 85 86 87 88 89 90 91 92
+Touareg,Volkswagen,4
+Town Car,Lincoln,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+Town & Country,Chrysler,90 91 92 93 94 95 96 97 98 99 00 01 02 03 04 05
+Tracer,Mercury,88 89 91 92 93 94 95 96 97 98 99
+Tracker,Chevrolet,98 99 00 01 02 03 04
+Tracker,Geo,89 90 91 92 93 94 95 96 97
+TrailBlazer,Chevrolet,02 03 04
+Trans Sport,Pontiac,90 91 92 93 94 95 96 97 98
+Tredia,Mitsubishi,83 84 85 86 87 88
+Tribute,Mazda,01 02 03 04 05
+Trooper,Isuzu,91 92 93 94 95 96 97 98 99 00 01 02 03
+Trooper II,Isuzu,84 85 86 87 88 89 90
+TSX,Acura,4
+TT,Audi,00 01 02 03 04
+Tundra,Toyota,00 01 02 03
+Turbo,Volvo,85
+Turismo,Plymouth,83 84 85 86 87
+V40,Volvo,00 01 02 03
+V70,Volvo,98 99 00 01 02 03
+V90,Volvo,97 98
+Van,Dodge,83 84
+Vanagon,Volkswagen,83 84 85 86 87 88 89 90 91
+Vanden Plas,Jaguar,02 03
+Vandura,GMC,83 84 85 86 87 88 89 90 91 92 93 94 95 96
+VehiCROSS,Isuzu,99 00 01
+Venture,Chevrolet,97 98 99 00 01 02 03 04
+Verona,Suzuki,4
+Vibe,Pontiac,03 04
+Vigor,Acura,92 93 94
+Villager,Mercury,93 94 95 96 97 98 99 00 01 02
+Viper,Dodge,92 93 94 95 96 97 98 99 00 01 02 03 04
+Vision,Eagle,93 94 95 96 97
+Vitara,Suzuki,99 00 01 02 03 04
+Voyager,Chrysler,00 01 02 03
+Voyager,Plymouth,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00
+VUE,Saturn,02 03 04
+Wagoneer,Jeep,83 84 85 86 87 88 89 90
+Windstar,Ford,95 96 97 98 99 00 01 02 03
+Wrangler,Jeep,87 88 89 90 91 92 93 94 95 97 98 99 00 01 02 03 04
+X1/9,Bertone,84 85 86 87 88
+X1/9,Fiat,83
+X3,BMW,4
+X5,BMW,00 01 02 03 04
+X-90,Suzuki,96 97 98
+XA,Scion,4
+XB,Scion,4
+XC70,Volvo,3
+XC90,Volvo,03 04
+XG300,Hyundai,1
+XG350,Hyundai,02 03 04
+XJ12,Jaguar,93 94 95 96
+XJ6,Jaguar,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97
+XJ8,Jaguar,98 99 00 01 02 03
+XJR,Jaguar,95 96 97 98 99 00 01 02 03
+XJR-S,Jaguar,93
+XJS,Jaguar,83 84 85 86 87 88 89 90 91 92 93 94 95 96
+XJ Series,Jaguar,4
+XJ Sport,Jaguar,02 03
+XJ Super,Jaguar,02 03
+XK8,Jaguar,97 98 99 00 01 02 03
+XKR,Jaguar,00 01 02 03
+XK Series,Jaguar,4
+XL-7,Suzuki,01 02 03 04
+XLR,Cadillac,4
+XR4Ti,Merkur,85 86 87 88 89
+XT,Subaru,85 86 87 88 89 91
+XT6,Subaru,88 89 91
+Xterra,Nissan,00 01 02 03 04
+X-Type,Jaguar,4
+X-Type,Jaguar,02 03
+Yukon,GMC,92 93 94 95 96 97 98 99 00 01 02 03 04
+Yukon XL,GMC,00 01 02 03
+Yukon XL 1500,GMC,4
+Yukon XL 2500,GMC,4
+Z3,BMW,96 97 98 99 00 01 02
+Z4,BMW,03 04
+Z8,BMW,00 01 02 03
+Zephyr,Mercury,83
+ZX2,Ford,01 02 03
+190E-16,Mercedes-Benz,86 87
+1,Mazda,3
+3,Mazda,4
+6,Mazda,4
+80,Audi,88 89 90 91 92
+88,Oldsmobile,89 90 91 92 93 94 95 96 97 98 99
+90,Audi,88 89 90 91 93 94 95
+98,Oldsmobile,83 84 85 86 87 88 89 90 91 92 93 94 95 96
+100,Audi,89 90 91 92 93 94
+164,Alfa Romeo,91 92 93 94 95
+200,Audi,89 90 91
+240,Volvo,86 87 88 89 90 91 92 93
+323,Mazda,86 87 88 89 90 91 92 93 94
+325,BMW,4
+330,BMW,4
+400,Dodge,83
+405,Peugeot,89 90 91
+504,Peugeot,83
+505,Peugeot,83 84 85 86 87 88 89 91
+525,BMW,4
+530,BMW,4
+545,BMW,4
+600,Dodge,83 84 85 86 87 88
+604,Peugeot,83 84
+626,Mazda,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02
+645,BMW,4
+740,Volvo,85 86 87 88 89 90 91 92
+745,BMW,4
+760,BMW,4
+760,Volvo,83 84 85 86 87 88 89 90
+780,Volvo,87 88 89 90
+825,Sterling,87 88
+827,Sterling,89 90 91
+850,Volvo,93 94 95 96 97
+900,Saab,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98
+911,Porsche,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+924,Porsche,87 88
+928,Porsche,83 84 85 86 87 88 89 90 91 93 94 95
+929,Mazda,88 89 90 91 92 93 94 95
+940,Volvo,91 92 93 94 95
+944,Porsche,83 84 85 86 87 88 89 90 91
+960,Volvo,92 93 94 95 96 97
+968,Porsche,92 93 94 95
+1000,Pontiac,83 84 85 86 87
+2000,Pontiac,83
+4000,Audi,83 84 85 86 87
+5000,Audi,83 84 85 86 87 88
+6000,Pontiac,83 84 85 86 87 88 89 90 91
+9000,Saab,86 87 88 89 90 91 92 93 94 95 96 97 98
+37867,Saab,99 00 01 02 03
+37869,Saab,99 00 01 02 03
+100 Pickup,Dodge,84 85 86 87 88 89
+10 Pickup,Chevrolet,83 84 85 86 87
+1500 Pickup,Chevrolet,88 89 90 91 92 93 94 95 96 97 98 99
+1500 Pickup,Dodge,94 95 96 97 98 99 00 01 02 03
+1500 Pickup,GMC,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99
+150 Pickup,Dodge,83 84 85 86 87 88 89 90 91 92 93
+18i,Renault,83
+190D,Mercedes-Benz,84 85 86 87 88 89
+190E,Mercedes-Benz,84 85 86 87 88 89 90 91 92 93
+2000 Sunbird,Pontiac,84
+200SX,Nissan,83 84 85 86 87 88 95 96 97 98
+20 Pickup,Chevrolet,83 84 85 86 87
+240D,Mercedes-Benz,83
+240SX,Nissan,89 90 91 92 93 94 95 96 97 98
+2500 Pickup,Chevrolet,88 89 90 91 92 93 94 95 96 97 98 99 00
+2500 Pickup,Dodge,94 95 96 97 98 99 00 01 02 03
+2500 Pickup,GMC,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00
+250 Pickup,Dodge,83 84 85 86 87 88 89 90 91 92 93
+260E,Mercedes-Benz,87 88 89
+280ZX,Nissan,83
+3000GT,Mitsubishi,91 92 93 94 95 96 97 98 99
+300CD,Mercedes-Benz,83 84 85
+300CE,Mercedes-Benz,88 89 90 91 92 93
+300D,Mercedes-Benz,83 84 85 87 90 91 92 93
+300E,Mercedes-Benz,86 87 88 89 90 91 92 93
+300M,Chrysler,99 00 01 02 03 04 05
+300SD,Mercedes-Benz,83 84 85 92 93
+300SDL,Mercedes-Benz,86 87
+300SE,Mercedes-Benz,88 89 90 91 92 93
+300SEL,Mercedes-Benz,88 89 90 91
+300SL,Mercedes-Benz,90 91 92 93
+300TD,Mercedes-Benz,83 84 85 87
+300TE,Mercedes-Benz,88 89 90 91 92 93
+300ZX,Nissan,84 85 86 87 88 89 90 91 92 93 94 95 96
+30 Pickup,Chevrolet,83 84 85 86 87
+3500 Pickup,Chevrolet,88 89 90 91 92 93 94 95 96 97 98 99 00
+3500 Pickup,Dodge,94 95 96 97 98 99 00 01 02 03
+3500 Pickup,GMC,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00
+350 Pickup,Dodge,83 84 85 86 87 88 89 90 91 92 93
+350SD,Mercedes-Benz,90 91
+350SDL,Mercedes-Benz,90 91
+350Z,Nissan,03 04
+380SE,Mercedes-Benz,84 85
+380SEC,Mercedes-Benz,83
+380SEL,Mercedes-Benz,83
+380SL,Mercedes-Benz,83 84 85
+3 Series,BMW,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03
+400E,Mercedes-Benz,92 93
+400SE,Mercedes-Benz,92
+400SEL,Mercedes-Benz,93
+40 Series,Volvo,4
+420SEL,Mercedes-Benz,86 87 88 89 90 91
+4Runner,Toyota,84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03 04
+500E,Mercedes-Benz,92 93
+500SEC,Mercedes-Benz,84 85 93
+500SEL,Mercedes-Benz,84 85 92 93
+500SL,Mercedes-Benz,90 91 92 93
+560SEC,Mercedes-Benz,86 87 88 89 90 91
+560SEL,Mercedes-Benz,86 87 88 89 90 91
+560SL,Mercedes-Benz,86 87 88 89
+5 Series,BMW,83 84 85 86 87 88 89 90 91 92 93 94 95 97 98 99 00 01 02 03
+600SEC,Mercedes-Benz,93
+600SEL,Mercedes-Benz,92 93
+600SL,Mercedes-Benz,93
+60 Series,Volvo,4
+6 Series,BMW,83 84 85 86 87 88 89 90
+70 Series,Volvo,4
+7 Series,BMW,83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 00 01 02 03
+80 Series,Volvo,4
+8 Series,BMW,91 92 93 94 95 96 97
+9-3,Saab,4
+9-5,Saab,4
