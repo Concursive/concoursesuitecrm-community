@@ -19,7 +19,6 @@
 <%-- draws the ticket events for a specific day --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="org.aspcfs.modules.troubletickets.base.Ticket,org.aspcfs.modules.base.Constants" %>
-<%@ include file="calendar_ticket_events_menu.jsp" %>
 <%
   TicketEventList ticketEventList = (TicketEventList) thisDay.get(category);
 %>
