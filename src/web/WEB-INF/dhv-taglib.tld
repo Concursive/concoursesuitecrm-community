@@ -367,6 +367,30 @@
   </tag>
   
   <tag>
+    <name>checkbox</name>
+    <tag-class>org.aspcfs.taglib.CheckboxHtmlHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Displays an HTML checkbox from the given parameters
+    </display-name>
+    <attribute>
+      <name>name</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>checked</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
     <name>hasAuthority</name>
     <tag-class>org.aspcfs.taglib.AuthorityHandler</tag-class>
     <body-content>JSP</body-content>
