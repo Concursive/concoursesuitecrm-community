@@ -32,3 +32,5 @@ update permission_category set lookups='t' where category_id=1;
 update permission_category set lookups='t' where category_id=2;
 update permission_category set lookups='t' where category_id=8;
 
+alter table opportunity add column notes text;
+

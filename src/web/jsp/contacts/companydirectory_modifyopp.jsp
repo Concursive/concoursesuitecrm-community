@@ -123,10 +123,15 @@ Modify Opportunity<br>
     Description
   </td>
   <td valign=center>
-    <input type=text size=35 name="description" value="<%= toHtmlValue(OppDetails.getDescription()) %>">
+    <input type=text size=50 name="description" value="<%= toHtmlValue(OppDetails.getDescription()) %>">
     <font color="red">*</font> <%= showAttribute(request, "descriptionError") %>
   </td>
 </tr>
+
+  <tr class="containerBody">
+    <td valign="top" nowrap class="formLabel">Additional Notes</td>
+    <td><TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toString(OppDetails.getNotes()) %></TEXTAREA></td>
+  </tr>
 
 <tr class="containerBody">
   <td nowrap class="formLabel">

@@ -33,7 +33,8 @@ CREATE TABLE opportunity (
   closed DATETIME,
   custom_data TEXT,
   alert varchar(100) default null,
-  enabled BIT NOT NULL DEFAULT 1
+  enabled BIT NOT NULL DEFAULT 1,
+  notes TEXT
 );
  
 CREATE TABLE lookup_call_types (

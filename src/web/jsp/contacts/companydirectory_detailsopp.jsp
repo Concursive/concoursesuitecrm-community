@@ -50,6 +50,13 @@ Opportunity Details<br>
       <%= OppDetails.getOwnerName() %>
     </td>
   </tr>
+  
+  <dhv:evaluate exp="<%= hasText(OppDetails.getNotes()) %>">
+  <tr class="containerBody">
+    <td valign="top" nowrap class="formLabel">Additional Notes</td>
+    <td valign="top"><%= toHtml(OppDetails.getNotes()) %></td>
+  </tr>
+  </dhv:evaluate>
 
   <tr class="containerBody">
     <td nowrap class="formLabel">

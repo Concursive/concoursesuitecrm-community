@@ -33,7 +33,8 @@ CREATE TABLE opportunity (
 	closed TIMESTAMP,
 	custom_data TEXT,
 	alert varchar(100) default null,
-  enabled BOOLEAN NOT NULL DEFAULT true
+  enabled BOOLEAN NOT NULL DEFAULT true,
+  notes TEXT
 );
 
 CREATE TABLE lookup_call_types (

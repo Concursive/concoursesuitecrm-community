@@ -36,6 +36,7 @@ public class Opportunity extends GenericBean {
   private String units = "";
   private int stage = -1;
   private String stageName = "";
+  private String notes = null;
 
   private double commission = 0;
   private String type = "";
@@ -216,6 +217,12 @@ public class Opportunity extends GenericBean {
     this.alertDate = DateUtils.parseDateString(tmp);
   }
 
+  public String getNotes() {
+    return notes;
+  }
+  public void setNotes(String notes) {
+    this.notes = notes;
+  }
 
   /**
    *  Gets the accountEnabled attribute of the Opportunity object
@@ -1869,6 +1876,7 @@ public class Opportunity extends GenericBean {
     closed = rs.getString("closed");
     alertText = rs.getString("alert");
     enabled = rs.getBoolean("enabled");
+    notes = rs.getString("notes");
 
     //table
     stageName = rs.getString("stagename");
@@ -1940,7 +1948,7 @@ public class Opportunity extends GenericBean {
     }
 
     sql.append("type = ?, stage = ?, description = ?, " +
-        "closedate = ?, alertdate = ?, alert = ?, terms = ?, units = ?, owner = ?, ");
+        "closedate = ?, alertdate = ?, alert = ?, terms = ?, units = ?, owner = ?, notes = ?, ");
 
     if (override == false) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
@@ -1989,6 +1997,7 @@ public class Opportunity extends GenericBean {
     pst.setDouble(++i, this.getTerms());
     pst.setString(++i, this.getUnits());
     pst.setInt(++i, this.getOwner());
+    pst.setString(++i, this.getNotes());
     pst.setInt(++i, this.getModifiedBy());
 
     if (this.getOpenIt() == true) {
