@@ -51,13 +51,14 @@ public class ServiceContract extends GenericBean {
   private int modifiedBy = -1;
   private boolean enabled = true;
   private boolean override = false;
+  private String serviceModelNotes = null;
   private ArrayList productList = null;
 
 
   /**
    *  Constructor for the ServiceContract object
    */
-  public ServiceContract() { 
+  public ServiceContract() {
     errors.clear();
   }
 
@@ -160,7 +161,7 @@ public class ServiceContract extends GenericBean {
     tmp = StringUtils.replace(tmp, ",", "");
     tmp = StringUtils.replace(tmp, "$", "");
 
-    if (!"".equals(tmp)){
+    if (!"".equals(tmp)) {
       try {
         this.contractValue = Double.parseDouble(tmp);
       } catch (NumberFormatException ne) {
@@ -593,6 +594,16 @@ public class ServiceContract extends GenericBean {
 
 
   /**
+   *  Sets the serviceModelNotes attribute of the ServiceContract object
+   *
+   *@param  tmp  The new serviceModelNotes value
+   */
+  public void setServiceModelNotes(String tmp) {
+    this.serviceModelNotes = tmp;
+  }
+
+
+  /**
    *  Gets the id attribute of the ServiceContract object
    *
    *@return    The id value
@@ -880,6 +891,16 @@ public class ServiceContract extends GenericBean {
 
 
   /**
+   *  Gets the serviceModelNotes attribute of the ServiceContract object
+   *
+   *@return    The serviceModelNotes value
+   */
+  public String getServiceModelNotes() {
+    return serviceModelNotes;
+  }
+
+
+  /**
    *  Gets the properties that are TimeZone sensitive
    *
    *@return    The timeZoneParams value
@@ -947,7 +968,8 @@ public class ServiceContract extends GenericBean {
         "response_time = ? , " +
         "telephone_service_model= ? , " +
         "onsite_service_model = ? , " +
-        "email_service_model = ? ");
+        "email_service_model = ? , " + 
+        "service_model_notes = ? ");
 
     if (!override) {
       sql.append(" , modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , modifiedby = ? ");
@@ -979,6 +1001,7 @@ public class ServiceContract extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, telephoneResponseModel);
     DatabaseUtils.setInt(pst, ++i, onsiteResponseModel);
     DatabaseUtils.setInt(pst, ++i, emailResponseModel);
+    pst.setString(++i, serviceModelNotes);
     if (!override) {
       pst.setInt(++i, modifiedBy);
     }
@@ -991,14 +1014,14 @@ public class ServiceContract extends GenericBean {
 
     insertProductList(db);
 
-   //Inserts all the products (labor categories) associated with the service contract
+    //Inserts all the products (labor categories) associated with the service contract
     return resultCount;
   }
 
 
   /**
-   *  Inserts all the products (labor categories) associated with the
-   *  service contract
+   *  Inserts all the products (labor categories) associated with the service
+   *  contract
    *
    *@param  db                Description of the Parameter
    *@return                   Description of the Return Value
@@ -1113,7 +1136,7 @@ public class ServiceContract extends GenericBean {
       assetList.buildList(db);
       assetList.delete(db);
       assetList = null;
-      
+
       delete(db);
       db.commit();
     } catch (SQLException e) {
@@ -1148,7 +1171,7 @@ public class ServiceContract extends GenericBean {
     scProductList.buildList(db);
     scProductList.delete(db);
     scProductList = null;
-    
+
     Statement st = db.createStatement();
     st.executeUpdate("DELETE FROM service_contract WHERE contract_id = " + this.getId());
     st.close();
@@ -1187,9 +1210,10 @@ public class ServiceContract extends GenericBean {
         "telephone_service_model , " +
         "onsite_service_model , " +
         "email_service_model , " +
+        "service_model_notes , " +
         "enteredby , " +
         "modifiedby ) " +
-        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     int i = 0;
     pst.setString(++i, serviceContractNumber);
     pst.setInt(++i, orgId);
@@ -1211,14 +1235,15 @@ public class ServiceContract extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, telephoneResponseModel);
     DatabaseUtils.setInt(pst, ++i, onsiteResponseModel);
     DatabaseUtils.setInt(pst, ++i, emailResponseModel);
+    pst.setString(++i, serviceModelNotes);
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, modifiedBy);
     pst.execute();
     id = DatabaseUtils.getCurrVal(db, "service_contract_contract_id_seq");
     pst.close();
 
-   //Inserts all the products (labor categories) associated with the service contract
-   insertProductList(db);
+    //Inserts all the products (labor categories) associated with the service contract
+    insertProductList(db);
 
     return true;
   }
@@ -1276,6 +1301,7 @@ public class ServiceContract extends GenericBean {
     enabled = rs.getBoolean("enabled");
     contractValue = DatabaseUtils.getDouble(rs, "contract_value");
     totalHoursRemaining = rs.getDouble("total_hours_remaining");
+    serviceModelNotes = rs.getString("service_model_notes");
   }
 }
 

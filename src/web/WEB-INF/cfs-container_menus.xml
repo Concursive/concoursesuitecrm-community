@@ -261,6 +261,11 @@
       <permission value="tickets-tickets-view"/>
       <link value="TroubleTickets.do?command=Details&amp;id=${id}"/>
     </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value=""/>
+      <link value="TroubleTickets.do?command=ViewHistory&amp;id=${id}"/>
+    </submenu>
     <submenu name="activitylog">
       <long_html value="Activity Log"/>
       <permission value="tickets-activity-log-view"/>
@@ -286,11 +291,6 @@
       <permission value=""/>
       <link value="TroubleTicketsDocuments.do?command=View&amp;tId=${id}"/>
     </submenu>
-    <submenu name="history">
-      <long_html value="History"/>
-      <permission value=""/>
-      <link value="TroubleTickets.do?command=ViewHistory&amp;id=${id}"/>
-    </submenu>
   </container>
   
   <!-- Submenu used in the TroubleTickets module -->
@@ -302,6 +302,11 @@
       <long_html value="Details"/>
       <permission value=""/>
       <link value="AccountTickets.do?command=TicketDetails&amp;id=${id}"/>
+    </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value=""/>
+      <link value="AccountTickets.do?command=ViewHistory&amp;id=${id}"/>
     </submenu>
     <submenu name="activitylog">
       <long_html value="Activity Log"/>
@@ -327,11 +332,6 @@
       <long_html value="Documents"/>
       <permission value="accounts-accounts-tickets-documents-view"/>
       <link value="AccountTicketsDocuments.do?command=View&amp;tId=${id}"/>
-    </submenu>
-    <submenu name="history">
-      <long_html value="History"/>
-      <permission value=""/>
-      <link value="AccountTickets.do?command=ViewHistory&amp;id=${id}"/>
     </submenu>
   </container>
   

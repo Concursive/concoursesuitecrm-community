@@ -674,5 +674,110 @@ public class BusinessProcess {
       }
     }
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+    boolean autoCommit = db.getAutoCommit();
+    if (autoCommit) {
+      db.setAutoCommit(false);
+    }
+    try {
+      PreparedStatement pst;
+      pst = db.prepareStatement(
+          "SELECT process_id " +
+          "FROM business_process " +
+          "WHERE process_name = ? ");
+      pst.setString(1, name);
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        id = rs.getInt("process_id");
+      }
+      rs.close();
+      pst.close();
+
+      //deleting parameters
+      parameters = new ProcessParameterList();
+      parameters.setProcessId(this.id);
+      parameters.buildList(db);
+      parameters.delete(db);
+
+      //deleting scheduled events
+      events = new ScheduledEventList();
+      events.setBusinessProcessId(this.id);
+      events.buildList(db);
+      events.delete(db);
+
+      //deleting business process components      
+      BusinessProcessComponent startComponent = (BusinessProcessComponent) components.get(new Integer(startId));
+      deleteComponentChildren(db, startComponent);
+
+      System.out.println(" Deleting from parameter library");
+      //deleting the library parameter (!check whether this is neccessary!)
+/*      pst = db.prepareStatement(
+          "DELETE  " +
+          "FROM business_process_parameter_library ");
+      pst.executeUpdate();
+      pst.close();
+  */      
+  
+    // deleting process hook
+      pst = db.prepareStatement(
+              "DELETE  " +
+              "FROM business_process_hook " +
+              "WHERE process_id = ? ");
+
+      pst.setInt(1, id);
+      pst.execute();
+
+    // deleting process hook
+      pst = db.prepareStatement(
+              "DELETE  " +
+              "FROM business_process " +
+              "WHERE process_id = ? ");
+
+      pst.setInt(1, id);
+      pst.execute();
+
+    } catch (SQLException e) {
+      if (autoCommit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (autoCommit) {
+        db.setAutoCommit(true);
+      }
+    }
+  }
+
+
+  /**
+   *  Helper method to iterate through the children components for deleting
+   *
+   *@param  db                Description of the Parameter
+   *@param  component         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  private void deleteComponentChildren(Connection db, BusinessProcessComponent component) throws SQLException {
+    if (component.getChildren() != null) {
+      Iterator children = component.getAllChildren().iterator();
+      while (children.hasNext()) {
+        BusinessProcessComponent child = (BusinessProcessComponent) children.next();
+        child.setProcessId(id);
+        //The parent id has changed after insert, so update the child
+        child.setParentId(component.getId());
+        deleteComponentChildren(db, child);
+      }
+      System.out.println("Trying Deleting Component");
+      component.delete(db);
+    }
+  }
+
 }
 

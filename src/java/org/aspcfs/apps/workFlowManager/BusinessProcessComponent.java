@@ -632,6 +632,32 @@ public class BusinessProcessComponent {
 
 
   /**
+   *  Deletes this object into a database
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+
+    //delete component paramters
+    parameters = new ComponentParameterList();
+    parameters.setComponentId(this.id);
+    parameters.buildList(db);
+    parameters.delete(db);
+    System.out.println(" Deleting parameter list ");
+
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM business_process_component " +
+        "WHERE id = ? ");
+
+    pst.setInt(1, this.id);
+    pst.execute();
+
+    pst.close();
+  }
+
+
+  /**
    *  Outputs the object for debugging
    *
    *@return    Description of the Return Value

@@ -148,7 +148,17 @@
  function resetNumericFieldValue(fieldId){
   document.getElementById(fieldId).value = -1;
  }
-  
+ 
+ function setAssignedDate(){
+  resetAssignedDate();
+  if (document.forms['addticket'].assignedTo.value > 0){
+    document.forms['addticket'].assignedDate.value = document.forms['addticket'].currentDate.value;
+  }
+ }
+
+ function resetAssignedDate(){
+    document.forms['addticket'].assignedDate.value = '';
+ }  
 </script>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
 	<tr>
@@ -383,6 +393,7 @@
       Resource Assigned
     </td>
     <td>
+      <% UserList.setJsEvent("onChange=\"javascript:setAssignedDate();\"");%>
       <%= UserList.getHtmlSelect("assignedTo", TicketDetails.getAssignedTo() ) %>
     </td>
 	</tr>
@@ -462,4 +473,5 @@
   </tr>
 </table>
 <input type="hidden" name="modified" value="<%=  TicketDetails.getModified() %>" />
+<input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />
 <%= addHiddenParams(request, "popup|popupType|actionId") %>

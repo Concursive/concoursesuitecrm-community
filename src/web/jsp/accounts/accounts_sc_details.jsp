@@ -218,6 +218,14 @@
     <%= toHtml(emailModelList.getSelectedValue(serviceContract.getEmailResponseModel())) %>
     </td>
   </tr>
+  <tr class="containerBody">
+    <td valign="top" class="formLabel">
+      Service Model Notes
+    </td>
+    <td>
+    <%= toHtml(serviceContract.getServiceModelNotes()) %>
+    </td>
+  </tr>
 </table>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
 <%-- End Details --%>

@@ -317,8 +317,16 @@ Ticket Details
       <dhv:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
     </td>
   </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Issue Notes
+    </td>
+    <td>
+      <font color="red">Previous notes for this ticket are listed in the "Ticket Log History" section of the history tab.</font>
+    </td>
+  </tr>
 </table>
-&nbsp;
+  <br />
 <%-- Resolution --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>

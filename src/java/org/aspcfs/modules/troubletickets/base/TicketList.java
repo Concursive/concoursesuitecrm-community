@@ -2,15 +2,16 @@
 
 package org.aspcfs.modules.troubletickets.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.sql.*;
+import java.text.DateFormat;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
 import java.util.Calendar;
+import org.aspcfs.utils.DateUtils;
 
 /**
  *  A collection of Ticket objects, can also be used for querying and filtering
@@ -51,6 +52,7 @@ public class TicketList extends ArrayList implements SyncableList {
   private int productId = -1;
   private int customerProductId = -1;
   private boolean onlyWithProducts = false;
+  private boolean hasEstimatedResolutionDate = false;
   //search filters
   private String searchText = "";
 
@@ -301,6 +303,26 @@ public class TicketList extends ArrayList implements SyncableList {
    */
   public void setOnlyWithProducts(boolean tmp) {
     this.onlyWithProducts = tmp;
+  }
+
+
+  /**
+   *  Sets the hasEstimatedResolutionDate attribute of the TicketList object
+   *
+   *@param  tmp  The new hasEstimatedResolutionDate value
+   */
+  public void setHasEstimatedResolutionDate(boolean tmp) {
+    this.hasEstimatedResolutionDate = tmp;
+  }
+
+
+  /**
+   *  Sets the hasEstimatedResolutionDate attribute of the TicketList object
+   *
+   *@param  tmp  The new hasEstimatedResolutionDate value
+   */
+  public void setHasEstimatedResolutionDate(String tmp) {
+    this.hasEstimatedResolutionDate = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -676,6 +698,16 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
+   *  Gets the hasEstimatedResolutionDate attribute of the TicketList object
+   *
+   *@return    The hasEstimatedResolutionDate value
+   */
+  public boolean getHasEstimatedResolutionDate() {
+    return hasEstimatedResolutionDate;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of Parameter
@@ -953,6 +985,9 @@ public class TicketList extends ArrayList implements SyncableList {
             "LOWER(t.solution) LIKE LOWER(?) ) ");
       }
     }
+    if (hasEstimatedResolutionDate == true) {
+      sqlFilter.append("AND t.est_resolution_date IS NOT NULL ");
+    }
   }
 
 
@@ -1100,5 +1135,36 @@ public class TicketList extends ArrayList implements SyncableList {
     return count;
   }
 
+  public HashMap queryRecordCount(Connection db, TimeZone timeZone) throws SQLException {
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    HashMap events = new HashMap();
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlTail = new StringBuffer();
+
+    createFilter(sqlFilter,db);
+
+    sqlSelect.append(
+        "SELECT est_resolution_date, count(*) as nocols " +
+        "FROM ticket t " +
+        "WHERE ticketid > -1 ");
+
+    sqlTail.append("GROUP BY est_resolution_date ");
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
+    prepareFilter(pst);    
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      String estResolutionDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("est_resolution_date"));
+      int tempcount=rs.getInt("nocols"); 
+      events.put(estResolutionDate, new Integer(tempcount));
+    }
+    rs.close();
+    pst.close();
+    return events;
+  }
+  
 }
 

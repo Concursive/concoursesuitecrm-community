@@ -1052,10 +1052,12 @@
     <forward name="ResultsOK" resource="/troubletickets/troubletickets_searchresults.jsp" layout="nav"/>
     <forward name="AddOK" resource="/troubletickets/troubletickets_add.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/troubletickets/troubletickets_modify.jsp" layout="nav"/>
+    <forward name="ModifyPopupOK" resource="/troubletickets/troubletickets_modify_popup.jsp" layout="style"/>
     <forward name="DetailsOK" resource="/troubletickets/troubletickets_details.jsp" layout="nav"/>
     <forward name="SearchTicketsFormOK" resource="/troubletickets/troubletickets_search.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/troubletickets/troubletickets_details.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/troubletickets/TroubleTickets.do?command=Details"/>
+    <forward name="UpdatePopupOK" resource="/closepopupandreload.jsp"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="CategoryJSListOK" resource="/troubletickets/troubletickets_js_categorylist.jsp"/>

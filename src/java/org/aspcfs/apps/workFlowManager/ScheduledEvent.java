@@ -12,7 +12,8 @@ import org.aspcfs.utils.StringUtils;
  *
  *@author     matt rajkowski
  *@created    June 23, 2003
- *@version    $Id$
+ *@version    $Id: ScheduledEvent.java,v 1.1 2003/06/24 15:17:30 mrajkowski Exp
+ *      $
  */
 public class ScheduledEvent implements Serializable {
 
@@ -445,6 +446,24 @@ public class ScheduledEvent implements Serializable {
       }
     }
     return sb.toString();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  void delete(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM business_process_events " +
+        "WHERE id = ? ");
+
+    pst.setInt(1, this.id);
+    pst.execute();
+
+    pst.close();
   }
 }
 

@@ -72,6 +72,11 @@ public final class TroubleTickets extends CFSModule {
         newTic = new Ticket();
       }
       buildFormElements(context, db, newTic);
+
+      //getting current date in mm/dd/yyyy format
+      Calendar calendar = Calendar.getInstance();
+      String currentDate = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR);
+      context.getRequest().setAttribute("currentDate", currentDate);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       context.getRequest().setAttribute("ThisContact", newTic.getThisContact());
@@ -367,13 +372,11 @@ public final class TroubleTickets extends CFSModule {
         newTic = new Ticket(db, Integer.parseInt(ticketId));
       } else {
         newTic = (Ticket) context.getFormBean();
-        newTic.getHistory().setTicketId(newTic.getId());
-        newTic.getHistory().buildList(db);
       }
 
       LookupList departmentList = new LookupList(db, "lookup_department");
       departmentList.addItem(0, "-- None --");
-      departmentList.setJsEvent("onChange=\"javascript:updateUserList();\"");
+      departmentList.setJsEvent("onChange=\"javascript:updateUserList();javascript:resetAssignedDate();\"");
       context.getRequest().setAttribute("DepartmentList", departmentList);
 
       LookupList severityList = new LookupList(db, "ticket_severity");
@@ -474,6 +477,11 @@ public final class TroubleTickets extends CFSModule {
       context.getRequest().setAttribute("TicketDetails", newTic);
       addRecentItem(context, newTic);
 
+      //getting current date in mm/dd/yyyy format
+      Calendar calendar = Calendar.getInstance();
+      String currentDate = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR);
+      context.getRequest().setAttribute("currentDate", currentDate);
+
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -482,7 +490,8 @@ public final class TroubleTickets extends CFSModule {
     }
     context.getRequest().setAttribute("TicketDetails", newTic);
     addModuleBean(context, "ViewTickets", "View Tickets");
-    return ("ModifyOK");
+    
+    return this.getReturn(context, "Modify");
   }
 
 
@@ -866,10 +875,7 @@ public final class TroubleTickets extends CFSModule {
     Ticket newTic = (Ticket) context.getFormBean();
     newTic.setEnteredBy(getUserId(context));
     newTic.setModifiedBy(getUserId(context));
-    if (newTic.getAssignedTo() > -1 && newTic.getAssignedDate() == null){
-      newTic.setAssignedDate(new java.sql.Timestamp(System.currentTimeMillis()));
-    }
-
+    
     if (newContact != null && newContact.equals("on")) {
       //If there are any changes here, also check AccountTickets where a new contact is created
       nc = new Contact();
@@ -1021,9 +1027,6 @@ public final class TroubleTickets extends CFSModule {
     boolean catInserted = false;
     boolean smartCommentsResult = true;
     Ticket newTic = (Ticket) context.getFormBean();
-    if (newTic.getAssignedTo() > -1 && newTic.getAssignedDate() == null){
-      newTic.setAssignedDate(new java.sql.Timestamp(System.currentTimeMillis()));
-    }
     try {
       db = this.getConnection(context);
       for (catCount = 0; catCount < 4; catCount++) {
@@ -1078,7 +1081,7 @@ public final class TroubleTickets extends CFSModule {
       if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
         return (executeCommandHome(context));
       } else {
-        return ("UpdateOK");
+        return this.getReturn(context, "Update");
       }
     } else {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
@@ -1192,7 +1195,7 @@ public final class TroubleTickets extends CFSModule {
   protected void buildFormElements(ActionContext context, Connection db, Ticket newTic) throws SQLException {
     LookupList departmentList = new LookupList(db, "lookup_department");
     departmentList.addItem(0, "-- None --");
-    departmentList.setJsEvent("onChange=\"javascript:updateUserList();\"");
+    departmentList.setJsEvent("onChange=\"javascript:updateUserList();javascript:resetAssignedDate();\"");
     context.getRequest().setAttribute("DepartmentList", departmentList);
 
     LookupList severityList = new LookupList(db, "ticket_severity");

@@ -169,5 +169,21 @@ public class ComponentParameterList extends ArrayList {
       param.insert(db);
     }
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+    Iterator itr = this.iterator();
+    while (itr.hasNext()) {
+      ComponentParameter tmpComponentParameter = (ComponentParameter) itr.next();
+      tmpComponentParameter.delete(db);
+    }
+  }
+
 }
 

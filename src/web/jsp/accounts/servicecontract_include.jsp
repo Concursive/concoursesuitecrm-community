@@ -371,6 +371,14 @@
       <%= emailModelList.getHtmlSelect("emailResponseModel", serviceContract.getEmailResponseModel()) %><font color="red">*</font>
     </td>
   </tr>
+  <tr class="containerBody">
+    <td nowrap valign="top" class="formLabel">
+      Service Model Notes
+    </td>
+    <td>
+      <textarea name="serviceModelNotes" rows="3" cols="50"><%= toString(serviceContract.getServiceModelNotes()) %></textarea>
+    </td>
+  </tr>
    <input type="hidden" name="modified" value="<%= serviceContract.getModified() %>" />
 </table>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>

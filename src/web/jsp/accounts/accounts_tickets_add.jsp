@@ -109,6 +109,17 @@
   function resetNumericFieldValue(fieldId){
     document.getElementById(fieldId).value = -1;
   }
+  
+ function setAssignedDate(){
+  resetAssignedDate();
+  if (document.forms['addticket'].assignedTo.value > 0){
+    document.forms['addticket'].assignedDate.value = document.forms['addticket'].currentDate.value;
+  }
+ }
+
+ function resetAssignedDate(){
+    document.forms['addticket'].assignedDate.value = '';
+ }  
 
 </script>
 <%-- Trails --%>
@@ -360,6 +371,7 @@ Add Ticket
       Resource Assigned
     </td>
     <td>
+      <% UserList.setJsEvent("onChange=\"javascript:setAssignedDate();\"");%>
       <%= UserList.getHtmlSelect("assignedTo", TicketDetails.getAssignedTo() ) %>
     </td>
 	</tr>
@@ -443,6 +455,7 @@ Add Ticket
 <input type="submit" value="Insert" name="Save" />
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
 <input type="hidden" name="dosubmit" value="true" />
+<input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />
 </td>
 </tr>
 </table>

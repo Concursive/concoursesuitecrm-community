@@ -95,6 +95,17 @@
       return true;
     }
   }
+  
+  function setAssignedDate(){
+    resetAssignedDate();
+    if (document.forms['details'].assignedTo.value > 0){
+      document.forms['details'].assignedDate.value = document.forms['details'].currentDate.value;
+    }
+  }
+  
+  function resetAssignedDate(){
+    document.forms['details'].assignedDate.value = '';
+  }  
 </script>
 <body>
 <%-- Trails --%>
@@ -348,6 +359,7 @@ Modify Ticket
               Resource Assigned
             </td>
             <td valign=center>
+              <% UserList.setJsEvent("onChange=\"javascript:setAssignedDate();\"");%>
               <%= UserList.getHtmlSelect("assignedTo", TicketDetails.getAssignedTo() ) %>
             </td>
           </tr>
@@ -374,11 +386,20 @@ Modify Ticket
               Issue Notes
             </td>
             <td>
-              <textarea name="comment" cols="55" rows="3"><%= toString(TicketDetails.getComment()) %></textarea>
+              <table border="0" cellspacing="0" cellpadding="0" class="empty">
+                <tr>
+                  <td>
+                    <textarea name="comment" cols="55" rows="3"><%= toString(TicketDetails.getComment()) %></textarea>
+                  </td>
+                  <td valign="top">
+                    (Previous notes for this ticket are listed in the "Ticket Log History" section of the history tab.)
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>
-        <br>
+        <br />
         <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
           <tr>
             <th colspan="2">
@@ -450,6 +471,7 @@ Modify Ticket
 <input type="hidden" name="companyName" value="<%= toHtml(TicketDetails.getCompanyName()) %>">
 <input type="hidden" name="close" value="">
 <input type="hidden" name="refresh" value="-1">
+<input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />
 </form>
 </table>
 </body>

@@ -1,0 +1,24 @@
+/*
+ * This script reads the specified database's workflow.xml file and either:
+ *   - Imports the workflow into a new database, or
+ *   - Merges the workflow into an existing database
+ *   
+ * This script is used by build.xml when installing a new database.
+ *
+ *@author     matt rajkowski
+ *@created    August 11, 2003
+ *@version    $Id$
+ */
+import java.sql.*;
+import java.io.File;
+
+import org.aspcfs.apps.workFlowManager.*;
+import org.aspcfs.controller.objectHookManager.*;
+
+try{
+  BusinessProcessList processList = new BusinessProcessList();
+  processList.buildList(db);
+  processList.delete(db);
+} catch (e){
+  print(e);
+}

@@ -232,5 +232,24 @@ public class LibraryComponentParameter {
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "business_process_pa_lib_id_seq");
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM business_process_parameter_library " +
+        "WHERE component_id = ? ");
+
+    pst.setInt(1, this.componentId);
+    pst.execute();
+
+    pst.close();
+
+  }
 }
 

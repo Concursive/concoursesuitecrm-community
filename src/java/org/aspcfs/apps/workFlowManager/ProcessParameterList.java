@@ -14,7 +14,8 @@ import java.sql.*;
  *
  *@author     matt rajkowski
  *@created    June 6, 2003
- *@version    $Id$
+ *@version    $Id: ProcessParameterList.java,v 1.2 2003/06/19 20:50:05
+ *      mrajkowski Exp $
  */
 public class ProcessParameterList extends ArrayList {
   private int processId = -1;
@@ -173,6 +174,21 @@ public class ProcessParameterList extends ArrayList {
       if (autoCommit) {
         db.setAutoCommit(true);
       }
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+    Iterator itr = this.iterator();
+    while (itr.hasNext()) {
+      ProcessParameter tmpProcessParameter = (ProcessParameter) itr.next();
+      tmpProcessParameter.delete(db);
     }
   }
 }

@@ -11,7 +11,8 @@ import java.sql.*;
  *
  *@author     matt rajkowski
  *@created    June 6, 2003
- *@version    $Id$
+ *@version    $Id: ProcessParameter.java,v 1.2 2003/06/19 20:50:05 mrajkowski
+ *      Exp $
  */
 public class ProcessParameter {
 
@@ -224,5 +225,24 @@ public class ProcessParameter {
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "business_process_param_id_seq");
   }
+
+
+  /**
+   *  Deletes this object into a database
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM business_process_parameter " +
+        "WHERE id = ? ");
+
+    pst.setInt(1, this.id);
+    pst.execute();
+
+    pst.close();
+  }
+
 }
 

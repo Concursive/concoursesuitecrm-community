@@ -56,7 +56,7 @@ public class AccountsAssets extends CFSModule {
     }
     AssetList assetList = new AssetList();
     String orgId = context.getRequest().getParameter("orgId");
-
+    
     //find record permissions for portal users
     if (!isRecordAccessPermitted(context,Integer.parseInt(orgId))){
       return ("PermissionError");
@@ -385,7 +385,7 @@ public class AccountsAssets extends CFSModule {
 
       
       //find record permissions for portal users
-      if (!isRecordAccessPermitted(context,thisContract.getOrgId())){
+      if (!isRecordAccessPermitted(context,thisAsset.getOrgId())){
          return ("PermissionError");
       }
 

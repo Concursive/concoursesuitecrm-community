@@ -107,14 +107,17 @@ public final class AccountTickets extends CFSModule {
       if (context.getRequest().getParameter("refresh") != null || 
           (context.getRequest().getParameter("contact") != null && 
            context.getRequest().getParameter("contact").equals("on"))) {
-        newTic.getHistory().setTicketId(newTic.getId());
-        newTic.getHistory().buildList(db);
       } else {
         newTic.setOrgId(tempid);
       }
       buildFormElements(context, db, newTic);
       addModuleBean(context, "View Accounts", "Add a Ticket");
       context.getRequest().setAttribute("OrgDetails", newOrg);
+
+      //getting current date in mm/dd/yyyy format
+      Calendar calendar = Calendar.getInstance();
+      String currentDate = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR);
+      context.getRequest().setAttribute("currentDate", currentDate);
       return ("AddTicketOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -253,7 +256,9 @@ public final class AccountTickets extends CFSModule {
     try {
       db = this.getConnection(context);
       // Load the ticket
-      Ticket newTic = new Ticket(db, Integer.parseInt(ticketId));
+      Ticket newTic = new Ticket();
+      newTic.setBuildHistory(true);
+      newTic.queryRecord(db, Integer.parseInt(ticketId));
       
       //find record permissions for portal users
       if (!isRecordAccessPermitted(context,newTic.getOrgId())){
@@ -399,7 +404,6 @@ public final class AccountTickets extends CFSModule {
         newTic = new Ticket(db, Integer.parseInt(ticketId));
       } else {
         newTic = (Ticket) context.getFormBean();
-        newTic.getHistory().setTicketId(newTic.getId());
       }
       //Load the organization
       Organization thisOrganization = new Organization(db, newTic.getOrgId());
@@ -407,7 +411,7 @@ public final class AccountTickets extends CFSModule {
       //Load the departmentList for assigning
       LookupList departmentList = new LookupList(db, "lookup_department");
       departmentList.addItem(0, "-- None --");
-      departmentList.setJsEvent("onChange=\"javascript:updateUserList();\"");
+      departmentList.setJsEvent("onChange=\"javascript:updateUserList();javascript:resetAssignedDate();\"");
       context.getRequest().setAttribute("DepartmentList", departmentList);
       //Load the severity list
       LookupList severityList = new LookupList(db, "ticket_severity");
@@ -495,6 +499,12 @@ public final class AccountTickets extends CFSModule {
       addRecentItem(context, newTic);
       context.getRequest().setAttribute("TicketDetails", newTic);
       addModuleBean(context, "View Accounts", "View Tickets");
+
+      //getting current date in mm/dd/yyyy format
+      Calendar calendar = Calendar.getInstance();
+      String currentDate = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR);
+      context.getRequest().setAttribute("currentDate", currentDate);
+
       return ("ModifyTicketOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -616,7 +626,7 @@ public final class AccountTickets extends CFSModule {
   protected void buildFormElements(ActionContext context, Connection db, Ticket newTic) throws SQLException {
     LookupList departmentList = new LookupList(db, "lookup_department");
     departmentList.addItem(0, "-- None --");
-    departmentList.setJsEvent("onChange=\"javascript:updateUserList();\"");
+    departmentList.setJsEvent("onChange=\"javascript:updateUserList();javascript:resetAssignedDate();\"");
     context.getRequest().setAttribute("DepartmentList", departmentList);
 
     LookupList severityList = new LookupList(db, "ticket_severity");

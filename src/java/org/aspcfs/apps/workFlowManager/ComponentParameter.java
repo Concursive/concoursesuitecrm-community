@@ -271,5 +271,26 @@ public class ComponentParameter {
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "business_process_comp_pa_id_seq");
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+
+    System.out.println(" Deleting component parameter");
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM business_process_component_parameter " +
+        "WHERE id = ? ");
+
+    pst.setInt(1, this.id);
+    pst.execute();
+    pst.close();
+
+  }
+
 }
 

@@ -934,6 +934,30 @@
         processSpecifiedDatabaseOnly="true">
     </upgradeDatabase>
   </target>
+  <!-- Delete the preferences from this system -->
+  <target name="install.deleteprefs" depends="init,install.prepare.dbname,taskdef.upgradeDatabase,taskdef.jasper">
+  <!--
+    <mkdir dir="${CFS_HOME}/WEB-INF/fileLibrary/${DATABASE.NAME}"/>
+    <copy todir="${CFS_HOME}/WEB-INF/fileLibrary/${DATABASE.NAME}">
+      <fileset dir="${pref.dir}/cfs/system">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    -->
+    <!-- Delete the workflow from the database -->
+    <upgradeDatabase
+        sitecode="${SITE.APPCODE}"
+        driver="${SITE.DRIVER}"
+        url="${SITE.URL}${DATABASE.NAME}"
+        user="${SITE.USER}"
+        password="${SITE.PASSWORD}"
+        servletJar="${servletJar}"
+        webPath="${CFS_HOME}"
+        baseFile="${src.sql.dir}${fs}init${fs}workflow-delete.bsh"
+        specificDatabase="${DATABASE.NAME}"
+        processSpecifiedDatabaseOnly="true">
+    </upgradeDatabase>
+  </target>
   
   <!-- Installs a new database -->
   <target name="installdb" depends="log.installdb,install.database,install.permissions,install.help,install.copyprefs,install.addsite"

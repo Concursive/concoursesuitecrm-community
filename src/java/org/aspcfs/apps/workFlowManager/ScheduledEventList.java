@@ -10,7 +10,8 @@ import org.aspcfs.modules.base.Constants;
  *
  *@author     matt rajkowski
  *@created    June 23, 2003
- *@version    $Id$
+ *@version    $Id: ScheduledEventList.java,v 1.1 2003/06/24 15:17:30 mrajkowski
+ *      Exp $
  */
 public class ScheduledEventList extends ArrayList {
 
@@ -149,6 +150,21 @@ public class ScheduledEventList extends ArrayList {
       pst.setBoolean(++i, enabled == Constants.TRUE);
     }
     return i;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  void delete(Connection db) throws SQLException {
+    Iterator itr = this.iterator();
+    while (itr.hasNext()) {
+      ScheduledEvent tmpScheduledEvent = (ScheduledEvent) itr.next();
+      tmpScheduledEvent.delete(db);
+    }
   }
 }
 

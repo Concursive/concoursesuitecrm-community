@@ -92,7 +92,8 @@ CREATE TABLE service_contract (
   modifiedby INT NOT NULL REFERENCES access(user_id),
   enabled BIT DEFAULT 1,
   contract_value FLOAT,
-  total_hours_remaining FLOAT
+  total_hours_remaining FLOAT,
+  service_model_notes TEXT
 );
 
 CREATE TABLE service_contract_hours (

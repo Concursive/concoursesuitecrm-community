@@ -25,6 +25,7 @@ public class BusinessProcessList extends HashMap {
   //Object resources
   private boolean buildScheduledEvents = false;
 
+
   /**
    *  Constructor for the BusinessProcessList object
    */
@@ -100,8 +101,25 @@ public class BusinessProcessList extends HashMap {
     this.linkModuleId = Integer.parseInt(tmp);
   }
 
-  public void setBuildScheduledEvents(boolean tmp) { this.buildScheduledEvents = tmp; }
-public void setBuildScheduledEvents(String tmp) { this.buildScheduledEvents = DatabaseUtils.parseBoolean(tmp); }
+
+  /**
+   *  Sets the buildScheduledEvents attribute of the BusinessProcessList object
+   *
+   *@param  tmp  The new buildScheduledEvents value
+   */
+  public void setBuildScheduledEvents(boolean tmp) {
+    this.buildScheduledEvents = tmp;
+  }
+
+
+  /**
+   *  Sets the buildScheduledEvents attribute of the BusinessProcessList object
+   *
+   *@param  tmp  The new buildScheduledEvents value
+   */
+  public void setBuildScheduledEvents(String tmp) {
+    this.buildScheduledEvents = DatabaseUtils.parseBoolean(tmp);
+  }
 
 
   /**
@@ -133,14 +151,22 @@ public void setBuildScheduledEvents(String tmp) { this.buildScheduledEvents = Da
     return linkModuleId;
   }
 
-  public boolean getBuildScheduledEvents() { return buildScheduledEvents; }
+
+  /**
+   *  Gets the buildScheduledEvents attribute of the BusinessProcessList object
+   *
+   *@return    The buildScheduledEvents value
+   */
+  public boolean getBuildScheduledEvents() {
+    return buildScheduledEvents;
+  }
 
 
   /**
    *  Populate business processes from an XML file
    *
-   *@param  xmlFile      Description of the Parameter
-   *@return              Description of the Return Value
+   *@param  xmlFile  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public boolean buildList(File xmlFile) {
     try {
@@ -290,6 +316,30 @@ public void setBuildScheduledEvents(String tmp) { this.buildScheduledEvents = Da
       while (processes.hasNext()) {
         BusinessProcess thisProcess = (BusinessProcess) processes.next();
         thisProcess.insert(db);
+      }
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+    try {
+      db.setAutoCommit(false);
+      Iterator processes = this.values().iterator();
+      while (processes.hasNext()) {
+        BusinessProcess thisProcess = (BusinessProcess) processes.next();
+        thisProcess.delete(db);
       }
       db.commit();
     } catch (SQLException e) {

@@ -117,7 +117,7 @@
           <img border='0' src='images/box.gif'> -- Tasks
         </td>
         <td>
-          &nbsp;
+          <img border='0' src='images/tree0.gif'> -- Tickets
         </td>
       </tr>
     </table>

@@ -750,6 +750,10 @@ public final class MyCFS extends CFSModule {
       if (hasPermission(context, "contacts-external_contacts-opportunities-view") || hasPermission(context, "pipeline-opportunities-view")) {
         calendarInfo.addAlertType("Opportunity", "org.aspcfs.modules.pipeline.base.OpportunityListScheduledActions", "Opportunities");
       }
+      if (hasPermission(context, "tickets-tickets-view")) {
+        calendarInfo.addAlertType("Tickets", "org.aspcfs.modules.troubletickets.base.TicketListScheduledActions", "Tickets");
+      }
+      
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }
     return "HomeOK";
