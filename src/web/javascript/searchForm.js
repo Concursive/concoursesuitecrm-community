@@ -230,7 +230,6 @@ function removeValues(){
   } else {
 		searchCriteria[searchList.selectedIndex] = "skip";
 		searchList.options[searchList.selectedIndex] = null;
-    alert("one");
 		for (i=0; i < searchCriteria.length; i++){
 			if (searchCriteria[i] == "skip") {
 				offset = 1;
@@ -245,7 +244,6 @@ function removeValues(){
 					tempArray[i] = searchCriteria[i+offset];
 				}
 		}
-    alert("two");
 		delete searchCriteria;
 		searchCriteria = new Array();
 		for (i=0; i < tempArray.length; i++){
