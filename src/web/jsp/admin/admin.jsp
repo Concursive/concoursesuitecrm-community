@@ -3,24 +3,6 @@ Setup
 <hr color="#BFBFBB" noshade>
 Manage CFS by reviewing system usage, configuring specific modules, and configuring system parameters.<br>
 &nbsp;<br>
-<dhv:permission name="admin-usage-view">
-  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
-    <tr>
-      <th>
-        <strong>Usage</strong>
-      </th>
-    </tr>
-    <tr class="containerBody">
-      <td>
-        <ul>
-          <li><a href="Admin.do?command=Usage">Check system resources</a></li>
-        </ul>
-      </td>
-    </tr>
-  </table>
-  &nbsp;
-</dhv:permission>
-  
 <dhv:permission name="admin-sysconfig-view,admin-users-view,admin-roles-view">
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
@@ -59,3 +41,20 @@ Manage CFS by reviewing system usage, configuring specific modules, and configur
   &nbsp;
 </dhv:permission>
 
+<dhv:permission name="admin-usage-view">
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+    <tr>
+      <th>
+        <strong>Usage</strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td>
+        <ul>
+          <li><a href="Admin.do?command=Usage">Check system resources</a></li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+  &nbsp;
+</dhv:permission>
