@@ -1417,7 +1417,6 @@ public class Opportunity extends GenericBean {
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-
       pst.setInt(++i, this.getAccountLink());
       pst.setInt(++i, this.getContactLink());
       pst.setInt(++i, this.getEnteredBy());
@@ -1426,7 +1425,6 @@ public class Opportunity extends GenericBean {
       pst.setDate(++i, this.getCloseDate());
       pst.setInt(++i, this.getStage());
       pst.setString(++i, this.getDescription());
-
       pst.execute();
       pst.close();
 
@@ -1516,6 +1514,7 @@ public class Opportunity extends GenericBean {
    *@since                    1.1
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
+    //opportunity table
     this.setId(rs.getInt("opp_id"));
     owner = rs.getInt("owner");
     description = rs.getString("description");
@@ -1542,13 +1541,15 @@ public class Opportunity extends GenericBean {
     modifiedBy = rs.getInt("modifiedby");
     closed = rs.getString("closed");
     
+    //table
     stageName = rs.getString("stagename");
     
+    //table
     accountName = rs.getString("acct_name");
     
+    //contact table
     String contactNameLast = rs.getString("last_name");
     String contactNameFirst = rs.getString("first_name");
-    
     contactName = contactNameFirst + " " + contactNameLast;
     contactCompanyName = rs.getString("ctcompany");
     ownerName = rs.getString("o_namelast") + ", " + rs.getString("o_namefirst");

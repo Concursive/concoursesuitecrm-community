@@ -122,23 +122,7 @@ public class ContactPhoneNumber extends PhoneNumber {
     pst.execute();
     pst.close();
 
-    Statement st = db.createStatement();
-    ResultSet rs = null;
-      switch (DatabaseUtils.getType(db)) {
-        case DatabaseUtils.POSTGRESQL:
-          rs = st.executeQuery("select currval('contact_phone_phone_id_seq')");
-          break;
-        case DatabaseUtils.MSSQL:
-          rs = st.executeQuery("SELECT @@IDENTITY");
-          break;
-        default:
-          break;
-      }
-    if (rs.next()) {
-      this.setId(rs.getInt(1));
-    }
-    rs.close();
-    st.close();
+    this.setId(DatabaseUtils.getCurrVal(db, "contact_phone_phone_id_seq"));
   }
 
 

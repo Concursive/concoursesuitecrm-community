@@ -101,23 +101,7 @@ public class ContactAddress extends Address {
     pst.execute();
     pst.close();
     
-    Statement st = db.createStatement();
-    ResultSet rs = null;
-      switch (DatabaseUtils.getType(db)) {
-        case DatabaseUtils.POSTGRESQL:
-          rs = st.executeQuery("select currval('contact_address_address_id_seq')");
-          break;
-        case DatabaseUtils.MSSQL:
-          rs = st.executeQuery("SELECT @@IDENTITY");
-          break;
-        default:
-          break;
-      }
-    if (rs.next()) {
-      this.setId(rs.getInt(1));
-    }
-    rs.close();
-    st.close();
+    this.setId(DatabaseUtils.getCurrVal(db, "contact_address_address_id_seq"));
   }
 
 

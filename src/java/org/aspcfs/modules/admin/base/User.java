@@ -1305,7 +1305,6 @@ public class User extends GenericBean {
       } else {
         pst.setDate(++i, this.getExpires());
       }
-
       pst.execute();
       pst.close();
 
@@ -1313,27 +1312,13 @@ public class User extends GenericBean {
         System.out.println("User-> Getting interval value");
       }
       
-      Statement st = db.createStatement();
-      ResultSet rs = null;
-      switch (DatabaseUtils.getType(db)) {
-          case DatabaseUtils.POSTGRESQL:
-            rs = st.executeQuery("select currval('access_user_id_seq')");
-            break;
-          case DatabaseUtils.MSSQL:
-            rs = st.executeQuery("SELECT @@IDENTITY");
-            break;
-          default:
-            break;
-      }
-      if (rs.next()) {
-        this.setId(rs.getInt(1));
-      }
-      rs.close();
+      id = DatabaseUtils.getCurrVal(db, "access_user_id_seq");
 
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Updating contact");
       }
       
+      Statement st = db.createStatement();
       st.executeUpdate(
           "UPDATE contact " +
           "SET user_id = " + id + " " +

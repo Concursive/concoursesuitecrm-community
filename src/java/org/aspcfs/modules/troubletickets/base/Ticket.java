@@ -8,6 +8,7 @@ import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Description of the Class
@@ -103,10 +104,16 @@ public class Ticket extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT t.*, o.name as orgname, ld.description as dept, tp.description as ticpri, " +
-        "ts.description as ticsev, tc.description as catname, " +
-        "ct_eb.namelast || ', ' || ct_eb.namefirst as eb_name, ct_mb.namelast || ', ' || ct_mb.namefirst as mb_name, ct_owner.namelast || ', ' || ct_owner.namefirst as owner_name,  " +
-        "lu_ts.description as sourcename " +
+        "SELECT t.*, " +
+        "o.name AS orgname, " +
+        "ld.description AS dept, " +
+        "tp.description AS ticpri, " +
+        "ts.description AS ticsev, " +
+        "tc.description AS catname, " +
+        "lu_ts.description AS sourcename, " +
+        "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst, " +
+        "ct_mb.namelast AS mb_namelast, ct_mb.namefirst AS mb_namefirst, " +
+        "ct_owner.namelast AS owner_namelast, ct_owner.namefirst AS owner_namefirst " +
         "FROM ticket t " +
         "LEFT JOIN organization o ON (t.org_id = o.org_id) " +
         "LEFT JOIN lookup_department ld ON (t.department_code = ld.code) " +
@@ -1262,7 +1269,6 @@ public class Ticket extends GenericBean {
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-
       pst.setInt(++i, this.getOrgId());
       pst.setString(++i, this.getProblem());
       pst.setInt(++i, this.getEnteredBy());
@@ -1271,17 +1277,10 @@ public class Ticket extends GenericBean {
       pst.setInt(++i, this.getDepartmentCode());
       pst.setInt(++i, this.getCatCode());
       pst.setInt(++i, this.getSeverityCode());
-
       pst.execute();
       pst.close();
 
-      Statement st = db.createStatement();
-      ResultSet rs = st.executeQuery("select currval('ticket_ticketid_seq')");
-      if (rs.next()) {
-        this.setId(rs.getInt(1));
-      }
-      rs.close();
-      st.close();
+      id = DatabaseUtils.getCurrVal(db, "ticket_ticketid_seq");
 
       this.update(db);
 
@@ -1507,52 +1506,57 @@ public class Ticket extends GenericBean {
    *@since
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
+    //ticket table
     this.setId(rs.getInt("ticketid"));
     orgId = rs.getInt("org_id");
     contactId = rs.getInt("contact_id");
-    owner = rs.getInt("enteredby");
     problem = rs.getString("problem");
-    solution = rs.getString("solution");
-
-    companyName = rs.getString("orgname");
-    departmentName = rs.getString("dept");
-    priorityName = rs.getString("ticpri");
-    severityName = rs.getString("ticsev");
-    categoryName = rs.getString("catname");
-    assignedTo = rs.getInt("assigned_to");
-
-    //ageOf = Integer.parseInt(rs.getString("age"));
-
+    entered = rs.getTimestamp("entered");
+    enteredBy = rs.getInt("enteredby");
+    owner = enteredBy;
+    modified = rs.getTimestamp("modified");
+    modifiedBy = rs.getInt("modifiedby");
+    closed = rs.getTimestamp("closed");
     priorityCode = rs.getInt("pri_code");
     levelCode = rs.getInt("level_code");
     departmentCode = rs.getInt("department_code");
     sourceCode = rs.getInt("source_code");
     catCode = rs.getInt("cat_code");
-    sourceName = rs.getString("sourcename");
-
     subCat1 = rs.getInt("subcat_code1");
     subCat2 = rs.getInt("subcat_code2");
     subCat3 = rs.getInt("subcat_code3");
-
+    assignedTo = rs.getInt("assigned_to");
+    solution = rs.getString("solution");
     severityCode = rs.getInt("scode");
+    
+    //organization table
+    companyName = rs.getString("orgname");
 
-    enteredByName = rs.getString("eb_name");
-    modifiedByName = rs.getString("mb_name");
-    ownerName = rs.getString("owner_name");
+    //lookup_department table
+    departmentName = rs.getString("dept");
 
-    closed = rs.getTimestamp("closed");
+    //ticket_priority table
+    priorityName = rs.getString("ticpri");
 
-    entered = rs.getTimestamp("entered");
-    modified = rs.getTimestamp("modified");
+    //ticket_severity table
+    severityName = rs.getString("ticsev");
 
+    //ticket_category table
+    categoryName = rs.getString("catname");
+
+    //ticket_source table
+    sourceName = rs.getString("sourcename");
+
+    //contact table
+    enteredByName = rs.getString("eb_namelast") + ", " + rs.getString("eb_namefirst");
+    modifiedByName = rs.getString("mb_namelast") + ", " + rs.getString("mb_namefirst");
+    ownerName = rs.getString("owner_namelast") + ", " + rs.getString("owner_namefirst");
+
+    
     if (entered != null) {
       float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
       ageOf = java.lang.Math.round(ageCheck);
     }
-
-    enteredBy = rs.getInt("enteredby");
-
-    modifiedBy = rs.getInt("modifiedby");
   }
 
 }

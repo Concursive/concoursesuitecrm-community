@@ -8,6 +8,7 @@ import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Description of the Class
@@ -244,27 +245,17 @@ public class TicketCategory extends GenericBean {
 					"INSERT INTO TICKET_CATEGORY " +
 					"(parent_cat_code, description, enabled, cat_level) " +
 					"VALUES (?, ?, ?, ?) ");
-
 			int i = 0;
-			
 			PreparedStatement pst = db.prepareStatement(sql.toString());
 			pst.setInt(++i, this.getParentCode());
 			pst.setString(++i, this.getDescription());
 			pst.setBoolean(++i, this.getEnabled());
 			pst.setInt(++i, this.getLevel());
-			
 			pst.execute();
 			pst.close();
 			
-			Statement st = db.createStatement();
-			ResultSet rs = st.executeQuery("select currval('ticket_category_id_seq')");
-			if (rs.next()) {
-				this.setId(rs.getInt(1));
-			}
-			rs.close();
-			st.close();
-			
-			//this.update(db, true);
+			id = DatabaseUtils.getCurrVal(db, "ticket_category_id_seq");
+      
 			db.commit();
 		}
 		catch (SQLException e) {

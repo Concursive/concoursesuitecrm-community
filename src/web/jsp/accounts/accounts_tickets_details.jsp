@@ -1,10 +1,9 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <form name="details" action="/AccountTickets.do?command=ModifyTicket&auto-populate=true" method="post">
-<a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>">Back to Ticket List</a><br>&nbsp;
+<a href="Accounts.do?command=ViewTickets&orgId=<%= TicketDetails.getOrgId() %>">Back to Ticket List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -13,13 +12,13 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Details</font></a> | 
-      <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Folders</font></a> |
+      <a href="/Accounts.do?command=Details&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Details</font></a> | 
+      <a href="/Accounts.do?command=Fields&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Folders</font></a> |
       <font color="#787878">Activities</font> | 
-      <a href="Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Contacts</font></a> | 
-      <a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Opportunities</font></a> | 
-      <a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>"><font color="#0000FF">Tickets</font></a> |
-      <a href="AccountsDocuments.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><font color="#000000">Documents</font></a>
+      <a href="Contacts.do?command=View&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Contacts</font></a> | 
+      <a href="Opportunities.do?command=View&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Opportunities</font></a> | 
+      <a href="Accounts.do?command=ViewTickets&orgId=<%= TicketDetails.getOrgId() %>"><font color="#0000FF">Tickets</font></a> |
+      <a href="AccountsDocuments.do?command=View&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Documents</font></a>
     </td>
   </tr>
   <tr>
