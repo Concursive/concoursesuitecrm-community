@@ -66,7 +66,7 @@ function initRichEdit(el) {
 				"<html>\n" +
 				"<head>\n<title></title>\n</head>\n<body>\n</body>\n</html>";
 					
-		el.src = "about:blank";
+		//el.src = "about:blank"; //breaks under IE5.0
 		var d = el.frameWindow.document;
 		d.designMode = "On";
 		d.open();
