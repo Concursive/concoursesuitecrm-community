@@ -664,6 +664,24 @@
     <forward name="DeleteReportOK" resource="/TroubleTickets.do?command=Reports"/>
     <forward name="DeleteReportERROR" resource="/TroubleTickets.do?command=Reports"/>
   </action>
+  <action name="TroubleTicketsDocuments" class="com.darkhorseventures.cfsmodule.TroubleTicketsDocuments">
+    <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <!--
+    <forward name="ViewOK" resource="/leads_documents_list.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/leads_documents_upload.jsp" layout="nav"/>
+    <forward name="UploadOK" resource="/LeadsDocuments.do?command=View"/>
+    <forward name="AddVersionOK" resource="/leads_documents_upload_version.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/leads_documents_details.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/leads_documents_modify.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/LeadsDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/LeadsDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/LeadsDocuments.do?command=View"/>
+    -->
+  </action>
   <!-- End Ticket Module -->
   
   
