@@ -100,7 +100,19 @@ Modify User<br>
   
   <tr class="containerBody">
     <td nowrap class="formLabel">Generate new password</td>
-    <td><input type="checkbox" name="generatePass"></td>
+    <td>
+    <table border="0" cellpadding="0" cellspacing="0">
+    <tr><td valign="center">
+    <input type="checkbox" name="generatePass">
+    </td>
+    <td width="8"></td>
+    <td valign="center">
+    Note: New password will be emailed to the following address:
+    <%=UserRecord.getContact().getEmailAddress("Business")%>
+    </td>
+    </tr>
+    </table>
+    </td>
   </tr>  
 
   
