@@ -10,25 +10,39 @@ import org.aspcfs.utils.web.*;
 import org.aspcfs.utils.*;
 import java.util.*;
 
-/** Retrieves data in the appropriate order for reconstructing folders
- * @author matt rajkowski
- * @created 9/15/2002
- * @version $Id$
+/**
+ *  Retrieves data in the appropriate order for reconstructing folders
+ *
+ *@author     matt rajkowski
+ *@created    9/15/2002
+ *@version    $Id$
  */
 public class ImportFolders implements CFSDatabaseReaderImportModule {
-  /** Reads folder data and sends to a writer */  
+
+  /**
+   *  Reads folder data and sends to a writer
+   *
+   *@param  writer            Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@param  mappings          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   *@deprecated               The system_modules table has been replaced so this
+   *      method needs to be updated
+   */
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     logger.info("ImportBaseData-> Inserting folders");
     boolean processOK = true;
-    
+
     writer.setAutoCommit(true);
     //For each linkModuleId... get the categories and definitions to insert
+    // NOTE: this table no longer exists so this code needs to be updated to work
     LookupList moduleList = new LookupList(db, "system_modules");
     Iterator modules = moduleList.iterator();
     while (modules.hasNext()) {
-      LookupElement thisModule = (LookupElement)modules.next();
+      LookupElement thisModule = (LookupElement) modules.next();
       int moduleId = thisModule.getCode();
-      
+
       //Insert the category
       CustomFieldCategoryList categoryList = new CustomFieldCategoryList();
       categoryList.setLinkModuleId(moduleId);
@@ -38,40 +52,40 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
       if (!processOK) {
         return false;
       }
-      
+
       //Insert the category groups
       Iterator categories = categoryList.iterator();
       while (categories.hasNext()) {
-        CustomFieldCategory thisCategory = (CustomFieldCategory)categories.next();
+        CustomFieldCategory thisCategory = (CustomFieldCategory) categories.next();
         processOK = mappings.saveList(writer, thisCategory, "insertGroup");
         if (!processOK) {
           return false;
         }
-        
+
         ArrayList fieldLookup = new ArrayList();
-        
+
         //Insert the fields
         Iterator groups = thisCategory.iterator();
         while (groups.hasNext()) {
-          CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
+          CustomFieldGroup thisGroup = (CustomFieldGroup) groups.next();
           processOK = mappings.saveList(writer, thisGroup, "insertField");
           if (!processOK) {
             return false;
           }
-          
+
           //Insert the field lookup lists
           Iterator fields = thisGroup.iterator();
           while (fields.hasNext()) {
-            CustomField thisField = (CustomField)fields.next();
+            CustomField thisField = (CustomField) fields.next();
             if (thisField.getType() == CustomField.SELECT) {
-              
+
               //Stash this item id so we know it is a lookup for later
               fieldLookup.add(new Integer(thisField.getId()));
-              
+
               thisField.buildElementData(db);
-              Iterator lookupItems = ((LookupList)thisField.getElementData()).iterator();
+              Iterator lookupItems = ((LookupList) thisField.getElementData()).iterator();
               while (lookupItems.hasNext()) {
-                LookupElement thisElement = (LookupElement)lookupItems.next();
+                LookupElement thisElement = (LookupElement) lookupItems.next();
                 DataRecord thisRecord = new DataRecord();
                 thisRecord.setName("customFieldLookup");
                 thisRecord.setAction("insert");
@@ -91,31 +105,30 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
             //but a record is needed
           }
         }
-        
-        
+
         //TODO: Test this with records...
         //Copy the actual data
         CustomFieldRecordList recordList = new CustomFieldRecordList();
         recordList.setLinkModuleId(moduleId);
         recordList.setCategoryId(thisCategory.getId());
         recordList.buildList(db);
-        
+
         Iterator records = recordList.iterator();
         while (records.hasNext()) {
-          CustomFieldRecord thisCFRecord = (CustomFieldRecord)records.next();
+          CustomFieldRecord thisCFRecord = (CustomFieldRecord) records.next();
           DataRecord thisRecord = new DataRecord();
           thisRecord.setName("customFieldRecord");
           thisRecord.setAction("insert");
           thisRecord.addField("linkModuleId", String.valueOf(thisCFRecord.getLinkModuleId()), "systemModules", null);
           switch (thisCFRecord.getLinkModuleId()) {
-            case 1:
-              thisRecord.addField("linkItemId", String.valueOf(thisCFRecord.getLinkItemId()), "account", null);
-              break;
-            case 2:
-              thisRecord.addField("linkItemId", String.valueOf(thisCFRecord.getLinkItemId()), "contact", null);
-              break;
-            default:
-              break;
+              case 1:
+                thisRecord.addField("linkItemId", String.valueOf(thisCFRecord.getLinkItemId()), "account", null);
+                break;
+              case 2:
+                thisRecord.addField("linkItemId", String.valueOf(thisCFRecord.getLinkItemId()), "contact", null);
+                break;
+              default:
+                break;
           }
           thisRecord.addField("categoryId", String.valueOf(thisCFRecord.getCategoryId()), "customFieldCategory", null);
           thisRecord.addField("guid", String.valueOf(thisCFRecord.getId()));
@@ -128,14 +141,14 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
           if (!processOK) {
             return false;
           }
-          
+
           //TODO:For each record, add the field data
           CustomFieldDataList fieldList = new CustomFieldDataList();
           fieldList.setRecordId(thisCFRecord.getId());
           fieldList.buildList(db);
           Iterator fieldItems = fieldList.iterator();
           while (fieldItems.hasNext()) {
-            CustomFieldData thisData = (CustomFieldData)fieldItems.next();
+            CustomFieldData thisData = (CustomFieldData) fieldItems.next();
             DataRecord thisFieldRecord = new DataRecord();
             thisFieldRecord.setName("customFieldData");
             thisFieldRecord.setAction("insert");
@@ -153,7 +166,7 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
           }
         }
       }
-      
+
       if (!processOK) {
         return false;
       }
@@ -161,3 +174,4 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
     return true;
   }
 }
+
