@@ -8,6 +8,7 @@ import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.utils.*;
 import org.w3c.dom.Element;
 import org.theseus.actions.*;
+import com.darkhorseventures.webutils.LookupList;
 
 /**
  *  System status maintains global values for a shared group of users. This is
@@ -32,6 +33,7 @@ public class SystemStatus {
   private ObjectHookManager hookManager = new ObjectHookManager();
   private ConnectionElement connectionElement = null;
   private String fileLibraryPath = null;
+  Hashtable lookups = new Hashtable();
 
   /**
    *  Constructor for the SystemStatus object
@@ -284,6 +286,30 @@ public class SystemStatus {
     hookManager.initializeBusinessProcessList(hookData);
   }
 
+  
+  /**
+   *  Builds the lookupList on demand and caches it in the lookups HashTable.
+   *
+   *@param  db                Description of the Parameter
+   *@param  listName          DB Table name.
+   *@return                   The lookupList value
+   *@exception  SQLException  Description of the Exception
+   */
+  public LookupList getLookupList(Connection db, String listName) throws SQLException {
+    if (!(lookups.containsKey(listName))) {
+      synchronized (this) {
+        if (!(lookups.containsKey(listName))) {
+          lookups.put(listName, new LookupList(db, listName));
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("SystemStatus --> Added new LookupList object: " + listName);
+          }
+        }
+      }
+    }
+    return (LookupList) lookups.get(listName);
+  }
+  
+  
 
   /**
    *  A presentation object (.jsp) can see if a field should be ignored
