@@ -1,5 +1,6 @@
 <jsp:useBean id="LoginBean" class="org.aspcfs.modules.login.beans.LoginBean" scope="request"/>
 <jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
+<jsp:useBean id="APP_ORGANIZATION" class="java.lang.String" scope="application"/>
 <%!
   public static String getLongDate(java.util.Date tmp) {
     java.text.SimpleDateFormat formatter1 = new java.text.SimpleDateFormat ("MMMMM d, yyyy");
@@ -74,7 +75,7 @@
               <tr>
                 <td align="center" valign="center" colspan="4">
                   <font face="Arial, Helvetica, sans-serif" size="2"><strong>Dark Horse CRM <%= ("https".equals(request.getScheme())?"Secure ":"") %>Login</strong><br>
-                  <%= toHtml(APP_TEXT) %></font>
+                  <%= toHtml(APP_TEXT) %></font><dhv:evaluate if="<%= hasText(APP_ORGANIZATION) %>"><br>Licensed To: <%= toHtml(APP_ORGANIZATION) %></dhv:evaluate>
                 </td>
               </tr>
 <%

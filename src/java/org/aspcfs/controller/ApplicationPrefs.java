@@ -280,6 +280,10 @@ public class ApplicationPrefs {
           if (edition != null) {
             context.setAttribute("APP_TEXT", edition);
           }
+          String organization = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("company"));
+          if (organization != null) {
+            context.setAttribute("APP_ORGANIZATION", organization);
+          }
           //String gdot = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
         }
       } catch (Exception e) {
