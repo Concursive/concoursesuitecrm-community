@@ -22,7 +22,7 @@ public class GenerateTicketList extends ObjectHookComponent implements Component
   public final static String ONLY_OPEN = "ticketList.onlyOpen";
   public final static String ONLY_ASSIGNED = "ticketList.onlyAssigned";
   public final static String ONLY_UNASSIGNED = "ticketList.onlyUnassigned";
-  public final static String AGE_IN_MINUTES = "ticketList.ageInMinutes";
+  public final static String MINUTES_OLDER_THAN = "ticketList.minutesOlderThan";
   public final static String LAST_ANCHOR = "ticketList.lastAnchor";
   public final static String NEXT_ANCHOR = "ticketList.nextAnchor";
 
@@ -60,7 +60,9 @@ public class GenerateTicketList extends ObjectHookComponent implements Component
       tickets.setLastAnchor(context.getParameter(GenerateTicketList.LAST_ANCHOR));
       tickets.setNextAnchor(context.getParameter(GenerateTicketList.NEXT_ANCHOR));
     }
-    //tickets.setAgeInMinutes(context.getParameterAsInt(GenerateTicketList.AGE_IN_MINUTES));
+    if (context.hasParameter(GenerateTicketList.MINUTES_OLDER_THAN)) {
+      tickets.setMinutesOlderThan(context.getParameterAsInt(GenerateTicketList.MINUTES_OLDER_THAN));
+    }
     Connection db = null;
     try {
       db = this.getConnection(context);

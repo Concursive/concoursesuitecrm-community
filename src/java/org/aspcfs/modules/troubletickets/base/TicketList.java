@@ -10,6 +10,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
+import java.util.Calendar;
 
 /**
  *  A collection of Ticket objects, can also be used for querying and filtering
@@ -43,6 +44,7 @@ public class TicketList extends ArrayList implements SyncableList {
   private int priority = 0;
   private String accountOwnerIdRange = null;
   private String description = null;
+  private int minutesOlderThan = -1;
   //search filters
   private String searchText = "";
   private boolean sendNotification = true;
@@ -380,6 +382,8 @@ public class TicketList extends ArrayList implements SyncableList {
     this.description = description;
   }
 
+  public void setMinutesOlderThan(int tmp) { this.minutesOlderThan = tmp; }
+  public void setMinutesOlderThan(String tmp) { this.minutesOlderThan = Integer.parseInt(tmp); }
 
   /**
    *  Sets the onlyClosed attribute of the TicketList object
@@ -731,76 +735,80 @@ public class TicketList extends ArrayList implements SyncableList {
    *@since             1.2
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
-    if (searchText == null || (searchText.equals(""))) {
-      if (enteredBy > -1) {
-        sqlFilter.append("AND t.enteredby = ? ");
+    if (enteredBy > -1) {
+      sqlFilter.append("AND t.enteredby = ? ");
+    }
+    if (description != null) {
+      if (description.indexOf("%") >= 0) {
+        sqlFilter.append("AND lower(t.problem) like lower(?) ");
+      } else {
+        sqlFilter.append("AND lower(t.problem) = lower(?) ");
       }
-      if (description != null) {
-        if (description.indexOf("%") >= 0) {
-          sqlFilter.append("AND lower(t.problem) like lower(?) ");
-        } else {
-          sqlFilter.append("AND lower(t.problem) = lower(?) ");
-        }
+    }
+    if (onlyOpen == true) {
+      sqlFilter.append("AND t.closed IS NULL ");
+    }
+    if (onlyClosed == true) {
+      sqlFilter.append("AND t.closed IS NOT NULL ");
+    }
+    if (id > -1) {
+      sqlFilter.append("AND t.ticketid = ? ");
+    }
+    if (orgId > -1) {
+      sqlFilter.append("AND t.org_id = ? ");
+    }
+    if (department > -1) {
+      if (unassignedToo == true) {
+        sqlFilter.append("AND (t.department_code in (?, 0, -1) OR (t.department_code IS NULL)) ");
+      } else {
+        sqlFilter.append("AND t.department_code = ? ");
       }
-      if (onlyOpen == true) {
-        sqlFilter.append("AND t.closed IS NULL ");
+    }
+    if (assignedTo > -1) {
+      sqlFilter.append("AND t.assigned_to = ? ");
+    }
+    if (excludeAssignedTo > -1) {
+      sqlFilter.append("AND t.assigned_to <> ? ");
+    }
+    if (onlyAssigned) {
+      sqlFilter.append("AND t.assigned_to > 0 AND t.assigned_to IS NOT NULL ");
+    }
+    if (onlyUnassigned) {
+      sqlFilter.append("AND (t.assigned_to IS NULL OR t.assigned_to = 0 OR t.assigned_to = -1) ");
+    }
+    if (severity > 0) {
+      sqlFilter.append("AND t.scode = ? ");
+    }
+    if (priority > 0) {
+      sqlFilter.append("AND t.pri_code = ? ");
+    }
+    if (accountOwnerIdRange != null) {
+      sqlFilter.append("AND t.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
+    }
+    //Sync API
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND t.entered >= ? ");
       }
-      if (onlyClosed == true) {
-        sqlFilter.append("AND t.closed IS NOT NULL ");
+      sqlFilter.append("AND t.entered < ? ");
+    } else if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND t.modified >= ? ");
+      sqlFilter.append("AND t.entered < ? ");
+      sqlFilter.append("AND t.modified < ? ");
+    } else if (syncType == Constants.SYNC_QUERY) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND t.entered >= ? ");
       }
-      if (id > -1) {
-        sqlFilter.append("AND t.ticketid = ? ");
-      }
-      if (orgId > -1) {
-        sqlFilter.append("AND t.org_id = ? ");
-      }
-      if (department > -1) {
-        if (unassignedToo == true) {
-          sqlFilter.append("AND (t.department_code in (?, 0, -1) OR (t.department_code IS NULL)) ");
-        } else {
-          sqlFilter.append("AND t.department_code = ? ");
-        }
-      }
-      if (assignedTo > -1) {
-        sqlFilter.append("AND t.assigned_to = ? ");
-      }
-      if (excludeAssignedTo > -1) {
-        sqlFilter.append("AND t.assigned_to <> ? ");
-      }
-      if (onlyAssigned) {
-        sqlFilter.append("AND t.assigned_to > 0 AND t.assigned_to IS NOT NULL ");
-      }
-      if (onlyUnassigned) {
-        sqlFilter.append("AND (t.assigned_to IS NULL OR t.assigned_to = 0 OR t.assigned_to = -1) ");
-      }
-      if (severity > 0) {
-        sqlFilter.append("AND t.scode = ? ");
-      }
-      if (priority > 0) {
-        sqlFilter.append("AND t.pri_code = ? ");
-      }
-      if (accountOwnerIdRange != null) {
-        sqlFilter.append("AND t.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
-      }
-      //Sync API
-      if (syncType == Constants.SYNC_INSERTS) {
-        if (lastAnchor != null) {
-          sqlFilter.append("AND t.entered > ? ");
-        }
+      if (nextAnchor != null) {
         sqlFilter.append("AND t.entered < ? ");
-      } else if (syncType == Constants.SYNC_UPDATES) {
-        sqlFilter.append("AND t.modified > ? ");
-        sqlFilter.append("AND t.entered < ? ");
-        sqlFilter.append("AND t.modified < ? ");
-      } else if (syncType == Constants.SYNC_QUERY) {
-        if (lastAnchor != null) {
-          sqlFilter.append("AND t.entered > ? ");
-        }
-        if (nextAnchor != null) {
-          sqlFilter.append("AND t.entered < ? ");
-        }
       }
     } else {
+      //No sync, but still need to factor in age
+      if (minutesOlderThan > 0) {
+        sqlFilter.append("AND t.entered <= ? ");
+      }
+    }
+    if (searchText == null || (searchText.equals(""))) {
       if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
         sqlFilter.append(
             "AND ( LOWER(CONVERT(VARCHAR(2000),t.problem)) LIKE LOWER(?) OR " +
@@ -827,53 +835,74 @@ public class TicketList extends ArrayList implements SyncableList {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-    if (searchText == null || (searchText.equals(""))) {
-      if (enteredBy > -1) {
-        pst.setInt(++i, enteredBy);
-      }
-      if (description != null) {
-        pst.setString(++i, description);
-      }
-      if (id > -1) {
-        pst.setInt(++i, id);
-      }
-      if (orgId > -1) {
-        pst.setInt(++i, orgId);
-      }
-      if (department > -1) {
-        pst.setInt(++i, department);
-      }
-      if (assignedTo > -1) {
-        pst.setInt(++i, assignedTo);
-      }
-      if (excludeAssignedTo > -1) {
-        pst.setInt(++i, excludeAssignedTo);
-      }
-      if (severity > 0) {
-        pst.setInt(++i, severity);
-      }
-      if (priority > 0) {
-        pst.setInt(++i, priority);
-      }
-      //Sync API
-      if (syncType == Constants.SYNC_INSERTS) {
-        if (lastAnchor != null) {
-          pst.setTimestamp(++i, lastAnchor);
-        }
-        pst.setTimestamp(++i, nextAnchor);
-      } else if (syncType == Constants.SYNC_UPDATES) {
+    if (enteredBy > -1) {
+      pst.setInt(++i, enteredBy);
+    }
+    if (description != null) {
+      pst.setString(++i, description);
+    }
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
+    if (orgId > -1) {
+      pst.setInt(++i, orgId);
+    }
+    if (department > -1) {
+      pst.setInt(++i, department);
+    }
+    if (assignedTo > -1) {
+      pst.setInt(++i, assignedTo);
+    }
+    if (excludeAssignedTo > -1) {
+      pst.setInt(++i, excludeAssignedTo);
+    }
+    if (severity > 0) {
+      pst.setInt(++i, severity);
+    }
+    if (priority > 0) {
+      pst.setInt(++i, priority);
+    }
+    //Sync API
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
         pst.setTimestamp(++i, lastAnchor);
-        pst.setTimestamp(++i, lastAnchor);
-        pst.setTimestamp(++i, nextAnchor);
-      } else if (syncType == Constants.SYNC_QUERY) {
-        if (lastAnchor != null) {
-          pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    } else if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    } else if (syncType == Constants.SYNC_QUERY) {
+      if (lastAnchor != null) {
+        java.sql.Timestamp adjustedDate = lastAnchor;
+        if (minutesOlderThan > 0) {
+          Calendar now = Calendar.getInstance();
+          now.setTimeInMillis(lastAnchor.getTime());
+          now.add(Calendar.MINUTE, minutesOlderThan - (2 * minutesOlderThan));
+          adjustedDate = new java.sql.Timestamp(now.getTimeInMillis());
         }
-        if (nextAnchor != null) {
-          pst.setTimestamp(++i, nextAnchor);
+        pst.setTimestamp(++i, adjustedDate);
+      }
+      if (nextAnchor != null) {
+        java.sql.Timestamp adjustedDate = nextAnchor;
+        if (minutesOlderThan > 0) {
+          Calendar now = Calendar.getInstance();
+          now.setTimeInMillis(nextAnchor.getTime());
+          now.add(Calendar.MINUTE, minutesOlderThan - (2 * minutesOlderThan));
+          adjustedDate = new java.sql.Timestamp(now.getTimeInMillis());
         }
+        pst.setTimestamp(++i, adjustedDate);
       }
     } else {
+      //No sync, but still need to factor in age
+      if (minutesOlderThan > 0) {
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.MINUTE, minutesOlderThan - (2 * minutesOlderThan));
+        java.sql.Timestamp adjustedDate = new java.sql.Timestamp(now.getTimeInMillis());
+        pst.setTimestamp(++i, adjustedDate);
+      }
+    }
+    if (searchText == null || (searchText.equals(""))) {
       pst.setString(++i, searchText);
       pst.setString(++i, searchText);
       pst.setString(++i, searchText);

@@ -85,7 +85,7 @@ Comment: ${this.comment}
             <parameter name="ticketList.onlyOpen" value="true"/>
             <parameter name="ticketList.onlyAssigned" value="true" enabled="false"/>
             <parameter name="ticketList.onlyUnassigned" value="true" enabled="true"/>
-            <parameter name="ticketList.ageInMinutes" value="10"/>
+            <parameter name="ticketList.minutesOlderThan" value="10" enabled="true"/>
             <parameter name="ticketList.lastAnchor" value="${process.lastAnchor}" enabled="true"/>
             <parameter name="ticketList.nextAnchor" value="${process.nextAnchor}" enabled="true"/>
           </parameters>
@@ -106,12 +106,13 @@ The following tickets in CFS are unassigned and need attention:
 ]]></parameter>
             <parameter name="report.ticket.content"><![CDATA[----- Ticket Details -----
 Ticket # ${this.paddedId}
+Created: ${this.enteredString}
 Organization: ${ticketOrganization.name}
 Priority: ${ticketPriorityLookup.description}
 Severity: ${ticketSeverityLookup.description}
 Issue: ${this.problem}
 
-Assigned By: ${ticketModifiedByContact.nameFirstLast}
+Last Modified By: ${ticketModifiedByContact.nameFirstLast}
 Comment: ${this.comment}
 
 
