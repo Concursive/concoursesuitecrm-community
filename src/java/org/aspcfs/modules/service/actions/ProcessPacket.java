@@ -115,7 +115,7 @@ public final class ProcessPacket extends CFSModule {
 
           SyncTable metaMapping = new SyncTable();
           metaMapping.setName("meta");
-          metaMapping.setMappedClassName("com.darkhorseventures.utils.TransactionMeta");
+          metaMapping.setMappedClassName("org.aspcfs.modules.service.base.TransactionMeta");
           thisTransaction.addMapping("meta", metaMapping);
           thisTransaction.build(thisElement);
           //Execute the transaction
