@@ -435,7 +435,7 @@ public class SurveyAnswer {
     String sql =
         "SELECT avg(quant_ans) as av " +
         "FROM active_survey_answers s " +
-        "WHERE question_id = ? ";
+        "WHERE question_id = ? AND quant_ans > 0";
     pst = db.prepareStatement(sql);
     pst.setInt(1, this.getQuestionId());
     rs = pst.executeQuery();
