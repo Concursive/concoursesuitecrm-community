@@ -93,7 +93,7 @@
       </td>
     </tr>
 <%
-    }
+      }
 %>      
     <tr>
       <td width="2" align="center" valign="top" bgcolor="<%= currentHighlight %>">&nbsp;</td>

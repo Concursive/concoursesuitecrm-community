@@ -40,9 +40,9 @@ public final class ProjectManagementTeam extends CFSModule {
       context.getRequest().setAttribute("IncludeSection", ("team_modify").toLowerCase());
       
       UserList userList = new UserList();
-			userList.setBuildContact(true);
-			userList.setBuildHierarchy(false);
-			userList.buildList(db);
+      userList.setBuildContact(true);
+      userList.setBuildHierarchy(false);
+      userList.buildList(db);
       //context.getRequest().setAttribute("UserList", userList);
       context.getRequest().setAttribute("UserSize", "" + userList.size());
       
@@ -160,7 +160,4 @@ public final class ProjectManagementTeam extends CFSModule {
       return ("SystemError");
     }
   }
-  
-  
-  
 }

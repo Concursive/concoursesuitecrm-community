@@ -69,7 +69,9 @@
       <td width="2" bgcolor="#000000">&nbsp;</td>
     </tr>
     <tr>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
+      <td width="2" bgcolor="#000000">
+        &nbsp;
+      </td>
       <td width="100%" colspan="4">
         &nbsp;<br>
         &nbsp;Activity Description:<br>
@@ -80,7 +82,9 @@
       <td width="2" bgcolor="#000000">&nbsp;</td>
     </tr>
     <tr>
-      <td width="2" bgcolor="#000000">&nbsp;</td>
+      <td width="2" bgcolor="#000000">
+        &nbsp;
+      </td>
       <td width="100%" colspan="4">
         &nbsp;<br>
         &nbsp;Link to Requirement:<br>
@@ -102,8 +106,8 @@
     while (iTeam.hasNext()) {
       TeamMember thisMember = (TeamMember)iTeam.next();
       team.addItem(thisMember.getUserId(), 
-                   ((Contact)thisMember.getContact()).getNameLast() + ", " +
-                   ((Contact)thisMember.getContact()).getNameFirst());
+           ((Contact)thisMember.getContact()).getNameLast() + ", " +
+           ((Contact)thisMember.getContact()).getNameFirst());
     }
 %>
         <%= team.getHtml("userAssignedId", Assignment.getUserAssignedId()) %><font color=red>*</font> <%= showAttribute(request, "userAssignedIdError") %>

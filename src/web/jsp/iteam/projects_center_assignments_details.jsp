@@ -100,8 +100,8 @@
     while (iTeam.hasNext()) {
       TeamMember thisMember = (TeamMember)iTeam.next();
       team.addItem(thisMember.getUserId(), 
-                   ((Contact)thisMember.getContact()).getNameLast() + ", " +
-                   ((Contact)thisMember.getContact()).getNameFirst());
+           ((Contact)thisMember.getContact()).getNameLast() + ", " +
+           ((Contact)thisMember.getContact()).getNameFirst());
     }
 %>
         <%= team.getHtml("userAssignedId", Assignment.getUserAssignedId()) %>

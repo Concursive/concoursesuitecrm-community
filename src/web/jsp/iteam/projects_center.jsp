@@ -12,7 +12,7 @@
   <tr>
   <td bgcolor='#E4E4E4' valign='top' nowrap>
     <font color='#000000'>
-      <b><img border='0' src='images/project.gif'>&nbsp;Project Center</b>
+      <b><img border="0" src="images/project.gif" align="absbottom">&nbsp;Project Center</b>
     </font>
   </td>
   <td bgcolor='#E4E4E4' valign='top'>
