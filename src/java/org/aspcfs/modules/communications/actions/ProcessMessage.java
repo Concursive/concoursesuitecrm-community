@@ -30,10 +30,10 @@ public final class ProcessMessage extends CFSModule {
 			System.out.println("Getting driver");
 			sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
 			ConnectionElement ce = new ConnectionElement();
-			ce.setUrl("jdbc:postgresql://216.54.81.101:5432/" + "cdb_" + dbName);
+			ce.setUrl("jdbc:postgresql://127.0.0.1:5432/" + dbName);
 			ce.setUsername("cfsdba");
 			ce.setPassword("");
-			ce.setDbName("cdb_" + dbName);
+			ce.setDbName(dbName);
 			System.out.println("Getting connection");
 			db = sqlDriver.getConnection(ce);
 			System.out.println("Got connection");

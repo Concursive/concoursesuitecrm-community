@@ -228,6 +228,7 @@ public class Notifier extends ReportBuilder {
           thisRecipient.setStatusDate(new java.sql.Timestamp(System.currentTimeMillis()));
           thisRecipient.setStatusId(1);
           thisRecipient.setStatus(thisNotification.getStatus());
+					System.out.println("Notifier-> Notification status: " + thisNotification.getStatus());
           thisRecipient.update(db);
         } else {
           System.out.println("Notifier-> ...it's old");
@@ -333,7 +334,7 @@ public class Notifier extends ReportBuilder {
 	java.util.Date end = new java.util.Date();
       } catch (Exception exc) {
 	System.out.println("Sending error email...");
-	thisNotifier.sendAdminReport(exc.toString());
+	//thisNotifier.sendAdminReport(exc.toString());
 	System.err.println("BuildReport Error: " + exc.toString());
       }
       System.exit(0);
@@ -341,15 +342,21 @@ public class Notifier extends ReportBuilder {
   }
   
   private boolean outputFaxLog(Vector faxLog) {
+		System.out.println("Notifier-> Outputting fax log");
     if (faxLog == null || faxLog.size() == 0) return false;
     PrintWriter out = null;
     try {
       Iterator faxEntries = faxLog.iterator();
-      out = new PrintWriter(new BufferedWriter(new FileWriter("foo.out")));
+      out = new PrintWriter(new BufferedWriter(new FileWriter("foo.sh")));
       while (faxEntries.hasNext()) {
         String thisEntry = (String)faxEntries.next();
-        out.println("./html2ps -o filename.ps http://127.0.0.1:8080/ProcessMessage.do?id=" + thisEntry);
-        out.println("gs -q -sDEVICE=tiffg3 -dNOPAUSE -dBATCH -sOutputFile=filename.tiff filename.ps");
+				StringTokenizer st = new StringTokenizer(thisEntry, "|");
+				String databaseName = st.nextToken();
+				String messageId = st.nextToken();
+				String faxNumber = st.nextToken();
+				String baseFilename = "fax" + faxNumber + messageId;
+        out.println("./html2ps -o " + baseFilename + ".ps http://127.0.0.1:8080/ProcessMessage.do?id=" + databaseName + "\\|" + messageId);
+        out.println("gs -q -sDEVICE=tiffg3 -dNOPAUSE -dBATCH -sOutputFile=" + baseFilename + ".tiff " + baseFilename + ".ps");
       }
     } catch (IOException e) {
       e.printStackTrace(System.err);

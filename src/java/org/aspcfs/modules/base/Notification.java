@@ -351,7 +351,7 @@ public class Notification {
         Contact thisContact = new Contact(db, "" + contactToNotify);
         if (type.equals(EMAILFAX)) {
           if (thisContact.getEmailAddress("Business").equals("") &&
-              !thisContact.getPhoneNumber("Business Fax").equals("")) {
+              !thisContact.getPhoneNumber("Demo Fax").equals("")) {
             type = FAX;
           } else {
             type = EMAIL;
@@ -389,10 +389,11 @@ public class Notification {
 
           status = "IM Sent";
         } else if (type.equals(FAX)) {
+					System.out.println("Notification-> To: " + thisContact.getPhoneNumber("Demo Fax"));
           String phoneNumber = thisContact.getPhoneNumber("Demo Fax");
-          if (!phoneNumber.equals("") && phoneNumber.length() == 10) {
+          if (!phoneNumber.equals("") && phoneNumber.length() > 0) {
             if (phoneNumber.startsWith("757")) {
-              phoneNumber = phoneNumber.substring(3, 10);
+              phoneNumber = phoneNumber.substring(3);
             } else {
               phoneNumber = "1" + phoneNumber;
             }

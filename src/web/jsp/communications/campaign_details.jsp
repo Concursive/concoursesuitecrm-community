@@ -74,7 +74,7 @@
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="5" valign="center" align="left">
+    <td colspan="6" valign="center" align="left">
       <strong>List of Recipients</strong>
     </td>     
   </tr>
@@ -93,6 +93,9 @@
     </td>
     <td nowrap>
       Reply Date
+    </td>
+		<td nowrap>
+      Status
     </td>
   </tr>
 <%
@@ -129,6 +132,9 @@
     <td nowrap>
       <%= toHtml(thisRecipient.getReplyDateString()) %>
     </td>
+		<td nowrap>
+		  <%= toHtml(thisRecipient.getStatus()) %>
+	  </td>
   </tr>
   <%}%>
 </table>
@@ -136,7 +142,7 @@
 [<%= CampaignDashboardRecipientInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignDashboardRecipientInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= CampaignDashboardRecipientInfo.getNumericalPageLinks() %>
 <%} else {%>
   <tr bgcolor="white">
-    <td colspan="5" valign="center">
+    <td colspan="6" valign="center">
       No recipients found.
     </td>
   </tr>
