@@ -25,7 +25,8 @@ import org.xml.sax.*;
 public class ContainerMenuHandler extends TagSupport {
   private String name = null;
   private String selected = null;
-  private HashMap params = new HashMap();
+  private HashMap params = null;
+  private String appendToUrl = "";
 
 
   /**
@@ -62,14 +63,21 @@ public class ContainerMenuHandler extends TagSupport {
    *@param  tmp  The new param value
    */
   public void setParam(String tmp) {
-    String param = tmp.substring(0, tmp.indexOf("="));
-    String value = tmp.substring(tmp.indexOf("=") + 1);
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("ContainerMenuHandler: Param-> " + param);
-      System.out.println("ContainerMenuHandler: Value-> " + value);
+    params = new HashMap();
+    StringTokenizer tokens = new StringTokenizer(tmp, "|");
+    while(tokens.hasMoreTokens()){
+      String pair = tokens.nextToken();
+      String param = pair.substring(0, pair.indexOf("="));
+      String value = pair.substring(pair.indexOf("=") + 1);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("ContainerMenuHandler: Param-> " + param);
+        System.out.println("ContainerMenuHandler: Value-> " + value);
+      }
+      params.put("${" + param + "}", value);
     }
-    params.put("${" + param + "}", value);
   }
+
+  public void setAppendToUrl(String tmp) { this.appendToUrl = tmp; }
 
 
   /**
@@ -113,13 +121,13 @@ public class ContainerMenuHandler extends TagSupport {
             if (thisItem.getName().equals(selected)) {
               Template linkText = new Template(thisItem.getLink());
               linkText.setParseElements(params);
-              this.pageContext.getOut().write("<a class=\"containerOn\"href=\"" + linkText.getParsedText() + "\">");
+              this.pageContext.getOut().write("<a class=\"containerOn\"href=\"" + linkText.getParsedText() + appendToUrl + "\">");
               this.pageContext.getOut().write(thisItem.getLongHtml());
               this.pageContext.getOut().write("</a>");
             } else {
               Template linkText = new Template(thisItem.getLink());
               linkText.setParseElements(params);
-              this.pageContext.getOut().write("<a class=\"containerOff\" href=\"" + linkText.getParsedText() + "\">");
+              this.pageContext.getOut().write("<a class=\"containerOff\" href=\"" + linkText.getParsedText() + appendToUrl + "\">");
               this.pageContext.getOut().write(thisItem.getLongHtml());
               this.pageContext.getOut().write("</a>");
             }
