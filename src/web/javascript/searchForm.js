@@ -9,21 +9,6 @@ function operator(id, operand, text){
 	this.displayText = text
 	this.operand = operand
 }
-//form checking for the criteria page
-function checkForm(form) {
-  formTest = true;
-  message = "";
-  if (form.groupName.value == "") {
-    message += "- Group Name is required\r\n";
-    formTest = false;
-  }
-  if (formTest == false) {
-    alert("Criteria could not be processed, please check the following:\r\n\r\n" + message);
-    return false;
-  } 
-  saveValues();
-  return true;
-}
 
 function popPreview() {
   saveValues();
