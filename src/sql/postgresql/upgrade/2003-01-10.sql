@@ -1,18 +1,16 @@
-//9-30-02
 INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (8, 'tickets-tickets-reports', true, true, false, true, 'Reports', 30);
 
-//10-31-02
 alter table permission_category add column folders boolean;
 alter table permission_category alter column folders set default false;
-update table permission_category set folders='f';
+update permission_category set folders='f';
 
 alter table permission_category add column lookups boolean;
 alter table permission_category alter column lookups set default false;
-update table permission_category set lookups='f';
+update permission_category set lookups='f';
 
-//
-//do the database switch-around right before this to make accounts id 1 and contacts id 2
-//
+/*
+do the database switch-around right before this to make accounts id 1 and contacts id 2
+*/
 
 update permission_category set folders='t' where category_id in (1,2);
 update permission_category set lookups='t' where category_id=4;
@@ -22,7 +20,10 @@ update permission_category set lookups='t' where category_id=8;
 
 alter table opportunity add column notes text;
 
-//ignore the revenue, employees fields in accounts
+/*
+ignore the revenue, employees fields in accounts
+*/
+
 insert into system_prefs (category, data, enabled, enteredby, modifiedby) values ('system.fields.ignore', '<config><ignore>accounts-employees</ignore><ignore>accounts-revenue</ignore></config>', 't', '0', '0');
 
 CREATE TABLE lookup_opportunity_types (
@@ -49,8 +50,10 @@ update field_types set enabled = 'f' where id in (3,4,5,6);
 update field_types set enabled = 'f' where id in (9);
 
 
-//campaign dashboard and survey updates 
-//Dated : 11/24/2002 Mathur
+/*
+campaign dashboard and survey updates 
+Dated : 11/24/2002 Mathur
+*/
 
 CREATE TABLE survey_items (
   item_id serial PRIMARY KEY,
