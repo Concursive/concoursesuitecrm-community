@@ -115,6 +115,26 @@ public final class ProjectManagementTeam extends CFSModule {
     }
   }
   
+  public String executeCommandUpdateUserList(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+      String deptId = context.getRequest().getParameter("deptId");
+      db = this.getConnection(context);
+      UserList userList = new UserList();
+      if (deptId != null) {
+        userList.setDepartment(deptId);
+      }
+      userList.buildList(db);
+      context.getRequest().setAttribute("UserList", userList);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("MakeUserListOK");
+  }
+  
   public String executeCommandUpdate(ActionContext context) {
 	  
 /* 	if (!(hasPermission(context, "projects-team-edit"))) {

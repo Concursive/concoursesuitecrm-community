@@ -63,6 +63,13 @@
     }
   }
   
+  function updateUserList() {
+    var sel = document.forms['projectMemberForm'].elements['selDepartment'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "ProjectManagementTeam.do?command=UpdateUserList&deptId=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+  
   function switchList(form, thisAction) {
     var index;
     var copyValue;
@@ -225,7 +232,9 @@
     <tr>
       <td width='2' bgcolor='#808080'>&nbsp;</td>
       <td width="33%" align="center">
-        <% DepartmentList.setSelectSize(10); %><%= DepartmentList.getHtmlSelect("selDepartment", 0) %>
+        <% DepartmentList.setSelectSize(10); %>
+	<% DepartmentList.setJsEvent("onchange=\"updateUserList();\""); %>
+	<%= DepartmentList.getHtmlSelect("selDepartment", 0) %>
       </td>
       <td width="33%" align="center">
         <select size='10' name='selTotalList' onChange="switchList(this.form, 'add')">
@@ -239,6 +248,7 @@
       <td width='2' bgcolor='#808080'>&nbsp;</td>
       <td width='100%' colspan='3'>&nbsp;</td>
       <td width='2' bgcolor='#808080'>&nbsp;</td>
+      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
     </tr>
     <tr>
       <td width='2' bgcolor='#808080'>&nbsp;</td>

@@ -437,6 +437,7 @@
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="MakeUserListOK" resource="/projects_makeuserlist.jsp"/>
     <forward name="ModifyOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Team"/>
   </action>
   <action name="ProjectManagementAssignments" class="com.darkhorseventures.cfsmodule.ProjectManagementAssignments">
