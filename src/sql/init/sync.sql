@@ -867,4 +867,10 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (5, 'syncClient', 'com.darkhorseventures.cfsbase.SyncClient', 2);
  
- 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (5, 'accountList', 'com.darkhorseventures.cfsbase.OrganizationList');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (5, 'userList', 'com.darkhorseventures.cfsbase.UserList');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (5, 'contactList', 'com.darkhorseventures.cfsbase.ContactList');
+
