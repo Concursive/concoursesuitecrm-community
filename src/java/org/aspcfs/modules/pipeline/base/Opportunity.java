@@ -99,12 +99,22 @@ public class Opportunity extends OpportunityComponent {
       throw new SQLException("Valid opportunity ID not specified.");
     }
     PreparedStatement pst = db.prepareStatement(
-        "SELECT x.*, oc.*, y.description as stagename, org.name as acct_name, org.enabled as accountenabled, " +
-        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, oc.description as comp_desc, oc.id as comp_id, " +
-        "ct.namelast as last_name, ct.namefirst as first_name, " +
-        "ct.company as ctcompany, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst " +
+        "SELECT x.opp_id AS header_opp_id, " +
+        "x.description AS header_description, " +
+        "x.acctlink AS header_acctlink, " +
+        "x.contactlink AS header_contactlink, " +
+        "x.entered AS header_entered, " +
+        "x.enteredby AS header_enteredby, " +
+        "x.modified AS header_modified, " +
+        "x.modifiedby AS header_modifiedby, " +
+        "oc.*, y.description AS stagename, " +
+        "ct_owner.namelast AS o_namelast, ct_owner.namefirst AS o_namefirst, " +
+        "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst, " +
+        "ct_mb.namelast AS mb_namelast, ct_mb.namefirst AS mb_namefirst, " +
+        "org.name AS acct_name, org.enabled AS accountenabled, " +
+        "ct.namelast AS last_name, ct.namefirst AS first_name, " +
+        "ct.company AS ctcompany, " +
+        "oc.description AS comp_desc, oc.id AS comp_id " +
         "FROM opportunity_header x " +
         "LEFT JOIN opportunity_component oc ON (x.opp_id = oc.opp_id) " +
         "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
@@ -120,7 +130,6 @@ public class Opportunity extends OpportunityComponent {
     if (rs.next()) {
       buildRecord(rs);
       buildTypes(db);
-
       if (buildComponentCount) {
         this.retrieveComponentCount(db);
       }
@@ -1171,7 +1180,6 @@ public class Opportunity extends OpportunityComponent {
     if (this.getOwner() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
-
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM access " +
@@ -1402,7 +1410,6 @@ public class Opportunity extends OpportunityComponent {
    *  Gets the Description attribute of the Opportunity object
    *
    *@return    The Description value
-   *@since
    */
   public String getShortDescription() {
     if (description.length() <= 40) {
@@ -1417,7 +1424,6 @@ public class Opportunity extends OpportunityComponent {
    *  Gets the Low attribute of the Opportunity object
    *
    *@return    The Low value
-   *@since
    */
   public double getLow() {
     return low;
@@ -1432,7 +1438,7 @@ public class Opportunity extends OpportunityComponent {
    */
   public String getLowAmount() {
     Double thisAmount = new Double(round(low, 2));
-    String toReturn = "" + thisAmount;
+    String toReturn = String.valueOf(thisAmount);
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
     } else {
@@ -1473,7 +1479,7 @@ public class Opportunity extends OpportunityComponent {
    */
   public String getGuessAmount() {
     Double thisAmount = new Double(round(guess, 2));
-    String toReturn = "" + thisAmount;
+    String toReturn = String.valueOf(thisAmount);
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
     } else {
@@ -1505,13 +1511,11 @@ public class Opportunity extends OpportunityComponent {
     NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
     double tempValue = (java.lang.Math.round(guess) / divisor);
     String amountOut = "";
-
     if (tempValue < 1) {
       amountOut = "<1";
     } else {
       amountOut = numberFormatter.format(tempValue);
     }
-
     return amountOut;
   }
 
@@ -1572,7 +1576,6 @@ public class Opportunity extends OpportunityComponent {
    *  Gets the CloseProb attribute of the Opportunity object
    *
    *@return    The CloseProb value
-   *@since
    */
   public double getCloseProb() {
     if (System.getProperty("DEBUG") != null) {
@@ -1758,16 +1761,17 @@ public class Opportunity extends OpportunityComponent {
 
   public int update(Connection db, ActionContext context) throws SQLException {
     int oldId = -1;
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
+    PreparedStatement pst = db.prepareStatement(
         "SELECT owner " +
         "FROM opportunity_component " +
-        "WHERE id = " + this.getId());
+        "WHERE id = ? ");
+    pst.setInt(1, this.getId());
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       oldId = rs.getInt("owner");
     }
     rs.close();
-    st.close();
+    pst.close();
     int result = update(db);
     if (result == 1) {
       invalidateUserData(context);
@@ -2221,26 +2225,26 @@ public class Opportunity extends OpportunityComponent {
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //opportunity table
-    //which description?
-    description = rs.getString("description");
-    accountLink = rs.getInt("acctLink");
+    this.setId(rs.getInt("header_opp_id"));
+    description = rs.getString("header_description");
+    accountLink = rs.getInt("header_acctLink");
     if (rs.wasNull()) {
       accountLink = -1;
     }
-    contactLink = rs.getInt("contactLink");
+    contactLink = rs.getInt("header_contactLink");
     if (rs.wasNull()) {
       contactLink = -1;
     }
+    entered = rs.getTimestamp("header_entered");
+    enteredBy = rs.getInt("header_enteredby");
+    modified = rs.getTimestamp("header_modified");
+    modifiedBy = rs.getInt("header_modifiedby");
+    
+    //opportunity component table
+    super.buildRecord(rs);
 
-    entered = rs.getTimestamp("entered");
-    enteredBy = rs.getInt("enteredby");
-
-    modified = rs.getTimestamp("modified");
-    modifiedBy = rs.getInt("modifiedby");
-
-    //table
+    //organization table
     accountName = rs.getString("acct_name");
-
     if (accountLink > -1) {
       accountEnabled = rs.getBoolean("accountenabled");
     }
@@ -2250,15 +2254,13 @@ public class Opportunity extends OpportunityComponent {
     String contactNameFirst = rs.getString("first_name");
     contactName = Contact.getNameFirstLast(contactNameFirst, contactNameLast);
     contactCompanyName = rs.getString("ctcompany");
-    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
-    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
-
+    
+    //opportunity_component table (again?)
     componentDescription = rs.getString("comp_desc");
     componentId = rs.getInt("comp_id");
-
-    super.buildRecord(rs);
-
-    this.setId(rs.getInt("opp_id"));
+    
+    enteredByName = super.getEnteredByName();
+    modifiedByName = super.getModifiedByName();
   }
 
 
@@ -2630,11 +2632,10 @@ public class Opportunity extends OpportunityComponent {
     sql.append(
         "SELECT COUNT(*) as componentcount " +
         "FROM opportunity_component oc " +
-        "WHERE id > 0 ");
-    sql.append("AND oc.opp_id = ?");
-
+        "WHERE id > 0 " +
+        "AND oc.opp_id = ? ");
     if (this.getOwner() > -1) {
-      sql.append("AND oc.owner = ?");
+      sql.append("AND oc.owner = ? ");
     }
 
     PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -2664,10 +2665,10 @@ public class Opportunity extends OpportunityComponent {
     sql.append(
         "SELECT sum(guessvalue) as total " +
         "FROM opportunity_component oc " +
-        "WHERE id > 0 ");
-    sql.append("AND oc.opp_id = ?");
+        "WHERE id > 0 " +
+        "AND oc.opp_id = ? ");
     if (this.getOwner() > -1) {
-      sql.append("AND oc.owner = ?");
+      sql.append("AND oc.owner = ? ");
     }
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, oppId);

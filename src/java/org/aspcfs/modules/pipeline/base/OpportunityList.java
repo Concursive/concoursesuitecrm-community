@@ -613,12 +613,22 @@ public class OpportunityList extends Vector {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " x.*, oc.*, y.description as stagename, org.name as acct_name, org.enabled as accountenabled, " +
-        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, oc.description as comp_desc, oc.id as comp_id, " +
-        "ct.namelast as last_name, ct.namefirst as first_name, " +
-        "ct.company as ctcompany, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst " +
+        "x.opp_id AS header_opp_id, " +
+        "x.description AS header_description, " +
+        "x.acctlink AS header_acctlink, " +
+        "x.contactlink AS header_contactlink, " +
+        "x.entered AS header_entered, " +
+        "x.enteredby AS header_enteredby, " +
+        "x.modified AS header_modified, " +
+        "x.modifiedby AS header_modifiedby, " +
+        "oc.*, y.description AS stagename, " +
+        "ct_owner.namelast AS o_namelast, ct_owner.namefirst AS o_namefirst, " +
+        "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst, " +
+        "ct_mb.namelast AS mb_namelast, ct_mb.namefirst AS mb_namefirst, " +
+        "org.name AS acct_name, org.enabled AS accountenabled, " +
+        "ct.namelast AS last_name, ct.namefirst AS first_name, " +
+        "ct.company AS ctcompany, " +
+        "oc.description AS comp_desc, oc.id AS comp_id " +
         "FROM opportunity_header x " +
         "LEFT JOIN opportunity_component oc ON (x.opp_id = oc.opp_id) " +
         "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
