@@ -50,6 +50,9 @@ public class ContactReport extends ContactList {
 	protected boolean displayCountry = true;
 	protected boolean displayNotes = true;
 	
+	protected OrganizationReport orgReportJoin = new OrganizationReport();
+	protected boolean joinOrgs = false;
+	
 	public ContactReport() { }
 	
 	public void setRep(Report tmp) { this.rep = tmp; }
@@ -110,6 +113,10 @@ public class ContactReport extends ContactList {
 	public void setDisplayZip(boolean tmp) { this.displayZip = tmp; }
 	public void setDisplayCountry(boolean tmp) { this.displayCountry = tmp; }
 	public void setDisplayNotes(boolean tmp) { this.displayNotes = tmp; }
+	public OrganizationReport getOrgReportJoin() { return orgReportJoin; }
+	public boolean getJoinOrgs() { return joinOrgs; }
+	public void setOrgReportJoin(OrganizationReport tmp) { this.orgReportJoin = tmp; }
+	public void setJoinOrgs(boolean tmp) { this.joinOrgs = tmp; }
 
 	public ArrayList getCriteria() {
 		return criteria;
@@ -173,6 +180,8 @@ public class ContactReport extends ContactList {
 	}
 	
 	public void buildReportHeaders() {
+		if (joinOrgs) { orgReportJoin.buildReportHeaders(rep); }
+		
 		if (displayType) { rep.addColumn("Type"); }
 		if (displayNameLast) { rep.addColumn("Last Name", "Last Name"); }
 		if (displayNameFirst) { rep.addColumn("First Name", "First Name"); }
@@ -197,34 +206,48 @@ public class ContactReport extends ContactList {
 	
 	public void buildReportData(Connection db) throws SQLException {
 		this.buildList(db);
+				
+		boolean writeOut = false;
+		Organization tempOrg = null;
 		
 		Iterator x = this.iterator();
 		while (x.hasNext()) {
 			Contact thisContact = (Contact) x.next();
 			ReportRow thisRow = new ReportRow();
 			
-			if (displayType) { thisRow.addCell(thisContact.getTypeName()); }
-			if (displayNameLast) { thisRow.addCell(thisContact.getNameLast()); }
-			if (displayNameFirst) { thisRow.addCell(thisContact.getNameFirst()); }
-			if (displayNameMiddle) { thisRow.addCell(thisContact.getNameMiddle()); }
-			if (displayCompany) { thisRow.addCell(thisContact.getCompany()); }
-			if (displayDepartment) { thisRow.addCell(thisContact.getDepartmentName()); }
-			if (displayTitle) { thisRow.addCell(thisContact.getTitle()); }
-			if (displayEntered) { thisRow.addCell(thisContact.getEnteredString()); }
-			if (displayEnteredBy) { thisRow.addCell(thisContact.getEnteredByName()); }
-			if (displayModified) { thisRow.addCell(thisContact.getModifiedString()); }
-			if (displayModifiedBy) { thisRow.addCell(thisContact.getModifiedByName()); }
-			if (displayOwner) { thisRow.addCell(thisContact.getOwnerName()); }
-			if (displayBusinessEmail) { thisRow.addCell(thisContact.getEmailAddress("Business")); }
-			if (displayBusinessPhone) { thisRow.addCell(thisContact.getPhoneNumber("Business")); }
-			if (displayBusinessAddress) { thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine1() + " " + thisContact.getAddress("Business").getStreetAddressLine2()); }
-			if (displayCity) { thisRow.addCell(thisContact.getAddress("Business").getCity()); }
-			if (displayState) { thisRow.addCell(thisContact.getAddress("Business").getState()); }
-			if (displayZip) { thisRow.addCell(thisContact.getAddress("Business").getZip()); }
-			if (displayCountry) { thisRow.addCell(thisContact.getAddress("Business").getCountry()); }
-			if (displayNotes) { thisRow.addCell(thisContact.getNotes()); }
+			if (joinOrgs && thisContact.getOrgId() > 0) { 
+				tempOrg = new Organization(db, thisContact.getOrgId());
+				orgReportJoin.addDataRow(thisRow, tempOrg);
+				writeOut = true;
+			}
 			
-			rep.addRow(thisRow);
+			if (!joinOrgs || writeOut == true) {
+				if (displayType) { thisRow.addCell(thisContact.getTypeName()); }
+				if (displayNameLast) { thisRow.addCell(thisContact.getNameLast()); }
+				if (displayNameFirst) { thisRow.addCell(thisContact.getNameFirst()); }
+				if (displayNameMiddle) { thisRow.addCell(thisContact.getNameMiddle()); }
+				if (displayCompany) { thisRow.addCell(thisContact.getCompany()); }
+				if (displayDepartment) { thisRow.addCell(thisContact.getDepartmentName()); }
+				if (displayTitle) { thisRow.addCell(thisContact.getTitle()); }
+				if (displayEntered) { thisRow.addCell(thisContact.getEnteredString()); }
+				if (displayEnteredBy) { thisRow.addCell(thisContact.getEnteredByName()); }
+				if (displayModified) { thisRow.addCell(thisContact.getModifiedString()); }
+				if (displayModifiedBy) { thisRow.addCell(thisContact.getModifiedByName()); }
+				if (displayOwner) { thisRow.addCell(thisContact.getOwnerName()); }
+				if (displayBusinessEmail) { thisRow.addCell(thisContact.getEmailAddress("Business")); }
+				if (displayBusinessPhone) { thisRow.addCell(thisContact.getPhoneNumber("Business")); }
+				if (displayBusinessAddress) { thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine1() + " " + thisContact.getAddress("Business").getStreetAddressLine2()); }
+				if (displayCity) { thisRow.addCell(thisContact.getAddress("Business").getCity()); }
+				if (displayState) { thisRow.addCell(thisContact.getAddress("Business").getState()); }
+				if (displayZip) { thisRow.addCell(thisContact.getAddress("Business").getZip()); }
+				if (displayCountry) { thisRow.addCell(thisContact.getAddress("Business").getCountry()); }
+				if (displayNotes) { thisRow.addCell(thisContact.getNotes()); }
+				
+				rep.addRow(thisRow);
+			}
+			
+			writeOut = false;
+			
 		}
 	}
 		
@@ -246,7 +269,11 @@ public class ContactReport extends ContactList {
 		rep.saveHtml(filePath + filenameToUse + ".html");
 		rep.saveDelimited(filePath + filenameToUse + ".csv");
 		
-		thisItem.setLinkModuleId(Constants.CONTACTS_REPORTS);
+		if (joinOrgs) { thisItem.setLinkModuleId(Constants.ACCOUNTS_REPORTS); }
+		else {
+			thisItem.setLinkModuleId(Constants.CONTACTS_REPORTS);
+		}
+		
 		thisItem.setLinkItemId(0);
 		thisItem.setProjectId(-1);
 		thisItem.setEnteredBy(enteredBy);
