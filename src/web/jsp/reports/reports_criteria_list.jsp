@@ -19,8 +19,8 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Reports.do">Reports</a> >
-<a href="Reports.do?command=RunReport">Run Report</a> >
+<a href="Reports.do">Report Queue</a> >
+<a href="Reports.do?command=RunReport">Modules</a> >
 <a href="Reports.do?command=ListReports&categoryId=<%= category.getId() %>">Reports</a> >
 Criteria List
 </td>

@@ -20,7 +20,6 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Reports.do">Reports</a> >
 Report Queue
 </td>
 </tr>
@@ -28,6 +27,8 @@ Report Queue
 <%-- End Trails --%>
 <%-- Completed Reports --%>
 <%= showError(request, "actionError", false) %>
+<a href="Reports.do?command=RunReport">Add a Report</a><br>
+<br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td>Generated reports ready to be retrieved</td>

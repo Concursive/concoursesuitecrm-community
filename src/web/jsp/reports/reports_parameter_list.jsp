@@ -15,8 +15,8 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Reports.do">Reports</a> >
-<a href="Reports.do?command=RunReport">Run Report</a> >
+<a href="Reports.do">Report Queue</a> >
+<a href="Reports.do?command=RunReport">Modules</a> >
 <a href="Reports.do?command=ListReports&categoryId=<%= category.getId() %>">Reports</a> >
 <a href="Reports.do?command=CriteriaList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>">Criteria List</a> >
 Parameters
@@ -34,27 +34,29 @@ Parameters
       <strong>Parameters</strong>
     </th>
   </tr>
-<dhv:evaluate if="<%= parameterList.size() == 0 %>">
-  <tr>
-    <td colspan="2">No parameters required.</td>
-  </tr>
-</dhv:evaluate>
 <%
+  int count = 0;
   Iterator i = parameterList.iterator();
   while (i.hasNext()) {
     Parameter parameter = (Parameter) i.next();
     //Show only the parameters that require input from the user
 %>
-<dhv:evaluate if="<%= parameter.getIsForPrompting() %>">
+<dhv:evaluate if="<%= parameter.getIsForPrompting() %>"><% ++count; %>
   <tr>
     <td class="formLabel"><%= toHtml(parameter.getDisplayName()) %></td>
-    <td><%= parameter.getHtml(request) %></td>
+    <td><%= parameter.getHtml(request) %> <font color="red">*</font></td>
   </tr>
 </dhv:evaluate>
 <%
   }
 %>
+<dhv:evaluate if="<%= count == 0 %>">
+  <tr>
+    <td colspan="2">No parameters required.</td>
+  </tr>
+</dhv:evaluate>
 </table>
+<dhv:evaluate if="<%= count > 0 %>">
 <br>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
@@ -77,6 +79,7 @@ Parameters
 <input type="radio" name="saveType" value="none" checked> Do not save criteria for generating future reports<br />
 <input type="radio" name="saveType" value="overwrite"> Overwrite previously saved criteria<br />
 <input type="radio" name="saveType" value="save"> Save a new copy of this criteria<br />
+</dhv:evaluate>
 </dhv:evaluate>
 <br />
 <input type="submit" value="Generate Report"/>
