@@ -31,5 +31,7 @@ CREATE TABLE opportunity (
   ,custom1 int default -1
   ,custom2 int default -1
   ,closed TIMESTAMP,
-  custom_data TEXT
+  ,custom_data TEXT
+  ,alert varchar(100) default null
+  enabled BOOLEAN DEFAULT true
 );
