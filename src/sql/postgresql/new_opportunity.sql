@@ -61,7 +61,11 @@ CREATE TABLE opportunity_component (
   alert varchar(100) default null,
   enabled BOOLEAN NOT NULL DEFAULT true,
   notes TEXT
-);  
+);
+
+CREATE INDEX "oppcomplist_closedate" ON "opportunity_component" (closedate);
+CREATE INDEX "oppcomplist_description" ON "opportunity_component" (description);
+
 
 CREATE TABLE opportunity_component_levels (
   opp_id INT NOT NULL REFERENCES opportunity_component(id),

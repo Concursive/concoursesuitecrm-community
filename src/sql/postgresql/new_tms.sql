@@ -95,6 +95,8 @@ CREATE TABLE ticket (
 );
 
 CREATE INDEX "ticket_cidx" ON "ticket" USING btree ("assigned_to", "closed");
+CREATE INDEX "ticketlist_entered" ON "ticket" (entered);
+
 
 CREATE TABLE ticketlog (
   id serial PRIMARY KEY

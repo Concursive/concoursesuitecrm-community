@@ -96,6 +96,8 @@ CREATE TABLE ticket (
 );
 
 CREATE INDEX "ticket_cidx" ON "ticket" ("assigned_to", "closed");
+CREATE INDEX "ticketlist_entered" ON "ticket" (entered);
+
 
 CREATE TABLE ticketlog (
   id INT IDENTITY PRIMARY KEY

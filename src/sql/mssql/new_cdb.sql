@@ -204,6 +204,9 @@ CREATE TABLE organization (
   namesuffix varchar(80)
 );
 
+CREATE INDEX "orglist_name" ON "organization" (name);
+
+
 CREATE TABLE contact (
   contact_id INT IDENTITY PRIMARY KEY,
   user_id INT references access(user_id),
@@ -247,6 +250,8 @@ CREATE TABLE contact (
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" ("user_id");
+CREATE INDEX "contactlist_namecompany" ON "contact" (namelast, namefirst, company);
+CREATE INDEX "contactlist_company" ON "contact" (company, namelast, namefirst);
 
 CREATE TABLE role (
   role_id INT IDENTITY PRIMARY KEY,
