@@ -109,7 +109,6 @@ Opportunities
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
          <a href="javascript:displayMenu('menuOpp','<%= ContactDetails.getId() %>','<%= oppHeader.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
       </td>
-      </dhv:permission>
       <td width="100%" valign="top" class="row<%= rowid %>">
         <a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= oppHeader.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
         <%= toHtml(oppHeader.getDescription()) %></a>
