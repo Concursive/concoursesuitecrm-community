@@ -482,7 +482,6 @@ public final class CampaignManagerGroup extends CFSModule {
     SearchCriteriaList thisSCL = null;
     try {
       String criteria = context.getRequest().getParameter("criteria");
-      System.out.println("CampaignManagerGroup-> " + criteria);
       //Enable paging through records
       if ("true".equals(context.getRequest().getParameter("reset"))) {
         context.getSession().removeAttribute("CampaignGroupsPreviewInfo");
