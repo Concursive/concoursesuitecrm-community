@@ -459,24 +459,29 @@ public class PilotOnlineReader implements DataReader {
     //Process the vehicle pictures
     if (processOK && picturesToProcess.size() > 0) {
       processLog.add("INFO: Processing pictures (resize/copy): " + picturesToProcess.size());
-      try {
-        Iterator pictures = picturesToProcess.iterator();
-        while (pictures.hasNext()) {
-          String thisPicture = (String) pictures.next();
-          File sourcePicture = new File(
-              pictureSourcePath +
-              thisPicture.substring(0, 4) + fs +
-              thisPicture.substring(4, 8) + fs +
-              thisPicture);
-          File destinationPicture = new File(pictureDestinationPath + thisPicture + ".jpg");
-          if (sourcePicture.exists() && !destinationPicture.exists()) {
+      Iterator pictures = picturesToProcess.iterator();
+      int failureCount = 0;
+      while (pictures.hasNext()) {
+        String thisPicture = (String) pictures.next();
+        File sourcePicture = new File(
+            pictureSourcePath +
+            thisPicture.substring(0, 4) + fs +
+            thisPicture.substring(4, 8) + fs +
+            thisPicture);
+        File destinationPicture = new File(pictureDestinationPath + thisPicture + ".jpg");
+        if (sourcePicture.exists() && !destinationPicture.exists()) {
+	  try {
             ImageUtils.saveThumbnail(sourcePicture, destinationPicture, 285.0, -1.0);
-          }
+	  } catch(Exception e) {
+	    ++failureCount;
+            e.printStackTrace(System.out);
+	    processLog.add("ERROR: Processing picture-> " + e.getMessage());
+	  }
         }
-      } catch (Exception e) {
-        e.printStackTrace(System.out);
-        processLog.add("ERROR: Processing pictures-> " + e.getMessage());
-        processOK = false;
+      }
+      if (failureCount == picturesToProcess.size()) {
+	processLog.add("ERROR: No pictures scaled");
+	processOK = false;
       }
     }
 
