@@ -1,5 +1,5 @@
 /**
- *  Coding Guidelines (Draft)
+ *  Coding Guidelines for CFS
  *
  *@author     matt rajkowski
  *@created    August 26, 2002
@@ -26,13 +26,22 @@ Working with Java Objects:
   - For methods and properties, do not use "_" in the name.
     Ex: private String firstName = null;
         public String getFirstName()
+  - CFS base classes that represent nouns should have a List class as well
+    for the synchronization API
+    Ex: Task, TaskList
+  - CFS base classes should always have an "id" property for the synchronization
+    API
+  - CFS module classes are responsible for collecting data for a response to a
+    client, code should not be implemented at this level, but at the base class
+    level
   
   String vs. StringBuffer
   - Use StringBuffer when appending multiple strings together
-  - Use String when not appending multiple strings together
+  - Use String when not appending multiple strings together,
+    do not use "thisString = thisString + anotherString" -- use a StringBuffer
   
   JDBC
-  - Use PreparedStatement whenever a query will have unique IDs.
+  - Use a PreparedStatement whenever a query will have variables
     Ex. "DELETE FROM campaign WHERE campaign_id = ?"
   
 Variable Names:
@@ -46,6 +55,8 @@ CSS:
     Ex. The classes "containerHeader", "containerMenu", "containerBack", 
         "containerBody" make up the color and layout scheme for module sub-menus.
         You wouldn't want to use these for other page elements.
+  - Each browser also has its own CSS file for compatibility, make sure to
+    update all other CSS files.
     
 HTML:
   - It is proper to put all attributes in double quotes.  Do not use single quotes
@@ -56,6 +67,12 @@ HTML:
     need the "/" before the URL.
     Ex. In cfs-config.xml use: resource="/Process.do?command=whatever"
     Ex. In HTML use <a href="Process.do?command=whatever">
+  - When displaying text for an object, whether in a .html, .jsp or servlet class,
+    use string conversion methods to handle "null" and blank text.
+    Ex: In a JSP, output text using toHtml(aString)
+    Ex: In a JSP, output text as a default value using toHtmlValue(aString)
+        Use toString(aString) within a TEXTAREA
+    Ex: In a servlet, build text as StringUtils.toString(aString)
     
 MVC Modules:
   - Modules need to handle exceptions and should not throw exceptions.
@@ -75,5 +92,5 @@ Displaying contact names:
 - Always use thisContact."getNameLastFirst" or "getNameFirstLast" or 
   "Contact.getNameLastFirst(last, first)" when displaying names.  This will
   ensure name are retrieved correctly.
-  
+
 
