@@ -167,7 +167,7 @@
   
   <!-- Auto Guide Module -->
   <action name="AccountsAutoGuide" class="com.darkhorseventures.autoguide.module.AutoGuide">
-    <bean name="InventoryDetails" class="com.darkhorseventures.autoguide.base.AccountInventory" scope="request"/>
+    <bean name="InventoryDetails" class="com.darkhorseventures.autoguide.base.Inventory" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -177,6 +177,7 @@
     <forward name="AddOK" resource="/autoguide_account_add.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/AccountsAutoGuide.do?command=AccountList"/>
     <forward name="ModifyOK" resource="/autoguide_account_modify.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/AccountsAutoGuide.do?command=AccountDetails"/>
     <forward name="DetailsOK" resource="/autoguide_accountdetails.jsp" layout="nav"/>
     <forward name="DeleteOK" resource="/AccountsAutoGuide.do?command=AccountList"/>
   </action>

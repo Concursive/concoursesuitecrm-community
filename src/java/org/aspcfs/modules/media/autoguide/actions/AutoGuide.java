@@ -104,7 +104,7 @@ public final class AutoGuide extends CFSModule {
       if (orgId == null) {
         addModuleBean(context, "Auto Guide", "Details");
       } else {
-        addModuleBean(context, "Accounts", "Vehicle Details");
+        addModuleBean(context, "View Accounts", "Vehicle Details");
         Organization thisOrganization = new Organization(db, Integer.parseInt(orgId));
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
       }
@@ -422,6 +422,53 @@ public final class AutoGuide extends CFSModule {
     addModuleBean(context, "View Accounts", "Modify Vehicle");
     if (errorMessage == null) {
       return ("ModifyOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandAccountUpdate(ActionContext context) {
+/*     if (!(hasPermission(context, "contacts-external_contacts-edit"))) {
+      return ("PermissionError");
+    }
+ */
+    Exception errorMessage = null;
+    
+    Inventory thisItem = (Inventory)context.getFormBean();
+    thisItem.setRequestItems(context.getRequest());
+    thisItem.setModifiedBy(getUserId(context));
+    
+    Organization thisOrganization = null;
+    String orgid = context.getRequest().getParameter("orgId");
+
+    Connection db = null;
+    int resultCount = 0;
+    try {
+      db = this.getConnection(context);
+      thisItem.generateVehicleId(db);
+      //resultCount = thisItem.update(db);
+      if (resultCount == -1) {
+        //processErrors(context, thisItem.getErrors());
+        //buildFormElements(context, db);
+        thisOrganization = new Organization(db, Integer.parseInt(orgid));
+        context.getRequest().setAttribute("OrgDetails", thisOrganization);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (resultCount == -1) {
+        return ("ModifyOK");
+      } else if (resultCount == 1) {
+        return ("UpdateOK");
+      } else {
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+        return ("UserError");
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

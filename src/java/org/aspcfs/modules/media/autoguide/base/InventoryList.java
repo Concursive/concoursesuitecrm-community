@@ -82,7 +82,7 @@ public class InventoryList extends ArrayList {
       "SELECT i.inventory_id, i.vehicle_id AS inventory_vehicle_id, " +
       "i.account_id, vin, adtype, mileage, is_new, " +
       "condition, comments, stock_no, ext_color, int_color, invoice_price, " +
-      "selling_price, i.status, i.entered, i.enteredby, i.modified, i.modifiedby, " +
+      "selling_price, sold, i.status, i.entered, i.enteredby, i.modified, i.modifiedby, " +
       "v.vehicle_id, v.year, v.make_id AS vehicle_make_id, " +
       "v.model_id AS vehicle_model_id, v.entered AS vehicle_entered, " +
       "v.enteredby AS vehicle_enteredby, v.modified AS vehicle_modified, " +

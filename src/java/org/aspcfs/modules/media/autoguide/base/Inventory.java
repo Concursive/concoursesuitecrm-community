@@ -29,6 +29,7 @@ public class Inventory {
   private String interiorColor = null;
   private double invoicePrice = -1;
   private double sellingPrice = -1;
+  private boolean sold = false;
   private String status = null;
   private java.sql.Timestamp entered = null;
   private int enteredBy = -1;
@@ -38,7 +39,6 @@ public class Inventory {
   private Organization organization = null;
   private OptionList options = null;
   private AdRunList adRuns = null;
-  private boolean sold = false;
   
   public Inventory() { }
 
@@ -114,6 +114,10 @@ public class Inventory {
   public void setSellingPrice(String tmp) { 
     sellingPrice = StringUtils.getDoubleNumber(tmp);
   }
+  public void setSold(boolean tmp) { this.sold = tmp; }
+  public void setSold(String tmp) { 
+    this.sold = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+  }
   public void setStatus(String tmp) { this.status = tmp; }
   public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
   public void setEntered(String tmp) {
@@ -135,7 +139,7 @@ public class Inventory {
     adRuns = new AdRunList(request);
   }
   public void setAdRuns(AdRunList tmp) { this.adRuns = tmp; }
-  public void setSold(boolean tmp) { this.sold = tmp; }
+  
 
   public int getId() { return id; }
   public int getVehicleId() { return vehicleId; }
@@ -170,6 +174,7 @@ public class Inventory {
       return "";
     }
   }
+  public boolean getSold() { return sold; }
   public String getStatus() { return status; }
   public java.sql.Timestamp getEntered() { return entered; }
   public int getEnteredBy() { return enteredBy; }
@@ -191,7 +196,6 @@ public class Inventory {
   public boolean hasAdRuns() {
     return (adRuns != null && adRuns.size() > 0);
   }
-  public boolean getSold() { return sold; }
 
 
   public boolean insert(Connection db) throws SQLException {
@@ -199,9 +203,9 @@ public class Inventory {
     sql.append(
         "INSERT INTO autoguide_account_inventory " +
         "(vehicle_id, account_id, vin, adtype, mileage, is_new, condition, comments, " +
-        "stock_no, ext_color, int_color, invoice_price, selling_price, " +
+        "stock_no, ext_color, int_color, invoice_price, selling_price, sold, " +
         "status, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, vehicleId);
@@ -217,6 +221,7 @@ public class Inventory {
     pst.setString(++i, interiorColor);
     pst.setDouble(++i, invoicePrice);
     pst.setDouble(++i, sellingPrice);
+    pst.setBoolean(++i, sold);
     pst.setString(++i, status);
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, enteredBy);
@@ -227,19 +232,8 @@ public class Inventory {
     //vehicle = new Vehicle(db, vehicleId);
     
     if (options != null) {
-      sql.setLength(0);
-      sql.append(
-        "INSERT INTO autoguide_inventory_options (inventory_id, option_id) " +
-        "VALUES (?, ?)");
-      Iterator optionList = options.iterator();
-      while (optionList.hasNext()) {
-        Option thisOption = (Option)optionList.next();
-        pst = db.prepareStatement(sql.toString());
-        pst.setInt(1, id);
-        pst.setInt(2, thisOption.getId());
-        pst.execute();
-        pst.close();
-      }
+      options.setInventoryId(id);
+      options.insert(db);
     }
     if (adRuns != null) {
       sql.setLength(0);
@@ -264,6 +258,66 @@ public class Inventory {
     }
     return true;
   }
+  
+  public int update(Connection db) throws SQLException {
+    int resultCount = 0;
+/* 
+    if (!isValid(db)) {
+      return -1;
+    }
+ */
+    if (this.getId() == -1) {
+      throw new SQLException("ID was not specified");
+    }
+    
+    try {
+      db.setAutoCommit(false);
+      PreparedStatement pst = null;
+      StringBuffer sql = new StringBuffer();
+
+      sql.append(
+        "UPDATE autoguide_account_inventory " +
+        "SET vehicle_id = ?, vin = ?, adtype = ?, mileage = ?, is_new = ?, condition = ?, comments = ?, " +
+        "stock_no = ?, ext_color = ?, int_color = ?, invoice_price = ?, selling_price = ?, sold = ?, status = ?, " +
+        "modifiedby = ?, modified = CURRENT_TIMESTAMP ");
+      sql.append("WHERE inventory_id = ? ");
+      sql.append("AND modified = ? ");
+        
+      int i = 0;
+      pst = db.prepareStatement(sql.toString());
+      pst.setInt(++i, this.getVehicleId());
+      pst.setString(++i, this.getVin());
+      pst.setInt(++i, this.getAdType());
+      pst.setInt(++i, this.getMileage());
+      pst.setBoolean(++i, this.getIsNew());
+      pst.setString(++i, this.getCondition());
+      pst.setString(++i, this.getComments());
+      pst.setString(++i, this.getStockNo());
+      pst.setString(++i, this.getExteriorColor());
+      pst.setString(++i, this.getInteriorColor());
+      pst.setDouble(++i, this.getInvoicePrice());
+      pst.setDouble(++i, this.getSellingPrice());
+      pst.setBoolean(++i, this.getSold());
+      pst.setString(++i, this.getStatus());
+      pst.setInt(++i, this.getModifiedBy());
+      pst.setInt(++i, this.getId());
+      pst.setTimestamp(++i, this.getModified());
+      resultCount = pst.executeUpdate();
+      pst.close();
+
+      options.setInventoryId(id);
+      options.update(db);
+      
+      db.commit();
+    } catch (Exception e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    }
+
+    db.setAutoCommit(true);
+    return resultCount;
+  }
 
 
   public boolean delete(Connection db) throws SQLException {
@@ -284,20 +338,16 @@ public class Inventory {
     pst.close();
     
     //Options
-    pst = db.prepareStatement(
-        "DELETE FROM autoguide_inventory_options " +
-        "WHERE inventory_id = ? ");
-    pst.setInt(1, id);
-    pst.executeUpdate();
-    pst.close();
+    if (options != null) {
+      options.setInventoryId(id);
+      options.delete(db);
+    }
     
     //Ad Runs
-    pst = db.prepareStatement(
-        "DELETE FROM autoguide_ad_run " +
-        "WHERE inventory_id = ? ");
-    pst.setInt(1, id);
-    pst.executeUpdate();
-    pst.close();
+    if (adRuns != null) {
+      adRuns.setInventoryId(id);
+      adRuns.delete(db);
+    }
 
     if (recordCount == 0) {
       //errors.put("actionError", "Record could not be deleted because it no longer exists.");
@@ -305,54 +355,6 @@ public class Inventory {
     } else {
       return true;
     }
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   */
-  public int update(Connection db, ActionContext context) throws SQLException {
-    if (id == -1) {
-      throw new SQLException("Record ID was not specified");
-    }
-
-    int resultCount = 0;
-    PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "UPDATE autoguide_account_inventory " +
-        "SET vehicle_id = ?, account_id = ?, vin = ?, adtype = ?, is_new = ?, " +
-        "condition = ?, comments = ?, stock_no = ?, ext_color = ?, int_color = ?, " +
-        "invoice_price = ?, selling_price = ?, status = ?, modifiedby = ?, " +
-        "modified = CURRENT_TIMESTAMP " +
-        "WHERE inventory_id = ? " +
-        "AND modified = ? ");
-    int i = 0;
-    pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, vehicleId);
-    pst.setInt(++i, accountId);
-    pst.setString(++i, vin);
-    pst.setInt(++i, adType);
-    pst.setBoolean(++i, isNew);
-    pst.setString(++i, condition);
-    pst.setString(++i, comments);
-    pst.setString(++i, stockNo);
-    pst.setString(++i, exteriorColor);
-    pst.setString(++i, interiorColor);
-    pst.setDouble(++i, invoicePrice);
-    pst.setDouble(++i, sellingPrice);
-    pst.setString(++i, status);
-    pst.setInt(++i, modifiedBy);
-    pst.setInt(++i, id);
-    pst.setTimestamp(++i, this.getModified());
-    resultCount = pst.executeUpdate();
-    pst.close();
-    return resultCount;
   }
 
 
@@ -371,6 +373,7 @@ public class Inventory {
     interiorColor = rs.getString("int_color");
     invoicePrice = rs.getDouble("invoice_price");
     sellingPrice = rs.getDouble("selling_price");
+    sold = rs.getBoolean("sold");
     status = rs.getString("status");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");

@@ -58,6 +58,9 @@ public class OptionList extends ArrayList {
     while (i.hasNext()) {
       Option thisOption = (Option)i.next();
       if (thisOption.getId() == optionId) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("TRUE");
+        }
         return true;
       }
     }
@@ -142,5 +145,36 @@ public class OptionList extends ArrayList {
       pst.setInt(++i, inventoryId);
     }
     return i;
+  }
+  
+  public void insert(Connection db) throws SQLException {
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+      "INSERT INTO autoguide_inventory_options (inventory_id, option_id) " +
+      "VALUES (?, ?)");
+    Iterator optionList = this.iterator();
+    while (optionList.hasNext()) {
+      Option thisOption = (Option)optionList.next();
+      PreparedStatement pst = db.prepareStatement(sql.toString());
+      pst.setInt(1, inventoryId);
+      pst.setInt(2, thisOption.getId());
+      pst.execute();
+      pst.close();
+    }
+  }
+  
+  public void update(Connection db) throws SQLException {
+    this.delete(db);
+    this.insert(db);
+  }
+  
+  public void delete(Connection db) throws SQLException {
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+      "DELETE FROM autoguide_inventory_options WHERE inventory_id = ? ");
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(1, inventoryId);
+    pst.execute();
+    pst.close();
   }
 }

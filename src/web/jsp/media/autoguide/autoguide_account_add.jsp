@@ -82,7 +82,7 @@
       Stock No
     </td>
     <td width="100%">
-      <input type="text" size="35" name="stockNo" value="<%= toHtmlValue(InventoryDetails.getStockNo()) %>">
+      <input type="text" size="15" name="stockNo" value="<%= toHtmlValue(InventoryDetails.getStockNo()) %>">
       <%= showAttribute(request, "stockNoError") %>
     </td>
   </tr>
@@ -122,7 +122,7 @@
       Vin
     </td>
     <td>
-      <input type="text" size="10" name="vin" value="<%= toHtmlValue(InventoryDetails.getVin()) %>">
+      <input type="text" size="30" name="vin" value="<%= toHtmlValue(InventoryDetails.getVin()) %>">
     </td>
   </tr>
   <tr class="containerBody">
@@ -139,7 +139,7 @@
       Condition
     </td>
     <td>
-      <input type="text" size="10" name="condition" value="<%= toHtmlValue(InventoryDetails.getCondition()) %>">
+      <input type="text" size="30" name="condition" value="<%= toHtmlValue(InventoryDetails.getCondition()) %>">
       <%= showAttribute(request, "conditionError") %>
     </td>
   </tr>
@@ -148,7 +148,7 @@
       Comments
     </td>
     <td>
-      <input type="text" size="5" name="comments" value="<%= toHtmlValue(InventoryDetails.getComments()) %>">
+      <input type="text" size="30" name="comments" value="<%= toHtmlValue(InventoryDetails.getComments()) %>">
       <%= showAttribute(request, "commentsError") %>
     </td>
   </tr>
@@ -157,7 +157,7 @@
       Exterior Color
     </td>
     <td>
-      <input type="text" size="5" name="exteriorColor" value="<%= toHtmlValue(InventoryDetails.getExteriorColor()) %>">
+      <input type="text" size="15" name="exteriorColor" value="<%= toHtmlValue(InventoryDetails.getExteriorColor()) %>">
       <%= showAttribute(request, "exteriorColorError") %>
     </td>
   </tr>
@@ -166,7 +166,7 @@
       Selling Price
     </td>
     <td>
-      <input type="text" size="5" name="sellingPrice" value="<%= InventoryDetails.getSellingPriceString() %>">
+      <input type="text" size="10" name="sellingPrice" value="<%= InventoryDetails.getSellingPriceString() %>">
       <%= showAttribute(request, "sellingPrice") %>
     </td>
   </tr>
@@ -175,7 +175,7 @@
       Sold
     </td>
     <td>
-      <input type="checkbox" name="sold" <%= (InventoryDetails.getSold()?"selected":"") %>>
+      <input type="checkbox" name="sold"<%= (InventoryDetails.getSold()?" checked":"") %>>
     </td>
   </tr>
 </table>

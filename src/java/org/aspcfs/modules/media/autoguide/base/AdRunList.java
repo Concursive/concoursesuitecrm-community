@@ -134,4 +134,19 @@ public class AdRunList extends ArrayList {
     }
     return i;
   }
+  
+  public void update(Connection db) throws SQLException {
+    this.delete(db);
+    //this.insert(db);
+  }
+  
+  public void delete(Connection db) throws SQLException {
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+      "DELETE FROM autoguide_ad_run WHERE inventory_id = ? ");
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(1, inventoryId);
+    pst.execute();
+    pst.close();
+  }
 }
