@@ -331,6 +331,14 @@ public class PilotOnlineReader implements DataReader {
     try {
       OrganizationList organizationList = new OrganizationList();
       organizationList.buildList(db);
+      Calendar runDate = Calendar.getInstance();
+      while (runDate.get(Calendar.DAY_OF_WEEK) != Calendar.THURSDAY) {
+        runDate.add(Calendar.DATE, 1);
+      }
+      runDate.set(Calendar.HOUR, 0);
+      runDate.set(Calendar.MINUTE, 0);
+      runDate.set(Calendar.SECOND, 0);
+      runDate.set(Calendar.MILLISECOND, 0);
       processLog.add("INFO: Processing organizations/vehicles: " + organizationList.size());
       Iterator organizations = organizationList.iterator();
       while (organizations.hasNext()) {
@@ -338,10 +346,6 @@ public class PilotOnlineReader implements DataReader {
         InventoryList inventoryList = new InventoryList();
         inventoryList.setOrgId(dealer.getId());
         inventoryList.setShowSold(Constants.FALSE);
-        Calendar runDate = Calendar.getInstance();
-        while (runDate.get(Calendar.DAY_OF_WEEK) != Calendar.THURSDAY) {
-          runDate.add(Calendar.DATE, 1);
-        }
         inventoryList.setAdRunDate(new java.sql.Date(runDate.getTime().getTime()));
         inventoryList.setBuildPictureId(true);
         inventoryList.buildList(db);
