@@ -68,7 +68,8 @@ Surveys
       Preview
     </td>
     <td valign="center">
-      <iframe id="edit" name="edit" frameborder="0" <dhv:browser id="ie" include="false">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 100%;"</dhv:browser> onblur="return false" src="">
+      <iframe id="edit" name="edit" frameborder="0" <dhv:browser id="ie" include="false">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 200;"</dhv:browser> onblur="return false" src="CampaignManager.do?command=PreviewSurvey&preview=0&id=<%= Campaign.getSurveyId() %>&inline=true">
+        Viewing not supported by this browser
       </iframe>
     </td>
   </tr>
