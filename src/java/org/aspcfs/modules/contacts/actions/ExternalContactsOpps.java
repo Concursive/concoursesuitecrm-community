@@ -634,9 +634,10 @@ public final class ExternalContactsOpps extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
+      boolean inLinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
       if (recordDeleted) {
         context.getRequest().setAttribute("contactId", contactId);
-        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(),  "popupType|actionId" + (inLinePopup ? "|popup" : "")));
         deleteRecentItem(context, newOpp);
         return "OppDeleteOK";
       } else {
@@ -679,8 +680,9 @@ public final class ExternalContactsOpps extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
+      boolean inLinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
       if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=DetailsOpp&headerId=" + component.getHeaderId() + "&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=DetailsOpp&headerId=" + component.getHeaderId() + "&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(),  "popupType|actionId" + (inLinePopup ? "|popup" : "")));
         deleteRecentItem(context, component);
         return ("ComponentDeleteOK");
       } else {
