@@ -97,7 +97,7 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
           Property thisProperty = (Property)properties.next();
           String fieldName = thisProperty.getField();
           String value = thisElement.getValue(fieldName);
-          System.out.println(fieldName + ", " + value);
+          
           if (thisProperty.hasAlias()) {
             if ("guid".equals(thisProperty.getAlias())) {
               thisRecord.addField("guid", value);
@@ -108,6 +108,8 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
           }
         }
         processOK = writer.save(thisRecord);
+        System.out.println(processOK);
+        
       }
     }
     return processOK;
