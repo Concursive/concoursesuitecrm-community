@@ -22,7 +22,7 @@
   <input type="hidden" name="letter">
   <table width="100%" border="0">
     <tr>
-      <td nowrap>
+      <td>
         <select size="1" name="listView" onChange="javascript:setFieldSubmit('listFilter1','-1','acctListView');">
           <%
             Iterator filters = Filters.iterator();
@@ -67,7 +67,6 @@
       <td align="center" nowrap width="8">
 <% 
   if ("list".equals(request.getParameter("listType"))) { 
-    System.out.println("Processing " + orgId);
   %>  
         <input type="checkbox" name="account<%= count %>" value=<%= thisAcct.getOrgId() %><%= (SelectedAccounts.indexOf(orgId) != -1 ? " checked" : "") %> onClick="highlight(this,'<%=User.getBrowserId()%>');">
 <%} else {%>

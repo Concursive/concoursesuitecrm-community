@@ -64,11 +64,11 @@
     formTest = true;
     message = "";
     if (form.orgId.value == "-1") { 
-      message += "- You have to select an Organization\r\n";
+      message += "- Check that an Organization is selected\r\n";
       formTest = false;
     }
     if (form.contactId.value == "-1") { 
-      message += "- You have to select a Contact\r\n";
+      message += "- Check that a Contact is selected\r\n";
       formTest = false;
     }
     if (formTest == false) {

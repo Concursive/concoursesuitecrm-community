@@ -36,8 +36,6 @@
             <option <%= ContactListInfo.getOptionValue(thisFilter.getValue()) %>><%= thisFilter.getDisplayName() %></option>
         <%}%>
          </select>
-      </td>
-      <td>
 <% 
   if (ContactListInfo.getListView().equals("employees")) {
     DepartmentList.setSelectSize(1); 
