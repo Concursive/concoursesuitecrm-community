@@ -185,6 +185,8 @@ function popContactTypeSelectMultiple(displayFieldId, category, contactId) {
     for (i=0;i<size;i++) {
       if (obj.options[i].value != -1) {
           obj.options[i].selected = true;
+      } else {
+          obj.options[i].selected = false;
       }
     }
     
