@@ -44,7 +44,7 @@ History
                 TicketLog thisEntry = (TicketLog)hist.next();
         %>    
         <% if (thisEntry.getSystemMessage() == true) {%>
-          <tr bgColor="#F1F0E0">
+          <tr class="row1">
         <% } else { %>
           <tr class="containerBody">
         <%}%>
