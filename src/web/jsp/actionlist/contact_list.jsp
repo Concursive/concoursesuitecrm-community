@@ -138,7 +138,7 @@ Action Contacts
       <% 
         } else {
       %>
-        <a href="javascript:changeImages('image<%= thisContact.getId() %>','MyActionContacts.do?command=ProcessImage&id=box.gif|gif|'+<%= thisContact.getId() %>+'|1','MyActionContacts.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisContact.getId() %>+'|1');"><img src="images/box.gif" name="image<%= thisContact.getId() %>" id="0" border="0" title="Click to change" align="absmiddle"></a>
+        <a href="javascript:changeImages('image<%= thisContact.getId() %>','MyActionContacts.do?command=ProcessImage&id=box.gif|gif|'+<%= thisContact.getId() %>+'|0','MyActionContacts.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisContact.getId() %>+'|1');"><img src="images/box.gif" name="image<%= thisContact.getId() %>" id="0" border="0" title="Click to change" align="absmiddle"></a>
       <%
         }
       %>
