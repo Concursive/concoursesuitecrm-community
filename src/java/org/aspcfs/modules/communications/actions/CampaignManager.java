@@ -654,14 +654,17 @@ public final class CampaignManager extends CFSModule {
 
     String campaignId = context.getRequest().getParameter("id");
     String messageId = context.getRequest().getParameter("messageId");
-    String surveyId = context.getRequest().getParameter("surveyId");
+    
+    if (context.getRequest().getParameter("surveyId") != null) {
+	    String surveyId = context.getRequest().getParameter("surveyId");
+	    campaign.setSurveyId(surveyId);
+    }
 
     if (messageId != null) {
       try {
         db = this.getConnection(context);
         campaign = new Campaign(db, campaignId);
         campaign.setMessageId(Integer.parseInt(messageId));
-	campaign.setSurveyId(surveyId);
         campaign.setModifiedBy(this.getUserId(context));
         resultCount = campaign.updateMessage(db);
       } catch (Exception e) {
