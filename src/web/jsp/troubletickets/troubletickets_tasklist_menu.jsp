@@ -16,7 +16,7 @@
   
   //Menu link functions
   function details() {
-   popURL('TroubleTicketTasks.do?command=Modify&ticketId=' + thisTaskId + '&id=' + thisTaskId +  '&popup=true','CRM_Task','600','425','yes','yes');
+   popURL('TroubleTicketTasks.do?command=Modify&ticketId=' + thisTicId + '&id=' + thisTaskId +  '&popup=true','CRM_Task','600','425','yes','yes');
   }
   
   function deleteTask() {
