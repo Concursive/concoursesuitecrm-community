@@ -120,31 +120,21 @@ Add Opportunity<br>
       Associate With
     </td>
     <td width="100%">
-        <input type="radio" name="opp_type" value="org" <dhv:evaluate exp="<%=(OppDetails.getHeader().getAccountLink() > -1)%>">checked</dhv:evaluate>>Account<br>
-        <input type="radio" name="opp_type" value="contact" <dhv:evaluate exp="<%=(OppDetails.getHeader().getContactLink() > -1)%>">checked</dhv:evaluate>>Contact
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Account
-    </td>
-    <td width="100%">
-      <%= OrgList.getHtmlSelectDefaultNone("header_accountLink", OppDetails.getHeader().getAccountLink())%>
-      <font color=red>*</font> <%= showAttribute(request, "orgError") %>
-    </td>
-  </tr>
-  
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      <a href="javascript:popContactsListOppsSingle('header_contactLink','changecontact','true');">Contact</a>
-    </td>
-    <td width="100%">
-      <table>
+        <table>
         <tr>
           <td>
-            <div id="changecontact"><%=(OppDetails.getHeader().getContactLink()+"").equals("-1")?"None Selected":OppDetails.getHeader().getContactName()+""%></div>
+            <input type="radio" name="opp_type" value="org" <dhv:evaluate exp="<%=(OppDetails.getHeader().getAccountLink() > -1)%>">checked</dhv:evaluate>>Account
           </td>
           <td>
+            &nbsp;<%= OrgList.getHtmlSelectDefaultNone("header_accountLink", OppDetails.getHeader().getAccountLink())%><font color=red>*</font> <%= showAttribute(request, "orgError") %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="radio" name="opp_type" value="contact" <dhv:evaluate exp="<%=(OppDetails.getHeader().getContactLink() > -1)%>">checked</dhv:evaluate>><a href="javascript:popContactsListOppsSingle('header_contactLink','changecontact','true');">Contact</a>
+          </td>
+          <td align="left" valign="bottom">
+            <div id="changecontact"><%=(OppDetails.getHeader().getContactLink()+"").equals("-1")?"&nbsp;None Selected":"&nbsp;" + OppDetails.getHeader().getContactName()%></div>
             <input type="hidden" name="header_contactLink" id="header_contactLink" value="<%=(OppDetails.getHeader().getContactLink() == -1)?-1:OppDetails.getHeader().getContactLink()%>">
           </td>
         </tr>
