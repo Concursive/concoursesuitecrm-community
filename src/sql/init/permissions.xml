@@ -97,7 +97,7 @@
       <permission name="campaign-campaigns-surveys" attributes="vaed" description="Survey Records"/>
       <report file="campaign.xml" type="user" permission="campaign-campaigns" title="Campaigns by date" description="What are my active campaigns?"/>
     </category>
-    <category id="7" name="Project Management" folders="false" lookups="false" enabled="false">
+    <category id="7" name="Projects" folders="false" lookups="false" enabled="false">
       <permission name="projects" attributes="v---" description="Access to Project Management module"/>
       <permission name="projects-personal" attributes="v---" description="Personal View"/>
       <permission name="projects-enterprise" attributes="v---" description="Enterprise View"/>
