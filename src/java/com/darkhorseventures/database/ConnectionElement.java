@@ -14,7 +14,7 @@ package com.darkhorseventures.utils;
  *@created    July 10, 2001
  *@version    $Id$
  */
-public class ConnectionElement {
+public class ConnectionElement implements Cloneable {
 
   private String url = "jdbc:postgresql://127.0.0.1:5432/database";
   private String dbName = "";
@@ -163,5 +163,12 @@ public class ConnectionElement {
     activeDate = new java.util.Date();
   }
 
+  public Object clone() {
+    try {
+      return super.clone();
+    } catch (java.lang.CloneNotSupportedException e) {
+    }
+    return null;
+  }
 }
 
