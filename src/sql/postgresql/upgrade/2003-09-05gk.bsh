@@ -1,0 +1,12 @@
+/*
+  The expected keystore location has changed so that just the fileLibrary
+  needs to be backed up on a system, instead of the whole WEB-INF also
+*/
+print("IMPORTANT NOTICE!");
+print("IMPORTANT NOTICE!");
+print("IMPORTANT NOTICE!");
+print("IMPORTANT NOTICE!");
+print("IMPORTANT NOTICE!");
+print("Tomcat's server.xml file MUST be updated manually on this server");
+print("The default location for the keystore is now in WEB-INF/fileLibrary/ instead of WEB-INF/");
+
