@@ -576,7 +576,7 @@ public class Notification extends Thread {
   public void notifyContact(Connection db) {
     if (type > -1) {
       try {
-        Contact thisContact = new Contact(db, "" + contactToNotify);
+        Contact thisContact = new Contact(db, String.valueOf(contactToNotify));
         //Determine the method...
         if (type == EMAILFAXLETTER) {
           if (thisContact.getEmailAddress("Business").equals("") &&
@@ -608,7 +608,7 @@ public class Notification extends Thread {
           System.out.println("Notification-> To: " + thisContact.getEmailAddress("Business"));
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
-          mail.setFrom(from + " <cfs-messenger@darkhorseventures.com>");
+          mail.setFrom(from + " <" + from + ">");
           if (from != null && !from.equals("")) {
             mail.addReplyTo(from);
           } else {
