@@ -16,6 +16,7 @@ public class SurveyAnswerItem {
   private int id = -1;
   private int answerId = -1;
   private String comments = null;
+  private ActiveSurveyQuestionItem item = null;
 
 
   /**
@@ -79,6 +80,26 @@ public class SurveyAnswerItem {
 
 
   /**
+   *  Sets the item attribute of the SurveyAnswerItem object
+   *
+   *@param  item  The new item value
+   */
+  public void setItem(ActiveSurveyQuestionItem item) {
+    this.item = item;
+  }
+
+
+  /**
+   *  Gets the item attribute of the SurveyAnswerItem object
+   *
+   *@return    The item value
+   */
+  public ActiveSurveyQuestionItem getItem() {
+    return item;
+  }
+
+
+  /**
    *  Gets the comments attribute of the SurveyAnswerItem object
    *
    *@return    The comments value
@@ -116,6 +137,20 @@ public class SurveyAnswerItem {
    */
   public void setId(String id) {
     this.id = Integer.parseInt(id);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildItemDetails(Connection db) throws SQLException {
+    if (id < 1) {
+      throw new SQLException("Answer ID not specified.");
+    }
+    item = new ActiveSurveyQuestionItem(db, id);
   }
 
 
@@ -240,5 +275,6 @@ public class SurveyAnswerItem {
     }
     return count;
   }
+
 }
 
