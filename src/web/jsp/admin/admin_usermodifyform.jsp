@@ -19,6 +19,21 @@
 Modify User<br>
 <hr color="#BFBFBB" noshade>
 
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="containerHeader">
+    <td>
+      <strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
+    </td>
+  </tr>
+  <tr class="containerMenu">
+    <td>
+      <% String param1 = "id=" + UserRecord.getId(); %>      
+      <dhv:container name="users" selected="details" param="<%= param1 %>" />
+    </td>
+  </tr>
+  <tr>
+    <td class="containerBack">
+
 <% if (request.getParameter("return") != null) {%>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
@@ -39,13 +54,13 @@ Modify User<br>
 <input type="hidden" name="previousUsername" value="<%= ((UserRecord.getPreviousUsername() == null)?UserRecord.getUsername():UserRecord.getPreviousUsername()) %>">
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
+  <tr class="title">
     <td colspan=2 valign=center align=left>
-	    <strong>Modify a user record</strong>
+	    <strong>Modify Primary Information</strong>
     </td>
   </tr>
-  <tr>
-    <td width="150">Unique Username</td>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">Unique Username</td>
     <td>
       <input type="text" name="username" value="<%= toHtmlValue(UserRecord.getUsername()) %>">
       <font color=red>*</font> <%= showAttribute(request, "usernameError") %>
@@ -53,38 +68,38 @@ Modify User<br>
   </tr>
   <!--tr><td width="150">Password</td><td><input type="password" name="password1" value="<%= toHtmlValue(UserRecord.getPassword()) %>"><font color=red>*</font> <%= showAttribute(request, "password1Error") %></td></tr>
   <tr><td width="150">Type password again</td><td><input type="password" name="password2" value="<%= toHtmlValue(UserRecord.getPassword()) %>"><font color=red>*</font> <%= showAttribute(request, "password2Error") %></td></tr-->
-  <tr>
-    <td width="150">Role (User Group)</td>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">Role (User Group)</td>
     <td>
       <%= RoleList.getHtmlSelect("roleId", UserRecord.getRoleId()) %>
       <font color="red">*</font> <%= showAttribute(request, "roleError") %>
     </td>
   </tr>
-  <tr>
-    <td width="150">Reports To</td>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">Reports To</td>
     <td>
       <%= UserList.getHtmlSelect("managerId", UserRecord.getManagerId()) %>
       <%= showAttribute(request, "managerIdError") %>
     </td>
   </tr>
   
-    <tr>
-    <td width="150">Alias User</td>
+    <tr class="containerBody">
+    <td nowrap class="formLabel">Alias User</td>
     <td>
       <%= UserList.getHtmlSelect("alias", UserRecord.getAlias()) %>
     </td>
   </tr>
   
-  <tr>
-    <td width="150">Expire Date</td>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">Expire Date</td>
     <td>
     <input type=text size=10 name="expires" value="<%=toHtmlValue(UserRecord.getExpiresString())%>">
     <a href="javascript:popCalendar('details', 'expires');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>
   
-  <tr>
-    <td width="150">Generate new password</td>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">Generate new password</td>
     <td><input type="checkbox" name="generatePass"></td>
   </tr>  
 
@@ -100,5 +115,7 @@ Modify User<br>
 <input type=submit value="Cancel" onClick="javascript:this.form.action='Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
 <%}%>
 <input type=submit value="Disable" onClick="javascript:this.form.action='Users.do?command=DisableUserConfirm&id=<%=UserRecord.getId()%>'">
+  </td>
+  </tr>
+</table>
 </form>
-</body>

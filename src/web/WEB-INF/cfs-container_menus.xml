@@ -187,4 +187,23 @@
       <link value="AccountsAutoGuide.do?command=View&amp;section=Schedule&amp;orgId=${orgId}"/>
     </submenu>
   </container>
+  
+  
+  <!-- Submenu used in the Users module -->
+  <container name="users">
+    <separator value=" | "/>
+    <long_css on="containerOn" off="containerOff"/>
+    <short_css on="containerOn" off="containerOff"/>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value="admin-users-view"/>
+      <link value="Users.do?command=UserDetails&amp;id=${id}"/>
+    </submenu>
+    <submenu name="history">
+      <long_html value="Login History"/>
+      <permission value="admin-users-view"/>
+      <link value="Users.do?command=ViewLog&amp;id=${id}"/>
+    </submenu>
+  </container>    
+  
 </application>

@@ -89,6 +89,55 @@ public final class Users extends CFSModule {
 			return ("SystemError");
 		}
 	}
+  
+	public String executeCommandViewLog(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-users-view"))) {
+			return ("PermissionError");
+		}
+
+		Exception errorMessage = null;
+
+		PagedListInfo listInfo = getPagedListInfo(context, "AccessLogInfo");
+		listInfo.setLink("/Users.do?command=ViewLog&id=" + context.getRequest().getParameter("id"));
+
+		Connection db = null;
+		AccessLogList list = new AccessLogList();
+    int userId = -1;
+    User newUser = null;
+    
+    if (context.getRequest().getParameter("id") != null) {
+      userId = Integer.parseInt(context.getRequest().getParameter("id"));
+    }
+
+		try {
+			db = getConnection(context);
+      newUser = new User();
+			newUser.setBuildContact(true);
+			newUser.buildRecord(db, userId); 
+      
+      list.setUserId(userId);
+			list.setPagedListInfo(listInfo);
+			list.buildList(db);
+		}
+		catch (Exception e) {
+			errorMessage = e;
+		}
+		finally {
+			this.freeConnection(context, db);
+		}
+
+		addModuleBean(context, "Users", "View User Details");
+		if (errorMessage == null) {
+      context.getRequest().setAttribute("UserRecord", newUser);
+			context.getRequest().setAttribute("AccessLog", list);
+			return ("ViewLogOK");
+		}
+		else {
+			context.getRequest().setAttribute("Error", errorMessage);
+			return ("SystemError");
+		}
+	}  
 
 
 	/**
@@ -790,16 +839,6 @@ public final class Users extends CFSModule {
     
     addModuleBean(context, "Users", "Disable User");
 		if (errorMessage == null) {
-			/**
-      if (recordDeleted) {
-				return ("UserDeleteOK");
-			}
-			else {
-				processErrors(context, thisUser.getErrors());
-				return (executeCommandListUsers(context));
-			}
-      */
-      
       context.getRequest().setAttribute("User", thisUser);
       context.getRequest().setAttribute("ManagerUser", managerUser);
       return("UserDisableConfirmOK");
@@ -810,39 +849,6 @@ public final class Users extends CFSModule {
 			return ("SystemError");
 		}
 
-    /**
-		Exception errorMessage = null;
-		boolean recordDeleted = false;
-		User thisUser = null;
-
-		Connection db = null;
-		try {
-			db = this.getConnection(context);
-			thisUser = new User(db, context.getRequest().getParameter("id"));
-			recordDeleted = thisUser.delete(db);
-		}
-		catch (Exception e) {
-			errorMessage = e;
-		}
-		finally {
-			this.freeConnection(context, db);
-		}
-
-		addModuleBean(context, "View Users", "Delete User");
-		if (errorMessage == null) {
-			if (recordDeleted) {
-				return ("UserDeleteOK");
-			}
-			else {
-				processErrors(context, thisUser.getErrors());
-				return (executeCommandListUsers(context));
-			}
-		}
-		else {
-			context.getRequest().setAttribute("Error", errorMessage);
-			return ("SystemError");
-		}
-    */
 	}  
 
 
@@ -869,8 +875,10 @@ public final class Users extends CFSModule {
 
 		try {
 			db = this.getConnection(context);
-			newUser = new User(db, userId);
-
+      newUser = new User();
+			newUser.setBuildContact(true);
+			newUser.buildRecord(db, Integer.parseInt(userId));
+        
 			UserList userList = new UserList();
 			userList.setEmptyHtmlSelectRecord("-- None --");
 			userList.setBuildContact(false);

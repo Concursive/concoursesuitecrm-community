@@ -815,6 +815,7 @@
     <forward name="NewAccountFirstOK" resource="/admin_newusercontact.jsp" layout="nav"/>
     <forward name="UserDetailsModifyOK" resource="/admin_userdetails.jsp" layout="nav"/>
     <forward name="ContactJSListOK" resource="/admin_jsuser_contactlist.jsp"/>
+    <forward name="ViewLogOK" resource="/admin_userlog.jsp" layout="nav"/>
   </action>  
   <action name="Roles" class="com.darkhorseventures.cfsmodule.Roles">
     <bean name="Role" class="com.darkhorseventures.cfsbase.Role" scope="request" />
