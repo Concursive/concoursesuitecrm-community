@@ -82,14 +82,13 @@ public class ObjectHookList extends HashMap {
           Element hookElement = (Element) hookElements.next();
           String hookClass = (String) hookElement.getAttribute("class");
           String hookEnabled = (String) hookElement.getAttribute("enabled");
-          if (hookEnabled != null && "false".equals(hookEnabled)) {
-            break;
+          if (hookEnabled == null || "true".equals(hookEnabled)) {
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("ObjectHookList-> Added a hook: " + hookClass);
+            }
+            ObjectHookActionList actionList = new ObjectHookActionList(hookElement, Constants.TRUE);
+            this.put(hookClass, actionList);
           }
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("ObjectHookList-> Added a hook: " + hookClass);
-          }
-          ObjectHookActionList actionList = new ObjectHookActionList(hookElement, Constants.TRUE);
-          this.put(hookClass, actionList);
         }
       }
     } catch (Exception e) {
