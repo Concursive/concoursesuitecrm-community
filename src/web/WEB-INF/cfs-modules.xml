@@ -306,15 +306,15 @@
     
     <submenu name="ManageGroups">
       <permission value="campaign-view"/>
-      <long_html value="Manage Groups"/>
-      <short_html value="Manage&lt;br&gt;Groups"/>
+      <long_html value="Build Groups"/>
+      <short_html value="Build&lt;br&gt;Groups"/>
       <link value="/CampaignManagerGroup.do?command=View"/>
     </submenu>
     
     <submenu name="ManageMessages">
       <permission value="campaign-view"/>
-      <long_html value="Manage Messages"/>
-      <short_html value="Manage&lt;br&gt;Messages"/>
+      <long_html value="Create Messages"/>
+      <short_html value="Create&lt;br&gt;Messages"/>
       <link value="/CampaignManagerMessage.do?command=View"/>
     </submenu>
     
