@@ -318,11 +318,10 @@ public class OptionList extends ArrayList {
    *@exception  SQLException  Description of Exception
    */
   public void delete(Connection db) throws SQLException {
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "DELETE FROM autoguide_inventory_options " +
-        "WHERE inventory_id = ? ");
-    PreparedStatement pst = db.prepareStatement(sql.toString());
+    String sql = 
+      "DELETE FROM autoguide_inventory_options " +
+      "WHERE inventory_id = ? ";
+    PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, inventoryId);
     pst.execute();
     pst.close();
