@@ -324,4 +324,18 @@
       <required>no</required>
     </attribute>
   </tag>
+  
+  <tag>
+    <name>hasAuthority</name>
+    <tag-class>org.aspcfs.taglib.AuthorityHandler</tag-class>
+    <body-content>JSP</body-content>
+    <display-name>
+      Checks to see if the specified user has authority to access the specified record
+    </display-name>
+    <attribute>
+      <name>owner</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
 </taglib>
