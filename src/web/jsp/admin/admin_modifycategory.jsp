@@ -86,6 +86,9 @@
     }else if(checkDuplicate(text, mode)){
       alert('Category with that description already exists');
       return;
+    }else if(text.indexOf("\"") > -1){
+      alert('Double Quotes are not allowed in the description');
+      return;
     }
     if (tmpList.length == 0 || tmpList.options[0].value == "-1"){
       tmpList.options[0] = new Option(text);
