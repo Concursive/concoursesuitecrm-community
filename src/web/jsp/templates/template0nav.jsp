@@ -27,9 +27,9 @@
     <th align="right">
       <a href="javascript:window.print()" class="s">Print</a>
       |
-      <a href="javascript:popURL('Help.do?module=<%= request.getAttribute("moduleAction") %>&section=<%= request.getParameter("command") %>&sub=<%= request.getParameter("section") %>','CFS_Help','790','500','yes','yes');" class="s" onMouseOver="window.status='Pop-up Help';return true;" onMouseOut="window.status='';return true;">Help</a>
+      <a href="javascript:popURL('Help.do?module=<%= request.getAttribute("moduleAction") %><%= request.getParameter("command") != null ? "&section=" + request.getParameter("command") : ""%> <%= request.getParameter("section") != null ? "&sub=" + request.getParameter("section") : "" %>&popup=true','CFS_Help','790','500','yes','yes');" class="s" onMouseOver="window.status='Pop-up Help';return true;" onMouseOut="window.status='';return true;">Help</a>
       |
-      <dhv:permission name="help-edit"><a href="javascript:popURL('QA.do?module=<%= request.getAttribute("moduleAction") %>&section=<%= request.getParameter("command") %><%= request.getParameter("section") != null ? "&sub=" + request.getParameter("section") : "" %>&popup=true','CFS_QA','450','550','yes','yes');" class="s" onMouseOver="window.status='Pop-up QA';return true;" onMouseOut="window.status='';return true;">QA</a>
+      <dhv:permission name="qa-edit"><a href="javascript:popURL('QA.do?module=<%= request.getAttribute("moduleAction") %><%= request.getParameter("command") != null ? "&section=" + request.getParameter("command") : ""%><%= request.getParameter("section") != null ? "&sub=" + request.getParameter("section") : "" %>&popup=true','CFS_QA','450','550','yes','yes');" class="s" onMouseOver="window.status='Pop-up QA';return true;" onMouseOut="window.status='';return true;">QA</a>
       |</dhv:permission><a href="Login.do?command=Logout" class="s">Logout</a><br>
 <%
   if (!User.getUserRecord().getContact().getNameFirstLast().equals("")) {
