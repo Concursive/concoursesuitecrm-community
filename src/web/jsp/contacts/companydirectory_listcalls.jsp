@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <jsp:useBean id="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
@@ -5,7 +6,9 @@
 <jsp:useBean id="CallListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <jsp:useBean id="CallTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<dhv:permission name="contacts-external_contacts-calls-add">
 <body onLoad="javascript:document.forms[0].subject.focus();">
+</dhv:permission>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
@@ -19,16 +22,17 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>"><font color="#000000">Details</font></a> | 
-            <a href="/ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Folders</font></a> | 
-      <a href="/ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>"><font color="#0000FF">Calls</font></a> |
-      <a href="/ExternalContacts.do?command=ViewMessages&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Messages</font></a> |
-      <a href="/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Opportunities</font></a> 
+      <a href="/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>"><font color="#000000">Details</font></a><dhv:permission name="contacts-external_contacts-folders-view"> | 
+      <a href="/ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Folders</font></a></dhv:permission><dhv:permission name="contacts-external_contacts-calls-view"> | 
+      <a href="/ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>"><font color="#0000FF">Calls</font></a></dhv:permission><dhv:permission name="contacts-external_contacts-messages-view"> |
+      <a href="/ExternalContacts.do?command=ViewMessages&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Messages</font></a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-view"> |
+      <a href = "/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Opportunities</font></a></dhv:permission> 
     </td>
   </tr>
   <tr>
     <td class="containerBack">
 <%= showAttribute(request, "actionError") %>
+<dhv:permission name="contacts-external_contacts-calls-add">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
@@ -83,13 +87,15 @@
 <input type="reset" value="Reset">
 <br>
 &nbsp;
+</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
 
   <tr class="title">
+  <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete">
     <td valign=center align=left>
       <strong>Action</strong>
     </td>
-    
+   </dhv:permission> 
     <td valign=center align=left>
       <strong>Subject</strong>
     </td>
@@ -123,9 +129,11 @@
 		Call thisCall = (Call)j.next();
 %>      
     <tr class="containerBody">
+      <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete">
       <td width=8 valign=center nowrap class="row<%= rowid %>">
-        <a href="/ExternalContactsCalls.do?command=Modify&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId() %>">Edit</a>|<a href="javascript:confirmDelete('/ExternalContactsCalls.do?command=Delete&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId() %>');">Del</a>
+          <dhv:permission name="contacts-external_contacts-calls-edit"><a href="/ExternalContactsCalls.do?command=Modify&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId()%>">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-calls-delete"><a href="javascript:confirmDelete('/ExternalContactsCalls.do?command=Delete&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId()%>');">Del</a></dhv:permission>
       </td>
+      </dhv:permission>
       <td width="100%" valign=center class="row<%= rowid %>">
         <a href="/ExternalContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId() %>">
         <%= toHtml(thisCall.getSubject()) %>

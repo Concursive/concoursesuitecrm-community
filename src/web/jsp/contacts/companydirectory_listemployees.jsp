@@ -5,13 +5,16 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <dhv:permission name="contacts-internal_contacts-add"><a href="/CompanyDirectory.do?command=InsertEmployeeForm">Add an Employee</a></dhv:permission>
+<dhv:permission name="contacts-internal_contacts-add" none="true"><br></dhv:permission>
 <center><%= CompanyDirectoryInfo.getAlphabeticalPageLinks() %></center>
 <%= showAttribute(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
+  <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete">
     <td valign=center align=left>
       <strong>Action</strong>
     </td>
+  </dhv:permission>
     <td>
       <a href="/CompanyDirectory.do?command=ListEmployees&column=c.namelast">
         <strong>Name</strong>
@@ -47,9 +50,11 @@
       Contact thisEmployee = (Contact)i.next();
 %>      
       <tr>
+        <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete">
         <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>&action=modify&return=list">Edit</a>|<a href="javascript:confirmDelete('/CompanyDirectory.do?command=DeleteEmployee&empid=<%= thisEmployee.getId() %>');">Del</a>
+          <dhv:permission name="contacts-internal_contacts-edit"><a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId()%>&action=modify&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-internal_contacts-delete"><a href="javascript:confirmDelete('/CompanyDirectory.do?command=DeleteEmployee&empid=<%= thisEmployee.getId() %>');">Del</a></dhv:permission>
         </td>
+	</dhv:permission>
         <td class="row<%= rowid %>"><font class="columntext1">
           <a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLast()) %>, <%= toHtml(thisEmployee.getNameFirst()) %></a></font>
           <%= thisEmployee.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>

@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <jsp:useBean id="OpportunityList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
@@ -13,23 +14,25 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>"><font color="#000000">Details</font></a> | 
-            <a href="/ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Folders</font></a> | 
-      <a href="/ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Calls</font></a> |
-      <a href="/ExternalContacts.do?command=ViewMessages&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Messages</font></a> |
-      <a href="/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>"><font color="#0000FF">Opportunities</font></a> 
+      <a href="/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>"><font color="#000000">Details</font></a><dhv:permission name="contacts-external_contacts-folders-view"> | 
+      <a href="/ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Folders</font></a></dhv:permission><dhv:permission name="contacts-external_contacts-calls-view"> | 
+      <a href="/ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Calls</font></a></dhv:permission><dhv:permission name="contacts-external_contacts-messages-view"> |
+      <a href="/ExternalContacts.do?command=ViewMessages&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Messages</font></a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-view"> |
+      <a href = "/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>"><font color="#0000FF">Opportunities</font></a></dhv:permission> 
     </td>
   </tr>
   <tr>
     <td class="containerBack">
-<a href="/ExternalContactsOpps.do?command=AddOpp&contactId=<%= ContactDetails.getId() %>">Add an Opportunity</a>
+<dhv:permission name="contacts-external_contacts-opportunities-add"><a href="/ExternalContactsOpps.do?command=AddOpp&contactId=<%= ContactDetails.getId() %>">Add an Opportunity</a></dhv:permission>
 <center><%= OpportunityPagedListInfo.getAlphabeticalPageLinks() %></center><br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
 
   <tr class="title">
+    <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
     <td valign=center align=left>
       <strong>Action</strong>
     </td>
+    </dhv:permission>
   
     <td valign=center align=left>
       <strong>Opportunity Name</strong>
@@ -63,9 +66,11 @@
 		Opportunity thisOpp = (Opportunity)j.next();
 %>      
     <tr class="containerBody">
+      <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
       <td width=8 valign=center nowrap class="row<%= rowid %>">
-        <a href="/ExternalContactsOpps.do?command=ModifyOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink() %>">Edit</a>|<a href="javascript:confirmDelete('/ExternalContactsOpps.do?command=DeleteOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink() %>');">Del</a>
+      <dhv:permission name="contacts-external_contacts-opportunities-edit"><a href="/ExternalContactsOpps.do?command=ModifyOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink()%>&contactId=<%= thisOpp.getContactLink() %>">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete"><a href="javascript:confirmDelete('/ExternalContactsOpps.do?command=DeleteOpp&id=<%=thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink() %>');">Del</a></dhv:permission>
       </td>
+      </dhv:permission>
       <td width=40% valign=center class="row<%= rowid %>">
         <a href="/ExternalContactsOpps.do?command=DetailsOpp&id=<%=thisOpp.getId()%>&contactId=<%= ContactDetails.getId() %>">
         <%= toHtml(thisOpp.getDescription()) %></a>

@@ -1,12 +1,13 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <a href="/CompanyDirectory.do?command=ListEmployees">Back to Employee List</a><p>
 <form action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>&action=modify' method='post'>
-<input type='submit' value='Modify' name='Modify'>
-<input type="submit" value="Delete" onClick="javascript:this.form.action='/CompanyDirectory.do?command=DeleteEmployee&empid=<%= EmployeeBean.getId() %>'">
-<br>
-&nbsp;
+<dhv:permission name="contacts-internal_contacts-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
+<dhv:permission name="contacts-internal_contacts-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/CompanyDirectory.do?command=DeleteEmployee&empid=<%=EmployeeBean.getId() %>'"></dhv:permission>
+<dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br>&nbsp;</dhv:permission>
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
@@ -112,8 +113,8 @@
     <td width="100%"><%= toHtml(EmployeeBean.getNotes()) %>&nbsp;</td>
   </tr>
 </table>
-<br>
-<input type='submit' value='Modify' name='Modify'>
-<input type="submit" value="Delete" onClick="javascript:this.form.action='/CompanyDirectory.do?command=DeleteEmployee&empid=<%= EmployeeBean.getId() %>'">
+<dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br></dhv:permission>
+<dhv:permission name="contacts-internal_contacts-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
+<dhv:permission name="contacts-internal_contacts-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/CompanyDirectory.do?command=DeleteEmployee&empid=<%=EmployeeBean.getId() %>'"></dhv:permission>
 </form>
 

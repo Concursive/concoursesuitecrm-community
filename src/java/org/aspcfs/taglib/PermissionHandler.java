@@ -71,7 +71,7 @@ public class PermissionHandler extends TagSupport {
     int checks = 0;
     UserBean thisUser = (UserBean)pageContext.getSession().getAttribute("User");
     if (thisUser != null) {
-      StringTokenizer st = new StringTokenizer(permissionName);
+      StringTokenizer st = new StringTokenizer(permissionName, ",");
       while (st.hasMoreTokens()) {
         String thisPermission = st.nextToken();
         ++checks;
