@@ -117,6 +117,16 @@ public class UserBean extends GenericBean {
   /**
    *  Sets the clientType attribute of the UserBean object
    *
+   *@param  tmp  The new clientType value
+   */
+  public void setClientType(ClientType tmp) {
+    this.clientType = tmp;
+  }
+
+
+  /**
+   *  Sets the clientType attribute of the UserBean object
+   *
    *@param  request  The new clientType value
    */
   public void setClientType(HttpServletRequest request) {
@@ -306,11 +316,16 @@ public class UserBean extends GenericBean {
     return getUserRecord().getContact().getNameLast();
   }
 
-  
+
+  /**
+   *  Gets the nameFirstLast attribute of the UserBean object
+   *
+   *@return    The nameFirstLast value
+   */
   public String getNameFirstLast() {
     return getUserRecord().getContact().getNameFirstLast();
   }
-  
+
 
   /**
    *  Gets the Template attribute of the User object
