@@ -262,68 +262,72 @@ public class Notifier extends ReportBuilder {
     thisNotifier.baseName = args[0];
     thisNotifier.dbUser = args[1];
     thisNotifier.dbPass = args[2];
-
-    try {
-      Class.forName("org.postgresql.Driver");
-
-      Vector siteList = new Vector();
-
-      Connection dbSites = DriverManager.getConnection(
-          thisNotifier.baseName, thisNotifier.dbUser, thisNotifier.dbPass);
-      Statement stSites = dbSites.createStatement();
-      ResultSet rsSites = stSites.executeQuery(
-          "SELECT * " +
-          "FROM sites " +
-          "WHERE enabled = true ");
-      while (rsSites.next()) {
-        Hashtable siteInfo = new Hashtable();
-        siteInfo.put("driver", rsSites.getString("driver"));
-        siteInfo.put("host", rsSites.getString("dbhost"));
-        siteInfo.put("name", rsSites.getString("dbname"));
-        siteInfo.put("port", rsSites.getString("dbport"));
-        siteInfo.put("user", rsSites.getString("dbuser"));
-        siteInfo.put("password", rsSites.getString("dbpw"));
-        siteInfo.put("sitecode", rsSites.getString("sitecode"));
-        siteList.add(siteInfo);
+    
+    if (thisNotifier.baseName.equals("debug")) {
+      thisNotifier.sendAdminReport("Notifier manual sendmail test");
+    } else {
+      try {
+	Class.forName("org.postgresql.Driver");
+  
+	Vector siteList = new Vector();
+  
+	Connection dbSites = DriverManager.getConnection(
+	    thisNotifier.baseName, thisNotifier.dbUser, thisNotifier.dbPass);
+	Statement stSites = dbSites.createStatement();
+	ResultSet rsSites = stSites.executeQuery(
+	    "SELECT * " +
+	    "FROM sites " +
+	    "WHERE enabled = true ");
+	while (rsSites.next()) {
+	  Hashtable siteInfo = new Hashtable();
+	  siteInfo.put("driver", rsSites.getString("driver"));
+	  siteInfo.put("host", rsSites.getString("dbhost"));
+	  siteInfo.put("name", rsSites.getString("dbname"));
+	  siteInfo.put("port", rsSites.getString("dbport"));
+	  siteInfo.put("user", rsSites.getString("dbuser"));
+	  siteInfo.put("password", rsSites.getString("dbpw"));
+	  siteInfo.put("sitecode", rsSites.getString("sitecode"));
+	  siteList.add(siteInfo);
+	}
+	rsSites.close();
+	stSites.close();
+	dbSites.close();
+  
+	Iterator i = siteList.iterator();
+	while (i.hasNext()) {
+  
+	  Hashtable siteInfo = (Hashtable)i.next();
+	  Class.forName((String)siteInfo.get("driver"));
+	  Connection db = DriverManager.getConnection(
+	      (String)siteInfo.get("host") + ":" +
+	      (String)siteInfo.get("port") + "/" +
+	      (String)siteInfo.get("name"),
+	      (String)siteInfo.get("user"),
+	      (String)siteInfo.get("password"));
+	  thisNotifier.baseName = (String)siteInfo.get("sitecode");
+  
+	  System.out.println("Running Alerts...");
+	  thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db));
+	  //thisNotifier.output.append(thisNotifier.buildCallAlerts(db));
+	  thisNotifier.output.append("<br><hr><br>");
+	  
+	  System.out.println("Running Communications...");
+	  thisNotifier.output.append(thisNotifier.buildCommunications(db));
+	  thisNotifier.output.append("<br><hr><br>");
+	  
+	  db.close();
+	}
+	
+	System.out.println(thisNotifier.output.toString());
+	//thisNotifier.sendAdminReport(thisNotifier.output.toString());
+	java.util.Date end = new java.util.Date();
+      } catch (Exception exc) {
+	System.out.println("Sending error email...");
+	thisNotifier.sendAdminReport(exc.toString());
+	System.err.println("BuildReport Error: " + exc.toString());
       }
-      rsSites.close();
-      stSites.close();
-      dbSites.close();
-
-      Iterator i = siteList.iterator();
-      while (i.hasNext()) {
-
-        Hashtable siteInfo = (Hashtable)i.next();
-        Class.forName((String)siteInfo.get("driver"));
-        Connection db = DriverManager.getConnection(
-            (String)siteInfo.get("host") + ":" +
-            (String)siteInfo.get("port") + "/" +
-            (String)siteInfo.get("name"),
-            (String)siteInfo.get("user"),
-            (String)siteInfo.get("password"));
-        thisNotifier.baseName = (String)siteInfo.get("sitecode");
-
-        System.out.println("Running Alerts...");
-        thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db));
-        //thisNotifier.output.append(thisNotifier.buildCallAlerts(db));
-        thisNotifier.output.append("<br><hr><br>");
-        
-        System.out.println("Running Communications...");
-        thisNotifier.output.append(thisNotifier.buildCommunications(db));
-        thisNotifier.output.append("<br><hr><br>");
-        
-        db.close();
-      }
-      
-      System.out.println(thisNotifier.output.toString());
-      //thisNotifier.sendAdminReport(thisNotifier.output.toString());
-      java.util.Date end = new java.util.Date();
-    } catch (Exception exc) {
-      System.out.println("Sending error email...");
-      thisNotifier.sendAdminReport(exc.toString());
-      System.err.println("BuildReport Error: " + exc.toString());
+      System.exit(0);
     }
-    System.exit(0);
   }
 
   /*
