@@ -1385,7 +1385,6 @@ public class OpportunityComponent extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-      buildTypes(db);
     } else {
       rs.close();
       pst.close();
@@ -1393,6 +1392,7 @@ public class OpportunityComponent extends GenericBean {
     }
     rs.close();
     pst.close();
+    buildTypes(db);`
   }
 
 
