@@ -63,13 +63,15 @@ Modify Ticket<br>
       <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
     </td>
   </tr>
-<% if (TicketDetails.getClosed() != null) { %>  
-  <tr>
-    <td bgColor="#F1F0E0">
-      <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
+  <tr class="containerMenu">
+    <td>
+      <% String param1 = "id=" + TicketDetails.getId(); %>
+      <dhv:container name="tickets" selected="details" param="<%= param1 %>"/>
+      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
+      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
+      </dhv:evaluate>
     </td>
   </tr>
-<%}%>
   <tr>
   	<td class="containerBack">
   <table cellpadding="0" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
