@@ -1,5 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*,org.aspcfs.modules.accounts.base.NewsArticle,org.aspcfs.modules.mycfs.beans.*" %>
+<%@ page import="org.aspcfs.modules.quotes.base.*" %>
+<%@ page import="org.aspcfs.modules.troubletickets.base.*" %>
 <jsp:useBean id="NewsList" class="org.aspcfs.modules.accounts.base.NewsArticleList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="NewUserList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
@@ -30,26 +32,55 @@
     <td>
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <%-- User Selected Info --%>
+  <dhv:permission name="products-view" none="true">
   <tr>
     <td width="100%" valign="top" colspan="2" height="20" style="text-align: center !important">
       <strong><div id="userName">Scheduled Actions for <%= CalendarInfo.getSelectedUserId()!=-1?toHtml(CalendarInfo.getSelectedUserName()) : toHtml(User.getUserRecord().getContact().getNameLastFirst())%></div></strong>
     </td>
   </tr>
+  </dhv:permission>
+  <%-- AdsJet users only --%>
+  <dhv:permission name="products-view">
+  <tr>
+    <td colspan="2">
+      <table class="pagedListHeader" cellspacing="0">
+        <tr>
+          <td align="center">
+            <strong>Welcome to AdsJet.com.</strong>
+          </td>
+        </tr>
+      </table>
+      <table class="pagedListHeader2" cellspacing="0">
+        <tr>
+          <th>
+            You are currently at the "My Home Page" tab in which you can 
+            review the status of your pending ad requests and orders.
+            From the "Products &amp; Services" tab you can review 
+            publication information, as well as manage and place ads.
+          </th>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  </dhv:permission>
   <%-- Calendar and Details --%>
   <tr valign="top">
+    <%-- Left cell --%>
     <td valign="top" width="320">
       <iframe id="calendarid" name="calendar" frameborder="0" marginwidth="0" marginheight="0" width="320" height="400" src="MyCFS.do?command=MonthView&source=Calendar<%= returnPage != null ? "&return="+returnPage : "" %>&reloadCalendarDetails=true">
       </iframe>
     </td>
+    <%-- Right cell --%>
     <td valign="top" height="380" width="100%"><%-- Change height to 100% once Safari works in all places --%>
+      <%-- Calendar details --%>
       <table height="380" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-          <td width="100%" style="border: 1px solid #000; background-color: #DEE0FA;">
-            <table width="100%" cellspacing="4" cellpadding="0" border="0">
+          <td width="100%" class="cellBox">
+            <table width="100%" cellspacing="4" cellpadding="0" border="0" class="empty">
               <tr>
                 <td valign="center" nowrap>
                  <select id="alerts" size="1" name="alertsView" onChange="javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=calendardetails&inline=true&alertsView='+document.getElementById('alerts').value);">
-                  <option value="all" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("all") ? " selected":"" %>>All Sched. Actions</option>
+                  <option value="all" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("all") ? " selected":"" %>>Pending Items</option>
                    <%
                     Iterator alertTypes = CalendarInfo.getAlertTypes().iterator();
                     while(alertTypes.hasNext()){
@@ -61,7 +92,7 @@
                     }
                    %>
                  </select>
-                <% if(NewUserList.size()!=0){%>
+                <% if(NewUserList.size()>1){%>
                   <%= NewUserList.getHtml("userId",CalendarInfo.getSelectedUserId()) %>
                 <%}%>
                 </td>

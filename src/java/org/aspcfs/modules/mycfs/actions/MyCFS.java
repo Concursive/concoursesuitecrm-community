@@ -24,6 +24,9 @@ import java.sql.*;
 import java.lang.reflect.*;
 import java.util.*;
 import java.text.DateFormat;
+import org.aspcfs.modules.quotes.base.*;
+import org.aspcfs.controller.*;
+import org.aspcfs.modules.troubletickets.base.*;
 
 /**
  *  The MyCFS module.
@@ -683,6 +686,40 @@ public final class MyCFS extends CFSModule {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandCustomerQuoteDecision(ActionContext context) {
+    Connection db = null;
+    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    String value = (String) context.getRequest().getParameter("value");
+    try {
+      db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+
+      if (value.equals("APPROVE")) {
+        value = new String("Accepted by customer");
+      } else if (value.equals("REJECT")) {
+        value = new String("Rejected by customer");
+      }
+      Quote quote = new Quote(db, Integer.parseInt(quoteIdString));
+      quote.setStatusId(list.getIdFromValue(value));
+      quote.update(db);
+
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return executeCommandHome(context);
+  }
+
+
+  /**
    *  Takes a look at the User Session Object and prepares the MyCFSBean for the
    *  JSP. The bean will contain all the information that the JSP can see.
    *
@@ -699,14 +736,11 @@ public final class MyCFS extends CFSModule {
       return ("MaintenanceModeOK");
     }
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-    NewsArticleList newsList = null;
-    Connection db = null;
-    //this is how we get the multiple-level heirarchy...recursive function.
     User thisRec = thisUser.getUserRecord();
-
+    
+    //this is how we get the multiple-level heirarchy...recursive function.
     UserList shortChildList = thisRec.getShortChildList();
     UserList newUserList = thisRec.getFullChildList(shortChildList, new UserList());
-
     newUserList.setMyId(getUserId(context));
     newUserList.setMyValue(thisUser.getContact().getNameLastFirst());
     newUserList.setIncludeMe(true);
@@ -735,44 +769,6 @@ public final class MyCFS extends CFSModule {
       }
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }
-    /*
-     *  String industryCheck = context.getRequest().getParameter("industry");
-     *  PagedListInfo newsListInfo = new PagedListInfo();
-     *  try {
-     *  db = this.getConnection(context);
-     *  NewsArticleList newsArticleList = new NewsArticleList();
-     *  newsArticleList.setIndustryCode(1);
-     *  newsArticleList.setEnteredBy(getUserId(context));
-     *  newsArticleList.buildList(db);
-     *  LookupList indSelect = new LookupList(db, "lookup_industry");
-     *  indSelect.setJsEvent("onChange=\"document.forms['miner_select'].submit();\"");
-     *  indSelect.addItem(0, "Latest News");
-     *  context.getRequest().setAttribute("IndSelect", indSelect);
-     *  if (newsArticleList.size() > 0) {
-     *  indSelect.addItem(1, "My News");
-     *  if (industryCheck == null) {
-     *  industryCheck = "1";
-     *  }
-     *  }
-     *  newsList = new NewsArticleList();
-     *  newsList.setPagedListInfo(newsListInfo);
-     *  if (industryCheck != null && !(industryCheck.equals("0"))) {
-     *  newsList.setIndustryCode(industryCheck);
-     *  if (industryCheck.equals("1")) {
-     *  newsList.setEnteredBy(getUserId(context));
-     *  }
-     *  } else if (industryCheck == null || industryCheck.equals("0")) {
-     *  newsList.setMinerOnly(false);
-     *  }
-     *  newsList.buildList(db);
-     *  } catch (Exception errorMessage) {
-     *  context.getRequest().setAttribute("Error", errorMessage);
-     *  return "SystemError";
-     *  } finally {
-     *  this.freeConnection(context, db);
-     *  }
-     *  context.getRequest().setAttribute("NewsList", newsList);
-     */
     return "HomeOK";
   }
 
@@ -806,7 +802,37 @@ public final class MyCFS extends CFSModule {
         String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
         companyCalendar.addEvent(expiryDate, "Your user login expires", CalendarEventList.EVENT_TYPES[9]);
       }
-
+      
+      // Additional Today Items
+      if (hasPermission(context, "products-view")) {
+        Timestamp todayTimestamp = new Timestamp(System.currentTimeMillis());
+        // Retrieve the quote status lookup list
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+        // Build quotes for this user that are in their account
+        // and pending their approval
+        QuoteList quoteList = new QuoteList();
+        quoteList.setOrgId(thisUser.getContact().getOrgId());
+        quoteList.setStatusId(list.getIdFromValue("Pending customer acceptance"));
+        quoteList.buildList(db);
+        Iterator quotes = quoteList.iterator();
+        while (quotes.hasNext()) {
+          Quote thisQuote = (Quote) quotes.next();
+          companyCalendar.addEvent(todayTimestamp, "Quote #" + thisQuote.getId() + " needs your approval", CalendarEventList.EVENT_TYPES[10], thisQuote.getId());
+        }
+        // Build a list of tickets they have submitted to show status
+        TicketList ticketList = new TicketList();
+        ticketList.setOrgId(thisUser.getContact().getOrgId());
+        ticketList.setOnlyOpen(true);
+        ticketList.setOnlyWithProducts(true);
+        ticketList.buildList(db);
+        Iterator tickets = ticketList.iterator();
+        while (tickets.hasNext()) {
+          Ticket thisTicket = (Ticket) tickets.next();
+          companyCalendar.addEvent(todayTimestamp, "Request #" + thisTicket.getId() + " is in progress", CalendarEventList.EVENT_TYPES[11], -1);
+        }
+      }
+      
       //create events depending on alert type
       String selectedAlertType = calendarInfo.getCalendarDetailsView();
       String param1 = "org.aspcfs.utils.web.CalendarView";
