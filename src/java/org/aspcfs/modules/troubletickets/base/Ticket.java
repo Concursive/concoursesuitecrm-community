@@ -1187,7 +1187,6 @@ public class Ticket extends GenericBean {
 			
 			Statement st = db.createStatement();
 			ResultSet rs = st.executeQuery("select currval('ticket_ticketid_seq')");
-
 			if (rs.next()) {
 				this.setId(rs.getInt(1));
 			}
@@ -1195,6 +1194,24 @@ public class Ticket extends GenericBean {
 			st.close();
 
 			this.update(db);
+      
+      if (this.getAssignedTo() > -1 && !this.getCloseIt()) {
+        Notification thisNotification = new Notification();
+        thisNotification.setUserToNotify(this.getAssignedTo());
+        thisNotification.setModule("Tickets");
+        thisNotification.setItemId(this.getId());
+        thisNotification.setItemModified(null);
+        thisNotification.setSubject("New Ticket Assigned: " + this.getId());
+        thisNotification.setMessageToSend(
+          "A new ticket has been added to CFS and assigned to you:<br>&nbsp;<br>&nbsp;<br>" +
+          "Ticket # " + this.getId() + "<br>" +
+          "Problem: " + this.getProblem() + "<br><br>" +
+          "###");
+        thisNotification.setType(Notification.EMAIL);
+        thisNotification.notifyUser(db);
+      }
+      
+      
 			db.commit();
 		}
 		catch (SQLException e) {

@@ -43,7 +43,6 @@ public class Notifier extends ReportBuilder {
 
     OpportunityList thisList = new OpportunityList();
     java.sql.Date thisDate = new java.sql.Date(System.currentTimeMillis());
-    //thisDate = thisDate.valueOf("2001-10-15");
     thisDate = thisDate.valueOf(
         thisCalendar.get(Calendar.YEAR) + "-" +
         (thisCalendar.get(Calendar.MONTH) + 1) + "-" +
@@ -68,8 +67,11 @@ public class Notifier extends ReportBuilder {
       if (thisNotification.isNew(db)) {
         System.out.println("Notifier-> ...it's new");
         thisNotification.setSiteCode(baseName);
-        thisNotification.setSubject("Opportunity: " + thisOpportunity.getDescription());
-        thisNotification.setMessageToSend("Opportunity: " + thisOpportunity.getDescription() + ", needs your attention");
+        thisNotification.setSubject("CFS Opportunity: " + thisOpportunity.getDescription());
+        thisNotification.setMessageToSend(
+          "The following opportunity in CFS has an alert set: <br>" + 
+          "<br>" +
+          thisOpportunity.getDescription() + "<br>");
         thisNotification.setType(Notification.EMAIL);
         thisNotification.notifyUser(db);
         ++notifyCount;
@@ -83,8 +85,58 @@ public class Notifier extends ReportBuilder {
     thisReport.setHeader("Opportunity Alerts Report for " + start.toString() + "<br>" + "Total Records: " + notifyCount);
     return thisReport.getHtml();
   }
+  
+  private String buildCallAlerts(Connection db) throws SQLException {
+    Report thisReport = new Report();
+    thisReport.setBorderSize(0);
+    thisReport.addColumn("User");
 
+    Calendar thisCalendar = Calendar.getInstance();
 
+    CallList thisList = new CallList();
+    java.sql.Date thisDate = new java.sql.Date(System.currentTimeMillis());
+    thisDate = thisDate.valueOf(
+        thisCalendar.get(Calendar.YEAR) + "-" +
+        (thisCalendar.get(Calendar.MONTH) + 1) + "-" +
+        thisCalendar.get(Calendar.DAY_OF_MONTH));
+    thisList.setAlertDate(thisDate);
+    thisList.buildList(db);
+
+    int notifyCount = 0;
+    Iterator i = thisList.iterator();
+    while (i.hasNext()) {
+      Call thisCall = (Call)i.next();
+      Notification thisNotification = new Notification();
+      thisNotification.setUserToNotify(thisCall.getEnteredBy());
+      thisNotification.setModule("Calls");
+      thisNotification.setItemId(thisCall.getId());
+      thisNotification.setItemModified(null);
+      if (thisNotification.isNew(db)) {
+        System.out.println("Notifier-> ...it's new");
+        thisNotification.setSiteCode(baseName);
+        thisNotification.setSubject(
+          "Call Alert: " + thisCall.getSubject());
+        thisNotification.setMessageToSend(
+          "The following call in CFS has an alert set: <br>" +
+          "<br>" +
+          "Contact: " + thisCall.getContactName() + "<br>" +
+          "<br>" +
+          thisCall.getNotes() + "<br>" +
+          "<br>");
+        thisNotification.setType(Notification.EMAIL);
+        thisNotification.notifyUser(db);
+        ++notifyCount;
+      } else {
+        System.out.println("Notifier-> ...it's old");
+      }
+      if (thisNotification.hasErrors()) {
+        System.err.println("Notifier Error-> " + thisNotification.getErrorMessage());
+      }
+    }
+    thisReport.setHeader("Opportunity Alerts Report for " + start.toString() + "<br>" + "Total Records: " + notifyCount);
+    return thisReport.getHtml();
+  }
+  
   /**
    *  Scans the Communications module to see if there are any recipients that
    *  need to be sent a message.
@@ -253,10 +305,13 @@ public class Notifier extends ReportBuilder {
 
         System.out.println("Running Alerts...");
         thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db));
+        //thisNotifier.output.append(thisNotifier.buildCallAlerts(db));
         thisNotifier.output.append("<br><hr><br>");
+        
         System.out.println("Running Communications...");
         thisNotifier.output.append(thisNotifier.buildCommunications(db));
         thisNotifier.output.append("<br><hr><br>");
+        
         db.close();
       }
       
