@@ -66,7 +66,10 @@ function inArray(a, s) {
 	return false;
 }
 </script>
-<form name="ForwardForm" action="ForwardNote.do?command=Forward&auto-populate=true<dhv:evaluate if="<%= request.getParameter("return") != null %>">&return=<%= java.net.URLEncoder.encode(request.getParameter("return")) %></dhv:evaluate>" method="POST" onsubmit="selectAllOptions(document.ForwardForm.selectedList)">
+<%
+  String returnString = (request.getParameter("return") != null ? "return=" + java.net.URLEncoder.encode(request.getParameter("return")) : "");
+%>
+<form name="ForwardForm" action="ForwardNote.do?command=Forward&auto-populate=true<%= returnString %>" method="POST" onsubmit="selectAllOptions(document.ForwardForm.selectedList)">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2" valign="center" align="left">
