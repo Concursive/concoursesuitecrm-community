@@ -144,6 +144,16 @@ public class Contact extends GenericBean {
   /**
    *  Description of the Method
    *
+   *@param  db  Description of the Parameter
+   */
+  public void build(Connection db) throws SQLException {
+    queryRecord(db, this.getId());
+  }
+
+
+  /**
+   *  Description of the Method
+   *
    *@param  db                Description of the Parameter
    *@param  contactId         Description of the Parameter
    *@exception  SQLException  Description of the Exception
@@ -603,7 +613,7 @@ public class Contact extends GenericBean {
    */
   public void setTitle(String tmp) {
     if (tmp != null && tmp.length() > 80) {
-      tmp = tmp.substring(0,79);
+      tmp = tmp.substring(0, 79);
     }
     this.title = tmp;
   }
@@ -1430,21 +1440,21 @@ public class Contact extends GenericBean {
     this.id = -1;
     this.notes = null;
     this.title = null;
-    
+
     Iterator i = emailAddressList.iterator();
-    while(i.hasNext()){
+    while (i.hasNext()) {
       ContactEmailAddress thisAddress = (ContactEmailAddress) i.next();
       thisAddress.setId(-1);
     }
-    
+
     Iterator j = phoneNumberList.iterator();
-    while(j.hasNext()){
+    while (j.hasNext()) {
       ContactPhoneNumber thisNumber = (ContactPhoneNumber) j.next();
       thisNumber.setId(-1);
     }
-    
+
     Iterator k = addressList.iterator();
-    while(k.hasNext()){
+    while (k.hasNext()) {
       ContactAddress thisAddress = (ContactAddress) k.next();
       thisAddress.setId(-1);
     }
