@@ -342,7 +342,6 @@ public final class LeadsCalls extends CFSModule {
       thisCall.setModifiedBy(getUserId(context));
       Call oldCall = new Call(db, context.getRequest().getParameter("id"));
       if (!hasViewpointAuthority(db, context, "pipeline", oldCall.getEnteredBy(), userId)) {
-        System.out.println("NO AUTHPRITY");
         this.freeConnection(context, db);
         return "PermissionError";
       }
