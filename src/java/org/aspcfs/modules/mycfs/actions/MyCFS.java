@@ -766,7 +766,8 @@ public final class MyCFS extends CFSModule {
           StringUtils.toString(newNote.getBody()) + "\n\n");
      
      //add the sender as a recipient
-     Contact recipient = new Contact(db, newNote.getReplyId());
+     User sender = this.getUser(context, newNote.getReplyId());
+     Contact recipient = new Contact(db, sender.getContactId());
      context.getRequest().setAttribute("Recipient", recipient);
      
    //Add the recipient to the selectedList
@@ -778,7 +779,7 @@ public final class MyCFS extends CFSModule {
       thisList = new HashMap();
       context.getSession().setAttribute("finalContacts", thisList);
     }
-     thisList.put(new Integer(newNote.getReplyId()), "");
+     thisList.put(new Integer(sender.getContactId()), "");
      if(context.getSession().getAttribute("selectedContacts") != null){
       HashMap tmp = (HashMap) context.getSession().getAttribute("selectedContacts");
       tmp.clear();
