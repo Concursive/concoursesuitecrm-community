@@ -127,6 +127,7 @@ public final class ProjectManagementAssignments extends CFSModule {
       if (!recordInserted) {
         processErrors(context, thisAssignment.getErrors());
       } else {
+        processInsertHook(context, thisAssignment);
         context.getRequest().setAttribute("pid", projectId);
       }
     } catch (Exception e) {
