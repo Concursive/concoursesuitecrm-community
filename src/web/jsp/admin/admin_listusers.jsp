@@ -29,7 +29,7 @@ View Users<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="admin-users-edit,admin-users-delete">
-    <td>
+    <td align="center">
       <strong>Action</strong>
     </td>
     </dhv:permission>
@@ -70,16 +70,16 @@ View Users<br>
           </dhv:evaluate>
         </td>
         </dhv:permission>
-        <td>
+        <td width="60%">
           <a href="Users.do?command=UserDetails&id=<%= thisUser.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
         </td>
-        <td>
+        <td width="20%" nowrap>
           <%= toHtml(thisUser.getUsername()) %>
         </td>
-        <td>
+        <td nowrap>
           <%= toHtml(thisUser.getRole()) %>
         </td>
-        <td>
+        <td nowrap>
           <dhv:username id="<%= thisUser.getManagerId() %>"/>
           <dhv:evaluate exp="<%=!(thisUser.getManagerUserEnabled())%>"><font color="red">*</font></dhv:evaluate>
         </td>
