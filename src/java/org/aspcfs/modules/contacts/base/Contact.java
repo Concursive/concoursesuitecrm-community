@@ -718,10 +718,42 @@ public class Contact extends GenericBean {
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
+
+    Iterator i = this.getEmailAddressList().iterator();
+    while (i.hasNext()) {
+	ContactEmailAddress thisEmail = (ContactEmailAddress)i.next();
+	thisEmail.setEnteredBy(tmp);
+    }
+    Iterator j = this.getPhoneNumberList().iterator();
+    while (j.hasNext()) {
+	ContactPhoneNumber thisPhone = (ContactPhoneNumber)j.next();
+	thisPhone.setEnteredBy(tmp);
+    }
+    Iterator k = this.getAddressList().iterator();
+    while (k.hasNext()) {
+	ContactAddress thisAddress = (ContactAddress)k.next();
+	thisAddress.setEnteredBy(tmp);
+    }
   }
   
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
+
+    Iterator i = this.getEmailAddressList().iterator();
+    while (i.hasNext()) {
+	ContactEmailAddress thisEmail = (ContactEmailAddress)i.next();
+	thisEmail.setEnteredBy(Integer.parseInt(tmp));
+    }
+    Iterator j = this.getPhoneNumberList().iterator();
+    while (j.hasNext()) {
+	ContactPhoneNumber thisPhone = (ContactPhoneNumber)j.next();
+	thisPhone.setEnteredBy(Integer.parseInt(tmp));
+    }
+    Iterator k = this.getAddressList().iterator();
+    while (k.hasNext()) {
+	ContactAddress thisAddress = (ContactAddress)k.next();
+	thisAddress.setEnteredBy(Integer.parseInt(tmp));
+    }
   }
 
 
@@ -733,10 +765,42 @@ public class Contact extends GenericBean {
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
+
+    Iterator i = this.getEmailAddressList().iterator();
+    while (i.hasNext()) {
+	ContactEmailAddress thisEmail = (ContactEmailAddress)i.next();
+	thisEmail.setModifiedBy(tmp);
+    }
+    Iterator j = this.getPhoneNumberList().iterator();
+    while (j.hasNext()) {
+	ContactPhoneNumber thisPhone = (ContactPhoneNumber)j.next();
+	thisPhone.setModifiedBy(tmp);
+    }
+    Iterator k = this.getAddressList().iterator();
+    while (k.hasNext()) {
+	ContactAddress thisAddress = (ContactAddress)k.next();
+	thisAddress.setModifiedBy(tmp);
+    }
   }
 
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
+
+    Iterator i = this.getEmailAddressList().iterator();
+    while (i.hasNext()) {
+	ContactEmailAddress thisEmail = (ContactEmailAddress)i.next();
+	thisEmail.setModifiedBy(Integer.parseInt(tmp));
+    }
+    Iterator j = this.getPhoneNumberList().iterator();
+    while (j.hasNext()) {
+	ContactPhoneNumber thisPhone = (ContactPhoneNumber)j.next();
+	thisPhone.setModifiedBy(Integer.parseInt(tmp));
+    }
+    Iterator k = this.getAddressList().iterator();
+    while (k.hasNext()) {
+	ContactAddress thisAddress = (ContactAddress)k.next();
+	thisAddress.setModifiedBy(Integer.parseInt(tmp));
+    }
   }
 
   /**
