@@ -16,23 +16,29 @@
   - Configure to boot up to shell
   - If uncomfortable, choose Custom Install (Everything),
     otherwise install at least the following packages (to be revised):
-      - Gnome (not KDE)
-      - Server stuff (mail, firewall, ssh, ssl)
-      - Developer tools (make, etc)
-      - Text based browsers (links, lynx)
-      - Install Red Hat Database PostgreSQL (v7.3.2)
+      - X Windows System
+      - Gnome Desktop Environment
+      - Graphical Internet
+      - Text-based Internet (Lynx)
+      - Editors
+      - Mail Server
+      - SQL Database Server (PostgreSQL (v7.3.2))
+      - Development Tools
+      - Administration Tools
+      - System Tools
+      - Printing Support
   - Configure IP
   - Turn on port 80 and 443 during install or in iptables later
-    - iptables must be edited later to allow DNS through using lokkit
+    - iptables must be edited later to allow DNS using lokkit
 
 - Install Java2 SDK 1.4.1_03 RPM for Linux
   Purpose: Programming language just-in-time compiler, 
     required for executing Java applications
   http://java.sun.com
   file: 2sdk-1_4_1_03-fcs-linux-i586.rpm
-  destination: /usr/java/j2sdk1.4.1
+  destination: /usr/java/j2sdk1.4.1_03
   $ rpm --install [file]
-  $ ln -s /usr/java/j2sdk1.4.1 /usr/java/j2se
+  $ ln -s /usr/java/j2sdk1.4.1_03 /usr/java/j2se
 
 - Install Apache Tomcat 4.1.24 binary
   Purpose: Web Server
@@ -63,13 +69,16 @@
 - Install HylaFax 4.1.5 RPM for Red Hat 9 
   Purpose: Fax client for sending documents to fax server
   http://www.hylafax.org
-  file: hylafax-4.1.5-1rh8.i386.rpm
+  file: hylafax-4.1.6-1rh9.i386.rpm
     $ rpm --install [file]
   # If error about conflicting mgetty-sendfax, issue the following command:
     $ rpm --erase mgetty-sendfax
+  # If error about failed dependency sharutils, insert Red Hat CD1 and issue the 
+    following command:
+    $ rpm --install /mnt/cdrom/RedHat/RPMS/sharutils-4.2.1-14.i386.rpm
   # NOTE: On the FAX SERVER, the ip and domain name must be added to:
   #   /etc/hosts
-  #   /var/spool/hylafax/etc/hosts.faxd
+  #   /var/spool/hylafax/etc/hosts.hfaxd
 
 
 
@@ -112,46 +121,6 @@
   # Ant version should say: Apache Ant version 1.5.1 compiled on October 2 2002
     $ ant -version
 
-- Configure Apache Tomcat Web Server
-  # Setup tomcat as a service, so that it auto-starts on boot
-    ### This file can optionally be copied from CVS
-    ### by copying the pref/apache/tomcat4.1/init.d/tomcat to /etc/init.d/tomcat
-    ### otherwise...
-    $ cp /usr/java/tomcat/bin/catalina.sh /etc/init.d/tomcat
-    $ vi /etc/init.d/tomcat
-  
-  # Edit the top of the file to look like the following, the additional
-    lines are the chkconfig, description, and processname:
-  
-
-    #!/bin/sh
-    # -----------------------------------------------------------------------------
-    # Start/Stop Script for the CATALINA Server
-    #
-    # chkconfig: - 85 15
-    # description: Tomcat is a World Wide Web server.  It is used to serve \
-    #              JSP files and CGI.
-    # processname: tomcat
-    #
-
-    
-  # Right before the line "# Get standard Java environment variables" add the line:
-    source /etc/profile
-  # Delete the line that reads "CATALINA_HOME=`cd "$PRGDIR/.." ; pwd`"
-  # Save and exit
-    
-  # Setup tomcat to start when server starts up
-    $ chkconfig --level 2345 tomcat on
-    
-  # Make sure Apache Web Server is not installed or running
-    $ service httpd stop
-    $ chkconfig --level 2345 httpd off
-    
-  # Test the web server, Tomcat welcome page should show in browser:
-    $ service tomcat start
-    $ links http://127.0.0.1:8080
-
-    
 - Configure Postgresql
   # Initialize the database by starting the service the first time:
     $ service postgresql start
@@ -164,10 +133,10 @@
     $ service postgresql stop
     $ cd /var/lib/pgsql/data
     $ vi pg_hba.conf
-  # Verify this line is uncommented: 
+  # Uncomment the following line: 
     host all 127.0.0.1 255.255.255.255 trust
-  # Add the backup server
-    host all 216.54.81.126 255.255.255.255 trust
+  # Add a remote backup server if you have one
+    host all [remote-ip-addr] 255.255.255.255 trust
   # Save and exit
 
   # Configure Postgresql to accept TCP/IP connections
@@ -207,7 +176,18 @@
     $ sudo cp pref/apache/tomcat4.1/conf/web.xml ${CATALINA_HOME}/conf/
     $ sudo cp pref/apache/tomcat4.1/conf/server.xml ${CATALINA_HOME}/conf/
     $ sudo cp pref/apache/tomcat4.1/init.d/tomcat /etc/init.d/tomcat
-    $ sudo vi ${CATALINA_HOME}/conf/server.xml #make changes per on-screen directions
+    $ sudo chmod a+x /etc/init.d/tomcat
+  
+  # Setup tomcat to start when server starts up
+    $ chkconfig --level 2345 tomcat on
+    
+  # Make sure Apache Web Server is not installed or running
+    $ service httpd stop
+    $ chkconfig --level 2345 httpd off
+    
+  # Test the web server, Tomcat welcome page should show in browser:
+    $ service tomcat start
+    $ elinks http://127.0.0.1:8080
   
   # Install the software (Follow on-screen messages until BUILD SUCCESSFUL)
     $ ant deploy
@@ -230,6 +210,7 @@
   # Test SSL ASPCFS, should see Security Alert due to not having a signed cert,
   # choose to proceed, then you should see login prompt
     $ links https://127.0.0.1
+    
 
 *** Software Maintenace ***
 
@@ -243,6 +224,8 @@ to the same server or other servers fairly easily.
   $ chown .postgres /var/lib/pgsql/postgres-backup.sh
   $ chmod a+x /var/lib/pgsql/postgres-backup.sh
 
+  
+  
 # On this server make a cron entry to run postgres-backup.sh,
 # the resulting backup will be in /home/backup/DB_BACKUP
 37 4 * * * su postgres -c "/var/lib/pgsql/postgres-backup.sh '' 127.0.0.1 all `date +%a`"
@@ -270,6 +253,9 @@ to the same server or other servers fairly easily.
   # in the following files:
   $ vi pg_dump723
   $ vi pg_dumpall723
+  
+  
+  
   
 - Then you need to setup a cron task with the following
 
