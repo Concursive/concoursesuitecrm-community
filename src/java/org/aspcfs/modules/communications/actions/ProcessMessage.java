@@ -2,19 +2,36 @@
  *  Copyright 2002 Dark Horse Ventures
  *  Class begins with "Process" so it bypasses security
  */
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.communications.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.login.base.AuthenticationItem;
 
+/**
+ *  Description of the Class
+ *
+ *@author     mrajkowski
+ *@created    January 15, 2003
+ *@version    $Id$
+ */
 public final class ProcessMessage extends CFSModule {
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;

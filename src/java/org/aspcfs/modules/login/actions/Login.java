@@ -1,11 +1,17 @@
 package org.aspcfs.modules.login.actions;
 
-import com.darkhorseventures.actions.*;
+import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.database.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
 import java.util.Hashtable;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.controller.*;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.login.beans.LoginBean;
+import org.aspcfs.modules.admin.base.User;
+
 
 /**
  *  The CFS Login module.

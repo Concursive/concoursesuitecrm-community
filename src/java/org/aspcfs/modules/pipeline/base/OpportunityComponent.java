@@ -1803,7 +1803,7 @@ public class OpportunityComponent extends GenericBean {
    *@exception  SQLException  Description of Exception
    *@since
    */
-  protected boolean isValid(Connection db) throws SQLException {
+  public boolean isValid(Connection db) throws SQLException {
     //errors.clear();
 
     if (description == null || description.trim().equals("")) {

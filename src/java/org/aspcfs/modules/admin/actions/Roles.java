@@ -4,11 +4,12 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
 import java.util.Vector;
-import com.darkhorseventures.database.Connection;
-import org.aspcfs.modules.utils.*;
-import org.aspcfs.modules.utils.web.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.actions.CFSModule;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.base.DependencyList;
 
 /**
  *  Action class for managing Roles

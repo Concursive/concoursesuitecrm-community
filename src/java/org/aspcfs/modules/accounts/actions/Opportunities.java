@@ -7,7 +7,14 @@ import java.sql.*;
 import java.util.Vector;
 import java.sql.*;
 import org.aspcfs.utils.*;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.pipeline.base.*;
+import org.aspcfs.modules.pipeline.beans.OpportunityBean;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.web.*;
 
 
@@ -477,7 +484,7 @@ public final class Opportunities extends CFSModule {
     try {
       db = this.getConnection(context);
       newOpp = new OpportunityHeader(db, context.getRequest().getParameter("id"));
-      recordDeleted = newOpp.delete(db, context, this.getPath(context, "opportunities", newOpp.getId()));
+      recordDeleted = newOpp.delete(db, context, this.getPath(context, "opportunities"));
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
     } catch (Exception e) {
@@ -575,7 +582,7 @@ public final class Opportunities extends CFSModule {
     try {
       db = this.getConnection(context);
       component = new OpportunityComponent(db, context.getRequest().getParameter("id"));
-      recordDeleted = component.delete(db, context, this.getPath(context, "opportunities", component.getId()));
+      recordDeleted = component.delete(db, context, this.getPath(context, "opportunities"));
     } catch (Exception e) {
       errorMessage = e;
     } finally {

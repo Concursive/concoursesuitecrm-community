@@ -1,18 +1,18 @@
 
-package com.darkhorseventures.autoguide.module;
+package org.aspcfs.modules.media.autoguide.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
-import com.darkhorseventures.cfsbase.Constants;
-import com.darkhorseventures.cfsbase.SyncClientMap;
-import com.darkhorseventures.cfsbase.SyncTable;
-import com.darkhorseventures.cfsmodule.CFSModule;
-import com.darkhorseventures.autoguide.base.*;
-import com.darkhorseventures.utils.ImageUtils;
-import com.darkhorseventures.utils.AuthenticationItem;
-import com.darkhorseventures.utils.StringUtils;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.service.base.SyncClientMap;
+import org.aspcfs.modules.service.base.SyncTable;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.media.autoguide.base.*;
+import org.aspcfs.utils.ImageUtils;
+import org.aspcfs.modules.login.base.AuthenticationItem;
+import org.aspcfs.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import com.zeroio.iteam.base.*;

@@ -4,11 +4,17 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.database.Connection;
-import org.aspcfs.modules.utils.*;
-import org.aspcfs.modules.utils.web.*;
 import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactTypeList;
+import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+
 
 /**
  *  Methods for managing users

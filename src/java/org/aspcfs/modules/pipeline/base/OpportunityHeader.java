@@ -769,7 +769,7 @@ public class OpportunityHeader extends GenericBean {
    *@return                   The Valid value
    *@exception  SQLException  Description of Exception
    */
-  protected boolean isValid(Connection db) throws SQLException {
+  public boolean isValid(Connection db) throws SQLException {
     if (description == null || description.trim().equals("")) {
       errors.put("descriptionError", "Description cannot be left blank");
     }

@@ -1,22 +1,23 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.contacts.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import java.sql.*;
 import java.util.Vector;
 import java.io.*;
-import java.sql.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.actions.CFSModule;
 
 /**
  *  Description of the Class
  *
  *@author     akhi_m
  *@created    September 9, 2002
- *@version    $Id$
+ *@version    $Id: ExternalContactsCalls.java,v 1.12 2002/12/23 18:27:00 chris
+ *      Exp $
  */
 public final class ExternalContactsCalls extends CFSModule {
 
@@ -156,11 +157,11 @@ public final class ExternalContactsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, thisCall.getEnteredBy())) {
         return ("PermissionError");
-      }      
-      
+      }
+
       context.getRequest().setAttribute("CallDetails", thisCall);
       return ("DetailsOK");
     } else {
@@ -304,11 +305,11 @@ public final class ExternalContactsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, thisCall.getEnteredBy())) {
         return ("PermissionError");
-      }      
-      
+      }
+
       context.getRequest().setAttribute("CallDetails", thisCall);
       if (context.getRequest().getParameter("popup") != null) {
         return ("ModifyPopupOK");

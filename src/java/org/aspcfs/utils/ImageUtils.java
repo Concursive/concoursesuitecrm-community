@@ -1,4 +1,4 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.utils;
 
 import java.io.*;
 import javax.imageio.*;
@@ -65,26 +65,26 @@ public class ImageUtils {
     byte buffer[];
     int bytes;
     String[] command = null;
-    
+
     File osCheckFile = new File("/bin/sh");
     if (osCheckFile.exists()) {
       //Linux
       command = new String[]{"/bin/sh", "-c",
-        "gs -q " +
-        "-sDEVICE=tiffg3 " +
-        "-dNOPAUSE " +
-        "-dBATCH " +
-        "-sOutputFile=" + baseFilename + ".tiff " + 
-        baseFilename + ".ps"};
+          "gs -q " +
+          "-sDEVICE=tiffg3 " +
+          "-dNOPAUSE " +
+          "-dBATCH " +
+          "-sOutputFile=" + baseFilename + ".tiff " +
+          baseFilename + ".ps"};
     } else {
       //Windows
       command = new String[]{"gs",
-        "-q " +
-        "-sDEVICE=tiffg4 " +
-        "-dNOPAUSE " +
-        "-dBATCH " +
-        "-sOutputFile=" + baseFilename + ".tiff " + 
-        baseFilename + ".ps"};
+          "-q " +
+          "-sDEVICE=tiffg4 " +
+          "-dNOPAUSE " +
+          "-dBATCH " +
+          "-sOutputFile=" + baseFilename + ".tiff " +
+          baseFilename + ".ps"};
     }
     runtime = Runtime.getRuntime();
     try {

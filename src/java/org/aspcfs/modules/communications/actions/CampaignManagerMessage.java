@@ -1,14 +1,16 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.communications.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.controller.CustomForm;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.base.DependencyList;
 
 /**
  *  Actions for dealing with Messages in the Communications Module
@@ -115,11 +117,11 @@ public final class CampaignManagerMessage extends CFSModule {
     addModuleBean(context, submenu, "Modify Message");
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, newMessage.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
+
       context.getRequest().setAttribute("Message", newMessage);
       return ("ModifyOK");
     } else {
@@ -221,11 +223,11 @@ public final class CampaignManagerMessage extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, newMessage.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
+
       context.getRequest().setAttribute("MessageDetails", newMessage);
       return ("DetailsOK");
     } else {
@@ -472,7 +474,6 @@ public final class CampaignManagerMessage extends CFSModule {
 
       DependencyList dependencies = thisMessage.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
-
 
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);

@@ -1,13 +1,19 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
 import java.util.Vector;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
-import org.theseus.actions.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.web.*;
+import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.mycfs.base.CFSNote;
+import org.aspcfs.modules.contacts.base.Call;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.utils.*;
 
 /**
  *  Description of the Class

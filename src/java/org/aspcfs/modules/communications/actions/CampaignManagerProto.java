@@ -1,13 +1,15 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.communications.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.modules.base.DependencyList;
 import java.sql.*;
 import java.util.Vector;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
 
 /**
  *  Action class for the Campaign Module

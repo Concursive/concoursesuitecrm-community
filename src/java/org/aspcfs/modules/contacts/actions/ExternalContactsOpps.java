@@ -1,15 +1,22 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.contacts.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import java.sql.*;
 import java.util.Vector;
 import java.io.*;
 import java.sql.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.pipeline.base.*;
+import org.aspcfs.modules.pipeline.beans.OpportunityBean;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.base.DependencyList;
 
 /**
  *  Description of the Class
@@ -634,7 +641,7 @@ public final class ExternalContactsOpps extends CFSModule {
     try {
       db = this.getConnection(context);
       newOpp = new OpportunityHeader(db, context.getRequest().getParameter("id"));
-      recordDeleted = newOpp.delete(db, context, this.getPath(context, "opportunities", newOpp.getId()));
+      recordDeleted = newOpp.delete(db, context, this.getPath(context, "opportunities"));
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -683,7 +690,7 @@ public final class ExternalContactsOpps extends CFSModule {
     try {
       db = this.getConnection(context);
       component = new OpportunityComponent(db, context.getRequest().getParameter("id"));
-      recordDeleted = component.delete(db, context, this.getPath(context, "opportunities", component.getId()));
+      recordDeleted = component.delete(db, context, this.getPath(context, "opportunities"));
     } catch (Exception e) {
       errorMessage = e;
     } finally {

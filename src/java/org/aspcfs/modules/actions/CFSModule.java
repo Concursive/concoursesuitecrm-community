@@ -22,7 +22,6 @@ import java.util.*;
 import java.text.*;
 import java.io.*;
 
-
 /**
  *  Base class for all modules
  *

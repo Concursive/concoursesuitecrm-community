@@ -1,17 +1,23 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.contacts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import java.sql.*;
 import java.util.*;
 import java.io.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import java.text.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.communications.base.Campaign;
+import org.aspcfs.modules.communications.base.CampaignList;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.accounts.base.OrganizationList;
+import org.aspcfs.modules.base.*;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
-import java.text.*;
 
 /**
  *  Description of the Class

@@ -2,15 +2,17 @@
  *  Copyright 2002 Dark Horse Ventures
  *  Class begins with "Process" so it bypasses security
  */
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.communications.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.modules.base.DependencyList;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
@@ -46,7 +48,7 @@ public final class ProcessImage extends CFSModule {
    */
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
-    String id = (String)context.getRequest().getParameter("id");
+    String id = (String) context.getRequest().getParameter("id");
     FileItem thisItem = null;
 
     //Start the download
@@ -54,7 +56,7 @@ public final class ProcessImage extends CFSModule {
       String dbName = null;
       String fileName = null;
       String imageType = null;
-      //Url can be: 
+      //Url can be:
       StringTokenizer st = new StringTokenizer(id, "|");
       String item1 = st.nextToken();
       if (st.hasMoreTokens()) {

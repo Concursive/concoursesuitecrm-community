@@ -2,22 +2,37 @@
  *  Copyright 2002 Dark Horse Ventures
  *  Uses iteam objects from matt@zeroio.com http://www.mavininteractive.com
  */
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.communications.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.communications.base.*;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import java.io.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author     mrajkowski
+ *@created    January 15, 2003
+ *@version    $Id$
+ */
 public final class CampaignDocuments extends CFSModule {
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandView(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-dashboard-view"))) {
@@ -61,6 +76,12 @@ public final class CampaignDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandAdd(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -93,6 +114,12 @@ public final class CampaignDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUpload(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -171,6 +198,12 @@ public final class CampaignDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandAddVersion(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -212,6 +245,12 @@ public final class CampaignDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUploadVersion(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -290,6 +329,12 @@ public final class CampaignDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDetails(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-dashboard-view"))) {
@@ -325,6 +370,12 @@ public final class CampaignDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDownload(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-dashboard-view"))) {
@@ -357,7 +408,7 @@ public final class CampaignDocuments extends CFSModule {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "campaign", id) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "campaign") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -375,7 +426,7 @@ public final class CampaignDocuments extends CFSModule {
       } else {
         FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "campaign", id) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "campaign") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -415,6 +466,12 @@ public final class CampaignDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandModify(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -450,6 +507,12 @@ public final class CampaignDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUpdate(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -495,6 +558,12 @@ public final class CampaignDocuments extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDelete(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
@@ -513,7 +582,7 @@ public final class CampaignDocuments extends CFSModule {
 
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), id, Constants.COMMUNICATIONS_DOCUMENTS);
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
-        recordDeleted = thisItem.delete(db, this.getPath(context, "campaign", thisItem.getLinkItemId()));
+        recordDeleted = thisItem.delete(db, this.getPath(context, "campaign"));
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -563,8 +632,7 @@ public final class CampaignDocuments extends CFSModule {
    *      attribute
    *@param  db                The feature to be added to the Organization
    *      attribute
-   *@param  organizationId    The feature to be added to the Organization
-   *      attribute
+   *@param  campaignId        The feature to be added to the Campaign attribute
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */

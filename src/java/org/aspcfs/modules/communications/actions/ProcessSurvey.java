@@ -2,17 +2,20 @@
  *  Copyright 2002 Dark Horse Ventures
  *  Class begins with "Process" so it bypasses security
  */
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.communications.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.database.ConnectionPool;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.controller.CustomForm;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.utils.web.CustomForm;
+import org.aspcfs.modules.login.base.AuthenticationItem;
 
 
 /**
@@ -29,7 +32,6 @@ public final class ProcessSurvey extends CFSModule {
    *
    *@param  context           Description of the Parameter
    *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
    */
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
@@ -41,13 +43,13 @@ public final class ProcessSurvey extends CFSModule {
       //CustomForm thisForm = getDynamicForm(context, "surveyview");
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
-      
+
       String dbName = auth.getConnectionElement(context).getDbName();
       String filename = getPath(context) + dbName + fs + "keys" + fs + "survey.key";
       String codedId = context.getRequest().getParameter("id");
       String uncodedId = PrivateString.decrypt(filename, codedId);
       int surveyId = -1;
-      
+
       StringTokenizer st = new StringTokenizer(uncodedId, ",");
       while (st.hasMoreTokens()) {
         String pair = (st.nextToken());
@@ -58,7 +60,7 @@ public final class ProcessSurvey extends CFSModule {
           surveyId = Integer.parseInt(value);
         }
       }
-      System.out.println("ProcessSurvey -- > Survey Id "  + surveyId);
+      System.out.println("ProcessSurvey -- > Survey Id " + surveyId);
       thisSurvey = new ActiveSurvey(db, surveyId);
     } catch (Exception e) {
       errorMessage = e;
@@ -86,7 +88,6 @@ public final class ProcessSurvey extends CFSModule {
    *
    *@param  context           Description of the Parameter
    *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
    */
   public String executeCommandInsert(ActionContext context) {
     Exception errorMessage = null;
@@ -96,15 +97,15 @@ public final class ProcessSurvey extends CFSModule {
     try {
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
-      
+
       String dbName = auth.getConnectionElement(context).getDbName();
       String filename = getPath(context) + dbName + fs + "keys" + fs + "survey.key";
       String codedId = context.getRequest().getParameter("id");
       String uncodedId = PrivateString.decrypt(filename, codedId);
-      
+
       int surveyId = -1;
       int contactId = -1;
-      
+
       StringTokenizer st = new StringTokenizer(uncodedId, ",");
       while (st.hasMoreTokens()) {
         String pair = (st.nextToken());

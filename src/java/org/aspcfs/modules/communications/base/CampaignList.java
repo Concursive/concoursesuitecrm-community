@@ -1,11 +1,12 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Represents the combination of a Message, Recipients, and Schedule details.
@@ -37,9 +38,9 @@ public class CampaignList extends Vector {
   private java.sql.Timestamp activeRangeEnd = null;
   private java.sql.Timestamp runRangeStart = null;
   private java.sql.Timestamp runRangeEnd = null;
-  
-  public static final String tableName = "campaign";
-  public static final String uniqueField = "id";
+
+  public final static String tableName = "campaign";
+  public final static String uniqueField = "id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
@@ -127,8 +128,16 @@ public class CampaignList extends Vector {
   public void setReady(int tmp) {
     this.ready = tmp;
   }
-  
-  public void setContactId(int tmp) { this.contactId = tmp; }
+
+
+  /**
+   *  Sets the contactId attribute of the CampaignList object
+   *
+   *@param  tmp  The new contactId value
+   */
+  public void setContactId(int tmp) {
+    this.contactId = tmp;
+  }
 
 
 
@@ -182,20 +191,126 @@ public class CampaignList extends Vector {
   public void setIdRange(String idRange) {
     this.idRange = idRange;
   }
-  
-  public void setActiveRangeStart(java.sql.Timestamp tmp) { this.activeRangeStart = tmp; }
-  public void setActiveRangeEnd(java.sql.Timestamp tmp) { this.activeRangeEnd = tmp; }
-  public void setRunRangeStart(java.sql.Timestamp tmp) { this.runRangeStart = tmp; }
-  public void setRunRangeEnd(java.sql.Timestamp tmp) { this.runRangeEnd = tmp; }
 
-public String getTableName() { return tableName; }
-public String getUniqueField() { return uniqueField; }
-public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
-public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
-public int getSyncType() { return syncType; }
-public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
-public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
-public void setSyncType(int tmp) { this.syncType = tmp; }
+
+  /**
+   *  Sets the activeRangeStart attribute of the CampaignList object
+   *
+   *@param  tmp  The new activeRangeStart value
+   */
+  public void setActiveRangeStart(java.sql.Timestamp tmp) {
+    this.activeRangeStart = tmp;
+  }
+
+
+  /**
+   *  Sets the activeRangeEnd attribute of the CampaignList object
+   *
+   *@param  tmp  The new activeRangeEnd value
+   */
+  public void setActiveRangeEnd(java.sql.Timestamp tmp) {
+    this.activeRangeEnd = tmp;
+  }
+
+
+  /**
+   *  Sets the runRangeStart attribute of the CampaignList object
+   *
+   *@param  tmp  The new runRangeStart value
+   */
+  public void setRunRangeStart(java.sql.Timestamp tmp) {
+    this.runRangeStart = tmp;
+  }
+
+
+  /**
+   *  Sets the runRangeEnd attribute of the CampaignList object
+   *
+   *@param  tmp  The new runRangeEnd value
+   */
+  public void setRunRangeEnd(java.sql.Timestamp tmp) {
+    this.runRangeEnd = tmp;
+  }
+
+
+  /**
+   *  Gets the tableName attribute of the CampaignList object
+   *
+   *@return    The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   *  Gets the uniqueField attribute of the CampaignList object
+   *
+   *@return    The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   *  Gets the lastAnchor attribute of the CampaignList object
+   *
+   *@return    The lastAnchor value
+   */
+  public java.sql.Timestamp getLastAnchor() {
+    return lastAnchor;
+  }
+
+
+  /**
+   *  Gets the nextAnchor attribute of the CampaignList object
+   *
+   *@return    The nextAnchor value
+   */
+  public java.sql.Timestamp getNextAnchor() {
+    return nextAnchor;
+  }
+
+
+  /**
+   *  Gets the syncType attribute of the CampaignList object
+   *
+   *@return    The syncType value
+   */
+  public int getSyncType() {
+    return syncType;
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the CampaignList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the CampaignList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the syncType attribute of the CampaignList object
+   *
+   *@param  tmp  The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
 
 
   /**
@@ -559,13 +674,21 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public int queryRecordCount(Connection db) throws SQLException {
     int recordCount = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
-      "SELECT COUNT(*) AS recordcount " +
-      "FROM campaign c " +
-      "WHERE c.campaign_id > -1 ";
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM campaign c " +
+        "WHERE c.campaign_id > -1 ";
     createFilter(sqlFilter);
     PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);

@@ -13,8 +13,8 @@ import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.database.Connection;
 import org.aspcfs.utils.*;
+import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.*;
@@ -410,7 +410,7 @@ public final class AccountsDocuments extends CFSModule {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "accounts", orgId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "accounts") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -428,7 +428,7 @@ public final class AccountsDocuments extends CFSModule {
       } else {
         FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "accounts", orgId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "accounts") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -584,7 +584,7 @@ public final class AccountsDocuments extends CFSModule {
 
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), orgId, Constants.ACCOUNTS);
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
-        recordDeleted = thisItem.delete(db, this.getPath(context, "accounts", thisItem.getLinkItemId()));
+        recordDeleted = thisItem.delete(db, this.getPath(context, "accounts"));
       }
     } catch (Exception e) {
       errorMessage = e;

@@ -1,15 +1,17 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.communications.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.utils.web.CustomFormList;
+import org.aspcfs.utils.web.CustomForm;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.controller.CustomFormList;
-import com.darkhorseventures.controller.CustomForm;
 
 /**
  *  Description of the Class
@@ -214,11 +216,11 @@ public final class CampaignManagerSurvey extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, thisSurvey.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
+
       context.getRequest().setAttribute("submenu", submenu);
       addModuleBean(context, submenu, "Add Surveys");
 
@@ -272,11 +274,11 @@ public final class CampaignManagerSurvey extends CFSModule {
     context.getRequest().setAttribute("submenu", submenu);
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, thisSurvey.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
+
       addModuleBean(context, submenu, "Add Surveys");
       return ("DetailsOK");
     } else {

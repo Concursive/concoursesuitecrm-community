@@ -1,10 +1,11 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.help.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.help.base.*;
 import java.sql.*;
-import com.darkhorseventures.cfsbase.*;
 
 /**
  *  Help Module
@@ -48,14 +49,21 @@ public final class Help extends CFSModule {
       return ("HelpOK");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandProcess(ActionContext context) {
     if (this.hasPermission(context, "help-edit")) {
       Exception errorMessage = null;
       Connection db = null;
-  
+
       try {
-        HelpItem thisItem = (HelpItem)context.getFormBean();
+        HelpItem thisItem = (HelpItem) context.getFormBean();
         db = this.getConnection(context);
         thisItem.setEnteredBy(this.getUserId(context));
         thisItem.setModifiedBy(this.getUserId(context));
@@ -66,13 +74,20 @@ public final class Help extends CFSModule {
       } finally {
         this.freeConnection(context, db);
       }
-  
+
       return ("ProcessOK");
     } else {
       return ("UserError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandViewAll(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
