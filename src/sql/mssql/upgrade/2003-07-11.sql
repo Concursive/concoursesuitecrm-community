@@ -74,4 +74,4 @@ CREATE TABLE help_tips (
   enabled BIT NOT NULL DEFAULT 1
 );
 
-update permission set permission_edit = 1 and where permission='help';
+update permission set permission_edit = 1 where permission='help';

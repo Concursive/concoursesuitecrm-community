@@ -74,4 +74,4 @@ CREATE TABLE lookup_help_features (
   enabled BOOLEAN DEFAULT true
 );
 
-update permission set permission_edit = 't' and where permission='help';
+update permission set permission_edit = 't' where permission='help';
