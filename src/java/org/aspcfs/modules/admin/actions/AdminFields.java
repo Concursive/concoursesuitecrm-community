@@ -733,9 +733,10 @@ public final class AdminFields extends CFSModule {
   private void addModuleList(ActionContext context, Connection db) throws SQLException {
     String moduleId = context.getRequest().getParameter("modId");
     LookupList moduleList = new LookupList(db, "system_modules");
-    moduleList.setDefaultKey(moduleId);
+    if (moduleId != null) {
+      moduleList.setDefaultKey(moduleId);
+    }
     context.getRequest().setAttribute("ModuleList", moduleList);
-    System.out.println("AdminFields-> addModuleListOK");
   }
 
 
@@ -756,7 +757,6 @@ public final class AdminFields extends CFSModule {
       categoryList.setBuildResources(false);
       categoryList.buildList(db);
       context.getRequest().setAttribute("CategoryList", categoryList);
-      System.out.println("AdminFields-> addCategoryListOK");
     }
   }
 
