@@ -118,7 +118,6 @@ New Export
       <select name="sort">
       <option value="c.namelast">Last Name</option>
       <option value="c.contact_id">Contact ID</option>
-      <option value="type_name">Contact Type</option>
       <option value="c.namefirst">First Name</option>
       <option value="c.company">Company</option>
       <option value="c.title">Title</option>

@@ -56,10 +56,6 @@ function checkForm(form) {
     message += "- Please specify an alert description\r\n";
     formTest = false;
   }
-  if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      alertMessage += "Alert Date is before today's date\r\n";
-  }
-    
   if (formTest == false) {
     alert("Form could not be saved, please check the following:\r\n\r\n" + message);
     return false;

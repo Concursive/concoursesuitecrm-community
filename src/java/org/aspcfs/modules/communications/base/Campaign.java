@@ -349,7 +349,7 @@ public class Campaign extends GenericBean {
     ResultSet rs = null;
 
     String sql =
-        "SELECT c.*, msg.name as messageName, dt.description as delivery, msg.subject as messageSubject " +
+        "SELECT c.*, msg.name as messageName, msg.subject as messageSubject, dt.description as delivery " +
         "FROM campaign c " +
         "LEFT JOIN message msg ON (c.message_id = msg.id) " +
         "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +

@@ -148,6 +148,7 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
       this.setBuildIssues(false);
       this.buildList(db);
 
+/*
       Iterator projectList = this.iterator();
       while (projectList.hasNext()) {
         com.zeroio.iteam.base.Project thisProject = (com.zeroio.iteam.base.Project) projectList.next();
@@ -166,6 +167,7 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
           //companyCalendar.addEvent(thisEvent);
         }
       }
+*/
     } catch (SQLException e) {
       e.printStackTrace(System.out);
       throw new SQLException("Error Building Project Calendar Alerts");
@@ -200,16 +202,23 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
       this.setAssignmentsForUser(userId);
       this.setOpenAssignmentsOnly(true);
       this.setBuildIssues(false);
+      //Dummy code to throw SQLException in the try catch block.
+      /*TODO remove this if block on fixing the code to display project alerts in the calendar*/
+      if (this.getUserId() < -100 ) {
+        throw new SQLException("Dummy SQLException");
+      }
+/*
       HashMap dayEvents = this.queryAssignmentRecordCount(db, timeZone);
       Set s = dayEvents.keySet();
       Iterator i = s.iterator();
       while (i.hasNext()) {
         String thisDay = (String) i.next();
-        companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[8], thisDay, dayEvents.get(thisDay));
+        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[8], dayEvents.get(thisDay));
         if (System.getProperty("DEBUG") != null) {
           System.out.println("ProjectListScheduledActions-> Added Assignments for day " + thisDay + "- " + String.valueOf(dayEvents.get(thisDay)));
         }
       }
+*/
     } catch (SQLException e) {
       throw new SQLException("Error Building Project Calendar Alert Counts");
     }

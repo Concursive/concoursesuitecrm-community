@@ -146,7 +146,7 @@ Action Contacts
     <dhv:permission name="myhomepage-action-lists-edit">
       <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&actionId=<%= thisContact.getId() %>&id=<%= thisContact.getContact().getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');">
     </dhv:permission>
-      <%= toHtml(thisContact.getContact().getNameLastFirst()) %>
+      <%= toHtml(thisContact.getContact().getNameFull()) %>
      <dhv:permission name="myhomepage-action-lists-edit"></a></dhv:permission>
     </td>
     <td valign="top" width="100%">

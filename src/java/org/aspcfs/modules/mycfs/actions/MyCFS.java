@@ -777,9 +777,30 @@ public final class MyCFS extends CFSModule {
       if (hasPermission(context, "products-view") || hasPermission(context, "tickets-tickets-view")) {
         calendarInfo.addAlertType("Ticket", "org.aspcfs.modules.troubletickets.base.TicketListScheduledActions", "Tickets");
       }
+      int userId = this.getUserId(context);
+      if (context.getRequest().getParameter("userId") != null){
+        userId = Integer.parseInt(context.getRequest().getParameter("userId"));
+        if (userId == this.getUserId(context)) {
+          Integer tmpUserId = (Integer) context.getSession().getAttribute("calendarUserId");
+          if (tmpUserId != null) {
+            context.getSession().removeAttribute("calendarUserId");
+          }
+        } else {
+          context.getSession().setAttribute("calendarUserId", new Integer(userId));
+        }
+      } else if (context.getSession().getAttribute("calendarUserId") != null) {
+        userId = ((Integer) context.getSession().getAttribute("calendarUserId")).intValue();
+      }
+      calendarInfo.setSelectedUserId(userId);
+      calendarInfo.setSelectedUserName(this.getUser(context, userId).getContact().getNameLastFirst());
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }else{
-      calendarInfo.setSelectedUserId(-1);
+      Integer tmpUserId = (Integer) context.getSession().getAttribute("calendarUserId");
+      if (tmpUserId != null) {
+        calendarInfo.setSelectedUserId(tmpUserId.intValue());
+      } else {
+        calendarInfo.setSelectedUserId(-1);
+      }
     }
     return "HomeOK";
   }

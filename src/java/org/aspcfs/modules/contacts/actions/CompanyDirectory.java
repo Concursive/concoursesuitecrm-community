@@ -157,7 +157,7 @@ public final class CompanyDirectory extends CFSModule {
    */
   public String executeCommandModifyEmployee(ActionContext context) {
 
-    if (!(hasPermission(context, "contacts-internal_contacts-view"))) {
+    if (!(hasPermission(context, "contacts-internal_contacts-edit"))) {
       return ("PermissionError");
     }
 
@@ -211,9 +211,9 @@ public final class CompanyDirectory extends CFSModule {
     thisEmployee.setEnteredBy(getUserId(context));
     thisEmployee.setModifiedBy(getUserId(context));
 
-//insert
     if (thisEmployee.getId() > 0) {
-      permission = "accounts-accounts-contacts-edit";
+      // Object is being updated
+      permission = "contacts-internal_contacts-edit";
     }
     if (!hasPermission(context, permission)) {
       return ("PermissionError");
