@@ -222,11 +222,11 @@
     $ ant deploy
   
   # Install the gatekeeper
-    $ createdb cfs2gk
+    $ createdb -E UNICODE cfs2gk
     $ ant installgk
 
   # Create the initial cfs database
-    $ createdb cdb_[company abbreviation]
+    $ createdb -E UNICODE cdb_[company abbreviation]
   # Install the database
     $ ant installdb
   
