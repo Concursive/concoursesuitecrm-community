@@ -32,6 +32,7 @@ public class CampaignList extends Vector {
   private String ownerIdRange = null;
   private String idRange = null;
   private int ready = -1;
+  private int contactId = -1;
   
   public static final String tableName = "campaign";
   public static final String uniqueField = "id";
@@ -122,6 +123,9 @@ public class CampaignList extends Vector {
   public void setReady(int tmp) {
     this.ready = tmp;
   }
+  
+  public void setContactId(int tmp) { this.contactId = tmp; }
+
 
 
   /**
@@ -455,7 +459,7 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     }
 
     if (owner > -1) {
-      sqlFilter.append("AND c.enteredby = " + owner + " ");
+      sqlFilter.append("AND c.enteredby = ? ");
     }
 
     if (ownerIdRange != null) {
@@ -468,6 +472,10 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
 
     if (ready == TRUE) {
       sqlFilter.append("AND c.status_id IN (" + Campaign.QUEUE + ", " + Campaign.STARTED + ") ");
+    }
+    
+    if (contactId > -1) {
+      sqlFilter.append("AND c.campaign_id IN (SELECT campaign_id FROM scheduled_recipient WHERE contact_id = ?) ");
     }
   }
 
@@ -506,6 +514,14 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     if (completeOnly) {
       pst.setBoolean(++i, true);
     }
+    
+    if (owner > -1) {
+      pst.setInt(++i, owner);
+    }
+    
+    if (contactId > -1) {
+      pst.setInt(++i, contactId);
+    }
 
     return i;
   }
@@ -520,7 +536,6 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
    */
   private void buildResources(Connection db) throws SQLException {
     Iterator i = this.iterator();
-
     while (i.hasNext()) {
       Campaign thisCampaign = (Campaign) i.next();
       thisCampaign.buildRecipientCount(db);
