@@ -22,6 +22,7 @@ import com.zeroio.iteam.base.*;
 import java.util.*;
 import java.util.zip.*;
 import java.lang.reflect.*;
+import org.aspcfs.controller.ApplicationPrefs;
 
 /**
  *  Application that processes various kinds of Alerts in CFS, generating
@@ -98,21 +99,47 @@ public class Notifier extends ReportBuilder {
       this.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients");
       //this.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCallOwners");
     }
-
-    AppUtils.loadConfig(filename, this.config);
+    if (filename.endsWith(".xml")) {
+      AppUtils.loadConfig(filename, this.config);
+    } else {
+      ApplicationPrefs prefs = new ApplicationPrefs();
+      prefs.load(filename + "build.properties");
+      config = prefs.getPrefs();
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Notifier-> WEBSERVER.ASPMODE: " + (String) config.get("WEBSERVER.ASPMODE"));
+      }
+    }
     this.baseName = (String) this.config.get("GATEKEEPER.URL");
     this.dbUser = (String) this.config.get("GATEKEEPER.USER");
     this.dbPass = (String) this.config.get("GATEKEEPER.PASSWORD");
     try {
-      Class.forName((String) this.config.get("GATEKEEPER.DRIVER"));
-      //Build list of sites to process
-      Connection dbSites = DriverManager.getConnection(
-          this.baseName, this.dbUser, this.dbPass);
       SiteList siteList = new SiteList();
-      siteList.setEnabled(Constants.TRUE);
-      siteList.buildList(dbSites);
-      dbSites.close();
+      if ("true".equals((String) this.config.get("WEBSERVER.ASPMODE"))) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Notifier-> Processing site list: " + (String) this.config.get("GATEKEEPER.DRIVER"));
+        }
+        //Build list of sites to process
+        Class.forName((String) this.config.get("GATEKEEPER.DRIVER"));
+        Connection dbSites = DriverManager.getConnection(
+            this.baseName, this.dbUser, this.dbPass);
+        siteList.setEnabled(Constants.TRUE);
+        siteList.buildList(dbSites);
+        dbSites.close();
+      } else {
+        //This setup only allows one site so process it
+        Site thisSite = new Site();
+        thisSite.setDatabaseDriver((String) this.config.get("GATEKEEPER.DRIVER"));
+        thisSite.setDatabaseUrl((String) this.config.get("GATEKEEPER.URL"));
+        thisSite.setDatabaseUsername((String) this.config.get("GATEKEEPER.USER"));
+        thisSite.setDatabasePassword((String) this.config.get("GATEKEEPER.PASSWORD"));
+        thisSite.setSiteCode((String) this.config.get("GATEKEEPER.APPCODE"));
+        thisSite.setVirtualHost((String) this.config.get("WEBSERVER.URL"));
+        siteList.add(thisSite);
+      }
       //Process each site
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Notifier-> Processing each site");
+      }
       Iterator i = siteList.iterator();
       while (i.hasNext()) {
         Site thisSite = (Site) i.next();
@@ -195,7 +222,7 @@ public class Notifier extends ReportBuilder {
     while (i.hasNext()) {
       OpportunityComponent thisComponent = (OpportunityComponent) i.next();
       Notification thisNotification = new Notification();
-      thisNotification.setHost((String) this.config.get("MailServer"));
+      thisNotification.setHost((String) this.config.get("MAILSERVER"));
       thisNotification.setUserToNotify(thisComponent.getOwner());
       thisNotification.setModule("Opportunities");
       thisNotification.setItemId(thisComponent.getId());
@@ -219,7 +246,7 @@ public class Notifier extends ReportBuilder {
           } catch (Exception ignore) {
           }
         }
-        thisNotification.setFrom("cfs-messenger@" + siteInfo.getVirtualHost());
+        thisNotification.setFrom((String) this.config.get("EMAILADDRESS"));
         thisNotification.setSiteCode(baseName);
         thisNotification.setSubject("CFS Opportunity" + (relationshipName != null ? ": " + StringUtils.toHtml(relationshipName) : ""));
         thisNotification.setMessageToSend(
@@ -281,22 +308,23 @@ public class Notifier extends ReportBuilder {
     while (i.hasNext()) {
       Call thisCall = (Call) i.next();
       Notification thisNotification = new Notification();
-      thisNotification.setHost((String) this.config.get("MailServer"));
+      thisNotification.setHost((String) this.config.get("MAILSERVER"));
       thisNotification.setUserToNotify(thisCall.getEnteredBy());
       thisNotification.setModule("Calls");
       thisNotification.setItemId(thisCall.getId());
       thisNotification.setItemModified(null);
       if (thisNotification.isNew(db)) {
         thisNotification.setSiteCode(baseName);
+        thisNotification.setFrom((String) this.config.get("EMAILADDRESS"));
         thisNotification.setSubject(
             "Call Alert: " + thisCall.getSubject());
         thisNotification.setMessageToSend(
             NOREPLY_DISCLAIMER + "<br>" +
             "<br>" +
-            "The following call in CFS has an alert set: <br>" +
+            "The following activity in CFS has an alert set: <br>" +
             "<br>" +
             "Contact: " + StringUtils.toHtml(thisCall.getContactName()) + "<br>" +
-            "Call Notes: " + StringUtils.toHtml(thisCall.getNotes()) + "<br>" +
+            "Notes: " + StringUtils.toHtml(thisCall.getNotes()) + "<br>" +
             "<br>" +
             generateCFSUrl(siteInfo, "ExternalContactsCalls.do?command=Details&id=" + thisCall.getId() + "&contactId=" + thisCall.getContactId()));
         thisNotification.setType(Notification.EMAIL);
@@ -342,7 +370,7 @@ public class Notifier extends ReportBuilder {
     System.out.println("Notifier-> Active Campaigns: " + thisList.size());
 
     //Get this database's key
-    String filePath = (String) config.get("FileLibrary") + fs + dbName + fs + "keys" + fs;
+    String filePath = (String) config.get("FILELIBRARY") + fs + dbName + fs + "keys" + fs;
     File f = new File(filePath);
     f.mkdirs();
     PrivateString thisKey = new PrivateString(filePath + "survey.key");
@@ -377,7 +405,7 @@ public class Notifier extends ReportBuilder {
         FileItem thisItem = (FileItem) files.next();
         FileItem actualItem = new FileItem();
         actualItem.setClientFilename(thisItem.getClientFilename());
-        actualItem.setDirectory((String) config.get("FileLibrary") + fs + dbName + fs + "communications" + fs);
+        actualItem.setDirectory((String) config.get("FILELIBRARY") + fs + dbName + fs + "communications" + fs);
         actualItem.setFilename(thisItem.getFilename());
         actualItem.setSize(thisItem.getSize());
         attachments.add(actualItem);
@@ -407,7 +435,7 @@ public class Notifier extends ReportBuilder {
         Contact thisContact = new Contact(db, thisRecipient.getContactId());
 
         Notification thisNotification = new Notification();
-        thisNotification.setHost((String) this.config.get("MailServer"));
+        thisNotification.setHost((String) this.config.get("MAILSERVER"));
         thisNotification.setContactToNotify(thisContact.getId());
         thisNotification.setModule("Communications Manager");
         thisNotification.setDatabaseName(dbName);
@@ -491,7 +519,7 @@ public class Notifier extends ReportBuilder {
       return false;
     }
     PrintWriter out = null;
-    String baseDirectory = (String) config.get("BaseDirectory");
+    String baseDirectory = (String) config.get("FILELIBRARY") + fs + "faxFiles";
     if (baseDirectory != null && !baseDirectory.equals("")) {
       if (!baseDirectory.endsWith(fs)) {
         baseDirectory += fs;
@@ -502,7 +530,7 @@ public class Notifier extends ReportBuilder {
     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMMddHHmmss");
     String uniqueScript = formatter1.format(new java.util.Date());
     try {
-      out = new PrintWriter(new BufferedWriter(new FileWriter(baseDirectory + (String) config.get("BaseFilename") + uniqueScript + ".sh")));
+      out = new PrintWriter(new BufferedWriter(new FileWriter(baseDirectory + "cfsfax" + uniqueScript + ".sh")));
       Iterator faxEntries = faxLog.iterator();
       while (faxEntries.hasNext()) {
         String uniqueId = formatter1.format(new java.util.Date());
@@ -524,9 +552,9 @@ public class Notifier extends ReportBuilder {
           recordId = st.nextToken();
         }
 
-        if (!"false".equals((String) config.get("FaxEnabled"))) {
+        if (!"false".equals((String) config.get("FAXENABLED"))) {
           //Faxing is enabled
-          String baseFilename = baseDirectory + (String) config.get("BaseFilename") + uniqueId + messageId + "-" + faxNumber;
+          String baseFilename = baseDirectory + "cfsfax" + uniqueId + messageId + "-" + faxNumber;
           //Must escape the & for Linux shell script
           String url = "http://" + siteInfo.getVirtualHost() + "/ProcessMessage.do?code=" + siteInfo.getSiteCode() + "\\&messageId=" + messageId + (contactId != null ? "\\&contactId=" + contactId : "");
           if (HTTPUtils.convertUrlToPostscriptFile(url, baseFilename) == 1) {
@@ -549,9 +577,9 @@ public class Notifier extends ReportBuilder {
           //Fax command -- only removes file if sendfax is successful
           out.println(
               "sendfax -n " +
-              "-h " + (String) config.get("FaxServer") + " " +
+              "-h " + (String) config.get("FAXSERVER") + " " +
               "-d " + faxNumber + " " +
-              baseFilename + ".tiff > " + baseDirectory + (String) config.get("BaseFilename") + uniqueScript + ".log " +
+              baseFilename + ".tiff > " + baseDirectory + "cfsfax" + uniqueScript + ".log " +
               "&& rm " + baseFilename + ".tiff ");
 
           //Track usage
@@ -577,7 +605,7 @@ public class Notifier extends ReportBuilder {
     }
     try {
       java.lang.Process process = java.lang.Runtime.getRuntime().exec(
-          "/bin/sh " + baseDirectory + (String) config.get("BaseFilename") + uniqueScript + ".sh");
+          "/bin/sh " + baseDirectory + "cfsfax" + uniqueScript + ".sh");
     } catch (Exception e) {
       e.printStackTrace(System.out);
     }
@@ -601,7 +629,7 @@ public class Notifier extends ReportBuilder {
     if (contactReport == null || contactReport.size() == 0) {
       return false;
     }
-    String filePath = (String) config.get("FileLibrary") + fs + dbName + fs + "communications" + fs +  CFSModule.getDatePath(new java.util.Date()) + fs;
+    String filePath = (String) config.get("FILELIBRARY") + fs + dbName + fs + "communications" + fs +  CFSModule.getDatePath(new java.util.Date()) + fs;
     String baseFilename = contactReport.generateFilename();
     File f = new File(filePath);
     f.mkdirs();
@@ -622,7 +650,7 @@ public class Notifier extends ReportBuilder {
     ZipUtils.addTextEntry(zip, "contacts-" + baseFilename + ".csv", contactReport.getRep().getDelimited());
 
     //Get this database's key
-    String keyFilePath = (String) config.get("FileLibrary") + fs + dbName + fs + "keys" + fs;
+    String keyFilePath = (String) config.get("FILELIBRARY") + fs + dbName + fs + "keys" + fs;
     File keys = new File(keyFilePath);
     keys.mkdirs();
     PrivateString thisKey = new PrivateString(keyFilePath + "survey.key");
@@ -661,7 +689,7 @@ public class Notifier extends ReportBuilder {
    */
   public String generateCFSUrl(Site siteInfo, String url) {
     String schema = "http";
-    if ("true".equals((String) config.get("ForceSSL"))) {
+    if ("true".equals((String) config.get("FORCESSL"))) {
       schema = "https";
     }
     return ("<a href=\"" + schema + "://" + siteInfo.getVirtualHost() + "/" + url + "\">" +

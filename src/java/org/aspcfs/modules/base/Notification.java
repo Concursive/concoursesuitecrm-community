@@ -527,11 +527,9 @@ public class Notification extends Thread {
           System.out.println("Notification-> To: " + emailToNotify);
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
-          mail.setFrom(from + " <cfs-messenger@darkhorseventures.com>");
+          mail.setFrom(from);
           if (from != null && !from.equals("")) {
             mail.addReplyTo(from);
-          } else {
-            mail.addReplyTo(siteCode + "@" + this.getHostName());
           }
           mail.setType("text/html");
           mail.addTo(emailToNotify);
@@ -579,11 +577,9 @@ public class Notification extends Thread {
           System.out.println("Notification-> To: " + thisUser.getContact().getEmailAddress("Business"));
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
-          mail.setFrom(from + " <cfs-messenger@darkhorseventures.com>");
+          mail.setFrom(from);
           if (from != null && !from.equals("")) {
             mail.addReplyTo(from);
-          } else {
-            mail.addReplyTo(siteCode + "@" + this.getHostName());
           }
           mail.setType("text/html");
           mail.addTo(thisUser.getContact().getEmailAddress("Business"));
@@ -654,11 +650,9 @@ public class Notification extends Thread {
           System.out.println("Notification-> To: " + thisContact.getEmailAddress("Business"));
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
-          mail.setFrom(from + " <" + from + ">");
+          mail.setFrom(from);
           if (from != null && !from.equals("")) {
             mail.addReplyTo(from);
-          } else {
-            mail.addReplyTo(siteCode + "@" + this.getHostName());
           }
           mail.setType("text/html");
           if (thisContact.getEmailAddress("Business").equals("")) {
@@ -796,25 +790,6 @@ public class Notification extends Thread {
       ignore.printStackTrace(System.out);
       result = 1;
     }
-  }
-
-
-  /**
-   *  Gets the HostName attribute of the Notification object
-   *
-   *@return    The HostName value
-   */
-  protected String getHostName() {
-    String tmp = "";
-    try {
-      InetAddress localaddr = InetAddress.getLocalHost();
-      tmp = localaddr.getHostName();
-    } catch (UnknownHostException e) {
-    }
-    if (tmp.indexOf(".") == -1) {
-      tmp += ".darkhorseventures.com";
-    }
-    return tmp;
   }
 
 

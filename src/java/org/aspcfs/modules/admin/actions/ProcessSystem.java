@@ -207,7 +207,7 @@ public final class ProcessSystem extends CFSModule {
    */
   private void precompileJSP(ActionContext context, File thisFile, String dir) {
     if (thisFile.getName().endsWith(".jsp") && !thisFile.getName().endsWith("_include.jsp")) {
-      String serverName = "http://" + context.getRequest().getServerName();
+      String serverName = "http://" + HTTPUtils.getServerUrl(context.getRequest());
       String jsp = serverName + dir + thisFile.getName();
       try {
         URL url = new URL(jsp);

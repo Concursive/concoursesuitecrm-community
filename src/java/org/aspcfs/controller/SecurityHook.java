@@ -45,6 +45,7 @@ public class SecurityHook implements ControllerHook {
 
     //Login and Process modules bypass security and must implement their own
     if (action.toUpperCase().startsWith("LOGIN") ||
+        action.toUpperCase().startsWith("SETUP") ||
         action.toUpperCase().startsWith("PROCESS")) {
       return null;
     }
@@ -172,9 +173,9 @@ public class SecurityHook implements ControllerHook {
     if (!statusList.containsKey(ce.getUrl())) {
       SystemStatus newSystemStatus = new SystemStatus();
       newSystemStatus.setConnectionElement((ConnectionElement) ce.clone());
-      newSystemStatus.setFileLibraryPath(
-          context.getRealPath("/") + "WEB-INF" + fs +
-          "fileLibrary" + fs + ce.getDbName() + fs);
+      //Store the fileLibrary path for processes like Workflow
+      ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute("APPLICATION.PREFS");
+      newSystemStatus.setFileLibraryPath(prefs.get("FILELIBRARY") + ce.getDbName() + fs);
       newSystemStatus.queryRecord(db);
       statusList.put(ce.getUrl(), newSystemStatus);
       if (System.getProperty("DEBUG") != null) {

@@ -475,16 +475,18 @@ public final class MyCFS extends CFSModule {
 
           if ((!email.startsWith("P:")) && (copyrecipients || !thisContact.hasAccount())) {
             SMTPMessage mail = new SMTPMessage();
-            mail.setHost((String) System.getProperty("MailServer"));
-            mail.setFrom("cfs-messenger@darkhorseventures.com");
+            mail.setHost(getPref(context, "MAILSERVER"));
+            mail.setFrom(getPref(context, "EMAILADDRESS"));
             if (replyAddr != null && !(replyAddr.equals(""))) {
               mail.addReplyTo(replyAddr);
             }
             mail.setType("text/html");
             mail.setTo(email);
             mail.setSubject(thisNote.getSubject());
-            mail.setBody("The following message was sent to your CFS Inbox by " + thisRecord.getUsername() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + StringUtils.toHtml(thisNote.getBody()));
-            System.out.println("Sending Mail .. " + thisNote.getBody());
+            mail.setBody("The following message was sent to your CFS Inbox by " + thisRecord.getContact().getNameFirstLast() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + StringUtils.toHtml(thisNote.getBody()));
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("Sending Mail .. " + thisNote.getBody());
+            }
             if (mail.send() == 2) {
               if (System.getProperty("DEBUG") != null) {
                 System.out.println("MyCFS-> Send error: " + mail.getErrorMsg() + "<br><br>");

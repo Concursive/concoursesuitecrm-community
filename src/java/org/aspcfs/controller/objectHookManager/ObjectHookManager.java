@@ -12,6 +12,7 @@ import com.darkhorseventures.framework.actions.*;
 import com.darkhorseventures.database.*;
 import org.aspcfs.modules.service.base.PacketContext;
 import javax.servlet.ServletContext;
+import org.aspcfs.controller.ApplicationPrefs;
 
 /**
  *  Manages hooks within the application and attaches to a WorkflowManager to
@@ -144,6 +145,7 @@ public class ObjectHookManager {
       if (wfManager != null && hookList != null && processList != null) {
         if ((object != null && hookList.has(object)) ||
             (previousObject != null && hookList.has(previousObject))) {
+          ApplicationPrefs prefs = (ApplicationPrefs) actionContext.getServletContext().getAttribute("APPLICATION.PREFS");
           ComponentContext context = new ComponentContext();
           context.setPreviousObject(previousObject);
           context.setThisObject(object);
@@ -152,6 +154,8 @@ public class ObjectHookManager {
           context.setAttribute("ConnectionElement", ce);
           context.setAttribute("ClientSSLKeystore", actionContext.getServletContext().getAttribute("ClientSSLKeystore"));
           context.setAttribute("ClientSSLKeystorePassword", actionContext.getServletContext().getAttribute("ClientSSLKeystorePassword"));
+          context.setAttribute("MAILSERVER", prefs.get("MAILSERVER"));
+          context.setAttribute("EMAILADDRESS", prefs.get("EMAILADDRESS"));
           if (System.getProperty("DEBUG") != null) {
             System.out.println("ObjectHookList-> Hook thread start");
           }

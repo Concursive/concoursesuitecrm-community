@@ -1351,19 +1351,14 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandActivate(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+    if (!hasPermission(context, "campaign-campaigns-edit")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
-
     Campaign campaign = null;
     String id = context.getRequest().getParameter("id");
     String modified = context.getRequest().getParameter("modified");
-
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
@@ -1372,24 +1367,19 @@ public final class CampaignManager extends CFSModule {
       }
       campaign.setModifiedBy(getUserId(context));
       campaign.setModified(modified);
-      campaign.setServerName(context.getRequest().getServerName());
+      campaign.setServerName(HTTPUtils.getServerUrl(context.getRequest()));
       resultCount = campaign.activate(db, campaign.getEnteredBy(), this.getUserRange(context, campaign.getEnteredBy()));
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (resultCount == 1) {
-        return ("ActivateOK");
-      } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
-      }
+    if (resultCount == 1) {
+      return ("ActivateOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
   }
 

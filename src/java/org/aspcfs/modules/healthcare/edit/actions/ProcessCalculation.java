@@ -414,8 +414,8 @@ public final class ProcessCalculation extends CFSModule {
     //Mail the final report
     if (ce != null) {
       SMTPMessage mail = new SMTPMessage();
-      mail.setHost((String) System.getProperty("MailServer"));
-      mail.setFrom("cfs-messenger@darkhorseventures.com");
+      mail.setHost(getPref(context, "MAILSERVER"));
+      mail.setFrom(getPref(context, "EMAILADDRESS"));
       mail.setType("text/html");
       mail.setTo(this.getValue(context, ce, "ERROR_REPORT_ADDRESS"));
       mail.setSubject("EDIT transaction data summary: " + month + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));

@@ -287,14 +287,14 @@ public class User extends GenericBean {
 
       //send email
       SMTPMessage mail = new SMTPMessage();
-      mail.setHost((String) System.getProperty("MailServer"));
-      mail.setFrom("cfs-root@darkhorseventures.com");
+      mail.setHost(ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
+      mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
       mail.setType("text/html");
       mail.setTo(targetContact.getEmailAddress("Business"));
       mail.setSubject("CFS password changed");
-      mail.setBody("Your CFS User account password has been changed by " + modUser.getUsername() + " (" + modUser.getContact().getNameLastFirst() + ").<br><br>" +
-          " Your new CFS password is the following:<br>" + newPassword + "<br><br>" +
-          "It is recomended that you change your password next time you login to CFS.");
+      mail.setBody("Your CFS User account password has been changed by " + modUser.getContact().getNameLastFirst() + ".<br><br>" +
+          "Your new CFS password is the following:<br>" + newPassword + "<br><br>" +
+          "It is recomended that you change your password the next time you login to CFS.");
       if (mail.send() == 2) {
         System.err.println(mail.getErrorMsg());
       }
@@ -1635,22 +1635,17 @@ public class User extends GenericBean {
       if (lastLogin != null) {
         pst.setTimestamp(++i, lastLogin);
       }
-
       pst.setInt(++i, getEnteredBy());
       pst.setInt(++i, getModifiedBy());
       pst.execute();
       pst.close();
-
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Getting interval value");
       }
-
       id = DatabaseUtils.getCurrVal(db, "access_user_id_seq");
-
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Updating contact");
       }
-
       pst = db.prepareStatement(
           "UPDATE contact " +
           "SET user_id = ? " +
@@ -1660,7 +1655,6 @@ public class User extends GenericBean {
       pst.executeUpdate();
       pst.close();
       db.commit();
-
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> User inserted & contact record updated");
       }

@@ -54,7 +54,8 @@ public class CFSModule {
 
 
   /**
-   *  Retrieves the specified PagedList object and creates it if it does not exist<br>
+   *  Retrieves the specified PagedList object and creates it if it does not
+   *  exist<br>
    *  Optionally sets parameters from the request based on "setParams" parameter
    *
    *@param  context    Description of the Parameter
@@ -360,9 +361,8 @@ public class CFSModule {
    *@since
    */
   protected String getPath(ActionContext context) {
-    return (
-        context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
-        "fileLibrary" + fs);
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    return prefs.get("FILELIBRARY");
   }
 
 
@@ -374,9 +374,8 @@ public class CFSModule {
    *@return                   The path value
    */
   protected String getPath(ActionContext context, String moduleFolderName) {
-    return (
-        context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
-        "fileLibrary" + fs +
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    return (prefs.get("FILELIBRARY") +
         (this.getDbName(context) == null ? "" : this.getDbName(context) + fs) +
         moduleFolderName + fs);
   }
@@ -391,9 +390,8 @@ public class CFSModule {
    *@return                   The path value
    */
   protected String getPath(ActionContext context, ConnectionElement ce, String moduleFolderName) {
-    return (
-        context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
-        "fileLibrary" + fs +
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    return (prefs.get("FILELIBRARY") +
         (this.getDbName(ce) == null ? "" : this.getDbName(ce) + fs) +
         moduleFolderName + fs);
   }
@@ -406,10 +404,8 @@ public class CFSModule {
    *@return          The dbNamePath value
    */
   public static String getDbNamePath(ActionContext context) {
-    return (
-        context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
-        "fileLibrary" + fs +
-        getDbName(context) + fs);
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    return (prefs.get("FILELIBRARY") + getDbName(context) + fs);
   }
 
 
@@ -1031,7 +1027,7 @@ public class CFSModule {
    *@param  returnString  Description of the Parameter
    *@return               The return value
    */
-  protected String getReturn(ActionContext context, String returnString) {
+  protected static String getReturn(ActionContext context, String returnString) {
     boolean popup = "true".equals(context.getRequest().getParameter("popup"));
     if (popup) {
       return (returnString += "PopupOK");
@@ -1039,5 +1035,21 @@ public class CFSModule {
     return (returnString += "OK");
   }
 
+
+  /**
+   *  Gets the specified preference from the loaded applicationPrefs
+   *
+   *@param  context  Description of the Parameter
+   *@param  param    Description of the Parameter
+   *@return          The pref value
+   */
+  protected static String getPref(ActionContext context, String param) {
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    if (prefs != null) {
+      return prefs.get(param);
+    } else {
+      return null;
+    }
+  }
 }
 

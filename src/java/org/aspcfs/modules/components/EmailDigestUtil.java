@@ -166,13 +166,20 @@ public class EmailDigestUtil {
       }
       Notification thisNotification = new Notification();
       thisNotification.setSubject(StringUtils.toHtml(context.getParameter(SendUserNotification.SUBJECT)));
-      thisNotification.setFrom(StringUtils.toHtml(context.getParameter(SendUserNotification.FROM)));
+      String from = StringUtils.toHtml(context.getParameter(SendUserNotification.FROM));
+      if (from != null && !"".equals(from)) {
+        thisNotification.setFrom(from);
+      } else {
+        thisNotification.setFrom(context.getParameter("EMAILADDRESS"));
+      }
       thisNotification.setType(Notification.EMAIL);
       thisNotification.setEmailToNotify(emailAddressTo);
       thisNotification.setMessageToSend(StringUtils.toHtml(context.getParameter(SendUserNotification.BODY) + messageDigest.toString()));
       String host = context.getParameter(SendUserNotification.HOST);
       if (host != null && !"".equals(host)) {
         thisNotification.setHost(host);
+      } else {
+        thisNotification.setHost(context.getParameter("MAILSERVER"));
       }
       thisNotification.notifyAddress();
     }

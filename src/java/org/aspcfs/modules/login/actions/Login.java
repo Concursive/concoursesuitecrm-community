@@ -59,22 +59,30 @@ public final class Login extends CFSModule {
     ConnectionElement ce = null;
     //Connect to the gatekeeper, validate this host and get new connection info
     try {
-      db = sqlDriver.getConnection(gk);
-      SiteList siteList = new SiteList();
-      siteList.setSiteCode(siteCode);
-      siteList.setVirtualHost(serverName);
-      siteList.buildList(db);
-      if (siteList.size() > 0) {
-        Site thisSite = (Site) siteList.get(0);
-        ce = new ConnectionElement(
-            thisSite.getDatabaseUrl(), 
-            thisSite.getDatabaseUsername(), 
-            thisSite.getDatabasePassword());
-        ce.setDbName(thisSite.getDatabaseName());
-        ce.setDriver(thisSite.getDatabaseDriver());
+      if ("true".equals((String) context.getServletContext().getAttribute("WEBSERVER.ASPMODE"))) {
+        //Scan for the virtual host
+        db = sqlDriver.getConnection(gk);
+        SiteList siteList = new SiteList();
+        siteList.setSiteCode(siteCode);
+        siteList.setVirtualHost(serverName);
+        siteList.buildList(db);
+        if (siteList.size() > 0) {
+          Site thisSite = (Site) siteList.get(0);
+          ce = new ConnectionElement(
+              thisSite.getDatabaseUrl(), 
+              thisSite.getDatabaseUsername(), 
+              thisSite.getDatabasePassword());
+          ce.setDbName(thisSite.getDatabaseName());
+          ce.setDriver(thisSite.getDatabaseDriver());
+        } else {
+          loginBean.setMessage("* Access denied: Host does not exist (" +
+              serverName + ")");
+        }
       } else {
-        loginBean.setMessage("* Access denied: Host does not exist (" +
-            serverName + ")");
+        //A single database is configured, so use it only regardless of ip/domain name
+        ce = new ConnectionElement(gkHost, gkUser, gkUserPw);
+        ce.setDbName("cfs_data");
+        ce.setDriver(gkDriver);
       }
     } catch (Exception e) {
       loginBean.setMessage("* Gatekeeper: " + e.getMessage());
