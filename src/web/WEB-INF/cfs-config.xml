@@ -397,6 +397,7 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="DefaultOK" resource="/campaign.jsp" layout="nav"/>
     <forward name="DashboardOK" resource="/campaign_dashboard.jsp" layout="nav"/>
     <forward name="ViewOK" resource="/campaign_view.jsp" layout="nav"/>
     <forward name="AddOK" resource="/campaign_add.jsp" layout="nav"/>

@@ -120,7 +120,7 @@ listOfOperators[2] = numberOperators
 </script>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="/CampaignManagerGroup.do?command=View">Group List</a> >
-Group Details (Add)
+Add a Group
 <hr color="#BFBFBB" noshade>
 <form name="searchForm" method="post" action="/CampaignManagerGroup.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

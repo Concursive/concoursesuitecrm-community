@@ -25,7 +25,7 @@
 <body onLoad="javascript:document.forms[0].name.focus();">
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="/CampaignManager.do?command=View">Campaign List</a> >
-Campaign Details (New)
+Add a Campaign
 <hr color="#BFBFBB" noshade>
 <form name="addForm" action="/CampaignManager.do?command=Insert&auto-populate=true" method="post" onSubmit="return checkForm(this);">
   <input type="hidden" name="dosubmit" value="true">

@@ -30,11 +30,15 @@ public final class CampaignManager extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
-    if (hasPermission(context, "campaign-dashboard-view")) {
+    //Check to see if the user has a preference
+    return "DefaultOK";
+    //Otherwise go to the specified module...
+/*     if (hasPermission(context, "campaign-dashboard-view")) {
       return executeCommandDashboard(context);
     } else {
       return executeCommandView(context);
     }
+ */
   }
 
 

@@ -325,7 +325,7 @@
     <permission value="campaign-view"/>
     <long_html value="Communications"/>
     <short_html value="Communications"/>
-    <link value="/CampaignManager.do?command=Dashboard"/>
+    <link value="/CampaignManager.do"/>
     <graphic width="83" height="36" on="menu-comm-on.gif" off="menu-comm-off.gif" rollover=""/>
     
     <submenu name="Add Campaign">
