@@ -3,7 +3,7 @@ Setup
 <hr color="#BFBFBB" noshade>
 Manage CFS by reviewing system usage, configuring specific modules, and configuring system parameters.<br>
 &nbsp;<br>
-<dhv:permission name="admin-reassign-view">
+<dhv:permission name="admin-usage-view">
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
       <td>

@@ -79,7 +79,7 @@ public final class Admin extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUsage(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-view")) {
+    if (!hasPermission(context, "admin-usage-view")) {
       return ("PermissionError");
     }
     addModuleBean(context, "Configuration", "Usage");
@@ -201,11 +201,9 @@ public final class Admin extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandConfig(ActionContext context) {
-
     if (!(hasPermission(context, "admin-sysconfig-view"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     addModuleBean(context, "Configuration", "Configuration");
     Connection db = null;
@@ -240,11 +238,9 @@ public final class Admin extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfigDetails(ActionContext context) {
-
     if (!(hasPermission(context, "admin-sysconfig-view"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     addModuleBean(context, "Configuration", "Configuration");
     Connection db = null;
@@ -275,10 +271,8 @@ public final class Admin extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandEditLists(ActionContext context) {
-
     if (!(hasPermission(context, "admin-sysconfig-lists-view"))) {
       return ("PermissionError");
     }
