@@ -88,15 +88,15 @@ CREATE INDEX "ticket_cidx" ON "ticket" USING btree ("assigned_to", "closed");
 
 CREATE TABLE ticketlog (
   id serial
-  ,ticketid int NOT NULL REFERENCES ticket(ticketid)
-  ,assigned_to int
+  ,ticketid int REFERENCES ticket(ticketid)
+  ,assigned_to int REFERENCES access
   ,comment text
-  ,closed BOOLEAN NOT NULL 
+  ,closed BOOLEAN
   ,pri_code int NOT NULL REFERENCES ticket_priority(code)
   ,level_code int NOT NULL 
-  ,department_code int NOT NULL 
-  ,cat_code int NOT NULL 
-  ,scode int NOT NULL REFERENCES ticket_severity(code)
+  ,department_code INT REFERENCES lookup_department
+  ,cat_code INT
+  ,scode INT REFERENCES ticket_severity(code)
   ,entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
   ,enteredby INT NOT NULL REFERENCES access(user_id)
   ,modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
