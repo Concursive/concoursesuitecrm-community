@@ -110,13 +110,12 @@ public class Notifier extends ReportBuilder {
           thisNotifier.output.append(thisNotifier.buildCommunications(db, siteInfo));
           db.close();
         }
-
         System.out.println(thisNotifier.output.toString());
         //thisNotifier.sendAdminReport(thisNotifier.output.toString());
         java.util.Date end = new java.util.Date();
       } catch (Exception exc) {
         exc.printStackTrace(System.out);
-        System.err.println("BuildReport Error: " + exc.toString());
+        System.err.println("Notifier-> BuildReport Error: " + exc.toString());
         System.exit(2);
       }
       System.exit(0);
@@ -248,7 +247,6 @@ public class Notifier extends ReportBuilder {
       thisNotification.setItemId(thisCall.getId());
       thisNotification.setItemModified(null);
       if (thisNotification.isNew(db)) {
-        System.out.println("Notifier-> ...it's new");
         thisNotification.setSiteCode(baseName);
         thisNotification.setSubject(
             "Call Alert: " + thisCall.getSubject());
@@ -265,8 +263,6 @@ public class Notifier extends ReportBuilder {
         thisNotification.setTypeText(Notification.EMAIL_TEXT);
         thisNotification.notifyUser(db);
         ++notifyCount;
-      } else {
-        System.out.println("Notifier-> ...it's old");
       }
       if (thisNotification.hasErrors()) {
         System.err.println("Notifier Error-> " + thisNotification.getErrorMessage());
@@ -291,10 +287,7 @@ public class Notifier extends ReportBuilder {
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
     thisReport.addColumn("Report");
-
     Calendar thisCalendar = Calendar.getInstance();
-
-    System.out.print("Getting campaign list...");
     CampaignList thisList = new CampaignList();
     java.sql.Date thisDate = new java.sql.Date(System.currentTimeMillis());
     thisDate = thisDate.valueOf(
@@ -306,7 +299,7 @@ public class Notifier extends ReportBuilder {
     thisList.setReady(CampaignList.TRUE);
     thisList.setEnabled(CampaignList.TRUE);
     thisList.buildList(db);
-    System.out.println("...got the list: " + thisList.size() + " active");
+    System.out.println("Notifier-> Active Campaigns: " + thisList.size());
 
     //Get this database's key
     String filePath = (String) config.get("FileLibrary") + fs + dbName + fs + "keys" + fs;
@@ -318,7 +311,6 @@ public class Notifier extends ReportBuilder {
     Iterator i = thisList.iterator();
     int notifyCount = 0;
     while (i.hasNext()) {
-      System.out.println("  Getting campaign ...");
       //Lock the campaign so the user cannot cancel, and so that another process
       //does not execute this campaign
       Campaign thisCampaign = (Campaign) i.next();
@@ -339,7 +331,7 @@ public class Notifier extends ReportBuilder {
       fileItemList.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       fileItemList.setLinkItemId(thisCampaign.getId());
       fileItemList.buildList(db);
-      System.out.println("  Campaign file attachments: " + fileItemList.size());
+      System.out.println("Notifier-> Campaign file attachments: " + fileItemList.size());
       Iterator files = fileItemList.iterator();
       while (files.hasNext()) {
         FileItem thisItem = (FileItem) files.next();
@@ -352,7 +344,6 @@ public class Notifier extends ReportBuilder {
       }
 
       //Load in the recipients
-      System.out.println("  Getting recipient list ...");
       RecipientList recipientList = new RecipientList();
       recipientList.setCampaignId(thisCampaign.getId());
       recipientList.setHasNullSentDate(true);
@@ -372,7 +363,6 @@ public class Notifier extends ReportBuilder {
       //Send each recipient a message
       while (iList.hasNext()) {
         ++campaignCount;
-        System.out.println("  Getting contact ...");
         Recipient thisRecipient = (Recipient) iList.next();
         Contact thisContact = new Contact(db, thisRecipient.getContactId());
 
@@ -385,7 +375,6 @@ public class Notifier extends ReportBuilder {
         thisNotification.setFileAttachments(attachments);
         //thisNotification.setItemModified(thisCampaign.getActiveDate());
         if (thisNotification.isNew(db)) {
-          System.out.println("Sending message ...");
           thisNotification.setFrom(thisCampaign.getReplyTo());
           thisNotification.setSubject(thisCampaign.getSubject());
           thisNotification.setMessageIdToSend(thisCampaign.getMessageId());
@@ -427,8 +416,6 @@ public class Notifier extends ReportBuilder {
           thisRecipient.setStatus(thisNotification.getStatus());
           System.out.println("Notifier-> Notification status: " + thisNotification.getStatus());
           thisRecipient.update(db);
-        } else {
-          System.out.println("Notifier-> ...it's old");
         }
         if (thisNotification.hasErrors()) {
           System.out.println("Notifier Error-> " + thisNotification.getErrorMessage());
