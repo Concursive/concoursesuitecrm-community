@@ -1,10 +1,20 @@
-<!-- ASPCFS Apache Tomcat 4.1.18 -->
-<Server className="org.apache.catalina.core.StandardServer" debug="0" port="8005" shutdown="SHUTDOWN">
-  <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" debug="0"/>
-  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" debug="0"/>
+<!-- CFS Apache Tomcat 4.1.18 -->
+<!-- Replace ${WEB_HOME} with the actual path -->
+<!-- Replace ${CFS_HOME} with the actual path --> 
+<Server port="8005" shutdown="SHUTDOWN" debug="0">
+  <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener"
+            debug="0"/>
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener"
+            debug="0"/>
   <GlobalNamingResources>
-    <Environment name="simpleValue" override="true" type="java.lang.Integer" value="30"/>
-    <Resource auth="Container" description="User database that can be updated and saved" name="UserDatabase" scope="Shareable" type="org.apache.catalina.UserDatabase"/>
+    <!-- Test entry for demonstration purposes -->
+    <Environment name="simpleValue" type="java.lang.Integer" value="30"/>
+    <!-- Editable user database that can also be used by
+         UserDatabaseRealm to authenticate users -->
+    <Resource name="UserDatabase" auth="Container"
+              type="org.apache.catalina.UserDatabase"
+       description="User database that can be updated and saved">
+    </Resource>
     <ResourceParams name="UserDatabase">
       <parameter>
         <name>factory</name>
@@ -16,118 +26,67 @@
       </parameter>
     </ResourceParams>
   </GlobalNamingResources>
-  <!-- Tomcat administration on Port 8080 -->
-  <Service className="org.apache.catalina.core.StandardService" debug="0" name="Tomcat-Standalone">
-    <Connector className="org.apache.coyote.tomcat4.CoyoteConnector" acceptCount="10" bufferSize="2048" connectionTimeout="20000" debug="0" enableLookups="true" maxProcessors="75" minProcessors="5" port="8080" protocolHandlerClassName="org.apache.coyote.http11.Http11Protocol" proxyPort="0" redirectPort="8443" scheme="http" secure="false" tcpNoDelay="true" useURIValidationHack="false">
-      <Factory className="org.apache.catalina.net.DefaultServerSocketFactory"/>
+
+  <!-- Tomcat administration and other apps on Port 8080 -->
+  <Service name="Tomcat-Standalone">
+    <!-- Define a non-SSL Coyote HTTP/1.1 Connector on port 8080 -->
+    <Connector className="org.apache.coyote.tomcat4.CoyoteConnector" 
+               port="8080" minProcessors="5" maxProcessors="75"
+               enableLookups="true" redirectPort="8443"
+               acceptCount="100" debug="0" connectionTimeout="20000"
+               useURIValidationHack="false" disableUploadTimeout="true">
     </Connector>
-    <Connector className="org.apache.coyote.tomcat4.CoyoteConnector" acceptCount="10" bufferSize="2048" connectionTimeout="20000" debug="0" enableLookups="true" maxProcessors="75" minProcessors="5" port="8009" protocolHandlerClassName="org.apache.jk.server.JkCoyoteHandler" proxyPort="0" redirectPort="8443" scheme="http" secure="false" tcpNoDelay="true" useURIValidationHack="false">
-      <Factory className="org.apache.catalina.net.DefaultServerSocketFactory"/>
+    <!-- Define a Coyote/JK2 AJP 1.3 Connector on port 8009 -->
+    <Connector className="org.apache.coyote.tomcat4.CoyoteConnector"
+               port="8009" minProcessors="5" maxProcessors="75"
+               enableLookups="true" redirectPort="8443"
+               acceptCount="10" debug="0" connectionTimeout="20000"
+               useURIValidationHack="false"
+               protocolHandlerClassName="org.apache.jk.server.JkCoyoteHandler">
     </Connector>
-    <Engine className="org.apache.catalina.core.StandardEngine" debug="0" defaultHost="localhost" mapperClass="org.apache.catalina.core.StandardEngineMapper" name="Standalone">
-      <Host className="org.apache.catalina.core.StandardHost" appBase="webapps" autoDeploy="true" configClass="org.apache.catalina.startup.ContextConfig" contextClass="org.apache.catalina.core.StandardContext" debug="0" deployXML="true" errorReportValveClass="org.apache.catalina.valves.ErrorReportValve" liveDeploy="true" mapperClass="org.apache.catalina.core.StandardHostMapper" name="localhost" unpackWARs="true">
-        <Context className="org.apache.catalina.core.StandardContext" cachingAllowed="true" charsetMapperClass="org.apache.catalina.util.CharsetMapper" cookies="true" crossContext="false" debug="0" displayName="Tomcat Manager Application" docBase="../server/webapps/manager" mapperClass="org.apache.catalina.core.StandardContextMapper" path="/manager" privileged="true" reloadable="false" useNaming="true" wrapperClass="org.apache.catalina.core.StandardWrapper">
-          <ResourceLink global="UserDatabase" name="users" type="org.apache.catalina.UserDatabase"/>
-        </Context>
-        <Context className="org.apache.catalina.core.StandardContext" cachingAllowed="true" charsetMapperClass="org.apache.catalina.util.CharsetMapper" cookies="true" crossContext="true" debug="0" docBase="examples" mapperClass="org.apache.catalina.core.StandardContextMapper" path="/examples" privileged="false" reloadable="true" useNaming="true" wrapperClass="org.apache.catalina.core.StandardWrapper">
-          <Logger className="org.apache.catalina.logger.FileLogger" debug="0" directory="logs" prefix="localhost_examples_log." suffix=".txt" timestamp="true" verbosity="1"/>
-          <Parameter name="context.param.name" override="false" value="context.param.value"/>
-          <Ejb description="Example EJB Reference" home="com.mycompany.mypackage.AccountHome" name="ejb/Account" remote="com.mycompany.mypackage.Account" type="Entity"/>
-          <Ejb home="com.wombat.empl.EmployeeRecordHome" name="ejb/EmplRecord" remote="com.wombat.empl.EmployeeRecord" type="Entity"/>
-          <Environment name="maxExemptions" override="true" type="java.lang.Integer" value="15"/>
-          <Environment name="foo/name1" override="true" type="java.lang.String" value="value1"/>
-          <Environment name="minExemptions" override="true" type="java.lang.Integer" value="1"/>
-          <Environment name="name3" override="true" type="java.lang.Integer" value="1"/>
-          <Environment name="foo/bar/name2" override="true" type="java.lang.Boolean" value="true"/>
-          <Environment name="foo/name4" override="true" type="java.lang.Integer" value="10"/>
-          <LocalEjb description="Example Local EJB Reference" home="com.mycompany.mypackage.ProcessOrderHome" local="com.mycompany.mypackage.ProcessOrder" name="ejb/ProcessOrder" type="Session"/>
-          <Resource auth="Container" name="mail/Session" scope="Shareable" type="javax.mail.Session"/>
-          <Resource auth="SERVLET" name="jdbc/EmployeeAppDb" scope="Shareable" type="javax.sql.DataSource"/>
-          <ResourceParams name="mail/Session">
-            <parameter>
-              <name>mail.smtp.host</name>
-              <value>localhost</value>
-            </parameter>
-          </ResourceParams>
-          <ResourceParams name="jdbc/EmployeeAppDb">
-            <parameter>
-              <name>user</name>
-              <value>sa</value>
-            </parameter>
-            <parameter>
-              <name>password</name>
-              <value></value>
-            </parameter>
-            <parameter>
-              <name>url</name>
-              <value>jdbc:HypersonicSQL:database</value>
-            </parameter>
-            <parameter>
-              <name>driverClassName</name>
-              <value>org.hsql.jdbcDriver</value>
-            </parameter>
-          </ResourceParams>
-          <ResourceLink global="simpleValue" name="linkToGlobalResource" type="java.lang.Integer"/>
-        </Context>
-        <Context className="org.apache.catalina.core.StandardContext" cachingAllowed="true" charsetMapperClass="org.apache.catalina.util.CharsetMapper" cookies="true" crossContext="false" debug="0" docBase="/usr/java/tomcat/webapps/tomcat-docs" mapperClass="org.apache.catalina.core.StandardContextMapper" path="/tomcat-docs" privileged="false" reloadable="false" useNaming="true" wrapperClass="org.apache.catalina.core.StandardWrapper">
-        </Context>
-        <Context className="org.apache.catalina.core.StandardContext" cachingAllowed="true" charsetMapperClass="org.apache.catalina.util.CharsetMapper" cookies="true" crossContext="false" debug="0" docBase="/usr/java/tomcat/webapps/webdav" mapperClass="org.apache.catalina.core.StandardContextMapper" path="/webdav" privileged="false" reloadable="false" useNaming="true" wrapperClass="org.apache.catalina.core.StandardWrapper">
-        </Context>
-        <Context className="org.apache.catalina.core.StandardContext" cachingAllowed="true" charsetMapperClass="org.apache.catalina.util.CharsetMapper" cookies="true" crossContext="false" debug="0" displayName="Tomcat Administration Application" docBase="../server/webapps/admin" mapperClass="org.apache.catalina.core.StandardContextMapper" path="/admin" privileged="true" reloadable="false" useNaming="true" wrapperClass="org.apache.catalina.core.StandardWrapper">
-          <Logger className="org.apache.catalina.logger.FileLogger" debug="0" directory="logs" prefix="localhost_admin_log." suffix=".txt" timestamp="true" verbosity="1"/>
-        </Context>
-        <Context className="org.apache.catalina.core.StandardContext" cachingAllowed="true" charsetMapperClass="org.apache.catalina.util.CharsetMapper" cookies="true" crossContext="false" debug="0" docBase="/usr/java/tomcat/webapps/ROOT" mapperClass="org.apache.catalina.core.StandardContextMapper" path="" privileged="false" reloadable="false" useNaming="true" wrapperClass="org.apache.catalina.core.StandardWrapper">
-        </Context>
-        <Logger className="org.apache.catalina.logger.FileLogger" debug="0" directory="logs" prefix="localhost_log." suffix=".txt" timestamp="true" verbosity="1"/>
+    <Engine name="Standalone" defaultHost="localhost" debug="0">
+      <Logger className="org.apache.catalina.logger.FileLogger"
+              prefix="catalina_log." suffix=".txt"
+              timestamp="true"/>
+      <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+                 debug="0" resourceName="UserDatabase"/>
+      <Host name="localhost" debug="0" appBase="webapps" 
+            unpackWARs="true" autoDeploy="true">
+        <Logger className="org.apache.catalina.logger.FileLogger"
+                 directory="logs"  prefix="localhost_log." suffix=".txt"
+	               timestamp="true"/>
       </Host>
-      <Logger className="org.apache.catalina.logger.FileLogger" debug="0" directory="logs" prefix="catalina_log." suffix=".txt" timestamp="true" verbosity="1"/>
-      <Realm className="org.apache.catalina.realm.UserDatabaseRealm" debug="0" resourceName="UserDatabase" validate="true"/>
     </Engine>
   </Service>
-  <!-- ASPCFS on Port 80 and 443 -->
+  <!-- CFS on Port 80 and 443 -->
   <Service className="org.apache.catalina.core.StandardService" debug="0" name="Web">
+    <Connector className="org.apache.coyote.tomcat4.CoyoteConnector"
+               port="80" minProcessors="5" maxProcessors="75"
+               enableLookups="true" redirectPort="8443"
+               acceptCount="100" debug="0" connectionTimeout="20000"
+               useURIValidationHack="false" disableUploadTimeout="true" />
     <Connector className="org.apache.coyote.tomcat4.CoyoteConnector" 
-        acceptCount="10" connectionTimeout="60000" debug="0" enableLookups="true" 
-        maxProcessors="75" minProcessors="5" port="80" redirectPort="443" 
-        useURIValidationHack="false">
-      <Factory className="org.apache.catalina.net.DefaultServerSocketFactory"/>
-    </Connector>/
-    <Connector className="org.apache.coyote.tomcat4.CoyoteConnector" 
-        acceptCount="10" connectionTimeout="60000" debug="0" enableLookups="true" 
-        maxProcessors="75" minProcessors="5" port="443" 
-        scheme="https" secure="true" 
-        useURIValidationHack="false">
+        port="443" minProcessors="5" maxProcessors="75"
+        enableLookups="true" 
+        acceptCount="100" debug="0" scheme="https" secure="true"
+        connectionTimeout="60000"
+        useURIValidationHack="false" disableUploadTimeout="true">
       <Factory className="org.apache.coyote.tomcat4.CoyoteServerSocketFactory" 
-          clientAuth="false" 
-          keystoreFile="/home/cfs/keystore" 
-          keystorePass="aspcfs" keystoreType="JKS" protocol="TLS"
-          randomFile="/root/random.pem" 
-          rootFile="/root/root.pem"/>
+          clientAuth="false" protocol="TLS"
+          keystoreFile="${CFS_HOME}/WEB-INF/keystore" 
+          keystorePass="aspcfs" keystoreType="JKS"/>
     </Connector>
-    <Engine className="org.apache.catalina.core.StandardEngine" debug="0" 
-            defaultHost="localhost" mapperClass="org.apache.catalina.core.StandardEngineMapper" name="Web">
-      <Host className="org.apache.catalina.core.StandardHost" 
-            appBase="/home/webapps" autoDeploy="true" 
-            configClass="org.apache.catalina.startup.ContextConfig" 
-            contextClass="org.apache.catalina.core.StandardContext" 
-            debug="0" deployXML="true" 
-            errorReportValveClass="org.apache.catalina.valves.ErrorReportValve" 
-            liveDeploy="true" mapperClass="org.apache.catalina.core.StandardHostMapper" 
-            name="localhost" unpackWARs="false">
-        <Context className="org.apache.catalina.core.StandardContext" 
-                 cachingAllowed="true" charsetMapperClass="org.apache.catalina.util.CharsetMapper" 
-                 cookies="true" crossContext="false" debug="0" 
-                 docBase="/home/cfs/html" 
-                 mapperClass="org.apache.catalina.core.StandardContextMapper" 
-                 path="" privileged="false" reloadable="true" useNaming="true" 
-                 wrapperClass="org.apache.catalina.core.StandardWrapper">
-        </Context>
+    <Engine name="Web" defaultHost="localhost" debug="0">
+      <Host name="localhost" debug="0" appBase="${WEB_HOME}" 
+            unpackWARs="false" autoDeploy="false">
+        <Logger className="org.apache.catalina.logger.FileLogger"
+                directory="logs"  prefix="cfs_log." suffix=".txt"
+                timestamp="true"/>
+        <Context path="" docBase="cfs" debug="0" 
+                 reloadable="true" crossContext="false"/>
       </Host>
-      <Logger className="org.apache.catalina.logger.FileLogger" debug="0" 
-              directory="logs" prefix="aspcfs_log" suffix=".txt" 
-              timestamp="true" verbosity="0"/>
       <Valve className="org.apache.catalina.valves.AccessLogValve"
-              directory="logs"  prefix="aspcfs_access_log." suffix=".txt"
+              directory="logs"  prefix="cfs_access_log." suffix=".txt"
               pattern="%h %l %v %t &quot;%r&quot; %s %b"
               resolveHosts="false"/>
     </Engine>
