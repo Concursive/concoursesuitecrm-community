@@ -135,9 +135,6 @@ If the darkhorse.war is renamed, then a second instance of Dark Horse CRM can
 exist on the same server.  The second instance, or any instance thereafter,
 will require the user to perform the Dark Horse CRM configuration process.
 
-NOTE: Multiple instances CANNOT share the same database and CANNOT share the
-      same fileLibrary.  Be certain to specify different locations.
-
 
 --------------------------------------------------------------------------------
 | QUESTIONS/PROBLEMS                                                           |
