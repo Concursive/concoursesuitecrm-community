@@ -149,7 +149,7 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="NewTaskPopupOK" resource="/tasks/mytasks_new.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
-    </action>
+  </action>
   
   <action name="MyTasksForward" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
@@ -847,6 +847,8 @@
     <forward name="UsageOK" resource="/admin/admin_usage.jsp" layout="nav"/>
     <forward name="GlobalParamsOK" resource="/admin/admin_global_params.jsp" layout="nav"/>
     <forward name="ModifyTimeoutOK" resource="/admin/admin_modify_timeout.jsp" layout="nav"/>
+    <forward name="WorkflowOK" resource="/admin/admin_workflow_list.jsp" layout="nav"/>
+    <forward name="WorkflowDetailsOK" resource="/admin/admin_workflow_details.jsp" layout="nav"/>
   </action>
   
   <action name="AdminFieldsFolder" class="org.aspcfs.modules.admin.actions.AdminFields">
