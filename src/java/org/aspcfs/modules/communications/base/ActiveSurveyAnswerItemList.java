@@ -119,7 +119,7 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "SELECT contact_id " +
+        "contact_id " +
         "FROM active_survey_responses asr, active_survey_answers asa, active_survey_answer_items asi " +
         "WHERE  asr.response_id = asa.response_id AND asa.answer_id = asi.answer_id AND asi.item_id = ? ");
 
