@@ -4,19 +4,18 @@
 <jsp:useBean id="OppList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
 <jsp:useBean id="GraphTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
-
 <form name=Dashboard action="Leads.do?command=Dashboard" method=POST>
 <a href="Leads.do">Pipeline Management</a> > 
 Dashboard<br>
 <hr color="#BFBFBB" noshade>
-<table width=100% border=0 cellspacing=0 cellpadding=3>
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
   <tr>
-    <!-- Left Column -->
+    <%-- Left Column --%>
     <td width="275" valign=top>
-      <!-- Graphic -->
-      <table width="275" cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <%-- Graphic --%>
+      <table width="275" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr bgcolor="#DEE0FA">
-          <td valign=center colspan=1 align=center>
+          <td valign="center" align="center">
           <% if (((String)request.getSession().getAttribute("leadsoverride")) == null) {%>
 		My Dashboard
 		<%} else {%>
@@ -26,7 +25,7 @@ Dashboard<br>
         </tr>
         <tr>
           <td>
-            <img border="0" width="275" height="200" src="graphs/<%=request.getAttribute("GraphFileName")%>">
+            <img border="0" width="275" height="200" src="graphs/<%= request.getAttribute("GraphFileName") %>">
           </td>
         </tr>
         <tr>
@@ -35,25 +34,28 @@ Dashboard<br>
           </td>
         </tr>
       </table>
-      
-      <br>
+      <%-- Up a level --%>
+      <table width="285" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+          <td align="center" width="100%">
 	<% if (!(((String)request.getSession().getAttribute("leadsoverride")) == null)) {%>
-	
-	<div margintop=5 align=center width=285>
 	<input type="hidden" name="oid" value="<%=((String)request.getSession().getAttribute("leadsoverride"))%>">
 	<a href="Leads.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("leadspreviousId"))%>">Up One Level</a> |
 	<a href="Leads.do?command=Dashboard&reset=1">Back to My Dashboard</a>
-	</div>
-	<%}%>
-      
-      <table width=285 cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
+	<%} else {%>
+      &nbsp;
+  <%}%>
+          </td>
+        </tr>
+      </table>
+      <%-- User List --%>
+      <table width="285" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr bgcolor="#DEE0FA">
           <td valign=center nowrap>
-           Reports ($Gr. Pipe.)
+            Reports ($Gr. Pipe.)
           </td>
-          
           <td width=125 valign=center>
-           Title
+            Title
           </td>
         </tr>
 <%
@@ -78,7 +80,6 @@ Dashboard<br>
             <%= toHtml(thisRec.getContact().getTitle()) %>
           </td>
         </tr>
-    
 <%      }
       } else {
 %>
@@ -88,45 +89,28 @@ Dashboard<br>
       <%}%>
       </table>
     </td>
-    <!-- Right Column -->
+    <%-- Right Column --%>
     <td valign=top width="100%">
-      <table width=100% cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <!--tr bgcolor="#DEE0FA">
-          <td valign=center colspan="6">
-            <strong>
-<% if (request.getAttribute("override") == null || request.getAttribute("override").equals("null")) {%>
-	  	My
-<%}%>
-	  Opportunities</strong>
-          </td>
-        </tr-->
+      <%-- Opportunity List --%>
+      <table width="100%" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr bgcolor="#DEE0FA">
-          <!--td>Type</td-->
           <td>Opportunity</td>
-          <!--td>Organization</td-->
           <td align="left">Amnt</td>
-          <!--td align="right" nowrap width=25>%P</td>
-          <td align="right" width=90>Revenue Start</td>
-          <td valign="right" width=25>Term</td-->
         </tr>
 <%
 	Iterator n = OppList.iterator();
   FileItem thisFile = new FileItem();
-  
-		if ( n.hasNext() ) {
-			int rowid = 0;
-      int previousId = -1;
-			while (n.hasNext()) {
-		
-				if (rowid != 1) {
-					rowid = 1;
-				} else {
-					rowid = 2;
-				}
-	          	
-				Opportunity thisOpp = (Opportunity)n.next();
-        
-        if (thisOpp.getId() != previousId) {
+  if ( n.hasNext() ) {
+    int rowid = 0;
+    int previousId = -1;
+    while (n.hasNext()) {
+      if (rowid != 1) {
+        rowid = 1;
+      } else {
+        rowid = 2;
+      }
+      Opportunity thisOpp = (Opportunity)n.next();
+      if (thisOpp.getId() != previousId) {
 %>    
 				<tr>
           <td width="100%" class="row<%= rowid %>" valign=center><a href="Leads.do?command=DetailsOpp&oppId=<%=thisOpp.getId()%>&return=dashboard"><%= toHtml(thisOpp.getAccountName()) %>:&nbsp;<%= toHtml(thisOpp.getDescription()) %></a>
@@ -144,20 +128,19 @@ Dashboard<br>
 	  } else {
 %>
         <tr>
-          <td valign=center colspan=7>No Opportunities at this time.</td>
+          <td valign="center" colspan="7">No Opportunities found.</td>
         </tr>
 <%}%>
-     
       </table>
-      <br>
-      <div width="100">
-      <dhv:pagedListControl object="DashboardListInfo" tdClass="row0" abbreviate="true"/>
-      </div>
       
+      <table width="100%" border="0" cellpadding="3">
+        <tr>
+          <td align="center">
+            <dhv:pagedListStatus object="DashboardListInfo" showRefresh="false" showControlOnly="true"/>
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
-  
-  
 </table>
 </form>
-</body>
