@@ -39,101 +39,111 @@ public class SecurityHook implements ControllerHook {
     String action = request.getServletPath();
     int slash = action.lastIndexOf("/");
     action = action.substring(slash + 1);
+    
+    //Login and Process modules bypass security and must implement their own
+    if (action.toUpperCase().startsWith("LOGIN") ||
+        action.toUpperCase().startsWith("PROCESS")) {
+      return null;
+    }
 
-    if (userSession == null && !action.toUpperCase().startsWith("LOGIN") && !action.toUpperCase().startsWith("PROCESS")) {
+    //User is supposed to have a valid session, so fail security check
+    if (userSession == null) {
       LoginBean failedSession = new LoginBean();
       failedSession.setMessage("* Please login, your session has expired");
       request.setAttribute("LoginBean", failedSession);
       return "SecurityCheck";
-    } else {
-      if (!action.toUpperCase().startsWith("PROCESS") && "true".equals((String) servlet.getServletConfig().getServletContext().getAttribute("ForceSSL")) &&
-          "http".equals(request.getScheme())) {
-        LoginBean failedSession = new LoginBean();
-        failedSession.setMessage("* A secure connection is required");
-        request.setAttribute("LoginBean", failedSession);
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("A secure connection is required");
+    }
+    
+    //Check to see if this site requires SSL
+    if ("true".equals((String) servlet.getServletConfig().getServletContext().getAttribute("ForceSSL")) &&
+        "http".equals(request.getScheme())) {
+      LoginBean failedSession = new LoginBean();
+      failedSession.setMessage("* A secure connection is required");
+      request.setAttribute("LoginBean", failedSession);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("A secure connection is required");
+      }
+      return "SecurityCheck";
+    }
+
+    //Good so far...
+    if (userSession != null) {
+      ConnectionElement ce = userSession.getConnectionElement();
+      if (ce == null) {
+        System.out.println("SecurityHook-> Fatal: CE is null");
+        return ("SystemError");
+      }
+      
+      Hashtable globalStatus = (Hashtable) servlet.getServletConfig().getServletContext().getAttribute("SystemStatus");
+      if (globalStatus == null) {
+        //NOTE: This shouldn't occur
+        System.out.println("SecurityHook-> Fatal: SystemStatus Hashtable is null!");
+      }
+      
+      SystemStatus systemStatus = (SystemStatus) globalStatus.get(ce.getUrl());
+      if (systemStatus == null) {
+        //NOTE: This happens when the context is reloaded and the user's
+        //session was serialized and reloaded
+        Connection db = null;
+        try {
+          db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).getConnection(ce);
+          systemStatus = SecurityHook.retrieveSystemStatus(servlet.getServletConfig().getServletContext(), db, ce);
+          systemStatus.getSessionManager().addUser(request, userSession.getUserId());
+        } catch (Exception e) {
+        } finally {
+          ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).free(db);
         }
+      }
+      request.setAttribute("moduleAction", action);
+      
+      //Check the session manager to see if this session is valid
+      SessionManager thisManager = systemStatus.getSessionManager();
+      UserSession sessionInfo = thisManager.getUserSession(userSession.getActualUserId());
+      if (sessionInfo != null && !sessionInfo.getId().equals(request.getSession().getId()) && !action.toUpperCase().startsWith("LOGIN")) {
+        if (request.getSession(false) != null) {
+          request.getSession(false).invalidate();
+        }
+        LoginBean failedSession = new LoginBean();
+        failedSession.setMessage("* Please login, your session expired because you logged in from " + sessionInfo.getIpAddress());
+        request.setAttribute("LoginBean", failedSession);
         return "SecurityCheck";
       }
-
-      if (userSession != null) {
-        ConnectionElement ce = userSession.getConnectionElement();
-        if (ce == null) {
-          System.out.println("SecurityHook-> Fatal: CE is null");
-        }
-        
-        Hashtable globalStatus = (Hashtable) servlet.getServletConfig().getServletContext().getAttribute("SystemStatus");
-        if (globalStatus == null) {
-          //NOTE: This shouldn't occur
-          System.out.println("SecurityHook-> Fatal: SystemStatus Hashtable is null!");
-        }
-        
-        SystemStatus systemStatus = (SystemStatus) globalStatus.get(ce.getUrl());
-        if (systemStatus == null) {
-          //NOTE: This happens when the context is reloaded and the user's
-          //session was serialized and reloaded
-          Connection db = null;
-          try {
-            db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).getConnection(ce);
-            systemStatus = SecurityHook.retrieveSystemStatus(servlet.getServletConfig().getServletContext(), db, ce);
-            systemStatus.getSessionManager().addUser(request, userSession.getUserId());
-          } catch (Exception e) {
-          } finally {
-            ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).free(db);
-          }
-        }
-        request.setAttribute("moduleAction", action);
-        
-        //Check the session manager to see if this session is valid
-        SessionManager thisManager = systemStatus.getSessionManager();
-        UserSession sessionInfo = thisManager.getUserSession(userSession.getActualUserId());
-        if (sessionInfo != null && !sessionInfo.getId().equals(request.getSession().getId()) && !action.toUpperCase().startsWith("LOGIN")) {
-          if (request.getSession(false) != null) {
-            request.getSession(false).invalidate();
-          }
-          LoginBean failedSession = new LoginBean();
-          failedSession.setMessage("* Please login, your session expired because you logged in from " + sessionInfo.getIpAddress());
-          request.setAttribute("LoginBean", failedSession);
-          return "SecurityCheck";
-        }
-        
-        //Calling getHierarchyCheck() and getPermissionCheck() will block the
-        //user until hierarchy and permisions have been rebuilt
-        if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck()) ||
-            userSession.getPermissionCheck().before(systemStatus.getPermissionCheck())) {
-          Connection db = null;
-          try {
-            db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).getConnection(ce);
-            if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("SecurityHook-> ** Getting you a new user record");
-              }
-              User updatedUser = systemStatus.getUser(userSession.getUserId());
-              userSession.setUserRecord(updatedUser);
-              userSession.setHierarchyCheck(new java.util.Date());
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("SecurityHook-> Updating user session with new user record");
-              }
+      
+      //Calling getHierarchyCheck() and getPermissionCheck() will block the
+      //user until hierarchy and permisions have been rebuilt
+      if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck()) ||
+          userSession.getPermissionCheck().before(systemStatus.getPermissionCheck())) {
+        Connection db = null;
+        try {
+          db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).getConnection(ce);
+          if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("SecurityHook-> ** Getting you a new user record");
             }
-
-            User updatedUser = userSession.getUserRecord();
-            if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
-              updatedUser.setBuildContact(true);
-            } else {
-              updatedUser.setBuildContact(false);
+            User updatedUser = systemStatus.getUser(userSession.getUserId());
+            userSession.setUserRecord(updatedUser);
+            userSession.setHierarchyCheck(new java.util.Date());
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("SecurityHook-> Updating user session with new user record");
             }
-            updatedUser.setBuildHierarchy(false);
-            updatedUser.buildResources(db);
-            userSession.setPermissionCheck(new java.util.Date());
-          } catch (SQLException e) {
-          } finally {
-            ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).free(db);
           }
+
+          User updatedUser = userSession.getUserRecord();
+          if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
+            updatedUser.setBuildContact(true);
+          } else {
+            updatedUser.setBuildContact(false);
+          }
+          updatedUser.setBuildHierarchy(false);
+          updatedUser.buildResources(db);
+          userSession.setPermissionCheck(new java.util.Date());
+        } catch (SQLException e) {
+        } finally {
+          ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).free(db);
         }
       }
-      return null;
     }
+    return null;
   }
 
   public static synchronized SystemStatus retrieveSystemStatus(ServletContext context, Connection db, ConnectionElement ce) throws SQLException {
