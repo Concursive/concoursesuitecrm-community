@@ -164,6 +164,7 @@
       <strong>Tickets Created by Me</strong>
     </td>
   </tr>
+
   <tr class="title">
   <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<td valign="center" align="left">
