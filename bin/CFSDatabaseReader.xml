@@ -1,19 +1,19 @@
 <CFSDatabaseReader>
   <processes>
     <!-- Initialization Data -->
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.LookupTableImport</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportLookupTables</module>
     <!-- Users, Accounts, Contacts and ownership -->
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.BaseDataImport</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportBaseData</module>
     <!-- Related Data -->
-<!--    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.OpportunityImport</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.OpportunityReportImport</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.AccountReportImport</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.RevenueImport</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.TicketImport</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.FolderImport</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ProjectImport</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.DocumentImport</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.CommunicationsImport</module>
+<!--    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunities</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunityReports</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportAccountReports</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportRevenue</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportTickets</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportFolders</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportProjects</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportDocuments</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCommunications</module>
  -->
   </processes>
   <mappings>

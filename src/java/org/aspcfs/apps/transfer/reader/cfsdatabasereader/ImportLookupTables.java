@@ -12,7 +12,7 @@ import com.zeroio.iteam.base.*;
  *@created    September 4, 2002
  *@version    $Id$
  */
-public class LookupTableImport implements CFSDatabaseReaderImportModule {
+public class ImportLookupTable implements CFSDatabaseReaderImportModule {
   /**
    *  Description of the Method
    *

@@ -14,7 +14,7 @@ import java.util.*;
  *@created    September 4, 2002
  *@version    $Id$
  */
-public class BaseDataImport implements CFSDatabaseReaderImportModule {
+public class ImportBaseData implements CFSDatabaseReaderImportModule {
   
   DataWriter writer = null;
   PropertyMapList mappings = null;

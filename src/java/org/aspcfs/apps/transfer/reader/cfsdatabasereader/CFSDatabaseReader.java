@@ -23,17 +23,21 @@ public class CFSDatabaseReader implements DataReader {
   private String url = null;
   private String user = null;
   private String password = null;
+  private String processConfigFile = "CFSDatabaseReader.xml";
   private ArrayList modules = null;
   private PropertyMapList mappings = null;
+  
 
   public void setDriver(String tmp) { this.driver = tmp; }
   public void setUrl(String tmp) { this.url = tmp; }
   public void setUser(String tmp) { this.user = tmp; }
   public void setPassword(String tmp) { this.password = tmp; }
+  public void setProcessConfigFile(String tmp) { this.processConfigFile = tmp; }
   public String getDriver() { return driver; }
   public String getUrl() { return url; }
   public String getUser() { return user; }
   public String getPassword() { return password; }
+  public String getProcessConfigFile() { return processConfigFile; }
 
 
   /**
@@ -79,7 +83,7 @@ public class CFSDatabaseReader implements DataReader {
 
     //Read in modules and mappings to be processed
     try {
-      File configFile = new File("CFSDatabaseReader.xml");
+      File configFile = new File(processConfigFile);
       XMLUtils xml = new XMLUtils(configFile);
       
       modules = new ArrayList();
