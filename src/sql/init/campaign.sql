@@ -35,15 +35,15 @@ INSERT INTO lookup_survey_types (description) VALUES ('Quantitative (no comments
 INSERT INTO lookup_survey_types (description) VALUES ('Quantitative (with comments)');
 INSERT INTO lookup_survey_types (description) VALUES ('Item List');
 /* General Contacts */
-insert into lookup_access_types (link_module_id, description, default_item, level, rule_id) values (626030330, 'Controlled-Hierarchy', @TRUE@, 1, 626030335);
-insert into lookup_access_types (link_module_id, description, default_item, level, rule_id) values (626030330, 'Public', @FALSE@, 2, 626030334);
-insert into lookup_access_types (link_module_id, description, default_item, level, rule_id) values (626030330, 'Personal', @FALSE@, 3, 626030333);
-/* Account Contacts */
-insert into lookup_access_types (link_module_id, description, default_item, level, rule_id) values (626030331, 'Public', @TRUE@, 1, 626030334);
-/* Employees */
-insert into lookup_access_types (link_module_id, description, default_item, level, rule_id) values (626030332, 'Public', @TRUE@, 1, 626030334);
-/* Communication Messages */
-insert into lookup_access_types (link_module_id, description, default_item, level, rule_id) values (707031028, 'Controlled-Hierarchy', @TRUE@, 1, 626030335);
-insert into lookup_access_types (link_module_id, description, default_item, level, rule_id) values (707031028, 'Public', @FALSE@, 2, 626030334);
-insert into lookup_access_types (link_module_id, description, default_item, level, rule_id) values (707031028, 'Personal', @FALSE@, 3, 626030333);
-
+INSERT INTO lookup_access_types (link_module_id, description, default_item, level, rule_id) VALUES (626030330, 'Controlled-Hierarchy', @TRUE@, 1, 626030335);
+INSERT INTO lookup_access_types (link_module_id, description, default_item, level, rule_id) VALUES (626030330, 'Public', @FALSE@, 2, 626030334);
+INSERT INTO lookup_access_types (link_module_id, description, default_item, level, rule_id) VALUES (626030330, 'Personal', @FALSE@, 3, 626030333);
+/* Account Contacts */                                                                      
+INSERT INTO lookup_access_types (link_module_id, description, default_item, level, rule_id) VALUES (626030331, 'Public', @TRUE@, 1, 626030334);
+/* Employees */                                                                             
+INSERT INTO lookup_access_types (link_module_id, description, default_item, level, rule_id) VALUES (626030332, 'Public', @TRUE@, 1, 626030334);
+/* Communication Messages */                                                                
+INSERT INTO lookup_access_types (link_module_id, description, default_item, level, rule_id) VALUES (707031028, 'Controlled-Hierarchy', @TRUE@, 1, 626030335);
+INSERT INTO lookup_access_types (link_module_id, description, default_item, level, rule_id) VALUES (707031028, 'Public', @FALSE@, 2, 626030334);
+INSERT INTO lookup_access_types (link_module_id, description, default_item, level, rule_id) VALUES (707031028, 'Personal', @FALSE@, 3, 626030333);
+                                                                                            
