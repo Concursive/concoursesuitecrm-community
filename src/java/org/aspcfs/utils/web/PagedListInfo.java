@@ -1,7 +1,7 @@
 package com.darkhorseventures.webutils;
 
 import org.theseus.actions.*;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 
@@ -28,7 +28,7 @@ public class PagedListInfo {
   String currentLetter = "";
   int currentOffset = 0;
   String listView = null;
-  Hashtable listFilters = new Hashtable();
+  HashMap listFilters = new HashMap();
 
 
   /**
@@ -224,8 +224,12 @@ public class PagedListInfo {
         this.setCurrentLetter("");
         this.setCurrentOffset(0);
       }
-      listFilters.put("listFilter" + filter, tmpListFilter);
+      addFilter(filter, tmpListFilter);
     }
+  }
+  
+  public void addFilter(int param, String value) {
+    listFilters.put("listFilter" + param, value);
   }
 
 
@@ -518,6 +522,10 @@ public class PagedListInfo {
     } catch (Exception e) {
       return -1;
     }
+  }
+  
+  public boolean hasListFilters() {
+    return listFilters.size() > 0;
   }
 
 

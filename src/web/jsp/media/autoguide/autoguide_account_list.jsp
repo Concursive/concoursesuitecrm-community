@@ -3,6 +3,7 @@
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="InventoryList" class="com.darkhorseventures.autoguide.base.InventoryList" scope="request"/>
 <jsp:useBean id="AutoGuideAccountInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
+<jsp:useBean id="listFilterSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <form name="listView" method="post" action="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>">
@@ -23,7 +24,7 @@
     <td class="containerBack">
 <dhv:permission name="autoguide-inventory-add"><a href="AccountsAutoGuide.do?command=AccountAdd&orgId=<%= OrgDetails.getOrgId() %>">Add a Vehicle</a></dhv:permission>
 <dhv:permission name="autoguide-inventory-add" none="true"><br></dhv:permission>
-<center><%= AutoGuideAccountInfo.getAlphabeticalPageLinks() %></center>
+<center><%= AutoGuideAccountInfo.getNumericalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
     <td align="left">
@@ -31,6 +32,9 @@
         <option <%= AutoGuideAccountInfo.getOptionValue("list") %>>List View</option>
         <option <%= AutoGuideAccountInfo.getOptionValue("slides") %>>Ad View</option>
       </select>
+      &nbsp;
+      <% listFilterSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+			Filter: <%= listFilterSelect.getHtml("listFilter1", AutoGuideAccountInfo.getFilterKey("listFilter1")) %>
       <%= showAttribute(request, "actionError") %>
     </td>
   </tr>
@@ -59,7 +63,7 @@
       <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Color</a></strong>
     </td>
     <td>
-      <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Ad</a></strong>
+      <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Next Ad</a></strong>
     </td>
     <td>
       <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Photo</a></strong>

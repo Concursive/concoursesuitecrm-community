@@ -13,7 +13,32 @@
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="ContactList" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-
+<script language="JavaScript">
+  function updateSubList1() {
+    var sel = document.forms['addticket'].elements['catCode'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=CategoryJSList&catCode=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+  function updateSubList2() {
+    var sel = document.forms['addticket'].elements['subCat1'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=CategoryJSList&subCat1=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+  function updateSubList3() {
+    var sel = document.forms['addticket'].elements['subCat2'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=CategoryJSList&subCat2=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+  function updateUserList() {
+    var sel = document.forms['addticket'].elements['departmentCode'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=DepartmentJSList&departmentCode=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+</script>
 <form name="addticket" action="/TroubleTickets.do?command=Insert&auto-populate=true" method="post">
 <input type="submit" value="Insert" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Home'">
@@ -23,6 +48,7 @@
 &nbsp;
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 
 	<tr bgcolor="#DEE0FA">
 	<td colspan=2 valign=center align=left>
@@ -255,13 +281,13 @@
 	<td nowrap class="formLabel">
 	Assign To
 	</td>
-	<td colspan=1 valign=center>
+	<td valign="center">
 	<%= UserList.getHtmlSelect("assignedTo", TicketDetails.getAssignedTo() ) %>
 	</td>
 	</tr>
 	
 	<tr>
-	<td width=100 class="formLabel">
+	<td width="100" class="formLabel">
 	Entry Comments
 	</td>
 	

@@ -27,6 +27,7 @@ public class InventoryList extends ArrayList {
   private boolean buildOrganizationInfo = false;
   private boolean buildPictureId = false;
   private int orgId = -1;
+  private int showSold = -1;
 
 
   /**
@@ -124,6 +125,14 @@ public class InventoryList extends ArrayList {
     this.buildPictureId = tmp;
   }
 
+  public void setShowSold(int tmp) { this.showSold = tmp; }
+  public void setShowSold(String tmp) {
+    if (tmp != null) {
+      this.showSold = Integer.parseInt(tmp);
+    } else {
+      this.showSold = -1;
+    }
+  }
 
   /**
    *  Gets the tableName attribute of the InventoryList object
@@ -272,6 +281,9 @@ public class InventoryList extends ArrayList {
     if (orgId > -1) {
       sqlFilter.append("AND i.account_id = ? ");
     }
+    if (showSold > -1) {
+      sqlFilter.append("AND sold = ? ");
+    }
   }
 
 
@@ -297,6 +309,9 @@ public class InventoryList extends ArrayList {
     }
     if (orgId > -1) {
       pst.setInt(++i, orgId);
+    }
+    if (showSold > -1) {
+      pst.setBoolean(++i, (showSold == Constants.TRUE));
     }
     return i;
   }

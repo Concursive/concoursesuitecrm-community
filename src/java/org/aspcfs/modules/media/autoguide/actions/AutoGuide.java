@@ -184,10 +184,12 @@ public final class AutoGuide extends CFSModule {
     try {
       db = this.getConnection(context);
       populateOrganization(context, db, orgId);
+      populateListFilters(context, autoGuideAccountInfo);
       //inventoryList.setPagedListInfo(autoGuideAccountInfo);
       inventoryList.setOrgId(orgId);
       inventoryList.setBuildOrganizationInfo(false);
       inventoryList.setBuildPictureId(true);
+      inventoryList.setShowSold(autoGuideAccountInfo.getFilterKey("listFilter1"));
       inventoryList.buildList(db);
       context.getRequest().setAttribute("InventoryList", inventoryList);
     } catch (Exception e) {
@@ -651,6 +653,18 @@ public final class AutoGuide extends CFSModule {
   private void populateOrganization(ActionContext context, Connection db, int orgId) throws SQLException {
     Organization thisOrganization = new Organization(db, orgId);
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
+  }
+  
+  public void populateListFilters(ActionContext context, PagedListInfo info) {
+    if (!info.hasListFilters()) {
+      //Default to Current Inventory
+      info.addFilter(1, "0");
+    }
+    HtmlSelect listFilterSelect = new HtmlSelect();
+    listFilterSelect.addItem(0, "Current Inventory");
+    listFilterSelect.addItem(1, "Sold Inventory");
+    listFilterSelect.addItem(-1, "All Inventory");
+    context.getRequest().setAttribute("listFilterSelect", listFilterSelect);
   }
 
 

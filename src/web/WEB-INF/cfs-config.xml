@@ -502,6 +502,8 @@
     <forward name="InsertOK" resource="/troubletickets_details.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/TroubleTickets.do?command=Details"/>
     <forward name="DeleteOK" resource="/TroubleTickets.do?command=Home"/>
+    <forward name="CategoryJSListOK" resource="/troubletickets_categorylist.jsp"/>
+    <forward name="DepartmentJSListOK" resource="/troubletickets_departmentlist.jsp"/>
   </action>
   <!-- End Ticket Module -->
   

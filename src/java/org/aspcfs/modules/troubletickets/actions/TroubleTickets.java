@@ -654,7 +654,7 @@ public final class TroubleTickets extends CFSModule {
 
     LookupList departmentList = new LookupList(db, "lookup_department");
     departmentList.addItem(0, "-- None --");
-    departmentList.setJsEvent("onChange = javascript:document.forms[0].action='/TroubleTickets.do?command=Add&auto-populate=true#department';document.forms[0].submit()");
+    departmentList.setJsEvent("onChange=\"javascript:updateUserList();\"");
     context.getRequest().setAttribute("DepartmentList", departmentList);
 
     LookupList severityList = new LookupList(db, "ticket_severity");
@@ -667,29 +667,22 @@ public final class TroubleTickets extends CFSModule {
     sourceList.addItem(0, "-- None --");
     context.getRequest().setAttribute("SourceList", sourceList);
 
-    TicketCategoryList categoryList = new TicketCategoryList();
-    categoryList.setCatLevel(0);
-    categoryList.setParentCode(0);
-    categoryList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/TroubleTickets.do?command=Add&auto-populate=true&refresh=1#categories';document.forms[0].submit()");
-    categoryList.buildList(db);
-    context.getRequest().setAttribute("CategoryList", categoryList);
-
     ContactList contactList = new ContactList();
-
     if (newTic != null && newTic.getOrgId() != -1) {
       contactList.setBuildDetails(false);
       contactList.setPersonalId(getUserId(context));
       contactList.setOrgId(newTic.getOrgId());
       contactList.buildList(db);
     }
-
     context.getRequest().setAttribute("ContactList", contactList);
 
     UserList userList = new UserList();
     userList.setEmptyHtmlSelectRecord("-- None --");
     userList.setBuildContact(true);
-    userList.setDepartment(newTic.getDepartmentCode());
-    userList.buildList(db);
+    if (newTic.getDepartmentCode() > 0) {
+      userList.setDepartment(newTic.getDepartmentCode());
+      userList.buildList(db);
+    }
     context.getRequest().setAttribute("UserList", userList);
 
     OrganizationList orgList = new OrganizationList();
@@ -699,17 +692,22 @@ public final class TroubleTickets extends CFSModule {
     orgList.buildList(db);
     context.getRequest().setAttribute("OrgList", orgList);
 
+    TicketCategoryList categoryList = new TicketCategoryList();
+    categoryList.setCatLevel(0);
+    categoryList.setParentCode(0);
+    categoryList.setHtmlJsEvent("onChange=\"javascript:updateSubList1();\"");
+    categoryList.buildList(db);
+    context.getRequest().setAttribute("CategoryList", categoryList);
+    
     TicketCategoryList subList1 = new TicketCategoryList();
-
     subList1.setCatLevel(1);
     subList1.setParentCode(newTic.getCatCode());
-    subList1.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/TroubleTickets.do?command=Add&auto-populate=true&refresh=2#categories';document.forms[0].submit()");
+    subList1.setHtmlJsEvent("onChange=\"javascript:updateSubList2();\"");
     subList1.buildList(db);
     context.getRequest().setAttribute("SubList1", subList1);
 
     TicketCategoryList subList2 = new TicketCategoryList();
     subList2.setCatLevel(2);
-
     if (context.getRequest().getParameter("refresh") != null && Integer.parseInt(context.getRequest().getParameter("refresh")) == 1) {
       subList2.setParentCode(0);
       newTic.setSubCat1(0);
@@ -721,14 +719,12 @@ public final class TroubleTickets extends CFSModule {
     } else {
       subList2.setParentCode(newTic.getSubCat1());
     }
-
-    subList2.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/TroubleTickets.do?command=Add&auto-populate=true&refresh=3#categories';document.forms[0].submit()");
+    subList2.setHtmlJsEvent("onChange=\"javascript:updateSubList3();\"");
     subList2.buildList(db);
     context.getRequest().setAttribute("SubList2", subList2);
 
     TicketCategoryList subList3 = new TicketCategoryList();
     subList3.setCatLevel(3);
-
     if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(context.getRequest().getParameter("refresh")) == 2)) {
       subList3.setParentCode(0);
       newTic.setSubCat2(0);
@@ -739,7 +735,6 @@ public final class TroubleTickets extends CFSModule {
     } else {
       subList3.setParentCode(newTic.getSubCat2());
     }
-
     subList3.buildList(db);
     context.getRequest().setAttribute("SubList3", subList3);
 
@@ -749,6 +744,63 @@ public final class TroubleTickets extends CFSModule {
 
     context.getRequest().setAttribute("TicketDetails", newTic);
   }
-
+  
+  public String executeCommandCategoryJSList(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+      String catCode = context.getRequest().getParameter("catCode");
+      String subCat1 = context.getRequest().getParameter("subCat1");
+      String subCat2 = context.getRequest().getParameter("subCat2");
+      
+      db = this.getConnection(context);
+      if (catCode != null) {
+        TicketCategoryList subList1 = new TicketCategoryList();
+        subList1.setCatLevel(1);
+        subList1.setParentCode(Integer.parseInt(catCode));
+        subList1.buildList(db);
+        context.getRequest().setAttribute("SubList1", subList1);
+      } else if (subCat1 != null) {
+        TicketCategoryList subList2 = new TicketCategoryList();
+        subList2.setCatLevel(2);
+        subList2.setParentCode(Integer.parseInt(subCat1));
+        subList2.buildList(db);
+        context.getRequest().setAttribute("SubList2", subList2);
+      } else if (subCat2 != null) {
+        TicketCategoryList subList3 = new TicketCategoryList();
+        subList3.setCatLevel(3);
+        subList3.setParentCode(Integer.parseInt(subCat2));
+        subList3.buildList(db);
+        context.getRequest().setAttribute("SubList3", subList3);
+      }
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("CategoryJSListOK");
+  }
+  
+  public String executeCommandDepartmentJSList(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+      String departmentCode = context.getRequest().getParameter("departmentCode");
+      db = this.getConnection(context);
+      UserList userList = new UserList();
+      userList.setEmptyHtmlSelectRecord("-- None --");
+      if ((departmentCode != null) && (!"0".equals(departmentCode))) {
+        userList.setBuildContact(true);
+        userList.setDepartment(Integer.parseInt(departmentCode));
+        userList.buildList(db);
+      }
+      context.getRequest().setAttribute("UserList", userList);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("DepartmentJSListOK");
+  }
 }
 
