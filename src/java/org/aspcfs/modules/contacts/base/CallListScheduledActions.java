@@ -75,7 +75,7 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
         } else {
           thisEvent = companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getContactName() + ": " + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[6], thisCall.getOppHeaderId(), thisCall.getId());
         }
-        String contactLink = "<a target=\"_parent\" href=\"ExternalContacts.do?command=ContactDetails&id=" +  thisCall.getContactId() + "\">Contact Link</a>";
+        String contactLink = "[<a target=\"_parent\" href=\"ExternalContacts.do?command=ContactDetails&id=" +  thisCall.getContactId() + "\">Contact Link</a>]";
         thisEvent.addRelatedLink(contactLink);
       }
     } catch (SQLException e) {
