@@ -807,6 +807,8 @@
   </action>
   <action name="TroubleTicketTasks" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketTasks">
     <bean name="TicketTask" class="org.aspcfs.modules.troubletickets.base.TicketTask" scope="request"/>
+    <forward name="TaskDetailsOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=TroubleTicketTasks&amp;returnAction=TaskDetailsForm"/>
+    <forward name="TaskDetailsFormPopupOK" resource="/troubletickets/troubletickets_taskdetails.jsp" layout="style"/>
     <forward name="AddTaskOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=TroubleTicketTasks"/>
     <forward name="PrepareTaskPopupOK" resource="/troubletickets/troubletickets_taskform.jsp" layout="style"/>
     <forward name="ListTasksOK" resource="/troubletickets/troubletickets_tasklist.jsp" layout="nav"/>
