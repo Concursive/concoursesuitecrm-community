@@ -29,6 +29,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
 
     UserBean thisUser = (UserBean)request.getSession().getAttribute("User");
     int userId = thisUser.getUserId();
+    int departmentId = thisUser.getUserRecord().getContact().getDepartment();
 
     StringBuffer items = new StringBuffer();
     int itemCount = 0;
@@ -89,12 +90,12 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           rs = pst.executeQuery();
           if (rs.next()) {
             callCount = rs.getInt("callcount");
-            myItems += callCount;
             if (System.getProperty("DEBUG") != null) System.out.println("GlobalItemsHook-> Calls: " + callCount);
           }
           rs.close();
           pst.close();
           items.append("<a href='/MyCFS.do?command=Home' class='s'>Calls to make</a> (" + callCount + ")<br>");
+          ++myItems;
         }
         
         //Project Activities
@@ -107,15 +108,15 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           rs = pst.executeQuery();
           if (rs.next()) {
             activityCount = rs.getInt("activitycount");
-            myItems += activityCount;
             if (System.getProperty("DEBUG") != null) System.out.println("GlobalItemsHook-> Activities: " + activityCount);
           }
           rs.close();
           pst.close();
           items.append("<a href='/ProjectManagement.do?command=PersonalView' class='s'>Assigned Activities</a> (" + activityCount + ")<br>");
+          ++myItems;
         }
         
-        //Tickets
+        //Tickets Assigned to me
         if (thisUser.hasPermission("tickets-view")) {
           int ticketCount = 0;
           sql = 
@@ -125,12 +126,32 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           rs = pst.executeQuery();
           if (rs.next()) {
             ticketCount = rs.getInt("ticketcount");
-            myItems += ticketCount;
             if (System.getProperty("DEBUG") != null) System.out.println("GlobalItemsHook-> Tickets: " + ticketCount);
           }
           rs.close();
           pst.close();
           items.append("<a href='/TroubleTickets.do?command=Home' class='s'>Assigned Tickets</a> (" + ticketCount + ")<br>");
+          ++myItems;
+        }
+        
+        //Tickets Unassigned
+        if (thisUser.hasPermission("tickets-view")) {
+          int ticketCount = 0;
+          sql = 
+            "SELECT COUNT(*) as ticketcount " +
+            "FROM ticket " +
+            "WHERE assigned_to = -1 AND closed IS NULL AND (department_code = ? OR department_code = 0)";
+          pst = db.prepareStatement(sql);
+          pst.setInt(1, departmentId);
+          rs = pst.executeQuery();
+          if (rs.next()) {
+            ticketCount = rs.getInt("ticketcount");
+            if (System.getProperty("DEBUG") != null) System.out.println("GlobalItemsHook-> Tickets (Unassigned): " + ticketCount);
+          }
+          rs.close();
+          pst.close();
+          items.append("<a href='/TroubleTickets.do?command=Home' class='s'>Unassigned Tickets</a> (" + ticketCount + ")<br>");
+          ++myItems;
         }
       
         //Default no items
