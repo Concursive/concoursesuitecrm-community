@@ -15,7 +15,7 @@ import java.io.*;
  */
 public class ClientType implements Serializable {
   public final static String allowed = "0123456789.";
-  
+
   //Client Browser Products, also define the text below
   public final static int NETSCAPE = 1;
   public final static int IE = 2;
@@ -34,7 +34,7 @@ public class ClientType implements Serializable {
   private int id = -1;
   private double version = -1;
   private int os = WINDOWS;
-  
+
   final static long serialVersionUID = 8345658414124283569L;
 
 
@@ -95,15 +95,9 @@ public class ClientType implements Serializable {
         //User-Agent: mozilla/4.0 (compatible; msie 5.01; windows nt 5.0)
         this.id = IE;
         //Search for "msie x"
-        try {
-          this.version =
-              Double.parseDouble(header.substring(header.indexOf("msie ") + 5,
-              header.indexOf("msie ") + 8).trim());
-        } catch (Exception e) {
-          this.version =
-              Double.parseDouble(header.substring(header.indexOf("msie ") + 5,
-              header.indexOf("msie ") + 9).trim());
-        }
+        this.version =
+            Double.parseDouble(header.substring(header.indexOf("msie ") + 5,
+            header.indexOf(";", header.indexOf("msie "))));
         cleanupVersion();
       } else if (header.indexOf("opera") > -1) {
         //Opera likes to impersonate other browsers
@@ -243,7 +237,7 @@ public class ClientType implements Serializable {
         case OPERA:
           thisId = "opera";
           break;
-        default: 
+        default:
           thisId = "moz";
           break;
     }
@@ -308,7 +302,11 @@ public class ClientType implements Serializable {
           return "win";
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   */
   public void cleanupVersion() {
     //Cleanup old versions...
     if (version > 4.0 && version < 5.0) {
@@ -319,15 +317,30 @@ public class ClientType implements Serializable {
       version = 2;
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  versionText  Description of the Parameter
+   *@return              Description of the Return Value
+   */
   public double parseVersion(String versionText) {
     try {
       return Double.parseDouble(versionText);
     } catch (Exception e) {
       StringBuffer sb = new StringBuffer();
+      boolean hasPoint = false;
       for (int i = 0; i < versionText.length(); i++) {
         char c = versionText.charAt(i);
         if (allowed.indexOf(c) > -1) {
+          if (c == '.') {
+            if (hasPoint) {
+              break;
+            } else {
+              hasPoint = true;
+            }
+          }
           sb.append(c);
         }
       }
