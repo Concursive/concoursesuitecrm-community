@@ -116,7 +116,7 @@ Add Opportunity<br>
   </tr> 
   
   <tr class="containerBody">
-    <td nowrap valign="center" class="formLabel">
+    <td nowrap valign="top" class="formLabel">
       Associate With
     </td>
     <td width="100%">
@@ -131,10 +131,10 @@ Add Opportunity<br>
         </tr>
         <tr>
           <td>
-            <input type="radio" name="opp_type" value="contact" <dhv:evaluate exp="<%=(OppDetails.getHeader().getContactLink() > -1)%>">checked</dhv:evaluate>><a href="javascript:popContactsListOppsSingle('header_contactLink','changecontact','true');">Contact</a>
+            <input type="radio" name="opp_type" value="contact" <dhv:evaluate exp="<%=(OppDetails.getHeader().getContactLink() > -1)%>">checked</dhv:evaluate>>Contact
           </td>
           <td align="left" valign="bottom">
-            <div id="changecontact"><%=(OppDetails.getHeader().getContactLink()+"").equals("-1")?"&nbsp;None Selected":"&nbsp;" + OppDetails.getHeader().getContactName()%></div>
+            <div id="changecontact"><a href="javascript:popContactsListOppsSingle('header_contactLink','changecontact','true');"><%=(OppDetails.getHeader().getContactLink()+"").equals("-1")?"&nbsp;None Selected":"&nbsp;" + OppDetails.getHeader().getContactName()%></a></div>
             <input type="hidden" name="header_contactLink" id="header_contactLink" value="<%=(OppDetails.getHeader().getContactLink() == -1)?-1:OppDetails.getHeader().getContactLink()%>">
           </td>
         </tr>
