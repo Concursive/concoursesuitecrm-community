@@ -687,7 +687,8 @@ public final class TroubleTickets extends CFSModule {
 
     OrganizationList orgList = new OrganizationList();
     orgList.setMinerOnly(false);
-    orgList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/TroubleTickets.do?command=Add&auto-populate=true';document.forms[0].submit()");
+    //orgList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/TroubleTickets.do?command=Add&auto-populate=true';document.forms[0].submit()");
+    orgList.setHtmlJsEvent("onChange=\"javascript:updateContactList();\"");
     orgList.setShowMyCompany(true);
     orgList.buildList(db);
     context.getRequest().setAttribute("OrgList", orgList);
@@ -801,6 +802,29 @@ public final class TroubleTickets extends CFSModule {
       this.freeConnection(context, db);
     }
     return ("DepartmentJSListOK");
+  }
+  
+  public String executeCommandOrganizationJSList(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+      String orgId = context.getRequest().getParameter("orgId");
+      db = this.getConnection(context);
+      
+      ContactList contactList = new ContactList();
+      if (orgId != null && !"-1".equals(orgId)) {
+        contactList.setBuildDetails(false);
+        contactList.setPersonalId(getUserId(context));
+        contactList.setOrgId(Integer.parseInt(orgId));
+        contactList.buildList(db);
+      }
+      context.getRequest().setAttribute("ContactList", contactList);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("OrganizationJSListOK");
   }
 }
 

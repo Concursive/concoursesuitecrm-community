@@ -38,6 +38,12 @@
     var url = "TroubleTickets.do?command=DepartmentJSList&departmentCode=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
+  function updateContactList() {
+    var sel = document.forms['addticket'].elements['orgId'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=OrganizationJSList&orgId=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
 </script>
 <form name="addticket" action="/TroubleTickets.do?command=Insert&auto-populate=true" method="post">
 <input type="submit" value="Insert" name="Save">
@@ -84,7 +90,7 @@
 	<td nowrap class="formLabel">
 	Contact
 	</td>
-	<td colspan=1 valign=center>
+	<td valign="center">
 	<% if (TicketDetails == null || TicketDetails.getOrgId() == -1 || ContactList.size() == 0) { %>
 	<%= ContactList.getEmptyHtmlSelect("contactId") %>
 	<%} else {%>
