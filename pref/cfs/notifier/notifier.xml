@@ -33,7 +33,7 @@
   <!-- Remote Hylafax fax server -->
   <init-param>
     <param-name>FaxServer</param-name>
-    <param-value>216.54.13.15</param-value>
+    <param-value>216.54.81.123</param-value>
   </init-param>
 	<init-param>
     <param-name>FaxEnabled</param-name>
