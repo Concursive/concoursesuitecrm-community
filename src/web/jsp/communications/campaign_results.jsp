@@ -100,7 +100,7 @@ Results
              <dhv:evaluate exp="<%=((type != SurveyQuestion.QUANT_NOCOMMENTS))%>">
                 <tr class="title">
                   <td colspan="8" valign="center" align="left">
-                    Most recent user comments &nbsp; <a href="javascript:popURLReturn('CampaignManager.do?command=ShowComments&surveyId=<%=SurveyQuestionList.getId()%>&questionId=<%=thisItem.getId()%>&type=<%=thisItem.getType()==1?"open":"quant"%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','500','240','yes','no');">Show All...</a>
+                    Most recent user comments &nbsp; <a href="javascript:popURLReturn('CampaignManager.do?command=ShowComments&surveyId=<%=SurveyQuestionList.getId()%>&questionId=<%=thisItem.getId()%>&type=<%=thisItem.getType()==1?"open":"quant"%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','500','400','yes','yes');">Show All...</a>
                   </td>
                 </tr>
                 <%
