@@ -263,6 +263,24 @@ public class User extends GenericBean {
       this.setPassword1(newPassword);
       this.setPassword2(newPassword);
       resultCount = this.newPassword(db, context);
+      
+              
+      if (resultCount > -1) {
+          //send email
+          SMTPMessage mail = new SMTPMessage();
+          mail.setHost("127.0.0.1");
+          mail.setFrom("cfs-root@darkhorseventures.com");
+          mail.setType("text/html");      
+          mail.setTo("chris@darkhorseventures.com");
+          mail.setSubject("CFS password changed");
+          mail.setBody("Your CFS User account password has been changed by " + modifiedBy + ".<br><br>" +
+            " Your new CFS password is:<br>" + newPassword);
+        
+          if (mail.send() == 2) {
+            System.err.println(mail.getErrorMsg());
+          }         
+      }
+      
       return resultCount;
   }
   /**
