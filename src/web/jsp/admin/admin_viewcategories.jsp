@@ -95,8 +95,7 @@ function activate(){
         CategoryEditor.getTopCategoryList().getCatListSelect().addAttribute("style", "width: 150px");
         %>
         
-        <%= CategoryEditor.getTopCategoryList().getHtmlSelect("level0", value) %>
-        <br>
+        <%= CategoryEditor.getTopCategoryList().getHtmlSelect("level0", value) %><br>
         <input type="button" value="Edit" id="edit0" onClick="javascript:editCategory('0');">
       </td>
       <td align="center">
