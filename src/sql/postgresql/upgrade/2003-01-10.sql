@@ -22,7 +22,9 @@ alter table permission_category add column lookups boolean;
 alter table permission_category alter column lookups set default false;
 update table permission_category set lookups='f';
 
+//
 //do the database switch-around right before this to make accounts id 1 and contacts id 2
+//
 
 update permission_category set folders='t' where category_id in (1,2);
 update permission_category set lookups='t' where category_id=4;
