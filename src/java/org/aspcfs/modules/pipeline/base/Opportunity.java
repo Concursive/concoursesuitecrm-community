@@ -27,16 +27,16 @@ public class Opportunity extends GenericBean {
 	private int accountLink = -1;
 	private int contactLink = -1;
 	private String closeDate = "";
-	private float closeProb = 0;
-	private float terms = 0;
-	private float low = 0;
-	private float guess = 0;
-	private float high = 0;
+	private double closeProb = 0;
+	private double terms = 0;
+	private double low = 0;
+	private double guess = 0;
+	private double high = 0;
 	private String units = "";
 	private int stage = -1;
 	private String stageName = "";
 	private String stageDate = "";
-	private float commission = 0;
+	private double commission = 0;
 	private String type = "";
 	private String alertDate = "";
 	private String entered = "";
@@ -253,7 +253,7 @@ public void setClosed(String closed) {
 	 *@since
 	 */
 	public void setTerms(String terms) {
-		this.terms = Float.parseFloat(terms);
+		this.terms = Double.parseDouble(terms);
 	}
 
 
@@ -330,7 +330,7 @@ public void setClosed(String closed) {
 	 *@since
 	 */
 	public void setLow(String low) {
-		this.low = Float.parseFloat(low);
+		this.low = Double.parseDouble(low);
 	}
 
 
@@ -341,7 +341,7 @@ public void setClosed(String closed) {
 	 *@since
 	 */
 	public void setGuess(String guess) {
-		this.guess = Float.parseFloat(guess);
+		this.guess = Double.parseDouble(guess);
 	}
 
 
@@ -352,7 +352,7 @@ public void setClosed(String closed) {
 	 *@since
 	 */
 	public void setHigh(String high) {
-		this.high = Float.parseFloat(high);
+		this.high = Double.parseDouble(high);
 	}
 
 
@@ -407,7 +407,7 @@ public void setClosed(String closed) {
 	 *@since
 	 */
 	public void setCloseProb(String closeProb) {
-		this.closeProb = ((Float.parseFloat(closeProb)) / 100);
+		this.closeProb = ((Double.parseDouble(closeProb)) / 100);
 	}
 
 
@@ -418,7 +418,7 @@ public void setClosed(String closed) {
 	 *@since
 	 */
 	public void setCommission(String commission) {
-		this.commission = ((Float.parseFloat(commission)) / 100);
+		this.commission = ((Double.parseDouble(commission)) / 100);
 	}
 
 
@@ -538,7 +538,7 @@ public void setClosed(String closed) {
 	 *@return    The Terms value
 	 *@since
 	 */
-	public float getTerms() {
+	public double getTerms() {
 		return terms;
 	}
 
@@ -550,7 +550,8 @@ public void setClosed(String closed) {
 	 *@since
 	 */
 	public String getTermsString() {
-		Float tmp = new Float(round(terms, 2));
+		Double thisVal = new Double(terms);
+		Float tmp = new Float(round(thisVal.floatValue(), 2));
 		return tmp.toString();
 	}
 
@@ -720,7 +721,7 @@ public void setCloseIt(boolean closeIt) {
 	 *@return    The Low value
 	 *@since
 	 */
-	public float getLow() {
+	public double getLow() {
 		return low;
 	}
 
@@ -756,7 +757,7 @@ public void setCloseIt(boolean closeIt) {
 	 *@return    The Guess value
 	 *@since
 	 */
-	public float getGuess() {
+	public double getGuess() {
 		return guess;
 	}
 
@@ -792,7 +793,7 @@ public void setCloseIt(boolean closeIt) {
 	 *@return    The High value
 	 *@since
 	 */
-	public float getHigh() {
+	public double getHigh() {
 		return high;
 	}
 
@@ -850,7 +851,7 @@ public void setCloseIt(boolean closeIt) {
 	 *@return    The CloseProb value
 	 *@since
 	 */
-	public float getCloseProb() {
+	public double getCloseProb() {
 		return closeProb;
 	}
 
@@ -915,7 +916,7 @@ public void setCloseIt(boolean closeIt) {
 	 *@return    The Commission value
 	 *@since
 	 */
-	public float getCommission() {
+	public double getCommission() {
 		return commission;
 	}
 
@@ -1264,11 +1265,11 @@ public void setCloseIt(boolean closeIt) {
 		else {
 			closeDate = "";
 		}
-		closeProb = rs.getFloat("closeprob");
+		closeProb = rs.getDouble("closeprob");
 		terms = rs.getInt("terms");
-		low = rs.getFloat("lowvalue");
-		guess = rs.getFloat("guessvalue");
-		high = rs.getFloat("highvalue");
+		low = rs.getDouble("lowvalue");
+		guess = rs.getDouble("guessvalue");
+		high = rs.getDouble("highvalue");
 		stage = rs.getInt("stage");
 		java.sql.Date thisStageDate = rs.getDate("stagedate");
 		if (thisStageDate != null) {
@@ -1277,7 +1278,7 @@ public void setCloseIt(boolean closeIt) {
 		else {
 			stageDate = "";
 		}
-		commission = rs.getFloat("commission");
+		commission = rs.getDouble("commission");
 		type = rs.getString("type");
 		java.sql.Date thisAlertDate = rs.getDate("alertdate");
 		if (thisAlertDate != null) {
@@ -1287,7 +1288,7 @@ public void setCloseIt(boolean closeIt) {
 			alertDate = "";
 		}
 		stageName = rs.getString("stagename");
-		terms = rs.getFloat("terms");
+		terms = rs.getDouble("terms");
 		units = rs.getString("units");
 
 		java.sql.Timestamp tmpDateCreated = rs.getTimestamp("entered");
@@ -1352,11 +1353,11 @@ public void setCloseIt(boolean closeIt) {
 
 		int i = 0;
 		pst = db.prepareStatement(sql.toString());
-		pst.setFloat(++i, this.getLow());
-		pst.setFloat(++i, this.getGuess());
-		pst.setFloat(++i, this.getHigh());
-		pst.setFloat(++i, this.getCloseProb());
-		pst.setFloat(++i, this.getCommission());
+		pst.setDouble(++i, this.getLow());
+		pst.setDouble(++i, this.getGuess());
+		pst.setDouble(++i, this.getHigh());
+		pst.setDouble(++i, this.getCloseProb());
+		pst.setDouble(++i, this.getCommission());
 
 
 		pst.setString(++i, this.getType());
@@ -1369,7 +1370,7 @@ public void setCloseIt(boolean closeIt) {
 		else {
 			pst.setDate(++i, convertStringToSqlDate(this.getAlertDate(), DateFormat.SHORT));
 		}
-		pst.setFloat(++i, this.getTerms());
+		pst.setDouble(++i, this.getTerms());
 		pst.setString(++i, this.getUnits());
 		pst.setInt(++i, this.getOwner());
 		pst.setInt(++i, this.getModifiedBy());

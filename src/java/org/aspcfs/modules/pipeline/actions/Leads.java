@@ -651,10 +651,10 @@ public final class Leads extends CFSModule {
     int roundedYear = 0;
     int x = 0;
 
-    Float ramrAddTerm = new Float(0.0);
-    Float gmrAddTerm = new Float(0.0);
-    Float cgmrAddTerm = new Float(0.0);
-    Float cramrAddTerm = new Float(0.0);
+    Double ramrAddTerm = new Double(0.0);
+    Double gmrAddTerm = new Double(0.0);
+    Double cgmrAddTerm = new Double(0.0);
+    Double cramrAddTerm = new Double(0.0);
 
     String valKey = "";
     boolean adjustTerms = false;
@@ -695,7 +695,7 @@ public final class Leads extends CFSModule {
               readDate.setTime(myDate);
 
               readDateAdjusted.setTime(myDate);
-              readDateAdjusted.add(java.util.Calendar.MONTH, +(java.lang.Math.round(tempOpp.getTerms())));
+              readDateAdjusted.add(java.util.Calendar.MONTH, + (int)(java.lang.Math.round(tempOpp.getTerms())));
 
               passedDay = readDate.get(java.util.Calendar.DATE);
               passedYear = readDate.get(java.util.Calendar.YEAR);
@@ -719,10 +719,10 @@ public final class Leads extends CFSModule {
               valKey = ("" + roundedYear) + ("" + roundedMonth);
 
               //get the individual graph values
-              gmrAddTerm = new Float((tempOpp.getGuess() / tempOpp.getTerms()));
-	      ramrAddTerm = new Float((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCloseProb());
-              cgmrAddTerm = new Float((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCommission());
-              cramrAddTerm = new Float(((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCloseProb() * tempOpp.getCommission()));
+              gmrAddTerm = new Double((tempOpp.getGuess() / tempOpp.getTerms()));
+	      ramrAddTerm = new Double((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCloseProb());
+              cgmrAddTerm = new Double((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCommission());
+              cramrAddTerm = new Double(((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCloseProb() * tempOpp.getCommission()));
               //done
 
               //case: close date within 0-6m range
@@ -878,10 +878,10 @@ public final class Leads extends CFSModule {
     int count = 0;
 
     for (count = 0; count < 12; count++) {
-      thisLine.getGmr().setValue(valKeys[count], new Float(primaryNode.getGmr().getValue(valKeys[count]).floatValue() + (addToMe.getGmr().getValue(valKeys[count])).floatValue()));
-      thisLine.getRamr().setValue(valKeys[count], new Float(primaryNode.getRamr().getValue(valKeys[count]).floatValue() + (addToMe.getRamr().getValue(valKeys[count])).floatValue()));
-      thisLine.getCgmr().setValue(valKeys[count], new Float(primaryNode.getCgmr().getValue(valKeys[count]).floatValue() + (addToMe.getCgmr().getValue(valKeys[count])).floatValue()));
-      thisLine.getCramr().setValue(valKeys[count], new Float(primaryNode.getCramr().getValue(valKeys[count]).floatValue() + (addToMe.getCramr().getValue(valKeys[count])).floatValue()));
+      thisLine.getGmr().setValue(valKeys[count], new Double(primaryNode.getGmr().getValue(valKeys[count]).doubleValue() + (addToMe.getGmr().getValue(valKeys[count])).doubleValue()));
+      thisLine.getRamr().setValue(valKeys[count], new Double(primaryNode.getRamr().getValue(valKeys[count]).doubleValue() + (addToMe.getRamr().getValue(valKeys[count])).doubleValue()));
+      thisLine.getCgmr().setValue(valKeys[count], new Double(primaryNode.getCgmr().getValue(valKeys[count]).doubleValue() + (addToMe.getCgmr().getValue(valKeys[count])).doubleValue()));
+      thisLine.getCramr().setValue(valKeys[count], new Double(primaryNode.getCramr().getValue(valKeys[count]).doubleValue() + (addToMe.getCramr().getValue(valKeys[count])).doubleValue()));
     }
 
     currentLines.addElement(thisLine);

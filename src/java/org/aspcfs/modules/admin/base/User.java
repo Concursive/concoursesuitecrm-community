@@ -260,7 +260,7 @@ public void setAliasName(String aliasName) {
 	 *@param  v4   The new GraphValues value
 	 *@since
 	 */
-	public void setGraphValues(String key, Float v1, Float v2, Float v3, Float v4) {
+	public void setGraphValues(String key, Double v1, Double v2, Double v3, Double v4) {
 		this.getGmr().setValue(key, v1);
 		this.getRamr().setValue(key, v2);
 		this.getCgmr().setValue(key, v3);

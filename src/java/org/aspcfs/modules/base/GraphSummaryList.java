@@ -27,7 +27,7 @@ public class GraphSummaryList extends Hashtable {
 	 */
 	public GraphSummaryList() {
 		String[] valKeys = getRange(12);
-		Float initialVal = new Float(0.0);
+		Double initialVal = new Double(0.0);
 
 		for (int i = 0; i < 12; i++) {
 			this.values.put(valKeys[i], initialVal);
@@ -64,7 +64,7 @@ public class GraphSummaryList extends Hashtable {
 	 *@param  val    The new Value value
 	 *@since
 	 */
-	public void setValue(String which, Float val) {
+	public void setValue(String which, Double val) {
 		if (!(this.values.containsKey(which))) {
 			this.values.put(which, val);
 		}
@@ -114,8 +114,8 @@ public class GraphSummaryList extends Hashtable {
 	 *@return        The Value value
 	 *@since
 	 */
-	public Float getValue(String which) {
-		return (Float) this.values.get(which);
+	public Double getValue(String which) {
+		return (Double) this.values.get(which);
 	}
 
 
@@ -168,9 +168,9 @@ public class GraphSummaryList extends Hashtable {
 	 *@param  val    The feature to be added to the ToValue attribute
 	 *@since
 	 */
-	public void addToValue(String which, Float val) {
-		Float tempValue = (Float) this.values.get(which);
-		tempValue = new Float(tempValue.floatValue() + val.floatValue());
+	public void addToValue(String which, Double val) {
+		Double tempValue = (Double) this.values.get(which);
+		tempValue = new Double(tempValue.doubleValue() + val.doubleValue());
 
 		this.values.put(which, tempValue);
 	}
