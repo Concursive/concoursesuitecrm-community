@@ -22,8 +22,10 @@ public class Address {
   private int contactId = -1;
   private String streetAddressLine1 = "";
   private String streetAddressLine2 = "";
+  private String streetAddressLine3 = "";
   private String city = null;
   private String state = null;
+  private String otherState = null;
   private String zip = null;
   private String country = null;
   private int type = -1;
@@ -106,6 +108,52 @@ public class Address {
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the streetAddressLine3 attribute of the Address object
+   *
+   *@param  streetAddressLine3  The new streetAddressLine3 value
+   */
+  public void setStreetAddressLine3(String streetAddressLine3) {
+    this.streetAddressLine3 = streetAddressLine3;
+  }
+
+
+  /**
+   *  Sets the otherState attribute of the Address object
+   *
+   *@param  otherState  The new otherState value
+   */
+  public void setOtherState(String tmp) {
+    if (tmp != null) {
+      if (tmp.length() == 0) {
+        this.otherState = null;
+      } else {
+        this.otherState = tmp;
+      }
+    }
+  }
+
+
+  /**
+   *  Gets the otherState attribute of the Address object
+   *
+   *@return    The otherState value
+   */
+  public String getOtherState() {
+    return otherState;
+  }
+
+
+  /**
+   *  Gets the streetAddressLine3 attribute of the Address object
+   *
+   *@return    The streetAddressLine3 value
+   */
+  public String getStreetAddressLine3() {
+    return streetAddressLine3;
   }
 
 
@@ -360,7 +408,10 @@ public class Address {
    *@since     1.5
    */
   public String getState() {
-    return state;
+    if("UNITED STATES".equals(country) || ("CANADA".equals(country))){ 
+      return state;
+    }
+      return otherState;
   }
 
 
@@ -444,10 +495,11 @@ public class Address {
     }
     if ((streetAddressLine1 == null || streetAddressLine1.trim().equals("")) &&
         (streetAddressLine2 == null || streetAddressLine2.trim().equals("")) &&
+        (streetAddressLine3 == null || streetAddressLine3.trim().equals("")) &&
         (city == null || city.trim().equals("")) &&
-        (state == null || 
-         state.trim().equals("") || 
-         "-1".equals(state)) &&
+        (state == null ||
+        state.trim().equals("") ||
+        "-1".equals(state)) &&
         (zip == null || zip.trim().equals("")) &&
         (country == null ||
         country.trim().equals("") ||
@@ -546,6 +598,9 @@ public class Address {
     if (this.getStreetAddressLine2() != null && !this.getStreetAddressLine2().trim().equals("")) {
       thisAddress.append(this.getStreetAddressLine2().trim() + "\r\n");
     }
+    if (this.getStreetAddressLine3() != null && !this.getStreetAddressLine3().trim().equals("")) {
+      thisAddress.append(this.getStreetAddressLine3().trim() + "\r\n");
+    }
     if (!this.getCityState().trim().equals("")) {
       thisAddress.append(this.getCityState().trim() + "\r\n");
     }
@@ -584,11 +639,12 @@ public class Address {
     if (rs.wasNull()) {
       this.setType(-1);
     }
-    this.setTypeName(rs.getString("description"));
     this.setStreetAddressLine1(rs.getString("addrline1"));
     this.setStreetAddressLine2(rs.getString("addrline2"));
+    this.setStreetAddressLine3(rs.getString("addrline3"));
     this.setCity(rs.getString("city"));
     this.setState(rs.getString("state"));
+    this.setOtherState(state);
     this.setZip(rs.getString("postalcode"));
     this.setCountry(rs.getString("country"));
     this.setEntered(rs.getTimestamp("entered"));
@@ -601,6 +657,7 @@ public class Address {
     if (this.getModifiedBy() == -1) {
       this.setModifiedBy(0);
     }
+    this.setTypeName(rs.getString("description"));
   }
 
 
@@ -618,8 +675,10 @@ public class Address {
     }
     this.setStreetAddressLine1(request.getParameter("address" + parseItem + "line1"));
     this.setStreetAddressLine2(request.getParameter("address" + parseItem + "line2"));
+    this.setStreetAddressLine3(request.getParameter("address" + parseItem + "line3"));
     this.setCity(request.getParameter("address" + parseItem + "city"));
     this.setState(request.getParameter("address" + parseItem + "state"));
+    this.setOtherState(request.getParameter("address" + parseItem + "otherState"));
     this.setZip(request.getParameter("address" + parseItem + "zip"));
     this.setCountry(request.getParameter("address" + parseItem + "country"));
     if (request.getParameter("address" + parseItem + "delete") != null) {
