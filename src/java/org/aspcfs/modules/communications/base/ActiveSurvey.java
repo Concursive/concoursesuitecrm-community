@@ -444,6 +444,7 @@ public class ActiveSurvey extends SurveyBase {
       st.executeUpdate("DELETE FROM active_survey_answers WHERE response_id IN (SELECT response_id FROM active_survey_responses WHERE active_survey_id = " + this.getId() + ")");
       st.executeUpdate("DELETE FROM active_survey_responses WHERE active_survey_id = " + this.getId());
       st.executeUpdate("DELETE FROM active_survey_answer_avg WHERE question_id IN (SELECT question_id FROM active_survey_questions WHERE active_survey_id = " + this.getId() + ")");
+      st.executeUpdate("DELETE FROM active_survey_items WHERE question_id IN (SELECT question_id FROM active_survey_questions WHERE active_survey_id = " + this.getId() + ")");
       st.executeUpdate("DELETE FROM active_survey_questions WHERE active_survey_id = " + this.getId());
       st.executeUpdate("DELETE FROM active_survey WHERE active_survey_id = " + this.getId());
       st.close();
