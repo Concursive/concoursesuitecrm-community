@@ -103,7 +103,7 @@
       <property>enabled</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Opportunity" id="opportunity">
-      <property>id</property>
+      <property>guid</property>
       <property lookup="user">owner</property>
       <property>description</property>
       <property lookup="">acctlink</property>
