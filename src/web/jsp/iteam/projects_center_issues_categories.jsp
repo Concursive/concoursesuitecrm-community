@@ -27,7 +27,10 @@
 %>    
   <tr<%= bgColorVar %>>
     <td width='5' valign='top' nowrap>&nbsp;</td>
-    <td width="100%" valign='top' align='left'><a href="ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= thisCategory.getProjectId() %>&cid=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getDescription()) %></a></td>
+    <td width="100%" valign='top' align='left'>
+      <img border="0" src="images/folder.gif" align="absmiddle">
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= thisCategory.getProjectId() %>&cid=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getDescription()) %></a>
+    </td>
     <td valign='top' align='center' nowrap><%= ((thisCategory.getPostCount()==0)?"-":""+thisCategory.getPostCount()) %></td>
     <td valign='top' align='center' nowrap><%= ((thisCategory.getThreadCount()==0)?"-":""+thisCategory.getThreadCount()) %></td>
     <td valign='top' align='left' nowrap><%= thisCategory.getLatestPostDateTimeString() %><br><%= toHtml(thisCategory.getModifiedBy()) %></td>

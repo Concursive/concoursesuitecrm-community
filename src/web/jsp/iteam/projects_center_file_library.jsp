@@ -29,10 +29,12 @@
 %>    
   <tr<%= bgColorVar %>>
     <td valign="middle" align="center" nowrap>
+      <a href="ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>">Download</a><br>
       <a href="ProjectManagementFiles.do?command=Modify&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>">Edit</a>|<a href="javascript:confirmDelete('ProjectManagementFiles.do?command=Delete&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>');">Del</a>&nbsp;
     </td>
     <td valign="top">
-      <a href="ProjectManagementFiles.do?command=Details&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></a>
+      <%= thisFile.getImageTag() %><a href="ProjectManagementFiles.do?command=Details&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></a><br>
+      <i><%= toHtml(thisFile.getSubject()) %></i>
     </td>
     <td align="center" valign="middle">
       [<a href="ProjectManagementFiles.do?command=AddVersion&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
@@ -48,14 +50,6 @@
     </td>
     <td valign="middle">
       <%= toHtml(thisFile.getEnteredByString()) %>
-    </td>
-  </tr>
-  <tr<%= bgColorVar %>>
-    <td valign="middle" align="center" nowrap>
-      &nbsp;
-    </td>
-    <td valign="middle" align="left" colspan="6">
-      <i><%= toHtml(thisFile.getSubject()) %></i>
     </td>
   </tr>
 <%    

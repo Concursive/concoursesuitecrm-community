@@ -49,7 +49,7 @@
       <a href="ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>">Download</a>
     </td>
     <td>
-      <a href="ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>"><%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %></a>
+      <%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %>
     </td>
     <td align="right">
       <%= thisVersion.getRelativeSize() %> k&nbsp;
