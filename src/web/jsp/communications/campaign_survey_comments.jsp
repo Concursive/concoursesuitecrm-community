@@ -1,10 +1,15 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<jsp:useBean id="CommentListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <jsp:useBean id="SurveyAnswerList" class="com.darkhorseventures.cfsbase.SurveyAnswerList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <%
   boolean openEnded =  "open".equalsIgnoreCase(request.getParameter("type"));
 %>
+<br>
+<center><%= CommentListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CommentListInfo"/>
+<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="<%=openEnded?"2":"3"%>">
@@ -36,7 +41,7 @@
 			}
       SurveyAnswer thisAnswer = (SurveyAnswer)i.next();
 %>      
-  <tr class="row<%= rowid %>">
+   <tr class="row<%= rowid %>">
     <%if(!openEnded){%>
       <td valign="top" align="center" class="row<%= rowid %>" nowrap>
         <%=thisAnswer.getQuantAns()%>
@@ -51,16 +56,20 @@
         
       </td>
     </tr>
-      
-<%
-    }
-  } else {%>  
+    <%
+   }
+    %>
+    </table>
+    <br>
+    <dhv:pagedListControl object="CommentListInfo" />
+  <%} else {%>  
   <tr>
-    <td class="row2" valign="center" colspan="2">
+    <td class="row2" valign="center" colspan="<%=openEnded?"2":"3"%>">
       No comments found for this question.
     </td>
   </tr>
+  </table>
 <%}%>
-</table>
 <br>
+
 <input type="button" value="Close Window" onClick="javascript:window.close();">
