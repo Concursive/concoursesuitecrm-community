@@ -10,14 +10,21 @@ public class TextWriter implements DataWriter {
   private String lastResponse = null;
   private String filename = null;
   private boolean overwrite = true;
+  private String fieldSeparator = null;
+  private boolean showColumnNames = true;
   private PrintWriter out = null;
+  
+  private int recordCount = 0;
   
   public void setFilename(String tmp) {
     this.filename = tmp;
   }
   
   public void setOverwrite(boolean tmp) { this.overwrite = tmp; }
-
+  public void setOverwrite(String tmp) { this.overwrite = "true".equals(tmp); }
+  public void setFieldSeparator(String tmp) { this.fieldSeparator = tmp; }
+  public void setShowColumnNames(boolean tmp) { this.showColumnNames = tmp; }
+  public void setShowColumnNames(String tmp) { this.showColumnNames = "true".equals(tmp); }
 
   public void setAutoCommit(boolean flag) {}
   
@@ -42,6 +49,8 @@ public class TextWriter implements DataWriter {
   
   public String getFilename() { return filename; }
   public boolean getOverwrite() { return overwrite; }
+  public String getFieldSeparator() { return fieldSeparator; }
+  public boolean getShowColumnNames() { return showColumnNames; }
 
   public boolean isConfigured() {
     if (filename == null) {
@@ -52,22 +61,37 @@ public class TextWriter implements DataWriter {
       out = new PrintWriter(new BufferedWriter(new FileWriter(filename, !overwrite)));
     } catch (IOException io) {
       io.printStackTrace(System.out);
+      return false;
     }
-    return false;
+    return true;
   }
 
 
   public boolean save(DataRecord record) {
+    ++recordCount;
     try {
-      Iterator fieldItems = record.iterator();
-      while (fieldItems.hasNext()) {
-        DataField thisField = (DataField) fieldItems.next();
-        out.print(thisField.getValue());
-        if (fieldItems.hasNext()) {
-          out.print("|");
+      if (recordCount == 1 && showColumnNames) {
+        Iterator fieldItems = record.iterator();
+        while (fieldItems.hasNext()) {
+          DataField thisField = (DataField) fieldItems.next();
+          out.print(thisField.getName());
+          if (fieldItems.hasNext() && fieldSeparator != null) {
+            out.print(fieldSeparator);
+          }
         }
+        out.println("");
       }
-      out.println("");
+      if (1 == 1) {
+        Iterator fieldItems = record.iterator();
+        while (fieldItems.hasNext()) {
+          DataField thisField = (DataField) fieldItems.next();
+          out.print(thisField.getValue());
+          if (fieldItems.hasNext() && fieldSeparator != null) {
+            out.print(fieldSeparator);
+          }
+        }
+        out.println("");
+      }
     } catch (Exception ex) {
       logger.info(ex.toString());
       ex.printStackTrace(System.out);
