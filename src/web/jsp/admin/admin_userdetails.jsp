@@ -59,14 +59,15 @@ User Details<br>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">Reports To</td>
-    <td><%= toHtml(UserRecord.getManager()) %>
-    <dhv:evaluate exp="<%=!(UserRecord.getManagerUserEnabled())%>"><font color="red">*</font></dhv:evaluate>
+    <td>
+      <dhv:username id="<%= UserRecord.getManagerId() %>"/>
+      <dhv:evaluate exp="<%= !(UserRecord.getManagerUserEnabled()) %>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
-<dhv:evaluate if="<%= hasText(UserRecord.getAliasName()) %>">
+<dhv:evaluate if="<%= UserRecord.getAlias() != -1 %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">Aliased To</td>
-    <td><%= toHtml(UserRecord.getAliasName()) %></td>
+    <td><dhv:username id="<%= UserRecord.getAlias() %>"/></td>
   </tr>
 </dhv:evaluate>
   <tr class="containerBody">
@@ -87,7 +88,7 @@ User Details<br>
 </dhv:evaluate>
 <dhv:evaluate exp="<%=!(UserRecord.getEnabled())%>">
 <dhv:permission name="admin-users-edit">
-  <input type=button name="action" value="Enable"	onClick="document.details.command.value='EnableUser';document.details.submit()">
+  <input type="button" name="action" value="Enable"	onClick="document.details.command.value='EnableUser';document.details.submit()">
 </dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate exp="<%=(UserRecord.getEnabled())%>">
