@@ -62,21 +62,23 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
     try {
       if (se.getName().equals("User")) {
         UserBean thisUser = (UserBean) se.getValue();
-        int userId = thisUser.getActualUserId();
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("ContextSessionListener --> Session for user " + userId + " ended ");
-        }
-        SessionManager thisManager = ((SystemStatus) ((Hashtable) context.getAttribute("SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getSessionManager();
-        UserSession thisSession = thisManager.getUserSession(userId);
-        if (thisSession.getId().equals(se.getSession().getId())) {
-          thisManager.removeUser(userId);
+        if (thisUser != null) {
+          int userId = thisUser.getActualUserId();
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("ContextSessionListener --> User removed from Valid User List");
+            System.out.println("ContextSessionListener-> Session for user " + userId + " ended ");
+          }
+          SessionManager thisManager = ((SystemStatus) ((Hashtable) context.getAttribute("SystemStatus")).get(thisUser.getConnectionElement().getUrl())).getSessionManager();
+          UserSession thisSession = thisManager.getUserSession(userId);
+          if (thisSession.getId().equals(se.getSession().getId())) {
+            thisManager.removeUser(userId);
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("ContextSessionListener-> User removed from valid user list");
+            }
           }
         }
       }
     } catch (Exception e) {
-      System.out.println("ContextSessionListener -- > Error " + e.toString());
+      System.out.println("ContextSessionListener-> Error: " + e.toString());
     }
   }
 
