@@ -15,8 +15,8 @@ import java.io.*;
 import java.util.*;
 
 /**
- *  Provides essential methods for working with XML.  XMLUtils is also
- *  a class representing an XML document.
+ *  Provides essential methods for working with XML. XMLUtils is also a class
+ *  representing an XML document.
  *
  *@author     matt
  *@created    April 10, 2002
@@ -72,7 +72,14 @@ public class XMLUtils {
     }
     this.parseXML(data.toString());
   }
-  
+
+
+  /**
+   *  Constructor for the XMLUtils object
+   *
+   *@param  xmlFile        Description of Parameter
+   *@exception  Exception  Description of Exception
+   */
   public XMLUtils(File xmlFile) throws Exception {
     this.parseXML(xmlFile);
   }
@@ -241,6 +248,7 @@ public class XMLUtils {
    *
    *@param  target   Description of Parameter
    *@param  element  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public static HashMap populateObject(Object target, Element element) {
     if (target != null) {
@@ -289,7 +297,8 @@ public class XMLUtils {
 
 
   /**
-   *  Description of the Method
+   *  Converts the XML to a string representation. Properties are based on:
+   *  http://www.ietf.org/rfc/rfc2278.txt
    *
    *@param  node  Description of Parameter
    *@return       Description of the Returned Value
@@ -298,6 +307,12 @@ public class XMLUtils {
     try {
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
+      //transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+      //transformer.setOutputProperty(OutputKeys.ENCODING, "US-ASCII");
+      transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
+      //transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
+
+
       Source source = new DOMSource(node);
 
       StringWriter writer = new StringWriter();
@@ -417,7 +432,14 @@ public class XMLUtils {
     DocumentBuilder builder = factory.newDocumentBuilder();
     this.document = builder.parse(isXML);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  xmlFileToParse  Description of Parameter
+   *@exception  Exception   Description of Exception
+   */
   private void parseXML(File xmlFileToParse) throws Exception {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("XMLUtils-> Parsing XML file");
