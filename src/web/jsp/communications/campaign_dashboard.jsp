@@ -58,7 +58,6 @@
 	%>      
 	<tr class="containerBody">
     <td width="8" valign="center" align="center" nowrap class="row<%= rowid %>">
-      <%= (!campaign.hasRun() && !campaign.hasFiles()?"&nbsp":"") %>
       <%= (campaign.hasRun() && !campaign.hasFiles()?"&nbsp":"") %>
       <%= (campaign.hasRun()?"":"<a href=\"javascript:confirmForward('/CampaignManager.do?command=Cancel&id=" + campaign.getId() +"&notify=true')\">Cancel</a>") %>
       <%= (campaign.hasFiles()?"<a href=\"/CampaignManager.do?command=PrepareDownload&id=" + campaign.getId() + "\">Download<br>Available</a>":"") %>
