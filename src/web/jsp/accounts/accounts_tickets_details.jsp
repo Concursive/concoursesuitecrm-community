@@ -11,26 +11,25 @@
     </td>
   </tr>
   <tr class="containerMenu">
-    <td>
-      <a href="/Accounts.do?command=Details&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Details</font></a> | 
-      <a href="/Accounts.do?command=Fields&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Folders</font></a> |
-      <font color="#787878">Activities</font> | 
-      <a href="Contacts.do?command=View&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Contacts</font></a> | 
-      <a href="Opportunities.do?command=View&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Opportunities</font></a> | 
-      <a href="Accounts.do?command=ViewTickets&orgId=<%= TicketDetails.getOrgId() %>"><font color="#0000FF">Tickets</font></a> |
-      <a href="AccountsDocuments.do?command=View&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Documents</font></a>
+      <td>
+      <a href="/Accounts.do?command=Details&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Details</font></a><dhv:permission name="accounts-accounts-folders-view"> | 
+      <a href="/Accounts.do?command=Fields&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Folders</font></a></dhv:permission><dhv:permission name="accounts-accounts-contacts-view"> |
+      <a href="Contacts.do?command=View&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Contacts</font></a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-view"> | 
+      <a href="Opportunities.do?command=View&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Opportunities</font></a></dhv:permission><dhv:permission name="accounts-accounts-tickets-view"> | 
+      <a href="Accounts.do?command=ViewTickets&orgId=<%= TicketDetails.getOrgId() %>"><font color="#0000FF">Tickets</font></a></dhv:permission><dhv:permission name="accounts-accounts-documents-view"> |
+      <a href="AccountsDocuments.do?command=View&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Documents</font></a></dhv:permission>
     </td>
   </tr>
   <tr>
   	<td class="containerBack">
 <% if (TicketDetails.getClosed() != null) { %>
-      <input type=button value="Reopen"> <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
+      <dhv:permission name="accounts-accounts-tickets-edit"><input type=button value="Reopen"> <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font></dhv:permission>
 <%} else {%>
-      <input type=submit value="Modfiy">
-      <input type="submit" value="Delete" onClick="javascript:this.form.action='/AccountTickets.do?command=DeleteTicket&id=<%= TicketDetails.getId() %>'">
+      <dhv:permission name="accounts-accounts-tickets-edit"><input type=submit value="Modfiy"></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/AccountTickets.do?command=DeleteTicket&id=<%=TicketDetails.getId() %>'"></dhv:permission>
 <%}%>
-<br>
-&nbsp;
+<dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br>&nbsp;</dhv:permission>
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
 		<td colspan=2 valign=center align=left>
@@ -214,13 +213,14 @@
   </tr>
 <%}%>
 </table>
-<br>
+<dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br></dhv:permission>
 <% if (TicketDetails.getClosed() != null) { %>
-  <input type=button value="Reopen">
+      <dhv:permission name="accounts-accounts-tickets-edit"><input type=button value="Reopen"></dhv:permission>
 <%} else {%>
-  <input type=submit value="Modify">
-  <input type="submit" value="Delete" onClick="javascript:this.form.action='/AccountTickets.do?command=DeleteTicket&id=<%= TicketDetails.getId() %>'">
+      <dhv:permission name="accounts-accounts-tickets-edit"><input type=submit value="Modfiy"></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/AccountTickets.do?command=DeleteTicket&id=<%=TicketDetails.getId() %>'"></dhv:permission>
 <%}%>
+
 </td></tr>
 </table>
 </form>

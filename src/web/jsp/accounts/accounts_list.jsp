@@ -1,10 +1,13 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="OrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
 <jsp:useBean id="OrgListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+
 <form name="listView" method="post" action="/Accounts.do?command=View">
-<a href="/Accounts.do?command=Add">Add an Account</a>
+<dhv:permission name="accounts-accounts-add"><a href="/Accounts.do?command=Add">Add an Account</a></dhv:permission>
+<dhv:permission name="accounts-accounts-add" none="true"><br></dhv:permission>
 <center><%= OrgListInfo.getAlphabeticalPageLinks() %></center>
 
 <table width="100%" border="0">
@@ -21,9 +24,11 @@
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
+    <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete">
     <td valign=center align=left bgcolor="#DEE0FA">
       <strong>Action</strong>
     </td>
+    </dhv:permission>
     <td width=30% valign=center align=left>
       <strong><a href="/Accounts.do?command=View&column=o.name">Account Name</a></strong>
       <%= OrgListInfo.getSortIcon("o.name") %>
@@ -52,9 +57,12 @@
     Organization thisOrg = (Organization)j.next();
 %>      
   <tr>
+    <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete">
     <td width=8 valign=center nowrap class="row<%= rowid %>">
-      <a href="/Accounts.do?command=Modify&orgId=<%= thisOrg.getOrgId() %>&return=list">Edit</a>|<a href="javascript:confirmDelete('/Accounts.do?command=Delete&orgId=<%= thisOrg.getOrgId() %>');">Del</a>
-    </td>
+      <dhv:permission name="accounts-accounts-edit"><a href="/Accounts.do?command=Modify&orgId=<%= thisOrg.getOrgId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-edit,accounts-accounts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-delete"><a href="javascript:confirmDelete('/Accounts.do?command=Delete&orgId=<%= thisOrg.getOrgId() %>');">Del</a></dhv:permission>
+      </td>
+    </dhv:permission>
+    
 		<td width="30%" class="row<%= rowid %>">
       <a href="/Accounts.do?command=Details&orgId=<%=thisOrg.getOrgId()%>"><%= toHtml(thisOrg.getName()) %></a>
 		</td>

@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
@@ -13,22 +14,22 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><font color="#000000">Details</font></a> | 
-      <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Folders</font></a> |
-      <font color="#787878">Activities</font> | 
-      <a href="/Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><font color="#0000FF">Contacts</font></a> | 
-      <a href="/Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><font color="#000000">Opportunities</font></a> | 
-      <a href="/Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Tickets</font></a> |
-      <a href="AccountsDocuments.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><font color="#000000">Documents</font></a>
+      <a href="/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Details</font></a><dhv:permission name="accounts-accounts-folders-view"> | 
+      <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Folders</font></a></dhv:permission><dhv:permission name="accounts-accounts-contacts-view"> |
+      <a href="Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>"><font color="#0000FF">Contacts</font></a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-view"> | 
+      <a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Opportunities</font></a></dhv:permission><dhv:permission name="accounts-accounts-tickets-view"> | 
+      <a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Tickets</font></a></dhv:permission><dhv:permission name="accounts-accounts-documents-view"> |
+      <a href="AccountsDocuments.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><font color="#000000">Documents</font></a></dhv:permission>
     </td>
   </tr>
   <tr>
     <td class="containerBack">
-<input type='submit' value="Modify"	name="Modify">
-<input type='submit' value="Delete" onClick="javascript:this.form.action='/Contacts.do?command=Delete&id=<%=ContactDetails.getId()%>&orgId=<%=ContactDetails.getOrgId()%>'">
+<dhv:permission name="accounts-accounts-contacts-edit"><input type='submit' value="Modify"	name="Modify"></dhv:permission>
+<dhv:permission name="accounts-accounts-contacts-delete"><input type='submit' value="Delete" onClick="javascript:this.form.action='/Contacts.do?command=Delete&id=<%=ContactDetails.getId()%>&orgId=<%=ContactDetails.getOrgId()%>'"></dhv:permission>
+<dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br>&nbsp;</dhv:permission>
+
 <input type=hidden name="typeId" value="<%=ContactDetails.getTypeId()%>">
-<br>
-&nbsp;
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
@@ -156,10 +157,10 @@
   </tr>
 <%}%>
 </table>
-<br>
-<input type='submit' value="Modify"	name="Modify">
-<input type='submit' value="Delete" onClick="javascript:this.form.action='/Contacts.do?command=Delete&id=<%=ContactDetails.getId()%>&orgId=<%=ContactDetails.getOrgId()%>'">
-  </td>
+<dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br></dhv:permission>
+<dhv:permission name="accounts-accounts-contacts-edit"><input type='submit' value="Modify"	name="Modify"></dhv:permission>
+<dhv:permission name="accounts-accounts-contacts-delete"><input type='submit' value="Delete" onClick="javascript:this.form.action='/Contacts.do?command=Delete&id=<%=ContactDetails.getId()%>&orgId=<%=ContactDetails.getOrgId()%>'"></dhv:permission>
+ </td>
   </tr>
 </table>
 </form>

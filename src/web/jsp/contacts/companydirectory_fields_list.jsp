@@ -29,8 +29,8 @@
   if (CategoryList.size() > 0) {
 %>
     <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><br>
-    &nbsp;<br>
-    <dhv:permission name="contacts-external_contacts-folders-add"><a href="/ExternalContacts.do?command=AddFolderRecord&contactId=<%= ContactDetails.getId() %>&catId=<%=(String)request.getAttribute("catId") %>">Add a record to this folder</a><br></dhv:permission>
+    
+    <dhv:permission name="contacts-external_contacts-folders-add">&nbsp;<br><a href="/ExternalContacts.do?command=AddFolderRecord&contactId=<%= ContactDetails.getId() %>&catId=<%=(String)request.getAttribute("catId") %>">Add a record to this folder</a><br></dhv:permission>
     &nbsp;<br>
     <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr class="title">
