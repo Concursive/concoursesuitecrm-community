@@ -116,6 +116,9 @@
 
 - Configure Apache Tomcat Web Server
   # Setup tomcat as a service, so that it auto-starts on boot
+    ### This file can optionally be copied from CVS
+    ### by copying the pref/apache/tomcat4.1/init.d/tomcat to /etc/init.d/tomcat
+    ### otherwise...
     $ cp /usr/java/tomcat/bin/catalina.sh /etc/init.d/tomcat
     $ vi /etc/init.d/tomcat
   
@@ -212,6 +215,7 @@
   # Configure the web server
     $ sudo cp pref/apache/tomcat4.1/conf/web.xml ${CATALINA_HOME}/conf/
     $ sudo cp pref/apache/tomcat4.1/conf/server.xml ${CATALINA_HOME}/conf/
+    $ sudo cp pref/apache/tomcat4.1/init.d/tomcat /etc/init.d/tomcat
     $ sudo vi ${CATALINA_HOME}/conf/server.xml #make changes per on-screen directions
   
   # Install the software (Follow on-screen messages until BUILD SUCCESSFUL)
