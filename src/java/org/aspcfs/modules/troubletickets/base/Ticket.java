@@ -899,6 +899,15 @@ public class Ticket extends GenericBean {
     }
     return tmp;
   }
+  
+  public String getModifiedDateTimeString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
 
 
   /**
@@ -1225,6 +1234,15 @@ public class Ticket extends GenericBean {
    */
   public int getSeverityCode() {
     return severityCode;
+  }
+  
+  public String getClosedDateTimeString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(closed);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
   }
 
 

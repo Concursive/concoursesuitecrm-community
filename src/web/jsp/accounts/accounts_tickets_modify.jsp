@@ -95,6 +95,16 @@ function ShowSpan(thisID)
       <strong><%=toHtml(TicketDetails.getCompanyName())%> - Ticket #<%=TicketDetails.getId()%></strong>
     </td>
   </tr>
+  
+  <% if (TicketDetails.getClosed() != null) { %>  
+  <tr>
+    <td bgColor="#F1F0E0">
+      <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
+    </td>
+  </tr>
+<%}%>
+  
+  
   <tr class="containerMenu">
     <td>
       <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
@@ -105,12 +115,19 @@ function ShowSpan(thisID)
     <td class="containerBack">
 <form name="details" action="/AccountTickets.do?command=UpdateTicket&auto-populate=true" method="post">    
 <% if (TicketDetails.getClosed() != null) { %>
-  <input type=button value="Reopen"> <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+  <input type=button value="Reopen">
+    <% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
+  <%} else {%> 
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+  <%}%>
 <%} else {%>
   <input type=submit value="Update">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
-  <input type=submit onClick="javascript:document.forms[0].close.value='1'" value="Close">
+    <% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
+  <%} else {%> 
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+  <%}%>
   <%= showAttribute(request, "closedError") %>
 <%}%>
 <br>
@@ -290,9 +307,20 @@ function ShowSpan(thisID)
       Solution
 		</td>
 		<td>
-      <textarea name=solution cols=55 rows=3><% if (TicketDetails.getSolution() != null) {%><%=TicketDetails.getSolution()%><%}%></textarea>
-		</td>
-  </tr>
+      <textarea name=solution cols=55 rows=3><% if (TicketDetails.getSolution() != null) {%><%=TicketDetails.getSolution()%><%}%></textarea><br>
+        <input type="checkbox" name="closeNow">Close ticket
+      </td>
+		</tr>
+		
+	<tr class="containerBody">
+	<td width="100" class="formLabel">
+	Knowledge Base
+	</td>
+	
+	<td bgColor="white">
+	<input type="checkbox" name="kbase" checked>Include this solution
+	</td>
+	</tr>
 </table>
 <br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -336,11 +364,20 @@ function ShowSpan(thisID)
 <br>
 <% if (TicketDetails.getClosed() != null) { %>
   <input type=button value="Reopen">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+  
+  <% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
+  <%} else {%> 
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+  <%}%>
+  
 <%} else {%>
   <input type=submit value="Update">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
-  <input type=submit onClick="javascript:document.forms[0].close.value='1'" value="Close">
+  <% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
+  <%} else {%> 
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+  <%}%>
 <%}%>
   </td>
   </tr>

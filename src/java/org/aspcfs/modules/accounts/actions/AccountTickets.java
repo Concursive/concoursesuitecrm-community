@@ -513,7 +513,9 @@ public final class AccountTickets extends CFSModule {
       if (resultCount == -1) {
         return (executeCommandModifyTicket(context));
       } else if (resultCount == 1) {
-        return ("UpdateTicketOK");
+
+		      return ("UpdateTicketOK");
+        
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");

@@ -345,6 +345,7 @@
     <forward name="AddTicketOK" resource="/accounts_tickets_add.jsp" layout="nav"/>
     <forward name="InsertTicketOK" resource="/accounts_tickets_details.jsp" layout="nav"/>
     <forward name="DeleteTicketOK" resource="/Accounts.do?command=ViewTickets"/>
+    <forward name="ReturnListOK" resource="/Accounts.do?command=ViewTickets"/>
     <forward name="TicketDetailsOK" resource="/accounts_tickets_details.jsp" layout="nav"/>
     <forward name="ModifyTicketOK" resource="/accounts_tickets_modify.jsp" layout="nav"/>
     <forward name="UpdateTicketOK" resource="/AccountTickets.do?command=TicketDetails"/>
