@@ -25,6 +25,10 @@ public class RecipientList extends Vector {
   private boolean hasNullSentDate = false;
   private boolean buildContact = false;
 
+  private java.sql.Timestamp statusRangeStart = null;
+  private java.sql.Timestamp statusRangeEnd = null;
+  private String status = null;
+  
   /**
    *  Constructor for the RecipientList object
    *
@@ -40,7 +44,13 @@ public class RecipientList extends Vector {
   public void setHasNullSentDate(boolean tmp) { this.hasNullSentDate = tmp; }
   public void setBuildContact(boolean tmp) { this.buildContact = tmp; }
   public void setPagedListInfo(PagedListInfo tmp) { this.pagedListInfo = tmp; }
-
+  public void setStatusRangeStart(java.sql.Timestamp tmp) {
+    this.statusRangeStart = tmp;
+  }
+  public void setStatusRangeEnd(java.sql.Timestamp tmp) {
+    this.statusRangeEnd = tmp;
+  }
+  public void setStatus(String tmp) { this.status = tmp; }
 
   public int getCampaignId() { return campaignId; }
   public int getRunId() { return runId; }
@@ -53,7 +63,6 @@ public class RecipientList extends Vector {
 
 
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
@@ -150,45 +159,53 @@ public class RecipientList extends Vector {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
     if (campaignId > -1) {
       sqlFilter.append("AND campaign_id = " + campaignId + " ");
     }
-    
     if (runId > -1) {
       sqlFilter.append("AND run_id = " + runId + " ");
     }
-    
     if (statusId > -1) {
       sqlFilter.append("AND status_id = " + statusId + " ");
     }
-    
     if (scheduledDate != null) {
       sqlFilter.append("AND scheduled_date = ? ");
     }
-    
     if (sentDate != null) {
       sqlFilter.append("AND sent_date = ? ");
     }
-    
     if (hasNullSentDate) {
       sqlFilter.append("AND sent_date IS NULL ");
     }
-
+    if (statusRangeStart != null) {
+      sqlFilter.append("AND status_date >= ? ");
+    }
+    if (statusRangeEnd != null) {
+      sqlFilter.append("AND status_date <= ? ");
+    }
+    if (status != null) {
+      sqlFilter.append("AND status = ? ");
+    }
   }
 
 
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-
     if (scheduledDate != null) {
       pst.setTimestamp(++i, scheduledDate);
     }
-    
     if (sentDate != null) {
       pst.setTimestamp(++i, sentDate);
     }
-
+    if (statusRangeStart != null) {
+      pst.setTimestamp(++i, statusRangeStart);
+    }
+    if (statusRangeEnd != null) {
+      pst.setTimestamp(++i, statusRangeEnd);
+    }
+    if (status != null) {
+      pst.setString(++i, status);
+    }
     return i;
   }
   
@@ -213,6 +230,26 @@ public class RecipientList extends Vector {
     rs.close();
     pst.close();
     return count;
+  }
+  
+  public int queryRecordCount(Connection db) throws SQLException {
+    int recordCount = 0;
+    StringBuffer sqlFilter = new StringBuffer();
+    String sqlCount =
+      "SELECT COUNT(*) AS recordcount " +
+      "FROM scheduled_recipient r " +
+      "LEFT JOIN contact c ON (r.contact_id = c.contact_id) " +
+      "WHERE r.id > -1 ";
+    createFilter(sqlFilter);
+    PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
+    int items = prepareFilter(pst);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      recordCount = DatabaseUtils.getInt(rs, "recordcount", 0);
+    }
+    pst.close();
+    rs.close();
+    return recordCount;
   }
 }
 
