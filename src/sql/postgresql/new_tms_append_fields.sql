@@ -10,3 +10,6 @@ ADD COLUMN customer_product_id INTEGER REFERENCES customer_product(customer_prod
 
 ALTER TABLE ticketlog
 ADD COLUMN customer_product_id INTEGER REFERENCES customer_product(customer_product_id);
+
+ALTER TABLE ticket ADD COLUMN expectation INTEGER;
+
