@@ -259,6 +259,69 @@ Temporary solution:
   
   
   
+*** PostgreSQL Tuning ***
+
+[root]
+
+PostgreSQL by default is very conservative.  It's a good idea to increase a few
+things on the system.
+
+# Increase the kernel shared memory
+# This is a calculation based on ACTUAL server memory!!!
+# To check the current shared memory on a system, use:
+    $ cat /proc/sys/kernel/shmmax
+# In this example, the server has 256MB so I want to increase shared memory to 128MB
+# 256Mb total, 96Mb shared, 12Mb sort
+# 512Mb total, 224Mb shared, 12Mb sort
+# 1Gb total, 480Mb shared, 32Mb sort
+
+# The greater this number, the more PostgreSQL can load the database into memory
+  $ vi /etc/sysctl.conf
+  
+  # Add the following line at the bottom:
+    kernel.shmmax = 96000000
+
+# To update the server at run-time, without rebooting:
+  $ echo 96000000 > /proc/sys/kernel/shmmax
+
+# Now modify postgresql configuration to use more memory
+# This is a calculation based on the kernel shmmax!!!
+  $ vi /var/lib/pgsql/data/postgresql.conf
+  
+  # Uncomment the following line and change the value:
+  # shared buffers AT THE MOST can be shmmax / 8192
+    shared_buffers = 11700
+  # Uncomment the following line and change the value:
+  # sort_mem should not be too much, 512k is the default so try:
+    sort_mem = 12288
+    
+# On an initial data load, set fsync=false, but turn it back on when done!!!
+# This will speed up inserts but can cause data loss if the server fails
+
+# PostgreSQL will need to be restarted after saving changes
+  $ service postgresql restart
+  
+
+Vacuuming the database regularly is highly recommended to keep the indexes
+up to date.
+
+# In psql, try:
+  # vacuum;
+
+  
+  
+*** Tomcat Tuning ***
+
+[root]
+  
+  # In /etc/profile change the amount of memory that Java uses
+  # depending on the amount of memory the system has!!!!!!!
+  # 256Mb total, use 128m
+  # 512Mb total, use 256m
+  # 1Gb total, use 512m
+  $ vi /etc/profile
+    export JAVA_OPTS=-Xmx128m -Xms128m
+  
 *** Software Maintenace ***
 
 Even though the production server uses RAID, it is important that the database 
