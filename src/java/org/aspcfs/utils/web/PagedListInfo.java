@@ -498,6 +498,9 @@ public class PagedListInfo implements Serializable {
         if (this.getCriteriaValue(tempKey) != null && !(this.getCriteriaValue(tempKey).trim().equals(""))) {
 
           //its an int
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("PagedListInfo-> Setting: " + tempKey + "=" + getCriteriaValue(tempKey));
+          }
           if (tempKey.startsWith("searchcode") || tempKey.startsWith("searchdate")) {
             ObjectUtils.setParam(obj, tempKey.substring(10), this.getCriteriaValue(tempKey));
           } else {
