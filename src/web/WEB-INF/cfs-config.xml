@@ -670,12 +670,12 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="PersonalViewOK" resource="/projects_personalview.jsp" layout="nav"/>
-    <forward name="EnterpriseViewOK" resource="/projects_enterpriseview.jsp" layout="nav"/>
-    <forward name="AddProjectOK" resource="/projects_addproject.jsp" layout="nav"/>
-    <forward name="ModifyProjectOK" resource="/projects_modifyproject.jsp" layout="nav"/>
+    <forward name="PersonalViewOK" resource="/iteam/projects_personalview.jsp" layout="nav"/>
+    <forward name="EnterpriseViewOK" resource="/iteam/projects_enterpriseview.jsp" layout="nav"/>
+    <forward name="AddProjectOK" resource="/iteam/projects_addproject.jsp" layout="nav"/>
+    <forward name="ModifyProjectOK" resource="/iteam/projects_modifyproject.jsp" layout="nav"/>
     <forward name="UpdateProjectOK" resource="/ProjectManagement.do?command=ProjectCenter"/>
-    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
   </action>
   <action name="ProjectManagementRequirements" class="com.zeroio.iteam.actions.ProjectManagementRequirements">
     <bean name="Requirement" class="com.zeroio.iteam.base.Requirement" scope="request" />
@@ -683,7 +683,7 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
     <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
     <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
   </action>
@@ -693,8 +693,8 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
-    <forward name="MakeUserListOK" resource="/projects_makeuserlist.jsp"/>
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
+    <forward name="MakeUserListOK" resource="/iteam/projects_makeuserlist.jsp"/>
     <forward name="ModifyOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Team"/>
   </action>
   <action name="ProjectManagementAssignments" class="com.zeroio.iteam.actions.ProjectManagementAssignments">
@@ -703,11 +703,11 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
     <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
     <forward name="AddOKRequirements" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
     <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
-    <forward name="PopupOK" resource="/projects_center_assignments_modify.jsp" layout="style"/>
+    <forward name="PopupOK" resource="/iteam/projects_center_assignments_modify.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   <action name="ProjectManagementIssues" class="com.zeroio.iteam.actions.ProjectManagementIssues">
@@ -716,9 +716,9 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
     <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Issues"/>
-    <forward name="PopupOK" resource="/projects_center_issues_details.jsp" layout="style"/>
+    <forward name="PopupOK" resource="/iteam/projects_center_issues_details.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   <action name="ProjectManagementIssueReply" class="com.zeroio.iteam.actions.ProjectManagementIssues">
@@ -727,7 +727,7 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
     <forward name="AddOK" resource="/ProjectManagementIssues.do?command=Details"/>
     <forward name="DownloadOK" resource="/ProjectManagementIssues.do?command=Details"/>
   </action>
@@ -737,7 +737,7 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
     <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
     <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
     <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
@@ -749,7 +749,7 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
     <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
     <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
   </action>
@@ -759,7 +759,7 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
     <forward name="AddCategoryOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
     <forward name="UpdateCategoryOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
   </action>
