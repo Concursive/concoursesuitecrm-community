@@ -812,11 +812,20 @@ public final class MyCFS extends CFSModule {
       //check if the user's account is expiring
       
       int userId = this.getUserId(context);
+      User thisUser = this.getUser(context, userId);
       if (context.getRequest().getParameter("userId") != null){
         userId = Integer.parseInt(context.getRequest().getParameter("userId"));
+        if (userId == this.getUserId(context)) {
+          Integer tmpUserId = (Integer) context.getSession().getAttribute("calendarUserId");
+          if (tmpUserId != null) {
+            context.getSession().removeAttribute("calendarUserId");
+          }
+        } else {
+          context.getSession().setAttribute("calendarUserId", new Integer(userId));
+        }
+      } else if (context.getSession().getAttribute("calendarUserId") != null) {
+        userId = ((Integer) context.getSession().getAttribute("calendarUserId")).intValue();
       }
-      
-      User thisUser = this.getUser(context, userId);
       if (thisUser.getExpires() != null) {
         String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
         companyCalendar.addEvent(expiryDate, CalendarEventList.EVENT_TYPES[9],"Your user login expires");
@@ -900,10 +909,20 @@ public final class MyCFS extends CFSModule {
       //companyCalendar.updateParams();
       //check if the user's account is expiring
       int userId = this.getUserId(context);
+      User thisUser = this.getUser(context, userId);
       if (context.getRequest().getParameter("userId") != null){
         userId = Integer.parseInt(context.getRequest().getParameter("userId"));
+        if (userId == this.getUserId(context)) {
+          Integer tmpUserId = (Integer) context.getSession().getAttribute("calendarUserId");
+          if (tmpUserId != null) {
+            context.getSession().removeAttribute("calendarUserId");
+          }
+        } else {
+          context.getSession().setAttribute("calendarUserId", new Integer(userId));
+        }
+      } else if (context.getSession().getAttribute("calendarUserId") != null) {
+        userId = ((Integer) context.getSession().getAttribute("calendarUserId")).intValue();
       }
-      User thisUser = this.getUser(context, userId);
       if (thisUser.getExpires() != null) {
         String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
         companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[9], expiryDate, new Integer(1));
