@@ -30,6 +30,7 @@ Response Details
         <tr>
             <td>
 <%
+        System.out.println("1");
         Iterator z = ResponseDetails.iterator();
         
         if ( z.hasNext() ) {
@@ -60,12 +61,13 @@ Response Details
                  <tr>
                    <td class="containerBody">
                     <table cellpadding="4" cellspacing="0" border="<%= border %>" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-                    <dhv:evaluate exp="<%= (type == SurveyQuestion.OPEN_ENDED) %>">
-                      <tr><td align="left">Comment</td></tr>
+                    <dhv:evaluate exp="<%= (type == SurveyQuestion.QUANT_COMMENTS) %>">
+                      <tr><td align="left" width="4">Answer</td><td align="left">Comment</td></tr>
                     </dhv:evaluate>
                     <dhv:evaluate exp="<%= (type == SurveyQuestion.ITEMLIST) %>">
                       <tr><td width="100%" align="left">Item</td><td align="left">Selection</td></tr>
                       <% 
+                        System.out.println("2");
                         HashMap itemListResponse = thisItem.getItemListResponse(answers);
                         Iterator i = itemListResponse.keySet().iterator();
                         if(i.hasNext()){
@@ -81,6 +83,7 @@ Response Details
                     </dhv:evaluate>
                     <dhv:evaluate exp="<%= (type != SurveyQuestion.ITEMLIST) %>">
                       <%
+                      System.out.println("3");
                          Iterator answerList = answers.iterator();
                          if(answerList.hasNext()){
                           while(answerList.hasNext()){
@@ -100,7 +103,9 @@ Response Details
                          }else{
                        %>
                           <tr><td width="100%" align="left">No Answers Found.</td></tr>
-                       <%}%>
+                       <%}
+                        System.out.println("4");
+                        %>
                      </dhv:evaluate>
                     </table>
                    </td>
