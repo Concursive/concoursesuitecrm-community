@@ -52,6 +52,8 @@ public class AutoGuideMaintenance {
       rs.close();
       pst.close();
 
+      System.out.println("AutoGuideMaintenance-> Vehicles to delete: " + deleteList.size());
+      
       Iterator i = deleteList.iterator();
       while (i.hasNext()) {
         Inventory thisItem = new Inventory(db, ((Integer) i.next()).intValue());
