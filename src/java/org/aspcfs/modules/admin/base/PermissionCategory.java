@@ -98,14 +98,16 @@ public class PermissionCategory extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO permission_category (category, description, " +
-        "level, enabled, active) " +
-        "VALUES ( ?, ?, ?, ?, ? ) ");
+        "level, enabled, active, lookups, folders) " +
+        "VALUES ( ?, ?, ?, ?, ?, ?, ? ) ");
     int i = 0;
     pst.setString(++i, category);
     pst.setString(++i, description);
     pst.setInt(++i, level);
     pst.setBoolean(++i, enabled);
     pst.setBoolean(++i, active);
+    pst.setBoolean(++i, lookups);
+    pst.setBoolean(++i, folders);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "permission_cate_category_id_seq");
