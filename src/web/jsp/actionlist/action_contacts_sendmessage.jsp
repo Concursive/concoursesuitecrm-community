@@ -29,15 +29,15 @@
 <%-- Editor must go here, before the body onload --%>
 <dhv:evaluate if="<%= !clientType.showApplet() %>">
 <jsp:include page="../htmlarea_include.jsp" flush="true"/>
-<body onload="initEditor('messageText');document.sendMessage.name.focus();">
+<body onload="initEditor('messageText');document.sendMessage.replyTo.focus();">
 </dhv:evaluate>
 <%-- Use applet instead --%>
 <dhv:evaluate if="<%= clientType.showApplet() %>">
-<body onload="document.sendMessage.name.focus();">
+<body onload="document.sendMessage.replyTo.focus();">
 </dhv:evaluate>
 <script language="JavaScript">
   function updateMessageList() {
-    document.forms['sendMessage'].elements['messageId'].selectedIndex = 0;;
+    document.forms['sendMessage'].elements['messageId'].selectedIndex = 0;
     document.forms['sendMessage'].action = 'CampaignManager.do?command=MessageJSList&actionSource=MyActionContacts<%= addLinkParams(request, "popup|popupType|actionId")%>';
     document.forms['sendMessage'].submit();
   }

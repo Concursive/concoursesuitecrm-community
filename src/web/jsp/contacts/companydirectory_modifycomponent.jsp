@@ -120,6 +120,7 @@ Modify Component
       <br>
       <br>
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
+<dhv:evaluate exp="<%= !(isPopup(request)  && !isInLinePopup(request)) %>">
  <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
@@ -127,6 +128,7 @@ Modify Component
  <% }else{ %>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
  <% } %>
+</dhv:evaluate>
 <dhv:evaluate exp="<%= isPopup(request)  && !isInLinePopup(request) %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
@@ -139,6 +141,7 @@ Modify Component
 <br>
 
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
+<dhv:evaluate exp="<%= !(isPopup(request)  && !isInLinePopup(request)) %>">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
@@ -146,6 +149,7 @@ Modify Component
 <%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
+</dhv:evaluate>
 <dhv:evaluate exp="<%= isPopup(request)  && !isInLinePopup(request) %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>

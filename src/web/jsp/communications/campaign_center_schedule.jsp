@@ -91,7 +91,7 @@ Delivery
       <input type="text" size="10" name="activeDate" value="<zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" />">
       <dhv:permission name="campaign-campaigns-edit">
       <a href="javascript:popCalendar('inputForm', 'activeDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
-      <%= TimeZoneSelect.getSelect("activeDateTimeZone", Campaign.getActiveDateTimeZone()).getHtml() %>
+      <%= TimeZoneSelect.getSelect("activeDateTimeZone", (Campaign.getActiveDateTimeZone() == null) ? User.getTimeZone(): Campaign.getActiveDateTimeZone()).getHtml() %>
       </dhv:permission>
       <%=showAttribute(request,"activeDateError")%>
     </td>

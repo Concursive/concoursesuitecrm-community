@@ -76,8 +76,7 @@
       <strong>Status</strong>
     </th>
     <th width="100%" nowrap>
-      <strong><a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>&column=problem">Issue</a></strong>
-      <%= projectTicketsInfo.getSortIcon("problem") %>
+      <strong>Issue</strong>
     </th>
     <th align="center" nowrap>
       <strong><a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>&column=pri_code">Priority</a></strong>
@@ -87,12 +86,12 @@
       <strong>Assigned To</strong>
     </th>
     <th align="center" nowrap>
-      <strong><a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>&column=entered">Age</a></strong>
-      <%= projectTicketsInfo.getSortIcon("entered") %>
+      <strong><a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>&column=t.entered">Age</a></strong>
+      <%= projectTicketsInfo.getSortIcon("t.entered") %>
     </th>
     <th align="center" nowrap>
-      <strong><a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>&column=modified">Last Modified</a></strong>
-      <%= projectTicketsInfo.getSortIcon("modified") %>
+      <strong><a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>&column=t.modified">Last Modified</a></strong>
+      <%= projectTicketsInfo.getSortIcon("t.modified") %>
     </th>
   </tr>
 <dhv:evaluate if="<%= ticketList.size() == 0 %>">

@@ -116,17 +116,18 @@ Modify Component
       <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
         <%= thisFile.getImageTag("-23") %>
       </dhv:evaluate>
-      <br>
-      <br>
+      <br /> <br />
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-<% if ("list".equals(request.getParameter("return"))) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= ComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
-<%} else {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
-<%}%>
-<dhv:evaluate exp="<%= popUp %>">
-  <input type="button" value="Cancel" onclick="javascript:window.close();">
-</dhv:evaluate>
+      <dhv:evaluate exp="<%= !popUp %>">
+        <% if ("list".equals(request.getParameter("return"))) {%>
+          <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= ComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+        <%} else {%>
+          <input type="submit" value="Cancel" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+        <%}%>
+      </dhv:evaluate>
+      <dhv:evaluate exp="<%= popUp %>">
+        <input type="button" value="Cancel" onclick="javascript:window.close();">
+      </dhv:evaluate>
 <input type="hidden" name="id" value="<%= ComponentDetails.getId() %>">
 <input type="hidden" name="headerId" value="<%= ComponentDetails.getHeaderId() %>">
 <input type="hidden" name="modified" value="<%= ComponentDetails.getModified() %>">
@@ -144,11 +145,13 @@ Modify Component
 
 <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-<% if ("list".equals(request.getParameter("return"))) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= ComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
-<%} else {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
-<%}%>
+<dhv:evaluate exp="<%= !popUp %>">
+      <% if ("list".equals(request.getParameter("return"))) {%>
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= ComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+      <%} else {%>
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+      <%}%>
+</dhv:evaluate>
 <dhv:evaluate exp="<%= popUp %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>

@@ -83,9 +83,9 @@ Add Activity
       <%-- include call add form --%>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <% if ("list".equals(request.getParameter("return"))) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+      <input type="button" value="Cancel" onClick="window.location.href='AccountContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>';">
       <% }else{ %>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';"> 
+      <input type="button" value="Cancel" onClick="window.location.href='AccountContactsCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';"> 
       <%}%>
       <br />
       <dhv:formMessage />
@@ -95,9 +95,9 @@ Add Activity
       <br>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <% if ("list".equals(request.getParameter("return"))) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+      <input type="button" value="Cancel" onClick="window.location.href='AccountContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>';">
       <% }else{ %>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';"> 
+      <input type="button" value="Cancel" onClick="window.location.href='AccountContactsCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';"> 
       <%}%>
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">

@@ -66,15 +66,15 @@ Export Data
       <strong>Action</strong>
     </th>
     <th nowrap>
-      <strong><a href="Accounts.do?command=Reports&column=subject">Subject</a></strong>
-      <%= RptListInfo.getSortIcon("subject") %>
+      <strong><a href="Accounts.do?command=Reports&column=f.subject">Subject</a></strong>
+      <%= RptListInfo.getSortIcon("f.subject") %>
     </th>
     <th>
       <strong>Size</strong>
     </th>
     <th nowrap>
-      <strong><a href="Accounts.do?command=Reports&column=entered">Create Date</a></strong>
-      <%= RptListInfo.getSortIcon("entered") %>
+      <strong><a href="Accounts.do?command=Reports&column=f.entered">Create Date</a></strong>
+      <%= RptListInfo.getSortIcon("f.entered") %>
     </th>
     <th nowrap>
       <strong>Created By</strong>
