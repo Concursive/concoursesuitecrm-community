@@ -33,8 +33,7 @@ public class PagedListInfo {
    *@since    1.0
    */
   public PagedListInfo() { }
-
-
+  
   /**
    *  Sets the ColumnToSortBy attribute of the PagedListInfo object
    *
