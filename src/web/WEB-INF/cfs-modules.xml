@@ -23,6 +23,7 @@
     <action name="MyCFSInbox"/>
     <action name="MyTasks"/>
     <action name="MyTasksForward"/>
+    <action name="Reassignments"/>
     <page title="My Home Page"/>
     <permission value="myhomepage-view"/>
     <long_html value="My Home Page"/>
@@ -43,18 +44,25 @@
       <short_html value="&lt;image src='images/divider.gif'&gt;"/>
     </submenu>
     
-    <submenu name="MyProfile">
-      <permission value="myhomepage-profile-view"/>
-      <long_html value="My Profile"/>
-      <short_html value="My&lt;br&gt;Profile"/>
-      <link value="MyCFS.do?command=MyProfile"/>
-    </submenu>
-    
     <submenu name="MyInbox">
       <permission value="myhomepage-inbox-view"/>
-      <long_html value="My Inbox"/>
-      <short_html value="My&lt;br&gt;Inbox"/>
+      <long_html value="My Mailbox"/>
+      <short_html value="My&lt;br&gt;Mailbox"/>
       <link value="MyCFSInbox.do?command=Inbox&amp;return=1"/>
+    </submenu>
+    
+    <submenu name="My Tasks">
+     <permission value="myhomepage-miner-view"/>
+      <long_html value="My Tasks"/>
+      <short_html value="My&lt;br&gt;Tasks"/>
+      <link value="MyTasks.do"/>
+    </submenu>
+    
+    <submenu name="Reassign">
+        <permission value="admin-reassign-view"/>
+        <long_html value="Re-assignments"/>
+        <short_html value="Re-assignments"/>
+        <link value="Reassignments.do?command=Reassign"/>
     </submenu>
     
     <submenu name="Customize Headlines">
@@ -64,11 +72,11 @@
       <link value="MyCFS.do?command=Headline"/>
     </submenu>
     
-    <submenu name="My Tasks">
-     <permission value="myhomepage-miner-view"/>
-      <long_html value="My Tasks"/>
-      <short_html value="My&lt;br&gt;Tasks"/>
-      <link value="MyTasks.do"/>
+    <submenu name="MyProfile">
+      <permission value="myhomepage-profile-view"/>
+      <long_html value="My Settings"/>
+      <short_html value="My&lt;br&gt;Settings"/>
+      <link value="MyCFS.do?command=MyProfile"/>
     </submenu>
   </menu>
   
@@ -548,13 +556,6 @@
       <short_html value="&lt;image src='images/divider.gif'&gt;"/>
     </submenu>
     
-    <submenu name="Reassign">
-        <permission value="admin-reassign-view"/>
-        <long_html value="Re-assignments"/>
-        <short_html value="Re-assignments"/>
-        <link value="Users.do?command=Reassign"/>
-    </submenu>
-    
     <submenu name="Users">
         <permission value="admin-users-view"/>
         <long_html value="View Users"/>
@@ -569,13 +570,6 @@
         <link value="Roles.do?command=ListRoles"/>
     </submenu>
     
-    <submenu name="Configuration">
-        <permission value="admin-sysconfig-view"/>
-        <long_html value="System Management"/>
-        <short_html value="System&lt;br&gt;Management"/>
-        <link value="Admin.do?command=Manage"/>
-    </submenu>
-
   </menu>
   
 </application>
