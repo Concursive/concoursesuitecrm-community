@@ -1406,4 +1406,169 @@ ALTER TABLE [dbo].[sync_table] ADD
 	)
 GO
 
+ALTER TABLE [dbo].[contact_address] ADD 
+	 FOREIGN KEY 
+	(
+		[address_type]
+	) REFERENCES [dbo].[lookup_contactaddress_types] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[contact_id]
+	) REFERENCES [dbo].[contact] (
+		[contact_id]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [dbo].[access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [dbo].[access] (
+		[user_id]
+	)
+GO
+
+ALTER TABLE [dbo].[contact_emailaddress] ADD 
+	 FOREIGN KEY 
+	(
+		[contact_id]
+	) REFERENCES [dbo].[contact] (
+		[contact_id]
+	),
+	 FOREIGN KEY 
+	(
+		[emailaddress_type]
+	) REFERENCES [dbo].[lookup_contactemail_types] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [dbo].[access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [dbo].[access] (
+		[user_id]
+	)
+GO
+
+ALTER TABLE [dbo].[contact_phone] ADD 
+	 FOREIGN KEY 
+	(
+		[contact_id]
+	) REFERENCES [dbo].[contact] (
+		[contact_id]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [dbo].[access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [dbo].[access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[phone_type]
+	) REFERENCES [dbo].[lookup_contactphone_types] (
+		[code]
+	)
+GO
+
+ALTER TABLE [dbo].[organization_address] ADD 
+	 FOREIGN KEY 
+	(
+		[address_type]
+	) REFERENCES [dbo].[lookup_orgaddress_types] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [dbo].[access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [dbo].[access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[org_id]
+	) REFERENCES [dbo].[organization] (
+		[org_id]
+	)
+GO
+
+ALTER TABLE [dbo].[organization_emailaddress] ADD 
+	 FOREIGN KEY 
+	(
+		[emailaddress_type]
+	) REFERENCES [dbo].[lookup_orgemail_types] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [dbo].[access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [dbo].[access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[org_id]
+	) REFERENCES [dbo].[organization] (
+		[org_id]
+	)
+GO
+
+ALTER TABLE [dbo].[organization_phone] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [dbo].[access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [dbo].[access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[org_id]
+	) REFERENCES [dbo].[organization] (
+		[org_id]
+	),
+	 FOREIGN KEY 
+	(
+		[phone_type]
+	) REFERENCES [dbo].[lookup_orgphone_types] (
+		[code]
+	)
+GO
+
+
+
+
 
