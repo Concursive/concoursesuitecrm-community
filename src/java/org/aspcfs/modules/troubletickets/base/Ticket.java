@@ -1358,7 +1358,7 @@ public void setCompanyEnabled(boolean companyEnabled) {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO TICKET (org_id, contact_id, problem, enteredby, modifiedby, pri_code, department_code, cat_code, scode ) " +
-          "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,? ) ");
+          "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? ) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getOrgId());
@@ -1379,7 +1379,6 @@ public void setCompanyEnabled(boolean companyEnabled) {
                 pst.setNull(++i, java.sql.Types.INTEGER);
         }
         
-      pst.setInt(++i, this.getCatCode());
       
         if (this.getCatCode() > 0) {
                 pst.setInt(++i, this.getCatCode());
@@ -1474,18 +1473,25 @@ public void setCompanyEnabled(boolean companyEnabled) {
         } else {
                 pst.setNull(++i, java.sql.Types.INTEGER);
         }
+        
+        if (this.getPriorityCode() > 0) {
+                pst.setInt(++i, this.getPriorityCode());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
     
-    pst.setInt(++i, priorityCode);
         if (this.getSeverityCode() > 0) {
                 pst.setInt(++i, this.getSeverityCode());
         } else {
                 pst.setNull(++i, java.sql.Types.INTEGER);
         }
+        
         if (this.getCatCode() > 0) {
                 pst.setInt(++i, this.getCatCode());
         } else {
                 pst.setNull(++i, java.sql.Types.INTEGER);
         }
+        
     pst.setInt(++i, assignedTo);
     if (this.getSubCat1() > 0) {
             pst.setInt(++i, this.getSubCat1());
