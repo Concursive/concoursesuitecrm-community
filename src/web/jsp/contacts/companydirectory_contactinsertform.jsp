@@ -100,7 +100,7 @@ Add Contact<br>
             </td>
             <td>
               <input type="hidden" name="orgId" id="orgId" value="<%= ContactDetails.getOrgId() %>">
-              &nbsp;[<a href="javascript:popAccountsListSingle('orgId','changeaccount');">Select</a>]&nbsp;
+              &nbsp;[<a href="javascript:document.forms['addContact'].contactcategory[1].checked='t';popAccountsListSingle('orgId','changeaccount');" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;">Select</a>]&nbsp;
             </td>
           </tr>
        </table>
