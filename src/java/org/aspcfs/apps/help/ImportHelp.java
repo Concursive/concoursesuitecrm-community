@@ -20,15 +20,13 @@ import javax.xml.transform.stream.*;
  */
 public class ImportHelp {
 
-  ArrayList helpModules;
-  HelpModule helpModule = null;
-  HelpContent helpContent = null;
+  ArrayList helpModules = new ArrayList();
 
   //Place holder for permission categories existing in the new database
-  ArrayList permissionCategories;
+  ArrayList permissionCategories = new ArrayList();
 
   //Place holder for items in the table of contents
-  ArrayList tableOfContents;
+  ArrayList tableOfContents = new ArrayList();
 
 
   /**
@@ -40,14 +38,9 @@ public class ImportHelp {
   /**
    *  Constructor for the ImportHelp object
    *
-   *@param  Args  Description of the Parameter
+   *@param  args  Description of the Parameter
    */
   public ImportHelp(String[] args) {
-
-    helpModules = new ArrayList();
-    permissionCategories = new ArrayList();
-    tableOfContents = new ArrayList();
-
     ConnectionPool sqlDriver = null;
     try {
       sqlDriver = new ConnectionPool();
@@ -57,16 +50,16 @@ public class ImportHelp {
     Connection db = null;
 
     try {
-     String filePath = args[0];
- 
+      String filePath = args[0];
+
       String driver = args[1];
       String uri = args[2];
       String username = args[3];
       String passwd = "";
-      if (args.length == 5)
+      if (args.length == 5) {
         passwd = args[4];
- 
-      
+      }
+
       sqlDriver.setForceClose(false);
       sqlDriver.setMaxConnections(5);
       //Test a single connection
@@ -74,24 +67,28 @@ public class ImportHelp {
       thisElement.setDriver(driver);
 
       db = sqlDriver.getConnection(thisElement);
-
-      System.out.println("Reading Help Data from XML...");
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Reading Help Data from XML...");
+      }
       buildHelpInformation(filePath);
       buildExistingPermissionCategories(db);
 
-      System.out.println("Inserting data into help_module, help_contents, features, tips, etc...");
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Inserting data into help_module, help_contents, features, tips, etc...");
+      }
       insertHelpRecords(db);
       buildTableOfContents();
-      System.out.println("Inserting table of content records...");
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Inserting table of content records...");
+      }
       insertTableOfContents(db);
 
       sqlDriver.free(db);
-      System.out.println("Finished");
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Finished");
+      }
     } catch (Exception e) {
       System.err.println(e);
-    }
-    finally{
-     System.exit(0); 
     }
   }
 
@@ -99,15 +96,16 @@ public class ImportHelp {
   /**
    *  The main program for the ImportHelp class
    *
-   *@param  Args  The command line arguments
+   *@param  args  The command line arguments
    */
   public static void main(String[] args) {
-
-    if (( args.length != 4) && ( args.length != 5))
+    if ((args.length != 4) && (args.length != 5)) {
       System.out.println("Synopsis: java ExportHelp [filepath][driver][uri][user] <passwd>");
-    else
+    } else {
+      System.setProperty("DEBUG", "1");
       new ImportHelp(args);
-
+    }
+    System.exit(0);
   }
 
 
@@ -118,12 +116,14 @@ public class ImportHelp {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  boolean insertHelpRecords(Connection db) throws SQLException {
+  public boolean insertHelpRecords(Connection db) throws SQLException {
     // Inserting a records correspoding to a permission category
     Iterator itr = helpModules.iterator();
     while (itr.hasNext()) {
       HelpModule tempHelpModule = (HelpModule) itr.next();
-      System.out.println(" " + tempHelpModule.getCategory());
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(" " + tempHelpModule.getCategory());
+      }
       // Verifying if the permission category exists in the new database
       int categoryId = -1;
       if ((categoryId = existPermissionCategory(tempHelpModule.getCategory())) != -1) {
@@ -132,7 +132,9 @@ public class ImportHelp {
 
         tempHelpModule.insertModule(db);
       } else {
-        System.out.println(" * " + tempHelpModule.getCategory() + " Does not exist in the new database");
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println(" * " + tempHelpModule.getCategory() + " Does not exist in the new database");
+        }
       }
     }
 
@@ -147,7 +149,7 @@ public class ImportHelp {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  boolean insertTableOfContents(Connection db) throws SQLException {
+  public boolean insertTableOfContents(Connection db) throws SQLException {
 
     HashMap map = new HashMap();
     Iterator itr = tableOfContents.iterator();
@@ -173,7 +175,7 @@ public class ImportHelp {
    *@param  category  Category name as it exists in the exported xml data
    *@return           the id of the permission category in the new database
    */
-  int existPermissionCategory(String category) {
+  public int existPermissionCategory(String category) {
     Iterator itr = permissionCategories.iterator();
     while (itr.hasNext()) {
       PermissionCategory pc = (PermissionCategory) itr.next();
@@ -193,7 +195,7 @@ public class ImportHelp {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  boolean buildExistingPermissionCategories(Connection db) throws SQLException {
+  public boolean buildExistingPermissionCategories(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM permission_category ");
@@ -213,6 +215,8 @@ public class ImportHelp {
 
   /**
    *  Description of the Method
+   *
+   *@param  filePath  Description of the Parameter
    */
   public void buildHelpInformation(String filePath) {
 
@@ -235,7 +239,7 @@ public class ImportHelp {
    *
    *@param  node  Description of the Parameter
    */
-  void processNode(Node node) {
+  public void processNode(Node node) {
     NodeList moduleList = ((Element) node).getElementsByTagName("module");
 
     for (int i = 0; i < moduleList.getLength(); i++) {
@@ -254,7 +258,9 @@ public class ImportHelp {
 
       NodeList pageList = ((Element) module).getElementsByTagName("pageDescription");
 
-      System.out.println(" " + helpModule.getCategory() + ": " + pageList.getLength());
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(" " + helpModule.getCategory() + ": " + pageList.getLength());
+      }
       for (int j = 0; j < pageList.getLength(); j++) {
         Node page = pageList.item(j);
         NamedNodeMap pageNMP = page.getAttributes();
@@ -309,7 +315,7 @@ public class ImportHelp {
   /**
    *  Description of the Method
    */
-  void buildTableOfContents() {
+  public void buildTableOfContents() {
     Iterator moduleItr = helpModules.iterator();
     int moduleOrder = 5;
 
