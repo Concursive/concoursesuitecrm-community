@@ -34,12 +34,14 @@ Scheduled Events
     </th>
   </tr>
 <%
+    int rowid = 0;
     Iterator i = processList.values().iterator();
     if(i.hasNext()) {
     while (i.hasNext()) {
+      rowid = (rowid != 1 ? 1 : 2);
       BusinessProcess thisProcess = (BusinessProcess) i.next();
 %>
-  <tr class="containerBody">
+  <tr class="row<%= rowid %>">
     <td align="center" valign="top">
       Edit
     </td>

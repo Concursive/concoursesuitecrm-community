@@ -22,14 +22,15 @@
   </tr>
 <% 
   int count = 0;
+  int rowid = 0;
 %>
 <%-- Categories --%>
 <% 
   if (PermissionCategory.getCategories()) { 
-    ++count;
 %>
   <dhv:permission name="admin-sysconfig-categories-view">
-  <tr>
+  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
+  <tr class="row<%= rowid %>">
     <td><a href="AdminCategories.do?command=ViewActive&moduleId=<%= PermissionCategory.getId() %>">Categories</a></td>
   </tr>
   </dhv:permission>
@@ -37,10 +38,10 @@
 <%-- Folders --%>
 <% 
   if (PermissionCategory.getFolders()) {
-    ++count;
 %>
   <dhv:permission name="admin-sysconfig-folders-view">
-  <tr>
+  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
+  <tr class="row<%= rowid %>">
     <td><a href="AdminFieldsFolder.do?modId=<%= PermissionCategory.getId() %>">Custom Folders &amp; Fields</a></td>
   </tr>
   </dhv:permission>
@@ -48,10 +49,10 @@
 <%-- Lookups --%>
 <%
   if (PermissionCategory.getLookups()) {
-    ++count;
 %>
   <dhv:permission name="admin-sysconfig-lists-view">
-  <tr>
+  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
+  <tr class="row<%= rowid %>">
     <td><a href="Admin.do?command=EditLists&moduleId=<%= PermissionCategory.getId() %>">Lookup Lists</a></td>
   </tr>
   </dhv:permission>
@@ -59,10 +60,10 @@
 <%-- Object Events --%>
 <% 
   if (PermissionCategory.getObjectEvents()) { 
-    ++count;
 %>
   <dhv:permission name="admin-object-workflow-view">
-  <tr>
+  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
+  <tr class="row<%= rowid %>">
     <td>
       <a href="AdminObjectEvents.do?moduleId=<%= PermissionCategory.getId() %>">Object Events</a>
       <%--<i>Object events are background processes that are triggered by an action</i>--%>
@@ -73,10 +74,10 @@
 <%-- Scheduled Events --%>
 <% 
   if (PermissionCategory.getScheduledEvents()) { 
-    ++count;
 %>
   <dhv:permission name="admin-object-workflow-view">
-  <tr>
+  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
+  <tr class="row<%= rowid %>">
     <td>
       <a href="AdminScheduledEvents.do?moduleId=<%= PermissionCategory.getId() %>">Scheduled Events</a>
       <%--<i>Scheduled events are background processes that can run continously or at a specific date and time</i>--%>

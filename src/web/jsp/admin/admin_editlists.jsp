@@ -31,11 +31,13 @@ Lookup Lists
     </th>
   </tr>
 <%
+  int rowid = 0;
   Iterator i = LookupLists.iterator();
   while (i.hasNext()) {
+    rowid = (rowid != 1 ? 1 : 2);
     LookupListElement thisElement = (LookupListElement)i.next();
 %>
-    <tr>
+    <tr class="row<%= rowid %>">
       <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="Admin.do?command=ModifyList&module=<%= thisElement.getModuleId() %>&sublist=<%= thisElement.getLookupId() %>">Edit</a></td></dhv:permission>
       <td valign="center" width="200"><%= toHtml(thisElement.getDescription()) %></td>
       <td width="35" valign="center" align="center"><%= thisElement.getLookupList().getEnabledElementCount() %></td>

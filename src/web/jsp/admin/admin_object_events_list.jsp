@@ -54,14 +54,16 @@ Object Events
 <%
     Iterator hooks = hookList.values().iterator();
     int count = 0;
+    int rowid = 0;
     while (hooks.hasNext()) {
       ObjectHookActionList actionList = (ObjectHookActionList) hooks.next();
       Iterator actions = actionList.values().iterator();
       while (actions.hasNext()) {
         count++;
+        rowid = (rowid != 1 ? 1 : 2);
         ObjectHookAction thisAction = (ObjectHookAction) actions.next();
 %>
-  <tr class="containerBody">
+  <tr class="row<%= rowid %>">
     <td align="center" valign="top">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
           <a href="javascript:displayMenu('menuProcess', '<%= PermissionCategory.getId() %>', '<%= thisAction.getProcessId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
