@@ -1362,7 +1362,11 @@ public void setCompanyEnabled(boolean companyEnabled) {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getOrgId());
-      pst.setInt(++i, this.getContactId());
+      if (contactId > -1) {
+	      pst.setInt(++i, this.getContactId());
+      } else {
+	      pst.setNull(++i, java.sql.Types.INTEGER);
+      }
       pst.setString(++i, this.getProblem());
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
@@ -1514,7 +1518,11 @@ public void setCompanyEnabled(boolean companyEnabled) {
             pst.setNull(++i, java.sql.Types.INTEGER);
     }
       
-    pst.setInt(++i, this.getContactId());
+    if (contactId > -1) {
+	      pst.setInt(++i, this.getContactId());
+    } else {
+	      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getProblem());
 
     if (this.getCloseIt() == true) {
@@ -1636,11 +1644,14 @@ public void setCompanyEnabled(boolean companyEnabled) {
 
     if (problem == null || problem.trim().equals("")) {
       errors.put("problemError", "An issue is required");
-    } else if (closeIt == true && (solution == null || solution.trim().equals(""))) {
+    } 
+    if (closeIt == true && (solution == null || solution.trim().equals(""))) {
       errors.put("closedError", "A solution is required when closing a ticket");
-    } else if (orgId == -1) {
+    } 
+    if (orgId == -1) {
       errors.put("orgIdError", "You must associate an Account with a Ticket");
-    } else if (contactId == -1) {
+    } 
+    if (contactId == -1) {
       errors.put("contactIdError", "You must associate a Contact with a Ticket");
     }
 
@@ -1663,7 +1674,13 @@ public void setCompanyEnabled(boolean companyEnabled) {
     //ticket table
     this.setId(rs.getInt("ticketid"));
     orgId = rs.getInt("org_id");
+    if (rs.wasNull()) {
+            orgId = -1;
+    }
     contactId = rs.getInt("contact_id");
+    if (rs.wasNull()) {
+            contactId = -1;
+    }
     problem = rs.getString("problem");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
