@@ -66,7 +66,7 @@ User Details<br>
   
   </table>
   <br>
-  <dhv:pagedListControl object="AccessLogInfo" tdClass="row1"/>
+  <dhv:pagedListControl object="AccessLogInfo"/>
 </td>
 </tr>
 </table>  
