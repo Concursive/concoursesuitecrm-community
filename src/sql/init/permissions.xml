@@ -31,7 +31,7 @@
       <lookup constantId="3" class="lookupList" table="lookup_contactaddress_types" description="Address Types"/>
       <lookup constantId="4" class="lookupList" table="lookup_contactphone_types" description="Phone Types"/>
       <lookup constantId="5" class="lookupList" table="lookup_department" description="Departments"/>
-      <permission name="contacts" attributes="v---" description="Access to Contacts &amp; Resources module"/>
+      <permission name="contacts" attributes="v---" description="Access to General Contacts module"/>
       <permission name="contacts-external_contacts" attributes="vaed" description="External Contact Records"/>
       <permission name="contacts-internal_contacts" attributes="vaed" description="Internal Contact Records"/>
       <permission name="contacts-external_contacts-reports" attributes="va-d" description="Reports"/>
