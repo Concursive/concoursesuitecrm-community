@@ -36,6 +36,7 @@ public class UpgradeDatabaseTask extends Task {
   private String baseFile = null;
   private String servletJar = null;
   private String webPath = null;
+  private String specificDatabase = null;
 
 
   /**
@@ -119,6 +120,16 @@ public class UpgradeDatabaseTask extends Task {
 
 
   /**
+   *  Sets the specificDatabase attribute of the UpgradeDatabaseTask object
+   *
+   *@param  tmp  The new specificDatabase value
+   */
+  public void setSpecificDatabase(String tmp) {
+    this.specificDatabase = tmp;
+  }
+
+
+  /**
    *  This method is called by Ant when the upgradeDatabaseTask is used
    *
    *@exception  BuildException  Description of the Exception
@@ -130,7 +141,7 @@ public class UpgradeDatabaseTask extends Task {
       servletJar = StringUtils.replace(servletJar, "\\", "\\\\");
       webPath = StringUtils.replace(webPath, "\\", "\\\\");
     }
-    System.out.println("Checking databases to upgrade");
+    System.out.println("Checking databases to process...");
     try {
       //Create a Connection Pool to facilitate connections
       ConnectionPool sqlDriver = new ConnectionPool();
@@ -165,7 +176,10 @@ public class UpgradeDatabaseTask extends Task {
           siteInfo.put("user", rs.getString("dbuser"));
           siteInfo.put("password", rs.getString("dbpw"));
           siteInfo.put("driver", rs.getString("driver"));
-          siteList.add(siteInfo);
+          if ((specificDatabase == null || "".equals(specificDatabase)) ||
+             (specificDatabase.equals((String) siteInfo.get("dbName")))) {
+            siteList.add(siteInfo);
+          }
         }
         rs.close();
         pst.close();
@@ -181,6 +195,7 @@ public class UpgradeDatabaseTask extends Task {
             (String) siteInfo.get("user"),
             (String) siteInfo.get("password"));
         ce.setDriver((String) siteInfo.get("driver"));
+        System.out.println("");
         db = sqlDriver.getConnection(ce);
         //Try to run a specified bean shell script if found
         executeScript(db, baseFile, fsEval, (String) siteInfo.get("dbName"));
@@ -246,7 +261,16 @@ public class UpgradeDatabaseTask extends Task {
       }
     }
   }
-  
+
+
+  /**
+   *  After a file is executed, the database is updated with the file's date
+   *  for reference
+   *
+   *@param  db             Description of the Parameter
+   *@param  baseName       Description of the Parameter
+   *@exception  Exception  Description of the Exception
+   */
   private void updateDBVersion(Connection db, String baseName) throws Exception {
     if (new File(baseName).exists()) {
       try {
@@ -264,7 +288,7 @@ public class UpgradeDatabaseTask extends Task {
         }
         rs.close();
         pst.close();
-        
+
         if (newFile) {
           //Ex. 2003-07-23.sql  2003-07-23.bsh  2003-07-23gk.sql
           String scriptVersion = fileName.substring(0, fileName.indexOf("."));
