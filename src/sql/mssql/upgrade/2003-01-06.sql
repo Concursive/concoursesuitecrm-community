@@ -12,4 +12,5 @@ INSERT INTO permission (category_id, permission, permission_view, permission_add
 
 INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (5, 'accounts-autoguide-inventory', 1, 1, 1, 1, 'Auto Guide Vehicle Inventory', 200);
 
+UPDATE permission_category SET level = 55 WHERE level = 35;
 
