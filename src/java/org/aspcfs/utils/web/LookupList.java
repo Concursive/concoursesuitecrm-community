@@ -2,6 +2,7 @@ package org.aspcfs.utils.web;
 
 import java.util.Vector;
 import java.util.Iterator;
+import java.util.HashMap;
 import java.sql.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
@@ -26,6 +27,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
   protected int syncType = Constants.NO_SYNC;
   protected boolean showDisabledFlag = true;
   protected PagedListInfo pagedListInfo = null;
+  protected HashMap selectedItems = null;
 
 
   /**
@@ -95,6 +97,26 @@ public class LookupList extends HtmlSelect implements SyncableList {
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
+  }
+
+
+  /**
+   *  Gets the selectedItems attribute of the LookupList object
+   *
+   *@return    The selectedItems value
+   */
+  public HashMap getSelectedItems() {
+    return selectedItems;
+  }
+
+
+  /**
+   *  Sets the selectedItems attribute of the LookupList object
+   *
+   *@param  tmp  The new selectedItems value
+   */
+  public void setSelectedItems(HashMap tmp) {
+    this.selectedItems = tmp;
   }
 
 
@@ -631,9 +653,11 @@ public class LookupList extends HtmlSelect implements SyncableList {
           count >= pagedListInfo.getItemsPerPage()) {
         break;
       }
-      ++count;
       LookupElement thisElement = this.getObject(rs);
-      this.add(thisElement);
+      if (thisElement.getEnabled() == true || !showDisabledFlag || hasItem(thisElement.getCode())) {
+        ++count;
+        this.add(thisElement);
+      }
     }
     rs.close();
     if (pst != null) {
@@ -883,6 +907,13 @@ public class LookupList extends HtmlSelect implements SyncableList {
       sqlFilter.append("AND entered < ? ");
       sqlFilter.append("AND modified < ? ");
     }
+    if (selectedItems != null) {
+      if (selectedItems.size() > 0) {
+        sqlFilter.append("AND (enabled = ? OR code IN (" + getItemsAsList() + ")) ");
+      } else {
+        sqlFilter.append("AND enabled = ? ");
+      }
+    }
   }
 
 
@@ -906,8 +937,47 @@ public class LookupList extends HtmlSelect implements SyncableList {
       pst.setTimestamp(++i, lastAnchor);
       pst.setTimestamp(++i, nextAnchor);
     }
+    if (selectedItems != null) {
+      pst.setBoolean(++i, true);
+    }
     return i;
   }
 
+
+  /**
+   *  If a list of codes is provided, then hasItem will return whether the list
+   *  contains the specified code
+   *
+   *@param  code  Description of the Parameter
+   *@return       Description of the Return Value
+   */
+  private boolean hasItem(int code) {
+    if (selectedItems != null) {
+      if (!selectedItems.containsKey(new Integer(code))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+
+  /**
+   *  Gets the itemsAsList attribute of the LookupList object
+   *
+   *@return    The itemsAsList value
+   */
+  private String getItemsAsList() {
+    StringBuffer sb = new StringBuffer();
+    if (selectedItems != null) {
+      Iterator i = selectedItems.keySet().iterator();
+      while (i.hasNext()) {
+        sb.append(String.valueOf((Integer) i.next()));
+        if (i.hasNext()) {
+          sb.append(",");
+        }
+      }
+    }
+    return sb.toString();
+  }
 }
 
