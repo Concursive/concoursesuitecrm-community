@@ -613,7 +613,7 @@ public final class Accounts extends CFSModule {
     CalendarBean calendarInfo = (CalendarBean) context.getSession().getAttribute("AccountsCalendarInfo");
     if (calendarInfo == null) {
       calendarInfo = new CalendarBean();
-      calendarInfo.addAlertType("Accounts", "org.aspcfs.modules.accounts.AccountsListScheduledActions", "Accounts");
+      calendarInfo.addAlertType("Accounts", "org.aspcfs.modules.accounts.base.AccountsListScheduledActions", "Accounts");
       calendarInfo.setCalendarDetailsView("Accounts");
       context.getSession().setAttribute("AccountsCalendarInfo", calendarInfo);
     }
