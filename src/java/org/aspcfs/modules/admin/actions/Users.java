@@ -551,7 +551,7 @@ public final class Users extends CFSModule {
 		Exception errorMessage = null;
 		Connection db = null;
 		boolean recordInserted = false;
-    boolean contactInserted = false;
+    User insertedUser = null;
     
 		try {
 			db = getConnection(context);
@@ -566,9 +566,13 @@ public final class Users extends CFSModule {
       
 			recordInserted = thisUser.insert(db, context);
 			if (recordInserted) {
-        thisUser.setBuildContact(true);
-				thisUser = new User(db, thisUser.getId());
-				context.getRequest().setAttribute("UserRecord", thisUser);
+        insertedUser = new User();
+        insertedUser.setBuildContact(true);
+				//thisUser = new User(db, thisUser.getId());
+        insertedUser.buildRecord(db, thisUser.getId());
+        context.getRequest().setAttribute("UserRecord", insertedUser);
+        addRecentItem(context, insertedUser);        
+				context.getRequest().setAttribute("UserRecord", insertedUser);
 				updateSystemHierarchyCheck(db, context);
 			}
 			else {
