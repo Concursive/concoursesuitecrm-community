@@ -79,7 +79,7 @@
       <property>minerOnly</property>
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
-      <property>contactEndDate</property>
+      <property>contractEndDate</property>
       <property>alertDate</property>
       <property>alertText</property>
       <property>enabled</property>
@@ -108,6 +108,7 @@
       <property>modified</property>
       <property>entered</property>
       <property>modified</property>
+      <property>lastLogin</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Role" id="role">
       <property alias="guid">id</property>
@@ -653,6 +654,7 @@
       <property>username</property>
       <property>ip</property>
       <property>browser</property>
+      <property>entered</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="accountTypeLevels" table="account_type_levels">
       <property lookup="account" field="id">orgId</property>
