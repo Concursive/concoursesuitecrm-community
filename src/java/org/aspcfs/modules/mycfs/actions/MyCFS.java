@@ -329,7 +329,6 @@ public final class MyCFS extends CFSModule {
       projects.setBuildAssignments(true);
       projects.setAssignmentsForUser(getUserId(context));
       projects.setOpenAssignmentsOnly(true);
-      projects.setWithAssignmentDaysComplete(0);
       projects.setBuildIssues(false);
       projects.buildList(db);
       Iterator projectList = projects.iterator();
