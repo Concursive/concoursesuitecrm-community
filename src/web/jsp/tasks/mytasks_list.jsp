@@ -23,6 +23,7 @@
         <option value="all" <%=TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("all")?" selected":""%>>All Tasks</option>
       </select>
      </td>
+     <%if(!TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("all")){%>
      <td>
        <select size="1" name="listFilter2" onChange="javascript:document.taskListView.submit();">
         <option value="false" <%=TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("false")?" selected":""%>>InComplete Tasks</option>
@@ -30,6 +31,7 @@
         <option value="all" <%=TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("all")?" selected":""%>>All</option>
       </select>
       </td>
+      <%}%>
     </tr>
 </table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
