@@ -12,8 +12,36 @@ CREATE TABLE lookup_call_types (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
-)
-;
+);
+
+CREATE TABLE lookup_call_priority (
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  weight INTEGER NOT NULL
+);
+
+CREATE TABLE lookup_call_reminder (
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  base_value INTEGER DEFAULT 0 NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
+
+CREATE TABLE lookup_call_result (
+  result_id SERIAL PRIMARY KEY,
+  description VARCHAR(100) NOT NULL,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  next_required BOOLEAN NOT NULL DEFAULT false,
+  next_days INT NOT NULL DEFAULT 0,
+  next_call_type_id INT NULL,
+  canceled_type BOOLEAN NOT NULL DEFAULT false
+);
 
 CREATE SEQUENCE lookup_opportunity_typ_code_seq;
 CREATE TABLE lookup_opportunity_types (
@@ -84,14 +112,27 @@ CREATE TABLE call_log (
   length INTEGER,
   subject VARCHAR(255),
   notes TEXT,
-  followup_date DATE,
-  alertdate DATE,
-  followup_notes TEXT,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
-  alert varchar(100) default null
+  alert varchar(100) default null,
+  alertdate TIMESTAMP(3),
+  followup_date TIMESTAMP(3),
+  parent_id INT NULL REFERENCES call_log(call_id),
+  owner INT NULL REFERENCES access(user_id),
+  assignedby INT REFERENCES access(user_id),
+  assign_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  completedby INT REFERENCES access(user_id),
+  complete_date TIMESTAMP(3) NULL,
+  result_id INT REFERENCES lookup_call_result(result_id),
+  priority_id INT REFERENCES lookup_call_priority(code),
+  status_id INT NOT NULL DEFAULT 1,
+  reminder_value INT NULL,
+  reminder_type_id INT NOT NULL REFERENCES lookup_call_reminder(code)
 );
 
 CREATE INDEX "call_log_cidx" ON "call_log" USING btree ("alertdate", "enteredby");
+
+ALTER TABLE lookup_call_result ADD FOREIGN KEY(next_call_type_id) REFERENCES call_log(call_id);
+
