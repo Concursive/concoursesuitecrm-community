@@ -199,7 +199,7 @@ Campaign Details
 
 
 <dhv:permission name="campaign-campaigns-edit">
-  <input type="button" value="Modify Campaign Details" onClick="javascript:this.form.action='/CampaignManager.do?command=Modify&id=<%= Campaign.getId() %>';submit();">
+  <input type="button" value="Rename Campaign" onClick="javascript:this.form.action='/CampaignManager.do?command=Modify&id=<%= Campaign.getId() %>';submit();">
 </dhv:permission>
 <dhv:permission name="campaign-campaigns-delete">
   <input type="button" value="Delete Campaign" onClick="javascript:this.form.action='/CampaignManager.do?command=Delete&id=<%= Campaign.getId() %>';confirmSubmit(document.modForm);">
