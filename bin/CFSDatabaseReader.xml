@@ -127,6 +127,8 @@
       <property>level</property>
       <property>enabled</property>
       <property>active</property>
+      <property>folders</property>
+      <property>lookups</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Permission" id="permission">
       <property alias="guid">id</property>
