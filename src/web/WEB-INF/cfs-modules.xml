@@ -49,7 +49,7 @@
       <permission value="myhomepage-view"/>
       <long_html value="My Inbox"/>
       <short_html value="My&lt;br&gt;Inbox"/>
-      <link value="/MyCFSInbox.do?command=Inbox&return=1"/>
+      <link value="/MyCFSInbox.do?command=Inbox&amp;return=1"/>
     </submenu>
     
     <submenu name="Customize Headlines">
