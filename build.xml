@@ -640,18 +640,18 @@
         <fileset dir= "${dist.dir}/cfs/WEB-INF/reports" includes="*.xml"/>
     </delete>
     <!-- Archive the folder -->
-    <war destfile="${dist.dir}/darkhorse.war"
+    <war destfile="${dist.dir}/centric.war"
          webxml="${src.web.dir}/WEB-INF/web.xml"
          basedir="${dist.dir}/cfs"
          compress="true"
          manifest="${pref.dir}/cfs/war/MANIFEST.MF"
          />
     <!-- Create the distributable .zip file -->
-    <zip destfile="${dist.dir}/dhcrm_war.zip">
+    <zip destfile="${dist.dir}/centric_war.zip">
       <fileset dir="${doc.dir}" includes="Binary*EULA.rtf"/>
-      <fileset dir="${doc.dir}" includes="Dark*Horse*CRM*Installation*and*Setup.pdf"/>
+      <fileset dir="${doc.dir}" includes="CRM*Installation*and*Setup.pdf"/>
       <fileset dir="${doc.dir}/Change Logs" includes="readme.txt"/>
-      <fileset dir="${dist.dir}" includes="darkhorse.war"/>
+      <fileset dir="${dist.dir}" includes="centric.war"/>
     </zip>
     <!-- Cleanup files -->
     <delete dir="${dist.dir}/cfs"/>
