@@ -73,6 +73,7 @@ public final class CampaignManager extends CFSModule {
     if (!hasPermission(context, "campaign-dashboard-view")) {
       return ("PermissionError");
     }
+    this.resetPagedListInfo(context);
     Connection db = null;
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignDashboardListInfo");
     pagedListInfo.setLink("CampaignManager.do?command=Dashboard");
@@ -2190,6 +2191,25 @@ public final class CampaignManager extends CFSModule {
       this.freeConnection(context, db);
     }
     return ("SurveyJSListOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   */
+  private void resetPagedListInfo(ActionContext context) {
+    this.deletePagedListInfo(context, "CampaignDashboardListInfo");
+    this.deletePagedListInfo(context, "CampaignListInfo");
+    this.deletePagedListInfo(context, "CampaignCenterPreviewInfo");
+    this.deletePagedListInfo(context, "CampaignCenterGroupInfo");
+    this.deletePagedListInfo(context, "SurveyQuestionListInfo");
+    this.deletePagedListInfo(context, "SurveyResponseListInfo");
+    this.deletePagedListInfo(context, "ResponseDetailsListInfo");
+    this.deletePagedListInfo(context, "CampaignDashboardRecipientInfo");
+    this.deletePagedListInfo(context, "ItemDetailsListInfo");
+    this.deletePagedListInfo(context, "CommentListInfo");
   }
 }
 
