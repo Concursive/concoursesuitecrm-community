@@ -107,12 +107,14 @@ Add Folder Record
         </td></tr>
     </dhv:evaluate>
 <%}else{%>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr class="containerBody">
       <td colspan="2">
         <font color="#9E9E9E">No groups available.</font>
       </td>
     </tr>
-<%}%>
 </table>
+<%}%>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
+</table>
 </form>
