@@ -1103,7 +1103,7 @@
     <forward name="ConfigureDatabaseConfirmOK" resource="/setup/configure_database_confirm.jsp" layout="dhv"/>
     <forward name="ConfigureDatabaseOK" resource="/setup/configure_database_success.jsp" layout="dhv"/>
     <forward name="ConfigureDatabaseCreateOK" resource="/setup/configure_database_create_success.jsp" layout="dhv"/>
-    <forward name="ConfigureDatabaseCreateERROR" resource="/SetupDatabase.do?command=ConfigureDatabaseCheck" layout="dhv"/>
+    <forward name="ConfigureDatabaseCreateERROR" resource="/SetupDatabase.do?command=ConfigureDatabaseCheck"/>
   </action>
   <action name="SetupServerDetails" class="org.aspcfs.modules.setup.actions.Setup">
     <bean name="server" class="org.aspcfs.modules.setup.beans.ServerBean" scope="request" />
