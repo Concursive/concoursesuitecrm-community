@@ -41,8 +41,15 @@ NOTE: Dark Horse CRM works best with at least a 500 MHz processor and
       
       The web application server and database server can be on the same machine.
       
-      Tomcat should be configured with at least 256 MB of memory by setting
+      Tomcat should be configured with at least 256 MB of memory by setting the
+      following environment variable:
       JAVA_OPTS="-Xms256m -Xmx256m"
+      
+      Under Linux, you probably need to enable headless mode so that Dark Horse
+      CRM can dynamically create graphics by setting the following environment
+      variable:
+      CATALINA_OPTS=-Djava.awt.headless=true
+      
 
 
 --------------------------------------------------------------------------------
