@@ -4,7 +4,7 @@
 <jsp:useBean id="ContactEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].searchFirst.focus();">
+<body onLoad="javascript:document.forms[0].searchFirstName.focus();">
 <form name="searchContact" action="/ExternalContacts.do?command=ListContacts&auto-populate=true" method="post">
 <!--input type=submit value="Search">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts'">
@@ -21,7 +21,7 @@
       First Name
     </td>
     <td>
-      <input type=text size=35 name="searchFirst" value="">
+      <input type=text size=35 name="searchFirstName" value="">
     </td>
   </tr>
   
@@ -30,7 +30,7 @@
       Middle Name
     </td>
     <td>
-      <input type=text size=35 name="searchMiddle" value="">
+      <input type=text size=35 name="searchMiddleName" value="">
     </td>
   </tr>
   
@@ -39,7 +39,7 @@
       Last Name
     </td>
     <td>
-      <input type=text size=35 name="searchLast" value="">
+      <input type=text size=35 name="searchLastName" value="">
     </td>
   </tr>
   
@@ -65,5 +65,6 @@
 <input type=submit value="Search">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts'">
 <input type="reset" value="Reset">
+<input type="hidden" name="doSearch" value="true">
 </form>
 </body>

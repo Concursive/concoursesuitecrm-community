@@ -356,60 +356,38 @@ public final class ExternalContacts extends CFSModule {
 
     PagedListInfo externalContactsInfo = this.getPagedListInfo(context, "ExternalContactsInfo");
     externalContactsInfo.setLink("/ExternalContacts.do?command=ListContacts");
-
-    String passedFirst = context.getRequest().getParameter("searchFirst");
-    String passedMiddle = context.getRequest().getParameter("searchMiddle");
-    String passedLast = context.getRequest().getParameter("searchLast");
-    String passedTitle = context.getRequest().getParameter("searchTitle");
-    String passedCompany = context.getRequest().getParameter("searchCompany");
+    
+    if (context.getRequest().getParameter("doSearch") != null || ("search".equals(externalContactsInfo.getListView()))) {
+            externalContactsInfo.addFilter(1, "-1");
+    }
 
     Connection db = null;
     ContactList contactList = new ContactList();
-
-    //this is search stuff
-
-    if (passedFirst != null && !(passedFirst.equals(""))) {
-      passedFirst = "%" + passedFirst + "%";
-      contactList.setFirstName(passedFirst);
-    }
-    if (passedMiddle != null && !(passedMiddle.equals(""))) {
-      passedMiddle = "%" + passedMiddle + "%";
-      contactList.setMiddleName(passedMiddle);
-    }
-    if (passedLast != null && !(passedLast.equals(""))) {
-      passedLast = "%" + passedLast + "%";
-      contactList.setLastName(passedLast);
-    }
-    if (passedTitle != null && !(passedTitle.equals(""))) {
-      passedTitle = "%" + passedTitle + "%";
-      contactList.setTitle(passedTitle);
-    }
-    if (passedCompany != null && !(passedCompany.equals(""))) {
-      passedCompany = "%" + passedCompany + "%";
-      contactList.setCompany(passedCompany);
-    }
-
-    //end search stuff
+    
+    ContactTypeList contactTypeList = new ContactTypeList();
+    contactTypeList.setShowPersonal(true);
+    
+    context.getSession().removeAttribute("ContactMessageListInfo");
 
     try {
       db = this.getConnection(context);
-      context.getSession().removeAttribute("ContactMessageListInfo");
 
-      ContactTypeList contactTypeList = new ContactTypeList();
-      contactTypeList.setShowPersonal(true);
       contactTypeList.buildList(db);
       contactTypeList.addItem(-1, "All");
       context.getRequest().setAttribute("ContactTypeList", contactTypeList);
-
+      
       contactList.setPagedListInfo(externalContactsInfo);
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+      
       contactList.setPersonalId(this.getUserId(context));
       contactList.setTypeId(externalContactsInfo.getFilterKey("listFilter1"));
-
-      if ("all".equals(externalContactsInfo.getListView())) {
-        contactList.setOwnerIdRange(this.getUserRange(context));
+      
+      externalContactsInfo.setSearchCriteria(contactList);
+      
+      if ("my".equals(externalContactsInfo.getListView())) {
+              contactList.setOwner(this.getUserId(context));
       } else {
-        contactList.setOwner(this.getUserId(context));
+              contactList.setOwnerIdRange(this.getUserRange(context));
       }
 
       contactList.buildList(db);
