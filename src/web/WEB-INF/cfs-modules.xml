@@ -548,6 +548,13 @@
       <short_html value="&lt;image src='images/divider.gif'&gt;"/>
     </submenu>
     
+    <submenu name="Reassign">
+        <permission value="admin-reassign-view"/>
+        <long_html value="Re-assignments"/>
+        <short_html value="Re-assignments"/>
+        <link value="Users.do?command=Reassign"/>
+    </submenu>
+    
     <submenu name="Users">
         <permission value="admin-users-view"/>
         <long_html value="View Users"/>
@@ -562,26 +569,13 @@
         <link value="Roles.do?command=ListRoles"/>
     </submenu>
     
-    <submenu name="Reassign">
-        <permission value="admin-reassign-view"/>
-        <long_html value="Re-assignments"/>
-        <short_html value="Re-assignments"/>
-        <link value="Users.do?command=Reassign"/>
-    </submenu>
-    
     <submenu name="Configuration">
         <permission value="admin-sysconfig-view"/>
-        <long_html value="System Configuration"/>
-        <short_html value="System&lt;br&gt;Configuration"/>
-        <link value="Admin.do?command=Config"/>
+        <long_html value="System Management"/>
+        <short_html value="System&lt;br&gt;Management"/>
+        <link value="Admin.do?command=Manage"/>
     </submenu>
-    
-    <submenu name="Maintenance">
-        <permission value="admin-sysmaintenance-view"/>
-        <long_html value="System Maintenance"/>
-        <short_html value="System&lt;br&gt;Maintenance"/>
-        <link value="#"/>
-    </submenu>
+
   </menu>
   
 </application>
