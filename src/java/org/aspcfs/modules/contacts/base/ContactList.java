@@ -254,13 +254,14 @@ public class ContactList extends Vector {
 
 
   /**
-   *  Filters personal contacts based on the argument specified<br>
-   *  Usage: EXCLUDE_PERSONAL to exclude personal contacts
-   *         IGNORE_PERSONAL to ignore personal contacts
-   *         Set UserId to include personal contacts
-   *  Note: If owner is set personal contacts are included by default
-   *        so personalId can be set to IGNORE_PERSONAL<br>
-   *        Also set the AccessTypeList for speed up of the query
+   *  Filters personal contacts based on the argument specified<p />
+   *
+   *  Usage: EXCLUDE_PERSONAL to exclude personal contacts IGNORE_PERSONAL to
+   *  ignore personal contacts Set UserId to include personal contacts<p />
+   *
+   *  Note: If owner is set personal contacts are included by default so
+   *  personalId can be set to IGNORE_PERSONAL<br>
+   *  Also set the AccessTypeList for speed up of the query
    *
    *@param  personalId  The new personalId value
    */
@@ -270,13 +271,15 @@ public class ContactList extends Vector {
 
 
   /**
-   *  Filters personal contacts based on the argument specified<br>
-   *  Usage: EXCLUDE_PERSONAL to exclude personal contacts
-   *         IGNORE_PERSONAL to ignore personal contacts
-   *         Set UserId to include personal contacts
-   *  Note: If owner is set personal contacts are included by default
-   *        so personalId can be set to IGNORE_PERSONAL<br>
-   *        For external applications using ContactList it works without accessTypes too
+   *  Filters personal contacts based on the argument specified<p />
+   *
+   *  Usage: EXCLUDE_PERSONAL to exclude personal contacts IGNORE_PERSONAL to
+   *  ignore personal contacts Set UserId to include personal contacts<p />
+   *
+   *  Note: If owner is set personal contacts are included by default so
+   *  personalId can be set to IGNORE_PERSONAL<br>
+   *  For external applications using ContactList it works without accessTypes
+   *  too
    *
    *@param  personalId   The new personalId value
    *@param  accessTypes  The new personalId value
@@ -328,10 +331,9 @@ public class ContactList extends Vector {
 
 
   /**
-   *  Method to get all contacts including personal
-   *  Optionally the three arguments can be set seperately but it is highly recommended
-   *  to use this method
-   *  Note: AccessTypeList has to be set for the personalId to work
+   *  Method to get all contacts including personal Optionally the three
+   *  arguments can be set seperately but it is highly recommended to use this
+   *  method Note: AccessTypeList has to be set for the personalId to work
    *
    *@param  allContacts   The new allContacts value
    *@param  ownerIdRange  The new allContacts value
@@ -395,7 +397,8 @@ public class ContactList extends Vector {
 
 
   /**
-   *  Set the rule Id to get only contacts which follow a certain rule e.g Personal
+   *  Set the rule Id to get only contacts which follow a certain rule e.g
+   *  Personal
    *
    *@return    The ruleId value
    */
@@ -457,9 +460,9 @@ public class ContactList extends Vector {
 
   /**
    *  Gets all hierarchy contacts<br>
-   *  Optionally could set the two arguments seperately but using this
-   *  method is highly recommended for clarity purposes
-   *  Note: Also set the AccessTypeList for speed up of the query
+   *  Optionally could set the two arguments seperately but using this method is
+   *  highly recommended for clarity purposes Note: Also set the AccessTypeList
+   *  for speed up of the query
    *
    *@param  controlledHierarchyOnly  The new controlledHierarchyOnly value
    *@param  ownerIdRange             The new controlledHierarchyOnly value
@@ -2459,5 +2462,22 @@ public class ContactList extends Vector {
     pst.close();
   }
 
+
+  /**
+   *  Gets the contactFromId attribute of the ContactList object
+   *
+   *@param  id  Description of the Parameter
+   *@return     The contactFromId value
+   */
+  public Contact getContactFromId(int id) {
+    Iterator iterator = this.iterator();
+    while (iterator.hasNext()) {
+      Contact contact = (Contact) iterator.next();
+      if (contact.getUserId() == id) {
+        return contact;
+      }
+    }
+    return null;
+  }
 }
 
