@@ -94,7 +94,7 @@ Headlines<br>
 <br>
 <dhv:pagedListControl object="HeadlineListInfo" tdClass="row1"/>
 <%} else {%>
-  <tr>
+  <tr class="containerBody">
     <td colspan="4">No companies found.</td>
   </tr>
 </table>

@@ -64,19 +64,19 @@ Relationship Type: <%= relationshipTypeSelect.getHtml() %><br>
       Enterprise CFS for 2003 (Opp)
     </td>
   </tr>
-  <tr class="containerBody">
+  <tr class="row2">
     <dhv:permission name="demo-edit,demo-delete">
-      <td width="8" valign="center" nowrap class="row2">
+      <td width="8" valign="center" nowrap>
         <dhv:permission name="demo-edit"><a href="ExternalContactsPrototype.do?module=ExternalContacts&contactId=<%= ContactDetails.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="demo-edit,demo-delete" all="true">|</dhv:permission><dhv:permission name="demo-delete"><a href="javascript:confirmDelete('ExternalContactsPrototype.do?contactId=<%= ContactDetails.getId() %>');">Del</a></dhv:permission>
       </td>
     </dhv:permission>
-    <td width="40%" valign="center" class="row2">
+    <td width="40%" valign="center">
       <%= toHtml(ContactDetails.getNameFull()) %> ...
     </td>
-    <td width="20%" valign="center" nowrap class="row2">
+    <td width="20%" valign="center" nowrap>
       Author of
     </td>
-    <td width="20%" valign="center" nowrap class="row2">
+    <td width="20%" valign="center" nowrap>
       Proposal XYZ (Opp)
     </td>
   </tr>

@@ -206,7 +206,7 @@
       }
     } else {%>
       <tr>
-        <td class="row2" colspan="6" valign="center">
+        <td class="containerBody" colspan="6" valign="center">
           No tasks found in this view.
         </td>
       </tr>

@@ -117,7 +117,7 @@
     }
   } else {%>  
   <tr>
-    <td class="row2" valign="center" colspan="6">
+    <td class="containerBody" valign="center" colspan="6">
       No vehicles found.
     </td>
   </tr>

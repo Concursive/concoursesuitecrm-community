@@ -58,7 +58,7 @@ View Roles<br>
   } else {
 %>  
   <tr>
-    <td class="row2" colspan="5">
+    <td class="containerBody" colspan="5">
       No roles found.
     </td>
   </tr>

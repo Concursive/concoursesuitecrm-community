@@ -60,7 +60,7 @@ Item Details<br>
       <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="ItemDetailsListInfo"/>
     <%} else {%>  
     <tr>
-      <td class="row2" colspan="4">
+      <td class="containerBody" colspan="4">
         No responses found for this item.
       </td>
     </tr>

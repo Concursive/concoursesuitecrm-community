@@ -89,7 +89,7 @@ View Users<br>
   } else {
 %>  
 <tr>
-    <td class="row2" valign="center" colspan="5">
+    <td class="containerBody" valign="center" colspan="5">
       No users found.
     </td>
   </tr>

@@ -48,19 +48,19 @@ How Direct? <%= howDirectSelect.getHtml() %><br>
       1.00
     </td>
   </tr>
-  <tr class="containerBody">
-    <td width="100%" valign="center" class="row2">
+  <tr class="row2">
+    <td width="100%" valign="center">
       <a href="#">Name</a> (Friend) to <%= toHtml(ContactDetails.getNameFull()) %>
     </td>
-    <td width="10" valign="center" align="right" nowrap class="row2">
+    <td width="10" valign="center" align="right" nowrap>
       .90
     </td>
   </tr>
-  <tr class="containerBody">
-    <td width="100%" valign="center" class="row1">
+  <tr class="row1">
+    <td width="100%" valign="center">
       <a href="#">Name</a> (Co-Worker) to <%= toHtml(ContactDetails.getNameFull()) %>
     </td>
-    <td width="10" valign="center" align="right" nowrap class="row1">
+    <td width="10" valign="center" align="right" nowrap>
       .60
     </td>
   </tr>

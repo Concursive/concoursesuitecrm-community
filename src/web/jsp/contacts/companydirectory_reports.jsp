@@ -84,7 +84,7 @@ Reports<br>
 <br>
 <dhv:pagedListControl object="ContactRptListInfo" tdClass="row1"/>
 <%} else {%>
-  <tr>
+  <tr class="containerBody">
     <td colspan="6">No reports found.</td>
   </tr>
 </table>

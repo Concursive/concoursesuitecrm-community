@@ -105,7 +105,7 @@ View Contacts<br>
     }
   } else {%>  
   <tr>
-    <td class="row2" colspan="5">
+    <td class="containerBody" colspan="5">
       No contacts found.
     </td>
   </tr>

@@ -137,7 +137,7 @@
   </tr>
 		<%}
 	} else {%>
-  <tr class="row2"><td>No news found.</td></tr>
+  <tr class="containerBody"><td>No news found.</td></tr>
 	<%}%>
 </table>
 </dhv:permission>

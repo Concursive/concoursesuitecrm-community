@@ -107,7 +107,7 @@ View Accounts<br>
   </tr>
 <%}%>
 <%} else {%>
-  <tr>
+  <tr class="containerBody">
     <td colspan="5">
       No accounts found.
     </td>

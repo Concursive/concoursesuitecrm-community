@@ -80,7 +80,7 @@ Viewpoints<br>
   } else {
 %>  
   <tr>
-    <td class="row2" colspan="4">
+    <td class="containerBody" colspan="4">
       No Viewpoints found.
     </td>
   </tr>

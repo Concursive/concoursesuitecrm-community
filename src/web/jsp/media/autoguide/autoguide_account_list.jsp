@@ -131,7 +131,7 @@ Vehicle Inventory List<br>
     }
   } else {%>  
   <tr>
-    <td class="row2" valign="center" colspan="9">
+    <td class="containerBody" valign="center" colspan="9">
       No vehicles found.
     </td>
   </tr>

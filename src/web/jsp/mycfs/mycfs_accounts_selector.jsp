@@ -90,7 +90,7 @@
   } else {
 %>
     <tr>
-      <td class="row2" colspan="4">
+      <td class="containerBody" colspan="4">
         No accounts matched query.
       </td>
     </tr>
