@@ -39,7 +39,6 @@ function highlight() {
       <font color="red">*</font> <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
-  </dhv:evaluate>
   <tr>
     <td valign="top" class="formLabel">
       Internal Description
@@ -48,6 +47,7 @@ function highlight() {
       <input type="text" size="50" maxlength="255" name="description" value="<%= toHtmlValue(Message.getDescription()) %>">
     </td>
   </tr>
+  </dhv:evaluate>
 	<tr>
     <td valign="top" class="formLabel">
       Message
