@@ -172,8 +172,8 @@ public class FileItemVersionList extends ArrayList {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
+      pst.close();
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
@@ -211,11 +211,9 @@ public class FileItemVersionList extends ArrayList {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -308,8 +306,8 @@ public class FileItemVersionList extends ArrayList {
     if (rs.next()) {
       recordCount = DatabaseUtils.getInt(rs, "recordcount", 0);
     }
-    pst.close();
     rs.close();
+    pst.close();
     return recordCount;
   }
 
@@ -325,18 +323,24 @@ public class FileItemVersionList extends ArrayList {
     int recordSize = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
-        "SELECT SUM(size) AS recordsize " +
+        "SELECT SUM(size/1048576) AS recordsize " +
         "FROM project_files_version v " +
         "WHERE v.item_id > -1 ";
     createFilter(sqlFilter);
     PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      recordSize = DatabaseUtils.getInt(rs, "recordsize", 0);
+    ResultSet rs = null;
+    try {
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        recordSize = DatabaseUtils.getInt(rs, "recordsize", 0);
+      }
+    } catch (SQLException e) {
+      //If the filesize causes an overflow then sql will return an error
+      recordSize = -1;
     }
-    pst.close();
     rs.close();
+    pst.close();
     return recordSize;
   }
 
@@ -362,8 +366,8 @@ public class FileItemVersionList extends ArrayList {
     if (rs.next()) {
       downloadCount = DatabaseUtils.getInt(rs, "downloadcount", 0);
     }
-    pst.close();
     rs.close();
+    pst.close();
     return downloadCount;
   }
 
@@ -389,8 +393,8 @@ public class FileItemVersionList extends ArrayList {
     if (rs.next()) {
       downloadSize = DatabaseUtils.getInt(rs, "downloadsize", 0);
     }
-    pst.close();
     rs.close();
+    pst.close();
     return downloadSize;
   }
 }
