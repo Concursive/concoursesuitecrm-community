@@ -57,6 +57,7 @@ public class CalendarView {
   //Events that can be displayed on the calendar
   protected HashMap eventList = new HashMap();
   protected boolean sortEvents = false;
+  //NOTE: DO NOT USE THIS LIST DIRECTLY BECAUSE OF LEAP YEARS
   public final static int[] DAYSINMONTH = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
   public final static String[] MONTHS = {"JANUARY", "FEBRUARY", "MARCH", "ARPIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"};
   //parameter for synchronization of session object
@@ -552,15 +553,13 @@ public class CalendarView {
     int eventCount = 0;
     if (eventList.containsKey(key)) {
       tmpList = (ArrayList) eventList.get(key);
-      System.out.println("Getting ArrayList ---- " + tmpList.toString());
     }
     Iterator events = tmpList.iterator();
     if (events.hasNext()) {
       while (events.hasNext()) {
         CalendarEvent thisEvent = (CalendarEvent) events.next();
-        System.out.println("Comparing ---- " + thisEvent.getCategory() + ":" + eventCategory.toUpperCase());
-          if (thisEvent.getCategory().toUpperCase().startsWith(eventCategory.toUpperCase())) {
-            eventCount++;
+        if (thisEvent.getCategory().toUpperCase().startsWith(eventCategory.toUpperCase())) {
+          eventCount++;
         }
       }
     }
@@ -728,8 +727,9 @@ public class CalendarView {
     if (source != null) {
       if (calendarInfo.isAgendaView() && source.equalsIgnoreCase("calendarDetails")) {
         Calendar today = Calendar.getInstance();
+        today.add(Calendar.DATE, 6);
         displayMonth = today.get(Calendar.MONTH) + 1;
-        displayDay = today.get(Calendar.DAY_OF_MONTH) + 6;
+        displayDay = today.get(Calendar.DAY_OF_MONTH);
         displayYear = today.get(Calendar.YEAR);
       } else if (!source.equalsIgnoreCase("Calendar")) {
         if (calendarInfo.getCalendarView().equalsIgnoreCase("day")) {
@@ -737,13 +737,12 @@ public class CalendarView {
           displayDay = Integer.parseInt(getDay());
           displayYear = cal.get(Calendar.YEAR);
         } else if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
-          displayMonth = this.getStartMonthOfWeek();
-          displayDay = this.getStartDayOfWeek() + 6;
-          displayYear = cal.get(Calendar.YEAR);
-          if ((startDayOfWeek + 6) > DAYSINMONTH[getStartMonthOfWeek() - 1]) {
-            displayMonth = this.getStartMonthOfWeek() + 1;
-            displayDay = 7 - ((DAYSINMONTH[getStartMonthOfWeek() - 1] - getStartDayOfWeek()) + 1);
-          }
+          Calendar newDate = Calendar.getInstance();
+          newDate.set(cal.get(Calendar.YEAR), this.getStartMonthOfWeek()-1, this.getStartDayOfWeek());
+          newDate.add(Calendar.DATE, 6);
+          displayMonth = newDate.get(Calendar.MONTH) + 1;
+          displayDay = newDate.get(Calendar.DATE);
+          displayYear = newDate.get(Calendar.YEAR);
         } else {
           displayMonth = calNext.get(Calendar.MONTH) + 1;
           displayYear = calNext.get(Calendar.YEAR);
@@ -1267,7 +1266,7 @@ public class CalendarView {
           CalendarEvent thisEvent = (CalendarEvent) i.next();
           thisEventList.add(thisEvent);
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("CalendarView-> Event added");
+            System.out.println("CalendarView-> Event added: " + thisEvent.getCategory());
           }
           count++;
         }
@@ -1275,11 +1274,6 @@ public class CalendarView {
       tmpCal.add(java.util.Calendar.DATE, +1);
       loopCount++;
     }
-
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("CalendarView-> Returning " + allDays.size());
-    }
-
     return allDays;
   }
 
@@ -1399,9 +1393,6 @@ public class CalendarView {
    *@param  status     The feature to be added to the Event attribute
    */
   public void addEvent(String eventDate, String eventTime, String subject, String category, int idmain, int idsub, int status) {
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("date is now: " + category + " " + eventDate);
-    }
     CalendarEvent thisEvent = new CalendarEvent();
     StringTokenizer st = new StringTokenizer(eventDate, "/");
     if (st.hasMoreTokens()) {
@@ -1466,7 +1457,7 @@ public class CalendarView {
         Iterator i = thisDay.iterator();
         if (i.hasNext()) {
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("CalendarView-> Day added");
+            System.out.println("CalendarView-> Day added: " + tmpCal.get(Calendar.MONTH) + "/" + tmpCal.get(Calendar.DAY_OF_MONTH) + "/" + tmpCal.get(Calendar.YEAR));
           }
           while (i.hasNext()) {
             CalendarEvent thisEvent = (CalendarEvent) i.next();
@@ -1611,8 +1602,8 @@ public class CalendarView {
    *@return       Description of the Returned Value
    *@since
    */
-  public boolean eventExists(String tmp1, String tmp2, String tmp3) {
-    if (eventList.containsKey(tmp1 + "/" + tmp2 + "/" + tmp3)) {
+  public boolean eventExists(String tmpMonth, String tmpDay, String tmpYear) {
+    if (eventList.containsKey(tmpMonth + "/" + tmpDay + "/" + tmpYear)) {
       return true;
     } else {
       return false;
