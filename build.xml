@@ -462,38 +462,39 @@
       <classpath>
         <path refid="cfs2.classpath"/>
       </classpath>
+      <!-- base data -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_cdb.sql"/>
       <transaction src="${build.sql.dir}/cdb.sql"/>
       <transaction src="${build.sql.dir}/code_tables.sql"/>
       <transaction src="${build.sql.dir}/access.sql"/>
       <transaction src="${build.sql.dir}/organization.sql"/>
       <transaction src="${build.sql.dir}/data.sql"/>
-      
+      <!-- opportunities -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_opportunity.sql"/>
       <transaction src="${build.sql.dir}/opportunity.sql"/>
-      
+      <!-- tickets -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_tms.sql"/>
       <transaction src="${build.sql.dir}/tms.sql"/>
-      
+      <!-- custom fields -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_custom_field.sql"/>
-      
+      <!-- project management -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_project.sql"/>
       <transaction src="${build.sql.dir}/project.sql"/>
-      
+      <!-- communications manager -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_campaign.sql"/>
       <transaction src="${build.sql.dir}/campaign.sql"/>
-      
+      <!-- help -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_help.sql"/>
-      
+      <!-- synchronization api -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_sync.sql"/>
       <transaction src="${build.sql.dir}/sync.sql"/>
-      
+      <!-- autoguide module -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_autoguide.sql"/>
       <transaction src="${build.sql.dir}/autoguide.sql"/>
-      
+      <!-- revenue manager -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_revenue.sql"/>
       <transaction src="${build.sql.dir}/revenue.sql"/>
-      
+      <!-- task management -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_task.sql"/>
       <transaction src="${build.sql.dir}/task.sql"/>
     </sql>
