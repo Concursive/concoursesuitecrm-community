@@ -110,8 +110,8 @@ public final class Login extends GenericAction {
         synchronized (this) {
           if (!((Hashtable)context.getServletContext().getAttribute("SystemStatus")).containsKey(ce.getUrl())) {
             ((Hashtable)context.getServletContext().getAttribute("SystemStatus")).put(ce.getUrl(), new SystemStatus(db));
-            System.out.println("Login-> Added new System Status object: " + ce.getUrl());
-          } 
+            if (System.getProperty("DEBUG") != null) System.out.println("Login-> Added new System Status object: " + ce.getUrl());
+          }
         }
       }
       
@@ -129,18 +129,18 @@ public final class Login extends GenericAction {
         if (pw == null || pw.trim().equals("") || (!pw.equals(password) && !context.getServletContext().getAttribute("GlobalPWInfo").equals(password))   ) {
           loginBean.setMessage("* Access denied: Invalid password.");
         } else {
-	  java.sql.Date expDate = rs.getDate("expires");
-	  
-	  if ( expDate != null && now.after(expDate) ) {
-		  loginBean.setMessage("* Access denied: Account Expired.");
- 	  } else {
-		  int aliasId = rs.getInt("alias");
-		  
-		  if ( aliasId > 0 ) {
-			userId = aliasId;
-	          } else {
-        	  	userId = rs.getInt("user_id");
-		  }
+          java.sql.Date expDate = rs.getDate("expires");
+          
+          if ( expDate != null && now.after(expDate) ) {
+            loginBean.setMessage("* Access denied: Account Expired.");
+          } else {
+            int aliasId = rs.getInt("alias");
+            
+            if ( aliasId > 0 ) {
+            userId = aliasId;
+                  } else {
+                    userId = rs.getInt("user_id");
+            }
           }
         }
       }
@@ -148,12 +148,12 @@ public final class Login extends GenericAction {
       pst.close();
 
       if (userId > -1) {
-        System.out.println("Login-> Getting user " + userId + " from memory");
+        if (System.getProperty("DEBUG") != null) System.out.println("Login-> Getting user " + userId + " from memory");
         SystemStatus thisSystem = (SystemStatus)((Hashtable)context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
         System.out.println("Login-> Getting SystemStatus from memory : " + ((thisSystem == null)?"false":"true"));
         thisUser = new UserBean(thisSystem, userId);
         if (thisUser != null) {
-          System.out.println("Login-> updating user");
+          if (System.getProperty("DEBUG") != null) System.out.println("Login-> updating user");
           thisUser.getUserRecord().setIp(context.getIpAddress());
           thisUser.getUserRecord().updateLogin(db);
           thisUser.setBrowserType(context.getBrowser());

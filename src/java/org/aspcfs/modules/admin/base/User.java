@@ -1288,12 +1288,7 @@ public void setLastLogin(java.sql.Timestamp tmp) { this.lastLogin = tmp; }
 	 *@since                  1.18
 	 */
 	public boolean hasPermission(String thisPermission) {
-		if (permissions.contains(thisPermission)) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return permissions.contains(thisPermission);
 	}
 
 	/**

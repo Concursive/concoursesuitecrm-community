@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
 <jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -139,75 +140,74 @@ function ShowSpan(thisID)
 		</tr>
 		
 		<tr>
-		<td width=100 class="formLabel">
-      		Problem
-    		</td>
-		
-		<td valign=top bgColor="white">
-		<textarea name="problem" cols=55 rows=3><%=TicketDetails.getProblem()%></textarea>
-		<font color="red">*</font> <%= showAttribute(request, "problemError") %>
-		<input type=hidden name=orgId value="<%=TicketDetails.getOrgId()%>">
-		<input type=hidden name=id value="<%=TicketDetails.getId()%>">
-		<input type=hidden name=companyName value="<%=toHtml(TicketDetails.getCompanyName())%>">
-		<input type=hidden name=refresh value="-1">
-		
-		</td>
+      <td width=100 class="formLabel">
+        <dhv:label name="tickets-problem">Problem</dhv:label>
+      </td>
+      <td valign=top bgColor="white">
+        <textarea name="problem" cols=55 rows=3><%=TicketDetails.getProblem()%></textarea>
+        <font color="red">*</font> <%= showAttribute(request, "problemError") %>
+        <input type=hidden name=orgId value="<%=TicketDetails.getOrgId()%>">
+        <input type=hidden name=id value="<%=TicketDetails.getId()%>">
+        <input type=hidden name=companyName value="<%=toHtml(TicketDetails.getCompanyName())%>">
+        <input type=hidden name=refresh value="-1">
+      </td>
 		</tr>
 		
 		<tr>
-		<td width=100 class="formLabel">
-		Category
-		</td>
-		<td bgColor="white">
-		<%= CategoryList.getHtmlSelect("catCode", TicketDetails.getCatCode()) %>
-		
-			<% if (TicketDetails.getCatCode() == 0) { %>
-			<input type=checkbox name="newCat0chk" onClick="javascript:ShowSpan('new0')">add new<span name="new0" ID="new0" style="position:relative; visibility:hidden">&nbsp;<input type=text size=25 name=newCat0></span>
-			<%}%>
-		
-		</td>
+      <td width=100 class="formLabel">
+        Category
+      </td>
+      <td bgColor="white">
+        <%= CategoryList.getHtmlSelect("catCode", TicketDetails.getCatCode()) %>
+<% if (TicketDetails.getCatCode() == 0) { %>
+        <input type=checkbox name="newCat0chk" onClick="javascript:ShowSpan('new0')">add new<span name="new0" ID="new0" style="position:relative; visibility:hidden">&nbsp;<input type=text size=25 name=newCat0></span>
+<%}%>
+      
+      </td>
 		</tr>
 				
+    <dhv:include name="tickets-subcat1" none="true">
 		<tr>
-		<td width=100 class="formLabel">
-		Sub-level 1
-		</td>
-		<td bgColor="white">
-		<%= SubList1.getHtmlSelect("subCat1", TicketDetails.getSubCat1()) %>
-		
-			<% if (TicketDetails.getCatCode() != 0 && TicketDetails.getSubCat1() == 0) { %>
-			<input type=checkbox name="newCat1chk" onClick="javascript:ShowSpan('new1')">add new<span name="new1" ID="new1" style="visibility:hidden">&nbsp;<input type=text size=25 name=newCat1></span>
-			<%}%>
-		</td>
+      <td width=100 class="formLabel">
+      Sub-level 1
+      </td>
+      <td bgColor="white">
+        <%= SubList1.getHtmlSelect("subCat1", TicketDetails.getSubCat1()) %>
+        <% if (TicketDetails.getCatCode() != 0 && TicketDetails.getSubCat1() == 0) { %>
+        <input type=checkbox name="newCat1chk" onClick="javascript:ShowSpan('new1')">add new<span name="new1" ID="new1" style="visibility:hidden">&nbsp;<input type=text size=25 name=newCat1></span>
+        <%}%>
+      </td>
 		</tr>
+    </dhv:include>
 				
+    <dhv:include name="tickets-subcat2" none="true">
 		<tr>
-		<td width=100 class="formLabel">
-		Sub-level 2
-		</td>
-		<td bgColor="white">
-		<%= SubList2.getHtmlSelect("subCat2", TicketDetails.getSubCat2()) %>
-		
-			<% if (TicketDetails.getSubCat1() != 0 && TicketDetails.getCatCode() != 0 && TicketDetails.getSubCat2() == 0) { %>
-			<input type=checkbox name="newCat2chk" onClick="javascript:ShowSpan('new2')">add new<span name="new2" ID="new2" style="visibility:hidden">&nbsp;<input type=text size=25 name=newCat2></span>
-			<%}%>
-		
-		</td>
+      <td width=100 class="formLabel">
+        Sub-level 2
+      </td>
+      <td bgColor="white">
+        <%= SubList2.getHtmlSelect("subCat2", TicketDetails.getSubCat2()) %>
+        <% if (TicketDetails.getSubCat1() != 0 && TicketDetails.getCatCode() != 0 && TicketDetails.getSubCat2() == 0) { %>
+        <input type=checkbox name="newCat2chk" onClick="javascript:ShowSpan('new2')">add new<span name="new2" ID="new2" style="visibility:hidden">&nbsp;<input type=text size=25 name=newCat2></span>
+        <%}%>
+      
+      </td>
 		</tr>
+    </dhv:include>
 				
+    <dhv:include name="tickets-subcat3" none="true">
 		<tr>
-		<td width=100 class="formLabel">
-		Sub-level 3
-		</td>
-		<td bgColor="white">
-		<%= SubList3.getHtmlSelect("subCat3", TicketDetails.getSubCat3()) %>
-		
+      <td width=100 class="formLabel">
+      Sub-level 3
+      </td>
+      <td bgColor="white">
+      <%= SubList3.getHtmlSelect("subCat3", TicketDetails.getSubCat3()) %>
 			<% if (TicketDetails.getSubCat2() != 0 && TicketDetails.getCatCode() != 0 && TicketDetails.getSubCat1() != 0) { %>
 			<input type=checkbox name="newCat3chk" onClick="javascript:ShowSpan('new3')">add new<span name="new3" ID="new3" style="visibility:hidden">&nbsp;<input type=text size=25 name=newCat3></span>
 			<%}%>
-		
 		</td>
 		</tr>
+    </dhv:include>
 		
 		</table>
 		<br>

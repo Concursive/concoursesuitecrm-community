@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.TicketCategoryList" scope="request"/>
@@ -155,53 +156,58 @@
 	</tr>
 	
 	<tr>
-	<td width=100 class="formLabel">
-	Problem
-	</td>
-	<td bgColor="white">
-	<textarea name="problem" cols=55 rows=3><%=TicketDetails.getProblem()%></textarea>
-	<font color="red">*</font> <%= showAttribute(request, "problemError") %>
-	<input type=hidden name=refresh value="-1">
-	
-	</td>
+    <td width=100 class="formLabel">
+      <dhv:label name="tickets-problem">Problem</dhv:label>
+    </td>
+    <td bgColor="white">
+      <textarea name="problem" cols=55 rows=3><%=TicketDetails.getProblem()%></textarea>
+      <font color="red">*</font> <%= showAttribute(request, "problemError") %>
+      <input type=hidden name=refresh value="-1">
+    </td>
 	</tr>
 	
 	<tr>
-	<td width=100 class="formLabel">
-	Category
-	</td>
-	<td bgColor="white">
-	<%= CategoryList.getHtmlSelect("catCode", TicketDetails.getCatCode()) %>
-	</td>
+    <td width=100 class="formLabel">
+      Category
+    </td>
+    <td bgColor="white">
+      <%= CategoryList.getHtmlSelect("catCode", TicketDetails.getCatCode()) %>
+    </td>
 	</tr>
 	
+  <dhv:include name="tickets-subcat1" none="true">
 	<tr>
-	<td width=100 class="formLabel">
-	Sub-level 1
-	</td>
-	<td bgColor="white">
-	<%= SubList1.getHtmlSelect("subCat1", TicketDetails.getSubCat1()) %>
-	<input type=hidden name="close" value="">
-	</td>
+    <td width=100 class="formLabel">
+      Sub-level 1
+    </td>
+    <td bgColor="white">
+      <%= SubList1.getHtmlSelect("subCat1", TicketDetails.getSubCat1()) %>
+      <input type=hidden name="close" value="">
+    </td>
 	</tr>
+  </dhv:include>
 	
+  <dhv:include name="tickets-subcat2" none="true">
 	<tr>
-	<td width=100 class="formLabel">
-	Sub-level 2
-	</td>
-	<td bgColor="white">
-	<%= SubList2.getHtmlSelect("subCat2", TicketDetails.getSubCat2()) %>
-	</td>
+    <td width=100 class="formLabel">
+      Sub-level 2
+    </td>
+    <td bgColor="white">
+      <%= SubList2.getHtmlSelect("subCat2", TicketDetails.getSubCat2()) %>
+    </td>
 	</tr>
+  </dhv:include>
 	
+  <dhv:include name="tickets-subcat3" none="true">
 	<tr>
-	<td width=100 class="formLabel">
-	Sub-level 3
-	</td>
-	<td bgColor="white">
-	<%= SubList3.getHtmlSelect("subCat3", TicketDetails.getSubCat3()) %>
-	</td>
+    <td width=100 class="formLabel">
+      Sub-level 3
+    </td>
+    <td bgColor="white">
+      <%= SubList3.getHtmlSelect("subCat3", TicketDetails.getSubCat3()) %>
+    </td>
 	</tr>
+  </dhv:include>
 	
 	</table>
 	<br>

@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.*;
 import java.sql.*;
 import com.darkhorseventures.cfsbase.*;
+import com.darkhorseventures.utils.*;
+import org.w3c.dom.Element;
 
 /**
  *  System status maintains global values for a shared group of users. This is
@@ -24,6 +26,8 @@ public class SystemStatus {
   Date hierarchyCheck = new Date();
   UserList hierarchyList = new UserList();
   boolean hierarchyUpdating = false;
+  Vector ignoredFields = new Vector();
+  Hashtable fieldLabels = new Hashtable();
 
   /**
    *  Constructor for the SystemStatus object
@@ -42,6 +46,7 @@ public class SystemStatus {
    */
   public SystemStatus(Connection db) throws SQLException {
     buildHierarchyList(db);
+    buildPreferences(db);
   }
 
 
@@ -115,8 +120,6 @@ public class SystemStatus {
     tmpListA.setTopLevel(true);
     tmpListA.buildList(db);
     
-    //System.out.println("SS-> tmpListA has : " + tmpListA.size());
-    
     //Get everyone
     UserList tmpListB = new UserList();
     tmpListB.setBuildContact(false);
@@ -125,30 +128,22 @@ public class SystemStatus {
     tmpListB.setTopLevel(false);
     tmpListB.buildList(db);
     
-    //System.out.println("SS-> tmpListB has : " + tmpListB.size());
-    
+    //Combine the lists
     Iterator listA = tmpListA.iterator();
     while (listA.hasNext()) {
       User thisUser = (User)listA.next(); 
       User userToAdd = tmpListB.getTopUser(thisUser.getId());
       if (userToAdd != null) {
         hierarchyList.add(userToAdd);
-        //System.out.println("SS-> Manager Added: " + thisUser.getUsername() + " " + thisUser.getId());
+        //System.out.println("SystemStatus-> Manager Added: " + thisUser.getUsername() + " " + thisUser.getId());
         this.addChildUsers(userToAdd, tmpListB);
       } else {
         hierarchyList.add(thisUser);
-        //System.out.println("SS-> System User Added: " + thisUser.getUsername());
+        //System.out.println("SystemStatus-> System User Added: " + thisUser.getUsername());
       }
     }
     
-    System.out.println("SS-> Top Level Users added : " + hierarchyList.size());
-    
-    /* hierarchyList.clear();
-    hierarchyList.setBuildContact(true);
-    hierarchyList.setBuildHierarchy(true);
-    hierarchyList.setBuildPermissions(false);
-    hierarchyList.setTopLevel(true);
-    hierarchyList.buildList(db); */
+    if (System.getProperty("DEBUG") != null) System.out.println("SystemStatus-> Top Level Users added : " + hierarchyList.size());
   }
   
   private void addChildUsers(User thisUser, UserList addFrom) {
@@ -159,7 +154,7 @@ public class SystemStatus {
         thisUser.setChildUsers(new UserList());
       }
       if (tmpUser.getManagerId() == thisUser.getId()) {
-        //System.out.println("SS-> Found a match for : " + thisUser.getUsername());
+        if (System.getProperty("DEBUG") != null) System.out.println("SystemStatus-> Found a match for : " + thisUser.getUsername());
         thisUser.getShortChildList().add(tmpUser);
         tmpUser.setManagerUser(thisUser);
         this.addChildUsers(tmpUser, addFrom);
@@ -186,6 +181,64 @@ public class SystemStatus {
       }
     }
   }
+  
+  public void buildPreferences(Connection db) throws SQLException {
+    ignoredFields.clear();
+    fieldLabels.clear();
+    String fieldsToIgnore = null;
+    String labelsToUse = null;
+    String sql =
+      "SELECT * " +
+      "FROM system_prefs ";
+    Statement st = db.createStatement();
+    ResultSet rs = st.executeQuery(sql);
+    while (rs.next()) {
+      String category = rs.getString("category");
+      if ("ignore fields".equals(category)) {
+        fieldsToIgnore = rs.getString("data");
+      } else if ("field labels".equals(category)) {
+        labelsToUse = rs.getString("data");
+      }
+    }
+    rs.close();
+    st.close();
+    
+    if (fieldsToIgnore != null) {
+      try {
+        if (System.getProperty("DEBUG") != null) System.out.println("SystemStatus-> Adding ignored fields (temporary solution)");
+        XMLUtils xml = new XMLUtils(fieldsToIgnore);
+        xml.getAllChildrenText(xml.getDocumentElement(), "ignore", ignoredFields);
+      } catch (Exception e) {
+        System.out.println("SystemStatus-> Error: " + e.getMessage());
+      }
+    }
+    
+    if (labelsToUse != null) {
+      try {
+        if (System.getProperty("DEBUG") != null) System.out.println("SystemStatus-> Adding field labels (temporary solution)");
+        XMLUtils xml = new XMLUtils(labelsToUse);
+        Vector fieldElements = new Vector();
+        xml.getAllChildren(xml.getDocumentElement(), "label", fieldElements);
+        Iterator elements = fieldElements.iterator();
+        while (elements.hasNext()) {
+          Element thisElement = (Element)elements.next();
+          String replace = xml.getNodeText(xml.getFirstChild(thisElement, "replace"));
+          String with = xml.getNodeText(xml.getFirstChild(thisElement, "with"));
+          if (System.getProperty("DEBUG") != null) System.out.println("SystemStatus-> Replace " + replace + " with " + with);
+          fieldLabels.put(replace, with);
+        }
+      } catch (Exception e) {
+        System.out.println("SystemStatus-> Error: " + e.getMessage());
+      }
+    }
+  }
+  
+  public boolean hasField(String thisField) {
+		return ignoredFields.contains(thisField);
+  }
 
+  public String getLabel(String thisLabel) {
+    return ((String)fieldLabels.get(thisLabel));
+  }
 }
 

@@ -14,16 +14,10 @@ public class XMLUtils {
   private Document document = null;
   private StringBuffer XMLString = null;
   private boolean cacheXML = false;
-
-  public void setCacheXML(boolean tmp) { cacheXML = tmp; }
   
-  public Document getDocument() { return document; }
-  public Element getDocumentElement() { return document.getDocumentElement(); }
-  public String getXMLString() { 
-    if (XMLString == null) return null;
-    return XMLString.toString();
+  public XMLUtils(String xmlData) throws Exception {
+    this.parseXML(xmlData);
   }
-  
 
   public XMLUtils(HttpServletRequest request) throws Exception {
     StringBuffer data = new StringBuffer();
@@ -39,6 +33,15 @@ public class XMLUtils {
       }
     }
     this.parseXML(data.toString());
+  }
+  
+  public void setCacheXML(boolean tmp) { cacheXML = tmp; }
+  
+  public Document getDocument() { return document; }
+  public Element getDocumentElement() { return document.getDocumentElement(); }
+  public String getXMLString() { 
+    if (XMLString == null) return null;
+    return XMLString.toString();
   }
   
   private void parseXML(String xmlToParse) throws Exception {
@@ -86,6 +89,19 @@ public class XMLUtils {
       Node n = nl.item(i);
       if (n.getNodeType() == Node.ELEMENT_NODE && ((Element)n).getTagName().equals(name)) {
         elementList.add((Element)n);
+      }
+    }
+  }
+  
+  public static void getAllChildrenText(Element e, String name, Vector textList) {
+    NodeList nl = e.getChildNodes();
+    for (int i = 0; i < nl.getLength(); i++) {
+      Node n = nl.item(i);
+      if (n.getNodeType() == Node.ELEMENT_NODE && ((Element)n).getTagName().equals(name)) {
+        String nodeText = getNodeText((Element)n);
+        if (nodeText != null) {
+          textList.add(nodeText);
+        }
       }
     }
   }

@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
 <%@ include file="initPage.jsp" %>
@@ -50,16 +51,15 @@
 		</tr>
 		
 		<tr>
-		<td width=100 class="formLabel">
-      		Problem
-    		</td>
-		
-		<td valign=top bgColor="white">
-		<%=toHtml(TicketDetails.getProblem())%>
-		<input type=hidden name=problem value="<%=toHtml(TicketDetails.getProblem())%>">
-		<input type=hidden name=orgId value="<%=TicketDetails.getOrgId()%>">
-		<input type=hidden name=id value="<%=TicketDetails.getId()%>">
-		</td>
+      <td width=100 class="formLabel">
+        <dhv:label name="tickets-problem">Problem</dhv:label>
+      </td>
+      <td valign=top bgColor="white">
+        <%=toHtml(TicketDetails.getProblem())%>
+        <input type=hidden name=problem value="<%=toHtml(TicketDetails.getProblem())%>">
+        <input type=hidden name=orgId value="<%=TicketDetails.getOrgId()%>">
+        <input type=hidden name=id value="<%=TicketDetails.getId()%>">
+      </td>
 		</tr>
 		
 		<tr>
