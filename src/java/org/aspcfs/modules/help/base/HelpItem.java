@@ -4,6 +4,7 @@ package com.darkhorseventures.cfsbase;
 
 import org.theseus.beans.*;
 import java.sql.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 public class HelpItem extends GenericBean {
 
@@ -43,7 +44,9 @@ public class HelpItem extends GenericBean {
       "FROM help_contents h " +
       "WHERE module = ? AND section = ? AND subsection = ? ";
     pst = db.prepareStatement(sql);
-    System.out.println("HelpItem-> Prepared");
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("HelpItem-> Prepared");
+    }
     int i = 0;
     pst.setString(++i, module);
     pst.setString(++i, section);
@@ -58,7 +61,9 @@ public class HelpItem extends GenericBean {
     }
     rs.close();
     pst.close();
-    System.out.println("HelpItem-> Init ok");
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("HelpItem-> Init ok");
+    }
   }
   
   public void setId(int tmp) { this.id = tmp; }
@@ -131,13 +136,7 @@ public class HelpItem extends GenericBean {
     pst.execute();
     pst.close();
     
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery("SELECT currval('help_contents_help_id_seq')");
-    if (rs.next()) {
-      this.setId(rs.getInt(1));
-    }
-    rs.close();
-    st.close();
+    id = DatabaseUtils.getCurrVal(db, "help_contents_help_id_seq");
     
     return true;
   }

@@ -335,11 +335,9 @@ public class OpportunityList extends Vector {
       sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&

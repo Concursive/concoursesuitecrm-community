@@ -2,6 +2,7 @@
 package com.darkhorseventures.cfsbase;
 
 import java.sql.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 public class OpportunityNote extends Note {
 
@@ -28,10 +29,10 @@ public class OpportunityNote extends Note {
     Statement st = null;
     ResultSet rs = null;
     StringBuffer sql = new StringBuffer();
-    sql.append("SELECT * " +
+    sql.append(
+        "SELECT * " +
         "FROM note " +
         "WHERE id = " + noteId + " ");
-	
     st = db.createStatement();
     rs = st.executeQuery(sql.toString());
     if (rs.next()) {
@@ -87,17 +88,7 @@ public class OpportunityNote extends Note {
     pst.execute();
     pst.close();
 
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery("select currval('note_id_seq')");
-    
-    
-    if (rs.next()) {
-     
-      this.setId(rs.getInt(1));
-            System.out.println("here I am " + ("" + this.getId()));
-    }
-    rs.close();
-    st.close();
+    this.setId(DatabaseUtils.getCurrVal(db, "note_id_seq"));
   }
 
 

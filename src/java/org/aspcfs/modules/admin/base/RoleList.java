@@ -57,7 +57,8 @@ public class RoleList extends Vector {
     StringBuffer sqlOrder = new StringBuffer();
 
     //Need to build a base SQL statement for counting records
-    sqlCount.append("SELECT COUNT(*) AS recordcount " +
+    sqlCount.append(
+        "SELECT COUNT(*) AS recordcount " +
         "FROM role r " +
         "WHERE enabled = " + DatabaseUtils.getTrue(db) + " ");
 
@@ -100,10 +101,10 @@ public class RoleList extends Vector {
     }
 
     //Need to build a base SQL statement for returning records
-    sqlSelect.append("SELECT * " +
+    sqlSelect.append(
+        "SELECT * " +
         "FROM role r " +
         "WHERE enabled = " + DatabaseUtils.getTrue(db) + " ");
-        
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();

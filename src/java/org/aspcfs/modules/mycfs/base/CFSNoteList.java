@@ -212,13 +212,13 @@ public class CFSNoteList extends Vector {
     }
 
     if (sentTo > -1) {
-      sqlFilter.append("AND m.id in (select distinct id from cfsinbox_messagelink where sent_to = ?) ");
+      sqlFilter.append("AND m.id in (SELECT DISTINCT id FROM cfsinbox_messagelink WHERE sent_to = ?) ");
     }
 
     if (oldMessagesOnly == true) {
-      sqlFilter.append("AND m.id in (select distinct id from cfsinbox_messagelink where status = 2) ");
+      sqlFilter.append("AND m.id in (SELECT DISTINCT id FROM cfsinbox_messagelink WHERE status = 2) ");
     } else {
-      sqlFilter.append("AND m.id in (select distinct id from cfsinbox_messagelink where status in (0,1)) ");
+      sqlFilter.append("AND m.id in (SELECT DISTINCT id FROM cfsinbox_messagelink WHERE status IN (0,1)) ");
     }
 
   }

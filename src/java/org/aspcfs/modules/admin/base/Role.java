@@ -392,24 +392,20 @@ public class Role extends GenericBean {
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
 
-      //Process the base role record
       sql.append(
           "UPDATE role " +
           "SET role = ?, description = ?, modified = CURRENT_TIMESTAMP, " +
           "modifiedby = ? " +
           "WHERE modified = ? AND role_id = " + id);
-
       pst = db.prepareStatement(sql.toString());
       int i = 0;
       pst.setString(++i, this.getRole());
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getModifiedBy());
       pst.setTimestamp(++i, this.getModified());
-
       resultCount = pst.executeUpdate();
       pst.close();
 
-      //Process the permissions
       deletePermissions(db);
       insertPermissions(db);
 
@@ -600,12 +596,11 @@ public class Role extends GenericBean {
    *@since
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
+    //role table
     id = rs.getInt("role_id");
     role = rs.getString("role");
     description = rs.getString("description");
-
     entered = rs.getTimestamp("entered");
-
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
@@ -691,7 +686,7 @@ public class Role extends GenericBean {
         "SELECT count(*) AS count " +
         "FROM access " +
         "WHERE role_id = " + id + " " +
-        (activeUsers ? "AND enabled = true " : ""));
+        (activeUsers ? "AND enabled = " + DatabaseUtils.getTrue(db) + " " : ""));
     if (rs.next()) {
       resultCount = rs.getInt("count");
     }
@@ -714,7 +709,8 @@ public class Role extends GenericBean {
    */
   private void deletePermissions(Connection db) throws SQLException {
     Statement st = db.createStatement();
-    st.execute("DELETE FROM role_permission " +
+    st.execute(
+        "DELETE FROM role_permission " +
         "WHERE role_id = " + id);
     st.close();
   }

@@ -6,6 +6,7 @@ import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
+import com.darkhorseventures.utils.DatabaseUtils;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -40,13 +41,11 @@ public class OpportunityNoteList extends NoteList {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
 
-    //Need to build a base SQL statement for returning records
-    sqlSelect.append("SELECT * " +
-        "FROM note n WHERE subject != '' ");
-
     //Need to build a base SQL statement for counting records
-    sqlCount.append("SELECT COUNT(*) AS recordcount " +
-        "FROM note n WHERE subject != '' ");
+    sqlCount.append(
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM note n " +
+        "WHERE subject != '' ");
 
     createFilter(sqlFilter);
 
@@ -80,30 +79,40 @@ public class OpportunityNoteList extends NoteList {
       }
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals("")) {
-        sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + ", subject ");
-        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
-          sqlOrder.append(pagedListInfo.getSortOrder() + " ");
-        }
-      } else {
-        sqlOrder.append("ORDER BY subject ");
-      }
-
-      //Determine items per page
-      if (pagedListInfo.getItemsPerPage() > 0) {
-        sqlOrder.append("LIMIT " + pagedListInfo.getItemsPerPage() + " ");
-      }
-
-      sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
+      pagedListInfo.setDefaultSort("subject", null);
+      pagedListInfo.appendSqlTail(db, sqlOrder);
+    } else {
+      sqlOrder.append("ORDER BY subject");
     }
-
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-	
-	//System.out.println("SHOW IT: " + sqlSelect.toString()+ sqlFilter.toString() + sqlOrder.toString());
-	
+    
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "* " +
+        "FROM note n " +
+        "WHERE subject != '' ");
+    pst = db.prepareStatement(
+      sqlSelect.toString() + 
+      sqlFilter.toString() + 
+      sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
+    
+    int count = 0;
     while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          count >= pagedListInfo.getItemsPerPage()) {
+        break;
+      }
+      ++count;
       OpportunityNote thisNote = new OpportunityNote(rs);
       this.addElement(thisNote);
     }

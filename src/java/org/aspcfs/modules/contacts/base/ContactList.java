@@ -911,8 +911,13 @@ public class ContactList extends Vector {
     }
 
     //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
     sqlSelect.append(
-        "SELECT c.*, d.description as departmentname, t.description as type_name, " +
+        "c.*, d.description as departmentname, t.description as type_name, " +
         "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
         "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +

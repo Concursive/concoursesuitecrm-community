@@ -5,6 +5,7 @@ package com.darkhorseventures.cfsbase;
 import org.theseus.beans.*;
 import java.sql.*;
 import java.text.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Description of the Class
@@ -64,7 +65,8 @@ public class Recipient extends GenericBean {
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT * FROM scheduled_recipient r " +
+        "SELECT * " +
+        "FROM scheduled_recipient r " +
         "WHERE r.id > -1 ");
 
     if (recipientId > -1) {
@@ -177,22 +179,14 @@ public class Recipient extends GenericBean {
         "INSERT INTO scheduled_recipient " +
         "(campaign_id, contact_id) " +
         "VALUES (?, ?) ");
-
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, campaignId);
     pst.setInt(++i, contactId);
-
     pst.execute();
     pst.close();
 
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery("select currval('scheduled_recipient_id_seq')");
-    if (rs.next()) {
-      this.setId(rs.getInt(1));
-    }
-    rs.close();
-    st.close();
+    id = DatabaseUtils.getCurrVal(db, "scheduled_recipient_id_seq");
     return true;
   }
   

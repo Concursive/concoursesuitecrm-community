@@ -203,6 +203,7 @@ public class SearchField {
 	 *@since                    1.1
 	 */
 	public void buildRecord(ResultSet rs) throws SQLException {
+    //search_fields table
 		this.setId(rs.getInt("id"));
 		fieldName = rs.getString("field");
 		description = rs.getString("description");

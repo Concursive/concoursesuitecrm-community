@@ -670,13 +670,11 @@ public class Call extends GenericBean {
     pst.setString(++i, this.getNotes());
     pst.setInt(++i, this.getEnteredBy());
     pst.setInt(++i, this.getModifiedBy());
-
     if (alertDate == null) {
       pst.setNull(++i, java.sql.Types.DATE);
     } else {
       pst.setDate(++i, this.getAlertDate());
     }
-
     pst.execute();
     pst.close();
 

@@ -26,24 +26,13 @@ public class SearchCriteriaElement {
   String contactNameFirst = null;
   String contactNameLast = null;
 
+
   /**
    *  Description of the Method
    *
    *@since    1.1
    */
   public SearchCriteriaElement() { }
-
-public String getContactTypeName() {
-	return contactTypeName;
-}
-public void setContactTypeName(String contactTypeName) {
-	this.contactTypeName = contactTypeName;
-}
-
-public String getContactNameFirst() { return contactNameFirst; }
-public String getContactNameLast() { return contactNameLast; }
-public void setContactNameFirst(String tmp) { this.contactNameFirst = tmp; }
-public void setContactNameLast(String tmp) { this.contactNameLast = tmp; }
 
 
   /**
@@ -55,13 +44,13 @@ public void setContactNameLast(String tmp) { this.contactNameLast = tmp; }
   public SearchCriteriaElement(String elementText) {
     StringTokenizer st = new StringTokenizer(elementText, "[*|]");
     if (st.hasMoreTokens()) {
-      fieldId = Integer.parseInt((String)st.nextToken());
+      fieldId = Integer.parseInt((String) st.nextToken());
     }
     if (st.hasMoreTokens()) {
-      operatorId = Integer.parseInt((String)st.nextToken());
+      operatorId = Integer.parseInt((String) st.nextToken());
     }
     if (st.hasMoreTokens()) {
-      text = (String)st.nextToken();
+      text = (String) st.nextToken();
     }
   }
 
@@ -75,6 +64,36 @@ public void setContactNameLast(String tmp) { this.contactNameLast = tmp; }
    */
   public SearchCriteriaElement(ResultSet rs) throws SQLException {
     buildRecord(rs);
+  }
+
+
+  /**
+   *  Sets the contactTypeName attribute of the SearchCriteriaElement object
+   *
+   *@param  contactTypeName  The new contactTypeName value
+   */
+  public void setContactTypeName(String contactTypeName) {
+    this.contactTypeName = contactTypeName;
+  }
+
+
+  /**
+   *  Sets the contactNameFirst attribute of the SearchCriteriaElement object
+   *
+   *@param  tmp  The new contactNameFirst value
+   */
+  public void setContactNameFirst(String tmp) {
+    this.contactNameFirst = tmp;
+  }
+
+
+  /**
+   *  Sets the contactNameLast attribute of the SearchCriteriaElement object
+   *
+   *@param  tmp  The new contactNameLast value
+   */
+  public void setContactNameLast(String tmp) {
+    this.contactNameLast = tmp;
   }
 
 
@@ -122,7 +141,15 @@ public void setContactNameLast(String tmp) { this.contactNameLast = tmp; }
     this.operatorId = operatorId;
   }
 
-  public void setOperatorDisplayText(String tmp) { this.operatorDisplayText = tmp; }
+
+  /**
+   *  Sets the operatorDisplayText attribute of the SearchCriteriaElement object
+   *
+   *@param  tmp  The new operatorDisplayText value
+   */
+  public void setOperatorDisplayText(String tmp) {
+    this.operatorDisplayText = tmp;
+  }
 
 
   /**
@@ -133,6 +160,36 @@ public void setContactNameLast(String tmp) { this.contactNameLast = tmp; }
    */
   public void setText(String text) {
     this.text = text;
+  }
+
+
+  /**
+   *  Gets the contactTypeName attribute of the SearchCriteriaElement object
+   *
+   *@return    The contactTypeName value
+   */
+  public String getContactTypeName() {
+    return contactTypeName;
+  }
+
+
+  /**
+   *  Gets the contactNameFirst attribute of the SearchCriteriaElement object
+   *
+   *@return    The contactNameFirst value
+   */
+  public String getContactNameFirst() {
+    return contactNameFirst;
+  }
+
+
+  /**
+   *  Gets the contactNameLast attribute of the SearchCriteriaElement object
+   *
+   *@return    The contactNameLast value
+   */
+  public String getContactNameLast() {
+    return contactNameLast;
   }
 
 
@@ -156,8 +213,16 @@ public void setContactNameLast(String tmp) { this.contactNameLast = tmp; }
   public String getOperator() {
     return operator;
   }
-  
-  public String getOperatorDisplayText() { return operatorDisplayText; }
+
+
+  /**
+   *  Gets the operatorDisplayText attribute of the SearchCriteriaElement object
+   *
+   *@return    The operatorDisplayText value
+   */
+  public String getOperatorDisplayText() {
+    return operatorDisplayText;
+  }
 
 
   /**
@@ -229,9 +294,9 @@ public void setContactNameLast(String tmp) { this.contactNameLast = tmp; }
         "FROM field_types " +
         "WHERE id = " + this.getOperatorId());
     if (rs.next()) {
+      this.dataType = rs.getString("data_type");
       this.operator = rs.getString("operator");
       this.operatorDisplayText = rs.getString("display_text");
-      this.dataType = rs.getString("data_type");
     }
     rs.close();
     st.close();
@@ -259,13 +324,11 @@ public void setContactNameLast(String tmp) { this.contactNameLast = tmp; }
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-
       pst.setInt(++i, listid);
       pst.setInt(++i, this.getFieldId());
       pst.setString(++i, this.getOperator());
       pst.setInt(++i, this.getOperatorId());
       pst.setString(++i, this.getText());
-
       pst.execute();
       pst.close();
 
@@ -306,11 +369,16 @@ public void setContactNameLast(String tmp) { this.contactNameLast = tmp; }
    *@since
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
+    //saved_criteriaelement table
     fieldId = rs.getInt("field");
     operatorId = rs.getInt("operatorid");
     operator = rs.getString("operator");
     text = rs.getString("value");
+    
+    //lookup_contact_types table
     contactTypeName = rs.getString("ctype");
+    
+    //contact table
     contactNameFirst = rs.getString("cnamefirst");
     contactNameLast = rs.getString("cnamelast");
   }

@@ -36,12 +36,9 @@ public class SearchOperatorList extends Vector {
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		StringBuffer sqlSelect = new StringBuffer();
-
-		//Need to build a base SQL statement for returning records
 		sqlSelect.append(
 				"SELECT id, data_typeid, data_type, operator, display_text " +
 				"FROM field_types");
-	
 		pst = db.prepareStatement(sqlSelect.toString());
 		rs = pst.executeQuery();
 		while (rs.next()) {
@@ -68,14 +65,10 @@ public class SearchOperatorList extends Vector {
 		ResultSet rs = null;
 		StringBuffer sqlSelect = new StringBuffer();
 
-		//Need to build a base SQL statement for returning records
 		sqlSelect.append(
 				"SELECT id, data_typeid, data_type, operator, display_text " +
-				"FROM field_types");
-		sqlSelect.append(" ");
-		sqlSelect.append(
+				"FROM field_types " +
 				"WHERE data_typeid = " + typeID);
-	
 		pst = db.prepareStatement(sqlSelect.toString());
 		rs = pst.executeQuery();
 		while (rs.next()) {

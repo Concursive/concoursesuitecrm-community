@@ -337,7 +337,7 @@ public class CallList extends Vector {
     }
 
     if (hasAlertDate == true) {
-      sqlFilter.append("AND c.alertdate is not null ");
+      sqlFilter.append("AND c.alertdate IS NOT NULL ");
     }
 
     if (oppId != -1) {
