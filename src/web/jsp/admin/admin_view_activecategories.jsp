@@ -30,7 +30,7 @@ var categoryId = -1;
 <table border="1" width="100%" cellpadding="4" cellspacing="0">
   <tr class="containerHeader">
     <td align="left" colspan="4">
-      <strong>Edit Categories</strong>
+      <strong>Categories</strong>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -40,13 +40,14 @@ var categoryId = -1;
     </td>
   </tr>
   <tr>
-  <td>
-    <table border="0" cellpadding="12" cellspacing="0">
+  <td align="center">
+    <table border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td align="center">
         Level 1<br>
         <% 
         TopCategoryList.getCatListSelect().setSelectSize(10);
+        TopCategoryList.setIncludeDisabled(true);
         TopCategoryList.setHtmlJsEvent("onChange=\"javascript:loadCategories('0');\"");
         TopCategoryList.getCatListSelect().addAttribute("style", "width: 150px");
         %>
