@@ -472,6 +472,12 @@ public String getUniqueField() { return uniqueField; }
     }
     rs.close();
     pst.close();
+    
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Ticket thisTicket = (Ticket)i.next();
+      thisTicket.buildFiles(db);
+    }
   }
 
 

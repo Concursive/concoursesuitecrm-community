@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="CreatedByMeList" class="com.darkhorseventures.cfsbase.TicketList" scope="request"/>
 <jsp:useBean id="CreatedByMeInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <jsp:useBean id="AssignedToMeList" class="com.darkhorseventures.cfsbase.TicketList" scope="request"/>
@@ -73,7 +73,20 @@
   
   <tr>
   <td colspan=6 valign="top" class="row<%= rowid %>">
-  <%= toHtml(assignedTic.getProblemHeader()) %>
+<%
+  if (1==1) {
+    Iterator files = assignedTic.getFiles().iterator();
+    while (files.hasNext()) {
+      FileItem thisFile = (FileItem)files.next();
+      if (".wav".equalsIgnoreCase(thisFile.getExtension())) {
+%>
+  <a href="TroubleTicketsDocuments.do?command=Download&tId=<%= assignedTic.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom"></a>
+<%
+      }
+    }
+  }
+%>
+    <%= toHtml(assignedTic.getProblemHeader()) %>
   </td>
   </tr>
 	<%}%>
@@ -154,7 +167,20 @@
   
   <tr>
   <td colspan=6 valign="top" class="row<%= rowid %>">
-  <%= toHtml(openTic.getProblemHeader()) %>
+<%
+  if (1==1) {
+    Iterator files = openTic.getFiles().iterator();
+    while (files.hasNext()) {
+      FileItem thisFile = (FileItem)files.next();
+      if (".wav".equalsIgnoreCase(thisFile.getExtension())) {
+%>
+  <a href="TroubleTicketsDocuments.do?command=Download&tId=<%= openTic.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom"></a>
+<%
+      }
+    }
+  }
+%>
+    <%= toHtml(openTic.getProblemHeader()) %>
   </td>
   </tr>
 	<%}%>
@@ -236,7 +262,20 @@
   
   <tr>
   <td colspan=6 valign="top" class="row<%= rowid %>">
-  <%= toHtml(thisTic.getProblemHeader()) %>
+<%
+  if (1==1) {
+    Iterator files = thisTic.getFiles().iterator();
+    while (files.hasNext()) {
+      FileItem thisFile = (FileItem)files.next();
+      if (".wav".equalsIgnoreCase(thisFile.getExtension())) {
+%>
+  <a href="TroubleTicketsDocuments.do?command=Download&tId=<%= thisTic.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom"></a>
+<%
+      }
+    }
+  }
+%>
+    <%= toHtml(thisTic.getProblemHeader()) %>
   </td>
   </tr>
   
