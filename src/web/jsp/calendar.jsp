@@ -3,22 +3,42 @@
 <jsp:useBean id="CompanyCalendar" class="org.aspcfs.utils.web.CalendarView" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:include page="templates/cssInclude.jsp" flush="true"/>
+<%@ include file="../initPage.jsp" %>
 <% 
    String returnPage = (String)request.getParameter("return");
    CalendarBean CalendarInfo = (CalendarBean) session.getAttribute(returnPage!=null?returnPage + "CalendarInfo" :"CalendarInfo");
 %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/images.js"></SCRIPT>
 <script type="text/javascript">
-  function showDayEvents(month,day){
-    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=DayView&inline=true&month='+month+'&day='+day+'&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
+  function showDayEvents(year, month,day){
+    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=DayView&inline=true&year='+year+'&month='+month+'&day='+day+'&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
   }
   function showToDaysEvents(thisMonth,thisDay,thisYear){
-    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=DayView&inline=true&month='+thisMonth+'&day='+thisDay+'&year='+thisYear+'&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
-    window.location.href='MyCFS.do?command=MonthView&inline=true&&month='+thisMonth+'&year='+thisYear+'&source=calendar<%=returnPage!=null?"&return="+returnPage:""%>';
+   window.parent.frames['calendardetails'].location.href='MyCFS.do?command=TodaysView&inline=true&month=' + thisMonth + '&day=' + thisDay + '&year=' + thisYear + '&source=calendardetails&reloadCalendar=true<%= returnPage!=null ? "&return="+returnPage : "" %>';
   }
-  function showWeekEvents(startMonth,startDay){
-    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=WeekView&inline=true&&month='+startMonth+'&startMonthOfWeek='+startMonth+'&startDayOfWeek='+startDay+'&source=calendarDetails<%=returnPage!=null?"&return="+returnPage:""%>';
+  
+  function reloadCalendarDetails(){
+  
+  <% int selYear = CompanyCalendar.getCalendarInfo().getYearSelected();
+     int selMonth = CompanyCalendar.getCalendarInfo().getMonthSelected();
+     int selDay = CompanyCalendar.getCalendarInfo().getDaySelected();
+  %>
+
+  <%if("".equals(toString(CompanyCalendar.getCalendarInfo().getCalendarView())) || CompanyCalendar.getCalendarInfo().isAgendaView()){%>
+    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=AgendaView&source=calendarDetails<%=returnPage!=null?"&return="+returnPage:""%>';
+    <% }else if("day".equals(toString(CompanyCalendar.getCalendarInfo().getCalendarView()))){ %>
+    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=DayView&inline=true&month=<%= selMonth %>&day=<%= selDay %>&year=<%= selYear %>&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
+    <% }else if("week".equals(toString(CompanyCalendar.getCalendarInfo().getCalendarView()))){ %>
+    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=WeekView&inline=true&startMonthOfWeek=<%= CompanyCalendar.getCalendarInfo().getStartMonthOfWeek() %>&startDayOfWeek=<%= CompanyCalendar.getCalendarInfo().getStartDayOfWeek() %>&year=<%= selYear %>&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
+    <% }else{ %>
+    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=ToDaysView&inline=true&month=<%= selMonth %>&day=<%= selDay %>&year=<%= selYear %>&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
+    <% } %>
   }
+
+  function showWeekEvents(startYear,startMonth,startDay){
+    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=WeekView&inline=true&year='+ startYear +'&month='+startMonth+'&startMonthOfWeek='+startMonth+'&startDayOfWeek='+startDay+'&source=calendarDetails<%=returnPage!=null?"&return="+returnPage:""%>';
+  }
+  
   function switchTableClass(E,className,rowOrCell,browser){
     if(rowOrCell == "cell"){
       tdToChange = E;
@@ -60,7 +80,10 @@
     }
   }
 </script>
-<form name="monthBean" action="MyCFS.do?command=MonthView&source=calendar<%= returnPage!=null?"&return="+returnPage:"" %>" method="post">
+<dhv:evaluate if="<%= "true".equals(request.getParameter("reloadCalendarDetails")) %>">
+<body onLoad="javascript:reloadCalendarDetails();">
+</dhv:evaluate>
+<form name="monthBean" action="MyCFS.do?command=MonthView&source=calendar&resetView=true<%= returnPage!=null?"&return="+returnPage:"" %>" method="post">
 <%
       CompanyCalendar.setCellPadding(4);
       CompanyCalendar.setCellSpacing(0);
@@ -102,3 +125,6 @@
   </tr>
 </table>
 </form>
+<dhv:evaluate if="<%= "true".equals(request.getParameter("reloadCalendarDetails")) %>">
+</body>
+</dhv:evaluate>

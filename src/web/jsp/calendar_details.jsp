@@ -23,12 +23,18 @@ function switchStyle(E){
     E.style.display = 'none';
   }
 }
+function reloadCalendar(){
+  window.parent.frames['calendar'].location.href='MyCFS.do?command=MonthView&inline=true&month=<%= CalendarInfo.getMonthSelected() %>&year=<%= CalendarInfo.getYearSelected() %>&source=calendar<%=returnPage!=null?"&return="+returnPage:""%>';
+}
 </script>
+<dhv:evaluate if="<%= "true".equals(request.getParameter("reloadCalendar")) %>">
+<body onLoad="javascript:reloadCalendar();">
+</dhv:evaluate>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 <%-- Display header label --%>
   <tr>
     <td align="center" valign="top" width="100%" nowrap>
-      <strong><%= CalendarInfo.isAgendaView()?"Next 7 Days View": Character.toUpperCase(CalendarInfo.getCalendarView().charAt(0)) + CalendarInfo.getCalendarView().substring(1) + " View " + (CalendarInfo.getCalendarView().equalsIgnoreCase("week")?" : " + toMediumDateString(CompanyCalendar.getStartOfWeekDate()) + " - " + toMediumDateString(CompanyCalendar.getEndOfWeekDate()):"")%></strong>
+      <strong><%= CalendarInfo.isAgendaView()?"Next 7 Days View": Character.toUpperCase(CalendarInfo.getCalendarView().charAt(0)) + CalendarInfo.getCalendarView().substring(1) + " View " + (CalendarInfo.getCalendarView().equalsIgnoreCase("week")?" : " + toMediumDateString(CompanyCalendar.getCalendarInfo().getStartOfWeekDate()) + " - " + toMediumDateString(CompanyCalendar.getCalendarInfo().getEndOfWeekDate()):"")%></strong>
       <dhv:evaluate if="<%= CalendarInfo.isAgendaView() %>"><br>&nbsp;</dhv:evaluate>
     </td>
   </tr>
@@ -168,3 +174,6 @@ function switchStyle(E){
     </td>
   </tr>
 </table>
+<dhv:evaluate if="<%= "true".equals(request.getParameter("reloadCalendar")) %>">
+</body>
+</dhv:evaluate>
