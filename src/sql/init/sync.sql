@@ -629,10 +629,25 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'roleList', 'com.darkhorseventures.cfsbase.RoleList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'permissionCategory', 'com.darkhorseventures.cfsbase.PermissionCategory');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'permissionCategoryList', 'com.darkhorseventures.cfsbase.PermissionCategoryList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'permission', 'com.darkhorseventures.cfsbase.Permission');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'permissionList', 'com.darkhorseventures.cfsbase.PermissionList');
  
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'rolePermission', 'com.darkhorseventures.cfsbase.RolePermission');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'rolePermissionList', 'com.darkhorseventures.cfsbase.RolePermissionList');
+
+/*INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'rolePermission', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'rolePermissionList', 'com.darkhorseventures.webutils.CustomLookupList');
+ */
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'opportunity', 'com.darkhorseventures.cfsbase.Opportunity');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)

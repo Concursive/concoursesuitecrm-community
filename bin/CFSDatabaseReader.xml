@@ -4,6 +4,7 @@
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportLookupTables</module>
     <!-- Users, Accounts, Contacts and ownership -->
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportBaseData</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportRoles</module>
     <!-- Related Data -->
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunities</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportTickets</module>
@@ -98,9 +99,41 @@
       <property alias="guid">id</property>
       <property>role</property>
       <property>description</property>
+      <property>entered</property>
+      <property>modified</property>
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
+    </map>
+    <map class="com.darkhorseventures.cfsbase.PermissionCategory" id="permissionCategory">
+      <property alias="guid">id</property>
+      <property>category</property>
+      <property>description</property>
+      <property>level</property>
+      <property>enabled</property>
+      <property>active</property>
+    </map>
+    <map class="com.darkhorseventures.cfsbase.Permission" id="permission">
+      <property alias="guid">id</property>
+      <property lookup="permissionCategory">categoryId</property>
+      <property>permissionLevel</property>
+      <property>name</property>
+      <property>add</property>
+      <property>view</property>
+      <property>edit</property>
+      <property>delete</property>
+      <property>description</property>
+      <property>enabled</property>
+      <property>active</property>
+    </map>
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="rolePermission" table="role_permission" uniqueField="id">
+      <property alias="guid" field="id">id</property>
+      <property lookup="role" field="role_id">roleId</property>
+      <property lookup="permission" field="permission_id">permissionId</property>
+      <property field="role_add">add</property>
+      <property field="role_view">view</property>
+      <property field="role_edit">edit</property>
+      <property field="role_delete">delete</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Opportunity" id="opportunity">
       <property alias="guid">id</property>
