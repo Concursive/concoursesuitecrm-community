@@ -154,7 +154,7 @@ function addValues() {
 		
 	searchCriteria[searchCriteria.length] = newCriteria;
 	document.searchForm.searchValue.value = document.searchForm.searchValue.defaultValue;
-	document.searchForm.searchValue.focus();
+	//document.searchForm.searchValue.focus();
 }
 
 //removes the value at a particular index within the criteria select box

@@ -36,11 +36,15 @@ function updateOperators(){
     %>
     
 		javascript:ShowSpan('new0');
+    javascript:HideSpan('searchText1');
+    javascript:HideSpan('searchText2');    
     javascript:HideSpan('new1');
 		document.searchForm.searchValue.value = document.searchForm.idSelect.options[document.searchForm.idSelect.selectedIndex].text;
 	} else if (document.searchForm.fieldSelect.selectedIndex == 3) {
 		javascript:HideSpan('new0');
 		javascript:ShowSpan('new1');
+    javascript:ShowSpan('searchText1');
+    javascript:ShowSpan('searchText2');    
 		document.searchForm.searchValue.value = "";
 	} else if (document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 11) {
     javascript:HideSpan('new1');
@@ -60,10 +64,14 @@ function updateOperators(){
     %>
     
 		javascript:ShowSpan('new0');
+    javascript:HideSpan('searchText1');
+    javascript:HideSpan('searchText2');    
 		document.searchForm.searchValue.value = document.searchForm.idSelect.options[document.searchForm.idSelect.selectedIndex].text;
 	} else {
 		javascript:HideSpan('new0');
     javascript:HideSpan('new1');
+    javascript:ShowSpan('searchText1');
+    javascript:ShowSpan('searchText2');    
 		document.searchForm.searchValue.value = "";
 	}
 	
@@ -230,11 +238,11 @@ Group Details
     
     <tr>
     <td width=98 nowrap>
-    Search Text
+    <span name="searchText1" ID="searchText1" style="position:relative">Search Text</span>
     </td>
     
     <td width=100% valign=center>
-    <input type="text" name="searchValue" value="" size=25  maxlength=125> 
+    <span name="searchText2" ID="searchText2" style="position:relative"><input type="text" name="searchValue" value="" size=25  maxlength=125></span> 
     </td>
     
     </tr>    
