@@ -171,9 +171,9 @@ else{%>
       <%}%>
     </table>
     
+    <%if(ContactListInfo.getParentFieldType().equalsIgnoreCase("list")){%>
     <input type='button' value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','contactListView');">
     <input type="button" value="Cancel" onClick="javascript:window.close()">
-    <%if(ContactListInfo.getParentFieldType().equalsIgnoreCase("list")){%>
     <a href="javascript:SetChecked(1,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Check All</a>
     <a href="javascript:SetChecked(0,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Clear All</a>
     <%}%>
