@@ -24,6 +24,8 @@ public class ContactEmailAddress extends EmailAddress {
   public ContactEmailAddress(Connection db, String emailAddressId) throws SQLException {
           queryRecord(db, Integer.parseInt(emailAddressId));
   }
+ 
+
   
   public void queryRecord(Connection db, int emailAddressId) throws SQLException {
     isContact = true;

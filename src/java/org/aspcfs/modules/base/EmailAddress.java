@@ -140,7 +140,9 @@ public class EmailAddress {
     this.enteredBy = Integer.parseInt(tmp);
   }
 
-
+  public void setEnabled(String tmp) {
+    enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+  }
   /**
    *  Sets the ModifiedBy attribute of the EmailAddress object
    *
