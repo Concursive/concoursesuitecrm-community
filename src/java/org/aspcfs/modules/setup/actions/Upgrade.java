@@ -76,6 +76,7 @@ public class Upgrade extends CFSModule {
     }
     addModuleBean(context, null, "Upgrade");
     // Retrieve version info (else, default to first binary version date)
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     String installedVersion = getPref(context, "VERSION");
     if (installedVersion == null) {
       installedVersion = "2004-03-16";
@@ -87,6 +88,7 @@ public class Upgrade extends CFSModule {
       ArrayList installLog = new ArrayList();
       context.getRequest().setAttribute("installLog", installLog);
       Connection db = null;
+      String versionToInstall = null;
       try {
         boolean buildHelp = false;
         // Get a connection from the connection pool for this user
@@ -94,66 +96,25 @@ public class Upgrade extends CFSModule {
         // Prepare bean shell script, if needed
         Interpreter script = new Interpreter();
         script.set("db", db);
-        // Determine if version 2004-06-15 (Version 2.8) needs to be executed
-        if (!isInstalled(db, "2004-06-15")) {
-          switch (DatabaseUtils.getType(db)) {
-              case DatabaseUtils.POSTGRESQL:
-                System.out.println("Upgrade-> Executing PostgreSQL script 2004-06-15");
-                // SQL Script
-                DatabaseUtils.executeSQL(db,
-                    context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql_2004-06-15.sql");
-                // Bean Shell Script
-                script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "2004-06-15.bsh");
-                installLog.add("2004-06-15 Database changes installed");
-                break;
-              case DatabaseUtils.MSSQL:
-                System.out.println("Upgrade-> Executing MSSQL script 2004-06-15");
-                // SQL Script
-                DatabaseUtils.executeSQL(db,
-                    context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "mssql_2004-06-15.sql");
-                // Bean Shell Script
-                script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "2004-06-15.bsh");
-                installLog.add("2004-06-15 Database changes installed");
-                break;
-              default:
-                if (System.getProperty("DEBUG") != null) {
-                  System.out.println("Upgrade-> * Database could not be determined: " + DatabaseUtils.getType(db));
-                }
-                break;
-          }
+        script.set("dbFileLibraryPath", prefs.get("FILELIBRARY"));
+        // Determine if an upgrade needs to be executed
+        versionToInstall = "2004-06-15";
+        if (!isInstalled(db, versionToInstall)) {
+          upgradeSQL(context, db, "2004-06-15.sql");
+          upgradeBSH(context, script, "2004-06-15.bsh");
+          installLog.add("2004-06-15 database changes installed");
           buildHelp = true;
         }
-        String dbVersionToCheck = "2004-08-30";
-        if (!isInstalled(db, dbVersionToCheck)) {
-          switch (DatabaseUtils.getType(db)) {
-              case DatabaseUtils.POSTGRESQL:
-                System.out.println("Upgrade-> Executing PostgreSQL script " + dbVersionToCheck);
-                // SQL Script
-                DatabaseUtils.executeSQL(db,
-                    context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql_" + dbVersionToCheck + ".sql");
-                // Bean Shell Script
-                script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "2004-08-19.bsh");
-                script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "2004-08-20.bsh");
-                installLog.add(dbVersionToCheck + " Database changes installed");
-                break;
-              case DatabaseUtils.MSSQL:
-                System.out.println("Upgrade-> Executing MSSQL script " + dbVersionToCheck);
-                // SQL Script
-                DatabaseUtils.executeSQL(db,
-                    context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "mssql_" + dbVersionToCheck + ".sql");
-                // Bean Shell Script
-                script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "2004-08-19.bsh");
-                script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "2004-08-20.bsh");
-                installLog.add(dbVersionToCheck + " Database changes installed");
-                break;
-              default:
-                if (System.getProperty("DEBUG") != null) {
-                  System.out.println("Upgrade-> * Database could not be determined: " + DatabaseUtils.getType(db));
-                }
-                break;
-          }
+        // Determine if an upgrade needs to be executed
+        versionToInstall = "2004-08-30";
+        if (!isInstalled(db, versionToInstall)) {
+          upgradeSQL(context, db, "2004-08-30.sql");
+          upgradeBSH(context, script, "2004-08-19.bsh");
+          upgradeBSH(context, script, "2004-08-20.bsh");
+          installLog.add("2004-08-30 database changes installed");
           buildHelp = true;
         }
+        // Reinstall the help file if requested...
         if (buildHelp) {
           // Install the help (blank tables should already exist)
           ImportHelp help = new ImportHelp();
@@ -163,7 +124,6 @@ public class Upgrade extends CFSModule {
           help.buildTableOfContents();
           help.insertTableOfContents(db);
         }
-        ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
         if (!prefs.save()) {
           context.getRequest().setAttribute("errorMessage", "No write permission on file library, build.properties");
           return "UpgradeERROR";
@@ -266,6 +226,49 @@ public class Upgrade extends CFSModule {
     pst.setString(2, version);
     pst.execute();
     pst.close();
+  }
+  
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@param  baseName          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  private void upgradeSQL(ActionContext context, Connection db, String baseName) throws Exception {
+    switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          System.out.println("Upgrade-> Executing PostgreSQL script " + baseName);
+          DatabaseUtils.executeSQL(db,
+              context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql_" + baseName);
+          break;
+        case DatabaseUtils.MSSQL:
+          System.out.println("Upgrade-> Executing MSSQL script " + baseName);
+          DatabaseUtils.executeSQL(db,
+              context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "mssql_" + baseName);
+          break;
+        default:
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("Upgrade-> * Database could not be determined: " + DatabaseUtils.getType(db));
+          }
+          break;
+    }
+
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context        Description of the Parameter
+   *@param  script         Description of the Parameter
+   *@param  scriptName     Description of the Parameter
+   *@exception  Exception  Description of the Exception
+   */
+  private void upgradeBSH(ActionContext context, Interpreter script, String scriptName) throws Exception {
+    System.out.println("Upgrade-> Executing BeanShell script " + scriptName);
+    script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + scriptName);
   }
 }
 

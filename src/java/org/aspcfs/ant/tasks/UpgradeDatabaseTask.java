@@ -250,10 +250,11 @@ public class UpgradeDatabaseTask extends Task {
       script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "aspcfs.jar\")");
       script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "darkhorseventures.jar\")");
       script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "zeroio-iteam.jar\")");
+      script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "jcrontab.jar\")");
       script.eval("addClassPath(\"" + servletJar + "\")");
       script.set("db", db);
-      script.set("fileLibraryPath", webPath);
-      script.set("dbFileLibraryPath", webPath + fs + "WEB-INF" + fs + "fileLibrary" + fs + dbName);
+      script.set("fileLibraryPath", webPath + fs);
+      script.set("dbFileLibraryPath", webPath + fs + "WEB-INF" + fs + "fileLibrary" + fs + dbName + fs);
       System.out.println("Executing: " + scriptFile);
       script.source(scriptFile);
     }

@@ -1089,7 +1089,8 @@ CREATE TABLE opportunity_component (
     alert character varying(100),
     enabled boolean DEFAULT true NOT NULL,
     notes text,
-    alertdate_timezone character varying(255)
+    alertdate_timezone character varying(255),
+    closedate_timezone VARCHAR(255)
 );
 
 
@@ -1276,7 +1277,9 @@ CREATE TABLE projects (
     documents_label character varying(50),
     est_closedate timestamp(3) without time zone,
     budget double precision,
-    budget_currency character varying(5)
+    budget_currency character varying(5),
+    requestDate_timezone VARCHAR(255),
+    est_closedate_timezone VARCHAR(255)
 );
 
 
@@ -1311,7 +1314,9 @@ CREATE TABLE project_requirements (
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     modifiedby integer NOT NULL,
-    startdate timestamp(3) without time zone
+    startdate timestamp(3) without time zone,
+    startdate_timezone VARCHAR(255),
+    deadline_timezone VARCHAR(255)
 );
 
 
@@ -1373,7 +1378,8 @@ CREATE TABLE project_assignments (
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     modifiedby integer NOT NULL,
     folder_id integer,
-    percent_complete integer
+    percent_complete integer,
+    due_date_timezone VARCHAR(255)
 );
 
 
@@ -1577,7 +1583,9 @@ CREATE TABLE project_news (
     read_count integer DEFAULT 0 NOT NULL,
     enabled boolean DEFAULT true,
     status integer,
-    html boolean DEFAULT true NOT NULL
+    html boolean DEFAULT true NOT NULL,
+    start_date_timezone VARCHAR(255),
+    end_date_timezone VARCHAR(255)
 );
 
 
@@ -2090,7 +2098,10 @@ CREATE TABLE service_contract (
     enabled boolean DEFAULT true,
     contract_value double precision,
     total_hours_remaining double precision,
-    service_model_notes text
+    service_model_notes text,
+    initial_start_date_timezone VARCHAR(255),
+    current_start_date_timezone VARCHAR(255),
+    current_end_date_timezone VARCHAR(255)
 );
 
 
@@ -2177,7 +2188,10 @@ CREATE TABLE asset (
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     modifiedby integer NOT NULL,
     enabled boolean DEFAULT true,
-    purchase_cost double precision
+    purchase_cost double precision,
+    date_listed_timezone VARCHAR(255),
+    expiration_date_timezone VARCHAR(255),
+    purchase_date_timezone VARCHAR(255)
 );
 
 
@@ -2287,7 +2301,9 @@ CREATE TABLE ticket (
     customer_product_id integer,
     expectation integer,
     key_count integer,
-    est_resolution_date_timezone character varying(255)
+    est_resolution_date_timezone character varying(255),
+    assigned_date_timezone VARCHAR(255),
+    resolution_date_timezone VARCHAR(255)
 );
 
 
@@ -2332,7 +2348,8 @@ CREATE TABLE ticket_csstm_form (
     modifiedby integer NOT NULL,
     enabled boolean DEFAULT true,
     travel_towards_sc boolean DEFAULT true,
-    labor_towards_sc boolean DEFAULT true
+    labor_towards_sc boolean DEFAULT true,
+    alert_date_timezone VARCHAR(255)
 );
 
 
@@ -2345,7 +2362,8 @@ CREATE TABLE ticket_activity_item (
     travel_hours integer,
     travel_minutes integer,
     labor_hours integer,
-    labor_minutes integer
+    labor_minutes integer,
+    activity_date_timezone VARCHAR(255)
 );
 
 
@@ -2978,7 +2996,8 @@ CREATE TABLE campaign (
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     modifiedby integer NOT NULL,
-    "type" integer DEFAULT 1
+    "type" integer DEFAULT 1,
+    active_date_timezone VARCHAR(255)
 );
 
 

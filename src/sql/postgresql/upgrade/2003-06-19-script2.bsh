@@ -22,7 +22,7 @@ import java.io.File;
 import org.aspcfs.apps.workFlowManager.*;
 import org.aspcfs.controller.objectHookManager.*;
 
-File xmlFile = new File(dbFileLibraryPath + System.getProperty("file.separator") + "workflow.xml");
+File xmlFile = new File(dbFileLibraryPath + "workflow.xml");
 if (xmlFile.exists()) {
   //Read in any workflow business processes
   print("Importing business processes...");

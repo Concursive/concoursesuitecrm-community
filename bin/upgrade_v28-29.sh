@@ -23,6 +23,8 @@ ant upgradedb -Darg1=2004-08-20.bsh -Darg2=
 # Timezone field additions
 ant upgradedb -Darg1=2004-08-25-f-release9_20040810-ak.sql -Darg2=
 ant upgradedb -Darg1=2004-08-26-partha.sql -Darg2=
+ant upgradedb -Darg1=2004-08-30-partha.sql -Darg2=
+ant upgradedb -Darg1=2004-08-31-partha.bsh -Darg2=
 
 # Manually upgrade the help for each site
 echo ...
