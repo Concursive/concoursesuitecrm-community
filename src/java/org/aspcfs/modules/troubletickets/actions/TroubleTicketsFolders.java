@@ -77,7 +77,7 @@ public final class TroubleTicketsFolders extends CFSModule {
         if (recordId == null && thisCategory.getAllowMultipleRecords()) {
           //The user didn't request a specific record, so show a list
           //of records matching this category that the user can choose from
-          PagedListInfo folderListInfo = this.getPagedListInfo(context, "AccountFolderInfo");
+          PagedListInfo folderListInfo = this.getPagedListInfo(context, "TicketsFolderInfo");
           folderListInfo.setLink("TroubleTicketsFolders.do?command=Fields&ticketId=" + ticketId + "&catId=" + selectedCatId);
 
           CustomFieldRecordList recordList = new CustomFieldRecordList();
