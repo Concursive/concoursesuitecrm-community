@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -698,6 +698,7 @@ public class CustomFieldGroup extends ArrayList {
     int i = 0;
     pst.setInt(++i, categoryId);
     pst.execute();
+    pst.close();
 
     sql =
         "DELETE FROM custom_field_group " +
