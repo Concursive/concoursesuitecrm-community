@@ -74,7 +74,8 @@ su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/cdb.init "
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/code_tables.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/access.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/organization.init "
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/permissions.init " 
+# No Longer used, you must run a dataImport...
+#su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/permissions.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/data.init " 
 
 #su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_cfs2.sql " 
