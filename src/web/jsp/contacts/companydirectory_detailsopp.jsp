@@ -108,7 +108,7 @@ Opportunity Details<br>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= oppComponent.getClosed() != null ? "<font color=\"red\">closed</font>" : "<font color=\"green\">open</font>" %>
     </td>
-    <td valign="top" align="center" nowrap class="row<%= rowid %>">
+    <td valign="top" align="right" nowrap class="row<%= rowid %>">
       $<%= oppComponent.getGuessCurrency() %>
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">

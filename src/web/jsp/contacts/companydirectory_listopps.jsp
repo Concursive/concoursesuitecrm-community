@@ -85,7 +85,7 @@ Opportunities<br>
         <%= thisFile.getImageTag() %>
 </dhv:evaluate>
       </td>  
-      <td valign="top" align="center" class="row<%= rowid %>" nowrap>
+      <td valign="top" align="right" class="row<%= rowid %>" nowrap>
         $<%= toHtml(oppHeader.getTotalValueCurrency()) %>
       </td>      
       <td valign="top" align="center" class="row<%= rowid %>" nowrap>
