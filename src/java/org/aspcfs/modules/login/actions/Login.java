@@ -115,7 +115,7 @@ public final class Login extends CFSModule {
       //A good place to initialize this SystemStatus, must be done before getting a user
       SystemStatus thisSystem = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("Login-> Getting SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
+        System.out.println("Login-> Retrieved SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
       }
 
       pst = db.prepareStatement(
@@ -166,6 +166,9 @@ public final class Login extends CFSModule {
         } else {
           if (System.getProperty("DEBUG") != null) {
             System.out.println("Login-> Fatal: User not found in this System!");
+          }
+          if (!thisSystem.hasPermissions()) {
+            System.out.println("Login-> This system does not have any permissions loaded!");
           }
         }
       } else {
