@@ -58,7 +58,13 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
     if (!processOK) {
       return false;
     }
-
+    
+    logger.info("ImportCommunications-> Inserting Campaign Records");
+    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "campaign");
+    if (!processOK) {
+      return false;
+    }
+    
     /**
     processOK = writer.commit();
     if (!processOK) {

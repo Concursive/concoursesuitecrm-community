@@ -152,8 +152,8 @@ public class Campaign extends GenericBean {
       "FROM campaign c " +
       "LEFT JOIN message msg ON (c.message_id = msg.id) " +
       "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
-      //"WHERE c.campaign_id = ? ";
-      "WHERE c.id = ? ";
+      "WHERE c.campaign_id = ? ";
+      //"WHERE c.id = ? ";
     pst = db.prepareStatement(sql);
     pst.setInt(1, campaignId);
     rs = pst.executeQuery();
@@ -1309,8 +1309,8 @@ public java.sql.Timestamp getModified() {
       pst.execute();
       pst.close();
 
-      //id = DatabaseUtils.getCurrVal(db, "campaign_campaign_id_seq");
-      id = DatabaseUtils.getCurrVal(db, "campaign_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "campaign_campaign_id_seq");
+      //id = DatabaseUtils.getCurrVal(db, "campaign_id_seq");
       this.update(db, true);
 
       if (this.getGroupList() != null && !this.getGroupList().equals("")) {
@@ -1387,8 +1387,8 @@ public java.sql.Timestamp getModified() {
       st.executeUpdate(
           "UPDATE campaign " +
           "SET modified = CURRENT_TIMESTAMP " +
-          //"WHERE campaign_id = " + id);
-          "WHERE id = " + id);
+          "WHERE campaign_id = " + id);
+          //"WHERE id = " + id);
       st.close();
 
       db.commit();
@@ -1460,8 +1460,8 @@ public java.sql.Timestamp getModified() {
         st.executeUpdate(
             "UPDATE campaign " +
             "SET modified = CURRENT_TIMESTAMP " +
-            //"WHERE campaign_id = " + id);
-            "WHERE id = " + id);
+            "WHERE campaign_id = " + id);
+            //"WHERE id = " + id);
         st.close();
       }
       db.commit();
@@ -1553,8 +1553,8 @@ public java.sql.Timestamp getModified() {
       }
       
       pst = db.prepareStatement(
-          //"DELETE FROM campaign WHERE campaign_id = ? ");
-          "DELETE FROM campaign WHERE id = ? ");
+          "DELETE FROM campaign WHERE campaign_id = ? ");
+          //"DELETE FROM campaign WHERE id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       
@@ -1602,8 +1602,8 @@ public java.sql.Timestamp getModified() {
         "active = ?, " +
         "modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        //"WHERE campaign_id = ? " +
-        "WHERE id = ? " +
+        "WHERE campaign_id = ? " +
+        //"WHERE id = ? " +
         "AND status_id IN (" + QUEUE + ", " + ERROR + ") ");
       int i = 0;
       pst.setInt(++i, CANCELLED);
@@ -1675,8 +1675,8 @@ public java.sql.Timestamp getModified() {
         "status = ?, " +
         "modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        //"WHERE campaign_id = ? " + 
-        "WHERE id = ? " +
+        "WHERE campaign_id = ? " + 
+        //"WHERE id = ? " +
         "AND modified = ? " +
         "AND active = ? ");
       int i = 0;
@@ -1731,8 +1731,8 @@ public java.sql.Timestamp getModified() {
           "message = ?, " +
           "modifiedby = ?, " +
           "modified = CURRENT_TIMESTAMP " +
-          //"WHERE campaign_id = ? ");
-          "WHERE id = ? ");
+          "WHERE campaign_id = ? ");
+          //"WHERE id = ? ");
         i = 0;
         pst.setBoolean(++i, true);
         pst.setString(++i, thisMessage.getReplyTo());
@@ -1816,8 +1816,8 @@ public java.sql.Timestamp getModified() {
         "description = ?, " +
         "modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        //"WHERE campaign_id = " + id);
-        "WHERE id = " + id);
+        "WHERE campaign_id = " + id);
+        //"WHERE id = " + id);
     int i = 0;
     pst.setString(++i, name);
     pst.setString(++i, description);
@@ -1854,8 +1854,8 @@ public java.sql.Timestamp getModified() {
         "message = null, " +
         "modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        //"WHERE campaign_id = ? ");
-        "WHERE id = ? ");
+        "WHERE campaign_id = ? ");
+        //"WHERE id = ? ");
     pst.setInt(++i, messageId);
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, id);
@@ -1879,8 +1879,8 @@ public java.sql.Timestamp getModified() {
           "UPDATE campaign " +
           "SET modifiedby = ?, " +
           "modified = CURRENT_TIMESTAMP " +
-          //"WHERE campaign_id = ? ");
-          "WHERE id = ? ");
+          "WHERE campaign_id = ? ");
+          //"WHERE id = ? ");
       pst.setInt(1, modifiedBy);
       pst.setInt(2, id);
       resultCount = pst.executeUpdate();
@@ -1933,8 +1933,8 @@ public java.sql.Timestamp getModified() {
         "active_date = ?, " +
         "send_method_id = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        //"WHERE campaign_id = " + id);
-        "WHERE id = " + id);
+        "WHERE campaign_id = " + id);
+        //"WHERE id = " + id);
     pst.setInt(++i, messageId);
     pst.setDate(++i, activeDate);
     pst.setInt(++i, sendMethodId);
@@ -1999,8 +1999,8 @@ public java.sql.Timestamp getModified() {
         "SET description = ?, active_date = ?, " +
         "enabled = ?, modified = CURRENT_TIMESTAMP, modifiedby = ?, " +
         "active = ?, status_id = ?, status = ?, message_id = ? " +
-        //"WHERE campaign_id = ? ";
-        "WHERE id = ? ";
+        "WHERE campaign_id = ? ";
+        //"WHERE id = ? ";
     int i = 0;
     pst = db.prepareStatement(sql);
     pst.setString(++i, this.getDescription());
