@@ -35,7 +35,7 @@
           <td width="100%">
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
               <tr>
-                <td width="100%" valign="top">
+                <td width="100%" valign="top" style="padding-right: 10px">
                   <% String includeModule = (String) request.getAttribute("IncludeModule"); %>
                   <jsp:include page="<%= includeModule %>" flush="true"/>
                 </td>

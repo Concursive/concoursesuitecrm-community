@@ -2,7 +2,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>
 <%
-  String image = "<img alt=\"Current Step\" src=\"images/box-checked.gif\"/>";
+  String image = "<img alt=\"Current Step\" src=\"images/bullet.gif\" align=\"absmiddle\"/>&nbsp;";
 %>
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
@@ -48,7 +48,7 @@
     <td>
       Dark Horse CRM saves time and money...<br>
       <br>
-      <img alt="" src="images/bullet.gif"/>
+      <img alt="" src="images/bullet.gif" align="absmiddle"/>
       <a href="http://www.darkhorsecrm.com" target="_blank">Learn more about our products</a><br>
       &nbsp;
     </td>
@@ -69,9 +69,9 @@
       <br>
       Your information will not be provided to others.<br>
       <br>
-      <img alt="" src="images/bullet.gif"/>
+      <img alt="" src="images/bullet.gif" align="absmiddle"/>
       <a href="#">Review Privacy Statement</a><br>
-      <img alt="" src="images/bullet.gif"/>
+      <img alt="" src="images/bullet.gif" align="absmiddle"/>
       <a href="#">Review Security Statement</a><br>
       &nbsp;
     </td>
@@ -90,7 +90,7 @@
     <td>
       Remember to make backups of your data.<br>
       <br>
-      <img alt="" src="images/bullet.gif"/>
+      <img alt="" src="images/bullet.gif" align="absmiddle"/>
       <a href="#">File Backup Tutorial</a><br>
       &nbsp;
     </td>
@@ -107,9 +107,9 @@
   </tr>
   <tr>
     <td>
-      <img alt="" src="images/bullet.gif"/>
+      <img alt="" src="images/bullet.gif" align="absmiddle"/>
       <a href="#">SendMail Tutorial</a><br>
-      <img alt="" src="images/bullet.gif"/>
+      <img alt="" src="images/bullet.gif" align="absmiddle"/>
       <a href="#">HylaFax Tutorial</a><br>
       &nbsp;
     </td>
@@ -126,7 +126,7 @@
   </tr>
   <tr>
     <td>
-      <img alt="" src="images/bullet.gif"/>
+      <img alt="" src="images/bullet.gif" align="absmiddle"/>
       <a href="#">PostgreSQL Tutorial</a><br>
       &nbsp;
     </td>
@@ -143,7 +143,7 @@
   </tr>
   <tr>
     <td>
-      <img alt="" src="images/bullet.gif"/>
+      <img alt="" src="images/bullet.gif" align="absmiddle"/>
       <a href="#">Dark Horse CRM Tutorial</a><br>
       &nbsp;
     </td>
