@@ -703,7 +703,7 @@ public class CFSModule {
       thisItem = new RecentItem(
           RecentItem.OPPORTUNITY,
           thisOpp.getShortDescription(),
-          "Leads.do?command=DetailsOpp&id=" + thisOpp.getId());
+          "Leads.do?command=DetailsOpp&id=" + thisOpp.getId() + "&reset=true");
     } else if (itemObject instanceof OpportunityComponent) {
       OpportunityComponent thisComponent = (OpportunityComponent) itemObject;
       thisItem = new RecentItem(
