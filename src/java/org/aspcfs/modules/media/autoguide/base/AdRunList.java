@@ -160,6 +160,10 @@ public class AdRunList extends ArrayList {
   public void setAccountInventoryId(int tmp) {
     this.inventoryId = tmp;
   }
+  
+  public void setAccountInventoryId(String tmp) {
+    this.inventoryId = Integer.parseInt(tmp);
+  }
 
 
   /**
