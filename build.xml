@@ -2,8 +2,16 @@
  $Id$
 
  Notes: 
-   Make sure to override all preferences for the current system.
-   Root/Administrator access may be required
+   The easiest way to get started is to run "ant deploy"
+   
+   The build process will instruct you to have several environment variables
+   and to customize the build.properties.  The build will fail until all
+   installation conditions are met.
+   
+   Do not edit the master build.properties in this folder, a copy will be
+   made by the installation and you will be notified of the file to modify.
+   
+   The build process needs write access to the destination web-app folder.
 -->
 <project name="CFS" default="usage" basedir=".">
   
@@ -100,7 +108,8 @@
   
   <!-- Copy the common jars -->
   <target name="init.classpath.uptodate">
-    <copy todir="${env.CATALINA_HOME}/common/lib">
+    <mkdir dir="${CFS_HOME}/WEB-INF/lib"/>
+    <copy todir="${CFS_HOME}/WEB-INF/lib">
       <fileset dir="${lib.dir}">
         <include name="*.jar"/>
       </fileset>
@@ -237,6 +246,13 @@
         <include name="images/**" />
         <include name="javascript/**" />
         <include name="css/**" />
+      </fileset>
+    </copy>
+    <!-- Copy the help files  -->
+    <mkdir dir="${CFS_HOME}/images/help"/>
+    <copy todir="${CFS_HOME}/images/help" flatten="true">
+      <fileset dir="${src.web.dir}/help">
+        <include name="**/*" />
       </fileset>
     </copy>
     <!-- Copy the configuration files -->
