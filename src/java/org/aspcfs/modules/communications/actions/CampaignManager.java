@@ -1094,7 +1094,7 @@ public final class CampaignManager extends CFSModule {
     //Start the download
     try {
       String filePath = this.getPath(context, "communications", Integer.parseInt(linkItemId)) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
-      
+      	
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);
       fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -1122,5 +1122,34 @@ public final class CampaignManager extends CFSModule {
       return ("SystemError");
     }
   }
+  
+  public String executeCommandShowComments(ActionContext context) throws SQLException {
+	int surveyId = Integer.parseInt(context.getRequest().getParameter("surveyId"));
+	
+	SurveyAnswerList answerList = new SurveyAnswerList();
+	
+	if (context.getRequest().getParameter("questionId") != null) {
+		answerList.setQuestionId(Integer.parseInt(context.getRequest().getParameter("questionId")));
+	}
+	
+	answerList.setSurveyId(surveyId);
+	
+	Exception errorMessage = null;
+	Connection db = null;
+	
+	try {
+		db = getConnection(context);
+		answerList.buildList(db);
+	} catch (Exception e) {
+		errorMessage = e;
+		e.printStackTrace(System.out);
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	context.getRequest().setAttribute("SurveyAnswerList", answerList);
+	return ("PopupOK");  
+  }
+  
 }
 

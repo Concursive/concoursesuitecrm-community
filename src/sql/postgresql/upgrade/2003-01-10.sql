@@ -24,4 +24,5 @@ alter table survey_item add column total7 int default 0;
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'account', 'com.darkhorseventures.cfsbase.Organization', 5);
  
+alter table survey_answer add column survey_id int not null default -1;
  

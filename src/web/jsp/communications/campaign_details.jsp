@@ -4,6 +4,7 @@
 <jsp:useBean id="Survey" class="com.darkhorseventures.cfsbase.Survey" scope="request"/>
 <jsp:useBean id="RecipientList" class="com.darkhorseventures.cfsbase.RecipientList" scope="request"/>
 <jsp:useBean id="CampaignDashboardRecipientInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
+<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <%@ include file="initPage.jsp" %>
 <a href="/CampaignManager.do?command=Dashboard">Back to Dashboard</a>
 <br>&nbsp;
@@ -125,7 +126,17 @@
   <tr>
     <td align=right nowrap><%=count%></td>
     <td><%= toHtml(thisItem.getDescription()) %></td>
-    <td width="24" nowrap><%= toHtml(thisItem.getAverageValue()) %></td>
+    <td width="24" nowrap>
+    
+    <% if (Survey.getType() == 3) {%>
+    <a href="javascript:popURLReturn('/CampaignManager.do?command=ShowComments&surveyId=<%=Survey.getId()%>&questionId=<%=thisItem.getId()%>&popup=true','CampaignManager.do?command=Details&id=27&reset=true','Survey_Comments','600','450','yes','no');">
+    <%}%>
+    <%= toHtml(thisItem.getAverageValue()) %>
+    <% if (Survey.getType() == 3) {%>
+    </a>
+    <%}%>
+    
+    </td>
     <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(0) + "")%></td>
     <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(1) + "")%></td>
     <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(2) + "")%></td>

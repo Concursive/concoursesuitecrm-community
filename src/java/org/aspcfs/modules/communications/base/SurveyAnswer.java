@@ -11,6 +11,7 @@ public class SurveyAnswer {
 	private String comments = "";
 	private int quantAns = -1;
 	private String textAns = "";
+	private int surveyId = -1;
 
   public SurveyAnswer() {}
 
@@ -38,6 +39,13 @@ public class SurveyAnswer {
 public int getId() {
 	return id;
 }
+public int getSurveyId() {
+	return surveyId;
+}
+public void setSurveyId(int surveyId) {
+	this.surveyId = surveyId;
+}
+
   public void setId(String id) {
 	this.id = Integer.parseInt(id);
 }
@@ -47,6 +55,7 @@ public int getId() {
     this.setComments(rs.getString("comments"));
     this.setQuantAns(rs.getInt("quant_ans"));
     this.setTextAns(rs.getString("text_ans"));
+    this.setSurveyId(rs.getInt("survey_id"));
     //this.setEnteredBy(rs.getInt("enteredby"));
   }
 
@@ -138,18 +147,19 @@ public void setTextAns(String tmp) { this.textAns = tmp; }
 public void setQuestionId(String tmp) { this.questionId = Integer.parseInt(tmp); }
 public void setQuantAns(String tmp) { this.quantAns = Integer.parseInt(tmp); }
 
-  public void insert(Connection db, int enteredBy) throws SQLException {
+  public void insert(Connection db, int enteredBy, int surveyId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO survey_answer " +
-        "(question_id, comments, quant_ans, text_ans, enteredBy) " +
+        "(question_id, comments, quant_ans, text_ans, enteredBy, survey_id) " +
         "VALUES " +
-        "(?, ?, ?, ?, ?) ");
+        "(?, ?, ?, ?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, questionId);
     pst.setString(++i, comments);
     pst.setInt(++i, quantAns);
     pst.setString(++i, textAns);
     pst.setInt(++i, enteredBy);
+    pst.setInt(++i, surveyId);
     
     pst.execute();
     pst.close();

@@ -15,8 +15,18 @@ import javax.servlet.http.*;
  *
  */
 public class SurveyAnswerList extends Vector {
+	
+	private int surveyId = -1;
+	private int questionId = -1;
 
   public SurveyAnswerList() { }
+  
+public int getSurveyId() {
+	return surveyId;
+}
+public void setSurveyId(int surveyId) {
+	this.surveyId = surveyId;
+}
 
   public SurveyAnswerList(HttpServletRequest request) {
     int i = 0;
@@ -27,88 +37,69 @@ public class SurveyAnswerList extends Vector {
       System.out.println("Added an answer: " + thisAnswer.getQuestionId());
     }
   }
-
-/**
+ public int getQuestionId() {
+	return questionId;
+}
+public void setQuestionId(int questionId) {
+	this.questionId = questionId;
+}
+ 
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
-    ResultSet rs = null;
-    int items = -1;
-
-    StringBuffer sqlSelect = new StringBuffer();
-    StringBuffer sqlCount = new StringBuffer();
-    StringBuffer sqlFilter = new StringBuffer();
-    StringBuffer sqlOrder = new StringBuffer();
-
-    //Need to build a base SQL statement for returning records
-    sqlSelect.append("SELECT * " +
-        "FROM contact_emailaddress e, lookup_contactemail_types l " +
-        "WHERE e.emailaddress_type = l.code ");
-
-    //Need to build a base SQL statement for counting records
-    sqlCount.append("SELECT COUNT(*) AS recordcount " +
-        "FROM contact_emailaddress e, lookup_contactemail_types l " +
-        "WHERE e.emailaddress_type = l.code ");
-
-    createFilter(sqlFilter);
-
-    if (pagedListInfo != null) {
-      //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() +
-          sqlFilter.toString());
-      items = prepareFilter(pst);
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int maxRecords = rs.getInt("recordcount");
-        pagedListInfo.setMaxRecords(maxRecords);
-      }
-      pst.close();
-      rs.close();
-
-      //Determine the offset, based on the filter, for the first record to show
-      if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND email < ? ");
-        items = prepareFilter(pst);
-        pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
-        rs = pst.executeQuery();
-        if (rs.next()) {
-          int offsetCount = rs.getInt("recordcount");
-          pagedListInfo.setCurrentOffset(offsetCount);
-        }
-        rs.close();
-        pst.close();
-      }
-
-      //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals("")) {
-        sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + ", email ");
-        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
-          sqlOrder.append(pagedListInfo.getSortOrder() + " ");
-        }
-      } else {
-        sqlOrder.append("ORDER BY email ");
-      }
-
-      //Determine items per page
-      if (pagedListInfo.getItemsPerPage() > 0) {
-        sqlOrder.append("LIMIT " + pagedListInfo.getItemsPerPage() + " ");
-      }
-
-      sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
-    }
-
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    rs = pst.executeQuery();
+    ResultSet rs = queryList(db, pst);
     while (rs.next()) {
-      ContactEmailAddress thisEmailAddress = new ContactEmailAddress(rs);
-      this.addElement(thisEmailAddress);
+      SurveyAnswer thisAnswer = this.getObject(rs);
+      this.add(thisAnswer);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
   }
-*/
+  
+  public SurveyAnswer getObject(ResultSet rs) throws SQLException {
+    SurveyAnswer thisAnswer = new SurveyAnswer(rs);
+    return thisAnswer;
+  }
+
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    int items = -1;
+
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT sa.* " +
+        "FROM survey_answer sa ");
+    sql.append("WHERE sa.survey_id > -1 ");
+    createFilter(sql);
+    //sql.append("ORDER BY level, o.option_name ");
+    pst = db.prepareStatement(sql.toString());
+    items = prepareFilter(pst);
+    ResultSet rs = pst.executeQuery();
+    return rs;
+  }
+  
+  private void createFilter(StringBuffer sqlFilter) {
+    if (sqlFilter == null) {
+      sqlFilter = new StringBuffer();
+    }
+    if (surveyId > -1) {
+      sqlFilter.append("AND sa.survey_id = ? ");
+    }
+    if (questionId > -1) {
+      sqlFilter.append("AND sa.question_id = ? ");
+    }
+  }
+
+  private int prepareFilter(PreparedStatement pst) throws SQLException {
+    int i = 0;
+    if (surveyId > -1) {
+      pst.setInt(++i, surveyId);
+    }
+    if (questionId > -1) {
+      pst.setInt(++i, questionId);
+    }
+    return i;
+  }
+
 }
 

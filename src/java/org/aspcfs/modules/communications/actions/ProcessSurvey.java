@@ -75,7 +75,7 @@ public final class ProcessSurvey extends CFSModule {
 	Iterator ans = thisSurvey.getAnswers().iterator();
 	while (ans.hasNext()) {
 		SurveyAnswer thisAnswer = (SurveyAnswer) ans.next();
-		thisAnswer.insert(db, -1);
+		thisAnswer.insert(db, -1, Integer.parseInt(context.getRequest().getParameter("id")));
 	}
 	
 	if (errorMessage == null) {

@@ -185,6 +185,7 @@ function validateRadio (field) {
 
 <br>
 <%=CustomFormInfo.getHiddenValues()%>
+<input type=hidden name="id" value="<%=Survey.getId()%>">
 <%=CustomFormInfo.displayButtons()%>
 <% if (request.getParameter("preview") == null) {%>
 <input type="submit" value="Submit Survey">
