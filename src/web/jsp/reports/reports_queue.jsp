@@ -30,9 +30,10 @@ Queue
 <%= showError(request, "actionError", false) %>
 <a href="Reports.do?command=RunReport">Add a Report</a><br>
 <br>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-bottom:3px">
   <tr>
-    <td>Generated reports ready to be retrieved</td>
+    <td><img src="images/icons/stock_form-16.gif" align="absMiddle" alt="" />
+    Generated reports ready to be retrieved</td>
     <td align="right">Records: <%= completedQueue.size() %></td>
   </tr>
 </table>
@@ -84,9 +85,10 @@ Queue
 </table>
 <%-- Reports in Queue --%>
 <br>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-bottom:3px">
   <tr>
-    <td>Reports scheduled to be processed by server</td>
+    <td><img src="images/icons/stock_form-autopilots-16.gif" align="absMiddle" alt="" />
+    Reports scheduled to be processed by server</td>
     <td align="right">Records: <%= pendingQueue.size() %></td>
   </tr>
 </table>
