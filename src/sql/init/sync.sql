@@ -715,4 +715,9 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'ticketLog', 'com.darkhorseventures.cfsbase.TicketLog');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'ticketLogList', 'com.darkhorseventures.cfsbase.TicketLogList');
+ 
+      INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'message', 'com.darkhorseventures.cfsbase.Message');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'messageList', 'com.darkhorseventures.cfsbase.MessageList');
 

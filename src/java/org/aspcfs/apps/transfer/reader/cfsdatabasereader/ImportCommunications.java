@@ -9,7 +9,7 @@ import java.util.*;
 /**
  *  Processes Tickets
  */
-public class ImportTickets implements CFSDatabaseReaderImportModule {
+public class ImportCommunications implements CFSDatabaseReaderImportModule {
   
   DataWriter writer = null;
   PropertyMapList mappings = null;
@@ -26,27 +26,29 @@ public class ImportTickets implements CFSDatabaseReaderImportModule {
     this.mappings = mappings;
     boolean processOK = true;
     
-    logger.info("ImportTickets-> Inserting Tickets");
+    logger.info("ImportCommunications-> Inserting Messages");
     writer.setAutoCommit(false);
-    TicketList ticList = new TicketList();
-    ticList.setSendNotification(false);
-    ticList.buildList(db);
-    mappings.saveList(writer, ticList, "insert");
+    MessageList messageList = new MessageList();
+    messageList.buildList(db);
+    mappings.saveList(writer, messageList, "insert");
     processOK = writer.commit();
     if (!processOK) {
       return false;
     }
 
+    /**
     logger.info("ImportTickets-> Inserting Ticket Log");
     TicketLogList ticketLogList = new TicketLogList();
     ticketLogList.setDoSystemMessages(false);
     ticketLogList.buildList(db);
+    logger.info("ImportTickets-> " + ticketLogList.size());
     mappings.saveList(writer, ticketLogList, "insert");
     processOK = writer.commit();
     if (!processOK) {
       return false;
     }    
-
+    */
+    
     //update owners
     
     writer.setAutoCommit(true);

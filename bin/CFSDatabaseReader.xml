@@ -372,5 +372,19 @@
       <property lookup="user">modifiedBy</property>
       <property>closed</property>
     </map>
+    <map class="com.darkhorseventures.cfsbase.Message" id="message">
+      <property alias="guid">id</property>
+      <property>name</property>
+      <property>description</property>
+      <property>templateId</property>
+      <property>replyTo</property>
+      <property>messageSubject</property>
+      <property>messageText</property>
+      <property>url</property>
+      <property>image</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+    </map>
   </mappings>
 </CFSDatabaseReader>

@@ -10,6 +10,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.StringUtils;
+import com.darkhorseventures.utils.DateUtils;
 
 /**
  *  Represents an HTML message than can be emailed, faxed, or printed.  Messages
@@ -35,6 +36,12 @@ public class Message extends GenericBean {
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp entered = null;
   private boolean enabled = true;
+  
+  public final static String tableName = "message";
+  public final static String uniqueField = "id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
 
   /**
@@ -63,35 +70,7 @@ public class Message extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public Message(Connection db, String messageId) throws SQLException {
-
-    Statement st = null;
-    ResultSet rs = null;
-
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT m.* " +
-        "FROM message m " +
-        "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
-        "WHERE m.id > -1 ");
-
-    if (messageId != null && !messageId.equals("")) {
-      sql.append("AND m.id = " + messageId + " ");
-    } else {
-      throw new SQLException("Message ID not specified.");
-    }
-
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
-    if (rs.next()) {
-      buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
-      throw new SQLException("Message not found.");
-    }
-    rs.close();
-    st.close();
+          queryRecord(db, Integer.parseInt(messageId));
   }
   
   /**
@@ -102,6 +81,10 @@ public class Message extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public Message(Connection db, int messageId) throws SQLException {
+          queryRecord(db, messageId);
+  }
+          
+  public void queryRecord(Connection db, int messageId) throws SQLException {
 
     Statement st = null;
     ResultSet rs = null;
@@ -163,6 +146,14 @@ public class Message extends GenericBean {
     this.name = tmp;
   }
 
+public String getTableName() { return tableName; }
+public String getUniqueField() { return uniqueField; }
+public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
+public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
+public int getSyncType() { return syncType; }
+public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
+public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
+public void setSyncType(int tmp) { this.syncType = tmp; }
 
   /**
    *  Sets the description attribute of the Message object
@@ -214,6 +205,9 @@ public class Message extends GenericBean {
     this.messageText = StringUtils.toHtmlText(tmp);
   }
 
+public java.sql.Timestamp getModified() {
+	return modified;
+}
 
   /**
    *  Sets the replyTo attribute of the Message object
@@ -254,16 +248,12 @@ public class Message extends GenericBean {
     this.modified = tmp;
   }
 
-
-  /**
-   *  Sets the modified attribute of the Message object
-   *
-   *@param  tmp  The new modified value
-   */
+  public void setEntered(String tmp) {
+    this.entered = DateUtils.parseTimestampString(tmp);
+  }
+  
   public void setModified(String tmp) {
-    java.util.Date tmpDate = new java.util.Date();
-    modified = new java.sql.Timestamp(tmpDate.getTime());
-    modified = modified.valueOf(tmp);
+    this.modified = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -286,7 +276,10 @@ public class Message extends GenericBean {
     this.enteredBy = tmp;
   }
 
-
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
+  
   /**
    *  Sets the modifiedBy attribute of the Message object
    *
@@ -296,18 +289,17 @@ public class Message extends GenericBean {
     this.modifiedBy = tmp;
   }
 
-
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
+  
   /**
    *  Sets the enabled attribute of the Message object
    *
    *@param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
-    if (tmp.toLowerCase().equals("false")) {
-      this.enabled = false;
-    } else {
-      this.enabled = true;
-    }
+    enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -436,16 +428,6 @@ public class Message extends GenericBean {
     } catch (NullPointerException e) {
     }
     return ("");
-  }
-
-
-  /**
-   *  Gets the modified attribute of the Message object
-   *
-   *@return    The modified value
-   */
-  public String getModified() {
-    return modified.toString();
   }
 
 
