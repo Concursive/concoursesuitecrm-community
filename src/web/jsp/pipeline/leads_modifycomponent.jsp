@@ -63,13 +63,13 @@ function checkForm(form) {
   }
 }
 </SCRIPT>
+<form name="opportunityForm" action="LeadsComponents.do?command=SaveComponent&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
 <%
    boolean popUp = false;
    if(request.getParameter("popup")!=null){
      popUp = true;
    }
 %>
-<form name="opportunityForm" action="LeadsComponents.do?command=SaveComponent&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate if="<%= !popUp %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
