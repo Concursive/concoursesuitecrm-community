@@ -12,8 +12,7 @@ import org.aspcfs.modules.base.Constants;
  *
  *@author     Mathur
  *@created    March 5, 2003
- *@version    $Id: FilterList.java,v 1.2 2003/03/07 19:55:13 mrajkowski
- *      Exp $
+ *@version    $Id$
  */
 public class FilterList extends ArrayList {
 
@@ -115,16 +114,17 @@ public class FilterList extends ArrayList {
    *  Description of the Method
    */
   public void buildDefaultFilters() {
-     switch (source) {
+    switch (source) {
         case Constants.CONTACTS:
           for (int i = 0; i < Array.getLength(CONTACT_FILTERS); i++) {
             this.add(new Filter(CONTACT_FILTERS[i], getDisplayName(CONTACT_FILTERS[i])));
           }
+          break;
         case Constants.ACCOUNTS:
           for (int i = 0; i < Array.getLength(ACCOUNT_FILTERS); i++) {
             this.add(new Filter(ACCOUNT_FILTERS[i], getDisplayName(ACCOUNT_FILTERS[i])));
           }
-     }
+    }
   }
 
 
