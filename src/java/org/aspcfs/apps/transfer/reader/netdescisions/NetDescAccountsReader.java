@@ -29,7 +29,8 @@ public class NetDescAccountsReader implements DataReader {
   private DataWriter writer = null;
   private PropertyMapList mappings = null;
   private String excelFile = "ActToCFS22Jan03.xls";
-  public boolean ignoreRow1 = true;
+  private boolean ignoreRow1 = true;
+  private String propertyFile = null;
 
 
   /**
@@ -49,6 +50,16 @@ public class NetDescAccountsReader implements DataReader {
    */
   public void setIgnoreRow1(boolean tmp) {
     this.ignoreRow1 = tmp;
+  }
+
+
+  /**
+   *  Sets the propertyFile attribute of the NetDescAccountsReader object
+   *
+   *@param  tmp  The new propertyFile value
+   */
+  public void setPropertyFile(String tmp) {
+    this.propertyFile = tmp;
   }
 
 
@@ -103,6 +114,16 @@ public class NetDescAccountsReader implements DataReader {
 
 
   /**
+   *  Gets the propertyFile attribute of the NetDescAccountsReader object
+   *
+   *@return    The propertyFile value
+   */
+  public String getPropertyFile() {
+    return propertyFile;
+  }
+
+
+  /**
    *  Gets the configured attribute of the NetDescAccountsReader object
    *
    *@return    The configured value
@@ -115,7 +136,12 @@ public class NetDescAccountsReader implements DataReader {
     if (!testFile.exists()) {
       return false;
     }
-    mappings = new PropertyMapList(excelFile, new ArrayList());
+    try {
+      mappings = new PropertyMapList(propertyFile, new ArrayList());
+    } catch (Exception e) {
+      logger.info(e.toString());
+      return false;
+    }
     return true;
   }
 
@@ -136,13 +162,12 @@ public class NetDescAccountsReader implements DataReader {
     logger.info("Processing excel file" + excelFile);
     try {
 
-      
       int userId = 1;
       HashMap accounts = new HashMap();
 
       POIFSFileSystem fs =
           new POIFSFileSystem(new FileInputStream(excelFile));
-          System.out.println("INFO: Created FileSystem");
+      System.out.println("INFO: Created FileSystem");
       HSSFWorkbook wb = new HSSFWorkbook(fs);
       System.out.println("INFO: Created WorkBook");
       HSSFSheet sheet = wb.getSheetAt(0);
@@ -306,6 +331,7 @@ public class NetDescAccountsReader implements DataReader {
       }
     } catch (IOException io) {
       io.printStackTrace(System.out);
+      return false;
     }
     return true;
   }
