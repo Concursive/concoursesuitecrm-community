@@ -231,11 +231,7 @@ public final class MyTasks extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (context.getRequest().getParameter("popup") != null) {
-        return ("PopupCloseOK");
-      } else {
-        return ("InsertTaskOK");
-      }
+        return this.getReturn(context, "InsertTask");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
