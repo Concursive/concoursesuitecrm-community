@@ -21,6 +21,11 @@ import com.darkhorseventures.webutils.*;
 public final class CampaignManagerGroup extends CFSModule {
 
 	public String executeCommandShowContactsPopup(ActionContext context) {
+		
+		if (!(hasPermission(context, "campaign-campaigns-groups-view"))) {
+	    		return ("PermissionError");
+    		}
+	
 		Exception errorMessage = null;
 		Connection db = null;
 		SearchCriteriaList thisSCL = new SearchCriteriaList();
@@ -63,6 +68,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since           1.1
    */
   public String executeCommandView(ActionContext context) {
+	  
+  		if (!(hasPermission(context, "campaign-campaigns-groups-view"))) {
+	    		return ("PermissionError");
+    		}
+		
     Exception errorMessage = null;
 
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupListInfo");
@@ -114,6 +124,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since
    */
   public String executeCommandAdd(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-groups-add"))) {
+	    		return ("PermissionError");
+    		}
+		
     Exception errorMessage = null;
     String passedId = null;
 
@@ -183,6 +198,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-groups-delete"))) {
+	    		return ("PermissionError");
+    		}
+		
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -224,6 +244,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since           1.1
    */
   public String executeCommandInsert(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-groups-add"))) {
+	    		return ("PermissionError");
+    		}
+		
     Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
@@ -287,6 +312,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since
    */
   public String executeCommandModify(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-groups-edit"))) {
+	    		return ("PermissionError");
+    		}
+		
     Exception errorMessage = null;
     Connection db = null;
 
@@ -354,6 +384,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-groups-edit"))) {
+	    		return ("PermissionError");
+    		}
+		
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -420,6 +455,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since
    */
   public String executeCommandPreview(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-groups-view"))) {
+	    		return ("PermissionError");
+    		}
+		
     Exception errorMessage = null;
     Connection db = null;
 

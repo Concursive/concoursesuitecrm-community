@@ -44,6 +44,11 @@ public final class ProjectManagement extends CFSModule {
    *@since           1.6
    */
   public String executeCommandPersonalView(ActionContext context) {
+	  
+	if (!(hasPermission(context, "projects-personal-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     Connection db = null;
@@ -89,6 +94,11 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandEnterpriseView(ActionContext context) {
+	  
+	if (!(hasPermission(context, "projects-enterprise-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     Connection db = null;
@@ -147,6 +157,11 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandAddProject(ActionContext context) {
+	  
+	if (!(hasPermission(context, "projects-projects-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     try {
@@ -185,6 +200,11 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandInsertProject(ActionContext context) {
+	  
+	if (!(hasPermission(context, "projects-projects-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
@@ -225,6 +245,11 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandModifyProject(ActionContext context) {
+	  
+	if (!(hasPermission(context, "projects-projects-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -264,6 +289,11 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandUpdateProject(ActionContext context) {
+	  
+	if (!(hasPermission(context, "projects-projects-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     Project thisProject = (Project)context.getFormBean();
@@ -318,6 +348,11 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandProjectCenter(ActionContext context) {
+	  
+	if (!(hasPermission(context, "projects-projects-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     Connection db = null;

@@ -31,6 +31,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.1
    */
   public String executeCommandDashboard(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-dashboard-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Connection db = null;
     Exception errorMessage = null;
 
@@ -82,6 +87,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.1
    */
   public String executeCommandView(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Connection db = null;
     Exception errorMessage = null;
 
@@ -133,6 +143,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.1
    */
   public String executeCommandAdd(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     addModuleBean(context, "ManageCampaigns", "Build New Campaign");
@@ -160,6 +175,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandInsert(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
@@ -202,6 +222,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandViewDetails(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     addModuleBean(context, "ManageCampaigns", "Campaign Details");
     Connection db = null;
@@ -238,6 +263,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandViewGroups(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-view"))) {
+	    return ("PermissionError");
+    	}
+	  
     Exception errorMessage = null;
     addModuleBean(context, "ManageCampaigns", "Build New Campaign");
     Connection db = null;
@@ -276,6 +306,11 @@ public final class CampaignManager extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandPreviewGroups(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -333,6 +368,11 @@ public final class CampaignManager extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandToggleRecipient(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean result = true;
@@ -367,6 +407,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandViewMessage(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     addModuleBean(context, "ManageCampaigns", "Build New Campaign");
     Connection db = null;
@@ -407,6 +452,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandViewSchedule(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     addModuleBean(context, "ManageCampaigns", "Build New Campaign");
     Connection db = null;
@@ -449,6 +499,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandAddGroups(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     addModuleBean(context, "ManageCampaigns", "Campaign: Add Groups");
@@ -491,6 +546,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandInsertGroups(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
@@ -532,6 +592,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandAddMessage(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     addModuleBean(context, "ManageCampaigns", "Campaign: Add Message");
@@ -571,6 +636,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandInsertMessage(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -615,6 +685,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandInsertSchedule(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -657,6 +732,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandRemoveGroups(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean recordDeleted = false;
@@ -698,6 +778,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandUpdate(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -741,6 +826,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandCancel(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -785,6 +875,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandActivate(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -830,6 +925,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandDetails(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -877,6 +977,11 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandDelete(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -915,6 +1020,11 @@ public final class CampaignManager extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandPrepareDownload(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-view"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "Dashboard", "Campaign: Downloads");
     Exception errorMessage = null;
     Connection db = null;
@@ -945,6 +1055,11 @@ public final class CampaignManager extends CFSModule {
   }
   
   public String executeCommandDownload(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     String linkItemId = (String)context.getRequest().getParameter("id");

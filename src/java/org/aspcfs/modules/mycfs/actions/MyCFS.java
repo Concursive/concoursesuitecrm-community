@@ -44,6 +44,10 @@ public final class MyCFS extends CFSModule {
    */
   public String executeCommandInbox(ActionContext context) {
 	  
+	if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+	    return ("PermissionError");
+    	}
+	  
     Exception errorMessage = null;
 
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
@@ -139,6 +143,11 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandCFSNoteDelete(ActionContext context) {
+	  
+	if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+	    return ("PermissionError");
+    	}
+	  
     Connection db = null;
     Exception errorMessage = null;
 
@@ -170,6 +179,11 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandCFSNoteTrash(ActionContext context) {
+	  
+	if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+	    return ("PermissionError");
+    	}
+	  
     Connection db = null;
     Exception errorMessage = null;
 
@@ -309,6 +323,11 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandCFSNoteDetails(ActionContext context) {
+	  
+	if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+	    return ("PermissionError");
+    	}
+	  
     Exception errorMessage = null;
     Connection db = null;
     CFSNote newNote = null;
@@ -585,6 +604,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyProfile(ActionContext context) {
+	  
+	if (!(hasPermission(context, "myhomepage-profile-view"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "MyProfile", "");
     return ("MyProfileOK");
   }
@@ -598,6 +622,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyCFSProfile(ActionContext context) {
+	
+	if (!(hasPermission(context, "myhomepage-profile-personal-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     try {
@@ -627,6 +656,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandUpdateProfile(ActionContext context) {
+	  
+	if (!(hasPermission(context, "myhomepage-profile-personal-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     Contact thisContact = (Contact) context.getFormBean();
@@ -677,6 +711,10 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyCFSPassword(ActionContext context) {
+	  
+	if (!(hasPermission(context, "myhomepage-profile-password-edit"))) {
+	    return ("PermissionError");
+    	}
 	
     Exception errorMessage = null;
     Connection db = null;
@@ -706,6 +744,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandUpdatePassword(ActionContext context) {
+	  
+	if (!(hasPermission(context, "myhomepage-profile-password-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -760,6 +803,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyCFSSettings(ActionContext context) {
+	  
+	if (!(hasPermission(context, "myhomepage-profile-settings-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     try {
@@ -788,6 +836,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandUpdateSettings(ActionContext context) {
+	  
+	if (!(hasPermission(context, "myhomepage-profile-settings-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     return ("UpdateSettingsOK");
   }
 

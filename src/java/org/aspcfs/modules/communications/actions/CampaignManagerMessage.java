@@ -27,6 +27,11 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandView(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
+	    		return ("PermissionError");
+    		}
+		
     Exception errorMessage = null;
 
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignMessageListInfo");
@@ -78,6 +83,11 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandModify(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-messages-edit"))) {
+	    		return ("PermissionError");
+    		}
+		
     addModuleBean(context, "View Messages", "Modify Message");
     Exception errorMessage = null;
 
@@ -122,6 +132,11 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-messages-edit"))) {
+	    		return ("PermissionError");
+    		}
+		
     Exception errorMessage = null;
     addModuleBean(context, "ManageMessages", "Message Details");
 
@@ -173,6 +188,11 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandDetails(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
+	    		return ("PermissionError");
+    		}
+		
     addModuleBean(context, "ManageMessages", "View Message Details");
     Exception errorMessage = null;
 
@@ -209,6 +229,11 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandAdd(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-messages-add"))) {
+	    		return ("PermissionError");
+    		}
+		
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
       submenu = (String)context.getRequest().getAttribute("submenu");
@@ -230,6 +255,11 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-messages-add"))) {
+	    		return ("PermissionError");
+    		}
+		
     addModuleBean(context, "BuildNew", "Add New Message");
     Exception errorMessage = null;
     boolean recordInserted = false;
@@ -275,6 +305,11 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-messages-delete"))) {
+	    		return ("PermissionError");
+    		}
+		
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -316,6 +351,11 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandPreviewMessage(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
+	    		return ("PermissionError");
+    		}
+		
     Exception errorMessage = null;
     addModuleBean(context, "ManageCampaigns", "Build New Campaign");
     Connection db = null;

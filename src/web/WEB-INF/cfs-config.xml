@@ -313,6 +313,7 @@
   <!-- Campaign Module -->
   <action name="CampaignManager" class="com.darkhorseventures.cfsmodule.CampaignManager">
     <bean name="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -342,6 +343,7 @@
   </action>
   <action name="CampaignManagerGroup" class="com.darkhorseventures.cfsmodule.CampaignManagerGroup">
     <bean name="SearchForm" class="com.darkhorseventures.cfsbase.SearchFormBean" scope="request"/>
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -357,6 +359,7 @@
   </action>
   <action name="CampaignManagerMessage" class="com.darkhorseventures.cfsmodule.CampaignManagerMessage">
     <bean name="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -375,6 +378,7 @@
   <!-- Project Management Module -->
   <action name="ProjectManagement" class="com.darkhorseventures.cfsmodule.ProjectManagement">
     <bean name="Project" class="com.zeroio.iteam.base.Project" scope="request" />
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -387,6 +391,7 @@
   </action>
   <action name="ProjectManagementRequirements" class="com.darkhorseventures.cfsmodule.ProjectManagementRequirements">
     <bean name="Requirement" class="com.zeroio.iteam.base.Requirement" scope="request" />
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -396,6 +401,7 @@
   </action>
   <action name="ProjectManagementTeam" class="com.darkhorseventures.cfsmodule.ProjectManagementTeam">
     <bean name="TeamMemberList" class="com.zeroio.iteam.base.TeamMemberList" scope="request" />
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -404,6 +410,7 @@
   </action>
   <action name="ProjectManagementAssignments" class="com.darkhorseventures.cfsmodule.ProjectManagementAssignments">
     <bean name="Assignment" class="com.zeroio.iteam.base.Assignment" scope="request" />
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -415,6 +422,7 @@
   </action>
   <action name="ProjectManagementIssues" class="com.darkhorseventures.cfsmodule.ProjectManagementIssues">
     <bean name="Issue" class="com.zeroio.iteam.base.Issue" scope="request" />
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -425,6 +433,7 @@
   </action>
   <action name="ProjectManagementIssueReply" class="com.darkhorseventures.cfsmodule.ProjectManagementIssues">
     <bean name="IssueReply" class="com.zeroio.iteam.base.IssueReply" scope="request" />
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -434,6 +443,7 @@
   </action>
   <action name="ProjectManagementFiles" class="com.darkhorseventures.cfsmodule.ProjectManagementFiles">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -558,6 +568,7 @@
   
   <action name="Help" class="com.darkhorseventures.cfsmodule.Help">
     <bean name="Help" class="com.darkhorseventures.cfsbase.HelpItem" scope="request" />
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="HelpOK" resource="/help.jsp" layout="style"/>

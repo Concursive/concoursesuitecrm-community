@@ -23,6 +23,11 @@ import com.zeroio.iteam.base.*;
 public final class ProjectManagementTeam extends CFSModule {
 
   public String executeCommandModify(ActionContext context) {
+	  
+	if (!(hasPermission(context, "projects-team-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     
     String projectId = (String)context.getRequest().getParameter("pid");
@@ -111,6 +116,11 @@ public final class ProjectManagementTeam extends CFSModule {
   }
   
   public String executeCommandUpdate(ActionContext context) {
+	  
+	if (!(hasPermission(context, "projects-team-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     
