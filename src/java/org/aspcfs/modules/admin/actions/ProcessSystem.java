@@ -21,7 +21,8 @@ import java.net.*;
  *
  *@author     matt rajkowski
  *@created    9/24/2002
- *@version    $Id$
+ *@version    $Id: ProcessSystem.java,v 1.14 2003/12/10 21:32:17 mrajkowski Exp
+ *      $
  */
 public final class ProcessSystem extends CFSModule {
 
@@ -32,7 +33,7 @@ public final class ProcessSystem extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandReloadSystemPrefs(ActionContext context) {
-    if (!"127.0.0.1".equals(context.getIpAddress())) {
+    if (!allow(context)) {
       return ("PermissionError");
     }
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
@@ -59,7 +60,7 @@ public final class ProcessSystem extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandClearSystems(ActionContext context) {
-    if (!"127.0.0.1".equals(context.getIpAddress())) {
+    if (!allow(context)) {
       return ("PermissionError");
     }
     Iterator i = this.getSystemIterator(context);
@@ -79,9 +80,6 @@ public final class ProcessSystem extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandClearGraphData(ActionContext context) {
-    if (!"127.0.0.1".equals(context.getIpAddress())) {
-      return ("PermissionError");
-    }
     clearGraphData(context);
     deleteGraphFiles(context);
     return "ProcessOK";
@@ -136,34 +134,6 @@ public final class ProcessSystem extends CFSModule {
 
 
   /**
-   *  Action that prepares a list of the cron data from the running crontab
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandViewCron(ActionContext context) {
-    if (!"127.0.0.1".equals(context.getIpAddress())) {
-      return ("PermissionError");
-    }
-    try {
-      CrontabEntryBean[] entryList = CrontabEntryDAO.getInstance().findAll();
-      //ArrayList entries = (ArrayList)Arrays.asList(entryList);
-      ArrayList entries = new ArrayList();
-      for (int i = 0; i < entryList.length; i++) {
-        entries.add(entryList[i]);
-      }
-      context.getRequest().setAttribute("entries", entries);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("ProcessSystem-> List OK");
-      }
-    } catch (Exception e) {
-      e.printStackTrace(System.out);
-    }
-    return "ViewCronOK";
-  }
-
-
-  /**
    *  Gets an Iterator of all SystemStatus objects that are cached
    *
    *@param  context  Description of the Parameter
@@ -183,7 +153,7 @@ public final class ProcessSystem extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandPrecompileJSPs(ActionContext context) {
-    if (!"127.0.0.1".equals(context.getIpAddress())) {
+    if (!allow(context)) {
       return ("PermissionError");
     }
     File baseDir = new File(context.getServletContext().getRealPath("/"));
@@ -220,8 +190,8 @@ public final class ProcessSystem extends CFSModule {
    *@param  dir       Description of the Parameter
    */
   private void precompileJSP(ActionContext context, File thisFile, String dir) {
-    if (thisFile.getName().endsWith(".jsp") && 
-        !thisFile.getName().endsWith("_include.jsp") && 
+    if (thisFile.getName().endsWith(".jsp") &&
+        !thisFile.getName().endsWith("_include.jsp") &&
         !thisFile.getName().endsWith("_menu.jsp")) {
       String serverName = "http://" + HTTPUtils.getServerUrl(context.getRequest());
       String jsp = serverName + dir + thisFile.getName();
@@ -232,6 +202,28 @@ public final class ProcessSystem extends CFSModule {
       } catch (Exception e) {
 
       }
+    }
+  }
+
+
+  /**
+   *  Currently only the localhost is allowed
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  private boolean allow(ActionContext context) {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("IP FROM REQUEST: " + context.getIpAddress());
+    }
+    try {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Compare to: " + InetAddress.getLocalHost().getHostAddress());
+      }
+      return ("127.0.0.1".equals(context.getIpAddress()) ||
+          InetAddress.getLocalHost().getHostAddress().equals(context.getIpAddress()));
+    } catch (Exception e) {
+      return false;
     }
   }
 }
