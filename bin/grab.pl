@@ -24,7 +24,7 @@ use CGI qw(:standard);
 
 $LOGFILE = "/home/chris/grab.log";
 $DBNAME = '';
-$SITE_CODE = '';
+#$SITE_CODE = '';
 
 $base = "http://www.prnewswire.com";
 
@@ -86,56 +86,66 @@ sub insert {
 
 sub main () {
 
-open LOG, ">>$LOGFILE" or die "Cannot open $LOGFILE for write :$!";
-        
-	$DBNAME = 'cdb_' . $ARGV[0];
-	$SITE_CODE = $ARGV[0];
+	open LOG, ">>$LOGFILE" or die "Cannot open $LOGFILE for write :$!";
 
-	print LOG "----------------------------\n";
-        print LOG `date`;
-        print LOG "$0\n";
-        print LOG "site code: $SITE_CODE\n";
-        print LOG "database: $DBNAME\n";
+	$c = Pg::connectdb("port=5432 dbname=cfs2gk user=cfsdba");
+	$q = "SELECT dbname from sites where enabled = 't' ";
+	$r = $c->exec($q);
 
-	if (!$SITE_CODE || !$DBNAME)
-	{
-		print LOG "Exiting: missing parameter(s):\n";
-		print LOG "         parameter: SITE_CODE ='$SITE_CODE'\n";
-		print LOG "         parameter: DB        ='$DBNAME'\n";
-		exit(1);
-	}
-
-	print LOG "database: $DBNAME\n"; 
-
-	$conn = Pg::connectdb("port=5432 dbname=$DBNAME user=cfsdba");
-
-	if ($conn->status != PGRES_CONNECTION_OK)
-	{
-		$errmsg = $conn->errorMessage;
-		print LOG "error: $errmsg\n";
-		exit(2);
-	}
-
-	$query = "SELECT org_id,name from organization where duplicate_id = -1 ";
-	$result = $conn->exec($query);
-	if ($result->resultStatus != PGRES_TUPLES_OK)
+	if ($r->resultStatus != PGRES_TUPLES_OK)
 	{
 		$errmsg = $conn->errorMessage;
 		print LOG "error: $errmsg\n";
 		exit(3);
 	}
 
-	for ($row = 0; $row < $result->ntuples; $row++)
+	for ($rowcount = 0; $rowcount < $r->ntuples; $rowcount++)
 	{
-		$org_id = $result->getvalue($row,0);
-		$company_name = $result->getvalue($row,1);
+		$DBNAME = $r->getvalue($rowcount,0);
+		print LOG "trying - $DBNAME got" . ($r->ntuples) . "\n\n";
 
-		##	change spaces to plus signs
-		$company_name =~ s/ /+/g;
+		print LOG "----------------------------\n";
+        	print LOG `date`;
+        	print LOG "database: $DBNAME\n";
 
-		print LOG "Processing $company_name, id ($org_id) for '$SITE_CODE'\n";
-#		print "Processing $company_name, id ($org_id) for '$SITE_CODE'\n";
-   		&doit( $org_id, $company_name );
+		if (!$DBNAME)
+		{
+			print LOG "Exiting: missing parameter(s):\n";
+			print LOG "         parameter: DB        ='$DBNAME'\n";
+			exit(1);
+		}
+
+		print LOG "database: $DBNAME\n"; 
+		$conn = Pg::connectdb("port=5432 dbname=$DBNAME user=cfsdba");
+
+		if ($conn->status != PGRES_CONNECTION_OK)
+		{
+			$errmsg = $conn->errorMessage;
+			print LOG "error: $errmsg\n";
+			exit(2);
+		}
+
+		$query = "SELECT org_id,name from organization where duplicate_id = -1 ";
+		$result = $conn->exec($query);
+		if ($result->resultStatus != PGRES_TUPLES_OK)
+		{
+			$errmsg = $conn->errorMessage;
+			print LOG "error: $errmsg\n";
+			exit(3);
+		}
+
+		for ($row = 0; $row < $result->ntuples; $row++)
+		{
+			$org_id = $result->getvalue($row,0);
+			$company_name = $result->getvalue($row,1);
+
+			##	change spaces to plus signs
+			$company_name =~ s/ /+/g;
+
+			#print LOG "Processing $company_name, id ($org_id) for '$SITE_CODE'\n";
+			print LOG "Processing $company_name, id ($org_id) for '$DBNAME'\n";
+   			&doit( $org_id, $company_name );
+		}
 	}
 }
 
