@@ -728,25 +728,28 @@ public class Task extends GenericBean {
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void checkEnabledOwnerAccount(Connection db) throws SQLException {
+  public int checkEnabledOwnerAccount(Connection db) throws SQLException {
     if (this.getOwner() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
-
+    int ownerUserId = -1;
+    
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM access " +
-        "WHERE user_id = ? AND enabled = ? ");
+        "WHERE contact_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
+      ownerUserId = rs.getInt("user_id");
       this.setHasEnabledOwnerAccount(true);
     } else {
       this.setHasEnabledOwnerAccount(false);
     }
     rs.close();
     pst.close();
+    return ownerUserId;
   }
 
 
