@@ -11,7 +11,26 @@ Admin
 <%-- End Trails --%>
 Manage Dark Horse CRM by reviewing system usage, configuring specific modules, and configuring system parameters.<br>
 &nbsp;<br>
-<dhv:permission name="admin-sysconfig-view,admin-users-view,admin-roles-view">
+<dhv:permission name="admin-users-view,admin-roles-view">
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+    <tr>
+      <th>
+        <strong>Users &amp; Roles</strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td>
+        <ul>
+          <dhv:permission name="admin-users-view"><li><a href="Users.do?command=ListUsers">Manage Users</a></li></dhv:permission>
+          <dhv:permission name="admin-roles-view"><li><a href="Roles.do?command=ListRoles">Manage Roles</a></li></dhv:permission>
+        </ul>
+      </td>
+    </tr>
+  </table>
+  &nbsp;
+</dhv:permission>
+
+<dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th>
@@ -21,8 +40,6 @@ Manage Dark Horse CRM by reviewing system usage, configuring specific modules, a
     <tr class="containerBody">
       <td>
         <ul>
-          <dhv:permission name="admin-users-view"><li><a href="Users.do?command=ListUsers">Manage Users</a></li></dhv:permission>
-          <dhv:permission name="admin-roles-view"><li><a href="Roles.do?command=ListRoles">Manage Roles</a></li></dhv:permission>
           <dhv:permission name="admin-sysconfig-view"><li><a href="Admin.do?command=Config">Configure Modules</a></li></dhv:permission>
         </ul>
       </td>
