@@ -15,16 +15,17 @@ Configure Modules
 Setup Dark Horse CRM to meet the specific needs of your organization, including configuration of lookup lists and custom fields.  Choose a Dark Horse CRM module to proceed.<br>
 &nbsp;<br>
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td width="49%" valign="top">
 <%
+  int column = 0;
   Iterator i = PermissionCategoryList.iterator();
-  int limit = (PermissionCategoryList.size()/2);
-  int count = 0;
   while (i.hasNext()) {
-    count++;
+    column = (column != 1 ? 1 : 2);
     PermissionCategory thisPermissionCat = (PermissionCategory)i.next();
 %>
+<dhv:evaluate if="<%= column == 1 %>">
+  <tr>
+</dhv:evaluate>
+    <td width="49%" valign="top">
       <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
         <tr>
           <th>
@@ -38,19 +39,23 @@ Setup Dark Horse CRM to meet the specific needs of your organization, including 
         </tr>
       </table>
       &nbsp;
-<% 
-    if (count == limit) { 
-%>
     </td>
+<dhv:evaluate if="<%= column == 1 %>">
     <td width="2%">
       &nbsp;
     </td>
-    <td width="49%" valign="top">
+</dhv:evaluate>
+<dhv:evaluate if="<%= column == 2 %>">
+  </tr>
+</dhv:evaluate>
 <%
-    }
   }
 %>
+<dhv:evaluate if="<%= column == 1 %>">
+    <td width="49%">
+      &nbsp;
     </td>
   </tr>
+</dhv:evaluate>
 </table>
 
