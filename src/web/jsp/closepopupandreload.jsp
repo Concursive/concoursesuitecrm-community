@@ -22,7 +22,12 @@
 %>
 <body onload="window.opener.location.reload(); window.close();">
 <% 
-  } else {
+  } else if("Calendar".equalsIgnoreCase(returnPage)) {
+%>
+<body onload="window.opener.parent.reloadFrames(); window.close();">
+<%
+  }
+else {
 %>
 <body onload="window.opener.location='<%= location %>'; window.close();">
 <%

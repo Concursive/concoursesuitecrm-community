@@ -55,6 +55,8 @@
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="HomeOK" resource="/mycfs.jsp" layout="nav"/>
+    <forward name="CalendarOK" resource="/calendar.jsp"/>
+    <forward name="CalendarDetailsOK" resource="/calendar_details.jsp" layout="style"/>
     <forward name="DeleteOK" resource="/MyCFS.do?command=Headline"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
     <forward name="HeadlineOK" resource="/MyCFSHeadlines.jsp" layout="nav"/>
@@ -113,6 +115,8 @@
     <forward name="InsertTaskOK" resource="/MyTasks.do?command=ListTasks"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="NewTaskPopupOK" resource="/mytasks_new.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
     </action>
   
   <action name="MyTasksForward" class="com.darkhorseventures.cfsmodule.MyCFS">
@@ -215,6 +219,8 @@
     <forward name="ModifyOK" resource="/companydirectory_modifycall.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/ExternalContactsCalls.do?command=Details"/>
     <forward name="DeleteOK" resource="/ExternalContactsCalls.do?command=View"/>
+    <forward name="ModifyPopupOK" resource="/companydirectory_modifycall.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   <action name="ExternalContactsCallsForward" class="com.darkhorseventures.cfsmodule.MyCFS">
     <bean name="NoteDetails" class="com.darkhorseventures.cfsbase.CFSNote" scope="request"/>
@@ -290,6 +296,8 @@
     <forward name="DeleteReportOK" resource="/Leads.do?command=Reports"/>
     <forward name="DeleteReportERROR" resource="/Leads.do?command=Reports"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="ModifyOppPopupOK" resource="/LeadsModify.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   <action name="LeadsCalls" class="com.darkhorseventures.cfsmodule.LeadsCalls">
     <bean name="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
@@ -338,6 +346,7 @@
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
     <forward name="AddOK" resource="/accounts_add.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/accounts_modify.jsp" layout="nav"/>
+    <forward name="PopupModifyOK" resource="/accounts_modify.jsp" layout="style"/>
     <forward name="DashboardOK" resource="/accounts_dashboard.jsp" layout="nav"/>
     <forward name="ListOK" resource="/accounts_list.jsp" layout="nav"/>
     <forward name="ViewTicketsOK" resource="/accounts_tickets_list.jsp" layout="nav"/>

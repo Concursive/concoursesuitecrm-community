@@ -20,13 +20,15 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *@version    $Id$
  */
 public class TaskList extends Vector {
-  private int enteredBy = -1;
-  private PagedListInfo pagedListInfo = null;
-  private int owner = -1;
-  private boolean completeEnabled = false;
-  private boolean complete = false;
-  private boolean tasksAssignedToMeOnly = false;
-  private boolean tasksAssignedByMeOnly = false;
+  protected int enteredBy = -1;
+  protected PagedListInfo pagedListInfo = null;
+  protected int owner = -1;
+  protected boolean completeEnabled = false;
+  protected boolean complete = false;
+  protected boolean tasksAssignedToMeOnly = false;
+  protected boolean tasksAssignedByMeOnly = false;
+  protected java.sql.Date alertRangeStart = null;
+  protected java.sql.Date alertRangeEnd = null;
 
 
   /**
@@ -67,6 +69,16 @@ public class TaskList extends Vector {
 
 
   /**
+   *  Sets the owner attribute of the TaskList object
+   *
+   *@param  owner  The new owner value
+   */
+  public void setOwner(int owner) {
+    this.owner = owner;
+  }
+
+
+  /**
    *  Sets the tasksAssignedToMeOnly attribute of the TaskList object
    *
    *@param  tmp  The new tasksAssignedToMeOnly value
@@ -84,6 +96,37 @@ public class TaskList extends Vector {
   public void setTasksAssignedByMeOnly(boolean tmp) {
     this.tasksAssignedByMeOnly = tmp;
   }
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the Task object
+   *
+   *@param  alertRangeStart  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(java.sql.Date alertRangeStart) {
+    this.alertRangeStart = alertRangeStart;
+  }
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the Task object
+   *
+   *@param  alertRangeEnd  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(java.sql.Date alertRangeEnd) {
+    this.alertRangeEnd = alertRangeEnd;
+  }
+
+
+  /**
+   *  Gets the enteredBy attribute of the TaskList object
+   *
+   *@return    The enteredBy value
+   */
+  public int getEnteredBy() {
+    return enteredBy;
+  }
+
 
 
   /**
@@ -163,7 +206,7 @@ public class TaskList extends Vector {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     //if (System.getProperty("DEBUG") != null) {
-      System.out.println("TaskList Query --> " + pst.toString());
+    System.out.println("TaskList Query --> " + pst.toString());
     //}
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
@@ -192,7 +235,7 @@ public class TaskList extends Vector {
    *
    *@param  sqlFilter  Description of the Parameter
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -213,6 +256,13 @@ public class TaskList extends Vector {
       sqlFilter.append("AND t.complete = ? ");
     }
 
+    if (alertRangeStart != null) {
+      sqlFilter.append("AND t.duedate >= ? ");
+    }
+
+    if (alertRangeEnd != null) {
+      sqlFilter.append("AND t.duedate <= ? ");
+    }
   }
 
 
@@ -223,7 +273,7 @@ public class TaskList extends Vector {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
 
     if (enteredBy != -1) {
@@ -236,6 +286,14 @@ public class TaskList extends Vector {
 
     if (completeEnabled) {
       pst.setBoolean(++i, complete);
+    }
+
+    if (alertRangeStart != null) {
+      pst.setDate(++i, alertRangeStart);
+    }
+
+    if (alertRangeEnd != null) {
+      pst.setDate(++i, alertRangeEnd);
     }
 
     return i;
@@ -284,7 +342,6 @@ public class TaskList extends Vector {
   /**
    *  Sets the filterParams attribute of the TaskList object
    *
-   *@param  request    The new filterParams value
    *@param  userId     The new filterParams value
    *@param  contactId  The new filterParams value
    */

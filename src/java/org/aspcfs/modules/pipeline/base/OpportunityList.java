@@ -26,31 +26,31 @@ public class OpportunityList extends Vector {
 
   public static final int TRUE = 1;
   public static final int FALSE = 0;
-  private int includeEnabled = 1;
+  protected int includeEnabled = 1;
   
   public static final String tableName = "opportunity";
   public static final String uniqueField = "opp_id";
-  private java.sql.Timestamp lastAnchor = null;
-  private java.sql.Timestamp nextAnchor = null;
-  private int syncType = Constants.NO_SYNC;
+  protected java.sql.Timestamp lastAnchor = null;
+  protected java.sql.Timestamp nextAnchor = null;
+  protected int syncType = Constants.NO_SYNC;
 
-  private PagedListInfo pagedListInfo = null;
-  private int orgId = -1;
-  private int contactId = -1;
-  private Vector ignoreTypeIdList = new Vector();
-  private String description = null;
-  private int enteredBy = -1;
-  private boolean hasAlertDate = false;
-  private java.sql.Date alertDate = null;
-  private int owner = -1;
-  private String ownerIdRange = null;
-  private String units = null;
-  private String accountOwnerIdRange = null;
-  private java.sql.Date alertRangeStart = null;
-  private java.sql.Date alertRangeEnd = null;
-  private java.sql.Date closeDateStart = null;
-  private java.sql.Date closeDateEnd = null;
-  private int stage = -1;
+  protected PagedListInfo pagedListInfo = null;
+  protected int orgId = -1;
+  protected int contactId = -1;
+  protected Vector ignoreTypeIdList = new Vector();
+  protected String description = null;
+  protected int enteredBy = -1;
+  protected boolean hasAlertDate = false;
+  protected java.sql.Date alertDate = null;
+  protected int owner = -1;
+  protected String ownerIdRange = null;
+  protected String units = null;
+  protected String accountOwnerIdRange = null;
+  protected java.sql.Date alertRangeStart = null;
+  protected java.sql.Date alertRangeEnd = null;
+  protected java.sql.Date closeDateStart = null;
+  protected java.sql.Date closeDateEnd = null;
+  protected int stage = -1;
 
   /**
    *  Constructor for the ContactList object
@@ -481,7 +481,7 @@ public void setCloseDateEnd(String tmp) {
    *@param  sqlFilter  Description of Parameter
    *@since             1.3
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -577,7 +577,7 @@ public void setCloseDateEnd(String tmp) {
    *@exception  SQLException  Description of Exception
    *@since                    1.3
    */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (orgId != -1) {
       pst.setInt(++i, orgId);

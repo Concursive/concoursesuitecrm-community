@@ -201,7 +201,14 @@ public class Contact extends GenericBean {
    *@return    The fullNameAbbr value
    */
   public String getFullNameAbbr() {
-    return (this.getNameFirst().charAt(0) + ". " + this.getNameLast());
+    StringBuffer out = new StringBuffer();
+    if (this.getNameFirst() != null && this.getNameFirst().length() > 0) {
+      out.append(this.getNameFirst().charAt(0) + ". ");
+    }
+    if (this.getNameLast() != null && this.getNameLast().length() > 0) {
+      out.append(this.getNameLast());
+    }
+    return out.toString();
   }
 
 
@@ -1275,7 +1282,7 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  üýV$ Gets the Notes attribute of the Contact object
+   *  ï¿½ï¿½V$ Gets the Notes attribute of the Contact object
    *
    *@return    The Notes value
    *@since     1.1

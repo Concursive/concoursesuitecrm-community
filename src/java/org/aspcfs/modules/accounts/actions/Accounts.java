@@ -30,14 +30,7 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandDefault(ActionContext context) {
-    /**
-    String module = context.getRequest().getParameter("module");
-    String includePage = context.getRequest().getParameter("include");
-    context.getRequest().setAttribute("IncludePage", includePage);
-    addModuleBean(context, module, module);
-    return ("IncludeOK");
-    */
-    
+
     return executeCommandDashboard(context);
   }
 
@@ -322,7 +315,6 @@ public final class Accounts extends CFSModule {
         contactReport.setHeader("CFS Accounts");
         contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         contactReport.setPersonalId(this.getUserId(context));
-
 	      contactReport.setCriteria(null);
         contactReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
 
@@ -504,7 +496,7 @@ public final class Accounts extends CFSModule {
 
       LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
       context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
-      
+
       LookupList accountTypeList = new LookupList(db, "lookup_account_types");
       accountTypeList.setSelectSize(4);
       accountTypeList.setMultiple(true);
@@ -579,12 +571,10 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Dashboard: The introductory page for the Accounts module. Displays a
-   *  calendar that maps out upcoming events related to Accounts (contract end
-   *  dates, alerts, etc.)
+   *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDashboard(ActionContext context) {
 
@@ -598,13 +588,15 @@ public final class Accounts extends CFSModule {
 
     addModuleBean(context, "Dashboard", "Dashboard");
 
-    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-
-    int alertsDD = getUserId(context);
-
-    if (context.getRequest().getParameter("userId") != null) {
-      alertsDD = Integer.parseInt(context.getRequest().getParameter("userId"));
+    CalendarBean calendarInfo = (CalendarBean) context.getSession().getAttribute("AccountsCalendarInfo");
+    if (calendarInfo == null) {
+      calendarInfo = new CalendarBean();
+      calendarInfo.addAlertType(0, "Accounts");
+      calendarInfo.setCalendarDetailsView("Accounts");
+      context.getSession().setAttribute("AccountsCalendarInfo", calendarInfo);
     }
+
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
 
     //this is how we get the multiple-level heirarchy...recursive function.
 
@@ -618,7 +610,8 @@ public final class Accounts extends CFSModule {
     newUserList.setIncludeMe(true);
 
     newUserList.setJsEvent("onChange = javascript:document.forms[0].action='/Accounts.do?command=Dashboard';document.forms[0].submit()");
-
+    HtmlSelect userListSelect = newUserList.getHtmlSelectObj("userId", getUserId(context));
+    userListSelect.addAttribute("id", "userId");
     CalendarView companyCalendar = new CalendarView(context.getRequest());
 
     PagedListInfo orgAlertPaged = new PagedListInfo();
@@ -627,12 +620,10 @@ public final class Accounts extends CFSModule {
 
     OrganizationList alertOrgs = new OrganizationList();
     alertOrgs.setPagedListInfo(orgAlertPaged);
-    alertOrgs.setEnteredBy(alertsDD);
     alertOrgs.setHasAlertDate(true);
 
     OrganizationList expireOrgs = new OrganizationList();
     expireOrgs.setPagedListInfo(orgAlertPaged);
-    expireOrgs.setEnteredBy(alertsDD);
     expireOrgs.setHasExpireDate(true);
 
     Connection db = null;
@@ -640,6 +631,9 @@ public final class Accounts extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      calendarInfo.update(db, context);
+      alertOrgs.setEnteredBy(calendarInfo.getSelectedUserId());
+      expireOrgs.setEnteredBy(calendarInfo.getSelectedUserId());
       alertOrgs.buildList(db);
       expireOrgs.buildList(db);
     } catch (SQLException e) {
@@ -661,14 +655,14 @@ public final class Accounts extends CFSModule {
     }
 
     if (errorMessage == null) {
-      context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
-      context.getRequest().setAttribute("NewUserList", newUserList);
+      context.getRequest().setAttribute("Return", "Accounts");
+      //context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
+      context.getRequest().setAttribute("NewUserList", userListSelect);
       return ("DashboardOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-
   }
 
 
@@ -698,10 +692,10 @@ public final class Accounts extends CFSModule {
 
     Connection db = null;
     OrganizationList organizationList = new OrganizationList();
-    
+
     try {
       db = this.getConnection(context);
-      
+
       organizationList.setPagedListInfo(orgListInfo);
       organizationList.setMinerOnly(false);
       orgListInfo.setSearchCriteria(organizationList);
@@ -709,7 +703,7 @@ public final class Accounts extends CFSModule {
       if ("my".equals(orgListInfo.getListView())) {
         organizationList.setOwnerId(this.getUserId(context));
       }
-      
+
       if ("disabled".equals(orgListInfo.getListView())) {
         organizationList.setIncludeEnabled(0);
       }
@@ -752,10 +746,10 @@ public final class Accounts extends CFSModule {
     Organization newOrg = null;
 
     int passedId = Integer.parseInt(context.getRequest().getParameter("orgId"));
-    
-      PagedListInfo ticketListInfo = this.getPagedListInfo(context, "AccountTicketInfo");
-      ticketListInfo.setLink("/Accounts.do?command=ViewTickets&orgId=" + passedId);
-      ticList.setPagedListInfo(ticketListInfo);
+
+    PagedListInfo ticketListInfo = this.getPagedListInfo(context, "AccountTicketInfo");
+    ticketListInfo.setLink("/Accounts.do?command=ViewTickets&orgId=" + passedId);
+    ticList.setPagedListInfo(ticketListInfo);
 
     try {
       db = this.getConnection(context);
@@ -883,13 +877,16 @@ public final class Accounts extends CFSModule {
       if (resultCount == -1) {
         return (executeCommandModify(context));
       } else if (resultCount == 1) {
-	      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-		      return (executeCommandView(context));
-	      } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("dashboard")) {
-		      return (executeCommandDashboard(context));
-	      } else {
-		      return ("UpdateOK");
-	      }
+        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+          return (executeCommandView(context));
+        } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("dashboard")) {
+          return (executeCommandDashboard(context));
+        } else {
+          if (context.getRequest().getParameter("popup") != null) {
+            return ("PopupCloseOK");
+          }
+          return ("UpdateOK");
+        }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
@@ -899,6 +896,7 @@ public final class Accounts extends CFSModule {
       return ("SystemError");
     }
   }
+
 
 
   /**
@@ -916,26 +914,25 @@ public final class Accounts extends CFSModule {
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Organization thisOrganization = null;
-    
+
     Connection db = null;
     try {
       db = this.getConnection(context);
       thisOrganization = new Organization(db, Integer.parseInt(context.getRequest().getParameter("orgId")));
-      
+
       if (context.getRequest().getParameter("action") != null) {
-	      
-	      if ( ((String)context.getRequest().getParameter("action")).equals("delete") ) {
-		      //TODO: these may have different options later
-		      thisOrganization.setContactDelete(true);
-		      thisOrganization.setRevenueDelete(true);
-		      thisOrganization.setDocumentDelete(true);
-	      
-	      	      recordDeleted = thisOrganization.delete(db, this.getPath(context, "accounts", thisOrganization.getOrgId()));
-	      } else if ( ((String)context.getRequest().getParameter("action")).equals("disable") ) {
-		      recordDeleted = thisOrganization.disable(db);
-	      }
+
+        if (((String) context.getRequest().getParameter("action")).equals("delete")) {
+          //TODO: these may have different options later
+          thisOrganization.setContactDelete(true);
+          thisOrganization.setRevenueDelete(true);
+          thisOrganization.setDocumentDelete(true);
+
+          recordDeleted = thisOrganization.delete(db, this.getPath(context, "accounts", thisOrganization.getOrgId()));
+        } else if (((String) context.getRequest().getParameter("action")).equals("disable")) {
+          recordDeleted = thisOrganization.disable(db);
+        }
       }
-      
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -945,12 +942,20 @@ public final class Accounts extends CFSModule {
     addModuleBean(context, "Accounts", "Delete Account");
     if (errorMessage == null) {
       if (recordDeleted) {
-	deleteRecentItem(context, thisOrganization);
+        deleteRecentItem(context, thisOrganization);
         context.getRequest().setAttribute("refreshUrl","Accounts.do?command=View");
         return ("DeleteOK");
+/* =======
+        //return ("DeleteOK");
+        return ("PopupCloseOK");
+>>>>>>> 1.54.2.2 */
       } else {
         processErrors(context, thisOrganization.getErrors());
         return (executeCommandView(context));
+/* =======
+        return ("PopupCloseOK");
+        //return (executeCommandView(context));
+>>>>>>> 1.54.2.2 */
       }
     } else {
       System.out.println(errorMessage);
@@ -958,7 +963,14 @@ public final class Accounts extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandEnable(ActionContext context) {
 
     if (!(hasPermission(context, "accounts-accounts-edit"))) {
@@ -968,7 +980,7 @@ public final class Accounts extends CFSModule {
     Exception errorMessage = null;
     boolean recordEnabled = false;
     Organization thisOrganization = null;
-    
+
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -983,7 +995,7 @@ public final class Accounts extends CFSModule {
     addModuleBean(context, "Accounts", "Delete Account");
     if (errorMessage == null) {
       if (recordEnabled) {
-	return (executeCommandView(context));
+        return (executeCommandView(context));
       } else {
         processErrors(context, thisOrganization.getErrors());
         return (executeCommandView(context));
@@ -994,7 +1006,14 @@ public final class Accounts extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandConfirmDelete(ActionContext context) {
 
     if (!(hasPermission(context, "accounts-accounts-delete"))) {
@@ -1027,6 +1046,14 @@ public final class Accounts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+/* <<<<<<< Accounts.java
+=======
+
+    context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    context.getRequest().setAttribute("DeleteDetails", tempMap);
+
+    addModuleBean(context, "Accounts", "Delete Account");
+>>>>>>> 1.54.2.2 */
     if (errorMessage == null) {
       context.getSession().setAttribute("Dialog", htmlDialog);
       return ("ConfirmDeleteOK");
@@ -1034,7 +1061,7 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-    
+
   }
 
 
@@ -1093,7 +1120,7 @@ public final class Accounts extends CFSModule {
 
       LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
       context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
-      
+
       LookupList accountTypeList = new LookupList(db, "lookup_account_types");
       accountTypeList.setSelectSize(4);
       accountTypeList.setMultiple(true);
@@ -1108,7 +1135,11 @@ public final class Accounts extends CFSModule {
     if (errorMessage == null) {
       addModuleBean(context, "View Accounts", "Account Modify");
       context.getRequest().setAttribute("OrgDetails", newOrg);
-      return ("ModifyOK");
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("PopupModifyOK");
+      } else {
+        return ("ModifyOK");
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -1161,7 +1192,7 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("catId", selectedCatId);
 
       recordId = context.getRequest().getParameter("recId");
-      String recordDeleted = (String)context.getRequest().getAttribute("recordDeleted");
+      String recordDeleted = (String) context.getRequest().getAttribute("recordDeleted");
       if (recordDeleted != null) {
         recordId = null;
       }
@@ -1172,7 +1203,7 @@ public final class Accounts extends CFSModule {
         //of records matching this category that the user can choose from
         PagedListInfo folderListInfo = this.getPagedListInfo(context, "AccountFolderInfo");
         folderListInfo.setLink("/Accounts.do?command=Fields&orgId=" + orgId + "&catId=" + selectedCatId);
-     
+
         CustomFieldRecordList recordList = new CustomFieldRecordList();
         recordList.setLinkModuleId(Constants.ACCOUNTS);
         recordList.setLinkItemId(thisOrganization.getOrgId());
@@ -1196,7 +1227,7 @@ public final class Accounts extends CFSModule {
         thisCategory.setBuildResources(true);
         thisCategory.buildResources(db);
         showRecords = false;
-        
+
         if (thisCategory.getRecordId() > -1) {
           CustomFieldRecord thisRecord = new CustomFieldRecord(db, thisCategory.getRecordId());
           context.getRequest().setAttribute("Record", thisRecord);
@@ -1290,7 +1321,7 @@ public final class Accounts extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     Organization thisOrganization = null;
-    
+
     String selectedCatId = (String) context.getRequest().getParameter("catId");
     String recordId = (String) context.getRequest().getParameter("recId");
 
@@ -1320,7 +1351,7 @@ public final class Accounts extends CFSModule {
     if (errorMessage == null) {
       addModuleBean(context, "View Accounts", "Modify Custom Fields");
       if (recordId.equals("-1")) {
-        return ("AddFolderRecordOK"); 
+        return ("AddFolderRecordOK");
       } else {
         return ("ModifyFieldsOK");
       }
@@ -1509,6 +1540,13 @@ public final class Accounts extends CFSModule {
     }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDeleteFields(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-folders-delete"))) {
       return ("PermissionError");
@@ -1523,10 +1561,10 @@ public final class Accounts extends CFSModule {
       String selectedCatId = context.getRequest().getParameter("catId");
       String recordId = context.getRequest().getParameter("recId");
       String orgId = context.getRequest().getParameter("orgId");
-      
+
       CustomFieldCategory thisCategory = new CustomFieldCategory(db,
           Integer.parseInt(selectedCatId));
-      
+
       CustomFieldRecord thisRecord = new CustomFieldRecord(db, Integer.parseInt(recordId));
       thisRecord.setLinkModuleId(Constants.ACCOUNTS);
       thisRecord.setLinkItemId(Integer.parseInt(orgId));
@@ -1540,7 +1578,7 @@ public final class Accounts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-      
+
     if (errorMessage == null) {
       return ("DeleteFieldsOK");
     } else {
@@ -1549,7 +1587,13 @@ public final class Accounts extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   */
   private void resetPagedListInfo(ActionContext context) {
     this.deletePagedListInfo(context, "ContactListInfo");
     this.deletePagedListInfo(context, "AccountFolderInfo");

@@ -4,7 +4,7 @@
   </description>
   <reader class="com.darkhorseventures.apps.dataimport.cfsdatabasereader.CFSDatabaseReader">
     <driver>org.postgresql.Driver</driver>
-    <url>jdbc:postgresql://216.54.81.101:5432/cdb_dhv</url>
+    <url>jdbc:postgresql://216.54.13.14:5432/cdb_edit</url>
     <user>mrajkowski</user>
     <password/>
     <processConfigFile/>

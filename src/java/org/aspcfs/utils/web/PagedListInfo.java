@@ -122,12 +122,25 @@ public class PagedListInfo {
     this.itemsPerPage = tmp;
   }
 
+
+  /**
+   *  Gets the savedCriteria attribute of the PagedListInfo object
+   *
+   *@return    The savedCriteria value
+   */
   public HashMap getSavedCriteria() {
-	return savedCriteria;
-}
-public void setSavedCriteria(HashMap savedCriteria) {
-	this.savedCriteria = savedCriteria;
-}
+    return savedCriteria;
+  }
+
+
+  /**
+   *  Sets the savedCriteria attribute of the PagedListInfo object
+   *
+   *@param  savedCriteria  The new savedCriteria value
+   */
+  public void setSavedCriteria(HashMap savedCriteria) {
+    this.savedCriteria = savedCriteria;
+  }
 
 
 
@@ -139,13 +152,27 @@ public void setSavedCriteria(HashMap savedCriteria) {
   public void setParentFieldType(String parentFieldType) {
     this.parentFieldType = parentFieldType;
   }
-  
-public String getId() {
-	return id;
-}
-public void setId(String id) {
-	this.id = id;
-}
+
+
+  /**
+   *  Gets the id attribute of the PagedListInfo object
+   *
+   *@return    The id value
+   */
+  public String getId() {
+    return id;
+  }
+
+
+  /**
+   *  Sets the id attribute of the PagedListInfo object
+   *
+   *@param  id  The new id value
+   */
+  public void setId(String id) {
+    this.id = id;
+  }
+
 
   /**
    *  Sets the parentFormName attribute of the PagedListInfo object
@@ -312,14 +339,15 @@ public void setId(String id) {
    *  Sets the Parameters attribute of the PagedListInfo object
    *
    *@param  context  The new Parameters value
+   *@return          Description of the Return Value
    *@since           1.1
    */
   public boolean setParameters(ActionContext context) {
-	  
+
     if (context.getRequest().getParameter("pagedListInfoId") != null && !(context.getRequest().getParameter("pagedListInfoId").equals("")) && !(context.getRequest().getParameter("pagedListInfoId").equals(this.getId()))) {
-            return false;
-    } 
-    
+      return false;
+    }
+
     Enumeration parameters = context.getRequest().getParameterNames();
     boolean reset = false;
 
@@ -406,48 +434,53 @@ public void setId(String id) {
     if (context.getRequest().getParameter("listFilter1") != null && resetList) {
       resetList();
     }
-    
-    	while (parameters.hasMoreElements()) {
-		String param = (String) parameters.nextElement();
-	
-		if (param.startsWith("search")) {	
-			if (!(reset)) {
-				this.getSavedCriteria().clear();
-				this.setListView("search");
-				reset = true;
-			}
-			
-			this.getSavedCriteria().put(param, context.getRequest().getParameter(param));
-		}
-		
-	}
-      return true;
-  }
-  
-    
-  public boolean setSearchCriteria(Object obj) {
-	if (("search".equals(this.getListView())) && !(this.getSavedCriteria().isEmpty()) ) {
-	    
-	Iterator hashIterator = this.getSavedCriteria().keySet().iterator();
-	
-		while(hashIterator.hasNext()) {
-			String tempKey = (String)hashIterator.next();
-			
-			if (this.getCriteriaValue(tempKey) != null && !(this.getCriteriaValue(tempKey).trim().equals(""))) {
-				
-				//its an int
-				if (tempKey.startsWith("searchcode") || tempKey.startsWith("searchdate") ) {
-					ObjectUtils.setParam(obj, tempKey.substring(10), this.getCriteriaValue(tempKey));
-				} else {
-          System.out.println("Trying to set " + tempKey.substring(6) + " to " + this.getCriteriaValue(tempKey));      
-					ObjectUtils.setParam(obj, tempKey.substring(6), "%" + this.getCriteriaValue(tempKey) + "%");
-				}
-			}
-		}
-	    
+
+    while (parameters.hasMoreElements()) {
+      String param = (String) parameters.nextElement();
+
+      if (param.startsWith("search")) {
+        if (!(reset)) {
+          this.getSavedCriteria().clear();
+          this.setListView("search");
+          reset = true;
+        }
+
+        this.getSavedCriteria().put(param, context.getRequest().getParameter(param));
+      }
     }
-	
-	return true;
+    return true;
+  }
+
+
+  /**
+   *  Sets the searchCriteria attribute of the PagedListInfo object
+   *
+   *@param  obj  The new searchCriteria value
+   *@return      Description of the Return Value
+   */
+  public boolean setSearchCriteria(Object obj) {
+    if (("search".equals(this.getListView())) && !(this.getSavedCriteria().isEmpty())) {
+
+      Iterator hashIterator = this.getSavedCriteria().keySet().iterator();
+
+      while (hashIterator.hasNext()) {
+        String tempKey = (String) hashIterator.next();
+
+        if (this.getCriteriaValue(tempKey) != null && !(this.getCriteriaValue(tempKey).trim().equals(""))) {
+
+          //its an int
+          if (tempKey.startsWith("searchcode") || tempKey.startsWith("searchdate")) {
+            ObjectUtils.setParam(obj, tempKey.substring(10), this.getCriteriaValue(tempKey));
+          } else {
+            System.out.println("Trying to set " + tempKey.substring(6) + " to " + this.getCriteriaValue(tempKey));
+            ObjectUtils.setParam(obj, tempKey.substring(6), "%" + this.getCriteriaValue(tempKey) + "%");
+          }
+        }
+      }
+
+    }
+
+    return true;
   }
 
 
@@ -832,10 +865,18 @@ public void setId(String id) {
   public String getFilterValue(String tmp) {
     return (String) listFilters.get(tmp);
   }
-  
+
+
+  /**
+   *  Gets the criteriaValue attribute of the PagedListInfo object
+   *
+   *@param  tmp  Description of the Parameter
+   *@return      The criteriaValue value
+   */
   public String getCriteriaValue(String tmp) {
-	  return (String) savedCriteria.get(tmp);
+    return (String) savedCriteria.get(tmp);
   }
+
 
   /**
    *  Gets the filterKey attribute of the PagedListInfo object
@@ -850,6 +891,7 @@ public void setId(String id) {
       return -1;
     }
   }
+
 
   /**
    *  Gets the endOfOffset attribute of the PagedListInfo object

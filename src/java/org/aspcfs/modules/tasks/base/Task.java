@@ -32,8 +32,8 @@ public class Task extends GenericBean {
   private int estimatedLOE = -1;
   private int owner = -1;
   private int age = -1;
-  private String notes = "";
-  private String description = "";
+  private String notes = null;
+  private String description = null;
   private boolean complete = false;
   private boolean enabled = false;
   private java.sql.Date dueDate = null;
@@ -42,14 +42,15 @@ public class Task extends GenericBean {
   private java.sql.Timestamp completeDate = null;
 
   //other
-  private HashMap dependencyList = new HashMap();
   private int contactId = -1;
   private int ticketId = -1;
-  private String contactName = "";
-  private String ownerName = "";
   private boolean hasLinks = false;
+  private String contactName = null;
+  private String ownerName = null;
+  private HashMap dependencyList = new HashMap();
   private Contact contact = null;
   private Ticket ticket = null;
+
 
 
   /**
@@ -66,37 +67,27 @@ public class Task extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public Task(Connection db, int thisId) throws SQLException {
-    ResultSet rs = null;
-    StringBuffer sql = new StringBuffer();
     if (thisId == -1) {
-      return;
+      throw new SQLException("Task ID not specified");
     }
-    this.setId(thisId);
-    try {
-      db.setAutoCommit(false);
-      sql.append(
-          "SELECT t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
-          "t.duedate, t.notes, t.sharing, t.complete, t.estimatedLOE, t.owner, t.completedate, " +
-          "c.namelast as lastname,c.namefirst as firstname " +
-          "FROM task t,contact c " +
-          "WHERE (task_id = ? AND t.owner = c.contact_id) ");
 
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        buildRecord(rs);
-        buildResources(db);
-      }
-      pst.close();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
+        "t.duedate, t.notes, t.sharing, t.complete, t.estimatedLOE, t.owner, t.completedate, " +
+        "c.namelast as lastname,c.namefirst as firstname " +
+        "FROM task t,contact c " +
+        "WHERE (task_id = ? AND t.owner = c.contact_id) ");
+    int i = 0;
+    pst.setInt(++i, thisId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+      buildResources(db);
+    }
+    rs.close();
+    pst.close();
+    if (thisId == -1) {
+      throw new SQLException("Task ID not found");
     }
   }
 
@@ -119,8 +110,18 @@ public class Task extends GenericBean {
    *
    *@param  entered  The new entered value
    */
-  private void setEntered(java.sql.Timestamp entered) {
+  public void setEntered(java.sql.Timestamp entered) {
     this.entered = entered;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the Task object
+   *
+   *@param  entered  The new entered value
+   */
+  public void setEntered(String entered) {
+    this.entered = DatabaseUtils.parseTimestamp(entered);
   }
 
 
@@ -175,19 +176,14 @@ public class Task extends GenericBean {
   }
 
 
+
   /**
    *  Sets the dueDate attribute of the Task object
    *
    *@param  tmp  The new dueDate value
    */
   public void setDueDate(String tmp) {
-    try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
-      dueDate = new java.sql.Date(new java.util.Date().getTime());
-      dueDate.setTime(tmpDate.getTime());
-    } catch (Exception e) {
-      dueDate = null;
-    }
+    this.dueDate = DatabaseUtils.parseDate(tmp);
   }
 
 
@@ -238,11 +234,7 @@ public class Task extends GenericBean {
    *@param  complete  The new complete value
    */
   public void setComplete(String complete) {
-    if (Integer.parseInt(complete) == 1) {
-      this.complete = true;
-    } else {
-      this.complete = false;
-    }
+    this.complete = DatabaseUtils.parseBoolean(complete);
   }
 
 
@@ -358,6 +350,7 @@ public class Task extends GenericBean {
   }
 
 
+
   /**
    *  Gets the completeDate attribute of the Task object
    *
@@ -430,6 +423,23 @@ public class Task extends GenericBean {
    */
   public String getContactName() {
     return contactName;
+  }
+
+
+  /**
+   *  Gets the alertDateStringLongYear attribute of the Task object
+   *
+   *@return    The alertDateStringLongYear value
+   */
+  public String getAlertDateStringLongYear() {
+    String tmp = "";
+    try {
+      SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
+      formatter.applyPattern("M/d/yyyy");
+      return formatter.format(dueDate);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
   }
 
 
@@ -618,13 +628,14 @@ public class Task extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    String sql = "";
+    String sql = null;
+
+    if (!isValid()) {
+      return false;
+    }
+
     try {
       db.setAutoCommit(false);
-      if (this.getDescription().equals("")) {
-        return false;
-      }
-
       sql = "INSERT INTO task " +
           "(enteredby, priority, description, notes, sharing, owner, duedate, estimatedloe, complete, completedate) " +
           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
@@ -651,7 +662,7 @@ public class Task extends GenericBean {
       }
       pst.execute();
       this.id = DatabaseUtils.getCurrVal(db, "task_task_id_seq");
-      insertContacts(pst, db);
+      if(this.getContactId()!=-1){insertContacts(pst, db);}
       pst.close();
       db.commit();
     } catch (SQLException e) {
@@ -674,37 +685,26 @@ public class Task extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean update(Connection db, int thisId) throws SQLException {
+  public int update(Connection db, int thisId) throws SQLException {
     String sql = "";
     ResultSet rs = null;
     PreparedStatement pst = null;
-    boolean isAlreadyComplete = false;
-    java.sql.Timestamp previousCompleteTimeStamp = null;
+    int count = 0;
 
-    if (this.getDescription().equals("")) {
-      return false;
+    if (!isValid()) {
+      return -1;
     }
 
     try {
       db.setAutoCommit(false);
-      sql = "SELECT complete,completedate " +
-          "FROM task " +
-          "WHERE task_id = ?  ";
-
+      Task previousTask = new Task(db, thisId);
       int i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, thisId);
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        isAlreadyComplete = rs.getBoolean("complete");
-        previousCompleteTimeStamp = rs.getTimestamp("completedate");
-      }
 
-      sql= "UPDATE task " +
-           "SET enteredby = ?, priority = ?, description = ?, notes = ?, " +
-           "sharing = ?, owner = ?, duedate = ?, estimatedloe = ?, " +
-           "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ? " +
-           "WHERE task_id = ? ";
+      sql = "UPDATE task " +
+          "SET enteredby = ?, priority = ?, description = ?, notes = ?, " +
+          "sharing = ?, owner = ?, duedate = ?, estimatedloe = ?, " +
+          "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ? " +
+          "WHERE task_id = ? ";
 
       i = 0;
       pst = db.prepareStatement(sql);
@@ -717,9 +717,9 @@ public class Task extends GenericBean {
       pst.setDate(++i, this.getDueDate());
       pst.setInt(++i, this.getEstimatedLOE());
       pst.setBoolean(++i, this.getComplete());
-      if (isAlreadyComplete && this.getComplete()) {
-        pst.setTimestamp(++i, previousCompleteTimeStamp);
-      } else if (this.getComplete() && !isAlreadyComplete) {
+      if (previousTask.getComplete() && this.getComplete()) {
+        pst.setTimestamp(++i, previousTask.getCompleteDate());
+      } else if (this.getComplete() && !previousTask.getComplete()) {
         pst.setTimestamp(++i, new Timestamp(System.currentTimeMillis()));
       } else {
         pst.setTimestamp(++i, null);
@@ -730,9 +730,9 @@ public class Task extends GenericBean {
         System.out.println("Task -> Update Query is " + pst.toString());
       }
 
-      pst.execute();
+      count = pst.executeUpdate();
       this.id = thisId;
-      insertContacts(pst, db);
+      if(this.getContactId()!=-1){insertContacts(pst, db);}
       pst.close();
       db.commit();
     } catch (SQLException e) {
@@ -742,7 +742,7 @@ public class Task extends GenericBean {
     } finally {
       db.setAutoCommit(true);
     }
-    return true;
+    return count;
   }
 
 
@@ -756,7 +756,14 @@ public class Task extends GenericBean {
    */
   public boolean insertContacts(PreparedStatement pst, Connection db) throws SQLException {
 
-    String sql = "";
+    String sql = null;
+    if (contactId == -1) {
+      throw new SQLException("Contact ID incorrect");
+    }
+    if (this.getId() == -1) {
+      throw new SQLException("Task ID not specified");
+    }
+
     try {
       db.setAutoCommit(false);
       sql = "DELETE FROM tasklink_contact " +
@@ -767,25 +774,24 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getId());
       pst.execute();
 
-      if (contactId != -1) {
-        sql = "INSERT INTO tasklink_contact " +
-            "(task_id, contact_id) " +
-            "VALUES (?, ?) ";
+      sql = "INSERT INTO tasklink_contact " +
+          "(task_id, contact_id) " +
+          "VALUES (?, ?) ";
 
-        i = 0;
-        pst = db.prepareStatement(sql);
-        pst.setInt(++i, this.getId());
-        pst.setInt(++i, this.getContactId());
-        pst.execute();
-      }
+      i = 0;
+      pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      pst.setInt(++i, this.getContactId());
+      pst.execute();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.commit();
+      db.setAutoCommit(true);
     }
     return true;
   }
-
 
 
   /**
@@ -797,9 +803,8 @@ public class Task extends GenericBean {
    */
   public HashMap processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
-    String sql = "";
+    String sql = null;
     try {
-      db.setAutoCommit(false);
       sql = "SELECT count(*) as linkcount " +
           "FROM task,tasklink_contact " +
           "WHERE task.task_id = ? AND task.task_id = tasklink_contact.task_id ";
@@ -827,14 +832,10 @@ public class Task extends GenericBean {
           dependencyList.put("Tickets", new Integer(rs.getInt("linkcount")));
         }
       }
+      rs.close();
       pst.close();
-      db.commit();
     } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
     }
     return dependencyList;
   }
@@ -849,10 +850,15 @@ public class Task extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
-    String sql = "";
+    String sql = null;
+    if (this.getId() == -1) {
+      throw new SQLException("Task ID not specified");
+    }
+
     try {
       db.setAutoCommit(false);
       PreparedStatement pst = null;
+
       //delete all relationships
       deleteRelationships(pst, db);
 
@@ -884,8 +890,13 @@ public class Task extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean deleteRelationships(PreparedStatement pst, Connection db) throws SQLException {
-    String sql = "";
+    String sql = null;
+    boolean commit = true;
     try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       sql = "DELETE from tasklink_contact " +
           "WHERE task_id = ? ";
       int i = 0;
@@ -899,10 +910,19 @@ public class Task extends GenericBean {
       pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getId());
       pst.execute();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
+      if (commit) {
+        db.rollback();
+        db.setAutoCommit(true);
+      }
       throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -916,9 +936,11 @@ public class Task extends GenericBean {
    */
   public void buildResources(Connection db) throws SQLException {
     ResultSet rs = null;
-    String sql = "";
+    String sql = null;
+    if (this.getId() == -1) {
+      throw new SQLException("Task ID not specified");
+    }
     try {
-      db.setAutoCommit(false);
       sql = "SELECT c.contact_id, c.namelast as ct_lastname, c.namefirst as ct_firstname " +
           "FROM tasklink_contact tl_ct, contact c " +
           "WHERE (task_id = ? AND tl_ct.contact_id = c.contact_id) ";
@@ -930,7 +952,7 @@ public class Task extends GenericBean {
       if (rs.next()) {
         this.contactId = rs.getInt("contact_id");
         this.contact = new Contact(db, new Integer(this.contactId).toString());
-        this.contactName = rs.getString("ct_lastname") + "," + rs.getString("ct_firstname");
+        this.contactName = rs.getString("ct_lastname") + ", " + rs.getString("ct_firstname");
         hasLinks = true;
       }
       sql = "SELECT ticket_id " +
@@ -945,10 +967,9 @@ public class Task extends GenericBean {
         this.ticketId = rs.getInt("ticket_id");
         this.ticket = new Ticket(db, this.ticketId);
       }
+      rs.close();
       pst.close();
     } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     }
   }
@@ -979,6 +1000,29 @@ public class Task extends GenericBean {
     if (entered != null) {
       float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
       age = java.lang.Math.round(ageCheck);
+    }
+  }
+
+
+  /**
+   *  Gets the valid attribute of the Task object
+   *
+   *@return                   The valid value
+   *@exception  SQLException  Description of the Exception
+   */
+  protected boolean isValid() throws SQLException {
+    errors.clear();
+
+    if (this.getDescription() == null) {
+      errors.put("DescriptionError", "Task Description is required");
+    }
+    if (this.getOwner() == -1) {
+      errors.put("OwnerError", "Owner name is required");
+    }
+    if (hasErrors()) {
+      return false;
+    } else {
+      return true;
     }
   }
 

@@ -85,6 +85,28 @@ public final class MyTasks extends CFSModule {
    */
   public String executeCommandNew(ActionContext context) {
 
+    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+      return ("DefaultError");
+    }
+    addModuleBean(context, "My Tasks", "Task Home");
+    context.getSession().removeAttribute("contactListInfo");
+    context.getRequest().setAttribute("Task", new Task());
+    if (context.getRequest().getParameter("popup") != null) {
+      return ("NewTaskPopupOK");
+    } else {
+      return ("NewTaskOK");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandModify(ActionContext context) {
+
     Exception errorMessage = null;
     Connection db = null;
     Task thisTask = null;
@@ -108,7 +130,11 @@ public final class MyTasks extends CFSModule {
     if (errorMessage == null) {
       context.getRequest().setAttribute("Task", thisTask);
       addModuleBean(context, "My Tasks", "Task Home");
-      return ("NewTaskOK");
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("NewTaskPopupOK");
+      } else {
+        return ("NewTaskOK");
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -126,9 +152,7 @@ public final class MyTasks extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     int id = -1;
-    int contactId = -1;
     boolean done = false;
-    int sharing = 1;
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("DefaultError");
     }
@@ -141,10 +165,8 @@ public final class MyTasks extends CFSModule {
       db = this.getConnection(context);
       Task newTask = (Task) context.getFormBean();
       newTask.setEnteredBy(getUserId(context));
-      if (id != -1) {
-        done = newTask.update(db, id);
-      } else {
-        done = newTask.insert(db);
+      if (!newTask.insert(db)) {
+        processErrors(context, newTask.getErrors());
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -153,7 +175,11 @@ public final class MyTasks extends CFSModule {
     }
 
     if (errorMessage == null) {
-      return ("InsertTaskOK");
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("PopupCloseOK");
+      } else {
+        return ("InsertTaskOK");
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -161,7 +187,69 @@ public final class MyTasks extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandUpdate(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    int id = -1;
+    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+      return ("DefaultError");
+    }
 
+    if (context.getRequest().getParameter("id") != null) {
+      id = Integer.parseInt(context.getRequest().getParameter("id"));
+    }
+
+    try {
+      db = this.getConnection(context);
+      Task thisTask = (Task) context.getFormBean();
+      thisTask.setEnteredBy(getUserId(context));
+      int count = thisTask.update(db, id);
+      if (count == -1) {
+        processErrors(context, thisTask.getErrors());
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("PopupCloseOK");
+      } else {
+        return ("InsertTaskOK");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value public String
+   *      executeCommandInsert(ActionContext context) { Exception errorMessage =
+   *      null; Connection db = null; boolean done = false; if
+   *      (!(hasPermission(context, "myhomepage-inbox-view"))) { return
+   *      ("DefaultError"); } try { db = this.getConnection(context); Task
+   *      newTask = (Task) context.getFormBean();
+   *      newTask.setEnteredBy(getUserId(context)); if (!newTask.insert(db)) {
+   *      processErrors(context, newTask.getErrors()); } } catch (Exception e) {
+   *      errorMessage = e; } finally { this.freeConnection(context, db); } if
+   *      (errorMessage == null) { if (context.getRequest().getParameter("popup")
+   *      != null) { return ("PopupCloseOK"); } else { return ("InsertTaskOK");
+   *      } } else { context.getRequest().setAttribute("Error", errorMessage);
+   *      return ("SystemError"); } }
+   */
   /**
    *  Description of the Method
    *
@@ -247,7 +335,7 @@ public final class MyTasks extends CFSModule {
     }
     if (errorMessage == null) {
       context.getRequest().setAttribute("Task", thisTask);
-      context.getRequest().setAttribute("refreshUrl","MyTasks.do?command=ListTasks");
+      context.getRequest().setAttribute("refreshUrl", "MyTasks.do?command=ListTasks");
       return ("DeleteOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -265,7 +353,7 @@ public final class MyTasks extends CFSModule {
   public String executeCommandProcessImage(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
-    boolean queryDone = false;
+    int count = 0;
 
     String id = (String) context.getRequest().getParameter("id");
 
@@ -284,9 +372,9 @@ public final class MyTasks extends CFSModule {
       } else {
         thisTask.setComplete(false);
       }
-      queryDone = thisTask.update(db, taskId);
+      count = thisTask.update(db, taskId);
       this.freeConnection(context, db);
-      if (queryDone) {
+      if (count != -1) {
         String filePath = context.getServletContext().getRealPath("/") + "images" + fs + fileName;
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
@@ -296,11 +384,15 @@ public final class MyTasks extends CFSModule {
         } else {
           System.err.println("Image-> Trying to send a file that does not exist");
         }
+      } else {
+        processErrors(context, thisTask.getErrors());
       }
     } catch (java.net.SocketException se) {
       //User either cancelled the download or lost connection
+      System.out.println("MyTasks -> ProcessImage : Download cancelled or connection lost");
     } catch (Exception e) {
       errorMessage = e;
+      this.freeConnection(context, db);
       System.out.println(e.toString());
     }
     return ("-none-");

@@ -23,30 +23,32 @@ public class OrganizationList extends Vector {
 
   public final static int TRUE = 1;
   public final static int FALSE = 0;
-  private int includeEnabled = TRUE;
+  protected int includeEnabled = TRUE;
 
   public final static String tableName = "organization";
   public final static String uniqueField = "org_id";
-  private java.sql.Timestamp lastAnchor = null;
-  private java.sql.Timestamp nextAnchor = null;
-  private int syncType = Constants.NO_SYNC;
-  private PagedListInfo pagedListInfo = null;
+  protected java.sql.Timestamp lastAnchor = null;
+  protected java.sql.Timestamp nextAnchor = null;
+  protected int syncType = Constants.NO_SYNC;
+  protected PagedListInfo pagedListInfo = null;
 
-  private Boolean minerOnly = null;
-  private int enteredBy = -1;
-  private String name = null;
-  private int ownerId = -1;
-  private String HtmlJsEvent = "";
-  private boolean showMyCompany = false;
-  private String ownerIdRange = null;
-  private boolean hasAlertDate = false;
-  private boolean hasExpireDate = false;
-  private String accountNumber = null;
+  protected Boolean minerOnly = null;
+  protected int enteredBy = -1;
+  protected String name = null;
+  protected int ownerId = -1;
+  protected String HtmlJsEvent = "";
+  protected boolean showMyCompany = false;
+  protected String ownerIdRange = null;
+  protected boolean hasAlertDate = false;
+  protected boolean hasExpireDate = false;
+  protected String accountNumber = null;
 
-  private int revenueType = 0;
-  private int revenueYear = -1;
-  private int revenueOwnerId = -1;
-  private boolean buildRevenueYTD = false;
+  protected int revenueType = 0;
+  protected int revenueYear = -1;
+  protected int revenueOwnerId = -1;
+  protected boolean buildRevenueYTD = false;
+  protected java.sql.Date alertRangeStart = null;
+  protected java.sql.Date alertRangeEnd = null;
 
 
   /**
@@ -161,7 +163,15 @@ public class OrganizationList extends Vector {
   public void setRevenueYear(int tmp) {
     this.revenueYear = tmp;
   }
+public void setAlertRangeStart(java.sql.Date alertRangeStart) {
+    this.alertRangeStart = alertRangeStart;
+  }
 
+
+  
+  public void setAlertRangeEnd(java.sql.Date alertRangeEnd) {
+    this.alertRangeEnd = alertRangeEnd;
+  }
 
   /**
    *  Gets the revenueType attribute of the OrganizationList object
@@ -649,7 +659,7 @@ public class OrganizationList extends Vector {
    *@param  sqlFilter  Description of Parameter
    *@since             1.2
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -727,7 +737,7 @@ public class OrganizationList extends Vector {
    *@exception  SQLException  Description of Exception
    *@since                    1.5
    */
-  private void buildResources(Connection db) throws SQLException {
+  protected void buildResources(Connection db) throws SQLException {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Organization thisOrg = (Organization) i.next();
@@ -747,7 +757,7 @@ public class OrganizationList extends Vector {
    *@exception  SQLException  Description of Exception
    *@since                    1.2
    */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (minerOnly != null) {
       pst.setBoolean(++i, minerOnly.booleanValue());

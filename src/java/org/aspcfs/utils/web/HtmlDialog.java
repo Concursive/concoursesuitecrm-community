@@ -4,7 +4,24 @@ import java.util.*;
 import java.text.*;
 
 /**
- *  Description of the Class
+ *  HtmlDialog.java creates a pop up dialog box and can be either extended or
+ *  used as is for a dialog with the user, specifically it is best used for a
+ *  dialog which conveys certain dependencies or relationships. <p>
+ *
+ *  For example<p>
+ *
+ *  htmlDialog.setRelationships(thisTask.processDependencies(db)); 
+ if
+ *  (htmlDialog.getRelationships().size() == 0) {
+ *  htmlDialog.setTitle("Confirm"); htmlDialog.setShowAndConfirm(false);
+ *  htmlDialog.setDeleteUrl("javascript:window.location.href='MyTasks.do?command=Delete&id="
+ *  + id + "'"); } else { htmlDialog.setTitle("Confirm");
+ *  htmlDialog.setHeader("Are you sure you want to delete this item:");
+ *  htmlDialog.addButton("Delete All", "javascript:window.location.href='/MyTasks.do?command=Delete&id="
+ *  + id + "'"); htmlDialog.addButton("No", "javascript:parent.window.close()");
+ *  } <p>
+ *
+ *  The setRelationships
  *
  *@author     akhi_m
  *@created    August 22, 2002

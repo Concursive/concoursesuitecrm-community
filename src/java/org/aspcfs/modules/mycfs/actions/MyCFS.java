@@ -3,13 +3,15 @@ package com.darkhorseventures.cfsmodule;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.theseus.actions.*;
+import com.darkhorseventures.webutils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.utils.*;
-import java.sql.*;
-import java.util.ArrayList;
-import com.darkhorseventures.webutils.*;
-import java.util.*;
 import com.zeroio.iteam.base.*;
+import java.util.ArrayList;
+import java.sql.*;
+import java.lang.reflect.*;
+import java.util.*;
+
 /**
  *  The MyCFS module.
  *
@@ -489,8 +491,8 @@ public final class MyCFS extends CFSModule {
     boolean listDone = false;
     try {
       db = this.getConnection(context);
-      
-      //parentFieldType is the type of selection required i.e list or single 
+
+      //parentFieldType is the type of selection required i.e list or single
       if (context.getRequest().getParameter("parentFieldType") != null) {
         contactListInfo.setParentFieldType(context.getRequest().getParameter("parentFieldType"));
       }
@@ -516,7 +518,7 @@ public final class MyCFS extends CFSModule {
         htmlSelect.addItem(-1, "--All Projects--", 0);
         context.getSession().setAttribute("ProjectListSelect", htmlSelect);
       }
-      
+
       firstFilter = contactListInfo.getListView();
       contactList = new ContactList();
 
@@ -576,7 +578,6 @@ public final class MyCFS extends CFSModule {
         secondFilter = context.getRequest().getParameter("listFilter1");
       }
 
-      
       //  set Filter for retrieving addresses depending on typeOfContact
       if ((firstFilter == null || firstFilter.equals(""))) {
         firstFilter = "all";
@@ -887,18 +888,11 @@ public final class MyCFS extends CFSModule {
     addModuleBean(context, "Home", "");
     int headlines = 0;
     Exception errorMessage = null;
-    int alertsDD = getUserId(context);
-
-    if (context.getRequest().getParameter("userId") != null) {
-      alertsDD = Integer.parseInt(context.getRequest().getParameter("userId"));
-    }
-
     String whereClause = new String();
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
 
-    /*
-     *  this is how we get the multiple-level heirarchy...recursive function.
-     */
+    //this is how we get the multiple-level heirarchy...recursive function.
+
     User thisRec = thisUser.getUserRecord();
 
     UserList shortChildList = thisRec.getShortChildList();
@@ -910,19 +904,27 @@ public final class MyCFS extends CFSModule {
     newUserList.setMyId(getUserId(context));
     newUserList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
     newUserList.setIncludeMe(true);
+    newUserList.setJsEvent("onChange = \"javascript:fillFrame('calendar','MyCFS.do?command=MonthView&source=Calendar&userId='+document.getElementById('userId').value); javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=CalendarDetails&userId='+document.getElementById('userId').value);javascript:changeDivContent('userName','User:' + document.getElementById('userId').options[document.getElementById('userId').selectedIndex].firstChild.nodeValue);\"");
+    HtmlSelect userListSelect = newUserList.getHtmlSelectObj("userId", getUserId(context));
+    userListSelect.addAttribute("id", "userId");
 
-    newUserList.setJsEvent("onChange = \"javascript:document.forms[0].action='/MyCFS.do?command=Home';document.forms[0].submit()\"");
-
-    //
-    //	Alerts Selection
-    //
-
-    String alertsRequest = (String) context.getRequest().getParameter("alerts");
-    if (alertsRequest == null) {
-      alertsRequest = "0";
+    CalendarBean calendarInfo = (CalendarBean) context.getSession().getAttribute("CalendarInfo");
+    if (calendarInfo == null) {
+      calendarInfo = new CalendarBean();
+      calendarInfo.addAlertType(0, "Task");
+      calendarInfo.addAlertType(1, "Call");
+      calendarInfo.addAlertType(2, "Opportunity");
+      calendarInfo.addAlertType(3, "Project");
+      calendarInfo.addAlertType(4, "Accounts");
+      context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }
 
-    int i_alerts = Integer.parseInt(alertsRequest);
+    //String alertsRequest = (String) context.getRequest().getParameter("alerts");
+    //if (alertsRequest == null) {
+    //  alertsRequest = "0";
+    //}
+
+    //int i_alerts = Integer.parseInt(alertsRequest);
 
     ArrayList newsList = new ArrayList();
 
@@ -935,15 +937,11 @@ public final class MyCFS extends CFSModule {
 
     try {
       StringBuffer sql = new StringBuffer();
-
       db = this.getConnection(context);
-
       //newUserList.buildList(db);
-      context.getRequest().setAttribute("NewUserList", newUserList);
-
+      context.getRequest().setAttribute("NewUserList", userListSelect);
       LookupList indSelect = new LookupList(db, "lookup_industry");
       indSelect.setJsEvent("onChange=\"document.forms['miner_select'].submit();\"");
-
       indSelect.addItem(0, "Latest News");
 
       //used to check the number of customized headlines
@@ -1014,85 +1012,6 @@ public final class MyCFS extends CFSModule {
       }
       rs.close();
       st.close();
-
-      //Setup the calendar
-
-      CalendarView companyCalendar = new CalendarView(context.getRequest());
-
-      PagedListInfo alertPaged = new PagedListInfo();
-      alertPaged.setMaxRecords(20);
-      alertPaged.setColumnToSortBy("alertdate");
-
-      CallList alertCalls = new CallList();
-      alertCalls.setEnteredBy(alertsDD);
-      alertCalls.setHasAlertDate(true);
-      alertCalls.setAlertRangeStart(companyCalendar.getCalendarStartDate());
-      alertCalls.setAlertRangeEnd(companyCalendar.getCalendarEndDate());
-      alertCalls.buildList(db);
-      Iterator m = alertCalls.iterator();
-      while (m.hasNext()) {
-        Call thisCall = (Call) m.next();
-        if (thisCall.getOppId() == -1 && thisCall.getContactId() > -1) {
-          companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getAlertText(), "Contact Call", thisCall.getContactId(), thisCall.getId());
-        } else {
-          companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getAlertText(), "Opportunity Call", thisCall.getOppId(), thisCall.getId());
-        }
-
-      }
-
-      com.zeroio.iteam.base.ProjectList projects = new com.zeroio.iteam.base.ProjectList();
-      projects.setGroupId(-1);
-      projects.setOpenProjectsOnly(true);
-      projects.setProjectsWithAssignmentsOnly(true);
-      projects.setProjectsForUser(alertsDD);
-      projects.setBuildAssignments(true);
-      projects.setAssignmentsForUser(alertsDD);
-      projects.setOpenAssignmentsOnly(true);
-      projects.setBuildIssues(false);
-      projects.buildList(db);
-      Iterator projectList = projects.iterator();
-      while (projectList.hasNext()) {
-        com.zeroio.iteam.base.Project thisProject = (com.zeroio.iteam.base.Project) projectList.next();
-        Iterator assignmentList = thisProject.getAssignments().iterator();
-        while (assignmentList.hasNext()) {
-          com.zeroio.iteam.base.Assignment thisAssignment = (com.zeroio.iteam.base.Assignment) assignmentList.next();
-          if (thisAssignment.getDueDate() != null) {
-            CalendarEvent thisEvent = new CalendarEvent();
-            thisEvent.setDate(thisAssignment.getDueDate());
-            thisEvent.setSubject(thisAssignment.getRole());
-            thisEvent.setCategory("Assignment");
-            thisEvent.setId(thisAssignment.getProjectId());
-            thisEvent.setIdsub(thisAssignment.getId());
-            thisEvent.setIcon(thisAssignment.getStatusGraphicTag());
-            companyCalendar.addEvent(thisEvent);
-          }
-        }
-      }
-
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("MyCFS-> Building opportunity alerts");
-      }
-      PagedListInfo alertPaged2 = new PagedListInfo();
-      alertPaged2.setItemsPerPage(0);
-      alertPaged2.setColumnToSortBy("x.alertdate");
-
-      OpportunityList alertOpps = new OpportunityList();
-      alertOpps.setPagedListInfo(alertPaged2);
-      alertOpps.setEnteredBy(alertsDD);
-      alertOpps.setHasAlertDate(true);
-      alertOpps.setAlertRangeStart(companyCalendar.getCalendarStartDate());
-      alertOpps.setAlertRangeEnd(companyCalendar.getCalendarEndDate());
-      alertOpps.buildList(db);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("MyCFS-> size of opps: " + alertOpps.size());
-      }
-      Iterator n = alertOpps.iterator();
-      while (n.hasNext()) {
-        Opportunity thisOpp = (Opportunity) n.next();
-        companyCalendar.addEvent(thisOpp.getAlertDateStringLongYear(), "", thisOpp.getDescription() + ": " + thisOpp.getAlertText(), "Opportunity", thisOpp.getId());
-      }
-
-      context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -1100,12 +1019,249 @@ public final class MyCFS extends CFSModule {
     }
 
     if (errorMessage == null) {
+      context.getRequest().setAttribute("UserId", String.valueOf(getUserId(context)));
       context.getRequest().setAttribute("NewsList", newsList);
       return ("HomeOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandAlerts(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-profile-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    Connection db = null;
+    addModuleBean(context, "Home", "");
+    CalendarBean calendarInfo = null;
+
+    String returnPage = context.getRequest().getParameter("return");
+    calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
+    CalendarView companyCalendar = new CalendarView(context.getRequest());
+
+    try {
+      db = this.getConnection(context);
+      calendarInfo.update(db, context);
+      companyCalendar.setCalendarInfo(calendarInfo);
+      companyCalendar.updateParams();
+      companyCalendar.addHolidaysByRange();
+
+      //create events depending on alert type
+      String selectedAlertType = calendarInfo.getCalendarDetailsView();
+      String param1 = "com.darkhorseventures.utils.CalendarView";
+      String param2 = "java.sql.Connection";
+      ArrayList alertTypes = calendarInfo.getAlertTypes();
+      for (int i = 0; i < alertTypes.size(); i++) {
+        String className = "com.darkhorseventures.cfsbase." + ((String) alertTypes.get(i)).trim() + "ListScheduledActions";
+        Object thisInstance = Class.forName(className).newInstance();
+        
+        if (((String)alertTypes.get(i)).equalsIgnoreCase(selectedAlertType) || selectedAlertType.equalsIgnoreCase("all")) {
+          //set UserId
+          Method method = Class.forName(className).getMethod("setUserId", new Class[]{int.class});
+          method.invoke(thisInstance, new Object[]{new Integer(calendarInfo.getSelectedUserId())});
+
+          //set Start and End Dates
+          method = Class.forName(className).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Date")});
+          method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarStartDate(context)});
+
+          method = Class.forName(className).getMethod("setAlertRangeEnd", new Class[]{Class.forName("java.sql.Date")});
+          method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarEndDate(context)});
+
+          //Add Events
+          method = Class.forName(className).getMethod("calendarAlerts", new Class[]{Class.forName(param1), Class.forName(param2)});
+          method.invoke(thisInstance, new Object[]{companyCalendar, db});
+          if (!selectedAlertType.equalsIgnoreCase("all")) {
+            break;
+          }
+        }
+      }
+    } catch (SQLException e) {
+      errorMessage = e;
+    } catch (Exception e) {
+      System.out.println(e.toString());
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
+      return "CalendarDetailsOK";
+    }
+    return "SystemError";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandMonthView(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-profile-view"))) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    Connection db = null;
+    CalendarBean calendarInfo = null;
+    CalendarView companyCalendar = null;
+    addModuleBean(context, "Home", "");
+    String returnPage = context.getRequest().getParameter("return");
+    calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
+    if (context.getRequest().getAttribute("CompanyCalendar") != null) {
+      companyCalendar = (CalendarView) context.getRequest().getAttribute("CompanyCalendar");
+    } else {
+      companyCalendar = new CalendarView(context.getRequest());
+      context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
+    }
+
+    ArrayList alertTypes = calendarInfo.getAlertTypes();
+
+    try {
+      db = this.getConnection(context);
+      calendarInfo.update(db, context);
+      companyCalendar.setCalendarInfo(calendarInfo);
+      companyCalendar.updateParams();
+
+      //Use reflection to invoke methods on scheduler classes
+
+      String param1 = "com.darkhorseventures.utils.CalendarView";
+      String param2 = "java.sql.Connection";
+
+      for (int i = 0; i < alertTypes.size(); i++) {
+        String className = "com.darkhorseventures.cfsbase." + ((String) alertTypes.get(i)).trim() + "ListScheduledActions";
+        Object thisInstance = Class.forName(className).newInstance();
+
+        //set UserId
+        Method method = Class.forName(className).getMethod("setUserId", new Class[]{int.class});
+        method.invoke(thisInstance, new Object[]{new Integer(calendarInfo.getSelectedUserId())});
+
+        //set Start and End Dates
+        method = Class.forName(className).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Date")});
+        method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarStartDate(context)});
+
+        method = Class.forName(className).getMethod("setAlertRangeEnd", new Class[]{Class.forName("java.sql.Date")});
+        method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarEndDate(context)});
+
+        //Add Events
+        method = Class.forName(className).getMethod("calendarAlerts", new Class[]{Class.forName(param1), Class.forName(param2)});
+        method.invoke(thisInstance, new Object[]{companyCalendar, db});
+      }
+    } catch (SQLException e) {
+      errorMessage = e;
+    } catch (Exception e) {
+      System.out.println(e.toString());
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("CalendarOK");
+  }
+
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandDayView(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-profile-view"))) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    Connection db = null;
+    CalendarBean calendarInfo = null;
+    addModuleBean(context, "Home", "");
+
+    String returnPage = context.getRequest().getParameter("return");
+    calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
+    try {
+      db = this.getConnection(context);
+      calendarInfo.update(db, context);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    calendarInfo.setCalendarView("day");
+    calendarInfo.resetParams("day");
+    return executeCommandAlerts(context);
+  }
+
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandWeekView(ActionContext context) {
+
+    if (!(hasPermission(context, "myhomepage-profile-view"))) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    Connection db = null;
+    addModuleBean(context, "Home", "");
+    CalendarBean calendarInfo = null;
+
+    String returnPage = context.getRequest().getParameter("return");
+    calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
+    try {
+      db = this.getConnection(context);
+      calendarInfo.update(db, context);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    calendarInfo.setCalendarView("week");
+    calendarInfo.resetParams("week");
+    return executeCommandAlerts(context);
+  }
+
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandAgendaView(ActionContext context) {
+
+    if (!(hasPermission(context, "myhomepage-profile-view"))) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    Connection db = null;
+    addModuleBean(context, "Home", "");
+    CalendarBean calendarInfo = null;
+    String returnPage = context.getRequest().getParameter("return");
+    calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
+    try {
+      db = this.getConnection(context);
+      calendarInfo.update(db, context);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    calendarInfo.resetParams("agenda");
+    calendarInfo.setAgendaView(true);
+    executeCommandAlerts(context);
+    return ("CalendarDetailsOK");
   }
 
 
@@ -1358,6 +1514,7 @@ public final class MyCFS extends CFSModule {
    *@exception  SQLException  Description of Exception
    *@since
    */
+
   protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
     LookupList departmentList = new LookupList(db, "lookup_department");
     departmentList.addItem(0, "--None--");

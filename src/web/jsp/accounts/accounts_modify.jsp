@@ -66,7 +66,12 @@
       }
     }
 </script>
-<form name="addAccount" action="/Accounts.do?command=Update&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<form name="addAccount" action="/Accounts.do?command=Update&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
+<%boolean popUp = false;
+  if(request.getParameter("popup")!=null){
+    popUp = true;
+  }%>
+<dhv:evaluate exp="<%= !popUp %>">
 <a href="/Accounts.do">Account Management</a> > 
 
 <% if (request.getParameter("return") != null) {%>
@@ -83,19 +88,26 @@
 
 Modify Account<br>
 <hr color="#BFBFBB" noshade>
+
 <a href="Accounts.do?command=View">Back to Account List</a><br>&nbsp;
+</dhv:evaluate>
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
       <strong><%= toHtml(OrgDetails.getName()) %></strong>
     </td>
   </tr>
+  
+  <dhv:evaluate exp="<%= !popUp %>">
   <tr class="containerMenu">
     <td>
       <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
       <dhv:container name="accounts" selected="details" param="<%= param1 %>" />
     </td>
   </tr>
+  </dhv:evaluate>
+  
   <tr>
     <td class="containerBack">
 <input type="hidden" name="modified" value="<%= OrgDetails.getModified() %>">
@@ -113,7 +125,12 @@ Modify Account<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <%}%>
 
+
 <input type="reset" value="Reset">
+<dhv:evaluate exp="<%= popUp %>">
+  <input type="button" value="Cancel" onclick="javascript:window.close();">
+</dhv:evaluate>
+
 <br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -494,6 +511,9 @@ Modify Account<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="reset" value="Reset">
+<dhv:evaluate exp="<%= popUp %>">
+  <input type="button" value="Cancel" onclick="javascript:window.close();">
+</dhv:evaluate>
 <input type="hidden" name="dosubmit" value="true">
   </td>
   </tr>

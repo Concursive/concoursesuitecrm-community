@@ -11,6 +11,7 @@ import java.text.*;
  *@version    $Id: CalendarEvent.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski
  *      Exp $
  */
+ 
 public class CalendarEvent implements Comparable {
 
   //General Information
@@ -22,12 +23,14 @@ public class CalendarEvent implements Comparable {
   protected int id = -1;
   protected int idsub = -1;
 
-  protected String details = "";
   //Body of the event
-  protected String HTMLClass = "";
+  protected String details = "";
   //Special HTML formatting
-  protected String link = "";
+  protected String HTMLClass = "";
   //Link where event goes to
+  protected String link = "";
+  //status of event
+  protected int status = -1;
 
   //Date
   protected String month = "";
@@ -77,10 +80,15 @@ public class CalendarEvent implements Comparable {
 
   /**
    *  Constructor for the CalendarEvent object
-   *
    */
   public CalendarEvent() { }
 
+
+  /**
+   *  Sets the date attribute of the CalendarEvent object
+   *
+   *@param  eventDate  The new date value
+   */
   public void setDate(java.sql.Timestamp eventDate) {
     if (eventDate != null) {
       SimpleDateFormat shortDateFormat = new SimpleDateFormat("M/d/yyyy");
@@ -93,6 +101,7 @@ public class CalendarEvent implements Comparable {
       }
     }
   }
+
 
   /**
    *  Sets the Month attribute of the CalendarEvent object
@@ -217,6 +226,26 @@ public class CalendarEvent implements Comparable {
 
 
   /**
+   *  Sets the status attribute of the CalendarEvent object
+   *
+   *@param  status  The new status value
+   */
+  public void setStatus(int status) {
+    this.status = status;
+  }
+
+
+  /**
+   *  Gets the status attribute of the CalendarEvent object
+   *
+   *@return    The status value
+   */
+  public int getStatus() {
+    return status;
+  }
+
+
+  /**
    *  Gets the idsub attribute of the CalendarEvent object
    *
    *@return    The idsub value
@@ -244,17 +273,18 @@ public class CalendarEvent implements Comparable {
   public String getLink() {
 
     if (category.equalsIgnoreCase("Opportunity")) {
-      return "<a href=\"/Leads.do?command=DetailsOpp&id=" + id + "\">";
-    } else if (category.equalsIgnoreCase("Account")) {
-      return "<a href=\"/Accounts.do?command=Details&orgId=" + id + "&return=dashboard\">";
-    } else if (category.equalsIgnoreCase("Assignment")) {
+      return "<a href=\"javascript:popURL('Leads.do?command=ModifyOpp&id=" + id + "&popup=true&return=Calendar','CFS_Opportunity','500','475','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Opportunity';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
+    } else if (category.equalsIgnoreCase("Accounts")) {
+      return "<a href=\"javascript:popURL('/Accounts.do?command=Modify&orgId=" + id + "&popup=true&return=Calendar','CFS_Account','500','475','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Account';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
+    } else if (category.equalsIgnoreCase("Assignments")) {
       return "<a href=\"/ProjectManagementAssignments.do?command=Modify&aid=" + idsub + "&pid=" + id + "\">";
-    } else if (category.equalsIgnoreCase("Contact Call")) {
-      return "<a href=\"/ExternalContactsCalls.do?command=Details&id=" + idsub + "&contactId=" + id + "\">";
-    } else if (category.equalsIgnoreCase("Opportunity Call")) {
-      return "<a href=\"/LeadsCalls.do?command=Details&id=" + idsub + "&oppId=" + id + "\">";
+    } else if (category.equalsIgnoreCase("Contact Calls")) {
+      return "<a href=\"javascript:popURL('ExternalContactsCalls.do?command=Modify&id=" + idsub + "&contactId=" + id + "&popup=true&return=Calendar','CFS_Opportunity','550','375','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Call';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
+    } else if (category.equalsIgnoreCase("Opportunity Calls")) {
+      return "<a href=\"javascript:popURL('LeadsCalls.do?command=Details&id=" + idsub + "&oppId=" + id + "&popup=true&return=Calendar','CFS_Opportunity','550','375','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Call';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
+    } else if (category.equalsIgnoreCase("Tasks")) {
+      return "<a href=\"javascript:popURL('MyTasks.do?command=Modify&id=" + id + "&popup=true&return=Calendar','CFS_Task','600','420','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Task';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
     }
-
     return link;
   }
 
@@ -296,15 +326,60 @@ public class CalendarEvent implements Comparable {
       return "<img border=0 src=\"/images/event-holiday.gif\" alt=\"Holiday:" + this.getSubject() + "\" align=texttop width=12 height=12>";
     } else if (category.equalsIgnoreCase("Opportunity")) {
       return "<img border=0 src=\"images/alertopp.gif\" alt=\"Opp:" + this.getSubject() + "\" align=texttop>";
-    } else if (category.equalsIgnoreCase("Contact Call") || category.equalsIgnoreCase("Opportunity Call")) {
+    } else if (category.equalsIgnoreCase("Contact Calls") || category.equalsIgnoreCase("Opportunity Calls")) {
       return "<img border=0 src=\"images/alertcall.gif\" alt=\"Call:" + this.getSubject() + "\" align=texttop>";
-    } else if (category.equalsIgnoreCase("Assignment")) {
+    } else if (category.equalsIgnoreCase("Assignments")) {
       return "<img border=0 src=\"images/alertassignment.gif\" alt=\"Assignment:" + this.getSubject() + "\" align=texttop>";
-    } else if (category.equalsIgnoreCase("Account")) {
-      return "<img border=0 src=\"images/alertassignment.gif\" alt=\"Account:" + this.getSubject() + "\" align=texttop>";
+    } else if (category.equalsIgnoreCase("Accounts")) {
+      return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" alt=\"Account:" + this.getSubject() + "\" align=texttop>";
+    } else if (category.equalsIgnoreCase("Tasks")) {
+      if (this.getStatus() == Task.DONE) {
+        return "<a href=\"javascript:changeImages('image" + this.getId() + "','/MyTasks.do?command=ProcessImage&id=box.gif|gif|'+" + this.getId() + "+'|0','/MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+" + this.getId() + "+'|1');\"><img src=\"images/box-checked.gif\" name=\"image" + this.getId() + "\" id=\"1\" border=0 title=\"Click to change\"></a>";
+      } else {
+        return "<a href=\"javascript:changeImages('image" + this.getId() + "','/MyTasks.do?command=ProcessImage&id=box.gif|gif|'+" + this.getId() + "+'|1','/MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+" + this.getId() + "+'|1');\"><img src=\"images/box.gif\" name=\"image" + this.getId() + "\" id=\"0\" border=0 title=\"Click to change\"></a>";
+      }
     }
-
     return icon;
+  }
+  
+  
+  public static String getIcon(String thisCategory){
+    if (thisCategory.equals("event")) {
+      return "<img border=0 src=\"/images/event-timed.gif\" align=texttop width=12 height=12 title=\"Event\">";
+    } else if (thisCategory.equalsIgnoreCase("holiday")) {
+      return "<img border=0 src=\"/images/event-holiday.gif\" align=texttop width=12 height=12 title=\"Holiday\">";
+    } else if (thisCategory.equalsIgnoreCase("Opportunity")) {
+      return "<img border=0 src=\"images/alertopp.gif\" align=texttop title=\"Opportunities\">";
+    } else if (thisCategory.equalsIgnoreCase("Contact Calls") || thisCategory.equalsIgnoreCase("Opportunity Calls")) {
+      return "<img border=0 src=\"images/alertcall.gif\" align=texttop title=\"Calls\">";
+    } else if (thisCategory.equalsIgnoreCase("Assignments")) {
+      return "<img border=0 src=\"images/alertassignment.gif\" align=texttop title=\"Assignments\">";
+    } else if (thisCategory.equalsIgnoreCase("Accounts")) {
+      return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" align=texttop title=\"Accounts\">";
+    } else if (thisCategory.equalsIgnoreCase("Tasks")) {
+        return "<img src=\"images/box.gif\" border=0 align=texttop width=\"14\" height=\"14\" title=\"Tasks\">";
+      }
+    return "";
+  }
+  
+  
+  public static String getNamePlural(String thisCategory){
+    if (thisCategory.equals("event")) {
+      return "Events";
+    } else if (thisCategory.equalsIgnoreCase("holiday")) {
+      return "Holiday";
+    } else if (thisCategory.equalsIgnoreCase("Opportunity")) {
+      return "Opportunities";
+    } else if (thisCategory.equalsIgnoreCase("Contact Calls") || thisCategory.equalsIgnoreCase("Opportunity Calls")) {
+      return "Calls";
+    } else if (thisCategory.equalsIgnoreCase("Assignments")) {
+      return "Assignments";
+    } else if (thisCategory.equalsIgnoreCase("Accounts")) {
+      return "Accounts";
+    } else if (thisCategory.equalsIgnoreCase("Tasks")) {
+        return "Tasks";
+      }
+    return "";
   }
 
 
@@ -317,7 +392,13 @@ public class CalendarEvent implements Comparable {
   public String getDateTimeString() {
     return (year + "-" + month + "-" + day + " " + time);
   }
-  
+
+
+  /**
+   *  Gets the dateString attribute of the CalendarEvent object
+   *
+   *@return    The dateString value
+   */
   public String getDateString() {
     return (month + "/" + day + "/" + year);
   }

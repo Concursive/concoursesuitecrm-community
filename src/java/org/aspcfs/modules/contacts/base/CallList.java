@@ -21,19 +21,19 @@ public class CallList extends Vector {
         
   public static final String tableName = "call_log";
   public static final String uniqueField = "call_id";
-  private java.sql.Timestamp lastAnchor = null;
-  private java.sql.Timestamp nextAnchor = null;
-  private int syncType = Constants.NO_SYNC;
+  protected java.sql.Timestamp lastAnchor = null;
+  protected java.sql.Timestamp nextAnchor = null;
+  protected int syncType = Constants.NO_SYNC;
 
-  private PagedListInfo pagedListInfo = null;
-  private int contactId = -1;
-  private int orgId = -1;
-  private int oppId = -1;
-  private int enteredBy = -1;
-  private boolean hasAlertDate = false;
-  private java.sql.Date alertDate = null;
-  private java.sql.Date alertRangeStart = null;
-  private java.sql.Date alertRangeEnd = null;
+  protected PagedListInfo pagedListInfo = null;
+  protected int contactId = -1;
+  protected int orgId = -1;
+  protected int oppId = -1;
+  protected int enteredBy = -1;
+  protected boolean hasAlertDate = false;
+  protected java.sql.Date alertDate = null;
+  protected java.sql.Date alertRangeStart = null;
+  protected java.sql.Date alertRangeEnd = null;
   
 
 
@@ -356,7 +356,7 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
    *@param  sqlFilter  Description of Parameter
    *@since
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -402,7 +402,7 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
    *@exception  SQLException  Description of Exception
    *@since
    */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (contactId != -1) {
       pst.setInt(++i, contactId);

@@ -719,7 +719,11 @@ public final class Leads extends CFSModule {
       addRecentItem(context, newOpp);
       context.getRequest().setAttribute("BusTypeList", busTypeSelect);
       context.getRequest().setAttribute("UnitTypeList", unitSelect);
+      if(context.getRequest().getParameter("popup")!=null){
+        return ("ModifyOppPopupOK");
+      }else{
       return ("ModifyOppOK");
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -1112,7 +1116,9 @@ public final class Leads extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (resultCount == 1) {
+      if(context.getRequest().getParameter("popup")!=null){
+        return ("PopupCloseOK");
+      }else if (resultCount == 1) {
 	      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
 		      return (executeCommandViewOpp(context));
 	      } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("dashboard")) {

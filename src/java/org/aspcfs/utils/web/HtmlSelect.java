@@ -14,11 +14,11 @@ import com.darkhorseventures.webutils.LookupList;
  */
 public class HtmlSelect extends ArrayList {
 
-	protected String selectName = "";
-	protected int selectSize = 1;
+  protected String selectName = "";
+  protected int selectSize = 1;
 
-	protected String firstEntry = "";
-	protected String firstKey = "";
+  protected String firstEntry = "";
+  protected String firstKey = "";
 
 	protected String defaultKey = "";
 	protected String defaultValue = "";
@@ -33,6 +33,7 @@ public class HtmlSelect extends ArrayList {
 	protected boolean built = false;
 	protected LookupList multipleSelects = null;
   protected String idName = null;
+  protected HashMap attributeList = new HashMap();
 
 	/**
 	 *  Constructor for an HTML select box. Creates an HTML select box or series of
@@ -65,66 +66,68 @@ public class HtmlSelect extends ArrayList {
   public HtmlSelect(ArrayList itemsToAdd) {
     Iterator i = itemsToAdd.iterator();
     while (i.hasNext()) {
-      String thisItem = (String)i.next();
+      String thisItem = (String) i.next();
       this.addItem(thisItem);
     }
   }
-	
-	/**
-	*  Set the name of the HTML Select element
-	*
-	*@param  tmp  The new SelectName value
-	*@since       1.0
-	*/
-	public void setSelectName(String tmp) {
-		this.selectName = tmp;
-	}
-	
-	
-	/**
-	*  Set the default value for the HTML Select, by value name
-	*
-	*@param  tmp  The new DefaultValue value
-	*@since       1.0
-	*/
-	public void setDefaultValue(String tmp) {
-		if (tmp == null) {
-			this.defaultValue = ""; 
-		} else {
-			this.defaultValue = tmp;
-		}
-	}
-	
 
-	/**
-	 *  Sets the Multiple attribute of the HtmlSelect object
-	 *
-	 *@param  mutiple  The new Mutiple value
-	 *@since
-	 */
-	public void setMultiple(boolean multiple) {
-		this.multiple = multiple;
-	}
-	
-	/**
-	*  Set the default value for the HTML Select, by value name
-	*
-	*@param  tmp  The new DefaultValue value
-	*@since       1.0
-	*/
-	public void setDefaultValue(int tmp) {
-		this.defaultValue = "" + tmp;
-	}
-	
-	
-	/**
-	*  Set the default value for the HTML Select, by key name
-	*
-	*@param  tmp  The new DefaultKey value
-	*@since       1.0
-	*/
-	public void setDefaultKey(String tmp) {
-		if(!tmp.equals(defaultKey)){
+
+  /**
+   *  Set the name of the HTML Select element
+   *
+   *@param  tmp  The new SelectName value
+   *@since       1.0
+   */
+  public void setSelectName(String tmp) {
+    this.selectName = tmp;
+  }
+
+
+  /**
+   *  Set the default value for the HTML Select, by value name
+   *
+   *@param  tmp  The new DefaultValue value
+   *@since       1.0
+   */
+  public void setDefaultValue(String tmp) {
+    if (tmp == null) {
+      this.defaultValue = "";
+    } else {
+      this.defaultValue = tmp;
+    }
+  }
+
+
+  /**
+   *  Sets the Multiple attribute of the HtmlSelect object
+   *
+   *@param  multiple  The new multiple value
+   *@since
+   */
+  public void setMultiple(boolean multiple) {
+    this.multiple = multiple;
+  }
+
+
+  /**
+   *  Set the default value for the HTML Select, by value name
+   *
+   *@param  tmp  The new DefaultValue value
+   *@since       1.0
+   */
+  public void setDefaultValue(int tmp) {
+    this.defaultValue = "" + tmp;
+  }
+
+
+  /**
+   *  Set the default value for the HTML Select, by key name
+   *
+   *@param  tmp  The new DefaultKey value
+   *@since       1.0
+   */
+  public void setDefaultKey(String tmp) {
+    if (!tmp.equals(defaultKey)) {
       built = false;
     }
     if (defaultKey != null) {
@@ -249,115 +252,157 @@ public class HtmlSelect extends ArrayList {
 		for (int i = 0; i < timeZones.length; i++) {
 			TimeZone tz = TimeZone.getTimeZone(timeZones[i]);
       int rawOffset = tz.getRawOffset();
-      double gmt = (rawOffset/1000/60/60);
-      int gmtInt = (rawOffset/1000/60/60);
+      double gmt = (rawOffset / 1000 / 60 / 60);
+      int gmtInt = (rawOffset / 1000 / 60 / 60);
 
-      if (gmt != Math.round(gmt)) System.out.println("HtmlSelect-> GMT Offset: " + gmt);      
+      if (gmt != Math.round(gmt)) {
+        System.out.println("HtmlSelect-> GMT Offset: " + gmt);
+      }
       int fraction = 0;
       if (gmt != gmtInt) {
-        fraction = (int)((Math.abs(gmt) - Math.abs(gmtInt))*60);
+        fraction = (int) ((Math.abs(gmt) - Math.abs(gmtInt)) * 60);
       }
-      
+
       String gmtId = tz.getID();
-      String gmtString = "(GMT" + (gmtInt < 0?"-":"+") + (Math.abs(gmtInt) > 9?"":"0") + Math.abs(gmtInt) + ":" + (fraction != 0?"" + fraction:"00") + ") ";
+      String gmtString = "(GMT" + (gmtInt < 0 ? "-" : "+") + (Math.abs(gmtInt) > 9 ? "" : "0") + Math.abs(gmtInt) + ":" + (fraction != 0 ? "" + fraction : "00") + ") ";
       String timeZone = gmtString + tz.getDisplayName();
       if (!tz.getDisplayName().startsWith("GMT")) {
         this.addItem(gmtId, timeZone + " (" + gmtId + ")");
-        
-        /* Iterator select = this.iterator();
-        boolean matched = false;
-        while (select.hasNext()) {
-          String tmp = (String)select.next();
-          if (tmp.indexOf(timeZone) > -1) {
-            matched = true;
-            break;
-          }
-        }
-        if (!matched) {
-          //&& !this.contains(gmtId + "|" + timeZone))
-          this.addItem(gmtId, timeZone);
-        } else {
-          if (System.getProperty("DEBUG") != null) System.out.println("HtmlSelect-> TimeZone: " + gmtId + " | " + timeZone);
-        } */ 
-      } 
-		}
-	}
-	
-	/**
-	 *  Sets the TypeMinutesQuarterly attribute of the HtmlSelect object
-	 *
-	 *@since    1.0
-	 */
-	public void setTypeMinutesQuarterly() {
-		this.addItem("00");
-		this.addItem("15");
-		this.addItem("30");
-		this.addItem("45");
-	}
+
+        /*
+         *  Iterator select = this.iterator();
+         *  boolean matched = false;
+         *  while (select.hasNext()) {
+         *  String tmp = (String)select.next();
+         *  if (tmp.indexOf(timeZone) > -1) {
+         *  matched = true;
+         *  break;
+         *  }
+         *  }
+         *  if (!matched) {
+         *  /&& !this.contains(gmtId + "|" + timeZone))
+         *  this.addItem(gmtId, timeZone);
+         *  } else {
+         *  if (System.getProperty("DEBUG") != null) System.out.println("HtmlSelect-> TimeZone: " + gmtId + " | " + timeZone);
+         *  }
+         */
+      }
+    }
+  }
 
 
-	/**
-	 *  Sets the TypeAMPM attribute of the HtmlSelect object
-	 *
-	 *@since    1.0
-	 */
-	public void setTypeAMPM() {
-		this.addItem("AM");
-		this.addItem("PM");
-	}
-	
-	public void setTypeUSMonths() {
-		this.addItem(1, "January");
-		this.addItem(2, "February");
-		this.addItem(3, "March");
-		this.addItem(4, "April");
-		this.addItem(5, "May");
-		this.addItem(6, "June");
-		this.addItem(7, "July");
-		this.addItem(8, "August");
-		this.addItem(9, "September");
-		this.addItem(10, "October");
-		this.addItem(11, "November");
-		this.addItem(12, "December");
-	}
-	
-	public void setTypeYears(int bottomLimitYear) {
-		java.util.Date d = new java.util.Date();
-		java.util.Calendar iteratorDate = java.util.Calendar.getInstance();
-		
-		int counter = iteratorDate.get(java.util.Calendar.YEAR);
-		
-		while (counter >= bottomLimitYear) {
-			this.addItem("" + counter);
-			counter--;
-		}
-		
-		this.setDefaultValue("" + iteratorDate.get(java.util.Calendar.YEAR));
-	}
-	
-	/**
-	 *  Sets the JsEvent attribute of the HtmlSelect object
-	 *
-	 *@param  tmp  The new JsEvent value
-	 *@since       1.7
-	 */
-	public void setJsEvent(String tmp) {
-		this.jsEvent = tmp;
-	}
+  /**
+   *  Sets the TypeMinutesQuarterly attribute of the HtmlSelect object
+   *
+   *@since    1.0
+   */
+  public void setTypeMinutesQuarterly() {
+    this.addItem("00");
+    this.addItem("15");
+    this.addItem("30");
+    this.addItem("45");
+  }
 
 
-	/**
-	 *  Gets the Multiple attribute of the HtmlSelect object
-	 *
-	 *@return    The Mutiple value
-	 *@since
-	 */
-	public boolean getMultiple() {
-		return multiple;
-	}
+  /**
+   *  Sets the TypeAMPM attribute of the HtmlSelect object
+   *
+   *@since    1.0
+   */
+  public void setTypeAMPM() {
+    this.addItem("AM");
+    this.addItem("PM");
+  }
 
 
-    /**
+  /**
+   *  Sets the typeUSMonths attribute of the HtmlSelect object
+   */
+  public void setTypeUSMonths() {
+    this.addItem(1, "January");
+    this.addItem(2, "February");
+    this.addItem(3, "March");
+    this.addItem(4, "April");
+    this.addItem(5, "May");
+    this.addItem(6, "June");
+    this.addItem(7, "July");
+    this.addItem(8, "August");
+    this.addItem(9, "September");
+    this.addItem(10, "October");
+    this.addItem(11, "November");
+    this.addItem(12, "December");
+  }
+
+
+  /**
+   *  Sets the typeYears attribute of the HtmlSelect object
+   *
+   *@param  bottomLimitYear  The new typeYears value
+   */
+  public void setTypeYears(int bottomLimitYear) {
+    java.util.Date d = new java.util.Date();
+    java.util.Calendar iteratorDate = java.util.Calendar.getInstance();
+    int counter = iteratorDate.get(java.util.Calendar.YEAR);
+    while (counter >= bottomLimitYear) {
+      this.addItem("" + counter);
+      counter--;
+    }
+    this.setDefaultValue("" + iteratorDate.get(java.util.Calendar.YEAR));
+  }
+
+
+  /**
+   *  Sets the JsEvent attribute of the HtmlSelect object
+   *
+   *@param  tmp  The new JsEvent value
+   *@since       1.7
+   */
+  public void setJsEvent(String tmp) {
+    this.jsEvent = tmp;
+  }
+
+
+  /**
+   *  Sets the attribute attribute of the HtmlSelect object
+   *
+   *@param  attrName   The new attribute value
+   *@param  attrValue  The new attribute value
+   */
+  public void addAttribute(String attrName, String attrValue) {
+    attributeList.put(attrName, attrValue);
+  }
+
+
+  /**
+   *  Gets the Multiple attribute of the HtmlSelect object
+   *
+   *@return    The Mutiple value
+   *@since
+   */
+  public boolean getMultiple() {
+    return multiple;
+  }
+
+
+  /**
+   *  Gets the attributeList attribute of the HtmlSelect object
+   *
+   *@return    The attributeList value
+   */
+  public String getAttributeList() {
+    StringBuffer tmpList = new StringBuffer();
+    Set s = attributeList.keySet();
+    Iterator i = s.iterator();
+    tmpList.append(" ");
+    while (i.hasNext()) {
+      Object name = i.next();
+      tmpList.append(name.toString() + "=\"" + attributeList.get(name).toString() + "\" ");
+    }
+    return tmpList.toString();
+  }
+
+
+  /**
    *  Returns the HTML list box with the specified name, must call build() first
    *
    *@param  thisSelectName  Description of Parameter
@@ -424,7 +469,7 @@ public class HtmlSelect extends ArrayList {
     }
     StringBuffer outputHtml = new StringBuffer();
     if (!checkboxOutput) {
-      outputHtml.append("<select size='" + this.selectSize + "' name='" + this.selectName + "'" + (jsEvent != null?" " + this.jsEvent:"") + (idName != null?" " + "id='" + this.idName + "' ":"")  + (multiple != false?" multiple ":"") + ">");
+      outputHtml.append("<select size='" + this.selectSize + "' name='" + this.selectName + "'" + (jsEvent != null?" " + this.jsEvent:"") + (idName != null?" " + "id='" + this.idName + "' ":"")  + (multiple != false?" multiple ":"") + this.getAttributeList() + ">");
     }
 
     //Process the rows
@@ -459,9 +504,18 @@ public class HtmlSelect extends ArrayList {
     return this.getHtml();
   }
 
+
+  /**
+   *  Adds a feature to the Item attribute of the HtmlSelect object
+   *
+   *@param  tmp1      The feature to be added to the Item attribute
+   *@param  tmp2      The feature to be added to the Item attribute
+   *@param  position  The feature to be added to the Item attribute
+   */
   protected void addItem(String tmp1, String tmp2, int position) {
     this.add(position, tmp1 + "|" + tmp2);
   }
+
 
   /**
    *  Add a string to the HTML select, supplying two strings, the first String
@@ -499,7 +553,15 @@ public class HtmlSelect extends ArrayList {
   public void addItem(int tmp1, String tmp2) {
     this.add(tmp1 + "|" + tmp2);
   }
-  
+
+
+  /**
+   *  Adds a feature to the Item attribute of the HtmlSelect object
+   *
+   *@param  tmp1      The feature to be added to the Item attribute
+   *@param  tmp2      The feature to be added to the Item attribute
+   *@param  position  The feature to be added to the Item attribute
+   */
   public void addItem(int tmp1, String tmp2, int position) {
     this.add(position, tmp1 + "|" + tmp2);
   }
@@ -526,6 +588,7 @@ public class HtmlSelect extends ArrayList {
       addItem(tmp1, tmp2);
     }
   }
+
 
   /**
    *  Builds the HTML based on the items that were added to the rowList, and
@@ -560,27 +623,27 @@ public class HtmlSelect extends ArrayList {
         }
       }
     }
-    
+
     //Process a Vector
     for (int i = 0; i < this.size(); i++) {
       ++processedRowCount;
-      StringTokenizer values = new StringTokenizer((String)this.get(i), "|");
+      StringTokenizer values = new StringTokenizer((String) this.get(i), "|");
       String tmp1 = values.nextToken();
       String tmp2 = values.nextToken();
       while (values.hasMoreTokens()) {
         tmp2 += "|" + values.nextToken();
       }
-      
+
       String optionChecked = "";
       String optionSelected = "";
-      
-      if ( multipleSelects != null && multipleSelects.containsKey( Integer.parseInt(tmp1) ) ) { 
-		optionSelected = "selected ";
-		optionChecked = " checked";
-      } else if ( multipleSelects == null && ((tmp2.equals(this.defaultValue)) ||
-           (tmp1.equals(this.defaultValue)) ||
+
+      if (multipleSelects != null && multipleSelects.containsKey(Integer.parseInt(tmp1))) {
+        optionSelected = "selected ";
+        optionChecked = " checked";
+      } else if (multipleSelects == null && ((tmp2.equals(this.defaultValue)) ||
+          (tmp1.equals(this.defaultValue)) ||
           (rowSelect == processedRowCount) ||
-          (tmp1.equals(this.defaultKey)) )) {
+          (tmp1.equals(this.defaultKey)))) {
         optionSelected = "selected ";
         optionChecked = " checked";
       }

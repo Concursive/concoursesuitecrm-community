@@ -11,6 +11,13 @@ import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author     akhi_m
+ *@created    September 9, 2002
+ *@version    $Id$
+ */
 public final class ExternalContactsCalls extends CFSModule {
 
   /**
@@ -21,11 +28,11 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandView(ActionContext context) {
-	
-	if (!(hasPermission(context, "contacts-external_contacts-calls-view"))) {
-	    return ("PermissionError");
-    	}
-	  
+
+    if (!(hasPermission(context, "contacts-external_contacts-calls-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
     String contactId = context.getRequest().getParameter("contactId");
@@ -45,10 +52,10 @@ public final class ExternalContactsCalls extends CFSModule {
       callList.setPagedListInfo(callListInfo);
       callList.setContactId(contactId);
       callList.buildList(db);
-      
+
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
-      
+
       LookupList callTypeList = new LookupList(db, "lookup_call_types");
       callTypeList.addItem(0, "--None--");
       context.getRequest().setAttribute("CallTypeList", callTypeList);
@@ -76,22 +83,25 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
-	
-    	if (!(hasPermission(context, "contacts-external_contacts-calls-add"))) {
-	    return ("PermissionError");
-    	}
-	
-	  
+
+    if (!(hasPermission(context, "contacts-external_contacts-calls-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     boolean recordInserted = false;
+/* <<<<<<< ExternalContactsCalls.java
     
+=======
+
+    String contactId = context.getRequest().getParameter("contactId");
+>>>>>>> 1.9.2.1 */
     Contact thisContact = null;
     //Call thisCall = (Call)context.getRequest().getAttribute("CallDetails");
-    
     Call thisCall = (Call) context.getFormBean();
     thisCall.setEnteredBy(getUserId(context));
     thisCall.setModifiedBy(getUserId(context));
-    
+
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -114,7 +124,8 @@ public final class ExternalContactsCalls extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
   /**
    *  Description of the Method
    *
@@ -123,14 +134,14 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandDetails(ActionContext context) {
-	  
-	if (!(hasPermission(context, "contacts-external_contacts-calls-view"))) {
-	    return ("PermissionError");
-    	}
-	  
+
+    if (!(hasPermission(context, "contacts-external_contacts-calls-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     addModuleBean(context, "External Contacts", "Calls");
-    
+
     String callId = context.getRequest().getParameter("id");
     String contactId = context.getRequest().getParameter("contactId");
 
@@ -167,15 +178,15 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
-	  
-    	if (!(hasPermission(context, "contacts-external_contacts-calls-delete"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "contacts-external_contacts-calls-delete"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
-    String contactId = context.getRequest().getParameter("contactId");     
+    String contactId = context.getRequest().getParameter("contactId");
     Call thisCall = null;
 
     Connection db = null;
@@ -202,8 +213,9 @@ public final class ExternalContactsCalls extends CFSModule {
       return ("SystemError");
     }
   }
-  
-   /**
+
+
+  /**
    *  Description of the Method
    *
    *@param  context  Description of Parameter
@@ -211,17 +223,16 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandAdd(ActionContext context) {
-	  
-	if (!(hasPermission(context, "contacts-external_contacts-calls-add"))) {
-	    return ("PermissionError");
-    	}
-	
-	
+
+    if (!(hasPermission(context, "contacts-external_contacts-calls-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
     String contactId = context.getRequest().getParameter("contactId");
     Contact thisContact = null;
-    
+
     Connection db = null;
     Statement st = null;
     ResultSet rs = null;
@@ -230,7 +241,7 @@ public final class ExternalContactsCalls extends CFSModule {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
-      
+
       LookupList callTypeList = new LookupList(db, "lookup_call_types");
       callTypeList.addItem(0, "--None--");
       context.getRequest().setAttribute("CallTypeList", callTypeList);
@@ -251,16 +262,21 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandModify(ActionContext context) {
-	  
-	if (!(hasPermission(context, "contacts-external_contacts-calls-edit"))) {
-	    return ("PermissionError");
-    	}
-	
-	
+
+    if (!(hasPermission(context, "contacts-external_contacts-calls-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     addModuleBean(context, "External Contacts", "Calls");
-    
+
     String contactId = context.getRequest().getParameter("contactId");
     Contact thisContact = null;
 
@@ -274,10 +290,10 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       thisCall = new Call(db, "" + callId);
-      
+
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
-      
+
       LookupList callTypeList = new LookupList(db, "lookup_call_types");
       callTypeList.addItem(0, "--None--");
       context.getRequest().setAttribute("CallTypeList", callTypeList);
@@ -289,12 +305,17 @@ public final class ExternalContactsCalls extends CFSModule {
 
     if (errorMessage == null) {
       context.getRequest().setAttribute("CallDetails", thisCall);
-      return ("ModifyOK");
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("ModifyPopupOK");
+      } else {
+        return ("ModifyOK");
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
   }
+
 
   /**
    *  Description of the Method
@@ -304,15 +325,15 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
-	  
-	if (!(hasPermission(context, "contacts-external_contacts-calls-edit"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "contacts-external_contacts-calls-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
-    Call thisCall = (Call)context.getFormBean();
-    
+    Call thisCall = (Call) context.getFormBean();
+
     String contactId = context.getRequest().getParameter("contactId");
     Contact thisContact = null;
 
@@ -326,7 +347,7 @@ public final class ExternalContactsCalls extends CFSModule {
       if (resultCount == -1) {
         thisContact = new Contact(db, contactId);
         context.getRequest().setAttribute("ContactDetails", thisContact);
-        
+
         LookupList callTypeList = new LookupList(db, "lookup_call_types");
         callTypeList.addItem(0, "--None--");
         context.getRequest().setAttribute("CallTypeList", callTypeList);
@@ -338,17 +359,19 @@ public final class ExternalContactsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (resultCount == -1) {
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("PopupCloseOK");
+      } else if (resultCount == -1) {
         processErrors(context, thisCall.getErrors());
         context.getRequest().setAttribute("CallDetails", thisCall);
         return ("ModifyOK");
       } else if (resultCount == 1) {
-              context.getRequest().removeAttribute("CallDetails");
+        context.getRequest().removeAttribute("CallDetails");
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-		      return (executeCommandView(context));
-	      } else {
-		      return ("UpdateOK");
-	      }
+          return (executeCommandView(context));
+        } else {
+          return ("UpdateOK");
+        }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");

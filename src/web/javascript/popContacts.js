@@ -105,7 +105,6 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
   
   
   function SetChecked(val,chkName,thisForm,browser) {
-      if((val==0 && ValidateForm(thisForm,chkName)) || val==1){
         var frm = document.forms[thisForm];
         var len = document.forms[thisForm].elements.length;
         var i=0;
@@ -115,7 +114,6 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
                     highlight(frm.elements[i],browser);
               }
           }
-       }
   }
   
   

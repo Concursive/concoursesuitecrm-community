@@ -45,27 +45,34 @@
     }
 </script>
 
-<form name="addCall" action="/ExternalContactsCalls.do?command=Update&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<form name="addCall" action="/ExternalContactsCalls.do?command=Update&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
 
+<%boolean popUp = false;
+  if(request.getParameter("popup")!=null){
+    popUp = true;
+  }%>
+  
+  
+<dhv:evaluate exp="<%= !popUp %>">
 <a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
 <a href="/ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="/ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 <a href="/ExternalContactsCalls.do?command=View&contactId=<%=ContactDetails.getId()%>">Calls</a> >
-
-<% if (request.getParameter("return") == null) { %>
+ <%if (request.getParameter("return") == null) { %>
 	<a href="/ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>">Call Details</a> >
 <%}%>
 Modify Call<br>
 <hr color="#BFBFBB" noshade>
-
-
 <a href="/ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>">Back to Call List</a><br>&nbsp;
+</dhv:evaluate>
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
       <strong><%= toHtml(ContactDetails.getNameFull()) %></strong>
     </td>
   </tr>
+  <% if (request.getParameter("popup") == null) {%>
   <tr class="containerMenu">
     <td>
       <% String param1 = "id=" + ContactDetails.getId(); %>      
@@ -73,6 +80,7 @@ Modify Call<br>
     </td>
   </tr>
   <tr>
+  <%}%>
     <td class="containerBack">
 <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
 
@@ -89,7 +97,13 @@ Modify Call<br>
 <%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContactsCalls.do?command=Details&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
+
 <input type="reset" value="Reset">
+
+<dhv:evaluate exp="<%= popUp %>">
+  <input type="button" value="Cancel" onclick="javascript:window.close();"> 
+</dhv:evaluate>
+
 <br><%= showAttribute(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -167,6 +181,9 @@ Modify Call<br>
 <%}%>
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
+<dhv:evaluate exp="<%= popUp %>">
+  <input type="button" value="Cancel" onclick="javascript:window.close();"> 
+</dhv:evaluate>
 </td>
 </tr>
 </table>

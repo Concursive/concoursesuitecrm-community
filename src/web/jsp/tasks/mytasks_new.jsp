@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*"%>
 <%@ include file="initPage.jsp" %>
 <jsp:useBean id="Task" class="com.darkhorseventures.cfsbase.Task" scope="request"/>
@@ -7,11 +8,20 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/tasks.js"></script>
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <body onLoad="javascript:document.forms[0].description.focus();">
-<form name="addTask" action="/MyTasks.do?command=Insert&id=<%=Task.getId()%>&auto-populate=true" method="post" onSubmit="return validateTask();">
+<%boolean popUp = false;
+  if(request.getParameter("popup")!=null){
+    popUp = true;
+  }%>
+<dhv:evaluate exp="<%= !popUp %>">
+<a href="MyCFS.do?command=Home">My Home Page</a> > <a href="MyTasks.do?command=ListTasks">My Tasks</a> >
+<%= Task.getId()==-1?"Add":"Update" %> a Task <br>
+  <hr color="#BFBFBB" noshade>
+</dhv:evaluate>
+<form name="addTask" action="MyTasks.do?command=<%=Task.getId()!=-1?"Update":"Insert"%>&id=<%=Task.getId()%>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" method="post" onSubmit="return validateTask();">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
-      <strong>New CFS Task</strong>
+      <strong>CFS Task</strong>
     </td>
   </tr>
   
@@ -21,8 +31,8 @@
   </td>
   
   <td>
-      <input type=text name="description" value="<%=toHtmlValue(Task.getDescription())%>" size=50>
-      <font color="red">*</font>
+      <input type=text name="description" value="<%=toHtmlValue(Task.getDescription()!=null?Task.getDescription():"")%>" size=50>
+      <font color="red">*</font>`
   </td>
   
   </tr>
@@ -89,7 +99,7 @@
       <table>
         <tr>
           <td>
-            <div id="changeowner"><%=Task.getOwnerName().equals("")?toHtml(User.getNameLast())+" "+ toHtml(User.getNameFirst()):""%><%=Task.getOwnerName()%></div>
+            <div id="changeowner"><%=Task.getOwnerName()==null?toHtml(User.getNameLast())+" "+ toHtml(User.getNameFirst()):""%><%=Task.getOwnerName()!=null?Task.getOwnerName():""%></div>
           </td>
           <td>
             <input type="hidden" name="owner" id="ownerid" value="<%=(Task.getOwner() == -1)?User.getUserRecord().getContact().getId():Task.getOwner()%>"><a href="javascript:popContactsListSingle('ownerid','changeowner');">Change Owner</a>
@@ -110,8 +120,8 @@
   
   <tr class="containerBody">
     <td nowrap class="formLabel">Notes</td>
-    <td width="100%">
-      <textarea name="notes" style="width:50%;" rows=5 value="body"><%=Task.getNotes()%></textarea>
+    <td width=100%>
+      <textarea name="notes" style="width:50%;" rows=5 value="body"><%=Task.getNotes()!=null?Task.getNotes():""%></textarea>
     </td>
   </tr>
 
@@ -123,7 +133,7 @@
       <table>
         <tr>
           <td>
-            <div id="changecontact"><%=Task.getContactName().equals("")?"None":Task.getContactName()%></div>
+            <div id="changecontact"><%=Task.getContactName()!=null?Task.getContactName():"None"%></div>
           </td>
           <td>
             <input type="hidden" name="contact" id="contactid" value="<%=(Task.getContactId() == -1)?-1:Task.getContactId()%>"><a href="javascript:popContactsListSingle('contactid','changecontact');">Change Contact</a>
@@ -137,8 +147,9 @@
   </tr>
 </table>
 <br>
-<input type="submit" value="<%= Task.getId()==-1?"Insert":"Update" %>">
-<input type="button" value="Cancel" onClick="javascript:window.location.href='MyTasks.do?command=ListTasks';">
+<input type="submit" value="<%= Task.getId()==-1?"Save":"Update" %>">
+<input type="hidden" name="return" value="<%= request.getParameter("return") %>">
+<input type="button" value="Cancel" onClick="<%=popUp?"javascript:window.close();":"javascript:window.location.href='MyTasks.do?command=ListTasks';"%>">
 </form>
 </body>
 

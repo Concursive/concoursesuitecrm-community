@@ -8,7 +8,8 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/images.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/tasks.js"></SCRIPT>
 <body onLoad="javascript:document.forms['addTask'].description.focus();">
-
+<a href="MyCFS.do?command=Home">My Home Page</a> > View Tasks<br>
+<hr color="#BFBFBB" noshade>
 <form name="addTask" action="/MyTasks.do?command=Insert&auto-populate=true" method="post">
  <table cellpadding="4" cellspacing="0" border="1" width="45%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -143,7 +144,7 @@
       <%}%>
     </td>
     <td>
-        <a href="MyTasks.do?command=New&id=<%=thisTask.getId()%>"><%= thisTask.getDescription() %></a>&nbsp; <%=(thisTask.getContactId()==-1)?"":"[ <a href=\"ExternalContacts.do?command=ContactDetails&id="+ thisTask.getContact().getId() +"\" title=\""+ thisTask.getContact().getNameLastFirst() +"\"><font color=\"green\">C</font></a> ]"%> <%=(thisTask.getTicketId()==-1)?"":"[ <a href=\"TroubleTickets.do?command=Details&id="+ ticketId +"\"><font color=\"orange\">T</font></a> ]"%><br>
+        <a href="MyTasks.do?command=Modify&id=<%=thisTask.getId()%>"><%= thisTask.getDescription()!=null?thisTask.getDescription():"" %></a>&nbsp; <%=(thisTask.getContactId()==-1)?"":"[ <a href=\"ExternalContacts.do?command=ContactDetails&id="+ thisTask.getContact().getId() +"\" title=\""+ thisTask.getContact().getNameLastFirst() +"\"><font color=\"green\">C</font></a> ]"%> <%=(thisTask.getTicketId()==-1)?"":"[ <a href=\"TroubleTickets.do?command=Details&id="+ ticketId +"\"><font color=\"orange\">T</font></a> ]"%><br>
     </td>
     </tr>
       <%if(thisTask.getHasLinks()){%>

@@ -70,7 +70,7 @@ function switchClass(thisId){
           else{
           list(i).style.visibility = "hidden";
           }
-          switchTrStyle(list(i),'ie');
+          switchTrStyle(list(i),'ie','TR');
           }
         }
       }
@@ -82,19 +82,19 @@ function switchClass(thisId){
         else{
           document.getElementById(thisId).setAttribute('style','visibility: hidden;');
         }
-        switchTrStyle(document.getElementById(thisId),'ns');
+        switchTrStyle(document.getElementById(thisId),'ns','TR');
       }
     }
     
     
-    function switchTrStyle(E,browser){
+    function switchTrStyle(E,browser,switchTag){
       if (browser=="ie"){
-        while (E.tagName!="TR"){
+        while (E.tagName != switchTag){
           E=E.parentElement;
         }
       }
       else{
-        while (E.tagName!="TR"){
+        while (E.tagName != switchTag){
           E=E.parentNode;
         }
       }
