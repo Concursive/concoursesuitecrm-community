@@ -71,7 +71,7 @@ Response
         <a href="CampaignManager.do?command=ResponseDetails&id=<%= Campaign.getId() %>&contactId=<%= thisResponse.getContactId() %>&responseId=<%= thisResponse.getId() %>"><%= toHtml(thisResponse.getContact().getNameLastFirst()) %></a>
       </td>
       <td nowrap>
-        <zeroio:tz timestamp="<%= thisResponse.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+        <zeroio:tz timestamp="<%= thisResponse.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
       </td>
       <td>
         <%= toHtml(thisResponse.getIpAddress()) %>&nbsp;

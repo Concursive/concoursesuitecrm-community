@@ -93,11 +93,11 @@ Maintenance Notes
     </td>
     <td width="20%" nowrap>
       <b>Start Date:</b>
-      <zeroio:tz timestamp="<%= ticketDetails.getContractStartDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= ticketDetails.getContractStartDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
     <td nowrap>
       <b>End Date:</b>
-      <zeroio:tz timestamp="<%= ticketDetails.getContractEndDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= ticketDetails.getContractEndDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
 </table>
@@ -145,7 +145,7 @@ Maintenance Notes
       </td>
 		<td width="15%" nowrap>
       <a href="AccountTicketMaintenanceNotes.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%= thisSun.getId()%>">
-      <zeroio:tz timestamp="<%= thisSun.getEntered() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/></a>
+      <zeroio:tz timestamp="<%= thisSun.getEntered() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></a>
 		</td>
 		<td width="15%" >
       <%= toHtml(thisSun.getDescriptionOfService()) %>

@@ -78,7 +78,7 @@ Survey Details
         Date
       </td>
       <td>
-        <zeroio:tz timestamp="<%= Survey.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+        <zeroio:tz timestamp="<%= Survey.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
       </td>
     </tr>
     <tr class="containerBody">
@@ -94,7 +94,7 @@ Survey Details
         Date
       </td>
       <td>
-        <zeroio:tz timestamp="<%= Survey.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+        <zeroio:tz timestamp="<%= Survey.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
       </td>
     </tr>
   </table>

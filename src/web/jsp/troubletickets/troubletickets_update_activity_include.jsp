@@ -291,7 +291,7 @@
       Alert Date
     </td>
     <td>
-      <zeroio:dateSelect form="details" field="alertDate" timestamp="<%=activityDetails.getAlertDate()%>" timeZone="<%=activityDetails.getAlertDateTimeZone()%>" showTimeZone="yes" />
+      <zeroio:dateSelect form="details" field="alertDate" timestamp="<%=activityDetails.getAlertDate()%>" timeZone="<%=activityDetails.getAlertDateTimeZone()%>" showTimeZone="true" />
       <%= showAttribute(request, "alertDateError") %><%= showWarningAttribute(request, "alertDateWarning") %>
     </td>
   </tr>

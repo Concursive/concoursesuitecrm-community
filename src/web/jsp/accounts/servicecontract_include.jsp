@@ -118,7 +118,7 @@
       Initial Contract Date
     </td>
     <td>
-      <zeroio:dateSelect form="addServiceContract" field="initialStartDate" timestamp="<%= serviceContract.getInitialStartDate() %>" timeZone="<%=serviceContract.getInitialStartDateTimeZone()%>" showTimeZone="yes" />
+      <zeroio:dateSelect form="addServiceContract" field="initialStartDate" timestamp="<%= serviceContract.getInitialStartDate() %>" timeZone="<%=serviceContract.getInitialStartDateTimeZone()%>" showTimeZone="true" />
       <font color="red">*</font>
       <%= showAttribute(request, "initialStartDateError") %>
     </td>
@@ -128,7 +128,7 @@
       Current Contract Date
     </td>
     <td>
-      <zeroio:dateSelect form="addServiceContract" field="currentStartDate" timestamp="<%= serviceContract.getCurrentStartDate() %>" timeZone="<%=serviceContract.getCurrentStartDateTimeZone()%>" showTimeZone="yes" />
+      <zeroio:dateSelect form="addServiceContract" field="currentStartDate" timestamp="<%= serviceContract.getCurrentStartDate() %>" timeZone="<%=serviceContract.getCurrentStartDateTimeZone()%>" showTimeZone="true" />
       <%= showAttribute(request, "currentStartDateError") %>
     </td>
   </tr>
@@ -137,7 +137,7 @@
       Current End Date
     </td>
     <td>
-      <zeroio:dateSelect form="addServiceContract" field="currentEndDate" timestamp="<%= serviceContract.getCurrentEndDate() %>" timeZone="<%=serviceContract.getCurrentEndDateTimeZone()%>" showTimeZone="yes" />
+      <zeroio:dateSelect form="addServiceContract" field="currentEndDate" timestamp="<%= serviceContract.getCurrentEndDate() %>" timeZone="<%=serviceContract.getCurrentEndDateTimeZone()%>" showTimeZone="true" />
       <%= showAttribute(request, "currentEndDateError") %>
     </td>
   </tr>

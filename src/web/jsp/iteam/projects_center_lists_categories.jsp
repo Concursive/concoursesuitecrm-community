@@ -95,7 +95,7 @@
     </td>
     <td class="row<%= rowid %>" valign="top" align="center" nowrap><%= thisCategory.getTaskCount() %></td>
     <td class="row<%= rowid %>" valign="top" align="center" nowrap>
-      <zeroio:tz timestamp="<%= thisCategory.getLastTaskEntered() %>" default="--" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= thisCategory.getLastTaskEntered() %>" default="--" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
 <%    

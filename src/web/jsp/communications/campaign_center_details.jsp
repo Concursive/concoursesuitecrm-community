@@ -128,10 +128,10 @@ Campaign Details
                 <td style="text-align: center;">
                   <% if(Campaign.hasDetails()){ %>
                     <font color='green'>Scheduled for 
-                    <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= Campaign.getActiveDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+                    <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= Campaign.getActiveDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
                     <% if (!User.getTimeZone().equals(Campaign.getActiveDateTimeZone())) { %>
                     <br />
-                    <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+                    <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
                     <% } %>
                     <%= toHtml(Campaign.getDeliveryName()) %></font><br>
                   <% }else{ %>
@@ -206,7 +206,7 @@ Campaign Details
     </td>
     <td>
       <dhv:username id="<%= Campaign.getEnteredBy() %>" />
-      <zeroio:tz timestamp="<%= Campaign.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= Campaign.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -215,7 +215,7 @@ Campaign Details
     </td>
     <td>
       <dhv:username id="<%= Campaign.getModifiedBy() %>" />
-      <zeroio:tz timestamp="<%= Campaign.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= Campaign.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
 </table>

@@ -114,10 +114,10 @@
       Date Listed
     </td>
     <td>
-      <zeroio:tz timestamp="<%= asset.getDateListed() %>" dateOnly="true" timeZone="<%= asset.getDateListedTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= asset.getDateListed() %>" dateOnly="true" timeZone="<%= asset.getDateListedTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(asset.getDateListedTimeZone())){%>
       <br />
-      <zeroio:tz timestamp="<%= asset.getDateListed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= asset.getDateListed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
     </td>
   </tr>
@@ -265,10 +265,10 @@
       Expiration Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= asset.getExpirationDate() %>" dateOnly="true" timeZone="<%= asset.getExpirationDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= asset.getExpirationDate() %>" dateOnly="true" timeZone="<%= asset.getExpirationDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(asset.getExpirationDateTimeZone())){%>
       <br />
-      <zeroio:tz timestamp="<%= asset.getExpirationDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= asset.getExpirationDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
     </td>
   </tr>
@@ -301,10 +301,10 @@
       Purchase Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%=asset.getPurchaseDate()%>" dateOnly="true" timeZone="<%= asset.getPurchaseDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=asset.getPurchaseDate()%>" dateOnly="true" timeZone="<%= asset.getPurchaseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(asset.getPurchaseDateTimeZone())){%>
       <br />
-      <zeroio:tz timestamp="<%= asset.getPurchaseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= asset.getPurchaseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
     </td>
   </tr>

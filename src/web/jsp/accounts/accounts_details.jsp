@@ -150,10 +150,10 @@
       Contract End Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= OrgDetails.getContractEndDate() %>" dateOnly="true" timeZone="<%= OrgDetails.getContractEndDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= OrgDetails.getContractEndDate() %>" dateOnly="true" timeZone="<%= OrgDetails.getContractEndDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(OrgDetails.getContractEndDateTimeZone())){%>
       <br />
-      <zeroio:tz timestamp="<%= OrgDetails.getContractEndDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= OrgDetails.getContractEndDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
     </td>
   </tr>
@@ -176,10 +176,10 @@
       Alert Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= OrgDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= OrgDetails.getAlertDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= OrgDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= OrgDetails.getAlertDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(OrgDetails.getAlertDateTimeZone())){%>
       <br />
-      <zeroio:tz timestamp="<%= OrgDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= OrgDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
     </td>
   </tr>
@@ -401,7 +401,7 @@
     </td>
     <td>
       <dhv:username id="<%= OrgDetails.getEnteredBy() %>" />
-      <zeroio:tz timestamp="<%= OrgDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+      <zeroio:tz timestamp="<%= OrgDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
   </tr>
   <tr class="containerBody">
@@ -410,7 +410,7 @@
     </td>
     <td>
       <dhv:username id="<%= OrgDetails.getModifiedBy() %>" />
-      <zeroio:tz timestamp="<%= OrgDetails.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+      <zeroio:tz timestamp="<%= OrgDetails.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
   </tr>
 </table>

@@ -102,7 +102,7 @@ File Attachments
               <%= thisFile.getRelativeSize() %> k&nbsp;
             </td>
             <td nowrap>
-              <zeroio:tz timestamp="<%= thisFile.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/><br />
+              <zeroio:tz timestamp="<%= thisFile.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/><br />
               <dhv:username id="<%= thisFile.getEnteredBy() %>"/>
             </td>
           </tr>

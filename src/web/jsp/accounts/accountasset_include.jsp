@@ -118,9 +118,9 @@
     </td>
     <td>
     <%if ((asset.getDateListed() == null) && (request.getAttribute("dateListedError") == null)){%>
-      <zeroio:dateSelect form="addAccountAsset" field="dateListed" timeZone="<%= asset.getDateListedTimeZone() %>" showTimeZone="yes" />
+      <zeroio:dateSelect form="addAccountAsset" field="dateListed" timeZone="<%= asset.getDateListedTimeZone() %>" showTimeZone="true" />
     <%}else{%>
-      <zeroio:dateSelect form="addAccountAsset" field="dateListed" timestamp="<%= asset.getDateListed() %>" timeZone="<%= asset.getDateListedTimeZone() %>" showTimeZone="yes" />
+      <zeroio:dateSelect form="addAccountAsset" field="dateListed" timestamp="<%= asset.getDateListed() %>" timeZone="<%= asset.getDateListedTimeZone() %>" showTimeZone="true" />
     <%}%>
       <%= showAttribute(request, "dateListedError") %>
       <font color="red">*</font>
@@ -274,7 +274,7 @@
       Expiration Date
     </td>
     <td>
-      <zeroio:dateSelect form="addAccountAsset" field="expirationDate" timestamp="<%= asset.getExpirationDate() %>" timeZone="<%= asset.getExpirationDateTimeZone() %>" showTimeZone="yes" />
+      <zeroio:dateSelect form="addAccountAsset" field="expirationDate" timestamp="<%= asset.getExpirationDate() %>" timeZone="<%= asset.getExpirationDateTimeZone() %>" showTimeZone="true" />
       <%= showAttribute(request, "expirationDateError") %>
     </td>
   </tr>
@@ -307,7 +307,7 @@
       Purchase Date
     </td>
     <td>
-      <zeroio:dateSelect form="addAccountAsset" field="purchaseDate" timestamp="<%= asset.getPurchaseDate() %>" timeZone="<%= asset.getPurchaseDateTimeZone() %>" showTimeZone="yes" />
+      <zeroio:dateSelect form="addAccountAsset" field="purchaseDate" timestamp="<%= asset.getPurchaseDate() %>" timeZone="<%= asset.getPurchaseDateTimeZone() %>" showTimeZone="true" />
       <%= showAttribute(request, "purchaseDateError") %>
     </td>
   </tr>

@@ -95,7 +95,7 @@
       <%= thisVersion.getVersion() %>&nbsp;
     </td>
     <td align="center" nowrap>
-      <zeroio:tz timestamp="<%= thisVersion.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+      <zeroio:tz timestamp="<%= thisVersion.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
     <td align="center" nowrap>
       <dhv:username id="<%= thisVersion.getEnteredBy() %>"/>

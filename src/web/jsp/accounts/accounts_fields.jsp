@@ -120,7 +120,7 @@ Folder Record Details
     </td>
     <td>
       <dhv:username id="<%= Record.getEnteredBy() %>" />
-      <zeroio:tz timestamp="<%= Record.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+      <zeroio:tz timestamp="<%= Record.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
   </tr>
   <tr class="containerBody">
@@ -129,7 +129,7 @@ Folder Record Details
     </td>
     <td>
       <dhv:username id="<%= Record.getModifiedBy() %>" />
-      <zeroio:tz timestamp="<%= Record.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+      <zeroio:tz timestamp="<%= Record.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
   </tr>
 </table>

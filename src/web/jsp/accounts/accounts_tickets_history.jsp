@@ -69,7 +69,7 @@ History
               <%= toHtml(thisEntry.getEnteredByName()) %>
             </td>
             <td nowrap valign="top">
-              <zeroio:tz timestamp="<%= thisEntry.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+              <zeroio:tz timestamp="<%= thisEntry.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
             </td>
             <td valign="top" width="100%">
               <%= toHtml(thisEntry.getEntryText()) %>

@@ -71,7 +71,7 @@
   	<td class="containerBack" width="100%">
       <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
         <font color="red"><dhv:label name="tickets.alert.closed">This ticket has been closed:</dhv:label>
-        <zeroio:tz timestamp="<%= TicketDetails.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+        <zeroio:tz timestamp="<%= TicketDetails.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
         </font><br />
       </dhv:evaluate>
 				<% if (TicketDetails.getClosed() != null) { %>

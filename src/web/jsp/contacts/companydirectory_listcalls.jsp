@@ -107,9 +107,9 @@ Activities
           </td>
           <td valign="top" nowrap>
             <% if(!User.getTimeZone().equals(thisCall.getAlertDateTimeZone())){%>
-            <zeroio:tz timestamp="<%= thisCall.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <zeroio:tz timestamp="<%= thisCall.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
             <% } else { %>
-            <zeroio:tz timestamp="<%= thisCall.getAlertDate() %>" dateOnly="true" timeZone="<%= thisCall.getAlertDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <zeroio:tz timestamp="<%= thisCall.getAlertDate() %>" dateOnly="true" timeZone="<%= thisCall.getAlertDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
             <% } %>
           </td>
           <td valign="top" nowrap>
@@ -208,7 +208,7 @@ Activities
             <dhv:username id="<%= thisCall.getEnteredBy() %>" firstInitialLast="true"/>
           </td>
           <td valign="top" nowrap>
-            <zeroio:tz timestamp="<%= thisCall.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+            <zeroio:tz timestamp="<%= thisCall.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
           </td>
         </tr>
         <dhv:evaluate if="<%= CompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>">

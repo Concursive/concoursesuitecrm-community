@@ -126,9 +126,9 @@ Opportunity Details
     </td>
     <td valign="top" align="center" nowrap>
       <% if(!User.getTimeZone().equals(thisComponent.getCloseDateTimeZone())){%>
-      <zeroio:tz timestamp="<%= thisComponent.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= thisComponent.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } else { %>
-      <zeroio:tz timestamp="<%= thisComponent.getCloseDate() %>" dateOnly="true" timeZone="<%= thisComponent.getCloseDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= thisComponent.getCloseDate() %>" dateOnly="true" timeZone="<%= thisComponent.getCloseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
     </td>
     <td valign="top" align="center" nowrap>

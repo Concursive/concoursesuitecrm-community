@@ -175,7 +175,7 @@
 		<td>
       <dhv:username id="<%= ticket.getEnteredBy() %>"/>
       -
-      <zeroio:tz timestamp="<%= ticket.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= ticket.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
 		</td>
   </tr>
   <tr class="containerBody">
@@ -185,7 +185,7 @@
 		<td>
       <dhv:username id="<%= ticket.getModifiedBy() %>"/>
       -
-      <zeroio:tz timestamp="<%= ticket.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= ticket.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
 		</td>
   </tr>
 <%--
@@ -219,7 +219,7 @@
 			<%}%>
 			<td nowrap valign="top" align="right">
         <dhv:username id="<%= thisEntry.getEnteredBy() %>"/>
-        <zeroio:tz timestamp="<%= thisEntry.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+        <zeroio:tz timestamp="<%= thisEntry.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
 			</td>
 			<td valign="top" width="100%">
         <%= toHtml(thisEntry.getEntryText()) %>

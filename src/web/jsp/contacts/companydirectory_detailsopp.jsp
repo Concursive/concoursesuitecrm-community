@@ -153,9 +153,9 @@ Opportunity Details
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <% if(!User.getTimeZone().equals(oppComponent.getCloseDateTimeZone())){%>
-      <zeroio:tz timestamp="<%= oppComponent.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= oppComponent.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } else { %>
-      <zeroio:tz timestamp="<%= oppComponent.getCloseDate() %>" dateOnly="true" timeZone="<%= oppComponent.getCloseDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= oppComponent.getCloseDate() %>" dateOnly="true" timeZone="<%= oppComponent.getCloseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">

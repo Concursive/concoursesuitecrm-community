@@ -111,7 +111,7 @@ Action Lists
       <%= thisList.getTotal() %>
     </td>
     <td nowrap align="center">
-      <zeroio:tz timestamp="<%= thisList.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+      <zeroio:tz timestamp="<%= thisList.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
   </tr>
 <%}

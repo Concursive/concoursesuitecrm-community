@@ -127,7 +127,7 @@
       <dhv:username id="<%= thisTask.getModifiedBy() %>"/>
     </td>
     <td align="center" valign="top" nowrap>
-      <zeroio:tz timestamp="<%= thisTask.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= thisTask.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
 <%    

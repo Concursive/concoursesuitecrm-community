@@ -169,7 +169,7 @@ Action Contacts
     <% } %>
     </td>
     <td nowrap align="center" valign="top">
-      <zeroio:tz timestamp="<%= thisContact.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+      <zeroio:tz timestamp="<%= thisContact.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
   </tr>
 <%}

@@ -142,7 +142,7 @@ public class CalendarHandler extends TagSupport {
    *@param  tmp  The new showTimeZone value
    */
   public void setShowTimeZone(String tmp) {
-    this.showTimeZone = "yes".equals(tmp);
+    this.showTimeZone = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -209,7 +209,6 @@ public class CalendarHandler extends TagSupport {
         String toWriteOut = "<input type=\"text\" name=\"" + field + "\" size=\"10\" value=\"" + dateString + "\" />" +
             "&nbsp;<a href=\"javascript:popCalendar('" + form + "','" + field + "','" + language + "','" + country + "');\">" +
             "<img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\"></a>";
-        
         if (showTimeZone){
           toWriteOut = toWriteOut + "&nbsp;" + HtmlSelectTimeZone.getSelect(field +"TimeZone", timeZone).getHtml();
         }

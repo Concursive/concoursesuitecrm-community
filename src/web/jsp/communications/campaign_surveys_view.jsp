@@ -101,7 +101,7 @@ Surveys
           <dhv:username id="<%= thisSurvey.getEnteredBy() %>"/>
         </td>
         <td class="row<%= rowid %>" nowrap>
-          <zeroio:tz timestamp="<%= thisSurvey.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+          <zeroio:tz timestamp="<%= thisSurvey.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
         </td>
       </tr>
 <%

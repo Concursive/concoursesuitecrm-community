@@ -214,13 +214,13 @@ Tasks
           </td>
           <td nowrap align="center" valign="top">
             <% if(!User.getTimeZone().equals(thisTask.getDueDateTimeZone())){%>
-            <zeroio:tz timestamp="<%= thisTask.getDueDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <zeroio:tz timestamp="<%= thisTask.getDueDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
             <% } else { %>
-            <zeroio:tz timestamp="<%= thisTask.getDueDate() %>" dateOnly="true" timeZone="<%= thisTask.getDueDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <zeroio:tz timestamp="<%= thisTask.getDueDate() %>" dateOnly="true" timeZone="<%= thisTask.getDueDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
             <% } %>
           </td>
             <td nowrap align="center" valign="top">
-              <zeroio:tz timestamp="<%= thisTask.getCompleteDate() %>" dateOnly="true" default="-NA-" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+              <zeroio:tz timestamp="<%= thisTask.getCompleteDate() %>" dateOnly="true" default="-NA-" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
             </td>
             <td nowrap align="center" valign="top">
               <%= thisTask.getAgeString() %>

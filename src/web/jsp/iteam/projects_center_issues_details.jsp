@@ -64,7 +64,7 @@
             By <dhv:username id="<%= Issue.getEnteredBy() %>"/>
             -
             Posted on
-            <zeroio:tz timestamp="<%= Issue.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+            <zeroio:tz timestamp="<%= Issue.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
             <dhv:evaluate if="<%= !(Issue.getModified().equals(Issue.getEntered())) %>">
             (edited)
             </dhv:evaluate>
@@ -122,7 +122,7 @@
           By <dhv:username id="<%= thisReply.getEnteredBy() %>"/>
           -
           Posted on
-          <zeroio:tz timestamp="<%= thisReply.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+          <zeroio:tz timestamp="<%= thisReply.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
           <dhv:evaluate if="<%= !(thisReply.getModified().equals(thisReply.getEntered())) %>">
           (edited)
           </dhv:evaluate>

@@ -186,7 +186,7 @@
       Est. Close Date
     </td>
     <td>
-      <zeroio:dateSelect form="opportunityForm" field="<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>" timestamp="<%= ComponentDetails.getCloseDate() %>" timeZone="<%= ComponentDetails.getCloseDateTimeZone() %>" showTimeZone="yes" />
+      <zeroio:dateSelect form="opportunityForm" field="<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>" timestamp="<%= ComponentDetails.getCloseDate() %>" timeZone="<%= ComponentDetails.getCloseDateTimeZone() %>" showTimeZone="true" />
       <font color="red">*</font> <%= showAttribute(request, "closeDateError") %>
     </td>
   </tr>
@@ -263,7 +263,7 @@
       Alert Date
     </td>
     <td>
-      <zeroio:dateSelect form="opportunityForm" field="<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>" timestamp="<%= ComponentDetails.getAlertDate() %>" timeZone="<%= ComponentDetails.getAlertDateTimeZone() %>" showTimeZone="yes" />
+      <zeroio:dateSelect form="opportunityForm" field="<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>" timestamp="<%= ComponentDetails.getAlertDate() %>" timeZone="<%= ComponentDetails.getAlertDateTimeZone() %>" showTimeZone="true" />
       <%= showAttribute(request, "alertDateError") %><%= showWarningAttribute(request, "alertDateWarning") %>
     </td>
   </tr>

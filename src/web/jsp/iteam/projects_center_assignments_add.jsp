@@ -196,7 +196,7 @@
     <tr class="containerBody">
       <td nowrap class="formLabel">Due Date</td>
       <td valign="top">
-        <zeroio:dateSelect form="inputForm" field="dueDate" timestamp="<%= Assignment.getDueDate() %>" timeZone="<%= Assignment.getDueDateTimeZone() %>" showTimeZone="yes" />
+        <zeroio:dateSelect form="inputForm" field="dueDate" timestamp="<%= Assignment.getDueDate() %>" timeZone="<%= Assignment.getDueDateTimeZone() %>" showTimeZone="true" />
       </td>
     </tr>
   </table>

@@ -110,7 +110,7 @@ for (int i = searchBeanInfo.getCurrentOffset() ; i < searchBeanInfo.getPageSize(
       </dhv:evaluate>
       <dhv:evaluate if="<%= modified != null %>">
       -
-      <zeroio:tz timestamp="<%= modified %>" dateOnly="true" dateFormat="<%= DateFormat.LONG %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= modified %>" dateOnly="true" dateFormat="<%= DateFormat.LONG %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
       </dhv:evaluate>
       <%--
       -

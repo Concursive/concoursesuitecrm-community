@@ -29,7 +29,7 @@
       Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= PreviousCallDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+      <zeroio:tz timestamp="<%= PreviousCallDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
   </tr>
   <tr class="containerBody">

@@ -84,13 +84,13 @@
         <dhv:permission name="accounts-accounts-tickets-view"><a href="AccountTickets.do?command=TicketDetails&id=<%=thisTicket.getId()%>"></dhv:permission><%=thisTicket.getPaddedId() %><dhv:permission name="accounts-accounts-tickets-view"></a></dhv:permission>
     </td>
     <td width="12%" >
-      <zeroio:tz timestamp="<%= thisTicket.getEntered() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= thisTicket.getEntered() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
 		</td>
     <td width="32%" >
       <%=toHtml(thisTicket.getProblem())%>
 		</td>
 		<td width="12%" >
-    <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+    <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
 		</td>
 		<td width="32%" >
       <%= toHtml(thisTicket.getSolution()) %>

@@ -142,7 +142,7 @@ Mailbox
                 <%
 		}%>
 		<td valign="center" class="row<%= rowid %>" nowrap>
-      <zeroio:tz timestamp="<%= thisNote.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= thisNote.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
 <%}%>

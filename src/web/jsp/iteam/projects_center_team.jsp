@@ -94,22 +94,22 @@
       </td>
     </zeroio:permission>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_ADDED %>">
-      <td valign="top" nowrap>Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/></td>
+      <td valign="top" nowrap>Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_PENDING %>">
-      <td valign="top" nowrap><font color="green">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/></font></td>
+      <td valign="top" nowrap><font color="green">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_INVITING %>">
-      <td valign="top" nowrap><font color="green">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/></font></td>
+      <td valign="top" nowrap><font color="green">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_MAILERROR %>">
       <td valign="top" nowrap><font color="red">Invitation could not be sent to email address</font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_REFUSED %>">
-      <td valign="top" nowrap><font color="red">Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/></font></td>
+      <td valign="top" nowrap><font color="red">Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></font></td>
     </dhv:evaluate>
     <td nowrap valign="top">
-      <zeroio:tz timestamp="<%= thisMember.getLastAccessed() %>" dateOnly="true" default="--" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= thisMember.getLastAccessed() %>" dateOnly="true" default="--" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
 <%    

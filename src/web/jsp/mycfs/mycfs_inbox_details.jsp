@@ -61,7 +61,7 @@ Message Details
       Received
     </td>
     <td>
-      <zeroio:tz timestamp="<%= NoteDetails.getEntered() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+      <zeroio:tz timestamp="<%= NoteDetails.getEntered() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
   </tr>
   <tr class="containerBody">

@@ -90,9 +90,9 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 		</td>
 		<td width="15%" valign="top" nowrap>
       <% if(!User.getTimeZone().equals(assignedTic.getEstimatedResolutionDateTimeZone())){%>
-      <zeroio:tz timestamp="<%= assignedTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= assignedTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } else { %>
-      <zeroio:tz timestamp="<%= assignedTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= assignedTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= assignedTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= assignedTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
 		</td>
 		<td width="6%" align="right" valign="top" nowrap>
@@ -185,9 +185,9 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 		</td>
 		<td width="15%" valign="top" class="row<%= rowid %>">
       <% if(!User.getTimeZone().equals(openTic.getEstimatedResolutionDateTimeZone())){%>
-      <zeroio:tz timestamp="<%= openTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= openTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } else { %>
-      <zeroio:tz timestamp="<%= openTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= openTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= openTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= openTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
 		</td>
 		<td width="6%" align="right" valign="top" nowrap class="row<%= rowid %>">
@@ -287,9 +287,9 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 		</td>
 		<td width="15%" valign="top" class="row<%= rowid %>">
       <% if(!User.getTimeZone().equals(thisTic.getEstimatedResolutionDateTimeZone())){%>
-      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } else { %>
-      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= thisTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= thisTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
 		</td>
 		<td width="6%" align="right" valign="top" nowrap>
@@ -390,9 +390,9 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 		</td>
 		<td width="15%" valign="top" class="row<%= rowid %>">
       <% if(!User.getTimeZone().equals(thisTic.getEstimatedResolutionDateTimeZone())){%>
-      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } else { %>
-      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= thisTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= thisTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
 		</td>
 		<td width="6%" align="right" valign="top" nowrap>

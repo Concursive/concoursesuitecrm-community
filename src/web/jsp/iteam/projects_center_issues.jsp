@@ -92,7 +92,7 @@
       <%= ((thisIssue.getReplyCount()==0)?"0":""+thisIssue.getReplyCount()) %>
     </td>
     <td class="row<%= rowid %>" valign="top" align="center" nowrap>
-      <zeroio:tz timestamp="<%= thisIssue.getReplyDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/><br />
+      <zeroio:tz timestamp="<%= thisIssue.getReplyDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/><br />
       <%= ((thisIssue.getReplyCount()==0)?"":"by") %>
       <dhv:username id="<%= thisIssue.getReplyBy() %>"/>
     </td>

@@ -105,9 +105,9 @@ Tickets
 		</td>
 		<td width="15%" valign="top" nowrap>
       <% if(!User.getTimeZone().equals(thisTic.getEstimatedResolutionDateTimeZone())){%>
-      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } else { %>
-      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= thisTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= thisTic.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= thisTic.getEstimatedResolutionDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
 		</td>
 		<td width="8%" align="right" valign="top" nowrap>
@@ -118,9 +118,9 @@ Tickets
 		</td>
     <td width="150" nowrap valign="top">
       <% if (thisTic.getClosed() == null) { %>
-        <zeroio:tz timestamp="<%= thisTic.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+        <zeroio:tz timestamp="<%= thisTic.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
       <%} else {%>
-        <zeroio:tz timestamp="<%= thisTic.getClosed() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+        <zeroio:tz timestamp="<%= thisTic.getClosed() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
       <%}%>
     </td>
    </tr>

@@ -99,7 +99,7 @@ View Groups
       <dhv:username id="<%= thisList.getEnteredBy() %>" lastFirst="true"/>
     </td>
     <td valign="center" nowrap class="row<%= rowid %>">
-      <zeroio:tz timestamp="<%= thisList.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= thisList.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
 	<%}%>

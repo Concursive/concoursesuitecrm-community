@@ -57,10 +57,10 @@
           </td>
           <td>
             &nbsp;
-            <zeroio:tz timestamp="<%= Requirement.getStartDate() %>" dateOnly="true" timeZone="<%= Requirement.getStartDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <zeroio:tz timestamp="<%= Requirement.getStartDate() %>" dateOnly="true" timeZone="<%= Requirement.getStartDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
             <% if(!User.getTimeZone().equals(Requirement.getStartDateTimeZone())){%>
             <br />
-            <zeroio:tz timestamp="<%= Requirement.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="--"/>
+            <zeroio:tz timestamp="<%= Requirement.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="--"/>
             <% } %>
           </td>
         </tr>
@@ -69,10 +69,10 @@
             Finish:
           </td>
           <td>
-            &nbsp;<zeroio:tz timestamp="<%= Requirement.getDeadline() %>" dateOnly="true" timeZone="<%= Requirement.getDeadlineTimeZone() %>" showTimeZone="yes" default="--"/>
+            &nbsp;<zeroio:tz timestamp="<%= Requirement.getDeadline() %>" dateOnly="true" timeZone="<%= Requirement.getDeadlineTimeZone() %>" showTimeZone="true" default="--"/>
             <% if(!User.getTimeZone().equals(Requirement.getDeadlineTimeZone())){%>
             <br />
-            <zeroio:tz timestamp="<%= Requirement.getDeadline() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="--"/>
+            <zeroio:tz timestamp="<%= Requirement.getDeadline() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="--"/>
             <% } %>
           </td>
         </tr>

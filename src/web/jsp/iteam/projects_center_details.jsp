@@ -55,7 +55,7 @@
       </dhv:evaluate>
       <dhv:evaluate if="<%= Project.getClosed() %>">
         <font color="blue">This project was closed on
-        <zeroio:tz timestamp="<%= Project.getCloseDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+        <zeroio:tz timestamp="<%= Project.getCloseDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
         </font>
       </dhv:evaluate>
       <dhv:evaluate if="<%= !Project.getClosed() %>">
@@ -63,7 +63,7 @@
           <font color="red">This project is currently under review and has not been approved</font>
         </dhv:evaluate>
         <dhv:evaluate if="<%= Project.getApprovalDate() != null %>">
-          <font color="darkgreen">This project was approved on <zeroio:tz timestamp="<%= Project.getApprovalDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/></font>
+          <font color="darkgreen">This project was approved on <zeroio:tz timestamp="<%= Project.getApprovalDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></font>
         </dhv:evaluate>
       </dhv:evaluate>
     </td>
@@ -83,20 +83,20 @@
   <tr class="containerBody">
     <td nowrap class="formLabel">Start Date</td>
     <td>
-      <zeroio:tz timestamp="<%= Project.getRequestDate() %>" dateOnly="true" timeZone="<%= Project.getRequestDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= Project.getRequestDate() %>" dateOnly="true" timeZone="<%= Project.getRequestDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(Project.getRequestDateTimeZone())){%>
       <br />
-      <zeroio:tz timestamp="<%= Project.getRequestDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= Project.getRequestDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">Estimated Close Date</td>
     <td>
-      <zeroio:tz timestamp="<%= Project.getEstimatedCloseDate() %>" dateOnly="true" timeZone="<%= Project.getEstimatedCloseDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= Project.getEstimatedCloseDate() %>" dateOnly="true" timeZone="<%= Project.getEstimatedCloseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(Project.getEstimatedCloseDateTimeZone())){%>
       <br />
-      <zeroio:tz timestamp="<%= Project.getEstimatedCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= Project.getEstimatedCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
     </td>
   </tr>
@@ -130,14 +130,14 @@
     <td nowrap class="formLabel">Entered</td>
     <td>
       <dhv:username id="<%= Project.getEnteredBy() %>"/>
-      <zeroio:tz timestamp="<%= Project.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= Project.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">Modified</td>
     <td>
       <dhv:username id="<%= Project.getModifiedBy() %>"/>
-      <zeroio:tz timestamp="<%= Project.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= Project.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
 </table>

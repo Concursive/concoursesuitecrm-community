@@ -54,14 +54,14 @@
     <td class="formLabel" valign="top">Entered</td>
     <td>
       <dhv:username id="<%= Task.getEnteredBy() %>"/>
-      <zeroio:tz timestamp="<%= Task.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= Task.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="top">Modified</td>
     <td>
       <dhv:username id="<%= Task.getModifiedBy() %>"/>
-      <zeroio:tz timestamp="<%= Task.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= Task.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
 </table>

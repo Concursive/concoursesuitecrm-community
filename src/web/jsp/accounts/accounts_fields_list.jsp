@@ -105,13 +105,13 @@ List of Folder Records
           <a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
         </td>
         <td nowrap class="row<%= rowid %>">
-        <zeroio:tz timestamp="<%= thisRecord.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+        <zeroio:tz timestamp="<%= thisRecord.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
         </td>
         <td nowrap class="row<%= rowid %>">
           <dhv:username id="<%= thisRecord.getModifiedBy() %>" />
         </td>
         <td nowrap class="row<%= rowid %>">
-        <zeroio:tz timestamp="<%= thisRecord.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+        <zeroio:tz timestamp="<%= thisRecord.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
         </td>
       </tr>
 <%    

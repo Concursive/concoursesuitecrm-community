@@ -52,10 +52,10 @@
             By <dhv:username id="<%= newsArticle.getEnteredBy() %>"/>
             -
             Posted on
-            <zeroio:tz timestamp="<%= newsArticle.getStartDate() %>" dateOnly="true" timeZone="<%= newsArticle.getStartDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <zeroio:tz timestamp="<%= newsArticle.getStartDate() %>" dateOnly="true" timeZone="<%= newsArticle.getStartDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
             <% if(!User.getTimeZone().equals(newsArticle.getStartDateTimeZone())){%>
             <br />
-            <zeroio:tz timestamp="<%= newsArticle.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <zeroio:tz timestamp="<%= newsArticle.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
             <% } %>
           </td>
           <td align="right" valign="top" nowrap>

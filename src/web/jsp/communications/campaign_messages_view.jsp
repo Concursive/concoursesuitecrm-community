@@ -112,7 +112,7 @@ Message List
       <dhv:username id="<%= thisMessage.getEnteredBy() %>" lastFirst="true" />
     </td>
     <td valign="center" class="row<%= rowid %>" nowrap>
-      <zeroio:tz timestamp="<%= thisMessage.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= thisMessage.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
 <%

@@ -90,7 +90,7 @@
     </td>
     <td class="row<%= rowid %>" valign="top" align="center" nowrap>
       <dhv:evaluate if="<%= thisCategory.getPostsCount() > 0 %>">
-      <zeroio:tz timestamp="<%= thisCategory.getLastPostDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/><br />
+      <zeroio:tz timestamp="<%= thisCategory.getLastPostDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/><br />
       </dhv:evaluate>
 			<dhv:username id="<%= thisCategory.getModifiedBy() %>"/>
     </td>

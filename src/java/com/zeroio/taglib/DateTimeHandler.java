@@ -222,7 +222,7 @@ public class DateTimeHandler extends TagSupport {
    *@param  tmp  The new showTimeZone value
    */
   public void setShowTimeZone(String tmp) {
-    this.showTimeZone = ("yes".equals(tmp) ? true : false);
+    this.showTimeZone = DatabaseUtils.parseBoolean(tmp);
   }
 
 

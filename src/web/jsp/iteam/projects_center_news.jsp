@@ -105,10 +105,10 @@
             By <dhv:username id="<%= thisArticle.getEnteredBy() %>"/>
             -
             Posted on
-            <zeroio:tz timestamp="<%= thisArticle.getStartDate() %>" dateOnly="true" timeZone="<%= thisArticle.getStartDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <zeroio:tz timestamp="<%= thisArticle.getStartDate() %>" dateOnly="true" timeZone="<%= thisArticle.getStartDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
             <% if(!User.getTimeZone().equals(thisArticle.getStartDateTimeZone())){%>
             <br />
-            <zeroio:tz timestamp="<%= thisArticle.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <zeroio:tz timestamp="<%= thisArticle.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
             <% } %>
           </td>
           <td align="right" nowrap valign="top">

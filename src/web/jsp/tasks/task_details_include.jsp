@@ -41,10 +41,10 @@
       Due Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= Task.getDueDate() %>" dateOnly="true" timeZone="<%= Task.getDueDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= Task.getDueDate() %>" dateOnly="true" timeZone="<%= Task.getDueDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(Task.getDueDateTimeZone())){%>
       <br>
-      <zeroio:tz timestamp="<%= Task.getDueDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= Task.getDueDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
     </td>
   </tr>

@@ -117,10 +117,10 @@ Activity Log
          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuTicketForm');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
     <td width="12%" >
-    <zeroio:tz timestamp="<%=thisMaintenance.getFirstActivityDate()%>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+    <zeroio:tz timestamp="<%=thisMaintenance.getFirstActivityDate()%>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
 		</td>
 		<td width="12%" >
-    <zeroio:tz timestamp="<%=thisMaintenance.getLastActivityDate()%>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+    <zeroio:tz timestamp="<%=thisMaintenance.getLastActivityDate()%>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
 		</td>
 		<td width="12%" >
     <%if (thisMaintenance.getFollowUpRequired()) { %>
@@ -131,9 +131,9 @@ Activity Log
 		</td>
 		<td width="10%">
       <% if(!User.getTimeZone().equals(thisMaintenance.getAlertDateTimeZone())){%>
-      <zeroio:tz timestamp="<%= thisMaintenance.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= thisMaintenance.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } else { %>
-      <zeroio:tz timestamp="<%= thisMaintenance.getAlertDate() %>" dateOnly="true" timeZone="<%= thisMaintenance.getAlertDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= thisMaintenance.getAlertDate() %>" dateOnly="true" timeZone="<%= thisMaintenance.getAlertDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
 		</td>
 		<td width="48%" >
@@ -144,7 +144,7 @@ Activity Log
     <%}%>
 		</td>
 		<td width="10%" >
-      <zeroio:tz timestamp="<%=thisMaintenance.getModified()%>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%=thisMaintenance.getModified()%>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
 		</td>
    </tr>
     <%  

@@ -101,7 +101,7 @@ Documents
       </td>
     </dhv:permission>
       <td nowrap>
-        <zeroio:tz timestamp="<%= thisFile.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/><br>
+        <zeroio:tz timestamp="<%= thisFile.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/><br>
         <dhv:username id="<%= thisFile.getEnteredBy() %>"/>
       </td>
     </tr>

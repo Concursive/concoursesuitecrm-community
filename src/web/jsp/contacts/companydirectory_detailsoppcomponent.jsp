@@ -110,10 +110,10 @@ Component Details
       Est. Close Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" dateOnly="true" timeZone="<%= oppComponentDetails.getCloseDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" dateOnly="true" timeZone="<%= oppComponentDetails.getCloseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(oppComponentDetails.getCloseDateTimeZone())){%>
       <br />
-      <zeroio:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
     </td>
   </tr>
@@ -189,10 +189,10 @@ Component Details
       Alert Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= oppComponentDetails.getAlertDateTimeZone() %>" showTimeZone="yes"  default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= oppComponentDetails.getAlertDateTimeZone() %>" showTimeZone="true"  default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(oppComponentDetails.getAlertDateTimeZone())){%>
       <br>
-      <zeroio:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"  default="&nbsp;" />
+      <zeroio:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"  default="&nbsp;" />
       <% } %>
     </td>
   </tr>
@@ -203,7 +203,7 @@ Component Details
     </td>
     <td>
       <dhv:username id="<%= oppComponentDetails.getEnteredBy() %>"/>
-      <zeroio:tz timestamp="<%= oppComponentDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+      <zeroio:tz timestamp="<%= oppComponentDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
   </tr>
   <tr class="containerBody">
@@ -212,7 +212,7 @@ Component Details
     </td>
     <td>
       <dhv:username id="<%= oppComponentDetails.getModifiedBy() %>"/>
-      <zeroio:tz timestamp="<%= oppComponentDetails.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" />
+      <zeroio:tz timestamp="<%= oppComponentDetails.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
   </tr>
 </table>

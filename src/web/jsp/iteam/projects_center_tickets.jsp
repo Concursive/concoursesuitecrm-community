@@ -144,9 +144,9 @@
     </td>
     <td valign="top" align="center" nowrap>
 <% if (thisTicket.getClosed() == null) { %>
-      <zeroio:tz timestamp="<%= thisTicket.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= thisTicket.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
 <%} else {%>
-      <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
+      <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
 <%}%>
     </td>
 	</tr>
