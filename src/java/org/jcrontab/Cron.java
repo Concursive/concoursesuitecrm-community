@@ -87,7 +87,6 @@ public class Cron extends Thread {
   public Cron() {
     // Remember the time the class was loaded.
     this.myClassLoadTime = Long.parseLong(System.getProperty(LOAD_TIME_PROPERTY));
-
     crontab = Crontab.getInstance();
     iFrec = 3600;
     calb = new CalendarBuilder();
@@ -105,7 +104,6 @@ public class Cron extends Thread {
   public Cron(Crontab cront, int iTimeTableGenerationFrec) {
     // Remember the time the class was loaded.
     this.myClassLoadTime = Long.parseLong(System.getProperty(LOAD_TIME_PROPERTY));
-
     crontab = cront;
     iFrec = iTimeTableGenerationFrec * 60;
   }
@@ -147,9 +145,7 @@ public class Cron extends Thread {
     while (shouldRun) {
       // The event...
       CrontabBean nextEv = eventsQueue[counter];
-
       long intervalToSleep = nextEv.getTime() - System.currentTimeMillis();
-      // System.out.println("intervalToSleep :" + intervalToSleep);
       if (intervalToSleep > 0) {
         // Waits until the next event
         try {
@@ -174,11 +170,10 @@ public class Cron extends Thread {
         generateEvents();
         // reinitialized the array
         counter = 0;
-      }
-      // Else, then tell the crontab to create the new task
-      else {
+      } else {
+        // Else, then tell the crontab to create the new task
         crontab.newTask(nextEv.getClassName(), nextEv.getMethodName(),
-            nextEv.getExtraInfo());
+            nextEv.getExtraInfo(), nextEv.getConnectionContext());
       }
     }
   }
@@ -234,8 +229,8 @@ public class Cron extends Thread {
    *      CrontabEntryBean
    *@throws  Exception
    */
-  private static CrontabEntryBean[] readCrontab() throws Exception {
-    crontabEntryArray = CrontabEntryDAO.getInstance().findAll();
+  private static CrontabEntryBean[] readCrontab(Object cp) throws Exception {
+    crontabEntryArray = CrontabEntryDAO.getInstance().findAll(cp);
     return crontabEntryArray;
   }
 
@@ -250,8 +245,7 @@ public class Cron extends Thread {
     // This loads the info from the DAO
     try {
       crontabEntryArray = null;
-      crontabEntryArray = readCrontab();
-
+      crontabEntryArray = readCrontab(crontab.getConnectionPool());
       // This Vector is created cause don't know how big is the list
       // of events
       Vector lista1 = new Vector();
@@ -268,6 +262,7 @@ public class Cron extends Thread {
             ev.setClassName(crontabEntryArray[j].getClassName());
             ev.setMethodName(crontabEntryArray[j].getMethodName());
             ev.setExtraInfo(crontabEntryArray[j].getExtraInfo());
+            ev.setConnectionContext(crontabEntryArray[j].getConnectionContext());
             lista1.add(ev);
           }
         }
@@ -284,7 +279,6 @@ public class Cron extends Thread {
       for (int i = 0; i < lista1.size(); i++) {
         eventsQueue[i] = (CrontabBean) lista1.get(i);
       }
-
     } catch (Exception e) {
       // Rounds the calendar to this minute
       Calendar cal = Calendar.getInstance();
@@ -302,7 +296,6 @@ public class Cron extends Thread {
       // last event
       eventsQueue = new CrontabBean[1];
       eventsQueue[0] = ev;
-
       if (e instanceof DataNotFoundException) {
         Log.info(e.toString());
       } else {
