@@ -545,5 +545,24 @@ public class Permission extends GenericBean {
     id = DatabaseUtils.getCurrVal(db, "permission_permission_id_seq");
     return true;
   }
+  
+  public static int lookupId(Connection db, String name) throws SQLException {
+    if (name == null) {
+      throw new SQLException("Invalid Permission Name");
+    }
+    int i = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT permission_id " +
+        "FROM permission " +
+        "WHERE permission = ? ");
+    pst.setString(1, name);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      i = rs.getInt("permission_id");
+    }
+    rs.close();
+    pst.close();
+    return i;
+  }
 }
 

@@ -142,9 +142,6 @@ public class PermissionCategory extends GenericBean {
     }
     rs.close();
     pst.close();
-    if (i == -1) {
-      throw new SQLException("Permission category not found: " + name);
-    }
     return i;
   }
 
@@ -574,5 +571,25 @@ public class PermissionCategory extends GenericBean {
     reports = rs.getBoolean("reports");
   }
 
+
+  /**
+   *  Enables or disables the permission report attribute based on the specified
+   *  information
+   *
+   *@param  db                Description of the Parameter
+   *@param  categoryId        Description of the Parameter
+   *@param  enabled           Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void updateReportAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE permission_category " +
+        "SET reports = ? " +
+        "WHERE category_id = ? ");
+    pst.setBoolean(1, enabled);
+    pst.setInt(2, categoryId);
+    pst.execute();
+    pst.close();
+  }
 }
 

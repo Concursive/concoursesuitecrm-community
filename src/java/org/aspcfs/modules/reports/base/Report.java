@@ -471,5 +471,58 @@ public class Report extends GenericBean {
   public boolean getCustom() {
     return custom;
   }
+
+
+  /**
+   *  Gets the id of the specified filename
+   *
+   *@param  db                Description of the Parameter
+   *@param  filename          Description of the Parameter
+   *@return                   The idByFilename value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int lookupId(Connection db, String filename) throws SQLException {
+    int reportId = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT report_id " +
+        "FROM report " +
+        "WHERE filename = ? ");
+    pst.setString(1, filename);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      reportId = rs.getInt("report_id");
+    }
+    rs.close();
+    pst.close();
+    return reportId;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean insert(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "INSERT INTO report " +
+        "(category_id, permission_id, filename, type, title, description, enteredby, modifiedby) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
+    int i = 0;
+    pst.setInt(++i, categoryId);
+    DatabaseUtils.setInt(pst, ++i, permissionId);
+    pst.setString(++i, filename);
+    pst.setInt(++i, type);
+    pst.setString(++i, title);
+    pst.setString(++i, description);
+    pst.setInt(++i, enteredBy);
+    pst.setInt(++i, modifiedBy);
+    pst.execute();
+    pst.close();
+    id = DatabaseUtils.getCurrVal(db, "report_report_id_seq");
+    return true;
+  }
 }
 

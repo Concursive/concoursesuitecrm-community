@@ -39,8 +39,9 @@
 		<parameterDescription><![CDATA[Stage]]></parameterDescription>
 		<defaultValueExpression><![CDATA[new Integer(-1)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="lookup_stage_max" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(999999)]]></defaultValueExpression>
+	<parameter name="lookup_stage_where" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[AND y.code = $P{lookup_stage}]]></parameterDescription>
+		<defaultValueExpression><![CDATA[" "]]></defaultValueExpression>
 	</parameter>
 	<parameter name="percent_close" isForPrompting="true" class="java.lang.String">
 		<parameterDescription><![CDATA[Probability]]></parameterDescription>
@@ -76,8 +77,7 @@ AND oc.owner IN ($P!{userid_range})
 AND y.code NOT IN (8,9)
 AND oc.closedate >= $P{date_start}
 AND oc.closedate <= $P{date_end}
-AND y.code >= $P{lookup_stage}
-AND y.code <= $P{lookup_stage_max}
+$P!{lookup_stage_where}
 AND oc.closeprob > $P{percent_close_min}
 AND oc.closeprob < $P{percent_close_max}
 ORDER BY y.level desc,
@@ -101,7 +101,7 @@ x.description asc, oc.closedate asc]]></queryString>
 	<field name="owner_last_name" class="java.lang.String"/>
 	<variable name="groupcount" class="java.lang.Integer" resetType="Group" resetGroup="stagename" calculation="Nothing">
 		<variableExpression><![CDATA[new Integer( ($V{groupcount}.intValue() + 1) )]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
-		<group  name="stagename" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
+		<group  name="stagename" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="49" >
 			<groupExpression><![CDATA[$F{stagename}]]></groupExpression>
 			<groupHeader>
 			<band height="18"  isSplitAllowed="true" >
@@ -201,7 +201,7 @@ x.description asc, oc.closedate asc]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[CLOSE DATE]]></text>
+				<text><![CDATA[Close Date]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -220,7 +220,7 @@ x.description asc, oc.closedate asc]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[PROBABILITY]]></text>
+				<text><![CDATA[Probability]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -239,7 +239,7 @@ x.description asc, oc.closedate asc]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[AMOUNT]]></text>
+				<text><![CDATA[Amount]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"

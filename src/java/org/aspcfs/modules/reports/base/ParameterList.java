@@ -7,6 +7,7 @@ import java.sql.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.UserUtils;
+import org.aspcfs.utils.Template;
 import dori.jasper.engine.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
@@ -89,10 +90,13 @@ public class ParameterList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Parameter param = (Parameter) i.next();
+      //For each parameter the user is prompted for, evaluate the answer
       if (param.getIsForPrompting()) {
         param.setValue(request.getParameter(param.getName()));
+        //Auto-populate the user's range based on selected type
         if (param.getName().equals("userid_range_source")) {
           if (param.getValue().equals("all")) {
+            //TOOD:"All" wouldn't work, need to swap the _where clause
             addParam("userid_range", "");
           } else if (param.getValue().equals("hierarchy")) {
             addParam("userid_range", UserUtils.getUserIdRange(request));
@@ -100,14 +104,24 @@ public class ParameterList extends ArrayList {
             addParam("userid_range", String.valueOf(UserUtils.getUserId(request)));
           }
         }
+        //Lookup lists will result in -1, > -1
+        //if other than -1 then use the additional WHERE clause included in
+        //the report
         if (param.getName().startsWith("lookup_")) {
-          if ("-1".equals(param.getValue())) {
-            addParam(param.getName() + "_max", "999999");
-          } else {
-            addParam(param.getName() + "_max", param.getValue());
+          Parameter whereParam = this.getParameter(param.getName() + "_where");
+          if (whereParam != null) {
+            if (!"-1".equals(param.getValue())) {
+              //New case, replace query param with another param and parse
+              Template where = new Template(whereParam.getDescription());
+              where.addParseElement("$P{" + param.getName() + "}", param.getValue());
+              addParam(whereParam.getName(), where.getParsedText());
+            } else {
+              addParam(whereParam.getName(), " ");
+            }
           }
           addParam(param.getName(), param.getValue());
         }
+        //Percent lookup uses a range from the HtmlSelectProbabilityRange object
         if (param.getName().startsWith("percent_")) {
           //The range will be specified as -0.01|1.01 for the query
           StringTokenizer st = new StringTokenizer(param.getValue(), "|");
@@ -347,6 +361,17 @@ public class ParameterList extends ArrayList {
       Parameter thisParam = (Parameter) i.next();
       if (param.equals(thisParam.getName())) {
         return thisParam.getValueClass();
+      }
+    }
+    return null;
+  }
+  
+  public Parameter getParameter(String param) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Parameter thisParam = (Parameter) i.next();
+      if (param.equals(thisParam.getName())) {
+        return thisParam;
       }
     }
     return null;
