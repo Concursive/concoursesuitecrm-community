@@ -7,8 +7,10 @@ import java.util.Iterator;
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.modules.base.PhoneNumberList;
+import org.aspcfs.modules.base.PhoneNumber;
 import org.aspcfs.modules.base.Constants;
 
 /**
@@ -134,6 +136,24 @@ public class ContactPhoneNumberList extends PhoneNumberList {
   }
 
 
+  public String getHtmlSelect(String selectName, int defaultKey) {
+    HtmlSelect emailListSelect = new HtmlSelect();
+
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      PhoneNumber thisNumber = (PhoneNumber) i.next();
+      String elementText = null;
+
+      elementText = String.valueOf(thisNumber.getTypeName().charAt(0)) + ":";
+      elementText += thisNumber.getNumber();
+      emailListSelect.addItem(
+          thisNumber.getId(),
+          elementText);
+    }
+    return emailListSelect.getHtml(selectName, defaultKey);
+  }
+  
+  
   /**
    *  Builds a list of addresses based on several parameters. The parameters are
    *  set after this object is constructed, then the buildList method is called
@@ -210,6 +230,8 @@ public class ContactPhoneNumberList extends PhoneNumberList {
         sqlOrder.append("LIMIT " + pagedListInfo.getItemsPerPage() + " ");
       }
       sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
+    }else{
+      sqlOrder.append("ORDER BY phone_type ");
     }
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

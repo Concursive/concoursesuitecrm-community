@@ -138,6 +138,31 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
 
 
   /**
+   *  Gets the htmlSelect attribute of the OrganizationPhoneNumberList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelect value
+   */
+  public String getHtmlSelect(String selectName, int defaultKey) {
+    HtmlSelect phoneListSelect = new HtmlSelect();
+
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      PhoneNumber thisNumber = (PhoneNumber) i.next();
+      String elementText = null;
+
+      elementText = String.valueOf(thisNumber.getTypeName().charAt(0)) + ":";
+      elementText += thisNumber.getNumber();
+      phoneListSelect.addItem(
+          thisNumber.getId(),
+          elementText);
+    }
+    return phoneListSelect.getHtml(selectName, defaultKey);
+  }
+
+
+  /**
    *  Builds a list of addresses based on several parameters. The parameters are
    *  set after this object is constructed, then the buildList method is called
    *  to generate the list.

@@ -5,6 +5,7 @@ import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.*;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
@@ -30,9 +31,8 @@ public final class Search extends CFSModule {
    *@since
    */
   public String executeCommandSiteSearch(ActionContext context) {
+    int ITEMS_PER_PAGE = 15;
     Exception errorMessage = null;
-    PagedListInfo searchSiteInfo = this.getPagedListInfo(context, "SearchSiteInfo");
-    searchSiteInfo.setLink("ExternalContacts.do?command=ListContacts");
     String searchCriteria = context.getRequest().getParameter("search");
     Connection db = null;
     if (searchCriteria != null && !(searchCriteria.equals(""))) {
@@ -40,10 +40,14 @@ public final class Search extends CFSModule {
     }
     try {
       db = this.getConnection(context);
-      if (hasPermission(context, "contacts-external_contacts-view")) {
+      if (hasPermission(context, "contacts-external_contacts-view") || hasPermission(context, "accounts-accounts-contacts-view")) {
+        PagedListInfo contactSearchInfo = this.getPagedListInfo(context, "SearchSiteContactInfo");
+        contactSearchInfo.setLink("Search.do?command=SiteSearch");
+        contactSearchInfo.setItemsPerPage(ITEMS_PER_PAGE);
+
         ContactList contactList = new ContactList();
         contactList.setSearchText(searchCriteria);
-        contactList.setPagedListInfo(searchSiteInfo);
+        contactList.setPagedListInfo(contactSearchInfo);
         contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         contactList.setAllContacts(true, this.getUserId(context), this.getUserRange(context));
         contactList.setBuildDetails(true);
@@ -53,8 +57,13 @@ public final class Search extends CFSModule {
       }
 
       if (hasPermission(context, "contacts-internal_contacts-view")) {
+        PagedListInfo employeeSearchInfo = this.getPagedListInfo(context, "SearchSiteEmployeeInfo");
+        employeeSearchInfo.setLink("Search.do?command=SiteSearch");
+        employeeSearchInfo.setItemsPerPage(ITEMS_PER_PAGE);
+
         ContactList employeeList = new ContactList();
         employeeList.setSearchText(searchCriteria);
+        employeeList.setPagedListInfo(employeeSearchInfo);
         employeeList.setEmployeesOnly(true);
         employeeList.setPersonalId(ContactList.IGNORE_PERSONAL);
         employeeList.setBuildDetails(true);
@@ -64,24 +73,39 @@ public final class Search extends CFSModule {
       }
 
       if (hasPermission(context, "accounts-accounts-view")) {
+        PagedListInfo accountSearchInfo = this.getPagedListInfo(context, "SearchSiteAccountInfo");
+        accountSearchInfo.setLink("Search.do?command=SiteSearch");
+        accountSearchInfo.setItemsPerPage(ITEMS_PER_PAGE);
+
         OrganizationList organizationList = new OrganizationList();
         organizationList.setName(searchCriteria);
         organizationList.setMinerOnly(false);
+        organizationList.setPagedListInfo(accountSearchInfo);
         organizationList.buildList(db);
         context.getRequest().setAttribute("OrganizationList", organizationList);
       }
 
       if (hasPermission(context, "pipeline-opportunities-view")) {
+        PagedListInfo opportuntySearchInfo = this.getPagedListInfo(context, "SearchSiteOppInfo");
+        opportuntySearchInfo.setLink("Search.do?command=SiteSearch");
+        opportuntySearchInfo.setItemsPerPage(ITEMS_PER_PAGE);
+
         OpportunityList oppList = new OpportunityList();
         oppList.setDescription(searchCriteria);
+        oppList.setPagedListInfo(opportuntySearchInfo);
         oppList.setOwnerIdRange(this.getUserRange(context));
         oppList.buildList(db);
         context.getRequest().setAttribute("OpportunityList", oppList);
       }
 
       if (hasPermission(context, "tickets-tickets-view")) {
+        PagedListInfo ticSearchInfo = this.getPagedListInfo(context, "SearchSiteTicketInfo");
+        ticSearchInfo.setLink("Search.do?command=SiteSearch");
+        ticSearchInfo.setItemsPerPage(ITEMS_PER_PAGE);
+
         TicketList ticketList = new TicketList();
         ticketList.setSearchText(searchCriteria);
+        ticketList.setPagedListInfo(ticSearchInfo);
         ticketList.buildList(db);
         context.getRequest().setAttribute("TicketList", ticketList);
       }
