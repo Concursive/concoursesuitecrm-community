@@ -651,7 +651,7 @@
     <!-- Create the distributable .zip file -->
     <zip destfile="${dist.dir}/dhcrm.war.zip">
       <fileset dir="${doc.dir}" includes="Binary*EULA.rtf"/>
-      <fileset dir="${base.dir}" includes="README-WAR.txt"/>
+      <fileset dir="${doc.dir}" includes="Dark*Horse*CRM*Installation*and*Setup.pdf"/>
       <fileset dir="${dist.dir}" includes="darkhorse.war"/>
     </zip>
     <!-- Cleanup files -->
