@@ -303,10 +303,19 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
     this.setId(rs.getInt("emailaddress_id"));
     if (!isContact) {
       this.setOrgId(rs.getInt("org_id"));
+      if (rs.wasNull()) {
+              this.setOrgId(-1);
+      }
     } else {
       this.setContactId(rs.getInt("contact_id"));
+      if (rs.wasNull()) {
+              this.setContactId(-1);
+      }
     }
     this.setType(rs.getInt("emailaddress_type"));
+    if (rs.wasNull()) {
+            this.setType(-1);
+    }
     this.setTypeName(rs.getString("description"));
     this.setEmail(rs.getString("email"));
     this.setEnteredBy(rs.getInt("enteredby"));

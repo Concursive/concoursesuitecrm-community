@@ -89,8 +89,19 @@ public class ContactEmailAddress extends EmailAddress {
         "VALUES " +
         "(?, ?, ?, ?, ?) ");
     int i = 0;
-    pst.setInt(++i, contactId);
-    pst.setInt(++i, this.getType());
+    
+    if (contactId > -1) {
+      pst.setInt(++i, this.getContactId());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    
+    if (this.getType() > -1) {
+      pst.setInt(++i, this.getType());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    
     pst.setString(++i, this.getEmail());
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, enteredBy);
@@ -116,7 +127,11 @@ public class ContactEmailAddress extends EmailAddress {
         "modified = CURRENT_TIMESTAMP " +
         "WHERE emailaddress_id = ? ");
     int i = 0;
-    pst.setInt(++i, this.getType());
+    if (this.getType() > -1) {
+      pst.setInt(++i, this.getType());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getEmail());
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, this.getId());
