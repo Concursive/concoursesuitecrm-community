@@ -1506,15 +1506,27 @@ public void setEnabled(boolean enabled) {
       db.setAutoCommit(false);
 
       StringBuffer sql = new StringBuffer();
+      
       sql.append(
         "INSERT INTO opportunity " +
         "(acctlink, contactlink, enteredby, modifiedby, owner, closedate, stage, description) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
-
+        
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setInt(++i, this.getAccountLink());
-      pst.setInt(++i, this.getContactLink());
+      
+      if (accountLink > -1) {
+	      pst.setInt(++i, this.getAccountLink());
+      } else {
+	      pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+      
+      if (contactLink > -1) {
+	      pst.setInt(++i, this.getContactLink());
+      } else {
+	      pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+      
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getOwner());
@@ -1523,9 +1535,8 @@ public void setEnabled(boolean enabled) {
       pst.setString(++i, this.getDescription());
       pst.execute();
       pst.close();
-
+      
       id = DatabaseUtils.getCurrVal(db, "opportunity_opp_id_seq");
-
       this.update(db, true);
       db.commit();
     } catch (SQLException e) {
@@ -1636,6 +1647,7 @@ public void setEnabled(boolean enabled) {
       st = db.createStatement();
       st.executeUpdate(
           "DELETE FROM opportunity WHERE opp_id = " + this.getId());
+          
       st.close();
       
       db.commit();
@@ -1662,7 +1674,17 @@ public void setEnabled(boolean enabled) {
     owner = rs.getInt("owner");
     description = rs.getString("description");
     accountLink = rs.getInt("acctLink");
+    
+    if (rs.wasNull()) {
+	    accountLink = -1; 
+    }
+    
     contactLink = rs.getInt("contactLink");
+    
+    if (rs.wasNull()) {
+	    contactLink = -1; 
+    }
+    
     closeDate = rs.getDate("closedate");
     closeProb = rs.getDouble("closeprob");
     if (System.getProperty("DEBUG") != null) {

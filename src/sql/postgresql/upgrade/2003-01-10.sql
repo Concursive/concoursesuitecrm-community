@@ -24,3 +24,4 @@ UPDATE cfsinbox_messagelink
 alter table  opportunity add column enabled BOOLEAN;
 ALTER TABLE  opportunity ALTER COLUMN enabled SET DEFAULT true;
 update opportunity set enabled = 't';
+

@@ -10,8 +10,8 @@ CREATE TABLE opportunity (
 	opp_id serial PRIMARY KEY,
 	owner INT NOT NULL REFERENCES access(user_id),
 	description VARCHAR(80),
-	acctlink INT not null default -1,
-	contactlink INT not null default -1,
+	acctlink INT default -1,
+	contactlink INT default -1,
 	closedate date not null,
 	closeprob float,
 	terms float,
@@ -35,3 +35,4 @@ CREATE TABLE opportunity (
 	alert varchar(100) default null,
 	enabled BOOLEAN DEFAULT true
 );
+
