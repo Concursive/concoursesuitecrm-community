@@ -900,7 +900,6 @@ public class ContactList extends Vector {
         "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
         "WHERE c.contact_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    System.out.println(sqlFilter.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     
