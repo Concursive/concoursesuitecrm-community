@@ -2734,7 +2734,8 @@ CREATE TABLE [project_assignments] (
 	[modified] [datetime] NOT NULL ,
 	[modifiedBy] [int] NOT NULL ,
 	[folder_id] [int] NULL ,
-	[percent_complete] [int] NULL 
+	[percent_complete] [int] NULL ,
+  [due_date_timezone] [VARCHAR] (255) NULL
 ) ON [PRIMARY]
 GO
 

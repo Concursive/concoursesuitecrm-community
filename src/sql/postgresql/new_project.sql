@@ -186,7 +186,8 @@ CREATE TABLE project_assignments (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
   folder_id INTEGER NULL REFERENCES project_assignments_folder(folder_id),
-  percent_complete INTEGER NULL
+  percent_complete INTEGER NULL,
+  due_date_timezone VARCHAR(255) NULL
 );
   
 CREATE INDEX "project_assignments_cidx" ON "project_assignments" 
