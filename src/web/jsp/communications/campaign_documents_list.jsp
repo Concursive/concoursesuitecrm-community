@@ -1,13 +1,13 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="Campaign" class="org.aspcfs.modules.Campaign" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="CampaignDocListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="/javascript/confirmDelete.js"></script>
 <a href="CampaignManager.do">Communications Manager</a> >
-<a href="/CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="/CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
+<a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
+<a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
 Documents
 <hr color="#BFBFBB" noshade>
 
@@ -32,7 +32,7 @@ Documents
   <tr class="title">
     <td width="10" align="center">Action</td>
     <td>
-    <strong><a href="/CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>&column=subject">Item</a></strong>
+    <strong><a href="CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>&column=subject">Item</a></strong>
       <%= CampaignDocListInfo.getSortIcon("subject") %>
       </td>
     <td align="center">Ext</td>

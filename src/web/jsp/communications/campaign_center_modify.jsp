@@ -1,4 +1,4 @@
-<jsp:useBean id="Campaign" class="org.aspcfs.modules.Campaign" scope="request"/>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
@@ -24,15 +24,15 @@
 </script>
 <body onLoad="javascript:document.forms[0].name.focus();">
 <a href="CampaignManager.do">Communications Manager</a> > 
-<a href="/CampaignManager.do?command=View">Campaign List</a> >
-<a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
+<a href="CampaignManager.do?command=View">Campaign List</a> >
+<a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Modify
 <hr color="#BFBFBB" noshade>
-<form name="addForm" action="/CampaignManager.do?command=Update&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<form name="addForm" action="CampaignManager.do?command=Update&auto-populate=true" method="post" onSubmit="return checkForm(this);">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= Campaign.getId() %>">
   <input type="submit" value="Update" name="Save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/CampaignManager.do?command=ViewDetails';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignManager.do?command=ViewDetails';">
   <input type="reset" value="Reset">
   <br>
   <%= showError(request, "actionError") %>
@@ -61,7 +61,7 @@ Modify
   </table>
   <br>
   <input type="submit" value="Update" name="Save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/CampaignManager.do?command=ViewDetails';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignManager.do?command=ViewDetails';">
   <input type="reset" value="Reset">
 </form>
 </body>

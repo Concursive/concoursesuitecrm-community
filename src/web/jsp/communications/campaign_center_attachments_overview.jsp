@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="Campaign" class="org.aspcfs.modules.Campaign" scope="request"/>
-<jsp:useBean id="Survey" class="org.aspcfs.modules.Survey" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
+<jsp:useBean id="Survey" class="org.aspcfs.modules.communications.base.Survey" scope="request"/>
 <jsp:useBean id="fileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <form name="modForm" action="CampaignManager.do?command=InsertAttachment&id=<%= Campaign.getId() %>" method="post">

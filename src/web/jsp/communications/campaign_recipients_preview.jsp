@@ -1,12 +1,12 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="Campaign" class="org.aspcfs.modules.Campaign" scope="request"/>
-<jsp:useBean id="RecipientList" class="org.aspcfs.modules.RecipientList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
+<jsp:useBean id="RecipientList" class="org.aspcfs.modules.communications.base.RecipientList" scope="request"/>
 <jsp:useBean id="CampaignDashboardRecipientInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <a href="CampaignManager.do">Communications Manager</a> >
-<a href="/CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="/CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
+<a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
+<a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
 Recipients
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

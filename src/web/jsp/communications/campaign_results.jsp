@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="Campaign" class="org.aspcfs.modules.Campaign" scope="request"/>
-<jsp:useBean id="SurveyQuestionList" class="org.aspcfs.modules.ActiveSurveyQuestionList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
+<jsp:useBean id="SurveyQuestionList" class="org.aspcfs.modules.communications.base.ActiveSurveyQuestionList" scope="request"/>
 <jsp:useBean id="SurveyQuestionListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <%@ include file="../initPage.jsp" %>

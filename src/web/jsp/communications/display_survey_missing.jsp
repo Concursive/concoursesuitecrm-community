@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.controller.CustomFormTab,org.aspcfs.controller.CustomFormGroup" %>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.web.CustomFormTab,org.aspcfs.utils.web.CustomFormGroup" %>
 <%@ include file="../initPage.jsp" %>
 <html>
 <head>

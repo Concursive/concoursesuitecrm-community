@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="campList" class="org.aspcfs.modules.CampaignList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<jsp:useBean id="campList" class="org.aspcfs.modules.communications.base.CampaignList" scope="request"/>
 <jsp:useBean id="CampaignDashboardListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
@@ -29,22 +29,22 @@ Dashboard
       <strong>Action</strong>
     </td>
     <td align="left" nowrap>
-      <a href="/CampaignManager.do?command=Dashboard&column=c.name"><strong>Name</strong></a>
+      <a href="CampaignManager.do?command=Dashboard&column=c.name"><strong>Name</strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("c.name") %>
     </td>  
     <td align="left" nowrap>
-      <a href="/CampaignManager.do?command=Dashboard&column=active_date"><strong>Start Date</strong></a>
+      <a href="CampaignManager.do?command=Dashboard&column=active_date"><strong>Start Date</strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("active_date") %>
     </td> 
     <td align="left" nowrap>
       <strong># Recipients</strong>
     </td> 
     <td align="left" nowrap>
-      <a href="/CampaignManager.do?command=Dashboard&column=status"><strong>Status</strong></a>
+      <a href="CampaignManager.do?command=Dashboard&column=status"><strong>Status</strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("status") %>
     </td>
     <td width="10" align="left" nowrap>
-      <a href="/CampaignManager.do?command=Dashboard&column=active"><strong>Active?</strong></a>
+      <a href="CampaignManager.do?command=Dashboard&column=active"><strong>Active?</strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("active") %>
     </td> 
 	<%
@@ -68,7 +68,7 @@ Dashboard
       <%= (campaign.hasRun() && !campaign.hasFiles()?"&nbsp":"") %>
       <dhv:permission name="campaign-campaigns-edit"><%= (campaign.hasRun()?"":"<a href=\"javascript:confirmForward('/CampaignManager.do?command=Cancel&id=" + campaign.getId() +"&notify=true')\">Cancel</a>") %></dhv:permission>
       <dhv:permission name="campaign-campaigns-edit" none="true">&nbsp;</dhv:permission>
-      <%= (campaign.hasFiles()?"<a href=\"/CampaignManager.do?command=PrepareDownload&id=" + campaign.getId() + "\">Download<br>Available</a>":"") %>
+      <%= (campaign.hasFiles()?"<a href=\"CampaignManager.do?command=PrepareDownload&id=" + campaign.getId() + "\">Download<br>Available</a>":"") %>
     </td>
 
     <td valign="center" width="100%" nowrap class="row<%= rowid %>">

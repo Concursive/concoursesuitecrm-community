@@ -1,11 +1,11 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="CampaignGroupsPreviewInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <a href="CampaignManager.do">Communications Manager</a> >
-<a href="/CampaignManagerGroup.do?command=View">Group List</a> >
-<dhv:permission name="campaign-campaigns-groups-edit"><a href="/CampaignManagerGroup.do?command=Modify&id=<%= request.getAttribute("id") %>">Group Details</a> ></dhv:permission>
+<a href="CampaignManagerGroup.do?command=View">Group List</a> >
+<dhv:permission name="campaign-campaigns-groups-edit"><a href="CampaignManagerGroup.do?command=Modify&id=<%= request.getAttribute("id") %>">Group Details</a> ></dhv:permission>
 Contact Preview
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="CommentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
-<jsp:useBean id="SurveyAnswerList" class="org.aspcfs.modules.SurveyAnswerList" scope="request"/>
+<jsp:useBean id="SurveyAnswerList" class="org.aspcfs.modules.communications.base.SurveyAnswerList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%
   boolean openEnded =  "open".equalsIgnoreCase(request.getParameter("type"));

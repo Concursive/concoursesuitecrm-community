@@ -1,13 +1,13 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="Survey" class="org.aspcfs.modules.Survey" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<jsp:useBean id="Survey" class="org.aspcfs.modules.communications.base.Survey" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <%@ include file="../initPage.jsp" %>
-<a href="CampaignManager.do">Communications Manager</a> > <a href="/CampaignManagerAttachment.do">Create Attachments</a> > <a href="/CampaignManagerSurvey.do?command=View"> Surveys </a> > Survey Details<br>
+<a href="CampaignManager.do">Communications Manager</a> > <a href="CampaignManagerAttachment.do">Create Attachments</a> > <a href="CampaignManagerSurvey.do?command=View"> Surveys </a> > Survey Details<br>
 <hr color="#BFBFBB" noshade>
 
 <input type="button" name="action" value="Modify" onClick="javascript:window.location.href='CampaignManagerSurvey.do?command=Modify&id=<%=Survey.getId()%>'">
-<input type="button" name="action" value="Delete Survey" onClick="javascript:popURLReturn('/CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=Survey.getId()%>','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">
+<input type="button" name="action" value="Delete Survey" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=Survey.getId()%>','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">
 <input type="button" name="action" value="Preview" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=Preview&id=<%=Survey.getId()%>','CampaignManagerSurvey.do?command=Details&id=<%=Survey.getId()%>', 'Preview_Survey','760','510','yes','yes');">
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -182,6 +182,6 @@
     </tr>
   </table><br>
 <input type="button" name="action" value="Modify" onClick="javascript:window.location.href='CampaignManagerSurvey.do?command=Modify&id=<%=Survey.getId()%>'">
-<input type="button" name="action" value="Delete Survey" onClick="javascript:popURLReturn('/CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=Survey.getId()%>','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">
+<input type="button" name="action" value="Delete Survey" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=Survey.getId()%>','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">
 <input type="button" name="action" value="Preview" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=Preview&id=<%=Survey.getId()%>','CampaignManagerSurvey.do?command=Details&id=<%=Survey.getId()%>', 'Preview_Survey','700','680','yes','yes');">
 

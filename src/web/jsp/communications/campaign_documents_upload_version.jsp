@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="Campaign" class="org.aspcfs.modules.Campaign" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
@@ -40,9 +40,9 @@
 <body onLoad="document.inputForm.subject.focus();">
 
 <a href="CampaignManager.do">Communications Manager</a> >
-<a href="/CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="/CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
-<a href="/CampaignDocuments.do?command=View&id=<%=Campaign.getId()%>">Documents</a> >
+<a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
+<a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
+<a href="CampaignDocuments.do?command=View&id=<%=Campaign.getId()%>">Documents</a> >
 Upload New Version<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

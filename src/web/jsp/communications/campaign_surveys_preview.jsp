@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="CustomFormInfo" class="org.aspcfs.controller.CustomForm" scope="request"/>
-<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.controller.CustomFormTab,org.aspcfs.controller.CustomFormGroup" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.utils.web.CustomFormTab,org.aspcfs.utils.web..CustomFormGroup" %>
 <%@ include file="../initPage.jsp" %>
 
 <% if (CustomFormInfo.getReturnLink() != null && !(CustomFormInfo.getReturnLink().equals(""))) {%>

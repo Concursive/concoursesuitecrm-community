@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.utils.StringUtils" %>
-<jsp:useBean id="Message" class="org.aspcfs.modules.Message" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.StringUtils" %>
+<jsp:useBean id="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script type="text/javascript" src="javascript/stringbuilder.js"></script>
 <script type="text/javascript" src="javascript/getxhtml.js"></script>

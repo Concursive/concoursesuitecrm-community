@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="surveyList" class="org.aspcfs.modules.SurveyList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<jsp:useBean id="surveyList" class="org.aspcfs.modules.communications.base.SurveyList" scope="request"/>
 <html>
 <head>
 </head>

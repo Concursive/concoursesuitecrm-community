@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="CampaignGroupListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
-<jsp:useBean id="sclList" class="org.aspcfs.modules.SearchCriteriaListList" scope="request"/>
+<jsp:useBean id="sclList" class="org.aspcfs.modules.communications.base.SearchCriteriaListList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <a href="CampaignManager.do">Communications Manager</a> >
@@ -62,11 +62,11 @@ Group List
 	<tr class="containerBody">
 	<dhv:permission name="campaign-campaigns-groups-edit,campaign-campaigns-groups-delete">
     <td width=8 valign=center nowrap class="row<%= rowid %>">
-      <dhv:permission name="campaign-campaigns-groups-edit"><a href="/CampaignManagerGroup.do?command=Modify&id=<%= thisList.getId() %>">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-groups-edit,campaign-campaigns-groups-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-groups-delete"><a href="javascript:popURLReturn('/CampaignManagerGroup.do?command=ConfirmDelete&id=<%=thisList.getId()%>','CampaignManagerGroup.do?command=View', 'Delete_group','330','200','yes','no');">Del</a></dhv:permission>
+      <dhv:permission name="campaign-campaigns-groups-edit"><a href="/CampaignManagerGroup.do?command=Modify&id=<%= thisList.getId() %>">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-groups-edit,campaign-campaigns-groups-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-groups-delete"><a href="javascript:popURLReturn('CampaignManagerGroup.do?command=ConfirmDelete&id=<%=thisList.getId()%>','CampaignManagerGroup.do?command=View', 'Delete_group','330','200','yes','no');">Del</a></dhv:permission>
     </td>
     	</dhv:permission>
     <td valign=center nowrap class="row<%= rowid %>">
-      <a href="/CampaignManagerGroup.do?command=Preview&id=<%= thisList.getId() %>"><%= toHtml(thisList.getGroupName()) %></a>
+      <a href="CampaignManagerGroup.do?command=Preview&id=<%= thisList.getId() %>"><%= toHtml(thisList.getGroupName()) %></a>
     </td>
     <td valign="center" align="left" class="row<%= rowid %>" nowrap>
       <dhv:username id="<%= thisList.getEnteredBy() %>" />

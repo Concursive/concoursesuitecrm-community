@@ -1,17 +1,17 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="MessageList" class="org.aspcfs.modules.MessageList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<jsp:useBean id="MessageList" class="org.aspcfs.modules.communications.base.MessageList" scope="request"/>
 <jsp:useBean id="CampaignMessageListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <a href="CampaignManager.do">Communications Manager</a> >
 Message List
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="campaign-campaigns-messages-add"><a href="/CampaignManagerMessage.do?command=Add">Add a Message</a></dhv:permission>
+<dhv:permission name="campaign-campaigns-messages-add"><a href="CampaignManagerMessage.do?command=Add">Add a Message</a></dhv:permission>
 <center><%= CampaignMessageListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
-    <form name="listView" method="post" action="/CampaignManagerMessage.do?command=View">
+    <form name="listView" method="post" action="CampaignManagerMessage.do?command=View">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= CampaignMessageListInfo.getOptionValue("my") %>>My Messages</option>
@@ -32,19 +32,19 @@ Message List
     </td>
     </dhv:permission>
     <td width=40% valign=center align=left>
-      <a href="/CampaignManagerMessage.do?command=View&column=name"><strong>Name</strong></a>
+      <a href="CampaignManagerMessage.do?command=View&column=name"><strong>Name</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("name") %>
     </td>  
     <td width=60% valign=center align=left>
-      <a href="/CampaignManagerMessage.do?command=View&column=description"><strong>Description</strong></a>
+      <a href="CampaignManagerMessage.do?command=View&column=description"><strong>Description</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("description") %>
     </td>
     <td valign=center align=left nowrap>
-      <a href="/CampaignManagerMessage.do?command=View&column=m.enteredby"><strong>Entered By</strong></a>
+      <a href="CampaignManagerMessage.do?command=View&column=m.enteredby"><strong>Entered By</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("m.enteredby") %>
     </td>
     <td valign=center align=left>
-      <a href="/CampaignManagerMessage.do?command=View&column=m.modified"><strong>Last Modified</strong></a>
+      <a href="CampaignManagerMessage.do?command=View&column=m.modified"><strong>Last Modified</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("m.modified") %>
     </td>
   </tr>
@@ -66,11 +66,11 @@ Message List
   <tr class="containerBody">
   <dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete">
     <td width=8 valign=center nowrap align="center" class="row<%= rowid %>">
-      <dhv:permission name="campaign-campaigns-messages-edit"><a href="/CampaignManagerMessage.do?command=Modify&id=<%=thisMessage.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-messages-delete"><a href="javascript:popURLReturn('/CampaignManagerMessage.do?command=ConfirmDelete&id=<%=thisMessage.getId()%>','CampaignManagerMessage.do?command=View', 'Delete_message','330','200','yes','no');">Del</a></dhv:permission>
+      <dhv:permission name="campaign-campaigns-messages-edit"><a href="CampaignManagerMessage.do?command=Modify&id=<%=thisMessage.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-messages-delete"><a href="javascript:popURLReturn('/CampaignManagerMessage.do?command=ConfirmDelete&id=<%=thisMessage.getId()%>','CampaignManagerMessage.do?command=View', 'Delete_message','330','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
 		<td width=40% valign=center class="row<%= rowid %>">
-      <a href="/CampaignManagerMessage.do?command=Details&id=<%=thisMessage.getId()%>"><%= toHtml(thisMessage.getName()) %></a>
+      <a href="CampaignManagerMessage.do?command=Details&id=<%=thisMessage.getId()%>"><%= toHtml(thisMessage.getName()) %></a>
 		</td>
 		<td width=60% valign=center class="row<%= rowid %>">
       <%= toHtml(thisMessage.getDescription()) %>

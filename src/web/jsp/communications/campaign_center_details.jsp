@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="Campaign" class="org.aspcfs.modules.Campaign" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="fileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
@@ -45,7 +45,7 @@ Campaign Details
                 <td align="center">
                   <%= (Campaign.hasGroups()?"<font color='green'>" + Campaign.getGroupCount() + " selected</font>":"<font color='red'>No Groups Selected</font>") %><br>
                   &nbsp;<br>
-                  <dhv:permission name="campaign-campaigns-edit"><a href="/CampaignManager.do?command=AddGroups&id=<%= Campaign.getId() %>">Choose Groups</a><br>&nbsp;</dhv:permission>
+                  <dhv:permission name="campaign-campaigns-edit"><a href="CampaignManager.do?command=AddGroups&id=<%= Campaign.getId() %>">Choose Groups</a><br>&nbsp;</dhv:permission>
                 </td>
               </tr>
             </table>
@@ -64,7 +64,7 @@ Campaign Details
                 <td align="center">
                   <%= (Campaign.hasMessage()?"<font color='green'>" + Campaign.getMessageName() + "</font>":"<font color='red'>No Message Selected</font>") %><br>
                   &nbsp;<br>
-                  <dhv:permission name="campaign-campaigns-edit"><a href="/CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>">Choose Message</a><br>&nbsp;</dhv:permission>
+                  <dhv:permission name="campaign-campaigns-edit"><a href="CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>">Choose Message</a><br>&nbsp;</dhv:permission>
                 </td>
               </tr>
             </table>
@@ -91,7 +91,7 @@ Campaign Details
                     None<br>
                     &nbsp;<br>
                   </dhv:evaluate>
-                  <dhv:permission name="campaign-campaigns-edit"><a href="/CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>">Choose optional<br>attachments</a></dhv:permission>
+                  <dhv:permission name="campaign-campaigns-edit"><a href="CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>">Choose optional<br>attachments</a></dhv:permission>
                 </td>
               </tr>
             </table>
@@ -109,7 +109,7 @@ Campaign Details
               <tr class="containerBody">
                 <td align="center">
                   <%= (Campaign.hasDetails()?"<font color='green'>Scheduled for " + Campaign.getActiveDateString() + "<br>" + toHtml(Campaign.getDeliveryName()) + "</font><br>":"<font color='red'>Not Scheduled</font><br>&nbsp;<br>") %>
-                  <dhv:permission name="campaign-campaigns-view"><a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>">Choose Options</a><br>&nbsp;</dhv:permission>
+                  <dhv:permission name="campaign-campaigns-view"><a href="CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>">Choose Options</a><br>&nbsp;</dhv:permission>
                 </td>
               </tr>
             </table>

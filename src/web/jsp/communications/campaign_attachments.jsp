@@ -11,7 +11,7 @@ Customize and configure your Campaigns with the following attachments:<br>
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td>
-            <strong><a href="/CampaignManagerSurvey.do?command=View">Interactive Responses</a></strong>
+            <strong><a href="CampaignManagerSurvey.do?command=View">Interactive Responses</a></strong>
           </td>
         </tr>
         <tr class="containerBody">

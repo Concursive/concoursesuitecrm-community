@@ -1,12 +1,12 @@
-<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.webutils.LookupElement" %>
-<jsp:useBean id="SearchFieldList" class="org.aspcfs.modules.SearchFieldList" scope="request"/>
-<jsp:useBean id="StringOperatorList" class="org.aspcfs.modules.SearchOperatorList" scope="request"/>
-<jsp:useBean id="DateOperatorList" class="org.aspcfs.modules.SearchOperatorList" scope="request"/>
-<jsp:useBean id="NumberOperatorList" class="org.aspcfs.modules.SearchOperatorList" scope="request"/>
-<jsp:useBean id="SearchForm" class="org.aspcfs.modules.SearchFormBean" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.webutils.LookupElement" %>
+<jsp:useBean id="SearchFieldList" class="org.aspcfs.modules.communications.base.SearchFieldList" scope="request"/>
+<jsp:useBean id="StringOperatorList" class="org.aspcfs.modules.communications.base.SearchOperatorList" scope="request"/>
+<jsp:useBean id="DateOperatorList" class="org.aspcfs.modules.communications.base.SearchOperatorList" scope="request"/>
+<jsp:useBean id="NumberOperatorList" class="org.aspcfs.modules.communications.base.SearchOperatorList" scope="request"/>
+<jsp:useBean id="SearchForm" class="org.aspcfs.modules.communications.beans.SearchFormBean" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="AccountTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="SCL" class="org.aspcfs.modules.SearchCriteriaList" scope="request"/>
+<jsp:useBean id="SCL" class="org.aspcfs.modules.communications.base.SearchCriteriaList" scope="request"/>
 <jsp:useBean id="ContactSource" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 
@@ -151,9 +151,9 @@ listOfOperators[0] = stringOperators
 listOfOperators[1] = dateOperators
 listOfOperators[2] = numberOperators
 </script>
-<form name="searchForm" method="post" action="/CampaignManagerGroup.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
+<form name="searchForm" method="post" action="CampaignManagerGroup.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
 <a href="CampaignManager.do">Communications Manager</a> >
-<a href="/CampaignManagerGroup.do?command=View">Group List</a> >
+<a href="CampaignManagerGroup.do?command=View">Group List</a> >
 Add a Group
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

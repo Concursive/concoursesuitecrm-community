@@ -1,15 +1,15 @@
 <%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="Campaign" class="org.aspcfs.modules.Campaign" scope="request"/>
-<jsp:useBean id="sclList" class="org.aspcfs.modules.SearchCriteriaListList" scope="request"/>
-<jsp:useBean id="selectedList" class="org.aspcfs.modules.SearchCriteriaListList" scope="request"/>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
+<jsp:useBean id="sclList" class="org.aspcfs.modules.communications.base.SearchCriteriaListList" scope="request"/>
+<jsp:useBean id="selectedList" class="org.aspcfs.modules.communications.base.SearchCriteriaListList" scope="request"/>
 <jsp:useBean id="CampaignCenterGroupInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
-<form name="modForm" action="/CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>" method="post">
+<form name="modForm" action="CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>" method="post">
 <a href="CampaignManager.do">Communications Manager</a> > 
-<a href="/CampaignManager.do?command=View">Campaign List</a> >
-<a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
+<a href="CampaignManager.do?command=View">Campaign List</a> >
+<a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Choose Groups
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -29,7 +29,7 @@ Choose Groups
 <table width="100%" border="0">
   <tr>
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].action='/CampaignManager.do?command=AddGroups&id=<%= Campaign.getId() %>';document.forms[0].submit();">
+      <select size="1" name="listView" onChange="javascript:document.forms[0].action='CampaignManager.do?command=AddGroups&id=<%= Campaign.getId() %>';document.forms[0].submit();">
         <option <%= CampaignCenterGroupInfo.getOptionValue("my") %>>My Groups</option>
         <option <%= CampaignCenterGroupInfo.getOptionValue("all") %>>All Groups</option>
       </select>
@@ -60,7 +60,7 @@ Choose Groups
       <%= toHtml(thisList.getGroupName()) %>
     </td>
     <td valign="center" nowrap class="row<%= rowid %>">
-      <a href="javascript:popURL('/CampaignManager.do?command=PreviewGroups&id=<%= Campaign.getId() %>&scl=<%= thisList.getId() %>','CFS_Recipients',600,450,true,true)">Preview Recipients</a>
+      <a href="javascript:popURL('CampaignManager.do?command=PreviewGroups&id=<%= Campaign.getId() %>&scl=<%= thisList.getId() %>','CFS_Recipients',600,450,true,true)">Preview Recipients</a>
     </td>
   </tr>
 <%
