@@ -7,10 +7,10 @@ DELETE FROM sites;
 INSERT INTO sites 
 (sitecode,vhost,dbhost,dbname,dbport,dbuser,dbpw,driver) 
 VALUES 
-('cfs',
+('ds21',
  '127.0.0.1',
- 'jdbc:postgresql://127.0.0.1',
- 'cdb_cfs',
+ 'jdbc:postgresql://127.0.0.1:5432/cdb_ds21',
+ 'cdb_ds21',
  5432,
  'postgres','',
  'org.postgresql.Driver');
