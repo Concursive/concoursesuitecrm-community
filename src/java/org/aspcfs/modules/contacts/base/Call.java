@@ -666,7 +666,10 @@ public class Call extends GenericBean {
    *@since
    */
   public boolean insert(Connection db, ActionContext context) throws SQLException {
-
+          return(insert(db));
+  }
+  
+  public boolean insert(Connection db) throws SQLException {
     if (!isValid(db)) {
       return false;
     }
@@ -711,11 +714,6 @@ public class Call extends GenericBean {
     id = DatabaseUtils.getCurrVal(db, "call_log_call_id_seq");
     return true;
   }
-  
-  public boolean insert(Connection db) throws SQLException {
-          return insert(db, null);
-  }
-
 
   /**
    *  Description of the Method
