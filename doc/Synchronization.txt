@@ -313,7 +313,7 @@ Client #1 Ends Synchronization
       <property>modified</property>
       <property>modifiedBy</property>
     </meta>
-    <makeList action="sync"/>
+    <makeList action="sync" identity="1"/>
   </transaction>
 
   <transaction id="7">
@@ -325,7 +325,7 @@ Client #1 Ends Synchronization
       <property>modified</property>
       <property>modifiedBy</property>
     </meta>
-    <modelList action="sync"/>
+    <modelList action="sync" identity="1"/>
   </transaction>
   
   <transaction id="8">
@@ -338,7 +338,7 @@ Client #1 Ends Synchronization
       <property>modified</property>
       <property>modifiedBy</property>
     </meta>
-    <vehicleList action="sync">
+    <vehicleList action="sync" identity="1">
       <year>*Optionally specify a specific year to receive, or remove this attribute*</year>
     </vehicleList>
   </transaction>
@@ -349,7 +349,7 @@ Client #1 Ends Synchronization
       <property>description</property>
       <property>modified</property>
     </meta>
-    <adTypeList action="sync">
+    <adTypeList action="sync" identity="1">
       <table>autoguide_ad_run_types</table>
     </adTypeList>
   </transaction>
@@ -371,7 +371,7 @@ Client #1 Ends Synchronization
       <property>modified</property>
       <property>hasPicture</property>
     </meta>
-    <accountInventoryList action="sync">
+    <accountInventoryList action="sync" identity="1">
       <accountGuid>*OPTIONAL: SPECIFY AN ACCOUNT ID OR YOU GET ALL ACCOUNTS*</accountGuid>
     </accountInventoryList>
   </transaction>
@@ -391,7 +391,7 @@ Client #1 Ends Synchronization
       <property>completeDate</property>
       <property>modified</property>
     </meta>
-    <adRunList action="sync">
+    <adRunList action="sync" identity="1">
       <inventoryGuid>*REQUIRED: MUST SPECIFY INVENTORY GUID*</inventoryGuid>
     </adRunList>
   </transaction>
@@ -401,9 +401,9 @@ Client #1 Ends Synchronization
       <property>guid</property>
       <property>inventoryGuid</property>
     </meta>
-    <optionList action="sync">
+    <inventoryOptionList action="sync" identity="1">
       <inventoryGuid>*REQUIRED: MUST SPECIFY INVENTORY GUID*</inventoryGuid>
-    </optionList>
+    </inventoryOptionList>
   </transaction>
   
   ** TODO: inventory_pictures **

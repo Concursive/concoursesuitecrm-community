@@ -31,6 +31,11 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'adRun', 'com.darkhorseventures.autoguide.base.AdRun', 10);
  
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item)
+ VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 30, false);
+ 
+/* 
+THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
  VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 30, false,
 'CREATE TABLE sync_table (
@@ -42,6 +47,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
        PRIMARY KEY (table_id)
 )'
 );
+*/
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
  VALUES (2, 'status_master', null, 40,
@@ -76,6 +82,11 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 )'
 );
 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
+ VALUES (2, 'system', null, 70);
+
+/* 
+THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
  VALUES (2, 'system', null, 70,
 'CREATE TABLE system (
@@ -86,6 +97,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
        PRIMARY KEY (pda_id)
 )'
 );
+*/
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
  VALUES (2, 'modelList', 'com.darkhorseventures.autoguide.base.ModelList', 80, true, 
@@ -363,7 +375,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
 'CREATE TABLE ad_run (
        ad_run_id            int NOT NULL,
        record_status_id     int NULL,
-       inventory_id         int NOT NULL,
+       inventory_id         int NULL,
        ad_type_id           int NULL,
        ad_run_date          datetime NULL,
        has_picture          int NULL,
@@ -372,7 +384,6 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
        modifiedby           int NULL,
        enteredby            int NULL,
        PRIMARY KEY (ad_run_id), 
-       PRIMARY KEY (inventory_id), 
        FOREIGN KEY (inventory_id)
                              REFERENCES account_inventory (inventory_id), 
        FOREIGN KEY (ad_type_id)
@@ -416,7 +427,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
        modified             datetime NULL,
        modifiedby           int NULL,
        enteredby            int NULL,
-       PRIMARY KEY (pitcure_name, inventory_id), 
+       PRIMARY KEY (picture_name, inventory_id), 
        FOREIGN KEY (inventory_id)
                              REFERENCES account_inventory (inventory_id), 
        FOREIGN KEY (record_status_id)
