@@ -177,7 +177,7 @@
     <forward name="AddOK" resource="/autoguide_account_add.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/AccountsAutoGuide.do?command=AccountList"/>
     <forward name="ModifyOK" resource="/autoguide_account_modify.jsp" layout="nav"/>
-    <forward name="UpdateOK" resource="/AccountsAutoGuide.do?command=AccountDetails"/>
+    <forward name="UpdateOK" resource="/AccountsAutoGuide.do?command=Details"/>
     <forward name="DetailsOK" resource="/autoguide_accountdetails.jsp" layout="nav"/>
     <forward name="DeleteOK" resource="/AccountsAutoGuide.do?command=AccountList"/>
   </action>

@@ -447,7 +447,7 @@ public final class AutoGuide extends CFSModule {
     try {
       db = this.getConnection(context);
       thisItem.generateVehicleId(db);
-      //resultCount = thisItem.update(db);
+      resultCount = thisItem.update(db);
       if (resultCount == -1) {
         //processErrors(context, thisItem.getErrors());
         //buildFormElements(context, db);

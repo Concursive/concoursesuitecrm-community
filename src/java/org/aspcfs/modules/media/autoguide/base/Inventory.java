@@ -305,8 +305,10 @@ public class Inventory {
       resultCount = pst.executeUpdate();
       pst.close();
 
-      options.setInventoryId(id);
-      options.update(db);
+      if (resultCount == 1) {
+        options.setInventoryId(id);
+        options.update(db);
+      }
       
       db.commit();
     } catch (Exception e) {
