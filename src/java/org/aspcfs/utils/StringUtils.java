@@ -2,6 +2,7 @@ package org.aspcfs.utils;
 
 import java.util.ArrayList;
 import java.util.zip.*;
+import java.util.regex.*;
 import java.io.*;
 
 /**
@@ -465,6 +466,24 @@ public class StringUtils {
       }
     }
     return thisRecord;
+  }
+
+
+  /**
+   *  Replaces all occurances of the matching pattern in the source string
+   *
+   *@param  source       Description of the Parameter
+   *@param  pattern      Description of the Parameter
+   *@param  replacement  Description of the Parameter
+   *@return              Description of the Return Value
+   */
+  public static String replacePattern(String source, String thisPattern, String replacement) {
+    Pattern pattern = Pattern.compile(thisPattern);
+    Matcher match = pattern.matcher(source);
+    if (match.find()) {
+      return match.replaceAll(replacement);
+    }
+    return source;
   }
 }
 
