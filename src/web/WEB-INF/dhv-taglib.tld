@@ -216,6 +216,10 @@
     <attribute>
       <name>abbreviate</name>
       <required>no</required>
+    </attribute>
+    <attribute>
+      <name>enableJScript</name>
+      <required>no</required>
     </attribute>    
   </tag>
   
@@ -247,7 +251,7 @@
       <required>no</required>
     </attribute>
     <attribute>
-      <name>showForm</name>
+      <name>showHiddenParams</name>
       <required>no</required>
     </attribute>
     <attribute>
@@ -265,6 +269,10 @@
     </attribute>
     <attribute>
       <name>showControlOnly</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>enableJScript</name>
       <required>no</required>
     </attribute>
   </tag>
@@ -308,6 +316,10 @@
     </attribute>
     <attribute>
       <name>listType</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>lookupElementClass</name>
       <required>no</required>
     </attribute>
   </tag>
