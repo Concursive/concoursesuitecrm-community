@@ -616,6 +616,7 @@
   
   <!-- Run the CFS Notifier -->
   <target name="run.notifier" depends="run.notifier.init" if="notifier.present">
+    <echo message="Processing sites that are enabled in the gatekeeper database"/>
     <path id="cfs2.classpath">
       <fileset dir="${env.CATALINA_HOME}/common/lib">
         <include name="**/*.jar"/>
