@@ -8,9 +8,9 @@
    <title><%=Dialog.getTitle()%></title>
     <frameset rows="50,100%,50" frameborder="0">
         <% if ("true".equals((String)getServletConfig().getServletContext().getAttribute("ForceSSL"))) { %>
-          <frame name="topframe" src="https://<%= request.getServerName() %>/loadframes.jsp">
-          <frame marginheight="0" name="middleframe" src="https://<%= request.getServerName() %>/loadmiddleframe.jsp">
-          <frame name="bottomframe" src="https://<%= request.getServerName() %>/loadbottomframe.jsp">          
+          <frame name="topframe" src="https://<%= getServerUrl(request) %>/loadframes.jsp">
+          <frame marginheight="0" name="middleframe" src="https://<%= request.getServerName() %><%= request.getContextPath() %>/loadmiddleframe.jsp">
+          <frame name="bottomframe" src="https://<%= getServerUrl(request) %>/loadbottomframe.jsp">
         <%} else {%>
           <frame name="topframe" src="loadframes.jsp">
           <frame marginheight="0" name="middleframe" src="loadmiddleframe.jsp">
