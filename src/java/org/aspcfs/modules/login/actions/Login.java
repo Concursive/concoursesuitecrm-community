@@ -18,6 +18,8 @@ import java.util.Hashtable;
  */
 public final class Login extends GenericAction {
 
+  public final static String fs = System.getProperty("file.separator");
+  
   /**
    *  Processes the user login
    *
@@ -110,8 +112,14 @@ public final class Login extends GenericAction {
       if (!((Hashtable)context.getServletContext().getAttribute("SystemStatus")).containsKey(ce.getUrl())) {
         synchronized (this) {
           if (!((Hashtable)context.getServletContext().getAttribute("SystemStatus")).containsKey(ce.getUrl())) {
-            ((Hashtable)context.getServletContext().getAttribute("SystemStatus")).put(ce.getUrl(), new SystemStatus(db));
-            if (System.getProperty("DEBUG") != null) System.out.println("Login-> Added new System Status object: " + ce.getUrl());
+            SystemStatus newSystemStatus = new SystemStatus(db);
+            newSystemStatus.setFileLibraryPath( 
+              context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
+                "fileLibrary" + fs + ce.getDbName() + fs);
+            ((Hashtable)context.getServletContext().getAttribute("SystemStatus")).put(ce.getUrl(), newSystemStatus);
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("Login-> Added new System Status object: " + ce.getUrl());
+            }
           }
         }
       }

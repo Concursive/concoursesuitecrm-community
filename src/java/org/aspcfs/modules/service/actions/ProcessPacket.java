@@ -25,7 +25,7 @@ import java.lang.reflect.*;
  *
  *  After processing is complete, a response is sent with a request status.
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    April 24, 2002
  *@version    $Id$
  */
@@ -69,6 +69,7 @@ public final class ProcessPacket extends CFSModule {
         
         //Prepare the objectHooks: Inserts and updates can trigger code if specified
         ObjectHookList hooks = new ObjectHookList();
+        hooks.setFileLibraryPath(this.getDbNamePath(context));
         hooks.buildList(db);
         ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
         ConnectionElement ce = auth.getConnectionElement(context);

@@ -298,6 +298,13 @@ public class CFSModule {
         moduleFolderName + fs);
         //"id" + moduleItemId + fs);
   }
+  
+  public static String getDbNamePath(ActionContext context) {
+    return (
+        context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
+        "fileLibrary" + fs +
+        getDbName(context) + fs);
+  }
 
 
   /**
