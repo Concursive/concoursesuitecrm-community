@@ -683,8 +683,9 @@ public final class Accounts extends CFSModule {
     PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
     orgListInfo.setLink("/Accounts.do?command=View");
 
-    //Need to reset the contact list PagedListInfo since this is a new account
-    this.deletePagedListInfo(context, "ContactListInfo");
+    //NOTE: For any new container menu item...
+    //Need to reset any sub PagedListInfos since this is a new account
+    this.resetPagedListInfo(context);
 
     Connection db = null;
     OrganizationList organizationList = new OrganizationList();
@@ -745,10 +746,12 @@ public final class Accounts extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      //ticList.setPagedListInfo(orgListInfo);
+      newOrg = new Organization(db, passedId);
+      PagedListInfo ticketListInfo = this.getPagedListInfo(context, "AccountTicketInfo");
+      ticketListInfo.setLink("/Accounts.do?command=ViewTickets&orgId=" + passedId);
+      ticList.setPagedListInfo(ticketListInfo);
       ticList.setOrgId(passedId);
       ticList.buildList(db);
-      newOrg = new Organization(db, passedId);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1054,6 +1057,9 @@ public final class Accounts extends CFSModule {
       if (recordId == null && thisCategory.getAllowMultipleRecords()) {
         //The user didn't request a specific record, so show a list
         //of records matching this category that the user can choose from
+        PagedListInfo folderListInfo = this.getPagedListInfo(context, "AccountFolderInfo");
+        folderListInfo.setLink("/Accounts.do?command=Fields&orgId=" + orgId + "&catId=" + selectedCatId);
+      
         CustomFieldRecordList recordList = new CustomFieldRecordList();
         recordList.setLinkModuleId(Constants.ACCOUNTS);
         recordList.setLinkItemId(thisOrganization.getOrgId());
@@ -1429,6 +1435,17 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+  }
+  
+  private void resetPagedListInfo(ActionContext context) {
+    this.deletePagedListInfo(context, "ContactListInfo");
+    this.deletePagedListInfo(context, "AccountFolderInfo");
+    this.deletePagedListInfo(context, "RptListInfo");
+    this.deletePagedListInfo(context, "OpportunityPagedInfo");
+    this.deletePagedListInfo(context, "AccountTicketInfo");
+    this.deletePagedListInfo(context, "AutoGuideAccountInfo");
+    this.deletePagedListInfo(context, "RevenueListInfo");
+    this.deletePagedListInfo(context, "AccountDocumentInfo");
   }
 }
 

@@ -33,6 +33,12 @@ public final class AccountsDocuments extends CFSModule {
       FileItemList documents = new FileItemList();
       documents.setLinkModuleId(Constants.ACCOUNTS);
       documents.setLinkItemId(orgId);
+      
+      //TODO: Not implemented in the JSP, so not implemented here
+      //PagedListInfo documentListInfo = this.getPagedListInfo(context, "AccountDocumentInfo");
+      //documentListInfo.setLink("AccountsDocuments.do?command=View&orgId=" + orgId);
+      //documents.setPagedListInfo(documentListInfo);
+      
       documents.buildList(db);
       context.getRequest().setAttribute("FileItemList", documents);
     } catch (Exception e) {
