@@ -13,9 +13,14 @@
     var obj = document.getElementById(id);
     obj.style.display = (obj.style.display == 'none')?'':'none';
     if (obj.style.display == '') {
-      //updateContactList();
       document.addUser.contact_nameFirst.focus();
     }
+    return false;
+  }
+  
+  function hideSpan(id) {
+    var obj = document.getElementById(id);
+    obj.style.display = 'none';
     return false;
   }
   
@@ -56,7 +61,7 @@ Add User<br>
       Contact
     </td>
     <td valign="center">
-      <% ContactList.setJsEvent("onChange=\"javascript:HideSpan('newContact');\""); %>
+      <% ContactList.setJsEvent("onChange=\"javascript:hideSpan('newContact');\""); %>
       <%= ContactList.getHtmlSelect("contactId", UserRecord.getContactId()) %><font color="red">*</font>
       &nbsp;[<a href="#" onClick="javascript:toggle('newContact'); return false;">add new</a>]
       <span name="newContact" ID="newContact" style="display:none">
