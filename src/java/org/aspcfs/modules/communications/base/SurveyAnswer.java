@@ -45,6 +45,40 @@ public class SurveyAnswer {
 
 
   /**
+   *  Constructor for the SurveyAnswer object
+   *
+   *@param  db                Description of the Parameter
+   *@param  passedId          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public SurveyAnswer(Connection db, int passedId) throws SQLException {
+    if (passedId < 1) {
+      throw new SQLException("Question ID not specified.");
+    }
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    String sql =
+        "SELECT * " +
+        "FROM active_survey_answers s " +
+        "WHERE answer_id = ? ";
+    pst = db.prepareStatement(sql);
+    pst.setInt(1, passedId);
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    } else {
+      rs.close();
+      pst.close();
+      throw new SQLException("Question Answer record not found.");
+    }
+    rs.close();
+    pst.close();
+    buildItems(db, passedId);
+  }
+  
+  
+  /**
    *  Description of the Method
    *
    *@param  request    Description of the Parameter
@@ -178,113 +212,6 @@ public class SurveyAnswer {
 
 
   /**
-   *  Description of the Method
-   *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  protected void buildRecord(ResultSet rs) throws SQLException {
-    this.setId(rs.getInt("answer_id"));
-    this.setResponseId(rs.getInt("response_id"));
-    this.setQuestionId(rs.getInt("question_id"));
-    this.setComments(rs.getString("comments"));
-    this.setQuantAns(rs.getInt("quant_ans"));
-    this.setTextAns(rs.getString("text_ans"));
-    this.setEntered(rs.getTimestamp("entered"));
-  }
-
-
-  /**
-   *  Build Items related to Answer
-   *
-   *@param  db                Description of the Parameter
-   *@param  thisAnswerId      Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  public void buildItems(Connection db, int thisAnswerId) throws SQLException {
-    try {
-      PreparedStatement pst = db.prepareStatement(
-          "SELECT * " +
-          "FROM active_survey_answer_items t " +
-          "WHERE t.answer_id = ? ");
-      pst.setInt(1, thisAnswerId);
-      ResultSet rs = pst.executeQuery();
-      while (rs.next()) {
-        if (itemList == null) {
-          itemList = new ArrayList();
-        }
-        SurveyAnswerItem thisAnswerItem = new SurveyAnswerItem();
-        thisAnswerItem.buildRecord(rs);
-        itemList.add(thisAnswerItem);
-      }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
-      throw new SQLException(e.getMessage());
-    }
-  }
-
-
-  /**
-   *  Builds the contactId of the person who responded to this Question
-   *
-   *@param  db                The new contactId value
-   *@exception  SQLException  Description of the Exception
-   */
-  public void setContactId(Connection db) throws SQLException {
-    try {
-      PreparedStatement pst = db.prepareStatement(
-          "SELECT sr.contact_id as contactid " +
-          "FROM active_survey_answers sa, active_survey_responses sr " +
-          "WHERE sa.answer_id = ? AND (sa.response_id = sr.response_id) ");
-      pst.setInt(1, this.getId());
-      ResultSet rs = pst.executeQuery();
-      if (rs.next()) {
-        setContactId(rs.getInt("contactid"));
-      }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
-      throw new SQLException(e.getMessage());
-    }
-  }
-
-
-  /**
-   *  Constructor for the SurveyAnswer object
-   *
-   *@param  db                Description of the Parameter
-   *@param  passedId          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  public SurveyAnswer(Connection db, int passedId) throws SQLException {
-    if (passedId < 1) {
-      throw new SQLException("Question Answer ID not specified.");
-    }
-
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-    String sql =
-        "SELECT * " +
-        "FROM active_survey_answers s " +
-        "WHERE answer_id = ? ";
-    pst = db.prepareStatement(sql);
-    pst.setInt(1, passedId);
-    rs = pst.executeQuery();
-    if (rs.next()) {
-      buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Question Answer record not found.");
-    }
-    rs.close();
-    pst.close();
-    buildItems(db, passedId);
-  }
-
-
-  /**
    *  Gets the questionId attribute of the SurveyAnswer object
    *
    *@return    The questionId value
@@ -381,6 +308,79 @@ public class SurveyAnswer {
    */
   public void setQuantAns(String tmp) {
     this.quantAns = Integer.parseInt(tmp);
+  }
+  
+  
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  protected void buildRecord(ResultSet rs) throws SQLException {
+    this.setId(rs.getInt("answer_id"));
+    this.setResponseId(rs.getInt("response_id"));
+    this.setQuestionId(rs.getInt("question_id"));
+    this.setComments(rs.getString("comments"));
+    this.setQuantAns(rs.getInt("quant_ans"));
+    this.setTextAns(rs.getString("text_ans"));
+    this.setEntered(rs.getTimestamp("entered"));
+  }
+
+
+  /**
+   *  Build Items related to Answer
+   *
+   *@param  db                Description of the Parameter
+   *@param  thisAnswerId      Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildItems(Connection db, int thisAnswerId) throws SQLException {
+    try {
+      PreparedStatement pst = db.prepareStatement(
+          "SELECT * " +
+          "FROM active_survey_answer_items t " +
+          "WHERE t.answer_id = ? ");
+      pst.setInt(1, thisAnswerId);
+      ResultSet rs = pst.executeQuery();
+      while (rs.next()) {
+        if (itemList == null) {
+          itemList = new ArrayList();
+        }
+        SurveyAnswerItem thisAnswerItem = new SurveyAnswerItem();
+        thisAnswerItem.buildRecord(rs);
+        itemList.add(thisAnswerItem);
+      }
+      rs.close();
+      pst.close();
+    } catch (SQLException e) {
+      throw new SQLException(e.getMessage());
+    }
+  }
+
+
+  /**
+   *  Builds the contactId of the person who responded to this Question
+   *
+   *@param  db                The new contactId value
+   *@exception  SQLException  Description of the Exception
+   */
+  public void setContactId(Connection db) throws SQLException {
+    try {
+      PreparedStatement pst = db.prepareStatement(
+          "SELECT sr.contact_id as contactid " +
+          "FROM active_survey_answers sa, active_survey_responses sr " +
+          "WHERE sa.answer_id = ? AND (sa.response_id = sr.response_id) ");
+      pst.setInt(1, this.getId());
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        setContactId(rs.getInt("contactid"));
+      }
+      rs.close();
+      pst.close();
+    } catch (SQLException e) {
+      throw new SQLException(e.getMessage());
+    }
   }
 
 
