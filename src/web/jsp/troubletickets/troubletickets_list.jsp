@@ -30,7 +30,8 @@
     <td><b>Priority</b></td>
     <td><b>Age</b></td>
     <td><b>Company</b></td>
-    <td><b><dhv:label name="tickets-problem">Issue</dhv:label></b></td>
+    <td><b>Category</b></td>
+    <!--td><b><dhv:label name="tickets-problem">Issue</dhv:label></b></td-->
 		<td><b>Assigned&nbsp;To</b></td>
   </tr>
   
@@ -50,7 +51,7 @@
 %>   
 	<tr>
 	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
-    <td width="8" valign="top" nowrap class="row<%= rowid %>">
+    <td rowspan=2 width="8" valign="top" nowrap class="row<%= rowid %>">
       <dhv:permission name="tickets-tickets-edit"><a href="/TroubleTickets.do?command=Modify&id=<%= assignedTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=Delete&id=<%= assignedTic.getId() %>');">Del</a></dhv:permission>
     </td>
     	</dhv:permission>
@@ -66,13 +67,23 @@
 		<td width="40%" valign="top" class="row<%= rowid %>">
 			<%=toHtml(assignedTic.getCompanyName())%><dhv:evaluate exp="<%=!(assignedTic.getCompanyEnabled())%>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
-		<td width="52%" valign="top" class="row<%= rowid %>">
-			<%= toHtml(assignedTic.getProblemHeader()) %> <% if (assignedTic.getCategoryName() != null) { %>[<%=toHtml(assignedTic.getCategoryName())%>]<%}%>
-		</td>
 		<td valign="top" class="row<%= rowid %>">
+			<% if (assignedTic.getCategoryName() != null) { %>
+          <%=toHtml(assignedTic.getCategoryName())%>
+      <%} else {%>
+          --none--
+      <%}%>
+		</td>
+		<td width=10% nowrap valign="top" class="row<%= rowid %>">
 			<%=toHtml(assignedTic.getOwnerName())%>
 		</td>
 	</tr>
+  
+  <tr>
+  <td colspan=6 valign="top" class="row<%= rowid %>">
+  <%= toHtml(assignedTic.getProblemHeader()) %>
+  </td>
+  </tr>
 	<%}%>
 	</table>
 	<br>
@@ -103,7 +114,8 @@
     <td><b>Priority</b></td>
     <td><b>Age</b></td>
     <td><b>Company</b></td>
-    <td><b><dhv:label name="tickets-problem">Issue</dhv:label></b></td>
+    <td><b>Category</b></td>
+    <!--td><b><dhv:label name="tickets-problem">Issue</dhv:label></b></td-->
 		<td><b>Assigned&nbsp;To</b></td>
   </tr>
   
@@ -123,7 +135,7 @@
 %>   
 	<tr>
 	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
-    <td width="8" valign="top" nowrap class="row<%= rowid %>">
+    <td rowspan=2 width="8" valign="top" nowrap class="row<%= rowid %>">
       <dhv:permission name="tickets-tickets-edit"><a href="/TroubleTickets.do?command=Modify&id=<%= openTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=Delete&id=<%= openTic.getId() %>');">Del</a></dhv:permission>
     </td>
     	</dhv:permission>
@@ -139,13 +151,23 @@
 		<td width="40%" valign="top" class="row<%= rowid %>">
 			<%=toHtml(openTic.getCompanyName())%><dhv:evaluate exp="<%=!(openTic.getCompanyEnabled())%>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
-		<td width="52%" valign="top" class="row<%= rowid %>">
-			<%= toHtml(openTic.getProblemHeader()) %> <% if (openTic.getCategoryName() != null) { %>[<%=toHtml(openTic.getCategoryName())%>]<%}%>
-		</td>
 		<td valign="top" class="row<%= rowid %>">
+			<% if (openTic.getCategoryName() != null) { %>
+          <%=toHtml(openTic.getCategoryName())%>
+      <%} else {%>
+          --none--
+      <%}%>
+		</td>
+		<td width=10% nowrap valign="top" class="row<%= rowid %>">
 			<%=toHtml(openTic.getOwnerName())%>
 		</td>
 	</tr>
+  
+  <tr>
+  <td colspan=6 valign="top" class="row<%= rowid %>">
+  <%= toHtml(openTic.getProblemHeader()) %>
+  </td>
+  </tr>
 	<%}%>
 	</table>
 	<br>
@@ -177,7 +199,8 @@
     <td><b>Priority</b></td>
     <td><b>Age</b></td>
     <td><b>Company</b></td>
-    <td><b><dhv:label name="tickets-problem">Issue</dhv:label></b></td>
+    <td><b>Category</b></td>
+    <!--td><b><dhv:label name="tickets-problem">Issue</dhv:label></b></td-->
 		<td><b>Assigned&nbsp;To</b></td>
   </tr>
   
@@ -197,29 +220,40 @@
 %>   
 	<tr>
 	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
-    <td width="8" valign="top" nowrap class="row<%= rowid %>">
+    <td rowspan=2 width=8 valign="top" nowrap class="row<%= rowid %>">
       <dhv:permission name="tickets-tickets-edit"><a href="/TroubleTickets.do?command=Modify&id=<%= thisTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=Delete&id=<%= thisTic.getId() %>');">Del</a></dhv:permission>
     </td>
     	</dhv:permission>
-		<td width="15" valign="top" nowrap class="row<%= rowid %>">
+		<td width=50 valign="top" nowrap class="row<%= rowid %>">
 			<a href="/TroubleTickets.do?command=Details&id=<%=thisTic.getId()%>"><%=thisTic.getPaddedId()%></a>
 		</td>
-		<td width="10" valign="top" nowrap class="row<%= rowid %>">
+		<td width=75 valign="top" nowrap class="row<%= rowid %>">
 			<%=toHtml(thisTic.getPriorityName())%>
 		</td>
-		<td width="8%" valign="top" nowrap class="row<%= rowid %>">
+		<td width=30 valign="top" nowrap class="row<%= rowid %>">
 			<%=thisTic.getAgeOf()%>
 		</td>
-		<td width="40%" valign="top" class="row<%= rowid %>">
+		<td width="90%" valign="top" class="row<%= rowid %>">
 			<%=toHtml(thisTic.getCompanyName())%><dhv:evaluate exp="<%=!(thisTic.getCompanyEnabled())%>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
-		<td width="52%" valign="top" class="row<%= rowid %>">
-			<%= toHtml(thisTic.getProblemHeader()) %> <% if (thisTic.getCategoryName() != null) { %>[<%=toHtml(thisTic.getCategoryName())%>]<%}%>
-		</td>
 		<td valign="top" class="row<%= rowid %>">
+			<% if (thisTic.getCategoryName() != null) { %>
+          <%=toHtml(thisTic.getCategoryName())%>
+      <%} else {%>
+          --none--
+      <%}%>
+		</td>
+		<td width=10% nowrap valign="top" class="row<%= rowid %>">
 			<%=toHtml(thisTic.getOwnerName())%>
 		</td>
 	</tr>
+  
+  <tr>
+  <td colspan=6 valign="top" class="row<%= rowid %>">
+  <%= toHtml(thisTic.getProblemHeader()) %>
+  </td>
+  </tr>
+  
 	<%}%>
 	</table>
 	<br>
