@@ -1292,9 +1292,11 @@ public final class MyCFS extends CFSModule {
     if (!hasPermission(context, "myhomepage-profile-personal-edit")) {
       return ("PermissionError");
     }
+    //Prepare the action
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
+    //Process the request
     Contact thisContact = (Contact) context.getFormBean();
     thisContact.setRequestItems(context.getRequest());
     thisContact.setEnteredBy(getUserId(context));
@@ -1305,6 +1307,10 @@ public final class MyCFS extends CFSModule {
       if (resultCount == -1) {
         processErrors(context, thisContact.getErrors());
         buildFormElements(context, db);
+      } else {
+        //If the user is in the cache, update the contact record
+        thisContact.checkUserAccount(db);
+        this.updateUserContact(db, context, thisContact.getUserId());
       }
     } catch (Exception e) {
       errorMessage = e;

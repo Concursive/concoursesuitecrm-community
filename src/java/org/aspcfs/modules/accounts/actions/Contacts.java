@@ -387,27 +387,23 @@ public final class Contacts extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-contacts-edit"))) {
+    if (!hasPermission(context, "accounts-accounts-contacts-edit")) {
       return ("PermissionError");
     }
-
+    //Prepare the action
     Exception errorMessage = null;
-
+    Connection db = null;
+    int resultCount = 0;
+    //Process the form bean
     Contact newContact = (Contact) context.getFormBean();
     newContact.setRequestItems(context.getRequest());
-
     if (context.getRequest().getParameter("primaryContact") != null) {
       if (context.getRequest().getParameter("primaryContact").equalsIgnoreCase("true")) {
         newContact.setPrimaryContact(true);
       }
     }
-
     Organization thisOrganization = null;
     String orgid = context.getRequest().getParameter("orgId");
-
-    Connection db = null;
-    int resultCount = 0;
-
     try {
       db = this.getConnection(context);
       newContact.setEnteredBy(getUserId(context));
@@ -418,13 +414,16 @@ public final class Contacts extends CFSModule {
         processErrors(context, newContact.getErrors());
         buildFormElements(context, db);
         thisOrganization = new Organization(db, Integer.parseInt(orgid));
+      } else {
+        //If the user is in the cache, update the contact record
+        newContact.checkUserAccount(db);
+        this.updateUserContact(db, context, newContact.getUserId());
       }
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (resultCount == -1) {
         context.getRequest().setAttribute("OrgDetails", thisOrganization);

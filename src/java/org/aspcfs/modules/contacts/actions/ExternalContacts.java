@@ -850,23 +850,21 @@ public final class ExternalContacts extends CFSModule {
    *@since           1.1
    */
   public String executeCommandUpdateContact(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-edit"))) {
+    if (!hasPermission(context, "contacts-external_contacts-edit")) {
       return ("PermissionError");
     }
-
+    //Prepare the action
     Exception errorMessage = null;
+    Connection db = null;
+    int resultCount = 0;
+    //Process the request parameters
     String id = context.getRequest().getParameter("id");
-
     Contact thisContact = (Contact) context.getFormBean();
     if (context.getRequest().getParameter("primaryContact") != null) {
       if (context.getRequest().getParameter("primaryContact").equalsIgnoreCase("true")) {
         thisContact.setPrimaryContact(true);
       }
     }
-
-    Connection db = null;
-    int resultCount = 0;
-
     try {
       db = this.getConnection(context);
       Contact oldContact = new Contact(db, id);
@@ -879,6 +877,9 @@ public final class ExternalContacts extends CFSModule {
       thisContact.setModifiedBy(getUserId(context));
       resultCount = thisContact.update(db);
       if (resultCount == -1) {
+        //Prepare the form elements for the failed update
+        //NOTE: Duplicate code... this typically should just return a retry and 
+        //the main action would then prepare the form data again
         UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
         User thisRec = thisUser.getUserRecord();
         UserList shortChildList = thisRec.getShortChildList();
@@ -894,13 +895,16 @@ public final class ExternalContacts extends CFSModule {
         }
         processErrors(context, thisContact.getErrors());
         buildFormElements(context, db);
+      } else {
+        //If the user is in the cache, update the contact record
+        thisContact.checkUserAccount(db);
+        this.updateUserContact(db, context, thisContact.getUserId());
       }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "External Contacts", "Update Contact");
     if (errorMessage == null) {
       if (resultCount == -1) {

@@ -210,15 +210,12 @@ public final class CompanyDirectory extends CFSModule {
    *@since           1.0
    */
   public String executeCommandUpdateEmployee(ActionContext context) {
-
-    if (!(hasPermission(context, "contacts-internal_contacts-edit"))) {
+    if (!hasPermission(context, "contacts-internal_contacts-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
-
     try {
       Contact thisEmployee = (Contact) context.getFormBean();
       thisEmployee.addType(Contact.EMPLOYEE_TYPE);
@@ -230,13 +227,16 @@ public final class CompanyDirectory extends CFSModule {
       if (resultCount == -1) {
         processErrors(context, thisEmployee.getErrors());
         buildFormElements(context, db);
+      } else {
+        //If the user is in the cache, update the contact record
+        thisEmployee.checkUserAccount(db);
+        this.updateUserContact(db, context, thisEmployee.getUserId());
       }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     //Decide what happened with the update...
     addModuleBean(context, "Internal Contacts", "Update Employee");
     if (errorMessage == null) {
