@@ -18,9 +18,9 @@ import java.io.InputStream;
 import org.jcrontab.log.Log;
 
 /**
- *  This class ejecutes a native command
+ *  This class executes a native command
  *
- *@author     $Author$
+ *@author     iolalla
  *@created    February 4, 2003
  *@version    $Revision$
  */
@@ -74,6 +74,18 @@ public class NativeExec {
             cmd[i + 2] = args[i];
           }
         }
+        //only will work with Windows XP
+        else if (osName.equals("Windows XP")) {
+          if (cmd == null) {
+            cmd = new String[args.length + 2];
+          }
+          cmd[0] = "cmd.exe";
+          cmd[1] = "/C";
+
+          for (int i = 0; i < args.length; i++) {
+            cmd[i + 2] = args[i];
+          }
+        }
         //only will work with Linux
         else if (osName.equals("Linux")) {
           if (cmd == null) {
@@ -113,4 +125,3 @@ public class NativeExec {
     }
   }
 }
-
