@@ -104,7 +104,8 @@ public final class TroubleTicketTasks extends CFSModule {
         thisTask.setTicketId(Integer.parseInt(ticketId));
         recordInserted = thisTask.insert(db);
       } else {
-        if (!hasAuthority(context, thisTask.getOwner())) {
+        Task oldTask = new Task(db, thisTask.getId());
+        if (!hasAuthority(context, oldTask.getOwner())) {
           return ("PermissionError");
         }
         resultCount = thisTask.update(db);
