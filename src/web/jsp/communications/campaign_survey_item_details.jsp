@@ -15,19 +15,19 @@
   </td>     
 </tr>
 <tr>
-  <td>
+  <td class="containerBack">
   <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
-       <td width="25" valign="center" align="left">
+       <td valign="center" align="left" nowrap>
           Name
         </td>
-       <td valign="center" align="left">
+       <td valign="center" align="left" nowrap>
           Phone Number(s)
         </td>
-      <td valign="center" align="left">
+      <td valign="center" align="left" nowrap>
         Email Addresses
       </td>
-      <td valign="center" align="left">
+      <td valign="center" align="left" nowrap>
         Entered
       </td>
     </tr>
@@ -43,17 +43,17 @@
         }
         ActiveSurveyAnswerItem thisItem = (ActiveSurveyAnswerItem)i.next();
   %>      
-     <tr class="row<%= rowid %>">
+     <tr class="row<%= rowid %>" nowrap>
         <td valign="top" align="center" class="row<%= rowid %>" nowrap>
           <%= thisItem.getRecipient().getNameLastFirst() %>
         </td>
-        <td width="80%">
+        <td width="20" nowrap>
           <%= toHtml(thisItem.getRecipient().getPhoneNumber(PhoneNumber.BUSSINESS)) %>
         </td>
-        <td width="80%">
+        <td width="40" nowrap>
           <%= toHtml(thisItem.getRecipient().getEmailAddress(EmailAddress.BUSSINESS)) %>
         </td>
-        <td width="80%">
+        <td width="40" nowrap>
           <%= toDateTimeString(thisItem.getEntered()) %>
         </td>
       </tr>

@@ -12,7 +12,7 @@
 <br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="<%= openEnded ? "2" : "3"%>">
+    <td colspan="<%= openEnded ? "3" : "4"%>">
       <strong>Survey Comments</strong>
     </td>
   </tr>
@@ -70,7 +70,7 @@
     <dhv:pagedListControl object="CommentListInfo" />
   <%} else {%>  
   <tr>
-    <td class="row2" valign="center" colspan="<%= openEnded ? "2" : "3" %>">
+    <td class="row2" valign="center" colspan="<%= openEnded ? "3" : "4" %>">
       No comments found for this question.
     </td>
   </tr>
