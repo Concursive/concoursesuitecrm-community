@@ -45,7 +45,7 @@ Response Details
             ActiveSurveyQuestion thisItem = (ActiveSurveyQuestion)z.next();
             int type = thisItem.getType();
             int border = (thisItem.getType() == SurveyQuestion.ITEMLIST || thisItem.getType() == SurveyQuestion.QUANT_COMMENTS ? 1 : 0);
-            SurveyAnswerList answerList = thisItem.getAnswerList();
+            SurveyAnswerList answers = thisItem.getAnswerList();
              
 %>
           <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -66,13 +66,13 @@ Response Details
                     <dhv:evaluate exp="<%= (type == SurveyQuestion.ITEMLIST) %>">
                       <tr><td width="100%" align="left">Item</td><td align="left">Selection</td></tr>
                       <% 
-                        HashMap itemListResponse = thisItem.getItemListResponse(answerList);
+                        HashMap itemListResponse = thisItem.getItemListResponse(answers);
                         Iterator i = itemListResponse.keySet().iterator();
                         if(i.hasNext()){
                         while(i.hasNext()){
                           ActiveSurveyQuestionItem item = (ActiveSurveyQuestionItem) i.next();
                         %>
-                          <tr><td width="100%" align="left"><%= item.getDescription() %></td><td align="left"><%= itemListResponseList.get((Object) item) %></td></tr>
+                          <tr><td width="100%" align="left"><%= item.getDescription() %></td><td align="left"><%= itemListResponse.get((Object) item) %></td></tr>
                         <%}
                         }else{
                       %>
@@ -81,6 +81,7 @@ Response Details
                     </dhv:evaluate>
                     <dhv:evaluate exp="<%= (type != SurveyQuestion.ITEMLIST) %>">
                       <%
+                         Iterator answerList = answers.iterator();
                          if(answerList.hasNext()){
                           while(answerList.hasNext()){
                           SurveyAnswer thisAnswer = (SurveyAnswer) answerList.next();
