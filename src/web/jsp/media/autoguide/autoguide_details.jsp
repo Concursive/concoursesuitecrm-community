@@ -116,12 +116,14 @@
       &nbsp;
     </td>
     <td class="rowUnderline" width="10%" nowrap align="right">
+<dhv:permission name="autoguide-adruns-edit">
 <dhv:evaluate exp="<%= !thisAdRun.isComplete() %>">
       <a href="javascript:confirmForward('AutoGuide.do?command=MarkComplete&id=<%= InventoryItem.getId() %>&adId=<%= thisAdRun.getId() %>');">Set this item as completed</a>
 </dhv:evaluate>
 <dhv:evaluate exp="<%= thisAdRun.isComplete() && thisAdRun.getCompletedBy() == User.getUserId() %>">
       <a href="javascript:confirmForward('AutoGuide.do?command=MarkIncomplete&id=<%= InventoryItem.getId() %>&adId=<%= thisAdRun.getId() %>');"><font color="#8F8F8F">Set this item as incomplete</font></a>
 </dhv:evaluate>
+</dhv:permission>
       &nbsp;
     </td>
   </tr>

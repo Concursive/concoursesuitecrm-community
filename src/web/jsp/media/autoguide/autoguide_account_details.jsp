@@ -21,9 +21,9 @@
   </tr>
   <tr>
     <td class="containerBack">
-<dhv:permission name="autoguide-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
-<dhv:permission name="autoguide-inventory-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=Delete&id=<%=InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>'"></dhv:permission>
-<dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete"><br>&nbsp;</dhv:permission>
+<dhv:permission name="autoguide-accounts-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
+<dhv:permission name="autoguide-accounts-inventory-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=Delete&id=<%=InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>'"></dhv:permission>
+<dhv:permission name="autoguide-accounts-inventory-edit,autoguide-accounts-inventory-delete"><br>&nbsp;</dhv:permission>
 
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
@@ -158,9 +158,9 @@
     </td>
   </tr>
 </table>
-<dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete"><br></dhv:permission>
-<dhv:permission name="autoguide-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
-<dhv:permission name="autoguide-inventory-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=Delete&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>'"></dhv:permission>
+<dhv:permission name="autoguide-accounts-inventory-edit,autoguide-accounts-inventory-delete"><br></dhv:permission>
+<dhv:permission name="autoguide-accounts-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
+<dhv:permission name="autoguide-accounts-inventory-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=Delete&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>'"></dhv:permission>
   </td>
   </tr>
 </table>

@@ -22,8 +22,8 @@
   </tr>
   <tr>
     <td class="containerBack">
-<dhv:permission name="autoguide-inventory-add"><a href="AccountsAutoGuide.do?command=AccountAdd&orgId=<%= OrgDetails.getOrgId() %>">Add a Vehicle</a></dhv:permission>
-<dhv:permission name="autoguide-inventory-add" none="true"><br></dhv:permission>
+<dhv:permission name="autoguide-accounts-inventory-add"><a href="AccountsAutoGuide.do?command=AccountAdd&orgId=<%= OrgDetails.getOrgId() %>">Add a Vehicle</a></dhv:permission>
+<dhv:permission name="autoguide-accounts-inventory-add" none="true"><br></dhv:permission>
 <center><%= AutoGuideAccountInfo.getNumericalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
@@ -42,7 +42,7 @@
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete">
+    <dhv:permission name="autoguide-accounts-inventory-edit,autoguide-accounts-inventory-delete">
     <td valign="center" align="left" class="title">
       <strong>Action</strong>
     </td>
@@ -90,9 +90,9 @@
       Inventory thisItem = (Inventory)i.next();
 %>
       <tr>
-        <dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete">
+        <dhv:permission name="autoguide-accounts-inventory-edit,autoguide-accounts-inventory-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <dhv:permission name="autoguide-inventory-edit"><a href="AccountsAutoGuide.do?command=AccountModify&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete" all="true">|</dhv:permission><dhv:permission name="autoguide-inventory-delete"><a href="javascript:confirmDelete('AccountsAutoGuide.do?command=Delete&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId() %>');">Del</a></dhv:permission>
+          <dhv:permission name="autoguide-accounts-inventory-edit"><a href="AccountsAutoGuide.do?command=AccountModify&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="autoguide-accounts-inventory-edit,autoguide-accounts-inventory-delete" all="true">|</dhv:permission><dhv:permission name="autoguide-accounts-inventory-delete"><a href="javascript:confirmDelete('AccountsAutoGuide.do?command=Delete&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId() %>');">Del</a></dhv:permission>
         </td>
         </dhv:permission>
         <td class="row<%= rowid %>" nowrap>

@@ -45,7 +45,7 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandList(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-inventory-view"))) {
+    if (!(hasPermission(context, "autoguide-adruns-view"))) {
       return ("PermissionError");
     }
 
@@ -96,7 +96,7 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDetails(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-inventory-view"))) {
+    if (!(hasPermission(context, "autoguide-adruns-view"))) {
       return ("PermissionError");
     }
 
@@ -133,7 +133,7 @@ public final class AutoGuide extends CFSModule {
   }
   
   public String executeCommandMarkComplete(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-inventory-edit"))) {
+    if (!(hasPermission(context, "autoguide-adruns-edit"))) {
       return ("PermissionError");
     }
 
@@ -163,7 +163,7 @@ public final class AutoGuide extends CFSModule {
   }
   
   public String executeCommandMarkIncomplete(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-inventory-edit"))) {
+    if (!(hasPermission(context, "autoguide-adruns-edit"))) {
       return ("PermissionError");
     }
 
@@ -200,7 +200,7 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDelete(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-inventory-delete"))) {
+    if (!(hasPermission(context, "accounts-autoguide-inventory-delete"))) {
       return ("PermissionError");
     }
 
@@ -237,7 +237,7 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandAccountList(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-inventory-view"))) {
+    if (!(hasPermission(context, "accounts-autoguide-inventory-view"))) {
       return ("PermissionError");
     }
 
@@ -287,7 +287,7 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandAccountAdd(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-inventory-add"))) {
+    if (!(hasPermission(context, "accounts-autoguide-inventory-add"))) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
@@ -326,7 +326,7 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandAccountInsert(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-inventory-add"))) {
+    if (!(hasPermission(context, "accounts-autoguide-inventory-add"))) {
       return ("PermissionError");
     }
 
@@ -436,7 +436,7 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandAccountModify(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-inventory-edit"))) {
+    if (!(hasPermission(context, "accounts-autoguide-inventory-edit"))) {
       return ("PermissionError");
     }
 
@@ -481,7 +481,7 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandAccountUpdate(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-inventory-edit"))) {
+    if (!(hasPermission(context, "accounts-autoguide-inventory-edit"))) {
       return ("PermissionError");
     }
 
@@ -532,7 +532,7 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandUploadForm(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-inventory-edit"))) {
+    if (!(hasPermission(context, "accounts-autoguide-inventory-edit"))) {
       return ("PermissionError");
     }
 
@@ -569,7 +569,7 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandUpload(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-inventory-edit"))) {
+    if (!(hasPermission(context, "accounts-autoguide-inventory-edit"))) {
       return ("PermissionError");
     }
 

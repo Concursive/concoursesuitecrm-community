@@ -299,8 +299,8 @@
     <graphic width="83" height="36" on="menu-autoguide-on.gif" off="menu-autoguide-off.gif" rollover=""/>
     <submenu name="Auto Guide">
       <permission value="autoguide-view"/>
-      <long_html value="View Vehicles"/>
-      <short_html value="View&lt;br&gt;Vehicles"/>
+      <long_html value="View Ad Runs"/>
+      <short_html value="View&lt;br&gt;Ad Runs"/>
       <link value="AutoGuide.do"/>
     </submenu>
   </menu>
