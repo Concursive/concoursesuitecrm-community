@@ -28,7 +28,7 @@ public class TicketCategoryList extends Vector {
   private int parentCode = -1;
   private int catLevel = -1;
   private String HtmlJsEvent = "";
-  private int enabledState = Constants.TRUE;
+  private int enabledState = -1;
 
 
   /**
@@ -213,12 +213,16 @@ public class TicketCategoryList extends Vector {
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     Iterator i = this.iterator();
-    catListSelect.addItem(0, "Undetermined");
+    catListSelect.addAttribute("id", selectName);
     while (i.hasNext()) {
       TicketCategory thisCat = (TicketCategory) i.next();
+      String elementText = thisCat.getDescription();
+      if (!(thisCat.getEnabled())) {
+        elementText += " *";
+      }
       catListSelect.addItem(
           thisCat.getId(),
-          thisCat.getDescription());
+          elementText);
     }
 
     if (!(this.getHtmlJsEvent().equals(""))) {
