@@ -77,6 +77,7 @@ function updateOperators(){
 		javascript:ShowSpan('new0');
 		document.searchForm.searchValue.value = document.searchForm.typeId.options[document.searchForm.typeId.selectedIndex].value;
 	} else if (document.searchForm.fieldSelect.selectedIndex == 3) {
+		javascript:HideSpan('new0');
 		javascript:ShowSpan('new1');
 	} else {
 		javascript:HideSpan('new0');
