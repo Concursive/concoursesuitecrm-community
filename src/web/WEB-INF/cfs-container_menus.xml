@@ -11,7 +11,7 @@
     </submenu>
     <submenu name="vehicles">
       <long_html value="Vehicle Inventory"/>
-      <permission value="autoguide-inventory-view"/>
+      <permission value="accounts-autoguide-inventory-view"/>
       <link value="AccountsAutoGuide.do?command=AccountList&amp;orgId=$orgId"/>
     </submenu>
     <submenu name="folders">
