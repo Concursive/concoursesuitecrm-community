@@ -102,16 +102,16 @@ public class Group extends TagSupport {
               boolean tableClosed = false;
               CustomFormGroup thisGroup = (CustomFormGroup) groups.next();
               if (!thisGroup.getName().equals("")) {
-                out.write("<table cellpadding=\"4\" cellspacing=\"0\" border=\"1\" width=\"100%\" bordercolorlight=\"#000000\" bordercolor=\"#FFFFFF\">");
+                out.write("<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" class=\"details\">");
               } else {
                 out.write("<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" >");
               }
               //TODO : make a Table Class and get header from object attributes
               if (!thisGroup.getName().equals("")) {
-                out.write("<tr class=\"title\">");
-                out.write("<td colspan=\"3\" valign=\"center\" align=\"left\">");
+                out.write("<tr>");
+                out.write("<th colspan=\"3\">");
                 out.write("<strong> " + thisGroup.getName() + "</strong>");
-                out.write("</td>");
+                out.write("</th>");
                 out.write("</tr>");
               }
 

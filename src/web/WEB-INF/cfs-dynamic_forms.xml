@@ -5,7 +5,7 @@
         scripts="survey.js^popURL.js"> 
     <button text="Save" link="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true"/>
     <tab id="0" name="Page 1" defaultField="name"
-         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;Communications Manager&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details&lt;hr color=&quot;#BFBFBB&quot; noshade&gt;">
+         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;Communications Manager&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details">
       <buttonGroup> <!-- TODO: add header & footer attribs !-->
         <button type="2" name="prev" display="&lt; Back" enabled="no"/>
         <button type="2" name="Next" display="Next &gt;" onclick="javascript:this.form.clickFrom.value='next';this.form.action='CampaignManagerSurvey.do?command=InsertAndAdd&amp;auto-populate=true&amp;pg=1';"/>
@@ -57,7 +57,7 @@
     </tab>
     
     <tab id="1" name="Page 2"
-         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;Communications Manager&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true');&quot;&gt;Survey Details&lt;/a&gt; &gt; Survey Questions  &lt;hr color=&quot;#BFBFBB&quot; noshade&gt;">
+         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;Communications Manager&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true');&quot;&gt;Survey Details&lt;/a&gt; &gt; Survey Questions">
       <buttonGroup>
         <button type="2" name="prev" display="&lt; Back" onclick="javascript:this.form.clickFrom.value='back';this.form.action='CampaignManagerSurvey.do?command=Add&amp;auto-populate=true'"/>
         <button type="2" display="Next &gt;" enabled="no"/>
@@ -113,7 +113,7 @@
       </group>
     </tab>
     <tab id="2" name="Page 2" defaultField="questionText" onLoad="javascript:processButton('survey',document.forms['survey'].type.value);"
-         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;Communications Manager&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true');&quot;&gt;Survey Details&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true&amp;pg=1');&quot;&gt;Survey Questions&lt;/a&gt; &gt; Survey Question  &lt;hr color=&quot;#BFBFBB&quot; noshade&gt;">
+         returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;Communications Manager&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true');&quot;&gt;Survey Details&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true&amp;pg=1');&quot;&gt;Survey Questions&lt;/a&gt; &gt; Survey Question">
       <buttonGroup>
         <button type="2" name="saveadd" display="Save &amp; Add" onclick="this.form.clickFrom.value='save';this.form.action='CampaignManagerSurvey.do?command=InsertAndAdd&amp;auto-populate=true&amp;pg=2'"/>
         <button type="2" name="save" display="Save" onclick="this.form.clickFrom.value='save';this.form.action='CampaignManagerSurvey.do?command=InsertAndAdd&amp;auto-populate=true&amp;pg=1'"/>
@@ -165,7 +165,7 @@
   <!-- View Survey Details -->
   <form name="surveydetails" 
         action="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" 
-        returnLinkText="Communications Manager &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details&lt;hr color=&quot;#BFBFBB&quot; noshade&gt;">
+        returnLinkText="Communications Manager &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details">
     <button text="Modify" link="CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true"/>
     <button text="Delete Survey" link="CampaignManagerSurvey.do?command=Delete&amp;auto-populate=true"/>
     <button text="Preview" link="CampaignManagerSurvey.do?command=Preview&amp;auto-populate=true"/>
@@ -192,7 +192,7 @@
   </form>
   <!-- See a stand-alone Preview of the survey -->
   <form name="surveypreview" 
-        returnLinkText="Communications Manager &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details &gt; Preview&lt;hr color=&quot;#BFBFBB&quot; noshade&gt;">
+        returnLinkText="Communications Manager &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details &gt; Preview">
     <button text="Back to Details" link="CampaignManagerSurvey.do?command=Details&amp;auto-populate=true"/>
     <tab name="Page 1" id="0">
       <group name="Survey Preview">

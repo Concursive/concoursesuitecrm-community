@@ -31,9 +31,15 @@
       CustomFormInfo.setSelectedTabName(thisTab.getName());
       if (thisTab.getReturnLinkText() != null && !(thisTab.getReturnLinkText().equals(""))) {
 %>
-        <%-- Draw Trails --%>
-        <%= thisTab.getReturnLinkText() %>
-        
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
+<%= thisTab.getReturnLinkText() %>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%
       }
 %>
