@@ -26,7 +26,6 @@ public class Prefs {
       Preferences prefs = Preferences.userNodeForPackage(Prefs.class);
       addAttribute(context, "SiteCode", prefs.get("cfs.gatekeeper.sitecode", "cfs"));
       addAttribute(context, "FileLibrary", prefs.get("cfs.fileLibrary", null));
-      addAttribute(context, "cfs.setup", prefs.get("cfs.setup", null));
       return true;
     } catch (Exception e) {
       return false;
