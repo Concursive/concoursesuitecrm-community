@@ -1,0 +1,33 @@
+/*
+UPDATE saved_criteriaelement SET value_id = value::INT WHERE field in (
+  SELECT id FROM search_fields WHERE field in ('typeId', 'contactId', 'accountTypeId')
+) AND value IS NOT NULL;
+*/
+
+import org.aspcfs.modules.communications.base.*;
+import java.sql.*;
+import java.util.*;
+
+int count = 0;
+ArrayList items = new ArrayList();
+Statement st = db.createStatement();
+ResultSet rs = st.executeQuery("SELECT * FROM saved_criteriaelement_tmp ");
+while (rs.next()) {
+  SavedCriteriaElement element = new SavedCriteriaElement();
+  element.setSavedCriteriaListId(rs.getInt("id"));
+  element.setFieldId(rs.getInt("field"));
+  element.setOperator(rs.getString("operator"));
+  element.setOperatorId(rs.getInt("operatorid"));
+  element.setValue(rs.getString("value"));
+  element.setSource(rs.getInt("source"));
+  items.add(element);
+}
+rs.close();
+st.close();
+//Insert them
+Iterator i = items.iterator();
+while (i.hasNext()) {
+  SavedCriteriaElement element = (SavedCriteriaElement) i.next();
+  element.insert(db);
+}
+print("Finished updating saved_criteriaelement... " + items.size() + " records");

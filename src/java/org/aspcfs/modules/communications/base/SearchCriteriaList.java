@@ -648,9 +648,9 @@ public class SearchCriteriaList extends HashMap {
         "SELECT s.*, t.description as ctype, t2.description as atype, " +
         "c.namefirst as cnamefirst, c.namelast as cnamelast " +
         "FROM saved_criteriaelement s " +
-        "LEFT JOIN lookup_contact_types t ON (s.value = t.code) " +
-        "LEFT JOIN lookup_account_types t2 ON (s.value = t2.code) " +
-        "LEFT JOIN contact c ON (s.value = c.contact_id) " +
+        "LEFT JOIN lookup_contact_types t ON (s.value_id = t.code) " +
+        "LEFT JOIN lookup_account_types t2 ON (s.value_id = t2.code) " +
+        "LEFT JOIN contact c ON (s.value_id = c.contact_id) " +
         "WHERE s.id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();

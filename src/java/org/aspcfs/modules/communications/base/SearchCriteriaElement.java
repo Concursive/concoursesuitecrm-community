@@ -4,6 +4,7 @@ package org.aspcfs.modules.communications.base;
 
 import java.util.StringTokenizer;
 import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  An element represents a specific search choice, and can be combined with
@@ -377,8 +378,8 @@ public class SearchCriteriaElement {
     this.buildOperatorData(db);
     try {
       PreparedStatement pst = db.prepareStatement(
-          "INSERT INTO saved_criteriaelement ( id, field, operator, operatorid, value, source ) " +
-          "VALUES ( ?, ?, ?, ?, ?, ? ) ");
+          "INSERT INTO saved_criteriaelement ( id, field, operator, operatorid, value, source, value_id ) " +
+          "VALUES ( ?, ?, ?, ?, ?, ?, ? ) ");
       int i = 0;
       pst.setInt(++i, listid);
       pst.setInt(++i, this.getFieldId());
@@ -386,7 +387,8 @@ public class SearchCriteriaElement {
       pst.setInt(++i, this.getOperatorId());
       pst.setString(++i, this.getText());
       pst.setInt(++i, this.getSourceId());
-      
+      int valueId = DatabaseUtils.parseInt(this.getText(), -1);
+      DatabaseUtils.setInt(pst, ++i, valueId);
       pst.execute();
       pst.close();
       db.commit();

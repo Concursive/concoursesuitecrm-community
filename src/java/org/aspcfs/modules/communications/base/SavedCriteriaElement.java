@@ -10,7 +10,8 @@ import org.aspcfs.utils.DatabaseUtils;
  *
  *@author     Mathur
  *@created    January 14, 2003
- *@version    $Id$
+ *@version    $Id: SavedCriteriaElement.java,v 1.3 2003/01/14 20:40:41 akhi_m
+ *      Exp $
  */
 public class SavedCriteriaElement {
 
@@ -19,6 +20,7 @@ public class SavedCriteriaElement {
   private String operator = null;
   private int operatorId = -1;
   private String value = null;
+  private int source = -1;
 
 
   /**
@@ -108,6 +110,16 @@ public class SavedCriteriaElement {
 
 
   /**
+   *  Sets the source attribute of the SavedCriteriaElement object
+   *
+   *@param  tmp  The new source value
+   */
+  public void setSource(int tmp) {
+    this.source = tmp;
+  }
+
+
+  /**
    *  Gets the savedCriteriaListId attribute of the SavedCriteriaElement object
    *
    *@return    The savedCriteriaListId value
@@ -158,6 +170,16 @@ public class SavedCriteriaElement {
 
 
   /**
+   *  Gets the source attribute of the SavedCriteriaElement object
+   *
+   *@return    The source value
+   */
+  public int getSource() {
+    return source;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -176,14 +198,17 @@ public class SavedCriteriaElement {
     }
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO saved_criteriaelement " +
-        "(id, field, operator, operatorid, value) VALUES " +
-        "(?, ?, ?, ?, ?) ");
+        "(id, field, operator, operatorid, value, source, value_id) VALUES " +
+        "(?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, savedCriteriaListId);
     pst.setInt(++i, fieldId);
     pst.setString(++i, operator);
     pst.setInt(++i, operatorId);
     pst.setString(++i, value);
+    pst.setInt(++i, source);
+    int valueId = DatabaseUtils.parseInt(value, -1);
+    DatabaseUtils.setInt(pst, ++i, valueId);
     pst.execute();
     pst.close();
     return true;

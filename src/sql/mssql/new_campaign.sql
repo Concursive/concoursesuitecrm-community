@@ -263,6 +263,7 @@ CREATE TABLE saved_criteriaelement (
   operator VARCHAR(50) NOT NULL,
   operatorid INTEGER NOT NULL references field_types(id),
   value VARCHAR(80) NOT NULL,
-  source INT NOT NULL DEFAULT -1
+  source INT NOT NULL DEFAULT -1,
+  value_id INT NULL
 );
 
