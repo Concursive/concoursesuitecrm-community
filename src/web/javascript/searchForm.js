@@ -211,8 +211,8 @@ function removeValue(index) {
   
 
 function removeValues(){
-	var searchList = document.searchForm.searchCriteria
-	var tempArray = new Array()
+	var searchList = document.searchForm.searchCriteria;
+	var tempArray = new Array();
 	var offset = 0;
 	var count = 0;
 	
@@ -224,7 +224,7 @@ function removeValues(){
 	}
 	
 	if (searchList.length == 0) {
-		alert("Nothing to remove")
+		alert("Nothing to remove");
 	}	else if (searchList.selectedIndex == -1) {
     alert("An item needs to be selected before it can be removed");
   } else {
@@ -244,7 +244,7 @@ function removeValues(){
 					tempArray[i] = searchCriteria[i+offset];
 				}
 		}
-		delete searchCriteria
+		delete searchCriteria;
 		searchCriteria = new Array();
 		for (i=0; i < tempArray.length; i++){
 			if (tempArray[i] != null) {
