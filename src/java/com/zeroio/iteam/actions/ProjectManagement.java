@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001 Dark Horse Ventures
+ *  Copyright 2001-2003 Dark Horse Ventures
  *  Uses iteam objects from matt@zeroio.com http://www.mavininteractive.com
  */
 package com.darkhorseventures.cfsmodule;
@@ -50,11 +50,11 @@ public final class ProjectManagement extends CFSModule {
    *@since           1.6
    */
   public String executeCommandPersonalView(ActionContext context) {
-	  
-	if (!(hasPermission(context, "projects-personal-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "projects-personal-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
     Connection db = null;
@@ -100,11 +100,11 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandEnterpriseView(ActionContext context) {
-	  
-	if (!(hasPermission(context, "projects-enterprise-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "projects-enterprise-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
     Connection db = null;
@@ -129,10 +129,10 @@ public final class ProjectManagement extends CFSModule {
 
       Iterator i = projects.iterator();
       while (i.hasNext()) {
-        Project thisProject = (Project)i.next();
+        Project thisProject = (Project) i.next();
         Iterator assignments = thisProject.getAssignments().iterator();
         while (assignments.hasNext()) {
-          Assignment thisAssignment = (Assignment)assignments.next();
+          Assignment thisAssignment = (Assignment) assignments.next();
           Contact userAssigned = this.getUser(context, thisAssignment.getUserAssignedId()).getContact();
           thisAssignment.setUserAssigned(userAssigned.getNameFirstLast());
         }
@@ -163,11 +163,11 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandAddProject(ActionContext context) {
-	  
-	if (!(hasPermission(context, "projects-projects-add"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "projects-projects-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
     try {
@@ -206,17 +206,17 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandInsertProject(ActionContext context) {
-	  
-	if (!(hasPermission(context, "projects-projects-add"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "projects-projects-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
     try {
       db = getConnection(context);
-      Project thisProject = (Project)context.getFormBean();
+      Project thisProject = (Project) context.getFormBean();
       thisProject.setGroupId(-1);
       thisProject.setEnteredBy(getUserId(context));
       thisProject.setModifiedBy(getUserId(context));
@@ -251,16 +251,16 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandModifyProject(ActionContext context) {
-	  
-	if (!(hasPermission(context, "projects-projects-edit"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "projects-projects-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
 
     Project thisProject = null;
-    String projectId = (String)context.getRequest().getParameter("pid");
+    String projectId = (String) context.getRequest().getParameter("pid");
 
     try {
       db = this.getConnection(context);
@@ -295,14 +295,14 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandUpdateProject(ActionContext context) {
-	  
-	if (!(hasPermission(context, "projects-projects-edit"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "projects-projects-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
-    Project thisProject = (Project)context.getFormBean();
+    Project thisProject = (Project) context.getFormBean();
     //thisProject.setRequestItems(context.getRequest());
 
     Connection db = null;
@@ -351,32 +351,34 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandProjectCenter(ActionContext context) {
-	  
-	if (!(hasPermission(context, "projects-projects-view"))) {
-	    return ("PermissionError");
-    	}
-	
+    if (!(hasPermission(context, "projects-projects-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
     Connection db = null;
     Project thisProject = null;
-    String projectId = (String)context.getRequest().getParameter("pid");
+    String projectId = (String) context.getRequest().getParameter("pid");
     if (projectId == null) {
-      projectId = (String)context.getRequest().getAttribute("pid");
+      projectId = (String) context.getRequest().getAttribute("pid");
     }
 
-    String section = (String)context.getRequest().getParameter("section");
+    String section = (String) context.getRequest().getParameter("section");
     if (section == null || section.equals("")) {
       section = "Home";
+      //Reset any pagedListInfo objects for this new project
+      context.getSession().removeAttribute("projectRequirementsInfo");
+      context.getSession().removeAttribute("projectAssignmentsInfo");
     }
 
     try {
       db = getConnection(context);
       thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
       if ("Requirements".equals(section)) {
-        String expand = (String)context.getRequest().getParameter("expand");
-        String contract = (String)context.getRequest().getParameter("contract");
-        ArrayList reqsOpen = (ArrayList)context.getSession().getAttribute("Tree-OpenRequirements");
+        String expand = (String) context.getRequest().getParameter("expand");
+        String contract = (String) context.getRequest().getParameter("contract");
+        ArrayList reqsOpen = (ArrayList) context.getSession().getAttribute("Tree-OpenRequirements");
         if (reqsOpen == null) {
           reqsOpen = new ArrayList();
           context.getSession().setAttribute("Tree-OpenRequirements", reqsOpen);
@@ -396,7 +398,7 @@ public final class ProjectManagement extends CFSModule {
         projectRequirementsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + thisProject.getId());
         thisProject.getRequirements().setPagedListInfo(projectRequirementsInfo);
         if ("all".equals(projectRequirementsInfo.getListView())) {
-          
+
         } else if ("closed".equals(projectRequirementsInfo.getListView())) {
           thisProject.getRequirements().setClosedOnly(true);
         } else {
@@ -406,7 +408,7 @@ public final class ProjectManagement extends CFSModule {
         thisProject.buildRequirementList(db);
         Iterator i = thisProject.getRequirements().iterator();
         while (i.hasNext()) {
-          Requirement thisRequirement = (Requirement)i.next();
+          Requirement thisRequirement = (Requirement) i.next();
           thisRequirement.setTreeOpen(reqsOpen.contains("" + thisRequirement.getId()));
           Contact enteredBy = this.getUser(context, thisRequirement.getEnteredBy()).getContact();
           Contact modifiedBy = this.getUser(context, thisRequirement.getModifiedBy()).getContact();
@@ -417,7 +419,7 @@ public final class ProjectManagement extends CFSModule {
         thisProject.buildTeamMemberList(db);
         Iterator i = thisProject.getTeam().iterator();
         while (i.hasNext()) {
-          TeamMember thisMember = (TeamMember)i.next();
+          TeamMember thisMember = (TeamMember) i.next();
           User thisUser = this.getUser(context, thisMember.getUserId());
           thisMember.setUser(thisUser);
           thisMember.setContact(thisUser.getContact());
@@ -431,7 +433,7 @@ public final class ProjectManagement extends CFSModule {
           System.out.println("ProjectManagement-> Assignments pagedListInfo view: " + projectAssignmentsInfo.getListView());
         }
         if ("all".equals(projectAssignmentsInfo.getListView())) {
-          
+
         } else if ("closed".equals(projectAssignmentsInfo.getListView())) {
           thisProject.getAssignments().setClosedOnly(true);
         } else {
@@ -440,7 +442,7 @@ public final class ProjectManagement extends CFSModule {
         thisProject.buildAssignmentList(db);
         Iterator i = thisProject.getAssignments().iterator();
         while (i.hasNext()) {
-          Assignment thisAssignment = (Assignment)i.next();
+          Assignment thisAssignment = (Assignment) i.next();
           Contact userAssigned = this.getUser(context, thisAssignment.getUserAssignedId()).getContact();
           thisAssignment.setUserAssigned(userAssigned.getNameFirstLast());
         }
@@ -448,19 +450,21 @@ public final class ProjectManagement extends CFSModule {
         thisProject.buildIssueCategoryList(db);
         Iterator i = thisProject.getIssueCategories().iterator();
         while (i.hasNext()) {
-          IssueCategory thisIssueCategory = (IssueCategory)i.next();
+          IssueCategory thisIssueCategory = (IssueCategory) i.next();
           //User user = new User(db, this.getUser(context).getGroupId(), thisIssueCategory.getModifiedBy());
           //thisIssueCategory.setUserModified(user.getNameFirstLast());
         }
       } else if ("Issues".equals(section)) {
         String categoryId = context.getRequest().getParameter("cid");
-        if (categoryId == null) categoryId = context.getRequest().getParameter("categoryId");
+        if (categoryId == null) {
+          categoryId = context.getRequest().getParameter("categoryId");
+        }
         thisProject.buildIssueList(db, Integer.parseInt(categoryId));
         IssueCategory issueCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
         context.getRequest().setAttribute("IssueCategory", issueCategory);
         Iterator i = thisProject.getIssues().iterator();
         while (i.hasNext()) {
-          Issue thisIssue = (Issue)i.next();
+          Issue thisIssue = (Issue) i.next();
           Contact user = this.getUser(context, thisIssue.getEnteredBy()).getContact();
           thisIssue.setUser(user.getNameFirstLast());
         }
@@ -468,7 +472,7 @@ public final class ProjectManagement extends CFSModule {
         thisProject.buildFileItemList(db);
         Iterator i = thisProject.getFiles().iterator();
         while (i.hasNext()) {
-          FileItem thisItem = (FileItem)i.next();
+          FileItem thisItem = (FileItem) i.next();
           Contact user = this.getUser(context, thisItem.getEnteredBy()).getContact();
           thisItem.setEnteredByString(user.getNameFirstLast());
         }
@@ -484,20 +488,12 @@ public final class ProjectManagement extends CFSModule {
         }
         LookupElement thisCategory = new LookupElement(db, Integer.parseInt(categoryId), "lookup_task_category");
         context.getRequest().setAttribute("category", thisCategory);
-        
+
         TaskList outlineList = new TaskList();
         outlineList.setProjectId(thisProject.getId());
         outlineList.setCategoryId(Integer.parseInt(categoryId));
         outlineList.buildList(db);
         context.getRequest().setAttribute("outlineList", outlineList);
-/*         
-        Iterator i = outlineList.iterator();
-        while (i.hasNext()) {
-          Issue thisIssue = (Issue)i.next();
-          Contact user = this.getUser(context, thisIssue.getEnteredBy()).getContact();
-          thisIssue.setUser(user.getNameFirstLast());
-        }
- */
       } else {
         addRecentItem(context, thisProject);
       }
