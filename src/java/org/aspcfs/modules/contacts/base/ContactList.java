@@ -1311,8 +1311,11 @@ public class ContactList extends Vector {
       Contact thisContact = (Contact) i.next();
       thisContact.buildTypes(db);
       if (buildDetails) {
+        thisContact.getPhoneNumberList().setContactId(thisContact.getId());
         thisContact.getPhoneNumberList().buildList(db);
+        thisContact.getAddressList().setContactId(thisContact.getId());
         thisContact.getAddressList().buildList(db);
+        thisContact.getEmailAddressList().setContactId(thisContact.getId());
         thisContact.getEmailAddressList().buildList(db);
       }
       if (checkUserAccess) {
