@@ -63,7 +63,12 @@
   Purpose: Fax client for sending documents to fax server
   http://www.hylafax.org
   file: hylafax-4.1.5-1rh8.i386.rpm
-  $ rpm --install [file]
+    $ rpm --install [file]
+  # If error about conflicting mgetty-sendfax, issue the following command:
+    $ rpm --erase mgetty-sendfax
+  # NOTE: On the FAX SERVER, the ip and domain name must be added to:
+  #   /etc/hosts
+  #   /var/spool/hylafax/etc/hosts.faxd
 
 
 
@@ -182,10 +187,12 @@
 - Configure Sendmail
   # Make sure sendmail is running on startup
     $ chkconfig --level 2345 sendmail on
-  # Edit sendmail configuration to allow emails to be sent from specified
-  # domains.  In ASPCFS we allow 127.0.0.1 to sendmail from any domain user,
-  # not just darkhorseventures.com.
-  # The default already allows localhost to RELAY
+  # Edit sendmail configuration to allow emails to be sent from any domain user.
+  # The default already allows localhost to RELAY, do not put other domains or
+  # mail will be used by spammers.
+  # Running the following command will report any errors
+    $ postfix check
+    
 
 - Install ASPCFS
   # Login as your own username
