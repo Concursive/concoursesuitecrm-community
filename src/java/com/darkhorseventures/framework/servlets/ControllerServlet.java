@@ -371,7 +371,10 @@ public class ControllerServlet extends HttpServlet
     String actionPath = getActionPath(request);
     Object beanRef = null;
 
-    if (System.getProperty("DEBUG") != null) System.out.println("** Requested action: " + actionPath);
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("");
+      System.out.println("** Requested action: " + actionPath);
+    }
 
     // we have the action name derived from the action path passed in, so now we need to
     // look it up in our list of Actions to see if there is a Action for this action.
