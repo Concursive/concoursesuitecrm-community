@@ -46,20 +46,20 @@ Opportunities<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
-    <td valign=center align=left>
+    <td width="8" valign=center align=left nowrap>
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td valign=center align=left>
+    <td valign=center align=left width="100%">
       <strong><a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>&column=description">Opportunity Name</a></strong>
       <%= OpportunityPagedInfo.getSortIcon("description") %>
     </td>
     
-    <td valign=center align=left>
+    <td valign=center align=left nowrap>
       <strong>Best Guess Total</strong>
     </td>
     
-    <td valign=center align=left>
+    <td valign=center align=left nowrap>
       <strong><a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>&column=modified">Last Modified</a></strong>
       <%= OpportunityPagedInfo.getSortIcon("modified") %>
     </td>
@@ -83,11 +83,11 @@ Opportunities<br>
 %>      
   <tr class="containerBody">
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
-    <td width=8 valign=center nowrap class="row<%= rowid %>">
+    <td width="8" valign=center nowrap class="row<%= rowid %>">
           <dhv:permission name="accounts-accounts-opportunities-edit"><a href="Opportunities.do?command=Modify&oppId=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=thisOpp.getId()%>','Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>&popup=true', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
-      <td width=40% valign=center class="row<%= rowid %>">
+      <td width=100% valign=center class="row<%= rowid %>">
         <a href="Opportunities.do?command=Details&oppId=<%=thisOpp.getOppId()%>&orgId=<%= OrgDetails.getId() %>&reset=true">
         <%= toHtml(thisOpp.getDescription()) %></a>
         (<%=thisOpp.getComponentCount()%>)
@@ -95,10 +95,10 @@ Opportunities<br>
         <%= thisFile.getImageTag() %>
         <%}%>        
       </td>  
-      <td width="115" valign=center class="row<%= rowid %>">
+      <td valign=center class="row<%= rowid %>" nowrap>
         $<%= toHtml(thisOpp.getTotalValueCurrency()) %>
       </td>      
-      <td valign=center class="row<%= rowid %>">
+      <td valign=center class="row<%= rowid %>" nowrap>
         <%= toHtml(thisOpp.getModifiedString()) %>
       </td>   
   </tr>
