@@ -127,7 +127,7 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
-    if (!hasPermission(context, "tickets-tickets-tasks-view")) {
+    if (!hasPermission(context, "myhomepage-tasks-view")) {
       return ("PermissionError");
     }
     Connection db = null;
