@@ -1,0 +1,36 @@
+/**
+ *  Implementation Ideas & Goals
+ *
+ *@author     Matt Rajkowski (mrajkowski@darkhorseventures.com)
+ *@created    March 11, 2003
+ *@version    $Id$
+ */
+
+This document is a growing list of ideas that we have considered or would
+like to consider for implementation within CFS:
+ 
+JSPs: 
+- Minimize the number of add/modify/details screens within a single module and 
+  across shared modules
+  
+Database Persistence:
+- Explore JDO implementations
+- Minimize the amount of SQL required to develop a base object
+
+Classes/Objects:
+- Need to have database synchronization interfaces that base objects can 
+  implement
+- Lighter weight base objects
+- More functional "List" objects, possibly with INSERT, UPDATE, and DELETE 
+  capabilities
+- Use more action classes per module, instead of overwhelming a single action
+  class
+- Reusable HTML and field validation classes
+
+Dynamic Forms:
+- Dynamic Forms are almost ready to be used in other modules, but someone
+  needs to follow through on the implementation
+
+Database Upgrades:
+- Implement a streamlined process for applying table changes
+
