@@ -1192,7 +1192,7 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("c.namelast", null);
+      pagedListInfo.setDefaultSort("c.namelast, c.namefirst, c.company", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY c.namelast ");
