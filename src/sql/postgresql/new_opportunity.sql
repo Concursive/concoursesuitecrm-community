@@ -33,6 +33,6 @@ CREATE TABLE opportunity (
 	closed TIMESTAMP,
 	custom_data TEXT,
 	alert varchar(100) default null,
-	enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN NOT NULL DEFAULT true
 );
 
