@@ -191,13 +191,15 @@ public final class Login extends CFSModule {
     context.getSession().setAttribute("ConnectionElement", ce);
 
     //Check to see if user is already logged in . If not then add him to the valid users list
-    SessionManager sessionManager = ((SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl())).getSessionManager();
+    SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    SessionManager sessionManager = thisSystem.getSessionManager();
     if (sessionManager.isUserLoggedIn(userId)) {
       UserSession thisSession = sessionManager.getUserSession(userId);
       context.getSession().setMaxInactiveInterval(300);
       context.getRequest().setAttribute("Session", thisSession);
       return "LoginVerifyOK";
     }
+    context.getSession().setMaxInactiveInterval(thisSystem.getSessionTimeout());
     sessionManager.addUser(context, userId);
 
     return "LoginOK";
