@@ -80,7 +80,7 @@ Comment: ${this.comment}
 ]]></parameter>
           </parameters>
         </component>
-        <component id="6" parent="1" class="org.aspcfs.modules.troubletickets.components.SendTicketToBPM" enabled="true">
+        <component id="6" parent="1" class="org.aspcfs.modules.troubletickets.components.SendTicketToBPM" enabled="false">
           <parameters>
             <parameter name="bpm.host.url" value="http://ds21.darkhorseventures.com:8080/Horse/servlet/ProcessInitiateServlet"/>
           </parameters>
