@@ -386,6 +386,7 @@ public final class Accounts extends CFSModule {
 			rep.addColumn("Ticket ID");
 			rep.addColumn("Problem");
 			rep.addColumn("Ticket Source");
+			rep.addColumn("Contact Name");
 			rep.addColumn("Severity");
 			rep.addColumn("Priority");
 			rep.addColumn("Category");
@@ -403,9 +404,9 @@ public final class Accounts extends CFSModule {
 			Iterator t = ticList.iterator();
 			while (t.hasNext()) {
 				Ticket thisTic = (Ticket)t.next();
+				thisTic.buildContactInformation(db);
 				
 				if (thisTic.getOrgId() > -1) {
-					System.out.println("this: " + thisTic.getOrgId() + " Last: " + lastId);
 					if (thisTic.getOrgId() != lastId) {
 						System.out.println("I am getting a new Org...");
 						ctOrg = new Organization(db, thisTic.getOrgId());
@@ -418,6 +419,7 @@ public final class Accounts extends CFSModule {
 					thisRow.addCell(thisTic.getId());
 					thisRow.addCell(thisTic.getProblem());
 					thisRow.addCell(thisTic.getSourceName());
+					thisRow.addCell(thisTic.getThisContact().getNameLastFirst());
 					thisRow.addCell(thisTic.getSeverityName());
 					thisRow.addCell(thisTic.getPriorityName());
 					thisRow.addCell(thisTic.getCategoryName());

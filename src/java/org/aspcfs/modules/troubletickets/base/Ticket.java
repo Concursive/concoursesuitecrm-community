@@ -84,7 +84,12 @@ public class Ticket extends GenericBean {
 		buildRecord(rs);
 	}
 
-
+	public void buildContactInformation(Connection db) throws SQLException {
+		if (contactId > -1) {
+			thisContact = new Contact(db, contactId + "");
+		}
+	}
+	
 	/**
 	 *  Description of the Method
 	 *
