@@ -705,13 +705,16 @@ public final class TroubleTickets extends CFSModule {
 
       if (recordInserted) {
         newTicket = new Ticket(db, newTic.getId());
+        //Check for and process any system hooks
+        this.getSystemStatus(context).processHook(newTic, db);
+        
         context.getRequest().setAttribute("TicketDetails", newTicket);
         addRecentItem(context, newTicket);
       } else {
         processErrors(context, newTic.getErrors());
       }
 
-    } catch (SQLException e) {
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
