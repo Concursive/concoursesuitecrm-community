@@ -27,7 +27,7 @@ Call Details
     <td class="containerBack">
 <dhv:permission name="contacts-external_contacts-calls-edit"><input type="submit" name="command" value="Modify"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-calls-delete"><input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()"></dhv:permission>
-<dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardMessage&popup=true&forwardType=8&id=<%=CallDetails.getId()%>&return='+escape('ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>')+'&sendUrl=ExternalContactsCallsForward.do?command=SendMessage';"></dhv:permission>
+<dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardMessage&popup=true&forwardType=8&id=<%=CallDetails.getId()%>&return='+escape('ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>') + '&sendUrl=' + escape('ExternalContactsCalls.do?command=SendMessage&contactId=<%= ContactDetails.getId() %>');"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -103,7 +103,7 @@ Call Details
 <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete"><br></dhv:permission>
 <dhv:permission name="contacts-external_contacts-calls-edit"><input type="submit" name="command" value="Modify"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-calls-delete"><input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()"></dhv:permission>
-<dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardMessage&popup=true&forwardType=8&id=<%=CallDetails.getId()%>&return='+escape('ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>')+'&sendUrl=ExternalContactsCallsForward.do?command=SendMessage';"></dhv:permission>
+<dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardMessage&popup=true&forwardType=8&id=<%=CallDetails.getId()%>&return='+escape('ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>') + '&sendUrl=' + escape('ExternalContactsCalls.do?command=SendMessage&contactId=<%= ContactDetails.getId() %>');"></dhv:permission>
 </td>
 </tr>
 </table>
