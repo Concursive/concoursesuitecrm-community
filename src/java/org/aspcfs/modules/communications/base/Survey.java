@@ -268,6 +268,7 @@ public void setEnabled(boolean tmp) { this.enabled = tmp; }
     try {
       db.setAutoCommit(false);
       st.executeUpdate("DELETE FROM survey WHERE id = " + this.getId());
+      st.executeUpdate("DELETE FROM survey_answer WHERE question_id in (select id from survey_item where survey_id = " + this.getId() + ") ");
       st.executeUpdate("DELETE FROM survey_item WHERE survey_id = " + this.getId());
       db.commit();
     } catch (SQLException e) {

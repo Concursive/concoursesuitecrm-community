@@ -73,6 +73,59 @@ public int getId() {
     rs.close();
     st.close();
   }
+	
+  private int setNewAverage(Connection db) throws SQLException {
+	if (questionId == -1) {
+		throw new SQLException("Question ID not specified.");
+	}
+	
+	Statement st = null;
+	ResultSet rs = null;
+	StringBuffer sql = new StringBuffer();
+		sql.append("SELECT avg(quant_ans) as av " +
+		"FROM survey_answer s " +
+		"WHERE question_id = " + this.getQuestionId() + " ");
+	st = db.createStatement();
+	rs = st.executeQuery(sql.toString());
+	
+	if(rs.next()) {
+		PreparedStatement pst = db.prepareStatement(
+			"UPDATE survey_item " +
+			"SET average = ? " +
+			"WHERE id = ? ");
+		int i = 0;
+		pst.setDouble(++i, rs.getDouble("av"));
+		pst.setInt(++i, this.getQuestionId());
+		pst.execute();
+		pst.close();
+	}
+	
+	//newAvg = new Double((double)total/rs.getFetchSize());
+	//System.out.println(newAvg + " " + rs.getFetchSize());
+	//newAverage = (Double)(newAverage/((Double)count));
+	
+	rs.close();
+	st.close();
+		
+	return 1;
+  }
+  
+  private void updateTotal(Connection db) throws SQLException {
+	if (questionId == -1) {
+		throw new SQLException("Question ID not specified.");
+	}
+	
+	PreparedStatement pst = db.prepareStatement(
+		"UPDATE survey_item " +
+		"SET total" + quantAns + " = total" + quantAns + "+1 " +
+		"WHERE id = ? ");
+	int i = 0;
+	pst.setInt(++i, this.getQuestionId());
+	System.out.println(pst.toString());
+	pst.execute();
+	pst.close();
+  }
+  
 public int getQuestionId() { return questionId; }
 public String getComments() { return comments; }
 public int getQuantAns() { return quantAns; }
@@ -100,6 +153,10 @@ public void setQuantAns(String tmp) { this.quantAns = Integer.parseInt(tmp); }
     
     pst.execute();
     pst.close();
+    
+    //id = DatabaseUtils.getCurrVal(db, "aurvey_answer_id_seq");
+    setNewAverage(db);
+    updateTotal(db);
   }
 
   /**

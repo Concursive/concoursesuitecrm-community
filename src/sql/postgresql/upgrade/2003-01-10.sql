@@ -106,3 +106,12 @@ CREATE TABLE survey_answer (
   enteredby int not null
 );
 
+alter table survey_item add column average float default 0.00;
+alter table survey_item add column total1 int default 0;
+alter table survey_item add column total2 int default 0;
+alter table survey_item add column total3 int default 0;
+alter table survey_item add column total4 int default 0;
+alter table survey_item add column total5 int default 0;
+alter table survey_item add column total6 int default 0;
+alter table survey_item add column total7 int default 0;
+  

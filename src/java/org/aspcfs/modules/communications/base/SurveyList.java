@@ -18,6 +18,7 @@ public class SurveyList extends Vector {
   private int type = -1;
   private int enteredBy = -1;
   private String enteredByIdRange = null;
+  private String jsEvent = null;
 
   public SurveyList() { }
 
@@ -130,6 +131,13 @@ public int getEnteredBy() { return enteredBy; }
 public String getEnteredByIdRange() { return enteredByIdRange; }
 public void setEnteredBy(String tmp) { this.enteredBy = Integer.parseInt(tmp); }
 
+public String getJsEvent() {
+	return jsEvent;
+}
+public void setJsEvent(String jsEvent) {
+	this.jsEvent = jsEvent;
+}
+
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
@@ -156,6 +164,7 @@ public void setEnteredBy(String tmp) { this.enteredBy = Integer.parseInt(tmp); }
 
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect surveyListSelect = new HtmlSelect();
+    surveyListSelect.setJsEvent(jsEvent);
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Survey thisSurvey = (Survey) i.next();

@@ -10,11 +10,54 @@
 <title>Thank you for visiting our survey page</title>
 <link rel="stylesheet" href="css/template0ie.css" type="text/css">
 <link rel="stylesheet" href="css/template0.css" type="text/css">
+
+<script language="JavaScript">
+  function checkForm(form) {
+      formTest = true;
+      message = "";
+      
+      for (i=0;i<form.length;i++){
+      		var tempobj=form.elements[i];
+		if ( (tempobj.name).search("qans") != -1 ) {
+			if (!validateRadio(document.forms[0].elements[tempobj.name])) {
+				formTest = false;
+			}
+			i = i+7;
+		}
+		
+		if (formTest == false) 
+			break;
+      }
+      
+      if (formTest == false) {
+        alert("Please Provide an answer for each survey item.\r\n\r\n");
+        return false;
+      } else {
+        return true;
+      }
+    }
+    
+function validateRadio (field) {
+  if (!field.length && field.checked)
+    return true;
+  else {
+    for (var b = 0; b < field.length; b++) {
+     
+      if (field[b].checked)
+        return true;
+    }
+  }
+  return false;
+}
+
+
+</script>
+
 </head>
 
 <body>
 
-<form name="<%=CustomFormInfo.getName()%>" method="post" action="<%=CustomFormInfo.getAction()%>">
+<form name="<%=CustomFormInfo.getName()%>" method="post" action="<%=CustomFormInfo.getAction()%>" onSubmit="return checkForm(this);">
 
 <%
   int pg = 0;
@@ -29,7 +72,6 @@
     if (pg == thisTab.getId()) {
     		CustomFormInfo.setSelectedTabName(thisTab.getName());
 %>   
-
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 
 
@@ -144,9 +186,10 @@
 <br>
 <%=CustomFormInfo.getHiddenValues()%>
 <%=CustomFormInfo.displayButtons()%>
+<% if (request.getParameter("preview") == null) {%>
 <input type="submit" value="Submit Survey">
-
 <br>
+<%}%>
 <%}%>
 <%}%>
 </form>

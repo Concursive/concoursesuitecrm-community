@@ -1,6 +1,7 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
+<jsp:useBean id="Survey" class="com.darkhorseventures.cfsbase.Survey" scope="request"/>
 <jsp:useBean id="RecipientList" class="com.darkhorseventures.cfsbase.RecipientList" scope="request"/>
 <jsp:useBean id="CampaignDashboardRecipientInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
@@ -80,6 +81,71 @@
     </td>
   </tr>
 </table>
+
+<% if (Survey != null) { %>
+&nbsp;
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+    <td colspan="10" valign="center" align="left">
+      <strong>Survey Results</strong>
+    </td>     
+  </tr>
+  
+  <tr class="title">
+    <td width="24" align=right nowrap>Count</td>
+    <td>Text</td>
+    <td width="24" nowrap>Avg.</td>
+    <td width="24" nowrap >1</td>
+    <td width="24" nowrap >2</td>
+    <td width="24" nowrap >3</td>
+    <td width="24" nowrap >4</td>
+    <td width="24" nowrap >5</td>
+    <td width="24" nowrap >6</td>
+    <td width="24" nowrap >7</td>
+  </tr>
+  <%
+	Iterator z = Survey.getItems().iterator();
+	
+	if ( z.hasNext() ) {
+		int rowid = 0;
+		int count = 0;
+	
+		while (z.hasNext()) {
+			count++;		
+			if (rowid != 1) {
+				rowid = 1;
+			} else {
+				rowid = 2;
+			}
+	
+		SurveyItem thisItem = (SurveyItem)z.next();
+		
+  %>
+  
+  <tr>
+    <td align=right nowrap><%=count%></td>
+    <td><%= toHtml(thisItem.getDescription()) %></td>
+    <td width="24" nowrap><%= toHtml(thisItem.getAverageValue()) %></td>
+    <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(0) + "")%></td>
+    <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(1) + "")%></td>
+    <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(2) + "")%></td>
+    <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(3) + "")%></td>
+    <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(4) + "")%></td>
+    <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(5) + "")%></td>
+    <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(6) + "")%></td>
+  </tr>
+
+	<%	}
+	}%>
+
+
+</table>
+
+
+
+
+<%}%>
+
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -88,22 +154,22 @@
     </td>     
   </tr>
   <tr class="title">
-    <td width="8" align="right" nowrap>
+    <td width="24" align=right nowrap>
       Count
     </td>
-    <td nowrap>
+    <td>
       Name
     </td>
-    <td nowrap width="100%">
+    <td width=100%>
       Company
     </td>
-    <td nowrap>
+    <td valign=center width="102" nowrap>
       Sent Date
     </td>
-    <td nowrap>
+    <!--td valign=center width="49" nowrap>
       Reply Date
-    </td>
-		<td nowrap>
+    </td-->
+    <td width="102" nowrap>
       Status
     </td>
   </tr>
@@ -126,24 +192,24 @@
 		Contact thisContact = thisRecipient.getContact();
 %>      
   <tr>
-    <td align="right" nowrap>
+    <td align=right nowrap>
       <%= count %>
     </td>
-    <td width="50%" nowrap>
+    <td nowrap>
       <%= toHtml(thisContact.getNameLast()) %>, <%= toHtml(thisContact.getNameFirst()) %>
     </td>
-    <td width="50%" nowrap>
+    <td width=100% nowrap>
       <%= toHtml(thisContact.getCompany()) %>
     </td>
-    <td nowrap>
+    <td width="102" nowrap>
       <%= toHtml(thisRecipient.getSentDateString()) %>
     </td>
-    <td nowrap>
+    <!--td width="100" nowrap>
       <%= toHtml(thisRecipient.getReplyDateString()) %>
+    </td-->
+    <td width="102" nowrap>
+      <%= toHtml(thisRecipient.getStatus()) %>
     </td>
-		<td nowrap>
-		  <%= toHtml(thisRecipient.getStatus()) %>
-	  </td>
   </tr>
   <%}%>
 </table>

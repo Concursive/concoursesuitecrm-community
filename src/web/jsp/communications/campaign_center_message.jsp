@@ -48,7 +48,7 @@
     </td>
   </tr>
 </table>
-
+<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>
@@ -60,18 +60,19 @@
       Survey
     </td>
     <td width=100% valign=center>
+    <% SurveyList.setJsEvent("onChange=\"javascript:window.frames['edit1'].location.href='/CampaignManagerMessage.do?command=PreviewSurvey&preview=1&id=' + this.options[this.selectedIndex].value;\""); %>
       <%= SurveyList.getHtmlSelect("surveyId", Campaign.getSurveyId()) %>
     </td>
   </tr>
-  <!--tr class="containerBody">
+  <tr class="containerBody">
     <td width=50 valign="top" nowrap class="formLabel">
       Preview
     </td>
     <td width=100% valign=center>
-      <iframe id="edit1" name="edit1" frameborder="0" <dhv:browser id="ns">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 100%;"</dhv:browser> onblur="return false" src="/CampaignManagerSurvey.do?command=Preview&id=2">
+      <iframe id="edit1" name="edit1" frameborder="0" <dhv:browser id="ns">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 100%;"</dhv:browser> onblur="return false" src="/CampaignManagerMessage.do?command=PreviewSurvey&preview=1&id=<%= Campaign.getSurveyId() %>">
       </iframe>
     </td>
-  </tr-->
+  </tr>
   
 </table>
 

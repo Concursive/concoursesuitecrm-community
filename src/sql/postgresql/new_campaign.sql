@@ -44,7 +44,15 @@ CREATE TABLE survey_item (
   survey_id int default -1,
   type int default -1,
   description VARCHAR(255),
-  enabled BOOLEAN NOT NULL DEFAULT 't'
+  enabled BOOLEAN NOT NULL DEFAULT 't',
+  average float default 0.00,
+  total1 int default 0,
+  total2 int default 0,
+  total3 int default 0,
+  total4 int default 0,
+  total5 int default 0,
+  total6 int default 0,
+  total7 int default 0
 );
 
 CREATE TABLE lookup_survey_types (

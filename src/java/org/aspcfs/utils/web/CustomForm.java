@@ -5,6 +5,7 @@ import com.darkhorseventures.cfsbase.CustomField;
 import com.darkhorseventures.controller.*;
 import java.util.Iterator;
 import com.darkhorseventures.utils.ObjectUtils;
+import com.darkhorseventures.utils.StringUtils;
 import com.darkhorseventures.cfsbase.SurveyItem;
 import java.util.ArrayList;
 
@@ -130,10 +131,14 @@ public void setButtonLinks(ArrayList tmp) { this.buttonLinks = tmp; }
 							  for (int count=1; count<=((ArrayList)thisField.getElementData()).size(); count++) {
 									SurveyItem thisItem = (SurveyItem)((ArrayList)thisField.getElementData()).get(count-1);
 									hiddenResult.append("<input type=\"hidden\" name=\"" + thisField.getName() + count + "id\" value=\"" + thisItem.getId() + "\">\n");
-									hiddenResult.append("<input type=\"hidden\" name=\"" + thisField.getName() + count + "text\" value=\"" + thisItem.getDescription() + "\">\n");
+									hiddenResult.append("<input type=\"hidden\" name=\"" + thisField.getName() + count + "text\" value=\"" + StringUtils.toHtml(thisItem.getDescription()) + "\">\n");
 							  }
 							} else {
-								hiddenResult.append("<input type=\"hidden\" name=\"" + thisField.getName() + "\" value=\"" + thisField.getEnteredValue() + "\">\n");
+								if (thisField.getType() != CustomField.TEXTAREA) {
+									hiddenResult.append("<input type=\"hidden\" name=\"" + thisField.getName() + "\" value=\"" + StringUtils.toHtml(thisField.getEnteredValue()) + "\">\n");
+								} else {
+									hiddenResult.append("<input type=\"hidden\" name=\"" + thisField.getName() + "\" value=\"" + thisField.getEnteredValue() + "\">\n");
+								}
 							}
 						}
 					}

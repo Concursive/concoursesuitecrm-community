@@ -8,6 +8,7 @@ import java.util.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
+import com.darkhorseventures.controller.CustomForm;
 
 /**
  *  Actions for dealing with Messages in the Communications Module
@@ -374,6 +375,42 @@ public final class CampaignManagerMessage extends CFSModule {
       return ("PreviewOK");
     } else {
       return ("PreviewOK");
+    }
+  }
+  
+    public String executeCommandPreviewSurvey(ActionContext context) {
+	  
+	  	if (!(hasPermission(context, "campaign-campaigns-surveys-view"))) {
+	    		return ("PermissionError");
+    		}
+		
+    Exception errorMessage = null;
+    addModuleBean(context, "ManageCampaigns", "Build New Campaign");
+    Connection db = null;
+    
+    CustomForm thisForm = getDynamicForm(context, "surveyview");
+    String surveyId = context.getRequest().getParameter("id");
+
+    try {
+      db = this.getConnection(context);
+      Survey thisSurvey = new Survey(db, surveyId);
+      
+      if (thisSurvey == null) 
+	      thisSurvey = new Survey();
+	      
+      thisForm.populate(thisSurvey);
+      context.getRequest().setAttribute("CustomFormInfo", thisForm);
+      context.getRequest().setAttribute("Survey", thisSurvey);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("PreviewSurveyOK");
+    } else {
+      return ("PreviewSurveyOK");
     }
   }
 
