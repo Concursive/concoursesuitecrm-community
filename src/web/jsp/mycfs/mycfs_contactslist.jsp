@@ -7,17 +7,23 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="session"/>
 <jsp:useBean id="ProjectListSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="session"/>
+<jsp:useBean id="Filters" class="java.util.ArrayList" scope="request"/>
 <jsp:useBean id="DisplayFieldId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="HiddenFieldId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="ListType" class="java.lang.String" scope="request"/>
 <jsp:useBean id="Campaign" class="java.lang.String" scope="request"/>
 <jsp:useBean id="AllContacts" class="java.lang.String" scope="request"/>
+
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popContacts.js"></script>
 
 <%
  if(!"true".equalsIgnoreCase(request.getParameter("finalsubmit"))){
+ String source = "";
+  if(request.getParameter("source") != null){
+    source = request.getParameter("source");
+  }
 %>
 
 <br>
@@ -33,11 +39,11 @@
     
     <td align="left">
       <select size="1" name="listView" onChange="javascript:setFieldSubmit('listFilter1','-1','contactListView');">
-        <option <%= ContactListInfo.getOptionValue("all") %>>All Contacts</option>
-	<option <%= ContactListInfo.getOptionValue("employees") %>>Employees</option>
-	<option <%= ContactListInfo.getOptionValue("mycontacts") %>>My Contacts</option>
-	<option <%= ContactListInfo.getOptionValue("accountcontacts") %>>Account Contacts</option>
-  <option <%= ContactListInfo.getOptionValue("myprojects") %>>My Projects</option>
+        <dhv:evaluate exp="<%= !source.equalsIgnoreCase("opps") %>"><option <%= ContactListInfo.getOptionValue("all") %>>All Contacts</option></dhv:evaluate>
+        <dhv:evaluate exp="<%= !source.equalsIgnoreCase("opps") %>"><option <%= ContactListInfo.getOptionValue("employees") %>>Employees</option></dhv:evaluate>
+        <option <%= ContactListInfo.getOptionValue("mycontacts") %>>My Contacts</option>
+        <option <%= ContactListInfo.getOptionValue("accountcontacts") %>>Account Contacts</option>
+        <dhv:evaluate exp="<%= !source.equalsIgnoreCase("opps") %>"><option <%= ContactListInfo.getOptionValue("myprojects") %>>My Projects</option></dhv:evaluate>
 	</select>
      </td>
     <td>
@@ -175,11 +181,12 @@ else{%>
       <%}%>
       <input type=hidden name="finalsubmit" value="false">
       <input type=hidden name="rowcount" value="0">
-      <input type=hidden name="displayFieldId" value="<%=DisplayFieldId%>">
-      <input type=hidden name="hiddenFieldId" value="<%=HiddenFieldId%>">
-      <input type=hidden name="listType" value="<%=ListType%>">
-      <input type=hidden name="campaign" value="<%=Campaign.toString()%>">
-      <input type=hidden name="allcontacts" value="<%=AllContacts.toString()%>">
+      <input type=hidden name="displayFieldId" value="<%= DisplayFieldId %>">
+      <input type=hidden name="hiddenFieldId" value="<%= HiddenFieldId %>">
+      <input type=hidden name="listType" value="<%= ListType %>">
+      <input type=hidden name="campaign" value="<%= Campaign.toString() %>">
+      <input type=hidden name="allcontacts" value="<%= AllContacts.toString() %>">
+      <input type=hidden name="source" value="<%= source %>">
     </table>
     
     <%if(ListType.equalsIgnoreCase("list")){%>

@@ -19,6 +19,24 @@ function popContactsListSingle(hiddenFieldId,displayFieldId,allContacts) {
   }
 }
 
+function popContactsListOppsSingle(hiddenFieldId, displayFieldId, allContacts) {
+  title  = 'Contacts';
+  width  =  '700';
+  height =  '450';
+  resize =  'yes';
+  bars   =  'no';
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  
+  var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  var newwin=window.open('/ContactsList.do?command=ContactList&allcontacts=' + allContacts + '&listType=single&flushtemplist=true&source=Opps&reset=true&selectedIds=' + document.getElementById(hiddenFieldId).value + '&displayFieldId=' + displayFieldId + '&hiddenFieldId=' + hiddenFieldId, title, params);
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
+
 function popContactsListMultiple(displayFieldId,highLightedId) {
   title  = 'Contacts';
   width  =  '700';

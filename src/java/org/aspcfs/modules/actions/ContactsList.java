@@ -32,6 +32,9 @@ public final class ContactsList extends CFSModule {
    */
   public String executeCommandContactList(ActionContext context) {
 
+    if(context.getRequest().getParameter("reset") != null){
+      context.getSession().removeAttribute("ContactListInfo");
+    }
     PagedListInfo contactListInfo = this.getPagedListInfo(context, "ContactListInfo");
     contactListInfo.setEnableJavaScript(true);
 
@@ -40,7 +43,7 @@ public final class ContactsList extends CFSModule {
     ContactList contactList = null;
     boolean listDone = false;
 
-    String firstFilter = "";
+    String firstFilter = null;
 
     String secondFilter = "";
     String selectedIds = "";
@@ -207,7 +210,10 @@ public final class ContactsList extends CFSModule {
       //  set Filter for retrieving addresses depending on typeOfContact
       if ((firstFilter == null || firstFilter.equals(""))) {
         firstFilter = "all";
+      } else if (context.getRequest().getParameter("source") != null && firstFilter == null || firstFilter.equals("")) {
+        firstFilter = "mycontacts";
       }
+
       if (firstFilter.equalsIgnoreCase("all")) {
         contactList.setPersonalId(getUserId(context));
         contactList.setOwnerIdRange(this.getUserRange(context));
@@ -246,7 +252,6 @@ public final class ContactsList extends CFSModule {
       context.getRequest().setAttribute("DisplayFieldId", displayFieldId);
       context.getRequest().setAttribute("ListType", listType);
       context.getRequest().setAttribute("ContactList", contactList);
-
       if (context.getRequest().getParameter("campaign") != null) {
         if (((String) context.getRequest().getParameter("campaign")).equalsIgnoreCase("true")) {
           context.getRequest().setAttribute("Campaign", (String) context.getRequest().getParameter("campaign"));

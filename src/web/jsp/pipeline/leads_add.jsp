@@ -137,7 +137,7 @@ Add Opportunity<br>
   
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <a href="javascript:popContactsListSingle('header_contactLink','changecontact','true');">Contact</a>
+      <a href="javascript:popContactsListOppsSingle('header_contactLink','changecontact','true');">Contact</a>
     </td>
     <td width="100%">
       <table>
