@@ -18,13 +18,6 @@ CREATE TABLE saved_criterialist (
   enabled BOOLEAN NOT NULL DEFAULT true
 );
 
-CREATE TABLE saved_criteriaelement (
-  id INTEGER NOT NULL REFERENCES saved_criterialist(id),
-  field INTEGER NOT NULL references search_fields(id),
-  operator VARCHAR(50) NOT NULL,
-  operatorid INTEGER NOT NULL references field_types(id)
-  value VARCHAR(80) NOT NULL
-);
 
 CREATE TABLE campaign (
   campaign_id serial PRIMARY KEY,
@@ -237,6 +230,13 @@ CREATE TABLE message_template (
   modifiedby INT NOT NULL REFERENCES access(user_id)
 );
 
+CREATE TABLE saved_criteriaelement (
+  id INTEGER NOT NULL REFERENCES saved_criterialist(id),
+  field INTEGER NOT NULL references search_fields(id),
+  operator VARCHAR(50) NOT NULL,
+  operatorid INTEGER NOT NULL references field_types(id),
+  value VARCHAR(80) NOT NULL
+);
 
 
  
