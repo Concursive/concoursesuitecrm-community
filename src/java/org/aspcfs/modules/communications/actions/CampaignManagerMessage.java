@@ -354,33 +354,21 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandPreviewMessage(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
+    if (!hasPermission(context, "campaign-campaigns-messages-view")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     addModuleBean(context, "ManageCampaigns", "Build New Campaign");
     Connection db = null;
-
     String messageId = context.getRequest().getParameter("id");
-
     try {
       db = this.getConnection(context);
       Message thisMessage = new Message(db, messageId);
       context.getRequest().setAttribute("Message", thisMessage);
-
     } catch (Exception e) {
-      errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      return "PreviewOK";
-    } else {
-      return "PreviewOK";
-    }
+    return "PreviewOK";
   }
 
 
