@@ -78,8 +78,11 @@ public class SSLMessage {
       //Prepare SSL... the host key needs to be in the keyring
       System.setProperty("java.protocol.handler.pkgs", 
         "com.sun.net.ssl.internal.www.protocol");
+      Class classFactory = Class.forName("com.sun.net.ssl.internal.ssl.Provider");
+      if( (null != classFactory) && (null == Security.getProvider("SunJSSE")) )
+          Security.addProvider((Provider)classFactory.newInstance());
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("SSLMessage-> Keystore: " + keystore + "/" + keystorePassword);
+        System.out.println("SSLMessage-> Keystore: " + keystore + ":" + keystorePassword);
       }
       
       SSLContext sslContext = SSLContext.getInstance("TLS");
