@@ -95,7 +95,7 @@
 </dhv:evaluate>
 <dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
   <tr class="containerBody">
-    <td nowrap class="formLabel">Ad Run Dates</td>
+    <td nowrap class="formLabel" valign="top">Ad Run Dates</td>
     <td>
 <%
       Iterator adruns = InventoryItem.getAdRuns().iterator();
@@ -116,9 +116,10 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td>
-Status Icons:<br>
+<font color="#8F8F8F">Status Icons:<br>
 <img border="0" src="images/box.gif" alt="" align="absmiddle"> Ad Run has not been processed by Graphic Designer<br>
-<img border="0" src="images/box-checked.gif" alt="" align="absmiddle"> Ad Run has been processed by Graphic Designer 
+<img border="0" src="images/box-checked.gif" alt="" align="absmiddle"> Ad Run has been processed by Graphic Designer
+</font> 
     </td>
   </tr>
 </table>

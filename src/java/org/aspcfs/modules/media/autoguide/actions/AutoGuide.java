@@ -10,6 +10,7 @@ import com.darkhorseventures.cfsmodule.CFSModule;
 import com.darkhorseventures.webutils.*;
 import com.darkhorseventures.autoguide.base.*;
 import com.darkhorseventures.utils.ImageUtils;
+import com.darkhorseventures.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import com.zeroio.iteam.base.*;
@@ -601,6 +602,9 @@ public final class AutoGuide extends CFSModule {
     try {
       db = getConnection(context);
       thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(linkId), Constants.AUTOGUIDE);
+      if (version != null) {
+        thisItem.buildVersionList(db);
+      }
     } catch (Exception e) {
       errorMessage = e;
       System.out.println(e.toString());
@@ -628,7 +632,7 @@ public final class AutoGuide extends CFSModule {
         //TODO: do not hard code this
         fileDownload.sendFile(context, "image/" + imageType);
       } else {
-        System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
+        System.err.println("AutoGuide-> Trying to send a file that does not exist");
       }
     } catch (java.net.SocketException se) {
       //User either cancelled the download or lost connection
@@ -647,16 +651,126 @@ public final class AutoGuide extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context           Description of Parameter
-   *@param  db                Description of Parameter
-   *@param  orgId             Description of Parameter
-   *@exception  SQLException  Description of Exception
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
-  private void populateOrganization(ActionContext context, Connection db, int orgId) throws SQLException {
-    Organization thisOrganization = new Organization(db, orgId);
-    context.getRequest().setAttribute("OrgDetails", thisOrganization);
+  public String executeCommandDownloadImage(ActionContext context) {
+    Exception errorMessage = null;
+    String linkId = (String) context.getRequest().getParameter("id");
+    String itemId = (String) context.getRequest().getParameter("fid");
+    String version = (String) context.getRequest().getParameter("ver");
+    FileItem thisItem = null;
+    Inventory inventoryItem = null;
+
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      inventoryItem = new Inventory(db, Integer.parseInt(linkId));
+      thisItem = inventoryItem.getPicture();
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    //Start the download
+    try {
+      FileItem itemToDownload = null;
+      if (version == null) {
+        //Retrieves the original/raw image instead of latest file
+        itemToDownload = thisItem.getVersion(1.0);
+      } else {
+        itemToDownload = thisItem.getVersion(Double.parseDouble(version));
+      }
+
+      itemToDownload.setEnteredBy(this.getUserId(context));
+      String filePath = this.getPath(context, "autoguide") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+
+      FileDownload fileDownload = new FileDownload();
+      fileDownload.setFullPath(filePath);
+      fileDownload.setDisplayName(
+          StringUtils.toString(inventoryItem.getOrganization().getAccountNumber()) + "_" +
+          StringUtils.toString(inventoryItem.getStockNo()) + "_" +
+          StringUtils.toString(inventoryItem.getVehicle().getMake().getName()) + ".jpg");
+
+      //itemToDownload.getClientFilename());
+      if (fileDownload.fileExists()) {
+        fileDownload.sendFile(context);
+        db = getConnection(context);
+        itemToDownload.updateCounter(db);
+      } else {
+        System.err.println("AutoGuide-> Trying to send a file that does not exist");
+      }
+    } catch (java.net.SocketException se) {
+      //User either cancelled the download or lost connection
+      if (System.getProperty("DEBUG") != null) {
+        se.printStackTrace(System.out);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+      e.printStackTrace(System.out);
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("-none-");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
   
+  public String executeCommandDownloadText(ActionContext context) {
+    Exception errorMessage = null;
+    String linkId = (String) context.getRequest().getParameter("id");
+    Inventory inventoryItem = null;
+
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      inventoryItem = new Inventory(db, Integer.parseInt(linkId));
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    //Start the download
+    try {
+      FileDownload fileDownload = new FileDownload();
+      fileDownload.setDisplayName(
+          StringUtils.toString(inventoryItem.getOrganization().getAccountNumber()) + "_" +
+          StringUtils.toString(inventoryItem.getStockNo()) + "_" +
+          StringUtils.toString(inventoryItem.getVehicle().getMake().getName()) + ".txt");
+      fileDownload.sendTextAsFile(context, inventoryItem.toString());
+    } catch (java.net.SocketException se) {
+      //User either cancelled the download or lost connection
+      if (System.getProperty("DEBUG") != null) {
+        se.printStackTrace(System.out);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+      e.printStackTrace(System.out);
+    }
+
+    if (errorMessage == null) {
+      return ("-none-");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@param  info     Description of Parameter
+   */
   public void populateListFilters(ActionContext context, PagedListInfo info) {
     if (!info.hasListFilters()) {
       //Default to Current Inventory
@@ -667,6 +781,20 @@ public final class AutoGuide extends CFSModule {
     listFilterSelect.addItem(1, "Sold Inventory");
     listFilterSelect.addItem(-1, "All Inventory");
     context.getRequest().setAttribute("listFilterSelect", listFilterSelect);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of Parameter
+   *@param  db                Description of Parameter
+   *@param  orgId             Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  private void populateOrganization(ActionContext context, Connection db, int orgId) throws SQLException {
+    Organization thisOrganization = new Organization(db, orgId);
+    context.getRequest().setAttribute("OrgDetails", thisOrganization);
   }
 
 

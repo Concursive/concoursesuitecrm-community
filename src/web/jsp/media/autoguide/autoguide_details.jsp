@@ -2,6 +2,7 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.autoguide.base.*" %>
 <jsp:useBean id="InventoryItem" class="com.darkhorseventures.autoguide.base.Inventory" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
 <a href="AutoGuide.do?command=List">Back to Vehicle List</a><p>
 <form action='/AutoGuide.do?command=Details&id=<%= InventoryItem.getId() %>&action=modify' method='post'>
@@ -84,7 +85,7 @@
 </dhv:evaluate>
 <dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
   <tr>
-    <td nowrap class="formLabel">Ad Run Dates</td>
+    <td nowrap class="formLabel" valign="top">Ad Run Dates</td>
     <td>
 <%
       Iterator adruns = InventoryItem.getAdRuns().iterator();
@@ -105,9 +106,10 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td>
-Status Icons:<br>
+<font color="#8F8F8F">Status Icons:<br>
 <img border="0" src="images/box.gif" alt="" align="absmiddle"> Ad Run has not been processed by Graphic Designer<br>
-<img border="0" src="images/box-checked.gif" alt="" align="absmiddle"> Ad Run has been processed by Graphic Designer 
+<img border="0" src="images/box-checked.gif" alt="" align="absmiddle"> Ad Run has been processed by Graphic Designer
+</font> 
     </td>
   </tr>
 </table>
@@ -115,13 +117,18 @@ Status Icons:<br>
     </td>
     <td class="PhotoDetail">
       <span>
-        <img src="<%= (InventoryItem.hasPictureId()?"AutoGuide.do?command=ShowImage&id=" + InventoryItem.getId() + "&fid=" + InventoryItem.getPictureId():"images/vehicle_unavailable.gif") %>" border="0"/>
+<dhv:evaluate exp="<%= InventoryItem.hasPictureId() %>">
+        <a href="javascript:popURL('autoguide_popup_photo.jsp?id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>&ver=1.0','Photo','760','550','yes','yes');"><img src="AutoGuide.do?command=ShowImage&id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>" border="0"/></a>
+</dhv:evaluate>
+<dhv:evaluate exp="<%= !InventoryItem.hasPictureId() %>">
+        <img src="images/vehicle_unavailable.gif" border="0"/>
+</dhv:evaluate>
         <br>
       </span>
-<dhv:evaluate exp="<%= InventoryItem.hasPictureId() %>">      
-      <a href="#">D/L Hi-Res</a> (<%= InventoryItem.getPicture().getVersion(1.0d).getRelativeSize() %>k)<br>
-</dhv:evaluate>      
-      <a href="#">D/L Text</a>
+<dhv:evaluate exp="<%= InventoryItem.hasPictureId() %>">   
+      <br><a href="AutoGuide.do?command=DownloadImage&id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>">D/L Hi-Res</a> (<%= InventoryItem.getPicture().getVersion(1.0d).getRelativeSize() %>k)<br>
+</dhv:evaluate>
+      <br><a href="#">D/L Text</a>
     </td>
   </tr>
 </table>

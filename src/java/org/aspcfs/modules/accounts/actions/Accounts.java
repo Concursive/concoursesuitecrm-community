@@ -146,7 +146,7 @@ public final class Accounts extends CFSModule {
         db = getConnection(context);
         itemToDownload.updateCounter(db);
       } else {
-        System.err.println("PMF-> Trying to send a file that does not exist");
+        System.err.println("Accounts-> Trying to send a file that does not exist");
       }
     } catch (java.net.SocketException se) {
       //User either cancelled the download or lost connection

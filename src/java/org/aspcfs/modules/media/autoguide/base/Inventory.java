@@ -1120,5 +1120,45 @@ public class Inventory {
     modifiedBy = rs.getInt("modifiedby");
     vehicle = new Vehicle(rs);
   }
+  
+  public String toString() {
+    String lf = System.getProperty("line.separator");
+    StringBuffer sb = new StringBuffer();
+    sb.append("AUTO GUIDE VEHICLE OUTPUT: " + StringUtils.toDateTimeString(new java.util.Date()) + lf + lf);
+    
+    if (this.hasAdRuns()) {
+      
+      
+    } else {
+      
+      
+    
+    }
+    sb.append("Year: ");
+    sb.append("Make: "); 
+    sb.append("Model: "); 
+    
+    sb.append("Stock No: " + StringUtils.toString(stockNo) + lf);
+    sb.append("Mileage: " + StringUtils.toString(this.getMileageString()) + lf);
+    sb.append("VIN: " + StringUtils.toString(this.getVin()) + lf);
+    sb.append("Selling Price: " + StringUtils.toString(this.getSellingPriceString()) + lf);
+    sb.append("Color: " + StringUtils.toString(this.getExteriorColor()) + lf);
+    sb.append("Condition: " + StringUtils.toString(condition) + lf);
+    sb.append("Additional Text: " + StringUtils.toString(comments) + lf);
+    sb.append("Options: "); 
+    if (this.hasOptions()) {
+      Iterator options = this.getOptions().iterator();
+      while (options.hasNext()) {
+        Option thisOption = (Option)options.next();
+        sb.append(thisOption.getName());
+        if (options.hasNext()) {
+          sb.append(", ");
+        }
+      }
+    }
+    sb.append(lf);
+    
+    return sb.toString();
+  }
 }
 
