@@ -266,12 +266,13 @@ public class InventoryOptionList extends ArrayList {
    *@exception  SQLException  Description of Exception
    */
   public void delete(Connection db) throws SQLException {
-    Iterator optionList = this.iterator();
-    while (optionList.hasNext()) {
-      InventoryOption thisOption = (InventoryOption) optionList.next();
-      thisOption.setInventoryId(inventoryId);
-      thisOption.delete(db);
-    }
+    String sql = 
+      "DELETE FROM autoguide_inventory_options " +
+      "WHERE inventory_id = ? ";
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, inventoryId);
+    pst.execute();
+    pst.close();
   }
 
 
