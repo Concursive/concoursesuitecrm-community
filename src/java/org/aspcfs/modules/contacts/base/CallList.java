@@ -21,6 +21,9 @@ public class CallList extends Vector {
 	private int contactId = -1;
 	private int orgId = -1;
 	private int oppId = -1;
+	private int enteredBy = -1;
+	private boolean hasAlertDate = false;
+	private java.sql.Date alertDate = null;
 
 
 	/**
@@ -87,6 +90,39 @@ public class CallList extends Vector {
 
 
 	/**
+	 *  Sets the EnteredBy attribute of the CallList object
+	 *
+	 *@param  tmp  The new EnteredBy value
+	 *@since
+	 */
+	public void setEnteredBy(int tmp) {
+		this.enteredBy = tmp;
+	}
+
+
+	/**
+	 *  Sets the AlertDate attribute of the CallList object
+	 *
+	 *@param  alertDate  The new AlertDate value
+	 *@since
+	 */
+	public void setAlertDate(java.sql.Date alertDate) {
+		this.alertDate = alertDate;
+	}
+
+
+	/**
+	 *  Sets the HasAlertDate attribute of the CallList object
+	 *
+	 *@param  tmp  The new HasAlertDate value
+	 *@since
+	 */
+	public void setHasAlertDate(boolean tmp) {
+		this.hasAlertDate = tmp;
+	}
+
+
+	/**
 	 *  Sets the OppId attribute of the CallList object
 	 *
 	 *@param  oppId  The new OppId value
@@ -94,6 +130,39 @@ public class CallList extends Vector {
 	 */
 	public void setOppId(String oppId) {
 		this.oppId = Integer.parseInt(oppId);
+	}
+
+
+	/**
+	 *  Gets the AlertDate attribute of the CallList object
+	 *
+	 *@return    The AlertDate value
+	 *@since
+	 */
+	public java.sql.Date getAlertDate() {
+		return alertDate;
+	}
+
+
+	/**
+	 *  Gets the EnteredBy attribute of the CallList object
+	 *
+	 *@return    The EnteredBy value
+	 *@since
+	 */
+	public int getEnteredBy() {
+		return enteredBy;
+	}
+
+
+	/**
+	 *  Gets the HasAlertDate attribute of the CallList object
+	 *
+	 *@return    The HasAlertDate value
+	 *@since
+	 */
+	public boolean getHasAlertDate() {
+		return hasAlertDate;
 	}
 
 
@@ -170,7 +239,6 @@ public class CallList extends Vector {
 				"  LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code), " +
 				"contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
 				"contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
-				
 				"WHERE c.enteredby = a1.user_id " +
 				"AND c.modifiedby = a2.user_id ");
 
@@ -247,8 +315,20 @@ public class CallList extends Vector {
 			sqlFilter.append("AND c.contact_id = ? ");
 		}
 		
+		if (hasAlertDate == true) {
+			sqlFilter.append("AND c.alertdate is not null ");
+		}
+
 		if (oppId != -1) {
 			sqlFilter.append("AND c.opp_id = ? ");
+		}
+
+		if (enteredBy != -1) {
+			sqlFilter.append("AND c.enteredby = ? ");
+		}
+		
+		if (alertDate != null) {
+			sqlFilter.append("AND c.alertdate = ? ");
 		}
 
 		if (orgId != -1) {
@@ -270,9 +350,17 @@ public class CallList extends Vector {
 		if (contactId != -1) {
 			pst.setInt(++i, contactId);
 		}
-		
+
 		if (oppId != -1) {
 			pst.setInt(++i, oppId);
+		}
+
+		if (enteredBy != -1) {
+			pst.setInt(++i, enteredBy);
+		}
+		
+		if (alertDate != null) {
+			pst.setDate(++i, alertDate);
 		}
 
 		if (orgId != -1) {
