@@ -275,6 +275,9 @@ public class OrganizationList extends Vector {
     return orgListSelect.getHtml(selectName);
   }
 
+  public void select(Connection db) throws SQLException {
+    buildList(db);
+  }
 
   /**
    *  Queries the database, using any of the filters, to retrieve a list of

@@ -7,6 +7,15 @@ import org.theseus.actions.*;
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 
+/**
+ *  A SyncClient represents a uniquely identifiable system that is
+ *  performing synchronization with the server.
+ *  The server maintains specific information about clients as well.  
+ *
+ *@author     matt
+ *@created    April 10, 2002
+ *@version    $Id$
+ */
 public class SyncClient extends GenericBean {
 
   private int id = -1;
@@ -16,15 +25,32 @@ public class SyncClient extends GenericBean {
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
-  
+
+
+  /**
+   *  Constructor for the SyncClient object
+   */
   public SyncClient() { }
 
 
+  /**
+   *  Constructor for the SyncClient object
+   *
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public SyncClient(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
 
 
+  /**
+   *  Constructor for the SyncClient object
+   *
+   *@param  db                Description of Parameter
+   *@param  clientId          Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public SyncClient(Connection db, int clientId) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
@@ -46,32 +72,190 @@ public class SyncClient extends GenericBean {
     pst.close();
   }
 
-  public void setId(int tmp) { this.id = tmp; }
-  public void setId(String tmp) { this.id = Integer.parseInt(tmp); }
-  public void setType(String tmp) { this.type = tmp; }
-  public void setVersion(String tmp) { this.version = tmp; }
-  public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
-  public void setEnteredBy(int tmp) { this.enteredBy = tmp; }
-  public void setEnteredBy(String tmp) { this.enteredBy = Integer.parseInt(tmp); }
-  public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
-  public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
-  public void setModifiedBy(String tmp) { this.modifiedBy = Integer.parseInt(tmp); }
-  
-  public int getId() { return id; }
-  public String getType() { return type; }
-  public String getVersion() { return version; }
-  public java.sql.Timestamp getEntered() { return entered; }
-  public int getEnteredBy() { return enteredBy; }
-  public java.sql.Timestamp getModified() { return modified; }
-  public int getModifiedBy() { return modifiedBy; }
+
+  /**
+   *  Sets the id attribute of the SyncClient object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(int tmp) {
+    this.id = tmp;
+  }
 
 
+  /**
+   *  Sets the id attribute of the SyncClient object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the type attribute of the SyncClient object
+   *
+   *@param  tmp  The new type value
+   */
+  public void setType(String tmp) {
+    this.type = tmp;
+  }
+
+
+  /**
+   *  Sets the version attribute of the SyncClient object
+   *
+   *@param  tmp  The new version value
+   */
+  public void setVersion(String tmp) {
+    this.version = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the SyncClient object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredBy attribute of the SyncClient object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(int tmp) {
+    this.enteredBy = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredBy attribute of the SyncClient object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the modified attribute of the SyncClient object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modifiedBy attribute of the SyncClient object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(int tmp) {
+    this.modifiedBy = tmp;
+  }
+
+
+  /**
+   *  Sets the modifiedBy attribute of the SyncClient object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the id attribute of the SyncClient object
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the type attribute of the SyncClient object
+   *
+   *@return    The type value
+   */
+  public String getType() {
+    return type;
+  }
+
+
+  /**
+   *  Gets the version attribute of the SyncClient object
+   *
+   *@return    The version value
+   */
+  public String getVersion() {
+    return version;
+  }
+
+
+  /**
+   *  Gets the entered attribute of the SyncClient object
+   *
+   *@return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Gets the enteredBy attribute of the SyncClient object
+   *
+   *@return    The enteredBy value
+   */
+  public int getEnteredBy() {
+    return enteredBy;
+  }
+
+
+  /**
+   *  Gets the modified attribute of the SyncClient object
+   *
+   *@return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Gets the modifiedBy attribute of the SyncClient object
+   *
+   *@return    The modifiedBy value
+   */
+  public int getModifiedBy() {
+    return modifiedBy;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "INSERT INTO sync_client " +
-      "(type, version, enteredby, modifiedby) " +
-      "VALUES (?, ?, ?, ?) ");
+        "INSERT INTO sync_client " +
+        "(type, version, enteredby, modifiedby) " +
+        "VALUES (?, ?, ?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setString(++i, type);
@@ -86,14 +270,21 @@ public class SyncClient extends GenericBean {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean delete(Connection db) throws SQLException {
     if (id == -1) {
       throw new SQLException("ID was not specified");
     }
-    
+
     PreparedStatement pst = null;
     //Delete related records (mappings)
-    
+
     //Delete the record
     int recordCount = 0;
     pst = db.prepareStatement(
@@ -112,6 +303,14 @@ public class SyncClient extends GenericBean {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  context           Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public int update(Connection db, ActionContext context) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("Call ID was not specified");
@@ -139,6 +338,12 @@ public class SyncClient extends GenericBean {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("client_id");
     type = rs.getString("type");
@@ -148,6 +353,6 @@ public class SyncClient extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
   }
- 
+
 }
 

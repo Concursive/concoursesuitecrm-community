@@ -77,7 +77,7 @@ public class Call extends GenericBean {
         "ct.namefirst as ctfirst, ct.namelast as ctlast " +
         "FROM call_log c " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
-        "  LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code), " +
+        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code), " +
         "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
         "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
         "WHERE c.enteredby = a1.user_id " +
@@ -806,6 +806,7 @@ public class Call extends GenericBean {
    *@since
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
+    //call_log table
     id = rs.getInt("call_id");
     orgId = rs.getInt("org_id");
     contactId = rs.getInt("contact_id");
@@ -818,10 +819,10 @@ public class Call extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
-    
+    //lookup_call_types table
     callTypeId = rs.getInt("code");
     callType = rs.getString("description");
-    
+    //contact table
     enteredName = fullName(rs.getString("efirst"), rs.getString("elast"));
     modifiedName = fullName(rs.getString("mfirst"), rs.getString("mlast"));
     contactName = fullName(rs.getString("ctfirst"), rs.getString("ctlast"));

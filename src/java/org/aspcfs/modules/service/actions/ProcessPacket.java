@@ -44,20 +44,22 @@ public final class ProcessPacket extends CFSModule {
           objectMap.put("user", "com.darkhorseventures.cfsbase.User");
           objectMap.put("syncClient", "com.darkhorseventures.cfsbase.SyncClient");
           objectMap.put("account", "com.darkhorseventures.cfsbase.Organization");
+          objectMap.put("accountList", "com.darkhorseventures.cfsbase.OrganizationList");
           objectMap.put("make", "com.darkhorseventures.autoguide.base.Make");
           objectMap.put("model", "com.darkhorseventures.autoguide.base.Model");
           objectMap.put("vehicle", "com.darkhorseventures.autoguide.base.Vehicle");
         }
-        Vector transactionList = new Vector();
+        ArrayList transactionList = new ArrayList();
         xml.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
         Iterator trans = transactionList.iterator();
         while (trans.hasNext()) {
           Element thisElement = (Element)trans.next();
           Transaction thisTransaction = new Transaction();
           thisTransaction.setMapping(objectMap);
+          thisTransaction.addMapping("meta", "com.darkhorseventures.utils.TransactionMeta");
           thisTransaction.build(thisElement);
           int statusCode = thisTransaction.execute(db);
-          StatusMessage thisStatus = new StatusMessage();
+          TransactionStatus thisStatus = new TransactionStatus();
           thisStatus.setStatusCode(statusCode);
           thisStatus.setId(thisTransaction.getId());
           thisStatus.setMessage(thisTransaction.getErrorMessage());
@@ -66,13 +68,13 @@ public final class ProcessPacket extends CFSModule {
         }
 
         if (statusMessages.size() == 0 && transactionList.size() == 0) {
-          StatusMessage thisStatus = new StatusMessage();
+          TransactionStatus thisStatus = new TransactionStatus();
           thisStatus.setStatusCode(1);
           thisStatus.setMessage("No transactions found");
           statusMessages.add(thisStatus);
         }
       } else {
-        StatusMessage thisStatus = new StatusMessage();
+        TransactionStatus thisStatus = new TransactionStatus();
         thisStatus.setStatusCode(1);
         thisStatus.setMessage("Not authorized");
         statusMessages.add(thisStatus);
@@ -80,7 +82,7 @@ public final class ProcessPacket extends CFSModule {
     } catch (Exception e) {
       errorMessage = e;
       e.printStackTrace();
-      StatusMessage thisStatus = new StatusMessage();
+      TransactionStatus thisStatus = new TransactionStatus();
       thisStatus.setStatusCode(1);
       thisStatus.setMessage("Error: " + e.getMessage());
       statusMessages.add(thisStatus);
@@ -101,7 +103,7 @@ public final class ProcessPacket extends CFSModule {
           System.out.println("ProcessPacket-> Processing StatusMessage for output");
         }
       
-        StatusMessage thisMessage = (StatusMessage)messages.next();
+        TransactionStatus thisMessage = (TransactionStatus)messages.next();
         Element response = document.createElement("response");
         if (thisMessage.getId() > -1) {
           response.setAttribute("id", "" + thisMessage.getId());
@@ -143,7 +145,6 @@ public final class ProcessPacket extends CFSModule {
     } catch (Exception pce) {
       pce.printStackTrace(System.out);
     }
-    //context.getRequest().setAttribute("statusMessages", statusMessages);
     return ("PacketOK");
   }
 }

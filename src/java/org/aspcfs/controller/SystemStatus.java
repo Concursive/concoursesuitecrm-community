@@ -26,8 +26,9 @@ public class SystemStatus {
   Date hierarchyCheck = new Date();
   UserList hierarchyList = new UserList();
   boolean hierarchyUpdating = false;
-  Vector ignoredFields = new Vector();
+  ArrayList ignoredFields = new ArrayList();
   Hashtable fieldLabels = new Hashtable();
+
 
   /**
    *  Constructor for the SystemStatus object
@@ -90,13 +91,32 @@ public class SystemStatus {
    *@since     1.1
    */
   public Date getHierarchyCheck() {
-    while (hierarchyUpdating) {}
+    while (hierarchyUpdating) {
+    }
     return hierarchyCheck;
   }
-  
-  public UserList getHierarchyList() { 
-    while (hierarchyUpdating) {}
-    return hierarchyList; 
+
+
+  /**
+   *  Gets the hierarchyList attribute of the SystemStatus object
+   *
+   *@return    The hierarchyList value
+   */
+  public UserList getHierarchyList() {
+    while (hierarchyUpdating) {
+    }
+    return hierarchyList;
+  }
+
+
+  /**
+   *  Gets the label attribute of the SystemStatus object
+   *
+   *@param  thisLabel  Description of Parameter
+   *@return            The label value
+   */
+  public String getLabel(String thisLabel) {
+    return ((String) fieldLabels.get(thisLabel));
   }
 
 
@@ -111,7 +131,7 @@ public class SystemStatus {
    */
   public void buildHierarchyList(Connection db) throws SQLException {
     hierarchyList.clear();
-    
+
     //Get the top level managers
     if (System.getProperty("DEBUG") != null) {
       System.out.println("SystemStatus-> buildHierarchyList: A");
@@ -122,7 +142,7 @@ public class SystemStatus {
     tmpListA.setBuildPermissions(false);
     tmpListA.setTopLevel(true);
     tmpListA.buildList(db);
-    
+
     //Get everyone
     if (System.getProperty("DEBUG") != null) {
       System.out.println("SystemStatus-> buildHierarchyList: B");
@@ -133,11 +153,11 @@ public class SystemStatus {
     tmpListB.setBuildPermissions(false);
     tmpListB.setTopLevel(false);
     tmpListB.buildList(db);
-    
+
     //Combine the lists
     Iterator listA = tmpListA.iterator();
     while (listA.hasNext()) {
-      User thisUser = (User)listA.next(); 
+      User thisUser = (User) listA.next();
       User userToAdd = tmpListB.getTopUser(thisUser.getId());
       if (userToAdd != null) {
         hierarchyList.add(userToAdd);
@@ -148,31 +168,23 @@ public class SystemStatus {
         //System.out.println("SystemStatus-> System User Added: " + thisUser.getUsername());
       }
     }
-    
-    if (System.getProperty("DEBUG") != null) System.out.println("SystemStatus-> Top Level Users added : " + hierarchyList.size());
-  }
-  
-  private void addChildUsers(User thisUser, UserList addFrom) {
-    Iterator i = addFrom.iterator();
-    while (i.hasNext()) {
-      User tmpUser = (User)i.next();
-      if (thisUser.getShortChildList() == null) {
-        thisUser.setChildUsers(new UserList());
-      }
-      if (tmpUser.getManagerId() == thisUser.getId()) {
-        if (System.getProperty("DEBUG") != null) System.out.println("SystemStatus-> Found a match for : " + thisUser.getUsername());
-        thisUser.getShortChildList().add(tmpUser);
-        tmpUser.setManagerUser(thisUser);
-        this.addChildUsers(tmpUser, addFrom);
-      }
+
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("SystemStatus-> Top Level Users added : " + hierarchyList.size());
     }
   }
-  
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public void updateHierarchy(Connection db) throws SQLException {
     java.util.Date checkDate = new java.util.Date();
     if (checkDate.after(this.getHierarchyCheck())) {
-      synchronized(this) {
+      synchronized (this) {
         hierarchyUpdating = true;
         if (checkDate.after(hierarchyCheck)) {
           try {
@@ -187,15 +199,22 @@ public class SystemStatus {
       }
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public void buildPreferences(Connection db) throws SQLException {
     ignoredFields.clear();
     fieldLabels.clear();
     String fieldsToIgnore = null;
     String labelsToUse = null;
     String sql =
-      "SELECT * " +
-      "FROM system_prefs ";
+        "SELECT * " +
+        "FROM system_prefs ";
     Statement st = db.createStatement();
     ResultSet rs = st.executeQuery(sql);
     while (rs.next()) {
@@ -208,29 +227,35 @@ public class SystemStatus {
     }
     rs.close();
     st.close();
-    
+
     if (fieldsToIgnore != null) {
       try {
-        if (System.getProperty("DEBUG") != null) System.out.println("SystemStatus-> Adding ignored fields (temporary solution)");
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("SystemStatus-> Adding ignored fields (temporary solution)");
+        }
         XMLUtils xml = new XMLUtils(fieldsToIgnore);
         xml.getAllChildrenText(xml.getDocumentElement(), "ignore", ignoredFields);
       } catch (Exception e) {
         System.out.println("SystemStatus-> Error: " + e.getMessage());
       }
     }
-    
+
     if (labelsToUse != null) {
       try {
-        if (System.getProperty("DEBUG") != null) System.out.println("SystemStatus-> Adding field labels (temporary solution)");
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("SystemStatus-> Adding field labels (temporary solution)");
+        }
         XMLUtils xml = new XMLUtils(labelsToUse);
-        Vector fieldElements = new Vector();
+        ArrayList fieldElements = new ArrayList();
         xml.getAllChildren(xml.getDocumentElement(), "label", fieldElements);
         Iterator elements = fieldElements.iterator();
         while (elements.hasNext()) {
-          Element thisElement = (Element)elements.next();
+          Element thisElement = (Element) elements.next();
           String replace = xml.getNodeText(xml.getFirstChild(thisElement, "replace"));
           String with = xml.getNodeText(xml.getFirstChild(thisElement, "with"));
-          if (System.getProperty("DEBUG") != null) System.out.println("SystemStatus-> Replace " + replace + " with " + with);
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("SystemStatus-> Replace " + replace + " with " + with);
+          }
           fieldLabels.put(replace, with);
         }
       } catch (Exception e) {
@@ -238,13 +263,41 @@ public class SystemStatus {
       }
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  thisField  Description of Parameter
+   *@return            Description of the Returned Value
+   */
   public boolean hasField(String thisField) {
-		return ignoredFields.contains(thisField);
+    return ignoredFields.contains(thisField);
   }
 
-  public String getLabel(String thisLabel) {
-    return ((String)fieldLabels.get(thisLabel));
+
+  /**
+   *  Adds a feature to the ChildUsers attribute of the SystemStatus object
+   *
+   *@param  thisUser  The feature to be added to the ChildUsers attribute
+   *@param  addFrom   The feature to be added to the ChildUsers attribute
+   */
+  private void addChildUsers(User thisUser, UserList addFrom) {
+    Iterator i = addFrom.iterator();
+    while (i.hasNext()) {
+      User tmpUser = (User) i.next();
+      if (thisUser.getShortChildList() == null) {
+        thisUser.setChildUsers(new UserList());
+      }
+      if (tmpUser.getManagerId() == thisUser.getId()) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("SystemStatus-> Found a match for : " + thisUser.getUsername());
+        }
+        thisUser.getShortChildList().add(tmpUser);
+        tmpUser.setManagerUser(thisUser);
+        this.addChildUsers(tmpUser, addFrom);
+      }
+    }
   }
 }
 

@@ -1,7 +1,11 @@
-/* 4/8/2002 All databases up-to-date */
-
-/* 4/10/2002 */
-
+/**
+ *  MSSQL Table Creation
+ *
+ *@author     mrajkowski
+ *@created    April 10, 2002
+ *@version    $Id$
+ */
+ 
 CREATE TABLE sync_client (
   client_id INT IDENTITY PRIMARY KEY,
   type VARCHAR(100),
