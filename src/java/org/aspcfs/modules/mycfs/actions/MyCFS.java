@@ -82,9 +82,20 @@ public final class MyCFS extends CFSModule {
       if ("old".equals(inboxInfo.getListView())) {
         noteList.setOldMessagesOnly(true);
       }
-
+      
+      // TODO: Modify CFSNoteList so that only 1 query is always generated so
+      // this doesn't have to happen...
       if ("sent".equals(inboxInfo.getListView())) {
+        /*Changing sort column as  "sent_namelast" is not a column in the query*/
+        if ("sent_namelast".equals(inboxInfo.getColumnToSortBy())){
+          inboxInfo.setColumnToSortBy("m.sent");
+        }
         noteList.setSentMessagesOnly(true);
+      } else {
+        /*Changing sort column back to requested column*/
+        if ("m.sent".equals(inboxInfo.getColumnToSortBy())){
+          inboxInfo.setColumnToSortBy("sent_namelast");
+        }
       }
 
       noteList.buildList(db);
