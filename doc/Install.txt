@@ -1,6 +1,6 @@
 /**
  *  ASPCFS Server Installation
- *  Configured for Red Hat 8.0, Postgresql 7.2.3, and Tomcat 4.1.12
+ *  Configured for Red Hat 8.0, Postgresql 7.2.3, and Tomcat 4.1.12/.24
  *
  *@author     matt rajkowski
  *@created    October 9, 2002
@@ -14,11 +14,17 @@
   Purpose: Operating system
   http://www.redhat.com
   - Configure to boot up to shell
-  - Choose Custom Install (Everything)
+  - If uncomfortable, choose Custom Install (Everything),
+    otherwise install at least the following packages (to be revised):
+      - Gnome (not KDE)
+      - Server stuff (mail, firewall, ssh, ssl)
+      - Developer tools (make, etc)
+      - Text based browsers (links, lynx)
+      - Do not install Red Hat PostgreSQL
   - Configure IP
   - Turn on port 80 and 443 during install or in iptables later
 
-- Install Postgresql 7.2.3 RPMS for Red Hat 8.0 (not 7.3.1+)
+- Install Postgresql 7.2.3 RPMS for Red Hat 8.0 (not 7.3.1+ yet)
   Purpose: Database server
   http://www.postgresql.org
   destination: /var/lib/pgsql
@@ -33,13 +39,13 @@
   $ rpm --install [file]
   $ ln -s /usr/java/j2sdk1.4.1 /usr/java/j2se
 
-- Install Apache Tomcat 4.1.12 or 4.1.19 binary (not 4.1.18)
+- Install Apache Tomcat 4.1.12 or 4.1.24 binary (nothing inbetween)
   Purpose: Web Server
   http://jakarta.apache.org 
-  file: jakarta-tomcat-4.1.18-LE-jdk14.tar.gz
-  destination: /usr/java/jakarta-tomcat-4.1.18-LE-jdk14
-  $ tar -xvzf jakarta-tomcat-4.1.18-LE-jdk14.tar.gz
-  $ ln -s /usr/java/jakarta-tomcat-4.1.18-LE-jdk14 /usr/java/tomcat
+  file: jakarta-tomcat-4.1.24-LE-jdk14.tar.gz
+  destination: /usr/java/jakarta-tomcat-4.1.24-LE-jdk14
+  $ tar -xvzf jakarta-tomcat-4.1.24-LE-jdk14.tar.gz
+  $ ln -s /usr/java/jakarta-tomcat-4.1.24-LE-jdk14 /usr/java/tomcat
   
 - Install Apache Ant 1.5.1 binary
   Purpose: Deployment utility for compiling and deploying ASPCFS
@@ -74,11 +80,14 @@
 
 *** Software Configuration ***
 
-- Configure OS environment
+- Configure OS environment (as root)
+  # Create a group called "cfs"
+    $ vigr
   # Add users to the system:
     $ adduser cfsdba
-    $ adduser [your name]
-  # Add [your name] to sudo users
+    $ adduser [your name] -g cfs
+    $ passwd [your name]
+  # Add [your name] to sudo users:
     $ visudo
 
   # Add the following to the bottom of /etc/profile:
@@ -89,15 +98,16 @@
     export CATALINA_OPTS=-Djava.awt.headless=true
     export CFS_HOME=/home/webapps/ROOT
 
-  # Remove the GNU Java if installed
+  # Remove the GNU Java if installed (only if KDE was installed)
     $ rm /usr/bin/java
     $ rm /usr/bin/javac
     
   # Make the web folders
     $ mkdir /home/webapps
-    $ mkdir /home/webapps/ROOT
+    $ mkdir -m 2775 /home/webapps/ROOT
+    $ chown .cfs /home/webapps/ROOT
     
-  # Log back in for changes to take effect, then test:
+  # Log back in as root for changes to take effect, then test:
   # Java version should say: 
   #   Java(TM) 2 Runtime Environment, Standard Edition (build 1.4.1-b21)
     $ java -version
@@ -123,23 +133,24 @@
     # processname: tomcat
     #
 
+    
   # Right before the line "# Get standard Java environment variables" add the line:
     source /etc/profile
   # Delete the line that reads "CATALINA_HOME=`cd "$PRGDIR/.." ; pwd`"
   # Save and exit
     
-  # Configure tomcat web application configuration
-    $ vi ${CATALINA_HOME}/conf/web.xml
-      # Change the init-param listings = true to listings = false
-    
   # Setup tomcat to start when server starts up
     $ chkconfig --level 2345 tomcat on
     
-  # Make sure Apache Web Server is not installed
-    $ chkconfig --level 2345 httpd off
-    $ service httpd stop
+  # Allow users to add libraries to Tomcat
+    $ chmod 2775 ${CATALINA_HOME}/common/lib
+    $ chown .cfs ${CATALINA_HOME}/common/lib/*
     
-  # Test the web server, Tomcat welcome page should show:
+  # Make sure Apache Web Server is not installed or running
+    $ service httpd stop
+    $ chkconfig --level 2345 httpd off
+    
+  # Test the web server, Tomcat welcome page should show in browser:
     $ service tomcat start
     $ links http://127.0.0.1:8080
 
@@ -187,7 +198,8 @@
   # Edit sendmail configuration to allow emails to be sent from any domain user.
   # The default already allows localhost to RELAY, do not put other domains or
   # mail will be used by spammers.
-  # Running the following command will report any errors
+  # Running the following command will report any errors, if postfix is used
+  # instead of sendmail
     $ postfix check
     
 
@@ -198,19 +210,19 @@
     $ cd ~/cfs2
   
   # Configure the web server
-    $ sudo cp src/tomcat/server.xml ${CATALINA_HOME}/conf/
+    $ sudo cp pref/apache/tomcat4.1/conf/web.xml ${CATALINA_HOME}/conf/
+    $ sudo cp pref/apache/tomcat4.1/conf/server.xml ${CATALINA_HOME}/conf/
     $ sudo vi ${CATALINA_HOME}/conf/server.xml #make changes per on-screen directions
   
-  # Copy the needed libraries 
-    $ sudo cp lib/*.jar ${CATALINA_HOME}/common/lib/
-
   # Install the software (Follow on-screen messages until BUILD SUCCESSFUL)
     $ ant deploy
   
   # Install the gatekeeper
     $ createdb cfs2gk
     $ ant installgk
-  
+
+  # Create the initial cfs database
+    $ createdb cdb_[company abbreviation]
   # Install the database
     $ ant installdb
   
@@ -227,13 +239,10 @@
 - Setup cron items (as root)
   # There are several tasks to keep ASPCFS running... eventually the ASPCFS
   # items will be integrated into the ASPCFS application
-    $ crontab -e
+    $ sudo crontab -e
   
 # Clean up graphs and data every night
 1 3 * * * /usr/bin/lynx -dump http://127.0.0.1/ProcessSystem.do?command=ClearGraphData > /dev/null
-
-# Check for emails, faxes, reports, etc.
-*/5 * * * * /home/cfs/bin/notifier cfs > /dev/null
 
 
 *** Software Maintenace ***
