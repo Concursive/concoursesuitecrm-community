@@ -59,8 +59,11 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     //Copy Accounts
     logger.info("ImportBaseData-> Inserting accounts");
     writer.setAutoCommit(false);
+    Organization myCompany = new Organization(db, 0);
+    writer.save(mappings.createDataRecord(myCompany, "insert"));
+    
     OrganizationList accounts = new OrganizationList();
-    accounts.setShowMyCompany(true);
+    accounts.setShowMyCompany(false);
     accounts.setIncludeEnabled(-1);
     accounts.buildList(db);
     mappings.saveList(writer, accounts, "insert");
