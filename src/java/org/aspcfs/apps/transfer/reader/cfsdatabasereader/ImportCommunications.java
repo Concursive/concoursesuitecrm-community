@@ -45,11 +45,13 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
       return false;
     }
     
+    logger.info("ImportCommunications-> Inserting Saved Criteria Elements");
     processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "savedCriteriaElement");
     if (!processOK) {
       return false;
     }
     
+    /**
     logger.info("ImportCommunications-> Inserting Campaign Records");
     CampaignList campaigns = new CampaignList();
     campaigns.buildList(db);
@@ -58,20 +60,8 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
     if (!processOK) {
       return false;
     }
-
-    /**
-    logger.info("ImportTickets-> Inserting Ticket Log");
-    TicketLogList ticketLogList = new TicketLogList();
-    ticketLogList.setDoSystemMessages(false);
-    ticketLogList.buildList(db);
-    logger.info("ImportTickets-> " + ticketLogList.size());
-    mappings.saveList(writer, ticketLogList, "insert");
-    processOK = writer.commit();
-    if (!processOK) {
-      return false;
-    }    
     */
-    
+
     //update owners
     
     writer.setAutoCommit(true);
