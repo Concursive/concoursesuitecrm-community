@@ -1,5 +1,5 @@
 <CFSPermissions>
-  <!-- Current max category id: 12 -->
+  <!-- Current max category id: 14, 11 and 12 are missing? -->
   <!-- Every individual permission has a unique name -->
   <!-- Permission Categories can be arranged in any order, but they must have a unique sequntial id that
        matches the id used in the CFS code -->
@@ -7,12 +7,12 @@
        concerns about the code-->
   <!-- Permission attributes include: View, Add, Edit, Delete (vaed) and can be in any order -->
   <permissions>
-    <category id="11" name="System" folders="false" lookups="false">
+    <category id="13" name="System" folders="false" lookups="false">
       <permission name="globalitems-search" attributes="v---" description="Access to Global Search"/>
       <permission name="globalitems-myitems" attributes="v---" description="Access to My Items"/>
       <permission name="globalitems-recentitems" attributes="v---" description="Access to Recent Items"/>
     </category>
-    <category id="12" name="My Home Page" folders="false" lookups="false">
+    <category id="14" name="My Home Page" folders="false" lookups="false">
       <permission name="myhomepage" attributes="v---" description="Access to My Home Page module"/>
       <permission name="myhomepage-dashboard" attributes="v---" description="View Performance Dashboard"/>
       <permission name="myhomepage-miner" attributes="va-d" description="Industry News records"/>
@@ -32,7 +32,7 @@
       <permission name="contacts-external_contacts-messages" attributes="v---" description="Messages"/>
       <permission name="contacts-external_contacts-opportunities" attributes="vaed" description="Opportunities"/>
     </category>
-    <category id="3" name="Pipeline Management" folders="false" lookups="true">
+    <category id="4" name="Pipeline Management" folders="false" lookups="true">
       <permission name="pipeline" attributes="v---" description="Access to Pipeline Management module"/>
       <permission name="pipeline-opportunities" attributes="vaed" description="Opportunity Records"/>
       <permission name="pipeline-dashboard" attributes="v---" description="Dashboard"/>
@@ -53,11 +53,11 @@
       <permission name="accounts-accounts-revenue" attributes="vaed" description="Revenue"/>
       <permission name="accounts-autoguide-inventory" attributes="vaed" description="Auto Guide Vehicle Inventory" enabled="false"/>
     </category>
-    <category id="9" name="Auto Guide" folders="false" lookups="false" enabled="false">
+    <category id="3" name="Auto Guide" folders="false" lookups="false" enabled="false">
       <permission name="autoguide" attributes="v---" description="Access to the Auto Guide module"/>
       <permission name="autoguide-adruns" attributes="--e-" description="Ad Run complete status"/>
     </category>
-    <category id="4" name="Campaign Management" folders="false" lookups="false">
+    <category id="6" name="Campaign Management" folders="false" lookups="false">
       <permission name="campaign" attributes="v---" description="Access to Campaign Manager module"/>
       <permission name="campaign-dashboard" attributes="v---" description="Dashboard"/>
       <permission name="campaign-campaigns" attributes="vaed" description="Campaign Records"/>
@@ -65,17 +65,17 @@
       <permission name="campaign-campaigns-messages" attributes="vaed" description="Campaign Message Records"/>
       <permission name="campaign-campaigns-surveys" attributes="vaed" description="Campaign Survey Records"/>
     </category>
-    <category id="5" name="Project Management" folders="false" lookups="false">
+    <category id="7" name="Project Management" folders="false" lookups="false">
       <permission name="projects" attributes="v---" description="Access to Project Management module"/>
       <permission name="projects-personal" attributes="v---" description="Personal View"/>
       <permission name="projects-enterprise" attributes="v---" description="Enterprise View"/>
       <permission name="projects-projects" attributes="vaed" description="Project Records"/>
     </category>
-    <category id="6" name="Tickets" folders="false" lookups="true">
+    <category id="8" name="Tickets" folders="false" lookups="true">
       <permission name="tickets" attributes="v---" description="Access to Ticket module"/>
       <permission name="tickets-tickets" attributes="vaed" description="Ticket Records"/>
     </category>
-    <category id="7" name="Admin" folders="false" lookups="false">
+    <category id="9" name="Admin" folders="false" lookups="false">
       <permission name="admin" attributes="v---" description="Access to Admin module"/>
       <permission name="admin-users" attributes="vaed" description="Users"/>
       <permission name="admin-reassign" attributes="v-e-" description="Re-assign Items"/>
@@ -84,10 +84,10 @@
       <permission name="admin-sysconfig-lists" attributes="v-e-" description="Configure Lookup Lists"/>
       <permission name="admin-sysconfig-folders" attributes="vaed" description="Configure Custom Folders &amp; Fields"/>
     </category>
-    <category id="8" name="Help" folders="false" lookups="false">
+    <category id="10" name="Help" folders="false" lookups="false">
       <permission name="help" attributes="v---" description="Access to Help System"/>
     </category>
-    <category id="10" name="Demo" folders="false" lookups="false" enabled="false">
+    <category id="5" name="Demo" folders="false" lookups="false" enabled="false">
       <permission name="demo" attributes="vaed" description="Access to Demo/Non-working features"/>
     </category>
   </permissions>
