@@ -16,6 +16,7 @@ import org.aspcfs.utils.DateUtils;
  */
 public class EmailAddress {
 
+  public final static int BUSSINESS = 1;
   protected boolean isContact = false;
   private int id = -1;
   private int orgId = -1;
