@@ -667,37 +667,22 @@ public class CFSNote extends GenericBean {
    */
   public boolean delete(Connection db, int myId) throws SQLException {
 
-    Statement st = db.createStatement();
-    Statement newSt = db.createStatement();
-
     try {
       db.setAutoCommit(false);
+      Statement st = db.createStatement();
       st.executeUpdate(
         "DELETE FROM cfsinbox_messagelink " +
         "WHERE id = " + this.getId() + " " +
         "AND sent_to = " + myId + " ");
-      db.commit();
-
-      ResultSet rs = newSt.executeQuery(
-        "SELECT sent_to " +
-        "FROM cfsinbox_messagelink " +
+      st.executeUpdate(
+        "DELETE FROM cfsinbox_message " +
         "WHERE id = " + this.getId() + " ");
-      if (!(rs.next())) {
-        db.setAutoCommit(false);
-        newSt.executeUpdate(
-          "DELETE FROM cfsinbox_message " +
-          "WHERE id = " + this.getId() + " ");
-        db.commit();
-      }
-      rs.close();
-
+      st.close();
     } catch (SQLException e) {
       db.rollback();
       System.out.println(e.toString());
     } finally {
       db.setAutoCommit(true);
-      newSt.close();
-      st.close();
     }
     return true;
   }
@@ -828,7 +813,6 @@ public class CFSNote extends GenericBean {
     replyId = rs.getInt("reply_id");
     enteredBy = rs.getInt("enteredby");
     sent = rs.getTimestamp("sent");
-    status = rs.getInt("status");
     entered = rs.getTimestamp("entered");
     modified = rs.getTimestamp("modified");
     type = rs.getInt("type");
@@ -836,6 +820,7 @@ public class CFSNote extends GenericBean {
     
     //cfsinbox_messagelink table
     sentTo = rs.getInt("sent_to");
+    status = rs.getInt("status");
     viewed = rs.getTimestamp("viewed");
 
     //contact table
