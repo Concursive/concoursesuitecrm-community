@@ -39,7 +39,7 @@ public class CFSModule {
       "You can hit the back button to review the changes that could not be committed, " +
       "but you must reload the record and make the changes again.";
 
-      
+
   /**
    *  This is the default call by all actions if a command= paramter is not
    *  passed along with the request. Descendant classes should override this
@@ -1095,17 +1095,26 @@ public class CFSModule {
     }
   }
 
-  protected static boolean isRecordAccessPermitted(ActionContext context, int tmpOrgId){
-    if (isPortalUser(context)){
-      if (tmpOrgId == getPortalUserPermittedOrgId(context)){
+
+  /**
+   *  Gets the recordAccessPermitted attribute of the CFSModule class
+   *
+   *@param  context   Description of the Parameter
+   *@param  tmpOrgId  Description of the Parameter
+   *@return           The recordAccessPermitted value
+   */
+  protected static boolean isRecordAccessPermitted(ActionContext context, int tmpOrgId) {
+    if (isPortalUser(context)) {
+      if (tmpOrgId == getPortalUserPermittedOrgId(context)) {
         return true;
-      }else{
+      } else {
         return false;
       }
-    }else{
-     return true; 
+    } else {
+      return true;
     }
   }
+
 
   /**
    *  returns true if the logged in user is a portal user, false otherwise
@@ -1122,8 +1131,8 @@ public class CFSModule {
 
 
   /**
-   *  returns the orgId of the portal user, the portal user is 
-   *  allowed only to view the information only of this organization
+   *  returns the orgId of the portal user, the portal user is allowed only to
+   *  view the information only of this organization
    *
    *@param  context  Description of the Parameter
    *@return          The portalUserPermittedOrgId value
