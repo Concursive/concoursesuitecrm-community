@@ -13,9 +13,14 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<table class="note">
-  <tr><td><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/>Import has been saved but no records have yet been imported into the system.<br>&nbsp;&nbsp; To process the records now, use the "Process Now" button. To process it later use the "Process Later" button.</td></tr>
-</table><br>
+<table class="note" cellspacing="0">
+  <tr>
+    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+    <td>Your file to import has been received, but has not been processed.<br />
+    To begin processing, use the &quot;Process Now&quot; button. 
+    However, since processing requires a few minutes of configuration, you can choose to process the file later by using the &quot;Process Later&quot; button.</td>
+  </tr>
+</table>
 <%-- Import Details --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
