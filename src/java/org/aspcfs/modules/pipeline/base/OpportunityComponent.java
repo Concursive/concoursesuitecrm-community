@@ -688,8 +688,8 @@ public class OpportunityComponent extends GenericBean {
   /**
    *  Gets the OppId attribute of the OpportunityComponent object
    *
-   *@return    The OppId value
-   *@deprecated Too confusing, an opportunity header is the parent now
+   *@return        The OppId value
+   *@deprecated    Too confusing, an opportunity header is the parent now
    */
   public int getOppId() {
     return oppId;
@@ -1820,21 +1820,22 @@ public class OpportunityComponent extends GenericBean {
       errors.put("componentDescriptionError", "Description cannot be left blank");
     }
 
-    if (closeProb == 0 && !(errors.containsKey("closeProbError"))) {
-      errors.put("closeProbError", "Close Probability cannot be left blank");
-    } else {
-      if (closeProb > 100) {
-        errors.put("closeProbError", "Close Probability cannot be greater than 100%");
-      } else if (closeProb < 0) {
-        errors.put("closeProbError", "Close Probability cannot be less than 0%");
+    if (!this.getCloseIt()) {
+      if (closeProb == 0 && !(errors.containsKey("closeProbError"))) {
+        errors.put("closeProbError", "Close Probability cannot be left blank");
+      } else {
+        if (closeProb > 100) {
+          errors.put("closeProbError", "Close Probability cannot be greater than 100%");
+        } else if (closeProb < 0) {
+          errors.put("closeProbError", "Close Probability cannot be less than 0%");
+        }
       }
     }
-
     if (closeDate == null || getCloseDateString().trim().equals("")) {
       errors.put("closeDateError", "Close Date cannot be left blank");
     }
 
-    if (guess == 0 && !(errors.containsKey("guessError")) && !this.getCloseIt()) {
+    if (guess == 0 && !(errors.containsKey("guessError"))) {
       errors.put("guessError", "Amount needs to be entered");
     }
 
@@ -2053,7 +2054,7 @@ public class OpportunityComponent extends GenericBean {
         }
         //check if opp is reopened
         closed = rs.getString("closed");
-        if(!rs.wasNull() && !this.getCloseIt()){
+        if (!rs.wasNull() && !this.getCloseIt()) {
           this.setOpenIt(true);
         }
       }
