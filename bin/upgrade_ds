@@ -13,6 +13,7 @@ CFSGROUP="cfs"
 CFSDBA="cfsdba"
 SITEHOME="/home"
 SITECODE=""
+GKHOST="jdbc:postgresql://127.0.0.1:5432/cfs2gk"
 
 usage ()
 {
@@ -81,7 +82,7 @@ echo ok
 
 # rm -f ${DIRDST}/html/index.jsp
 
-ant -DSITECODE=${SITECODE} lib
+ant -DSITECODE=${SITECODE} -DGKHOST=${GKHOST} lib
 ##/home/${SITECODE}/bin/restart 
 
 
