@@ -59,7 +59,7 @@ CREATE TABLE call_log (
   call_id SERIAL PRIMARY KEY,
   org_id INT REFERENCES organization(org_id),
   contact_id INT REFERENCES contact(contact_id),
-  opp_id INT REFERENCES opportunity(opp_id),
+  opp_id INT REFERENCES opportunity_header(opp_id),
   call_type_id INT REFERENCES lookup_call_types(code),
   length INTEGER,
   subject VARCHAR(255),

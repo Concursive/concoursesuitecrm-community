@@ -148,7 +148,7 @@ Dashboard<br>
         <%= thisFile.getImageTag() %>
         <%}%>             
           </td>
-          <td width="55" class="row<%= rowid %>">$<%=thisOpp.getTotalValue()%></td>
+          <td width="55" class="row<%= rowid %>">$<%=thisOpp.getTotalValue(1000)%>K</td>
         </tr>
 <%
         }

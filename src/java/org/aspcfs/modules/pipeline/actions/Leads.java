@@ -885,6 +885,8 @@ public final class Leads extends CFSModule {
 
     if (context.getRequest().getParameter("oppId") != null) {
       oppId = Integer.parseInt(context.getRequest().getParameter("oppId"));
+    } else if (context.getRequest().getParameter("id") != null) {
+      oppId = Integer.parseInt(context.getRequest().getParameter("id"));
     }
 
     Connection db = null;
