@@ -243,10 +243,11 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     if (campaignId != -1) {
       sqlFilter.append("AND id in (SELECT group_id FROM campaign_list_groups WHERE campaign_id = " + campaignId + ") ");
     }
-    
+    /**
     if (enabled == Constants.TRUE || enabled == Constants.FALSE) {
       sqlFilter.append("AND enabled = ? ");
     }
+    */
   }
 
 
@@ -266,6 +267,7 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
       pst.setInt(++i, owner);
     }
     
+    /**
     if (enabled == Constants.TRUE || enabled == Constants.FALSE) {
       switch (enabled) {
         case Constants.TRUE: pst.setBoolean(++i, true); break;
@@ -273,7 +275,8 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
         default: break;
       }
     }
-
+    */
+    
     return i;
   }
   
