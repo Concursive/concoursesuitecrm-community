@@ -61,6 +61,11 @@ Upload New Version<br>
 	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="/ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
 	</dhv:evaluate>
     </td>
+    
+        <% if (OpportunityDetails.hasFiles()) { %>
+      <% FileItem thisFile = new FileItem(); %>
+      <%= thisFile.getImageTag()%>
+      <%}%>      
   </tr>
   <tr class="containerMenu">
     <td>

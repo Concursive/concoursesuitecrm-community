@@ -24,6 +24,11 @@ Documents<br>
 	<dhv:evaluate exp="<%=(OpportunityDetails.getContactLink() > -1)%>">
 	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="/ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
 	</dhv:evaluate>
+  
+        <% if (OpportunityDetails.hasFiles()) { %>
+      <% FileItem thisFile = new FileItem(); %>
+      <%= thisFile.getImageTag()%>
+      <%}%>    
     </td>
   </tr>
   <tr class="containerMenu">
