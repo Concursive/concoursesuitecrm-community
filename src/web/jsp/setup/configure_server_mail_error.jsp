@@ -16,6 +16,7 @@
   - Version: $Id$
   - Description:
   --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ include file="../initPage.jsp" %>
 <table border="0" width="100%">
   <tr class="sectionTitle">

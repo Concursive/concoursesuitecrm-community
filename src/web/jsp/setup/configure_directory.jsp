@@ -16,6 +16,7 @@
   - Version: $Id$
   - Description:
   --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ include file="../initPage.jsp" %>
 <jsp:useBean id="fileLibrary" class="java.lang.String" scope="request"/>
 <body onLoad="javascript:document.forms[0].fileLibrary.focus();">
