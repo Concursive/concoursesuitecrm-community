@@ -95,9 +95,12 @@ public class MainMenuHook implements ControllerMainMenuHook {
     if (thisUser == null) {
       return;
     }
-
+    //Use the connection element and system status to access the cached permissions table
     ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute("ConnectionElement");
-    SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getAttribute("SystemStatus")).get(ce.getUrl());
+    SystemStatus systemStatus = null;
+    if (ce != null) {
+      systemStatus = (SystemStatus) ((Hashtable) context.getAttribute("SystemStatus")).get(ce.getUrl());
+    }
 
     ModuleBean thisModule = (ModuleBean) request.getAttribute("ModuleBean");
     if (thisModule == null) {
@@ -116,7 +119,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
     Iterator menuItemsList = menuItems.iterator();
     while (menuItemsList.hasNext()) {
       MainMenuItem thisMenu = (MainMenuItem) menuItemsList.next();
-      if ("".equals(thisMenu.getPermission()) || systemStatus.hasPermission(thisUser.getUserId(), thisMenu.getPermission())) {
+      if ("".equals(thisMenu.getPermission()) || (systemStatus != null && systemStatus.hasPermission(thisUser.getUserId(), thisMenu.getPermission()))) {
         if (thisMenu.hasActionName(actionPath)) {
           //The user is on this link/module
           thisModule.setName(thisMenu.getPageTitle());
@@ -125,8 +128,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
           menu.append(thisMenu.getShortHtml());
           menu.append("</th>");
           graphicMenu.append("<a href='" + thisMenu.getLink() + "'><img border='0' src='images/" + thisMenu.getGraphicOn() + "' width='" + thisMenu.getGraphicWidth() + "' height='" + thisMenu.getGraphicHeight() + "'></a>");
-          smallMenuList.add("<a href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
-
+          smallMenuList.add("<a " + addSelectedClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
           //Build the submenu
           Iterator j = thisMenu.getSubmenuItems().iterator();
           while (j.hasNext()) {
@@ -139,7 +141,6 @@ public class MainMenuHook implements ControllerMainMenuHook {
             }
             thisModule.addMenuItem(newItem);
           }
-
         } else {
           //The user is not on this link, set the off state of the menu
           menu.append("<td nowrap onClick=\"javascript:window.location.href='" + thisMenu.getLink() + "'\">");
@@ -160,7 +161,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
           graphicMenu.append(">");
           graphicMenu.append("</a>");
-          smallMenuList.add("<a href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
+          smallMenuList.add("<a " + addNormalClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
         }
         menuWidth += Integer.parseInt(thisMenu.getGraphicWidth());
       }
@@ -259,6 +260,8 @@ public class MainMenuHook implements ControllerMainMenuHook {
         mainItem.setShortHtml(child.getAttribute("value"));
       } else if (childName.equals("link")) {
         mainItem.setLink(child.getAttribute("value"));
+        mainItem.setClassNormal(child.getAttribute("classNormal"));
+        mainItem.setClassSelected(child.getAttribute("classSelected"));
       } else if (childName.equals("graphic")) {
         mainItem.setGraphicWidth(child.getAttribute("width"));
         mainItem.setGraphicHeight(child.getAttribute("height"));
@@ -300,5 +303,32 @@ public class MainMenuHook implements ControllerMainMenuHook {
     return mainItem;
   }
 
+
+  /**
+   *  Adds a feature to the NormalClass attribute of the MainMenuHook class
+   *
+   *@param  thisItem  The feature to be added to the NormalClass attribute
+   *@return           Description of the Return Value
+   */
+  private static String addNormalClass(MainMenuItem thisItem) {
+    if (thisItem.getClassNormal() != null && !"".equals(thisItem.getClassNormal())) {
+      return "class=\"" + thisItem.getClassNormal() + "\" ";
+    }
+    return "";
+  }
+
+
+  /**
+   *  Adds a feature to the SelectedClass attribute of the MainMenuHook class
+   *
+   *@param  thisItem  The feature to be added to the SelectedClass attribute
+   *@return           Description of the Return Value
+   */
+  private static String addSelectedClass(MainMenuItem thisItem) {
+    if (thisItem.getClassSelected() != null && !"".equals(thisItem.getClassSelected())) {
+      return "class=\"" + thisItem.getClassSelected() + "\" ";
+    }
+    return "";
+  }
 }
 

@@ -17,6 +17,8 @@ public class MainMenuItem {
   String longHtml = "";
   String shortHtml = "";
   String link = "";
+  String classNormal = null;
+  String classSelected = null;
   String graphicWidth = "";
   String graphicHeight = "";
   String graphicOn = "";
@@ -96,6 +98,26 @@ public class MainMenuItem {
    */
   public void setLink(String tmp) {
     this.link = tmp;
+  }
+
+
+  /**
+   *  Sets the classNormal attribute of the MainMenuItem object
+   *
+   *@param  tmp  The new classNormal value
+   */
+  public void setClassNormal(String tmp) {
+    this.classNormal = tmp;
+  }
+
+
+  /**
+   *  Sets the classSelected attribute of the MainMenuItem object
+   *
+   *@param  tmp  The new classSelected value
+   */
+  public void setClassSelected(String tmp) {
+    this.classSelected = tmp;
   }
 
 
@@ -229,6 +251,26 @@ public class MainMenuItem {
    */
   public String getLink() {
     return link;
+  }
+
+
+  /**
+   *  Gets the classNormal attribute of the MainMenuItem object
+   *
+   *@return    The classNormal value
+   */
+  public String getClassNormal() {
+    return classNormal;
+  }
+
+
+  /**
+   *  Gets the classSelected attribute of the MainMenuItem object
+   *
+   *@return    The classSelected value
+   */
+  public String getClassSelected() {
+    return classSelected;
   }
 
 
