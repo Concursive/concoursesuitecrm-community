@@ -36,8 +36,9 @@ CREATE TABLE lookup_industry (
   enabled BOOLEAN DEFAULT true
 );
 
+CREATE SEQUENCE access_log_id_seq MINVALUE 0 START 0;
 CREATE TABLE access_log (
-  id SERIAL PRIMARY KEY,
+  id INTEGER DEFAULT nextval('access_log_id_seq') NOT NULL PRIMARY KEY,
   user_id INT NOT NULL references access(user_id),
   username VARCHAR(80) NOT NULL,
   ip VARCHAR(15),
