@@ -17,9 +17,8 @@ import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import java.io.*;
 
-
 /**
- *  Description of the Class
+ *  Auto Guide CFS Module
  *
  *@author     matt
  *@created    April 30, 2002
@@ -45,11 +44,10 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandList(ActionContext context) {
-    /*
-     *  if (!(hasPermission(context, "autoguide-inventory-view"))) {
-     *  return ("PermissionError");
-     *  }
-     */
+    if (!(hasPermission(context, "autoguide-inventory-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
     PagedListInfo autoGuideDirectoryInfo = this.getPagedListInfo(context, "AutoGuideDirectoryInfo");
@@ -85,20 +83,17 @@ public final class AutoGuide extends CFSModule {
 
 
   /**
-   *  Stand-alone view of the vehicle details
+   *  Stand-alone AND account view of the vehicle details
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    */
   public String executeCommandDetails(ActionContext context) {
+    if (!(hasPermission(context, "autoguide-inventory-view"))) {
+      return ("PermissionError");
+    }
 
-    /*
-     *  if (!(hasPermission(context, "autoguide-inventory-view"))) {
-     *  return ("PermissionError");
-     *  }
-     */
     Exception errorMessage = null;
-
     Connection db = null;
     try {
       int id = Integer.parseInt((String) context.getRequest().getParameter("id"));
@@ -138,14 +133,11 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDelete(ActionContext context) {
+    if (!(hasPermission(context, "autoguide-inventory-delete"))) {
+      return ("PermissionError");
+    }
 
-    /*
-     *  if (!(hasPermission(context, "autoguide-inventory-view"))) {
-     *  return ("PermissionError");
-     *  }
-     */
     Exception errorMessage = null;
-
     Connection db = null;
     try {
       int id = Integer.parseInt((String) context.getRequest().getParameter("id"));
@@ -178,13 +170,11 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandAccountList(ActionContext context) {
-    /*
-     *  if (!(hasPermission(context, "autoguide-inventory-view"))) {
-     *  return ("PermissionError");
-     *  }
-     */
-    Exception errorMessage = null;
+    if (!(hasPermission(context, "autoguide-inventory-view"))) {
+      return ("PermissionError");
+    }
 
+    Exception errorMessage = null;
     PagedListInfo autoGuideAccountInfo = this.getPagedListInfo(context, "AutoGuideAccountInfo");
     autoGuideAccountInfo.setLink("AccountsAutoGuide.do?command=AccountList");
 
@@ -221,7 +211,7 @@ public final class AutoGuide extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Sets up the form for adding a vehicle
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -260,17 +250,16 @@ public final class AutoGuide extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Processes the vehicle form and attempts to insert the vehicle
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    */
   public String executeCommandAccountInsert(ActionContext context) {
-    /*
-     *  if (!(hasPermission(context, "contacts-external_contacts-add"))) {
-     *  return ("PermissionError");
-     *  }
-     */
+    if (!(hasPermission(context, "autoguide-inventory-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     boolean recordInserted = false;
 
@@ -311,7 +300,8 @@ public final class AutoGuide extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Populates a list of makes and stores in the request, used for updating
+   *  combo-boxes
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -338,7 +328,8 @@ public final class AutoGuide extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Populates a list of models and stores in the request, used for updating
+   *  combo-boxes
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -369,17 +360,16 @@ public final class AutoGuide extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares a form for modifying a vehicle
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    */
   public String executeCommandAccountModify(ActionContext context) {
-    /*
-     *  if (!(hasPermission(context, "contacts-external_contacts-edit"))) {
-     *  return ("PermissionError");
-     *  }
-     */
+    if (!(hasPermission(context, "autoguide-inventory-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     String orgId = context.getRequest().getParameter("orgId");
     String id = context.getRequest().getParameter("id");
@@ -415,17 +405,16 @@ public final class AutoGuide extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Processes the vehicle form and attempts to update the vehicle
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    */
   public String executeCommandAccountUpdate(ActionContext context) {
-    /*
-     *  if (!(hasPermission(context, "contacts-external_contacts-edit"))) {
-     *  return ("PermissionError");
-     *  }
-     */
+    if (!(hasPermission(context, "autoguide-inventory-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
 
@@ -467,18 +456,16 @@ public final class AutoGuide extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares a form when the user needs to upload a photo
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    */
   public String executeCommandUploadForm(ActionContext context) {
+    if (!(hasPermission(context, "autoguide-inventory-edit"))) {
+      return ("PermissionError");
+    }
 
-    /*
-     *  if (!(hasPermission(context, "autoguide-inventory-view"))) {
-     *  return ("PermissionError");
-     *  }
-     */
     Exception errorMessage = null;
 
     Connection db = null;
@@ -505,17 +492,17 @@ public final class AutoGuide extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Processes an uploaded photo, creates a thumbnail, and stores both in the
+   *  database
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    */
   public String executeCommandUpload(ActionContext context) {
-    /*
-     *  if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
-     *  return ("PermissionError");
-     *  }
-     */
+    if (!(hasPermission(context, "autoguide-inventory-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
 
@@ -565,7 +552,7 @@ public final class AutoGuide extends CFSModule {
         //Create a thumbnail
         File thumbnail = new File(newFileInfo.getLocalFile().getPath() + "TH");
         ImageUtils.saveThumbnail(newFileInfo.getLocalFile(), thumbnail, 133d, -1d);
-        
+
         //Store thumbnail in database
         thisItem.setSubject("thumbnail");
         thisItem.setFilename(newFileInfo.getRealFilename() + "TH");
@@ -593,7 +580,8 @@ public final class AutoGuide extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Retrieves a specific image and returns the data, used for displaying in a
+   *  browser with the <src> tag
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -751,7 +739,15 @@ public final class AutoGuide extends CFSModule {
     OptionList options = new OptionList(db);
     context.getRequest().setAttribute("OptionList", options);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of Parameter
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   private void populateAdRunTypeSelect(ActionContext context, Connection db) throws SQLException {
     LookupList adRunType = new LookupList(db, "autoguide_ad_run_types");
     context.getRequest().setAttribute("adRunTypeList", adRunType);
