@@ -1,40 +1,10 @@
+<jsp:useBean id="cal" class="com.darkhorseventures.utils.CalendarView" scope="page"/>
+<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <html>
 <head>
 <title>Calendar</title>
-
-<style type="text/css">
-  A:link { color: blue }       /* unvisited link */
-  A:visited { color: blue }   /* visited links */
-  A:active { color: red }    /* active links */
-  body {background: white; font-family: arial,helvetica; }
-  .calendar { background: #BFBFBB; }
-  .monthName { background: #3366CC; color: #FFFFFF; font-size: 12pt; font-weight: bold; text-align: center; }
-  .monthArrowPrev { background: #3366CC; color: #FFFFFF; font-size: 12pt; font-weight: bold; text-align: center; }
-  .monthArrowNext { background: #3366CC; color: #FFFFFF; font-size: 12pt; font-weight: bold; text-align: center; }
-  .weekName { background: #CCCCCC; color: #000000; font-size: 8pt; text-align: center; }
-  .day { background: white; color: #000000; font-size: 8pt; font-weight: normal; text-align: left; }
-  .highlightday { background: #66FF66; color: #000000; font-size: 8pt; font-weight: normal; text-align: left; }
-  .noday { background: #FEF8DE; color: #000000; font-size: 8pt; font-weight: normal; text-align: left; }
-  .today { background: #FFFFA6; color: #000000; font-size: 8pt; font-weight: bold; text-align: left; }
-
-  .smallcalendar { background: #FFFFFF; }
-  .smallmonthName { background: #3366CC; color: #FFFFFF; font-size: 8pt; font-weight: bold; text-align: center; }
-  .smallmonthArrowPrev { background: #3366CC; color: #FFFFFF; font-size: 8pt; font-weight: bold; text-align: center; }
-  .smallmonthArrowNext { background: #3366CC; color: #FFFFFF; font-size: 8pt; font-weight: bold; text-align: center; }
-  .smallweekName { background: #CCCCCC; color: #000000; font-size: 8pt; text-align: center; }  
-  .smallday { background: white; color: #000000; font-size: 8pt; font-weight: normal; text-align: right; }
-  .smallhighlightday { background: white; color: #FF0000; font-size: 8pt; font-weight: normal; text-align: right; }
-  .smallnoday { background: #EEEEEE; color: #000000; font-size: 8pt; font-weight: normal; text-align: right; }
-  .smalltoday { background: #FFFFA6; color: #000000; font-size: 8pt; font-weight: bold; text-align: right; }
-  
-  .date { color: #3366CC; font-size: 8pt; font-weight: bold; }
-  .time { color: #000000; font-size: 8pt; }
-  .appt { color: #000000; font-size: 8pt; }
-  .underline { text-decoration: underline; }
-  .smallfooter { color: #000000; font-size: 8pt; text-align: center; }
-</style>
-
-<jsp:useBean id="cal" class="com.darkhorseventures.utils.CalendarView" scope="page"/>
+<link rel="stylesheet" href="css/template0<%= User.getBrowserId() %>.css" type="text/css">
+<link rel="stylesheet" href="css/template0.css" type="text/css">
 
 <% String formName = request.getParameter("form"); %>
 <% String element = request.getParameter("element"); %>
