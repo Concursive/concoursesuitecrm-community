@@ -24,6 +24,7 @@ public class AuthenticationItem {
     String serverName = context.getRequest().getServerName();
     
     if (id.equals(serverName)) {
+      String authCode = null;
       ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
       ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
       ConnectionElement ce = null;
@@ -38,6 +39,7 @@ public class AuthenticationItem {
       pst.setString(2, serverName);
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
+        authCode = rs.getString("code");
         String dbName = rs.getString("dbname");
         ce = new ConnectionElement(
             rs.getString("dbhost") + ":" + rs.getInt("dbport") +
@@ -51,14 +53,14 @@ public class AuthenticationItem {
       pst.close();
       sqlDriver.free(db);
       
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("AuthenticationItem-> Site: " + id + "/" + code);
+      if (code.equals(authCode)) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("AuthenticationItem-> Site: " + id + "/" + code);
+        }
+        return sqlDriver.getConnection(ce);
       }
-      
-      return sqlDriver.getConnection(ce);
-    } else {
-      return null;
     }
+    return null;
   }
   
 }

@@ -136,7 +136,9 @@ public class Ticket extends GenericBean {
 		rs.close();
 		st.close();
 
-		thisContact = new Contact(db, "" + this.getContactId());
+    if (this.getContactId() > 0) {
+      thisContact = new Contact(db, "" + this.getContactId());
+    }
 		history.setTicketId(this.getId());
 		history.buildList(db);
 	}

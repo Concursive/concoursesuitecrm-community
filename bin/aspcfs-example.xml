@@ -6,8 +6,6 @@
   </authentication>
   <transaction>
     <ticket type="insert">
-      <enteredBy>2</enteredBy>
-      <sourceCode>12</sourceCode>
       <orgId>0</orgId>
       <contactId>0</contactId>
       <contactName>Freeform text (Caller's name)</contactName>
@@ -16,9 +14,7 @@
         Second line is message text
         Any additional lines can be used for the message
       </problem>
-      <catCode></catCode>
       <severityCode>1</severityCode>
-      <assignedTo>0</assignedTo>
       <comment>
         Message taken by and timestamp
       </comment>

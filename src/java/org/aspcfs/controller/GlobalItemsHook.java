@@ -140,7 +140,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           sql = 
             "SELECT COUNT(*) as ticketcount " +
             "FROM ticket " +
-            "WHERE assigned_to = -1 AND closed IS NULL AND (department_code = ? OR department_code = 0)";
+            "WHERE assigned_to = -1 AND closed IS NULL AND (department_code = ? OR department_code in (0, -1))";
           pst = db.prepareStatement(sql);
           pst.setInt(1, departmentId);
           rs = pst.executeQuery();

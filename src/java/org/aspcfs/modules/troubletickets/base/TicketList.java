@@ -335,7 +335,7 @@ public void setOnlyClosed(boolean onlyClosed) {
 			
 			if (department > -1) {
 				if (unassignedToo == true) {
-					sqlFilter.append("AND t.department_code in (?, 0) ");
+					sqlFilter.append("AND t.department_code in (?, 0, -1) ");
 				} else {
 					sqlFilter.append("AND t.department_code = ? ");
 				}

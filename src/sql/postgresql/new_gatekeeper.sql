@@ -13,6 +13,7 @@ CREATE TABLE sites (
   dbuser TEXT NOT NULL DEFAULT '',
   dbpw TEXT NOT NULL DEFAULT '',
   driver TEXT NOT NULL DEFAULT '',
+  code VARCHAR(255),
   enabled BOOLEAN NOT NULL DEFAULT false
 );
 
