@@ -62,6 +62,7 @@ public final class ProcessPacket extends CFSModule {
         SyncClientManager clientManager = new SyncClientManager();
         clientManager.addClient(db, auth.getClientId());
         dbLookup = auth.getConnection(context);
+        dbLookup.setAutoCommit(false);
         HashMap objectMap = this.getObjectMap(context, db, auth.getSystemId());
         LinkedList transactionList = new LinkedList();
         xml.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
@@ -85,6 +86,8 @@ public final class ProcessPacket extends CFSModule {
           thisStatus.setRecordList(thisTransaction.getRecordList());
           statusMessages.add(thisStatus);
         }
+        dbLookup.commit();
+        dbLookup.setAutoCommit(true);
         //Each transaction provides a status that needs to be returned to the client
         if (statusMessages.size() == 0 && transactionList.size() == 0) {
           TransactionStatus thisStatus = new TransactionStatus();

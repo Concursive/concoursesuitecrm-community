@@ -402,7 +402,7 @@ public class TransactionItem {
           //Object updatedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
           //syncClientMap.update(db, ObjectUtils.getParam(updatedObject, "modified"));
         }
-        addRecords(db, object, recordList, "processed");
+        addRecords(object, recordList, "processed");
       }
     }
     if (pagedListInfo != null) {
@@ -548,7 +548,7 @@ public class TransactionItem {
           default:
             break;
       }
-      Record thisRecord = addRecords(dbLookup, thisObject, recordList, recordAction);
+      Record thisRecord = addRecords(thisObject, recordList, recordAction);
       //if exists then insert it
       if (syncType == Constants.SYNC_INSERTS) {
         this.insertClientMapping(dbLookup, thisRecord);
@@ -578,7 +578,7 @@ public class TransactionItem {
    *@param  db                The feature to be added to the Records attribute
    *@exception  SQLException  Description of Exception
    */
-  private Record addRecords(Connection db, Object object, RecordList recordList, String recordAction) throws SQLException {
+  private Record addRecords(Object object, RecordList recordList, String recordAction) throws SQLException {
     if (recordList != null) {
       //Need to see if the Object is a collection of Objects, otherwise
       //just process it as a single record.
@@ -587,13 +587,13 @@ public class TransactionItem {
         while (objectItems.hasNext()) {
           Object objectItem = objectItems.next();
           Record thisRecord = new Record(recordAction);
-          this.addFields(db, thisRecord, meta, objectItem);
+          this.addFields(thisRecord, meta, objectItem);
           recordList.add(thisRecord);
         }
         return null;
       } else {
         Record thisRecord = new Record(recordAction);
-        this.addFields(db, thisRecord, meta, object);
+        this.addFields(thisRecord, meta, object);
         recordList.add(thisRecord);
         return thisRecord;
       }
@@ -610,10 +610,9 @@ public class TransactionItem {
    *@param  thisObject        The feature to be added to the Fields attribute
    *@param  mapping           The feature to be added to the Fields attribute
    *@param  syncClientMap     The feature to be added to the Fields attribute
-   *@param  db                The feature to be added to the Fields attribute
    *@exception  SQLException  Description of Exception
    */
-  private void addFields(Connection db, Record thisRecord, TransactionMeta thisMeta, Object thisObject) throws SQLException {
+  private void addFields(Record thisRecord, TransactionMeta thisMeta, Object thisObject) throws SQLException {
     if (thisMeta != null && thisMeta.getFields() != null) {
       Iterator fields = thisMeta.getFields().iterator();
       while (fields.hasNext()) {
