@@ -1057,9 +1057,7 @@ public final class TroubleTickets extends CFSModule {
       newTic.setModifiedBy(getUserId(context));
       //Get the previousTicket, update the ticket, then send both to a hook
       Ticket previousTicket = new Ticket(db, newTic.getId());
-      if (previousTicket.getProductId() > -1) {
-        newTic.setProductId(previousTicket.getProductId());
-      }
+ 
       resultCount = newTic.update(db);
       if (resultCount == 1) {
         processUpdateHook(context, previousTicket, newTic);
