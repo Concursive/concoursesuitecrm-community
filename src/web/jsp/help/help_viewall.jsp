@@ -65,5 +65,5 @@
   }
 %>
 </table>
-<center>(C) 2002 Dark Horse Ventures</center>
+<center>(C) 2002-2003 Dark Horse Ventures</center>
   

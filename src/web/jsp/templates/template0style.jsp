@@ -5,14 +5,13 @@
   response.setHeader("Pragma", "no-cache"); // HTTP 1.0
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
 %>
+<!-- (C) 2001-2003 Dark Horse Ventures -->
 <html>
-
 <head>
 <title>CFS<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
 <link rel="stylesheet" href="css/template0<%= User.getBrowserIdAndOS() %>.css" type="text/css">
 <link rel="stylesheet" href="css/template0.css" type="text/css">
 </head>
-
 <body leftmargin=0 rightmargin=0 margin=0 marginwidth=0 topmargin=0 marginheight=0>
 <table border="0" width="100%">
   <tr>
@@ -22,8 +21,6 @@
     </td>
   </tr>
 </table>
-<!-- (C) 2001-2002 Dark Horse Ventures -->
 </body>
-
 </html>
 

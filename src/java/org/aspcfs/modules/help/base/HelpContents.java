@@ -13,7 +13,7 @@ import org.aspcfs.utils.DatabaseUtils;
  *@created    January 14, 2003
  *@version    $Id$
  */
-public class HelpContents extends Vector {
+public class HelpContents extends ArrayList {
 
   /**
    *  Constructor for the HelpContents object
@@ -28,20 +28,13 @@ public class HelpContents extends Vector {
    *@exception  SQLException  Description of the Exception
    */
   public HelpContents(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-
-    String sql =
-        "SELECT module, section, subsection, description, " +
-        "help_id, display1, display2, display3, display4, " +
-        "enteredby, entered, modifiedby, modified " +
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * " +
         "FROM help_contents h " +
-        "WHERE enabled = " + DatabaseUtils.getTrue(db) + " " +
-        "GROUP BY module, section, subsection, description, " +
-        "help_id, display1, display2, display3, display4, " +
-        "enteredby, entered, modifiedby, modified ";
-    pst = db.prepareStatement(sql);
-    rs = pst.executeQuery();
+        "WHERE enabled = ? " +
+        "ORDER BY module, section, subsection");
+    pst.setBoolean(1, true);
+    ResultSet rs = pst.executeQuery();
     while (rs.next()) {
       HelpItem thisItem = new HelpItem(rs);
       this.add(thisItem);

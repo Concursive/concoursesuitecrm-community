@@ -26,7 +26,6 @@ public final class Help extends CFSModule {
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
-
     try {
       String module = context.getRequest().getParameter("module");
       String section = context.getRequest().getParameter("section");
@@ -42,7 +41,6 @@ public final class Help extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (this.hasPermission(context, "help-edit")) {
       return ("ModifyOK");
     } else {
@@ -61,7 +59,6 @@ public final class Help extends CFSModule {
     if (this.hasPermission(context, "help-edit")) {
       Exception errorMessage = null;
       Connection db = null;
-
       try {
         HelpItem thisItem = (HelpItem) context.getFormBean();
         db = this.getConnection(context);
@@ -74,7 +71,6 @@ public final class Help extends CFSModule {
       } finally {
         this.freeConnection(context, db);
       }
-
       return ("ProcessOK");
     } else {
       return ("UserError");
@@ -91,7 +87,6 @@ public final class Help extends CFSModule {
   public String executeCommandViewAll(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
-
     try {
       db = this.getConnection(context);
       HelpContents contents = new HelpContents(db);
@@ -102,7 +97,6 @@ public final class Help extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     return ("ViewAllOK");
   }
 }
