@@ -697,15 +697,15 @@ public final class Leads extends CFSModule {
     tempId = Integer.parseInt(passedId);
 
     Connection db = null;
-    Statement st = null;
-    ResultSet rs = null;
-    Opportunity newOpp = null;
+    Opportunity newOpp = (Opportunity) context.getFormBean();
 
     try {
       db = this.getConnection(context);
       StringBuffer sql = new StringBuffer();
 
-      newOpp = new Opportunity(db, "" + tempId);
+      if (newOpp.getId() < 1) {
+        newOpp = new Opportunity(db, "" + tempId);
+      }
 
       LookupList stageSelect = new LookupList(db, "lookup_stage");
       context.getRequest().setAttribute("StageList", stageSelect);
@@ -1098,18 +1098,14 @@ public final class Leads extends CFSModule {
    *@since
    */
   public String executeCommandUpdateOpp(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
+    if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
 	    return ("PermissionError");
-    	}
+    }
 	
     Exception errorMessage = null;
-
     Connection db = null;
     int resultCount = 0;
-
     Opportunity newOpp = (Opportunity) context.getFormBean();
-
     try {
       db = this.getConnection(context);
       newOpp.setModifiedBy(getUserId(context));
@@ -1121,16 +1117,19 @@ public final class Leads extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if(context.getRequest().getParameter("popup")!=null){
-        return ("PopupCloseOK");
-      }else if (resultCount == 1) {
-	      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-		      return (executeCommandViewOpp(context));
-	      } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("dashboard")) {
-		      return (executeCommandDashboard(context));
-	      } else {
-		      return ("UpdateOppOK");
-	      }
+      if (resultCount == -1) {
+        processErrors(context, newOpp.getErrors());
+        return executeCommandModifyOpp(context);
+      } else if (resultCount == 1) {
+        if (context.getRequest().getParameter("popup")!=null) {
+          return ("PopupCloseOK");
+        } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+          return (executeCommandViewOpp(context));
+        } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("dashboard")) {
+          return (executeCommandDashboard(context));
+        } else {
+          return ("UpdateOppOK");
+        }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
