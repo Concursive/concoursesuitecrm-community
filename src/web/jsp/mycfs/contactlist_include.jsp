@@ -62,16 +62,20 @@
 			count++;
       rowid = (rowid != 1?1:2);
       Contact thisContact = (Contact)j.next();
+      int thisContactId = thisContact.getId();
+      if("true".equals(request.getParameter("usersOnly"))){
+        thisContactId = thisContact.getUserId();
+      }
 %>
-  <tr class="row<%= rowid+((selectedContacts.get(new Integer(thisContact.getId()))!= null)?"hl":"") %>">
+  <tr class="row<%= rowid+((selectedContacts.get(new Integer(thisContactId))!= null)?"hl":"") %>">
     <td align="center" nowrap width="8">
 <% 
   if ("list".equals(request.getParameter("listType"))) { %>  
-      <input type="checkbox" name="checkcontact<%= count %>" value=<%= thisContact.getId() %><%= ((selectedContacts.get(new Integer(thisContact.getId()))!= null)?" checked":"") %> onClick="highlight(this,'<%=User.getBrowserId()%>');">
+      <input type="checkbox" name="checkcontact<%= count %>" value=<%= thisContactId %><%= ((selectedContacts.get(new Integer(thisContactId))!= null)?" checked":"") %> onClick="highlight(this,'<%=User.getBrowserId()%>');">
 <%} else {%>
       <a href="javascript:document.contactListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%= count %>','contactListView');">Add</a>
 <%}%>
-      <input type="hidden" name="hiddencontactid<%= count %>" value="<%= thisContact.getId() %>">
+      <input type="hidden" name="hiddencontactid<%= count %>" value="<%= thisContactId %>">
       <input type="hidden" name="hiddenname<%= count %>" value="<%= toHtml(thisContact.getNameLastFirst()) %>">
     </td>
     <td nowrap>
@@ -106,8 +110,8 @@
           email     =  thisAddress.getEmail();
           emailType =  thisAddress.getTypeName();
           String selectedEmail = "";
-          if((selectedContacts.get(new Integer(thisContact.getId()))!= null)){
-            selectedEmail = (String)selectedContacts.get(new Integer(thisContact.getId()));
+          if((selectedContacts.get(new Integer(thisContactId))!= null)){
+            selectedEmail = (String)selectedContacts.get(new Integer(thisContactId));
           }
           if (!email.equals("")) {
 %>
