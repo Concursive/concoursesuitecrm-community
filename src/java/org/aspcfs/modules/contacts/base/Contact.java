@@ -40,9 +40,11 @@ public class Contact extends GenericBean {
   private int employmentType = -1;
   private String startOfDay = "";
   private String endOfDay = "";
-  private String entered = "";
+  private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
+  //private String entered = "";
   private int enteredBy = -1;
-  private String modified = null;
+  //private String modified = null;
   private int modifiedBy = -1;
   private boolean enabled = true;
   private boolean hasAccount = false;
@@ -157,6 +159,10 @@ public class Contact extends GenericBean {
     emailAddressList.setContactId(tmp);
   }
 
+public java.sql.Timestamp getEntered() { return entered; }
+public java.sql.Timestamp getModified() { return modified; }
+public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
+public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 
   /**
    *  Sets the Owner attribute of the Opportunity object
@@ -515,16 +521,6 @@ public class Contact extends GenericBean {
   }
 
 
-  /**
-   *  Sets the Entered attribute of the Contact object
-   *
-   *@param  tmp  The new Entered value
-   *@since       1.1
-   */
-  public void setEntered(String tmp) {
-    this.entered = tmp;
-  }
-
 
   /**
    *  Sets the TypeId attribute of the Contact object
@@ -545,17 +541,6 @@ public class Contact extends GenericBean {
    */
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the Modified attribute of the Contact object
-   *
-   *@param  tmp  The new Modified value
-   *@since       1.1
-   */
-  public void setModified(String tmp) {
-    this.modified = tmp;
   }
 
 
@@ -1108,17 +1093,6 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the Entered attribute of the Contact object
-   *
-   *@return    The Entered value
-   *@since     1.1
-   */
-  public String getEntered() {
-    return entered;
-  }
-
-
-  /**
    *  Gets the Enabled attribute of the Contact object
    *
    *@return    The Enabled value
@@ -1127,18 +1101,6 @@ public class Contact extends GenericBean {
   public boolean getEnabled() {
     return enabled;
   }
-
-
-  /**
-   *  Gets the Modified attribute of the Contact object
-   *
-   *@return    The Modified value
-   *@since     1.1
-   */
-  public String getModified() {
-    return modified;
-  }
-
 
   /**
    *  Gets the PhoneNumberList attribute of the Contact object
@@ -1536,7 +1498,7 @@ public class Contact extends GenericBean {
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
     if (!override) {
-      pst.setTimestamp(++i, java.sql.Timestamp.valueOf(this.getModified()));
+      pst.setTimestamp(++i, this.getModified());
     }
 
     resultCount = pst.executeUpdate();
@@ -1582,21 +1544,11 @@ public class Contact extends GenericBean {
     enteredByName = rs.getString("eb_name");
     modifiedByName = rs.getString("mb_name");
 
-    java.sql.Timestamp tmpDateCreated = rs.getTimestamp("entered");
-    if (tmpDateCreated != null) {
-      entered = shortDateTimeFormat.format(tmpDateCreated);
-    } else {
-      entered = "";
-    }
-
+    entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
 
-    //java.sql.Timestamp tmpLastModified = rs.getTimestamp("modified");
-    //modified = tmpLastModified.toString();
 
-
-    java.sql.Timestamp tmpLastModified = rs.getTimestamp("modified");
-    modified = tmpLastModified.toString();
+    modified = rs.getTimestamp("modified");
 
     modifiedBy = rs.getInt("modifiedby");
     enabled = rs.getBoolean("enabled");
