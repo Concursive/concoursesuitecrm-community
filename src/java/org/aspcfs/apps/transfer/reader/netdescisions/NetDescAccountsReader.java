@@ -271,7 +271,7 @@ public class NetDescAccountsReader implements DataReader {
             cfsAddress.setStreetAddressLine1(addressLine1);
             cfsAddress.setType(1);
             cfsAddress.setCity(getCellValue(row.getCell((short) (firstCellNum + 4))));
-            cfsAddress.setState(getCellValue(row.getCell((short) (firstCellNum + 5))));
+            cfsAddress.setState(getCellValue(row.getCell((short) (firstCellNum + 5))).toUpperCase());
             cfsAddress.setZip(getCellValue(row.getCell((short) (firstCellNum + 6))));
             cfsAddress.setCountry(getCellValue(row.getCell((short) (firstCellNum + 7))));
             cfsAddress.setContactId(r);
@@ -290,6 +290,8 @@ public class NetDescAccountsReader implements DataReader {
               cfsPhNumber.setType(1);
               cfsPhNumber.setNumber(st.nextToken());
               cfsPhNumber.setContactId(r);
+              cfsPhNumber.setEnteredBy(userId);
+              cfsPhNumber.setModifiedBy(userId);
               cfsContPhList.add(cfsPhNumber);
             }
           }
