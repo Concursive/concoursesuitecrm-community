@@ -27,24 +27,24 @@ Component Details
   </tr>
   <tr>
     <td class="containerBack">
-<input type=hidden name="headerId" value="<%= OppComponentDetails.getHeaderId() %>">
-<input type=hidden name="id" value="<%= OppComponentDetails.getId() %>">
-<input type=hidden name="orgId" value="<%= OrgDetails.getId() %>">
+<input type="hidden" name="headerId" value="<%= OppComponentDetails.getHeaderId() %>">
+<input type="hidden" name="id" value="<%= OppComponentDetails.getId() %>">
+<input type="hidden" name="orgId" value="<%= OrgDetails.getId() %>">
 <dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%= OrgDetails.getId() %>&id=<%= OppComponentDetails.getId() %>&popup=true','Opportunities.do?command=DetailsOpp&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"></dhv:permission>
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong><%= toHtml(OppComponentDetails.getDescription()) %></strong>
     </td>
   </tr>  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel">
       Owner
     </td>
-    <td valign=center width=100%>
+    <td>
       <%= OppComponentDetails.getOwnerName() %>
       <dhv:evaluate exp="<%= !(OppComponentDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
     </td>
@@ -61,15 +61,19 @@ Component Details
   </dhv:evaluate>  
   <dhv:evaluate exp="<%= hasText(OppComponentDetails.getNotes()) %>">
   <tr class="containerBody">
-    <td valign="top" nowrap class="formLabel">Additional Notes</td>
-    <td valign="top"><%= toHtml(OppComponentDetails.getNotes()) %></td>
+    <td valign="top" nowrap class="formLabel">
+      Additional Notes
+    </td>
+    <td valign="top">
+      <%= toHtml(OppComponentDetails.getNotes()) %>
+    </td>
   </tr>
   </dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Prob. of Close
     </td>
-    <td valign=center width=100%>
+    <td>
       <%= OppComponentDetails.getCloseProbValue() %>%
     </td>
   </tr>

@@ -26,8 +26,8 @@ Opportunity Details<br>
     </td>
   </tr>
   <tr>
+    <form name="oppdet" action="Opportunities.do?command=ModifyOpp&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
     <td class="containerBack">
-<form name="oppdet" action="Opportunities.do?command=ModifyOpp&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
 <dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Rename" onClick="javascript:this.form.action='Opportunities.do?command=Modify&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%= OrgDetails.getId() %>&headerId=<%= HeaderDetails.getId() %>&popup=true','Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=AddOppComponent&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';submit();"></dhv:permission>
@@ -57,9 +57,9 @@ Opportunity Details<br>
     <td>
       <%= HeaderDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= HeaderDetails.getModifiedString() %>
     </td>
+    </form>
   </tr>    
   </table>
-</form>
 <br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountsComponentListInfo"/>
  <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -108,16 +108,16 @@ Opportunity Details<br>
       <a href="OpportunitiesComponents.do?command=DetailsComponent&orgId=<%= OrgDetails.getId() %>&id=<%=oppComponent.getId()%>">
       <%= toHtml(oppComponent.getDescription()) %></a>
     </td>
-    <td valign="top" nowrap class="row<%= rowid %>">
+    <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= oppComponent.getClosed() != null ? "<font color=\"red\">closed</font>" : "<font color=\"green\">open</font>" %>
     </td>
-    <td valign="top" nowrap class="row<%= rowid %>">
+    <td valign="top" align="right" nowrap class="row<%= rowid %>">
       $<%= oppComponent.getGuessCurrency() %>
     </td>
-    <td valign="top" nowrap class="row<%= rowid %>">
+    <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= toHtml(oppComponent.getCloseDateString()) %>
     </td>
-    <td valign="top" nowrap class="row<%= rowid %>">
+    <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= toHtml(oppComponent.getStageName()) %>
     </td>		
   </tr>

@@ -205,9 +205,17 @@ Add Ticket<br>
       <dhv:label name="tickets-problem">Issue</dhv:label>
     </td>
     <td valign="top">
-      <textarea name="problem" cols="55" rows="3"><%= toString(TicketDetails.getProblem()) %></textarea>
-      <font color="red">*</font> <%= showAttribute(request, "problemError") %>
-      <input type="hidden" name="refresh" value="-1">
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>
+            <textarea name="problem" cols="55" rows="3"><%= toString(TicketDetails.getProblem()) %></textarea>
+          </td>
+          <td valign="top">
+            <font color="red">*</font> <%= showAttribute(request, "problemError") %>
+            <input type="hidden" name="refresh" value="-1">
+          </td>
+        </tr>
+      </table>
     </td>
 	</tr>
 <dhv:include name="tickets-code" none="true">
@@ -318,8 +326,8 @@ Add Ticket<br>
     </td>
     <td>
       <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
-      <input type="checkbox" name="closeNow">Close ticket
-      <br><input type="checkbox" name="kbase">Add this solution to Knowledge Base &nbsp;
+      <input type="checkbox" name="closeNow">Close ticket<br>
+      <input type="checkbox" name="kbase">Add this solution to Knowledge Base
     </td>
 	</tr>
 </table>

@@ -100,7 +100,7 @@ Ticket Details<br>
 		</td>
 		<td>
       <%= toHtml(TicketDetails.getOwnerName()) %>
-      <dhv:evaluate exp="<%=!(TicketDetails.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
+      <dhv:evaluate exp="<%= !(TicketDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
 		</td>
   </tr>
 	<tr class="containerBody">
@@ -193,10 +193,10 @@ Ticket Details<br>
     <td nowrap valign="top" class="formLabel">
       <%= toHtml(thisEntry.getEnteredByName()) %>
     </td>
-    <td nowrap valign="top" width="150">
-			<%= thisEntry.getEnteredString() %>
+    <td nowrap valign="top">
+      <%= thisEntry.getEnteredString() %>
     </td>
-    <td valign="top">
+    <td valign="top" width="100%">
 			<%= toHtml(thisEntry.getEntryText()) %>
     </td>
   </tr>
@@ -205,7 +205,7 @@ Ticket Details<br>
   } else {
 %>
   <tr class="containerBody">
-    <td bgcolor="white">
+    <td>
       <font color="#9E9E9E" colspan="3">No Log Entries.</font>
     </td>
   </tr>

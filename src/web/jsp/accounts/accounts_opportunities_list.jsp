@@ -49,11 +49,11 @@ Opportunities<br>
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td valign="center" nowrap>
+    <td width="100%" nowrap>
       <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.description">Opportunity Name</a></strong>
       <%= OpportunityPagedInfo.getSortIcon("x.description") %>
     </td>
-    <td valign="center" nowrap>
+    <td nowrap>
       <strong>Best Guess Total</strong>
     </td>
     <td nowrap>
@@ -76,7 +76,7 @@ Opportunities<br>
       <dhv:permission name="accounts-accounts-opportunities-edit"><a href="Opportunities.do?command=Modify&headerId=<%= oppHeader.getId() %>&orgId=<%= oppHeader.getAccountLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%= OrgDetails.getId() %>&headerId=<%= oppHeader.getId() %>','Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&popup=true', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
-      <td "width=100%" valign="center" class="row<%= rowid %>">
+      <td valign="center" class="row<%= rowid %>">
         <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true">
         <%= toHtml(oppHeader.getDescription()) %></a>
         (<%= oppHeader.getComponentCount() %>)

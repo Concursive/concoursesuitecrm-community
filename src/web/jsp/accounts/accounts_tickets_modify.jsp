@@ -106,13 +106,11 @@ Modify Ticket<br>
 <form name="details" action="AccountTickets.do?command=UpdateTicket&auto-populate=true" method="post">    
 <% if (TicketDetails.getClosed() != null) { %>
       <input type="submit" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
-  <% if (request.getParameter("return") != null) {%>
-    <% if (request.getParameter("return").equals("list")) {%>
+    <% if ("list".equals(request.getParameter("return"))) {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
     <%} else {%> 
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
     <%}%>
-  <%}%>
 <%} else {%>
       <input type="submit" value="Update">
   <% if (request.getParameter("return") != null) {%>
@@ -166,15 +164,17 @@ Modify Ticket<br>
 		<td class="formLabel" valign="top">
       <dhv:label name="tickets-problem">Issue</dhv:label>
     </td>
-		<td valign="top">
-      <textarea name="problem" cols="55" rows="3"><%= toString(TicketDetails.getProblem()) %></textarea>
-      <font color="red">*</font> <%= showAttribute(request, "problemError") %>
-      <input type="hidden" name="modified" value="<%= TicketDetails.getModified() %>">
-      <input type="hidden" name="orgId" value="<%=TicketDetails.getOrgId()%>">
-      <input type="hidden" name="id" value="<%=TicketDetails.getId()%>">
-      <input type="hidden" name="companyName" value="<%=toHtml(TicketDetails.getCompanyName())%>">
-      <input type="hidden" name="close" value="">
-      <input type="hidden" name="refresh" value="-1">
+		<td>
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>
+            <textarea name="problem" cols="55" rows="3"><%= toString(TicketDetails.getProblem()) %></textarea>
+          </td>
+          <td valign="top">
+            <font color="red">*</font> <%= showAttribute(request, "problemError") %>
+          </td>
+        </tr>
+      </table>
 		</td>
   </tr>
   <dhv:include name="tickets-code" none="true">
@@ -333,7 +333,7 @@ Modify Ticket<br>
 			}
 		} else {
 	%>
-    <tr>
+    <tr class="containerBody">
       <td>
         <font color="#9E9E9E" colspan="3">No Log Entries.</font>
 			</td>
@@ -352,16 +352,20 @@ Modify Ticket<br>
   <%}%>
 <%} else {%>
       <input type="submit" value="Update">
-  <% if (request.getParameter("return") != null) {%>
-    <% if (request.getParameter("return").equals("list")) {%>
+    <% if ("list".equals(request.getParameter("return"))) {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
     <%} else {%> 
-        <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
     <%}%>
-  <%}%>
 <%}%>
 </td>
 </tr>
-</table>
+<input type="hidden" name="modified" value="<%= TicketDetails.getModified() %>">
+<input type="hidden" name="orgId" value="<%=TicketDetails.getOrgId()%>">
+<input type="hidden" name="id" value="<%= TicketDetails.getId() %>">
+<input type="hidden" name="companyName" value="<%= toHtml(TicketDetails.getCompanyName()) %>">
+<input type="hidden" name="close" value="">
+<input type="hidden" name="refresh" value="-1">
 </form>
-
+</table>
+</body>

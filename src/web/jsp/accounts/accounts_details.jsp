@@ -51,7 +51,7 @@ Account Details<br>
     </td>
     <td>
       <%= OrgDetails.getOwnerName() %>
-      <dhv:evaluate exp="<%=!(OrgDetails.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
+      <dhv:evaluate exp="<%= !(OrgDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
 <dhv:evaluate exp="<%= hasText(OrgDetails.getTypes().valuesAsString()) %>">
@@ -250,7 +250,7 @@ Account Details<br>
       OrganizationAddress thisAddress = (OrganizationAddress)iaddress.next();
 %>    
     <tr class="containerBody">
-      <td nowrap class="formLabel">
+      <td nowrap class="formLabel" valign="top">
         <%= toHtml(thisAddress.getTypeName()) %>
       </td>
       <td>
