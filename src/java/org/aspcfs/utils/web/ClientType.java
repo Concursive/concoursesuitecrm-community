@@ -95,16 +95,14 @@ public class ClientType implements Serializable {
         //User-Agent: mozilla/4.0 (compatible; msie 5.01; windows nt 5.0)
         this.id = IE;
         //Search for "msie x"
-        this.version =
-            Double.parseDouble(header.substring(header.indexOf("msie ") + 5,
+        version = parseVersion(header.substring(header.indexOf("msie ") + 5,
             header.indexOf(";", header.indexOf("msie "))));
-        cleanupVersion();
       } else if (header.indexOf("opera") > -1) {
         //Opera likes to impersonate other browsers
         //User-Agent: mozilla/4.0 (compatible; msie 6.0; msie 5.5; windows 98) opera 7.02  [en]
         //User-Agent: mozilla/3.0 (windows 98; u) opera 7.02  [en]
         this.id = OPERA;
-        parseVersion(header.substring(
+        version = parseVersion(header.substring(
             header.indexOf("opera") + 5, 
             header.indexOf("[", header.indexOf("opera"))
             ).trim());
@@ -250,36 +248,6 @@ public class ClientType implements Serializable {
 
 
   /**
-   *  Gets the browserIdAndOS attribute of the ClientType object
-   *
-   *@return    The browserIdAndOS value
-   */
-  public String getBrowserIdAndOS() {
-    String thisId = null;
-    switch (id) {
-        case IE:
-          thisId = "ie";
-          break;
-        case NETSCAPE:
-          thisId = "ns";
-          if (os == LINUX) {
-            thisId += "-linux";
-          }
-          break;
-        case POCKETIE:
-          thisId = "pie";
-          break;
-        case OPERA:
-          thisId = "opera";
-          break;
-        default:
-          break;
-    }
-    return thisId;
-  }
-
-
-  /**
    *  Gets the browserVersion attribute of the ClientType object
    *
    *@return    The browserVersion value
@@ -310,29 +278,11 @@ public class ClientType implements Serializable {
 
   /**
    *  Description of the Method
-   */
-  public void cleanupVersion() {
-    //Cleanup old versions...
-    if (version > 4.0 && version < 5.0) {
-      version = 4;
-    } else if (version > 3.0 && version < 4.0) {
-      version = 3;
-    } else if (version > 2.0 && version < 3.0) {
-      version = 2;
-    }
-  }
-
-
-  /**
-   *  Description of the Method
    *
    *@param  versionText  Description of the Parameter
    *@return              Description of the Return Value
    */
   public double parseVersion(String versionText) {
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("ClientType-> Version to parse: " + versionText);
-    }
     try {
       return Double.parseDouble(versionText);
     } catch (Exception e) {
