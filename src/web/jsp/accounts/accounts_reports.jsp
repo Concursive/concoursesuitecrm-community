@@ -11,7 +11,6 @@ Reports<br>
 <dhv:permission name="accounts-accounts-reports-add"><a href="/Accounts.do?command=GenerateForm">Generate new report</a></dhv:permission>
 <dhv:permission name="accounts-accounts-reports-add" none="true"><br></dhv:permission>
 <center><%= RptListInfo.getAlphabeticalPageLinks() %></center>
-
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="/Accounts.do?command=Reports">
@@ -21,6 +20,9 @@ Reports<br>
         <option <%= RptListInfo.getOptionValue("all") %>>All Reports</option>
       </select>
       <%= showAttribute(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="RptListInfo"/>
     </td>
     </form>
   </tr>

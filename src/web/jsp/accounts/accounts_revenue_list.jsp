@@ -26,7 +26,6 @@ Revenue<br>
     <td class="containerBack">
 <dhv:permission name="accounts-accounts-revenue-add"><a href="RevenueManager.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add Revenue</a></dhv:permission>
 <center><%= RevenueListInfo.getAlphabeticalPageLinks() %></center>
-
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="/RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">
@@ -35,7 +34,9 @@ Revenue<br>
         <option <%= RevenueListInfo.getOptionValue("my") %>>My Revenue </option>
         <option <%= RevenueListInfo.getOptionValue("all") %>>All Revenue</option>
       </select>
-      <%= showAttribute(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="RevenueListInfo"/>
     </td>
     </form>
   </tr>

@@ -26,7 +26,7 @@ Opportunities<br>
     <td class="containerBack">
 <dhv:permission name="accounts-accounts-opportunities-add"><a href="/Opportunities.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add an Opportunity</a></dhv:permission>
 <center><%= OpportunityPagedInfo.getAlphabeticalPageLinks() %></center>
-<%= showAttribute(request, "actionError") %>
+<dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="OpportunityPagedInfo"/>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
