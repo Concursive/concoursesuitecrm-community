@@ -1,0 +1,32 @@
+/* 
+ *  Migrating PostgreSQL to next major version
+ */
+
+# Backup the database
+pg_dumpall > backup
+
+# Verify backup
+more backup
+
+# Stop postgres
+service postgres stop
+
+# Move the old database and config out of the way
+mv /var/lib/pgsql /var/lib/pgsql.old
+
+# Upgrade PostgreSQL or upgrade whole os
+rpm -Uvh *.rpm
+
+# Start postgres and initialize new database
+service postgres start
+
+# Modify the backup file and make sure UNICODE is used
+# Change 'SQL_ASCII' to 'UNICODE' for all databases
+vi backup
+
+# Restore the databases
+pgsql -d template1 -f backup
+
+# Create dependencies when upgrading 7.2 -> 7.3
+./adddepend -d [database] -Y
+
