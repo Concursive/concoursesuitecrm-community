@@ -437,8 +437,11 @@ public class SystemStatus {
             Node configNode = configNodes.item(i);
             if (configNode != null &&
                 configNode.getNodeType() == Node.ELEMENT_NODE &&
-                "config".equals(((Element) configNode).getTagName())) {
-              //Each each config name, create a map for each of the params
+                "config".equals(((Element) configNode).getTagName()) &&
+                (((Element) configNode).getAttribute("enabled") == null || 
+                 "".equals(((Element) configNode).getAttribute("enabled")) ||
+                 "true".equals(((Element) configNode).getAttribute("enabled")))) {
+              //For each config name, create a map for each of the params
               String configName = ((Element) configNode).getAttribute("name");
               Map preferenceGroup = null;
               if (configName != null) {
