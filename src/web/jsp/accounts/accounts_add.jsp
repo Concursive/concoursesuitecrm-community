@@ -272,7 +272,7 @@ Add Account<br>
       Organization Name
     </td>
     <td>
-      <input onFocus="if (indSelected == 1) { tabNext(this) }" type="text" size="35" name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
+      <input onFocus="if (indSelected == 1) { tabNext(this) }" type="text" size="35" maxlength="80" name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
   <tr>
@@ -348,7 +348,7 @@ Add Account<br>
       Ticker Symbol
     </td>
     <td>
-      <input onFocus="if (indSelected == 1) { tabNext(this) }" type=text size=10 name="ticker" value="<%= OrgDetails.getTicker() != null ? toHtml(OrgDetails.getTicker()) : ""%>">
+      <input onFocus="if (indSelected == 1) { tabNext(this) }" type="text" size="10" maxlength="10" name="ticker" value="<%= toHtmlValue(OrgDetails.getTicker()) %>">
     </td>
   </tr>
   <tr>
