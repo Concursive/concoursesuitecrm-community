@@ -163,6 +163,42 @@ public final class ExternalContactsCalls extends CFSModule {
   /**
    *  Description of the Method
    *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandSendMessage(ActionContext context) {
+
+    if (!(hasPermission(context, "contacts-external_contacts-calls-edit"))) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    Connection db = null;
+    Contact thisContact = null;
+    String contactId = (String)context.getRequest().getParameter("contactId");
+    try {
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
+      return "SendMessageOK";
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    *@since
@@ -228,7 +264,7 @@ public final class ExternalContactsCalls extends CFSModule {
     String contactId = context.getRequest().getParameter("contactId");
     PagedListInfo callListInfo = this.getPagedListInfo(context, "CallListInfo");
     callListInfo.setLink("/ExternalContactCalls.do?command=View&contactId=" + contactId);
-    
+
     Contact thisContact = null;
 
     Connection db = null;
