@@ -17,7 +17,6 @@ public class DatabaseBean extends GenericBean {
 
   private int configured = -1;
   private String type = "PostgreSQL";
-  private String driver = "org.postgresql.Driver";
   private String ip = "127.0.0.1";
   private int port = 5432;
   private String name = "darkhorse_crm";
@@ -52,16 +51,6 @@ public class DatabaseBean extends GenericBean {
    */
   public void setType(String tmp) {
     this.type = tmp;
-  }
-
-
-  /**
-   *  Sets the driver attribute of the DatabaseBean object
-   *
-   *@param  tmp  The new driver value
-   */
-  public void setDriver(String tmp) {
-    this.driver = tmp;
   }
 
 
@@ -151,7 +140,13 @@ public class DatabaseBean extends GenericBean {
    *@return    The driver value
    */
   public String getDriver() {
-    return driver;
+    if ("PostgreSQL".equals(type)) {
+      return "org.postgresql.Driver";
+    }
+    if ("MSSQL".equals(type)) {
+      return "net.sourceforge.jtds.jdbc.Driver";
+    }
+    return null;
   }
 
 
@@ -237,6 +232,12 @@ public class DatabaseBean extends GenericBean {
     if ("org.postgresql.Driver".equals(this.getDriver())) {
       return "jdbc:postgresql://" + this.getIp() + ":" + this.getPort() + "/" + this.getName();
     }
+    if ("net.sourceforge.jtds.jdbc.Driver".equals(this.getDriver())) {
+      return "jdbc:jtds:sqlserver://" + this.getIp() + ":" + this.getPort() + "/" + this.getName();
+    }
+    if ("com.microsoft.jdbc.sqlserver.SQLServerDriver".equals(this.getDriver())) {
+      return "jdbc:microsoft:sqlserver://" + this.getIp() + ":" + this.getPort() + ";SelectMethod=cursor;DatabaseName=" + this.getName();
+    }
     return "";
   }
 
@@ -249,7 +250,8 @@ public class DatabaseBean extends GenericBean {
   public void setConnection(String tmp) {
     StringTokenizer st = new StringTokenizer(tmp, "|");
     type = st.nextToken();
-    driver = st.nextToken();
+    //driver = //user currently cannot choose the driver
+    st.nextToken();
     ip = st.nextToken();
     port = Integer.parseInt(st.nextToken());
     name = st.nextToken();
@@ -265,7 +267,7 @@ public class DatabaseBean extends GenericBean {
    */
   public String getConnection() {
     return type + "|" +
-        driver + "|" +
+        this.getDriver() + "|" +
         ip + "|" +
         port + "|" +
         name + "|" +
@@ -282,6 +284,9 @@ public class DatabaseBean extends GenericBean {
   public String getTypeValue() {
     if ("PostgreSQL".equals(type)) {
       return "postgresql";
+    }
+    if ("MSSQL".equals(type)) {
+      return "mssql";
     }
     return null;
   }
