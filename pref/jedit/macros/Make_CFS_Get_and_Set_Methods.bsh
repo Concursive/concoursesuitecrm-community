@@ -1,0 +1,274 @@
+/*
+ * Make_Get_and_Set_Methods.bsh - a BeanShell macro for
+ * the jEdit text editor - facilitates the creation of
+ * get() and set() methods from instance variables
+ * Copyright (C) 2001-2003 Matt Rajkowski
+ * mattjava@zeroio.com
+ *
+ * Added feature to process any number of selected lines, skipping comments
+ *
+ * originally developed by John Gellene
+ *
+ * based on code contributed to the jEdit Macro Guide project
+ * by Seppo Silaste
+ */
+
+import javax.swing.*;
+import javax.swing.border.*;
+
+void makeGetSetDialog() {
+  title = "Make get and set methods from caret line text";
+
+  dialog = new JDialog(view, title, false);
+  content = new JPanel(new BorderLayout());
+  content.setBorder(new EmptyBorder(5, 10, 10, 10));
+  content.setPreferredSize(new Dimension(480, 320));
+  dialog.setContentPane(content);
+
+  // textPanel holds a getPanel and a setPanel; each of
+  // the child panels holds a label and a scrolling text area
+  textPanel = new JPanel(new GridLayout(2, 1, 0, 10));
+  textPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+  setPanel = new JPanel(new BorderLayout());
+  setLabel = new JLabel("set() methods", SwingConstants.LEFT);
+  setText = new JTextArea();
+  setPanel.add(setLabel, "North");
+  setPanel.add(new JScrollPane( setText), "Center");
+  textPanel.add(setPanel);
+
+  getPanel = new JPanel(new BorderLayout());
+  getLabel = new JLabel("get() methods", SwingConstants.LEFT);
+  getText = new JTextArea();
+  getPanel.add(getLabel, "North");
+  getPanel.add(new JScrollPane( getText), "Center");
+  textPanel.add(getPanel);
+
+  content.add(textPanel, "Center");
+
+  buttonPanel = new JPanel(new GridLayout(4, 1, 0, 30));
+  buttonPanel.setBorder( new EmptyBorder(22, 5, 5, 5));
+
+  makeSetButton = new JButton("Create Get/Set");
+  insertSetButton = new JButton("Insert Set");
+  insertGetButton = new JButton("Insert Get");
+  
+  doneButton = new JButton("Close");
+  buttonPanel.add(makeSetButton);
+  buttonPanel.add(insertSetButton);
+  buttonPanel.add(insertGetButton);
+  buttonPanel.add(doneButton);
+
+  content.add(buttonPanel, "East");
+
+  // action listener for buttons
+  makeSetButton.addActionListener(this);
+  insertSetButton.addActionListener(this);
+  doneButton.addActionListener(this);
+  insertGetButton.addActionListener(this);
+
+  actionPerformed(e) {
+    cmd = e.getActionCommand();
+    if(cmd.indexOf("Close") != -1) {
+      this.dialog.dispose();
+      return;
+    }
+    isGetCmd = (cmd.indexOf("Get") != -1);
+    if(cmd.indexOf("Insert") != -1)
+      doInsert(isGetCmd ? this.getText : this.setText);
+    else if(isGetCmd) {
+      doMakeGetSet(this.setText, this.getText);
+    }
+  }
+
+  dialog.pack();
+  dialog.setLocationRelativeTo(view);
+  dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+  dialog.setVisible(true);
+  doMakeGetSet(this.setText, this.getText);
+}
+
+void doMakeGetSet(JTextArea setText, JTextArea getText) {
+  
+  //Iterate through the lines in the selection, then
+  //create get and set methods for each
+  
+  end = textArea.getSelectionEndLine() + 1;
+  for(line = textArea.getSelectionStartLine(); line < end; ++line) {
+    offsetBOL = textArea.getLineStartOffset(line);
+    textArea.setCaretPosition(offsetBOL);
+    textArea.goToStartOfWhiteSpace(false);
+    textArea.goToEndOfWhiteSpace(true);
+    text = textArea.getSelectedText();
+    if(text == null) text = "";
+    result = parseLine(text);
+    
+    //result = parseLine();
+    if(result.length() > 0) {
+      tokenizer = new StringTokenizer(result);
+      String resultType = tokenizer.nextToken();
+      String resultVariable = tokenizer.nextToken();
+      
+      //Get
+      c = resultVariable.substring(0,1);
+      c = c.toUpperCase();
+      sb1 = new StringBuffer();
+      sb1.append("public ");
+      sb1.append(resultType);
+      sb1.append(" get");
+      sb1.append(c);
+      sb1.append(resultVariable.substring(1));
+      sb1.append("()");
+      //sb1.append(" {\n\treturn ");
+      sb1.append(" { return ");
+      sb1.append(resultVariable);
+      //sb1.append(";\n}\n");
+      sb1.append("; }\n");
+      getText.append(sb1.toString());
+      
+      //Set
+      if (1==1) {
+        sb = new StringBuffer();
+        sb.append("public ");
+        sb.append("void set");
+        sb.append(c);
+        sb.append(resultVariable.substring(1));
+        sb.append("(");
+        sb.append(resultType);
+        sb.append(" ");
+        //sb.append(resultVariable);
+        sb.append("tmp");
+        //sb.append(") {\n\t");
+        sb.append(") { ");
+        sb.append("this.");
+        sb.append(resultVariable);
+        sb.append(" = ");
+        //sb.append(resultVariable);
+        sb.append("tmp");
+        //sb.append(";\n}\n");
+        sb.append("; }\n");
+        setText.append(sb.toString());
+      }
+      
+      //Set
+      if ("int".equals(resultType)) {
+        sb = new StringBuffer();
+        sb.append("public ");
+        sb.append("void set");
+        sb.append(c);
+        sb.append(resultVariable.substring(1));
+        sb.append("(");
+        sb.append("String");
+        sb.append(" ");
+        //sb.append(resultVariable);
+        sb.append("tmp");
+        //sb.append(") {\n\t");
+        sb.append(") { ");
+        sb.append("this.");
+        sb.append(resultVariable);
+        sb.append(" = ");
+        //sb.append(resultVariable);
+        sb.append("Integer.parseInt(tmp)");
+        //sb.append(";\n}\n");
+        sb.append("; }\n");
+        setText.append(sb.toString());
+      }
+      
+      //Set
+      if ("boolean".equals(resultType)) {
+        sb = new StringBuffer();
+        sb.append("public ");
+        sb.append("void set");
+        sb.append(c);
+        sb.append(resultVariable.substring(1));
+        sb.append("(");
+        sb.append("String");
+        sb.append(" ");
+        //sb.append(resultVariable);
+        sb.append("tmp");
+        //sb.append(") {\n\t");
+        sb.append(") { ");
+        sb.append("this.");
+        sb.append(resultVariable);
+        sb.append(" = ");
+        //sb.append(resultVariable);
+        sb.append("DatabaseUtils.parseBoolean(tmp)");
+        //sb.append(";\n}\n");
+        sb.append("; }\n");
+        setText.append(sb.toString());
+      }
+      
+      //Set
+      if ("Timestamp".equals(resultType) || "java.sql.Timestamp".equals(resultType)) {
+        sb = new StringBuffer();
+        sb.append("public ");
+        sb.append("void set");
+        sb.append(c);
+        sb.append(resultVariable.substring(1));
+        sb.append("(");
+        sb.append("String");
+        sb.append(" ");
+        //sb.append(resultVariable);
+        sb.append("tmp");
+        //sb.append(") {\n\t");
+        sb.append(") { ");
+        sb.append("this.");
+        sb.append(resultVariable);
+        sb.append(" = ");
+        //sb.append(resultVariable);
+        sb.append("DatabaseUtils.parseTimestamp(tmp)");
+        //sb.append(";\n}\n");
+        sb.append("; }\n");
+        setText.append(sb.toString());
+      }
+    }
+  }
+}
+
+String parseLine(String line) {
+  if(!(line == null || line.equals("") || line.startsWith("//"))) {
+    tokenizer = new StringTokenizer(line);
+    if(tokenizer.countTokens() >= 2) {
+      // get the first non-modifier token if there is one
+      returnType = tokenizer.nextToken();
+      while( modifiers.indexOf(returnType) != -1 && tokenizer.hasMoreTokens()) {
+        returnType = tokenizer.nextToken();
+      }
+      if(tokenizer.hasMoreTokens()) {
+        // a non-modifier token was found and
+        // there is also an instance variable.
+        instanceVar = tokenizer.nextToken();
+        // remove the ; if there is one
+        if(instanceVar.endsWith(";")) {
+          instanceVar = instanceVar.substring(0, instanceVar.length() - 1);
+        }
+        
+        // if the code doesn't have a space between the instance
+        // variable and the possible '=';
+        // get the correct instance variable.
+        if(instanceVar.indexOf('=') != -1) {
+          instanceVar = instanceVar.substring(0, instanceVar.indexOf('='));
+        }
+        return returnType + " " + instanceVar;
+      }
+    }
+  }
+  return "";
+}
+
+void doInsert(JTextArea insertText) {
+  insert = insertText.getText();
+  if(insert != null)
+      mainTextArea.setSelectedText(insert);
+}
+
+// main routine
+modifiers = "public protected private static transient final //";
+
+// external global variables imported by jEdit are
+// not visible in methods called by ActionListener
+mainTextArea = textArea;
+mainView = view;
+
+makeGetSetDialog();
+
