@@ -243,7 +243,10 @@ public final class AdminCategories extends CFSModule {
     String level = context.getRequest().getParameter("level");
     try {
       db = getConnection(context);
-
+      
+      //escape the ' character in the categories parameter
+      categories = StringUtils.replacePattern(categories, "'", "\\\\'");
+      
       //get the category editor from system status
       SystemStatus systemStatus = this.getSystemStatus(context);
       CategoryEditor thisEditor = systemStatus.getCategoryEditor(db);
@@ -253,12 +256,12 @@ public final class AdminCategories extends CFSModule {
         htmlDialog.setTitle("Confirm");
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setHeader("Are you sure ?");
-        htmlDialog.setDeleteUrl("javascript:window.location.href='AdminCategories.do?command=Save&categories=" + categories + "&parentCode=" + parentCatId + "&level=" + level + "'");
+        htmlDialog.setDeleteUrl("javascript:window.location.href='AdminCategories.do?command=Save&categories=' + escape('" + categories + "') + '&parentCode=" + parentCatId + "&level=" + level + "'");
       } else {
         if (dependencies.canDelete()) {
           htmlDialog.setTitle("CFS: Confirm Delete");
           htmlDialog.setHeader("The following categories have dependencies within CFS:");
-          htmlDialog.addButton("Delete All", "javascript:window.location.href='AdminCategories.do?command=Save&categories=" + categories + "&parentCode=" + parentCatId + "&level=" + level + "'");
+          htmlDialog.addButton("Delete All", "javascript:window.location.href='AdminCategories.do?command=Save&categories=' + escape('" + categories + "') + '&parentCode=" + parentCatId + "&level=" + level + "'");
           htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
         } else {
           htmlDialog.setTitle("CFS: Alert");
