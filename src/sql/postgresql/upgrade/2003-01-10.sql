@@ -61,3 +61,6 @@ WHERE system_id = 2
   AND element_name = 'accountInventoryList'
 ;
 
+/*7/15/2002*/
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (5, 'accounts-accounts-revenue', true, true, true, true, 'Revenue Records', 100);
+

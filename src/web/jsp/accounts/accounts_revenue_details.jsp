@@ -20,9 +20,9 @@
   </tr>
   <tr>
     <td class="containerBack">
-<input type='button' value="Modify" onClick="javascript:this.form.action='/RevenueManager.do?command=Modify&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';submit();">
-<input type='button' value="Delete" onClick="javascript:this.form.action='/RevenueManager.do?command=Delete&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';confirmSubmit(this.form);">
-<br>&nbsp;
+<dhv:permission name="accounts-accounts-revenue-edit"><input type='button' value="Modify" onClick="javascript:this.form.action='/RevenueManager.do?command=Modify&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-revenue-delete"><input type='button' value="Delete" onClick="javascript:this.form.action='/RevenueManager.do?command=Delete&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';confirmSubmit(this.form);"></dhv:permission>
+<dhv:permission name="accounts-accounts-revenue-edit,accounts-accounts-revenue-delete"><br>&nbsp;</dhv:permission>
 <input type=hidden name="type" value="<%=Revenue.getType()%>">
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -90,9 +90,9 @@
 
 </table>
 <br>
-<input type='button' value="Modify" onClick="javascript:this.form.action='/RevenueManager.do?command=Modify&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';submit();">
-<input type='button' value="Delete" onClick="javascript:this.form.action='/RevenueManager.do?command=Delete&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';confirmSubmit(this.form);">
-  </td>
+<dhv:permission name="accounts-accounts-revenue-edit"><input type='button' value="Modify" onClick="javascript:this.form.action='/RevenueManager.do?command=Modify&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-revenue-delete"><input type='button' value="Delete" onClick="javascript:this.form.action='/RevenueManager.do?command=Delete&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';confirmSubmit(this.form);"></dhv:permission>
+</td>
   </tr>
 </table>
 </form>

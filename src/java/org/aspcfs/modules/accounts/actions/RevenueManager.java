@@ -26,16 +26,9 @@ import com.jrefinery.util.ui.*;
 public final class RevenueManager extends CFSModule {
 	
   public String executeCommandDashboard(ActionContext context) {
-	  
-/**
-  	if (!(hasPermission(context, "pipeline-dashboard-view"))) {
-		if (!(hasPermission(context, "pipeline-opportunities-view"))) {
-	    		return ("PermissionError");
-    		}
-	    
-	    return (executeCommandViewOpp(context));
+	if (!(hasPermission(context, "accounts-accounts-revenue-view"))) {
+	    	return ("PermissionError");
     	}
-*/
 
     addModuleBean(context, "Revenue", "Revenue");
 
@@ -259,6 +252,10 @@ public final class RevenueManager extends CFSModule {
 	
 	
   public String executeCommandAdd(ActionContext context) {
+	if (!(hasPermission(context, "accounts-accounts-revenue-add"))) {
+	    	return ("PermissionError");
+    	}
+	
     addModuleBean(context, "View Accounts", "Add Revenue to Account");
     
     Exception errorMessage = null;
@@ -287,6 +284,9 @@ public final class RevenueManager extends CFSModule {
   }
   
   public String executeCommandView(ActionContext context) {
+	if (!(hasPermission(context, "accounts-accounts-revenue-view"))) {
+	    	return ("PermissionError");
+    	}
     addModuleBean(context, "View Accounts", "View Revenue List");
     
     Exception errorMessage = null;
@@ -324,6 +324,11 @@ public final class RevenueManager extends CFSModule {
   }
   
   public String executeCommandDelete(ActionContext context) {
+	
+	if (!(hasPermission(context, "accounts-accounts-revenue-delete"))) {
+	    	return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordDeleted = false;
     
@@ -362,6 +367,10 @@ public final class RevenueManager extends CFSModule {
   }
   
    public String executeCommandInsert(ActionContext context) {
+	
+	if (!(hasPermission(context, "accounts-accounts-revenue-add"))) {
+	    	return ("PermissionError");
+    	}
 	
     addModuleBean(context, "View Accounts", "Insert Revenue");
     Exception errorMessage = null;
@@ -407,6 +416,11 @@ public final class RevenueManager extends CFSModule {
   }
   
   public String executeCommandModify(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-revenue-edit"))) {
+	    	return ("PermissionError");
+    	}
+	
     addModuleBean(context, "View Accounts", "Modify Revenue");
     Exception errorMessage = null;
 
@@ -454,6 +468,11 @@ public final class RevenueManager extends CFSModule {
   }
   
   public String executeCommandDetails(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-revenue-view"))) {
+	    	return ("PermissionError");
+    	}
+	
     addModuleBean(context, "View Accounts", "View Revenue Details");
     Exception errorMessage = null;
 
@@ -486,6 +505,11 @@ public final class RevenueManager extends CFSModule {
 
   
   public String executeCommandUpdate(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-revenue-edit"))) {
+	    	return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     Revenue newRevenue = (Revenue)context.getFormBean();

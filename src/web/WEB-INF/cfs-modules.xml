@@ -262,7 +262,7 @@
     </submenu>
     
     <submenu name="Revenue">
-      <permission value="accounts-accounts-view"/>
+      <permission value="accounts-accounts-revenue-view"/>
       <long_html value="Revenue"/>
       <short_html value="Revenue"/>
       <link value="/RevenueManager.do?command=Dashboard"/>

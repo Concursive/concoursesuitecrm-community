@@ -31,7 +31,7 @@
     </submenu>
     <submenu name="revenue">
       <long_html value="Revenue"/>
-      <permission value="accounts-accounts-opportunities-view"/>
+      <permission value="accounts-accounts-revenue-view"/>
       <link value="RevenueManager.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="tickets">
