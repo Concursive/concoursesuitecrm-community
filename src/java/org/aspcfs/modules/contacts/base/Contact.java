@@ -2120,7 +2120,7 @@ public class Contact extends GenericBean {
         pst.executeUpdate();
         pst.close();
 
-        //For history, keep this contact if they previouslt received a comm. message
+        // For history, keep this contact if they previously received a comm. message
         if (RecipientList.retrieveRecordCount(db, Constants.CONTACTS, this.getId()) > 0) {
           errors.put("actionError", "Contact disabled from view, since it has related message records");
           this.disable(db);
@@ -2128,8 +2128,8 @@ public class Contact extends GenericBean {
           return true;
         }
 
-        //If we're not keeping this contact, get rid of some more data
-        //TODO: Use the ExcludedRecipientList class when it exists
+        // If we're not keeping this contact, get rid of some more data
+        // TODO: Use the ExcludedRecipientList class when it exists
         pst = db.prepareStatement(
             "DELETE FROM excluded_recipient " +
             "WHERE contact_id = ? ");
@@ -2137,14 +2137,23 @@ public class Contact extends GenericBean {
         pst.executeUpdate();
         pst.close();
 
-        //delete all types associated with this contact
+        // delete all types associated with this contact
         pst = db.prepareStatement(
             "DELETE FROM contact_type_levels " +
             "WHERE contact_id = ? ");
         pst.setInt(1, this.getId());
         pst.executeUpdate();
         pst.close();
-
+        
+        // delete all task links associated with this contact
+        pst = db.prepareStatement(
+            "DELETE FROM tasklink_contact " +
+            "WHERE contact_id = ? ");
+        pst.setInt(1, this.getId());
+        pst.executeUpdate();
+        pst.close();
+        
+        // finally, delete the contact
         pst = db.prepareStatement(
             "DELETE FROM contact " +
             "WHERE contact_id = ?");
