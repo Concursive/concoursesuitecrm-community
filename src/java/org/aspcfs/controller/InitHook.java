@@ -94,6 +94,9 @@ public class InitHook implements ControllerInitHook {
       config.getServletContext().setAttribute("MailServer", 
         config.getInitParameter("MailServer"));
       System.setProperty("MailServer", String.valueOf(config.getInitParameter("MailServer")));
+    } else {
+      config.getServletContext().setAttribute("MailServer", "127.0.0.1");
+      System.setProperty("MailServer", "127.0.0.1");
     }
     
     return null;
