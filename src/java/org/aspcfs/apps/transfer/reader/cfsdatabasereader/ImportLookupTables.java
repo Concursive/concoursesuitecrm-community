@@ -125,15 +125,13 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
           String fieldName = thisProperty.getField();
           String value = thisElement.getValue(fieldName);
 
-          if (thisProperty.hasAlias()) {
-            if ("guid".equals(thisProperty.getAlias())) {
-              thisRecord.addField("guid", value);
-            }
+          if (thisProperty.hasAlias() && "guid".equals(thisProperty.getAlias())) {
+            thisRecord.addField("guid", value);
           } else if (thisProperty.hasName()) {
-            thisRecord.addField(thisProperty.getName(), value);
+            thisRecord.addField(thisProperty.getName(), value, thisProperty.getLookupValue(), thisProperty.getAlias());
           } else {
             thisRecord.addField("field", fieldName);
-            thisRecord.addField("data", value);
+            thisRecord.addField("data", value, thisProperty.getLookupValue(), thisProperty.getAlias());
           }
         }
         processOK = writer.save(thisRecord);
