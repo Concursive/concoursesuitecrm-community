@@ -52,6 +52,8 @@ public class UserList extends Vector {
   private String username = null;
   
   private boolean excludeDisabledIfUnselected = false;
+  private java.sql.Timestamp enteredRangeStart = null;
+  private java.sql.Timestamp enteredRangeEnd = null;
   
   /**
    *  Constructor for the UserList object
@@ -138,6 +140,12 @@ public class UserList extends Vector {
   }
   public void setExcludeDisabledIfUnselected(boolean excludeDisabledIfUnselected) {
     this.excludeDisabledIfUnselected = excludeDisabledIfUnselected;
+  }
+  public void setEnteredRangeStart(java.sql.Timestamp tmp) {
+    this.enteredRangeStart = tmp;
+  }
+  public void setEnteredRangeEnd(java.sql.Timestamp tmp) {
+    this.enteredRangeEnd = tmp;
   }
   
   /**
@@ -914,6 +922,12 @@ public class UserList extends Vector {
       sqlFilter.append("AND a.entered < ? ");
       sqlFilter.append("AND a.modified < ? ");
     }
+    if (enteredRangeStart != null) {
+      sqlFilter.append("AND a.entered >= ? ");
+    }
+    if (enteredRangeEnd != null) {
+      sqlFilter.append("AND a.entered <= ? ");
+    }
   }
   
   
@@ -956,7 +970,34 @@ public class UserList extends Vector {
       pst.setTimestamp(++i, lastAnchor);
       pst.setTimestamp(++i, nextAnchor);
     }
+    if (enteredRangeStart != null) {
+      pst.setTimestamp(++i, enteredRangeStart);
+    }
+    if (enteredRangeEnd != null) {
+      pst.setTimestamp(++i, enteredRangeEnd);
+    }
     return i;
+  }
+  
+  public int queryRecordCount(Connection db) throws SQLException {
+    int recordCount = 0;
+    StringBuffer sqlFilter = new StringBuffer();
+    String sqlCount =
+      "SELECT COUNT(*) AS recordcount " +
+      "FROM access a " +
+      "LEFT JOIN contact c ON (a.contact_id = c.contact_id), " +
+      "role r " +
+      "WHERE a.role_id = r.role_id ";
+    createFilter(sqlFilter);
+    PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
+    int items = prepareFilter(pst);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      recordCount = DatabaseUtils.getInt(rs, "recordcount", 0);
+    }
+    pst.close();
+    rs.close();
+    return recordCount;
   }
 }
 
