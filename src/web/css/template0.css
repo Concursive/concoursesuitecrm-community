@@ -211,24 +211,115 @@ A:visited:hover{color:#FF3300;}
 .underline { text-decoration: underline; }
 .smallfooter { color: #000000; text-align: center; }
 
-.calendar { background: #BFBFBB; }
-.monthName { background: #DEE0FA; color: #000000; font-weight: bold; text-align: center; }
-.monthArrowPrev { background: #DEE0FA; color: #000000; font-weight: bold; text-align: center; }
-.monthArrowNext { background: #DEE0FA; color: #000000; font-weight: bold; text-align: center; }
-.weekName { background: #CCCCCC; color: #000000; text-align: center; }
-.selectedWeek { background: #FEFFB2;}
-.weekSelector { background: #EDEDED;}
-.selectedDay { background: #FEFFB2;}
-.day { background: white; color: #000000; font-family: arial, verdana; font-weight: normal; text-align: left; }
-.highlightday { background: #66FF66; color: #000000; font-family: arial, verdana; font-weight: normal; text-align: left; }
-.noday { background: #C9C9C9; color: #000000; font-family: arial, verdana; font-weight: normal; text-align: left; }
-.today { background: #C6E7FF; color: #000000; font-family: arial, verdana; font-weight: bold; text-align: left; }
-
-.smallcalendar { background: #FFFFFF; }
-.smallmonthName { background: #3366CC; color: #FFFFFF; font-weight: bold; text-align: center; }
+.calendar { 
+  background: #BFBFBB;
+  border: 1px solid #000;
+}
+.calendar th { 
+  text-align: center;
+  background: #DEE0FA;
+  border-bottom: 1px solid #000;
+  border-right: 1px solid #666;
+  font-weight: normal;
+}
+.calendar td {
+  border-bottom: 1px solid #666 !important;
+  border-right: 1px solid #666 !important;
+}
+.monthName { 
+  background: #DEE0FA;
+  color: #000000;
+  text-align: center;
+}
+.monthArrowPrev { 
+  background: #DEE0FA;
+  color: #000000;
+  font-weight: bold;
+  text-align: center;
+}
+.monthArrowNext {
+  background: #DEE0FA;
+  color: #000000;
+  font-weight: bold;
+  text-align: center;
+}
+.weekName {
+  background: #CCCCCC;
+  color: #000000;
+  text-align: center;
+}
+.selectedWeek {
+  background: #FEFFB2;
+  text-align: left;
+  cursor: pointer;
+}
+.weekSelector { 
+  background: #EDEDED;
+  text-align: left;
+}
+.selectedDay { 
+  background: #FEFFB2;
+  text-align: left;
+  cursor: pointer;
+}
+.day { 
+  background: white;
+  color: #000000; 
+  font-weight: normal; 
+  text-align: left;
+  cursor: pointer;
+}
+.highlightday { 
+  background: #66FF66;
+  color: #000000;
+  font-weight: normal;
+  text-align: left;
+  cursor: pointer;
+}
+.noday { 
+  background: #EEEEEE;
+  color: #000000;
+  font-weight: normal;
+  text-align: left;
+  cursor: pointer;
+}
+.today {
+  background: #C6E7FF;
+  color: #000000;
+  font-weight: bold;
+  text-align: left;
+  cursor: pointer;
+}
+.dayIcon td {
+  border: none !important;
+  cursor: pointer;
+}
+.smallcalendar {
+  background: #FFFFFF;
+  border: 1px solid #000;
+}
+.smallcalendar th {
+  text-align: center;
+  background: #DEE0FA;
+  border: none;
+}
+.smallcalendar td {
+  border: none;
+  text-align: center;
+}
+.smallmonthName {
+  background: #DEE0FA;
+  color: #000;
+  font-weight: bold;
+  text-align: center;
+}
 .smallmonthArrowPrev { background: #3366CC; color: #FFFFFF; font-weight: bold; text-align: center; }
 .smallmonthArrowNext { background: #3366CC; color: #FFFFFF; font-weight: bold; text-align: center; }
-.smallweekName { background: #CCCCCC; color: #000000; text-align: center; }  
+.smallweekName {
+  background: #CCCCCC;
+  color: #000000;
+  text-align: center;
+}
 .smallday { background: white; color: #000000; font-weight: normal; text-align: right; }
 .smallhighlightday { background: white; color: #FF0000; font-weight: normal; text-align: right; }
 .smallnoday { background: #EEEEEE; color: #000000; font-weight: normal; text-align: right; }

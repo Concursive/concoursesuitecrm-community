@@ -17,10 +17,10 @@
     window.frames['calendardetails'].location.href='MyCFS.do?command=Alerts&source=calendarDetails&return=<%=returnPage%>&inline=true';
   }
 </script>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" style="border: 1px solid #000">
   <tr>
     <td>
-<table cellpadding="0" cellspacing="0" border="0" width="100%" class="empty">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
   <%-- User Selected Info --%>
   <tr>
     <td width="100%" valign="top" colspan="2" height="20" style="text-align: center !important">

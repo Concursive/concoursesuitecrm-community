@@ -62,7 +62,6 @@
 </script>
 <form name="monthBean" action="MyCFS.do?command=MonthView&source=calendar<%= returnPage!=null?"&return="+returnPage:"" %>" method="post">
 <%
-      CompanyCalendar.setBorderSize(1);
       CompanyCalendar.setCellPadding(4);
       CompanyCalendar.setCellSpacing(0);
       CompanyCalendar.setSortEvents(true);
@@ -72,10 +71,10 @@
       CompanyCalendar.setShowSubject(false);
 %>
 <%= CompanyCalendar.getHtml() %>
-<table bgcolor="#FFFFFF" width="98%" border="0" cellpadding="4" cellspacing="0" border="0">
+<table bgcolor="#FFFFFF" width="98%" border="0" cellpadding="4" cellspacing="0">
   <tr>
     <td>
-    <table bgcolor="#FFFFFF" width="100%" border="0" cellpadding="0" cellspacing="0" border="0">
+    <table bgcolor="#FFFFFF" width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td nowrap>
           <img border='0' src='images/accounts.gif'> -- Accounts

@@ -51,11 +51,9 @@
   if ((action != null) && (action.equals("popup"))) {
     out.println("<input type=\"hidden\" name=\"action\" value=\"popup\">");
     cal.setPopup(true);
-    cal.setBorderSize(0);
   } else {
     cal.setHeaderSpace(true);
     cal.setMonthArrows(true);
-    cal.setBorderSize(1);
     //cal.showWeekSelector(false);    //Not implemented yet
   }
   

@@ -48,7 +48,8 @@ function switchStyle(E){
 <dhv:evaluate exp="<%= CalendarInfo.isAgendaView() %>">      
         <tr class="weekSelector">
           <td colspan="2" width="100%">
-            <strong><%= toFullDateString(Calendar.getInstance().getTime()) %> <font color="#006699">(Today)</font></strong>
+            <strong><%= toFullDateString(Calendar.getInstance().getTime()) %>
+            <font color="#006699">(Today)</font></strong>
           </td>
         </tr>
 </dhv:evaluate>

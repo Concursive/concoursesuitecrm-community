@@ -50,7 +50,6 @@ public class CalendarView {
   protected boolean popup = false;
   protected boolean showSubject = true;
 
-  protected String borderSize = "";
   protected String cellPadding = "";
   protected String cellSpacing = "";
   protected int numberOfCells = 42;
@@ -341,17 +340,6 @@ public class CalendarView {
       this.setMonthArrows(true);
       this.setSmallView(true);
     }
-  }
-
-
-  /**
-   *  Sets the BorderSize attribute of the CalendarView object
-   *
-   *@param  tmp  The new BorderSize value
-   *@since
-   */
-  public void setBorderSize(int tmp) {
-    this.borderSize = " border='" + tmp + "'";
   }
 
 
@@ -927,8 +915,8 @@ public class CalendarView {
     }
     //Display Calendar
     html.append(
-        "<center><table height=\"100%\" width='" + tableWidth + "'" + borderSize + cellSpacing + cellPadding + " class='" + pre + "calendar' bordercolorlight='#000000' bordercolor='#FFFFFF' id='calendarTable'>" +
-        "<tr name=\"staticrow\" class=\"title\" height=\"4%\">");
+        "<center><table height=\"100%\" width='" + tableWidth + "'" + cellSpacing + cellPadding + " class='" + pre + "calendar' id='calendarTable'>" +
+        "<tr name=\"staticrow\" height=\"4%\">");
 
     //Display Previous Month Arrow
     if (popup) {
@@ -949,13 +937,13 @@ public class CalendarView {
         html.append("<th colspan='1' class='" + pre + "monthArrowNext'>" + monthArrowNext + "</th>");
       }
     } else {
-      html.append("<td colspan=\"8\" align=\"center\">");
+      html.append("<th colspan=\"8\">");
       html.append(getHtmlMonthSelect());
       html.append("&nbsp;");
       html.append(getHtmlYearSelect());
       html.append("&nbsp;");
       html.append("<a href=\"javascript:showToDaysEvents('" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "','" + Calendar.getInstance().get(Calendar.DATE) + "','" + Calendar.getInstance().get(Calendar.YEAR) + "');\">Today</a>");
-      html.append("</td>");
+      html.append("</th>");
     }
     html.append("</tr>");
 
@@ -1029,7 +1017,7 @@ public class CalendarView {
         if (!popup) {
           if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
             if (displayMonth == calendarInfo.getStartMonthOfWeek() && displayDay == calendarInfo.getStartDayOfWeek()) {
-              html.append(" class=\"weekSelected\" ");
+              html.append(" class=\"selectedWeek\" ");
               tdClass = "selectedDay";
             }
           }
@@ -1116,20 +1104,16 @@ public class CalendarView {
           Set s = events.keySet();
           Iterator i = s.iterator();
           int count = 0;
-          html.append("<table width=\"12%\" align=center cellspacing=0 cellpadding=0 border=0>");
+          html.append("<table width=\"12%\" align=\"center\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" class=\"dayIcon\">");
           while (i.hasNext()) {
             Object eventCategory = i.next();
             if (((Integer) events.get(eventCategory)).intValue() > 0) {
-              if (count++ == 0) {
-                html.append("<tr><td>" + CalendarEvent.getIcon(String.valueOf(eventCategory)) + "</td><td> " + events.get(eventCategory) + "</td></tr>");
-              } else {
-                html.append("<tr><td>" + CalendarEvent.getIcon(String.valueOf(eventCategory)) + "</td><td> " + events.get(eventCategory) + "</td></tr>");
-              }
+              ++count;
+              html.append("<tr><td>" + CalendarEvent.getIcon(String.valueOf(eventCategory)) + "</td><td> " + events.get(eventCategory) + "</td></tr>");
             }
           }
           html.append("</table>");
         }//end of events display.
-        
       }
       html.append("</td>");
 
