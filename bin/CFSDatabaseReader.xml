@@ -8,11 +8,11 @@
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunities</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportTickets</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCalls</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportProjects</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportFolders</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunityReports</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportAccountReports</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportRevenue</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportProjects</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportDocuments</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCommunications</module>
   </processes>
@@ -205,6 +205,22 @@
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>alertDate</property>
+    </map>
+    <map class="com.zeroio.iteam.base.Project" id="project">
+      <property alias="guid">id</property>
+      <property lookup="lookupDepartment">departmentId</property>
+      <property>title</property>
+      <property>shortDescription</property>
+      <property>requestedBy</property>
+      <property>requestedByDept</property>
+      <property>requestDate</property>
+      <property>approvalDate</property>
+      <property>approved</property>
+      <property>closeDate</property>
+      <property>entered</property>
+      <property lookup="user">enteredBy</property>
+      <property>modified</property>
+      <property lookup="user">modifiedBy</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.ContactEmailAddress" id="contactEmailAddress">
       <property alias="guid">id</property>
