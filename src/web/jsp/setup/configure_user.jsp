@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="user" class="org.aspcfs.modules.setup.beans.UserBean" scope="request"/>
+<jsp:useBean id="user" class="org.aspcfs.modules.setup.beans.UserSetupBean" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
 <script language="JavaScript">
