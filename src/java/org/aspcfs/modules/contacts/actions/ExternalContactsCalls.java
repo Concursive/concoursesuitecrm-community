@@ -29,42 +29,29 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandView(ActionContext context) {
-
-    if (!(hasPermission(context, "contacts-external_contacts-calls-view"))) {
+    if (!hasPermission(context, "contacts-external_contacts-calls-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
     String contactId = context.getRequest().getParameter("contactId");
-
     addModuleBean(context, "External Contacts", "Calls");
-
     PagedListInfo callListInfo = this.getPagedListInfo(context, "CallListInfo");
     callListInfo.setLink("/ExternalContactsCalls.do?command=View&contactId=" + contactId);
-
     Connection db = null;
     CallList callList = new CallList();
     Contact thisContact = null;
-
     try {
       db = this.getConnection(context);
       callList.setPagedListInfo(callListInfo);
       callList.setContactId(contactId);
       callList.buildList(db);
-
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
-
-      LookupList callTypeList = new LookupList(db, "lookup_call_types");
-      callTypeList.addItem(0, "--None--");
-      context.getRequest().setAttribute("CallTypeList", callTypeList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (!hasAuthority(context, thisContact.getOwner())) {
         return ("PermissionError");
