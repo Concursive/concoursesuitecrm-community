@@ -67,7 +67,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "View Accounts", "View Documents");
+    addModuleBean(context, "ViewTickets", "View Documents");
     if (errorMessage == null) {
       return ("ViewOK");
     } else {
@@ -105,7 +105,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "View Accounts", "Upload Document");
+    addModuleBean(context, "ViewTickets", "Upload Document");
     if (errorMessage == null) {
       return ("AddOK");
     } else {
@@ -232,7 +232,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "View Accounts", "Upload New Document Version");
+    addModuleBean(context, "ViewTickets", "Upload New Document Version");
     if (errorMessage == null) {
       return ("AddVersionOK");
     } else {
@@ -353,7 +353,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "View Accounts", "Document Details");
+    addModuleBean(context, "ViewTickets", "Document Details");
     if (errorMessage == null) {
       return ("DetailsOK");
     } else {
@@ -458,7 +458,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       return ("-none-");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
-      addModuleBean(context, "View Accounts", "");
+      addModuleBean(context, "ViewTickets", "");
       return ("SystemError");
     }
   }
@@ -495,7 +495,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "View Accounts", "Modify Document Information");
+    addModuleBean(context, "ViewTickets", "Modify Document Information");
     if (errorMessage == null) {
       return ("ModifyOK");
     } else {
@@ -541,7 +541,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "View Accounts", "");
+    addModuleBean(context, "ViewTickets", "");
     if (errorMessage == null) {
       if (recordInserted) {
         return ("UpdateOK");
@@ -588,7 +588,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "View Accounts", "Delete Document");
+    addModuleBean(context, "ViewTickets", "Delete Document");
     if (errorMessage == null) {
       if (recordDeleted) {
         return ("DeleteOK");
