@@ -92,7 +92,7 @@ Process Details<br>
   </tr>
   <tr>
     <td width="50%">
-      <strong>Results</strong>
+      <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Results</strong>
     </td>
     <td width="50%" nowrap>
       <strong>Go to</strong>
