@@ -18,13 +18,13 @@ import java.sql.*;
 public class ObjectHookComponent {
 
   /**
-   *  Gets the connection attribute of the ObjectHookComponent class
+   *  Gets a database connection from the connection pool in the context
    *
    *@param  context           Description of the Parameter
    *@return                   The connection value
    *@exception  SQLException  Description of the Exception
    */
-  protected static Connection getConnection(ComponentContext context) throws SQLException {
+  public static Connection getConnection(ComponentContext context) throws SQLException {
     ConnectionPool sqlDriver = (ConnectionPool) context.getAttribute("ConnectionPool");
     ConnectionElement ce = (ConnectionElement) context.getAttribute("ConnectionElement");
     return sqlDriver.getConnection(ce);
@@ -32,12 +32,12 @@ public class ObjectHookComponent {
 
 
   /**
-   *  Description of the Method
+   *  Returns a database connection to the connection pool in the context
    *
    *@param  context  Description of the Parameter
    *@param  db       Description of the Parameter
    */
-  protected static void freeConnection(ComponentContext context, Connection db) {
+  public static void freeConnection(ComponentContext context, Connection db) {
     if (db != null) {
       ConnectionPool sqlDriver = (ConnectionPool) context.getAttribute("ConnectionPool");
       sqlDriver.free(db);
@@ -52,7 +52,7 @@ public class ObjectHookComponent {
    *@param  context  Description of the Parameter
    *@return          The fileLibraryPath value
    */
-  protected static String getFileLibraryPath(ComponentContext context) {
+  public static String getFileLibraryPath(ComponentContext context) {
     return context.getParameter("FileLibraryPath");
   }
 }
