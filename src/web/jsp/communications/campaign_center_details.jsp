@@ -82,7 +82,7 @@ Campaign Details
               <tr class="containerBody">
                 <td align="center">
                   <dhv:evaluate if="<%= Campaign.hasSurvey() %>">
-                    <font color="green">Interactive Response</font><br>
+                    <font color="green">Survey</font><br>
                   </dhv:evaluate>
                   <dhv:evaluate if="<%= fileItemList.size() > 0 %>">
                     <font color="green">Files</font><br>

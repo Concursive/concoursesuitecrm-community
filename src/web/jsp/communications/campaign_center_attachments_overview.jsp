@@ -30,11 +30,11 @@ Attachments
   </tr>
   <tr class="containerBody">
     <td width="50" valign="top" nowrap class="formLabel">
-      Interactive Responses
+      Surveys
     </td>
     <td width="100%" valign="top">
       <a href="CampaignManager.do?command=ViewAttachment&id=<%= Campaign.getId() %>">
-        Change interactive response attachment
+        Change survey
       </a>
       <dhv:evaluate if="<%= Campaign.hasSurvey() %>">
         <br>Attached: <%= Survey.getName() %>&nbsp;
