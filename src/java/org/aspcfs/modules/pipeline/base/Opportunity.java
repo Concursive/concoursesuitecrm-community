@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -108,13 +108,10 @@ public class Opportunity extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int oppId) throws SQLException {
-
-    Statement st = null;
-    ResultSet rs = null;
-
-    StringBuffer sql = new StringBuffer();
-
-    sql.append(
+    if (oppId == -1) {
+      throw new SQLException("Valid opportunity ID not specified.");
+    }
+    PreparedStatement pst=db.prepareStatement(
         "SELECT x.*, y.description as stagename, org.name as acct_name, org.enabled as accountenabled, " +
         "ct.namelast as last_name, ct.namefirst as first_name, " +
         "ct.company as ctcompany," +
@@ -128,26 +125,19 @@ public class Opportunity extends GenericBean {
         "LEFT JOIN contact ct_mb ON (x.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id), " +
         "lookup_stage y " +
-        "WHERE y.code = x.stage ");
-
-    if (oppId > -1) {
-      sql.append("AND opp_id = " + oppId + " ");
-    } else {
-      throw new SQLException("Valid opportunity ID not specified.");
-    }
-
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+        "WHERE y.code = x.stage " +
+        "AND opp_id = ? ");
+    pst.setInt(1, oppId);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     } else {
       rs.close();
-      st.close();
+      pst.close();
       throw new SQLException("Opportunity record not found.");
     }
     rs.close();
-    st.close();
-
+    pst.close();
   }
 
 
@@ -641,6 +631,9 @@ public class Opportunity extends GenericBean {
    *@since
    */
   public void setCloseProb(String closeProb) {
+    if (closeProb != null && closeProb.endsWith("%")) {
+      closeProb = closeProb.substring(0, closeProb.length() - 1);
+    }
     this.closeProb = ((Double.parseDouble(closeProb)) / 100);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity-> Close prob: " + closeProb);
@@ -655,6 +648,9 @@ public class Opportunity extends GenericBean {
    *@since
    */
   public void setCommission(String commission) {
+    if (commission != null && commission.endsWith("%")) {
+      commission = commission.substring(0, commission.length() - 1);
+    }
     this.commission = ((Double.parseDouble(commission)) / 100);
   }
 
