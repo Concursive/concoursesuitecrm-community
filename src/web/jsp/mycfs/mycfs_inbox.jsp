@@ -81,7 +81,8 @@ Mailbox
       <%= InboxInfo.getSortIcon("sent_namelast") %>
     </th>
     <th width="30%" nowrap>
-      <strong>Received</strong>
+      <strong><a href="MyCFSInbox.do?command=Inbox&column=m.entered">Received</a></strong>
+      <%= InboxInfo.getSortIcon("m.entered") %>
   <%} else {%>
     <th width="30%" nowrap>
       <strong>To</strong>
@@ -103,22 +104,22 @@ Mailbox
       rowid = (rowid != 1?1:2);
       CFSNote thisNote = (CFSNote) j.next();
 %>      
-  <tr>
-    <td valign="center" nowrap class="row<%= rowid %>">
+  <tr class="row<%= rowid %>">
+    <td valign="center" nowrap>
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
         <a href="javascript:displayMenu('select<%= count %>','menuNote', '<%= Constants.CFSNOTE %>', '<%=  thisNote.getId() %>');"
          onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuNote');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
   <% if (InboxInfo.getListView().equalsIgnoreCase("new")){ %>
-		<td valign="center" nowrap class="row<%= rowid %>">
+		<td valign="center" nowrap>
       <%= toHtml(thisNote.getStatusText()) %>
     </td>
   <%}%>
-		<td class="row<%= rowid %>">
+		<td>
       <a href="MyCFSInbox.do?command=CFSNoteDetails&id=<%= thisNote.getId() %>"><%= toHtml(thisNote.getSubject()) %></a>
 		</td>
   <% if (!InboxInfo.getListView().equalsIgnoreCase("sent")){ %>
-		<td valign="center" class="row<%= rowid %>" nowrap><%= toHtml(thisNote.getSentName()) %></td>
+		<td valign="center" nowrap><%= toHtml(thisNote.getSentName()) %></td>
   <%}else{
 		HashMap recipients = thisNote.getRecipientList();
 		Set s = recipients.keySet();
@@ -138,10 +139,10 @@ Mailbox
       }
 		}
 		%>  
-		<td valign="center" class="row<%= rowid %>"><%= recipientList.toString() %></td>
+		<td valign="center"><%= recipientList.toString() %></td>
                 <%
 		}%>
-		<td valign="center" class="row<%= rowid %>" nowrap>
+		<td valign="center" nowrap>
       <zeroio:tz timestamp="<%= thisNote.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
