@@ -362,6 +362,9 @@
     keytool -import -trustcacerts -alias comodo -file ComodoSecurityServicesCA.crt -keystore ${CFS_HOME}/WEB-INF/keystore
     keytool -import -trustcacerts -alias cfs -file domain.crt -keystore ${CFS_HOME}/WEB-INF/keystore
     -->
+    <!-- Export the certificate for a client app to use
+    keytool -export -alias cfs -file ${CFS_HOME}/WEB-INF/domain.cert -keystore ${CFS_HOME}/WEB-INF/keystore
+    -->
   </target>
   
   <!-- Copy all data to the web-app folder and finalize any items -->
