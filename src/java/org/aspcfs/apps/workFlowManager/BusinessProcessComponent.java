@@ -57,14 +57,14 @@ public class BusinessProcessComponent {
       while (parameterElements.hasNext()) {
         Element parameterElement = (Element) parameterElements.next();
         String parameterEnabled = (String) parameterElement.getAttribute("enabled");
-        if (enabled == Constants.TRUE && parameterEnabled != null && "false".equals(parameterEnabled)) {
-          break;
+        if ((enabled != Constants.TRUE) ||
+            (enabled == Constants.TRUE && (parameterEnabled == null || !"false".equals(parameterEnabled)))) {
+          ComponentParameter thisParameter = new ComponentParameter(parameterElement, enabled);
+          if (this.parameters == null) {
+            this.parameters = new ArrayList();
+          }
+          this.parameters.add(thisParameter);
         }
-        ComponentParameter thisParameter = new ComponentParameter(parameterElement, enabled);
-        if (this.parameters == null) {
-          this.parameters = new ArrayList();
-        }
-        this.parameters.add(thisParameter);
       }
     }
   }

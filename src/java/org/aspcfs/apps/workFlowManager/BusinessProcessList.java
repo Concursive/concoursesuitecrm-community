@@ -112,13 +112,13 @@ public class BusinessProcessList extends HashMap {
     while (processElements.hasNext()) {
       Element processElement = (Element) processElements.next();
       String processEnabled = (String) processElement.getAttribute("enabled");
-      if (enabled == Constants.TRUE && processEnabled != null && "false".equals(processEnabled)) {
-        break;
-      }
-      BusinessProcess thisProcess = new BusinessProcess(processElement, enabled);
-      this.put(thisProcess.getName(), thisProcess);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("BusinessProcessList-> Added: " + thisProcess.getName());
+      if ((enabled != Constants.TRUE) ||
+          (enabled == Constants.TRUE && (processEnabled == null || !"false".equals(processEnabled)))) {
+        BusinessProcess thisProcess = new BusinessProcess(processElement, enabled);
+        this.put(thisProcess.getName(), thisProcess);
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("BusinessProcessList-> Added: " + thisProcess.getName());
+        }
       }
     }
   }

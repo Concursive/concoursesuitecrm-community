@@ -52,11 +52,11 @@ public class BusinessProcess extends HashMap {
       while (componentElements.hasNext()) {
         Element componentElement = (Element) componentElements.next();
         String componentEnabled = (String) componentElement.getAttribute("enabled");
-        if (enabled == Constants.TRUE && componentEnabled != null && "false".equals(componentEnabled)) {
-          break;
+        if ((enabled != Constants.TRUE) ||
+            (enabled == Constants.TRUE && (componentEnabled == null || !"false".equals(componentEnabled)))) {
+          BusinessProcessComponent thisComponent = new BusinessProcessComponent(componentElement, enabled);
+          this.put(new Integer(thisComponent.getId()), thisComponent);
         }
-        BusinessProcessComponent thisComponent = new BusinessProcessComponent(componentElement, enabled);
-        this.put(new Integer(thisComponent.getId()), thisComponent);
       }
       //Link the components together
       Iterator cList = this.values().iterator();
@@ -85,14 +85,14 @@ public class BusinessProcess extends HashMap {
       while (parameterElements.hasNext()) {
         Element parameterElement = (Element) parameterElements.next();
         String parameterEnabled = (String) parameterElement.getAttribute("enabled");
-        if (enabled == Constants.TRUE && parameterEnabled != null && "false".equals(parameterEnabled)) {
-          break;
+        if ((enabled != Constants.TRUE) ||
+            (enabled == Constants.TRUE && (parameterEnabled == null || !"false".equals(parameterEnabled)))) {
+          ComponentParameter thisParameter = new ComponentParameter(parameterElement, enabled);
+          if (this.parameters == null) {
+            this.parameters = new ArrayList();
+          }
+          this.parameters.add(thisParameter);
         }
-        ComponentParameter thisParameter = new ComponentParameter(parameterElement, enabled);
-        if (this.parameters == null) {
-          this.parameters = new ArrayList();
-        }
-        this.parameters.add(thisParameter);
       }
     }
   }
