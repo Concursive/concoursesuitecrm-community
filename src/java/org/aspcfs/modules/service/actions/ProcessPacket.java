@@ -2,16 +2,16 @@
  *  Copyright 2002 Dark Horse Ventures
  *  Class begins with "Process" so it bypasses security
  */
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.service.actions;
 
+import org.aspcfs.modules.actions.CFSModule;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.theseus.actions.*;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.controller.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.controller.*;
 import java.io.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
