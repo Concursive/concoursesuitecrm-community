@@ -136,8 +136,8 @@ public class CategoryEditor {
    */
   public void build(Connection db) throws SQLException {
     categoryList.clear();
+    topCategoryList.clear();
     //Get the top level categories
-    topCategoryList = new TicketCategoryDraftList();
     topCategoryList.setBuildHierarchy(false);
     topCategoryList.setTopLevelOnly(true);
     topCategoryList.buildList(db);
