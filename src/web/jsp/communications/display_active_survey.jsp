@@ -23,7 +23,7 @@ function checkForm(form){
       var field = required[i];
       var checked = "false" ;
       var length = required[++i];
-      for(j = 0 ; j < length ; j++){
+      for(j = 1 ; j <= length ; j++){
         thisItem = document.getElementById(field + j);
         if(thisItem.checked){
           checked = "true";
