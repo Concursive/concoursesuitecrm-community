@@ -3145,7 +3145,7 @@ Once activated, today&apos;s campaigns will begin processing in under 5 minutes 
 <tips/>
 </pageDescription>
 </module>
-<module contentLevel="2" name="Tickets">
+<module contentLevel="2" name="Help Desk">
 <briefDescription>You are looking at the Help Desk module home page. The dashboard shows the most recent tickets that have been assigned to you, as well as tickets that are in your department, and tickets that have been created by you. You can add new tickets, search for existing tickets based on different filters and export ticket data.
 </briefDescription>
 <detailDescription>The Help Desk module has four main features.

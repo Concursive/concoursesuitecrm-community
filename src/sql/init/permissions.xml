@@ -11,7 +11,7 @@
       <permission name="globalitems-myitems" attributes="v---" description="Access to My Items"/>
       <permission name="globalitems-recentitems" attributes="v---" description="Access to Recent Items"/>
     </category>
-    <category id="14" name="My Home Page" folders="false" lookups="false">
+    <category id="14" name="My Home Page" folders="false" lookups="false" reports="true">
       <permission name="myhomepage" attributes="v---" description="Access to My Home Page module"/>
       <permission name="myhomepage-dashboard" attributes="v---" description="View Performance Dashboard"/>
       <permission name="myhomepage-miner" attributes="va-d" description="Industry News records" enabled="false"/>
@@ -88,7 +88,7 @@
       <permission name="autoguide" attributes="v---" description="Access to the Auto Guide module"/>
       <permission name="autoguide-adruns" attributes="--e-" description="Ad Run complete status"/>
     </category>
-    <category id="6" name="Communications" folders="false" lookups="false">
+    <category id="6" name="Communications" folders="false" lookups="false" reports="true">
       <permission name="campaign" attributes="v---" description="Access to Communications module"/>
       <permission name="campaign-dashboard" attributes="v---" description="Dashboard"/>
       <permission name="campaign-campaigns" attributes="vaed" description="Campaign Records"/>
@@ -104,7 +104,7 @@
       <permission name="projects-projects" attributes="vaed" description="Project Records"/>
     </category>
     <category id="8" name="Help Desk" folders="true" lookups="true" reports="true" scheduledEvents="true" objectEvents="true" categories="true">
-      <folder constantId="11072003" description="Help Desk"/>
+      <folder constantId="11072003" description="Tickets"/>
       <lookup constantId="1" class="lookupList" table="lookup_ticketsource" description="Ticket Source"/>
       <lookup constantId="2" class="lookupList" table="ticket_severity" description="Ticket Severity"/>
       <lookup constantId="3" class="lookupList" table="ticket_priority" description="Ticket Priority"/>
@@ -125,7 +125,7 @@
     <category id="16" name="Reports" folders="false" lookups="false">
       <permission name="reports" attributes="v---" description="Access to Reports module"/>
     </category>
-    <category id="9" name="Admin" folders="false" lookups="false">
+    <category id="9" name="Admin" folders="false" lookups="false" reports="true">
       <permission name="admin" attributes="v---" description="Access to Admin module"/>
       <permission name="admin-users" attributes="vaed" description="Users"/>
       <permission name="admin-roles" attributes="vaed" description="Roles"/>

@@ -3,7 +3,7 @@
   that executes the WorkflowManager when a ticket is updated or inserted,
   the corresponding process is activated -->
   <hooks>
-    <hook class="org.aspcfs.modules.troubletickets.base.Ticket" module="Tickets">
+    <hook class="org.aspcfs.modules.troubletickets.base.Ticket" module="Help Desk">
       <actions>
         <action type="update" process="dhv.ticket.insert" enabled="true"/>
         <action type="insert" process="dhv.ticket.insert" enabled="true"/>
@@ -13,7 +13,7 @@
   <!-- Each process describes the workflow for the various object and action
     that is being hooked-->
   <processes>
-    <process name="dhv.ticket.insert" description="Ticket change notification" startId="1" type="OBJECT_EVENT" module="Tickets">
+    <process name="dhv.ticket.insert" description="Ticket change notification" startId="1" type="OBJECT_EVENT" module="Help Desk">
       <parameters>
         <!-- Global parameters for the process override the defaults from Dark Horse CRM -->
         <!--
@@ -76,7 +76,7 @@ Comment: ${this.comment}
     </process>
     
     <!-- Example of a Scheduled Event -->
-    <process name="dhv.report.ticketList.overdue" description="Overdue ticket notification" startId="1" type="SCHEDULED_EVENT" module="Tickets">
+    <process name="dhv.report.ticketList.overdue" description="Overdue ticket notification" startId="1" type="SCHEDULED_EVENT" module="Help Desk">
       <parameters>
         <!--
         <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
