@@ -26,7 +26,6 @@ public class GraphSummaryList extends Hashtable {
   public GraphSummaryList() {
     String[] valKeys = getRange(12);
     Double initialVal = new Double(0.0);
-
     for (int i = 0; i < 12; i++) {
       this.values.put(valKeys[i], initialVal);
     }
@@ -59,11 +58,11 @@ public class GraphSummaryList extends Hashtable {
    *@param  which  The new Value value
    *@param  val    The new Value value
    */
-  public void setValue(String which, Double val) {
-    if (!(this.values.containsKey(which))) {
-      this.values.put(which, val);
+  public void setValue(String yearMonth, Double val) {
+    if (!this.values.containsKey(yearMonth)) {
+      this.values.put(yearMonth, val);
     } else {
-      addToValue(which, val);
+      addToValue(yearMonth, val);
     }
   }
 
@@ -122,21 +121,15 @@ public class GraphSummaryList extends Hashtable {
    */
   public String[] getRange(int size) {
     String[] valKeys = new String[size];
-
-    java.util.Date d = new java.util.Date();
-    java.util.Calendar rightNow = java.util.Calendar.getInstance();
-    rightNow.setTime(d);
-
-    int day = rightNow.get(java.util.Calendar.DATE);
-    int year = rightNow.get(java.util.Calendar.YEAR);
-    int month = rightNow.get(java.util.Calendar.MONTH);
-
+    Calendar rightNow = Calendar.getInstance();
+    int day = rightNow.get(Calendar.DATE);
+    int year = rightNow.get(Calendar.YEAR);
+    int month = rightNow.get(Calendar.MONTH);
     for (int x = 0; x < size; x++) {
-      valKeys[x] = ("" + year) + ("" + month);
-      rightNow.add(java.util.Calendar.MONTH, +1);
-
-      year = rightNow.get(java.util.Calendar.YEAR);
-      month = rightNow.get(java.util.Calendar.MONTH);
+      valKeys[x] = String.valueOf(year) + String.valueOf(month);
+      rightNow.add(Calendar.MONTH, +1);
+      year = rightNow.get(Calendar.YEAR);
+      month = rightNow.get(Calendar.MONTH);
     }
     return valKeys;
   }
@@ -151,13 +144,10 @@ public class GraphSummaryList extends Hashtable {
    */
   public String[] getYearRange(int size, int y) {
     String[] valKeys = new String[size];
-
     Calendar rightNow = Calendar.getInstance();
     rightNow.set(Calendar.YEAR, y);
-
     int year = rightNow.get(Calendar.YEAR);
     int month = 0;
-
     for (int x = 0; x < size; x++) {
       valKeys[x] = String.valueOf(year) + String.valueOf(month);
       month++;
