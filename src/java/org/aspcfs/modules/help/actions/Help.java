@@ -31,10 +31,11 @@ public final class Help extends CFSModule {
       String section = context.getRequest().getParameter("section");
       String subsection = context.getRequest().getParameter("sub");
       db = this.getConnection(context);
-      HelpContents helpContents = new HelpContents();
-      helpContents.build(db);
-      context.getRequest().setAttribute("HelpContents", helpContents);
-      HelpItem thisItem = new HelpItem(db, module, section, subsection, this.getUserId(context));
+      HelpItem thisItem = new HelpItem();
+      thisItem.setModule(module);
+      thisItem.setSection(section);
+      thisItem.setSubsection(subsection);
+      thisItem.processRecord(db, this.getUserId(context));
       context.getRequest().setAttribute("Help", thisItem);
     } catch (Exception e) {
       errorMessage = e;
