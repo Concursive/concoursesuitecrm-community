@@ -1,5 +1,5 @@
 <%@ include file="../initPage.jsp" %>
-<form name="configure" action="SetupServer.do?command=ConfigureServerCheck" method="post">
+<form name="configure" action="SetupServerDetails.do?command=ConfigureServerCheck" method="post">
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>

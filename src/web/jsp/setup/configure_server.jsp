@@ -4,7 +4,7 @@
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <body onLoad="javascript:document.forms[0].email.focus();">
 <%= showError(request, "actionError", false) %>
-<form name="configure" action="SetupServer.do?command=ConfigureServer&auto-populate=true" method="post">
+<form name="configure" action="SetupServerDetails.do?command=ConfigureServer&auto-populate=true" method="post">
 <input type="hidden" name="configured" value="1"/>
 <table border="0" width="100%">
   <tr class="sectionTitle">
