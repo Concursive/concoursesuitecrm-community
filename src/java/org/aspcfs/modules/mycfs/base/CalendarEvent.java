@@ -277,7 +277,7 @@ public class CalendarEvent implements Comparable {
     } else if (category.equalsIgnoreCase("Accounts")) {
       return "<a href=\"javascript:popURL('/Accounts.do?command=Modify&orgId=" + id + "&popup=true&return=Calendar','CFS_Account','500','475','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Account';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
     } else if (category.equalsIgnoreCase("Assignments")) {
-      return "<a href=\"/ProjectManagementAssignments.do?command=Modify&aid=" + idsub + "&pid=" + id + "\">";
+      return "<a href=\"javascript:popURL('/ProjectManagementAssignments.do?command=Modify&aid=" + idsub + "&pid=" + id + "&popup=true&return=Calendar','CFS_Assignment','600','325','yes','no');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Assignment';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
     } else if (category.equalsIgnoreCase("Contact Calls")) {
       return "<a href=\"javascript:popURL('ExternalContactsCalls.do?command=Modify&id=" + idsub + "&contactId=" + id + "&popup=true&return=Calendar','CFS_Opportunity','550','375','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Call';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
     } else if (category.equalsIgnoreCase("Opportunity Calls")) {

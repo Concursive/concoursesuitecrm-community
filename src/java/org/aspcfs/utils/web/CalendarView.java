@@ -1083,7 +1083,7 @@ public class CalendarView {
         imageCount.put("Contact Calls", "0");
         imageCount.put("Opportunity Calls", "0");
         imageCount.put("Opportunity", "0");
-        imageCount.put("Projects", "0");
+        imageCount.put("Assignments", "0");
         imageCount.put("Accounts", "0");
         for (int i = 0; i < tmpEvents.size(); i++) {
           CalendarEvent tmpEvent = (CalendarEvent) tmpEvents.get(i);
