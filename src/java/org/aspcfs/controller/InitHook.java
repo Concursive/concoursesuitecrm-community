@@ -37,7 +37,7 @@ public class InitHook implements ControllerInitHook {
     InitHook.addAttribute(config, context, "GKDRIVER", "GATEKEEPER.DRIVER");
     InitHook.addAttribute(config, context, "GKHOST", "GATEKEEPER.URL");
     InitHook.addAttribute(config, context, "GKUSER", "GATEKEEPER.USER");
-    InitHook.addAttribute(config, context, "GKPUSERPW", "GATEKEEPER.PASSWORD");
+    InitHook.addAttribute(config, context, "GKUSERPW", "GATEKEEPER.PASSWORD");
 
     if (config.getInitParameter("ForceSSL") != null) {
       if ("true".equals(config.getInitParameter("ForceSSL"))) {
