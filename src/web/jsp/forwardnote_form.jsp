@@ -89,7 +89,6 @@
 
 </script>
 <form name="ForwardForm" action="/ForwardNote.do?command=Forward&auto-populate=true&return=<%= java.net.URLEncoder.encode(request.getParameter("return")) %>" method=POST onsubmit="selectAllOptions(document.ForwardForm.selectedList)">
-<%= request.getParameter("return") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
