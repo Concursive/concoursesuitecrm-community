@@ -8,10 +8,7 @@ import com.darkhorseventures.utils.*;
 import java.sql.*;
 import java.util.ArrayList;
 import com.darkhorseventures.webutils.*;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 import com.zeroio.iteam.base.*;
 /**
  *  The MyCFS module.
@@ -94,7 +91,6 @@ public final class MyCFS extends CFSModule {
 
 
 
-
   /**
    *  Description of the Method
    *
@@ -108,7 +104,9 @@ public final class MyCFS extends CFSModule {
       return ("PermissionError");
     }
 
-    /*Process all parameters*/
+    /*
+     *  Process all parameters
+     */
     Enumeration parameters = context.getRequest().getParameterNames();
     Exception errorMessage = null;
 
@@ -128,7 +126,6 @@ public final class MyCFS extends CFSModule {
           if (System.getProperty("DEBUG") != null) {
             System.out.println("MyCFS-> " + param + ": " + context.getRequest().getParameter(param) + "<br>");
           }
-       
         }
       }
     } catch (SQLException e) {
@@ -166,11 +163,12 @@ public final class MyCFS extends CFSModule {
     try {
       db = this.getConnection(context);
       int noteId = Integer.parseInt(context.getRequest().getParameter("id"));
-      /*For a sent message myId is a user_id else its a contactId*/
-      if(inboxInfo.getListView().equals("sent")){
+      /*
+       *  For a sent message myId is a user_id else its a contactId
+       */
+      if (inboxInfo.getListView().equals("sent")) {
         myId = getUserId(context);
-      }
-      else{
+      } else {
         myId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
       }
       CFSNote newNote = new CFSNote(db, noteId, myId, inboxInfo.getListView());
@@ -178,7 +176,7 @@ public final class MyCFS extends CFSModule {
         System.out.println("\nMYCFS view mode" + context.getRequest().getParameter("listView"));
       }
       newNote.setCurrentView(inboxInfo.getListView());
-      newNote.delete(db,myId);
+      newNote.delete(db, myId);
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -214,15 +212,16 @@ public final class MyCFS extends CFSModule {
     try {
       db = this.getConnection(context);
       int noteId = Integer.parseInt(context.getRequest().getParameter("id"));
-      /*For a sent message myId is a user_id else its a contactId*/
-      if(inboxInfo.getListView().equals("sent")){
+      /*
+       *  For a sent message myId is a user_id else its a contactId
+       */
+      if (inboxInfo.getListView().equals("sent")) {
         myId = getUserId(context);
-      }
-      else{
+      } else {
         myId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
       }
       CFSNote newNote = new CFSNote(db, noteId, myId, inboxInfo.getListView());
-   
+
       if (System.getProperty("DEBUG") != null) {
         System.out.println("MyCFS-> Status before: " + newNote.getStatus());
       }
@@ -370,16 +369,19 @@ public final class MyCFS extends CFSModule {
     try {
       int msgId = Integer.parseInt(context.getRequest().getParameter("id"));
       db = this.getConnection(context);
-      /*For a sent message myId is a user_id else its a contactId*/
-      if(inboxInfo.getListView().equals("sent")){
+      /*
+       *  For a sent message myId is a user_id else its a contactId
+       */
+      if (inboxInfo.getListView().equals("sent")) {
         myId = getUserId(context);
-      }
-      else{
+      } else {
         myId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
       }
       newNote = new CFSNote(db, msgId, myId, inboxInfo.getListView());
       if (!inboxInfo.getListView().equalsIgnoreCase("sent")) {
-        /*do not change status if its the OutBox*/
+        /*
+         *  do not change status if its the OutBox
+         */
         if (newNote.getStatus() == CFSNote.NEW) {
           newNote.setStatus(CFSNote.READ);
           newNote.updateStatus(db);
@@ -413,45 +415,27 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
-    String  returnUrl ="";
+    String returnUrl = "";
     String sendUrl = "";
     Exception errorMessage = null;
     Connection db = null;
     context.getSession().removeAttribute("selectedContacts");
     context.getSession().removeAttribute("finalContacts");
-    
+    context.getSession().removeAttribute("contactListInfo");
     try {
-    db = this.getConnection(context);
-    if(context.getSession().getAttribute("DepartmentList") == null){
-        LookupList departmentList = new LookupList(db, "lookup_department");
-        departmentList.addItem(-1, "--All Departments--");
-        context.getSession().setAttribute("DepartmentList", departmentList);
-    }
-    
-    if(context.getSession().getAttribute("ProjectListSelect") == null){
-        ProjectList projects = new ProjectList();
-        projects.setUserRange(this.getUserRange(context));
-        projects.setBuildAssignments(false);
-        projects.setBuildIssues(false);
-        projects.setGroupId(-1);
-        projects.buildList(db);
-        HtmlSelect htmlSelect = projects.getHtmlSelect();
-        htmlSelect.addItem(-1,"--All Projects--",0);
-        context.getSession().setAttribute("ProjectListSelect", htmlSelect);
-    }
-    
-    CFSNote newNote = new CFSNote();
-    context.getRequest().setAttribute("Note", newNote);
-    returnUrl = context.getRequest().getParameter("return");
-    sendUrl = context.getRequest().getParameter("sendUrl");
-    }catch (Exception e) {
+      db = this.getConnection(context);
+      CFSNote newNote = new CFSNote();
+      context.getRequest().setAttribute("Note", newNote);
+      returnUrl = context.getRequest().getParameter("return");
+      sendUrl = context.getRequest().getParameter("sendUrl");
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-    if(returnUrl!=null){
-      context.getRequest().setAttribute("returnUrl",returnUrl);
-      context.getRequest().setAttribute("sendUrl",sendUrl);
+    if (returnUrl != null) {
+      context.getRequest().setAttribute("returnUrl", returnUrl);
+      context.getRequest().setAttribute("sendUrl", sendUrl);
     }
     addModuleBean(context, "MyInbox", "");
     return ("CFSNewMessageOK");
@@ -469,41 +453,68 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
-    
+
     PagedListInfo contactListInfo = this.getPagedListInfo(context, "ContactListInfo");
     Exception errorMessage = null;
     Connection db = null;
     ContactList contactList = null;
     contactListInfo.setLink("/MyCFSInbox.do?command=ContactList");
     contactListInfo.setEnableJavaScript(true);
-    String firstFilter = "",secondFilter="";
-    
+    String firstFilter = "";
+    String secondFilter = "";
+    //Parent form needs contact name to be displayed and not email id
+    Vector parentFieldType = new Vector();
+    parentFieldType.addElement("single");
+    parentFieldType.addElement("contactsingle");
+
     HashMap selectedList = (HashMap) context.getSession().getAttribute("selectedContacts");
-    
-    /* Flush the selectedList if its a new selection*/
-    if(context.getRequest().getParameter("flushtemplist") != null){
+
+    /*
+     *  Flush the selectedList if its a new selection
+     */
+    if (context.getRequest().getParameter("flushtemplist") != null) {
       if (((String) context.getRequest().getParameter("flushtemplist")).equalsIgnoreCase("true")) {
-        if(context.getSession().getAttribute("finalContacts") != null){
-        selectedList = (HashMap)((HashMap)context.getSession().getAttribute("finalContacts")).clone();
+        if (context.getSession().getAttribute("finalContacts") != null) {
+          selectedList = (HashMap) ((HashMap) context.getSession().getAttribute("finalContacts")).clone();
         }
       }
     }
-    
+
     if (!contactListInfo.hasListFilters()) {
       //filter for departments & project teams
-        contactListInfo.addFilter(1, "0");
+      contactListInfo.addFilter(1, "0");
     }
-    
+
     HashMap finalContactList = (HashMap) context.getSession().getAttribute("finalContacts");
     boolean listDone = false;
-    /*set when User hits DONE*/
-    
     try {
       db = this.getConnection(context);
+      if (context.getRequest().getParameter("parentFieldType") != null) {
+        contactListInfo.setParentFieldType(context.getRequest().getParameter("parentFieldType"));
+      }
+      if (context.getRequest().getParameter("parentFormName") != null) {
+          contactListInfo.setParentFormName(context.getRequest().getParameter("parentFormName"));
+      }
+      if (context.getSession().getAttribute("DepartmentList") == null) {
+        LookupList departmentList = new LookupList(db, "lookup_department");
+        departmentList.addItem(-1, "--All Departments--");
+        context.getSession().setAttribute("DepartmentList", departmentList);
+      }
+
+      if (context.getSession().getAttribute("ProjectListSelect") == null) {
+        ProjectList projects = new ProjectList();
+        projects.setUserRange(this.getUserRange(context));
+        projects.setBuildAssignments(false);
+        projects.setBuildIssues(false);
+        projects.setGroupId(-1);
+        projects.buildList(db);
+        HtmlSelect htmlSelect = projects.getHtmlSelect();
+        htmlSelect.addItem(-1, "--All Projects--", 0);
+        context.getSession().setAttribute("ProjectListSelect", htmlSelect);
+      }
       firstFilter = contactListInfo.getListView();
       contactList = new ContactList();
-    
-      
+
       /*
        *  Collect the selected entries in the contactList & store it in the session's HashMap i.e checkcontact
        *  checkcontact+rowCount is the checkbox name (value is  the contact_id)
@@ -512,26 +523,28 @@ public final class MyCFS extends CFSModule {
        */
       int rowCount = 1;
       while (context.getRequest().getParameter("hiddencontactid" + rowCount) != null) {
-          int contactId = 0;
-          String emailAddress = "";
-          contactId = Integer.parseInt(context.getRequest().getParameter("hiddencontactid" + rowCount));
-          if (context.getRequest().getParameter("checkcontact" + rowCount) != null) {
-              if (context.getRequest().getParameter("contactemail" + rowCount) != null) {
-                   emailAddress = context.getRequest().getParameter("contactemail" + rowCount);
-              }
+        int contactId = 0;
+        String emailAddress = "";
+        contactId = Integer.parseInt(context.getRequest().getParameter("hiddencontactid" + rowCount));
+        if (context.getRequest().getParameter("checkcontact" + rowCount) != null) {
+          if (context.getRequest().getParameter("contactemail" + rowCount) != null) {
+            emailAddress = context.getRequest().getParameter("contactemail" + rowCount);
+          }
 
-            /*If User does not have a emailAddress replace with Name(LastFirst)*/
-          if (emailAddress.equals("")) {
-                if (context.getRequest().getParameter("hiddenname" + rowCount) != null) {
-                  emailAddress = "P:" + context.getRequest().getParameter("hiddenname" + rowCount);
+          /*
+           *  If User does not have a emailAddress replace with Name(LastFirst)
+           */
+          if (emailAddress.equals("") || parentFieldType.contains(contactListInfo.getParentFieldType())) {
+            if (context.getRequest().getParameter("hiddenname" + rowCount) != null) {
+              emailAddress = "P:" + context.getRequest().getParameter("hiddenname" + rowCount);
             }
           }
 
           if (selectedList.get(new Integer(contactId)) == null) {
-            selectedList.put(new Integer(contactId), (Object) emailAddress);
-          }else{
-              selectedList.remove(new Integer(contactId));
-              selectedList.put(new Integer(contactId), (Object) emailAddress);
+            selectedList.put(new Integer(contactId), emailAddress);
+          } else {
+            selectedList.remove(new Integer(contactId));
+            selectedList.put(new Integer(contactId), emailAddress);
           }
         } else {
           selectedList.remove(new Integer(contactId));
@@ -542,17 +555,19 @@ public final class MyCFS extends CFSModule {
       if (context.getRequest().getParameter("finalsubmit") != null) {
         if (((String) context.getRequest().getParameter("finalsubmit")).equalsIgnoreCase("true")) {
           listDone = true;
-          finalContactList = (HashMap)selectedList.clone();
+          finalContactList = (HashMap) selectedList.clone();
         }
       }
-      
-      if(context.getRequest().getParameter("listFilter1") != null){
-            secondFilter = context.getRequest().getParameter("listFilter1");
+
+      if (context.getRequest().getParameter("listFilter1") != null) {
+        secondFilter = context.getRequest().getParameter("listFilter1");
       }
-      
-        /*set Filter for retrieving addresses depending on typeOfContact*/
+
+      /*
+       *  set Filter for retrieving addresses depending on typeOfContact
+       */
       if ((firstFilter == null || firstFilter.equals(""))) {
-              firstFilter = "all";
+        firstFilter = "all";
       }
       if (firstFilter.equalsIgnoreCase("all")) {
         contactList.setPersonalId(getUserId(context));
@@ -560,8 +575,8 @@ public final class MyCFS extends CFSModule {
       }
       if (firstFilter.equalsIgnoreCase("employees")) {
         contactList.setTypeId(Contact.EMPLOYEE_TYPE);
-        if(!secondFilter.equals("")){
-           contactList.setDepartmentId(Integer.parseInt(secondFilter));
+        if (!secondFilter.equals("")) {
+          contactList.setDepartmentId(Integer.parseInt(secondFilter));
         }
       }
       if (firstFilter.equalsIgnoreCase("mycontacts")) {
@@ -573,10 +588,9 @@ public final class MyCFS extends CFSModule {
       }
       if (firstFilter.equalsIgnoreCase("myprojects")) {
         contactList.setWithProjectsOnly(true);
-        if(!secondFilter.equals("")){
-             contactList.setProjectId(Integer.parseInt(secondFilter));
+        if (!secondFilter.equals("")) {
+          contactList.setProjectId(Integer.parseInt(secondFilter));
         }
-        
       }
       contactListInfo.setListView(firstFilter);
       contactList.setPagedListInfo(contactListInfo);
@@ -589,10 +603,10 @@ public final class MyCFS extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-        context.getRequest().setAttribute("ContactList", contactList);
-        context.getSession().setAttribute("selectedContacts", selectedList);
-      if(listDone){
-          context.getSession().setAttribute("finalContacts",finalContactList);
+      context.getRequest().setAttribute("ContactList", contactList);
+      context.getSession().setAttribute("selectedContacts", selectedList);
+      if (listDone) {
+        context.getSession().setAttribute("finalContacts", finalContactList);
       }
       return ("CFSContactListOK");
     } else {
@@ -602,8 +616,7 @@ public final class MyCFS extends CFSModule {
   }
 
 
-  
-  
+
   /**
    *  Description of the Method
    *
@@ -621,7 +634,7 @@ public final class MyCFS extends CFSModule {
     if (selectedList == null) {
       selectedList = new HashMap();
     }
-    
+
     CFSNote thisNote = new CFSNote();
     thisNote.setEnteredBy(getUserId(context));
     thisNote.setModifiedBy(getUserId(context));
@@ -645,7 +658,7 @@ public final class MyCFS extends CFSModule {
     if (context.getRequest().getParameter("mailrecipients") != null) {
       copyrecipients = true;
     }
-    
+
     Contact thisContact = null;
     User thisRecord = (User) ((UserBean) context.getSession().getAttribute("User")).getUserRecord();
     thisRecord.setBuildContact(true);
@@ -657,7 +670,7 @@ public final class MyCFS extends CFSModule {
         String replyAddr = thisRecord.getContact().getEmailAddress("Business");
         recordInserted = thisNote.insert(db);
         if (!recordInserted) {
-                 processErrors(context, thisNote.getErrors());
+          processErrors(context, thisNote.getErrors());
         }
         int count = -1;
         int contactId = -1;
@@ -675,16 +688,16 @@ public final class MyCFS extends CFSModule {
             email = st.toString();
           }
           boolean isUser = false;
-          
-          thisContact = new Contact(db,hashKey.toString());
+
+          thisContact = new Contact(db, hashKey.toString());
           thisContact.checkUserAccount(db);
           thisNote.setSentTo(contactId);
           recordInserted = thisNote.insertLink(db, thisContact.hasAccount());
           if (!recordInserted) {
-                    
-                    processErrors(context, thisNote.getErrors());
+
+            processErrors(context, thisNote.getErrors());
           }
-          
+
           if ((!email.startsWith("P:")) && (copyrecipients || !thisContact.hasAccount())) {
             SMTPMessage mail = new SMTPMessage();
             mail.setHost("127.0.0.1");
@@ -719,12 +732,14 @@ public final class MyCFS extends CFSModule {
 
     if (context.getAction().getActionName().equals("ExternalContactsCallsForward")) {
       addModuleBean(context, "External Contacts", "");
-    } else {
+    } else if (context.getAction().getActionName().equals("MyCFSInbox")) {
       addModuleBean(context, "MyInbox", "");
+    } else {
+      addModuleBean(context, "My Tasks", "");
     }
-    
+
     if (errorMessage == null) {
-      context.getRequest().setAttribute("returnUrl",context.getRequest().getParameter("return"));
+      context.getRequest().setAttribute("returnUrl", context.getRequest().getParameter("return"));
       return ("SendMessageOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -732,7 +747,7 @@ public final class MyCFS extends CFSModule {
     }
   }
 
-  
+
   /**
    *  Description of the Method
    *
@@ -751,24 +766,22 @@ public final class MyCFS extends CFSModule {
     }
     String returnUrl = context.getRequest().getParameter("return");
     String sendUrl = context.getRequest().getParameter("sendUrl");
-    
+
     context.getSession().removeAttribute("selectedContacts");
     context.getSession().removeAttribute("finalContacts");
-    
-    
-    
+
     try {
-      
+
       String msgId = context.getRequest().getParameter("id");
       int noteType = Integer.parseInt(context.getRequest().getParameter("forwardType"));
       db = this.getConnection(context);
-      if(context.getSession().getAttribute("DepartmentList") == null){
+      if (context.getSession().getAttribute("DepartmentList") == null) {
         LookupList departmentList = new LookupList(db, "lookup_department");
         departmentList.addItem(-1, "--All Departments--");
         context.getSession().setAttribute("DepartmentList", departmentList);
       }
-    
-      if(context.getSession().getAttribute("ProjectListSelect") == null){
+
+      if (context.getSession().getAttribute("ProjectListSelect") == null) {
         ProjectList projects = new ProjectList();
         projects.setUserRange(this.getUserRange(context));
         projects.setBuildAssignments(false);
@@ -776,40 +789,48 @@ public final class MyCFS extends CFSModule {
         projects.setGroupId(-1);
         projects.buildList(db);
         HtmlSelect htmlSelect = projects.getHtmlSelect();
-        htmlSelect.addItem(-1,"--All Projects--",0);
+        htmlSelect.addItem(-1, "--All Projects--", 0);
         context.getSession().setAttribute("ProjectListSelect", htmlSelect);
       }
       newNote = new CFSNote();
-      if(noteType == Constants.CFSNOTE){
-      /*For a sent message myId is a user_id else its a contactId*/
-      if(inboxInfo.getListView().equals("sent")){
-        myId = getUserId(context);
-      }
-      else{
-        myId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
-      }
-      newNote = new CFSNote(db, Integer.parseInt(msgId), myId, inboxInfo.getListView());
-      HashMap recipients = newNote.buildRecipientList(db);
-      Iterator i = recipients.keySet().iterator();
-      StringBuffer recipientList = new StringBuffer();
-      while (i.hasNext()) {
-      Object st = i.next();
-      recipientList.append(st);
-      if(i.hasNext()){
-          recipientList.append(",");
+      if (noteType == Constants.CFSNOTE) {
+        /*
+         *  For a sent message myId is a user_id else its a contactId
+         */
+        if (inboxInfo.getListView().equals("sent")) {
+          myId = getUserId(context);
+        } else {
+          myId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
+        }
+
+        newNote = new CFSNote(db, Integer.parseInt(msgId), myId, inboxInfo.getListView());
+        HashMap recipients = newNote.buildRecipientList(db);
+        Iterator i = recipients.keySet().iterator();
+        StringBuffer recipientList = new StringBuffer();
+        while (i.hasNext()) {
+          Object st = i.next();
+          recipientList.append(st);
+          if (i.hasNext()) {
+            recipientList.append(",");
           }
         }
-      newNote.setSubject("Fwd: "+newNote.getSubject());
-      newNote.setBody("\n\n----Original Message----\nFrom: " + newNote.getSentName() + "\nSent: " + newNote.getEnteredDateTimeString() +
-      "\nTo: " +	recipientList.toString() + "\nSubject: " + newNote.getSubject() + "\n\n" + newNote.getBody() +"\n\n");
+        newNote.setSubject("Fwd: " + newNote.getSubject());
+        newNote.setBody("\n\n----Original Message----\nFrom: " + newNote.getSentName() + "\nSent: " + newNote.getEnteredDateTimeString() +
+            "\nTo: " + recipientList.toString() + "\nSubject: " + newNote.getSubject() + "\n\n" + newNote.getBody() + "\n\n");
+      } else if (noteType == Constants.CONTACTS_CALLS) {
+        Call thisCall = new Call(db, msgId);
+        newNote.setBody("Contact Name: " + thisCall.getContactName() + "\nType: " + thisCall.getCallType() + "\nLength: " + thisCall.getLengthText() +
+            "\nSubject: " + thisCall.getSubject() + "\nNotes: " + thisCall.getNotes() + "\nEntered: "
+             + thisCall.getEnteredName() + " - " + thisCall.getEnteredString() + "\nModified: " +
+            thisCall.getModifiedName() + " - " + thisCall.getModifiedString());
+      } else if (noteType == Constants.TASKS) {
+        Task thisTask = new Task(db, Integer.parseInt(msgId));
+        String userName = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getNameLastFirst();
+        newNote.setBody("------Task Details------\n\n" +
+            "Task :" + thisTask.getDescription() + "\nFrom: " + userName + "\nDue Date :"
+             + thisTask.getDueDateString() + ((thisTask.getNotes().equals("")) ? "" : "Relevant Notes : ") + thisTask.getNotes() + "\n\n" +
+            "-----------------------\n\n");
       }
-      else if(noteType == Constants.CONTACTS_CALLS){
-      Call thisCall = new Call(db, msgId);
-      newNote.setBody("Contact Name: " + thisCall.getContactName() + "\nType: " + thisCall.getCallType() + "\nLength: " + thisCall.getLengthText() + 
-						"\nSubject: " + thisCall.getSubject() + "\nNotes: " + thisCall.getNotes() + "\nEntered: " 
-						+ thisCall.getEnteredName() + " - " + thisCall.getEnteredString() + "\nModified: " + 
-						thisCall.getModifiedName() + " - " + thisCall.getModifiedString());
-			}
       context.getSession().removeAttribute("selectedContacts");
       context.getSession().removeAttribute("finalContacts");
     } catch (Exception e) {
@@ -821,19 +842,21 @@ public final class MyCFS extends CFSModule {
     if (errorMessage == null) {
       if (context.getAction().getActionName().equals("ExternalContactsCallsForward")) {
         addModuleBean(context, "External Contacts", "");
+      } else if (context.getAction().getActionName().equals("MyCFSInbox")) {
+        addModuleBean(context, "My Inbox", "");
       } else {
-        addModuleBean(context, "MyInbox", "");
+        addModuleBean(context, "My Tasks", "");
       }
-      
-      context.getRequest().setAttribute("Note",newNote);
-      context.getRequest().setAttribute("returnUrl",returnUrl);
-      context.getRequest().setAttribute("sendUrl",sendUrl);
+      context.getRequest().setAttribute("Note", newNote);
+      context.getRequest().setAttribute("returnUrl", returnUrl);
+      context.getRequest().setAttribute("sendUrl", sendUrl);
       return ("ForwardMessageOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
   }
+
 
   /**
    *  Takes a look at the User Session Object and prepares the MyCFSBean for the
@@ -861,8 +884,9 @@ public final class MyCFS extends CFSModule {
     String whereClause = new String();
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
 
-    /*this is how we get the multiple-level heirarchy...recursive function.*/
-
+    /*
+     *  this is how we get the multiple-level heirarchy...recursive function.
+     */
     User thisRec = thisUser.getUserRecord();
 
     UserList shortChildList = thisRec.getShortChildList();
@@ -1032,7 +1056,7 @@ public final class MyCFS extends CFSModule {
           }
         }
       }
-      
+
       if (System.getProperty("DEBUG") != null) {
         System.out.println("MyCFS-> Building opportunity alerts");
       }
@@ -1132,7 +1156,6 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    *@since
    */
-  
    public String executeCommandUpdateProfile(ActionContext context) {
 	if (!(hasPermission(context, "myhomepage-profile-personal-edit"))) {
 		return ("PermissionError");
@@ -1293,7 +1316,6 @@ public final class MyCFS extends CFSModule {
       e.printStackTrace(System.out);
     }
     this.freeConnection(context, db);
-
     addModuleBean(context, "MyProfile", "");
     return ("SettingsOK");
   }
