@@ -331,26 +331,47 @@ public class PilotOnlineReader implements DataReader {
     try {
       OrganizationList organizationList = new OrganizationList();
       organizationList.buildList(db);
-      Calendar runDate = Calendar.getInstance();
-      while (runDate.get(Calendar.DAY_OF_WEEK) != Calendar.THURSDAY) {
-        runDate.add(Calendar.DATE, 1);
+      Calendar runDateStart = Calendar.getInstance();
+      Calendar runDateEnd = Calendar.getInstance();
+      if (runDateStart.get(Calendar.DAY_OF_WEEK) != Calendar.WEDNESDAY) {
+	      while (runDateStart.get(Calendar.DAY_OF_WEEK) != Calendar.WEDNESDAY) {
+		runDateStart.add(Calendar.DATE, 1);
+		runDateEnd.add(Calendar.DATE, 1);
+	      }
+      } else {
+	      runDateStart.add(Calendar.DATE, 1);
+	      runDateStart.add(Calendar.DATE, -1);
+	      runDateEnd.add(Calendar.DATE, 1);
+	      runDateEnd.add(Calendar.DATE, -1);
       }
-      runDate.set(Calendar.HOUR, 0);
-      runDate.set(Calendar.MINUTE, 0);
-      runDate.set(Calendar.SECOND, 0);
-      runDate.set(Calendar.MILLISECOND, 0);
+      runDateStart.set(Calendar.HOUR, 0);
+      runDateStart.set(Calendar.MINUTE, 0);
+      runDateStart.set(Calendar.SECOND, 0);
+      runDateStart.set(Calendar.MILLISECOND, 0);
+      
+      runDateStart.add(Calendar.DATE, -2);
+      runDateEnd.add(Calendar.DATE, 2);
+      
+      runDateEnd.set(Calendar.HOUR, 0);
+      runDateEnd.set(Calendar.MINUTE, 0);
+      runDateEnd.set(Calendar.SECOND, 0);
+      runDateEnd.set(Calendar.MILLISECOND, 0);
+      
       processLog.add("INFO: Processing organizations/vehicles: " + organizationList.size());
+      int vehicleCount = 0;
       Iterator organizations = organizationList.iterator();
       while (organizations.hasNext()) {
         Organization dealer = (Organization) organizations.next();
         InventoryList inventoryList = new InventoryList();
         inventoryList.setOrgId(dealer.getId());
         inventoryList.setShowSold(Constants.FALSE);
-        inventoryList.setAdRunDate(new java.sql.Date(runDate.getTime().getTime()));
+        inventoryList.setAdRunDateStart(new java.sql.Date(runDateStart.getTime().getTime()));
+        inventoryList.setAdRunDateEnd(new java.sql.Date(runDateEnd.getTime().getTime()));
         inventoryList.setBuildPictureId(true);
         inventoryList.buildList(db);
         Iterator inventory = inventoryList.iterator();
         while (inventory.hasNext()) {
+          ++vehicleCount;
           Inventory vehicle = (Inventory) inventory.next();
           DataRecord thisRecord = new DataRecord();
           thisRecord.setName("vehicle");
@@ -398,6 +419,7 @@ public class PilotOnlineReader implements DataReader {
           writer.save(thisRecord);
         }
       }
+      processLog.add("INFO: Vehicles added-> " + vehicleCount);
     } catch (Exception ex) {
       ex.printStackTrace(System.out);
       processLog.add("ERROR: Querying organizations/vehicles-> " + ex.getMessage());
@@ -422,7 +444,7 @@ public class PilotOnlineReader implements DataReader {
               thisPicture.substring(4, 8) + fs +
               thisPicture);
           File destinationPicture = new File(pictureDestinationPath + thisPicture + ".jpg");
-          if (sourcePicture.exists()) {
+          if (sourcePicture.exists() && !destinationPicture.exists()) {
             ImageUtils.saveThumbnail(sourcePicture, destinationPicture, 285.0, -1.0);
           }
         }
@@ -448,14 +470,21 @@ public class PilotOnlineReader implements DataReader {
     }
 
     if (processOK) {
-      processLog.add("INFO: FTP Sending data");
-      NCFTPApp ftp = new NCFTPApp();
-      ftp.setDeleteSourceFilesAfterSend(true);
-      ftp.setMakeRemoteDir(true);
-      ftp.addFile(((TextWriter) writer).getFilename());
-      processOK = (ftp.put(ftpData) == 0);
-      if (!processOK) {
-        processLog.add("ERROR: FTP Sending data-> " + ftp.getStdErr());
+      boolean sendComplete = false;
+      int retryCount = 0;
+      while (!sendComplete && retryCount < 6) {
+        ++retryCount;
+        processLog.add("INFO: FTP Sending data");
+        NCFTPApp ftp = new NCFTPApp();
+        ftp.setDeleteSourceFilesAfterSend(true);
+        ftp.setMakeRemoteDir(true);
+        ftp.addFile(((TextWriter) writer).getFilename());
+        processOK = (ftp.put(ftpData) == 0);
+        if (!processOK) {
+          processLog.add("ERROR: FTP Sending data-> " + ftp.getStdErr());
+        } else {
+          sendComplete = true;
+        }
       }
     } else {
       processLog.add("ERROR: FTP Sending data-> Skipped because of previous error");
@@ -495,17 +524,16 @@ public class PilotOnlineReader implements DataReader {
       } catch (Exception e) {
         e.printStackTrace();
       }
-      
-      //Local Debug
-      if (!processOK) {
-        Iterator logData = processLog.iterator();
-        while (logData.hasNext()) {
-          String logItem = (String)logData.next();
-          System.out.println(logItem);
-        }
-      }
-      
     }
+    
+    //Local Debug
+	if (!processOK) {
+	Iterator logData = processLog.iterator();
+	while (logData.hasNext()) {
+	  String logItem = (String)logData.next();
+	  System.out.println(logItem);
+	}
+	}
 
     return processOK;
   }
