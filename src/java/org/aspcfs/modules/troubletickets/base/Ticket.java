@@ -1038,12 +1038,10 @@ public class Ticket extends GenericBean {
    *@return    The paddedId value
    */
   public String getPaddedId() {
-    String padded = ("" + this.getId());
-
+    String padded = (String.valueOf(this.getId()));
     while (padded.length() < 6) {
       padded = "0" + padded;
     }
-
     return padded;
   }
 
@@ -2033,7 +2031,6 @@ public class Ticket extends GenericBean {
     if (contactId == -1) {
       errors.put("contactIdError", "You must associate a Contact with a Ticket");
     }
-
     if (hasErrors()) {
       return false;
     } else {
