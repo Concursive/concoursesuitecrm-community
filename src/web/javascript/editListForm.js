@@ -5,7 +5,7 @@ function addValues(){
     var count = 0;
     var x = 0;
     
-    if (document.modifyList.newValue.value != null && document.modifyList.newValue.value.trim().length > 0) {
+    if (document.modifyList.newValue.value != null && document.modifyList.newValue.value.length > 0) {
       if(!isDuplicate()){
         searchText = document.modifyList.newValue.value;
         var newOption = searchText;
