@@ -72,7 +72,7 @@
         <a href="/RevenueManager.do?command=Details&id=<%=thisRevenue.getId()%>"><%= toHtml(thisRevenue.getDescription()) %></a>
       </td>
       <td width=20% valign=center class="row<%= rowid %>">
-        <%= thisRevenue.getMonth() %>
+        <%= toHtml(thisRevenue.getMonthName()) %>
       </td>
       <td width=20% valign=center class="row<%= rowid %>" nowrap>
         <%= thisRevenue.getYear() %>

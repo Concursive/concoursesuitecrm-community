@@ -52,7 +52,7 @@
       Month
     </td>
     <td>
-      <%= Revenue.getMonth() %>
+      <%= toHtml(Revenue.getMonthName()) %>
     </td>
   </tr>
       <tr class="containerBody">

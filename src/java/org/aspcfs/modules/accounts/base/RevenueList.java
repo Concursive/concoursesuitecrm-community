@@ -63,7 +63,7 @@ public class RevenueList extends Vector {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
             sqlFilter.toString() +
-            "AND r.amount < ? ");
+            "AND r.description < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -76,10 +76,10 @@ public class RevenueList extends Vector {
       }
       
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("r.amount", null);
+      pagedListInfo.setDefaultSort("r.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY r.amount desc ");
+      sqlOrder.append("ORDER BY r.description ");
     }
     
     
