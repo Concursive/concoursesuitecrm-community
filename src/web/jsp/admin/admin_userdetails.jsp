@@ -28,6 +28,10 @@
     <td><%= toHtml(UserRecord.getManager()) %></td>
   </tr>
   <tr>
+    <td width="150">Aliased To</td>
+    <td><%= toHtml(UserRecord.getAliasName()) %></td>
+  </tr>
+  <tr>
     <td width="150">Last Login</td>
     <td><%= (UserRecord.getLastLogin()) %></td>
   </tr>

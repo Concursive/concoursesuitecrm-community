@@ -43,23 +43,26 @@ public final class Users extends CFSModule {
       
       if ("disabled".equals(listInfo.getListView())) {
         list.setEnabled(UserList.FALSE);
-      } else {
+      } 
+      else if ("aliases".equals(listInfo.getListView())) {
+	      list.setIncludeAliases(true);
+      } 
+      else {
         list.setEnabled(UserList.TRUE);
       }
-      
 			list.setPagedListInfo(listInfo);
 			list.setBuildContact(false);
 			list.setBuildHierarchy(false);
-      list.setBuildPermissions(false);
+      			list.setBuildPermissions(false);
 			list.buildList(db);
-      
+      /**
       Iterator i = list.iterator();
       while (i.hasNext()) {
         User thisUser = (User)i.next();
         Contact thisContact = this.getUser(context, thisUser.getId()).getContact();
         thisUser.setContact(thisContact);
       }
-      
+      */
 		}
 		catch (Exception e) {
 			errorMessage = e;

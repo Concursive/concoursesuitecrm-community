@@ -134,7 +134,13 @@ public final class Login extends GenericAction {
 	  if ( expDate != null && now.after(expDate) ) {
 		  loginBean.setMessage("* Access denied: Account Expired.");
  	  } else {
-        	  userId = rs.getInt("user_id");
+		  int aliasId = rs.getInt("alias");
+		  
+		  if ( aliasId > 0 ) {
+			userId = aliasId;
+	          } else {
+        	  	userId = rs.getInt("user_id");
+		  }
           }
         }
       }

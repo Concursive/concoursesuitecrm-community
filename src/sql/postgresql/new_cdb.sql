@@ -210,6 +210,8 @@ CREATE TABLE access (
   modifiedby INT NOT NULL REFERENCES access,
   modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   expires TIMESTAMP DEFAULT NULL,
+  alias INT DEFAULT -1,
+  assistant INT DEFAULT -1,
   enabled boolean NOT NULL DEFAULT true
 );
 

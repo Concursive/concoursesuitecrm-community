@@ -56,6 +56,8 @@ public class User extends GenericBean {
 	protected Contact contact = new Contact();
 	protected Vector permissions = new Vector();
 	protected UserList childUsers = null;
+	
+	protected String aliasName = null;
 
 	protected boolean buildContact = false;
 	protected boolean buildPermissions = false;
@@ -68,6 +70,8 @@ public class User extends GenericBean {
 	protected GraphSummaryList ramr = new GraphSummaryList();
 	protected GraphSummaryList cgmr = new GraphSummaryList();
 	protected GraphSummaryList cramr = new GraphSummaryList();
+	private int assistant = -1;
+	private int alias = -1;
 
 
 	/**
@@ -151,6 +155,35 @@ public class User extends GenericBean {
 
 
 	/**
+	 *  Sets the Assistant attribute of the User object
+	 *
+	 *@param  tmp  The new Assistant value
+	 *@since
+	 */
+	public void setAssistant(int tmp) {
+		this.assistant = tmp;
+	}
+
+	public void setAssistant(String tmp) {
+		this.assistant = Integer.parseInt(tmp);
+	}
+
+	/**
+	 *  Sets the Alias attribute of the User object
+	 *
+	 *@param  tmp  The new Alias value
+	 *@since
+	 */
+	public void setAlias(int tmp) {
+		this.alias = tmp;
+	}
+	
+	public void setAlias(String tmp) {
+		this.alias = Integer.parseInt(tmp);
+	}
+
+
+	/**
 	 *  Sets the Expires attribute of the User object
 	 *
 	 *@param  expires  The new Expires value
@@ -210,6 +243,12 @@ public class User extends GenericBean {
 		}
 	}
 
+public String getAliasName() {
+	return aliasName;
+}
+public void setAliasName(String aliasName) {
+	this.aliasName = aliasName;
+}
 
 	/**
 	 *  Sets the GraphValues attribute of the User object
@@ -607,6 +646,28 @@ public class User extends GenericBean {
 
 
 	/**
+	 *  Gets the Assistant attribute of the User object
+	 *
+	 *@return    The Assistant value
+	 *@since
+	 */
+	public int getAssistant() {
+		return assistant;
+	}
+
+
+	/**
+	 *  Gets the Alias attribute of the User object
+	 *
+	 *@return    The Alias value
+	 *@since
+	 */
+	public int getAlias() {
+		return alias;
+	}
+
+
+	/**
 	 *  Gets the Expires attribute of the User object
 	 *
 	 *@return    The Expires value
@@ -720,11 +781,18 @@ public class User extends GenericBean {
 	public String getPassword() {
 		return password;
 	}
-	
+
+
+	/**
+	 *  Gets the EncryptedPassword attribute of the User object
+	 *
+	 *@return    The EncryptedPassword value
+	 *@since
+	 */
 	public String getEncryptedPassword() {
 		return this.encryptPassword(password);
 	}
-	
+
 
 	/**
 	 *  Gets the Password1 attribute of the User object
@@ -1012,39 +1080,51 @@ public class User extends GenericBean {
 		this.opportunityLock = false;
 	}
 
+
+	/**
+	 *  Description of the Method
+	 *
+	 *@param  db                Description of Parameter
+	 *@param  context           Description of Parameter
+	 *@param  currPass          Description of Parameter
+	 *@return                   Description of the Returned Value
+	 *@exception  SQLException  Description of Exception
+	 *@since
+	 */
 	public synchronized int updatePassword(Connection db, ActionContext context, String currPass) throws SQLException {
 		if (!isValidChangePass(context, currPass)) {
 			return -1;
-		} 
-		
+		}
+
 		else {
 			int resultCount = -1;
-			
+
 			if (this.getId() == -1) {
 				throw new SQLException("User ID was not specified");
 			}
-	
+
 			PreparedStatement pst = null;
 			StringBuffer sql = new StringBuffer();
-	
+
 			sql.append("UPDATE access ");
-			
+
 			sql.append("SET password = ?  ");
 			sql.append("WHERE user_id = ? ");
-	
+
 			int i = 0;
 			pst = db.prepareStatement(sql.toString());
-	
+
 			pst.setString(++i, encryptPassword(password1));
 			pst.setInt(++i, getId());
-	
+
 			resultCount = pst.executeUpdate();
 			pst.close();
-			
+
 			return resultCount;
 		}
-		
+
 	}
+
 
 	/**
 	 *  Inserts the current user record into the database
@@ -1067,27 +1147,32 @@ public class User extends GenericBean {
 			StringBuffer sql = new StringBuffer();
 			sql.append(
 					"INSERT INTO access " +
-					"(username, password, contact_id, " +
+					"(username, password, contact_id, alias, " +
 					"manager_id, role_id, enteredby, modifiedby, expires ) " +
-					"VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
+					"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 
 			int i = 0;
 			PreparedStatement pst = db.prepareStatement(sql.toString());
 			pst.setString(++i, getUsername());
 			pst.setString(++i, encryptPassword(password1));
 			pst.setInt(++i, contact.getId());
-			pst.setInt(++i, getManagerId());
+			pst.setInt(++i, getAlias());
+			if (getAlias() > -1) {
+				pst.setInt(++i, -1);
+			} else {
+				pst.setInt(++i, getManagerId());
+			}
 			pst.setInt(++i, getRoleId());
 			pst.setInt(++i, getEnteredBy());
 			pst.setInt(++i, getModifiedBy());
-			
+
 			if (expires == null || expires.equals("")) {
 				pst.setNull(++i, java.sql.Types.DATE);
 			}
 			else {
 				pst.setDate(++i, convertStringToSqlDate(this.getExpires(), DateFormat.SHORT));
 			}
-			
+
 			pst.execute();
 			pst.close();
 
@@ -1235,9 +1320,11 @@ public class User extends GenericBean {
 		StringBuffer sql = new StringBuffer();
 		sql.append(
 				"SELECT a.*, r.role, c.namelast, c.namefirst, " +
-				"m.namefirst as mgr_namefirst, m.namelast as mgr_namelast " +
+				"m.namefirst as mgr_namefirst, m.namelast as mgr_namelast, " +
+				"als.namefirst as als_namefirst, als.namelast as als_namelast " +
 				"FROM access a " +
 				"LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
+				"LEFT JOIN contact als ON (a.alias = als.user_id) " +
 				"LEFT JOIN contact m ON (a.manager_id = m.user_id), " +
 				"role r " +
 				"WHERE a.role_id = r.role_id " +
@@ -1290,15 +1377,24 @@ public class User extends GenericBean {
 			return true;
 		}
 	}
-	
+
+
+	/**
+	 *  Gets the ValidChangePass attribute of the User object
+	 *
+	 *@param  context      Description of Parameter
+	 *@param  currentPass  Description of Parameter
+	 *@return              The ValidChangePass value
+	 *@since
+	 */
 	protected boolean isValidChangePass(ActionContext context, String currentPass) {
-		
+
 		System.out.println("Id " + this.getId());
-		
-		if (!(this.getEncryptedPassword().equals(currentPass)) || password == null || password.trim().equals("") ) {
+
+		if (!(this.getEncryptedPassword().equals(currentPass)) || password == null || password.trim().equals("")) {
 			errors.put("passwordError", "Incorrect value for current password");
 		}
-		
+
 		if (password1 == null || password1.trim().equals("")) {
 			errors.put("password1Error", "Password cannot be left blank");
 		}
@@ -1314,6 +1410,7 @@ public class User extends GenericBean {
 			return true;
 		}
 	}
+
 
 	/**
 	 *  Gets the ValidNoPass attribute of the User object
@@ -1382,11 +1479,19 @@ public class User extends GenericBean {
 		this.setRoleId(rs.getString("role_id"));
 		this.setRole(rs.getString("role"));
 		this.setManagerId(rs.getInt("manager_id"));
+		this.setAssistant(rs.getInt("assistant"));
+		this.setAlias(rs.getInt("alias"));
 
 		String managerNameFirst = rs.getString("mgr_namefirst");
 		String managerNameLast = rs.getString("mgr_namelast");
 		if (managerNameFirst != null) {
 			this.manager = managerNameLast + ", " + managerNameFirst;
+		}
+		
+		String aliasNameFirst = rs.getString("als_namefirst");
+		String aliasNameLast = rs.getString("als_namelast");
+		if (aliasNameFirst != null) {
+			this.aliasName = aliasNameLast + ", " + aliasNameFirst;
 		}
 
 		java.sql.Timestamp tmpDateCreated = rs.getTimestamp("entered");
@@ -1408,9 +1513,9 @@ public class User extends GenericBean {
 		}
 
 		modifiedBy = rs.getInt("modifiedby");
-		
+
 		java.sql.Timestamp tmpExpires = rs.getTimestamp("expires");
-		
+
 		if (tmpExpires != null) {
 			this.expires = shortDateFormat.format(tmpExpires);
 		}
@@ -1531,7 +1636,7 @@ public class User extends GenericBean {
 		StringBuffer sql = new StringBuffer();
 
 		sql.append("UPDATE access ");
-		sql.append("SET username = ?, manager_id = ?, role_id = ?, expires = ?  ");
+		sql.append("SET username = ?, manager_id = ?, role_id = ?, expires = ?, alias = ?  ");
 		if (password1 != null) {
 			sql.append("password = ?, ");
 		}
@@ -1546,16 +1651,23 @@ public class User extends GenericBean {
 		pst = db.prepareStatement(sql.toString());
 		pst.setString(++i, username);
 		//pst.setInt(++i, contact.getId());
-		pst.setInt(++i, managerId);
-		pst.setInt(++i, roleId);
+		if (alias > -1) {
+			pst.setInt(++i, -1);
+		} else {
+			pst.setInt(++i, managerId);
+		}
 		
+		pst.setInt(++i, roleId);
+
 		if (expires == null || expires.equals("")) {
 			pst.setNull(++i, java.sql.Types.DATE);
 		}
 		else {
 			pst.setDate(++i, convertStringToSqlDate(this.getExpires(), DateFormat.SHORT));
 		}
-			
+		
+		pst.setInt(++i, alias);
+
 		//pst.setBoolean(++i, getEnabled());
 		if (password1 != null) {
 			pst.setString(++i, encryptPassword(password1));

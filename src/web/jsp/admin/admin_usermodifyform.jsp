@@ -44,13 +44,22 @@
     </td>
   </tr>
   
+    <tr>
+    <td width="150">Alias User</td>
+    <td>
+      <%= UserList.getHtmlSelect("alias", UserRecord.getAlias()) %>
+    </td>
+  </tr>
+  
   <tr>
-    <td width="150">Account Expires On</td>
+    <td width="150">Expire Date</td>
     <td>
     <input type=text size=10 name="expires" value="<%=toHtmlValue(UserRecord.getExpires())%>">
     <a href="javascript:popCalendar('details', 'expires');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>
+  
+
   
 </table>
 <br>

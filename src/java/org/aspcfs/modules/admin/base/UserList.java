@@ -29,6 +29,7 @@ public class UserList extends Vector {
 	private int department = -1;
 	private int enabled = -1;
 	private String jsEvent = null;
+	private boolean includeAliases = false;
 
 	private boolean includeMe = false;
 	private String myValue = "";
@@ -171,6 +172,12 @@ public class UserList extends Vector {
 	public void setMyId(int tmp) {
 		this.myId = tmp;
 	}
+public boolean getIncludeAliases() {
+	return includeAliases;
+}
+public void setIncludeAliases(boolean includeAliases) {
+	this.includeAliases = includeAliases;
+}
 
 
 	/**
@@ -484,10 +491,11 @@ public class UserList extends Vector {
 		 *  "AND a.enabled = true ");
 		 */
 		sqlSelect.append(
-				"SELECT a.username, a.password, a.role_id, a.last_login, a.manager_id, a.last_ip, a.timezone, a.startofday, a.endofday, a.expires, " +
+				"SELECT a.username, a.password, a.role_id, a.last_login, a.manager_id, a.last_ip, a.timezone, a.startofday, a.endofday, a.expires, a.alias, " +
 				"r.role, c.*, d.description as departmentname, t.description as type_name, " +
 				"ct_owner.namelast || ', ' || ct_owner.namefirst as o_name, ct_eb.namelast || ', ' || ct_eb.namefirst as eb_name, ct_mb.namelast || ', ' || ct_mb.namefirst as mb_name, o.name as org_name, " +
-				"m.namefirst as mgr_namefirst, m.namelast as mgr_namelast " +
+				"m.namefirst as mgr_namefirst, m.namelast as mgr_namelast, " +
+				"als.namefirst as als_namefirst, als.namelast as als_namelast " +
 				"FROM access a " +
 				"LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
 		//"contact c " +
@@ -497,6 +505,7 @@ public class UserList extends Vector {
 				"LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
 				"LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
 				"LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
+				"LEFT JOIN contact als ON (a.alias = als.user_id) " +
 				"LEFT JOIN contact m ON (a.manager_id = m.user_id), " +
 				"role r " +
 				"WHERE a.role_id = r.role_id ");
@@ -572,8 +581,11 @@ public class UserList extends Vector {
 			}
 			this.addElement(thisUser);
 		}
+		
 		rs.close();
 		pst.close();
+		
+		
 
 		buildResources(db);
 	}
@@ -610,12 +622,19 @@ public class UserList extends Vector {
 		if (sqlFilter == null) {
 			sqlFilter = new StringBuffer();
 		}
+		if (includeAliases) {
+			sqlFilter.append("AND a.alias > -1 ");
+		} 
+		if (!(includeAliases)) {
+			sqlFilter.append("AND a.alias = -1 ");
+		}
 		if (roleId > -1) {
 			sqlFilter.append("AND r.role_id = ? ");
 		}
 		if (managerId > -1) {
 			sqlFilter.append("AND a.manager_id = ? ");
 		}
+
 		if (department > -1) {
 			sqlFilter.append("AND c.department = ? ");
 		}
@@ -627,10 +646,11 @@ public class UserList extends Vector {
 				sqlFilter.append("AND a.contact_id > -1 ");
 			}
 		}
-
+		
 		if (enabled > -1) {
 			sqlFilter.append("AND a.enabled = " + ((enabled == TRUE) ? "true" : "false") + " ");
 		}
+	
 	}
 
 

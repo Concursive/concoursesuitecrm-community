@@ -29,13 +29,22 @@
     </td>
   </tr>
   
+    <tr>
+    <td nowrap class="formLabel">Alias User</td>
+    <td>
+      <%= UserList.getHtmlSelect("alias", UserRecord.getAlias()) %>
+    </td>
+  </tr>
+  
   <tr>
-    <td nowrap class="formLabel">Account Expires On</td>
+    <td nowrap class="formLabel">Expire Date</td>
     <td>
     <input type=text size=10 name="expires" value="">
     <a href="javascript:popCalendar('addUser', 'expires');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>
+  
+
 </table>
 <input type="button" value="< Back" onClick="javascript:this.form.action='/Users.do?command=InsertUserForm';this.form.submit()">
 <input type="submit" value="Add User">

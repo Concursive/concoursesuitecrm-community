@@ -11,6 +11,7 @@
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= UserListInfo.getOptionValue("enabled") %>>Enabled Users</option>
+	<option <%= UserListInfo.getOptionValue("aliases") %>>Aliased Users</option>
         <option <%= UserListInfo.getOptionValue("disabled") %>>Disabled Users</option>
       </select>
       <%= showAttribute(request, "actionError") %>
