@@ -169,11 +169,14 @@ A:visited:hover{color:#FF3300;}
 .pagedList {
   border: 1px solid #000;
 }
-.pagedList th, .pagedList th a:link, .pagedList th a:visited {
+.pagedList th {
   text-align: left;
   border-bottom: 1px solid #000;
   border-right: 1px solid #666;
   background-color: #DEE0FA;
+  color: #000;
+}
+.pagedList th a:link, .pagedList th a:visited {
   color: #000;
 }
 .pagedList td {
