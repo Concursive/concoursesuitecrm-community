@@ -4,7 +4,7 @@
 <jsp:useBean id="SurveyList" class="com.darkhorseventures.cfsbase.SurveyList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <form name="modForm" action="/CampaignManager.do?command=InsertAttachment&id=<%= Campaign.getId() %>" method="post">
-Communications Manager > 
+<a href="CampaignManager.do">Communications Manager</a> >
 <a href="/CampaignManager.do?command=View">Campaign List</a> >
 <a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Attachment

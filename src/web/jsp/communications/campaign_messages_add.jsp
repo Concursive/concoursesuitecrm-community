@@ -23,7 +23,7 @@
   }  
 </style>
 <body onLoad="javascript:document.forms[0].name.focus();">
-Communications Manager >
+<a href="CampaignManager.do">Communications Manager</a> >
 <a href="/CampaignManagerMessage.do?command=View">Message List</a> >
 Add Message
 <hr color="#BFBFBB" noshade>

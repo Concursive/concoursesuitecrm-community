@@ -4,7 +4,7 @@
 <jsp:useBean id="SurveyList" class="com.darkhorseventures.cfsbase.SurveyList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-Communications Manager >
+<a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManagerAttachment.do">Create Attachments</a> >
 Surveys
 <hr color="#BFBFBB" noshade>

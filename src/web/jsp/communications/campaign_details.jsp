@@ -6,7 +6,7 @@
 <jsp:useBean id="CampaignDashboardRecipientInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <%@ include file="initPage.jsp" %>
-Communications Manager >
+<a href="CampaignManager.do">Communications Manager</a> >
 <a href="/CampaignManager.do?command=Dashboard">Dashboard</a> >
 Campaign Details
 <hr color="#BFBFBB" noshade>

@@ -3,7 +3,7 @@
 <jsp:useBean id="MessageDetails" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-Communications Manager >
+<a href="CampaignManager.do">Communications Manager</a> >
 <a href="/CampaignManagerMessage.do?command=View">Message List</a> >
 Message Details
 <hr color="#BFBFBB" noshade>

@@ -109,7 +109,7 @@
 <%}%>
 </table>
 <br>
-<dhv:pagedListControl object="ContactMessageListInfo" tdClass="row1"/>
+<dhv:pagedListControl object="ContactMessageListInfo"/>
 <br>
 </td></tr>
 </table>

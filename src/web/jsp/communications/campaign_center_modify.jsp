@@ -23,7 +23,7 @@
   }
 </script>
 <body onLoad="javascript:document.forms[0].name.focus();">
-Communications Manager > 
+<a href="CampaignManager.do">Communications Manager</a> > 
 <a href="/CampaignManager.do?command=View">Campaign List</a> >
 <a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Modify

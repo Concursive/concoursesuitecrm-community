@@ -7,7 +7,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <form name="modForm" action="/CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>" method="post">
-Communications Manager > 
+<a href="CampaignManager.do">Communications Manager</a> > 
 <a href="/CampaignManager.do?command=View">Campaign List</a> >
 <a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Choose Groups

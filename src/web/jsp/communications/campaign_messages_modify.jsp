@@ -22,7 +22,7 @@
     background: buttonface;
   }  
 </style>
-Communications Manager >
+<a href="CampaignManager.do">Communications Manager</a> >
 <a href="/CampaignManagerMessage.do?command=View">Message List</a> >
 <a href="/CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>">Message Details</a> >
 Modify Message

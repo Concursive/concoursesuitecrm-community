@@ -4,7 +4,8 @@
 <jsp:useBean id="CampaignDashboardListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-Communications Manager > Dashboard
+<a href="CampaignManager.do">Communications Manager</a> >
+Dashboard
 <hr color="#BFBFBB" noshade>
 <center><%= CampaignDashboardListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">

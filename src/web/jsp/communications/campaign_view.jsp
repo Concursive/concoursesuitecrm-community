@@ -8,7 +8,8 @@
 <dhv:permission name="campaign-campaigns-add"><a href="/CampaignManager.do?command=Add">Create a Campaign</a></dhv:permission>
 <dhv:permission name="campaign-campaigns-add" none="true"><br></dhv:permission>
 --%>
-Communications Manager > Campaign List
+<a href="CampaignManager.do">Communications Manager</a> >
+Campaign List
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="campaign-campaigns-add"><a href="/CampaignManager.do?command=Add">Add a Campaign</a></dhv:permission>
 <center><%= CampaignListInfo.getAlphabeticalPageLinks() %></center>

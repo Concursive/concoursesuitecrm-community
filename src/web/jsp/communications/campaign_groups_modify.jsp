@@ -117,7 +117,7 @@ listOfOperators[0] = stringOperators
 listOfOperators[1] = dateOperators
 listOfOperators[2] = numberOperators
 </script>
-Communications Manager >
+<a href="CampaignManager.do">Communications Manager</a> >
 <a href="/CampaignManagerGroup.do?command=View">Group List</a> >
 Group Details (Modify)
 <hr color="#BFBFBB" noshade>

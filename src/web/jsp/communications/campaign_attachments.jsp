@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-Communications Manager >
+<a href="CampaignManager.do">Communications Manager</a> >
 Create Attachments
 <hr color="#BFBFBB" noshade>
 Customize and configure your Campaigns with the following attachments:<br>

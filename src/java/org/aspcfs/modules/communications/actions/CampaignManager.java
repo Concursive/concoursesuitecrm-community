@@ -23,6 +23,14 @@ import com.zeroio.webutils.*;
  */
 public final class CampaignManager extends CFSModule {
 
+  public String executeCommandDefault(ActionContext context) {
+    if (hasPermission(context, "campaign-dashboard-view")) {
+	    return executeCommandDashboard(context);
+    } else {
+      return executeCommandView(context);
+    }
+  }
+  
   /**
    *  Generates the Dashboard List
    *

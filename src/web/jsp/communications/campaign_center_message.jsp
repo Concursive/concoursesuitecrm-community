@@ -5,7 +5,7 @@
 <jsp:useBean id="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <form name="modForm" action="/CampaignManager.do?command=InsertMessage&id=<%= Campaign.getId() %>" method="post">
-Communications Manager > 
+<a href="CampaignManager.do">Communications Manager</a> > 
 <a href="/CampaignManager.do?command=View">Campaign List</a> >
 <a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Message

@@ -4,7 +4,7 @@
 <jsp:useBean id="sclList" class="com.darkhorseventures.cfsbase.SearchCriteriaListList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-Communications Manager >
+<a href="CampaignManager.do">Communications Manager</a> >
 Group List
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="campaign-campaigns-groups-add"><a href="/CampaignManagerGroup.do?command=Add">Add a Contact Group</a></dhv:permission>

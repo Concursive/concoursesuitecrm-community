@@ -23,7 +23,7 @@
   }
 </script>
 <form name="inputForm" action="/CampaignManager.do?command=InsertSchedule&id=<%= Campaign.getId() %>" method="post" onSubmit="return checkForm(this);">
-Communications Manager > 
+<a href="CampaignManager.do">Communications Manager</a> > 
 <a href="/CampaignManager.do?command=View">Campaign List</a> >
 <a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Delivery

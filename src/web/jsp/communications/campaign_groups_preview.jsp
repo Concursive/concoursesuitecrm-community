@@ -3,7 +3,7 @@
 <jsp:useBean id="ContactList" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
 <jsp:useBean id="CampaignGroupsPreviewInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
-Communications Manager >
+<a href="CampaignManager.do">Communications Manager</a> >
 <a href="/CampaignManagerGroup.do?command=View">Group List</a> >
 <dhv:permission name="campaign-campaigns-groups-edit"><a href="/CampaignManagerGroup.do?command=Modify&id=<%= request.getAttribute("id") %>">Group Details (Modify)</a> ></dhv:permission>
 Contact Preview
