@@ -99,7 +99,7 @@ Contact Details
       <%if (portalUserDetails.getEnabled()){%>
       <zeroio:tz timestamp="<%= portalUserDetails.getExpires() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"/>
       <%}else{%>
-       <dhv:label name="accounts.portalAccessDisabled">Portal access has been disbled for this account contact.</dhv:label>
+       <dhv:label name="accounts.portalAccessDisabled">Portal access has been disabled for this account contact.</dhv:label>
       <%}%>
     </td>
   </tr>

@@ -25,6 +25,7 @@ public class ParameterList extends ArrayList {
 
   private int criteriaId = -1;
   protected PagedListInfo pagedListInfo = null;
+  public HashMap errors = new HashMap();
 
 
   /**
@@ -64,6 +65,36 @@ public class ParameterList extends ArrayList {
 
 
   /**
+   *  Sets the errors attribute of the ParameterList object
+   *
+   *@param  tmp  The new errors value
+   */
+  public void setErrors(HashMap tmp) {
+    this.errors = tmp;
+  }
+
+
+  /**
+   *  Gets the errors attribute of the ParameterList object
+   *
+   *@return    The errors value
+   */
+  public HashMap getErrors() {
+    return errors;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean hasErrors() {
+    return (errors.size() > 0);
+  }
+
+
+  /**
    *  Initially loads the parameters from the JasperReport
    *
    *@param  report  The new parameters value
@@ -87,7 +118,7 @@ public class ParameterList extends ArrayList {
    *
    *@param  request  The new parameters value
    */
-  public void setParameters(HttpServletRequest request) {
+  public boolean setParameters(HttpServletRequest request) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Parameter param = (Parameter) i.next();
@@ -162,12 +193,16 @@ public class ParameterList extends ArrayList {
           }
           addParam(param.getName(), param.getValue());
         }
-        if (param.getName().startsWith("date_")) {
-          Timestamp tmpTimestamp = DateUtils.getUserToServerDateTime(TimeZone.getTimeZone(UserUtils.getUserTimeZone(request)), DateFormat.SHORT, DateFormat.LONG, param.getValue(), UserUtils.getUserLocale(request));
-          SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
-              DateFormat.SHORT, Locale.getDefault());
-          String date = formatter.format(tmpTimestamp);
-          param.setValue(date);
+        try {
+          if (param.getName().startsWith("date_")) {
+            Timestamp tmpTimestamp = DateUtils.getUserToServerDateTime(TimeZone.getTimeZone(UserUtils.getUserTimeZone(request)), DateFormat.SHORT, DateFormat.LONG, param.getValue(), UserUtils.getUserLocale(request));
+            SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+                DateFormat.SHORT, Locale.getDefault());
+            String date = formatter.format(tmpTimestamp);
+            param.setValue(date);
+          }
+        } catch (Exception e) {
+          errors.put(param.getName() +"Error","no input or invalid date");
         }
       }
       if (System.getProperty("DEBUG") != null) {
@@ -178,6 +213,10 @@ public class ParameterList extends ArrayList {
     this.addParam("country", UserUtils.getUserLocale(request).getCountry());
     this.addParam("language", UserUtils.getUserLocale(request).getLanguage());
     this.addParam("userid", String.valueOf(UserUtils.getUserId(request)));
+    if (hasErrors()){
+      return false;
+    }
+    return true;
   }
 
 

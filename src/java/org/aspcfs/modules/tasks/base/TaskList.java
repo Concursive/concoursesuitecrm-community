@@ -114,6 +114,26 @@ public class TaskList extends ArrayList {
 
 
   /**
+   *  Gets the tasksAssignedByUser attribute of the TaskList object
+   *
+   *@return    The tasksAssignedByUser value
+   */
+  public int getTasksAssignedByUser() {
+    return tasksAssignedByUser;
+  }
+
+
+  /**
+   *  Gets the owner attribute of the TaskList object
+   *
+   *@return    The owner value
+   */
+  public int getOwner() {
+    return owner;
+  }
+
+
+  /**
    *  Gets the ticketId attribute of the TaskList object
    *
    *@return    The ticketId value

@@ -79,19 +79,14 @@ public final class MyTasks extends CFSModule {
       }
       taskList.buildList(db);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("TaskList", taskList);
-      addModuleBean(context, "My Tasks", "Task Home");
-      return ("TaskListOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("TaskList", taskList);
+    addModuleBean(context, "My Tasks", "Task Home");
+    return ("TaskListOK");
   }
 
 
@@ -133,7 +128,7 @@ public final class MyTasks extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (hasAuthority(context, thisTask.getOwner())) {
+    if (hasAuthority(context, thisTask.getOwner()) || hasAuthority(context, thisTask.getEnteredBy())) {
       return this.getReturn(context, "TaskDetails");
     }
     return ("PermissionError");

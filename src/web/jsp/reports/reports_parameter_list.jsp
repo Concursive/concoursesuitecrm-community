@@ -59,7 +59,10 @@ Parameters
 <dhv:evaluate if="<%= parameter.getIsForPrompting() %>"><% ++count; %>
   <tr>
     <td class="formLabel"><%= toHtml(parameter.getDisplayName()) %></td>
-    <td><%= parameter.getHtml(request) %> <font color="red">*</font></td>
+    <td>
+      <%= parameter.getHtml(request) %> <font color="red">*</font>
+      <%=showAttribute(request,parameter.getName() + "Error") %>
+    </td>
   </tr>
 </dhv:evaluate>
 <%

@@ -650,7 +650,8 @@ public final class ProjectManagement extends CFSModule {
     //Results
     if (resultCount == -1) {
       context.getRequest().setAttribute("Project", thisProject);
-      return ("ModifyProjectOK");
+      context.getRequest().setAttribute("IncludeSection", ("modifyproject").toLowerCase());
+      return ("ProjectCenterOK");
     } else if (resultCount == 1) {
       context.getRequest().setAttribute("pid", "" + thisProject.getId());
       return ("UpdateProjectOK");

@@ -202,7 +202,7 @@ public class CalendarHandler extends TagSupport {
             "<img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\"></a>";
         
         if (showTimeZone){
-          toWriteOut = toWriteOut + HtmlSelectTimeZone.getSelect(field +"TimeZone", timeZone).getHtml();
+          toWriteOut = toWriteOut + "&nbsp;" + HtmlSelectTimeZone.getSelect(field +"TimeZone", timeZone).getHtml();
         }
         this.pageContext.getOut().write(toWriteOut);
       } else {

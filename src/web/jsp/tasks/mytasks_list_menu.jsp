@@ -36,7 +36,11 @@
   }
   
   function deleteTask() {
-    popURLReturn('MyTasks.do?command=ConfirmDelete&id=' + thisTaskId + '&popup=true','MyTasks.do?command=ListTasks', 'Delete_task','320','200','yes','no');
+    <% if (TaskList.getTasksAssignedByUser() != -1) { %>
+      alert('Cannot delete the selected Task as it has been already assigned to another User.');
+    <% } else { %>
+      popURLReturn('MyTasks.do?command=ConfirmDelete&id=' + thisTaskId + '&popup=true','MyTasks.do?command=ListTasks', 'Delete_task','320','200','yes','no');
+    <% } %>
   }
 </script>
 <div id="menuTaskContainer" class="menu">

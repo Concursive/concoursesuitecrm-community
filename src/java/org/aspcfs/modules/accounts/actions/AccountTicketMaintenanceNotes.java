@@ -51,12 +51,12 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       }
 
       context.getRequest().setAttribute("ticketDetails", thisTicket);
+      // Load the Organization
+      loadOrganizaton(context, db, thisTicket);
       if (thisTicket.getAssetId() == -1) {
         return ("FormERROR");
       }
 
-      // Load the Organization
-      loadOrganizaton(context, db, thisTicket);
       // Build the onsiteModelList
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
       onsiteModelList.addItem(-1, "-- None --");

@@ -246,8 +246,12 @@ public final class Reports extends CFSModule {
       String reportPath = getWebInfPath(context, "reports");
       JasperReport jasperReport = JasperReportUtils.getReport(reportPath + report.getFilename());
       //Generate the allowable parameter list
-      ParameterList params = new ParameterList();
-      params.setParameters(jasperReport);
+      ParameterList params = null;
+      params = (ParameterList) context.getRequest().getAttribute("parameterList");
+      if (params == null) {
+        params = new ParameterList();
+        params.setParameters(jasperReport);
+      }
       //Load the criteria if the user selected to base on existing criteria
       if (criteriaId != null && !criteriaId.equals("-1") && !"".equals(criteriaId)) {
         Criteria criteria = new Criteria(db, Integer.parseInt(criteriaId));
@@ -288,6 +292,7 @@ public final class Reports extends CFSModule {
     }
     addModuleBean(context, "reports.run", "Run Report");
     Connection db = null;
+    boolean toInsert = false;
     //Process parameters
     String categoryId = context.getRequest().getParameter("categoryId");
     String reportId = context.getRequest().getParameter("reportId");
@@ -307,52 +312,60 @@ public final class Reports extends CFSModule {
       ParameterList params = new ParameterList();
       params.setParameters(jasperReport);
       //Set the user supplied parameters from the request
-      params.setParameters(context.getRequest());
-      //Set the system generated parameters
-      //TODO: Move this into ParameterList.java
-      params.addParam("user_name", (getUser(context, getUserId(context))).getContact().getNameFirstLast());
-      params.addParam("path_icons", context.getServletContext().getRealPath("/") + "images" + fs + "icons" + fs);
-      //Set some database specific parameters
-      if (params.getParameter("year_part") != null) {
-        Parameter thisParam = params.getParameter("year_part");
-        params.addParam("year_part", DatabaseUtils.getYearPart(db, thisParam.getDescription()));
+      toInsert = params.setParameters(context.getRequest());
+      if (toInsert) {
+        //Set the system generated parameters
+        //TODO: Move this into ParameterList.java
+        params.addParam("user_name", (getUser(context, getUserId(context))).getContact().getNameFirstLast());
+        params.addParam("path_icons", context.getServletContext().getRealPath("/") + "images" + fs + "icons" + fs);
+        //Set some database specific parameters
+        if (params.getParameter("year_part") != null) {
+          Parameter thisParam = params.getParameter("year_part");
+          params.addParam("year_part", DatabaseUtils.getYearPart(db, thisParam.getDescription()));
+        }
+        if (params.getParameter("month_part") != null) {
+          Parameter thisParam = params.getParameter("month_part");
+          params.addParam("month_part", DatabaseUtils.getMonthPart(db, thisParam.getDescription()));
+        }
+        if (params.getParameter("day_part") != null) {
+          Parameter thisParam = params.getParameter("day_part");
+          params.addParam("day_part", DatabaseUtils.getDayPart(db, thisParam.getDescription()));
+        }
+        //Populate a criteria record which will be used in the report
+        Criteria thisCriteria = new Criteria();
+        thisCriteria.setReportId(report.getId());
+        thisCriteria.setOwner(getUserId(context));
+        thisCriteria.setEnteredBy(getUserId(context));
+        thisCriteria.setModifiedBy(getUserId(context));
+        thisCriteria.setSubject(context.getRequest().getParameter("criteria_subject"));
+        thisCriteria.setParameters(params);
+        //Determine if criteria should be saved
+        thisCriteria.setSave(context.getRequest().getParameter("save"));
+        String saveType = context.getRequest().getParameter("saveType");
+        if ("overwrite".equals(saveType)) {
+          thisCriteria.setId(Integer.parseInt(context.getRequest().getParameter("criteriaId")));
+          thisCriteria.setOverwrite(true);
+        } else if ("save".equals(saveType)) {
+          thisCriteria.setSave(true);
+        }
+        //Save the user's criteria for future use
+        boolean result = thisCriteria.save(db);
+        //Insert the report into the queue
+        int position = ReportQueue.insert(db, thisCriteria);
+        context.getRequest().setAttribute("queuePosition", String.valueOf(position));
+        //JasperRunManager.runReportToPdfFile(reportPath + report.getFilename() + ".jasper", reportPath + report.getFilename() + ".pdf", parameters, db);
+      } else {
+        context.getRequest().setAttribute("parameterList", params);
+        processErrors(context, params.getErrors());
       }
-      if (params.getParameter("month_part") != null) {
-        Parameter thisParam = params.getParameter("month_part");
-        params.addParam("month_part", DatabaseUtils.getMonthPart(db, thisParam.getDescription()));
-      }
-      if (params.getParameter("day_part") != null) {
-        Parameter thisParam = params.getParameter("day_part");
-        params.addParam("day_part", DatabaseUtils.getDayPart(db, thisParam.getDescription()));
-      }
-      //Populate a criteria record which will be used in the report
-      Criteria thisCriteria = new Criteria();
-      thisCriteria.setReportId(report.getId());
-      thisCriteria.setOwner(getUserId(context));
-      thisCriteria.setEnteredBy(getUserId(context));
-      thisCriteria.setModifiedBy(getUserId(context));
-      thisCriteria.setSubject(context.getRequest().getParameter("criteria_subject"));
-      thisCriteria.setParameters(params);
-      //Determine if criteria should be saved
-      thisCriteria.setSave(context.getRequest().getParameter("save"));
-      String saveType = context.getRequest().getParameter("saveType");
-      if ("overwrite".equals(saveType)) {
-        thisCriteria.setId(Integer.parseInt(context.getRequest().getParameter("criteriaId")));
-        thisCriteria.setOverwrite(true);
-      } else if ("save".equals(saveType)) {
-        thisCriteria.setSave(true);
-      }
-      //Save the user's criteria for future use
-      boolean result = thisCriteria.save(db);
-      //Insert the report into the queue
-      int position = ReportQueue.insert(db, thisCriteria);
-      context.getRequest().setAttribute("queuePosition", String.valueOf(position));
-      //JasperRunManager.runReportToPdfFile(reportPath + report.getFilename() + ".jasper", reportPath + report.getFilename() + ".pdf", parameters, db);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       freeConnection(context, db);
+    }
+    if (!toInsert) {
+      return executeCommandParameterList(context);
     }
     return "GenerateReportOK";
   }
