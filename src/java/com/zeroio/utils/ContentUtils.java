@@ -30,7 +30,6 @@ import org.apache.xerces.xni.parser.XMLParserConfiguration;
 // PDF
 import org.pdfbox.pdfparser.PDFParser;
 import org.pdfbox.pdmodel.PDDocument;
-import org.pdfbox.encryption.DecryptDocument;
 import org.pdfbox.util.PDFTextStripper;
 // PPT
 import org.apache.poi.poifs.eventfilesystem.*;
@@ -106,9 +105,8 @@ public class ContentUtils {
         parser.parse();
         PDDocument pdfDocument = parser.getPDDocument();
         if (pdfDocument.isEncrypted()) {
-          DecryptDocument decryptor = new DecryptDocument(pdfDocument);
           //Just try using the default password and move on
-          decryptor.decryptDocument("");
+          pdfDocument.decrypt("");
         }
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         OutputStreamWriter writer = new OutputStreamWriter(out);

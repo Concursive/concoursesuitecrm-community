@@ -64,3 +64,9 @@ WEB-INF/lib/jasperreports.jar
 ## 2004-09-03 updated jtds to 0.9-rc2 (fixes bug with 0.8)
 WEB-INF/lib/jtds-0.8.jar
 
+## 2004-10-12 updated libs (fixes bugs, release versions)
+WEB-INF/lib/lucene-1.4-final.jar
+WEB-INF/lib/PDFBox-0.6.5.jar
+WEB-INF/lib/jtds-0.9-rc2.jar
+
+
