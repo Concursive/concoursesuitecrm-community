@@ -204,10 +204,10 @@ public class ActiveSurveyQuestionItem {
       pst.close();
       this.setId(DatabaseUtils.getCurrVal(db, "active_survey_items_item_id_seq"));
       
-      //populate the active_survey_answer_itemavg table with 0 count for items
+      //populate the active_survey_answer_avg table with 0 count for items
       i =0;
       pst = db.prepareStatement(
-          "INSERT INTO active_survey_answer_itemavg " +
+          "INSERT INTO active_survey_answer_avg " +
           "(question_id, item_id, total ) " +
           "VALUES (?, ?, ?) ");
       pst.setInt(++i, qid);

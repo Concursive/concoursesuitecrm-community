@@ -118,7 +118,7 @@ public class ActiveSurveyQuestionItemList extends ArrayList {
     try {
       pst = db.prepareStatement(
           "SELECT item_id,total " +
-          "FROM active_survey_answer_itemavg " +
+          "FROM active_survey_answer_avg " +
           "WHERE question_id = ? ");
       int i = 0;
       pst.setInt(++i, questionId);

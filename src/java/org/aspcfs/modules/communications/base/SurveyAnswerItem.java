@@ -224,7 +224,7 @@ public class SurveyAnswerItem {
       PreparedStatement pst = null;
       i = 0;
       pst = db.prepareStatement(
-          "UPDATE active_survey_answer_itemavg " +
+          "UPDATE active_survey_answer_avg " +
           "SET total = total + 1 " +
           "WHERE question_id = ? AND item_id =? ");
 
