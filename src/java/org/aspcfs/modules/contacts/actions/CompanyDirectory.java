@@ -57,7 +57,7 @@ public final class CompanyDirectory extends CFSModule {
     Exception errorMessage = null;
 
     PagedListInfo companyDirectoryInfo = this.getPagedListInfo(context, "CompanyDirectoryInfo");
-    companyDirectoryInfo.setLink("/CompanyDirectory.do?command=ListEmployees");
+    companyDirectoryInfo.setLink("CompanyDirectory.do?command=ListEmployees");
 
     Connection db = null;
     ContactList employeeList = new ContactList();

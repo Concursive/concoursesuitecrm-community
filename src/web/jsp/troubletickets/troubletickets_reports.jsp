@@ -5,7 +5,7 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
-<form name="listView" method="post" action="/TroubleTickets.do?command=Reports">
+<form name="listView" method="post" action="TroubleTickets.do?command=Reports">
 <a href="TroubleTickets.do">Tickets</a> > 
 Reports<br>
 <hr color="#BFBFBB" noshade>
@@ -59,7 +59,7 @@ Reports<br>
   <tr>
   <dhv:permission name="tickets-tickets-reports-view,tickets-tickets-reports-delete">
     <td nowrap class="row<%= rowid %>">
-      <dhv:permission name="tickets-tickets-reports-view"><a href="TroubleTickets.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="tickets-tickets-reports-view,tickets-tickets-reports-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-reports-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
+      <dhv:permission name="tickets-tickets-reports-view"><a href="TroubleTickets.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="tickets-tickets-reports-view,tickets-tickets-reports-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-reports-delete"><a href="javascript:confirmDelete('TroubleTickets.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
     </td>
   </dhv:permission>
     <td width="100%" class="row<%= rowid %>">

@@ -126,7 +126,7 @@ public class CustomForm extends CustomFieldCategory {
     StringTokenizer st = new StringTokenizer(scripts, "^");
     if (st.hasMoreTokens()) {
       while (st.hasMoreTokens()) {
-        jScripts.append("<script language=\"JavaScript\" TYPE=\"text/javascript\" SRC=\"/javascript/" + st.nextToken() + "\"></script>");
+        jScripts.append("<script language=\"JavaScript\" TYPE=\"text/javascript\" SRC=\"javascript/" + st.nextToken() + "\"></script>");
       }
     }
   }

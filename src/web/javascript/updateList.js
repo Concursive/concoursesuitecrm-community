@@ -1,5 +1,5 @@
 //Expects an iframe to query server to populate new lists
-//<iframe src='/empty.html' id='server_commands' name='server_commands' style='visibility:hidden' height=0></iframe>
+//<iframe src='empty.html' id='server_commands' name='server_commands' style='visibility:hidden' height=0></iframe>
 
 var item_machine;
 var taxrates = new Array(1);

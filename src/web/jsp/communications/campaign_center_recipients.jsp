@@ -3,7 +3,7 @@
 <jsp:useBean id="sclList" class="org.aspcfs.modules.communications.base.SearchCriteriaListList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
-<form name="modForm" action="/CampaignManager.do?command=Update&id=<%= Campaign.getId() %>&auto-populate=true" method="post">
+<form name="modForm" action="CampaignManager.do?command=Update&id=<%= Campaign.getId() %>&auto-populate=true" method="post">
 <a href="CampaignManager.do?command=View">Back to Campaign List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">

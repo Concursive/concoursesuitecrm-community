@@ -5,7 +5,7 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
-<a href="/Accounts.do">Account Management</a> > 
+<a href="Accounts.do">Account Management</a> >
 Reports<br>
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="accounts-accounts-reports-add"><a href="Accounts.do?command=GenerateForm">Generate new report</a></dhv:permission>
@@ -62,7 +62,7 @@ Reports<br>
   <tr>
     <dhv:permission name="accounts-accounts-reports-view,accounts-accounts-reports-delete">
       <td nowrap class="row<%= rowid %>">
-        <dhv:permission name="accounts-accounts-reports-view"><a href="Accounts.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="accounts-accounts-reports-view,accounts-accounts-reports-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-reports-delete"><a href="javascript:confirmDelete('/Accounts.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
+        <dhv:permission name="accounts-accounts-reports-view"><a href="Accounts.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="accounts-accounts-reports-view,accounts-accounts-reports-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-reports-delete"><a href="javascript:confirmDelete('Accounts.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
       </td>
     </dhv:permission>
     <td width="100%" class="row<%= rowid %>">

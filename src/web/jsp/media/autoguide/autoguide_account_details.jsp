@@ -3,8 +3,8 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="InventoryItem" class="org.aspcfs.modules.media.autoguide.base.Inventory" scope="request"/>
 <%@ include file="../../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
 <form name="modInventory" action="/AccountsAutoGuide.do?command=AccountModify&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>" method="post">
 <a href="Accounts.do">Account Management</a> > 

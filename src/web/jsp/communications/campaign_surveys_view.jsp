@@ -56,7 +56,7 @@ Surveys
       <tr>
         <dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <dhv:permission name="campaign-campaigns-surveys-edit"><a href="CampaignManagerSurvey.do?command=Modify&id=<%=thisSurvey.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-surveys-delete"><a href="javascript:popURLReturn('/CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=thisSurvey.getId()%>&popup=true','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">Del</a></dhv:permission>
+          <dhv:permission name="campaign-campaigns-surveys-edit"><a href="CampaignManagerSurvey.do?command=Modify&id=<%=thisSurvey.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-surveys-delete"><a href="javascript:popURLReturn('CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=thisSurvey.getId()%>&popup=true','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">Del</a></dhv:permission>
         </td>
 	</dhv:permission>
         <td class="row<%= rowid %>" width="100%" nowrap>

@@ -46,7 +46,7 @@ public final class Roles extends CFSModule {
     Exception errorMessage = null;
 
     PagedListInfo roleInfo = this.getPagedListInfo(context, "RoleListInfo");
-    roleInfo.setLink("/Roles.do?command=ListRoles");
+    roleInfo.setLink("Roles.do?command=ListRoles");
 
     Connection db = null;
     RoleList roleList = new RoleList();

@@ -47,7 +47,7 @@ public final class Viewpoints extends CFSModule {
 
     PagedListInfo viewpointInfo = this.getPagedListInfo(context, "ViewpointListInfo");
     String userId = context.getRequest().getParameter("userId");
-    viewpointInfo.setLink("/Viewpoints.do?command=ListViewpoints&userId=" + userId);
+    viewpointInfo.setLink("Viewpoints.do?command=ListViewpoints&userId=" + userId);
 
     Connection db = null;
     ViewpointList viewpointList = new ViewpointList();

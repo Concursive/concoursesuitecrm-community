@@ -49,7 +49,7 @@ public final class CampaignDocuments extends CFSModule {
       documents.setLinkModuleId(Constants.COMMUNICATIONS_DOCUMENTS);
       documents.setLinkItemId(thisCampaign.getId());
       PagedListInfo CampaignDocListInfo = this.getPagedListInfo(context, "CampaignDocListInfo");
-      CampaignDocListInfo.setLink("/CampaignDocuments.do?command=View&id=" + thisCampaign.getId());
+      CampaignDocListInfo.setLink("CampaignDocuments.do?command=View&id=" + thisCampaign.getId());
       //TODO: Not implemented in the JSP, so not implemented here
       //PagedListInfo documentListInfo = this.getPagedListInfo(context, "AccountDocumentInfo");
       //documentListInfo.setLink("CampaignDocuments.do?command=View&id=" + id);

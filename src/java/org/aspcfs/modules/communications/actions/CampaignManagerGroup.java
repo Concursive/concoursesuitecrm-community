@@ -201,7 +201,7 @@ public final class CampaignManagerGroup extends CFSModule {
       htmlDialog.addMessage(dependencies.getHtmlString());
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='/CampaignManagerGroup.do?command=Delete&id=" + id + "'");
+        htmlDialog.setDeleteUrl("javascript:window.location.href='CampaignManagerGroup.do?command=Delete&id=" + id + "'");
       } else {
         htmlDialog.setHeader("This group cannot be deleted because at least one campaign is using it.");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");

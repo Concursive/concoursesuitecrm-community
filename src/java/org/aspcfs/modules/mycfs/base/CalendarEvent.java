@@ -368,9 +368,9 @@ public class CalendarEvent implements Comparable {
       return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" alt=\"Account:" + this.getSubject() + "\" align=texttop>";
     } else if (category.equalsIgnoreCase("Tasks")) {
       if (this.getStatus() == Task.DONE) {
-        return "<a href=\"javascript:changeImages('image" + this.getId() + "','/MyTasks.do?command=ProcessImage&id=box.gif|gif|'+" + this.getId() + "+'|0','/MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+" + this.getId() + "+'|1');\"><img src=\"images/box-checked.gif\" name=\"image" + this.getId() + "\" id=\"1\" border=0 title=\"Click to change\"></a>";
+        return "<a href=\"javascript:changeImages('image" + this.getId() + "','MyTasks.do?command=ProcessImage&id=box.gif|gif|'+" + this.getId() + "+'|0','/MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+" + this.getId() + "+'|1');\"><img src=\"images/box-checked.gif\" name=\"image" + this.getId() + "\" id=\"1\" border=0 title=\"Click to change\"></a>";
       } else {
-        return "<a href=\"javascript:changeImages('image" + this.getId() + "','/MyTasks.do?command=ProcessImage&id=box.gif|gif|'+" + this.getId() + "+'|1','/MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+" + this.getId() + "+'|1');\"><img src=\"images/box.gif\" name=\"image" + this.getId() + "\" id=\"0\" border=0 title=\"Click to change\"></a>";
+        return "<a href=\"javascript:changeImages('image" + this.getId() + "','MyTasks.do?command=ProcessImage&id=box.gif|gif|'+" + this.getId() + "+'|1','/MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+" + this.getId() + "+'|1');\"><img src=\"images/box.gif\" name=\"image" + this.getId() + "\" id=\"0\" border=0 title=\"Click to change\"></a>";
       }
     }
     return icon;

@@ -4,16 +4,14 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../../initPage.jsp" %>
 <%@ include file="../../initPageIsManagerOf.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
 <a href="AutoGuide.do?command=List">Back to Vehicle List</a><p>
-<form action='/AutoGuide.do?command=Details&id=<%= InventoryItem.getId() %>&action=modify' method='post'>
-
+<form action='AutoGuide.do?command=Details&id=<%= InventoryItem.getId() %>&action=modify' method='post'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td width="100%" valign="top">
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2" valign="center" align="center">

@@ -66,7 +66,7 @@ public final class CampaignManagerProto extends CFSModule {
     Exception errorMessage = null;
 
     PagedListInfo campaignListInfo = this.getPagedListInfo(context, "CampaignListInfo");
-    campaignListInfo.setLink("/CampaignManager.do?command=Dashboard");
+    campaignListInfo.setLink("CampaignManager.do?command=Dashboard");
 
     Connection db = null;
     //RoleList roleList = new RoleList();

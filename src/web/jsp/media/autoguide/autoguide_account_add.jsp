@@ -9,8 +9,8 @@
 <jsp:useBean id="adRunTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].stockNo.focus();">
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
     if (form.dosubmit.value == "false") {
@@ -65,10 +65,10 @@
 <form name="addVehicle" action="AccountsAutoGuide.do?command=AccountInsert&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <input type="hidden" name="accountId" value="<%= OrgDetails.getOrgId() %>"/>
 <input type="hidden" name="dosubmit" value="true">
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="/AccountsAutoGuide.do?command=AccountList&orgId=<%=OrgDetails.getOrgId()%>">Vehicle Inventory List</a> >
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="AccountsAutoGuide.do?command=AccountList&orgId=<%=OrgDetails.getOrgId()%>">Vehicle Inventory List</a> >
 Add Vehicle<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

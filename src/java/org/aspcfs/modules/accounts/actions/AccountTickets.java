@@ -351,7 +351,6 @@ public final class AccountTickets extends CFSModule {
 
       LookupList departmentList = new LookupList(db, "lookup_department");
       departmentList.addItem(0, "-- None --");
-      //departmentList.setJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true#department';document.forms[0].submit()");
       departmentList.setJsEvent("onChange=\"javascript:updateUserList();\"");
       context.getRequest().setAttribute("DepartmentList", departmentList);
 
@@ -368,7 +367,6 @@ public final class AccountTickets extends CFSModule {
       TicketCategoryList categoryList = new TicketCategoryList();
       categoryList.setCatLevel(0);
       categoryList.setParentCode(0);
-      //categoryList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true&refresh=1#categories';document.forms[0].submit()");
       categoryList.setHtmlJsEvent("onChange=\"javascript:updateSubList1();\"");
       categoryList.buildList(db);
       context.getRequest().setAttribute("CategoryList", categoryList);
@@ -384,7 +382,7 @@ public final class AccountTickets extends CFSModule {
 
       OrganizationList orgList = new OrganizationList();
       orgList.setMinerOnly(false);
-      orgList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true';document.forms[0].submit()");
+      orgList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true';document.forms[0].submit()");
       orgList.buildList(db);
       context.getRequest().setAttribute("OrgList", orgList);
 
@@ -392,7 +390,6 @@ public final class AccountTickets extends CFSModule {
 
       subList1.setCatLevel(1);
       subList1.setParentCode(newTic.getCatCode());
-      //subList1.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true&refresh=2#categories';document.forms[0].submit()");
       subList1.setHtmlJsEvent("onChange=\"javascript:updateSubList2();\"");
       subList1.buildList(db);
       context.getRequest().setAttribute("SubList1", subList1);
@@ -422,7 +419,6 @@ public final class AccountTickets extends CFSModule {
         subList2.setParentCode(newTic.getSubCat1());
       }
 
-      //subList2.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true&refresh=3#categories';document.forms[0].submit()");
       subList2.setHtmlJsEvent("onChange=\"javascript:updateSubList3();\"");
       subList2.buildList(db);
       context.getRequest().setAttribute("SubList2", subList2);

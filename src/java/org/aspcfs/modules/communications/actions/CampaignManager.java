@@ -1362,7 +1362,7 @@ public final class CampaignManager extends CFSModule {
         context.getRequest().setAttribute("Error",
             "<p><b>This campaign could not be cancelled because it has already started processing or has completed.</b></p>" +
             "<p>Once the server starts sending the messages, the campaign cannot be stopped.</p>" +
-            "<p><a href=\"/CampaignManager.do?command=Dashboard\">Back to Dashboard</a></p>");
+            "<p><a href=\"CampaignManager.do?command=Dashboard\">Back to Dashboard</a></p>");
         return ("UserError");
       }
     } else {

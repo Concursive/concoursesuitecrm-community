@@ -6,8 +6,8 @@
 <jsp:useBean id="ModId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <body<% if (CustomField.getName() == null) { %> onLoad="document.forms[0].name.focus();"<%}%>>
 <form name="details" action="AdminFields.do?command=AddField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true" method="post">
 <a href="Admin.do">Setup</a> >

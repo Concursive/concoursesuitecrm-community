@@ -53,7 +53,7 @@ public final class AccountsDocuments extends CFSModule {
       documents.setLinkItemId(thisOrg.getOrgId());
 
       PagedListInfo docListInfo = this.getPagedListInfo(context, "DocListInfo");
-      docListInfo.setLink("/AccountsDocuments.do?command=View&orgId=" + thisOrg.getOrgId());
+      docListInfo.setLink("AccountsDocuments.do?command=View&orgId=" + thisOrg.getOrgId());
 
       //TODO: Not implemented in the JSP, so not implemented here
       //PagedListInfo documentListInfo = this.getPagedListInfo(context, "AccountDocumentInfo");

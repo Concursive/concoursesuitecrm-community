@@ -119,7 +119,7 @@ Campaign Details
           This campaign has been configured and can now be activated.<br>
           Once active, today's campaigns will begin processing in under 5 minutes and cannot be cancelled.<br>
           Verify the campaign then
-          <a href="javascript:confirmForward('/CampaignManager.do?command=Activate&id=<%= Campaign.getId() %>&notify=true&modified=<%= Campaign.getModified() %>');"><font color="red">click to Activate</font></a>.
+          <a href="javascript:confirmForward('CampaignManager.do?command=Activate&id=<%= Campaign.getId() %>&notify=true&modified=<%= Campaign.getModified() %>');"><font color="red">click to Activate</font></a>.
         </center>
       </td>
     </tr>
@@ -182,10 +182,10 @@ Campaign Details
 </table>
 &nbsp;<br>
 <dhv:permission name="campaign-campaigns-edit">
-  <input type="button" value="Rename Campaign" onClick="javascript:this.form.action='/CampaignManager.do?command=Modify&id=<%= Campaign.getId() %>';submit();">
+  <input type="button" value="Rename Campaign" onClick="javascript:this.form.action='CampaignManager.do?command=Modify&id=<%= Campaign.getId() %>';submit();">
 </dhv:permission>
 <dhv:permission name="campaign-campaigns-delete">
-  <input type="button" value="Delete Campaign" onClick="javascript:this.form.action='/CampaignManager.do?command=Delete&id=<%= Campaign.getId() %>';confirmSubmit(document.modForm);">
+  <input type="button" value="Delete Campaign" onClick="javascript:this.form.action='CampaignManager.do?command=Delete&id=<%= Campaign.getId() %>';confirmSubmit(document.modForm);">
 </dhv:permission>
   </td>
   </tr>

@@ -236,7 +236,7 @@ public final class TroubleTickets extends CFSModule {
     files.setLinkItemId(-1);
 
     PagedListInfo rptListInfo = this.getPagedListInfo(context, "TicketRptListInfo");
-    rptListInfo.setLink("/TroubleTickets.do?command=Reports");
+    rptListInfo.setLink("TroubleTickets.do?command=Reports");
 
     try {
       db = this.getConnection(context);
@@ -368,7 +368,6 @@ public final class TroubleTickets extends CFSModule {
 
       LookupList departmentList = new LookupList(db, "lookup_department");
       departmentList.addItem(0, "-- None --");
-      //departmentList.setJsEvent("onChange = javascript:document.forms[0].action='/TroubleTickets.do?command=Modify&passedid=" + newTic.getId() + "&auto-populate=true#department';document.forms[0].submit()");
       departmentList.setJsEvent("onChange=\"javascript:updateUserList();\"");
       context.getRequest().setAttribute("DepartmentList", departmentList);
 
@@ -393,7 +392,6 @@ public final class TroubleTickets extends CFSModule {
       TicketCategoryList categoryList = new TicketCategoryList();
       categoryList.setCatLevel(0);
       categoryList.setParentCode(0);
-      //categoryList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/TroubleTickets.do?command=Modify&passedid=" + newTic.getId() + "&auto-populate=true&refresh=1#categories';document.forms[0].submit()");
       categoryList.setHtmlJsEvent("onChange=\"javascript:updateSubList1();\"");
       categoryList.buildList(db);
       context.getRequest().setAttribute("CategoryList", categoryList);
@@ -411,7 +409,6 @@ public final class TroubleTickets extends CFSModule {
 
       subList1.setCatLevel(1);
       subList1.setParentCode(newTic.getCatCode());
-      //subList1.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/TroubleTickets.do?command=Modify&passedid=" + newTic.getId() + "&auto-populate=true&refresh=2#categories';document.forms[0].submit()");
       subList1.setHtmlJsEvent("onChange=\"javascript:updateSubList2();\"");
       subList1.buildList(db);
       context.getRequest().setAttribute("SubList1", subList1);
@@ -446,7 +443,6 @@ public final class TroubleTickets extends CFSModule {
         subList2.setParentCode(newTic.getSubCat1());
       }
 
-      //subList2.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/TroubleTickets.do?command=Modify&passedid=" + newTic.getId() + "&auto-populate=true&refresh=3#categories';document.forms[0].submit()");
       subList2.setHtmlJsEvent("onChange=\"javascript:updateSubList3();\"");
       subList2.buildList(db);
       context.getRequest().setAttribute("SubList2", subList2);
@@ -707,7 +703,7 @@ public final class TroubleTickets extends CFSModule {
     TicketList ticList = new TicketList();
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
 
-    ticListInfo.setLink("/TroubleTickets.do?command=SearchTickets");
+    ticListInfo.setLink("TroubleTickets.do?command=SearchTickets");
     ticList.setPagedListInfo(ticListInfo);
     ticListInfo.setSearchCriteria(ticList);
 

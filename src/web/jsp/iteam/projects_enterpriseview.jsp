@@ -2,7 +2,7 @@
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="ProjectList" class="com.zeroio.iteam.base.ProjectList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <%
   Iterator i = ProjectList.iterator();
   

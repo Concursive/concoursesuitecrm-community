@@ -34,7 +34,7 @@ public final class CampaignManagerMessage extends CFSModule {
     }
     Exception errorMessage = null;
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignMessageListInfo");
-    pagedListInfo.setLink("/CampaignManagerMessage.do?command=View");
+    pagedListInfo.setLink("CampaignManagerMessage.do?command=View");
     Connection db = null;
     MessageList messageList = new MessageList();
     try {

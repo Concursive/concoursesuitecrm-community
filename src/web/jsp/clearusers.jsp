@@ -37,4 +37,4 @@
 
   }
 %>
-<a href="/Login.do?command=Logout">Login</a>
+<a href="Login.do?command=Logout">Login</a>

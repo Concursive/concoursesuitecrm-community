@@ -1,7 +1,7 @@
 <jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
-<script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <body onLoad="javascript:document.forms[0].searchDescription.focus();">
 <form name="searchLeads" action="Leads.do?command=ViewOpp" method="post">

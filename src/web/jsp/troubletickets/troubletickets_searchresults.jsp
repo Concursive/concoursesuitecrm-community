@@ -36,7 +36,7 @@ Search Results
 	<tr>
 	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
     <td rowspan="2" width="8" valign="top" nowrap class="row<%= rowid %>">
-      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= thisTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=Delete&id=<%= thisTic.getId() %>');">Del</a></dhv:permission>
+      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= thisTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('TroubleTickets.do?command=Delete&id=<%= thisTic.getId() %>');">Del</a></dhv:permission>
     </td>
   </dhv:permission>
 		<td width="15" valign="top" nowrap class="row<%= rowid %>">

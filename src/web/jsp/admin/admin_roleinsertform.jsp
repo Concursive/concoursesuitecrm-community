@@ -78,6 +78,6 @@ Add Role<br>
 </table>
 <br>
 <input type="submit" value="Add" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Roles.do?command=ListRoles'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
 </form>
 </body>

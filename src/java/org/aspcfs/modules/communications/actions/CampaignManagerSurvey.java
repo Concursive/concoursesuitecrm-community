@@ -36,7 +36,7 @@ public final class CampaignManagerSurvey extends CFSModule {
 
     Exception errorMessage = null;
     PagedListInfo surveyInfo = this.getPagedListInfo(context, "CampaignSurveyListInfo");
-    surveyInfo.setLink("/CampaignManagerSurvey.do?command=View");
+    surveyInfo.setLink("CampaignManagerSurvey.do?command=View");
     Connection db = null;
     SurveyList surveyList = new SurveyList();
 

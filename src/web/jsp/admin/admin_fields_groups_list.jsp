@@ -56,7 +56,7 @@ Folder<br>
   <tr>
     <td class="containerBack">
       <dhv:permission name="admin-sysconfig-folders-add">
-        <a href="/AdminFieldsGroup.do?command=AddGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>">Add a Group to this Folder</a><br>
+        <a href="AdminFieldsGroup.do?command=AddGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>">Add a Group to this Folder</a><br>
         &nbsp;<br>
       </dhv:permission>
 <%

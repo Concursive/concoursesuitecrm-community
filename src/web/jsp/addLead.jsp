@@ -2,7 +2,7 @@
 <b>Add a New Lead</b>
 <hr color="#BFBFBB" noshade>
 
-<form name="addLead" action="/Leads.do?command=Insert" method="post">
+<form name="addLead" action="Leads.do?command=Insert" method="post">
 <table cellpadding="4" cellspacing="0" border="1" width="100%">
       
 <tr><td width=50% valign=center>

@@ -36,7 +36,7 @@ public final class ExternalContactsCalls extends CFSModule {
     String contactId = context.getRequest().getParameter("contactId");
     addModuleBean(context, "External Contacts", "Calls");
     PagedListInfo callListInfo = this.getPagedListInfo(context, "CallListInfo");
-    callListInfo.setLink("/ExternalContactsCalls.do?command=View&contactId=" + contactId);
+    callListInfo.setLink("ExternalContactsCalls.do?command=View&contactId=" + contactId);
     Connection db = null;
     CallList callList = new CallList();
     Contact thisContact = null;
@@ -227,7 +227,7 @@ public final class ExternalContactsCalls extends CFSModule {
 
     String contactId = context.getRequest().getParameter("contactId");
     PagedListInfo callListInfo = this.getPagedListInfo(context, "CallListInfo");
-    callListInfo.setLink("/ExternalContactCalls.do?command=View&contactId=" + contactId);
+    callListInfo.setLink("ExternalContactCalls.do?command=View&contactId=" + contactId);
 
     Contact thisContact = null;
 

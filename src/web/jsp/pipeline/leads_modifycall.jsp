@@ -6,9 +6,9 @@
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {

@@ -14,10 +14,10 @@
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%@ include file="../initPageIsManagerOf.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popLookupSelect.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript">
   indSelected = 0;
   orgSelected = 0; 
