@@ -6,23 +6,21 @@ import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import org.aspcfs.utils.web.*;
 import java.text.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.awt.image.*;
 import java.io.*;
 import java.util.*;
-import com.sun.image.codec.jpeg.*;
-import com.jrefinery.chart.*;
-import com.jrefinery.chart.data.*;
-import com.jrefinery.data.*;
-import com.jrefinery.chart.ui.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.base.GraphSummaryList;
+import com.jrefinery.chart.*;
+import com.jrefinery.chart.data.*;
+import com.jrefinery.chart.ui.*;
+import com.jrefinery.data.*;
+import com.jrefinery.chart.entity.StandardEntityCollection;
+import com.jrefinery.chart.tooltips.TimeSeriesToolTipGenerator;
+import java.awt.Color;
 
 /**
  *  Description of the Class
@@ -122,7 +120,6 @@ public final class RevenueManager extends CFSModule {
     UserList shortChildList = new UserList();
     shortChildList = thisRec.getShortChildList();
     shortChildList.setRevenueYear(year);
-    UserList linesToDraw = new UserList();
     RevenueList realFullRevList = new RevenueList();
     Connection db = null;
     try {
@@ -194,7 +191,7 @@ public final class RevenueManager extends CFSModule {
           tempRevList.addElement(tempRev);
         }
       }
-      //add up all revenue for children
+      //add up all revenue for children line on graph
       UserList tempUserList = new UserList();
       Iterator n = fullChildList.iterator();
       while (n.hasNext()) {
@@ -202,65 +199,51 @@ public final class RevenueManager extends CFSModule {
         thisRecord.setRevenueIsValid(false, true);
         tempUserList = prepareLines(thisRecord, realFullRevList, tempUserList, year);
       }
+      UserList linesToDraw = new UserList();
       linesToDraw = calculateLine(tempUserList, linesToDraw, year);
-      //set my own
+      //set my own, on top of the children line
       tempUserList = prepareLines(thisRec, tempRevList, tempUserList, year);
-      //add me up -- keep this
       linesToDraw = calculateLine(thisRec, linesToDraw, year);
-      XYDataset categoryData = createCategoryDataset(linesToDraw, year);
-      //Prepare the chart
-      JFreeChart chart = ChartFactory.createXYChart("", "", "", categoryData, false);
-      chart.setBackgroundPaint(Color.white);
-      XYPlot bPlot = chart.getXYPlot();
+      //Store the data in the collection
+      XYSeriesCollection categoryData = createCategoryDataset(linesToDraw, year);
       //Vertical Axis characteristics
-      VerticalNumberAxis vnAxis = (VerticalNumberAxis) bPlot.getVerticalAxis();
+      NumberAxis vnAxis = new VerticalNumberAxis("");
       vnAxis.setAutoRangeIncludesZero(true);
       vnAxis.setTickMarksVisible(true);
-      bPlot.setRangeAxis(vnAxis);
       //Horizontal Axis characteristics
-      HorizontalNumberAxis hnAxis = (HorizontalNumberAxis) bPlot.getHorizontalAxis();
-      hnAxis.setAutoRangeIncludesZero(false);
-      hnAxis.setAutoTickUnitSelection(false);
-      hnAxis.setAutoRange(false);
-      hnAxis.setVerticalTickLabels(true);
-      hnAxis.setTickMarksVisible(true);
-      //Grid characteristics
-      Stroke gridStroke = new BasicStroke(0.25f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0.0f, new float[]{2.0f, 2.0f}, 0.0f);
-      Paint gridPaint = Color.gray;
-      //Horizontal Axis labels
-      ValueAxis myHorizontalDateAxis = new HorizontalDateAxis(hnAxis.getLabel(), hnAxis.getLabelFont(),
-          hnAxis.getLabelPaint(), hnAxis.getLabelInsets(), true, hnAxis.getTickLabelFont(),
-          hnAxis.getTickLabelPaint(), hnAxis.getTickLabelInsets(), true, true, hnAxis.getTickMarkStroke(),
-          true, new Integer(0), new Range(year, (year + 1)), false, new DateUnit(Calendar.MONTH, 1),
-          new SimpleDateFormat("MMM ' ' yy"), true, gridStroke, gridPaint, false, null, null, null);
-      myHorizontalDateAxis.setTickMarksVisible(true);
-      try {
-        bPlot.setDomainAxis(myHorizontalDateAxis);
-      } catch (AxisNotCompatibleException err1) {
-        System.out.println("AxisNotCompatibleException error!");
-      }
+      HorizontalDateAxis hnAxis = new HorizontalDateAxis("");
+      XYPlot bPlot = new XYPlot(categoryData, hnAxis, vnAxis);
+      SimpleDateFormat sdf = new SimpleDateFormat("MMM yy");
+      TimeSeriesToolTipGenerator ttg = new TimeSeriesToolTipGenerator(
+          sdf, NumberFormat.getInstance());
+      StandardXYItemRenderer sxyir = new StandardXYItemRenderer(
+          StandardXYItemRenderer.LINES + StandardXYItemRenderer.SHAPES,
+          ttg);
+      sxyir.setDefaultShapeFilled(false);
+      bPlot.setRenderer(sxyir);
       //Draw the chart and save to file
+      JFreeChart chart = new JFreeChart("", JFreeChart.DEFAULT_TITLE_FONT, bPlot, false);
+      chart.setBackgroundPaint(Color.white);
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("Revenue-> Drawing the chart");
+        System.out.println("RevenueManager-> Drawing the chart");
       }
+      //Output the chart
       int width = 275;
       int height = 200;
-      BufferedImage img = draw(chart, width, height);
-
-      //Output the chart
       try {
         String realPath = context.getServletContext().getRealPath("/");
         String filePath = realPath + "graphs" + fs;
         java.util.Date testDate = new java.util.Date();
-        String fileName = new String(idToUse + testDate.getTime() + context.getSession().getCreationTime() + ".jpg");
-        FileOutputStream foutstream = new FileOutputStream(filePath + fileName);
-        JPEGImageEncoder encoder =
-            JPEGCodec.createJPEGEncoder(foutstream);
-        JPEGEncodeParam param =
-            encoder.getDefaultJPEGEncodeParam(img);
-        param.setQuality(1.0f, true);
-        encoder.encode(img, param);
-        foutstream.close();
+        String fileName = String.valueOf(idToUse) + String.valueOf(testDate.getTime()) + String.valueOf(context.getSession().getCreationTime());
+
+        // Write the chart image
+        ChartRenderingInfo info = new ChartRenderingInfo(new StandardEntityCollection());
+        File imageFile = new File(filePath + fileName + ".jpg");
+        ChartUtilities.saveChartAsJPEG(imageFile, 1.0f, chart, width, height, info);
+        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(filePath + fileName + ".map")));
+        ChartUtilities.writeImageMap(pw, fileName, info);
+        pw.flush();
+        pw.close();
 
         //Update the cached filename
         thisRec.getRevenue().setLastFileName(fileName);
@@ -640,25 +623,6 @@ public final class RevenueManager extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  chart   Description of the Parameter
-   *@param  width   Description of the Parameter
-   *@param  height  Description of the Parameter
-   *@return         Description of the Return Value
-   */
-  protected BufferedImage draw(JFreeChart chart, int width, int height) {
-    BufferedImage img =
-        new BufferedImage(width, height,
-        BufferedImage.TYPE_INT_RGB);
-    Graphics2D g2 = img.createGraphics();
-    chart.draw(g2, new Rectangle2D.Double((-21), 0, width + 21, height));
-    g2.dispose();
-    return img;
-  }
-
-
-  /**
-   *  Description of the Method
-   *
    *@param  y  Description of the Parameter
    *@param  m  Description of the Parameter
    *@param  d  Description of the Parameter
@@ -691,29 +655,6 @@ public final class RevenueManager extends CFSModule {
     yearList.setTypeYears(1990);
     yearList.setSelectName("year");
     context.getRequest().setAttribute("YearList", yearList);
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Return Value
-   */
-  private XYDataset createEmptyCategoryDataset() {
-
-    Object[][][] data;
-
-    data = new Object[][][]{
-        {
-        {createDate(2001, 12, 20), new Integer(0)},
-        {createDate(2002, 1, 18), new Integer(45)},
-        {createDate(2002, 2, 18), new Integer(3)},
-        {createDate(2002, 3, 18), new Integer(3)},
-        {createDate(2002, 4, 18), new Integer(5)},
-        {createDate(2002, 5, 18), new Integer(56)}
-        }
-        };
-    return new DefaultXYDataset(data);
   }
 
 
@@ -820,30 +761,33 @@ public final class RevenueManager extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  passedList  Description of the Parameter
-   *@param  year        Description of the Parameter
-   *@return             Description of the Return Value
+   *@param  year         Description of the Parameter
+   *@param  linesToDraw  Description of the Parameter
+   *@return              Description of the Return Value
    */
-  private XYDataset createCategoryDataset(UserList passedList, int year) {
-    if (passedList.size() == 0) {
-      return createEmptyCategoryDataset();
+  private XYSeriesCollection createCategoryDataset(UserList linesToDraw, int year) {
+    XYSeriesCollection xyDataset = new XYSeriesCollection();
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("RevenueManager-> Lines to draw: " + linesToDraw.size());
     }
-    Object[][][] data;
+    if (linesToDraw.size() == 0) {
+      return xyDataset;
+    }
     Calendar iteratorDate = Calendar.getInstance();
     iteratorDate.set(Calendar.YEAR, year);
-    data = new Object[passedList.size()][12][2];
-    int x = 0;
-    Iterator n = passedList.iterator();
-    while (n.hasNext()) {
-      User thisUser = (User) n.next();
+    Iterator users = linesToDraw.iterator();
+    while (users.hasNext()) {
+      User thisUser = (User) users.next();
+      XYSeries dataSeries = new XYSeries(null);
       String[] valKeys = thisUser.getRevenue().getYearRange(12, year);
       for (int count = 0; count < 12; count++) {
-        data[x][count][0] = createDate(iteratorDate.get(Calendar.YEAR), count, 1);
-        data[x][count][1] = thisUser.getRevenue().getValue(valKeys[count]);
+        java.util.Date dateValue = createDate(iteratorDate.get(Calendar.YEAR), count, 1);
+        Double itemValue = thisUser.getRevenue().getValue(valKeys[count]);
+        dataSeries.add(dateValue.getTime(), itemValue);
       }
-      x++;
+      xyDataset.addSeries(dataSeries);
     }
-    return new DefaultXYDataset(data);
+    return xyDataset;
   }
 
 }

@@ -5,6 +5,9 @@
 <jsp:useBean id="RevenueTypeList" class="org.aspcfs.modules.accounts.base.RevenueTypeList" scope="request"/>
 <jsp:useBean id="YearList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Read in the image map for the graph --%>
+<% String includePage = "../graphs/" + (String) request.getAttribute("GraphFileName") + ".map"; %>          
+<jsp:include page="<%= includePage %>" flush="true"/>
 <form name="Dashboard" action="RevenueManager.do?command=Dashboard" method="POST">
 <a href="Accounts.do">Account Management</a> > 
 Revenue Dashboard<br>
@@ -37,7 +40,7 @@ Revenue Dashboard<br>
         </tr>
         <tr>
           <td colspan="2">
-            <img border="0" width="275" height="200" src="graphs/<%=request.getAttribute("GraphFileName")%>">
+            <img src="graphs/<%= request.getAttribute("GraphFileName") %>.jpg" width="275" height="200" border="0" usemap="#<%= request.getAttribute("GraphFileName") %>">
           </td>
         </tr>
         <tr>

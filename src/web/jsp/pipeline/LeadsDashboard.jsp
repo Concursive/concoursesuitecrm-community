@@ -1,9 +1,15 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*,org.aspcfs.modules.admin.base.User" %>
+<%@ page import="java.util.*" %>
+<%@ page import="org.aspcfs.modules.pipeline.base.*" %>
+<%@ page import="com.zeroio.iteam.base.*" %>
+<%@ page import="org.aspcfs.modules.admin.base.User" %>
 <jsp:useBean id="ShortChildList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="OppList" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
 <jsp:useBean id="GraphTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Read in the image map for the graph --%>
+<% String includePage = "../graphs/" + (String) request.getAttribute("GraphFileName") + ".map"; %>          
+<jsp:include page="<%= includePage %>" flush="true"/>
 <form name="Dashboard" action="Leads.do?command=Dashboard" method=POST>
 <a href="Leads.do">Pipeline Management</a> > 
 Dashboard<br>
@@ -25,7 +31,7 @@ Dashboard<br>
         </tr>
         <tr>
           <td>
-            <img border="0" width="275" height="200" src="graphs/<%= request.getAttribute("GraphFileName") %>">
+            <img src="graphs/<%= request.getAttribute("GraphFileName") %>.jpg" width="275" height="200" border="0" usemap="#<%= request.getAttribute("GraphFileName") %>">
           </td>
         </tr>
         <tr>

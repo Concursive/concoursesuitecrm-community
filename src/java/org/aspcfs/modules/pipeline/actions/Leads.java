@@ -16,21 +16,15 @@ import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.accounts.base.OrganizationList;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.awt.image.*;
 import java.io.*;
 import java.util.*;
-
-import com.sun.image.codec.jpeg.*;
-
 import com.jrefinery.chart.*;
 import com.jrefinery.chart.data.*;
 import com.jrefinery.chart.ui.*;
 import com.jrefinery.data.*;
-
+import com.jrefinery.chart.entity.StandardEntityCollection;
+import com.jrefinery.chart.tooltips.TimeSeriesToolTipGenerator;
+import java.awt.Color;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 
@@ -604,10 +598,10 @@ public final class Leads extends CFSModule {
       while (z.hasNext()) {
         Opportunity tempOpp = (Opportunity) (z.next());
         if (tempOpp.getOwner() == idToUse) {
-          tempOppList.addElement(tempOpp);
+          tempOppList.add(tempOpp);
         }
       }
-      //add up all opportunities for children
+      //add up all opportunities for children line on graph
       UserList tempUserList = new UserList();
       Iterator n = fullChildList.iterator();
       while (n.hasNext()) {
@@ -616,65 +610,51 @@ public final class Leads extends CFSModule {
       }
       UserList linesToDraw = new UserList();
       linesToDraw = calculateLine(tempUserList, linesToDraw);
-      //set my own
+      //set my own, on top of the children line
       tempUserList = prepareLines(thisRec, tempOppList, tempUserList);
-      //add me up -- keep this
       linesToDraw = calculateLine(thisRec, linesToDraw);
-      XYDataset categoryData = createCategoryDataset(linesToDraw, graphString);
-      //Prepare the chart
-      JFreeChart chart = ChartFactory.createXYChart("", "", "", categoryData, false);
-      chart.setBackgroundPaint(Color.white);
-      XYPlot bPlot = chart.getXYPlot();
+      //Store the data in the collection
+      XYSeriesCollection categoryData = createCategoryDataset(linesToDraw, graphString);
       //Vertical Axis characteristics
-      VerticalNumberAxis vnAxis = (VerticalNumberAxis) bPlot.getVerticalAxis();
+      NumberAxis vnAxis = new VerticalNumberAxis("");
       vnAxis.setAutoRangeIncludesZero(true);
       vnAxis.setTickMarksVisible(true);
-      bPlot.setRangeAxis(vnAxis);
       //Horizontal Axis characteristics
-      HorizontalNumberAxis hnAxis = (HorizontalNumberAxis) bPlot.getHorizontalAxis();
-      hnAxis.setAutoRangeIncludesZero(false);
-      hnAxis.setAutoTickUnitSelection(false);
-      hnAxis.setAutoRange(false);
-      //Grid characteristics
-      Stroke gridStroke = new BasicStroke(0.25f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0.0f, new float[]{2.0f, 2.0f}, 0.0f);
-      Paint gridPaint = Color.gray;
-      //Horizontal Axis labels
-      Calendar cal = Calendar.getInstance();
-      ValueAxis myHorizontalDateAxis = new HorizontalDateAxis(hnAxis.getLabel(), hnAxis.getLabelFont(),
-          hnAxis.getLabelPaint(), hnAxis.getLabelInsets(), true, hnAxis.getTickLabelFont(),
-          hnAxis.getTickLabelPaint(), hnAxis.getTickLabelInsets(), true, true, hnAxis.getTickMarkStroke(),
-          true, new Integer(0),
-          new Range(cal.get(Calendar.YEAR), (cal.get(Calendar.YEAR) + 1)), false,
-          new DateUnit(Calendar.MONTH, 1),
-          new SimpleDateFormat("MMM ' ' yy"), true, gridStroke, gridPaint, false, null, null, null);
-      myHorizontalDateAxis.setTickMarksVisible(true);
-      try {
-        bPlot.setDomainAxis(myHorizontalDateAxis);
-      } catch (AxisNotCompatibleException err1) {
-        System.out.println("AxisNotCompatibleException error!");
-      }
+      HorizontalDateAxis hnAxis = new HorizontalDateAxis("");
+      XYPlot bPlot = new XYPlot(categoryData, hnAxis, vnAxis);
+      SimpleDateFormat sdf = new SimpleDateFormat("MMM yy");
+      TimeSeriesToolTipGenerator ttg = new TimeSeriesToolTipGenerator(
+          sdf, NumberFormat.getInstance());
+      StandardXYItemRenderer sxyir = new StandardXYItemRenderer(
+          StandardXYItemRenderer.LINES + StandardXYItemRenderer.SHAPES,
+          ttg);
+      sxyir.setDefaultShapeFilled(false);
+      bPlot.setRenderer(sxyir);
       //Draw the chart and save to file
+      JFreeChart chart = new JFreeChart("", JFreeChart.DEFAULT_TITLE_FONT, bPlot, false);
+      //TextTitle title = (TextTitle) chart.getTitle(0);
+      //title.setText("Gross Monthly Revenue");
+      chart.setBackgroundPaint(Color.white);
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Leads-> Drawing the chart");
       }
+      //Output the chart
       int width = 275;
       int height = 200;
-      BufferedImage img = draw(chart, width, height);
-
-      //Output the chart
       try {
         String realPath = context.getServletContext().getRealPath("/");
         String filePath = realPath + "graphs" + fs;
         java.util.Date testDate = new java.util.Date();
-        String fileName = new String(idToUse + testDate.getTime() + context.getSession().getCreationTime() + ".jpg");
-        FileOutputStream foutstream = new FileOutputStream(filePath + fileName);
-        JPEGImageEncoder encoder =
-            JPEGCodec.createJPEGEncoder(foutstream);
-        JPEGEncodeParam param =
-            encoder.getDefaultJPEGEncodeParam(img);
-        param.setQuality(1.0f, true);
-        encoder.encode(img, param);
-        foutstream.close();
+        String fileName = String.valueOf(idToUse) + String.valueOf(testDate.getTime()) + String.valueOf(context.getSession().getCreationTime());
+
+        // Write the chart image
+        ChartRenderingInfo info = new ChartRenderingInfo(new StandardEntityCollection());
+        File imageFile = new File(filePath + fileName + ".jpg");
+        ChartUtilities.saveChartAsJPEG(imageFile, 1.0f, chart, width, height, info);
+        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(filePath + fileName + ".map")));
+        ChartUtilities.writeImageMap(pw, fileName, info);
+        pw.flush();
+        pw.close();
 
         //Update the cached filename
         if (graphString.equals("gmr")) {
@@ -1397,24 +1377,6 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  chart   Description of Parameter
-   *@param  width   Description of Parameter
-   *@param  height  Description of Parameter
-   *@return         Description of the Returned Value
-   */
-  protected BufferedImage draw(JFreeChart chart, int width, int height) {
-    BufferedImage img =
-        new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    Graphics2D g2 = img.createGraphics();
-    chart.draw(g2, new Rectangle2D.Double((-21), 0, width + 21, height));
-    g2.dispose();
-    return img;
-  }
-
-
-  /**
-   *  Description of the Method
-   *
    *@param  pertainsTo    Description of Parameter
    *@param  oppList       Description of Parameter
    *@param  usersToGraph  Description of Parameter
@@ -1528,7 +1490,7 @@ public final class Leads extends CFSModule {
       }
       pertainsTo.doOpportunityUnlock();
     }
-    usersToGraph.addElement(pertainsTo);
+    usersToGraph.add(pertainsTo);
     if (oppList.size() == 0) {
       return new UserList();
     } else {
@@ -1538,40 +1500,46 @@ public final class Leads extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  This method takes a userlist, then for each user the specified graph data
+   *  is pulled out by date range and put in an XYSeries, and then the XYSeries
+   *  is added to an XYSeriesCollection.
    *
-   *@param  passedList  Description of Parameter
-   *@param  whichGraph  Description of Parameter
-   *@return             Description of the Returned Value
+   *@param  linesToDraw  Description of Parameter
+   *@param  whichGraph   Description of Parameter
+   *@return              Description of the Returned Value
    */
-  private XYDataset createCategoryDataset(UserList passedList, String whichGraph) {
-    if (passedList.size() == 0) {
-      return createEmptyCategoryDataset();
+  private XYSeriesCollection createCategoryDataset(UserList linesToDraw, String whichGraph) {
+    XYSeriesCollection xyDataset = new XYSeriesCollection();
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Leads-> Lines to draw: " + linesToDraw.size());
     }
-    Object[][][] data;
-    data = new Object[passedList.size()][12][2];
-    int x = 0;
-    Iterator n = passedList.iterator();
-    while (n.hasNext()) {
-      User thisUser = (User) n.next();
+    if (linesToDraw.size() == 0) {
+      return xyDataset;
+    }
+    Iterator users = linesToDraw.iterator();
+    while (users.hasNext()) {
+      User thisUser = (User) users.next();
+      XYSeries dataSeries = new XYSeries(null);
       String[] valKeys = thisUser.getGmr().getRange(12);
       Calendar iteratorDate = Calendar.getInstance();
       for (int count = 0; count < 12; count++) {
-        data[x][count][0] = createDate(iteratorDate.get(Calendar.YEAR), iteratorDate.get(Calendar.MONTH), 0);
+        java.util.Date dateValue = createDate(iteratorDate.get(Calendar.YEAR), iteratorDate.get(Calendar.MONTH), 0);
+        Double itemValue = new Double(0);
         if (whichGraph.equals("gmr")) {
-          data[x][count][1] = thisUser.getGmr().getValue(valKeys[count]);
+          itemValue = thisUser.getGmr().getValue(valKeys[count]);
         } else if (whichGraph.equals("ramr")) {
-          data[x][count][1] = thisUser.getRamr().getValue(valKeys[count]);
+          itemValue = thisUser.getRamr().getValue(valKeys[count]);
         } else if (whichGraph.equals("cgmr")) {
-          data[x][count][1] = thisUser.getCgmr().getValue(valKeys[count]);
+          itemValue = thisUser.getCgmr().getValue(valKeys[count]);
         } else if (whichGraph.equals("cramr")) {
-          data[x][count][1] = thisUser.getCramr().getValue(valKeys[count]);
+          itemValue = thisUser.getCramr().getValue(valKeys[count]);
         }
         iteratorDate.add(Calendar.MONTH, +1);
+        dataSeries.add(dateValue.getTime(), itemValue);
       }
-      x++;
+      xyDataset.addSeries(dataSeries);
     }
-    return new DefaultXYDataset(data);
+    return xyDataset;
   }
 
 
@@ -1587,7 +1555,7 @@ public final class Leads extends CFSModule {
    */
   private UserList calculateLine(User primaryNode, UserList currentLines) {
     if (currentLines.size() == 0) {
-      currentLines.addElement(primaryNode);
+      currentLines.add(primaryNode);
       return currentLines;
     }
     User thisLine = new User();
@@ -1600,7 +1568,7 @@ public final class Leads extends CFSModule {
       thisLine.getCgmr().setValue(valKeys[count], new Double(primaryNode.getCgmr().getValue(valKeys[count]).doubleValue() + (addToMe.getCgmr().getValue(valKeys[count])).doubleValue()));
       thisLine.getCramr().setValue(valKeys[count], new Double(primaryNode.getCramr().getValue(valKeys[count]).doubleValue() + (addToMe.getCramr().getValue(valKeys[count])).doubleValue()));
     }
-    currentLines.addElement(thisLine);
+    currentLines.add(thisLine);
     return currentLines;
   }
 
@@ -1631,29 +1599,8 @@ public final class Leads extends CFSModule {
         thisLine.getCramr().setValue(valKeys[count], thisUser.getCramr().getValue(valKeys[count]));
       }
     }
-    currentLines.addElement(thisLine);
+    currentLines.add(thisLine);
     return currentLines;
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@return    Description of the Returned Value
-   */
-  private XYDataset createEmptyCategoryDataset() {
-    Object[][][] data;
-    data = new Object[][][]{
-        {
-        {createDate(2001, 12, 20), new Integer(0)},
-        {createDate(2002, 1, 18), new Integer(45)},
-        {createDate(2002, 2, 18), new Integer(3)},
-        {createDate(2002, 3, 18), new Integer(3)},
-        {createDate(2002, 4, 18), new Integer(5)},
-        {createDate(2002, 5, 18), new Integer(56)}
-        }
-        };
-    return new DefaultXYDataset(data);
   }
 
 
