@@ -288,14 +288,17 @@ public class PermissionsAndRolesWriter implements DataWriter {
         try {
           PreparedStatement pst = db.prepareStatement(
             "INSERT INTO report " +
-            "(category_id, permission_id, filename, type, title, description) " +
-            "VALUES (?, ?, ?, ?, ?, ?) ");
+            "(category_id, permission_id, filename, type, title, description, " +
+            "enteredby, modifiedby) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
           pst.setInt(1, record.getIntValue("categoryId"));
           DatabaseUtils.setInt(pst, 2, record.getIntValue("permissionId"));
           pst.setString(3, record.getValue("file"));
-          pst.setString(4, record.getValue("type"));
+          pst.setInt(4, record.getIntValue("type"));
           pst.setString(5, record.getValue("title"));
           pst.setString(6, record.getValue("description"));
+          pst.setInt(7, record.getIntValue("enteredBy"));
+          pst.setInt(8, record.getIntValue("modifiedBy"));
           pst.executeUpdate();
           pst.close();
         } catch (SQLException e) {

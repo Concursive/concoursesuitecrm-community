@@ -192,9 +192,16 @@ public class InitPermissionsAndRoles implements DataReader {
           //reportRecord.addField("permissionId", String.valueOf(permissionId));
           reportRecord.addField("permissionId", -1);
           reportRecord.addField("file", (String) report.getAttribute("file"));
-          reportRecord.addField("type", (String) report.getAttribute("type"));
+          String type = report.getAttribute("type");
+          if ("admin".equals(type)) {
+            reportRecord.addField("type", "2");
+          } else {
+            reportRecord.addField("type", "1");
+          }
           reportRecord.addField("title", (String) report.getAttribute("title"));
           reportRecord.addField("description", (String) report.getAttribute("description"));
+          reportRecord.addField("enteredBy", "0");
+          reportRecord.addField("modifiedBy", "0");
           writer.save(reportRecord);
         }
       }
