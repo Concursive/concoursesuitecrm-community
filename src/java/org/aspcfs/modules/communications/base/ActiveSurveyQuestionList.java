@@ -237,7 +237,14 @@ public class ActiveSurveyQuestionList extends ArrayList {
         itemList.buildList(db);
         thisQuestion.setItemList(itemList);
       }else if (type == SurveyQuestion.QUANT_COMMENTS || type == SurveyQuestion.OPEN_ENDED) {
-        thisQuestion.buildComments(db);
+        //thisQuestion.buildComments(db);
+        SurveyAnswerList answerList = new SurveyAnswerList();
+        answerList.setQuestionId(thisQuestion.getId());
+        answerList.setHasComments(Constants.TRUE);
+        answerList.setItemsPerPage(5);
+        answerList.setLastAnswers(true);
+        answerList.buildList(db);
+        thisQuestion.setAnswerList(answerList);
       }
     }
   }
