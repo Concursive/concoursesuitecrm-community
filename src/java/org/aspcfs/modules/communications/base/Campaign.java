@@ -61,6 +61,8 @@ public class Campaign extends GenericBean {
   private String deliveryName = null;
   private int files = 0;
   private int surveyId = -1;
+  
+  private String serverName = "";
 
 
   /**
@@ -189,6 +191,13 @@ public void setSurveyId(String surveyId) {
   public void setMessageName(String messageName) {
     this.messageName = messageName;
   }
+  
+public String getServerName() {
+	return serverName;
+}
+public void setServerName(String serverName) {
+	this.serverName = serverName;
+}
 
 
   /**
@@ -1529,7 +1538,7 @@ public void setSurveyId(String surveyId) {
     
 	Template template = new Template();
 	template.setText(thisMessageText);
-	template.addParseElement("${survey_url}", "<a href=\"http://ds21.darkhorseventures.com/ProcessSurvey.do?command=View&surveyId=" + this.getSurveyId() + "\">http://ds21.darkhorseventures.com/ProcessSurvey.do?command=View&surveyId=" + this.getSurveyId() + "</a>");
+	template.addParseElement("${survey_url}", "<a href=\"http://" + this.getServerName() + "/ProcessSurvey.do?command=View&surveyId=" + this.getSurveyId() + "\">http://ds21.darkhorseventures.com/ProcessSurvey.do?command=View&surveyId=" + this.getSurveyId() + "</a>");
 	template.setValueEncoding(Template.HTMLEncoding);
 	  
     pst = db.prepareStatement(

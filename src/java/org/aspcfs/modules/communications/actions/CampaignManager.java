@@ -897,6 +897,7 @@ public final class CampaignManager extends CFSModule {
       campaign = new Campaign(db, id);
       campaign.setModifiedBy(getUserId(context));
       campaign.setModified(modified);
+      campaign.setServerName(context.getRequest().getServerName());
       resultCount = campaign.activate(db, campaign.getEnteredBy(), this.getUserRange(context, campaign.getEnteredBy()));
     } catch (Exception e) {
       errorMessage = e;
