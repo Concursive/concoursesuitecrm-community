@@ -20,11 +20,13 @@
   <property name="build.dir" value="${base.dir}${file.separator}build"/>
   <property name="build.lib.dir" value="${build.dir}${file.separator}lib"/>
   <property name="build.classes.dir" value="${build.dir}${file.separator}classes"/>
+  <property name="build.jsp.dir" value="${build.dir}${file.separator}jsp"/>
+  <property name="build.jspclasses.dir" value="${build.dir}${file.separator}jspclasses"/>
   <property name="dist.dir" value="${base.dir}${file.separator}dist"/>
 
   <!-- classpath as both object and a property -->
   <path id="cfs2.classpath">
-    <pathelement path="${classes.dir}"/>
+    <!-- <pathelement path="${classes.dir}"/> -->
     <fileset dir="${env.CATALINA_HOME}/common/lib">
       <include name="**/*.jar"/>
     </fileset>
@@ -39,7 +41,7 @@
     <record name="${base.dir}/build.log" append="no"/>
     <fail unless="env.CATALINA_HOME">Initialization aborted, environment variable CATALINA_HOME is not defined.</fail>
     <property name="CATALINA_HOME" value="${env.CATALINA_HOME}"/>
-    <fail unless="env.CFS_HOME">Initialization aborted, environment variable CFS_HOME is not defined.</fail>
+    <fail unless="env.CFS_HOME">Initialization aborted, environment variable CFS_HOME is not defined and should point to a Tomcat CFS web folder.</fail>
     <property name="CFS_HOME" value="${env.CFS_HOME}"/>
   </target>
   
@@ -146,7 +148,7 @@
     </delete>
     <delete dir="${build.classes.dir}"/>
     <mkdir dir="${build.classes.dir}"/>
-    <javac srcdir="${classes.dir}" destdir="${build.classes.dir}" verbose="off">
+    <javac srcdir="${classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on">
       <classpath>
         <path refid="cfs2.classpath"/>
         <pathelement location="${lib.dir}/jfreechart.jar"/>
@@ -154,6 +156,35 @@
         <pathelement location="${lib.dir}/ccp_integration.jar"/>
         <pathelement location="${lib.dir}/jakarta-poi.jar"/>
       </classpath>
+    </javac>
+  </target>
+  
+  <!-- Try to generate .java/.class files out of the .jsps -->
+  <target name="test" depends="init,deploy">
+    <delete dir="${build.jsp.dir}"/>
+    <delete dir="${build.jspclasses.dir}"/>
+    <mkdir dir="${build.jsp.dir}"/>
+    <java classname="org.apache.jasper.JspC" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <pathelement location="${env.ANT_HOME}/lib/ant.jar"/>
+      </classpath>
+      <arg line="-v -d ${build.jsp.dir} -p org.apache.jsp
+                -uriroot ${CFS_HOME}
+                -webinc ${build.jsp.dir}/webinc.xml
+                -webapp ${CFS_HOME} "/>
+    </java>
+    <mkdir dir="${build.jspclasses.dir}"/>
+    <javac srcdir="${build.jsp.dir}" destdir="${build.jspclasses.dir}"
+           verbose="off" deprecation="on">
+     <classpath>
+       <path refid="cfs2.classpath"/>
+       <pathelement location="${CFS_HOME}/WEB-INF/lib"/>
+       <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
+       <pathelement location="${CFS_HOME}/WEB-INF/lib/zeroio-iteam.jar"/>
+       <pathelement location="${CFS_HOME}/WEB-INF/lib/isavvix.jar"/>
+     </classpath>
+     <include name="**/*.java"/>
     </javac>
   </target>
   
