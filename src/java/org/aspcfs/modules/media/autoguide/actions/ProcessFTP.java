@@ -74,7 +74,7 @@ public final class ProcessFTP extends CFSModule {
           //Look up the server's id from the client's id
           SyncClientMap thisClientMap = new SyncClientMap();
           thisClientMap.setClientId(Integer.parseInt(clientId));
-          int tableId = SyncTable.lookupTableId(db, 2, "com.darkhorseventures.autoguide.base.InventoryList");
+          int tableId = SyncTable.lookupTableId(db, 2, "org.aspcfs.modules.media.autoguide.base.InventoryList");
           if (System.getProperty("DEBUG") != null) {
             System.out.println("ProcessFTP-> TableID = " + tableId);
           }
