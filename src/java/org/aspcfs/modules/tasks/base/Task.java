@@ -1097,6 +1097,10 @@ public class Task extends GenericBean {
         db.rollback();
       }
       throw new SQLException(e.getMessage());
+    }finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
   }
 
