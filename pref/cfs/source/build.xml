@@ -626,10 +626,14 @@
     <javadoc sourcepath="${src.classes.dir}"
           packagenames="com.*,org.*"
           destdir="${build.docs.dir}"
+          maxmemory="128m"
+          breakiterator="true"
+          author="true"
+          version="true"
           excludepackagenames="javax.servlet">
       <tag name="created" description="Date file was created"/>
-      <header>Copyright 2004 Dark Horse Ventures, License Applies</header>
-      <footer>Copyright 2004 Dark Horse Ventures</footer>
+      <header>Centric CRM</header>
+      <footer>Copyright 2001-2004 Dark Horse Ventures</footer>
       <classpath>
         <path refid="cfs2.classpath"/>
         <!--
