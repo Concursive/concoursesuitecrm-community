@@ -1,6 +1,8 @@
 <jsp:useBean id="OrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
 <jsp:useBean id="StageList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
+<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
 <body onLoad="javascript:document.forms[0].searchDescription.focus();">
 <form name="searchLeads" action="/Leads.do?command=ViewOpp" method="post">
 <a href="/Leads.do">Pipeline Management</a> > 
@@ -29,6 +31,24 @@ Description
 	<td bgColor="white">
 	<%= OrgList.getHtmlSelectDefaultNone("searchcodeOrgId") %>
 	</td>
+  </tr>
+  
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <a href="javascript:popURLReturn('/MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=contactsingle&parentFormName=searchLeads', 'Leads.do?command=SearchOpp', 'Search_Opp','700','450','yes','no');">Contact</a>
+    </td>
+    <td width="100%">
+      <table>
+        <tr>
+          <td>
+            <div id="changecontact">None Selected</div>
+          </td>
+          <td>
+            <input type=hidden name="contact" value="-1">
+          </td>
+        </tr>
+      </table>
+    </td>
   </tr>
   
     <tr>

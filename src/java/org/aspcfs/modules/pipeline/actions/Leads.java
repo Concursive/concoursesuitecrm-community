@@ -119,11 +119,21 @@ public final class Leads extends CFSModule {
 	
     Exception errorMessage = null;
     boolean recordInserted = false;
-
+    
+    String association = context.getRequest().getParameter("opp_type");
+    
     Opportunity newOpp = (Opportunity) context.getFormBean();
     newOpp.setEnteredBy(getUserId(context));
     newOpp.setOwner(getUserId(context));
     newOpp.setModifiedBy(getUserId(context));
+    
+    //some stuff to make contact list selector work, for now...
+    String contactLink = context.getRequest().getParameter("contact");
+    
+    if (association.equals("contact")) {
+            newOpp.setAccountLink("-1");
+            newOpp.setContactLink(contactLink);
+    }
 
     Connection db = null;
     try {
@@ -714,9 +724,9 @@ public final class Leads extends CFSModule {
       oppListInfo.setSearchCriteria(oppList);
       
       if ("my".equals(oppListInfo.getListView())) {
-	oppList.setOwner(this.getUserId(context));
+              oppList.setOwner(this.getUserId(context));
       } else {
-	oppList.setOwnerIdRange(this.getUserRange(context));
+              oppList.setOwnerIdRange(this.getUserRange(context));
       }
 
       oppList.buildList(db);

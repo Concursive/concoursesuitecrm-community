@@ -3,10 +3,13 @@
 <jsp:useBean id="OrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
 <jsp:useBean id="BusTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="UnitTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
+<jsp:useBean id="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].description.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
+<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -18,6 +21,17 @@
   function checkForm(form) {
       formTest = true;
       message = "";
+        selected = -1;
+        for (i=0; i<form.opp_type.length; i++) {
+          if (form.opp_type[i].checked) {
+            selected = i;
+          }
+        }
+        if (selected == -1) {
+            message += "- Please select an opportunity type (account or contact)\r\n";
+            formTest = false;
+        }
+
       if ((!form.closeDate.value == "") && (!checkDate(form.closeDate.value))) { 
         message += "- Check that Est. Close Date is entered correctly\r\n";
         formTest = false;
@@ -53,7 +67,7 @@ Add Opportunity<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td>
-<input type="submit" value="Save" onClick="return checkForm(this.form);this.form.dosubmit.value='true';">
+<input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
@@ -65,40 +79,42 @@ Add Opportunity<br>
     </td>     
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td nowrap valign="center" class="formLabel">
       Associate With
     </td>
     <td width="100%">
-        <input type="radio" name="opp_type" value="org">Organization<br>
+        <input type="radio" name="opp_type" value="org">Account<br>
         <input type="radio" name="opp_type" value="contact">Contact
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Organization
+      Account
     </td>
     <td width="100%">
       <%= OrgList.getHtmlSelectDefaultNone("accountLink")%>
       <font color=red>*</font> <%= showAttribute(request, "orgError") %>
     </td>
   </tr>
+  
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Contact
+      <a href="javascript:popURLReturn('/MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=contactsingle&parentFormName=addOpportunity', 'Leads.do?command=AddOpp', 'Add_Opp','700','450','yes','no');">Contact</a>
     </td>
     <td width="100%">
       <table>
         <tr>
           <td>
-            <div id="changecontact"><%=Task.getContactName().equals("")?"None":Task.getContactName()%></div>
+            <div id="changecontact"><%=(OppDetails.getContactLink()+"").equals("-1")?"None Selected":OppDetails.getContactLink()+""%></div>
           </td>
           <td>
-            <input type=hidden name="contact" value="<%=(Task.getContactId() == -1)?-1:Task.getContactId()%>"><a href="javascript:popURLReturn('/MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=contactsingle&parentFormName=addTask', 'MyTasks.do?command=New', 'Inbox_message','700','450','yes','no');">Change Contact</a>
+            <input type=hidden name="contact" value="<%=(OppDetails.getContactLink() == -1)?-1:OppDetails.getContactLink()%>">
           </td>
         </tr>
       </table>
     </td>
   </tr>
+
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Description
@@ -210,7 +226,7 @@ Add Opportunity<br>
 </table>
 &nbsp;
 <br>
-<input type="submit" value="Save" onClick="return checkForm(this.form);this.form.dosubmit.value='true';">
+<input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
