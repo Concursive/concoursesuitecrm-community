@@ -39,10 +39,10 @@
 </script>
 <body onLoad="document.inputForm.subject.focus();">
 
-<a href="/Leads.do">Pipeline Management</a> > 
-<a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
-<a href="/Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
-<a href="/Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Documents</a> > 
+<a href="Leads.do">Pipeline Management</a> > 
+<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
+<a href="Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
+<a href="Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Documents</a> > 
 Upload New Version<br>
 <hr color="#BFBFBB" noshade>
 
@@ -53,19 +53,18 @@ Upload New Version<br>
   <tr class="containerHeader">
     <td>
       <strong><%= toHtml(OpportunityDetails.getDescription()) %></strong>&nbsp;
-      	<dhv:evaluate exp="<%=(OpportunityDetails.getAccountEnabled() && OpportunityDetails.getAccountLink() > -1)%>">
-        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="/Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
+  <dhv:evaluate exp="<%=(OpportunityDetails.getAccountEnabled() && OpportunityDetails.getAccountLink() > -1)%>">
+      <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
 	</dhv:evaluate>
 	  
 	<dhv:evaluate exp="<%=(OpportunityDetails.getContactLink() > -1)%>">
-	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="/ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
+      <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
 	</dhv:evaluate>
-    </td>
-    
-        <% if (OpportunityDetails.hasFiles()) { %>
+      <% if (OpportunityDetails.hasFiles()) { %>
       <% FileItem thisFile = new FileItem(); %>
       <%= thisFile.getImageTag()%>
-      <%}%>      
+      <%}%> 
+    </td>
   </tr>
   <tr class="containerMenu">
     <td>
