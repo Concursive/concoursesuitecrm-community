@@ -282,7 +282,11 @@ public class ApplicationPrefs {
           crc = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
           if (edition != null) {
             context.setAttribute("APP_TEXT", edition);
-            context.setAttribute("APP_SIZE", String.valueOf(crc.length()));
+            if ("-1".equals(crc.substring(7))) {
+              context.removeAttribute("APP_SIZE");
+            } else {
+              context.setAttribute("APP_SIZE", crc.substring(7));
+            }
           }
           //The licensed organization will be shown
           String organization = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("company"));

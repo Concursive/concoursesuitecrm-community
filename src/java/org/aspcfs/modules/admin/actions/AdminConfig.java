@@ -226,7 +226,12 @@ public final class AdminConfig extends CFSModule {
             }
             StringUtils.saveText(context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt", updatedLicense);
             context.getServletContext().setAttribute("APP_TEXT", XMLUtils.getNodeText(xml2.getFirstChild("edition")));
-            context.getServletContext().setAttribute("APP_SIZE", String.valueOf(XMLUtils.getNodeText(xml2.getFirstChild("text2")).length()));
+            String text2 = XMLUtils.getNodeText(xml2.getFirstChild("text2")).substring(7);
+            if ("-1".equals(text2)) {
+              context.getServletContext().removeAttribute("APP_SIZE");
+            } else {
+              context.getServletContext().setAttribute("APP_SIZE", text2);
+            }
             return "LicenseUpdatedOK";
           }
         }

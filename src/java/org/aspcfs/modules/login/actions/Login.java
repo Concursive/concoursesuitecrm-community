@@ -128,13 +128,13 @@ public final class Login extends CFSModule {
         pst.setBoolean(1, true);
         ResultSet rs = pst.executeQuery();
         if (rs.next()) {
-          if (rs.getInt("user_count") <= lpd.length()) {
+          if (rs.getInt("user_count") <= Integer.parseInt(lpd.substring(7)) || "-1".equals(lpd.substring(7))) {
             continueId = true;
           }
         }
         rs.close();
         pst.close();
-        userId2 = String.valueOf(lpd.length());
+        userId2 = lpd.substring(7);
       } catch (Exception e) {
         loginBean.setMessage("* Access denied: License not found");
         continueId = true;
@@ -236,7 +236,7 @@ public final class Login extends CFSModule {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Login-> Session Size: " + sessionManager.size());
     }
-    if (userId2 != null && sessionManager.size() > Integer.parseInt(userId2)) {
+    if (userId2 != null && !userId2.equals("-1") && sessionManager.size() > Integer.parseInt(userId2)) {
       return "LicenseError";
     }
     context.getSession().setMaxInactiveInterval(thisSystem.getSessionTimeout());
