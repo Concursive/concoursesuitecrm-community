@@ -45,7 +45,7 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandList(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-adruns-view"))) {
+    if (!(hasPermission(context, "autoguide-view"))) {
       return ("PermissionError");
     }
 
@@ -96,7 +96,7 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDetails(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-adruns-view")) &&
+    if (!(hasPermission(context, "autoguide-view")) &&
         !(hasPermission(context, "accounts-autoguide-inventory-view"))) {
       return ("PermissionError");
     }
@@ -132,7 +132,14 @@ public final class AutoGuide extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandMarkComplete(ActionContext context) {
     if (!(hasPermission(context, "autoguide-adruns-edit"))) {
       return ("PermissionError");
@@ -162,7 +169,14 @@ public final class AutoGuide extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandMarkIncomplete(ActionContext context) {
     if (!(hasPermission(context, "autoguide-adruns-edit"))) {
       return ("PermissionError");
@@ -244,7 +258,7 @@ public final class AutoGuide extends CFSModule {
 
     Exception errorMessage = null;
     int orgId = Integer.parseInt(context.getRequest().getParameter("orgId"));
-    
+
     PagedListInfo autoGuideAccountInfo = this.getPagedListInfo(context, "AutoGuideAccountInfo");
     autoGuideAccountInfo.setLink("AccountsAutoGuide.do?command=AccountList&orgId=" + orgId);
 
@@ -787,7 +801,14 @@ public final class AutoGuide extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandDownloadText(ActionContext context) {
     Exception errorMessage = null;
     String linkId = (String) context.getRequest().getParameter("id");
@@ -849,7 +870,7 @@ public final class AutoGuide extends CFSModule {
     listFilterSelect.addItem(1, "Sold Inventory");
     listFilterSelect.addItem(-1, "All Inventory");
     context.getRequest().setAttribute("listFilterSelect", listFilterSelect);
-    
+
     HtmlSelect statusFilterSelect = new HtmlSelect();
     statusFilterSelect.addItem(1, "Incomplete Ads");
     statusFilterSelect.addItem(0, "Completed Ads");
@@ -893,6 +914,7 @@ public final class AutoGuide extends CFSModule {
    *@param  context           Description of Parameter
    *@param  db                Description of Parameter
    *@param  thisVehicle       Description of Parameter
+   *@param  defaultText       Description of Parameter
    *@exception  SQLException  Description of Exception
    */
   private void populateMakeSelect(ActionContext context, Connection db, Vehicle thisVehicle, String defaultText) throws SQLException {
