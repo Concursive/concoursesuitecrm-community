@@ -340,7 +340,7 @@ public class QuoteList extends ArrayList {
       pagedListInfo.setDefaultSort("qe.entered", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY org_id");
+      sqlOrder.append("ORDER BY qe.org_id");
     }
     //Build a base SQL statement for returning records
     if (pagedListInfo != null) {
