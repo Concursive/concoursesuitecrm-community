@@ -1,0 +1,15 @@
+<data-import-config>
+  <description>
+    Imports ticket categoriess into CFS from an Excel file.
+  </description>
+  <reader class="com.darkhorseventures.apps.dataimport.excelreader.ExcelTicketCategoryReader">
+    <excelFile>Tickets Classification for Demo.xls</excelFile>
+  </reader>
+  <writer class="com.darkhorseventures.apps.dataimport.cfshttpxmlwriter.CFSHttpXMLWriter">
+    <ignoreClientId>true</ignoreClientId>
+    <url>http://voice.aspcfs.com/ProcessPacket.do</url>
+    <id>voice.aspcfs.com</id>
+    <code>N2BLAim20020926</code>
+    <systemId>5</systemId>
+  </writer>
+</data-import-config>
