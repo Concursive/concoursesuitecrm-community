@@ -1267,7 +1267,7 @@ public class ContactList extends Vector {
       }
       
       if (contactIdRange != null) {
-        sqlFilter.append("AND c.contact_id IN (" + contactIdRange + ") ");
+        sqlFilter.append("OR c.contact_id IN (" + contactIdRange + ") ");
       }
       
       if (withAccountsOnly) {
