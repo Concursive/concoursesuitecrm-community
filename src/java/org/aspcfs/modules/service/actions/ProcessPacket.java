@@ -15,7 +15,6 @@ import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
 import java.lang.reflect.*;
-//import org.xml.sax.helpers.DefaultHandler;
 
 
 public final class ProcessPacket extends CFSModule {
@@ -24,13 +23,26 @@ public final class ProcessPacket extends CFSModule {
     Exception errorMessage = null;
     int statusCode = 1;
     String errorText = null;
+    StringBuffer data = new StringBuffer();
     
-    String data = (String)context.getRequest().getParameter("data");
-    if (data != null) {
+    //Process the posted data: content-type must be text/plain
+    try {
+      BufferedReader br = context.getRequest().getReader();
+      String line = null;
+      while ((line = br.readLine()) != null) {
+        data.append(line);
+        System.out.println("  ++Line: " + line);
+      }
+    } catch(Exception e) {
+      System.out.println("Read error: " + e.toString());
+    }
+    
+    //Parse the data as XML
+    if (data.length() > 0) {
       try {
         String siteId = null;
         Vector cfsObjects = new Vector();
-        errorText = this.parseXML(cfsObjects, data);
+        errorText = this.parseXML(cfsObjects, data.toString());
         if (System.getProperty("DEBUG") != null) System.out.println("Site: " + siteId);
         if (System.getProperty("DEBUG") != null) System.out.println("Objects created: " + cfsObjects.size());
         if (errorText == null && cfsObjects.size() > 0) {
@@ -46,10 +58,24 @@ public final class ProcessPacket extends CFSModule {
       }
       
     } else {
-      errorText = "\"data\" parameter not found";
+      errorText = "Posted data not found -- possibly incorrect content type";
     }
+    
+    //Return the status
     context.getRequest().setAttribute("statusCode", "" + statusCode);
     context.getRequest().setAttribute("errorText", errorText);
+    
+/*     try {
+      context.getResponse().setContentType("text/plain");
+      PrintWriter out = context.getResponse().getWriter();
+      out.println("Echo");
+      out.println(data.toString());
+      out.flush();
+      out.close();
+    } catch (Exception e) {
+      System.out.println("Write error: " + e.toString());
+    }
+*/   
     return ("PacketOK");
   }
 
