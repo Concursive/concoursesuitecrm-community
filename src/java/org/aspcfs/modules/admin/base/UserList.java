@@ -988,7 +988,7 @@ public class UserList extends Vector implements SyncableList {
         "a.enabled as access_enabled, a.assistant, " +
         "a.entered as access_entered, a.enteredby as access_enteredby, " +
         "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
-        "r.role, " +
+        "r.role, r.role_type, " +
         "m_usr.enabled as mgr_enabled, " +
         "c.*, d.description as departmentname, " +
         "o.name as org_name, o.enabled as orgenabled " +

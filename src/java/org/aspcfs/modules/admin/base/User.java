@@ -2098,7 +2098,7 @@ public class User extends GenericBean {
         "a.enabled as access_enabled, a.assistant, " +
         "a.entered as access_entered, a.enteredby as access_enteredby, " +
         "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
-        "r.role, " +
+        "r.role, r.role_type, " +
         "m_usr.enabled as mgr_enabled, " +
         "c.* " +
         "FROM access a " +
@@ -2422,6 +2422,7 @@ public class User extends GenericBean {
     modifiedBy = rs.getInt("access_modifiedby");
     //role table
     this.setRole(rs.getString("role"));
+    roleType = DatabaseUtils.getInt(rs, "role_type");
     //user table (manager)
     if (managerId > -1) {
       managerUserEnabled = rs.getBoolean("mgr_enabled");
