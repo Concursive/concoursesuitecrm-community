@@ -528,14 +528,36 @@ public class CustomFieldGroup extends ArrayList {
     if (!isGroupValid()) {
       return false;
     }
-
-    String sql =
-        "INSERT INTO custom_field_group " +
-        "(category_id, group_name, description) VALUES (?, ?, ?)";
+    
+    StringBuffer sql = new StringBuffer();
+    
+    sql.append("INSERT INTO custom_field_group ");
+    sql.append("(category_id, group_name, ");
+                if (entered != null) {
+                        sql.append("entered, ");
+                }
+                if (modified != null) {
+                        sql.append("modified, ");
+                }    
+    sql.append("description ) ");
+    sql.append("VALUES (?, ?, ?, ");
+                if (entered != null) {
+                        sql.append("?, ");
+                }
+                if (modified != null) {
+                        sql.append("?, ");
+                }    
+    sql.append("?) ");
     int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql);
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, this.getCategoryId());
     pst.setString(++i, this.getName());
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
+        if (modified != null) {
+                pst.setTimestamp(++i, modified);
+        }
     pst.setString(++i, this.getDescription());
     pst.execute();
     pst.close();

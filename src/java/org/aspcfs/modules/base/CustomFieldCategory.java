@@ -234,6 +234,13 @@ public class CustomFieldCategory extends ArrayList {
     this.entered = tmp;
   }
 
+  public void setEntered(String tmp) {
+    this.entered = DateUtils.parseTimestampString(tmp);
+  }
+
+  public void setModified(String tmp) {
+    this.modified = DateUtils.parseTimestampString(tmp);
+  }
 
   /**
    *  Sets the EnteredBy attribute of the CustomFieldCategory object
@@ -873,19 +880,45 @@ public class CustomFieldCategory extends ArrayList {
     if (!isCategoryValid()) {
       return false;
     }
-
-    String sql =
-        "INSERT INTO custom_field_category " +
-        "(module_id, category_name, description, enabled, " +
-        "multiple_records, read_only) VALUES (?, ?, ?, ?, ?, ?)";
+    StringBuffer sql = new StringBuffer();
+    
+    sql.append("INSERT INTO custom_field_category ");
+    sql.append("(module_id, category_name, description, enabled, ");
+    sql.append("multiple_records, read_only, ");
+                if (entered != null) {
+                        sql.append("entered, ");
+                }
+                if (modified != null) {
+                        sql.append("modified, ");
+                }    
+    sql.append("enteredBy, modifiedBy ) "); 
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+                if (entered != null) {
+                        sql.append("?, ");
+                }
+                if (modified != null) {
+                        sql.append("?, ");
+                }    
+    sql.append("?, ?) ");
+    
     int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql);
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, this.getModuleId());
     pst.setString(++i, this.getName());
     pst.setString(++i, this.getDescription());
     pst.setBoolean(++i, this.getEnabled());
     pst.setBoolean(++i, this.getAllowMultipleRecords());
     pst.setBoolean(++i, this.getReadOnly());
+    
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
+        if (modified != null) {
+                pst.setTimestamp(++i, modified);
+        }
+      pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());
+      
     pst.execute();
     pst.close();
     
