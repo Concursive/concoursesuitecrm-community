@@ -3,6 +3,7 @@
 package com.darkhorseventures.cfsbase;
 
 import java.sql.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Builds an address for an organization using a custom query that extends the
@@ -46,7 +47,8 @@ public class OrganizationAddress extends Address {
     Statement st = null;
     ResultSet rs = null;
     StringBuffer sql = new StringBuffer();
-    sql.append("SELECT * " +
+    sql.append(
+        "SELECT * " +
         "FROM organization_address c, lookup_orgaddress_types l " +
         "WHERE c.address_type = l.code " +
         "AND address_id = " + addressId + " ");
@@ -96,13 +98,7 @@ public class OrganizationAddress extends Address {
     pst.execute();
     pst.close();
     
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery("select currval('organization_add_address_id_seq')");
-    if (rs.next()) {
-      this.setId(rs.getInt(1));
-    }
-    rs.close();
-    st.close();
+    this.setId(DatabaseUtils.getCurrVal(db, "organization_add_address_id_seq"));
   }
 
 

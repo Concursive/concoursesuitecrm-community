@@ -2,6 +2,7 @@
 package com.darkhorseventures.cfsbase;
 
 import java.sql.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 public class OrganizationEmailAddress extends EmailAddress {
 
@@ -25,7 +26,8 @@ public class OrganizationEmailAddress extends EmailAddress {
     Statement st = null;
     ResultSet rs = null;
     StringBuffer sql = new StringBuffer();
-    sql.append("SELECT * " +
+    sql.append(
+        "SELECT * " +
         "FROM organization_emailaddress c, lookup_orgemail_types l " +
         "WHERE c.emailaddress_type = l.code " +
         "AND emailaddress_id = " + emailAddressId + " ");
@@ -82,17 +84,7 @@ public class OrganizationEmailAddress extends EmailAddress {
     pst.execute();
     pst.close();
 
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery("select currval('organization__emailaddress__seq')");
-    
-    
-    if (rs.next()) {
-      
-      this.setId(rs.getInt(1));
-      System.out.println("here I am " + ("" + this.getId()));
-    }
-    rs.close();
-    st.close();
+    this.setId(DatabaseUtils.getCurrVal(db, "organization__emailaddress__seq"));
   }
 
 

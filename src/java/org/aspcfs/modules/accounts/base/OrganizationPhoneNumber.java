@@ -3,6 +3,7 @@
 package com.darkhorseventures.cfsbase;
 
 import java.sql.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Represents an organization phone number, extending the base PhoneNumber
@@ -50,7 +51,8 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     Statement st = null;
     ResultSet rs = null;
     StringBuffer sql = new StringBuffer();
-    sql.append("SELECT * " +
+    sql.append(
+        "SELECT * " +
         "FROM organization_phone p, lookup_orgphone_types l " +
         "WHERE p.phone_type = l.code " +
         "AND phone_id = " + phoneNumberId + " ");
@@ -95,13 +97,7 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     pst.execute();
     pst.close();
 
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery("select currval('organization_phone_phone_id_seq')");
-    if (rs.next()) {
-      this.setId(rs.getInt(1));
-    }
-    rs.close();
-    st.close();
+    this.setId(DatabaseUtils.getCurrVal(db, "organization_phone_phone_id_seq"));
   }
   
   public void update(Connection db, int modifiedBy) throws SQLException {

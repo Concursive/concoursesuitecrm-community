@@ -8,6 +8,7 @@ import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Builds an address list for an organization using a custom query that extends

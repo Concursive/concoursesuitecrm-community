@@ -304,6 +304,8 @@ public class OpportunityList extends Vector {
       
       pagedListInfo.setDefaultSort("x.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
+    } else {
+      sqlOrder.append("ORDER BY x.entered");
     }
 
     //Need to build a base SQL statement for returning records
@@ -327,7 +329,6 @@ public class OpportunityList extends Vector {
       "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id), " +
       "lookup_stage y " +
       "WHERE x.stage = y.code AND " + whereClause);
-      
     pst = db.prepareStatement(
       sqlSelect.toString() + 
       sqlFilter.toString() + 
