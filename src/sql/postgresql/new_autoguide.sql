@@ -36,12 +36,11 @@ CREATE TABLE autoguide_vehicle (
   modifiedby INT NOT NULL
 );
 
-CREATE TABLE autoguide_account_inventory (
+CREATE TABLE autoguide_inventory (
   inventory_id SERIAL PRIMARY KEY,
   vehicle_id INTEGER NOT NULL,
   account_id INTEGER,
   vin VARCHAR(20),
-  adtype VARCHAR(20) NULL,
   mileage VARCHAR(20) NULL,
   is_new BOOLEAN DEFAULT false,
   condition VARCHAR(20) NULL,
@@ -77,10 +76,23 @@ CREATE TABLE autoguide_inventory_options (
 CREATE TABLE autoguide_ad_run (
   ad_run_id SERIAL PRIMARY KEY,
   inventory_id INTEGER NOT NULL,
-  start_date DATETIME NOT NULL,
-  end_date DATETIME NOT NULL,
+  run_date DATETIME NOT NULL,
+  ad_type VARCHAR(20) NULL,
+  include_photo BOOLEAN DEFAULT false,
+  complete BOOLEAN DEFAULT false,
+  complete_date DATETIME NULL,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
+);
+
+CREATE TABLE autoguide_ad_run_types (
+  type_id SERIAL PRIMARY KEY,
+  type_name VARCHAR(20) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT false,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

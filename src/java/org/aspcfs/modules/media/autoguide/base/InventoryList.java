@@ -11,7 +11,7 @@ import com.darkhorseventures.cfsbase.Constants;
 
 public class InventoryList extends ArrayList {
 
-  public static String tableName = "autoguide_account_inventory";
+  public static String tableName = "autoguide_inventory";
   public static String uniqueField = "inventory_id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
@@ -87,7 +87,7 @@ public class InventoryList extends ArrayList {
     StringBuffer sql = new StringBuffer(); 
     sql.append(  
       "SELECT i.inventory_id, i.vehicle_id AS inventory_vehicle_id, " +
-      "i.account_id, vin, adtype, mileage, is_new, " +
+      "i.account_id, vin, mileage, is_new, " +
       "condition, comments, stock_no, ext_color, int_color, invoice_price, " +
       "selling_price, sold, i.status, i.entered, i.enteredby, i.modified, i.modifiedby, " +
       "v.vehicle_id, v.year, v.make_id AS vehicle_make_id, " +
@@ -100,7 +100,7 @@ public class InventoryList extends ArrayList {
       "make.make_id, make.make_name, " +
       "make.entered AS make_entered, make.enteredby AS make_enteredby, " +
       "make.modified AS make_modified, make.modifiedby AS make_modifiedby " +
-      "FROM autoguide_account_inventory i " +
+      "FROM autoguide_inventory i " +
       " LEFT JOIN autoguide_vehicle v ON i.vehicle_id = v.vehicle_id " +
       " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
       " LEFT JOIN autoguide_model model ON v.model_id = model.model_id ");

@@ -9,17 +9,14 @@ import com.darkhorseventures.cfsbase.Constants;
 import com.darkhorseventures.cfsmodule.CFSModule;
 import com.darkhorseventures.webutils.*;
 import com.darkhorseventures.autoguide.base.*;
+import com.darkhorseventures.utils.ImageUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import java.io.*;
-import javax.imageio.*;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
+
 
 /**
  *  Description of the Class
@@ -537,16 +534,16 @@ public final class AutoGuide extends CFSModule {
 
       String id = (String) parts.get("id");
 
-      //Update the database with the resulting file
       db = getConnection(context);
 
-      //TODO: Delete the thumbnail also...
+      //Delete the previous files
       FileItemList previousFiles = new FileItemList();
       previousFiles.setLinkModuleId(Constants.AUTOGUIDE);
       previousFiles.setLinkItemId(Integer.parseInt(id));
       previousFiles.buildList(db);
       previousFiles.delete(db, filePath);
 
+      //Update the database with the resulting file
       FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
       FileItem thisItem = new FileItem();
       thisItem.setLinkModuleId(Constants.AUTOGUIDE);
@@ -564,16 +561,11 @@ public final class AutoGuide extends CFSModule {
       if (!recordInserted) {
         processErrors(context, thisItem.getErrors());
       } else {
-        //TODO: Create a thumbnail
+        //Create a thumbnail
         File thumbnail = new File(newFileInfo.getLocalFile().getPath() + "TH");
-
-        BufferedImage image = ImageIO.read(newFileInfo.getLocalFile());
-        double ratio = 133.0 / image.getWidth();
-        AffineTransform at = AffineTransform.getScaleInstance(ratio, ratio);
-        AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-        BufferedImage scaledImage = op.filter(image, null);
-        ImageIO.write(scaledImage, "jpg", thumbnail);
-
+        ImageUtils.saveThumbnail(newFileInfo.getLocalFile(), thumbnail, 133d, -1d);
+        
+        //Store thumbnail in database
         thisItem.setSubject("thumbnail");
         thisItem.setFilename(newFileInfo.getRealFilename() + "TH");
         thisItem.setVersion(1.1d);

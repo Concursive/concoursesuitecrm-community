@@ -82,13 +82,14 @@ public class AdRunList extends ArrayList {
     StringBuffer sql = new StringBuffer(); 
     sql.append(  
       "SELECT ad.ad_run_id, ad.inventory_id, " +
-      "ad.start_date, ad.end_date, " +
+      "ad.run_date, ad.ad_type, ad.include_photo, complete, complete_date, " +
       "ad.entered, ad.enteredby, " +
-      "ad.modified, ad.modifiedby " +
-      "FROM autoguide_ad_run ad ");
-    sql.append("WHERE ad.ad_run_id > -1 ");
+      "ad.modified, ad.modifiedby, " +
+      "adtype.type_name " +
+      "FROM autoguide_ad_run ad, autoguide_ad_run_types adtype ");
+    sql.append("WHERE ad.ad_run_id > -1 AND ad.ad_type = adtype.type_id ");
     createFilter(sql);
-    sql.append("ORDER BY start_date DESC ");
+    sql.append("ORDER BY run_date ");
     //sql.append("ORDER BY inventory_id, start_date DESC ");
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);

@@ -21,7 +21,6 @@ public class Inventory {
   private int vehicleId = -1;
   private int accountId = -1;
   private String vin = null;
-  private int adType = -1;
   private int mileage = -1;
   private boolean isNew = false;
   private String condition = null;
@@ -53,7 +52,7 @@ public class Inventory {
     StringBuffer sql = new StringBuffer();
     sql.append(  
       "SELECT i.inventory_id, i.vehicle_id AS inventory_vehicle_id, " +
-      "i.account_id, vin, adtype, mileage, is_new, " +
+      "i.account_id, vin, mileage, is_new, " +
       "condition, comments, stock_no, ext_color, int_color, invoice_price, " +
       "selling_price, sold, i.status, i.entered, i.enteredby, i.modified, i.modifiedby, " +
       "v.vehicle_id, v.year, v.make_id AS vehicle_make_id, " +
@@ -66,7 +65,7 @@ public class Inventory {
       "make.make_id, make.make_name, " +
       "make.entered AS make_entered, make.enteredby AS make_enteredby, " +
       "make.modified AS make_modified, make.modifiedby AS make_modifiedby " +
-      "FROM autoguide_account_inventory i " +
+      "FROM autoguide_inventory i " +
       " LEFT JOIN autoguide_vehicle v ON i.vehicle_id = v.vehicle_id " +
       " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
       " LEFT JOIN autoguide_model model ON v.model_id = model.model_id ");
@@ -95,8 +94,6 @@ public class Inventory {
   public void setAccountId(int tmp) { this.accountId = tmp; }
   public void setAccountId(String tmp) { this.accountId = Integer.parseInt(tmp); }
   public void setVin(String tmp) { this.vin = tmp; }
-  public void setAdType(int tmp) { this.adType = tmp; }
-  public void setAdType(String tmp) { this.adType = Integer.parseInt(tmp); }
   public void setMileage(int tmp) { this.mileage = tmp; }
   public void setMileage(String tmp) { 
     this.mileage = StringUtils.getIntegerNumber(tmp);
@@ -150,7 +147,6 @@ public class Inventory {
   public int getVehicleId() { return vehicleId; }
   public int getAccountId() { return accountId; }
   public String getVin() { return vin; }
-  public int getAdType() { return adType; }
   public int getMileage() { return mileage; }
   public String getMileageString() { 
     if (mileage > -1) {
@@ -207,17 +203,16 @@ public class Inventory {
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "INSERT INTO autoguide_account_inventory " +
-        "(vehicle_id, account_id, vin, adtype, mileage, is_new, condition, comments, " +
+        "INSERT INTO autoguide_inventory " +
+        "(vehicle_id, account_id, vin, mileage, is_new, condition, comments, " +
         "stock_no, ext_color, int_color, invoice_price, selling_price, sold, " +
         "status, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, vehicleId);
     pst.setInt(++i, accountId);
     pst.setString(++i, vin);
-    pst.setInt(++i, adType);
     pst.setInt(++i, mileage);
     pst.setBoolean(++i, isNew);
     pst.setString(++i, condition);
@@ -234,7 +229,7 @@ public class Inventory {
     pst.execute();
     pst.close();
 
-    id = DatabaseUtils.getCurrVal(db, "autoguide_acco_inventory_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "autoguide_inve_inventory_id_seq");
     //vehicle = new Vehicle(db, vehicleId);
     
     if (options != null) {
@@ -245,7 +240,7 @@ public class Inventory {
       sql.setLength(0);
       sql.append(
         "INSERT INTO autoguide_ad_run (inventory_id, " +
-        "start_date, end_date, " +
+        "run_date, complete_date, " +
         "enteredby, modifiedby) " +
         "VALUES (?, ?, ?, ?, ?)");
       Iterator adRunList = adRuns.iterator();
@@ -254,8 +249,8 @@ public class Inventory {
         pst = db.prepareStatement(sql.toString());
         i = 0;
         pst.setInt(++i, id);
-        pst.setDate(++i, thisAdRun.getStartDate());
-        pst.setDate(++i, thisAdRun.getEndDate());
+        pst.setDate(++i, thisAdRun.getRunDate());
+        pst.setDate(++i, thisAdRun.getCompleteDate());
         pst.setInt(++i, this.getModifiedBy());
         pst.setInt(++i, this.getModifiedBy());
         pst.execute();
@@ -282,8 +277,8 @@ public class Inventory {
       StringBuffer sql = new StringBuffer();
 
       sql.append(
-        "UPDATE autoguide_account_inventory " +
-        "SET vehicle_id = ?, vin = ?, adtype = ?, mileage = ?, is_new = ?, condition = ?, comments = ?, " +
+        "UPDATE autoguide_inventory " +
+        "SET vehicle_id = ?, vin = ?, mileage = ?, is_new = ?, condition = ?, comments = ?, " +
         "stock_no = ?, ext_color = ?, int_color = ?, invoice_price = ?, selling_price = ?, sold = ?, status = ?, " +
         "modifiedby = ?, modified = CURRENT_TIMESTAMP ");
       sql.append("WHERE inventory_id = ? ");
@@ -293,7 +288,6 @@ public class Inventory {
       pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getVehicleId());
       pst.setString(++i, this.getVin());
-      pst.setInt(++i, this.getAdType());
       pst.setInt(++i, this.getMileage());
       pst.setBoolean(++i, this.getIsNew());
       pst.setString(++i, this.getCondition());
@@ -343,7 +337,7 @@ public class Inventory {
     //Delete the record
     int recordCount = 0;
     pst = db.prepareStatement(
-        "DELETE FROM autoguide_account_inventory " +
+        "DELETE FROM autoguide_inventory " +
         "WHERE inventory_id = ? ");
     pst.setInt(1, id);
     recordCount = pst.executeUpdate();
@@ -360,7 +354,16 @@ public class Inventory {
       adRuns.setInventoryId(id);
       adRuns.delete(db);
     }
-
+    
+    //TODO: Pictures -- need filepath at this point
+/*     if (pictureId > -1) {
+      FileItemList previousFiles = new FileItemList();
+      previousFiles.setLinkModuleId(Constants.AUTOGUIDE);
+      previousFiles.setLinkItemId(id);
+      previousFiles.buildList(db);
+      previousFiles.delete(db, filePath);
+    }
+ */
     if (recordCount == 0) {
       //errors.put("actionError", "Record could not be deleted because it no longer exists.");
       return false;
@@ -375,7 +378,6 @@ public class Inventory {
     vehicleId = rs.getInt("inventory_vehicle_id");
     accountId = rs.getInt("account_id");
     vin = rs.getString("vin");
-    adType = rs.getInt("adtype");
     mileage = rs.getInt("mileage");
     isNew = rs.getBoolean("is_new");
     condition = rs.getString("condition");
