@@ -143,11 +143,11 @@
     <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="TaskListOK" resource="/tasks/mytasks_list.jsp" layout="nav"/>
-    <forward name="NewTaskOK" resource="/tasks/mytasks_new.jsp" layout="nav"/>
+    <forward name="AddTaskOK" resource="/tasks/mytasks_new.jsp" layout="nav"/>
     <forward name="InsertTaskOK" resource="/MyTasks.do?command=ListTasks"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
-    <forward name="NewTaskPopupOK" resource="/tasks/mytasks_new.jsp" layout="style"/>
+    <forward name="AddTaskPopupOK" resource="/tasks/mytasks_new.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   
@@ -177,6 +177,52 @@
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="SettingsOK" resource="/mycfs/mycfs_settings.jsp" layout="nav"/>
     <forward name="UpdateSettingsOK" resource="/MyCFS.do?command=MyProfile"/>
+  </action>
+  <action name="MyActionLists" class="org.aspcfs.modules.actionlist.actions.MyActionLists">
+    <bean name="ActionList" class="org.aspcfs.modules.actionlist.base.ActionList" scope="request" />
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/actionlist/action_lists.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/actionlist/action_lists.jsp" layout="nav"/>
+    <forward name="PrepareAddOK" resource="/MyActionContacts.do?command=Prepare&amp;actionSource=MyActionLists"/>
+    <forward name="PrepareContactsOK" resource="/actionlist/action_lists_add.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/MyActionLists.do?command=List"/>
+    <forward name="PrepareModifyOK" resource="/actionlist/action_lists_add.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
+  <action name="MyActionContacts" class="org.aspcfs.modules.actionlist.actions.MyActionContacts">
+  <bean name="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/actionlist/contact_list.jsp" layout="nav"/>
+    <forward name="PrepareOK" resource="/actionlist/action_contacts_add.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/MyActionContacts.do?command=List"/>
+    <forward name="ModifyOK"  resource="/ContactsList.do?command=ContactList&amp;listType=list&amp;reset=true&amp;filters=all|mycontacts|accountcontacts&amp;actionSource=MyActionContacts"/>
+    <forward name="ModifyNoBuildOK" resource="/ContactsList.do?command=ContactList&amp;actionSource=MyActionContacts"/> 
+    <forward name="CFSContactListOK" resource="/actionlist/action_contacts_modify.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/MyActionContacts.do?command=List"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/MyActionContacts.do?command=List"/>
+    <forward name="AddCallPopupOK" resource="/actionlist/action_contacts_addcall.jsp" layout="style"/>
+    <forward name="InsertCallPopupOK" resource="/closepopupandreload.jsp"/>
+    <forward name="AddTicketOK" resource="/actionlist/action_contacts_addticket.jsp" layout="style"/>
+    <forward name="InsertTicketOK" resource="/closepopupandreload.jsp"/>
+    <forward name="AddTaskOK" resource="/actionlist/action_contacts_addtask.jsp" layout="style"/>
+    <forward name="InsertTaskOK" resource="/closepopupandreload.jsp"/>
+    <forward name="PrepareOppOK" resource="/OpportunityForm.do?command=Prepare&amp;entity=contact"/>
+    <forward name="PrepareAddOppOK" resource="/actionlist/action_contacts_addopp.jsp" layout="style"/>
+    <forward name="DetailsOppOK" resource="/closepopupandreload.jsp"/>
+    <forward name="CFSNewMessageOK" resource="/actionlist/action_contacts_newmessage.jsp" layout="style"/>
+    <forward name="SendMessageOK" resource="/closepopupandreload.jsp"/>
+    <forward name="ViewHistoryOK" resource="/actionlist/action_contacts_history.jsp" layout="style"/>
+    <forward name="PrepareMessagePopupOK" resource="/CampaignManager.do?command=MessageJSList&amp;actionSource=MyActionContacts"/>
+    <forward name="MessageJSListPopupOK" resource="/actionlist/action_contacts_sendmessage.jsp" layout="style"/>
+    <forward name="SendMessagePopupOK" resource="/actionlist/action_contacts_confirmsend.jsp" layout="style"/>
   </action>
   <!-- End MyCFS Module -->
   
@@ -221,9 +267,7 @@
     <forward name="ContactDetailsUpdateOK" resource="/ExternalContacts.do?command=ContactDetails"/>
     <forward name="PrepareOK" resource="/ContactForm.do?command=Prepare&amp;actionSource=ExternalContacts&amp;entity=contact"/>
     <forward name="PrepareAddOK" resource="/contacts/companydirectory_contactinsertform.jsp" layout="nav"/>
-    <forward name="PreparePopupAddOK" resource="/contacts/companydirectory_contactinsertform.jsp" layout="style"/>
     <forward name="PrepareModifyOK" resource="/contacts/companydirectory_contactmodifyform.jsp" layout="nav"/>
-    <forward name="ContactPopupInsertFormOK" resource="/contacts/companydirectory_contactinsertform.jsp" layout="style"/>
     <forward name="ContactDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="MessageDetailsOK" resource="/contacts/companydirectory_message_details.jsp" layout="nav"/>
     <forward name="ViewMessagesOK" resource="/contacts/companydirectory_view_messages.jsp" layout="nav"/>
@@ -237,6 +281,19 @@
     <forward name="DefaultError" resource="/CompanyDirectory.do?command=ListEmployees"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="CloseInsertContactPopup" resource="/contacts/close_insertcontact_popup.jsp"/>
+    <!-- duplicate actions for pop ups with layout="style" -->
+    <forward name="ContactDetailsPopupOK" resource="/contacts/companydirectory_contactdetails.jsp" layout="style"/>
+    <forward name="PrepareAddPopupOK" resource="/contacts/companydirectory_contactinsertform.jsp" layout="style"/>
+    <forward name="PrepareModifyPopupOK" resource="/contacts/companydirectory_contactmodifyform.jsp" layout="style"/>
+    <forward name="ContactPopupInsertFormOK" resource="/contacts/companydirectory_contactinsertform.jsp" layout="style"/>
+    <forward name="MessageDetailsPopupOK" resource="/contacts/companydirectory_message_details.jsp" layout="style"/>
+    <forward name="ViewMessagesPopupOK" resource="/contacts/companydirectory_view_messages.jsp" layout="style"/>
+    <forward name="FieldsEmptyPopupOK" resource="/contacts/companydirectory_nofields.jsp" layout="style"/>
+    <forward name="FieldsPopupOK" resource="/contacts/companydirectory_fields.jsp" layout="style"/>
+    <forward name="FieldRecordListPopupOK" resource="/contacts/companydirectory_fields_list.jsp" layout="style"/>
+    <forward name="AddFolderRecordPopupOK" resource="/contacts/companydirectory_fields_add.jsp" layout="style"/>
+    <forward name="ModifyFieldsPopupOK" resource="/contacts/companydirectory_fields_modify.jsp" layout="style"/>
+    <forward name="UpdateFieldsPopupOK" resource="/contacts/companydirectory_fields.jsp" layout="style"/>
   </action>
   <action name="ExternalContactsOpps" class="org.aspcfs.modules.contacts.actions.ExternalContactsOpps">
     <bean name="OppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
@@ -247,12 +304,18 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="OppDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ListOppsOK" resource="/contacts/companydirectory_listopps.jsp" layout="nav"/>
-    <forward name="PrepareOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=ExternalContactsOpps&amp;entity=contact"/>
-    <forward name="PrepareAddOK" resource="/contacts/companydirectory_addopp.jsp" layout="nav"/>
+    <forward name="PrepareOppOK" resource="/OpportunityForm.do?command=Prepare&amp;entity=contact"/>
+    <forward name="PrepareAddOppOK" resource="/contacts/companydirectory_addopp.jsp" layout="nav"/>
     <forward name="OppDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ModifyOppOK" resource="/contacts/companydirectory_modifyopp.jsp" layout="nav"/>
     <forward name="DetailsOppOK" resource="/contacts/companydirectory_detailsopp.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <!-- duplicate actions for pop ups with layout="style" -->
+    <forward name="OppDeletePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ListOppsPopupOK" resource="/contacts/companydirectory_listopps.jsp" layout="style"/>
+    <forward name="PrepareAddOppPopupOK" resource="/contacts/companydirectory_addopp.jsp" layout="style"/>
+    <forward name="ModifyOppPopupOK" resource="/contacts/companydirectory_modifyopp.jsp" layout="style"/>
+    <forward name="DetailsOppPopupOK" resource="/contacts/companydirectory_detailsopp.jsp" layout="style"/>
   </action>
   
   <action name="ExternalContactsOppComponents" class="org.aspcfs.modules.contacts.actions.ExternalContactsOpps">
@@ -261,13 +324,18 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
-    <forward name="PrepareOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=ExternalContactsOppComponents&amp;entity=contact"/>
-    <forward name="PrepareAddOK" resource="/contacts/companydirectory_addoppcomponent.jsp" layout="nav"/>
-    <forward name="PrepareModifyOK" resource="/contacts/companydirectory_modifycomponent.jsp" layout="nav"/>
+    <forward name="PrepareOppOK" resource="/OpportunityForm.do?command=Prepare&amp;entity=contact"/>
+    <forward name="PrepareAddOppOK" resource="/contacts/companydirectory_addoppcomponent.jsp" layout="nav"/>
+    <forward name="PrepareModifyOppOK" resource="/contacts/companydirectory_modifycomponent.jsp" layout="nav"/>
     <forward name="DetailsOppOK" resource="/contacts/companydirectory_detailsopp.jsp" layout="nav"/>
     <forward name="DetailsComponentOK" resource="/contacts/companydirectory_detailsoppcomponent.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <!-- duplicate actions for pop ups with layout="style" -->
+    <forward name="PrepareAddOppPopupOK" resource="/contacts/companydirectory_addoppcomponent.jsp" layout="style"/>
+    <forward name="PrepareModifyOppPopupOK" resource="/contacts/companydirectory_modifycomponent.jsp" layout="style"/>
+    <forward name="DetailsOppPopupOK" resource="/contacts/companydirectory_detailsopp.jsp" layout="style"/>
+    <forward name="DetailsComponentPopupOK" resource="/contacts/companydirectory_detailsoppcomponent.jsp" layout="style"/>
   </action>
   
   <action name="ExternalContactsCalls" class="org.aspcfs.modules.contacts.actions.ExternalContactsCalls">
@@ -279,11 +347,20 @@
     <forward name="ViewOK" resource="/contacts/companydirectory_listcalls.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/contacts/companydirectory_detailscall.jsp" layout="nav"/>
     <forward name="AddOK" resource="/contacts/companydirectory_addcall.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/ExternalContactsCalls.do?command=View"/>
     <forward name="ModifyOK" resource="/contacts/companydirectory_modifycall.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/ExternalContactsCalls.do?command=Details"/>
-    <forward name="DeleteOK" resource="/ExternalContactsCalls.do?command=View"/>
     <forward name="ModifyPopupOK" resource="/contacts/companydirectory_modifycall.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <!-- duplicate actions for pop ups with layout="style" -->
+    <forward name="ViewPopupOK" resource="/contacts/companydirectory_listcalls.jsp" layout="style"/>
+    <forward name="DetailsPopupOK" resource="/contacts/companydirectory_detailscall.jsp" layout="style"/>
+    <forward name="AddPopupOK" resource="/contacts/companydirectory_addcall.jsp" layout="style"/>
+    <forward name="InsertPopupOK" resource="/ExternalContactsCalls.do?command=View"/>
+    <forward name="ModifyPopupOK" resource="/contacts/companydirectory_modifycall.jsp" layout="style"/>
+    
   </action>
   <action name="ExternalContactsCallsForward" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
@@ -344,8 +421,8 @@
     <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="PrepareOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=Leads"/>
-    <forward name="PrepareAddOK" resource="/pipeline/leads_add.jsp" layout="nav"/>
-    <forward name="PrepareModifyOK" resource="/pipeline/leads_modify.jsp" layout="nav"/>
+    <forward name="PrepareAddOppOK" resource="/pipeline/leads_add.jsp" layout="nav"/>
+    <forward name="PrepareModifyOppOK" resource="/pipeline/leads_modify.jsp" layout="nav"/>
     <forward name="SearchOK" resource="/pipeline/LeadsSearchOpp.jsp" layout="nav"/>
     <forward name="DashboardOK" resource="/pipeline/LeadsDashboard.jsp" layout="nav"/>
     <forward name="OppDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
@@ -371,8 +448,8 @@
     <forward name="AddOppComponentOK" resource="/pipeline/leads_addoppcomponent.jsp" layout="nav"/>
     <forward name="OppDetailsOK" resource="/pipeline/LeadsDetailsOpp.jsp" layout="nav"/>
     <forward name="PrepareOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=LeadsComponents"/>
-    <forward name="PrepareAddOK" resource="/pipeline/leads_addoppcomponent.jsp" layout="nav"/>
-    <forward name="PrepareModifyOK" resource="/pipeline/leads_modifycomponent.jsp" layout="nav"/>
+    <forward name="PrepareAddOppOK" resource="/pipeline/leads_addoppcomponent.jsp" layout="nav"/>
+    <forward name="PrepareModifyOppOK" resource="/pipeline/leads_modifycomponent.jsp" layout="nav"/>
     <forward name="DetailsComponentOK" resource="/pipeline/leads_detailsoppcomponent.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="OppListOK" resource="/pipeline/LeadsViewOpp.jsp" layout="nav"/>
@@ -495,7 +572,7 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="CloseAddPopup" resource="/accounts/accounts_closepopup_addcontact.jsp"/>
-    <forward name="PreparePopupAddOK" resource="/contacts/companydirectory_contactinsertform.jsp" layout="style"/>
+    <forward name="PrepareAddPoupOK" resource="/contacts/companydirectory_contactinsertform.jsp" layout="style"/>
   </action>
   <action name="ContactForm" class="org.aspcfs.modules.contacts.actions.ContactForm">
     <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
@@ -504,6 +581,25 @@
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="PrepareAddOK" resource="noresource"/>
     <forward name="PrepareModifyOK" resource="noresource"/>
+  </action>
+  <action name="AccountContactsCalls" class="org.aspcfs.modules.accounts.actions.AccountContactsCalls">
+    <bean name="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/contacts/companydirectory_listcalls.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/contacts/companydirectory_detailscall.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/contacts/companydirectory_addcall.jsp" layout="nav"/>
+  </action>
+  <action name="AccountContactsOpps" class="org.aspcfs.modules.accounts.actions.AccountContactsOpps">
+    <bean name="OppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
+    <forward name="PrepareOppOK" resource="/OpportunityForm.do?command=Prepare&amp;entity=contact"/>
+    <forward name="PrepareAddOppOK" resource="/contacts/companydirectory_addopp.jsp" layout="nav"/>
   </action>
   <action name="RevenueManager" class="org.aspcfs.modules.accounts.actions.RevenueManager">
     <bean name="Revenue" class="org.aspcfs.modules.accounts.base.Revenue" scope="request"/>
@@ -532,8 +628,8 @@
     <forward name="ListOK" resource="/accounts/accounts_opportunities_list.jsp" layout="nav"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="PrepareOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=Opportunities&amp;entity=account"/>
-    <forward name="PrepareAddOK" resource="/accounts/accounts_opportunities_add.jsp" layout="nav"/>
-    <forward name="PrepareModifyOK" resource="/accounts/accounts_opportunities_modify.jsp" layout="nav"/>
+    <forward name="PrepareAddOppOK" resource="/accounts/accounts_opportunities_add.jsp" layout="nav"/>
+    <forward name="PrepareModifyOppOK" resource="/accounts/accounts_opportunities_modify.jsp" layout="nav"/>
   </action>
   
   <action name="OpportunitiesComponents" class="org.aspcfs.modules.accounts.actions.Opportunities">
@@ -543,8 +639,8 @@
     <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="PrepareOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=OpportunitiesComponents&amp;entity=account"/>
-    <forward name="PrepareAddOK" resource="/accounts/accounts_opportunities_addoppcomponent.jsp" layout="nav"/>
-    <forward name="PrepareModifyOK" resource="/accounts/accounts_opportunities_modifycomponent.jsp" layout="nav"/>
+    <forward name="PrepareAddOppOK" resource="/accounts/accounts_opportunities_addoppcomponent.jsp" layout="nav"/>
+    <forward name="PrepareModifyOppOK" resource="/accounts/accounts_opportunities_modifycomponent.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/accounts/accounts_opportunities_details.jsp" layout="nav"/>
     <forward name="DetailsComponentOK" resource="/accounts/accounts_opportunities_detailsoppcomponent.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
@@ -842,7 +938,8 @@
     <forward name="SearchTicketsFormOK" resource="/troubletickets/troubletickets_search.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/troubletickets/troubletickets_details.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/troubletickets/TroubleTickets.do?command=Details"/>
-    <forward name="DeleteOK" resource="/TroubleTickets.do?command=Home"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="CategoryJSListOK" resource="/troubletickets/troubletickets_js_categorylist.jsp"/>
     <forward name="DepartmentJSListOK" resource="/troubletickets/troubletickets_js_departmentlist.jsp"/>
     <forward name="OrganizationJSListOK" resource="/troubletickets/troubletickets_js_contactlist.jsp"/>
