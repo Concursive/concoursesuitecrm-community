@@ -89,12 +89,18 @@
       updateContactList();
     }
 	}
-  function isAccountValid(){
-    if(document.forms['addticket'].orgId.value == -1){
-      alert('You  have to select an Account first');
-      return false;
+  
+  function addNewContact(){
+    var orgId = document.forms['addticket'].orgId.value;
+    if(orgId == -1){
+        alert('You  have to select an Account first');
+        return;
     }
-    return true;
+    if(orgId == '0'){
+      popURL('CompanyDirectory.do?command=Prepare&popup=true&source=troubletickets', 'New_Employee','500','600','yes','yes');
+    }else{
+      popURL('Contacts.do?command=Prepare&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','500','600','yes','yes');
+    }
   }
 </script>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -143,7 +149,7 @@
       <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
 	<%}%>
       <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-      [<a href="javascript:popURL('Contacts.do?command=Prepare&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','500','600','yes','yes');" onClick="return isAccountValid();">Create New Contact</a>] 
+      [<a href="javascript:addNewContact();">Create New Contact</a>] 
     </td>
 	</tr>
   <% }else{ %>
