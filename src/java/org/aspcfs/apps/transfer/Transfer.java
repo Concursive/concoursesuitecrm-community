@@ -29,7 +29,7 @@ public class Transfer {
     //Initialize app from the config file
     if (args.length == 0) {
       System.out.println("Usage: Transfer [config file]");
-      System.exit(0);
+      System.exit(2);
     }
 
     Transfer transfer = new Transfer();
@@ -84,7 +84,7 @@ public class Transfer {
         displayItems(invalidReaderProperties, "Invalid Reader Property");
         if (!validateHandler(reader)) {
           logger.info("Reader has not been configured");
-          System.exit(0);
+          System.exit(2);
         }
 
         //Instantiate the writer
@@ -93,7 +93,7 @@ public class Transfer {
         displayItems(invalidWriterProperties, "Invalid Writer Property");
         if (!validateHandler(writer)) {
           logger.info("Writer has not been configured");
-          System.exit(0);
+          System.exit(2);
         }
 
         //Execute the read/write process
@@ -102,12 +102,12 @@ public class Transfer {
         ((DataWriter) writer).close();
       } else {
         logger.info("A Reader and Writer need to be specified in the configuration file");
-        System.exit(0);
+        System.exit(2);
       }
     } catch (Exception e) {
       logger.info("Error: " + e.toString());
+      System.exit(2);
     }
-    logger.info("Transfer-> All done.");
   }
 
 
