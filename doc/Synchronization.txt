@@ -398,7 +398,7 @@ Client #1 Ends Synchronization
       <property>modified</property>
     </meta>
     <adRunList action="sync" identity="1">
-      <accountInventoryGuid>*REQUIRED: MUST SPECIFY INVENTORY GUID*</accountInventoryGuid>
+      <accountInventoryGuid>*OPTIONAL: SPECIFY INVENTORY GUID*</accountInventoryGuid>
     </adRunList>
   </transaction>
   
