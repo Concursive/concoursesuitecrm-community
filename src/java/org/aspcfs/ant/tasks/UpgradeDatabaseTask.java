@@ -132,6 +132,10 @@ public class UpgradeDatabaseTask extends Task {
       ConnectionElement ce = new ConnectionElement(url, user, password);
       ce.setDriver(driver);
       Connection db = sqlDriver.getConnection(ce);
+      //If a script exists for the gatekeeper, run it
+      executeScript(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : "gk.bsh"), fsEval);
+      executeSql(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : "gk.sql"), fsEval);
+      //Run the rest of the databases
       PreparedStatement pst = db.prepareStatement(
           "SELECT DISTINCT dbhost, dbuser, dbpw, driver " +
           "FROM sites " +
@@ -160,40 +164,61 @@ public class UpgradeDatabaseTask extends Task {
             (String) siteInfo.get("password"));
         ce.setDriver((String) siteInfo.get("driver"));
         db = sqlDriver.getConnection(ce);
-        //Run a specified bean shell script if found
-        String scriptFile = baseFile + (baseFile.indexOf(".")>-1?"":".bsh");
-        if (new File(scriptFile).exists()) {
-          Interpreter script = new Interpreter();
-          script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "aspcfs.jar\")");
-          script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "darkhorseventures.jar\")");
-          script.eval("addClassPath(\"" + servletJar + "\")");
-          script.set("db", db);
-          System.out.println("Executing: " + scriptFile);
-          script.source(scriptFile);
-        }
-        //Run the specified sql file
-        String sqlFile = baseFile + (baseFile.indexOf(".")>-1?"":".sql");
-        if (new File(sqlFile).exists()) {
-          try {
-            db.setAutoCommit(false);
-            Statement st = db.createStatement();
-            st.execute(StringUtils.loadText(sqlFile));
-            st.close();
-            db.commit();
-            System.out.println("SQL Script complete: " + sqlFile);
-          } catch (SQLException sq) {
-            db.rollback();
-            System.out.println("SQL ERROR: " + sq.getMessage());
-            throw new Exception(sq);
-          } finally {
-            db.setAutoCommit(true);
-          }
-        }
+        //Try to run a specified bean shell script if found
+        executeScript(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : ".bsh"), fsEval);
+        //Try to run the specified sql file
+        executeSql(db, baseFile + (baseFile.indexOf(".") > -1 ? "" : ".sql"), fsEval);
         sqlDriver.free(db);
       }
     } catch (Exception e) {
       e.printStackTrace();
       System.out.println("Script error");
+    }
+  }
+
+
+  /**
+   *  Executes the specified BeanShell script on the given database connection
+   *
+   *@param  db          Description of the Parameter
+   *@param  scriptFile  Description of the Parameter
+   */
+  private void executeScript(Connection db, String scriptFile, String fsEval) throws Exception {
+    if (scriptFile.endsWith(".bsh") && new File(scriptFile).exists()) {
+      Interpreter script = new Interpreter();
+      script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "aspcfs.jar\")");
+      script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "darkhorseventures.jar\")");
+      script.eval("addClassPath(\"" + servletJar + "\")");
+      script.set("db", db);
+      System.out.println("Executing: " + scriptFile);
+      script.source(scriptFile);
+    }
+  }
+
+
+  /**
+   *  Executes the specified sql file on the given database connection
+   *
+   *@param  db             Description of the Parameter
+   *@param  sqlFile        Description of the Parameter
+   *@exception  Exception  Description of the Exception
+   */
+  private void executeSql(Connection db, String sqlFile, String fsEval) throws Exception {
+    if (sqlFile.endsWith(".sql") && new File(sqlFile).exists()) {
+      try {
+        db.setAutoCommit(false);
+        Statement st = db.createStatement();
+        st.execute(StringUtils.loadText(sqlFile));
+        st.close();
+        db.commit();
+        System.out.println("SQL Script complete: " + sqlFile);
+      } catch (SQLException sq) {
+        db.rollback();
+        System.out.println("SQL ERROR: " + sq.getMessage());
+        throw new Exception(sq);
+      } finally {
+        db.setAutoCommit(true);
+      }
     }
   }
 }
