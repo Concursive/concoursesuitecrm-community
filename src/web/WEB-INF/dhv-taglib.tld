@@ -220,7 +220,7 @@
     <tag-class>com.darkhorseventures.taglib.PagedListStatusHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
-      Displays a table cell containing the status for the PagedListInfo specified.
+      Displays the status of the PagedListInfo specified.
     </display-name>
     <attribute>
       <name>name</name>
@@ -247,7 +247,7 @@
       <required>no</required>
     </attribute>
     <attribute>
-      <name>resetList</name>
+      <name>showRefresh</name>
       <required>no</required>
     </attribute>
     <attribute>
@@ -258,7 +258,11 @@
     <attribute>
       <name>showExpandLink</name>
       <required>no</required>
-    </attribute>   
+    </attribute>
+    <attribute>
+      <name>showControlOnly</name>
+      <required>no</required>
+    </attribute>
   </tag>
   
   <tag>
