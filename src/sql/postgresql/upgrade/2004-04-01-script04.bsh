@@ -1,0 +1,66 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  insert a category editor entry
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+
+int categoryId = 130041000;
+String module = "Assets";
+int constantId = 202041400;
+int level = 10;
+String table = "asset_category";
+String description = "Asset Categories";
+int maxLevels = 3;
+
+print("Lookup up " + module + " module and adding the category editor");
+
+// Check and insert a module
+int moduleId = -1;
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT category_id " +
+  "FROM permission_category " +
+  "WHERE category = '" + module + "'");
+if (rs.next()) {
+  moduleId = rs.getInt("category_id");
+}
+rs.close();
+st.close();
+if (moduleId == -1) {
+  print("****** ERROR: MODULE NOT FOUND ******");
+  System.exit(2);
+}
+
+// Check and insert the category editor
+int entryId = -1;
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT id " +
+  "FROM category_editor_lookup " +
+  "WHERE constant_id = " + constantId);
+if (rs.next()) {
+  entryId = rs.getInt("id");
+}
+rs.close();
+st.close();
+if (entryId == -1) {
+  print("Inserting new category editor...");
+  PreparedStatement pst = db.prepareStatement(
+      "INSERT INTO category_editor_lookup " +
+      "(module_id, constant_id, table_name, level, description, category_id, max_levels) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+  pst.setInt(1, moduleId);
+  pst.setInt(2, constantId);
+  pst.setString(3, table);
+  pst.setInt(4, level);
+  pst.setString(5, description);
+  pst.setInt(6, categoryId);
+  pst.setInt(7, maxLevels);
+  pst.execute();
+  pst.close();
+}
+print("Finished");
