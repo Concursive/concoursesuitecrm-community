@@ -52,13 +52,13 @@ function lettersubmit(thisLetter) {
   
   
   function setParentList(a){
-	deleteOptions();
-	if(a.length == 0){
-		insertNewOption("None Selected","");
-	}
-	var i = 0;
+    deleteOptions();
+	  if(a.length == 0){
+		  insertNewOption("None Selected","");
+	  }
+    var i = 0;
 	for(i=0; i < a.length; i++) {
-		insertNewOption(a[i],"");
+		//insertNewOption(a[i],"");
 	}
   }
   
@@ -110,39 +110,36 @@ function lettersubmit(thisLetter) {
       else{
         dL(E,browser);
       }
-    
     }
     
- function hL(E,browser){
-   if (browser=="ie")
-   {
-     while (E.tagName!="TR")
-     {E=E.parentElement;}
-   }
-else
-{
-while (E.tagName!="TR")
-{E=E.parentNode;}
-}
+    function hL(E,browser){
+      if (browser=="ie"){
+          while (E.tagName!="TR"){
+            E=E.parentElement;
+          }
+      }
+      else{
+        while (E.tagName!="TR"){
+          E=E.parentNode;
+          }
+      }
+      if(E.className.indexOf("hl")==-1){
+         E.className = E.className+"hl";
+      }
+    }
 
-if(E.className.indexOf("hl")==-1){
-  E.className = E.className+"hl";
-}
-}
 
+    function dL(E,browser){
+      if (browser=="ie"){
+        while (E.tagName!="TR"){
+          E=E.parentElement;
+        }
+      }
+      else{
+        while (E.tagName!="TR"){
+          E=E.parentNode;
+        }
+      }
+      E.className = E.className.substr(0,4);
+    }
 
-function dL(E,browser){
-if (browser=="ie")
-{
-while (E.tagName!="TR")
-{E=E.parentElement;}
-}
-else
-{
-while (E.tagName!="TR")
-{E=E.parentNode;}
-}
-
-  E.className = E.className.substr(0,4);
-
-}
