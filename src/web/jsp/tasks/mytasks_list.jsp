@@ -47,9 +47,9 @@
   <tr>
     <td align="left">
       <select size="1" name="listFilter1" onChange="javascript:document.taskListView.submit();">
-        <option value="taskstome" <%=TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("taskstome")?" selected":""%>>My Tasks</option>
+        <option value="my" <%=TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("taskstome")?" selected":""%>>My Tasks</option>
         <option value="tasksbyme" <%=TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("tasksbyme")?" selected":""%>>Tasks Assigned By Me</option>
-        <option value="all" <%=TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("all")?" selected":""%>>All Tasks</option>
+<%--        <option value="all" <%=TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("all")?" selected":""%>>All Tasks</option> --%>
       </select>
      <%if(!TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("all")){%>
        <select size="1" name="listFilter2" onChange="javascript:document.taskListView.submit();">
