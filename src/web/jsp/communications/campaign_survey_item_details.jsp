@@ -9,16 +9,19 @@
 <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="ItemDetailsListInfo"/>
 <br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+  <tr class="title" colspan="3">
     <td>
       <strong>Name</strong>
     </td>
   </tr>
   <tr class="title">
      <td width="25" valign="top" align="center">
+        Name
+      </td>
+     <td valign="top" align="center">
         Phone Number(s)
       </td>
-    <td width="85%" valign="center" align="left">
+    <td valign="center" align="left">
       Email Addresses
     </td>
   </tr>
