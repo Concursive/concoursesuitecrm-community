@@ -518,6 +518,10 @@ public class Organization extends GenericBean {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
+  
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -1107,33 +1111,17 @@ public class Organization extends GenericBean {
     if (orgId == -1) {
       throw new SQLException("No Organization ID Specified");
     }
-
-    StringBuffer sql = new StringBuffer();
-
-    try {
-      db.setAutoCommit(false);
-
-      sql.append(
-          "INSERT INTO account_type_levels " +
-          "(id, type_id, level) " +
-          "VALUES (?, ?, ?) ");
-
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setInt(++i, this.getOrgId());
-      pst.setInt(++i, type_id);
-      pst.setInt(++i, level);
-      pst.execute();
-      pst.close();
-
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
-    }
+    String sql = 
+      "INSERT INTO account_type_levels " +
+      "(id, type_id, level) " +
+      "VALUES (?, ?, ?) ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, this.getOrgId());
+    pst.setInt(++i, type_id);
+    pst.setInt(++i, level);
+    pst.execute();
+    pst.close();
     return true;
   }
 
@@ -1149,19 +1137,11 @@ public class Organization extends GenericBean {
     if (this.getOrgId() == -1) {
       throw new SQLException("Organization ID not specified");
     }
-
     Statement st = db.createStatement();
-
-    try {
-      db.setAutoCommit(false);
-      st.executeUpdate("DELETE FROM account_type_levels WHERE id = " + this.getOrgId());
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-    } finally {
-      db.setAutoCommit(true);
-      st.close();
-    }
+    st.executeUpdate(
+      "DELETE FROM account_type_levels " +
+      "WHERE id = " + this.getOrgId());
+    st.close();
     return true;
   }
 
@@ -1172,7 +1152,7 @@ public class Organization extends GenericBean {
   public void listTypes() {
     for (int i = 0; i < typeList.size(); i++) {
       String val = (String) typeList.get(i);
-      System.out.println(val);
+      //System.out.println(val);
     }
   }
 
@@ -1238,7 +1218,7 @@ public class Organization extends GenericBean {
       pst.setString(++i, this.getUrl());
       pst.setBoolean(++i, this.getMiner_only());
       pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getModifiedBy());
+      pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getOwner());
       pst.setInt(++i, this.getDuplicateId());
       pst.setString(++i, this.getNotes());
@@ -1302,7 +1282,6 @@ public class Organization extends GenericBean {
     try {
       db.setAutoCommit(false);
       i = this.update(db, false);
-
       //Process the phone numbers if there are any
       Iterator iphone = phoneNumberList.iterator();
       while (iphone.hasNext()) {
@@ -1398,25 +1377,20 @@ public class Organization extends GenericBean {
     } else {
       pst.setDate(++i, this.getAlertDate());
     }
-
     pst.setString(++i, alertText);
-
     pst.setInt(++i, orgId);
     if (!override) {
       pst.setTimestamp(++i, this.getModified());
     }
-
     resultCount = pst.executeUpdate();
     pst.close();
-
-    if (this.getMiner_only() == false) {
-
+    
+    //Remove all account types, add new list
+    if (this.getMiner_only() == false && typeList != null) {
       resetType(db);
       int lvlcount = 0;
-
       for (int k = 0; k < typeList.size(); k++) {
         String val = (String) typeList.get(k);
-
         if (val != null && !(val.equals(""))) {
           int type_id = Integer.parseInt((String) typeList.get(k));
           lvlcount++;
@@ -1426,7 +1400,6 @@ public class Organization extends GenericBean {
         }
       }
     }
-
     return resultCount;
   }
 
