@@ -7,9 +7,10 @@
  * @arg5 = allow resize (yes/no)
  * @arg6 = show scroll bars (yes/no)
  */
-function popURL(filename, title, width, height, resize, bars) {
-  var posx = (screen.width - width)/2;
-  var posy = (screen.height - height)/2;
+
+function popLEFT(filename, title, width, height, resize, bars) {
+  var posx = (30)
+  var posy = (30);
   
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
   var newwin=window.open(filename, title, params);
@@ -18,4 +19,3 @@ function popURL(filename, title, width, height, resize, bars) {
       newwin.opener = self;
   }
 }
-

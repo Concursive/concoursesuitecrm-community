@@ -1,4 +1,4 @@
 <html>
-<body onload="window.opener.location.reload(); window.close();">
+<body onload="window.close();">
 </body>
 </html>

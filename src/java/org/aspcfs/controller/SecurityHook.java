@@ -34,17 +34,18 @@ public class SecurityHook implements ControllerHook {
     UserBean userSession = (UserBean)request.getSession().getAttribute("User");
 
     // Get the intended action, if going to the login module, then let it proceed
-    String s = request.getServletPath();
-    int slash = s.lastIndexOf("/");
-    s = s.substring(slash + 1);
+    String action = request.getServletPath();
+    int slash = action.lastIndexOf("/");
+    action = action.substring(slash + 1);
 
-    if (userSession == null && !s.toUpperCase().startsWith("LOGIN")) {
+    if (userSession == null && !action.toUpperCase().startsWith("LOGIN")) {
       LoginBean failedSession = new LoginBean();
       failedSession.setMessage("* Please login, your session has expired");
       request.setAttribute("LoginBean", failedSession);
       return "SecurityCheck";
     } else {
       if (userSession != null) {
+        request.setAttribute("moduleAction", action);
         ConnectionElement ce = (ConnectionElement)request.getSession().getAttribute("ConnectionElement");
         SystemStatus systemStatus = (SystemStatus)((Hashtable)servlet.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
         

@@ -1,4 +1,12 @@
 //Copyright 2001 Dark Horse Ventures
+//TODO: Currency entry using k, m, b for 50,000, etc.
+//TODO: Phone numbers -- When you enter phone numbers in various phone fields, 
+//preserve whatever phone number format you enter. 
+//However, if your Locale is set to English (United States) or English (Canada), 
+//ten digit phone numbers and eleven digit numbers that start with '1' are 
+//automatically formatted as (800) 555-1212 when you save the record. 
+//If you do not want this formatting for a ten or eleven digit number, 
+//enter a '+' before the number, e.g., +49 8178 94 07-0.
 
 package com.darkhorseventures.cfsbase;
 
@@ -1145,7 +1153,7 @@ public class CustomField extends GenericBean {
     if (type == -1) {
       error = "Form field type error";
     }
-    
+
     //Required Fields
     if (this.getRequired() && (this.getEnteredValue() == null || this.getEnteredValue().equals(""))) {
       error = "Required field";
@@ -1153,9 +1161,9 @@ public class CustomField extends GenericBean {
     if (type == SELECT && this.getRequired() && this.getSelectedItemId() == -1) {
       error = "Required field";
     }
-    
+
     //Type mis-match
-    if ((error == null || error.equals("")) && 
+    if ((error == null || error.equals("")) &&
         (this.getEnteredValue() != null && !this.getEnteredValue().equals(""))) {
       if (type == INTEGER) {
         try {
@@ -1166,7 +1174,7 @@ public class CustomField extends GenericBean {
           error = "Value should be a whole number";
         }
       }
-      
+
       if (type == FLOAT) {
         try {
           double testNumber = Double.parseDouble(this.getEnteredValue());
@@ -1175,7 +1183,7 @@ public class CustomField extends GenericBean {
           error = "Value should be a number";
         }
       }
-      
+
       if (type == PERCENT) {
         try {
           double testNumber = Double.parseDouble(this.getEnteredValue());
@@ -1184,7 +1192,7 @@ public class CustomField extends GenericBean {
           error = "Value should be a number";
         }
       }
-      
+
       if (type == CURRENCY) {
         try {
           String testString = replace(this.getEnteredValue(), ",", "");
@@ -1195,7 +1203,7 @@ public class CustomField extends GenericBean {
           error = "Value should be a number";
         }
       }
-      
+
       if (type == DATE) {
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy");
         formatter.setLenient(false);
@@ -1204,11 +1212,11 @@ public class CustomField extends GenericBean {
           testDate = formatter.parse(this.getEnteredValue());
           SimpleDateFormat formatter2 = new SimpleDateFormat("MM/dd/yyyy");
           this.setEnteredValue(formatter2.format(testDate));
-        } catch(java.text.ParseException e) {
+        } catch (java.text.ParseException e) {
           error = "Value should be a valid date";
         }
       }
-      
+
       if (type == EMAIL) {
         if ((this.getEnteredValue().indexOf("@") < 1) ||
             (this.getEnteredValue().indexOf(" ") > -1) ||
@@ -1216,7 +1224,7 @@ public class CustomField extends GenericBean {
           error = "Email address format error";
         }
       }
-      
+
       if (type == URL) {
         if (this.getEnteredValue().indexOf(".") < 0) {
           error = "URL format error";

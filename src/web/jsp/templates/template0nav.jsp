@@ -86,7 +86,7 @@ A:visited:hover{color:#FF3300;}
 -->
 </style>
 </head>
-
+<script language="JavaScript" type="text/javascript" src="/javascript/popLEFT.js"></script>
 <body leftmargin=0 rightmargin=0 margin=0 marginwidth=0 topmargin=0 marginheight=0>
 <table border="0" width="100%">
   <tr>
@@ -96,7 +96,7 @@ A:visited:hover{color:#FF3300;}
     </th>
     <th align="right">
       <a href="/Login.do?command=Logout" class="s"> Logout</a> |
-      <a href="#Help" class="s"> Help</a><br>
+      <a href="javascript:popLEFT('/Help.do?module=<%= request.getAttribute("moduleAction") %>&section=<%= request.getParameter("command") %>&sub=<%= request.getParameter("section") %>','CFS_Help','375','450','yes','yes');" class="s" onMouseOver="window.status='Pop-up Help';return true;" onMouseOut="window.status='';return true;">Help</a><br>
 <%
   if (!User.getUserRecord().getContact().getNameFull().equals("")) {
 %>      

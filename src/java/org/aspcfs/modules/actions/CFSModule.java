@@ -118,6 +118,11 @@ public class CFSModule {
     UserList thisList = systemStatus.getHierarchyList();
     return thisList.getUser(userId);
   }
+  
+  protected boolean hasPermission(ActionContext context, String permission) {
+    UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
+    return (thisUser.hasPermission(permission));
+  }
 
 
   /**

@@ -447,7 +447,10 @@
   
   <action name="Help" class="com.darkhorseventures.cfsmodule.Help">
     <bean name="Help" class="com.darkhorseventures.cfsbase.HelpItem" scope="request" />
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="HelpOK" resource="/help.jsp" layout="style"/>
+    <forward name="ModifyOK" resource="/help_form.jsp" layout="style"/>
     <forward name="ProcessOK" resource="/closepopup.jsp"/>
   </action>
   
