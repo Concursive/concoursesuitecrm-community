@@ -4,7 +4,6 @@
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="document.inputForm.subject.focus();">
 <%-- Trails --%>
 <table class="trails">
 <tr>
@@ -91,4 +90,3 @@ Details
   </tr>
   <%-- account container end --%>
 </table>
-</body>
