@@ -101,11 +101,15 @@ public class ContainerMenuHandler extends TagSupport {
               this.pageContext.getOut().write(" | ");
             }
             if (thisItem.getName().equals(selected)) {
+              Template linkText = new Template(thisItem.getLink());
+              linkText.setParseElements(params);
+              this.pageContext.getOut().write("<a class=\"containerOn\"href=\"" + linkText.getParsedText() + "\">");
               this.pageContext.getOut().write(thisItem.getLongHtml());
+              this.pageContext.getOut().write("</a>");
             } else {
               Template linkText = new Template(thisItem.getLink());
               linkText.setParseElements(params);
-              this.pageContext.getOut().write("<a href=\"" + linkText.getParsedText() + "\">");
+              this.pageContext.getOut().write("<a class=\"containerOff\" href=\"" + linkText.getParsedText() + "\">");
               this.pageContext.getOut().write(thisItem.getLongHtml());
               this.pageContext.getOut().write("</a>");
             }

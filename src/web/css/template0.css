@@ -22,5 +22,15 @@ A:visited:hover{color:#FF3300;}
 .s:hover{color:#FF3300;text-decoration:underline;}
 .s:visited:hover{color:#FF3300;text-decoration:underline;}
 
-.containerOn{color:#0000FF;}
+.containerOn{color:#000000;text-decoration:none;}
+.containerOn:active{color:#000000;text-decoration:none;}
+.containerOn:visited{color:#000000;text-decoration:none;}
+.containerOn:hover{color:#FF3300;text-decoration:underline;}
+.containerOn:visited:hover{color:#FF3300;text-decoration:underline;}
+
 .containerOff{color:#000000;}
+.containerOff:active{color:#000000;}
+.containerOff:visited{color:#000000;}
+.containerOff:hover{color:#FF3300;text-decoration:underline;}
+.containerOff:visited:hover{color:#FF3300;text-decoration:underline;}
+
