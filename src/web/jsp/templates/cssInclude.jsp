@@ -28,5 +28,5 @@
 <%  
   }
 %>
-<link rel="stylesheet" href="css/template0.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/template0.css" type="text/css">
 <link rel="stylesheet" href="css/print.css" type="text/css" media="print">
