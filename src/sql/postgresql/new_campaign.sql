@@ -42,7 +42,7 @@ CREATE TABLE campaign (
   send_method_id INT DEFAULT -1 NOT NULL,
   inactive_date DATE DEFAULT NULL,
   approval_date TIMESTAMP(3) DEFAULT NULL,
-  approvedby INT DEFAULT -1,
+  approvedby INT,
   enabled BOOLEAN NOT NULL DEFAULT true,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
