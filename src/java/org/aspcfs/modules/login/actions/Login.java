@@ -175,6 +175,7 @@ public final class Login extends CFSModule {
       }
     } catch (Exception e) {
       loginBean.setMessage("* Access: " + e.getMessage());
+      e.printStackTrace(System.out);
       thisUser = null;
     }
 
