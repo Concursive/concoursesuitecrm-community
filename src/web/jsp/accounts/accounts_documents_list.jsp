@@ -32,7 +32,6 @@
       <td>&nbsp;</td>
     </dhv:permission>
     <td align="center">Submitted</td>
-    <td align="center">Sent By</td>
   </tr>
 <%
   Iterator j = FileItemList.iterator();
@@ -63,10 +62,8 @@
         [<a href="AccountsDocuments.do?command=AddVersion&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
       </td>
     </dhv:permission>
-      <td valign="middle" nowrap>
-        <%= thisFile.getModifiedDateTimeString() %>
-      </td>
-      <td valign="middle">
+      <td nowrap>
+        <%= thisFile.getModifiedDateTimeString() %><br>
         <dhv:username id="<%= thisFile.getEnteredBy() %>"/>
       </td>
     </tr>
@@ -74,7 +71,7 @@
   </table>
 <%} else {%>
     <tr class="containerBody">
-      <td colspan="8" valign="center">
+      <td colspan="7" valign="center">
         No documents found.
       </td>
     </tr>

@@ -19,7 +19,6 @@
     <td align="center"><font color='#FFFFFF'>&lt;Version&gt;</font></td>
     <td>&nbsp;</td>
     <td><font color='#FFFFFF'>&lt;Submitted&gt;</font></td>
-    <td><font color='#FFFFFF'>&lt;Sent By&gt;</font></td>
   </tr>
 <%    
   String bgColorVar = " bgColor='#E4E4E4'";
@@ -48,10 +47,8 @@
     <td align="center" valign="middle">
       [<a href="ProjectManagementFiles.do?command=AddVersion&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
     </td>
-    <td valign="middle" nowrap>
-      <%= thisFile.getModifiedDateTimeString() %>
-    </td>
-    <td valign="middle">
+    <td nowrap>
+      <%= thisFile.getModifiedDateTimeString() %><br>
       <%= toHtml(thisFile.getEnteredByString()) %>
     </td>
   </tr>

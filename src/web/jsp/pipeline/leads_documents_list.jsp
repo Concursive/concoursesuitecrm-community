@@ -26,8 +26,7 @@
   </tr>
   <tr>
     <td class="containerBack">
-    <dhv:permission name="pipeline-opportunities-documents-add"><a href="LeadsDocuments.do?command=Add&oppId=<%= OpportunityDetails.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
-    
+      <dhv:permission name="pipeline-opportunities-documents-add"><a href="LeadsDocuments.do?command=Add&oppId=<%= OpportunityDetails.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
       <%= showAttribute(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -40,7 +39,6 @@
       <td>&nbsp;</td>
     </dhv:permission>
     <td>Submitted</td>
-    <td>Sent By</td>
   </tr>
 <%
   Iterator j = FileItemList.iterator();
@@ -71,23 +69,16 @@
         [<a href="LeadsDocuments.do?command=AddVersion&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
       </td>
       </dhv:permission>
-      <td valign="middle" nowrap>
-        <%= thisFile.getModifiedDateTimeString() %>
-      </td>
-      <td valign="middle">
+      <td nowrap>
+        <%= thisFile.getModifiedDateTimeString() %><br>
         <dhv:username id="<%= thisFile.getEnteredBy() %>"/>
-      </td>
-    </tr>
-    <tr class="row<%= rowid %>">
-      <td valign="middle" align="left" colspan="6">
-        <i><%= toHtml(thisFile.getSubject()) %></i>
       </td>
     </tr>
 <%}%>
   </table>
 <%} else {%>
     <tr class="containerBody">
-      <td colspan="8" valign="center">
+      <td colspan="7" valign="center">
         No documents found.
       </td>
     </tr>
