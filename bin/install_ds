@@ -2,23 +2,33 @@
 
 #############################################################################
 #
-# Configuration
+# ASPCFS Database initialization script.  Used for deploying a new database 
+# with defaults.
+#
+# $Id: Exp$
+#
+# Requirements:
+# - Must have an environment script with CLASSPATH specified in scripts/
+# - The system user "cfsdba" must exist, as well as a Postgresql user
+#
+# Actions:
+# - Drops the specified database
+# - Creates the specified database
+# - Initializes the tables to CFS details
 #
 #############################################################################
 ENVFILE="scripts/env.`hostname`.sh"
 PROGNAME=`basename $0`
 BASE=`pwd`
-WEBUSER="apache"
-CFSGROUP="cfs"
 CFSDBA="cfsdba"
 SITEHOME="/home"
 SITECODE=""
 
 usage ()
 {
-	printf "\nUsage: ${PROGNAME} site_code\n\n"
+	printf "\nUsage: ${PROGNAME} [site_code]\n\n"
 	printf "Where:\n"
-  printf "    site_code       is the target database to create\n"
+  printf "    site_code = the target database to create, without the cdb_\n"
 	printf "\n"
 	exit 1
 }
@@ -37,10 +47,11 @@ if [ "`id -u`" != "0" ] ; then echo "Sorry, you must be root." ; exit 1 ; fi
 #############################################################################
 if [ ! -f "${ENVFILE}" ] ; then echo "Missing file: ${ENVFILE}" ; exit ; fi
 . ${ENVFILE}
+SITECODE=""
 
 #############################################################################
 #
-# Get command-line parameters.
+# Get command-line parameters... must perform after ENVFILE
 #
 #############################################################################
 if [ -n "$1" ] ; then SITECODE="$1"; shift ; fi
@@ -61,12 +72,17 @@ DB="cdb_${SITECODE}"
 #############################################################################
 LOG="${PROGNAME}_${SITECODE}.log"
 
+echo "Creating database: ${DB}"
+
 echo `date` >${LOG}
 
+# Create the database
 su - ${CFSDBA} -c "dropdb ${DB}" >>${LOG}
 su - ${CFSDBA} -c "createdb ${DB}" >>${LOG} 2>&1
 if [ -n "`grep -i ERROR ${LOG}`" ] ; then echo "Database error"; exit 2; fi
 
+# Create the tables and insert base data
+echo -n "Initializing database tables and data... "
 (
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_cdb.sql "
 
@@ -74,11 +90,7 @@ su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/cdb.init "
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/code_tables.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/access.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/organization.init "
-# No Longer used, you must run a dataImport...
-#su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/permissions.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/data.init " 
-
-#su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_cfs2.sql " 
 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_opportunity.sql "  
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/opportunity.init "
@@ -105,61 +117,17 @@ su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/task.init "
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_revenue.sql "
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/revenue.init "
 
-#############################################################################
-#
-# Verify directories
-#
-#############################################################################
-#if [ ! -d "$DIRDST" ] ; then
-#	mkdir -p "$DIRDST"
-#	if [ ! -d "$DIRDST" ] ; then echo "Exiting..."; exit 1; fi
-#fi
-
-#############################################################################
-#
-# Set ownership and permissions for the CFSGROUP on main directory.
-# See below -- more permissions...
-#
-#############################################################################
-#chmod 2775 ${DIRDST}
-#chown ${WEBUSER} ${DIRDST}
-#chgrp ${CFSGROUP} ${DIRDST}
-
-
-#############################################################################
-#
-# Create these empty directories (may not be transfered in the source)
-#
-#############################################################################
-#mkdir -p ${DIRDST}/bin
-#mkdir -p ${DIRDST}/logs
-
-
-#############################################################################
-#
-# Set ownership and permissions for the installed files (tar doesn't)
-#
-#############################################################################
-##--owners/groups...
-#chown -R ${WEBUSER} ${DIRDST}/*					# all
-#chgrp -R ${CFSGROUP} ${DIRDST}/*
-## #--directories...
-#chown -R root ${DIRDST}/bin
-#chmod 2550 ${DIRDST}/bin
-#chmod 2775 ${DIRDST}/logs
-
-
-#############################################################################
-#
-#############################################################################
-echo ok
-
-#rm -f ${DIRDST}/html/index.jsp
-
-#ant -DSITECODE=${SITECODE} lib
-
 ) >>${LOG} 2>&1 
+echo "finished"
+
+# Additional initializations
+echo -n "Inserting permissions and roles... "
+(
+su - $SUDO_USER -c "java -cp .:${CLASSPATH}:${BASE}/bin/Notifier.jar -Ddriver=org.postgresql.Driver -Durl=jdbc:postgresql://127.0.0.1:5432/${DB} -Duser=postgres -DprocessConfigFile=${BASE}/database/permissions.xml com.darkhorseventures.apps.dataimport.DataImport ${BASE}/database/permissions-dataimport.xml"
+) >>${LOG} 2>&1 
+echo "finished"
+
+echo "Log file stored at: ${LOG}"
 
 exit 0
-
 
