@@ -60,7 +60,7 @@ public class PrivateString {
    *@param  filename  Description of the Parameter
    *@return           Description of the Return Value
    */
-  public static Key generateKeyFile(String filename) {
+  public static synchronized Key generateKeyFile(String filename) {
     try {
       File file = new File(filename);
       if (!file.exists()) {
@@ -94,6 +94,26 @@ public class PrivateString {
     try {
       ObjectInputStream in = new ObjectInputStream(
           new FileInputStream(keyFilename));
+      Key key = (Key) in.readObject();
+      in.close();
+      return key;
+    } catch (Exception e) {
+      System.out.println("PrivateString-> Error loading key at: " + keyFilename);
+      return null;
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  keyFile  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public static Key loadKey(File keyFile) {
+    try {
+      ObjectInputStream in = new ObjectInputStream(
+          new FileInputStream(keyFile));
       Key key = (Key) in.readObject();
       in.close();
       return key;
@@ -179,8 +199,29 @@ public class PrivateString {
     }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  keyFilename  Description of the Parameter
+   *@param  inString     Description of the Parameter
+   *@return              Description of the Return Value
+   */
   public static String encryptAsymmetric(String keyFilename, String inString) {
     Key key = PrivateString.loadKey(keyFilename);
+    return PrivateString.encryptAsymmetric(key, inString);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  keyFile   Description of the Parameter
+   *@param  inString  Description of the Parameter
+   *@return           Description of the Return Value
+   */
+  public static String encryptAsymmetric(File keyFile, String inString) {
+    Key key = PrivateString.loadKey(keyFile);
     return PrivateString.encryptAsymmetric(key, inString);
   }
 
@@ -189,14 +230,14 @@ public class PrivateString {
    *  Encrypts a string using a public key, can only be decrypted using the
    *  private key
    *
-   *@param  key       Description of the Parameter
-   *@param  inString  Description of the Parameter
-   *@return           Description of the Return Value
+   *@param  inString   Description of the Parameter
+   *@param  publicKey  Description of the Parameter
+   *@return            Description of the Return Value
    */
   public static String encryptAsymmetric(Key publicKey, String inString) {
     try {
       Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-      
+
       Cipher cipher = Cipher.getInstance("RSA/None/OAEPPadding", "BC");
       cipher.init(Cipher.ENCRYPT_MODE, publicKey);
       byte[] inputBytes = inString.getBytes("UTF8");
@@ -209,25 +250,33 @@ public class PrivateString {
       return null;
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  keyFilename  Description of the Parameter
+   *@param  inString     Description of the Parameter
+   *@return              Description of the Return Value
+   */
   public static String decryptAsymmetric(String keyFilename, String inString) {
     Key key = PrivateString.loadKey(keyFilename);
     return PrivateString.decryptAsymmetric(key, inString);
   }
 
-  
+
   /**
-   *  Decrypts a base64 encoded string, with a private key, that was encoded 
+   *  Decrypts a base64 encoded string, with a private key, that was encoded
    *  using a public key
    *
-   *@param  key       Description of the Parameter
-   *@param  inString  Description of the Parameter
-   *@return           Description of the Return Value
+   *@param  inString    Description of the Parameter
+   *@param  privateKey  Description of the Parameter
+   *@return             Description of the Return Value
    */
   public static String decryptAsymmetric(Key privateKey, String inString) {
     try {
       Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-      
+
       Cipher cipher = Cipher.getInstance("RSA/None/OAEPPadding", "BC");
       cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
