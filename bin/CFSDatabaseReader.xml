@@ -481,7 +481,6 @@
       <property field="field_typeid"/>
       <property field="table_name"/>
       <property field="object_class"/>
-      <property field="enabled"/>
     </map>
     <map class="com.darkhorseventures.cfsbase.Revenue" id="revenue">
       <property alias="guid">id</property>
