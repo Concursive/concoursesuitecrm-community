@@ -12,6 +12,10 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.SyncableList;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.SystemStatus;
+import java.util.Hashtable;
 
 /**
  *  A list of User objects.
@@ -1146,9 +1150,35 @@ public class UserList extends Vector implements SyncableList {
     if (rs.next()) {
       recordCount = DatabaseUtils.getInt(rs, "recordcount", 0);
     }
-    pst.close();
     rs.close();
+    pst.close();
     return recordCount;
+  }
+
+
+  /**
+   *  A convenient method to retrieve a specific contact from the cache
+   *
+   *@param  context  Description of the Parameter
+   *@param  userId   Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public final static Contact retrieveUserContact(ActionContext context, int userId) {
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    if (ce == null) {
+      return null;
+    }
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    if (systemStatus == null) {
+      return null;
+    }
+    User thisUser = systemStatus.getUser(userId);
+    if (thisUser != null) {
+      Contact thisContact = thisUser.getContact();
+      return thisContact;
+    } else {
+      return null;
+    }
   }
 }
 
