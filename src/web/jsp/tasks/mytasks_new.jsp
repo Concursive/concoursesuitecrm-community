@@ -36,7 +36,7 @@
   </td>
   
   <td>
-      <input type="text" name="description" value="<%=toHtmlValue(Task.getDescription()!=null?Task.getDescription():"")%>" size="50" maxlength="80">
+      <input type="text" name="description" value="<%= toHtmlValue(Task.getDescription()) %>" size="50" maxlength="80">
       <font color="red">*</font> <%= showAttribute(request, "descriptionError") %>
   </td>
   
@@ -67,8 +67,8 @@
    <td>
    <table cellpadding=3 cellspacing=0 border=0>
    <tr>
-    <td><input type=checkbox name="chk1" value="true" onclick="javascript:setField('complete',document.addTask.chk1.checked,'addTask');" <%=Task.getComplete()?" checked":""%>></td>
-    <input type=hidden name="complete" value="<%=Task.getComplete()?"1":"0"%>">
+    <td><input type="checkbox" name="chk1" value="true" onclick="javascript:setField('complete',document.addTask.chk1.checked,'addTask');" <%=Task.getComplete()?" checked":""%>></td>
+    <input type="hidden" name="complete" value="<%=Task.getComplete()?"1":"0"%>">
     <input type="hidden" name="modified" value="<%=Task.getModified()%>">
     <td>Complete</td>
    </tr>
