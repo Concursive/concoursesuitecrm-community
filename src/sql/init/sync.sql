@@ -31,8 +31,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'adRun', 'com.darkhorseventures.autoguide.base.AdRun', 10);
  
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 30,
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 30, false,
 'CREATE TABLE sync_table (
        table_id             int NOT NULL,
        table_name           nvarchar(20) NULL,
@@ -168,8 +168,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 )'
 );
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'accountList', 'com.darkhorseventures.cfsbase.OrganizationList', 150,
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'accountList', 'com.darkhorseventures.cfsbase.OrganizationList', 150, true, 
 'CREATE TABLE account (
        account_id           int NOT NULL,
        account_name         nvarchar(20) NULL,
@@ -221,8 +221,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 )'
 );
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'accountInventoryList', 'com.darkhorseventures.autoguide.base.InventoryList', 190,
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'accountInventoryList', 'com.darkhorseventures.autoguide.base.InventoryList', 190, true,
 'CREATE TABLE account_inventory (
        inventory_id         int NOT NULL,
        vin                  nvarchar(20) NULL,
@@ -287,8 +287,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 )'
 );
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'optionList', 'com.darkhorseventures.autoguide.base.OptionList', 330,
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'optionList', 'com.darkhorseventures.autoguide.base.OptionList', 330, true,
 'CREATE TABLE options (
        option_id            int NOT NULL,
        option_name          nvarchar(20) NULL,
@@ -308,8 +308,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 )'
 );
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'inventory_options', null, 350,
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'inventoryOptionList', 'com.darkhorseventures.autoguide.base.OptionList', 350, true,
 'CREATE TABLE inventory_options (
        inventory_id         int NOT NULL,
        option_id            int NOT NULL,
@@ -349,8 +349,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 )'
 );
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'adTypeList', 'com.darkhorseventures.webutils.LookupList', 385,
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'adTypeList', 'com.darkhorseventures.webutils.LookupList', 385, true,
 'CREATE TABLE ad_type (
        ad_type_id           int NOT NULL,
        ad_type_name         nvarchar(20) NULL,
@@ -358,8 +358,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 )'
 );
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'adRunList', 'com.darkhorseventures.autoguide.base.AdRunList', 390,
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'adRunList', 'com.darkhorseventures.autoguide.base.AdRunList', 390, true,
 'CREATE TABLE ad_run (
        ad_run_id            int NOT NULL,
        record_status_id     int NULL,
@@ -406,8 +406,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 )'
 );
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'inventory_picture', null, 410,
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'inventory_picture', null, 410, false,
 'CREATE TABLE inventory_picture (
        picture_name         nvarchar(20) NOT NULL,
        inventory_id         int NOT NULL,
@@ -440,8 +440,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 )'
 );
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'preferences', null, 440,
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'preferences', null, 440, false,
 'CREATE TABLE preferences (
        user_id              int NOT NULL,
        record_status_id     int NULL,
@@ -462,8 +462,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 )'
 );
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'user_account', null, 460,
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'user_account', null, 460, false,
 'CREATE TABLE user_account (
        user_id              int NOT NULL,
        account_id           int NOT NULL,
