@@ -1,8 +1,8 @@
 BODY  { font-family: verdana, helvetica, arial, sans-serif; font-size: 10pt; background: white }
   .highlight { color: #006699; font-weight: bold; }
-  .pagedlist { background: #D4D4D4; }
   
   .title { background: #DEE0FA; }
+  .title2 { background: #D4D4D4; }
   .warning { background: #FF3300; font-weight: bold; color: #FFFFFF }
   
   .containerHeader { background: #FFFF95; }
@@ -18,7 +18,6 @@ BODY  { font-family: verdana, helvetica, arial, sans-serif; font-size: 10pt; bac
   .row2hl { background: #FFFDED; }
   .strike { text-decoration: line-through; }
   .tableBorder {border: outset 2pt; border-collapse: separate }
-  .columntext1 { color: #000080; }
   .error { color: #006699; }
   
   .date { color: #3366CC; font-size: 10pt; font-weight: bold; }
