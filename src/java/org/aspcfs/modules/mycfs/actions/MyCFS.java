@@ -615,6 +615,7 @@ public final class MyCFS extends CFSModule {
       contactList.setPagedListInfo(contactListInfo);
       contactList.setCheckUserAccess(true);
       contactList.setBuildDetails(true);
+      contactList.setBuildTypes(false);
       contactList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -916,7 +917,7 @@ public final class MyCFS extends CFSModule {
     UserList newUserList = thisRec.getFullChildList(shortChildList, new UserList());
 
     newUserList.setMyId(getUserId(context));
-    newUserList.setMyValue(thisUser.getUserRecord().getContact().getNameLastFirst());
+    newUserList.setMyValue(thisUser.getContact().getNameLastFirst());
     newUserList.setIncludeMe(true);
     newUserList.setJsEvent("onChange = \"javascript:fillFrame('calendar','MyCFS.do?command=MonthView&source=Calendar&userId='+document.getElementById('userId').value); javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=CalendarDetails&userId='+document.getElementById('userId').value);javascript:changeDivContent('userName','Scheduled Actions for ' + document.getElementById('userId').options[document.getElementById('userId').selectedIndex].firstChild.nodeValue);\"");
     HtmlSelect userListSelect = newUserList.getHtmlSelectObj("userId", getUserId(context));

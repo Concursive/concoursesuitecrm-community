@@ -37,6 +37,7 @@ public class UserList extends Vector {
   private int managerId = -1;
   private User managerUser = null;
   private boolean buildContact = false;
+  private boolean buildContactDetails = false;
   private boolean buildHierarchy = false;
   private boolean topLevel = false;
   private int department = -1;
@@ -432,6 +433,10 @@ public class UserList extends Vector {
    */
   public void setBuildContact(boolean tmp) {
     this.buildContact = tmp;
+  }
+  
+  public void setBuildContactDetails(boolean tmp) {
+    this.buildContactDetails = tmp;
   }
 
 
@@ -982,6 +987,7 @@ public class UserList extends Vector {
       while (i.hasNext()) {
         User thisUser = (User) i.next();
         thisUser.setBuildContact(buildContact);
+        thisUser.setBuildContactDetails(buildContactDetails);
         thisUser.setBuildHierarchy(buildHierarchy);
         thisUser.buildResources(db);
       }

@@ -471,8 +471,8 @@ public final class Contacts extends CFSModule {
       db = this.getConnection(context);
       contactList.setPagedListInfo(companyDirectoryInfo);
       contactList.setOrgId(Integer.parseInt(orgid));
-      //only MY contacts
-      //contactList.setOwner(getUserId(context));
+      contactList.setBuildDetails(true);
+      contactList.setBuildTypes(false);
       contactList.buildList(db);
       thisOrganization = new Organization(db, Integer.parseInt(orgid));
     } catch (Exception e) {

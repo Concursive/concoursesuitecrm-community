@@ -1158,7 +1158,7 @@ public final class Accounts extends CFSModule {
     UserList shortChildList = thisRec.getShortChildList();
     UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
     userList.setMyId(getUserId(context));
-    userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+    userList.setMyValue(thisUser.getContact().getNameLastFirst());
     userList.setIncludeMe(true);
     userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);

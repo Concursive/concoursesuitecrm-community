@@ -416,9 +416,10 @@ public final class CampaignManager extends CFSModule {
       contacts.setScl(thisSCL, campaign.getEnteredBy(), this.getUserRange(context, campaign.getEnteredBy()));
       contacts.setPagedListInfo(pagedListInfo);
       contacts.setCheckExcludedFromCampaign(campaign.getId());
+      contacts.setBuildDetails(true);
+      contacts.setBuildTypes(false);
       contacts.buildList(db);
       context.getRequest().setAttribute("ContactList", contacts);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {

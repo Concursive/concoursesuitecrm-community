@@ -63,11 +63,9 @@ public final class Reassignments extends CFSModule {
     userList.setMyValue(thisRec.getContact().getNameLastFirst());
     userList.setIncludeMe(true);
     userList.setEmptyHtmlSelectRecord("None Selected");
-
     if (context.getRequest().getParameter("userId") != null) {
       userId = Integer.parseInt(context.getRequest().getParameter("userId"));
     }
-
     if (userId > -1) {
       if (userId == thisRec.getId()) {
         sourceUser = thisRec;
@@ -87,6 +85,8 @@ public final class Reassignments extends CFSModule {
 
         sourceContacts = new ContactList();
         sourceContacts.setOwner(userId);
+        sourceContacts.setBuildDetails(false);
+        sourceContacts.setBuildTypes(false);
         sourceContacts.buildList(db);
         context.getRequest().setAttribute("SourceContacts", sourceContacts);
 
@@ -240,6 +240,8 @@ public final class Reassignments extends CFSModule {
       if (targetIdContacts > -1) {
         sourceContacts = new ContactList();
         sourceContacts.setOwner(userId);
+        sourceContacts.setBuildDetails(false);
+        sourceContacts.setBuildTypes(false);
         sourceContacts.buildList(db);
         sourceContacts.reassignElements(db, targetIdContacts);
       }

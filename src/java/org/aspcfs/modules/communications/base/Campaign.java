@@ -1542,6 +1542,7 @@ public class Campaign extends GenericBean {
       ContactList groupContacts = new ContactList();
       groupContacts.setScl(thisGroup, userId, userRangeId);
       groupContacts.setBuildDetails(false);
+      groupContacts.setBuildTypes(false);
       groupContacts.setCheckExcludedFromCampaign(this.getId());
       groupContacts.buildList(db);
 

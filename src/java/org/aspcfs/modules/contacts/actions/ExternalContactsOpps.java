@@ -108,7 +108,7 @@ public final class ExternalContactsOpps extends CFSModule {
     UserList shortChildList = thisRec.getShortChildList();
     UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
     userList.setMyId(getUserId(context));
-    userList.setMyValue(Contact.getNameLastFirst(thisUser.getNameLast(), thisUser.getNameFirst()));
+    userList.setMyValue(thisUser.getContact().getNameLastFirst());
     userList.setIncludeMe(true);
     userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
@@ -157,7 +157,7 @@ public final class ExternalContactsOpps extends CFSModule {
     UserList shortChildList = thisRec.getShortChildList();
     UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
     userList.setMyId(getUserId(context));
-    userList.setMyValue(Contact.getNameLastFirst(thisUser.getNameLast(), thisUser.getNameFirst()));
+    userList.setMyValue(thisUser.getContact().getNameLastFirst());
     userList.setIncludeMe(true);
     userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
@@ -686,7 +686,7 @@ public final class ExternalContactsOpps extends CFSModule {
     UserList shortChildList = thisRec.getShortChildList();
     UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
     userList.setMyId(getUserId(context));
-    userList.setMyValue(Contact.getNameLastFirst(thisUser.getNameLast(), thisUser.getNameFirst()));
+    userList.setMyValue(thisUser.getContact().getNameLastFirst());
     userList.setIncludeMe(true);
     userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("userList", userList);
@@ -808,7 +808,7 @@ public final class ExternalContactsOpps extends CFSModule {
         UserList shortChildList = thisRec.getShortChildList();
         UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
         userList.setMyId(getUserId(context));
-        userList.setMyValue(Contact.getNameLastFirst(thisUser.getNameLast(), thisUser.getNameFirst()));
+        userList.setMyValue(thisUser.getContact().getNameLastFirst());
         userList.setIncludeMe(true);
         userList.setExcludeDisabledIfUnselected(true);
         context.getRequest().setAttribute("userList", userList);

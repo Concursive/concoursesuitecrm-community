@@ -401,12 +401,12 @@ public final class ExternalContacts extends CFSModule {
    *@since           1.1
    */
   public String executeCommandListContacts(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-view"))) {
+    if (!hasPermission(context, "contacts-external_contacts-view")) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
     PagedListInfo externalContactsInfo = this.getPagedListInfo(context, "ExternalContactsInfo");
-    externalContactsInfo.setLink("/ExternalContacts.do?command=ListContacts");
+    externalContactsInfo.setLink("ExternalContacts.do?command=ListContacts");
     if (context.getRequest().getParameter("doSearch") != null || ("search".equals(externalContactsInfo.getListView()))) {
       externalContactsInfo.addFilter(1, "-1");
     }
@@ -421,7 +421,9 @@ public final class ExternalContacts extends CFSModule {
       contactTypeList.addItem(-1, "All Contact Types");
       contactTypeList.buildList(db);
       context.getRequest().setAttribute("ContactTypeList", contactTypeList);
-
+      
+      contactList.setBuildDetails(true);
+      contactList.setBuildTypes(false);
       contactList.setPagedListInfo(externalContactsInfo);
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
       contactList.setPersonalId(this.getUserId(context));
@@ -780,7 +782,7 @@ public final class ExternalContacts extends CFSModule {
       UserList shortChildList = thisRec.getShortChildList();
       UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
       userList.setMyId(getUserId(context));
-      userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+      userList.setMyValue(thisUser.getContact().getNameLastFirst());
       userList.setIncludeMe(true);
       userList.setExcludeDisabledIfUnselected(true);
       context.getRequest().setAttribute("UserList", userList);
@@ -880,7 +882,7 @@ public final class ExternalContacts extends CFSModule {
         UserList shortChildList = thisRec.getShortChildList();
         UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
         userList.setMyId(getUserId(context));
-        userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+        userList.setMyValue(thisUser.getContact().getNameLastFirst());
         userList.setIncludeMe(true);
         userList.setExcludeDisabledIfUnselected(true);
         context.getRequest().setAttribute("UserList", userList);

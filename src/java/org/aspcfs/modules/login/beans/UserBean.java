@@ -9,6 +9,7 @@ import com.darkhorseventures.database.ConnectionElement;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.contacts.base.Contact;
 
 /**
  *  User Session record -- maintained while the user is logged in
@@ -286,34 +287,12 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the FirstName attribute of the User object
+   *  Gets the contact attribute of the UserBean object
    *
-   *@return    The FirstName value
-   *@since     1.14
+   *@return    The contact value
    */
-  public String getNameFirst() {
-    return getUserRecord().getContact().getNameFirst();
-  }
-
-
-  /**
-   *  Gets the LastName attribute of the User object
-   *
-   *@return    The LastName value
-   *@since     1.14
-   */
-  public String getNameLast() {
-    return getUserRecord().getContact().getNameLast();
-  }
-
-
-  /**
-   *  Gets the nameFirstLast attribute of the UserBean object
-   *
-   *@return    The nameFirstLast value
-   */
-  public String getNameFirstLast() {
-    return getUserRecord().getContact().getNameFirstLast();
+  public Contact getContact() {
+    return getUserRecord().getContact();
   }
 
 

@@ -242,6 +242,7 @@ public final class ContactsList extends CFSModule {
     contactList.setPagedListInfo(contactListInfo);
     contactList.setCheckUserAccess(true);
     contactList.setBuildDetails(true);
+    contactList.setBuildTypes(true);
     if ("true".equals(usersOnly)) {
       contactList.setIncludeEnabledUsersOnly(true);
     }

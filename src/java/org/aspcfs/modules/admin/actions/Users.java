@@ -72,7 +72,6 @@ public final class Users extends CFSModule {
       list.setBuildContact(false);
       list.setBuildHierarchy(false);
       list.buildList(db);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -205,22 +204,18 @@ public final class Users extends CFSModule {
    *@since           1.6
    */
   public String executeCommandInsertUserForm(ActionContext context) {
-
-    if (!(hasPermission(context, "admin-users-add"))) {
+    if (!hasPermission(context, "admin-users-add")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     addModuleBean(context, "Add User", "Add New User");
-
     Connection db = null;
     try {
       String typeId = context.getRequest().getParameter("typeId");
       if (typeId == null || typeId.equals("")) {
-        typeId = "" + Contact.EMPLOYEE_TYPE;
+        typeId = String.valueOf(Contact.EMPLOYEE_TYPE);
       }
       String contactId = context.getRequest().getParameter("contactId");
-
       db = this.getConnection(context);
 
       RoleList roleList = new RoleList();
@@ -231,6 +226,7 @@ public final class Users extends CFSModule {
       UserList userList = new UserList();
       userList.setEmptyHtmlSelectRecord("-- None --");
       userList.setBuildContact(true);
+      userList.setBuildContactDetails(false);
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
 
@@ -261,17 +257,17 @@ public final class Users extends CFSModule {
     try {
       String typeId = context.getRequest().getParameter("typeId");
       if (typeId == null || typeId.equals("")) {
-        typeId = "" + Contact.EMPLOYEE_TYPE;
+        typeId = String.valueOf(Contact.EMPLOYEE_TYPE);
       }
       db = this.getConnection(context);
-
       ContactList contactList = new ContactList();
       contactList.setPersonalId(getUserId(context));
       contactList.setTypeId(Integer.parseInt(typeId));
       contactList.setIncludeNonUsersOnly(true);
+      contactList.setBuildDetails(false);
+      contactList.setBuildTypes(false);
       contactList.buildList(db);
       context.getRequest().setAttribute("ContactList", contactList);
-
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -587,6 +583,7 @@ public final class Users extends CFSModule {
       UserList userList = new UserList();
       userList.setEmptyHtmlSelectRecord("-- None --");
       userList.setBuildContact(false);
+      userList.setBuildContactDetails(false);
       userList.setExcludeDisabledIfUnselected(true);
       userList.buildList(db);
 
@@ -620,27 +617,22 @@ public final class Users extends CFSModule {
    *@since           1.12
    */
   public String executeCommandUpdateUser(ActionContext context) {
-
-    if (!(hasPermission(context, "admin-users-edit"))) {
+    if (!hasPermission(context, "admin-users-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
     User newUser = (User) context.getFormBean();
-
     Connection db = null;
     int resultCount = 0;
-
     try {
       db = this.getConnection(context);
       newUser.setModifiedBy(getUserId(context));
       resultCount = newUser.update(db, context);
-
       if (resultCount == -1) {
         UserList userList = new UserList();
         userList.setEmptyHtmlSelectRecord("-- None --");
         userList.setBuildContact(true);
+        userList.setBuildContactDetails(false);
         userList.buildList(db);
         context.getRequest().setAttribute("UserList", userList);
 

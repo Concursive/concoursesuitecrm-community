@@ -30,27 +30,23 @@ public final class Search extends CFSModule {
    */
   public String executeCommandSiteSearch(ActionContext context) {
     Exception errorMessage = null;
-
     PagedListInfo searchSiteInfo = this.getPagedListInfo(context, "SearchSiteInfo");
-    searchSiteInfo.setLink("/ExternalContacts.do?command=ListContacts");
-
+    searchSiteInfo.setLink("ExternalContacts.do?command=ListContacts");
     String searchCriteria = context.getRequest().getParameter("search");
-
     Connection db = null;
-
     if (searchCriteria != null && !(searchCriteria.equals(""))) {
       searchCriteria = "%" + searchCriteria + "%";
     }
-
     try {
       db = this.getConnection(context);
-
       if (hasPermission(context, "contacts-external_contacts-view")) {
         ContactList contactList = new ContactList();
         contactList.setPersonalId(getUserId(context));
         contactList.setSearchText(searchCriteria);
         contactList.setPagedListInfo(searchSiteInfo);
         contactList.setOwnerIdRange(this.getUserRange(context));
+        contactList.setBuildDetails(true);
+        contactList.setBuildTypes(false);
         contactList.buildList(db);
         context.getRequest().setAttribute("ContactList", contactList);
       }
@@ -60,6 +56,8 @@ public final class Search extends CFSModule {
         employeeList.setPersonalId(getUserId(context));
         employeeList.setSearchText(searchCriteria);
         employeeList.setTypeId(1);
+        employeeList.setBuildDetails(true);
+        employeeList.setBuildTypes(false);
         employeeList.buildList(db);
         context.getRequest().setAttribute("EmployeeList", employeeList);
       }

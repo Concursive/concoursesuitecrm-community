@@ -929,6 +929,7 @@ public class CFSModule {
         int userId = ((Integer) i.next()).intValue();
         User thisUser = new User();
         thisUser.setBuildContact(true);
+        thisUser.setBuildContactDetails(false);
         thisUser.buildRecord(db, userId);
         userList.add(thisUser);
       }

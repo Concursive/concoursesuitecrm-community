@@ -75,6 +75,7 @@ public class User extends GenericBean {
   protected String aliasName = null;
 
   protected boolean buildContact = false;
+  protected boolean buildContactDetails = false;
   protected boolean buildHierarchy = false;
 
   protected String previousUsername = null;
@@ -282,6 +283,7 @@ public class User extends GenericBean {
     if (resultCount > -1) {
       modUser = new User();
       modUser.setBuildContact(true);
+      modUser.setBuildContactDetails(false);
       modUser.buildRecord(db, modifiedBy);
 
       targetContact = new Contact(db, this.getContactId());
@@ -932,6 +934,10 @@ public class User extends GenericBean {
    */
   public void setBuildContact(boolean tmp) {
     this.buildContact = tmp;
+  }
+  
+  public void setBuildContactDetails(boolean tmp) {
+    this.buildContactDetails = tmp;
   }
 
 
@@ -1803,7 +1809,11 @@ public class User extends GenericBean {
   public void buildResources(Connection db) throws SQLException {
     if (buildContact || buildHierarchy) {
       if (this.getContactId() > -1) {
-        contact = new Contact(db, this.getContactId());
+        contact = new Contact();
+        contact.setId(this.getContactId());
+        contact.setBuildDetails(buildContactDetails);
+        contact.setBuildTypes(buildContactDetails);
+        contact.build(db);
       }
     }
     if (buildHierarchy) {

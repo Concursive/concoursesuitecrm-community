@@ -280,9 +280,7 @@ public final class CampaignManagerGroup extends CFSModule {
       if (!recordInserted) {
         processErrors(context, thisSCL.getErrors());
       } else {
-
-        context.getRequest().setAttribute("id", "" + thisSCL.getId());
-
+        context.getRequest().setAttribute("id", String.valueOf(thisSCL.getId()));
         context.getSession().removeAttribute("CampaignGroupsPreviewInfo");
         PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsPreviewInfo");
         pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
@@ -290,16 +288,16 @@ public final class CampaignManagerGroup extends CFSModule {
         ContactList contacts = new ContactList();
         contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
         contacts.setPagedListInfo(pagedListInfo);
+        contacts.setBuildDetails(true);
+        contacts.setBuildTypes(false);
         contacts.buildList(db);
         context.getRequest().setAttribute("ContactList", contacts);
       }
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (recordInserted) {
         addModuleBean(context, "ManageGroups", "Preview");
@@ -307,7 +305,6 @@ public final class CampaignManagerGroup extends CFSModule {
       } else {
         return (executeCommandAdd(context));
       }
-
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -380,11 +377,9 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-groups-edit"))) {
+    if (!hasPermission(context, "campaign-campaigns-groups-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -403,20 +398,19 @@ public final class CampaignManagerGroup extends CFSModule {
         return ("PermissionError");
       }
       resultCount = thisSCL.update(db);
-
       if (resultCount == -1) {
         processErrors(context, thisSCL.getErrors());
       } else {
-
-        context.getRequest().setAttribute("id", "" + thisSCL.getId());
-
+        context.getRequest().setAttribute("id", String.valueOf(thisSCL.getId()));
         context.getSession().removeAttribute("CampaignGroupsPreviewInfo");
         PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsPreviewInfo");
-        pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
+        pagedListInfo.setLink("CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
 
         ContactList contacts = new ContactList();
         contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
         contacts.setPagedListInfo(pagedListInfo);
+        contacts.setBuildDetails(true);
+        contacts.setBuildTypes(false);
         contacts.buildList(db);
         context.getRequest().setAttribute("ContactList", contacts);
       }
@@ -473,6 +467,8 @@ public final class CampaignManagerGroup extends CFSModule {
       ContactList contacts = new ContactList();
       contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
       contacts.setPagedListInfo(pagedListInfo);
+      contacts.setBuildDetails(true);
+      contacts.setBuildTypes(false);
       contacts.buildList(db);
       context.getRequest().setAttribute("ContactList", contacts);
 

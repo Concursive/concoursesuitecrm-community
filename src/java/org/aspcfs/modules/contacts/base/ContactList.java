@@ -48,6 +48,7 @@ public class ContactList extends Vector {
   private boolean checkEnabledUserAccess = false;
   private int checkExcludedFromCampaign = -1;
   private boolean buildDetails = true;
+  private boolean buildTypes = true;
   private int owner = -1;
   private String ownerIdRange = null;
   private String accountOwnerIdRange = null;
@@ -626,6 +627,9 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
     this.buildDetails = tmp;
   }
 
+  public void setBuildTypes(boolean tmp) {
+    this.buildTypes = tmp;
+  }
 
   /**
    *  Sets the SearchValues attribute of the ContactList object
@@ -1312,7 +1316,9 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Contact thisContact = (Contact) i.next();
-      thisContact.buildTypes(db);
+      if (buildTypes) {
+        thisContact.buildTypes(db);
+      }
       if (buildDetails) {
         thisContact.getPhoneNumberList().setContactId(thisContact.getId());
         thisContact.getPhoneNumberList().buildList(db);

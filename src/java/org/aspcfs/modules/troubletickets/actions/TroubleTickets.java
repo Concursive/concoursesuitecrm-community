@@ -53,19 +53,15 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandAdd(ActionContext context) {
-
-    if (!(hasPermission(context, "tickets-tickets-add"))) {
+    if (!hasPermission(context, "tickets-tickets-add")) {
       return ("PermissionError");
     }
-
     int errorCode = 0;
     Exception errorMessage = null;
     Connection db = null;
     Ticket newTic = null;
-
     try {
       db = this.getConnection(context);
-
       if (context.getRequest().getParameter("refresh") != null || (context.getRequest().getParameter("contact") != null && context.getRequest().getParameter("contact").equals("on"))) {
         newTic = (Ticket) context.getFormBean();
         newTic.getHistory().setTicketId(newTic.getId());
@@ -73,7 +69,6 @@ public final class TroubleTickets extends CFSModule {
       } else {
         newTic = new Ticket();
       }
-
       buildFormElements(context, db, newTic);
     } catch (Exception e) {
       errorCode = 1;
@@ -81,7 +76,6 @@ public final class TroubleTickets extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorCode == 0) {
       addModuleBean(context, "AddTicket", "Ticket Add");
       return ("AddOK");
@@ -406,6 +400,7 @@ public final class TroubleTickets extends CFSModule {
       UserList userList = new UserList();
       userList.setEmptyHtmlSelectRecord("-- None --");
       userList.setBuildContact(true);
+      userList.setBuildContactDetails(false);
       userList.setDepartment(newTic.getDepartmentCode());
       userList.setExcludeDisabledIfUnselected(true);
       userList.buildList(db);
@@ -425,6 +420,7 @@ public final class TroubleTickets extends CFSModule {
       contactList.setPersonalId(getUserId(context));
       //contactList.setTypeId(Integer.parseInt(typeId));
       contactList.setBuildDetails(false);
+      contactList.setBuildTypes(false);
       contactList.setOrgId(newTic.getOrgId());
 
       if (newTic.getOrgId() == -1) {
@@ -1116,7 +1112,6 @@ public final class TroubleTickets extends CFSModule {
    *@exception  SQLException  Description of Exception
    */
   protected void buildFormElements(ActionContext context, Connection db, Ticket newTic) throws SQLException {
-
     LookupList departmentList = new LookupList(db, "lookup_department");
     departmentList.addItem(0, "-- None --");
     departmentList.setJsEvent("onChange=\"javascript:updateUserList();\"");
@@ -1135,6 +1130,7 @@ public final class TroubleTickets extends CFSModule {
     ContactList contactList = new ContactList();
     if (newTic != null && newTic.getOrgId() != -1) {
       contactList.setBuildDetails(false);
+      contactList.setBuildTypes(false);
       contactList.setPersonalId(getUserId(context));
       contactList.setOrgId(newTic.getOrgId());
       contactList.buildList(db);
@@ -1144,8 +1140,8 @@ public final class TroubleTickets extends CFSModule {
     UserList userList = new UserList();
     userList.setEmptyHtmlSelectRecord("-- None --");
     userList.setBuildContact(true);
+    userList.setBuildContactDetails(false);
     userList.setExcludeDisabledIfUnselected(true);
-
     if (newTic.getDepartmentCode() > 0) {
       userList.setDepartment(newTic.getDepartmentCode());
       userList.buildList(db);
@@ -1154,7 +1150,6 @@ public final class TroubleTickets extends CFSModule {
 
     OrganizationList orgList = new OrganizationList();
     orgList.setMinerOnly(false);
-    //orgList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/TroubleTickets.do?command=Add&auto-populate=true';document.forms[0].submit()");
     orgList.setHtmlJsEvent("onChange=\"javascript:updateContactList();\"");
     orgList.setShowMyCompany(true);
     orgList.buildList(db);
@@ -1209,7 +1204,6 @@ public final class TroubleTickets extends CFSModule {
     if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(context.getRequest().getParameter("refresh")) == 3)) {
       newTic.setSubCat3(0);
     }
-
     context.getRequest().setAttribute("TicketDetails", newTic);
   }
 
@@ -1274,6 +1268,7 @@ public final class TroubleTickets extends CFSModule {
       userList.setEmptyHtmlSelectRecord("-- None --");
       if ((departmentCode != null) && (!"0".equals(departmentCode))) {
         userList.setBuildContact(true);
+        userList.setBuildContactDetails(false);
         userList.setDepartment(Integer.parseInt(departmentCode));
         userList.buildList(db);
       }
@@ -1303,6 +1298,7 @@ public final class TroubleTickets extends CFSModule {
       ContactList contactList = new ContactList();
       if (orgId != null && !"-1".equals(orgId)) {
         contactList.setBuildDetails(false);
+        contactList.setBuildTypes(false);
         contactList.setPersonalId(getUserId(context));
         contactList.setOrgId(Integer.parseInt(orgId));
         contactList.buildList(db);
