@@ -21,6 +21,7 @@ public class ActiveSurveyAnswerItem {
   private Contact recipient = null;
   private ActiveSurveyQuestionItem item = null;
   private java.sql.Timestamp entered = null;
+  
 
 
   /**
@@ -228,7 +229,7 @@ public class ActiveSurveyAnswerItem {
     id = rs.getInt("id");
     itemId = rs.getInt("item_id");
     contactId = rs.getInt("contact_id");
-    entered = rs.getInt("entered");
+    entered = rs.getTimestamp("entered");
   }
 }
 
