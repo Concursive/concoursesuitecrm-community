@@ -727,6 +727,19 @@
     </java>
   </target>
   
+  <!-- Test the EDIT transaction server -->
+  <target name="run.edit" depends="init">
+    <java classname="org.aspcfs.modules.healthcare.edit.apps.HttpPostTransaction" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${CFS_HOME}/WEB-INF/lib">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+      <arg value="${arg1}"/>
+      <arg value="${arg2}"/>
+    </java>
+  </target>
   
   
   
