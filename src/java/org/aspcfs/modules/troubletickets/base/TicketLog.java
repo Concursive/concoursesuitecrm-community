@@ -832,7 +832,11 @@ public class TicketLog extends GenericBean {
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, assignedTo);
+        if (this.getAssignedTo() > -1) {
+                pst.setInt(++i, this.getAssignedTo());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
     pst.setInt(++i, id);
     if (!override) {
       pst.setTimestamp(++i, this.getModified());
@@ -929,6 +933,9 @@ public class TicketLog extends GenericBean {
             ticketId = -1;
     }
     assignedTo = rs.getInt("assigned_to");
+    if (rs.wasNull()) {
+            assignedTo = 0;
+    }
     entryText = rs.getString("comment");
     closed = rs.getBoolean("closed");
     priorityCode = rs.getInt("pri_code");
