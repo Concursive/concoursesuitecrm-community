@@ -82,7 +82,7 @@ function sendMessage() {
       Body
     </td>
     <td width=100%>
-      <textarea name="body" rows="5" value="body"><%= toString(Note.getBody()) %></textarea>
+      <textarea name="body" rows="5" COLS="50" value="body"><%= toString(Note.getBody()) %></textarea>
     </td>
   </tr>
 </table>
