@@ -145,7 +145,7 @@ public final class ProcessCalculation extends CFSModule {
       providerRecords.setCategoryId(providerCategory.getId());
       providerRecords.buildList(prodDb);
       providerRecords.buildRecordColumns(prodDb, providerCategory);
-      //Process the records
+      //Store each providerOrgId in a HashMap
       Iterator p = providerRecords.iterator();
       while (p.hasNext()) {
         CustomFieldRecord rec = (CustomFieldRecord) p.next();
@@ -165,19 +165,16 @@ public final class ProcessCalculation extends CFSModule {
           }
         }
       }
-      //end mapping of providers to orgIds
-
-      //get mapping of payors to orgIds
+      //Create mapping of payors to orgIds
       CustomFieldCategory payorCategory = fullCategoryList.getCategory(getValueAsInt(context, ce, "OFFICE_PAYOR_DETAILS"));
       payorCategory.setBuildResources(true);
       payorCategory.buildResources(prodDb);
-
+      //Create mapping of payors to orgIds
       CustomFieldRecordList payorRecords = new CustomFieldRecordList();
       payorRecords.setLinkModuleId(Constants.ACCOUNTS);
       payorRecords.setCategoryId(payorCategory.getId());
       payorRecords.buildList(prodDb);
       payorRecords.buildRecordColumns(prodDb, payorCategory);
-
       Iterator ip = payorRecords.iterator();
       while (ip.hasNext()) {
         CustomFieldRecord rec = (CustomFieldRecord) ip.next();
@@ -204,18 +201,15 @@ public final class ProcessCalculation extends CFSModule {
           }
         }
       }
-      //end mapping of payors to orgIds
-
       //the custom form id numbers cf"X" used to populate context
       ArrayList providerTransactionDetailsIds = providerTransDetails.getFormFieldIds();
       ArrayList officeTransactionDetailsIds = officeTransDetails.getFormFieldIds();
-
-      //build provider-specific information for transactions
+      //Store all transactions for today in HashMaps for calculations
       Iterator i = recordList.iterator();
       while (i.hasNext()) {
         boolean hasErrors = false;
         TransactionRecord thisRec = (TransactionRecord) i.next();
-        //error checking!
+        //error checking
         if (providerOrgMapping.get(thisRec.getTaxId()) == null) {
           hasErrors = true;
           errors.put(new Integer(thisRec.getId()), new String("Error: Provider with tax ID = " + thisRec.getTaxId() + " not found in Dark Horse CRM!"));
@@ -239,26 +233,26 @@ public final class ProcessCalculation extends CFSModule {
             errors.put(new Integer(thisRec.getId()), new String("Error: Transaction Type " + thisRec.getType() + " not recognized"));
           }
         }
-        //end of error checking
-
+        //Add today's data to the TaxId HashMap and the TaxId/PayorId HashMap
         if (!hasErrors) {
-          //if this taxId does not already exist as a key, add it.
-          if (!providerTransactions.containsKey(thisRec.getTaxId())) {
-            providerTransactions.put(thisRec.getTaxId(), new FolderInsertRecord(thisRec.getTransactionId(), thisRec.getPayerId()));
-          }
-
-          if (!officeTransactions.containsKey(thisRec.getTaxId())) {
-            officeTransactions.put(thisRec.getTaxId(), new FolderInsertRecord(thisRec.getTransactionId(), thisRec.getPayerId()));
-          }
-
-          //Add the transaction count to the provider, total for the day will be created
+          //Maintain a HashMap of taxIds for today's calculations
           FolderInsertRecord fir = (FolderInsertRecord) providerTransactions.get(thisRec.getTaxId());
-          //process totals
+          if (fir == null) {
+            fir = new FolderInsertRecord(thisRec.getTransactionId(), thisRec.getPayerId());
+            providerTransactions.put(thisRec.getTaxId(), fir);
+          }
           fir.process(thisRec);
-
-          //Add the transaction count to the payer, total for the day will be created
-          FolderInsertRecord pfir = (FolderInsertRecord) officeTransactions.get(thisRec.getTaxId());
-          //process totals
+          //Maintain a HashMap of taxIds/payorIds for MTD calculations
+          HashMap officePayors = (HashMap) officeTransactions.get(thisRec.getTaxId());
+          if (officePayors == null) {
+            officePayors = new HashMap();
+            officeTransactions.put(thisRec.getTaxId(), officePayors);
+          }
+          FolderInsertRecord pfir = (FolderInsertRecord) officePayors.get(thisRec.getPayerId());
+          if (pfir == null) {
+            pfir = new FolderInsertRecord(thisRec.getTransactionId(), thisRec.getPayerId());
+            officePayors.put(thisRec.getPayerId(), pfir);
+          }
           pfir.process(thisRec);
         }
       }
@@ -270,27 +264,30 @@ public final class ProcessCalculation extends CFSModule {
       Iterator officeIterator = officeTransactions.keySet().iterator();
       while (officeIterator.hasNext()) {
         String taxId = (String) officeIterator.next();
-        FolderInsertRecord val = (FolderInsertRecord) officeTransactions.get(taxId);
+        HashMap officePayors = (HashMap) officeTransactions.get(taxId);
+        //Build a list of office MTD records for the specified taxId
+        officeTransDetails.setLinkItemId(((Integer) providerOrgMapping.get(taxId)).intValue());
+        officeTransDetails.setBuildResources(true);
+        CustomFieldRecordList officeRecords = new CustomFieldRecordList();
+        officeRecords.setLinkModuleId(Constants.ACCOUNTS);
+        officeRecords.setLinkItemId(((Integer) providerOrgMapping.get(taxId)).intValue());
+        officeRecords.setCategoryId(officeTransDetails.getId());
+        officeRecords.buildList(prodDb);
+        officeRecords.buildRecordColumns(prodDb, officeTransDetails);
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("ProcessCalculation-> Key: " + taxId + " Status: " + (val != null) + " OrgId: " + ((Integer) providerOrgMapping.get(taxId)).intValue());
+          System.out.println("ProcessCalculation-> Built list for: " + officeRecords.getLinkItemId() + " (" + officeRecords.size() + ")");
         }
-        boolean hasErrors = false;
-        if (!hasErrors) {
+        //Go through all payorIds and add today's transactions with the specified taxId to the MTD totals
+        Iterator officePayorIterator = officePayors.keySet().iterator();
+        while (officePayorIterator.hasNext()) {
+          String payorId = (String) officePayorIterator.next();
+          FolderInsertRecord val = (FolderInsertRecord) officePayors.get(payorId);
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("ProcessCalculation-> TaxId: " + taxId + " PayorId: " + payorId + " Status: " + (val != null) + " OrgId: " + ((Integer) providerOrgMapping.get(taxId)).intValue());
+          }
           ArrayList previousValues = new ArrayList();
           int foundId = -1;
-
-          officeTransDetails.setLinkItemId(((Integer) providerOrgMapping.get(taxId)).intValue());
-          officeTransDetails.setBuildResources(true);
-
-          CustomFieldRecordList officeRecords = new CustomFieldRecordList();
-          officeRecords.setLinkModuleId(Constants.ACCOUNTS);
-          officeRecords.setLinkItemId(((Integer) providerOrgMapping.get(taxId)).intValue());
-          officeRecords.setCategoryId(officeTransDetails.getId());
-          officeRecords.buildList(prodDb);
-          officeRecords.buildRecordColumns(prodDb, officeTransDetails);
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("ProcessCalculation-> Built list for: " + officeRecords.getLinkItemId() + " (" + officeRecords.size() + ")");
-          }
+          
           //try to find if MTD info is in there already and matches the payorId for this office (taxId)
           Iterator op = officeRecords.iterator();
           while (op.hasNext() && foundId == -1) {
@@ -332,10 +329,7 @@ public final class ProcessCalculation extends CFSModule {
               }
             }
           }
-          //end of MTD check
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("ProcessCalculation-> Populating context");
-          }
+          //Insert/Update all of the MTD transactions into the database
           context.getRequest().setAttribute("cf" + officeTransactionDetailsIds.get(0), val.getPayorId());
           context.getRequest().setAttribute("cf" + officeTransactionDetailsIds.get(1), recordList.getPerformedString());
           context.getRequest().setAttribute("cf" + officeTransactionDetailsIds.get(2), val.getEligibility() + "");
@@ -364,9 +358,7 @@ public final class ProcessCalculation extends CFSModule {
           }
         }
       }
-      //end insertion of office transaction records
-
-      //insert records for provider transaction details
+      //Insert all of today's transactions into the database
       Iterator it = providerTransactions.keySet().iterator();
       while (it.hasNext()) {
         boolean hasErrors = false;
@@ -435,7 +427,7 @@ public final class ProcessCalculation extends CFSModule {
       mail.setTo(this.getValue(context, ce, "ERROR_REPORT_ADDRESS"));
       mail.setSubject("EDIT transaction data summary: " + month + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
       if (sb.length() == 0) {
-        mail.setBody("* A PROCESSING ERROR HAS OCCURRED.");
+        mail.setBody("* A PROCESSING ERROR HAS OCCURRED, THE APPLICATION NEEDS TO BE CHECKED");
       } else {
         mail.setBody(sb.toString());
       }
