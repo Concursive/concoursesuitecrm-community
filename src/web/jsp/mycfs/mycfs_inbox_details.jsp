@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
 <jsp:useBean id="InboxInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -9,7 +9,7 @@
 Message Details<br>
 <hr color="#BFBFBB" noshade>
 <input type=button name="action" value="Delete" onClick="document.details.command.value='CFSNoteDelete';document.details.submit()">
-<input type=button name="action" value="Forward" onClick="javascript:window.location.href='MyCFSInbox.do?command=ForwardMessage&popup=true&forwardType=9&id=<%=NoteDetails.getId()%>&return=/MyCFSInbox.do?command=Inbox&sendUrl=/MyCFSInbox.do?command=SendMessage'">
+<input type=button name="action" value="Forward" onClick="javascript:window.location.href='MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%=NoteDetails.getId()%>&return=/MyCFSInbox.do?command=Inbox&sendUrl=/MyCFSInbox.do?command=SendMessage'">
   <% if(!InboxInfo.getListView().equalsIgnoreCase("sent")){%>
 <input type=button name="action" value="<%= (NoteDetails.getStatus() != 2?"Archive":"Send to Inbox") %>" onClick="document.details.command.value='CFSNoteTrash';document.details.submit()">
 <%}%>
@@ -51,7 +51,7 @@ Message Details<br>
 <br>
 <input type=hidden name="command" value="">
 <input type=button name="action" value="Delete" onClick="document.details.command.value='CFSNoteDelete';document.details.submit()">
-<input type=button name="action" value="Forward" onClick="javascript:window.location.href='MyCFSInbox.do?command=ForwardMessage&popup=true&forwardType=9&id=<%=NoteDetails.getId()%>&return=/MyCFSInbox.do?command=Inbox'">
+<input type=button name="action" value="Forward" onClick="javascript:window.location.href='MyCFSInbox.do?command=ForwardMessage&popup=true&forwardType=<%= Constants.CFSNOTE %>&id=<%=NoteDetails.getId()%>&return=/MyCFSInbox.do?command=Inbox'">
   <% if(!InboxInfo.getListView().equalsIgnoreCase("sent")){%>
 <input type=button name="action" value="<%= (NoteDetails.getStatus() != 2?"Archive":"Send to Inbox") %>" onClick="document.details.command.value='CFSNoteTrash';document.details.submit()">
 <%}%>
