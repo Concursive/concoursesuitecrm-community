@@ -207,6 +207,7 @@ public final class Users extends CFSModule {
 				//FOR GRAPH CLEARING
 				
 				if ( whichTable.startsWith("opportunity") ) {
+					invalidateUserData(context, getUserId(context));
 					invalidateUserInMemory(fromPerson, context);
 					invalidateUserInMemory(toPerson, context);
 				}

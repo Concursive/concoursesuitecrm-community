@@ -68,7 +68,6 @@ public class CFSModule {
     return ((UserBean)context.getSession().getAttribute("User")).getUserId();
   }
 
-
   /**
    *  Gets the UserRange attribute of the CFSModule object
    *
@@ -103,7 +102,6 @@ public class CFSModule {
   protected String getNameFirst(ActionContext context) {
     return ((UserBean)context.getSession().getAttribute("User")).getUserRecord().getContact().getNameFirst();
   }
-
 
   /**
    *  Gets the User attribute of the CFSModule object
@@ -315,6 +313,13 @@ public class CFSModule {
     ConnectionElement ce = (ConnectionElement)context.getSession().getAttribute("ConnectionElement");
     SystemStatus systemStatus = (SystemStatus)((Hashtable)context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     systemStatus.updateHierarchy(db);
+  }
+  
+  
+  protected void invalidateUserData(ActionContext context, int userId) {
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    systemStatus.getHierarchyList().getUser(userId).setIsValid(false, true);
   }
 
 

@@ -1626,30 +1626,30 @@ public class Opportunity extends GenericBean {
 
     return resultCount;
   }
-
-
+  
   /**
    *  Description of the Method
    *
    *@param  context  Description of Parameter
    *@since
    */
-  private void invalidateUserData(ActionContext context) {
+  public void invalidateUserData(ActionContext context) {
     invalidateUserData(context, owner);
   }
-
-
-  /**
+  
+    
+    /**
    *  Description of the Method
    *
    *@param  context  Description of Parameter
    *@param  userId   Description of Parameter
    *@since
    */
-  private void invalidateUserData(ActionContext context, int userId) {
+  public void invalidateUserData(ActionContext context, int userId) {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     systemStatus.getHierarchyList().getUser(userId).setIsValid(false, true);
   }
+
 }
 
