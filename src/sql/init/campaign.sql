@@ -33,4 +33,5 @@ INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES 
 INSERT INTO lookup_survey_types (description) VALUES ('Open-Ended');
 INSERT INTO lookup_survey_types (description) VALUES ('Quantitative (no comments)');
 INSERT INTO lookup_survey_types (description) VALUES ('Quantitative (with comments)');
+INSERT INTO lookup_survey_types (description) VALUES ('Item List');
                                               
