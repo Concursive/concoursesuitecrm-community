@@ -85,7 +85,6 @@ public final class AccountSelector extends CFSModule {
         }
         for (int i = 0; i < selectedList.size(); i++) {
           int orgId = Integer.parseInt((String) selectedList.get(i));
-          System.out.println("Final Org " + orgId);
           finalAccounts.add(new Organization(db, orgId));
         }
       }
@@ -129,8 +128,6 @@ public final class AccountSelector extends CFSModule {
     }
 
     PagedListInfo acctListInfo = this.getPagedListInfo(context, "AccountListInfo");
-    acctListInfo.setEnableJavaScript(true);
-
     //filter for departments & project teams
     if (!acctListInfo.hasListFilters()) {
       acctListInfo.addFilter(1, "0");
