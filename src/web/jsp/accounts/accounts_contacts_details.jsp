@@ -145,7 +145,7 @@ Contact Details<br>
       ContactAddress thisAddress = (ContactAddress)iaddress.next();
 %>    
   <tr class="containerBody">
-    <td class="formLabel">
+    <td class="formLabel" valign="top">
       <%= toHtml(thisAddress.getTypeName()) %>
     </td>
     <td>
