@@ -20,7 +20,10 @@ import org.aspcfs.utils.*;
 import org.aspcfs.modules.healthcare.edit.base.*;
 
 /**
- *  Description of the Class
+ *  This class processes EDIT transactions and stores them into a remote
+ *  CFS system.  This process is intended to run on the transaction server
+ *  each night, summarizing the transactions, and then storing them in CFS
+ *  folders.
  *
  *@author     chris
  *@created    February 11, 2003
@@ -29,15 +32,16 @@ import org.aspcfs.modules.healthcare.edit.base.*;
 public final class ProcessCalculation extends CFSModule {
 
   //these global IDs need to correspond to the folders for this to work!
+  //TODO: Move these into the CFS system_prefs table to be loaded at run-time
   public final static int OFFICE_PROVIDER_DETAILS = 2;
   public final static int OFFICE_PAYOR_DETAILS = 1;
   public final static int PROVIDER_TRANSACTION_DETAILS = 4;
   public final static int OFFICE_TRANSACTION_DETAILS = 3;
-  public final static String ERROR_REPORT_ADDRESS = "cprice@hrdenterprises.com";
+  public final static String ERROR_REPORT_ADDRESS = "mrajkowski@darkhorseventures.com";
 
 
   /**
-   *  Description of the Method
+   *  Execute this command to begin the processing
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -91,13 +95,15 @@ public final class ProcessCalculation extends CFSModule {
     recordList.setPerformed(dateToProcess);
 
     try {
-      //get a database connection
+      //get a local database connection
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
 
-      //connection to the production db
-      sqlDriver.setMaxConnections(1);
-      sqlDriver.setDebug(true);
+      //connections to the remote production database
+      sqlDriver.setMaxConnections(2);
+      if (System.getProperty("DEBUG") != null) {
+        sqlDriver.setDebug(true);
+      }
       connectionElement = new ConnectionElement(
           "jdbc:postgresql://216.54.13.43:5432/cdb_edit",
           "cfsdba",
@@ -422,17 +428,13 @@ public final class ProcessCalculation extends CFSModule {
     mail.setFrom("cfs-messenger@darkhorseventures.com");
     mail.setType("text/html");
     mail.setTo(ERROR_REPORT_ADDRESS);
-
     mail.setSubject("EDIT transaction data summary: " + month + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
-
     mail.setBody(sb.toString());
-
     if (mail.send() == 2) {
       System.err.println(mail.getErrorMsg());
     } else {
       System.err.println("Error sending message to " + ERROR_REPORT_ADDRESS);
     }
-
     return ("-none-");
   }
 }
