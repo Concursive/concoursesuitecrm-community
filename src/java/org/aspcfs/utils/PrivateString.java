@@ -191,7 +191,6 @@ public class PrivateString {
     try {
       if (args.length == 0) {
         System.out.println("[encrypt or decrypt] [key] [string]");
-        System.exit(0);
       } else {
         String method = args[0];
         String key = args[1];

@@ -36,7 +36,6 @@ public class ParseKBB {
       fileName = "autoguide.csv";
     }
     thisApp.process(fileName);
-    System.exit(0);
   }
 
 
