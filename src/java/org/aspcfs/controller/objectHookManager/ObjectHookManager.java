@@ -12,8 +12,8 @@ import com.darkhorseventures.framework.actions.*;
 import com.darkhorseventures.database.*;
 import org.aspcfs.modules.service.base.PacketContext;
 /**
- *  Manages hooks within the application and attaches to a WorkflowManager
- *  to execute BusinessProcess objects as defined by ObjectHook objects.
+ *  Manages hooks within the application and attaches to a WorkflowManager to
+ *  execute BusinessProcess objects as defined by ObjectHook objects.
  *
  *@author     matt rajkowski
  *@created    November 11, 2002
@@ -56,11 +56,33 @@ public class ObjectHookManager {
   /**
    *  Description of the Method
    *
+   *@param  documentElement  Description of the Parameter
+   */
+  public void initializeObjectHookList(Element documentElement) {
+    hookList = new ObjectHookList();
+    hookList.parse(documentElement);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
    *@param  processXML  Description of the Parameter
    */
   public void initializeBusinessProcessList(String processXML) {
     processList = new BusinessProcessList();
     processList.parse(processXML);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  documentElement  Description of the Parameter
+   */
+  public void initializeBusinessProcessList(Element documentElement) {
+    processList = new BusinessProcessList();
+    processList.parse(documentElement);
   }
 
 

@@ -12,7 +12,8 @@ import java.io.*;
  *
  *@author     matt rajkowski
  *@created    October 14, 2002
- *@version    $Id$
+ *@version    $Id: ObjectHookList.java,v 1.8 2003/01/13 21:41:16 mrajkowski Exp
+ *      $
  */
 public class ObjectHookList extends HashMap {
 
@@ -20,38 +21,16 @@ public class ObjectHookList extends HashMap {
    *  Constructor for the ObjectHookList object
    */
   public ObjectHookList() { }
-  
-  public ObjectHookList(Connection db) throws SQLException {
-    this.buildList(db);
-  }
-  
-  /**
-   *  Queries the database and retrieves the configured hooks from the
-   *  system_prefs table
-   *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = db.prepareStatement(
-        "SELECT data " +
-        "FROM system_prefs " +
-        "WHERE category = ? " +
-        "AND enabled = ? ");
-    pst.setString(1, "system.objects.hooks");
-    pst.setBoolean(2, true);
-    ResultSet rs = pst.executeQuery();
-    while (rs.next()) {
-      this.parse(rs.getString("data"));
-    }
-    rs.close();
-    pst.close();
-  }
 
-  public void buildListTest(File xmlFile)  {
+
+  /**
+   *  Description of the Method
+   *
+   *@param  xmlFile  Description of the Parameter
+   */
+  public void buildList(File xmlFile) {
     try {
       BufferedReader in = new BufferedReader(new FileReader(xmlFile));
-      
       StringBuffer config = new StringBuffer();
       String text = null;
       while ((text = in.readLine()) != null) {
@@ -61,6 +40,7 @@ public class ObjectHookList extends HashMap {
     } catch (Exception e) {
     }
   }
+
 
   /**
    *  Parses the XML hook configuration data into objects
@@ -74,8 +54,27 @@ public class ObjectHookList extends HashMap {
     }
     try {
       XMLUtils xml = new XMLUtils(hookData);
+      return this.parse(xml.getDocumentElement());
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      return false;
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  element  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public boolean parse(Element element) {
+    if (element == null) {
+      return false;
+    }
+    try {
       //Process all hooks and the corresponding actions
-      Element hooks = XMLUtils.getFirstElement(xml.getDocumentElement(), "hooks");
+      Element hooks = XMLUtils.getFirstElement(element, "hooks");
       if (hooks != null) {
         ArrayList hookNodes = XMLUtils.getElements(hooks, "hook");
         Iterator hookElements = hookNodes.iterator();

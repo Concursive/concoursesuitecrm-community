@@ -13,10 +13,12 @@ import java.io.*;
  *
  *@author     matt rajkowski
  *@created    November 11, 2002
- *@version    $Id$
+ *@version    $Id: BusinessProcessList.java,v 1.4 2003/01/13 21:41:16 mrajkowski
+ *      Exp $
  */
 public class BusinessProcessList extends HashMap {
   private int enabled = -1;
+
 
   /**
    *  Constructor for the BusinessProcessList object
@@ -37,6 +39,8 @@ public class BusinessProcessList extends HashMap {
 
   /**
    *  Description of the Method
+   *
+   *@param  xmlFile  Description of the Parameter
    */
   public void buildListTest(File xmlFile) {
     try {
@@ -64,7 +68,26 @@ public class BusinessProcessList extends HashMap {
     }
     try {
       XMLUtils xml = new XMLUtils(processData);
-      Element processes = XMLUtils.getFirstElement(xml.getDocumentElement(), "processes");
+      return parse(xml.getDocumentElement());
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      return false;
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  element  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public boolean parse(Element element) {
+    if (element == null) {
+      return false;
+    }
+    try {
+      Element processes = XMLUtils.getFirstElement(element, "processes");
       if (processes != null) {
         this.process(processes, Constants.TRUE);
       }
@@ -74,6 +97,7 @@ public class BusinessProcessList extends HashMap {
     }
     return true;
   }
+
 
 
   /**

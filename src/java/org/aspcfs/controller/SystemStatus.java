@@ -3,7 +3,6 @@ package org.aspcfs.controller;
 import java.util.Date;
 import java.util.*;
 import java.sql.*;
-import org.w3c.dom.Element;
 import com.darkhorseventures.database.*;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.utils.web.LookupList;
@@ -12,6 +11,8 @@ import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.controller.objectHookManager.*;
 import org.aspcfs.controller.SessionManager;
 import org.aspcfs.modules.contacts.base.Contact;
+import java.io.File;
+import org.w3c.dom.*;
 
 /**
  *  System status maintains global values for a shared group of users. This is
@@ -45,8 +46,7 @@ public class SystemStatus {
   private Hashtable lookups = new Hashtable();
 
   //Site Preferences
-  private ArrayList ignoredFields = new ArrayList();
-  private Hashtable fieldLabels = new Hashtable();
+  private Map preferences = null;
   private int sessionTimeout = 5400;
 
   //Object Hook to Workflow Manager
@@ -84,7 +84,7 @@ public class SystemStatus {
    */
   public void queryRecord(Connection db) throws SQLException {
     buildHierarchyList(db);
-    buildPreferences(db);
+    buildPreferences();
     buildRolePermissions(db);
   }
 
@@ -228,7 +228,7 @@ public class SystemStatus {
    *@return            The label value
    */
   public String getLabel(String thisLabel) {
-    return ((String) fieldLabels.get(thisLabel));
+    return this.getValue("system.fields.label", thisLabel);
   }
 
 
@@ -318,7 +318,8 @@ public class SystemStatus {
 
 
   /**
-   *  Description of the Method
+   *  A method to reload the user hierarchy, typically used when a user is added
+   *  or changed in the hierarchy.
    *
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
@@ -344,7 +345,8 @@ public class SystemStatus {
 
 
   /**
-   *  Description of the Method
+   *  Reloads role permissions that have been cached. Typically used when roles
+   *  are modified or created.
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
@@ -370,78 +372,88 @@ public class SystemStatus {
 
 
   /**
-   *  This method loads all of the preference data for this system.
-   *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   *  Loads the preferences for this specific system. Preference files are
+   *  stored as XML in the system's fileLibrary.
    */
-  public void buildPreferences(Connection db) throws SQLException {
-    String fieldsToIgnore = null;
-    String labelsToUse = null;
-    String hookData = null;
-    PreparedStatement pst = db.prepareStatement(
-        "SELECT category, data " +
-        "FROM system_prefs " +
-        "WHERE enabled = ? ");
-    pst.setBoolean(1, true);
-    ResultSet rs = pst.executeQuery();
-    while (rs.next()) {
-      String category = rs.getString("category");
-      if ("system.fields.ignore".equals(category)) {
-        fieldsToIgnore = rs.getString("data");
-      } else if ("system.fields.labels".equals(category)) {
-        labelsToUse = rs.getString("data");
-      } else if ("system.objects.hooks".equals(category)) {
-        hookData = rs.getString("data");
-      } else {
-        String tmp = rs.getString("data");
-      }
+  public void buildPreferences() {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("SystemStatus-> Loading system preferences");
     }
-    rs.close();
-    pst.close();
-
-    ignoredFields.clear();
-    if (fieldsToIgnore != null) {
-      try {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("SystemStatus-> Adding ignored fields");
-        }
-        XMLUtils xml = new XMLUtils(fieldsToIgnore);
-        xml.getAllChildrenText(xml.getDocumentElement(), "ignore", ignoredFields);
-      } catch (Exception e) {
-        System.out.println("SystemStatus-> Error: " + e.getMessage());
-      }
-    }
-
-    fieldLabels.clear();
-    if (labelsToUse != null) {
-      try {
-        XMLUtils xml = new XMLUtils(labelsToUse);
-        ArrayList fieldElements = new ArrayList();
-        xml.getAllChildren(xml.getDocumentElement(), "label", fieldElements);
-        Iterator elements = fieldElements.iterator();
-        while (elements.hasNext()) {
-          Element thisElement = (Element) elements.next();
-          String replace = xml.getNodeText(xml.getFirstChild(thisElement, "replace"));
-          String with = xml.getNodeText(xml.getFirstChild(thisElement, "with"));
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("SystemStatus-> Replace " + replace + " with " + with);
+    //Build the system preferences
+    try {
+      if (fileLibraryPath != null) {
+        File prefsFile = new File(fileLibraryPath + "system.xml");
+        if (prefsFile.exists()) {
+          XMLUtils xml = new XMLUtils(prefsFile);
+          //Traverse the prefs and add the config nodes to the LinkedHashMap,
+          //then for each config, add the param nodes into a child LinkedHashMap.
+          //This will provide quick access to the values, and will allow an
+          //editor to display the fields as ordered in the XML file
+          preferences = new LinkedHashMap();
+          NodeList configNodes = xml.getDocumentElement().getElementsByTagName("config");
+          for (int i = 0; i < configNodes.getLength(); i++) {
+            Node configNode = configNodes.item(i);
+            if (configNode != null &&
+                configNode.getNodeType() == Node.ELEMENT_NODE &&
+                "config".equals(((Element) configNode).getTagName())) {
+              //Each each config name, create a map for each of the params
+              String configName = ((Element) configNode).getAttribute("name");
+              Map preferenceGroup = null;
+              if (configName != null) {
+                if (preferences.containsKey(configName)) {
+                  preferenceGroup = (LinkedHashMap) preferences.get(configName);
+                } else {
+                  preferenceGroup = new LinkedHashMap();
+                  preferences.put(configName, preferenceGroup);
+                }
+                //Process the params for this config
+                NodeList paramNodes = ((Element) configNode).getElementsByTagName("param");
+                for (int j = 0; j < paramNodes.getLength(); j++) {
+                  Node paramNode = paramNodes.item(j);
+                  if (paramNode != null &&
+                      paramNode.getNodeType() == Node.ELEMENT_NODE &&
+                      "param".equals(((Element) paramNode).getTagName())) {
+                    String paramName = ((Element) paramNode).getAttribute("name");
+                    if (System.getProperty("DEBUG") != null) {
+                      System.out.println("SystemStatus-> Added pref " + configName + ":" + paramName);
+                    }
+                    if (paramName != null) {
+                      preferenceGroup.put(paramName, paramNode);
+                    }
+                  }
+                }
+              }
+            }
           }
-          fieldLabels.put(replace, with);
         }
-      } catch (Exception e) {
-        System.out.println("SystemStatus-> Error: " + e.getMessage());
       }
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      System.out.println("SystemStatus-> Preferences Error: " + e.getMessage());
     }
-
-    hookManager.setFileLibraryPath(fileLibraryPath);
-    hookManager.initializeObjectHookList(hookData);
-    hookManager.initializeBusinessProcessList(hookData);
+    //Build the workflow manager preferences
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("SystemStatus-> Loading workflow processes");
+    }
+    try {
+      if (fileLibraryPath != null) {
+        File prefsFile = new File(fileLibraryPath + "workflow.xml");
+        if (prefsFile.exists()) {
+          XMLUtils xml = new XMLUtils(prefsFile);
+          hookManager.setFileLibraryPath(fileLibraryPath);
+          hookManager.initializeBusinessProcessList(xml.getDocumentElement());
+          hookManager.initializeObjectHookList(xml.getDocumentElement());
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      System.out.println("SystemStatus-> Workflow Error: " + e.getMessage());
+    }
   }
 
 
   /**
-   *  Description of the Method
+   *  Initializes the permissions cache.
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
@@ -508,7 +520,11 @@ public class SystemStatus {
    *@return            Description of the Returned Value
    */
   public boolean hasField(String thisField) {
-    return ignoredFields.contains(thisField);
+    Map ignoredFieldsGroup = (Map) preferences.get("system.fields.ignore");
+    if (ignoredFieldsGroup != null) {
+      return ignoredFieldsGroup.containsKey(thisField);
+    }
+    return false;
   }
 
 
@@ -606,6 +622,44 @@ public class SystemStatus {
       if (thisUser != null) {
         thisUser.getContact().build(db);
       }
+    }
+  }
+
+
+  /**
+   *  Gets the preferences value for this SystemStatus object. If the value is
+   *  not found, then null is returned.
+   *
+   *@param  section    Description of the Parameter
+   *@param  parameter  Description of the Parameter
+   *@return            The value value
+   */
+  public String getValue(String section, String parameter) {
+    Map prefGroup = (Map) preferences.get(section);
+    if (prefGroup != null) {
+      Node param = (Node) prefGroup.get(parameter);
+      if (param != null) {
+        return XMLUtils.getNodeText(XMLUtils.getFirstChild((Element) param, "value"));
+      }
+    }
+    return null;
+  }
+
+
+  /**
+   *  Gets the preferences value for this SystemStatus object. If the value is
+   *  not found, then -1 is returned.
+   *
+   *@param  section    Description of the Parameter
+   *@param  parameter  Description of the Parameter
+   *@return            The valueAsInt value
+   */
+  public int getValueAsInt(String section, String parameter) {
+    String intValue = this.getValue(section, parameter);
+    if (intValue == null) {
+      return -1;
+    } else {
+      return Integer.parseInt(intValue);
     }
   }
 }
