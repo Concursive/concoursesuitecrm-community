@@ -27,6 +27,7 @@ public class SurveyAnswerList extends Vector {
       System.out.println("Added an answer: " + thisAnswer.getQuestionId());
     }
   }
+
 /**
   public void buildList(Connection db) throws SQLException {
 

@@ -939,6 +939,7 @@ public final class CampaignManager extends CFSModule {
 	
     Exception errorMessage = null;
     Connection db = null;
+    Survey thisSurvey = null;
 
     String id = context.getRequest().getParameter("id");
 
@@ -953,10 +954,11 @@ public final class CampaignManager extends CFSModule {
       Campaign campaign = new Campaign(db, id);
       context.getRequest().setAttribute("Campaign", campaign);
       
-      if (campaign.getSurveyId() > -1) {
-	      Survey thisSurvey = new Survey(db, campaign.getSurveyId() + "");
-	      context.getRequest().setAttribute("Survey", thisSurvey);
-      }
+      if (campaign.getSurveyId() > 0) {
+	      thisSurvey = new Survey(db, campaign.getSurveyId() + "");
+      } 
+      
+      context.getRequest().setAttribute("Survey", thisSurvey);
 
       RecipientList recipients = new RecipientList();
       recipients.setCampaignId(campaign.getId());

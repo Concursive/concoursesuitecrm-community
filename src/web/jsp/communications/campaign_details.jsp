@@ -82,7 +82,7 @@
   </tr>
 </table>
 
-<% if (Survey != null) { %>
+<% if (Survey != null && Campaign.getSurveyId() > 0) { %>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
