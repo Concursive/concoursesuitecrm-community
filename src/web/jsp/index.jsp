@@ -7,11 +7,13 @@
     RequestDispatcher setup = getServletContext().getRequestDispatcher("/Setup.do?command=Default");
     setup.forward(request, response);
   }
+  // BEGIN DHV CODE ONLY
   // If the site is setup, then check to see if this is an upgraded version of the app
   if (applicationPrefs.isUpgradeable()) {
     RequestDispatcher upgrade = getServletContext().getRequestDispatcher("/Upgrade.do?command=Default");
     upgrade.forward(request, response);
   }
+  // END DHV CODE ONLY
   // 
   String scheme = request.getScheme();
   // If SSL is configured, but this user isn't using SSL, then go to the welcome page

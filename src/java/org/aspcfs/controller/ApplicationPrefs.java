@@ -529,6 +529,7 @@ public class ApplicationPrefs {
   }
 
 
+  // BEGIN DHV CODE ONLY
   /**
    *  Determines if this system is upgradeable (not an ASP)
    *
@@ -540,5 +541,6 @@ public class ApplicationPrefs {
     }
     return (ApplicationVersion.isOutOfDate(this));
   }
+  // END DHV CODE ONLY
 }
 

@@ -127,10 +127,13 @@ public final class Login extends CFSModule {
     try {
       SystemStatus thisSystem = null;
       db = sqlDriver.getConnection(ce);
+      // BEGIN DHV CODE ONLY
       // If system is not upgraded, perform lightweight validation to ensure backwards compatibility
       if (applicationPrefs.isUpgradeable()) {
         continueId = true;
-      } else {
+      }
+      // END DHV CODE ONLY
+      if (!continueId) {
         //A good place to initialize this SystemStatus, must be done before getting a user
         thisSystem = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
         if (System.getProperty("DEBUG") != null) {
@@ -178,7 +181,7 @@ public final class Login extends CFSModule {
       //Query the user record
       // BEGIN DHV CODE ONLY
       if (continueId) {
-      // END DHV CODE ONLY
+        // END DHV CODE ONLY
         PreparedStatement pst = db.prepareStatement(
             "SELECT a.password, a.expires, a.alias, a.user_id, a.role_id, r.role " +
             "FROM access a, role r " +
@@ -208,7 +211,7 @@ public final class Login extends CFSModule {
         }
         rs.close();
         pst.close();
-      // BEGIN DHV CODE ONLY
+        // BEGIN DHV CODE ONLY
       }
       // END DHV CODE ONLY
       //Perform rest of user initialization if a valid user
@@ -264,6 +267,7 @@ public final class Login extends CFSModule {
     //security manager will not let them access any secure pages
     context.getSession().setAttribute("User", thisUser);
     context.getSession().setAttribute("ConnectionElement", ce);
+    // BEGIN DHV CODE ONLY
     if (applicationPrefs.isUpgradeable()) {
       if (roleId == 1 || "Administrator".equals(role)) {
         context.getSession().setAttribute("UPGRADEOK", "UPGRADEOK");
@@ -271,29 +275,29 @@ public final class Login extends CFSModule {
       } else {
         return "UpgradeCheck";
       }
-    } else {
-      //Check to see if user is already logged in.
-      //If not then add them to the valid users list
-      SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-      SessionManager sessionManager = thisSystem.getSessionManager();
-      if (sessionManager.isUserLoggedIn(userId)) {
-        UserSession thisSession = sessionManager.getUserSession(userId);
-        context.getSession().setMaxInactiveInterval(300);
-        context.getRequest().setAttribute("Session", thisSession);
-        return "LoginVerifyOK";
-      }
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Login-> Session Size: " + sessionManager.size());
-      }
-      // BEGIN DHV CODE ONLY
-      // NOTE: This check is no longer valid until portal users are tracked
-      //if (userId2 != null && !userId2.equals("-1") && sessionManager.size() > Integer.parseInt(userId2)) {
-      //  return "LicenseError";
-      //}
-      // END DHV CODE ONLY
-      context.getSession().setMaxInactiveInterval(thisSystem.getSessionTimeout());
-      sessionManager.addUser(context, userId);
     }
+    // END DHV CODE ONLY
+    //Check to see if user is already logged in.
+    //If not then add them to the valid users list
+    SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    SessionManager sessionManager = thisSystem.getSessionManager();
+    if (sessionManager.isUserLoggedIn(userId)) {
+      UserSession thisSession = sessionManager.getUserSession(userId);
+      context.getSession().setMaxInactiveInterval(300);
+      context.getRequest().setAttribute("Session", thisSession);
+      return "LoginVerifyOK";
+    }
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Login-> Session Size: " + sessionManager.size());
+    }
+    // BEGIN DHV CODE ONLY
+    // NOTE: This check is no longer valid until portal users are tracked
+    //if (userId2 != null && !userId2.equals("-1") && sessionManager.size() > Integer.parseInt(userId2)) {
+    //  return "LicenseError";
+    //}
+    // END DHV CODE ONLY
+    context.getSession().setMaxInactiveInterval(thisSystem.getSessionTimeout());
+    sessionManager.addUser(context, userId);
     // TODO: Replace this so it does not need to be maintained
     // NOTE: Make sure to update this similar code in the following method
     if (thisUser.getRoleType() == Constants.ROLETYPE_REGULAR) {
@@ -333,6 +337,7 @@ public final class Login extends CFSModule {
       // NOTE: Make sure to update this similar code in the previous method
       if (thisUser.getRoleType() == Constants.ROLETYPE_REGULAR) {
         ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+        // BEGIN DHV CODE ONLY
         if (applicationPrefs.isUpgradeable()) {
           if (thisUser.getRoleId() == 1 || "Administrator".equals(thisUser.getRole())) {
             return "PerformUpgradeOK";
@@ -340,6 +345,7 @@ public final class Login extends CFSModule {
             return "UpgradeCheck";
           }
         }
+        // END DHV CODE ONLY
         return "LoginOK";
       } else if (thisUser.getRoleType() == Constants.ROLETYPE_CUSTOMER) {
         return "CustomerPortalLoginOK";

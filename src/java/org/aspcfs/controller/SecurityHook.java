@@ -74,10 +74,12 @@ public class SecurityHook implements ControllerHook {
       return null;
     }
 
+    // BEGIN DHV CODE ONLY
     //Version check
     if (applicationPrefs.isUpgradeable()) {
       return "UpgradeCheck";
     }
+    // END DHV CODE ONLY
 
     //User is supposed to have a valid session, so fail security check
     if (userSession == null) {
