@@ -23,13 +23,20 @@ import java.text.*;
  */
 public final class ExternalContacts extends CFSModule {
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDefault(ActionContext context) {
     if (!(hasPermission(context, "contacts-external_contacts-view"))) {
       return ("DefaultError");
     }
     return (this.executeCommandListContacts(context));
   }
-  
+
+
   /**
    *  Show reports page
    *
@@ -52,7 +59,7 @@ public final class ExternalContacts extends CFSModule {
     PagedListInfo rptListInfo = this.getPagedListInfo(context, "ContactRptListInfo");
     rptListInfo.setLink("/ExternalContacts.do?command=Reports");
     files.setPagedListInfo(rptListInfo);
-    
+
     if ("all".equals(rptListInfo.getListView())) {
       files.setOwnerIdRange(this.getUserRange(context));
     } else {
@@ -89,6 +96,7 @@ public final class ExternalContacts extends CFSModule {
 
   }
   
+
 
 
   /**
@@ -357,17 +365,17 @@ public final class ExternalContacts extends CFSModule {
 
     PagedListInfo externalContactsInfo = this.getPagedListInfo(context, "ExternalContactsInfo");
     externalContactsInfo.setLink("/ExternalContacts.do?command=ListContacts");
-    
+
     if (context.getRequest().getParameter("doSearch") != null || ("search".equals(externalContactsInfo.getListView()))) {
-            externalContactsInfo.addFilter(1, "-1");
+      externalContactsInfo.addFilter(1, "-1");
     }
 
     Connection db = null;
     ContactList contactList = new ContactList();
-    
+
     ContactTypeList contactTypeList = new ContactTypeList();
     contactTypeList.setShowPersonal(true);
-    
+
     context.getSession().removeAttribute("ContactMessageListInfo");
 
     try {
@@ -376,19 +384,19 @@ public final class ExternalContacts extends CFSModule {
       contactTypeList.buildList(db);
       contactTypeList.addItem(-1, "All");
       context.getRequest().setAttribute("ContactTypeList", contactTypeList);
-      
+
       contactList.setPagedListInfo(externalContactsInfo);
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-      
+
       contactList.setPersonalId(this.getUserId(context));
       contactList.setTypeId(externalContactsInfo.getFilterKey("listFilter1"));
-      
+
       externalContactsInfo.setSearchCriteria(contactList);
-      
+
       if ("my".equals(externalContactsInfo.getListView())) {
-              contactList.setOwner(this.getUserId(context));
+        contactList.setOwner(this.getUserId(context));
       } else {
-              contactList.setOwnerIdRange(this.getUserRange(context));
+        contactList.setOwnerIdRange(this.getUserRange(context));
       }
 
       contactList.buildList(db);
@@ -566,7 +574,6 @@ public final class ExternalContacts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandFields(ActionContext context) {
-
     if (!(hasPermission(context, "contacts-external_contacts-folders-view"))) {
       return ("PermissionError");
     }
@@ -577,7 +584,7 @@ public final class ExternalContacts extends CFSModule {
     String recordId = null;
     boolean showRecords = true;
     String selectedCatId = null;
-    
+
     try {
       String contactId = context.getRequest().getParameter("contactId");
       db = this.getConnection(context);
@@ -602,15 +609,15 @@ public final class ExternalContacts extends CFSModule {
         selectedCatId = String.valueOf(thisList.getDefaultCategoryId());
       }
       context.getRequest().setAttribute("catId", selectedCatId);
-      
+
       if (Integer.parseInt(selectedCatId) > 0) {
         //See if a specific record has been chosen from the list
         recordId = context.getRequest().getParameter("recId");
-        String recordDeleted = (String)context.getRequest().getAttribute("recordDeleted");
+        String recordDeleted = (String) context.getRequest().getAttribute("recordDeleted");
         if (recordDeleted != null) {
           recordId = null;
         }
-        
+
         //Now build the specified or default category
         CustomFieldCategory thisCategory = thisList.getCategory(Integer.parseInt(selectedCatId));
         if (recordId == null && thisCategory.getAllowMultipleRecords()) {
@@ -618,7 +625,7 @@ public final class ExternalContacts extends CFSModule {
           //of records matching this category that the user can choose from
           PagedListInfo folderListInfo = this.getPagedListInfo(context, "ContactFolderInfo");
           folderListInfo.setLink("/ExternalContacts.do?command=Fields&contactId=" + contactId + "&catId=" + selectedCatId);
-       
+
           CustomFieldRecordList recordList = new CustomFieldRecordList();
           recordList.setLinkModuleId(Constants.CONTACTS);
           recordList.setLinkItemId(thisContact.getId());
@@ -642,7 +649,7 @@ public final class ExternalContacts extends CFSModule {
           thisCategory.setBuildResources(true);
           thisCategory.buildResources(db);
           showRecords = false;
-          
+
           if (thisCategory.getRecordId() > -1) {
             CustomFieldRecord thisRecord = new CustomFieldRecord(db, thisCategory.getRecordId());
             context.getRequest().setAttribute("Record", thisRecord);
@@ -739,10 +746,10 @@ public final class ExternalContacts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      
+
       //check whether or not the owner is an active User
       thisContact.checkEnabledOwnerAccount(db);
-      
+
       context.getRequest().setAttribute("ContactDetails", thisContact);
       addRecentItem(context, thisContact);
 
@@ -822,11 +829,11 @@ public final class ExternalContacts extends CFSModule {
       if (resultCount == -1) {
         return ("ContactDetailsModifyOK");
       } else if (resultCount == 1) {
-	      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-		      return (executeCommandListContacts(context));
-	      } else {
-		      return ("ContactDetailsUpdateOK");
-	      }
+        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+          return (executeCommandListContacts(context));
+        } else {
+          return ("ContactDetailsUpdateOK");
+        }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
@@ -1000,7 +1007,7 @@ public final class ExternalContacts extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
         context.getSession().removeAttribute("ContactMessageListInfo");
-        context.getRequest().setAttribute("refreshUrl","ExternalContacts.do?command=ListContacts");
+        context.getRequest().setAttribute("refreshUrl", "ExternalContacts.do?command=ListContacts");
         deleteRecentItem(context, thisContact);
         return ("ContactDeleteOK");
       } else {
@@ -1030,14 +1037,14 @@ public final class ExternalContacts extends CFSModule {
     Connection db = null;
     Contact thisContact = null;
 
+    String selectedCatId = (String) context.getRequest().getParameter("catId");
+    String recordId = (String) context.getRequest().getParameter("recId");
+
     try {
       String contactId = context.getRequest().getParameter("contactId");
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
-
-      String selectedCatId = (String) context.getRequest().getParameter("catId");
-      String recordId = (String) context.getRequest().getParameter("recId");
 
       CustomFieldCategory thisCategory = new CustomFieldCategory(db,
           Integer.parseInt(selectedCatId));
@@ -1058,7 +1065,11 @@ public final class ExternalContacts extends CFSModule {
 
     if (errorMessage == null) {
       addModuleBean(context, "External Contacts", "Modify Custom Fields");
-      return ("ModifyFieldsOK");
+      if (recordId.equals("-1")) {
+        return ("AddFolderRecordOK");
+      } else {
+        return ("ModifyFieldsOK");
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -1067,7 +1078,8 @@ public final class ExternalContacts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  UpdateFields: Performs the actual update of the selected Custom Field
+   *  Record based on user-submitted information from the modify form.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -1111,16 +1123,19 @@ public final class ExternalContacts extends CFSModule {
       thisCategory.buildResources(db);
       thisCategory.setParameters(context);
       thisCategory.setModifiedBy(this.getUserId(context));
-      resultCount = thisCategory.update(db);
+      if (!thisCategory.getReadOnly()) {
+        resultCount = thisCategory.update(db);
+      }
       if (resultCount == -1) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Contacts-> ModifyField validation error");
         }
       } else {
         thisCategory.buildResources(db);
+        CustomFieldRecord thisRecord = new CustomFieldRecord(db, thisCategory.getRecordId());
+        context.getRequest().setAttribute("Record", thisRecord);
       }
       context.getRequest().setAttribute("Category", thisCategory);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1150,7 +1165,6 @@ public final class ExternalContacts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandInsertFields(ActionContext context) {
-
     if (!(hasPermission(context, "contacts-external_contacts-folders-add"))) {
       return ("PermissionError");
     }
@@ -1187,14 +1201,15 @@ public final class ExternalContacts extends CFSModule {
       thisCategory.setParameters(context);
       thisCategory.setEnteredBy(this.getUserId(context));
       thisCategory.setModifiedBy(this.getUserId(context));
-      resultCode = thisCategory.insert(db);
+      if (!thisCategory.getReadOnly()) {
+        resultCode = thisCategory.insert(db);
+      }
       if (resultCode == -1) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Contacts-> InsertField validation error");
         }
       }
       context.getRequest().setAttribute("Category", thisCategory);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1212,7 +1227,14 @@ public final class ExternalContacts extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -1227,13 +1249,13 @@ public final class ExternalContacts extends CFSModule {
     if (context.getRequest().getParameter("id") != null) {
       id = context.getRequest().getParameter("id");
     }
-    
+
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, id);
       thisContact.checkUserAccount(db);
       htmlDialog.setRelationships(thisContact.processDependencies(db));
-      
+
       if (!thisContact.hasAccount()) {
         htmlDialog.setTitle("CFS: Confirm Delete");
         htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
@@ -1242,8 +1264,8 @@ public final class ExternalContacts extends CFSModule {
       } else {
         htmlDialog.setHeader("This Contact cannot be deleted because it is associated with a User account.");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
-      }        
-        
+      }
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
