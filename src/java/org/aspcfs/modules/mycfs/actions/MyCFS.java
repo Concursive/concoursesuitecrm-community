@@ -898,9 +898,9 @@ public final class MyCFS extends CFSModule {
     }
 
     addModuleBean(context, "Home", "");
-    int headlines = 0;
     Exception errorMessage = null;
-    String whereClause = new String();
+    NewsArticleList newsList = null;
+    Connection db = null;
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
 
     //this is how we get the multiple-level heirarchy...recursive function.
@@ -910,15 +910,13 @@ public final class MyCFS extends CFSModule {
     UserList shortChildList = thisRec.getShortChildList();
     UserList newUserList = thisRec.getFullChildList(shortChildList, new UserList());
 
-    //newUserList.setManagerId(getUserId(context));
-    //newUserList.setBuildHierarchy(true);
-
     newUserList.setMyId(getUserId(context));
     newUserList.setMyValue(thisUser.getUserRecord().getContact().getNameLastFirst());
     newUserList.setIncludeMe(true);
     newUserList.setJsEvent("onChange = \"javascript:fillFrame('calendar','MyCFS.do?command=MonthView&source=Calendar&userId='+document.getElementById('userId').value); javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=CalendarDetails&userId='+document.getElementById('userId').value);javascript:changeDivContent('userName','User:' + document.getElementById('userId').options[document.getElementById('userId').selectedIndex].firstChild.nodeValue);\"");
     HtmlSelect userListSelect = newUserList.getHtmlSelectObj("userId", getUserId(context));
     userListSelect.addAttribute("id", "userId");
+    context.getRequest().setAttribute("NewUserList", userListSelect);
 
     CalendarBean calendarInfo = (CalendarBean) context.getSession().getAttribute("CalendarInfo");
     if (calendarInfo == null) {
@@ -931,99 +929,45 @@ public final class MyCFS extends CFSModule {
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }
 
-    //String alertsRequest = (String) context.getRequest().getParameter("alerts");
-    //if (alertsRequest == null) {
-    //  alertsRequest = "0";
-    //}
-
-    //int i_alerts = Integer.parseInt(alertsRequest);
-
-    ArrayList newsList = new ArrayList();
-
     String industryCheck = context.getRequest().getParameter("industry");
-
-    Connection db = null;
-    Statement st = null;
-    ResultSet rs = null;
-    ResultSet headline_rs = null;
+    PagedListInfo newsListInfo = new PagedListInfo();
 
     try {
-      StringBuffer sql = new StringBuffer();
       db = this.getConnection(context);
-      //newUserList.buildList(db);
-      context.getRequest().setAttribute("NewUserList", userListSelect);
+      
+      NewsArticleList newsArticleList = new NewsArticleList();
+      newsArticleList.setIndustryCode(1);
+      
+      newsArticleList.setEnteredBy(getUserId(context));
+      newsArticleList.buildList(db);
+      
       LookupList indSelect = new LookupList(db, "lookup_industry");
       indSelect.setJsEvent("onChange=\"document.forms['miner_select'].submit();\"");
       indSelect.addItem(0, "Latest News");
-
-      //used to check the number of customized headlines
-      PreparedStatement pst = null;
-      StringBuffer headlineCount = new StringBuffer();
-      headlineCount.append(
-          "SELECT COUNT(org_id) AS headlinecount " +
-          "FROM organization " +
-          "WHERE miner_only = " + DatabaseUtils.getTrue(db) + " " +
-          "AND industry_temp_code = 1 and enteredby = " + getUserId(context) + " ");
-      pst = db.prepareStatement(headlineCount.toString());
-      headline_rs = pst.executeQuery();
-      if (headline_rs.next()) {
-        headlines = headline_rs.getInt("headlinecount");
-      }
-      pst.close();
-      headline_rs.close();
-
-      if (headlines > 0) {
-        indSelect.addItem(1, "My News");
-      }
-
-      //new
-
-      if (industryCheck == null && headlines > 0) {
-        industryCheck = "1";
-      }
-
-      sql.append("SELECT ");
-      if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
-        sql.append("TOP 10 ");
-      }
-      sql.append("* FROM news, organization ");
-
-      if (industryCheck != null && !(industryCheck.equals("0"))) {
-        whereClause =
-            "WHERE news.org_id = organization.org_id " +
-            "AND organization.industry_temp_code = " + Integer.parseInt(industryCheck) + " ";
-        if (industryCheck.equals("1")) {
-          whereClause +=
-              "AND news.org_id in ( organization.org_id, organization.duplicate_id ) " +
-              "AND organization.enteredby = " + getUserId(context) + " " +
-              "AND organization.miner_only = " + DatabaseUtils.getTrue(db) + " ";
-        }
-        sql.append(whereClause);
-      } else if (industryCheck == null || industryCheck.equals("0")) {
-        sql.append(
-            "WHERE organization.miner_only = " + DatabaseUtils.getFalse(db) + " " +
-            "AND organization.org_id = news.org_id ");
-      }
-
       context.getRequest().setAttribute("IndSelect", indSelect);
-      //end
 
-      sql.append("ORDER BY dateentered DESC ");
-
-      if (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL) {
-        sql.append("LIMIT 10 ");
+      if (newsArticleList.size() > 0) {
+        indSelect.addItem(1, "My News");
+        
+        if (industryCheck == null) {
+          industryCheck = "1";
+        }
       }
 
-      st = db.createStatement();
-
-      //Execute the main query
-      rs = st.executeQuery(sql.toString());
-      while (rs.next()) {
-        NewsArticle thisNews = new NewsArticle(rs);
-        newsList.add(thisNews);
+      newsList = new NewsArticleList();
+      newsList.setPagedListInfo(newsListInfo);
+      
+      if (industryCheck != null && !(industryCheck.equals("0"))) {
+        newsList.setIndustryCode(industryCheck);
+        if (industryCheck.equals("1")) {
+          newsList.setEnteredBy(getUserId(context));
+        }
+      } else if (industryCheck == null || industryCheck.equals("0")) {
+        newsList.setMinerOnly(false);
       }
-      rs.close();
-      st.close();
+      
+      newsList.buildList(db);
+      
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -1031,7 +975,6 @@ public final class MyCFS extends CFSModule {
     }
 
     if (errorMessage == null) {
-      context.getRequest().setAttribute("UserId", String.valueOf(getUserId(context)));
       context.getRequest().setAttribute("NewsList", newsList);
       return ("HomeOK");
     } else {
