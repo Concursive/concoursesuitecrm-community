@@ -1321,6 +1321,8 @@ public void setTypes(LookupList types) {
     resultCount = pst.executeUpdate();
     pst.close();
     
+    if (this.getMiner_only() == false) {
+    
 	resetType(db);
 	int lvlcount = 0;
 	
@@ -1335,7 +1337,8 @@ public void setTypes(LookupList types) {
 			lvlcount--;
 		}
 	}
-
+    }
+    
     return resultCount;
   }
 

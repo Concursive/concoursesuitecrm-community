@@ -288,16 +288,17 @@ public final class MyCFS extends CFSModule {
     String sym = context.getRequest().getParameter("stockSymbol");
 
     Organization newOrg = (Organization) new Organization();
-
-    try {
+      
       newOrg.setName(name);
       newOrg.setTicker(sym);
       newOrg.setIndustry("1");
       newOrg.setEnteredBy(getUserId(context));
+      newOrg.setModifiedBy(getUserId(context));
+      newOrg.setOwner(-1);
       newOrg.setMiner_only(true);
 
+    try {
       db = this.getConnection(context);
-
       existsAlready = newOrg.checkIfExists(db, name);
       newOrg.insert(db);
     } catch (SQLException e) {
@@ -308,7 +309,7 @@ public final class MyCFS extends CFSModule {
 
     if (errorMessage == null) {
       context.getRequest().setAttribute("OrgDetails", newOrg);
-      return ("GoHomeOK");
+      return (executeCommandHeadline(context));
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
