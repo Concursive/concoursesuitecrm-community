@@ -29,7 +29,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
-      <strong>Call Details</strong> [ <a href="javascript:popURL('/ForwardNote.do?command=ShowForm&linkRecordId=<%=CallDetails.getId()%>&linkModuleId=8&popup=true','Forward_Call','600','450','yes','no');">Forward</a> ]
+      <strong>Call Details</strong> [ <a href="javascript:popURLReturn('/ForwardNote.do?command=ShowForm&linkRecordId=<%=CallDetails.getId()%>&linkModuleId=8&popup=true','ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>','Forward_Call','600','450','yes','no');">Forward</a> ]
     </td>
   </tr>
   <tr class="containerBody">

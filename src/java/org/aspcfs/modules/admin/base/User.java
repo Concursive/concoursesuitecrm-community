@@ -1442,8 +1442,38 @@ public void setPermissions(Vector permissions) {
       pst.executeUpdate();
       pst.close();
     }
+    
+    insertLogRecord(db);
+    
   }
-
+  
+  public void insertLogRecord(Connection db) throws SQLException {
+	  if (this.id > -1) {
+		try {
+			db.setAutoCommit(false);
+		
+			StringBuffer sql = new StringBuffer();
+			sql.append(
+			"INSERT INTO access_log " +
+			"(username, ip) " +
+			"VALUES (?, ?) ");
+		
+			int i = 0;
+			PreparedStatement pst = db.prepareStatement(sql.toString());
+			pst.setString(++i, getUsername());
+			pst.setString(++i, getIp());
+			pst.execute();
+			pst.close();
+			db.commit();
+		} catch (SQLException e) {
+			db.rollback();
+			db.setAutoCommit(true);
+			throw new SQLException(e.getMessage());
+		}
+	}
+	
+	db.setAutoCommit(true);
+  }	
 
   /**
    *  Description of the Method

@@ -245,6 +245,13 @@ CREATE TABLE access (
   enabled boolean NOT NULL DEFAULT true
 );
 
+CREATE TABLE access_log (
+  id serial,
+  username VARCHAR(80) NOT NULL,
+  ip VARCHAR(15),
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 DROP SEQUENCE access_user_id_seq;
 CREATE SEQUENCE access_user_id_seq start 0 increment 1 maxvalue 2147483647 minvalue 0 cache 1 ;
 
