@@ -96,6 +96,7 @@ public class InitPermissionsAndRoles implements DataReader {
         }
         thisRecord.addField("folders", (String) category.getAttribute("folders"));
         thisRecord.addField("lookups", (String) category.getAttribute("lookups"));
+        thisRecord.addField("viewpoints", (String) category.getAttribute("viewpoints"));
         processOK = writer.save(thisRecord);
         int categoryId = Integer.parseInt(writer.getLastResponse());
         
@@ -126,6 +127,11 @@ public class InitPermissionsAndRoles implements DataReader {
           } else {
             permissionRecord.addField("enabled", "true");
             permissionRecord.addField("active", "true");
+          }
+          if ("true".equals((String) permission.getAttribute("viewpoints"))) {
+            permissionRecord.addField("viewpoints", "true");
+          } else {
+            permissionRecord.addField("viewpoints", "false");
           }
           writer.save(permissionRecord);
           int permissionId = Integer.parseInt(writer.getLastResponse());
@@ -167,6 +173,7 @@ public class InitPermissionsAndRoles implements DataReader {
           lookupRecord.addField("table", (String) lookup.getAttribute("table"));
           lookupRecord.addField("level", String.valueOf(lookupLevel));
           lookupRecord.addField("description", (String) lookup.getAttribute("description"));
+          lookupRecord.addField("categoryId", String.valueOf(categoryId));
           writer.save(lookupRecord);
         }
       }

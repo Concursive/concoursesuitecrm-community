@@ -218,6 +218,7 @@ public class PermissionsAndRolesWriter implements DataWriter {
         thisCategory.setActive(record.getValue("active"));
         thisCategory.setFolders(record.getValue("folders"));
         thisCategory.setLookups(record.getValue("lookups"));
+        thisCategory.setViewpoints(record.getValue("viewpoints"));
         thisCategory.insert(db);
         id = thisCategory.getId();
         return true;
@@ -235,6 +236,7 @@ public class PermissionsAndRolesWriter implements DataWriter {
         thisPermission.setDelete(record.getValue("delete"));
         thisPermission.setEnabled(record.getValue("enabled"));
         thisPermission.setActive(record.getValue("active"));
+        thisPermission.setViewpoints(record.getValue("viewpoints"));
         thisPermission.insert(db);
         id = thisPermission.getId();
         return true;
@@ -263,14 +265,15 @@ public class PermissionsAndRolesWriter implements DataWriter {
         try {
           PreparedStatement pst = db.prepareStatement(
             "INSERT INTO lookup_lists_lookup " +
-            "(module_id, lookup_id, class_name, table_name, level, description) " +
-            "VALUES (?, ?, ?, ?, ?, ?) ");
+            "(module_id, lookup_id, class_name, table_name, level, description, category_id) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?) ");
           pst.setInt(1, record.getIntValue("moduleId"));
           pst.setInt(2, record.getIntValue("lookupId"));
           pst.setString(3, record.getValue("class"));
           pst.setString(4, record.getValue("table"));
           pst.setInt(5, record.getIntValue("level"));
           pst.setString(6, record.getValue("description"));
+          pst.setInt(7, record.getIntValue("categoryId"));
           pst.executeUpdate();
           pst.close();
         } catch (SQLException e) {

@@ -31,6 +31,7 @@ public class Permission extends GenericBean {
   protected String description = null;
   protected boolean enabled = false;
   protected boolean active = true;
+  protected boolean viewpoints = false;
 
 
   /**
@@ -287,6 +288,26 @@ public class Permission extends GenericBean {
 
 
   /**
+   *  Sets the viewpoints attribute of the Permission object
+   *
+   *@param  tmp  The new viewpoints value
+   */
+  public void setViewpoints(boolean tmp) {
+    this.viewpoints = tmp;
+  }
+
+
+  /**
+   *  Sets the viewpoints attribute of the Permission object
+   *
+   *@param  tmp  The new viewpoints value
+   */
+  public void setViewpoints(String tmp) {
+    this.viewpoints = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Gets the id attribute of the Permission object
    *
    *@return    The id value
@@ -423,6 +444,16 @@ public class Permission extends GenericBean {
 
 
   /**
+   *  Gets the viewpoints attribute of the Permission object
+   *
+   *@return    The viewpoints value
+   */
+  public boolean getViewpoints() {
+    return viewpoints;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  rs                Description of the Parameter
@@ -440,6 +471,7 @@ public class Permission extends GenericBean {
     description = rs.getString("description");
     enabled = rs.getBoolean("enabled");
     active = rs.getBoolean("active");
+    viewpoints = rs.getBoolean("viewpoints");
 
     //permission_category table
     categoryName = rs.getString("category");
@@ -495,8 +527,8 @@ public class Permission extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO permission (category_id, permission, permission_view, " +
         "permission_add, permission_edit, permission_delete, " +
-        "description, level, enabled, active) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "description, level, enabled, active, viewpoints) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, categoryId);
     pst.setString(++i, name);
@@ -508,6 +540,7 @@ public class Permission extends GenericBean {
     pst.setInt(++i, permissionLevel);
     pst.setBoolean(++i, enabled);
     pst.setBoolean(++i, active);
+    pst.setBoolean(++i, viewpoints);
     pst.execute();
     id = DatabaseUtils.getCurrVal(db, "permission_permission_id_seq");
     return true;

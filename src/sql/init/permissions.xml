@@ -40,10 +40,10 @@
       <permission name="contacts-external_contacts-messages" attributes="v---" description="Messages"/>
       <permission name="contacts-external_contacts-opportunities" attributes="vaed" description="Opportunities"/>
     </category>
-    <category id="4" name="Pipeline Management" folders="false" lookups="true">
+    <category id="4" name="Pipeline Management" folders="false" lookups="true" viewpoints="true">
       <lookup constantId="1" class="lookupList" table="lookup_stage" description="Stage"/>
       <lookup constantId="2" class="lookupList" table="lookup_opportunity_types" description="Opportunity Types"/>
-      <permission name="pipeline" attributes="v---" description="Access to Pipeline Management module"/>
+      <permission name="pipeline" attributes="v---" description="Access to Pipeline Management module" viewpoints="true"/>
       <permission name="pipeline-opportunities" attributes="vaed" description="Opportunity Records"/>
       <permission name="pipeline-dashboard" attributes="v---" description="Dashboard"/>
       <permission name="pipeline-reports" attributes="va-d" description="Reports"/>
