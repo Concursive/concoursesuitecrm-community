@@ -1,7 +1,5 @@
-/*
-	Gatekeeper database tables.
-	Assumes the user 'gatekeeper' is already created.
-*/
+--	Gatekeeper database tables.
+--	Assumes the user 'gatekeeper' is already created.
 
 CREATE TABLE sites (
   site_id SERIAL PRIMARY KEY,
@@ -43,6 +41,7 @@ CREATE TABLE events_log (
   message TEXT
 );
 
-GRANT ALL ON sites TO gatekeeper;
-GRANT ALL ON events TO gatekeeper;
-GRANT ALL ON events_log TO gatekeeper;
+-- GRANT ALL ON sites TO gatekeeper;
+-- GRANT ALL ON events TO gatekeeper;
+-- GRANT ALL ON events_log TO gatekeeper;
+
