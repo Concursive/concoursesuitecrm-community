@@ -518,7 +518,7 @@ public class CallList extends Vector {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("CallList --> " + pst.toString());
+      System.out.println("CallList --> Building List ");
     }
     rs = pst.executeQuery();
 
