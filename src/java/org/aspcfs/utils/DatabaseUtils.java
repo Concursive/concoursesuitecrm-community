@@ -106,8 +106,12 @@ public class DatabaseUtils {
     ResultSet rs = null;
     switch (DatabaseUtils.getType(db)) {
       case DatabaseUtils.POSTGRESQL:
+      try {      
         rs = st.executeQuery("SELECT currval('" + sequenceName + "')");
         break;
+      } catch (SQLException e) {
+              break;
+      }
       case DatabaseUtils.MSSQL:
         rs = st.executeQuery("SELECT @@IDENTITY");
         break;
