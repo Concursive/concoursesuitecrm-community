@@ -216,6 +216,8 @@ public class LookupListElement {
       contactTypeList.setShowPersonal(true);
       contactTypeList.buildList(db);
       setLookupList(contactTypeList.getLookupList("list", 0));
+    } else {
+      throw new SQLException("LookupListElement class name not found");
     }
   }
 
