@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="org.aspcfs.modules.PermissionCategory, java.util.*" %>
+<%@ page import="org.aspcfs.modules.admin.base.PermissionCategory, java.util.*" %>
 <%@ include file="../initPage.jsp" %>
-<jsp:useBean id="PermissionCategoryList" class="org.aspcfs.modules.PermissionCategoryList" scope="request"/>
+<jsp:useBean id="PermissionCategoryList" class="org.aspcfs.modules.admin.base.PermissionCategoryList" scope="request"/>
 <a href="Admin.do">Setup</a> > 
 Configure Modules<br>
 <hr color="#BFBFBB" noshade>

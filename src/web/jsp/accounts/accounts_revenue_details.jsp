@@ -1,14 +1,14 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.Organization" scope="request"/>
-<jsp:useBean id="Revenue" class="org.aspcfs.modules.Revenue" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*" %>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<jsp:useBean id="Revenue" class="org.aspcfs.modules.accounts.base.Revenue" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="listRevenue" action="/RevenueManager.do" method="post">
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="/RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Revenue</a> >
+<form name="listRevenue" action="RevenueManager.do" method="post">
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Revenue</a> >
 Revenue Details<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -25,8 +25,8 @@ Revenue Details<br>
   </tr>
   <tr>
     <td class="containerBack">
-<dhv:permission name="accounts-accounts-revenue-edit"><input type='button' value="Modify" onClick="javascript:this.form.action='/RevenueManager.do?command=Modify&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';submit();"></dhv:permission>
-<dhv:permission name="accounts-accounts-revenue-delete"><input type='button' value="Delete" onClick="javascript:this.form.action='/RevenueManager.do?command=Delete&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';confirmSubmit(this.form);"></dhv:permission>
+<dhv:permission name="accounts-accounts-revenue-edit"><input type='button' value="Modify" onClick="javascript:this.form.action='RevenueManager.do?command=Modify&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-revenue-delete"><input type='button' value="Delete" onClick="javascript:this.form.action='RevenueManager.do?command=Delete&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';confirmSubmit(this.form);"></dhv:permission>
 <dhv:permission name="accounts-accounts-revenue-edit,accounts-accounts-revenue-delete"><br>&nbsp;</dhv:permission>
 <input type=hidden name="type" value="<%=Revenue.getType()%>">
 
@@ -96,8 +96,8 @@ Revenue Details<br>
 
 </table>
 <br>
-<dhv:permission name="accounts-accounts-revenue-edit"><input type='button' value="Modify" onClick="javascript:this.form.action='/RevenueManager.do?command=Modify&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';submit();"></dhv:permission>
-<dhv:permission name="accounts-accounts-revenue-delete"><input type='button' value="Delete" onClick="javascript:this.form.action='/RevenueManager.do?command=Delete&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';confirmSubmit(this.form);"></dhv:permission>
+<dhv:permission name="accounts-accounts-revenue-edit"><input type='button' value="Modify" onClick="javascript:this.form.action='RevenueManager.do?command=Modify&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-revenue-delete"><input type='button' value="Delete" onClick="javascript:this.form.action='RevenueManager.do?command=Delete&id=<%=Revenue.getId()%>&orgId=<%=Revenue.getOrgId()%>';confirmSubmit(this.form);"></dhv:permission>
 </td>
   </tr>
 </table>

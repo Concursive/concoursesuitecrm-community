@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.text.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,java.text.*,org.aspcfs.modules.admin.base.*" %>
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="org.aspcfs.modules.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="CustomField" class="org.aspcfs.modules.CustomField" scope="request"/>

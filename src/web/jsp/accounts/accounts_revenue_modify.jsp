@@ -1,8 +1,8 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.Organization" scope="request"/>
-<jsp:useBean id="Revenue" class="org.aspcfs.modules.Revenue" scope="request"/>
-<jsp:useBean id="RevenueTypeList" class="org.aspcfs.modules.RevenueTypeList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*" %>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<jsp:useBean id="Revenue" class="org.aspcfs.modules.accounts.base.Revenue" scope="request"/>
+<jsp:useBean id="RevenueTypeList" class="org.aspcfs.modules.accounts.base.RevenueTypeList" scope="request"/>
 <jsp:useBean id="MonthList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="YearList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>

@@ -1,14 +1,14 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.Organization" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*" %>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <form name="details" action="/Accounts.do" method="post">
-<a href="/Accounts.do">Account Management</a> > 
+<a href="Accounts.do">Account Management</a> > 
 <% if (request.getParameter("return") == null) { %>
-<a href="/Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=View">View Accounts</a> >
 <%} else if (request.getParameter("return").equals("dashboard")) {%>
-<a href="/Accounts.do?command=Dashboard">Dashboard</a> >
+<a href="Accounts.do?command=Dashboard">Dashboard</a> >
 <%}%>
 Account Details<br>
 <hr color="#BFBFBB" noshade>
@@ -41,7 +41,7 @@ Account Details<br>
 
 </dhv:evaluate>
 
-<dhv:permission name="accounts-accounts-delete"><input type="button" name="action" value="Delete Account" onClick="javascript:popURLReturn('/Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
+<dhv:permission name="accounts-accounts-delete"><input type="button" name="action" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br>&nbsp;</dhv:permission>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -402,7 +402,7 @@ Account Details<br>
 
 </dhv:permission>
 </dhv:evaluate>
-<dhv:permission name="accounts-accounts-delete"><input type="button" name="action" value="Delete Account" onClick="javascript:popURLReturn('/Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
+<dhv:permission name="accounts-accounts-delete"><input type="button" name="action" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
 </td></tr>
 </table>
 <input type=hidden name="command" value="">

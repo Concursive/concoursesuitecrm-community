@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.Organization" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*" %>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SeverityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -87,12 +87,12 @@ function ShowSpan(thisID)
 //  End -->
 </script>
 <body onLoad="HideSpans();">
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>">Tickets</a> >
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>">Tickets</a> >
 <% if (request.getParameter("return") == null) {%>
-<a href="/AccountTickets.do?command=TicketDetails&id=<%=TicketDetails.getPaddedId()%>">Ticket Details</a> >
+<a href="AccountTickets.do?command=TicketDetails&id=<%=TicketDetails.getPaddedId()%>">Ticket Details</a> >
 <%}%>
 Modify Ticket<br>
 <hr color="#BFBFBB" noshade>
@@ -119,15 +119,15 @@ Modify Ticket<br>
   </tr>
   <tr>
     <td class="containerBack">
-<form name="details" action="/AccountTickets.do?command=UpdateTicket&auto-populate=true" method="post">    
+<form name="details" action="AccountTickets.do?command=UpdateTicket&auto-populate=true" method="post">    
 <% if (TicketDetails.getClosed() != null) { %>
   <input type="submit" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
     <% if (request.getParameter("return") != null) {%>
 
   <% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
   <%} else {%> 
-        <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
   <%}%>
   <%}%>
 <%} else {%>
@@ -135,9 +135,9 @@ Modify Ticket<br>
     <% if (request.getParameter("return") != null) {%>
 
     <% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
   <%} else {%> 
-        <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
   <%}%>
   <%}%>
   <%= showAttribute(request, "closedError") %>
@@ -371,9 +371,9 @@ Modify Ticket<br>
     <% if (request.getParameter("return") != null) {%>
 
   <% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
   <%} else {%> 
-        <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
   <%}%>
   <%}%>
 <%} else {%>
@@ -381,9 +381,9 @@ Modify Ticket<br>
     <% if (request.getParameter("return") != null) {%>
 
   <% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
   <%} else {%> 
-        <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
   <%}%>
   <%}%>
 <%}%>

@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.Iterator,org.aspcfs.modules.PermissionCategory, org.aspcfs.utils.web.LookupList,org.aspcfs.utils.web.LookupListElement" %>
+<%@ page import="java.util.Iterator,org.aspcfs.modules.admin.base.PermissionCategory, org.aspcfs.utils.web.LookupList,org.aspcfs.utils.web.LookupListElement" %>
 <jsp:useBean id="LookupLists" class="org.aspcfs.utils.web.LookupListList" scope="request"/>
-<jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.PermissionCategory" scope="request"/>
+<jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <a href="Admin.do">Setup</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=PermissionCategory.getId()%>"><%=PermissionCategory.getCategory()%></a> >

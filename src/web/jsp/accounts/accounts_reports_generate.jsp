@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="CategoryList" class="org.aspcfs.modules.CustomFieldCategoryList" scope="request"/>
+<jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/reportSelect.js"></script>
 <script language="JavaScript">
@@ -96,13 +96,13 @@ function HideSpan(thisID) {
 	}
 </script>
 <body onLoad="javascript:HideSpans();javascript:document.forms[0].subject.focus();">
-<form name="generate" action="/Accounts.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=Reports">Reports</a> >
+<form name="generate" action="Accounts.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=Reports">Reports</a> >
 Generate New Report<br>
 <hr color="#BFBFBB" noshade>
 <input type="submit" value="Generate">
-<input type="button" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Reports';javascript:this.form.submit();">
+<input type="button" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Reports';javascript:this.form.submit();">
 <br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -221,6 +221,6 @@ Generate New Report<br>
 </table>
 <br>
 <input type="submit" value="Generate">
-<input type="button" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Reports';javascript:this.form.submit();">
+<input type="button" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Reports';javascript:this.form.submit();">
 </form>
 </body>

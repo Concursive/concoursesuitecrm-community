@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.accounts.base.*" %>
 <jsp:useBean id="FileList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <jsp:useBean id="RptListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -8,12 +8,12 @@
 <a href="/Accounts.do">Account Management</a> > 
 Reports<br>
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="accounts-accounts-reports-add"><a href="/Accounts.do?command=GenerateForm">Generate new report</a></dhv:permission>
+<dhv:permission name="accounts-accounts-reports-add"><a href="Accounts.do?command=GenerateForm">Generate new report</a></dhv:permission>
 <dhv:permission name="accounts-accounts-reports-add" none="true"><br></dhv:permission>
 <center><%= RptListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
-    <form name="listView" method="post" action="/Accounts.do?command=Reports">
+    <form name="listView" method="post" action="Accounts.do?command=Reports">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= RptListInfo.getOptionValue("my") %>>My Reports</option>
@@ -37,14 +37,14 @@ Reports<br>
     </dhv:permission>
     
     <td valign=center align=left bgcolor="#DEE0FA">
-      <strong><a href="/Accounts.do?command=Reports&column=subject">File Subject</a></strong>
+      <strong><a href="Accounts.do?command=Reports&column=subject">File Subject</a></strong>
       <%= RptListInfo.getSortIcon("subject") %>
     </td>
     <td valign=center align=left bgcolor="#DEE0FA">
       <strong>Size</strong>
     </td>
     <td valign=center align=left bgcolor="#DEE0FA">
-      <strong><a href="/Accounts.do?command=Reports&column=entered">Create Date</a></strong>
+      <strong><a href="Accounts.do?command=Reports&column=entered">Create Date</a></strong>
       <%= RptListInfo.getSortIcon("entered") %>
     </td>
      <td valign=center align=left bgcolor="#DEE0FA">
@@ -72,7 +72,7 @@ Reports<br>
   <tr>
     <dhv:permission name="accounts-accounts-reports-view,accounts-accounts-reports-delete">
     <td width=8 valign=center nowrap class="row<%= rowid %>">
-    <dhv:permission name="accounts-accounts-reports-view"><a href="/Accounts.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="accounts-accounts-reports-view,accounts-accounts-reports-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-reports-delete"><a href="javascript:confirmDelete('/Accounts.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
+    <dhv:permission name="accounts-accounts-reports-view"><a href="Accounts.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="accounts-accounts-reports-view,accounts-accounts-reports-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-reports-delete"><a href="javascript:confirmDelete('/Accounts.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
     <td width="40%" class="row<%= rowid %>">

@@ -1,8 +1,8 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.text.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="Category" class="org.aspcfs.modules.CustomFieldCategory" scope="request"/>
+<%@ page import="java.util.*,java.text.*,org.aspcfs.modules.admin.base.*" %>
+<jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="ModId" class="java.lang.String" scope="request"/>
-<jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.PermissionCategory" scope="request"/>
+<jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="document.forms[0].name.focus();">
 <form name="details" action="AdminFieldsFolder.do?command=UpdateFolder&modId=<%= ModId %>&catId=<%= Category.getId() %>&auto-populate=true" method="post">

@@ -1,9 +1,9 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="org.aspcfs.modules.*,java.util.*" %>
+<%@ page import="org.aspcfs.modules.admin.base.*,java.util.*" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="ManagerUser" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<a href="/Admin.do">Setup</a> >
+<a href="Admin.do">Setup</a> >
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	  <a href="Users.do?command=ListUsers">View Users</a> >

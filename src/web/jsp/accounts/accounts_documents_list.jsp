@@ -1,14 +1,14 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.Organization" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="DocListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="/javascript/confirmDelete.js"></script>
 
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 Documents<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -32,7 +32,7 @@ Documents<br>
   <tr class="title">
     <td width="10" align="center">Action</td>
     <td>
-    <strong><a href="/AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=subject">Item</a></strong>
+    <strong><a href="AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=subject">Item</a></strong>
       <%= DocListInfo.getSortIcon("subject") %>
       </td>
     <td align="center">Ext</td>
