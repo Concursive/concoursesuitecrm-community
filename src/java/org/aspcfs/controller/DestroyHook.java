@@ -39,6 +39,9 @@ public class DestroyHook implements ControllerDestroyHook {
    */
   public String executeControllerDestroy() {
     if (config != null) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("DestroyHook-> Shutting down");
+      }
       ConnectionPool cp =
           (ConnectionPool)config.getServletContext().getAttribute("ConnectionPool");
       cp.closeAllConnections();

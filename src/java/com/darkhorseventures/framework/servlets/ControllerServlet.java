@@ -203,6 +203,7 @@ public class ControllerServlet extends HttpServlet
     if (config.getInitParameter("DestroyHook") != null) {
       try {
         destroyHook = (ControllerDestroyHook)Class.forName(config.getInitParameter("DestroyHook")).newInstance();
+        destroyHook.executeControllerDestroyInit(config);
       } catch (Exception e) {
         System.out.println(e.toString());
         destroyHook = null;
