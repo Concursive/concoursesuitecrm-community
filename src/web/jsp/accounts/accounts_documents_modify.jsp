@@ -1,5 +1,5 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="OpportunityDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
+<jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript">
@@ -31,31 +31,28 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
-<a href="Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
+<a href="Accounts.do?command=View">Back to Account List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <form method="post" name="inputForm" action="LeadsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
+  <form method="post" name="inputForm" action="AccountsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(OpportunityDetails.getDescription()) %></strong>&nbsp;&nbsp;
-      
-		<% 
-	  if (OpportunityDetails.getAccountLink() != -1) { %>
-	  	[ <a href="/Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]
-	  <%} else { %>
-	  	[ <a href="/ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]
-	  <%}%>
+      <strong><%= toHtml(OrgDetails.getName()) %></strong>
     </td>
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>"><font color="#000000">Details</font></a> | 
-      <a href="LeadsCalls.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#000000">Calls</font></a> |
-      <a href="LeadsDocuments.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#0000FF">Documents</font></a>
-   </td>
+      <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><font color="#000000">Details</font></a> | 
+      <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Folders</font></a> |
+      <font color="#787878">Activities</font> | 
+      <a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><font color="#000000">Contacts</font></a> | 
+      <a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><font color="#000000">Opportunities</font></a> | 
+      <a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Tickets</font></a> |
+			<a href="AccountsDocuments.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><font color="#0000FF">Documents</font></a>
+    </td>
   </tr>
   <tr>
     <td class="containerBack">
-      <a href="LeadsDocuments.do?command=View&oppId=<%= OpportunityDetails.getId() %>">Back to Documents List</a><br>
+      <a href="AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Back to Documents List</a><br>
       <%= showAttribute(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -89,11 +86,11 @@
     </td>
   </tr>
 </table>
-&nbsp;<br>
+  &nbsp;<br>
   <input type='submit' value=' Update ' name="update" onClick="javascript:this.form.dosubmit.value='true';">
-  <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View&oppId=<%= OpportunityDetails.getId() %>';">
+  <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';">
   <input type="hidden" name="dosubmit" value="false">
-  <input type="hidden" name="oppId" value="<%= OpportunityDetails.getId() %>">
+  <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
 </td>
 </tr>
