@@ -14,19 +14,26 @@ import org.aspcfs.utils.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.base.*;
 import com.zeroio.iteam.base.FileItemList;
+import org.aspcfs.modules.actionlist.base.*;
 
 /**
  *  An OpportunityHeader is a top level description for all of the components
  *  that make up an Opportunity.
  *
- *@author     chris
- *@created    December, 2002
- *@version    $Id: OpportunityHeader.java,v 1.3 2003/01/07 20:21:45 mrajkowski
+ * @author     chris
+ * @created    December, 2002
+ * @version    $Id: OpportunityHeader.java,v 1.3 2003/01/07 20:21:45 mrajkowski
  *      Exp $
  */
 
 public class OpportunityHeader extends GenericBean {
+  /**
+   *  Description of the Field
+   */
   protected int id = -1;
+  /**
+   *  Description of the Field
+   */
   protected String description = null;
   private int accountLink = -1;
   private int contactLink = -1;
@@ -56,8 +63,8 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Constructor for the OpportunityHeader object
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  rs                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public OpportunityHeader(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -67,9 +74,9 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Constructor for the OpportunityHeader object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  id                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public OpportunityHeader(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -79,9 +86,9 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  id                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -129,9 +136,9 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Constructor for the OpportunityHeader object
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  id                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public OpportunityHeader(Connection db, String id) throws SQLException {
     queryRecord(db, Integer.parseInt(id));
@@ -141,7 +148,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the componentCount attribute of the OpportunityHeader object
    *
-   *@return    The componentCount value
+   * @return    The componentCount value
    */
   public int getComponentCount() {
     return componentCount;
@@ -151,7 +158,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the componentCount attribute of the OpportunityHeader object
    *
-   *@param  componentCount  The new componentCount value
+   * @param  componentCount  The new componentCount value
    */
   public void setComponentCount(int componentCount) {
     this.componentCount = componentCount;
@@ -161,7 +168,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the componentCount attribute of the OpportunityHeader object
    *
-   *@param  componentCount  The new componentCount value
+   * @param  componentCount  The new componentCount value
    */
   public void setComponentCount(String componentCount) {
     this.componentCount = Integer.parseInt(componentCount);
@@ -171,7 +178,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the totalValue attribute of the OpportunityHeader object
    *
-   *@return    The totalValue value
+   * @return    The totalValue value
    */
   public double getTotalValue() {
     return totalValue;
@@ -181,8 +188,8 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the totalValue attribute of the OpportunityHeader object
    *
-   *@param  divisor  Description of the Parameter
-   *@return          The totalValue value
+   * @param  divisor  Description of the Parameter
+   * @return          The totalValue value
    */
   public String getTotalValue(int divisor) {
     NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
@@ -198,7 +205,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the totalValue attribute of the OpportunityHeader object
    *
-   *@param  totalValue  The new totalValue value
+   * @param  totalValue  The new totalValue value
    */
   public void setTotalValue(double totalValue) {
     this.totalValue = totalValue;
@@ -208,7 +215,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the shortDescription attribute of the OpportunityHeader object
    *
-   *@return    The shortDescription value
+   * @return    The shortDescription value
    */
   public String getShortDescription() {
     if (description.length() <= 40) {
@@ -222,7 +229,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the totalValueCurrency attribute of the OpportunityHeader object
    *
-   *@return    The totalValueCurrency value
+   * @return    The totalValueCurrency value
    */
   public String getTotalValueCurrency() {
     NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
@@ -234,7 +241,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the id attribute of the OpportunityHeader object
    *
-   *@return    The id value
+   * @return    The id value
    */
   public int getId() {
     return id;
@@ -244,7 +251,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the description attribute of the OpportunityHeader object
    *
-   *@return    The description value
+   * @return    The description value
    */
   public String getDescription() {
     return description;
@@ -254,7 +261,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the accountLink attribute of the OpportunityHeader object
    *
-   *@return    The accountLink value
+   * @return    The accountLink value
    */
   public int getAccountLink() {
     return accountLink;
@@ -264,7 +271,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the contactLink attribute of the OpportunityHeader object
    *
-   *@return    The contactLink value
+   * @return    The contactLink value
    */
   public int getContactLink() {
     return contactLink;
@@ -274,7 +281,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the accountName attribute of the OpportunityHeader object
    *
-   *@return    The accountName value
+   * @return    The accountName value
    */
   public String getAccountName() {
     if (accountName != null) {
@@ -290,7 +297,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the contactName attribute of the OpportunityHeader object
    *
-   *@return    The contactName value
+   * @return    The contactName value
    */
   public String getContactName() {
     return contactName;
@@ -300,7 +307,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the contactCompanyName attribute of the OpportunityHeader object
    *
-   *@return    The contactCompanyName value
+   * @return    The contactCompanyName value
    */
   public String getContactCompanyName() {
     return contactCompanyName;
@@ -310,7 +317,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the enteredByName attribute of the OpportunityHeader object
    *
-   *@return    The enteredByName value
+   * @return    The enteredByName value
    */
   public String getEnteredByName() {
     return enteredByName;
@@ -320,7 +327,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the modifiedByName attribute of the OpportunityHeader object
    *
-   *@return    The modifiedByName value
+   * @return    The modifiedByName value
    */
   public String getModifiedByName() {
     return modifiedByName;
@@ -330,7 +337,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the accountEnabled attribute of the OpportunityHeader object
    *
-   *@return    The accountEnabled value
+   * @return    The accountEnabled value
    */
   public boolean getAccountEnabled() {
     return accountEnabled;
@@ -340,7 +347,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the entered attribute of the OpportunityHeader object
    *
-   *@return    The entered value
+   * @return    The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -350,7 +357,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the modified attribute of the OpportunityHeader object
    *
-   *@return    The modified value
+   * @return    The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -360,7 +367,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the id attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -370,7 +377,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the id attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -380,7 +387,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the description attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new description value
+   * @param  tmp  The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -390,7 +397,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the accountLink attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new accountLink value
+   * @param  tmp  The new accountLink value
    */
   public void setAccountLink(int tmp) {
     this.accountLink = tmp;
@@ -400,7 +407,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the contactLink attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new contactLink value
+   * @param  tmp  The new contactLink value
    */
   public void setContactLink(int tmp) {
     this.contactLink = tmp;
@@ -410,7 +417,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the accountLink attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new accountLink value
+   * @param  tmp  The new accountLink value
    */
   public void setAccountLink(String tmp) {
     this.accountLink = Integer.parseInt(tmp);
@@ -420,7 +427,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the contactLink attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new contactLink value
+   * @param  tmp  The new contactLink value
    */
   public void setContactLink(String tmp) {
     this.contactLink = Integer.parseInt(tmp);
@@ -430,7 +437,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the buildComponentCount attribute of the OpportunityHeader object
    *
-   *@return    The buildComponentCount value
+   * @return    The buildComponentCount value
    */
   public boolean getBuildComponentCount() {
     return buildComponentCount;
@@ -440,7 +447,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the buildComponentCount attribute of the OpportunityHeader object
    *
-   *@param  buildComponentCount  The new buildComponentCount value
+   * @param  buildComponentCount  The new buildComponentCount value
    */
   public void setBuildComponentCount(boolean buildComponentCount) {
     this.buildComponentCount = buildComponentCount;
@@ -450,7 +457,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the enteredString attribute of the OpportunityHeader object
    *
-   *@return    The enteredString value
+   * @return    The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
@@ -465,7 +472,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the modifiedString attribute of the OpportunityHeader object
    *
-   *@return    The modifiedString value
+   * @return    The modifiedString value
    */
   public String getModifiedString() {
     String tmp = "";
@@ -480,8 +487,8 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void buildFiles(Connection db) throws SQLException {
     files.clear();
@@ -494,7 +501,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return    Description of the Return Value
    */
   public boolean hasFiles() {
     return (files != null && files.size() > 0);
@@ -504,7 +511,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the accountName attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new accountName value
+   * @param  tmp  The new accountName value
    */
   public void setAccountName(String tmp) {
     this.accountName = tmp;
@@ -514,7 +521,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the contactName attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new contactName value
+   * @param  tmp  The new contactName value
    */
   public void setContactName(String tmp) {
     this.contactName = tmp;
@@ -524,7 +531,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the contactCompanyName attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new contactCompanyName value
+   * @param  tmp  The new contactCompanyName value
    */
   public void setContactCompanyName(String tmp) {
     this.contactCompanyName = tmp;
@@ -534,7 +541,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the enteredByName attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new enteredByName value
+   * @param  tmp  The new enteredByName value
    */
   public void setEnteredByName(String tmp) {
     this.enteredByName = tmp;
@@ -544,7 +551,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the modifiedByName attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new modifiedByName value
+   * @param  tmp  The new modifiedByName value
    */
   public void setModifiedByName(String tmp) {
     this.modifiedByName = tmp;
@@ -554,7 +561,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the accountEnabled attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new accountEnabled value
+   * @param  tmp  The new accountEnabled value
    */
   public void setAccountEnabled(boolean tmp) {
     this.accountEnabled = tmp;
@@ -564,7 +571,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the entered attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new entered value
+   * @param  tmp  The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -574,7 +581,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the modified attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new modified value
+   * @param  tmp  The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -584,7 +591,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the entered attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new entered value
+   * @param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -594,7 +601,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the modified attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new modified value
+   * @param  tmp  The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -604,7 +611,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new enteredBy value
+   * @param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -614,7 +621,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -624,7 +631,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new enteredBy value
+   * @param  tmp  The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -634,7 +641,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -644,7 +651,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the enteredBy attribute of the OpportunityHeader object
    *
-   *@return    The enteredBy value
+   * @return    The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -654,7 +661,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the modifiedBy attribute of the OpportunityHeader object
    *
-   *@return    The modifiedBy value
+   * @return    The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -664,7 +671,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the files attribute of the OpportunityHeader object
    *
-   *@return    The files value
+   * @return    The files value
    */
   public FileItemList getFiles() {
     return files;
@@ -674,7 +681,7 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Sets the files attribute of the OpportunityHeader object
    *
-   *@param  files  The new files value
+   * @param  files  The new files value
    */
   public void setFiles(FileItemList files) {
     this.files = files;
@@ -684,11 +691,11 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param  db                Description of Parameter
+   * @param  context           Description of Parameter
+   * @return                   Description of the Returned Value
+   * @exception  SQLException  Description of Exception
+   * @since
    */
   public boolean insert(Connection db, ActionContext context) throws SQLException {
     if (insert(db)) {
@@ -703,11 +710,11 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   * @param  db                Description of Parameter
+   * @param  context           Description of Parameter
+   * @return                   Description of the Returned Value
+   * @exception  SQLException  Description of Exception
+   * @since
    */
   public boolean delete(Connection db, ActionContext context) throws SQLException {
     if (delete(db)) {
@@ -722,11 +729,11 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@param  baseFilePath      Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  context           Description of the Parameter
+   * @param  baseFilePath      Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db, ActionContext context, String baseFilePath) throws SQLException {
     if (delete(db, baseFilePath)) {
@@ -741,9 +748,9 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public boolean disable(Connection db) throws SQLException {
     if (id == -1) {
@@ -765,9 +772,8 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Gets the Valid attribute of the Opportunity object
    *
-   *@param  db                Description of Parameter
-   *@return                   The Valid value
-   *@exception  SQLException  Description of Exception
+   * @return                   The Valid value
+   * @exception  SQLException  Description of Exception
    */
   public boolean isValid() throws SQLException {
     if (description == null || description.trim().equals("")) {
@@ -790,9 +796,9 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (!isValid()) {
@@ -862,9 +868,42 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  actionId      Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void updateLog(Connection db, int actionId) throws SQLException {
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      ActionItemLog thisLog = new ActionItemLog();
+      thisLog.setEnteredBy(this.getEnteredBy());
+      thisLog.setModifiedBy(this.getModifiedBy());
+      thisLog.setItemId(actionId);
+      thisLog.setLinkItemId(this.getId());
+      thisLog.setType(Constants.OPPORTUNITY_OBJECT);
+      thisLog.insert(db);
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -891,9 +930,9 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
@@ -945,6 +984,15 @@ public class OpportunityHeader extends GenericBean {
     }
     rs.close();
     pst.close();
+    
+    ActionList actionList = ActionItemLogList.isItemLinked(db, this.getId());
+      if (actionList != null) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName(actionList.getDescription());
+        thisDependency.setCount(1);
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
+      }
     return dependencyList;
   }
 
@@ -952,14 +1000,19 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   protected boolean delete(Connection db) throws SQLException {
     if (id == -1) {
       throw new SQLException("The Opportunity Header could not be found.");
     }
+    
+    //delete any action list items associated
+    ActionItemLog.deleteLink(db, this.getId(), Constants.OPPORTUNITY_OBJECT);
+    
+    //delete opportunity
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM opportunity_header WHERE opp_id = ? ");
     pst.setInt(1, id);
@@ -972,9 +1025,9 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public boolean resetType(Connection db) throws SQLException {
     if (id == -1) {
@@ -993,10 +1046,10 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  baseFilePath      Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  baseFilePath      Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   protected boolean delete(Connection db, String baseFilePath) throws SQLException {
     if (this.getId() == -1) {
@@ -1048,8 +1101,8 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  rs                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  rs                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("header_opp_id");
@@ -1076,10 +1129,10 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  override          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  override          Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
@@ -1121,8 +1174,8 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void retrieveComponentCount(Connection db) throws SQLException {
     int count = 0;
@@ -1144,8 +1197,8 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void buildTotal(Connection db) throws SQLException {
     double total = 0;
@@ -1167,11 +1220,11 @@ public class OpportunityHeader extends GenericBean {
   /**
    *  Checks if the user owns atleast one of the components
    *
-   *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
-   *@param  userId            Description of the Parameter
-   *@return                   The componentOwner value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  id                Description of the Parameter
+   * @param  userId            Description of the Parameter
+   * @return                   The componentOwner value
+   * @exception  SQLException  Description of the Exception
    */
   public static boolean isComponentOwner(Connection db, int id, int userId) throws SQLException {
     boolean isOwner = false;
