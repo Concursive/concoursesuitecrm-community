@@ -56,6 +56,7 @@ done
 export JAVA_HOME=/usr/java/j2se
 export CATALINA_HOME=/usr/java/tomcat
 PATH=$PATH:${JAVA_HOME}/bin
+export CATALINA_OPTS=-Djava.awt.headless=true
 
 # Get standard environment variables
 PRGDIR=`dirname "$PRG"`
