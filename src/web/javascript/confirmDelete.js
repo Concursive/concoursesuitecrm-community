@@ -21,3 +21,11 @@ function confirmAction() {
     return false;
   }
 }
+
+function confirmSubmit(theForm) {
+  if (confirm('Are you sure?')) {
+    theForm.submit();
+  } else {
+    return false;
+  }
+}
