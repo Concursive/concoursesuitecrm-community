@@ -102,7 +102,7 @@ CREATE TABLE project_requirements (
 	estimated_loevalue INTEGER DEFAULT -1 NOT NULL,
   estimated_loetype INTEGER REFERENCES lookup_project_loe,
   actual_loevalue INTEGER DEFAULT -1 NOT NULL,
-  actual_loetype INTEGER DEFAULT REFERENCES lookup_project_loe,
+  actual_loetype INTEGER REFERENCES lookup_project_loe,
 	deadline TIMESTAMP(3) NULL,
   approvedBy INTEGER REFERENCES access(user_id),
   approvalDate TIMESTAMP(3) NULL,
@@ -118,7 +118,7 @@ CREATE TABLE project_requirements (
 CREATE TABLE project_assignments (
 	assignment_id SERIAL PRIMARY KEY,
 	project_id INTEGER NOT NULL REFERENCES projects(project_id),
-  requirement_id INTEGER REFERENCES project_requirements (requirement_id),
+  requirement_id INTEGER REFERENCES project_requirements(requirement_id),
 	assignedBy INTEGER NOT NULL REFERENCES access(user_id),
 	user_assign_id INTEGER NOT NULL REFERENCES access(user_id),
 	activity_id INTEGER REFERENCES lookup_project_activity,
