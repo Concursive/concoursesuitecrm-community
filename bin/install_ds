@@ -68,22 +68,23 @@ su - ${CFSDBA} -c "createdb ${DB}" >>${LOG} 2>&1
 if [ -n "`grep -i ERROR ${LOG}`" ] ; then echo "Database error"; exit 2; fi
 
 (
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/new_cfs2.sql " 
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/new_cdb.sql " 
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/new_tms.sql " 
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/new_custom_field.sql "
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/new_project.sql "
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/new_help.sql "
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/new_campaign.sql "
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_cfs2.sql " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_cdb.sql " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_tms.sql " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_custom_field.sql "
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_project.sql "
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_help.sql "
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_campaign.sql "
 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/code_tables.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/access.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/permissions.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/data.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/employee.init " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/tms.init "
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/organization.init "
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/project.init "
- 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/campaign.init "
 
 
 
