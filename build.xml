@@ -97,6 +97,8 @@
         <srcfiles dir="${SRC}">
           <include name="bin/com/darkhorseventures/**/*.java" />
           <include name="bin/notifier" />
+          <include name="bin/dataImport" />
+          <include name="bin/dataImport-config.xml" />
           <include name="scripts/env.*" />
         </srcfiles>
     </uptodate>

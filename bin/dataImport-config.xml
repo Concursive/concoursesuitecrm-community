@@ -4,14 +4,14 @@
   </description>
   <reader class="com.darkhorseventures.apps.dataimport.cfsdatabasereader.CFSDatabaseReader">
     <driver>org.postgresql.Driver</driver>
-    <url>jdbc:postgresql://216.54.13.40:5432/cdb_dhv</url>
+    <url>jdbc:postgresql://216.54.81.101:5432/cdb_dhv</url>
     <user>mrajkowski</user>
     <password/>
     <processConfigFile/>
   </reader>
   <writer class="com.darkhorseventures.apps.dataimport.cfshttpxmlwriter.CFSHttpXMLWriter">
-    <url>http://127.0.0.1/ProcessPacket.do</url>
-    <id>127.0.0.1</id>
+    <url>http://ds22.darkhorseventures.com/ProcessPacket.do</url>
+    <id>ds22.darkhorseventures.com</id>
     <code>BZTST27A</code>
     <systemId>4</systemId>
   </writer>
