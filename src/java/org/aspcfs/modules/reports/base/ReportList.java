@@ -123,8 +123,9 @@ public class ReportList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "r.* " +
+        "r.*, p.permission " +
         "FROM report r " +
+        "LEFT JOIN permission p ON (r.permission_id = p.permission_id) " +
         "WHERE report_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);

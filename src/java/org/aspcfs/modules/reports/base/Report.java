@@ -19,7 +19,7 @@ import org.aspcfs.modules.actionlist.base.*;
  *@version    $Id$
  */
 public class Report extends GenericBean {
-
+  //Report properties
   private int id = -1;
   private int categoryId = -1;
   private int permissionId = -1;
@@ -33,6 +33,8 @@ public class Report extends GenericBean {
   private int modifiedBy = -1;
   private boolean enabled = true;
   private boolean custom = false;
+  //Helper properties
+  private String permissionName = null;
 
 
   /**
@@ -73,8 +75,9 @@ public class Report extends GenericBean {
    */
   public void queryRecord(Connection db, int reportId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT r.* " +
+        "SELECT r.*, p.permission " +
         "FROM report r " +
+        "LEFT JOIN permission p ON (r.permission_id = p.permission_id) " +
         "WHERE report_id = ? ");
     pst.setInt(1, reportId);
     ResultSet rs = pst.executeQuery();
@@ -110,6 +113,8 @@ public class Report extends GenericBean {
     modifiedBy = rs.getInt("modifiedby");
     enabled = rs.getBoolean("enabled");
     custom = rs.getBoolean("custom");
+    //permission table
+    permissionName = rs.getString("permission");
   }
 
 
@@ -344,6 +349,16 @@ public class Report extends GenericBean {
 
 
   /**
+   *  Sets the permissionName attribute of the Report object
+   *
+   *@param  tmp  The new permissionName value
+   */
+  public void setPermissionName(String tmp) {
+    this.permissionName = tmp;
+  }
+
+
+  /**
    *  Gets the id attribute of the Report object
    *
    *@return    The id value
@@ -470,6 +485,16 @@ public class Report extends GenericBean {
    */
   public boolean getCustom() {
     return custom;
+  }
+
+
+  /**
+   *  Gets the permissionName attribute of the Report object
+   *
+   *@return    The permissionName value
+   */
+  public String getPermissionName() {
+    return permissionName;
   }
 
 
