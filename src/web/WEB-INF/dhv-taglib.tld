@@ -62,19 +62,6 @@
   </tag>
   
   <tag>
-    <name>ssl</name> 
-    <tag-class>com.darkhorseventures.taglib.SSLHandler</tag-class>
-    <body-content>JSP</body-content>
-    <display-name>
-      Find out if this page is using SSL or not
-    </display-name>
-    <attribute>
-      <name>none</name>
-      <required>no</required>
-    </attribute>
-  </tag>
-  
-  <tag>
     <name>username</name> 
     <tag-class>com.darkhorseventures.taglib.UsernameHandler</tag-class>
     <body-content>empty</body-content>

@@ -1160,9 +1160,9 @@ public final class ExternalContacts extends CFSModule {
     HtmlDialog htmlDialog = new HtmlDialog();
     String id = null;
 
-    //if (!(hasPermission(context, "myhomepage-inbox-view"))) {
-    //  return ("DefaultError");
-    //}
+    if (!(hasPermission(context, "contacts-external_contacts-delete"))) {
+      return ("PermissionError");
+    }
 
     if (context.getRequest().getParameter("id") != null) {
       id = context.getRequest().getParameter("id");
@@ -1172,18 +1172,11 @@ public final class ExternalContacts extends CFSModule {
       db = this.getConnection(context);
       thisContact = new Contact(db, id);
       htmlDialog.setRelationships(thisContact.processDependencies(db));
-      
-      //if (htmlDialog.getRelationships().size() == 0) {
-      //  htmlDialog.setTitle("Confirm");
-     //   htmlDialog.setShowAndConfirm(false);
-     //   htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContacts.do?command=Delete&id=" + id + "'");
-      //} else {
               
         htmlDialog.setTitle("CFS: Confirm Delete");
         htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='/ExternalContacts.do?command=DeleteContact&id=" + id + "'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
-     // }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
