@@ -17,19 +17,19 @@
   
   //Menu link functions
   function details() {
-    window.location.href = 'LeadsCalls.do?command=Details&id=' + thisCallId + '&headerId=' + thisHeaderId;
+    window.location.href = 'LeadsCalls.do?command=Details&id=' + thisCallId + '&headerId=' + thisHeaderId + '<%= addLinkParams(request, "viewSource") %>';
   }
   
   function modify() {
-    window.location.href = 'LeadsCalls.do?command=Modify&id=' + thisCallId + '&headerId=' + thisHeaderId + '&return=list';
+    window.location.href = 'LeadsCalls.do?command=Modify&id=' + thisCallId + '&headerId=' + thisHeaderId + '&return=list' + '<%= addLinkParams(request, "viewSource") %>';
   }
   
   function forward() {
-    window.location.href = 'LeadsCallsForward.do?command=ForwardCall&forwardType=<%= Constants.PIPELINE_CALLS %>&headerId=' + thisHeaderId + '&id=' + thisCallId + '&return=list';
+    window.location.href = 'LeadsCallsForward.do?command=ForwardCall&forwardType=<%= Constants.PIPELINE_CALLS %>&headerId=' + thisHeaderId + '&id=' + thisCallId + '&return=list' + '<%= addLinkParams(request, "viewSource") %>';
   }
   
   function deleteCall() {
-    confirmDelete('LeadsCalls.do?command=Delete&id=' + thisCallId + '&headerId=' + thisHeaderId);
+    confirmDelete('LeadsCalls.do?command=Delete&id=' + thisCallId + '&headerId=' + thisHeaderId + '<%= addLinkParams(request, "viewSource") %>');
   }
   
 </script>

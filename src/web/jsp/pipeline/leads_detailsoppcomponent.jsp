@@ -11,9 +11,13 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> > 
-<a href="Leads.do?command=ViewOpp">View Components</a> >
-<a href="Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>&reset=true">Opportunity Details</a> > 
+<a href="Leads.do">Pipeline</a> >
+<% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
+	<a href="Leads.do?command=Dashboard">Dashboard</a> >
+<% }else{ %>
+	<a href="Leads.do?command=Search">Search Results</a> >
+<% } %>
+<a href="Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>&reset=true<%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> > 
 Component Details
 </td>
 </tr>
@@ -25,14 +29,16 @@ Component Details
 </dhv:evaluate>
 <%-- Begin container --%>
 <%@ include file="leads_details_header_include.jsp" %>
-<% String param1 = "id=" + opportunityHeader.getId(); %>      
-<dhv:container name="opportunities" selected="details" param="<%= param1 %>" style="tabs"/>
+<% String param1 = "id=" + opportunityHeader.getId(); 
+   String param2 = addLinkParams(request, "viewSource");
+%>      
+<dhv:container name="opportunities" selected="details" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <%-- Begin the container contents --%>
 <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='LeadsComponents.do?command=ModifyComponent&id=<%= LeadsComponentDetails.getId() %>&return=details';submit();"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=<%= LeadsComponentDetails.getId() %>&popup=true','Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=<%= LeadsComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "viewSource") %>','Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
@@ -180,10 +186,11 @@ Component Details
 </table>
 <dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete"><br></dhv:permission>
 <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='LeadsComponents.do?command=ModifyComponent&id=<%= LeadsComponentDetails.getId() %>';submit();"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=<%= LeadsComponentDetails.getId() %>&popup=true','Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=<%= LeadsComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "viewSource") %>','Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <%-- End container contents --%>
     </td>
   </tr>
 </table>
 <%-- End container --%>
+<%= addHiddenParams(request, "viewSource") %>
 </form>

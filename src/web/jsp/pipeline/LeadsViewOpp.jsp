@@ -4,11 +4,10 @@
 <%@ page import="com.zeroio.iteam.base.*" %>
 <%@ page import="org.aspcfs.modules.pipeline.beans.OpportunityBean" %>
 <jsp:useBean id="OpportunityList" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
-<jsp:useBean id="OpportunityListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="SearchOppListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
-<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -24,7 +23,7 @@
 <tr>
 <td>
 <a href="Leads.do">Pipeline</a> >
-View Components
+Search Results
 </td>
 </tr>
 </table>
@@ -34,66 +33,39 @@ View Components
   &nbsp;<br>
 </dhv:evaluate>
 <dhv:permission name="pipeline-opportunities-add"><a href="Leads.do?command=Prepare&source=list">Add an Opportunity</a></dhv:permission>
-<center><%= OpportunityListInfo.getAlphabeticalPageLinks() %></center>
-<table width="100%" border="0">
-  <tr>
-    <form name="listView" method="post" action="Leads.do?command=ViewOpp">
-    <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= OpportunityListInfo.getOptionValue("my") %>>My Open Opportunities</option>
-        <option <%= OpportunityListInfo.getOptionValue("all") %>>All Open Opportunities</option>
-        <option <%= OpportunityListInfo.getOptionValue("closed") %>>All Closed Opportunities</option>
-	      <dhv:evaluate if="<%= (!OpportunityListInfo.getSavedCriteria().isEmpty()) %>">
-          <option <%= OpportunityListInfo.getOptionValue("search") %>>Search Results</option>
-        </dhv:evaluate>
-      </select>
-			<% TypeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
-      <%=TypeSelect.getHtmlSelect("listFilter1", OpportunityListInfo.getFilterKey("listFilter1"))%>
-      <dhv:evaluate if="<%= "all".equals(OpportunityListInfo.getListView()) || "closed".equals(OpportunityListInfo.getListView()) %>">
-      <% UserList.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); 
-         HtmlSelect userSelect = UserList.getHtmlSelectObj("listFilter2", OpportunityListInfo.getFilterKey("listFilter2"));
-         userSelect.addItem(-1, "All Users", 0);
-      %>
-      <%= userSelect.getHtml("listFilter2", OpportunityListInfo.getFilterKey("listFilter2")) %>
-      </dhv:evaluate>
-    </td>
-    <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OpportunityListInfo"/>
-    </td>
-    </form>
-  </tr>
-</table>
+<center><%= SearchOppListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchOppListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th valign="center">
       <strong>Action</strong>
     </th>
     <th valign="center" nowrap>
-      <strong><a href="Leads.do?command=ViewOpp&column=x.description">Component</a></strong>
-      <%= OpportunityListInfo.getSortIcon("x.description") %>
+      <strong><a href="Leads.do?command=Search&column=x.description">Component</a></strong>
+      <%= SearchOppListInfo.getSortIcon("x.description") %>
     </th>
     <th valign="center" nowrap>
-      <strong><a href="Leads.do?command=ViewOpp&column=guessvalue">Amount</a></strong>
-      <%= OpportunityListInfo.getSortIcon("guessvalue") %>
+      <strong><a href="Leads.do?command=Search&column=guessvalue">Amount</a></strong>
+      <%= SearchOppListInfo.getSortIcon("guessvalue") %>
     </th>
     <th valign="center" nowrap>
-      <strong><a href="Leads.do?command=ViewOpp&column=closeprob">Prob.</a></strong>
-      <%= OpportunityListInfo.getSortIcon("closeprob") %>
+      <strong><a href="Leads.do?command=Search&column=closeprob">Prob.</a></strong>
+      <%= SearchOppListInfo.getSortIcon("closeprob") %>
     </th>
     <th valign="center" nowrap>
-      <strong><a href="Leads.do?command=ViewOpp&column=closedate">Close Date</a></strong>
-      <%= OpportunityListInfo.getSortIcon("closedate") %>
+      <strong><a href="Leads.do?command=Search&column=closedate">Close Date</a></strong>
+      <%= SearchOppListInfo.getSortIcon("closedate") %>
     </th>
     <th valign="center" nowrap>
-      <strong><a href="Leads.do?command=ViewOpp&column=terms">Term</a></strong>
-      <%= OpportunityListInfo.getSortIcon("terms") %>
+      <strong><a href="Leads.do?command=Search&column=terms">Term</a></strong>
+      <%= SearchOppListInfo.getSortIcon("terms") %>
     </th>
     <th valign="center" nowrap>
       <strong>Organization</strong>
     </th>
     <th valign="center" nowrap>
-      <strong><a href="Leads.do?command=ViewOpp&column=ct.namelast">Contact</a></strong>
-      <%= OpportunityListInfo.getSortIcon("ct.namelast") %>
+      <strong><a href="Leads.do?command=Search&column=ct.namelast">Contact</a></strong>
+      <%= SearchOppListInfo.getSortIcon("ct.namelast") %>
     </th>
   </tr>
 <%
@@ -158,10 +130,10 @@ View Components
     }
   } else {%>
   <tr class="containerBody">
-    <td colspan="8" valign="center">No opportunities found.</td>
+    <td colspan="8" valign="center">No  Opportunities found for the specified search parameters. <a href="Leads.do?command=SearchForm">Modify Search</a>. 
   </tr>
 <%}%>
 </table>
 <br>
-<dhv:pagedListControl object="OpportunityListInfo" tdClass="row1"/>
+<dhv:pagedListControl object="SearchOppListInfo" tdClass="row1"/>
 

@@ -69,9 +69,9 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> > 
+<a href="Leads.do">Pipeline</a> >
 <% if (request.getParameter("return") == null) { %>
-	<a href="Leads.do?command=ViewOpp">View Components</a> >
+	<a href="Leads.do?command=Search">Search Results</a> >
 <%} else {%>
 	<% if (request.getParameter("return").equals("dashboard")) { %>
 		<a href="Leads.do?command=Dashboard">Dashboard</a> >

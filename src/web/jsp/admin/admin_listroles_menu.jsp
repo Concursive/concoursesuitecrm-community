@@ -12,10 +12,6 @@
     return ypSlideOutMenu.displayMenu(id);
   }
   //Menu link functions
-  function details() {
-    window.location.href = 'Roles.do?command=RoleDetails&id=' + thisRoleId;
-  }
-  
   function modify() {
     window.location.href = 'Roles.do?command=RoleDetails&id=' + thisRoleId;
   }
@@ -27,16 +23,6 @@
 <div id="menuRoleContainer" class="menu">
   <div id="menuRoleContent">
     <table id="menuRoleTable" class="pulldown" width="170">
-      <dhv:permission name="admin-roles-view">
-      <tr>
-        <td>
-          <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
-        <td width="100%">
-          <a href="javascript:details()">View Details</a>
-        </td>
-      </tr>
-      </dhv:permission>
       <dhv:permission name="admin-roles-edit">
       <tr>
         <td>

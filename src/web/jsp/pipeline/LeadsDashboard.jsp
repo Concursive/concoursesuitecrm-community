@@ -134,7 +134,7 @@ Dashboard
 %>
 				<tr>
           <td width="100%" class="row<%= rowid %>" valign="center">
-            <a href="Leads.do?command=DetailsOpp&headerId=<%= thisHeader.getId() %>&return=dashboard&reset=true"><%= toHtml(thisHeader.getDisplayName()) %>:
+            <a href="Leads.do?command=DetailsOpp&headerId=<%= thisHeader.getId() %>&viewSource=dashboard&reset=true"><%= toHtml(thisHeader.getDisplayName()) %>:
             <%= toHtml(thisHeader.getDescription()) %></a>
             <dhv:evaluate if="<%= thisHeader.getComponentCount() > 1 %>">
               (<%= thisHeader.getOwnerComponentCount() %>/<%= thisHeader.getComponentCount() %>)

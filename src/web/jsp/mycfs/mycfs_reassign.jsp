@@ -80,6 +80,7 @@ Re-assignments
     <%}%>
     </td>
 		<td valign="top" nowrap>
+      <% UserList.setExcludeDisabledIfUnselected(true); %>
       <%= UserList.getHtmlSelect("ownerToAccounts") %>
     </td>
   </tr>

@@ -739,7 +739,7 @@ public final class TroubleTickets extends CFSModule {
 
     TicketList ticList = new TicketList();
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-    String type = context.getRequest().getParameter("type");
+    String type = context.getRequest().getParameter("listFilter1");
 
     ticListInfo.setLink("TroubleTickets.do?command=SearchTickets");
     ticList.setPagedListInfo(ticListInfo);
@@ -937,23 +937,32 @@ public final class TroubleTickets extends CFSModule {
     Connection db = null;
     //Prepare ticket state form data
     HtmlSelect ticketTypeSelect = new HtmlSelect();
-    ticketTypeSelect.setSelectName("type");
     ticketTypeSelect.addItem("0", "-- Any --");
     ticketTypeSelect.addItem("1", "Open Only");
     ticketTypeSelect.addItem("2", "Closed Only");
     ticketTypeSelect.build();
     context.getRequest().setAttribute("TicketTypeSelect", ticketTypeSelect);
+    PagedListInfo ticListInfo = this.getPagedListInfo(context, "TicListInfo");
     try {
       db = this.getConnection(context);
       //Prepare severity list form data
       LookupList severityList = new LookupList(db, "ticket_severity");
       severityList.addItem(0, "-- Any --");
       context.getRequest().setAttribute("SeverityList", severityList);
+      
       //Prepare priority list form data
       LookupList priorityList = new LookupList(db, "ticket_priority");
       priorityList.addItem(0, "-- Any --");
       context.getRequest().setAttribute("PriorityList", priorityList);
       addModuleBean(context, "SearchTickets", "Tickets Search");
+      
+      //check if account/owner is already selected, if so build it
+      if (!"".equals(ticListInfo.getSearchOptionValue("searchcodeOrgId")) && !"-1".equals(ticListInfo.getSearchOptionValue("searchcodeOrgId"))) {
+        String orgId = ticListInfo.getSearchOptionValue("searchcodeOrgId");
+        Organization thisOrg = new Organization(db, Integer.parseInt(orgId));
+        context.getRequest().setAttribute("OrgDetails", thisOrg);
+      }
+      
       return ("SearchTicketsFormOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);

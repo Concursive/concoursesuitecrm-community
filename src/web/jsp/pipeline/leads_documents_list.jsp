@@ -18,9 +18,13 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> > 
-<a href="Leads.do?command=ViewOpp">View Components</a> >
-<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
+<a href="Leads.do">Pipeline</a> >
+<% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
+	<a href="Leads.do?command=Dashboard">Dashboard</a> >
+<% }else{ %>
+	<a href="Leads.do?command=Search">Search Results</a> >
+<% } %>
+<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> >
 Documents
 </td>
 </tr>
@@ -31,12 +35,14 @@ Documents
   &nbsp;<br>
 </dhv:evaluate>
 <%@ include file="leads_details_header_include.jsp" %>
-<% String param1 = "id=" + opportunityHeader.getId(); %>      
-<dhv:container name="opportunities" selected="documents" param="<%= param1 %>" style="tabs"/>
+<% String param1 = "id=" + opportunityHeader.getId(); 
+   String param2 = addLinkParams(request, "viewSource");
+%>
+<dhv:container name="opportunities" selected="documents" param="<%= param1 %>" appendToUrl="<%= param2 %>"  style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
-      <dhv:permission name="pipeline-opportunities-documents-add"><a href="LeadsDocuments.do?command=Add&headerId=<%= opportunityHeader.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-documents-add"><a href="LeadsDocuments.do?command=Add&headerId=<%= opportunityHeader.getId() %>&folderId=<%= FileItemList.getFolderId() %><%= addLinkParams(request, "viewSource") %>">Add a Document</a><br></dhv:permission>
       <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
@@ -67,7 +73,7 @@ Documents
        onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td valign="middle" width="100%">
-        <a href="LeadsDocuments.do?command=Details&headerId=<%= opportunityHeader.getId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getSubject()) %></a>
+        <a href="LeadsDocuments.do?command=Details&headerId=<%= opportunityHeader.getId() %>&fid=<%= thisFile.getId() %><%= addLinkParams(request, "viewSource") %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getSubject()) %></a>
       </td>
       <td align="center"><%= thisFile.getExtension() %>&nbsp;</td>
       <td align="center" valign="middle" nowrap>
@@ -78,7 +84,7 @@ Documents
       </td>
       <dhv:permission name="pipeline-opportunities-documents-add">
       <td align="right" valign="middle" nowrap>
-        [<a href="LeadsDocuments.do?command=AddVersion&headerId=<%= opportunityHeader.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
+        [<a href="LeadsDocuments.do?command=AddVersion&headerId=<%= opportunityHeader.getId() %>&fid=<%= thisFile.getId() %><%= addLinkParams(request, "viewSource") %>">Add Version</a>]
       </td>
       </dhv:permission>
       <td nowrap>

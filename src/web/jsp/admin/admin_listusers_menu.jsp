@@ -7,15 +7,17 @@
     thisUserId = userId;
     if (!menu_init) {
       menu_init = true;
-      if(status == 0){
-        hideSpan('menuDisable');
-        showSpan('menuEnable');
-      }else if(status == 1){
-        hideSpan('menuEnable');
-        showSpan('menuDisable');
-      }else{
-        hideSpan('menuEnable');
-        hideSpan('menuDisable');
+      if(document.getElementById('menuDisable') != null && document.getElementById('menuEnable') != null){
+        if(status == 0){
+          hideSpan('menuDisable');
+          showSpan('menuEnable');
+        }else if(status == 1){
+          hideSpan('menuEnable');
+          showSpan('menuDisable');
+        }else{
+          hideSpan('menuEnable');
+          hideSpan('menuDisable');
+        }
       }
       new ypSlideOutMenu("menuUser", "down", 0, 0, 170, getHeight("menuUserTable"));
     }
@@ -61,6 +63,7 @@
         </td>
       </tr>
       </dhv:permission>
+      <dhv:permission name="admin-users-delete">
       <tr>
         <td>
           <img src="images/icons/stock_toggle-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -72,6 +75,7 @@
           <a href="javascript:enable()">Enable Login</a>
         </td>
       </tr>
+      </dhv:permission>
     </table>
   </div>
 </div>

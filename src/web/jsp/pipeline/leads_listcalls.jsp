@@ -19,9 +19,13 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> > 
-<a href="Leads.do?command=ViewOpp">View Components</a> >
-<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
+<a href="Leads.do">Pipeline</a> >
+<% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
+	<a href="Leads.do?command=Dashboard">Dashboard</a> >
+<% }else{ %>
+	<a href="Leads.do?command=Search">Search Results</a> >
+<% } %>
+<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> >
 Calls
 </td>
 </tr>
@@ -32,12 +36,14 @@ Calls
   &nbsp;<br>
 </dhv:evaluate>
 <%@ include file="leads_details_header_include.jsp" %>
-<% String param1 = "id=" + opportunityHeader.getId(); %>      
-<dhv:container name="opportunities" selected="calls" param="<%= param1 %>" style="tabs"/>
+<% String param1 = "id=" + opportunityHeader.getId(); 
+   String param2 = addLinkParams(request, "viewSource");
+%>            
+<dhv:container name="opportunities" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
-      <dhv:permission name="contacts-external_contacts-calls-add"><a href="LeadsCalls.do?command=Add&headerId=<%= opportunityHeader.getId() %>">Add a Call</a><br></dhv:permission>
+      <dhv:permission name="contacts-external_contacts-calls-add"><a href="LeadsCalls.do?command=Add&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Add a Call</a><br></dhv:permission>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsCallListInfo"/>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
@@ -74,7 +80,7 @@ Calls
              onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
           </td>
         <td width="100%" class="row<%= rowid %>">
-          <a href="LeadsCalls.do?command=Details&id=<%= thisCall.getId() %>&headerId=<%= opportunityHeader.getId() %>">
+          <a href="LeadsCalls.do?command=Details&id=<%= thisCall.getId() %>&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">
           <%= toHtml(thisCall.getSubject()) %>
           </a>
         </td>

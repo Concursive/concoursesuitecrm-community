@@ -9,10 +9,14 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> > 
-<a href="Leads.do?command=ViewOpp">View Components</a> >
-<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
-<a href="LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %>">Documents</a> > 
+<a href="Leads.do">Pipeline</a> >
+<% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
+	<a href="Leads.do?command=Dashboard">Dashboard</a> >
+<% }else{ %>
+	<a href="Leads.do?command=Search">Search Results</a> >
+<% } %>
+<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> >
+<a href="LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Documents</a> > 
 Document Details
 </td>
 </tr>
@@ -23,8 +27,10 @@ Document Details
   &nbsp;<br>
 </dhv:evaluate>
 <%@ include file="leads_details_header_include.jsp" %>
-<% String param1 = "id=" + opportunityHeader.getId(); %>      
-<dhv:container name="opportunities" selected="documents" param="<%= param1 %>" style="tabs"/>
+<% String param1 = "id=" + opportunityHeader.getId(); 
+   String param2 = addLinkParams(request, "viewSource");
+%>      
+<dhv:container name="opportunities" selected="documents" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
@@ -53,7 +59,7 @@ Document Details
 %>      
     <tr class="row<%= rowid %>">
       <td align="center" rowspan="2" nowrap>
-        <a href="LeadsDocuments.do?command=Download&headerId=<%= opportunityHeader.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>">Download</a>
+        <a href="LeadsDocuments.do?command=Download&headerId=<%= opportunityHeader.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %><%= addLinkParams(request, "viewSource") %>">Download</a>
       </td>
       <td>
         <%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %>

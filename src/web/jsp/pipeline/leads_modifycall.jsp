@@ -49,7 +49,6 @@
   }
 }
 </script>
-<form name="addCall" action="LeadsCalls.do?command=Update&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %><%= (request.getParameter("popup") != null?"&popup=true":"") %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%
   boolean popUp = false;
   if (request.getParameter("popup") != null) {
@@ -61,12 +60,16 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> > 
-<a href="Leads.do?command=ViewOpp">View Components</a> >
-<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
-<a href="LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>">Calls</a> >
+<a href="Leads.do">Pipeline</a> >
+<% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
+	<a href="Leads.do?command=Dashboard">Dashboard</a> >
+<% }else{ %>
+	<a href="Leads.do?command=Search">Search Results</a> >
+<% } %>
+<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> >
+<a href="LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Calls</a> >
 <% if (request.getParameter("return") == null) { %>
-	<a href="LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>">Call Details</a> >
+	<a href="LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Call Details</a> >
 <%}%>
 Modify Call
 </td>
@@ -80,13 +83,15 @@ Modify Call
 </dhv:evaluate>
 <%@ include file="leads_details_header_include.jsp" %>
 <dhv:evaluate exp="<%= !popUp %>">
-  <% String param1 = "id=" + opportunityHeader.getId(); %>      
-  <dhv:container name="opportunities" selected="calls" param="<%= param1 %>" style="tabs"/>
+  <% String param1 = "id=" + opportunityHeader.getId(); 
+   String param2 = addLinkParams(request, "viewSource");
+%>
+<dhv:container name="opportunities" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
 </dhv:evaluate>
+<form name="addCall" action="LeadsCalls.do?command=Update&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %><%= (request.getParameter("popup") != null?"&popup=true":"") %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
-      <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 <dhv:evaluate exp="<%= !popUp %>">
   <% if (request.getParameter("return") != null) {%>
@@ -176,9 +181,9 @@ Modify Call
       <input type="reset" value="Reset">
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="contactId" value="<%=CallDetails.getContactId()%>">
-<% if (request.getParameter("return") != null) {%>
-      <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
-<%}%>
+      <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
+      <%= addHiddenParams(request, "viewSource|return") %>
     </td>
   </tr>
 </table>
+</form>

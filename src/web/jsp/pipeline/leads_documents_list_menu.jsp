@@ -16,19 +16,19 @@
   
   //Menu link functions
   function details() {
-    window.location.href = 'LeadsDocuments.do?command=Details&headerId=' + thisHeaderId + '&fid=' + thisFileId;
+    window.location.href = 'LeadsDocuments.do?command=Details&headerId=' + thisHeaderId + '&fid=' + thisFileId + '<%= addLinkParams(request, "viewSource") %>';
   }
   
   function download() {
-    window.location.href = 'LeadsDocuments.do?command=Details&headerId=' + thisHeaderId + '&fid=' + thisFileId;
+    window.location.href = 'LeadsDocuments.do?command=Details&headerId=' + thisHeaderId + '&fid=' + thisFileId + '<%= addLinkParams(request, "viewSource") %>';
   }
   
   function modify() {
-    window.location.href = 'LeadsDocuments.do?command=Modify&fid=' + thisFileId + '&headerId=' + thisHeaderId;
+    window.location.href = 'LeadsDocuments.do?command=Modify&fid=' + thisFileId + '&headerId=' + thisHeaderId + '<%= addLinkParams(request, "viewSource") %>';
   }
   
   function deleteFile() {
-    confirmDelete('LeadsDocuments.do?command=Delete&fid=' + thisFileId + '&headerId=' + thisHeaderId);
+    confirmDelete('LeadsDocuments.do?command=Delete&fid=' + thisFileId + '&headerId=' + thisHeaderId + '<%= addLinkParams(request, "viewSource") %>');
   }
   
 </script>

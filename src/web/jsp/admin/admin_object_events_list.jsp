@@ -53,10 +53,12 @@ Object Events
 </dhv:evaluate>
 <%
     Iterator hooks = hookList.values().iterator();
+    int count = 0;
     while (hooks.hasNext()) {
       ObjectHookActionList actionList = (ObjectHookActionList) hooks.next();
       Iterator actions = actionList.values().iterator();
       while (actions.hasNext()) {
+        count++;
         ObjectHookAction thisAction = (ObjectHookAction) actions.next();
 %>
   <tr class="containerBody">

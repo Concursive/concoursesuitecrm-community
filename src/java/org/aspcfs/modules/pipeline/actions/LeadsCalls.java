@@ -45,7 +45,7 @@ public final class LeadsCalls extends CFSModule {
     addModuleBean(context, "View Opportunities", "Opportunity Calls");
 
     PagedListInfo leadsCallListInfo = this.getPagedListInfo(context, "LeadsCallListInfo");
-    leadsCallListInfo.setLink("LeadsCalls.do?command=View&headerId=" + headerId);
+    leadsCallListInfo.setLink("LeadsCalls.do?command=View&headerId=" + headerId + HTTPUtils.addLinkParams(context.getRequest(), "viewSource"));
 
     Connection db = null;
     CallList callList = new CallList();
@@ -384,6 +384,7 @@ public final class LeadsCalls extends CFSModule {
     }
 
     String msgId = context.getRequest().getParameter("id");
+    String headerId = context.getRequest().getParameter("headerId");
     CFSNote newNote = null;
     addModuleBean(context, "View Opportunities", "Opportunity Calls");
 
@@ -409,6 +410,8 @@ public final class LeadsCalls extends CFSModule {
           "Entered: " + StringUtils.toString(thisCall.getEnteredName()) + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getEntered()) + "\n" +
           "Modified: " + StringUtils.toString(thisCall.getModifiedName()) + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getModified()));
 
+      OpportunityHeader oppHeader = new OpportunityHeader(db, Integer.parseInt(headerId));
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -432,6 +435,7 @@ public final class LeadsCalls extends CFSModule {
     }
 
     String msgId = context.getRequest().getParameter("id");
+    String headerId = context.getRequest().getParameter("headerId");
     CFSNote newNote = null;
     addModuleBean(context, "View Opportunities", "Opportunity Calls");
 
@@ -450,6 +454,9 @@ public final class LeadsCalls extends CFSModule {
 
       //add the call
       context.getRequest().setAttribute("CallDetails", thisCall);
+      
+      OpportunityHeader oppHeader = new OpportunityHeader(db, Integer.parseInt(headerId));
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");

@@ -199,7 +199,7 @@ public final class Leads extends CFSModule {
           return (executeCommandPrepare(context));
         } else if (resultCount == 1) {
           if ("list".equals(context.getRequest().getParameter("return"))) {
-            return (executeCommandViewOpp(context));
+            return (executeCommandSearch(context));
           } else if ("details".equals(context.getRequest().getParameter("return"))) {
             return (executeCommandDetailsComponent(context));
           } else if (context.getRequest().getParameter("popup") != null) {
@@ -312,7 +312,7 @@ public final class Leads extends CFSModule {
       context.getSession().removeAttribute("LeadsComponentListInfo");
     }
     PagedListInfo componentListInfo = this.getPagedListInfo(context, "LeadsComponentListInfo");
-    componentListInfo.setLink("Leads.do?command=DetailsOpp&headerId=" + headerId);
+    componentListInfo.setLink("Leads.do?command=DetailsOpp&headerId=" + headerId + HTTPUtils.addLinkParams(context.getRequest(), "viewSource"));
     try {
       db = this.getConnection(context);
       //Generate the opportunity header
@@ -351,15 +351,47 @@ public final class Leads extends CFSModule {
     Connection db = null;
     int errorCode = 0;
     Exception errorMessage = null;
+    PagedListInfo searchOppListInfo = this.getPagedListInfo(context, "SearchOppListInfo");
+    //Prepare viewpoints
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int vpUserId = viewpointInfo.getVpUserId(this.getUserId(context));
+    int userId = this.getUserId(context);
+    if (vpUserId != -1 && vpUserId != userId) {
+      userId = vpUserId;
+    }
+    
     try {
       db = this.getConnection(context);
 
-      OrganizationList orgList = new OrganizationList();
-      orgList.setMinerOnly(false);
-      orgList.setShowMyCompany(true);
-      orgList.buildList(db);
-      context.getRequest().setAttribute("OrgList", orgList);
+      //Opportunity types drop-down menu
+      LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
+      typeSelect.addItem(0, "All Types");
+      context.getRequest().setAttribute("TypeSelect", typeSelect);
 
+      //Generate user list
+      User thisRec = this.getUser(context, userId);
+      UserList shortChildList = thisRec.getShortChildList();
+      UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+      userList.setMyId(userId);
+      userList.setMyValue(thisRec.getContact().getNameLastFirst());
+      userList.setIncludeMe(true);
+      userList.setExcludeDisabledIfUnselected(true);
+      context.getRequest().setAttribute("UserList", userList);
+
+      //check if account/contact is already selected, if so build it
+      if (!"".equals(searchOppListInfo.getSearchOptionValue("searchcodeOrgId")) && !"-1".equals(searchOppListInfo.getSearchOptionValue("searchcodeOrgId"))) {
+        String orgId = searchOppListInfo.getSearchOptionValue("searchcodeOrgId");
+        Organization thisOrg = new Organization(db, Integer.parseInt(orgId));
+        context.getRequest().setAttribute("OrgDetails", thisOrg);
+      }
+
+      if (!"".equals(searchOppListInfo.getSearchOptionValue("searchcodeContactId")) && !"-1".equals(searchOppListInfo.getSearchOptionValue("searchcodeContactId"))) {
+        String id = searchOppListInfo.getSearchOptionValue("searchcodeContactId");
+        Contact thisContact = new Contact(db, Integer.parseInt(id));
+        context.getRequest().setAttribute("ContactDetails", thisContact);
+      }
+
+      //stage
       LookupList stageSelect = new LookupList(db, "lookup_stage");
       context.getRequest().setAttribute("StageList", stageSelect);
     } catch (Exception e) {
@@ -407,7 +439,7 @@ public final class Leads extends CFSModule {
       htmlDialog.addMessage(dependencies.getHtmlString());
       htmlDialog.setTitle("Dark Horse CRM: Confirm Delete");
       htmlDialog.setHeader("This object has the following dependencies within Dark Horse CRM:");
-      htmlDialog.addButton("Delete All", "javascript:window.location.href='Leads.do?command=DeleteOpp&id=" + id + "'");
+      htmlDialog.addButton("Delete All", "javascript:window.location.href='Leads.do?command=DeleteOpp&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "viewSource") + "'");
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {
       errorMessage = e;
@@ -436,7 +468,7 @@ public final class Leads extends CFSModule {
       if (!hasPermission(context, "pipeline-opportunities-view")) {
         return ("PermissionError");
       }
-      return (executeCommandViewOpp(context));
+      return (executeCommandSearch(context));
     }
     addModuleBean(context, "Dashboard", "Dashboard");
     String errorMessage = null;
@@ -716,7 +748,7 @@ public final class Leads extends CFSModule {
         return ("OppDeleteOK");
       } else {
         processErrors(context, newOpp.getErrors());
-        return (executeCommandViewOpp(context));
+        return (executeCommandSearch(context));
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -769,7 +801,7 @@ public final class Leads extends CFSModule {
         return ("ComponentDeleteOK");
       } else {
         processErrors(context, component.getErrors());
-        return (executeCommandViewOpp(context));
+        return (executeCommandSearch(context));
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -911,87 +943,6 @@ public final class Leads extends CFSModule {
 
 
   /**
-   *  Action to prepare a list of opportunities
-   *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   */
-  public String executeCommandViewOpp(ActionContext context) {
-    if (!hasPermission(context, "pipeline-opportunities-view")) {
-      return ("PermissionError");
-    }
-    //Request parameters
-    if ("true".equals(context.getRequest().getParameter("reset"))) {
-      context.getSession().removeAttribute("OpportunityListInfo");
-    }
-    //Prepare the paged list
-    PagedListInfo oppListInfo = this.getPagedListInfo(context, "OpportunityListInfo");
-    oppListInfo.setLink("Leads.do?command=ViewOpp");
-    //Prepare viewpoints
-    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
-    int vpUserId = viewpointInfo.getVpUserId(this.getUserId(context));
-    int userId = this.getUserId(context);
-    if (vpUserId != -1 && vpUserId != userId) {
-      userId = vpUserId;
-    }
-    Connection db = null;
-    OpportunityList oppList = new OpportunityList();
-    try {
-      db = this.getConnection(context);
-      //Opportunity types drop-down menu
-      LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
-      typeSelect.addItem(0, "All Types");
-      context.getRequest().setAttribute("TypeSelect", typeSelect);
-      //The list of opportunities, according to drop-down filter
-      oppList.setPagedListInfo(oppListInfo);
-      if ("all".equals(oppListInfo.getListView())) {
-        if (oppListInfo.getFilterKey("listFilter2") != -1) {
-          oppList.setOwner(oppListInfo.getFilterKey("listFilter2"));
-        } else {
-          oppList.setOwnerIdRange(this.getUserRange(context, userId));
-        }
-        oppList.setQueryOpenOnly(true);
-      } else if ("closed".equals(oppListInfo.getListView())) {
-        if (oppListInfo.getFilterKey("listFilter2") != -1) {
-          oppList.setOwner(oppListInfo.getFilterKey("listFilter2"));
-        } else {
-          oppList.setOwnerIdRange(this.getUserRange(context, userId));
-        }
-        oppList.setQueryClosedOnly(true);
-      } else if ("search".equals(oppListInfo.getListView())) {
-        return executeCommandSearch(context);
-      } else {
-        System.out.println("User id is " + userId);
-        oppList.setOwner(userId);
-        oppList.setQueryOpenOnly(true);
-      }
-      oppList.setTypeId(oppListInfo.getFilterKey("listFilter1"));
-      oppList.buildList(db);
-      context.getRequest().setAttribute("OpportunityList", oppList);
-
-      //Generate user list
-      User thisRec = this.getUser(context, userId);
-      UserList shortChildList = thisRec.getShortChildList();
-      UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
-      userList.setMyId(userId);
-      userList.setMyValue(thisRec.getContact().getNameLastFirst());
-      userList.setIncludeMe(true);
-      userList.setExcludeDisabledIfUnselected(true);
-      context.getRequest().setAttribute("UserList", userList);
-
-      addModuleBean(context, "View Opportunities", "Opportunities Add");
-      return ("OppListOK");
-    } catch (Exception errorMessage) {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
-  }
-
-
-
-  /**
    *  Search Opportunities
    *
    *@param  context  Description of the Parameter
@@ -1004,8 +955,6 @@ public final class Leads extends CFSModule {
 
     //Prepare the paged list
     PagedListInfo searchOppListInfo = this.getPagedListInfo(context, "SearchOppListInfo");
-    PagedListInfo oppListInfo = this.getPagedListInfo(context, "OpportunityListInfo");
-    oppListInfo.setLink("Leads.do?command=ViewOpp");
 
     //Prepare viewpoints
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
@@ -1024,18 +973,26 @@ public final class Leads extends CFSModule {
       context.getRequest().setAttribute("TypeSelect", typeSelect);
       //The list of opportunities, according to drop-down filter
       oppList.setPagedListInfo(searchOppListInfo);
-      oppListInfo.setSearchCriteria(oppList);
+      searchOppListInfo.setSearchCriteria(oppList);
       if ("all".equals(searchOppListInfo.getListView())) {
-        oppList.setOwnerIdRange(this.getUserRange(context, userId));
+        if (searchOppListInfo.getFilterKey("listFilter2") != -1) {
+          oppList.setOwner(searchOppListInfo.getFilterKey("listFilter2"));
+        } else {
+          oppList.setOwnerIdRange(this.getUserRange(context, userId));
+        }
         oppList.setQueryOpenOnly(true);
       } else if ("closed".equals(searchOppListInfo.getListView())) {
-        oppList.setOwnerIdRange(this.getUserRange(context, userId));
+        if (searchOppListInfo.getFilterKey("listFilter2") != -1) {
+          oppList.setOwner(searchOppListInfo.getFilterKey("listFilter2"));
+        } else {
+          oppList.setOwnerIdRange(this.getUserRange(context, userId));
+        }
         oppList.setQueryClosedOnly(true);
       } else {
         oppList.setOwner(userId);
         oppList.setQueryOpenOnly(true);
       }
-      oppList.setTypeId(oppListInfo.getFilterKey("listFilter1"));
+      oppList.setTypeId(searchOppListInfo.getFilterKey("listFilter1"));
       oppList.buildList(db);
       context.getRequest().setAttribute("OpportunityList", oppList);
 
@@ -1048,10 +1005,6 @@ public final class Leads extends CFSModule {
       userList.setIncludeMe(true);
       userList.setExcludeDisabledIfUnselected(true);
       context.getRequest().setAttribute("UserList", userList);
-
-      //set the view to search
-      oppListInfo.setListView("search");
-
       addModuleBean(context, "View Opportunities", "Opportunities Add");
       return ("OppListOK");
     } catch (Exception errorMessage) {
@@ -1105,7 +1058,7 @@ public final class Leads extends CFSModule {
         return executeCommandModifyOpp(context);
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-          return (executeCommandViewOpp(context));
+          return (executeCommandSearch(context));
         } else {
           return (executeCommandDetailsOpp(context));
         }

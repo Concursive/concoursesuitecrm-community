@@ -75,13 +75,17 @@ function checkForm(form) {
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> > 
-<a href="Leads.do?command=ViewOpp">View Components</a> >
+<a href="Leads.do">Pipeline</a> >
+<% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
+	<a href="Leads.do?command=Dashboard">Dashboard</a> >
+<% }else{ %>
+	<a href="Leads.do?command=Search">Search Results</a> >
+<% } %>
 <% if ("list".equals(request.getParameter("return"))) {%>
-  <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>">Opportunity Details</a> > 
+  <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> > 
 <%} else if (request.getParameter("return") != null) {%>
-  <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>">Opportunity Details</a> > 
-  <a href="LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>">Component Details</a> >
+  <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> > 
+  <a href="LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %><%= addLinkParams(request, "viewSource") %>">Component Details</a> >
 <%}%>
 Modify Component
 </td>
@@ -96,8 +100,10 @@ Modify Component
 <%-- Begin container --%>
 <dhv:evaluate if="<%= !popUp %>">
 <%@ include file="leads_details_header_include.jsp" %>
-<% String param1 = "id=" + opportunityHeader.getId(); %>
-<dhv:container name="opportunities" selected="details" param="<%= param1 %>" style="tabs"/>
+<% String param1 = "id=" + opportunityHeader.getId(); 
+   String param2 = addLinkParams(request, "viewSource");
+%>      
+<dhv:container name="opportunities" selected="details" param="<%= param1 %>" appendToUrl="<%= param2 %>"  style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
@@ -108,7 +114,7 @@ Modify Component
   if (request.getParameter("return") != null) {
 	  if (request.getParameter("return").equals("list")) {
 %>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
 <%
     } else if (request.getParameter("return").equals("details")) {
 %>
@@ -121,13 +127,7 @@ Modify Component
 <%
   }
 %>
-<input type="hidden" name="id" value="<%= ComponentDetails.getId() %>">
-<input type="hidden" name="headerId" value="<%= ComponentDetails.getHeaderId() %>">
-<input type="hidden" name="modified" value="<%= ComponentDetails.getModified() %>">
-<dhv:evaluate if="<%= request.getParameter("return") != null %>">
-  <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
-</dhv:evaluate>
-  <input type="reset" value="Reset">
+<input type="reset" value="Reset">
 <dhv:evaluate exp="<%= popUp %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
@@ -140,7 +140,7 @@ Modify Component
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
 	<%} else if(request.getParameter("return").equals("details")) {%>
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>';this.form.dosubmit.value='false';">
  <%}
@@ -151,7 +151,6 @@ Modify Component
 <dhv:evaluate exp="<%= popUp %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
-<input type="hidden" name="dosubmit" value="true">
 <%-- End container contents --%>
 <dhv:evaluate if="<%= !popUp %>">
     </td>
@@ -159,5 +158,10 @@ Modify Component
 </table>
 </dhv:evaluate>
 <%-- End container --%>
+<%= addHiddenParams(request, "viewSource|return") %>
+<input type="hidden" name="id" value="<%= ComponentDetails.getId() %>">
+<input type="hidden" name="headerId" value="<%= ComponentDetails.getHeaderId() %>">
+<input type="hidden" name="modified" value="<%= ComponentDetails.getModified() %>">
+<input type="hidden" name="dosubmit" value="true">
 </form>
 

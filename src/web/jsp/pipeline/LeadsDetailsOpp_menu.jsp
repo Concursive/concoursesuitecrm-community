@@ -14,15 +14,15 @@
   
   //Menu link functions
   function details() {
-    window.location.href = 'LeadsComponents.do?command=DetailsComponent&id=' + thisCompId;
+    window.location.href = 'LeadsComponents.do?command=DetailsComponent&id=' + thisCompId + '<%= addLinkParams(request, "viewSource") %>';
   }
   
   function modify() {
-    window.location.href = 'LeadsComponents.do?command=ModifyComponent&id=' + thisCompId + '&return=details';
+    window.location.href = 'LeadsComponents.do?command=ModifyComponent&id=' + thisCompId + '&return=details' + '<%= addLinkParams(request, "viewSource") %>';
   }
   
   function deleteOpp() {
-    popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=' + thisCompId + '&popup=true','Leads.do?command=ViewOpps', 'Delete_opp','320','200','yes','no');
+    popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=' + thisCompId + '&popup=true' + '<%= addLinkParams(request, "viewSource") %>','Leads.do?command=Search', 'Delete_opp','320','200','yes','no');
   }
   
 </script>

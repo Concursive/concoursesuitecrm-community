@@ -19,14 +19,12 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> > 
-<% if (request.getParameter("return") == null) { %>
-	<a href="Leads.do?command=ViewOpp">View Components</a> >
-<%} else {%>
-	<% if (request.getParameter("return").equals("dashboard")) { %>
-		<a href="Leads.do?command=Dashboard">Dashboard</a> >
-	<%}%>
-<%}%>
+<a href="Leads.do">Pipeline</a> >
+<% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
+	<a href="Leads.do?command=Dashboard">Dashboard</a> >
+<% }else{ %>
+	<a href="Leads.do?command=Search">Search Results</a> >
+<% } %>
 Opportunity Details
 </td>
 </tr>
@@ -41,14 +39,16 @@ Opportunity Details
 </dhv:evaluate>
 <%-- Begin container --%>
 <%@ include file="leads_details_header_include.jsp" %>
-<% String param1 = "id=" + opportunityHeader.getId(); %>      
-<dhv:container name="opportunities" selected="details" param="<%= param1 %>" style="tabs"/>
+<% String param1 = "id=" + opportunityHeader.getId(); 
+   String param2 = addLinkParams(request, "viewSource");
+%>
+<dhv:container name="opportunities" selected="details" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <%-- Begin container content --%>
       <dhv:permission name="pipeline-opportunities-add">
-        <a href="LeadsComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>">Add a Component</a><br>
+        <a href="LeadsComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Add a Component</a><br>
       </dhv:permission>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsComponentListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
@@ -57,23 +57,23 @@ Opportunity Details
       <strong>Action</strong>
     </th>
     <th nowrap>
-      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.description">Component</a></strong>
+      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.description<%= addLinkParams(request, "viewSource") %>">Component</a></strong>
       <%= LeadsComponentListInfo.getSortIcon("oc.description") %>
     </th>
     <th nowrap>
-      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.closed">Status</a></strong>
+      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.closed<%= addLinkParams(request, "viewSource") %>">Status</a></strong>
       <%= LeadsComponentListInfo.getSortIcon("oc.closed") %>
     </th>
     <th align="center" nowrap>
-      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.guessvalue">Guess<br>Amount</a></strong>
+      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.guessvalue<%= addLinkParams(request, "viewSource") %>">Guess<br>Amount</a></strong>
       <%= LeadsComponentListInfo.getSortIcon("oc.guessvalue") %>
     </th>
     <th nowrap>
-      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.closedate">Close Date</a></strong>
+      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.closedate<%= addLinkParams(request, "viewSource") %>">Close Date</a></strong>
       <%= LeadsComponentListInfo.getSortIcon("oc.closedate") %>
     </th>
     <th nowrap>
-      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=stage">Current Stage</a></strong>
+      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=stage<%= addLinkParams(request, "viewSource") %>">Current Stage</a></strong>
       <%= LeadsComponentListInfo.getSortIcon("stage") %>
     </th>
     <th>
@@ -97,7 +97,7 @@ Opportunity Details
        onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
     <td width="100%" valign="top">
-      <a href="LeadsComponents.do?command=DetailsComponent&id=<%= thisComponent.getId() %>">
+      <a href="LeadsComponents.do?command=DetailsComponent&id=<%= thisComponent.getId() %><%= addLinkParams(request, "viewSource") %>">
       <%= toHtml(thisComponent.getDescription()) %></a>
     </td>
     <td valign="top" align="center" nowrap>
@@ -128,8 +128,8 @@ Opportunity Details
 <br>
 <dhv:pagedListControl object="LeadsComponentListInfo"/>
 &nbsp;<br>
-<dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Rename Opportunity" onClick="javascript:window.location.href='Leads.do?command=ModifyOpp&headerId=<%= opportunityHeader.getId() %>';"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete Opportunity" onClick="javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%= opportunityHeader.getId() %>&popup=true','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Rename Opportunity" onClick="javascript:window.location.href='Leads.do?command=ModifyOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>';"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete Opportunity" onClick="javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%= opportunityHeader.getId() %>&popup=true<%= addLinkParams(request, "viewSource") %>','Leads.do?command=Search', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 </td>
 </tr>
 </table>

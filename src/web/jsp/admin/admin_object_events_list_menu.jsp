@@ -1,12 +1,12 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
   var thisProcessId = -1;
-  var moduleId = -1;
+  var thisModuleId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
   function displayMenu(id, moduleId, processId) {
     thisProcessId = processId;
-    moduleId = moduleId;
+    thisModuleId = moduleId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuProcess", "down", 0, 0, 170, getHeight("menuProcessTable"));
@@ -15,7 +15,7 @@
   }
   //Menu link functions
   function details() {
-    window.location.href = 'AdminObjectEvents.do?command=Workflow&moduleId=' + moduleId + '&process=' + processId + '&return=AdminObjectEvents';
+    window.location.href = 'AdminObjectEvents.do?command=Workflow&moduleId=' + thisModuleId + '&process=' + thisProcessId + '&return=AdminObjectEvents';
   }
   
 </script>

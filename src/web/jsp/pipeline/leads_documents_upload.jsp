@@ -39,10 +39,14 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> > 
-<a href="Leads.do?command=ViewOpp">View Components</a> >
-<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
-<a href="LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %>">Documents</a> > 
+<a href="Leads.do">Pipeline</a> >
+<% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
+	<a href="Leads.do?command=Dashboard">Dashboard</a> >
+<% }else{ %>
+	<a href="Leads.do?command=Search">Search Results</a> >
+<% } %>
+<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> >
+<a href="LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Documents</a> > 
 Upload Document
 </td>
 </tr>
@@ -53,8 +57,10 @@ Upload Document
   &nbsp;<br>
 </dhv:evaluate>
 <%@ include file="leads_details_header_include.jsp" %>
-<% String param1 = "id=" + opportunityHeader.getId(); %>      
-<dhv:container name="opportunities" selected="documents" param="<%= param1 %>" style="tabs"/>
+<% String param1 = "id=" + opportunityHeader.getId(); 
+   String param2 = addLinkParams(request, "viewSource");
+%>      
+<dhv:container name="opportunities" selected="documents" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
 <form method="post" name="inputForm" action="LeadsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
@@ -71,7 +77,6 @@ Upload Document
       Subject
     </td>
     <td>
-      <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
       <input type="text" name="subject" size="59" maxlength="255"><font color="red">*</font>
     </td>
   </tr>
@@ -93,6 +98,8 @@ Upload Document
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= opportunityHeader.getId() %>">
   <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
+  <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
+  <%= addHiddenParams(request, "viewSource") %>
 </td>
 </tr>
 </table>

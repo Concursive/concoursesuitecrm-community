@@ -16,13 +16,13 @@
 <table class="trails">
 <tr>
 <td>
-  <a href="Leads.do">Pipeline</a> > 
+  <a href="Leads.do">Pipeline</a> >
   <% if (request.getParameter("return") == null) { %>
-	  <a href="Leads.do?command=ViewOpp">View Components</a> >
+	  <a href="Leads.do?command=Search">Search Results</a> >
     <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
     <%} else {%>
     <% if (request.getParameter("return").equals("list")) { %>
-		<a href="Leads.do?command=ViewOpp">View Components</a> >
+		<a href="Leads.do?command=Search">Search Results</a> >
     <%} else if (request.getParameter("return").equals("dashboard")) { %>
 		<a href="Leads.do?command=Dashboard">Dashboard</a> >
     <%}%>
@@ -53,7 +53,7 @@
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
   <% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
     	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
@@ -87,7 +87,7 @@
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
     	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">

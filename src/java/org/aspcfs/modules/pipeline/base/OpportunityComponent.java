@@ -1730,15 +1730,13 @@ public class OpportunityComponent extends GenericBean {
       errors.put("componentDescriptionError", "Description cannot be left blank");
     }
 
-    if (!this.getCloseIt()) {
-      if (closeProb == 0 && !(errors.containsKey("closeProbError"))) {
-        errors.put("closeProbError", "Close Probability cannot be left blank");
-      } else {
-        if (closeProb > 100) {
-          errors.put("closeProbError", "Close Probability cannot be greater than 100%");
-        } else if (closeProb < 0) {
-          errors.put("closeProbError", "Close Probability cannot be less than 0%");
-        }
+    if (closeProb == 0 && !(errors.containsKey("closeProbError"))) {
+      errors.put("closeProbError", "Close Probability cannot be left blank");
+    } else {
+      if (closeProb > 1.0) {
+        errors.put("closeProbError", "Close Probability cannot be greater than 100%");
+      } else if (closeProb < 0) {
+        errors.put("closeProbError", "Close Probability cannot be less than 0%");
       }
     }
     

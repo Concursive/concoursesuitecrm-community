@@ -35,7 +35,9 @@ Modify User
 <% if (request.getParameter("return") != null) {%>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
+<dhv:permission name="admin-users-edit">
 <input type="submit" value="Update">
+</dhv:permission>
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Users.do?command=ListUsers'">
@@ -43,7 +45,9 @@ Modify User
 <%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
 <%}%>
+<dhv:permission name="admin-users-delete">
 <input type="submit" value="Disable" onClick="javascript:this.form.action='Users.do?command=DisableUserConfirm&id=<%=UserRecord.getId()%>'">
+</dhv:permission>
 <br>
 <input type="hidden" name="id" value="<%= UserRecord.getId() %>">
 <input type="hidden" name="contactId" value="<%= UserRecord.getContactId() %>">
@@ -110,7 +114,9 @@ Modify User
   </tr>
 </table>
 <br>
+<dhv:permission name="admin-users-edit">
 <input type="submit" value="Update">
+</dhv:permission>
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Users.do?command=ListUsers'">
@@ -118,7 +124,9 @@ Modify User
 <%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
 <%}%>
+<dhv:permission name="admin-users-delete">
 <input type="submit" value="Disable" onClick="javascript:this.form.action='Users.do?command=DisableUserConfirm&id=<%=UserRecord.getId()%>'">
+</dhv:permission>
   </td>
   </tr>
 </table>
