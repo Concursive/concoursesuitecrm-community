@@ -104,6 +104,10 @@ public class AutoPopulate {
     boolean modified = false;
     // Populate date/time fields using the user's timezone and locale
     if (user.getTimeZone() != null && timeParams != null) {
+      String timeZone = user.getTimeZone();
+      if (request.getParameter(param + "TimeZone") != null) {
+        timeZone = (String) request.getParameter(param + "TimeZone");
+      }
       if (timeParams.contains(param)) {
         // See if time is in request too
         String hourValue = (String) request.getParameter(name + "Hour");
@@ -112,7 +116,7 @@ public class AutoPopulate {
           if (System.getProperty("DEBUG") != null) {
             System.out.println("AutoPopulate-> timeParams trying to set: " + param);
           }
-          Timestamp tmp = DateUtils.getUserToServerDateTime(TimeZone.getTimeZone(user.getTimeZone()), DateFormat.SHORT, DateFormat.LONG, value, user.getLocale());
+          Timestamp tmp = DateUtils.getUserToServerDateTime(TimeZone.getTimeZone(timeZone), DateFormat.SHORT, DateFormat.LONG, value, user.getLocale());
           if (tmp != null) {
             modified = ObjectUtils.setParam(bean, param, tmp);
           }
@@ -138,7 +142,7 @@ public class AutoPopulate {
             }
             cal.set(Calendar.HOUR_OF_DAY, hour);
             cal.set(Calendar.MINUTE, minute);
-            cal.setTimeZone(TimeZone.getTimeZone(user.getTimeZone()));
+            cal.setTimeZone(TimeZone.getTimeZone(timeZone));
             if (System.getProperty("DEBUG") != null) {
               System.out.println("AutoPopulate-> timeParams trying to set date/time: " + param);
             }
