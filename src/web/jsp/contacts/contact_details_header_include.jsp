@@ -1,7 +1,7 @@
 <%-- Contact header --%>
 <table border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="100%" nowrap>
+    <td nowrap>
       <img src="images/icons/stock_bcard-16.gif" border="0" align="absmiddle">
       <strong><%= toHtml(ContactDetails.getNameFull()) %></strong>
       <%-- Contact's company name --%>
@@ -34,7 +34,7 @@
       </dhv:evaluate>
     </td>
     <%-- The type of contact showing --%>
-    <td align="right" valign="top" nowrap>
+    <td align="right" valign="top" width="100%">
       <dhv:evaluate if="<%= ContactDetails.getOrgId() > 0 %>">
         <i>Account Contact</i>
       </dhv:evaluate>
