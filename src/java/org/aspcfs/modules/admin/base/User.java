@@ -1891,8 +1891,8 @@ public class User extends GenericBean {
       sql.append("AND a.user_id = ? ");
     } else {
       sql.append(
-          "AND lower(username) = ? " +
-          "AND password = ? " +
+          "AND lower(a.username) = ? " +
+          "AND a.password = ? " +
           "AND a.enabled = ? ");
     }
     pst = db.prepareStatement(sql.toString());
@@ -2233,11 +2233,9 @@ public class User extends GenericBean {
    */
   private boolean isDuplicate(Connection db) throws SQLException {
     boolean duplicate = false;
-
     if (previousUsername != null && previousUsername.equals(username)) {
       return false;
     }
-
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM access " +
