@@ -260,7 +260,7 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Ticket object
+   *  Sets the entered attribute of the Contact object
    *
    *@param  tmp  The new entered value
    */
@@ -270,7 +270,7 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Ticket object
+   *  Sets the modified attribute of the Contact object
    *
    *@param  tmp  The new modified value
    */

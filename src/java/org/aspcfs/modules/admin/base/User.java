@@ -11,6 +11,7 @@ import java.util.*;
 import java.text.DateFormat;
 
 import java.text.*;
+import com.darkhorseventures.utils.DateUtils;
 
 /**
  *  Represents a user access record <p>
@@ -208,13 +209,7 @@ public void setYTD(double YTD) {
    *@param  tmp  The new expires value
    */
   public void setExpires(String tmp) {
-    try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
-      expires = new java.sql.Date(new java.util.Date().getTime());
-      expires.setTime(tmpDate.getTime());
-    } catch (Exception e) {
-      expires = null;
-    }
+    this.expires = DateUtils.parseDateString(tmp);
   }
 
 
@@ -502,7 +497,7 @@ public void setRevenueLock(boolean revenueLock) {
    *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
-    this.entered = java.sql.Timestamp.valueOf(tmp);
+    this.entered = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -512,7 +507,7 @@ public void setRevenueLock(boolean revenueLock) {
    *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
-    this.modified = java.sql.Timestamp.valueOf(tmp);
+    this.modified = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -699,7 +694,7 @@ public void setRevenueLock(boolean revenueLock) {
    *@param  tmp  The new lastLogin value
    */
   public void setLastLogin(String tmp) {
-    this.lastLogin = java.sql.Timestamp.valueOf(tmp);
+    this.lastLogin = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -1405,8 +1400,22 @@ public void setRevenueLock(boolean revenueLock) {
       sql.append(
           "INSERT INTO access " +
           "(username, password, contact_id, alias, " +
-          "manager_id, role_id, enteredby, modifiedby, expires ) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+          "manager_id, role_id, expires, ");
+                if (entered != null) {
+                        sql.append("entered, ");
+                }
+                if (modified != null) {
+                        sql.append("modified, ");
+                }
+          sql.append("enteredBy, modifiedBy ) ");
+          sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
+                if (entered != null) {
+                        sql.append("?, ");
+                }
+                if (modified != null) {
+                        sql.append("?, ");
+                }          
+          sql.append("?, ?) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -1425,14 +1434,22 @@ public void setRevenueLock(boolean revenueLock) {
         pst.setInt(++i, getManagerId());
       }
       pst.setInt(++i, getRoleId());
-      pst.setInt(++i, getEnteredBy());
-      pst.setInt(++i, getModifiedBy());
+
 
       if (expires == null) {
         pst.setNull(++i, java.sql.Types.DATE);
       } else {
         pst.setDate(++i, this.getExpires());
       }
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
+        if (modified != null) {
+                pst.setTimestamp(++i, modified);
+        }
+      
+      pst.setInt(++i, getEnteredBy());
+      pst.setInt(++i, getModifiedBy());
       pst.execute();
       pst.close();
 

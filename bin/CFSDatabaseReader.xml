@@ -89,7 +89,7 @@
       <property lookup="user">managerId</property>
       <property>timeZone</property>
       <property lookup="user">enteredBy</property>
-      <property alias="expires">expiresString</property>
+      <property>expires</property>
       <property>aliasName</property>
       <property lookup="user">assistant</property>
       <property lookup="user">alias</property>
@@ -98,8 +98,8 @@
       <property alias="guid">id</property>
       <property>role</property>
       <property>description</property>
-      <property>enteredBy</property>
-      <property>modifiedBy</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
       <property>enabled</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Opportunity" id="opportunity">
