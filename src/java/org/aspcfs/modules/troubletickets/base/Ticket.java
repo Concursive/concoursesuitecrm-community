@@ -1426,7 +1426,11 @@ public void setCompanyEnabled(boolean companyEnabled) {
 
       id = DatabaseUtils.getCurrVal(db, "ticket_ticketid_seq");
 
-      this.update(db);
+      if (this.getEntered() == null) {
+              this.update(db);
+      } else {
+              this.update(db, true);
+      }
 
       if (this.getAssignedTo() > 0 && !this.getCloseIt() && this.getSendNotification()) {
         Notification thisNotification = new Notification();
