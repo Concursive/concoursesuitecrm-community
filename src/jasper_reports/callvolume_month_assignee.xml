@@ -52,7 +52,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.assigned_
 	<variable name="volume" class="java.lang.Integer" resetType="Group" resetGroup="assignee" calculation="Count">
 		<variableExpression><![CDATA[$F{assigned_to} == null ? new Integer(1) :$F{assigned_to}]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
 		<group  name="month_yr" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
-			<groupExpression><![CDATA[$F{entered}]]></groupExpression>
+			<groupExpression><![CDATA[(new SimpleDateFormat("MMMM yyyy")).format($F{entered})]]></groupExpression>
 			<groupHeader>
 			<band height="32"  isSplitAllowed="true" >
 				<rectangle radius="0" >

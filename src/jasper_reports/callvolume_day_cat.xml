@@ -52,7 +52,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, $P!{day_part}, tc.description]]></quer
 	<variable name="volume" class="java.lang.Long" resetType="Group" resetGroup="category" calculation="Count">
 		<variableExpression><![CDATA[($F{description} != null ? $F{description} : "")  ]]></variableExpression>		<initialValueExpression><![CDATA[new Long(0)]]></initialValueExpression>	</variable>
 		<group  name="date_wise" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
-			<groupExpression><![CDATA[$F{entered}]]></groupExpression>
+			<groupExpression><![CDATA[(new SimpleDateFormat("MMMM dd, yyyy")).format($F{entered})]]></groupExpression>
 			<groupHeader>
 			<band height="32"  isSplitAllowed="true" >
 				<rectangle radius="0" >
