@@ -1542,7 +1542,7 @@ public void setEnabled(boolean enabled) {
       pst.setInt(++i, this.getStage());
       pst.setString(++i, this.getDescription());
         if (stageDate != null) {
-                pst.setTimestamp(++i, stageDate);
+                pst.setDate(++i, stageDate);
         }      
         if (entered != null) {
                 pst.setTimestamp(++i, entered);
