@@ -47,7 +47,7 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </td>
         <td width="100%">
-          <a href="javascript:modify()">Modify</a>
+          <a href="javascript:modify()">Rename</a>
         </td>
       </tr>
       </dhv:permission>
