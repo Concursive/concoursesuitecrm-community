@@ -97,6 +97,28 @@ public class DatabaseUtils {
       return -1;
     }
   }
+  
+  public static int getCurrVal(Connection db, String sequenceName) throws SQLException {
+    int id = -1;
+    Statement st = db.createStatement();
+    ResultSet rs = null;
+    switch (DatabaseUtils.getType(db)) {
+      case DatabaseUtils.POSTGRESQL:
+        rs = st.executeQuery("SELECT currval('" + sequenceName + "')");
+        break;
+      case DatabaseUtils.MSSQL:
+        rs = st.executeQuery("SELECT @@IDENTITY");
+        break;
+      default:
+        break;
+    }
+    if (rs.next()) {
+      id = rs.getInt(1);
+    }
+    rs.close();
+    st.close();
+    return id;
+  }
 
 }
 

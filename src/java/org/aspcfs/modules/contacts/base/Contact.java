@@ -1398,27 +1398,7 @@ public class Contact extends GenericBean {
       pst.execute();
       pst.close();
       
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Contact-> Getting contact id");
-      }
-
-      Statement st = db.createStatement();
-      ResultSet rs = null;
-      switch (DatabaseUtils.getType(db)) {
-        case DatabaseUtils.POSTGRESQL:
-          rs = st.executeQuery("select currval('contact_contact_id_seq')");
-          break;
-        case DatabaseUtils.MSSQL:
-          rs = st.executeQuery("SELECT @@IDENTITY");
-          break;
-        default:
-          break;
-      }
-      if (rs.next()) {
-        this.setId(rs.getInt(1));
-      }
-      rs.close();
-      st.close();
+      id = DatabaseUtils.getCurrVal(db, "contact_contact_id_seq");
       
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Contact-> ContactID: " + this.getId());
@@ -1445,15 +1425,7 @@ public class Contact extends GenericBean {
         thisEmailAddress.insert(db, this.getId(), this.getEnteredBy());
       }
 
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Contact-> Updating contact");
-      }
-      
       this.update(db, true);
-      
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Contact-> Ready to commit");
-      }
       
       db.commit();
     } catch (SQLException e) {

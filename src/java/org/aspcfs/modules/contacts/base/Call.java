@@ -654,13 +654,13 @@ public class Call extends GenericBean {
     }
 
     StringBuffer sql = new StringBuffer();
-    sql.append("INSERT INTO call_log ");
-    sql.append("(org_id, contact_id, opp_id, call_type_id, length, subject, notes, enteredby, modifiedby, alertdate) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+    sql.append(
+      "INSERT INTO call_log " +
+      "(org_id, contact_id, opp_id, call_type_id, length, subject, notes, enteredby, modifiedby, alertdate) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
-
     pst.setInt(++i, this.getOrgId());
     pst.setInt(++i, this.getContactId());
     pst.setInt(++i, this.getOppId());
@@ -680,24 +680,7 @@ public class Call extends GenericBean {
     pst.execute();
     pst.close();
 
-    Statement st = db.createStatement();
-    ResultSet rs = null;
-      switch (DatabaseUtils.getType(db)) {
-        case DatabaseUtils.POSTGRESQL:
-          rs = st.executeQuery("select currval('call_log_call_id_seq')");
-          break;
-        case DatabaseUtils.MSSQL:
-          rs = st.executeQuery("SELECT @@IDENTITY");
-          break;
-        default:
-          break;
-      }
-    if (rs.next()) {
-      this.setId(rs.getInt(1));
-    }
-    rs.close();
-    st.close();
-
+    id = DatabaseUtils.getCurrVal(db, "call_log_call_id_seq");
     return true;
   }
 

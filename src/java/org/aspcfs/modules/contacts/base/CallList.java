@@ -256,10 +256,10 @@ public class CallList extends Vector {
       rs.close();
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("entered", "desc");
+      pagedListInfo.setDefaultSort("c.entered", "desc");
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY entered DESC ");
+      sqlOrder.append("ORDER BY c.entered DESC ");
     }
 
     //Need to build a base SQL statement for returning records
