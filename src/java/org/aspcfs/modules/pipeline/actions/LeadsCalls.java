@@ -195,7 +195,6 @@ public final class LeadsCalls extends CFSModule {
       db = this.getConnection(context);
       thisCall = new Call(db, callId);
       if (!hasViewpointAuthority(db, context, "pipeline", thisCall.getEnteredBy(), userId)) {
-        this.freeConnection(context, db);
         return "PermissionError";
       }
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
@@ -240,7 +239,6 @@ public final class LeadsCalls extends CFSModule {
       db = this.getConnection(context);
       thisCall = new Call(db, context.getRequest().getParameter("id"));
       if (!hasViewpointAuthority(db, context, "pipeline", thisCall.getEnteredBy(), userId)) {
-        this.freeConnection(context, db);
         return "PermissionError";
       }
       recordDeleted = thisCall.delete(db);
@@ -292,8 +290,7 @@ public final class LeadsCalls extends CFSModule {
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
 
-      if (!hasViewpointAuthority(db, context, "pipeline", oppHeader.getEnteredBy(), userId)) {
-        this.freeConnection(context, db);
+      if (!hasViewpointAuthority(db, context, "pipeline", thisCall.getEnteredBy(), userId)) {
         return "PermissionError";
       }
 
@@ -345,7 +342,6 @@ public final class LeadsCalls extends CFSModule {
       thisCall.setModifiedBy(getUserId(context));
       Call oldCall = new Call(db, context.getRequest().getParameter("id"));
       if (!hasViewpointAuthority(db, context, "pipeline", oldCall.getEnteredBy(), userId)) {
-        this.freeConnection(context, db);
         return "PermissionError";
       }
       resultCount = thisCall.update(db, context);
