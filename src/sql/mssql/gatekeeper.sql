@@ -8,17 +8,15 @@
 
 CREATE TABLE sites (
   site_id INT IDENTITY PRIMARY KEY,
-  sitecode TEXT NOT NULL,				
-  vhost TEXT NOT NULL DEFAULT '',	
-  dbhost TEXT NOT NULL DEFAULT '',	
-  dbname TEXT NOT NULL DEFAULT '',	
+  sitecode VARCHAR(255) NOT NULL,				
+  vhost VARCHAR(255) NOT NULL DEFAULT '',	
+  dbhost VARCHAR(255) NOT NULL DEFAULT '',	
+  dbname VARCHAR(255) NOT NULL DEFAULT '',	
   dbport INT NOT NULL DEFAULT 1433,	
-  dbuser TEXT NOT NULL DEFAULT '',
-  dbpw TEXT NOT NULL DEFAULT '',
-  driver TEXT NOT NULL DEFAULT '',
+  dbuser VARCHAR(255) NOT NULL DEFAULT '',
+  dbpw VARCHAR(255) NOT NULL DEFAULT '',
+  driver VARCHAR(255) NOT NULL DEFAULT '',
   code VARCHAR(255),
   enabled BIT NOT NULL DEFAULT 0
 );
-
-GRANT ALL ON sites TO gatekeeper;
 
