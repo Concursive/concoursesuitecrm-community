@@ -64,7 +64,6 @@ Modify Contact<br>
   <tr>
     <td class="containerBack">
 <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
-<input type="hidden" name="orgId" value="<%= ContactDetails.getOrgId() %>">
 <input type="hidden" name="modified" value="<%= ContactDetails.getModified() %>">
 
 <% if (request.getParameter("return") != null) {%>
