@@ -109,9 +109,7 @@ public class Notifier extends ReportBuilder {
         HashMap siteInfo = (HashMap) i.next();
         Class.forName((String) siteInfo.get("driver"));
         Connection db = DriverManager.getConnection(
-            (String) siteInfo.get("host") + ":" +
-            (String) siteInfo.get("port") + "/" +
-            (String) siteInfo.get("name"),
+            (String) siteInfo.get("host"),
             (String) siteInfo.get("user"),
             (String) siteInfo.get("password"));
         thisNotifier.baseName = (String) siteInfo.get("sitecode");
