@@ -37,8 +37,8 @@ CREATE TABLE events (
 );
 
 CREATE TABLE events_log (
-  log_id SERIAL INTEGER PRIMARY KEY,
-  event_id INTEGER DEFAULT NOT NULL,
+  log_id INT IDENTITY PRIMARY KEY,
+  event_id INTEGER NOT NULL REFERENCES events(event_id),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   status INT,
   message TEXT

@@ -39,7 +39,7 @@ GRANT ALL ON events TO gatekeeper;
 
 CREATE TABLE events_log (
   log_id SERIAL PRIMARY KEY,
-  event_id INTEGER NOT NULL,
+  event_id INTEGER NOT NULL REFERENCES events(event_id),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   status INT,
   message TEXT
