@@ -35,6 +35,15 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
     if (!processOK) {
       return false;
     }
+    
+    logger.info("ImportCommunications-> Inserting Saved Criteria");
+    SearchCriteriaListList scl = new SearchCriteriaListList();
+    scl.buildList(db);
+    mappings.saveList(writer, scl, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
 
     /**
     logger.info("ImportTickets-> Inserting Ticket Log");

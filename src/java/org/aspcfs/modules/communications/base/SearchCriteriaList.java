@@ -7,6 +7,7 @@ import java.sql.*;
 import com.darkhorseventures.webutils.HtmlSelect;
 import com.darkhorseventures.utils.DatabaseUtils;
 import java.text.*;
+import com.darkhorseventures.utils.DateUtils;
 
 /**
  *  Contains a group of criteria groups, that each contain criteria elements. A
@@ -67,6 +68,14 @@ public class SearchCriteriaList extends HashMap {
    *@since
    */
   public SearchCriteriaList(Connection db, String id) throws SQLException {
+          queryRecord(db, Integer.parseInt(id));
+  }
+  
+  public SearchCriteriaList(Connection db, int id) throws SQLException {
+          queryRecord(db, id);
+  }
+          
+  public void queryRecord(Connection db, int id) throws SQLException {
     Statement st = null;
     ResultSet rs = null;
 
@@ -77,10 +86,10 @@ public class SearchCriteriaList extends HashMap {
         "SELECT scl.* " +
         "FROM saved_criterialist scl " +
         "WHERE scl.id > -1 ");
-    if (id != null && !id.equals("")) {
+    if (id > -1) {
       sql.append("AND scl.id = " + id + " ");
     } else {
-      throw new SQLException("ID not specified.");
+      throw new SQLException("Invalid ID specified.");
     }
     st = db.createStatement();
     rs = st.executeQuery(sql.toString());
@@ -146,20 +155,6 @@ public class SearchCriteriaList extends HashMap {
     this.modified = tmp;
   }
 
-
-  /**
-   *  Sets the Modified attribute of the SearchCriteriaList object
-   *
-   *@param  tmp  The new Modified value
-   *@since
-   */
-  public void setModified(String tmp) {
-    java.util.Date tmpDate = new java.util.Date();
-    modified = new java.sql.Timestamp(tmpDate.getTime());
-    modified = modified.valueOf(tmp);
-  }
-
-
   /**
    *  Sets the Entered attribute of the SearchCriteriaList object
    *
@@ -180,7 +175,7 @@ public class SearchCriteriaList extends HashMap {
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
   }
-
+  
 
   /**
    *  Sets the EnteredBy attribute of the SearchCriteriaList object
@@ -191,7 +186,6 @@ public class SearchCriteriaList extends HashMap {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
-
 
   /**
    *  Sets the SaveCriteria attribute of the SearchCriteriaList object
@@ -213,7 +207,6 @@ public class SearchCriteriaList extends HashMap {
   public void setOwner(int tmp) {
     this.owner = tmp;
   }
-
 
   /**
    *  Sets the OwnerIdRange attribute of the SearchCriteriaList object
@@ -245,6 +238,25 @@ public class SearchCriteriaList extends HashMap {
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
+  }
+  
+    /**
+   *  Sets the entered attribute of the Ticket object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DateUtils.parseTimestampString(tmp);
+  }
+
+
+  /**
+   *  Sets the modified attribute of the Ticket object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -283,6 +295,9 @@ public class SearchCriteriaList extends HashMap {
   public void setGroupName(String tmp) {
     this.groupName = tmp;
   }
+public java.sql.Timestamp getModified() {
+	return modified;
+}
 
 
   /**
@@ -390,18 +405,7 @@ public class SearchCriteriaList extends HashMap {
   }
 
 
-  /**
-   *  Gets the Modified attribute of the SearchCriteriaList object
-   *
-   *@return    The Modified value
-   *@since
-   */
-  public String getModified() {
-    return modified.toString();
-  }
-
-
-  /**
+ /**
    *  Gets the ModifiedString attribute of the SearchCriteriaList object
    *
    *@return    The ModifiedString value
@@ -619,7 +623,11 @@ public class SearchCriteriaList extends HashMap {
 
       pst.setInt(++i, this.getOwner());
       pst.setString(++i, this.getGroupName());
-      pst.setInt(++i, contactSource);
+        if (this.getContactSource() > -1) {
+                pst.setInt(++i, this.getContactSource());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
       pst.execute();
@@ -886,6 +894,9 @@ public class SearchCriteriaList extends HashMap {
     owner = rs.getInt("owner");
     groupName = rs.getString("name");
     contactSource = rs.getInt("contact_source");
+    if (rs.wasNull()) {
+            contactSource = -1;
+    }
   }
 
 }

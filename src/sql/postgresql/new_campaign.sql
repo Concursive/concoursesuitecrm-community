@@ -14,7 +14,7 @@ CREATE TABLE saved_criterialist (
   modifiedby INTEGER NOT NULL REFERENCES access(user_id),
   owner INTEGER NOT NULL REFERENCES access(user_id),
   name VARCHAR(80) NOT NULL,
-  contact_source INTEGER NOT NULL DEFAULT -1,
+  contact_source INTEGER DEFAULT -1,
   enabled BOOLEAN NOT NULL DEFAULT true
 );
 

@@ -26,6 +26,12 @@ public class SearchCriteriaListList extends ArrayList {
   private String ownerIdRange = null;
   private int campaignId = -1;
   private int enabled = Constants.TRUE;
+  
+  public final static String tableName = "saved_criterialist";
+  public final static String uniqueField = "id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   /**
    *  Constructor for the SearchCriteriaListList object
@@ -72,6 +78,14 @@ public class SearchCriteriaListList extends ArrayList {
     this.ownerIdRange = tmp;
   }
 
+public String getTableName() { return tableName; }
+public String getUniqueField() { return uniqueField; }
+public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
+public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
+public int getSyncType() { return syncType; }
+public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
+public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
+public void setSyncType(int tmp) { this.syncType = tmp; }
 
   /**
    *  Sets the campaignId attribute of the SearchCriteriaListList object

@@ -386,5 +386,13 @@
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
     </map>
+    <map class="com.darkhorseventures.cfsbase.SearchCriteriaList" id="searchCriteriaList">
+      <property alias="guid">id</property>
+      <property>groupName</property>
+      <property lookup="">contactSource</property>
+      <property lookup="user">owner</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+    </map>
   </mappings>
 </CFSDatabaseReader>
