@@ -184,14 +184,12 @@ public class Contact extends GenericBean {
     if (rs.next()) {
       buildRecord(rs);
       buildTypes(db);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Contact record not found.");
     }
     rs.close();
     pst.close();
-
+    if (id == -1) {
+      throw new SQLException("Contact record not found.");
+    }
     phoneNumberList.setContactId(this.getId());
     phoneNumberList.buildList(db);
     addressList.setContactId(this.getId());
@@ -2310,7 +2308,7 @@ public class Contact extends GenericBean {
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //contact table
-    id = rs.getInt("contact_id");
+    this.setId(rs.getInt("contact_id"));
     userId = DatabaseUtils.getInt(rs, "user_id");
     orgId = DatabaseUtils.getInt(rs, "org_id");
     company = rs.getString("company");
