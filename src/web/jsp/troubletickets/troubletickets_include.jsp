@@ -291,7 +291,7 @@
     </td>
     <td>
       <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
-      <input type="checkbox" name="closeNow">Close ticket<br>
+      <input type="checkbox" name="closeNow" <%= TicketDetails.getCloseIt() ? " checked" : ""%>>Close ticket<br>
       <input type="checkbox" name="kbase">Add this solution to Knowledge Base
     </td>
 	</tr>
