@@ -25,11 +25,21 @@ public final class AdminFields extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-view"))) {
+	    return ("PermissionError");
+    	}
+	
     return executeCommandListFolders(context);
   }
 
 
   public String executeCommandListFolders(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -49,6 +59,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandAddFolder(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -67,6 +82,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandInsertFolder(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean result = true;
@@ -93,6 +113,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandModifyFolder(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -113,6 +138,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandUpdateFolder(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean result = false;
@@ -138,6 +168,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandToggleFolder(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean result = true;
@@ -162,6 +197,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandDeleteFolder(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean result = true;
@@ -192,6 +232,11 @@ public final class AdminFields extends CFSModule {
   //Groups
   
   public String executeCommandListGroups(ActionContext context) {
+	  
+ 	if (!(hasPermission(context, "admin-sysconfig-folders-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -213,6 +258,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandAddGroup(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -231,6 +281,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandInsertGroup(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean result = false;
@@ -256,6 +311,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandModifyGroup(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -277,6 +337,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandUpdateGroup(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean result = false;
@@ -302,6 +367,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandDeleteGroup(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean result = true;
@@ -331,6 +401,11 @@ public final class AdminFields extends CFSModule {
   //Fields
   
   public String executeCommandAddField(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -349,6 +424,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandInsertField(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean result = false;
@@ -374,6 +454,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandDeleteField(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean result = true;
@@ -400,6 +485,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandModifyField(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -421,6 +511,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandUpdateField(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     boolean result = false;
@@ -590,6 +685,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandMoveField(ActionContext context) {
+	  
+ 	if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -686,6 +786,11 @@ public final class AdminFields extends CFSModule {
   }
   
   public String executeCommandMoveGroup(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 

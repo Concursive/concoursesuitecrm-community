@@ -34,6 +34,11 @@ public final class Admin extends CFSModule {
 	 *@since
 	 */
 	public String executeCommandDefault(ActionContext context) {
+		
+		if (!(hasPermission(context, "admin-view"))) {
+		    return ("PermissionError");
+		}
+	
 		return executeCommandHome(context);
 	}
 
@@ -46,6 +51,11 @@ public final class Admin extends CFSModule {
 	 *@since
 	 */
 	public String executeCommandHome(ActionContext context) {
+		
+		if (!(hasPermission(context, "admin-view"))) {
+		    return ("PermissionError");
+		}
+		
 		addModuleBean(context, "Admin", "Admin");
 		return ("HomeOK");
 	}
@@ -59,6 +69,11 @@ public final class Admin extends CFSModule {
 	 *@since
 	 */
 	public String executeCommandConfig(ActionContext context) {
+		
+		if (!(hasPermission(context, "admin-sysconfig-view"))) {
+		    return ("PermissionError");
+		}
+	
 		addModuleBean(context, "Configuration", "Configuration");
 		return ("ConfigurationOK");
 	}
@@ -72,6 +87,11 @@ public final class Admin extends CFSModule {
 	 *@since
 	 */
 	public String executeCommandEditLists(ActionContext context) {
+		
+		if (!(hasPermission(context, "admin-sysconfig-lists-view"))) {
+		    return ("PermissionError");
+		}
+		
 		Exception errorMessage = null;
 		Connection db = null;
 
@@ -99,6 +119,11 @@ public final class Admin extends CFSModule {
 	 *@since
 	 */
 	public String executeCommandUpdateList(ActionContext context) {
+		
+		if (!(hasPermission(context, "admin-sysconfig-lists-edit"))) {
+		    return ("PermissionError");
+		}
+		
 		Exception errorMessage = null;
 		Connection db = null;
 
@@ -174,6 +199,11 @@ public final class Admin extends CFSModule {
 	 *@since
 	 */
 	public String executeCommandModifyList(ActionContext context) {
+		
+		if (!(hasPermission(context, "admin-sysconfig-lists-edit"))) {
+		    return ("PermissionError");
+		}
+		
 		Exception errorMessage = null;
 		Connection db = null;
 

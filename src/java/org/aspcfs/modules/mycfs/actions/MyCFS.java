@@ -43,6 +43,7 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandInbox(ActionContext context) {
+	  
     Exception errorMessage = null;
 
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
@@ -90,6 +91,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandDeleteHeadline(ActionContext context) {
+	  
+	if (!(hasPermission(context, "myhomepage-miner-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     //Process all parameters
     Enumeration parameters = context.getRequest().getParameterNames();
     Exception errorMessage = null;
@@ -208,6 +214,11 @@ public final class MyCFS extends CFSModule {
    *@since           1.1
    */
   public String executeCommandHeadline(ActionContext context) {
+	  
+	if (!(hasPermission(context, "myhomepage-miner-view"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "Customize Headlines", "Customize Headlines");
     Exception errorMessage = null;
 
@@ -247,6 +258,11 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandInsertHeadline(ActionContext context) {
+	  
+	if (!(hasPermission(context, "myhomepage-miner-add"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "Customize Headlines", "");
     int headlines = 0;
     Exception errorMessage = null;
@@ -333,6 +349,11 @@ public final class MyCFS extends CFSModule {
    *@since           1.1
    */
   public String executeCommandHome(ActionContext context) {
+	  
+	if (!(hasPermission(context, "myhomepage-dashboard-view"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "Home", "");
     int headlines = 0;
     Exception errorMessage = null;
@@ -656,6 +677,7 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyCFSPassword(ActionContext context) {
+	
     Exception errorMessage = null;
     Connection db = null;
     try {

@@ -17,10 +17,18 @@ import com.darkhorseventures.webutils.*;
  *@version    $Id$
  */
 public final class Users extends CFSModule {
-	
-  public String executeCommandDefault(ActionContext context) {
-    return executeCommandListUsers(context);
-  }
+
+	/**
+	 *  Description of the Method
+	 *
+	 *@param  context  Description of Parameter
+	 *@return          Description of the Returned Value
+	 *@since
+	 */
+	public String executeCommandDefault(ActionContext context) {
+		return executeCommandListUsers(context);
+	}
+
 
 	/**
 	 *  Lists the users in the system that have a corresponding contact record
@@ -30,6 +38,11 @@ public final class Users extends CFSModule {
 	 *@since           1.6
 	 */
 	public String executeCommandListUsers(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-users-view"))) {
+			return ("PermissionError");
+		}
+
 		Exception errorMessage = null;
 
 		PagedListInfo listInfo = getPagedListInfo(context, "UserListInfo");
@@ -40,30 +53,23 @@ public final class Users extends CFSModule {
 
 		try {
 			db = getConnection(context);
-      
-      if ("disabled".equals(listInfo.getListView())) {
-        list.setEnabled(UserList.FALSE);
-      } 
-      else if ("aliases".equals(listInfo.getListView())) {
-	      list.setIncludeAliases(true);
-	      list.setEnabled(UserList.TRUE);
-      } 
-      else {
-        list.setEnabled(UserList.TRUE);
-      }
+
+			if ("disabled".equals(listInfo.getListView())) {
+				list.setEnabled(UserList.FALSE);
+			}
+			else if ("aliases".equals(listInfo.getListView())) {
+				list.setIncludeAliases(true);
+				list.setEnabled(UserList.TRUE);
+			}
+			else {
+				list.setEnabled(UserList.TRUE);
+			}
 			list.setPagedListInfo(listInfo);
 			list.setBuildContact(false);
 			list.setBuildHierarchy(false);
-      			list.setBuildPermissions(false);
+			list.setBuildPermissions(false);
 			list.buildList(db);
-      /**
-      Iterator i = list.iterator();
-      while (i.hasNext()) {
-        User thisUser = (User)i.next();
-        Contact thisContact = this.getUser(context, thisUser.getId()).getContact();
-        thisUser.setContact(thisContact);
-      }
-      */
+
 		}
 		catch (Exception e) {
 			errorMessage = e;
@@ -89,20 +95,26 @@ public final class Users extends CFSModule {
 	 *
 	 *@param  context  Description of Parameter
 	 *@return          Description of the Returned Value
+	 *@since
 	 */
 	public String executeCommandReassign(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-reassign-view"))) {
+			return ("PermissionError");
+		}
+
 		Exception errorMessage = null;
 
 		Connection db = null;
 		Statement st = null;
 		ResultSet rs = null;
-		
-		UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
-		
+
+		UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+
 		//this is how we get the multiple-level heirarchy...recursive function.
-		
+
 		User thisRec = thisUser.getUserRecord();
-		
+
 		UserList shortChildList = thisRec.getShortChildList();
 		UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
 		userList.setMyId(getUserId(context));
@@ -110,26 +122,6 @@ public final class Users extends CFSModule {
 		userList.setIncludeMe(true);
 		context.getRequest().setAttribute("UserList", userList);
 
-		/**
-		try {
-			db = this.getConnection(context);
-
-			UserList userList = new UserList();
-			userList.setBuildContact(true);
-			userList.setIncludeMe(true);
-			userList.setMyId(getUserId(context));
-			userList.setMyValue(getNameLast(context) + ", " + getNameFirst(context));
-			userList.setManagerId(getUserId(context));
-			userList.buildList(db);
-			context.getRequest().setAttribute("UserList", userList);
-		}
-		catch (Exception e) {
-			errorMessage = e;
-		}
-		finally {
-			this.freeConnection(context, db);
-		}
-		*/
 
 		addModuleBean(context, "Reassign", "Bulk Reassign");
 		if (errorMessage == null) {
@@ -140,80 +132,100 @@ public final class Users extends CFSModule {
 			return ("SystemError");
 		}
 	}
-	
+
+
+	/**
+	 *  Description of the Method
+	 *
+	 *@param  context  Description of Parameter
+	 *@return          Description of the Returned Value
+	 *@since
+	 */
 	public String executeCommandDoReassign(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-reassign-edit"))) {
+			return ("PermissionError");
+		}
+
 		Exception errorMessage = null;
 
 		Connection db = null;
 		int resultCount = 0;
 		String sql = null;
-		
+
 		int fromPerson = Integer.parseInt(context.getRequest().getParameter("ownerFrom"));
 		int toPerson = Integer.parseInt(context.getRequest().getParameter("ownerTo"));
 		String whichTable = context.getRequest().getParameter("whichTable");
-    
-    if ("ticket".equals(whichTable)) {
-      sql =
-        "UPDATE ticket " +
-        "SET assigned_to = ? " +
-        "WHERE assigned_to = ? AND closed IS NULL ";
-      
-    } else if ("activity".equals(whichTable)) {
-      sql =
-        "UPDATE project_assignments " +
-        "SET user_assign_id = ?, assign_date = CURRENT_TIMESTAMP " +
-        "WHERE user_assign_id = ? AND status_id NOT IN (SELECT code FROM lookup_project_status WHERE type in (3,4)) ";
-      
-    } else if ("opportunity-open".equals(whichTable)) {
-      sql =
-        "UPDATE opportunity " +
-        "SET owner = ? " +
-        "WHERE owner = ? AND closed IS NULL ";
-        
-    } else if ("contact".equals(whichTable)) {
-	    sql =
-	    	"UPDATE contact " +
-		"SET owner = ? " +
-		"WHERE owner = ? AND type_id != 2 ";
-    
-    } else if (whichTable != null && !whichTable.equals("")) {
-      sql =
-        "UPDATE " + whichTable + " " +
-        "SET owner = ? " +
-        "WHERE owner = ? ";
-    }
+
+		if ("ticket".equals(whichTable)) {
+			sql =
+					"UPDATE ticket " +
+					"SET assigned_to = ? " +
+					"WHERE assigned_to = ? AND closed IS NULL ";
+
+		}
+		else if ("activity".equals(whichTable)) {
+			sql =
+					"UPDATE project_assignments " +
+					"SET user_assign_id = ?, assign_date = CURRENT_TIMESTAMP " +
+					"WHERE user_assign_id = ? AND status_id NOT IN (SELECT code FROM lookup_project_status WHERE type in (3,4)) ";
+
+		}
+		else if ("opportunity-open".equals(whichTable)) {
+			sql =
+					"UPDATE opportunity " +
+					"SET owner = ? " +
+					"WHERE owner = ? AND closed IS NULL ";
+
+		}
+		else if ("contact".equals(whichTable)) {
+			sql =
+					"UPDATE contact " +
+					"SET owner = ? " +
+					"WHERE owner = ? AND type_id != 2 ";
+
+		}
+		else if (whichTable != null && !whichTable.equals("")) {
+			sql =
+					"UPDATE " + whichTable + " " +
+					"SET owner = ? " +
+					"WHERE owner = ? ";
+		}
 
 		try {
-      if (sql != null) {
-        db = this.getConnection(context);
-        int i = 0;
-        PreparedStatement pst = db.prepareStatement(sql.toString());
-        pst.setInt(++i, toPerson);
-        pst.setInt(++i, fromPerson);
-        resultCount = pst.executeUpdate();
-        pst.close();
-      }
-		}	catch (SQLException e) {
+			if (sql != null) {
+				db = this.getConnection(context);
+				int i = 0;
+				PreparedStatement pst = db.prepareStatement(sql.toString());
+				pst.setInt(++i, toPerson);
+				pst.setInt(++i, fromPerson);
+				resultCount = pst.executeUpdate();
+				pst.close();
+			}
+		}
+		catch (SQLException e) {
 			errorMessage = e;
-		}	finally {
+		}
+		finally {
 			this.freeConnection(context, db);
 		}
-		
+
 		if (errorMessage == null) {
 			if (resultCount == -1) {
 				context.getRequest().setAttribute("Error", "<b>These records could not be bulk-reassigned</b>");
 				return ("UserError");
-			} else {
+			}
+			else {
 				//FOR GRAPH CLEARING
-				
-				if ( whichTable.startsWith("opportunity") ) {
+
+				if (whichTable.startsWith("opportunity")) {
 					invalidateUserData(context, getUserId(context));
 					invalidateUserInMemory(fromPerson, context);
 					invalidateUserInMemory(toPerson, context);
 				}
-				
-        context.getRequest().setAttribute("count", "" + resultCount);
-				return("DoReassignOK");
+
+				context.getRequest().setAttribute("count", "" + resultCount);
+				return ("DoReassignOK");
 			}
 		}
 		else {
@@ -232,6 +244,11 @@ public final class Users extends CFSModule {
 	 *@since           1.6
 	 */
 	public String executeCommandUserDetails(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-users-view"))) {
+			return ("PermissionError");
+		}
+
 		Exception errorMessage = null;
 
 		String id = context.getRequest().getParameter("id");
@@ -245,7 +262,7 @@ public final class Users extends CFSModule {
 			thisUser.setBuildContact(true);
 			thisUser.buildRecord(db, Integer.parseInt(id));
 			context.getRequest().setAttribute("UserRecord", thisUser);
-      addRecentItem(context, thisUser);
+			addRecentItem(context, thisUser);
 
 			if (action != null && action.equals("modify")) {
 				//RoleList roleList = new RoleList(db);
@@ -285,6 +302,11 @@ public final class Users extends CFSModule {
 	 *@since           1.6
 	 */
 	public String executeCommandInsertUserForm(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-users-add"))) {
+			return ("PermissionError");
+		}
+
 		Exception errorMessage = null;
 		addModuleBean(context, "Add User", "Add New User");
 
@@ -337,6 +359,11 @@ public final class Users extends CFSModule {
 	 *@since           1.7
 	 */
 	public String executeCommandInsertUserDecision(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-users-add"))) {
+			return ("PermissionError");
+		}
+
 		Exception errorMessage = null;
 		addModuleBean(context, "Add User", "Add New User");
 
@@ -401,6 +428,11 @@ public final class Users extends CFSModule {
 	 *@since           1.7
 	 */
 	public String executeCommandAddUser(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-users-add"))) {
+			return ("PermissionError");
+		}
+
 		Exception errorMessage = null;
 		Connection db = null;
 		boolean recordInserted = false;
@@ -449,6 +481,11 @@ public final class Users extends CFSModule {
 	 *@since           1.12
 	 */
 	public String executeCommandDeleteUser(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-users-delete"))) {
+			return ("PermissionError");
+		}
+
 		Exception errorMessage = null;
 		boolean recordDeleted = false;
 		User thisUser = null;
@@ -491,6 +528,11 @@ public final class Users extends CFSModule {
 	 *@since           1.12
 	 */
 	public String executeCommandModifyUser(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-users-edit"))) {
+			return ("PermissionError");
+		}
+
 		addModuleBean(context, "View Users", "Modify User");
 		Exception errorMessage = null;
 
@@ -507,12 +549,7 @@ public final class Users extends CFSModule {
 			userList.setEmptyHtmlSelectRecord("-- None --");
 			userList.setBuildContact(false);
 			userList.buildList(db);
-      //Iterator i = userList.iterator();
-      //while (i.hasNext()) {
-      //  User thisUser = (User)i.next();
-      //  Contact thisContact = this.getUser(context, thisUser.getId()).getContact();
-      //  thisUser.setContact(thisContact);
-      //}
+
 			context.getRequest().setAttribute("UserList", userList);
 
 			RoleList roleList = new RoleList();
@@ -546,6 +583,11 @@ public final class Users extends CFSModule {
 	 *@since           1.12
 	 */
 	public String executeCommandUpdateUser(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-users-edit"))) {
+			return ("PermissionError");
+		}
+
 		Exception errorMessage = null;
 
 		User newUser = (User) context.getFormBean();
@@ -559,7 +601,7 @@ public final class Users extends CFSModule {
 			if (resultCount == -1) {
 				UserList userList = new UserList();
 				userList.setEmptyHtmlSelectRecord("-- None --");
-			  userList.setBuildContact(true);
+				userList.setBuildContact(true);
 				userList.buildList(db);
 				context.getRequest().setAttribute("UserList", userList);
 
@@ -567,10 +609,11 @@ public final class Users extends CFSModule {
 				roleList.setEmptyHtmlSelectRecord("-- None --");
 				roleList.buildList(db);
 				context.getRequest().setAttribute("RoleList", roleList);
-			} else if (resultCount == 1) {
-        updateSystemHierarchyCheck(db, context);
+			}
+			else if (resultCount == 1) {
+				updateSystemHierarchyCheck(db, context);
 				updateSystemPermissionCheck(context);
-      }
+			}
 		}
 		catch (SQLException e) {
 			errorMessage = e;

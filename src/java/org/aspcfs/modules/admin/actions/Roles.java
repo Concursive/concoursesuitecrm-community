@@ -24,6 +24,11 @@ public final class Roles extends CFSModule {
 
   
   public String executeCommandListRoles(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-roles-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     
     PagedListInfo roleInfo = this.getPagedListInfo(context, "RoleListInfo");
@@ -52,6 +57,11 @@ public final class Roles extends CFSModule {
   }
   
   public String executeCommandRoleDetails(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-roles-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     
     String roleId = context.getRequest().getParameter("id");
@@ -93,6 +103,11 @@ public final class Roles extends CFSModule {
   }
   
   public String executeCommandUpdateRole(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-roles-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -132,6 +147,11 @@ public final class Roles extends CFSModule {
   }
   
   public String executeCommandInsertRoleForm(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-roles-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     addModuleBean(context, "Roles", "Insert a Role");
     Connection db = null;
@@ -155,6 +175,11 @@ public final class Roles extends CFSModule {
   }
   
   public String executeCommandInsertRole(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-roles-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordInserted = false;
     
@@ -197,6 +222,11 @@ public final class Roles extends CFSModule {
   }
   
   public String executeCommandDeleteRole(ActionContext context) {
+	  
+	if (!(hasPermission(context, "admin-roles-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Role thisRole = null;

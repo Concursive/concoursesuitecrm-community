@@ -45,6 +45,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandReports(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-reports-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -102,6 +107,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDownloadCSVReport(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-reports-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     String itemId = (String) context.getRequest().getParameter("fid");
@@ -161,6 +171,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandShowReportHtml(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-reports-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -194,6 +209,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandGenerateForm(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-reports-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -226,6 +246,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandExportReport(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-reports-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordInserted = false;
     Connection db = null;
@@ -355,6 +380,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDeleteReport(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-reports-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -412,7 +442,15 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandSearch(ActionContext context) {
+<<<<<<< Accounts.java
+	  
+	if (!(hasPermission(context, "accounts-accounts-view"))) {
+	    return ("PermissionError");
+    	}
+	
+=======
     //reset the offset and current letter of the paged list in order to make sure we search ALL accounts
+>>>>>>> 1.21
     PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
     orgListInfo.setCurrentLetter("");
     orgListInfo.setCurrentOffset(0);
@@ -430,6 +468,11 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandAdd(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-add"))) {
+	    return ("PermissionError");
+    	}
+	
     int errorCode = 0;
     Exception errorMessage = null;
 
@@ -479,6 +522,11 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandDetails(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     Organization newOrg = null;
@@ -522,6 +570,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDashboard(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-dashboard-view"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "Dashboard", "Dashboard");
 
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
@@ -607,6 +660,11 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandView(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
@@ -658,6 +716,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandViewTickets(ActionContext context) {
+	
+	if (!(hasPermission(context, "accounts-accounts-tickets-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     Connection db = null;
@@ -698,6 +761,11 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -751,6 +819,11 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -803,6 +876,11 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Organization thisOrganization = null;
@@ -841,6 +919,11 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandModify(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-edit"))) {
+	    return ("PermissionError");
+    	}
+	
 
     Exception errorMessage = null;
 
@@ -909,6 +992,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandFields(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-folders-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     Organization thisOrganization = null;
@@ -996,6 +1084,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandAddFolderRecord(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-folders-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     Organization thisOrganization = null;
@@ -1040,6 +1133,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandModifyFields(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-folders-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     Organization thisOrganization = null;
@@ -1088,6 +1186,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandUpdateFields(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-folders-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     Organization thisOrganization = null;
@@ -1164,6 +1267,11 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandInsertFields(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-folders-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCode = -1;

@@ -26,6 +26,11 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandAdd(ActionContext context) {
+	  
+	if (!(hasPermission(context, "tickets-tickets-add"))) {
+	    return ("PermissionError");
+    	}
+	
     int errorCode = 0;
     Exception errorMessage = null;
     Connection db = null;
@@ -70,6 +75,11 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandModify(ActionContext context) {
+	  
+	if (!(hasPermission(context, "tickets-tickets-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     Ticket newTic = null;
@@ -210,6 +220,11 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDetails(ActionContext context) {
+	  
+	if (!(hasPermission(context, "tickets-tickets-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     Ticket newTic = null;
@@ -250,6 +265,11 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandHome(ActionContext context) {
+	  
+ 	if (!(hasPermission(context, "tickets-tickets-view"))) {
+	    return ("PermissionError");
+    	}
+	
     int errorCode = 0;
     Exception errorMessage = null;
 
@@ -350,6 +370,11 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandInsert(ActionContext context) {
+	  
+	if (!(hasPermission(context, "tickets-tickets-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -437,6 +462,11 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandSearchTicketsForm(ActionContext context) {
+	  
+	if (!(hasPermission(context, "tickets-tickets-view"))) {
+	    return ("PermissionError");
+    	}
+	
     int errorCode = 0;
 
     Exception errorMessage = null;
@@ -491,6 +521,11 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandUpdate(ActionContext context) {
+	  
+	if (!(hasPermission(context, "tickets-tickets-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -582,6 +617,11 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDelete(ActionContext context) {
+	  
+	if (!(hasPermission(context, "tickets-tickets-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
