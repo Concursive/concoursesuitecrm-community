@@ -19,16 +19,16 @@
   //Menu link functions
   function addCall() {
     if(thisOrgId == -1){
-      popURL('ExternalContactsCalls.do?command=Add&popup=true&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Call','650','375','yes','yes');
+      popURL('ExternalContactsCalls.do?command=Add&popup=true&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Call','600','300','yes','yes');
     }else{
-      popURL('AccountContactsCalls.do?command=Add&popup=true&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Call','650','375','yes','yes');
+      popURL('AccountContactsCalls.do?command=Add&popup=true&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Call','600','300','yes','yes');
     }
   }
   function addTicket() {
   if(thisOrgId == -1){
-    popURL('TroubleTickets.do?command=Add&actionSource=MyActionContacts&contactId=' + thisContactId + '&contactSet=true&actionId=' + thisItemId,'Ticket','550','500','yes','yes');
+    popURL('TroubleTickets.do?command=Add&actionSource=MyActionContacts&contactId=' + thisContactId + '&contactSet=true&actionId=' + thisItemId,'Ticket','600','500','yes','yes');
    }else{
-    popURL('TroubleTickets.do?command=Add&actionSource=MyActionContacts&orgId=' + thisOrgId + '&contactId=' + thisContactId + '&contactSet=true&actionId=' + thisItemId,'Ticket','550','500','yes','yes');
+    popURL('TroubleTickets.do?command=Add&actionSource=MyActionContacts&orgId=' + thisOrgId + '&contactId=' + thisContactId + '&contactSet=true&actionId=' + thisItemId,'Ticket','600','500','yes','yes');
    }
   }
   function addTask() {
@@ -36,14 +36,14 @@
   }
   function addOpportunity() {
     if(thisOrgId == -1){
-      popURL('ExternalContactsOpps.do?command=Prepare&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Opportunity','550','500','yes','yes');
+      popURL('ExternalContactsOpps.do?command=Prepare&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Opportunity','600','500','yes','yes');
     }
     else{
-      popURL('AccountContactsOpps.do?command=Prepare&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Opportunity','550','500','yes','yes');
+      popURL('AccountContactsOpps.do?command=Prepare&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Opportunity','600','500','yes','yes');
     }
   }
   function sendMessage() {
-    popURL('MyActionContacts.do?command=PrepareMessage&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId + '&actionListId=' + thisActionId + '&popup=true','Message','700','500','yes','yes');
+    popURL('MyActionContacts.do?command=PrepareMessage&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId + '&actionListId=' + thisActionId + '&popup=true','Message','700','550','yes','yes');
   }
 </script>
 <div id="menuContactContainer" class="menu">
