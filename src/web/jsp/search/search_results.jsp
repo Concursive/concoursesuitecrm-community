@@ -1,5 +1,9 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*, org.aspcfs.modules.accounts.base.Organization,org.aspcfs.modules.contacts.base.Contact,org.aspcfs.modules.troubletickets.base.Ticket,org.aspcfs.modules.pipeline.base.Opportunity" %>
+<%@ page import="java.util.*" %> 
+<%@ page import="org.aspcfs.modules.accounts.base.Organization" %> 
+<%@ page import="org.aspcfs.modules.contacts.base.Contact" %> 
+<%@ page import="org.aspcfs.modules.troubletickets.base.Ticket" %> 
+<%@ page import="org.aspcfs.modules.pipeline.beans.OpportunityBean" %>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="EmployeeList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="OrganizationList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
@@ -181,7 +185,7 @@ if (i.hasNext()) {
 <%}%>
 </dhv:permission>
 <dhv:permission name="pipeline-opportunities-view">
-<strong><%=OpportunityList.size()%></strong> result(s) in <strong>Opportunities</strong>.
+<strong><%= OpportunityList.size() %></strong> result(s) in <strong>Opportunities</strong>.
 <% 
   Iterator m = OpportunityList.iterator();
   if (m.hasNext()) {
@@ -190,7 +194,7 @@ if (i.hasNext()) {
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <tr bgcolor="#DEE0FA">
     <td valign=center>
-      <strong><a href="Leads.do?command=ViewOpp&column=description">Opportunity</a></strong>
+      <strong><a href="Leads.do?command=ViewOpp&column=x.description">Opportunity</a></strong>
     </td>
     <td width=175 valign=center>
       <strong><a href="Leads.do?command=ViewOpp&column=acct_name">Organization</a></strong>
@@ -209,41 +213,37 @@ if (i.hasNext()) {
 			} else {
 				rowid = 2;
 			}
-		Opportunity thisOpp = (Opportunity)m.next();
+		OpportunityBean thisOpp = (OpportunityBean) m.next();
 %>      
 	<tr bgcolor="white">
       
-      <td valign=center class="row<%= rowid %>">
-        <a href="Leads.do?command=DetailsOpp&id=<%=thisOpp.getId()%>">
-        <%= toHtml(thisOpp.getDescription()) %></a>
+      <td valign="center" class="row<%= rowid %>">
+        <a href="Leads.do?command=DetailsOpp&headerId=<%= thisOpp.getHeader().getId() %>">
+        <%= toHtml(thisOpp.getHeader().getDescription()) %>: <%= toHtml(thisOpp.getComponent().getDescription()) %></a>
       </td>
-      
-      <td valign=center class="row<%= rowid %>">
+      <td valign="center" class="row<%= rowid %>">
 <%
-      if (thisOpp.getAccountLink() > -1) {
+      if (thisOpp.getHeader().getAccountLink() > -1) {
 %>        
-        <a href="Opportunities.do?command=View&orgId=<%= thisOpp.getAccountLink() %>">
+        <a href="Opportunities.do?command=View&orgId=<%= thisOpp.getHeader().getAccountLink() %>">
 <%
       }
 %>        
-        <%= toHtml(thisOpp.getAccountName()) %>
+        <%= toHtml(thisOpp.getHeader().getAccountName()) %>
 <%
-      if (thisOpp.getAccountLink() > -1) {
+      if (thisOpp.getHeader().getAccountLink() > -1) {
 %>     
         </a>
 <%
       }
 %>        
       </td>
-      
-      <td valign=center nowrap class="row<%= rowid %>">
-        $<%= thisOpp.getGuessCurrency() %>
+      <td valign="center" nowrap class="row<%= rowid %>">
+        $<%= thisOpp.getComponent().getGuessCurrency() %>
       </td>
-      
-      <td valign=center nowrap class="row<%= rowid %>">
-        <%= toHtml(thisOpp.getCloseDateString()) %>
+      <td valign="center" nowrap class="row<%= rowid %>">
+        <%= toHtml(thisOpp.getComponent().getCloseDateString()) %>
       </td>
-
     </tr>
 <%}%>
 </table>

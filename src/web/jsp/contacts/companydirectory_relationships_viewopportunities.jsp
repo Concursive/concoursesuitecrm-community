@@ -1,5 +1,8 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.pipeline.base.*" %>
+<%@ page import="java.util.*" %>
+<%@ page import="org.aspcfs.modules.contacts.base.*" %>
+<%@ page import="org.aspcfs.modules.pipeline.base.*" %>
+<%@ page import="org.aspcfs.modules.pipeline.beans.*" %>
 <jsp:useBean id="opportunityList" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 
@@ -25,20 +28,21 @@
     int row = 0;
     while (oppList.hasNext()) {
       row = row == 1?2:1;
-      Opportunity thisOpportunity = (Opportunity)oppList.next();
+      OpportunityBean thisOpportunity = (OpportunityBean) oppList.next();
 %>
   <tr class="containerBody">
     <td width="20%" valign="center" nowrap class="row<%= row %>">
-      <%= toHtml(thisOpportunity.getAccountName()) %>
+      <%= toHtml(thisOpportunity.getHeader().getAccountName()) %>
     </td>
     <td width="40%" valign="center" class="row<%= row %>">
-      <%= toHtml(thisOpportunity.getDescription()) %>
+      <%= toHtml(thisOpportunity.getHeader().getDescription()) %>:
+      <%= toHtml(thisOpportunity.getComponent().getDescription()) %>
     </td>
     <td width="20%" valign="center" align="right" nowrap class="row<%= row %>">
-      <%= toHtml(thisOpportunity.getGuessCurrency()) %>
+      <%= toHtml(thisOpportunity.getComponent().getGuessCurrency()) %>
     </td>
     <td width="20%" valign="center" align="right" nowrap class="row<%= row %>">
-      <%= toHtml(thisOpportunity.getCloseDateString()) %>
+      <%= toHtml(thisOpportunity.getComponent().getCloseDateString()) %>
     </td>
   </tr>
 <%  
