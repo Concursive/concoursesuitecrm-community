@@ -121,7 +121,7 @@ Modify Opportunity<br>
   
   <tr class="containerBody">
     <td nowrap class="formLabel" valign="top">
-      Opportunity Type(s)
+      Opportunity<br>Type(s)
     </td>
   
   	<td valign=center>
