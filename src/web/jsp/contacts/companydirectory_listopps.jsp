@@ -31,8 +31,9 @@ Opportunities<br>
     <form name="listView" method="post" action="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= ExternalOppsPagedListInfo.getOptionValue("my") %>>My Opportunities </option>
-        <option <%= ExternalOppsPagedListInfo.getOptionValue("all") %>>All Opportunities</option>
+        <option <%= ExternalOppsPagedListInfo.getOptionValue("my") %>>My Open Opportunities </option>
+        <option <%= ExternalOppsPagedListInfo.getOptionValue("all") %>>All Open Opportunities</option>
+        <option <%= ExternalOppsPagedListInfo.getOptionValue("closed") %>>All Closed Opportunities</option>
       </select>
     </td>
     <td>
