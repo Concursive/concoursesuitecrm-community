@@ -39,7 +39,7 @@ Revenue Details
       Owner
     </td>
     <td>
-      <%= toHtml(Revenue.getOwnerName()) %>
+      <dhv:username id="<%= Revenue.getOwner() %>" />
       <dhv:evaluate exp="<%= !(Revenue.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
@@ -80,7 +80,9 @@ Revenue Details
       Entered
     </td>
     <td>
-      <%= Revenue.getEnteredByName() %>&nbsp;-&nbsp;<%= Revenue.getEnteredDateTimeString() %>
+      <dhv:username id="<%= Revenue.getEnteredBy() %>" />
+      -
+      <%= Revenue.getEnteredDateTimeString() %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -88,7 +90,9 @@ Revenue Details
       Modified
     </td>
     <td>
-      <%= Revenue.getModifiedByName() %>&nbsp;-&nbsp;<%= Revenue.getModifiedDateTimeString() %>
+      <dhv:username id="<%= Revenue.getModifiedBy() %>" />
+      -
+      <%= Revenue.getModifiedDateTimeString() %>
     </td>
   </tr>
 </table>

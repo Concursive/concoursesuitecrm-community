@@ -48,7 +48,7 @@ Account Details
       <dhv:label name="organization.owner">Account Owner</dhv:label>
     </td>
     <td>
-      <%= OrgDetails.getOwnerName() %>
+      <dhv:username id="<%= OrgDetails.getOwner() %>" />
       <dhv:evaluate if="<%= !(OrgDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
@@ -361,7 +361,7 @@ Account Details
       Entered
     </td>
     <td>
-      <%= toHtml(OrgDetails.getEnteredByName()) %>
+      <dhv:username id="<%= OrgDetails.getEnteredBy() %>" />
       -
       <dhv:tz timestamp="<%= OrgDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
@@ -371,7 +371,7 @@ Account Details
       Modified
     </td>
     <td>
-      <%= toHtml(OrgDetails.getModifiedByName()) %>
+      <dhv:username id="<%= OrgDetails.getModifiedBy() %>" />
       -
       <dhv:tz timestamp="<%= OrgDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
