@@ -60,9 +60,9 @@ public class ParseKBB {
       sqlDriver.setForceClose(false);
       sqlDriver.setMaxConnections(1);
       ConnectionElement thisElement = new ConnectionElement(
-          "jdbc:microsoft:sqlserver://216.54.81.105:1433;DatabaseName=cdb_cfs;SelectMethod=cursor",
-          "postgres",
-          "p0stgres");
+          "jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs;SelectMethod=cursor",
+          "dhv_appuser",
+          "@pus3r");
       thisElement.setDriver("com.microsoft.jdbc.sqlserver.SQLServerDriver");
       db = sqlDriver.getConnection(thisElement);
 
