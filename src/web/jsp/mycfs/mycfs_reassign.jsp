@@ -14,6 +14,20 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
+<script language="JavaScript">
+  function doCheck(form) {
+    formTest = true;
+    message = "";
+    if (form.userId.value == "-1") {
+      formTest = false;
+      message = "- User to re-assign from must be selected";
+    }
+    if (!formTest) {
+      alert("Re-assignments could not be made, please check the following:\r\n\r\n" + message);
+    }
+    return formTest;
+  }
+</script>
 <%-- Trails --%>
 <table class="trails">
 <tr>
@@ -33,12 +47,13 @@ Re-assignments
     <td align="left" valign="center">
     <% UserSelectList.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\""); %>
     User to re-assign data from:&nbsp;<%= UserSelectList.getHtmlSelect("userId", SourceUser.getId()) %>
+    <font color="red">*</font>
     </td>
     </form>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-<form name="adminReassign" action="Reassignments.do?command=DoReassign" method="post">
+<form name="adminReassign" action="Reassignments.do?command=DoReassign" method="post" onSubmit="return doCheck(this);">
   <tr>
     <th nowrap>
       <strong>Re-assign</strong>
@@ -51,6 +66,7 @@ Re-assignments
     </th>
   </tr>
 <% int rowid = 0; %>
+<%-- Accounts --%>
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
@@ -67,6 +83,7 @@ Re-assignments
       <%= UserList.getHtmlSelect("ownerToAccounts") %>
     </td>
   </tr>
+<%-- Contacts --%>
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
@@ -82,7 +99,8 @@ Re-assignments
 		<td valign="top" nowrap>
       <%= UserList.getHtmlSelect("ownerToContacts") %>
     </td>
-  </tr>  
+  </tr>
+<%-- Opportunities (Open) --%>
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
@@ -98,7 +116,8 @@ Re-assignments
 		<td valign="top" nowrap>
       <%= UserList.getHtmlSelect("ownerToOpenOpps") %>
     </td>
-  </tr>  
+  </tr>
+<%-- Opportunities (Open & Closed) --%>
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
@@ -114,7 +133,8 @@ Re-assignments
 		<td valign="top" nowrap>
       <%= UserList.getHtmlSelect("ownerToOpenClosedOpps") %>
     </td>
-  </tr>  
+  </tr>
+<%-- Project Activities --%>
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
@@ -130,7 +150,8 @@ Re-assignments
 		<td valign="top" nowrap>
       <%= UserList.getHtmlSelect("ownerToActivities") %>
     </td>
-  </tr>  
+  </tr>
+<%-- Revenue --%>
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
@@ -146,7 +167,8 @@ Re-assignments
 		<td valign="top" nowrap>
       <%= UserList.getHtmlSelect("ownerToRevenue") %>
     </td>
-  </tr>  
+  </tr>
+<%-- Tickets (Open) --%>
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
@@ -162,7 +184,8 @@ Re-assignments
 		<td valign="top" nowrap>
       <%= UserList.getHtmlSelect("ownerToOpenTickets") %>
     </td>
-  </tr> 
+  </tr>
+<%-- Users --%>
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
@@ -182,10 +205,10 @@ Re-assignments
 </table>
 &nbsp;<br>
 <dhv:permission name="myhomepage-reassign-edit">
-<input type="submit" value="Update">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=Home'">
-<input type="reset" value="Reset">
-<input type="hidden" name="userId" value="<%= SourceUser.getId() %>">
+<input type="submit" value="Update" />
+<input type="button" value="Cancel" onClick="javascript:window.location.href='MyCFS.do?command=Home'" />
+<input type="reset" value="Reset" />
+<input type="hidden" name="userId" value="<%= SourceUser.getId() %>" />
 </dhv:permission>
 </form>
 </body>
