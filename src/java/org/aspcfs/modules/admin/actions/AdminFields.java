@@ -4,7 +4,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.theseus.actions.*;
 import java.sql.*;
-import java.util.Vector;
+import java.util.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
@@ -399,6 +399,94 @@ public final class AdminFields extends CFSModule {
     }
   }
   
+  public String executeCommandModifyField(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+
+    try {
+      db = this.getConnection(context);
+      this.addModuleList(context, db);
+      this.addCategoryList(context, db);
+      this.addCategory(context, db);
+      this.addGroup(context, db);
+      this.addField(context, db);
+    } catch (Exception e) {
+      errorMessage = e;
+      e.printStackTrace(System.out);
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "Configuration", "Configuration");
+    return ("ModifyFieldOK");
+  }
+  
+  public String executeCommandUpdateField(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    boolean result = false;
+    
+    try {
+      db = this.getConnection(context);
+      CustomField thisField = (CustomField)context.getFormBean();
+      thisField.buildElementData(db);
+      
+      String[] params = context.getRequest().getParameterValues("selectedList");
+      String[] names = new String[params.length];
+      String tblName = "";
+      int j = 0;
+  
+      StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("selectNames"), "^");
+      
+      while (st.hasMoreTokens()) {
+        names[j] = (String) st.nextToken();
+        j++;
+      }
+      
+      LookupList compareList = (LookupList)thisField.getElementData();
+			LookupList newList = new LookupList(params, names);
+			if (System.getProperty("DEBUG") != null) newList.printVals();
+      
+      Iterator i = compareList.iterator();
+			while (i.hasNext()) {
+				LookupElement thisElement = (LookupElement) i.next();
+
+				//still there, stay enabled, don't re-insert it
+				System.out.println("Here: " + thisElement.getCode() + " " + newList.getSelectedValue(thisElement.getCode()));
+
+				//not there, disable it, leave it
+				if (newList.getSelectedValue(thisElement.getCode()).equals("") || newList.getSelectedValue(thisElement.getCode()) == null) {
+					//thisElement.disableElement(db, tblName);
+				}
+			}
+      
+      Iterator k = newList.iterator();
+			while (k.hasNext()) {
+				LookupElement thisElement = (LookupElement) k.next();
+
+				if (thisElement.getCode() == 0) {
+					//thisElement.insertElement(db, tblName);
+				} else {
+					//thisElement.setNewOrder(db, tblName);
+				}
+			}
+      
+      result = thisField.updateField(db);
+      this.processErrors(context, thisField.getErrors());
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "Configuration", "Configuration");
+    if (result) {
+      return ("UpdateFieldOK");
+    } else {
+      return ("UpdateFieldERROR");
+    }
+  }
+  
   
   
   //
@@ -466,5 +554,34 @@ public final class AdminFields extends CFSModule {
       }
     }
   }
+  
+  private void addField(ActionContext context, Connection db) throws SQLException {
+    if ( (context.getRequest().getParameter("auto-populate") == null) ||
+         (context.getFormBean() == null) ||
+         (!(context.getFormBean() instanceof CustomField))) {
+    
+      String fieldId = context.getRequest().getParameter("id");
+      if (fieldId == null) {
+        fieldId = (String)context.getRequest().getAttribute("id");
+      }
+      if (System.getProperty("DEBUG") != null) System.out.println("AdminFields-> Adding Field: " + fieldId);
+      if (fieldId != null) {
+        context.getRequest().setAttribute("id", fieldId);
+        LookupList moduleList = (LookupList)context.getRequest().getAttribute("ModuleList");
+        CustomFieldCategoryList categoryList = (CustomFieldCategoryList)context.getRequest().getAttribute("CategoryList");
+        CustomFieldCategory thisCategory = (CustomFieldCategory)context.getRequest().getAttribute("Category");
+        CustomFieldGroup thisGroup = (CustomFieldGroup)context.getRequest().getAttribute("Group");
+        if (thisGroup == null) System.out.println("AdminFields-> CustomFieldGroup should not be null");
+        CustomField thisField = thisGroup.getField(Integer.parseInt(fieldId));
+        context.getRequest().setAttribute("CustomField", thisField);
+      }
+    } else if ( (context.getRequest().getParameter("auto-populate") != null) &&
+         (context.getFormBean() != null) &&
+         (context.getFormBean() instanceof CustomField)) {
+       CustomField thisField = (CustomField)context.getFormBean();
+       thisField.buildElementData(db);
+    }
+  }
+  
 }
 

@@ -64,46 +64,32 @@ public class LookupElement {
         "SET enabled = 'f' " +
         "WHERE code = ? ");
 	
-	int i = 0;
-	
-	pst = db.prepareStatement(sql.toString());
-	pst.setInt(++i, this.getCode());	
-	
-	resultCount = pst.executeUpdate();
-	pst.close();
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, this.getCode());	
+    resultCount = pst.executeUpdate();
+    pst.close();
 
     return resultCount;
   }
   
   public boolean insertElement(Connection db, String tableName) throws SQLException {
-	StringBuffer sql = new StringBuffer();
-	int i=0;
+    StringBuffer sql = new StringBuffer();
+    int i=0;
 
-		try {
-			db.setAutoCommit(false);
-			sql.append(
-			"INSERT INTO  " + tableName + " " +
-			"(description, level, enabled) " +
-			"VALUES (?, ?, ?) ");
-		
-			i = 0;
-			PreparedStatement pst = db.prepareStatement(sql.toString());
-			pst.setString(++i, this.getDescription());
-			pst.setInt(++i, this.getLevel());
-			pst.setBoolean(++i, true);
+    sql.append(
+    "INSERT INTO " + tableName + " " +
+    "(description, level, enabled) " +
+    "VALUES (?, ?, ?) ");
+  
+    i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setString(++i, this.getDescription());
+    pst.setInt(++i, this.getLevel());
+    pst.setBoolean(++i, true);
+    pst.execute();
+    pst.close();
 			
-			pst.execute();
-			pst.close();
-			
-			db.commit();
-		} catch (SQLException e) {
-			db.rollback();
-			db.setAutoCommit(true);
-			throw new SQLException(e.getMessage());
-		} finally {
-			db.setAutoCommit(true);
-		}
-
 		return true;
 }
   

@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.text.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,java.text.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.LookupList" %>
 <jsp:useBean id="ModuleList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
@@ -7,13 +7,22 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
+<script language="JavaScript" type="text/javascript" src="/javascript/editListForm.js"></script>
+<script language="JavaScript" type="text/javascript">
+  function doCheck() {
+    var test = document.modifyList.selectedList;
+    if (test != null) {
+      selectAllOptions(document.modifyList.selectedList);
+    }
+  }
+</script>
 <body<% if (CustomField.getName() == null) { %> onLoad="document.forms[0].name.focus();"<%}%>>
-<form name="details" action="/AdminFields.do?command=AddField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true" method="post">
+<form name="modifyList" action="/AdminFields.do?command=ModifyField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true" method="post">
 <a href="/Admin.do">Setup</a> >
 <a href="/Admin.do?command=Config">System Configuration</a> >
 <a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModuleList.getSelectedKey() %>">Custom Folders</a> > 
 <a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>">Folder</a> >
-New Field<br>
+Existing Field<br>
 &nbsp;<br>
 <%
   CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
@@ -73,15 +82,52 @@ New Field<br>
 <%      
         }
         if (CustomField.getLookupListRequired()) {
-%>        
+          LookupList SelectedList = (LookupList)CustomField.getElementData();
+          SelectedList.setSelectSize(8);
+          SelectedList.setMultiple(true);
+%>
         <tr class="containerBody">
           <td valign="top" class="formLabel">
             Lookup List
           </td>
           <td>
-            Enter values to appear in the selection list, each on a separate line.<br>
-            <textarea cols="50" rows="8" name="lookupList" wrap="SOFT"><%= CustomField.getLookupList() %></textarea>
             <%= showAttribute(request, "lookupListError") %>
+            <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+              <tr>
+                <td width=50%>
+                  <table width=100% cellspacing=0 cellpadding=2 border=0>
+                    <tr><td valign=center>
+                      New Option
+                    </td></tr>
+                    <tr><td valign=center>
+                      <input type="text" name="newValue" value="" size=25  maxlength=125>
+                    </td></tr>
+                    <tr><td valign=center>
+                      <input type="button" value="Add >" onclick="javascript:addValues()">
+                    </td></tr>
+                  </table>
+                </td>
+                <td width=25>
+                  <table width=100% cellspacing=0 cellpadding=2 border=0>
+                    <tr><td valign=center>
+                      <input type=button value="Up" onclick="javascript:moveOptionUp(document.modifyList.selectedList)">
+                    </td></tr>
+                    <tr><td valign=center>
+                      <input type=button value="Down" onclick="javascript:moveOptionDown(document.modifyList.selectedList)">
+                    </td></tr>
+                    <tr><td valign=center>
+                      <input type="button" value="Remove" onclick="javascript:removeValues()">
+                    </td></tr>
+                    <tr><td valign=center>
+                      <input type="button" value="Sort" onclick="javascript:sortSelect(document.modifyList.selectedList)">
+                    </td></tr>
+                  </table>
+                </td>
+                <td width=50%><%= SelectedList.getHtmlSelect("selectedList",0) %></td>
+                <input type=hidden name="selectNames" value="">
+                <input type=hidden name="listid" value="<%= request.getParameter("listId") %>">
+              </tr>
+            </table>
           </td>
         </tr>
         <tr class="containerBody">
@@ -107,8 +153,9 @@ New Field<br>
         </tr>
       </table>
       &nbsp;<br>
+      <input type="hidden" name="id" value="<%= (String)request.getParameter("id") %>">
       <input type="hidden" name="groupId" value="<%= (String)request.getParameter("grpId") %>">
-      <input type="submit" value="Save" onClick="javascript:this.form.action='/AdminFields.do?command=InsertField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true'">
+      <input type="submit" value="Update" onClick="javascript:this.form.action='/AdminFields.do?command=UpdateField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true';doCheck();">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>'">
     </td>
   </tr>

@@ -98,7 +98,7 @@ Folder<br>
 %>    
     <tr class="row<%= rowId %>">
       <td align="left" width="8" nowrap>
-        Edit|<a href="javascript:confirmDeleteField('/AdminFields.do?command=DeleteField&id=<%= thisField.getId() %>&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&groupId=<%= thisField.getGroupId() %>&auto-populate=true');">Del</a>
+        <a href="/AdminFields.do?command=ModifyField&id=<%= thisField.getId() %>&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisField.getGroupId() %>">Edit</a>|<a href="javascript:confirmDeleteField('/AdminFields.do?command=DeleteField&id=<%= thisField.getId() %>&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&groupId=<%= thisField.getGroupId() %>&auto-populate=true');">Del</a>
       </td>
       <td align="left" width="8" nowrap>
         Up|Down

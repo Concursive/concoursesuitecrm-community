@@ -408,10 +408,9 @@
     <forward name="AddFieldOK" resource="/admin_fields_groups_addfield.jsp" layout="nav"/>
     <forward name="InsertFieldOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
     <forward name="InsertFieldERROR" resource="/AdminFields.do?command=AddField"/>
-    
-    <forward name="ModifyFieldOK" resource="/admin_fields_group_modify.jsp" layout="nav"/>
+    <forward name="ModifyFieldOK" resource="/admin_fields_groups_modifyfield.jsp" layout="nav"/>
     <forward name="UpdateFieldOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
-    <forward name="UpdateFieldERROR" resource="/AdminFieldsGroup.do?command=ModifyGroup"/>
+    <forward name="UpdateFieldERROR" resource="/AdminFields.do?command=ModifyField"/>
     <forward name="DeleteFieldOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
     <forward name="DeleteFieldERROR" resource="/AdminFieldsGroup.do?command=ListGroups"/>
   </action>

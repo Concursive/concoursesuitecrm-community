@@ -368,6 +368,17 @@ public class CustomFieldGroup extends Vector {
   public Hashtable getErrors() {
     return errors;
   }
+  
+  public CustomField getField(int tmp) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      CustomField thisField = (CustomField)i.next();
+      if (thisField.getId() == tmp) {
+        return thisField;
+      }
+    }
+    return new CustomField();
+  }
 
 
   /**

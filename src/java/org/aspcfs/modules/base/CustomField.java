@@ -320,7 +320,7 @@ public class CustomField extends GenericBean {
    *@param  tmp  The new Length value
    *@since
    */
-  public void setLength(String tmp) {
+  public void setMaxLength(String tmp) {
     if (tmp != null && !tmp.equals("")) {
       parameters.put("maxlength", tmp);
       if (Integer.parseInt(tmp) > 150) {
@@ -481,7 +481,7 @@ public class CustomField extends GenericBean {
    *@since
    */
   public String getTypeString() {
-    return getTypeString(type);
+    return getTypeString(type, true);
   }
 
 
@@ -631,10 +631,10 @@ public class CustomField extends GenericBean {
    *@since
    */
   public String getParameter(String tmp) {
-    if (parameters.containsKey(tmp)) {
-      return (String)parameters.get(tmp);
+    if (parameters.containsKey(tmp.toLowerCase())) {
+      return (String)parameters.get(tmp.toLowerCase());
     } else {
-      return null;
+      return "";
     }
   }
 
@@ -713,18 +713,18 @@ public class CustomField extends GenericBean {
    */
   public String getHtmlSelect(String selectName, String jsEvent) {
     HtmlSelect dataTypes = new HtmlSelect();
-    dataTypes.addItem(TEXT, getTypeString(TEXT));
-    dataTypes.addItem(TEXTAREA, getTypeString(TEXTAREA));
-    dataTypes.addItem(SELECT, getTypeString(SELECT));
-    dataTypes.addItem(DATE, getTypeString(DATE));
-    dataTypes.addItem(INTEGER, getTypeString(INTEGER));
-    dataTypes.addItem(FLOAT, getTypeString(FLOAT));
-    dataTypes.addItem(PERCENT, getTypeString(PERCENT));
-    dataTypes.addItem(CURRENCY, getTypeString(CURRENCY));
-    dataTypes.addItem(CHECKBOX, getTypeString(CHECKBOX));
-    dataTypes.addItem(EMAIL, getTypeString(EMAIL));
-    dataTypes.addItem(URL, getTypeString(URL));
-    dataTypes.addItem(PHONE, getTypeString(PHONE));
+    dataTypes.addItem(TEXT, getTypeString(TEXT, false));
+    dataTypes.addItem(TEXTAREA, getTypeString(TEXTAREA, false));
+    dataTypes.addItem(SELECT, getTypeString(SELECT, false));
+    dataTypes.addItem(DATE, getTypeString(DATE, false));
+    dataTypes.addItem(INTEGER, getTypeString(INTEGER, false));
+    dataTypes.addItem(FLOAT, getTypeString(FLOAT, false));
+    dataTypes.addItem(PERCENT, getTypeString(PERCENT, false));
+    dataTypes.addItem(CURRENCY, getTypeString(CURRENCY, false));
+    dataTypes.addItem(CHECKBOX, getTypeString(CHECKBOX, false));
+    dataTypes.addItem(EMAIL, getTypeString(EMAIL, false));
+    dataTypes.addItem(URL, getTypeString(URL, false));
+    dataTypes.addItem(PHONE, getTypeString(PHONE, false));
     if (type == -1) {
       type = TEXT;
     }
@@ -740,10 +740,10 @@ public class CustomField extends GenericBean {
    *@return           The TypeString value
    *@since
    */
-  public String getTypeString(int dataType) {
+  public String getTypeString(int dataType, boolean dynamic) {
     switch (dataType) {
       case TEXT:
-        if (getParameter("maxlength") == null || getParameter("maxlength").equals("")) {
+        if ((getParameter("maxlength") == null || getParameter("maxlength").equals("")) || !dynamic) {
           return "Text (up to 255 characters)";
         } else {
           return "Text (" + getParameter("maxlength") + ")";
@@ -803,6 +803,10 @@ public class CustomField extends GenericBean {
       st.close();
     }
 
+    buildElementData(db);
+  }
+  
+  public void buildElementData(Connection db) throws SQLException {
     if (type == SELECT) {
       elementData = new LookupList(db, "custom_field_lookup", id);
     }
@@ -847,29 +851,19 @@ public class CustomField extends GenericBean {
       return result;
     }
 
-    StringBuffer parameterData = new StringBuffer();
-    Iterator params = (parameters.keySet()).iterator();
-    while (params.hasNext()) {
-      String key = (String)params.next();
-      parameterData.append(key + "|" + (String)parameters.get(key));
-      if (params.hasNext()) {
-        parameterData.append("^");
-      }
-    }
-
     try {
       db.setAutoCommit(false);
       String sql =
-          "INSERT INTO custom_field_info " +
-          "(group_id, field_name, field_type, required, parameters ) " +
-          "VALUES (?, ?, ?, ?, ?) ";
+        "INSERT INTO custom_field_info " +
+        "(group_id, field_name, field_type, required, parameters ) " +
+        "VALUES (?, ?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(++i, groupId);
       pst.setString(++i, name);
       pst.setInt(++i, type);
       pst.setBoolean(++i, required);
-      pst.setString(++i, parameterData.toString());
+      pst.setString(++i, this.getParameterData());
       pst.execute();
       pst.close();
 
@@ -915,6 +909,34 @@ public class CustomField extends GenericBean {
     db.setAutoCommit(true);
 
     return result;
+  }
+  
+  public boolean updateField(Connection db) throws SQLException {
+    if (!isFieldValid() || id == -1) {
+      return false;
+    }
+
+    String sql =
+      "UPDATE custom_field_info " +
+      "SET field_name = ?, field_type = ?, required = ?, parameters = ? " +
+      "WHERE group_id = ? " +
+      "AND field_id = ? ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setString(++i, this.getName());
+    pst.setInt(++i, type);
+    pst.setBoolean(++i, required);
+    pst.setString(++i, this.getParameterData());
+    pst.setInt(++i, this.getGroupId());
+    pst.setInt(++i, this.getId());
+    //pst.execute();
+    System.out.println("CustomField-> Updating CustomField");
+    System.out.println("           -> Name: " + this.getName());
+    System.out.println("           -> Type: " + this.getTypeString());
+    System.out.println("           -> Parameters: " + this.getParameterData());
+    pst.close();
+    
+    return true;
   }
 
 
@@ -998,7 +1020,7 @@ public class CustomField extends GenericBean {
       errors.put("nameError", "Name is required");
     }
     if (getLengthRequired() && (getParameter("maxlength") == null)) {
-      errors.put("lengthError", "Length is required");
+      errors.put("maxLengthError", "Length is required");
     }
     if (type == SELECT &&
         (elementData == null || (((LookupList)elementData).size() == 0))
@@ -1007,6 +1029,19 @@ public class CustomField extends GenericBean {
     }
 
     return (errors.size() == 0);
+  }
+  
+  private String getParameterData() {
+    StringBuffer parameterData = new StringBuffer();
+    Iterator params = (parameters.keySet()).iterator();
+    while (params.hasNext()) {
+      String key = (String)params.next();
+      parameterData.append(key + "|" + (String)parameters.get(key));
+      if (params.hasNext()) {
+        parameterData.append("^");
+      }
+    }
+    return parameterData.toString();
   }
 
 
