@@ -213,9 +213,9 @@ org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{o_namelast}, $F{o_n
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="682"
+						x="673"
 						y="1"
-						width="54"
+						width="63"
 						height="14"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
@@ -331,10 +331,10 @@ org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{o_namelast}, $F{o_n
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
-						x="682"
+						x="673"
 						y="2"
-						width="58"
-						height="15"
+						width="63"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -392,7 +392,7 @@ org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{o_namelast}, $F{o_n
 						mode="Opaque"
 						x="552"
 						y="2"
-						width="127"
+						width="115"
 						height="55"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
