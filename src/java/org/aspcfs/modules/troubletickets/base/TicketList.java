@@ -38,6 +38,7 @@ public class TicketList extends Vector {
   private String description = null;
 
   private String searchText = "";
+  private boolean sendNotification = true;
 
 
   /**
@@ -88,6 +89,13 @@ public class TicketList extends Vector {
   public void setUnassignedToo(boolean unassignedToo) {
     this.unassignedToo = unassignedToo;
   }
+  
+public boolean getSendNotification() {
+	return sendNotification;
+}
+public void setSendNotification(boolean sendNotification) {
+	this.sendNotification = sendNotification;
+}
 
 
   /**
@@ -172,7 +180,6 @@ public String getUniqueField() { return uniqueField; }
   public void setOrgId(String orgId) {
     this.orgId = Integer.parseInt(orgId);
   }
-
 
   /**
    *  Sets the PagedListInfo attribute of the TicketList object
@@ -456,6 +463,11 @@ public String getUniqueField() { return uniqueField; }
       }
       ++count;
       Ticket thisTicket = new Ticket(rs);
+      
+      if (!getSendNotification()) {
+              thisTicket.setSendNotification(false);
+      }
+      
       this.addElement(thisTicket);
     }
     rs.close();

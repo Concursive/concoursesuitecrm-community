@@ -63,6 +63,7 @@ public class Ticket extends GenericBean {
 
   private boolean closeIt = false;
   private boolean companyEnabled = true;
+  private boolean sendNotification = true;
 
   private int ageOf = 0;
 
@@ -153,6 +154,13 @@ public class Ticket extends GenericBean {
     history.buildList(db);
   }
 
+  public boolean getSendNotification() {
+          return sendNotification;
+  }
+  
+  public void setSendNotification(boolean sendNotification) {
+          this.sendNotification = sendNotification;
+  }
 
   /**
    *  Description of the Method
@@ -1365,7 +1373,7 @@ public void setCompanyEnabled(boolean companyEnabled) {
 
       this.update(db);
 
-      if (this.getAssignedTo() > 0 && !this.getCloseIt()) {
+      if (this.getAssignedTo() > 0 && !this.getCloseIt() && this.getSendNotification()) {
         Notification thisNotification = new Notification();
         thisNotification.setUserToNotify(this.getAssignedTo());
         thisNotification.setModule("Tickets");
