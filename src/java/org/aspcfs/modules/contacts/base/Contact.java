@@ -344,6 +344,16 @@ public class Contact extends GenericBean {
 
 
   /**
+   *  Sets the primaryContact attribute of the Contact object
+   *
+   *@param  tmp  The new primaryContact value
+   */
+  public void setPrimaryContact(String tmp) {
+    this.primaryContact = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Sets the typeList attribute of the Contact object
    *
    *@param  typeList  The new typeList value
@@ -374,7 +384,8 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Returns a name for the contact checking (last,first) name and company name in that order 
+   *  Returns a name for the contact checking (last,first) name and company name
+   *  in that order
    *
    *@return    The validName value
    */
