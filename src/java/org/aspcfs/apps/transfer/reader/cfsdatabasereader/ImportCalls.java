@@ -9,7 +9,7 @@ import java.util.*;
 /**
  *  Processes Opportunities
  */
-public class ImportOpportunities implements CFSDatabaseReaderImportModule {
+public class ImportCalls implements CFSDatabaseReaderImportModule {
   
   DataWriter writer = null;
   PropertyMapList mappings = null;
@@ -26,12 +26,12 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
     this.mappings = mappings;
     boolean processOK = true;
     
-    logger.info("ImportOpportunities-> Inserting Opps");
-    OpportunityList oppList = new OpportunityList();
-    oppList.buildList(db);
+    logger.info("ImportCalls-> Inserting Calls");
+    CallList callList = new CallList();
+    callList.buildList(db);
     
     writer.setAutoCommit(false);
-    mappings.saveList(writer, oppList, "insert");
+    mappings.saveList(writer, callList, "insert");
     
     processOK = writer.commit();
     if (!processOK) {
