@@ -707,13 +707,12 @@ public final class MyCFS extends CFSModule {
           thisNote.setSentTo(contactId);
           recordInserted = thisNote.insertLink(db, thisContact.hasAccount());
           if (!recordInserted) {
-
             processErrors(context, thisNote.getErrors());
           }
 
           if ((!email.startsWith("P:")) && (copyrecipients || !thisContact.hasAccount())) {
             SMTPMessage mail = new SMTPMessage();
-            mail.setHost("127.0.0.1");
+            mail.setHost((String)System.getProperty("MailServer"));
             mail.setFrom("cfs-messenger@darkhorseventures.com");
             if (replyAddr != null && !(replyAddr.equals(""))) {
               mail.addReplyTo(replyAddr);

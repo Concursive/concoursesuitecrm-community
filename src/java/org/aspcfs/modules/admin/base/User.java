@@ -276,7 +276,7 @@ public class User extends GenericBean {
                     
           //send email
           SMTPMessage mail = new SMTPMessage();
-          mail.setHost("127.0.0.1");
+          mail.setHost((String)System.getProperty("MailServer"));
           mail.setFrom("cfs-root@darkhorseventures.com");
           mail.setType("text/html");      
           mail.setTo(targetContact.getEmailAddress("Business"));

@@ -147,24 +147,20 @@ public final class ForwardNote extends CFSModule {
 					tempUser.buildResources(db);
 				
 					SMTPMessage mail = new SMTPMessage();
-					mail.setHost("127.0.0.1");
-				
+          mail.setHost((String)System.getProperty("MailServer"));
 					mail.setFrom("cfs-messenger@darkhorseventures.com");
-					
-					if (replyAddr != null && !(replyAddr.equals(""))) 
+					if (replyAddr != null && !(replyAddr.equals(""))) {
 						mail.addReplyTo(replyAddr);
-				
+				  }
 					mail.setType("text/html");
 					mail.setTo(tempUser.getContact().getEmailAddress("Business"));
-				
 					mail.setSubject(thisNote.getSubject());
 					mail.setBody("The following message was sent to your CFS Inbox by " + thisNote.getSentName() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + toHtml(thisNote.getBody()));
-				
 					if (mail.send() == 2) {
 						System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
 						System.err.println(mail.getErrorMsg());
 					} else {
-						System.out.println("Sending message to " + tempUser.getContact().getEmailAddress("Business"));
+						System.out.println("Error sending message to " + tempUser.getContact().getEmailAddress("Business"));
 					}
 				}
 			}
