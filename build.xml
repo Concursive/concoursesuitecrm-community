@@ -227,18 +227,36 @@
       <and>
         <available file="${CFS_HOME}/WEB-INF/web.xml"/>
         <available file="${CFS_HOME}/WEB-INF/build.env"/>
-        <uptodate srcfile="${CFS_HOME}/WEB-INF/web.xml"
-                  targetfile="${src.web.dir}/WEB-INF/web.xml"/>
-        <uptodate srcfile="${CFS_HOME}/WEB-INF/web.xml"
-                  targetfile="${CFS_HOME}/WEB-INF/build.env"/>
+        <uptodate srcfile="${src.web.dir}/WEB-INF/web.xml"
+                  targetfile="${CFS_HOME}/WEB-INF/web.xml"/>
+        <uptodate srcfile="${CFS_HOME}/WEB-INF/build.env"
+                  targetfile="${CFS_HOME}/WEB-INF/web.xml"/>
       </and>
     </condition>
   </target>
   
   <!-- Merge meta-data with build.env, only if changed so reload doesn't kick in -->
   <target name="deploy.merge" depends="deploy.merge.prepare" unless="deploy.merge.uptodate">
-    
-    
+    <echo message="Installing web.xml configuration file"/>
+    <copy file="${src.web.dir}/WEB-INF/web.xml" todir="${CFS_HOME}/WEB-INF" overwrite="true"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@SiteCode@" value="${DBSITECODE}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@GKDRIVER@" value="${GKDRIVER}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@GKHOST@" value="${GKHOST}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@GKUSER@" value="${GKUSER}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@GKUSERPW@" value="${GKUSERPW}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@MAILSERVER@" value="${MAILSERVER}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@KEYSTORE@" value="${CFS_HOME}/WEB-INF/keystore"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@FORCESSL@" value="${FORCESSL}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@DEBUGLEVEL@" value="${DEBUGLEVEL}"/>
   </target>
   
   <!-- Copy all data to the web-app folder -->
@@ -382,34 +400,6 @@
      </uptodate>
   </target>
   
-  <target name="site-configuration" depends="check-site-configuration"
-          unless="webxml.uptodate">
-    <echo message="Installing web.xml configuration file"/>
-    <copy todir="${CFS_HOME}">
-      <fileset dir="${SRC_APP}">
-        <include name="WEB-INF/web.xml" />
-      </fileset>
-    </copy>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@SiteCode@" value="${DBSITECODE}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GKDRIVER@" value="${GKDRIVER}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GKHOST@" value="${GKHOST}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GKUSER@" value="${GKUSER}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GKUSERPW@" value="${GKUSERPW}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@MAILSERVER@" value="${MAILSERVER}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@KEYSTORE@" value="${CFS_HOME}/WEB-INF/keystore"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@FORCESSL@" value="${FORCESSL}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@DEBUGLEVEL@" value="${DEBUGLEVEL}"/>
-  </target>
-
   <!-- Deploy jars to CFS_HOME -->
   <target name="deploy-jars" 
           description="Install library files to site." 
@@ -433,7 +423,7 @@
   <!-- Deploy rest of site files to CFS_HOME -->
   <target name="deploy-site" 
           description="Install files to site" 
-          depends="init,site-configuration" unless="site.uptodate">
+          depends="init" unless="site.uptodate">
     <echo message="Installing site"/>
     <echo message=" Source: ${SRC_APP}"/>
     <echo message=" Destination: ${CFS_HOME}"/>

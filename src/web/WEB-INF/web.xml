@@ -32,20 +32,20 @@ Replaceable parameter  typical value / description
 <web-app>
   <listener>
     <listener-class>
-     com.darkhorseventures.controller.ContextListener
+     org.aspcfs.controller.ContextListener
     </listener-class>
   </listener>
   
   <listener>
     <listener-class>
-     com.darkhorseventures.controller.ContextSessionListener
+     org.aspcfs.controller.ContextSessionListener
     </listener-class>
   </listener>
 
   <servlet>
     <servlet-name>Controller</servlet-name>
     <display-name>Controller</display-name>
-    <servlet-class>org.theseus.servlets.ControllerServlet</servlet-class>
+    <servlet-class>com.darkhorseventures.framework.servlets.ControllerServlet</servlet-class>
     <init-param>
         <param-name>Debug</param-name>
         <param-value>@DEBUGLEVEL@</param-value>
@@ -76,23 +76,23 @@ Replaceable parameter  typical value / description
     </init-param>
     <init-param>
         <param-name>PopulateClassName</param-name>
-        <param-value>org.theseus.beans.BeanUtils</param-value>
+        <param-value>com.darkhorseventures.framework.beans.BeanUtils</param-value>
     </init-param>
     <init-param>
         <param-name>InitHook</param-name>
-        <param-value>com.darkhorseventures.controller.InitHook</param-value>
+        <param-value>org.aspcfs.controller.InitHook</param-value>
     </init-param>
     <init-param>
         <param-name>Hook</param-name>
-        <param-value>com.darkhorseventures.controller.SecurityHook</param-value>
+        <param-value>org.aspcfs.controller.SecurityHook</param-value>
     </init-param>
     <init-param>
         <param-name>GlobalItemsHook</param-name>
-        <param-value>com.darkhorseventures.controller.GlobalItemsHook</param-value>
+        <param-value>org.aspcfs.controller.GlobalItemsHook</param-value>
     </init-param>
     <init-param>
         <param-name>MainMenuHook</param-name>
-        <param-value>com.darkhorseventures.controller.MainMenuHook</param-value>
+        <param-value>org.aspcfs.controller.MainMenuHook</param-value>
     </init-param>
     <init-param>
         <param-name>ForceSSL</param-name>
