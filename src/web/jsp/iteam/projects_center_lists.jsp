@@ -29,9 +29,12 @@
 %>    
   <tr<%= bgColorVar %>>
     <td width="5" valign="top" nowrap>&nbsp;</td>
-    <td valign="top" align="left" nowrap>Edit|Del</td>
+    <td valign="top" align="left" nowrap><a href="ProjectManagementLists.do?command=Add&pid=<%= Project.getId() %>&cid=<%= category.getId() %>&id=<%= thisTask.getId() %>">Edit</a>|Del</td>
     <td valign="top" align="center" nowrap><%= thisTask.getPriority() %></td>
-    <td width="100%" valign="top" align="left"><a href="ProjectManagementIssues.do?command=Details&pid=<%= Project.getId() %>&tid=<%= thisTask.getId() %>&cid=<%= category.getId() %>"><%= toHtml(thisTask.getDescription()) %></a></td>
+    <td width="100%" valign="top" align="left"<%= thisTask.getComplete()?" class=\"strike\"":"" %>>
+      <%= toHtml(thisTask.getDescription()) %>
+    </td>
+    <%-- <td width="100%" valign="top" align="left"><a href="ProjectManagementIssues.do?command=Details&pid=<%= Project.getId() %>&tid=<%= thisTask.getId() %>&cid=<%= category.getId() %>"><%= toHtml(thisTask.getDescription()) %></a></td> --%>
     <td valign="top" align="left" nowrap>&nbsp; <dhv:username id="<%= thisTask.getEnteredBy() %>"/> &nbsp;</td>
     <td valign="top" align="left" nowrap><%= thisTask.getEnteredString() %></td>
   </tr>
