@@ -106,8 +106,8 @@
       <property>guid</property>
       <property lookup="user">owner</property>
       <property>description</property>
-      <property lookup="">acctlink</property>
-      <property lookup="">contactlink</property>
+      <property>acctlink</property>
+      <property>contactlink</property>
       <property>closedate</property>
       <property>closeprob</property>
       <property>terms</property>
@@ -115,7 +115,7 @@
       <property>lowvalue</property>
       <property>guessvalue</property>
       <property>highvalue</property>
-      <property lookup="">stage</property>
+      <property>stage</property>
       <property>stagedate</property>
       <property>commission</property>
       <property>type</property>
