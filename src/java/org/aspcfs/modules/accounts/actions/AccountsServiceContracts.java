@@ -104,6 +104,11 @@ public class AccountsServiceContracts extends CFSModule {
       contactList.setEmptyHtmlSelectRecord("-- None --");
       context.getRequest().setAttribute("contactList", contactList);
 
+      //prepare contract product list
+      ServiceContractProductList scpl = new ServiceContractProductList();
+      context.getRequest().setAttribute("serviceContractProductList", scpl);
+
+      //prepare contract hours modification history
       ServiceContractHoursList schHistory = new ServiceContractHoursList();
       context.getRequest().setAttribute("serviceContractHoursHistory", schHistory);
 
@@ -135,6 +140,7 @@ public class AccountsServiceContracts extends CFSModule {
       setOrganization(context, db);
 
       ServiceContract thisContract = (ServiceContract) context.getFormBean();
+      thisContract.setProductList(context.getRequest().getParameterValues("selectedList"));
       thisContract.setEnteredBy(getUserId(context));
       thisContract.setModifiedBy(getUserId(context));
       inserted = thisContract.insert(db);
@@ -171,7 +177,7 @@ public class AccountsServiceContracts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Updates a service contract
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -187,6 +193,7 @@ public class AccountsServiceContracts extends CFSModule {
       db = this.getConnection(context);
       setOrganization(context, db);
       ServiceContract thisContract = (ServiceContract) context.getFormBean();
+      thisContract.setProductList(context.getRequest().getParameterValues("selectedList"));
 
       //Calculate hours remaining if it has been adjusted
       double newHoursRemaining = thisContract.getTotalHoursRemaining();
@@ -238,7 +245,7 @@ public class AccountsServiceContracts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Confirms a request to delete a service contract
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -284,7 +291,7 @@ public class AccountsServiceContracts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Deletes a service contract and its dependent records
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -333,7 +340,7 @@ public class AccountsServiceContracts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares the modify page to display a service contract
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -368,6 +375,13 @@ public class AccountsServiceContracts extends CFSModule {
       contactList.buildList(db);
       contactList.setEmptyHtmlSelectRecord("-- None --");
       context.getRequest().setAttribute("contactList", contactList);
+
+      //prepare contract product list
+      ServiceContractProductList scpl = new ServiceContractProductList();
+      scpl.setContractId(thisContract.getId());
+      scpl.buildList(db);
+      context.getRequest().setAttribute("serviceContractProductList", scpl);
+
     } catch (Exception e) {
       //Go through the SystemError process
       context.getRequest().setAttribute("Error", e);
@@ -380,7 +394,7 @@ public class AccountsServiceContracts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares the view page to display a service contract
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -415,9 +429,14 @@ public class AccountsServiceContracts extends CFSModule {
       schHistory.buildList(db);
       context.getRequest().setAttribute("serviceContractHoursHistory", schHistory);
 
+      //prepare contract product list
+      ServiceContractProductList scpl = new ServiceContractProductList();
+      scpl.setContractId(thisContract.getId());
+      scpl.buildList(db);
+      context.getRequest().setAttribute("serviceContractProductList", scpl);
+
       buildFormElements(context, db);
       context.getRequest().setAttribute("serviceContract", thisContract);
-      //System.out.println(" Hours Remaining --" + thisContract.getTotalHoursRemaining());
     } catch (Exception e) {
       //Go through the SystemError process
       context.getRequest().setAttribute("Error", e);

@@ -71,30 +71,24 @@ Ticket Details
                 <%= toHtml(TicketDetails.getAssetSerialNumber()) %>
               </td>
             </tr>
-<%
-  if(TicketDetails.getProductId() != -1){
-%>
+            <dhv:evaluate if="<%= TicketDetails.getProductId() != -1 %>">
             <tr class="containerBody">
               <td nowrap class="formLabel">
-                Product
+                Labor Category
               </td>
               <td>
-                <%= toHtml(product.getName()) %> of <%= toHtml(product.getCategoryName()) %>
-<%
-    if(!product.getShortDescription().equals("")){
-%>
-                / <%= toHtml(product.getShortDescription()) %>
-<%
-    }
-%>
+                <%= toHtml(product.getSku()) %>:&nbsp;<%= toHtml(product.getName()) %>
+                <%
+                    if(!"".equals(product.getShortDescription()) && (product.getShortDescription() != null)){
+                %>
+                                / <%= toHtml(product.getShortDescription()) %>
+                <%
+                    }
+                %>
               </td>
             </tr>
-<%
-  }
-%>
-<%
-  if(TicketDetails.getCustomerProductId() != -1){
-%>
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= TicketDetails.getCustomerProductId() != -1 %>">
             <tr class="containerBody">
               <td nowrap class="formLabel">
                 Customer Product
@@ -103,9 +97,7 @@ Ticket Details
                 <%= toHtml(customerProduct.getDescription()) %> <input type="button" value="Display" onClick="javascript:popURL('Publish.do?command=DisplayCustomerProduct&adId=<%= customerProduct.getId() %>&ticketId=<%= TicketDetails.getId() %>','Customer Product','500','200','yes','yes');"/>
               </td>
             </tr>
-<%
-}
-%>
+            </dhv:evaluate>
             <tr class="containerBody">
               <td valign="top" class="formLabel">
                 <dhv:label name="ticket.issue">Issue</dhv:label>

@@ -146,6 +146,21 @@ public class ParameterList extends ArrayList {
           //Clean up the name for output on the report
           param.setValue(HtmlSelectProbabilityRange.getValueFromId(param.getValue()));
         }
+        //Integer orgid lookup
+        if (param.getName().startsWith("orgid")) {
+          Parameter whereParam = this.getParameter(param.getName() + "_where");
+          if (whereParam != null) {
+            if (!"-1".equals(param.getValue())) {
+              //New case, replace query param with another param and parse
+              Template where = new Template(whereParam.getDescription());
+              where.addParseElement("$P{" + param.getName() + "}", param.getValue());
+              addParam(whereParam.getName(), where.getParsedText());
+            } else {
+              addParam(whereParam.getName(), " ");
+            }
+          }
+          addParam(param.getName(), param.getValue());
+        }
       }
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ParameterList-> " + param.getName() + "=" + param.getValue());

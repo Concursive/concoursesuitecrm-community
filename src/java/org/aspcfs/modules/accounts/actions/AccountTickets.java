@@ -199,6 +199,19 @@ public final class AccountTickets extends CFSModule {
         //Reload the ticket for the details page... redundant to do here
         newTicket = new Ticket(db, newTic.getId());
         context.getRequest().setAttribute("TicketDetails", newTicket);
+
+        if (newTicket.getProductId() != -1){
+          ProductCatalog product = new ProductCatalog(db, newTicket.getProductId());
+          context.getRequest().setAttribute("product", product);
+        }
+        
+        // check wether of not the customer product id exists
+        if (newTicket.getCustomerProductId() != -1){
+          CustomerProduct customerProduct = new CustomerProduct(db, newTicket.getCustomerProductId());
+          customerProduct.buildFileList(db);
+          context.getRequest().setAttribute("customerProduct", customerProduct);
+        }
+
         addRecentItem(context, newTicket);
       } else {
         processErrors(context, newTic.getErrors());

@@ -751,6 +751,7 @@ public class TicketActivityLog extends GenericBean {
     rs.close();
     pst.close();
 
+    //retrieve perday work description for this activity
     buildPerDayDescriptionList(db);
     calculateTotalTravelTime();
     calculateTotalLaborTime();

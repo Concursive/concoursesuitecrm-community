@@ -12,26 +12,24 @@ import java.sql.Timestamp;
 import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.servicecontracts.base.*;
 import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.login.beans.UserBean;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import java.text.*;
 import org.aspcfs.modules.base.*;
 
 /**
- *  Description of the Class
+ *  Action class to view, add, edit, delete and list maintenance notes
  *
  *@author     kbhoopal
  *@created    March 17, 2004
- *@version    $Id$
+ *@version    $Id: AccountTicketMaintenanceNotes.java,v 1.3.8.1 2004/05/13
+ *      16:12:09 kbhoopal Exp $
  */
 public final class AccountTicketMaintenanceNotes extends CFSModule {
 
   /**
-   *  Description of the Method
+   *  Lists maintenance notes
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -48,13 +46,14 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
 
       //find record permissions for portal users
-      if (!isRecordAccessPermitted(context,thisTicket.getOrgId())){
+      if (!isRecordAccessPermitted(context, thisTicket.getOrgId())) {
         return ("PermissionError");
       }
 
       context.getRequest().setAttribute("ticketDetails", thisTicket);
-      if (thisTicket.getAssetId() == -1)
+      if (thisTicket.getAssetId() == -1) {
         return ("FormERROR");
+      }
 
       // Load the Organization
       loadOrganizaton(context, db, thisTicket);
@@ -81,7 +80,7 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares the add page to add a maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -115,7 +114,7 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares the modify page to modify a maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -156,7 +155,7 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Saves a maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -180,6 +179,7 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       thisMaintenance.setLinkTicketId(thisTicket.getId());
       String descriptionOfService = context.getRequest().getParameter("descriptionOfService");
       thisMaintenance.setDescriptionOfService(descriptionOfService);
+      //Saves details of each replaced part
       thisMaintenance.setRequestItems(context.getRequest());
       thisMaintenance.insert(db);
     } catch (Exception e) {
@@ -193,7 +193,7 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Updates a maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -219,9 +219,11 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       thisMaintenance.setLinkTicketId(thisTicket.getId());
       String descriptionOfService = context.getRequest().getParameter("descriptionOfService");
       thisMaintenance.setDescriptionOfService(descriptionOfService);
+      //Saves details of each replaced part
       thisMaintenance.setRequestItems(context.getRequest());
       String modified = context.getRequest().getParameter("modified");
       thisMaintenance.setModified(modified);
+
       resultCount = thisMaintenance.update(db);
       if (resultCount == -1) {
         processErrors(context, thisMaintenance.getErrors());
@@ -248,7 +250,7 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares the view page for the maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -266,7 +268,7 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
 
       //find record permissions for portal users
-      if (!isRecordAccessPermitted(context,thisTicket.getOrgId())){
+      if (!isRecordAccessPermitted(context, thisTicket.getOrgId())) {
         return ("PermissionError");
       }
 
@@ -294,7 +296,7 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Confirms a request for deleting a maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -332,7 +334,7 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Deletes a maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -376,7 +378,7 @@ public final class AccountTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  loads organization details to display in at the top of the page
    *
    *@param  context           Description of the Parameter
    *@param  db                Description of the Parameter

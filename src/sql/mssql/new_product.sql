@@ -284,7 +284,7 @@ CREATE TABLE product_option_map (
 
 -- For each option, there are structure fields specified by the configurator
 -- which determine the option's structure
-CREATE TABLE product_option_BIT (
+CREATE TABLE product_option_boolean (
   product_option_id INTEGER NOT NULL REFERENCES product_option(option_id),
   value BIT NOT NULL
 );

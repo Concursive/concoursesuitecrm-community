@@ -20,10 +20,17 @@ import com.zeroio.webutils.*;
 import java.text.*;
 import org.aspcfs.modules.base.*;
 
+/**
+ *  Action class to view, add, edit, delete and list maintenance notes
+ *
+ *@author     kbhoopal
+ *@created    May 13, 2004
+ *@version    $Id$
+ */
 public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
   /**
-   *  Description of the Method
+   *  Lists maintenance notes
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -39,9 +46,10 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
       // Load the ticket
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
       context.getRequest().setAttribute("ticketDetails", thisTicket);
-      if (thisTicket.getAssetId() == -1)
+      if (thisTicket.getAssetId() == -1) {
         return ("FormERROR");
-      
+      }
+
       // Build the onsiteModelList
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
       onsiteModelList.addItem(-1, "-- None --");
@@ -65,7 +73,7 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares the add page to add a maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -97,7 +105,7 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares the modify page to modify a maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -138,7 +146,7 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Saves a maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -173,7 +181,7 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Updates a maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -226,7 +234,7 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares the view page for the maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -262,7 +270,7 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Confirms a request for deleting a maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -300,7 +308,7 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Deletes a maintenance note
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -314,7 +322,7 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
     Connection db = null;
     // Process the parameters
     String ticketId = context.getRequest().getParameter("id");
-    int formId = Integer.parseInt((String)context.getRequest().getParameter("formId"));
+    int formId = Integer.parseInt((String) context.getRequest().getParameter("formId"));
     try {
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
@@ -338,48 +346,6 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
     processErrors(context, thisTicket.getErrors());
     context.getRequest().setAttribute("refreshUrl", "TroubleTicketMaintenanceNotes.do?command=View&id=" + ticketId + "&formId=" + formId);
     return this.getReturn(context, "Delete");
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandPrintMaintenanceForm(ActionContext context) {
-    if (!hasPermission(context, "tickets-maintenance-report-view")) {
-      return ("PrintPermissionError");
-    }
-    Ticket thisTicket = null;
-    Organization thisOrg = null;
-    Connection db = null;
-    try {
-      // Process the parameters
-      String ticketId = context.getRequest().getParameter("id");
-      String orgId = context.getRequest().getParameter("orgId");
-      db = this.getConnection(context);
-      // Load the ticket
-      thisTicket = new Ticket(db, Integer.parseInt(ticketId));
-      context.getRequest().setAttribute("ticketDetails", thisTicket);
-      if (thisTicket.getAssetId() == -1)
-        return ("PrintFormERROR");
-
-      // Load the organization
-      thisOrg = new Organization(db, Integer.parseInt(orgId));
-      context.getRequest().setAttribute("orgDetails", thisOrg);
-      // Load related lookup data
-      LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
-      context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
-    // Does not match
-    return ("PrintFormOK");
   }
 }
 

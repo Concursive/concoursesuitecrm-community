@@ -66,6 +66,40 @@ function popContactTypeSelectMultiple(displayFieldId, category, contactId) {
 }
 
 
+function popProductCatalogSelectMultiple(displayFieldId, contractId) {
+  title  = 'product_catalog_list';
+  width  =  '500';
+  height =  '450';
+  resize =  'yes';
+  bars   =  'yes';
+  
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  
+  var selectedIds = "";
+  
+  for (count=0; count<(document.getElementById(displayFieldId).length); count++) {
+          
+          if (document.getElementById(displayFieldId).options[count].value > -1) {
+                  if (selectedIds.length > 0) {
+                          selectedIds = selectedIds + "|";
+                  }
+                          
+                  selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value;
+          }
+          
+  }
+  
+  var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  var newwin=window.open('ProductsCatalog.do?command=PopupSelector&reset=true&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&contractId=' + contractId , title, params);
+  newwin.focus();
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
+
   function setParentList(selectedValues,selectedIds,listType,displayFieldId){
 	  if(selectedValues.length == 0 && listType == "list"){
       opener.deleteOptions(displayFieldId);

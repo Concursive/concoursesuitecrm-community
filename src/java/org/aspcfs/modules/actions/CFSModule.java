@@ -1103,7 +1103,6 @@ public class CFSModule {
         return false;
       }
     }else{
-     System.out.println("Not a portal user");
      return true; 
     }
   }

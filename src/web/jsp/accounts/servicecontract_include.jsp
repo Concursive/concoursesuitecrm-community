@@ -89,6 +89,11 @@
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
+    }else{
+      var test = form.selectedList;
+      if (test != null) {
+        return selectAllOptions(test);
+      }
     }
   }
   
@@ -170,6 +175,36 @@
     </td>
     <td>
     <%= serviceContractTypeList.getHtmlSelect("type",serviceContract.getType()) %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" valign="top">
+      Labor Categories
+    </td>
+    <td>
+      <table border="0" cellspacing="0" cellpadding="0" class="empty">
+        <tr>
+          <td>
+            <select multiple name="selectedList" id="selectedList" size="5">
+            <% 
+              Iterator itr = serviceContractProductList.iterator();
+              if (itr.hasNext()){
+                while (itr.hasNext()){
+                  ServiceContractProduct scp = (ServiceContractProduct)itr.next(); 
+            %>
+                <option value="<%=scp.getProductId()%>"><%=toHtml(scp.getProductSku())%></option>
+             <%}
+             }else{%>
+                <option value="-1">None Selected</option>
+             <%}%>
+            </select>
+            <input type="hidden" name="previousSelection" value="" />
+          </td>
+          <td valign="top">
+            &nbsp;[<a href="javascript:popProductCatalogSelectMultiple('selectedList','<%=serviceContract.getId()%>');">Select</a>]
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
 	<tr class="containerBody">

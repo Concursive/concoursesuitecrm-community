@@ -166,7 +166,7 @@ public class EmailDigestUtil {
       }
       Notification thisNotification = new Notification();
       thisNotification.setSubject(StringUtils.toHtml(context.getParameter(SendUserNotification.SUBJECT)));
-      String from = StringUtils.toHtml(context.getParameter(SendUserNotification.FROM));
+      String from = StringUtils.toHtmlValue(context.getParameter(SendUserNotification.FROM));
       if (from != null && !"".equals(from)) {
         thisNotification.setFrom(from);
       } else {

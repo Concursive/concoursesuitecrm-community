@@ -248,6 +248,28 @@
   </menu>
   
   <menu>
+    <action name="ProductsCatalog" />
+    <page title="Catalog" />
+    <permission value="product-catalog-view"/>
+    <long_html value="Catalog"/>
+    <short_html value="Catalog"/>
+    <link value="ProductsCatalog.do?command=ListAllProducts"/>
+    <graphic width="83" height="36" on="menu-products-on.gif" off="menu-products-off.gif" rollover=""/>
+    <submenu name="View">
+    <permission value="product-catalog-product-view"/>
+      <long_html value="View"/>
+      <short_html value="View"/>
+      <link value="ProductsCatalog.do?command=ListAllProducts"/>
+    </submenu>
+    <submenu name="Add">
+    <permission value="product-catalog-product-add"/>
+      <long_html value="Add"/>
+      <short_html value="Add"/>
+      <link value="ProductsCatalog.do?command=AddProduct"/>
+    </submenu>
+  </menu>
+  
+  <menu>
     <action name="AutoGuide"/>
     <page title="Auto Guide"/>
     <permission value="autoguide-view"/>

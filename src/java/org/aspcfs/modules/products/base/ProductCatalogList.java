@@ -1,21 +1,18 @@
 package org.aspcfs.modules.products.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.sql.*;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
-import java.util.Calendar;
 
 /**
  *  List class for the Product Catalog
  *
- * @author     partha
- * @created    March 19, 2004
- * @version    $Id: ProductCatalogList.java,v 1.1.2.2 2004/03/19 20:46:01 partha
+ *@author     partha
+ *@created    March 19, 2004
+ *@version    $Id: ProductCatalogList.java,v 1.1.2.2 2004/03/19 20:46:01 partha
  *      Exp $
  */
 public class ProductCatalogList extends ArrayList implements SyncableList {
@@ -59,13 +56,15 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   private boolean optionMatch = true;
   // determines if the products in the list have the same option
   private boolean optionPriceMatch = true;
+
   // determines if the products in the list have the same option which has a single price
+  protected HashMap selectedItems = null;
 
 
   /**
    *  Sets the optionDefaultText attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new optionDefaultText value
+   *@param  tmp  The new optionDefaultText value
    */
   public void setOptionDefaultText(String tmp) {
     this.optionDefaultText = tmp;
@@ -75,7 +74,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the optionDefaultText attribute of the ProductCatalogList object
    *
-   * @return    The optionDefaultText value
+   *@return    The optionDefaultText value
    */
   public String getOptionDefaultText() {
     return optionDefaultText;
@@ -85,7 +84,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the optionPrice attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new optionPrice value
+   *@param  tmp  The new optionPrice value
    */
   public void setOptionPrice(String tmp) {
     this.optionPrice = tmp;
@@ -95,7 +94,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the optionPrice attribute of the ProductCatalogList object
    *
-   * @return    The optionPrice value
+   *@return    The optionPrice value
    */
   public String getOptionPrice() {
     return optionPrice;
@@ -106,7 +105,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the optionText attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new optionText value
+   *@param  tmp  The new optionText value
    */
   public void setOptionText(String tmp) {
     this.optionText = tmp;
@@ -116,7 +115,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the optionText attribute of the ProductCatalogList object
    *
-   * @return    The optionText value
+   *@return    The optionText value
    */
   public String getOptionText() {
     return optionText;
@@ -126,7 +125,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the optionMatch attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new optionMatch value
+   *@param  tmp  The new optionMatch value
    */
   public void setOptionMatch(boolean tmp) {
     this.optionMatch = tmp;
@@ -136,7 +135,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the optionMatch attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new optionMatch value
+   *@param  tmp  The new optionMatch value
    */
   public void setOptionMatch(String tmp) {
     this.optionMatch = DatabaseUtils.parseBoolean(tmp);
@@ -146,7 +145,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the optionPriceMatch attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new optionPriceMatch value
+   *@param  tmp  The new optionPriceMatch value
    */
   public void setOptionPriceMatch(boolean tmp) {
     this.optionPriceMatch = tmp;
@@ -156,7 +155,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the optionPriceMatch attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new optionPriceMatch value
+   *@param  tmp  The new optionPriceMatch value
    */
   public void setOptionPriceMatch(String tmp) {
     this.optionPriceMatch = DatabaseUtils.parseBoolean(tmp);
@@ -166,7 +165,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the optionMatch attribute of the ProductCatalogList object
    *
-   * @return    The optionMatch value
+   *@return    The optionMatch value
    */
   public boolean getOptionMatch() {
     return optionMatch;
@@ -176,7 +175,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the optionPriceMatch attribute of the ProductCatalogList object
    *
-   * @return    The optionPriceMatch value
+   *@return    The optionPriceMatch value
    */
   public boolean getOptionPriceMatch() {
     return optionPriceMatch;
@@ -186,7 +185,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the buildResources attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new buildResources value
+   *@param  tmp  The new buildResources value
    */
   public void setBuildResources(boolean tmp) {
     this.buildResources = tmp;
@@ -196,7 +195,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the buildResources attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new buildResources value
+   *@param  tmp  The new buildResources value
    */
   public void setBuildResources(String tmp) {
     this.buildResources = DatabaseUtils.parseBoolean(tmp);
@@ -206,7 +205,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the buildResources attribute of the ProductCatalogList object
    *
-   * @return    The buildResources value
+   *@return    The buildResources value
    */
   public boolean getBuildResources() {
     return buildResources;
@@ -214,9 +213,29 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
 
 
   /**
+   *  Gets the selectedItems attribute of the ProductCatalogList object
+   *
+   *@return    The selectedItems value
+   */
+  public HashMap getSelectedItems() {
+    return selectedItems;
+  }
+
+
+  /**
+   *  Sets the selectedItems attribute of the ProductCatalogList object
+   *
+   *@param  tmp  The new selectedItems value
+   */
+  public void setSelectedItems(HashMap tmp) {
+    this.selectedItems = tmp;
+  }
+
+
+  /**
    *  Gets the tableName attribute of the ProductCatalogList object
    *
-   * @return    The tableName value
+   *@return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -226,7 +245,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the uniqueField attribute of the ProductCatalogList object
    *
-   * @return    The uniqueField value
+   *@return    The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -236,7 +255,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the lastAnchor attribute of the ProductCatalogList object
    *
-   * @return    The lastAnchor value
+   *@return    The lastAnchor value
    */
   public Timestamp getLastAnchor() {
     return lastAnchor;
@@ -246,7 +265,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the nextAnchor attribute of the ProductCatalogList object
    *
-   * @return    The nextAnchor value
+   *@return    The nextAnchor value
    */
   public Timestamp getNextAnchor() {
     return nextAnchor;
@@ -256,7 +275,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the syncType attribute of the ProductCatalogList object
    *
-   * @return    The syncType value
+   *@return    The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -266,7 +285,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the pagedListInfo attribute of the ProductCatalogList object
    *
-   * @return    The pagedListInfo value
+   *@return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -276,7 +295,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the enteredBy attribute of the ProductCatalogList object
    *
-   * @return    The enteredBy value
+   *@return    The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -286,7 +305,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the id attribute of the ProductCatalogList object
    *
-   * @return    The id value
+   *@return    The id value
    */
   public int getId() {
     return id;
@@ -296,7 +315,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the parentId attribute of the ProductCatalogList object
    *
-   * @return    The parentId value
+   *@return    The parentId value
    */
   public int getParentId() {
     return parentId;
@@ -306,7 +325,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the typeId attribute of the ProductCatalogList object
    *
-   * @return    The typeId value
+   *@return    The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -316,7 +335,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the enabled attribute of the ProductCatalogList object
    *
-   * @return    The enabled value
+   *@return    The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -326,7 +345,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the categoryName attribute of the ProductCatalogList object
    *
-   * @return    The categoryName value
+   *@return    The categoryName value
    */
   public String getCategoryName() {
     return categoryName;
@@ -336,7 +355,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the msrpAmount attribute of the ProductCatalogList object
    *
-   * @return    The msrpAmount value
+   *@return    The msrpAmount value
    */
   public double getMsrpAmount() {
     return msrpAmount;
@@ -346,7 +365,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the priceAmount attribute of the ProductCatalogList object
    *
-   * @return    The priceAmount value
+   *@return    The priceAmount value
    */
   public double getPriceAmount() {
     return priceAmount;
@@ -356,7 +375,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the recurringAmount attribute of the ProductCatalogList object
    *
-   * @return    The recurringAmount value
+   *@return    The recurringAmount value
    */
   public double getRecurringAmount() {
     return recurringAmount;
@@ -366,7 +385,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the parentName attribute of the ProductCatalogList object
    *
-   * @return    The parentName value
+   *@return    The parentName value
    */
   public String getParentName() {
     return parentName;
@@ -376,7 +395,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the topOnly attribute of the ProductCatalogList object
    *
-   * @return    The topOnly value
+   *@return    The topOnly value
    */
   public int getTopOnly() {
     return topOnly;
@@ -386,7 +405,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the typeName attribute of the ProductCatalogList object
    *
-   * @return    The typeName value
+   *@return    The typeName value
    */
   public String getTypeName() {
     return typeName;
@@ -396,7 +415,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the publicationId attribute of the ProductCatalogList object
    *
-   * @return    The publicationId value
+   *@return    The publicationId value
    */
   public int getPublicationId() {
     return publicationId;
@@ -406,7 +425,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the lastAnchor attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new lastAnchor value
+   *@param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -416,7 +435,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the lastAnchor attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new lastAnchor value
+   *@param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = DatabaseUtils.parseTimestamp(tmp);
@@ -426,7 +445,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the nextAnchor attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new nextAnchor value
+   *@param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -436,7 +455,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the nextAnchor attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new nextAnchor value
+   *@param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = DatabaseUtils.parseTimestamp(tmp);
@@ -446,7 +465,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the syncType attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new syncType value
+   *@param  tmp  The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -456,7 +475,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the syncType attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new syncType value
+   *@param  tmp  The new syncType value
    */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
@@ -466,7 +485,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the pagedListInfo attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new pagedListInfo value
+   *@param  tmp  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -476,7 +495,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the enteredBy attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -486,7 +505,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the enteredBy attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -496,7 +515,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the id attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -506,7 +525,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the id attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -516,7 +535,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the parentId attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new parentId value
+   *@param  tmp  The new parentId value
    */
   public void setParentId(int tmp) {
     this.parentId = tmp;
@@ -526,7 +545,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the parentId attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new parentId value
+   *@param  tmp  The new parentId value
    */
   public void setParentId(String tmp) {
     this.parentId = Integer.parseInt(tmp);
@@ -536,7 +555,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the typeId attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new typeId value
+   *@param  tmp  The new typeId value
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -546,7 +565,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the typeId attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new typeId value
+   *@param  tmp  The new typeId value
    */
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
@@ -556,7 +575,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the enabled attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new enabled value
+   *@param  tmp  The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -566,7 +585,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the enabled attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new enabled value
+   *@param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -576,7 +595,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the categoryName attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new categoryName value
+   *@param  tmp  The new categoryName value
    */
   public void setCategoryName(String tmp) {
     this.categoryName = tmp;
@@ -586,7 +605,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the msrpAmount attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new msrpAmount value
+   *@param  tmp  The new msrpAmount value
    */
   public void setMsrpAmount(double tmp) {
     this.msrpAmount = tmp;
@@ -596,7 +615,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the priceAmount attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new priceAmount value
+   *@param  tmp  The new priceAmount value
    */
   public void setPriceAmount(double tmp) {
     this.priceAmount = tmp;
@@ -606,7 +625,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the recurringAmount attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new recurringAmount value
+   *@param  tmp  The new recurringAmount value
    */
   public void setRecurringAmount(double tmp) {
     this.recurringAmount = tmp;
@@ -616,7 +635,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the parentName attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new parentName value
+   *@param  tmp  The new parentName value
    */
   public void setParentName(String tmp) {
     this.parentName = tmp;
@@ -626,7 +645,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the topOnly attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new topOnly value
+   *@param  tmp  The new topOnly value
    */
   public void setTopOnly(int tmp) {
     this.topOnly = tmp;
@@ -636,7 +655,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the topOnly attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new topOnly value
+   *@param  tmp  The new topOnly value
    */
   public void setTopOnly(String tmp) {
     this.topOnly = Integer.parseInt(tmp);
@@ -646,7 +665,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the typeName attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new typeName value
+   *@param  tmp  The new typeName value
    */
   public void setTypeName(String tmp) {
     this.typeName = tmp;
@@ -656,7 +675,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the publicationId attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new publicationId value
+   *@param  tmp  The new publicationId value
    */
   public void setPublicationId(int tmp) {
     this.publicationId = tmp;
@@ -666,7 +685,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the publicationId attribute of the ProductCatalogList object
    *
-   * @param  tmp  The new publicationId value
+   *@param  tmp  The new publicationId value
    */
   public void setPublicationId(String tmp) {
     this.publicationId = Integer.parseInt(tmp);
@@ -682,8 +701,8 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -697,9 +716,9 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
 
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-        " SELECT COUNT(pctlg.*) AS recordcount " +
-        " FROM product_catalog AS pctlg " +
-        " WHERE pctlg.product_id > 0"
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM product_catalog pctlg " +
+        "WHERE pctlg.product_id > 0 "
         );
 
     createFilter(sqlFilter, db);
@@ -715,6 +734,12 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       }
       rs.close();
       pst.close();
+
+      //Determine column to sort by
+      pagedListInfo.setDefaultSort("product_name", null);
+      pagedListInfo.appendSqlTail(db, sqlOrder);
+    } else {
+      sqlOrder.append("ORDER BY entered ");
     }
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -724,6 +749,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     }
     sqlSelect.append(
         " pctlg.*, " +
+        " pctgy.category_id AS category_id, " +
         " pctgy.category_name AS category_name, " +
         " pctlgpricing.msrp_amount AS msrp_amount, " +
         " pctlgpricing.price_amount AS price_amount, " +
@@ -843,9 +869,9 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  basePath          Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  basePath          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void delete(Connection db, String basePath) throws SQLException {
     Iterator catalogs = this.iterator();
@@ -859,8 +885,8 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
-   * @param  db         Description of the Parameter
+   *@param  sqlFilter  Description of the Parameter
+   *@param  db         Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
 
@@ -924,15 +950,22 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     if (enabled != Constants.UNDEFINED) {
       sqlFilter.append(" AND pctlg.enabled = ? ");
     }
+    if (selectedItems != null) {
+      if (selectedItems.size() > 0) {
+        sqlFilter.append("AND (pctlg.enabled = ? OR pctlg.product_id IN (" + getItemsAsList() + ")) ");
+      } else {
+        sqlFilter.append("AND pctlg.enabled = ? ");
+      }
+    }
   }
 
 
   /**
    *  Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
 
@@ -992,7 +1025,31 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     } else if (enabled == Constants.FALSE) {
       pst.setBoolean(++i, false);
     }
+    if (selectedItems != null) {
+      pst.setBoolean(++i, true);
+    }
+
     return i;
+  }
+
+
+  /**
+   *  Gets the itemsAsList attribute of the ProductCatalogList object
+   *
+   *@return    The itemsAsList value
+   */
+  private String getItemsAsList() {
+    StringBuffer sb = new StringBuffer();
+    if (selectedItems != null) {
+      Iterator i = selectedItems.keySet().iterator();
+      while (i.hasNext()) {
+        sb.append(String.valueOf((Integer) i.next()));
+        if (i.hasNext()) {
+          sb.append(",");
+        }
+      }
+    }
+    return sb.toString();
   }
 }
 

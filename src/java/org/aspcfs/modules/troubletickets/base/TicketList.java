@@ -761,7 +761,9 @@ public class TicketList extends ArrayList implements SyncableList {
         "a.vendor AS assetvendor, " +
         "a.model_version AS modelversion, " +
         "a.location AS assetlocation, " +
-        "a.onsite_service_model AS assetonsiteservicemodel " +
+        "a.onsite_service_model AS assetonsiteservicemodel , " +
+        "pc.sku AS productsku , " +
+        "pc.product_name AS productname  " +
         "FROM ticket t " +
         "LEFT JOIN organization o ON (t.org_id = o.org_id) " +
         "LEFT JOIN lookup_department ld ON (t.department_code = ld.code) " +
@@ -771,6 +773,7 @@ public class TicketList extends ArrayList implements SyncableList {
         "LEFT JOIN lookup_ticketsource lu_ts ON (t.source_code = lu_ts.code) " +
         "LEFT JOIN service_contract sc ON (t.link_contract_id = sc.contract_id) " +
         "LEFT JOIN asset a ON (t.link_asset_id = a.asset_id) " +
+        "LEFT JOIN product_catalog pc ON (t.product_id = pc.product_id) " +
         "WHERE t.ticketid > 0 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);

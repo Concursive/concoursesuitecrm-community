@@ -90,7 +90,8 @@ public class FileUtils {
     // Create OS-specific command to get available space
     File osCheckFile = new File("/bin/sh");
     if (osCheckFile.exists()) {
-      // Linux
+      // Linux, Unix, Mac OSX
+      dir = StringUtils.replace(dir, " ", "\\ ");
       command = new String[]{"/bin/sh", "-c", "df " + dir};
     } else {
       // Windows
@@ -101,12 +102,17 @@ public class FileUtils {
     String line = null;
     String thisLine = null;
     try {
+      int blockSize = 1024;
       process = Runtime.getRuntime().exec(command);
       BufferedReader in =
           new BufferedReader(
           new InputStreamReader(process.getInputStream()));
       while ((thisLine = in.readLine()) != null) {
         line = thisLine;
+        // Using df, the block size must be incorporated
+        if (line.indexOf("512-blocks") > -1) {
+          blockSize = 512;
+        }
         // On Windows NT, last line contains the available space
         if (line.endsWith("bytes free")) {
           // The number is formatted with commas, so extract just the numeric portion

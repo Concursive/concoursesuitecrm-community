@@ -1,0 +1,134 @@
+#!/bin/sh
+//usr/bin/true; exec java -classpath .:lib/bsh.jar:lib/bcprov-jdk14-121.jar:build/lib/aspcfs.jar bsh.Interpreter "$0" "$@"
+
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.FileUtils;
+
+String CRLF = System.getProperty("line.separator");
+String fs = System.getProperty("file.separator");
+
+void processCVSDirectory(File dir) {
+  if (dir.isDirectory()) {
+    // Check for a CVS subdirectory and Entries file
+    print("Checking: " + dir.getPath());
+    File entriesFile = new File(dir.getPath() + fs + "CVS" + fs + "Entries");
+    // Load the entries file
+    if (entriesFile.isFile()) {
+      ArrayList entryList = new ArrayList();
+      //Read the file
+      BufferedReader in = new BufferedReader(new FileReader(entriesFile));
+      String line = null;
+      while ((line = in.readLine()) != null) {
+        if (line.indexOf("/Result of merge+") > -1) {
+          // "/DatabaseUtils.java/1.23.4.1/Result of merge+Wed May 05 19:54:28 2004//Tbranch-adsjet"
+          String thisEntry = line.substring(1, line.indexOf("/", 1));
+          entryList.add(thisEntry);
+        }
+      }
+      in.close();
+      Iterator entries = entryList.iterator();
+      while (entries.hasNext()) {
+        String thisEntry = (String) entries.next();
+        print("To process: " + dir.getPath() + fs + thisEntry);
+        // Get the file and process it
+        File file = new File(dir.getPath() + fs + thisEntry);
+        processFile(file);
+      }
+    }
+  }
+}
+
+void processDirectory(File dir) {
+  if (dir.isDirectory() && !dir.getPath().endsWith("CVS")) {
+    processCVSDirectory(dir);
+    String[] children = dir.list();
+    for (int i = 0; i < children.length; i++) {
+      processDirectory(new File(dir, children[i]));
+    }
+  } else {
+    //if ((dir.getName().endsWith(".java") || dir.getName().endsWith(".sql")) &&
+    //     !dir.getName().startsWith(".")) {
+    //  processFile(dir);
+    //}
+  }
+}
+
+void processFile(File checkFile) {
+  try {
+    if (!checkFile.exists()) {
+      print("File not found error");
+      System.exit(0);
+    }
+    
+    ArrayList lineList = new ArrayList();
+    
+    //Read the file
+    BufferedReader in = new BufferedReader(new FileReader(checkFile));
+    String line = null;
+    while ((line = in.readLine()) != null) {
+      lineList.add(line);
+    }
+    in.close();
+    
+    print("Lines: " + lineList.size());
+    
+    int l1 = 0;
+    int l2 = 0;
+    int l3 = 0;
+    int l4 = 0;
+    int l5 = 0;
+    Iterator lines = lineList.iterator();
+    int count = -1;
+    boolean complete = false;
+    while (lines.hasNext()) {
+      ++count;
+      String thisLine = (String) lines.next();
+      if ((l1 == 0 || l2 == 0) && thisLine.startsWith("<<<<<<<")) {
+        l1 = count;
+      } else if (l2 == 0 && thisLine.indexOf("$Id: ") > -1) {
+        l2 = count;
+      } else if (l2 > 0 && l3 == 0 && thisLine.startsWith("=======")) {
+        l3 = count;
+      } else if (l2 > 0 && l4 == 0 && thisLine.indexOf("$Id: ") > -1) {
+        l4 = count;
+      } else if (l4 > 0 && l5 == 0 && thisLine.startsWith(">>>>>>>")) {
+        l5 = count;
+        complete = true;
+      }
+    }
+    if (complete) {
+      lineList.remove(l5);
+      lineList.remove(l4);
+      lineList.remove(l3);
+      lineList.remove(l1);
+    
+      // Open file for writing
+      BufferedWriter out = new BufferedWriter(new FileWriter(checkFile));
+      lines = lineList.iterator();
+      while (lines.hasNext()) {
+        String outLine = (String) lines.next();
+        out.write(outLine);
+        out.write(CRLF);
+      }
+      out.close();
+      print("File was rewritten: " + checkFile.getName());
+    }
+  } catch (Exception e) {
+    e.printStackTrace(System.out);
+  }
+}
+
+if (bsh.args.length == 0) {
+  print("Usage:");
+  print("  stripMergeJunk [file or directory]");
+  print("");
+  System.exit(0);
+}
+
+// Recursively get a list of files to merge, checking each one
+String directory = bsh.args[0];
+File dir = new File(directory);
+processDirectory(dir);
+print("Done.");
+

@@ -107,6 +107,12 @@ CREATE TABLE service_contract_hours (
   modifiedby INT NOT NULL REFERENCES access(user_id)
 ); 
 
+CREATE TABLE service_contract_products(
+  id INT IDENTITY PRIMARY KEY,
+  link_contract_id INT REFERENCES service_contract(contract_id),
+  link_product_id INT REFERENCES product_catalog(product_id)
+);
+
 CREATE TABLE asset_category ( 
   id INT IDENTITY PRIMARY KEY,
   cat_level int NOT NULL DEFAULT 0,

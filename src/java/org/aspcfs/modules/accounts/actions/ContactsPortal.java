@@ -12,8 +12,6 @@ import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.admin.base.AccessType;
-import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.admin.base.RoleList;
 import org.aspcfs.modules.admin.base.Role;
 import org.aspcfs.modules.admin.base.User;
@@ -22,7 +20,7 @@ import org.aspcfs.utils.web.*;
 import org.aspcfs.utils.DateUtils;
 
 /**
- *  Description of the Class
+ *  Action class to view, add, edit, disable and enable a portal user
  *
  *@author     kbhoopal
  *@created    April 7, 2004
@@ -32,7 +30,7 @@ import org.aspcfs.utils.DateUtils;
 public final class ContactsPortal extends CFSModule {
 
   /**
-   *  Description of the Method
+   *  Prepares the view page to display portal user information
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -67,7 +65,7 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares the add page to add a portal user
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -114,7 +112,7 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Saves portal user information and mails the information to the portal user
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -143,7 +141,7 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares the modify page to modify portal user information
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -194,7 +192,7 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Saves portal user information and mails the information to the portal user
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -226,7 +224,7 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Deletes a portal user //NOT USED
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -252,7 +250,7 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Disables a portal user and sends mail to the user
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -307,7 +305,7 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Enables a portal user sends mail to the user
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -398,7 +396,7 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Inserts portal user information and mails the portal login information to the user
    *
    *@param  context           Description of the Parameter
    *@param  db                Description of the Parameter
@@ -470,7 +468,7 @@ public final class ContactsPortal extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Updates portal user information and mails the portal login information to the user
    *
    *@param  context           Description of the Parameter
    *@param  db                Description of the Parameter

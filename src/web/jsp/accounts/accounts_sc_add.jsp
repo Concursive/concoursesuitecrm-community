@@ -4,6 +4,7 @@
 <jsp:useBean id="contactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="serviceContract" class="org.aspcfs.modules.servicecontracts.base.ServiceContract" scope="request"/>
 <jsp:useBean id="serviceContractHoursHistory" class="org.aspcfs.modules.servicecontracts.base.ServiceContractHoursList" scope="request"/>
+<jsp:useBean id="serviceContractProductList" class="org.aspcfs.modules.servicecontracts.base.ServiceContractProductList" scope="request"/>
 <jsp:useBean id="serviceContractCategoryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="serviceContractTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="responseModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>

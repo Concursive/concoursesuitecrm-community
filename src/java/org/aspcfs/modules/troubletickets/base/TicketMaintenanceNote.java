@@ -387,8 +387,9 @@ public class TicketMaintenanceNote extends GenericBean {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("TicketSunMaintenance-> before build parts");
     }
+    
+    //retrieve the replacement parts for the asset for this maintenance report
     buildTicketReplacementPartList(db);
-
   }
 
 
@@ -480,7 +481,7 @@ public class TicketMaintenanceNote extends GenericBean {
       if (resultCount == -1){
         return resultCount;
       } else if (resultCount == 1) {
-        // Save the parts list
+        // Delete existing parts and insert part list
         TicketReplacementPartList tmpPartList = this.getTicketReplacementPartList();
         tmpPartList.deleteList(db, this.id);
         // Save the parts

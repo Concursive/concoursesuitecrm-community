@@ -10,18 +10,15 @@ import javax.servlet.http.*;
 import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.database.*;
 import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 import org.aspcfs.modules.assets.base.AssetList;
 
 /**
- * Service Contracts are contractual agreements with accounts (a.k.a. organizations)
- *  that specify the service model, start and end dates, hours and other information. 
- *  An account can have number of service contracts
+ *  Service Contracts are contractual agreements with accounts (a.k.a.
+ *  organizations) that specify the service model, start and end dates, hours
+ *  and other information. An account can have number of service contracts
  *
  *@author     kbhoopal
  *@created    December 31, 2003
@@ -42,7 +39,8 @@ public class ServiceContract extends GenericBean {
   private int contactId = -1;
   private String description = null;
   private String contractBillingNotes = null;
-  private double totalHoursRemaining = 0; //special case as -1 is also valid
+  private double totalHoursRemaining = 0;
+  //special case as -1 is also valid
   private int responseTime = -1;
   private int telephoneResponseModel = -1;
   private int onsiteResponseModel = -1;
@@ -53,6 +51,7 @@ public class ServiceContract extends GenericBean {
   private int modifiedBy = -1;
   private boolean enabled = true;
   private boolean override = false;
+  private ArrayList productList = null;
 
 
   /**
@@ -499,6 +498,68 @@ public class ServiceContract extends GenericBean {
 
 
   /**
+   *  Sets the products attribute of the ServiceContract object
+   *
+   *@param  tmpProducts  The new products value
+   */
+  public void setProductList(ArrayList tmpProducts) {
+    this.productList = tmpProducts;
+  }
+
+
+  /**
+   *  Sets the productList attribute of the ServiceContract object
+   *
+   *@param  criteriaString  The new productList value
+   */
+  public void setProductList(String[] criteriaString) {
+    if (criteriaString != null) {
+      productList = new ArrayList(Arrays.asList(criteriaString));
+    } else {
+      productList = new ArrayList();
+    }
+
+    this.productList = productList;
+  }
+
+
+  /**
+   *  Adds a feature to the Product attribute of the ServiceContract object
+   *
+   *@param  productId  The feature to be added to the Product attribute
+   */
+  public void addProduct(int productId) {
+    if (productList == null) {
+      productList = new ArrayList();
+    }
+    productList.add(String.valueOf(productId));
+  }
+
+
+  /**
+   *  Adds a feature to the Type attribute of the ServiceContract object
+   *
+   *@param  productId  The feature to be added to the Type attribute
+   */
+  public void addType(String productId) {
+    if (productList == null) {
+      productList = new ArrayList();
+    }
+    productList.add(productId);
+  }
+
+
+  /**
+   *  Gets the products attribute of the ServiceContract object
+   *
+   *@return    The products value
+   */
+  public ArrayList getProductList() {
+    return productList;
+  }
+
+
+  /**
    *  Sets the override attribute of the ServiceContract object
    *
    *@param  tmp  The new override value
@@ -701,7 +762,7 @@ public class ServiceContract extends GenericBean {
    *@return    The totalHoursRemaining value
    */
   public double getTotalHoursRemaining() {
-    return round(totalHoursRemaining,2);
+    return round(totalHoursRemaining, 2);
   }
 
 
@@ -888,7 +949,7 @@ public class ServiceContract extends GenericBean {
     int i = 0;
     pst.setString(++i, serviceContractNumber);
     pst.setInt(++i, orgId);
-    DatabaseUtils.setDouble(pst,++i, contractValue);
+    DatabaseUtils.setDouble(pst, ++i, contractValue);
     pst.setTimestamp(++i, initialStartDate);
     if (currentStartDate == null) {
       pst.setTimestamp(++i, initialStartDate);
@@ -915,14 +976,50 @@ public class ServiceContract extends GenericBean {
     }
     resultCount = pst.executeUpdate();
     pst.close();
+
+    insertProductList(db);
+
+   //Inserts all the products (labor categories) associated with the service contract
     return resultCount;
   }
 
 
   /**
-   *  Updates only the change in  the hours remaining in the service contract
+   *  Inserts all the products (labor categories) associated with the
+   *  service contract
    *
    *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean insertProductList(Connection db) throws SQLException {
+    //Remove all products, add new list
+    ServiceContractProductList scpList = new ServiceContractProductList();
+    scpList.setContractId(this.getId());
+    scpList.buildList(db);
+    scpList.delete(db);
+    if (productList != null) {
+      for (int k = 0; k < productList.size(); k++) {
+        String productId = (String) productList.get(k);
+        if (productId != null && !("".equals(productId))) {
+          ServiceContractProduct scp = new ServiceContractProduct();
+          scp.setContractId(this.getId());
+          scp.setProductId(Integer.parseInt(productId));
+          scp.insert(db);
+        }
+      }
+    }
+
+    return true;
+  }
+
+
+  /**
+   *  Updates only the change in the hours remaining in the service contract
+   *
+   *@param  db                Description of the Parameter
+   *@param  tmpContractId     Description of the Parameter
+   *@param  tmpHoursChanged   Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public static void updateHoursRemaining(Connection db, int tmpContractId, double tmpHoursChanged) throws SQLException {
@@ -944,8 +1041,8 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Finds all dependencies of the service contract
-   *  to inform the user before the service contract is deleted
+   *  Finds all dependencies of the service contract to inform the user before
+   *  the service contract is deleted
    *
    *@param  db                Description of the Parameter
    *@return                   Description of the Return Value
@@ -975,9 +1072,9 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Seperate method to delete the dependencies and then
-   *  the object. This seperation allows service contract alone
-   *  to be deleted when other objects are deleted (for e.g., tickets)   
+   *  Seperate method to delete the dependencies and then the object. This
+   *  seperation allows service contract alone to be deleted when other objects
+   *  are deleted (for e.g., tickets)
    *
    *@param  db                Description of the Parameter
    *@param  baseFilePath      File path of documents related to a ticket
@@ -1032,6 +1129,13 @@ public class ServiceContract extends GenericBean {
     scHoursList.delete(db);
     scHoursList = null;
 
+    //Delete Service Contract Products
+    ServiceContractProductList scProductList = new ServiceContractProductList();
+    scProductList.setContractId(this.id);
+    scProductList.buildList(db);
+    scProductList.delete(db);
+    scProductList = null;
+    
     Statement st = db.createStatement();
     st.executeUpdate("DELETE FROM service_contract WHERE contract_id = " + this.getId());
     st.close();
@@ -1076,7 +1180,7 @@ public class ServiceContract extends GenericBean {
     int i = 0;
     pst.setString(++i, serviceContractNumber);
     pst.setInt(++i, orgId);
-    DatabaseUtils.setDouble(pst,++i, contractValue);
+    DatabaseUtils.setDouble(pst, ++i, contractValue);
     pst.setTimestamp(++i, initialStartDate);
     if (currentStartDate == null) {
       pst.setTimestamp(++i, initialStartDate);
@@ -1099,6 +1203,9 @@ public class ServiceContract extends GenericBean {
     pst.execute();
     id = DatabaseUtils.getCurrVal(db, "service_contract_contract_id_seq");
     pst.close();
+
+   //Inserts all the products (labor categories) associated with the service contract
+   insertProductList(db);
 
     return true;
   }
@@ -1154,7 +1261,8 @@ public class ServiceContract extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     enabled = rs.getBoolean("enabled");
-    contractValue = DatabaseUtils.getDouble(rs,"contract_value");
+    contractValue = DatabaseUtils.getDouble(rs, "contract_value");
     totalHoursRemaining = rs.getDouble("total_hours_remaining");
   }
 }
+

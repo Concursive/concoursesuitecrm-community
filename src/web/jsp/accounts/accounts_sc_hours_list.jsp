@@ -4,14 +4,8 @@
 <jsp:useBean id="serviceContractHoursHistoryInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="serviceContractHoursReasonList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<%-- Initialize the drop-down menus --%>
-<%@ include file="../initPopupMenu.jsp" %>
-<%@ include file="sc_list_menu.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript">
-  <%-- Preload image rollovers for drop-down menu --%>
-  loadImages('select');
 </script>
 <%-- Trails --%>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="serviceContractHoursHistoryInfo"/>

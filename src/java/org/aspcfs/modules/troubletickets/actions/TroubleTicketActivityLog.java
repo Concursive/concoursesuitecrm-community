@@ -364,43 +364,5 @@ public final class TroubleTicketActivityLog extends CFSModule {
     context.getRequest().setAttribute("refreshUrl", "TroubleTicketActivityLog.do?command=View&id=" + ticketId + "&formId=" + formId);
     return this.getReturn(context, "Delete");
   }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandPrintActivityForm(ActionContext context) {
-    if (!hasPermission(context, "tickets-activity-log-view")) {
-      return ("PrintPermissionError");
-    }
-    Ticket thisTicket = null;
-    Organization thisOrg = null;
-    Connection db = null;
-    try {
-      // Process the parameters
-      String ticketId = context.getRequest().getParameter("id");
-      String orgId = context.getRequest().getParameter("orgId");
-      db = this.getConnection(context);
-      // Load the ticket
-      thisTicket = new Ticket(db, Integer.parseInt(ticketId));
-      context.getRequest().setAttribute("ticketDetails", thisTicket);
-      // Load the organization
-      thisOrg = new Organization(db, Integer.parseInt(orgId));
-      context.getRequest().setAttribute("orgDetails", thisOrg);
-      // Load related lookup data
-      LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
-      context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
-    return ("PrintFormOK");
-  }
 }
 

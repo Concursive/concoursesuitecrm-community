@@ -761,14 +761,14 @@
       <!-- opportunities -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_opportunity.sql"/>
       <transaction src="${build.sql.dir}/opportunity.sql"/>
-      <!-- service contracts and assets -->
-      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_service_contract.sql"/>
-      <transaction src="${build.sql.dir}/service_contract.sql"/>
       <!-- project management -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_project.sql"/>
       <transaction src="${build.sql.dir}/project.sql"/>
       <!-- product catalog -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_product.sql"/>
+      <!-- service contracts and assets -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_service_contract.sql"/>
+      <transaction src="${build.sql.dir}/service_contract.sql"/>
       <!-- tickets -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_tms.sql"/>
       <transaction src="${build.sql.dir}/tms.sql"/>

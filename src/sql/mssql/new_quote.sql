@@ -105,7 +105,7 @@ CREATE TABLE quote_product_options (
   status_id INTEGER REFERENCES lookup_quote_status(code)
 );
 
-CREATE TABLE quote_product_option_BIT (
+CREATE TABLE quote_product_option_boolean (
 	quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
 	value BIT NOT NULL
 );

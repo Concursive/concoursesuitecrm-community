@@ -80,6 +80,8 @@ public class Ticket extends GenericBean {
   private int productId = -1;
   private int customerProductId = -1;
   private int expectation = -1;
+  private String productSku = null;
+  private String productName = null;
   //Related descriptions
   private String companyName = "";
   private String categoryName = "";
@@ -106,6 +108,7 @@ public class Ticket extends GenericBean {
 
   //action list properties
   private int actionId = -1;
+
 
   /**
    *  Constructor for the Ticket object, creates an empty Ticket
@@ -170,7 +173,9 @@ public class Ticket extends GenericBean {
         "a.vendor AS assetvendor, " +
         "a.model_version AS modelversion, " +
         "a.location AS assetlocation, " +
-        "a.onsite_service_model AS assetonsiteservicemodel " +
+        "a.onsite_service_model AS assetonsiteservicemodel, " +
+        "pc.sku AS productsku , " +
+        "pc.product_name AS productname  " +
         "FROM ticket t " +
         "LEFT JOIN organization o ON (t.org_id = o.org_id) " +
         "LEFT JOIN lookup_department ld ON (t.department_code = ld.code) " +
@@ -180,6 +185,7 @@ public class Ticket extends GenericBean {
         "LEFT JOIN lookup_ticketsource lu_ts ON (t.source_code = lu_ts.code) " +
         "LEFT JOIN service_contract sc ON (t.link_contract_id = sc.contract_id) " +
         "LEFT JOIN asset a ON (t.link_asset_id = a.asset_id) " +
+        "LEFT JOIN product_catalog pc ON (t.product_id = pc.product_id) " +
         "WHERE t.ticketid = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -339,6 +345,26 @@ public class Ticket extends GenericBean {
    */
   public void setExpectation(String tmp) {
     this.expectation = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the productSku attribute of the Ticket object
+   *
+   *@param  tmp  The new productSku value
+   */
+  public void setProductSku(String tmp) {
+    this.productSku = tmp;
+  }
+
+
+  /**
+   *  Sets the productName attribute of the Ticket object
+   *
+   *@param  tmp  The new productName value
+   */
+  public void setProductName(String tmp) {
+    this.productName = tmp;
   }
 
 
@@ -1435,6 +1461,26 @@ public class Ticket extends GenericBean {
 
 
   /**
+   *  Gets the productSku attribute of the Ticket object
+   *
+   *@return    The productSku value
+   */
+  public String getProductSku() {
+    return productSku;
+  }
+
+
+  /**
+   *  Gets the productName attribute of the Ticket object
+   *
+   *@return    The productName value
+   */
+  public String getProductName() {
+    return productName;
+  }
+
+
+  /**
    *  Gets the paddedId attribute of the Ticket object
    *
    *@return    The paddedId value
@@ -1911,6 +1957,7 @@ public class Ticket extends GenericBean {
   public String getLocation() {
     return location;
   }
+
 
   /**
    *  Gets the problemHeader attribute of the Ticket object
@@ -2796,6 +2843,10 @@ public class Ticket extends GenericBean {
     assetModelVersion = rs.getString("modelversion");
     assetLocation = rs.getString("assetlocation");
     assetOnsiteResponseModel = DatabaseUtils.getInt(rs, "assetonsiteservicemodel");
+
+    //product catalog
+    productSku = rs.getString("productsku");
+    productName = rs.getString("productname");
 
     //Calculations
     if (entered != null) {

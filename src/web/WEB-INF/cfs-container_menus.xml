@@ -50,7 +50,7 @@
       <link value="RevenueManager.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="servicecontracts">
-      <long_html value="Service Contracts"/>
+      <long_html value="Contracts"/>
       <permission value="accounts-service-contracts-view"/>
       <link value="AccountsServiceContracts.do?command=List&amp;orgId=${orgId}"/>
     </submenu>

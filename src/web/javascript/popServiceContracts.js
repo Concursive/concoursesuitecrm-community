@@ -43,6 +43,8 @@ function setContractList(scIds, scNumbers, listType, displayFieldId, hiddenField
    if (opener.document.getElementById('assetId')){
       opener.resetNumericFieldValue('assetId');
       opener.changeDivContent('addAsset', "None Selected");
+      opener.resetNumericFieldValue('productId');
+      opener.changeDivContent('addLaborCategory', "None Selected");
     }
 
   }

@@ -110,6 +110,8 @@
     </category>
     <category id="330041409" name="Product Catalog" folders="true" lookups="false" reports="false" categories="false">
       <folder constantId="200403192" description="Product Catalog Categories"/>
+      <permission name="product-catalog" attributes="v---" description="Access to Product Catalog module"/>
+      <permission name="product-catalog-product" attributes="vaed" description="Products"/>
     </category>
     <category id="6" name="Communications" folders="false" lookups="false" reports="true">
       <permission name="campaign" attributes="v---" description="Access to Communications module"/>
@@ -151,8 +153,13 @@
       <permission name="tickets-maintenance-report" attributes="vaed" description="Maintenance Notes"/>
       <permission name="tickets-activity-log" attributes="vaed" description="Activities"/>
       <report file="tickets_department.xml" type="user" permission="tickets-tickets" title="Tickets by Department" description="What tickets are there in each department?"/>
-      <report file="ticket_summary_date.xml" type="user" permission="tickets-tickets" title="Ticket counts by Department" description="How man tickets are there in the system on a particular date?"/>
+      <report file="ticket_summary_date.xml" type="user" permission="tickets-tickets" title="Ticket counts by Department" description="How many tickets are there in the system on a particular date?"/>
       <report file="ticket_summary_range.xml" type="user" permission="tickets-tickets" title="Ticket activity by Department" description="How many tickets exist within a date range?"/>
+      <report file="open_calls_report.xml" type="user" permission="tickets-tickets" title="Open Calls" description="Which tickets are open?"/>
+      <report file="contract_review_report.xml" type="user" permission="tickets-tickets" title="Contract Review" description="What is the date status for each contract?"/>
+      <report file="call_history_report.xml" type="user" permission="tickets-tickets" title="Call History" description="How have tickets been resolved?"/>
+      <report file="assets_under_contract_report.xml" type="user" permission="tickets-tickets" title="Assets Under Contract" description="Which assets are covered by contracts?"/>
+      <report file="activity_log_report.xml" type="user" permission="tickets-tickets" title="Contract Activity Summary" description="What is the hourly summary for each contract?"/>
       <multipleCategory constantId="202041401" table="ticket_category" maxLevels="4" description="Ticket Categories"/>
     </category>
     <category id="16" name="Reports" folders="false" lookups="false">

@@ -64,7 +64,7 @@ public class SendUserNotification extends ObjectHookComponent implements Compone
       //thisNotification.setItemModified(context.getParameter(SendUserNotification.ITEM_MODIFIED));
       thisNotification.setItemModified(null);
       thisNotification.setSubject(StringUtils.toHtml(context.getParameter(SendUserNotification.SUBJECT)));
-      String from = StringUtils.toHtml(context.getParameter(SendUserNotification.FROM));
+      String from = StringUtils.toHtmlValue(context.getParameter(SendUserNotification.FROM));
       if (from != null && !"".equals(from)) {
         thisNotification.setFrom(from);
       } else {

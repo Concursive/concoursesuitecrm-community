@@ -4,6 +4,7 @@ package org.aspcfs.modules.reports.base;
 
 import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.modules.accounts.base.Organization;
 import java.sql.*;
 import java.text.*;
 import org.aspcfs.utils.DatabaseUtils;
@@ -31,6 +32,7 @@ public class Parameter extends GenericBean {
   private int type = -1;
   private String name = null;
   private String value = null;
+  private String displayValue = null;
   private java.lang.Class valueClass = null;
   private String description = null;
   private boolean required = false;
@@ -132,6 +134,16 @@ public class Parameter extends GenericBean {
    */
   public void setValue(String tmp) {
     this.value = tmp;
+  }
+
+
+  /**
+   *  Sets the displayValue attribute of the Parameter object
+   *
+   *@param  tmp  The new displayValue value
+   */
+  public void setDisplayValue(String tmp) {
+    this.displayValue = tmp;
   }
 
 
@@ -262,6 +274,16 @@ public class Parameter extends GenericBean {
    */
   public String getValue() {
     return value;
+  }
+
+
+  /**
+   *  Gets the displayValue attribute of the Parameter object
+   *
+   *@return    The displayValue value
+   */
+  public String getDisplayValue() {
+    return displayValue;
   }
 
 
@@ -424,7 +446,7 @@ public class Parameter extends GenericBean {
       request.setAttribute(name, select);
     } else if (name.startsWith("lookup_call_result") && !name.endsWith("_where")) {
       //TODO: Add call result object here
-      
+
     } else if (name.startsWith("lookup_") && !name.endsWith("_where")) {
       //Perform this one last, just in case other names start with lookup_
       LookupList select = new LookupList(db, name);
@@ -436,6 +458,15 @@ public class Parameter extends GenericBean {
       select.addItem("1", "Yes");
       select.addItem("0", "No");
       request.setAttribute(name, select);
+    }else if (name.startsWith("orgid")){
+      try{
+          int id = Integer.parseInt(value);
+          Organization org = new Organization(db,id);
+          displayValue = org.getName();
+        }catch(Exception e){
+          displayValue = "All" ;
+          value = "-1";
+        }
     }
   }
 
@@ -492,8 +523,8 @@ public class Parameter extends GenericBean {
           defaultSize = maxLength;
         }
       }
-      return "<input type=\"text\" size=\"" + defaultSize + "\" " + 
-          (maxLength == -1 ? "" : "maxlength=\"" + maxLength + "\" ") + 
+      return "<input type=\"text\" size=\"" + defaultSize + "\" " +
+          (maxLength == -1 ? "" : "maxlength=\"" + maxLength + "\" ") +
           "name=\"" + name + "\" " +
           "value=\"" + HTTPUtils.toHtmlValue(value) + "\"/>";
     } else if (name.startsWith("number_")) {
@@ -508,15 +539,15 @@ public class Parameter extends GenericBean {
           defaultSize = maxLength;
         }
       }
-      return "<input type=\"text\" size=\"" + defaultSize + "\" " + 
-          (maxLength == -1 ? "" : "maxlength=\"" + maxLength + "\" ") + 
+      return "<input type=\"text\" size=\"" + defaultSize + "\" " +
+          (maxLength == -1 ? "" : "maxlength=\"" + maxLength + "\" ") +
           "name=\"" + name + "\" " +
           "value=\"" + HTTPUtils.toHtmlValue(value) + "\"/>";
-    }else if (name.equals("orgid")){
-      return "<div id=\"changeaccount\" style=\"display:inline\">All</div>" +
-             "<input type=\"hidden\" name=\"orgid\" id=\"orgid\" value=\"-1\">" +
-             "&nbsp [<a href=\"javascript:popAccountsListSingle('orgid','changeaccount', 'showMyCompany=true&filters=all|my|disabled');\">Select</a>]" +
-             "&nbsp [<a href=\"javascript:changeDivContent('changeaccount','All');javascript:resetNumericFieldValue('orgid');\">Clear</a>]"; 
+    } else if (name.startsWith("orgid")) {
+      return "<div id=\"change" + name + "\" style=\"display:inline\">" + displayValue + "</div>" +
+          "<input type=\"hidden\" name=\"" + name + "\" id=\"" + name + "\" value=\""+value+"\">" +
+          "&nbsp; [<a href=\"javascript:popAccountsListSingle('" + name + "','change" + name + "', 'showMyCompany=true&filters=all|my|disabled');\">Select</a>]" +
+          "&nbsp; [<a href=\"javascript:changeDivContent('change" + name + "','All');javascript:resetNumericFieldValue('" + name + "');\">Clear</a>]";
     }
     return "Parameter type not supported";
   }

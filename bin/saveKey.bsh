@@ -22,7 +22,8 @@ if (bsh.args.length == 0) {
 }
 
 String password = bsh.args[0];
-
+// To make sure Java received the correct input, display the password
+print(password);
 PBEKeySpec pbeKeySpec;
 PBEParameterSpec pbeParamSpec;
 SecretKeyFactory keyFac;

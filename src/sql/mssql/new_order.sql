@@ -124,7 +124,7 @@ CREATE TABLE order_product_options (
   status_id INTEGER REFERENCES lookup_order_status(code)
 );
 
-CREATE TABLE order_product_option_BIT (
+CREATE TABLE order_product_option_boolean (
 	order_product_option_id INTEGER REFERENCES order_product_options(order_product_option_id),
 	value BIT NOT NULL
 );

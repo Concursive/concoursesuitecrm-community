@@ -10,6 +10,7 @@
 #menuSurveyContainer, #menuFieldContainer, #menuCallContainer,
 #menuContactContainer, #menuEmployeeContainer, #menuNoteContainer,
 #menu1Container, #menu1aContainer, #menu1bContainer, #menu2Container,
-#menuTicketContainer, #menuServiceContractContainer, #menuAssetContainer {
+#menuTicketContainer, #menuServiceContractContainer, #menuAssetContainer,
+#menuTicketFormContainer,#menuProductContainer {
   display: none;
 }

@@ -54,10 +54,18 @@
   
   <!-- Products Catalog Dialog -->
   <action name="ProductsCatalog" class="org.aspcfs.modules.products.actions.ProductsCatalog">
+    <bean name="ProductCatalog" class="org.aspcfs.modules.products.base.ProductCatalog" scope="request"/>
     <forward name="CategoryListOK" resource="/products/product_category_list.jsp" layout="style"/>
     <forward name="ProductListOK" resource="/products/product_product_list.jsp" layout="style"/>
     <forward name="CategoriesOK" resource="/products/product_categories.jsp" layout="style"/>
     <forward name="ProductsOK" resource="/products/product_products.jsp" layout="style"/>
+    <forward name="AllProductsOK" resource="/products/product_all_products.jsp" layout="nav"/>
+    <forward name="ViewProductOK" resource="/products/product_details.jsp" layout="nav"/>
+    <forward name="AddProductOK" resource="/products/product_add.jsp" layout="nav"/>
+    <forward name="ModifyProductOK" resource="/products/product_modify.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="PopupProductListOK" resource="/products/products_all_products_popup.jsp" layout="style"/>
   </action>
   
   
@@ -165,7 +173,11 @@
     <forward name="AdjustHoursOK" resource="/mycfs/mycfs_sc_hours_adjustor.jsp" layout="style"/>
    </action>
 
-  <action name="LookupSelector" class="org.aspcfs.modules.actions.LookupSelector">
+  <action name="ProductSelector" class="org.aspcfs.modules.actions.ProductSelector">
+    <forward name="ListProductsOK" resource="/mycfs/mycfs_product_selector.jsp" layout="style"/>
+   </action>
+
+   <action name="LookupSelector" class="org.aspcfs.modules.actions.LookupSelector">
     <forward name="PopLookupOK" resource="/lookup_selector.jsp" layout="style"/>
    </action>
   

@@ -12,17 +12,14 @@ import java.sql.Timestamp;
 import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.servicecontracts.base.*;
 import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.login.beans.UserBean;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import java.text.*;
 import org.aspcfs.modules.base.*;
 
 /**
- *  Description of the Class
+ *  Action class to view, add, edit, delete and list activity log
  *
  *@author     kbhoopal
  *@created    March 17, 2004
@@ -31,7 +28,7 @@ import org.aspcfs.modules.base.*;
 public final class AccountTicketActivityLog extends CFSModule {
 
   /**
-   *  Description of the Method
+   *  Lists activity log
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -77,7 +74,7 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares the add page to add an activity
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -111,7 +108,7 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares the modify page to modify an activity
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -152,7 +149,7 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Saves the activity
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -181,8 +178,11 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setAlertDate((String) context.getRequest().getParameter("alertDate"));
       thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
       thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));
+      
+      //Saves each activity item (description of work done for the day)
       thisMaintenance.setRequestItems(context.getRequest());
       thisMaintenance.setRequest(context.getRequest());
+      
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
       thisMaintenance.insert(db);
     } catch (Exception e) {
@@ -196,7 +196,7 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Updates an activity log
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -227,6 +227,8 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setAlertDate((String) context.getRequest().getParameter("alertDate"));
       thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
       thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));
+
+      //Saves each activity item (description of work done for the day)
       thisMaintenance.setRequestItems(context.getRequest());
       String modified = context.getRequest().getParameter("modified");
       thisMaintenance.setModified(modified);
@@ -258,7 +260,7 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares the view page of the activity log
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -304,7 +306,7 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Confirms a request for deleting an activity log
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -346,7 +348,7 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Deletes an activity log
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -392,7 +394,7 @@ public final class AccountTicketActivityLog extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  loads organization details to display in at the top of the page
    *
    *@param  context           Description of the Parameter
    *@param  db                Description of the Parameter

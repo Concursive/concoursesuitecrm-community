@@ -8,6 +8,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.utils.web.*;
 import java.util.Calendar;
 
 /**
@@ -47,6 +48,8 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
   private String parentName = null;
   private String typeName = null;
   private int hasProducts = Constants.UNDEFINED;
+
+  private String emptyHtmlSelectRecord = null;
 
 
   /**
@@ -206,6 +209,50 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
    */
   public int getHasProducts() {
     return hasProducts;
+  }
+
+
+  /**
+   *  Gets the emptyHtmlSelectRecord attribute of the ProductCategoryList object
+   *
+   *@return    The emptyHtmlSelectRecord value
+   */
+  public String getEmptyHtmlSelectRecord() {
+    return emptyHtmlSelectRecord;
+  }
+
+
+  /**
+   *  Gets the htmlSelect attribute of the RoleList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@return             The htmlSelect value
+   */
+  public String getHtmlSelect(String selectName) {
+    return getHtmlSelect(selectName, -1);
+  }
+
+
+  /**
+   *  Gets the htmlSelect attribute of the ProductCategoryList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelect value
+   */
+  public String getHtmlSelect(String selectName, int defaultKey) {
+    HtmlSelect categoryListSelect = new HtmlSelect();
+    if (emptyHtmlSelectRecord != null) {
+      categoryListSelect.addItem(-1, emptyHtmlSelectRecord);
+    }
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ProductCategory thisCategory = (ProductCategory) i.next();
+      categoryListSelect.addItem(
+          thisCategory.getId(),
+          thisCategory.getName());
+    }
+    return categoryListSelect.getHtml(selectName, defaultKey);
   }
 
 
@@ -440,6 +487,16 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
 
 
   /**
+   *  Sets the emptyHtmlSelectRecord attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new emptyHtmlSelectRecord value
+   */
+  public void setEmptyHtmlSelectRecord(String tmp) {
+    this.emptyHtmlSelectRecord = tmp;
+  }
+
+
+  /**
    *  Sets the hasProducts attribute of the ProductCategoryList object
    *
    *@param  tmp  The new hasProducts value
@@ -485,7 +542,7 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
         " FROM product_category AS pctgy " +
-        " WHERE pctgy.category_id > 0"
+        " WHERE pctgy.category_id > 0 "
         );
     createFilter(sqlFilter, db);
     if (pagedListInfo != null) {
@@ -499,12 +556,18 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
       }
       rs.close();
       pst.close();
+      
+      //Determine column to sort by
+      pagedListInfo.setDefaultSort("pctgy.category_name", null);
+      pagedListInfo.appendSqlTail(db, sqlOrder);
+    } else {
+      sqlOrder.append("ORDER BY pctgy.category_name ");
     }
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     } else {
-      sqlSelect.append(" SELECT ");
+      sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
         " pctgy.*, " +
@@ -524,14 +587,10 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    int count = 0;
     while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
+      if (pagedListInfo != null && pagedListInfo.isEndOfOffset(db)) {
         break;
-      }
-      ++count;
+      }      
       ProductCategory productCategory = new ProductCategory(rs);
       this.add(productCategory);
     }
@@ -586,20 +645,20 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     if (typeName != null) {
       sqlFilter.append("AND pctgytype.description = ? ");
     }
-    if (hasProducts == Constants.TRUE){
+    if (hasProducts == Constants.TRUE) {
       sqlFilter.append(
-        " AND pctgy.category_id IN ( "+
-        " SELECT category_id "+
-        " FROM product_catalog_category_map "+
-        " WHERE id > -1 ) "
-        );
-    } else if (hasProducts == Constants.FALSE){
+          " AND pctgy.category_id IN ( " +
+          " SELECT category_id " +
+          " FROM product_catalog_category_map " +
+          " WHERE id > -1 ) "
+          );
+    } else if (hasProducts == Constants.FALSE) {
       sqlFilter.append(
-        " AND pctgy.category_id NOT IN ( "+
-        " SELECT category_id "+
-        " FROM product_catalog_category_map "+
-        " WHERE id > -1 ) "
-        );
+          " AND pctgy.category_id NOT IN ( " +
+          " SELECT category_id " +
+          " FROM product_catalog_category_map " +
+          " WHERE id > -1 ) "
+          );
     }
     //Sync API
     if (syncType == Constants.SYNC_INSERTS) {

@@ -19,6 +19,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popServiceContracts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAssets.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popProducts.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -166,7 +167,7 @@ Add Ticket
         &nbsp;
         <%= showAttribute(request, "contractIdError") %>
         [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled', <%= TicketDetails.getOrgId() %>);">Select</a>]
-         &nbsp [<a href="javascript:changeDivContent('addServiceContract','None Selected');javascript:resetNumericFieldValue('contractId');javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');">Clear</a>] 
+         &nbsp [<a href="javascript:changeDivContent('addServiceContract','None Selected');javascript:resetNumericFieldValue('contractId');javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');javascript:changeDivContent('addLaborCategory','None Selected');javascript:resetNumericFieldValue('productId');">Clear</a>] 
       </td>
     </tr>
   </table>
@@ -194,7 +195,27 @@ Add Ticket
   </table>
  </td>
 </tr>
-  
+  <tr class="containerBody">
+    <td class="formLabel">
+      Labor Category
+    </td>
+    <td>
+     <table cellspacing="0" cellpadding="0" border="0" class="empty">
+      <tr>
+        <td>
+          <div id="addLaborCategory"><%= (TicketDetails.getProductId() != -1) ? TicketDetails.getProductSku() :"None Selected" %></div>
+        </td>
+        <td>
+          <input type="hidden" name="productId" id="productId" value="<%=  TicketDetails.getProductId() %>">
+          &nbsp;
+          <%= showAttribute(request, "productIdError") %>
+          [<a href="javascript:popProductListSingle('productId','addLaborCategory', 'filters=all|my|disabled');">Select</a>]
+          &nbsp [<a href="javascript:changeDivContent('addLaborCategory','None Selected');javascript:resetNumericFieldValue('productId');">Clear</a>] 
+        </td>
+      </tr>
+    </table>
+   </td>
+  </tr>  
 	<tr class="containerBody">
     <td class="formLabel">
       Contact

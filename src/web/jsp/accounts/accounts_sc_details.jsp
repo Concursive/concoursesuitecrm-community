@@ -4,6 +4,7 @@
 <jsp:useBean id="serviceContract" class="org.aspcfs.modules.servicecontracts.base.ServiceContract" scope="request"/>
 <jsp:useBean id="serviceContractContact" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="serviceContractHoursHistory" class="org.aspcfs.modules.servicecontracts.base.ServiceContractHoursList" scope="request"/>
+<jsp:useBean id="serviceContractProductList" class="org.aspcfs.modules.servicecontracts.base.ServiceContractProductList" scope="request"/>
 <jsp:useBean id="serviceContractCategoryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="serviceContractTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="responseModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -37,13 +38,11 @@
       <input type=submit value="Modify" />
       </dhv:permission>
       <dhv:permission name="accounts-service-contracts-delete">
-      <input type="button" value="Delete" onClick="javascript:popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_servicecontract','320','200','yes','no');">
+      <input type="button" value="Delete" onClick="javascript:popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_servicecontract','320','200','yes','no');" />
       </dhv:permission>
       <input type="hidden" name="orgId" value = <%= OrgDetails.getOrgId() %> />
       <input type="hidden" name="id" value = <%= serviceContract.getId() %> />
-      <br>
-<br>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+      <br /> <br />
 <%-- Start details --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
@@ -112,6 +111,28 @@
     </td>
   </tr>
   <tr class="containerBody">
+  <td class="formLabel">
+    Labor Categories
+  </td>
+  <td>
+      <dhv:evaluate if="<%= serviceContractProductList.size() > 0 %>">
+      <%
+        Iterator itr = serviceContractProductList.iterator();
+        int count = 0;
+        while (itr.hasNext()){
+          ServiceContractProduct scp = (ServiceContractProduct)itr.next();
+          if (count != 0){%>
+            , &nbsp;
+          <%}%>
+        <%=toHtml(scp.getProductSku())%>
+       <%
+          count++;
+        }
+       %>
+      </dhv:evaluate>&nbsp;
+  </td>
+  </tr>
+  <tr class="containerBody">
     <td class="formLabel">
       Contact
     </td>
@@ -146,18 +167,6 @@
 	    <strong>Block Hour Information</strong>
 	  </th>
   </tr>
-  <%--
-  <tr class="containerBody">
-    <td class="formLabel">
-    Total Hours Purchased
-    </td>
-    <td>
-      <dhv:evaluate if="<%= serviceContract.getTotalHoursPurchased() > -1 %>">
-      <%= serviceContract.getTotalHoursPurchased() %>
-      </dhv:evaluate>&nbsp;
-    </td>
-  </tr>
-  --%>
   <tr class="containerBody">
     <td class="formLabel">
     Total Hours Remaining
@@ -212,12 +221,12 @@
 </table>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
 <%-- End Details --%>
-<br>
+<br />
   <dhv:permission name="accounts-service-contracts-edit">
   <input type="submit" value="Modify" />
   </dhv:permission>
   <dhv:permission name="accounts-service-contracts-delete">
-  <input type="button" value="Delete" onClick="javascript:popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_servicecontract','320','200','yes','no');">
+  <input type="button" value="Delete" onClick="javascript:popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_servicecontract','320','200','yes','no');" />
   </dhv:permission>
   </td>
   </tr>

@@ -45,10 +45,6 @@ Activity Log
       </dhv:permission>
       <dhv:permission name="tickets-activity-log-add" none="true"></dhv:permission>
     </td>
-    <td align="right">
-      <img src="images/icons/stock_print-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-      <a href="javascript:popURLReturn('TroubleTicketActivityLog.do?command=PrintActivityForm&id=<%=thisTicket.getId()%>&orgId=<%=thisTicket.getOrgId()%>')">Printable Form</a>
-    </td>
   </tr>
 </table>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="TMListInfo"/>

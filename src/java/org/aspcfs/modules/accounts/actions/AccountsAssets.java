@@ -11,7 +11,6 @@ import org.aspcfs.modules.servicecontracts.base.*;
 import org.aspcfs.modules.assets.base.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
-import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.base.*;
@@ -21,8 +20,6 @@ import org.aspcfs.modules.login.beans.*;
 import org.aspcfs.modules.mycfs.beans.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.admin.base.AccessType;
-import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.base.CategoryList;
 
 /**

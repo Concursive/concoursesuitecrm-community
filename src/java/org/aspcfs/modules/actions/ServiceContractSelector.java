@@ -112,7 +112,7 @@ public final class ServiceContractSelector extends CFSModule {
 
 
   /**
-   *  Sets the parameters attribute of the AccountSelector object
+   *  Sets the parameters attribute of the ServiceContractSelector object
    *
    *@param  serviceContractList  The new parameters value
    *@param  context              The new parameters value
