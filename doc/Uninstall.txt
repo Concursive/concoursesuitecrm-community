@@ -1,0 +1,12 @@
+Uninstalling binary edition of Dark Horse CRM
+
+- Stop Tomcat
+- Delete the directory: $CATALINA_HOME/webapps/darkhorse
+- Delete the directory: $CATALINA_HOME/work/Catalina/localhost/darkhorse
+- Become the tomcat user and delete the directory: ~/.java/.userPrefs/org/aspcfs
+- Delete the directory: /var/lib/darkhorse
+
+At this point there shouldn't be anything from Dark Horse CRM leftover.
+
+- Start Tomcat
+- Attempt key again
