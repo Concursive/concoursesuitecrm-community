@@ -156,19 +156,19 @@ function HideSpan(thisID)
     </td>
     <td>
       <select size=5 multiple name="fields">
-      <option value="id" selected>Account ID</option>
-      <option value="accountName" selected>Account Name</option>
-      <option value="accountNumber" selected>Account No.</option>
-      <option value="url" selected>URL</option>
-      <option value="ticker" selected>Ticker</option>
-      <option value="employees" selected>Employees</option>
-      <option value="entered" selected>Entered</option>
-      <option value="enteredBy" selected>Entered By</option>
-      <option value="modified" selected>Modified</option>
-      <option value="modifiedBy" selected>Modified By</option>
-      <option value="owner" selected>Owner</option>
-      <option value="contractEndDate" selected>Contract End Date</option>
-      <option value="notes" selected>Notes</option>
+      <option value="id" >Account ID</option>
+      <option value="accountName" >Account Name</option>
+      <option value="accountNumber" >Account No.</option>
+      <option value="url" >URL</option>
+      <option value="ticker" >Ticker</option>
+      <option value="employees" >Employees</option>
+      <option value="entered" >Entered</option>
+      <option value="enteredBy" >Entered By</option>
+      <option value="modified" >Modified</option>
+      <option value="modifiedBy" >Modified By</option>
+      <option value="owner" >Owner</option>
+      <option value="contractEndDate" >Contract End Date</option>
+      <option value="notes" >Notes</option>
       </select>
       (CTRL+click to select/de-select)
     </td>

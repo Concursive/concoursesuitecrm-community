@@ -400,7 +400,7 @@ public class OrganizationReport extends OrganizationList {
 		thisItem.setEnteredBy(enteredBy);
 		thisItem.setModifiedBy(modifiedBy);
 		thisItem.setSubject(subject);
-		thisItem.setClientFilename(filenameToUse + ".csv");
+		thisItem.setClientFilename("accountreport-" + filenameToUse + ".csv");
 		thisItem.setFilename(filenameToUse);
 		thisItem.setSize((int)fileLink.length());
 		thisItem.insert(db);

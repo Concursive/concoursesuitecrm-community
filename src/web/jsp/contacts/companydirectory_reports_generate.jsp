@@ -87,27 +87,27 @@
     </td>
     <td>
       <select size=5 multiple name="fields">
-      <option value="id" selected>Contact ID</option>
-      <option value="type" selected>Contact Type</option>
-      <option value="nameLast" selected>Last Name</option>
-      <option value="nameMiddle" selected>Middle Name</option>
-      <option value="nameFirst" selected>First Name</option>
-      <option value="company" selected>Company</option>
-      <option value="title" selected>Title</option>
-      <option value="department" selected>Department</option>
-      <option value="entered" selected>Entered</option>
-      <option value="enteredBy" selected>Entered By</option>
-      <option value="modified" selected>Modified</option>
-      <option value="modifiedBy" selected>Modified By</option>
-      <option value="owner" selected>Owner</option>
-      <option value="businessEmail" selected>Business Email</option>
-      <option value="businessPhone" selected>Business Phone</option>
-      <option value="businessAddress" selected>Business Address</option>
-      <option value="city" selected>City</option>
-      <option value="state" selected>State</option>
-      <option value="zip" selected>Zip</option>
-      <option value="country" selected>Country</option>
-      <option value="notes" selected>Notes</option>
+      <option value="id" >Contact ID</option>
+      <option value="type" >Contact Type</option>
+      <option value="nameLast" >Last Name</option>
+      <option value="nameMiddle" >Middle Name</option>
+      <option value="nameFirst" >First Name</option>
+      <option value="company" >Company</option>
+      <option value="title" >Title</option>
+      <option value="department" >Department</option>
+      <option value="entered" >Entered</option>
+      <option value="enteredBy" >Entered By</option>
+      <option value="modified" >Modified</option>
+      <option value="modifiedBy" >Modified By</option>
+      <option value="owner" >Owner</option>
+      <option value="businessEmail" >Business Email</option>
+      <option value="businessPhone" >Business Phone</option>
+      <option value="businessAddress" >Business Address</option>
+      <option value="city" >City</option>
+      <option value="state" >State</option>
+      <option value="zip" >Zip</option>
+      <option value="country" >Country</option>
+      <option value="notes" >Notes</option>
       </select>
       (CTRL+click to select/de-select)
     </td>

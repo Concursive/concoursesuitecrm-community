@@ -90,24 +90,24 @@
     </td>
     <td>
       <select size=5 multiple name="fields">
-      <option value="id" selected>Opportunity ID</option>
-      <option value="description" selected>Description</option>
-      <option value="contact" selected>Contact/Organization</option>
-      <option value="owner" selected>Owner</option>
-      <option value="amount1" selected>Low Amount</option>
-      <option value="amount2" selected>Best Guess Amount</option>
-      <option value="amount3" selected>High Amount</option>
-      <option value="stageName" selected>Stage Name</option>
-      <option value="stageDate" selected>Stage Date</option>
-      <option value="probability" selected>Prob. of Close</option>
-      <option value="revenueStart" selected>Revenue Start</option>
-      <option value="terms" selected>Terms</option>
-      <option value="alertDate" selected>Alert Date</option>
-      <option value="commission" selected>Commission</option>
-      <option value="entered" selected>Entered</option>
-      <option value="enteredBy" selected>Entered By</option>
-      <option value="modified" selected>Modified</option>
-      <option value="modifiedBy" selected>Modified By</option>
+      <option value="id" >Opportunity ID</option>
+      <option value="description" >Description</option>
+      <option value="contact" >Contact/Organization</option>
+      <option value="owner" >Owner</option>
+      <option value="amount1" >Low Amount</option>
+      <option value="amount2" >Best Guess Amount</option>
+      <option value="amount3" >High Amount</option>
+      <option value="stageName" >Stage Name</option>
+      <option value="stageDate" >Stage Date</option>
+      <option value="probability" >Prob. of Close</option>
+      <option value="revenueStart" >Revenue Start</option>
+      <option value="terms" >Terms</option>
+      <option value="alertDate" >Alert Date</option>
+      <option value="commission" >Commission</option>
+      <option value="entered" >Entered</option>
+      <option value="enteredBy" >Entered By</option>
+      <option value="modified" >Modified</option>
+      <option value="modifiedBy" >Modified By</option>
       </select>
       (CTRL+click to select/de-select)
     </td>
