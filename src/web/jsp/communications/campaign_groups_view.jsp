@@ -68,7 +68,7 @@
 	
 <%} else {%>
 	<tr class="containerBody">
-    <td colspan=3 valign=center>
+    <td colspan=4 valign=center>
       No groups found.
     </td>
   </tr>

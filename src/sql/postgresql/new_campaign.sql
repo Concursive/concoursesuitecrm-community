@@ -5,7 +5,7 @@ CREATE TABLE search_fields (
   description VARCHAR(255),
   searchable BOOLEAN NOT NULL DEFAULT 't',
   field_typeID int NOT NULL DEFAULT -1,
-	table_name varchar(80)
+	table_name varchar(80),
   object_class varchar(80)
 );
 
@@ -24,7 +24,7 @@ CREATE TABLE field_types (
   data_typeID int NOT NULL DEFAULT -1,
 	data_type VARCHAR(20),
   operator VARCHAR(50),
-  display_text varchar(50),
+  display_text varchar(50)
 );
 
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', '=', 'is');
