@@ -46,7 +46,7 @@ public class SystemStatus {
   private Hashtable lookups = new Hashtable();
 
   //Site Preferences
-  private Map preferences = null;
+  private Map preferences = new LinkedHashMap();
   private int sessionTimeout = 5400;
 
   //Object Hook to Workflow Manager
@@ -380,6 +380,7 @@ public class SystemStatus {
       System.out.println("SystemStatus-> Loading system preferences");
     }
     //Build the system preferences
+    preferences.clear();
     try {
       if (fileLibraryPath != null) {
         File prefsFile = new File(fileLibraryPath + "system.xml");
@@ -389,7 +390,6 @@ public class SystemStatus {
           //then for each config, add the param nodes into a child LinkedHashMap.
           //This will provide quick access to the values, and will allow an
           //editor to display the fields as ordered in the XML file
-          preferences = new LinkedHashMap();
           NodeList configNodes = xml.getDocumentElement().getElementsByTagName("config");
           for (int i = 0; i < configNodes.getLength(); i++) {
             Node configNode = configNodes.item(i);
