@@ -86,7 +86,7 @@
   
   <tr>
     <td nowrap valign=top class="formLabel">
-      Included Fields (CTRL+click to select/de-select)
+      Included Fields
     </td>
     <td>
       <select size=5 multiple name="fields">
@@ -109,6 +109,7 @@
       <option value="modified" selected>Modified</option>
       <option value="modifiedBy" selected>Modified By</option>
       </select>
+      (CTRL+click to select/de-select)
     </td>
   </tr>
   

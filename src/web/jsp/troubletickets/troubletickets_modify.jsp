@@ -125,16 +125,15 @@ function ShowSpan(thisID)
 		<a name="categories"></a> 
 		<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 		<tr bgcolor="#DEE0FA">
-		<td colspan=2 valign=center align=left>
-		<strong>Classification</strong>
-		</td>     
+      <td colspan=2 valign=center align=left>
+        <strong>Classification</strong>
+      </td>     
 		</tr>
-		
 		<tr>
       <td width=100 class="formLabel">
         <dhv:label name="tickets-problem">Problem</dhv:label>
       </td>
-      <td valign=top bgColor="white">
+      <td valign="top" bgColor="white">
         <textarea name="problem" cols=55 rows=3><%=TicketDetails.getProblem()%></textarea>
         <font color="red">*</font> <%= showAttribute(request, "problemError") %>
         <input type=hidden name=orgId value="<%=TicketDetails.getOrgId()%>">
@@ -266,20 +265,19 @@ function ShowSpan(thisID)
 		<br>
 		<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 		<tr bgcolor="#DEE0FA">
-		<td colspan=2 valign=center align=left>
-		<strong>Resolution</strong>
-		</td>     
+      <td colspan=2 valign=center align=left>
+        <strong>Resolution</strong>
+      </td>     
 		</tr>
 		
 		<tr>
-		<td width=100 class="formLabel">
-		Solution
-		</td>
-		
-		<td bgColor="white">
-		<textarea name=solution cols=55 rows=3><% if (TicketDetails.getSolution() != null) {%><%=TicketDetails.getSolution()%><%}%></textarea>
-		<input type=checkbox name="closeNow">Close ticket
-		</td>
+      <td width=100 class="formLabel">
+        Solution
+      </td>
+      <td bgColor="white">
+        <textarea name=solution cols=55 rows=3><% if (TicketDetails.getSolution() != null) {%><%=TicketDetails.getSolution()%><%}%></textarea><br>
+        <input type=checkbox name="closeNow">Close ticket
+      </td>
 		</tr>
 		
 				<tr>

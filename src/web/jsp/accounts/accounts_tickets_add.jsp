@@ -153,7 +153,7 @@
     <td class="formLabel">
       <dhv:label name="tickets-problem">Problem</dhv:label>
     </td>
-    <td>
+    <td valign="top">
       <textarea name="problem" cols=55 rows=3><%=TicketDetails.getProblem()%></textarea>
       <font color="red">*</font> <%= showAttribute(request, "problemError") %>
       <input type=hidden name=refresh value="-1">
@@ -273,7 +273,7 @@
       Solution
     </td>
     <td>
-      <textarea name=solution cols=55 rows=3><%=TicketDetails.getSolution()%></textarea>
+      <textarea name=solution cols=55 rows=3><%=TicketDetails.getSolution()%></textarea><br>
       <input type=checkbox name="closeNow">Close ticket
     </td>
 	</tr>

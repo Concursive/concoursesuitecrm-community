@@ -83,7 +83,7 @@
   
   <tr>
     <td nowrap valign=top class="formLabel">
-      Included Fields (CTRL+click to select/de-select)
+      Included Fields
     </td>
     <td>
       <select size=5 multiple name="fields">
@@ -109,6 +109,7 @@
       <option value="country" selected>Country</option>
       <option value="notes" selected>Notes</option>
       </select>
+      (CTRL+click to select/de-select)
     </td>
   </tr>
   

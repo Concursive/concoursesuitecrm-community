@@ -149,17 +149,16 @@
 	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	
 	<tr bgcolor="#DEE0FA">
-	<td colspan=2 valign=center align=left>
-	
-	<strong>Classification</strong>
-	</td>     
+    <td colspan=2 valign=center align=left>
+      <strong>Classification</strong>
+    </td>     
 	</tr>
 	
 	<tr>
     <td width=100 class="formLabel">
       <dhv:label name="tickets-problem">Problem</dhv:label>
     </td>
-    <td bgColor="white">
+    <td bgColor="white" valign="top">
       <textarea name="problem" cols=55 rows=3><%=TicketDetails.getProblem()%></textarea>
       <font color="red">*</font> <%= showAttribute(request, "problemError") %>
       <input type=hidden name=refresh value="-1">
@@ -286,7 +285,7 @@
 	</td>
 	
 	<td bgColor="white">
-	<textarea name=solution cols=55 rows=3><%=TicketDetails.getSolution()%></textarea>
+	<textarea name=solution cols=55 rows=3><%=TicketDetails.getSolution()%></textarea><br>
 	<input type=checkbox name="closeNow">Close ticket
 	</td>
 	</tr>
