@@ -51,7 +51,7 @@ Manage CFS by reviewing system usage, configuring specific modules, and configur
     <tr class="containerBody">
       <td>
         <ul>
-          <li><a href="#">Configure global parameters</a></li>
+          <li><a href="Admin.do?command=ListGlobalParams">Configure global parameters</a></li>
         </ul>
       </td>
     </tr>

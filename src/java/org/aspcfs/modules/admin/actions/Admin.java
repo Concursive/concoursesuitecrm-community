@@ -9,6 +9,7 @@ import java.util.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
+import com.darkhorseventures.controller.SystemStatus;
 import com.zeroio.iteam.base.*;
 import java.text.*;
 
@@ -122,7 +123,7 @@ public final class Admin extends CFSModule {
       UsageList usage = new UsageList();
       usage.setEnteredRangeStart(new java.sql.Timestamp(startRange));
       usage.setEnteredRangeEnd(new java.sql.Timestamp(endRange));
-      
+
       //Upstream bw: x, the specific files uploaded on date x size
       usage.setAction(Constants.USAGE_FILE_UPLOAD);
       usage.buildUsage(db);
@@ -136,14 +137,14 @@ public final class Admin extends CFSModule {
       long fileDownloadCount = usage.getCount();
       long fileDownloadSize = usage.getSize();
       usageList2.add(nf.format(fileDownloadCount) + " file" + StringUtils.addS(fileDownloadCount) + " downloaded today, using " + nf.format(fileDownloadSize) + " byte" + StringUtils.addS(fileDownloadSize) + " of bandwidth");
- 
+
       //Communications Manager emails
       usage.setAction(Constants.USAGE_COMMUNICATIONS_EMAIL);
       usage.buildUsage(db);
       long emailRecipientCount = usage.getCount();
       long emailSize = usage.getSize();
       usageList2.add(nf.format(emailRecipientCount) + " email" + StringUtils.addS(emailRecipientCount) + " sent today, consisting of " + nf.format(emailSize) + " byte" + StringUtils.addS(emailSize));
-      
+
       //Communications Manager faxes
       usage.setAction(Constants.USAGE_COMMUNICATIONS_FAX);
       usage.buildUsage(db);
@@ -450,6 +451,71 @@ public final class Admin extends CFSModule {
     context.getRequest().setAttribute("moduleId", context.getRequest().getParameter("module"));
     addModuleBean(context, "Configuration", "Configuration");
     return ("ModifyListOK");
+  }
+
+
+  /**
+   *  Lists the global parameters.
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandListGlobalParams(ActionContext context) {
+
+    if (!(hasPermission(context, "admin-sysconfig-view"))) {
+      return ("PermissionError");
+    }
+
+    addModuleBean(context, "Configuration", "Configuration");
+
+    //get the session timeout
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    int sessionTimeout = ((SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl())).getSessionTimeout();
+    context.getRequest().setAttribute("Timeout", String.valueOf(sessionTimeout/60));
+
+    return ("GlobalParamsOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandModifyTimeout(ActionContext context) {
+
+    if (!(hasPermission(context, "admin-sysconfig-view"))) {
+      return ("PermissionError");
+    }
+
+    addModuleBean(context, "Configuration", "Configuration");
+    return ("ModifyTimeoutOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandUpdateTimeout(ActionContext context) {
+
+    if (!(hasPermission(context, "admin-sysconfig-view"))) {
+      return ("PermissionError");
+    }
+
+    int timeout = Integer.parseInt(context.getRequest().getParameter("timeout"));
+
+    addModuleBean(context, "Configuration", "Configuration");
+
+    //get the session timeout
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    thisSystem.setSessionTimeout(timeout * 60);
+
+    return executeCommandListGlobalParams(context);
   }
 
 
