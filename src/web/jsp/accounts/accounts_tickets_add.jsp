@@ -342,14 +342,7 @@ Add Ticket<br>
     <td>
       <textarea name=solution cols=55 rows=3><%= toString(TicketDetails.getSolution()) %></textarea><br>
       <input type=checkbox name="closeNow">Close ticket
-    </td>
-	</tr>
-	<tr class="containerBody">
-    <td class="formLabel">
-      Knowledge Base
-    </td>
-    <td>
-      <input type=checkbox name="kbase" checked>Include this solution
+      <br><input type="checkbox" name="kbase">Add this solution to Knowledge Base &nbsp;
     </td>
 	</tr>
 </table>

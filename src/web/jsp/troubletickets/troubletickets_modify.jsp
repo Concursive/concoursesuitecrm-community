@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.HtmlSelect" %>
 <jsp:useBean id="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
 <jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="SeverityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -319,18 +319,26 @@ function ShowSpan(thisID)
       <td bgColor="white">
         <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
         <input type="checkbox" name="closeNow">Close ticket
+        <br><input type="checkbox" name="kbase">Add this solution to Knowledge Base &nbsp;
+<%-- Added for voice demo... --%>
+<%
+        CampaignList campaignList = (CampaignList)request.getAttribute("CampaignList");
+        if (campaignList != null && campaignList.size() > 0) {
+          HtmlSelect campaignSelect = new HtmlSelect();
+          campaignSelect.addItem(-1, "-- None --");
+          Iterator campaigns = campaignList.iterator();
+          while (campaigns.hasNext()) {
+            Campaign thisCampaign = (Campaign)campaigns.next();
+            campaignSelect.addItem(thisCampaign.getId(), thisCampaign.getName());
+          }
+%>
+        <br>Send contact a follow-up message: <%= campaignSelect.getHtml("campaignId", TicketDetails.getCampaignId()) %>
+<%
+        }
+%>
+<%-- End voice demo --%>
       </td>
 		</tr>
-		
-				<tr>
-	<td width="100" class="formLabel">
-	Knowledge Base
-	</td>
-	
-	<td bgColor="white">
-	<input type="checkbox" name="kbase" checked>Include this solution
-	</td>
-	</tr>
 	</table>
 	
   &nbsp;

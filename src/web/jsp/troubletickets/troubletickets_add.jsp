@@ -341,20 +341,9 @@
 	<td bgColor="white">
 	<textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
 	<input type=checkbox name="closeNow">Close ticket
+  <br><input type="checkbox" name="kbase">Add this solution to Knowledge Base
 	</td>
 	</tr>
-	
-		<tr>
-	<td width="100" class="formLabel">
-	Knowledge Base
-	</td>
-	
-	<td bgColor="white">
-	<input type="checkbox" name="kbase" checked>Include this solution
-	</td>
-	</tr>
-
-	
 </table>
 <br>
 <% if (request.getParameter("contact") != null) {%>

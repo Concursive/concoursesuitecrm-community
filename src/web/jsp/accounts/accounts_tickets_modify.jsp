@@ -325,18 +325,9 @@ Modify Ticket<br>
 		<td>
       <textarea name=solution cols=55 rows=3><%= toString(TicketDetails.getSolution()) %></textarea><br>
         <input type="checkbox" name="closeNow">Close ticket
+        <br><input type="checkbox" name="kbase">Add this solution to Knowledge Base &nbsp;
       </td>
 		</tr>
-		
-	<tr class="containerBody">
-	<td width="100" class="formLabel">
-	Knowledge Base
-	</td>
-	
-	<td bgColor="white">
-	<input type="checkbox" name="kbase" checked>Include this solution
-	</td>
-	</tr>
 </table>
 <br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
