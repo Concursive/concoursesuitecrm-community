@@ -3,7 +3,7 @@
 /* 4/10/2002 */
 
 CREATE TABLE sync_client (
-  client_id INT IDENTITY PRIMARY KEY,
+  client_id SERIAL PRIMARY KEY,
   type VARCHAR(100),
   version VARCHAR(50),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
