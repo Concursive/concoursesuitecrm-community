@@ -145,7 +145,7 @@
 </table>
 </dhv:evaluate>
     </td>
-    <td class="PhotoDetail">
+    <td class="PhotoDetail" valign="top">
       <span>
 <dhv:evaluate exp="<%= InventoryItem.hasPictureId() %>">
         <a href="javascript:popURL('autoguide_popup_photo.jsp?id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>&ver=1.0','Photo','760','550','yes','yes');"><img src="AutoGuide.do?command=ShowImage&id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>" border="0"/></a>
@@ -156,7 +156,7 @@
         <br>
       </span>
       <br>
-      <a href="javascript:popURLReturn('AutoGuide.do?command=UploadForm&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>', 'AccountsAutoGuide.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&id=<%= InventoryItem.getId() %>', 'Photo Upload','500','300','no','no');">Upload Photo</a>
+      <a href="javascript:popURLReturn('AutoGuide.do?command=UploadForm&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>', 'AccountsAutoGuide.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&id=<%= InventoryItem.getId() %>', 'Photo_Upload','500','300','no','no');">Upload Photo</a>
     </td>
   </tr>
 </table>

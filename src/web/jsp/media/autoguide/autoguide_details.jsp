@@ -1,6 +1,7 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.autoguide.base.*" %>
 <jsp:useBean id="InventoryItem" class="com.darkhorseventures.autoguide.base.Inventory" scope="request"/>
+<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
@@ -118,6 +119,9 @@
 <dhv:evaluate exp="<%= !thisAdRun.isComplete() %>">
       <a href="javascript:confirmForward('AutoGuide.do?command=MarkComplete&id=<%= InventoryItem.getId() %>&adId=<%= thisAdRun.getId() %>');">Set this item as completed</a>
 </dhv:evaluate>
+<dhv:evaluate exp="<%= thisAdRun.isComplete() && thisAdRun.completedBy() == User.getUserId() %>">
+      <a href="javascript:confirmForward('AutoGuide.do?command=MarkComplete&id=<%= InventoryItem.getId() %>&adId=<%= thisAdRun.getId() %>');">Set this item as completed</a>
+</dhv:evaluate>
       &nbsp;
     </td>
   </tr>
@@ -143,7 +147,7 @@
 </table>
 </dhv:evaluate>
     </td>
-    <td class="PhotoDetail">
+    <td class="PhotoDetail" valign="top">
       <span>
 <dhv:evaluate exp="<%= InventoryItem.hasPictureId() %>">
         <a href="javascript:popURL('autoguide_popup_photo.jsp?id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>&ver=1.0','Photo','760','550','yes','yes');"><img src="AutoGuide.do?command=ShowImage&id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>" border="0"/></a>

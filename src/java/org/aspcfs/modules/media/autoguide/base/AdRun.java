@@ -176,6 +176,9 @@ public class AdRun {
   }
 
   public void setCompletedBy(int tmp) { this.completedBy = tmp; }
+  public void setCompletedBy(String tmp) {
+    this.completedBy = Integer.parseInt(tmp);
+  }
   public int getCompletedBy() { return completedBy; }
 
 
@@ -372,9 +375,9 @@ public class AdRun {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO autoguide_ad_run (inventory_id, " +
-        "run_date, ad_type, include_photo, complete_date, " +
+        "run_date, ad_type, include_photo, complete_date, completedby, " +
         "enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?)");
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, inventoryId);
@@ -383,8 +386,10 @@ public class AdRun {
     pst.setBoolean(++i, includePhoto);
     if (completeDate == null) {
       pst.setNull(++i, java.sql.Types.DATE);
+      pst.setInt(++i, -1);
     } else {
       pst.setDate(++i, completeDate);
+      pst.setInt(++i, completedBy);
     }
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, modifiedBy);
@@ -413,6 +418,7 @@ public class AdRun {
       sql.append(
           "UPDATE autoguide_ad_run " +
           "SET run_date = ?, ad_type = ?, include_photo = ?, complete_date = ?, " +
+          "completedby = ?, " +
           "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
           "WHERE ad_run_id = ? ");
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -422,8 +428,10 @@ public class AdRun {
       pst.setBoolean(++i, includePhoto);
       if (completeDate == null) {
         pst.setNull(++i, java.sql.Types.DATE);
+        pst.setInt(++i, -1);
       } else {
         pst.setDate(++i, completeDate);
+        pst.setInt(++i, completedBy);
       }
       pst.setInt(++i, modifiedBy);
       pst.setInt(++i, id);
@@ -442,6 +450,22 @@ public class AdRun {
     int i = 0;
     pst.setInt(++i, completedBy);
     pst.setInt(++i, id);
+    pst.execute();
+    pst.close();
+  }
+  
+  public void markIncomplete(Connection db) throws SQLException {
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "UPDATE autoguide_ad_run " +
+        "SET complete_date = ?, completedby = ? " +
+        "WHERE ad_run_id = ?, completedby = ? ");
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    int i = 0;
+    pst.setNull(++i, java.sql.Types.DATE);
+    pst.setInt(++i, -1);
+    pst.setInt(++i, id);
+    pst.setInt(++i, completedBy);
     pst.execute();
     pst.close();
   }
@@ -478,6 +502,7 @@ public class AdRun {
     adType = rs.getInt("ad_type");
     includePhoto = rs.getBoolean("include_photo");
     completeDate = rs.getDate("complete_date");
+    completedBy = rs.getInt("completedby");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");

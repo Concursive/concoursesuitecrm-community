@@ -263,7 +263,7 @@ public class AdRunList extends ArrayList {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT ad.ad_run_id, ad.inventory_id, " +
-        "ad.run_date, ad.ad_type, ad.include_photo, complete_date, " +
+        "ad.run_date, ad.ad_type, ad.include_photo, complete_date, completedby, " +
         "ad.entered, ad.enteredby, " +
         "ad.modified, ad.modifiedby, " +
         "adtype.description " +
