@@ -71,6 +71,11 @@ Search Results
   }
 %>
       <%= toHtml(thisTic.getProblemHeader()) %>
+      <% if (thisTic.getClosed() == null) { %>
+        [<font color="green">open</font>]
+      <%} else {%>
+        [<font color="red">closed</font>]
+      <%}%>
     </td>
   </tr>
 <%}%>
