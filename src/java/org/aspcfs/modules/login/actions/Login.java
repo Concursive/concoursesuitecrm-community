@@ -42,11 +42,11 @@ public final class Login extends CFSModule {
     String password = loginBean.getPassword();
     String serverName = context.getRequest().getServerName();
     //Prepare the gatekeeper
-    String gkDriver = (String) context.getServletContext().getAttribute("GKDRIVER");
-    String gkHost = (String) context.getServletContext().getAttribute("GKHOST");
-    String gkUser = (String) context.getServletContext().getAttribute("GKUSER");
-    String gkUserPw = (String) context.getServletContext().getAttribute("GKUSERPW");
-    String siteCode = (String) context.getServletContext().getAttribute("SiteCode");
+    String gkDriver = getPref(context, "GATEKEEPER.DRIVER");
+    String gkHost = getPref(context, "GATEKEEPER.URL");
+    String gkUser = getPref(context, "GATEKEEPER.USER");
+    String gkUserPw = getPref(context, "GATEKEEPER.PASSWORD");
+    String siteCode = getPref(context, "GATEKEEPER.APPCODE");
     ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
     gk.setDriver(gkDriver);
     //Prepare the database connection
@@ -95,11 +95,7 @@ public final class Login extends CFSModule {
     if (ce == null) {
       return "LoginRetry";
     }
-
-    ///////////////////////////////////////////////////////////
-    //	Get connected to Customer database,
-    //	Validate this user.
-    //
+    // Connect to the customer database and validate user
     UserBean thisUser = null;
     int userId = -1;
     int aliasId = -1;
@@ -115,11 +111,11 @@ public final class Login extends CFSModule {
       }
       //Check the license
       try {
-        File keyFile = new File((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
-        File inputFile = new File((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt");
+        File keyFile = new File(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
+        File inputFile = new File(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt");
         if (keyFile.exists() && inputFile.exists()) {
-          java.security.Key key = org.aspcfs.utils.PrivateString.loadKey((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
-          org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt")));
+          java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
+          org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
           //The edition will be shown
           String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
           PreparedStatement pst = db.prepareStatement(
@@ -184,7 +180,7 @@ public final class Login extends CFSModule {
         User userRecord = thisSystem.getUser(thisUser.getUserId());
         if (userRecord != null) {
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("SystemStatus-> Retrieved user from memory: " + userRecord.getUsername());
+            System.out.println("Login-> Retrieved user from memory: " + userRecord.getUsername());
           }
           thisUser.setConnectionElement(ce);
           thisUser.setClientType(context.getRequest());

@@ -208,8 +208,8 @@ public final class Users extends CFSModule {
     addModuleBean(context, "Add User", "Add New User");
     try {
       //Load the license and see how many users can be added
-      java.security.Key key = org.aspcfs.utils.PrivateString.loadKey((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
-      org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt")));
+      java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
+      org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
       String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
       db = this.getConnection(context);
       //Check the license
@@ -270,8 +270,8 @@ public final class Users extends CFSModule {
     try {
       synchronized(this) {
         //Load the license and see how many users can be added
-        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
-        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt")));
+        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
+        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
         String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
         db = this.getConnection(context);
         //Check the license
@@ -448,8 +448,8 @@ public final class Users extends CFSModule {
     try {
       synchronized(this) {
         //Load the license and see how many users can be added
-        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
-        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt")));
+        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
+        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
         String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
         db = this.getConnection(context);
         //Check the license

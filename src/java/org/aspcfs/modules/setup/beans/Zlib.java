@@ -23,8 +23,8 @@ import org.xml.sax.*;
  *@version    $Id$
  */
 public class Zlib {
-  public static final String CRLF = System.getProperty("line.separator");
-  
+  public final static String CRLF = System.getProperty("line.separator");
+
   private Key key = null;
   private String keyText = null;
   private String nameFirst = null;
@@ -39,6 +39,12 @@ public class Zlib {
   private String os = null;
   private String java = null;
   private String webserver = null;
+
+
+  /**
+   *  Constructor for the Zlib object
+   */
+  public Zlib() { }
 
 
   /**

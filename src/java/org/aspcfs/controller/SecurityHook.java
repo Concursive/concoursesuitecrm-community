@@ -181,7 +181,7 @@ public class SecurityHook implements ControllerHook {
       SystemStatus newSystemStatus = new SystemStatus();
       newSystemStatus.setConnectionElement((ConnectionElement) ce.clone());
       //Store the fileLibrary path for processes like Workflow
-      ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute("APPLICATION.PREFS");
+      ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute("applicationPrefs");
       newSystemStatus.setFileLibraryPath(prefs.get("FILELIBRARY") + ce.getDbName() + fs);
       newSystemStatus.queryRecord(db);
       statusList.put(ce.getUrl(), newSystemStatus);

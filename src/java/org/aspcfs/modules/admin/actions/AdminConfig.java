@@ -129,7 +129,7 @@ public final class AdminConfig extends CFSModule {
       return ("PermissionError");
     }
     //Prepare to change the prefs
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     if (prefs == null) {
       return "ModifyError";
     }
@@ -169,7 +169,7 @@ public final class AdminConfig extends CFSModule {
       return ("PermissionError");
     }
     //Prepare to change the prefs
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     if (prefs == null) {
       return "ModifyError";
     }
@@ -181,9 +181,9 @@ public final class AdminConfig extends CFSModule {
         UpdateBean bean = new UpdateBean();
         //Send the current key, email address, profile, and crc
         java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
-            (String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
+            getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
         XMLUtils xml = new XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, 
-            StringUtils.loadText((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt")));
+            StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
         //Encode the license for transmission
         BASE64Encoder encoder = new BASE64Encoder();
         bean.setZlib(encoder.encode(ObjectUtils.toByteArray(key)));
@@ -224,7 +224,7 @@ public final class AdminConfig extends CFSModule {
             if (entered == null) {
               return "LicenseCheckERROR";
             }
-            StringUtils.saveText(context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt", updatedLicense);
+            StringUtils.saveText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt", updatedLicense);
             context.getServletContext().setAttribute("APP_TEXT", XMLUtils.getNodeText(xml2.getFirstChild("edition")));
             String text2 = XMLUtils.getNodeText(xml2.getFirstChild("text2")).substring(7);
             if ("-1".equals(text2)) {

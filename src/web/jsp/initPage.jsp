@@ -230,7 +230,7 @@ public static String replace(String str, String o, String n) {
   }
   
   public static String getPref(ServletContext context, String param) {
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute("APPLICATION.PREFS");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute("applicationPrefs");
     if (prefs != null) {
       return prefs.get(param);
     } else {

@@ -67,7 +67,6 @@ public class Setup extends CFSModule {
     if (thisFile.exists()) {
       context.getRequest().setAttribute("found", "true");
     }
-    Prefs.loadPrefs(context.getServletContext());
     return "SetupOK";
   }
 
@@ -279,7 +278,7 @@ public class Setup extends CFSModule {
     //Check the file library pref, if it exists then add to request
     String path = context.getRequest().getParameter("fileLibrary");
     if (path == null) {
-      path = (String) context.getServletContext().getAttribute("FileLibrary");
+      path = getPref(context, "FILELIBRARY");
     }
     //Display a default recommended file path
     if (path == null) {
@@ -327,7 +326,6 @@ public class Setup extends CFSModule {
       File targetDirectory = new File(fileLibrary);
       if (targetDirectory.exists()) {
         //Let's use the target directory
-        context.getServletContext().setAttribute("FileLibrary", fileLibrary);
         ApplicationPrefs prefs = getApplicationPrefs(context);
         prefs.setFilename(fileLibrary + "build.properties");
         prefs.add("FILELIBRARY", fileLibrary);
@@ -364,7 +362,6 @@ public class Setup extends CFSModule {
       if (!path.endsWith(fs)) {
         path += fs;
       }
-      context.getServletContext().setAttribute("FileLibrary", path);
       ApplicationPrefs prefs = getApplicationPrefs(context);
       prefs.setFilename(path + "build.properties");
       prefs.add("FILELIBRARY", path);
@@ -391,7 +388,7 @@ public class Setup extends CFSModule {
     }
     addModuleBean(context, null, "Storage");
     //Verify the path again that the user specified
-    String userFileLibrary = (String) context.getServletContext().getAttribute("FileLibrary");
+    String userFileLibrary = getPref(context, "FILELIBRARY");
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Setup-> ConfigureDirectoryFinalize path = " + userFileLibrary);
     }
@@ -427,7 +424,7 @@ public class Setup extends CFSModule {
       //Copy zlib.jar to target directory (always do this, since user may have re-registered)
       FileUtils.copyFile(zlibFile, zlibFileDest, true);
       //Add fileLibrary pref to registry so that this page can be skipped in the future
-      Prefs.savePref("cfs.fileLibrary", userFileLibrary);
+      Prefs.savePref(context.getServletContext().getRealPath("/"), userFileLibrary);
     } catch (Exception e) {
       context.getRequest().setAttribute("actionError",
           "An error occurred while trying to use the directory, " +
@@ -453,7 +450,7 @@ public class Setup extends CFSModule {
     if (bean.getConfigured() == -1) {
       //Check the database pref, if it exists then add to request for confirm
       try {
-        String fileLibrary = (String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs;
+        String fileLibrary = getPref(context, "FILELIBRARY") + "init" + fs;
         File dbPref = new File(fileLibrary + "conn.sgml");
         if (dbPref.exists()) {
           String dbInfo = StringUtils.loadText(fileLibrary + "conn.sgml");
@@ -493,13 +490,13 @@ public class Setup extends CFSModule {
       Connection db = DriverManager.getConnection(
           bean.getUrl(), bean.getUser(), bean.getPassword());
       //Save the conn info as encrypted text so it can be reloaded later
-      String fileLibrary = (String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs;
+      String fileLibrary = getPref(context, "FILELIBRARY") + "init" + fs;
       File dbPref = new File(fileLibrary + "conn.sgml");
       String dbInfo = bean.getConnection();
       Key key = PrivateString.loadKey(fileLibrary + "zlib.jar");
       StringUtils.saveText(fileLibrary + "conn.sgml", PrivateString.encrypt(key, dbInfo));
       //Create the db directory to store database specific files
-      String dbPath = (String) context.getServletContext().getAttribute("FileLibrary") + bean.getName() + fs;
+      String dbPath = getPref(context, "FILELIBRARY") + bean.getName() + fs;
       File dbDirectory = new File(dbPath);
       dbDirectory.mkdirs();
       //Copy setup/system.xml and setup/workflow.xml to new fileLib + dbname + /
@@ -631,7 +628,7 @@ public class Setup extends CFSModule {
     if (bean.getConfigured() == -1) {
       //Check the server pref, if it exists then add to request for confirmation
       try {
-        String fileLibrary = (String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs;
+        String fileLibrary = getPref(context, "FILELIBRARY") + "init" + fs;
         File serverPref = new File(fileLibrary + "srv1.sgml");
         if (serverPref.exists()) {
           String serverInfo = StringUtils.loadText(fileLibrary + "srv1.sgml");
@@ -670,7 +667,7 @@ public class Setup extends CFSModule {
     }
     try {
       //Save the settings as encrypted text so it can be reloaded later
-      String fileLibrary = (String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs;
+      String fileLibrary = getPref(context, "FILELIBRARY") + "init" + fs;
       Key key = PrivateString.loadKey(fileLibrary + "zlib.jar");
       String serverInfo = bean.getServerInfo();
       StringUtils.saveText(fileLibrary + "srv1.sgml", PrivateString.encrypt(key, serverInfo));
@@ -922,7 +919,8 @@ public class Setup extends CFSModule {
    *@return          The key value
    */
   private Key getKey(ActionContext context) {
-    String fileLibrary = (String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs;
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    String fileLibrary = prefs.get("FILELIBRARY") + "init" + fs;
     return PrivateString.loadKey(fileLibrary + "zlib.jar");
   }
 
@@ -937,7 +935,8 @@ public class Setup extends CFSModule {
   private Connection getDbConnection(ActionContext context) throws Exception {
     //Retrieve the connection info from preferences
     Key key = getKey(context);
-    String fileLibrary = (String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs;
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    String fileLibrary = prefs.get("FILELIBRARY") + "init" + fs;
     DatabaseBean dbBean = new DatabaseBean();
     try {
       File dbPref = new File(fileLibrary + "conn.sgml");
@@ -1011,10 +1010,10 @@ public class Setup extends CFSModule {
    *@return          The applicationPrefs value
    */
   private ApplicationPrefs getApplicationPrefs(ActionContext context) {
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     if (prefs == null) {
       prefs = new ApplicationPrefs();
-      context.getServletContext().setAttribute("APPLICATION.PREFS", prefs);
+      context.getServletContext().setAttribute("applicationPrefs", prefs);
     }
     return prefs;
   }

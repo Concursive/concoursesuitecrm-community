@@ -145,7 +145,7 @@ public class ObjectHookManager {
       if (wfManager != null && hookList != null && processList != null) {
         if ((object != null && hookList.has(object)) ||
             (previousObject != null && hookList.has(previousObject))) {
-          ApplicationPrefs prefs = (ApplicationPrefs) actionContext.getServletContext().getAttribute("APPLICATION.PREFS");
+          ApplicationPrefs prefs = (ApplicationPrefs) actionContext.getServletContext().getAttribute("applicationPrefs");
           ComponentContext context = new ComponentContext();
           context.setPreviousObject(previousObject);
           context.setThisObject(object);

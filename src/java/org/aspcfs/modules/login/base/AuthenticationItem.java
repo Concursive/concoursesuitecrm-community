@@ -3,6 +3,7 @@ package org.aspcfs.modules.login.base;
 import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import com.darkhorseventures.database.*;
+import org.aspcfs.controller.ApplicationPrefs;
 
 /**
  *  When a module needs to get a connection to the database, it must first be
@@ -238,12 +239,13 @@ public class AuthenticationItem {
    *@exception  SQLException  Description of the Exception
    */
   public ConnectionElement getConnectionElement(ActionContext context) throws SQLException {
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     //Query the gatekeeper for the connectionElement info
-    String gkHost = (String) context.getServletContext().getAttribute("GKHOST");
-    String gkUser = (String) context.getServletContext().getAttribute("GKUSER");
-    String gkUserPw = (String) context.getServletContext().getAttribute("GKUSERPW");
-    String siteCode = (String) context.getServletContext().getAttribute("SiteCode");
-    String gkDriver = (String) context.getServletContext().getAttribute("GKDRIVER");
+    String gkHost = prefs.get("GATEKEEPER.URL");
+    String gkUser = prefs.get("GATEKEEPER.USER");
+    String gkUserPw = prefs.get("GATEKEEPER.PASSWORD");
+    String siteCode = prefs.get("GATEKEEPER.APPCODE");
+    String gkDriver = prefs.get("GATEKEEPER.DRIVER");
     String serverName = context.getRequest().getServerName();
     if (System.getProperty("DEBUG") != null) {
       System.out.println("AuthenticationItem-> GateKeeper: " + gkHost);

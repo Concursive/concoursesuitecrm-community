@@ -34,36 +34,13 @@ public class InitHook implements ControllerInitHook {
   public String executeControllerInit(ServletConfig config) {
     System.out.println("InitHook-> Executing");
     ServletContext context = config.getServletContext();
-    //Load the system prefs from the Java registry to determine the file library path
-    org.aspcfs.modules.setup.utils.Prefs.loadPrefs(context);
-    //Load the build.properties file to set the rest of the prefs
-    File propertyFile = null;
-    if (context.getAttribute("FileLibrary") != null) {
-      //The value was loaded from the binary distribution
-      propertyFile = new File((String) context.getAttribute("FileLibrary") + "build.properties");
-    } else {
-      propertyFile = new File(context.getRealPath("/") + "WEB-INF" + fs + "fileLibrary" + fs + "build.properties");
-      if (propertyFile.exists()) {
-        //The value can be set since it wasn't required during the enterprise build process
-        context.setAttribute("FileLibrary", context.getRealPath("/") + "WEB-INF" + fs + "fileLibrary" + fs);
-      }
-    }
-    //Load prefs from file
-    ApplicationPrefs prefs = new ApplicationPrefs();
-    if (propertyFile != null && propertyFile.exists()) {
-      prefs.load(propertyFile.getPath());
-      if (prefs.has("CONTROL")) {
-        context.setAttribute("cfs.setup", "true");
-      } else {
-        prefs.clear();
-      }
-    }
-    context.setAttribute("APPLICATION.PREFS", prefs);
-    prefs.populateContext(context);
+    //Determine the file library path and load the prefs if found
+    ApplicationPrefs prefs = new ApplicationPrefs(context);
+    context.setAttribute("applicationPrefs", prefs);
     //Define the keystore, to be used by tasks that require SSL certificates
     this.addAttribute(config, context, "ClientSSLKeystore", "ClientSSLKeystore");
     this.addAttribute(config, context, "ClientSSLKeystorePassword", "ClientSSLKeystorePassword");
-    //Read in the default module settings for CFS
+    //Read in the default module settings
     this.addAttribute(config, context, "ContainerMenuConfig", "ContainerMenuConfig");
     if (config.getInitParameter("DynamicFormConfig") != null) {
       context.setAttribute("DynamicFormConfig", config.getInitParameter("DynamicFormConfig"));
