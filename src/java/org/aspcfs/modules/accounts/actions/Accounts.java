@@ -700,9 +700,14 @@ public final class Accounts extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      
+      LookupList typeSelect = new LookupList(db, "lookup_account_types");
+      typeSelect.addItem(0, "-- All --");
+      context.getRequest().setAttribute("TypeSelect", typeSelect);       
 
       organizationList.setPagedListInfo(orgListInfo);
       organizationList.setMinerOnly(false);
+      organizationList.setTypeId(orgListInfo.getFilterKey("listFilter1"));
       orgListInfo.setSearchCriteria(organizationList);
 
       if ("my".equals(orgListInfo.getListView())) {

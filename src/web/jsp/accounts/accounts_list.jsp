@@ -2,6 +2,7 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="OrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
 <jsp:useBean id="OrgListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
+<jsp:useBean id="TypeSelect" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
@@ -23,6 +24,10 @@ View Accounts<br>
 		<option <%= OrgListInfo.getOptionValue("search") %>>Search Results</option>
 	<%}%>
       </select>
+      
+			<% TypeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+      <%=TypeSelect.getHtmlSelect("listFilter1", OrgListInfo.getFilterKey("listFilter1"))%>
+      
     </td>
     <td>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OrgListInfo"/>

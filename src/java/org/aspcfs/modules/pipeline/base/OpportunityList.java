@@ -53,6 +53,7 @@ public class OpportunityList extends Vector {
   protected int stage = -1;
   private boolean queryOpenOnly = false;
   private boolean buildComponentInfo = false;  
+  private int typeId = 0;
 
   /**
    *  Constructor for the ContactList object
@@ -92,6 +93,18 @@ public class OpportunityList extends Vector {
   public void setOrgId(int tmp) {
     this.orgId = tmp;
   }
+  
+public int getTypeId() {
+	return typeId;
+}
+public void setTypeId(int typeId) {
+	this.typeId = typeId;
+}
+  
+  public void setTypeId(String typeId) {
+	this.typeId = Integer.parseInt(typeId);
+}
+  
 
   public int getStage() {
 	return stage;
@@ -592,7 +605,10 @@ public void setCloseDateEnd(String tmp) {
     if (queryOpenOnly) {
       sqlFilter.append("AND oc.closed IS NULL ");
     }
-	
+    
+    if (typeId > 0) {
+      sqlFilter.append("AND oc.id IN (select ocl.opp_id from opportunity_component_levels ocl where ocl.type_id = ?) ");
+    }
   }
 
 
@@ -668,7 +684,11 @@ public void setCloseDateEnd(String tmp) {
     if (stage != -1) {
       pst.setInt(++i, stage);
     }
-
+    
+    if (typeId > 0) {
+      pst.setInt(++i, typeId);
+    }
+    
     return i;
   }
   

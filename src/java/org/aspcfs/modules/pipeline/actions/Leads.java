@@ -940,13 +940,17 @@ public final class Leads extends CFSModule {
 	
     Exception errorMessage = null;
     PagedListInfo oppListInfo = this.getPagedListInfo(context, "OpportunityListInfo");
-    oppListInfo.setLink("/Leads.do?command=ViewOpp");
+    oppListInfo.setLink("Leads.do?command=ViewOpp");
     
     Connection db = null;
     OpportunityList oppList = new OpportunityList();
-
+    
     try {
       db = this.getConnection(context);
+      
+      LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
+      typeSelect.addItem(0, "-- All --");
+      context.getRequest().setAttribute("TypeSelect", typeSelect);      
       
       oppList.setPagedListInfo(oppListInfo);
       oppListInfo.setSearchCriteria(oppList);
@@ -956,7 +960,8 @@ public final class Leads extends CFSModule {
       } else {
         oppList.setOwner(this.getUserId(context));
       }
-
+      
+      oppList.setTypeId(oppListInfo.getFilterKey("listFilter1"));
       oppList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;

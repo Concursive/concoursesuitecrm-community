@@ -2,6 +2,7 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OpportunityList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
 <jsp:useBean id="OpportunityListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
+<jsp:useBean id="TypeSelect" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
@@ -20,6 +21,10 @@ View Opportunities<br>
           <option <%= OpportunityListInfo.getOptionValue("search") %>>Search Results</option>
         </dhv:evaluate>
       </select>
+			<% TypeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+      <%=TypeSelect.getHtmlSelect("listFilter1", OpportunityListInfo.getFilterKey("listFilter1"))%>
+      
+      
     </td>
     <td>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OpportunityListInfo"/>

@@ -282,6 +282,19 @@ public class LookupList extends HtmlSelect {
 
     return thisSelect.getHtml(selectName);
   }
+  
+  public String getHtmlSelectDefaultAll(String selectName) {
+    HtmlSelect thisSelect = new HtmlSelect();
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+      thisSelect.addItem(
+          thisElement.getCode(),
+          thisElement.getDescription());
+    }
+
+    return thisSelect.getHtml(selectName);
+  }  
 
   public int getEnabledElementCount() {
     int count = 0;

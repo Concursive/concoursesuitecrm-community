@@ -49,6 +49,8 @@ public class OrganizationList extends Vector {
   protected boolean buildRevenueYTD = false;
   protected java.sql.Date alertRangeStart = null;
   protected java.sql.Date alertRangeEnd = null;
+  
+  protected int typeId = 0;
 
 
   /**
@@ -108,7 +110,16 @@ public class OrganizationList extends Vector {
   public void setSyncType(int tmp) {
     this.syncType = tmp;
   }
-
+  
+  public int getTypeId() {
+    return typeId;
+  }
+  public void setTypeId(int typeId) {
+    this.typeId = typeId;
+  }
+  public void setTypeId(String typeId) {
+    this.typeId = Integer.parseInt(typeId);
+  }
 
   /**
    *  Sets the syncType attribute of the OrganizationList object
@@ -737,6 +748,11 @@ public void setAlertRangeStart(java.sql.Date alertRangeStart) {
         sqlFilter.append("AND lower(o.account_number) = lower(?) ");
       }
     }
+    
+    if (typeId > 0) {
+      sqlFilter.append("AND o.org_id IN (select atl.org_id from account_type_levels atl where atl.type_id = ?) ");
+    }    
+    
   }
 
 
@@ -821,6 +837,10 @@ public void setAlertRangeStart(java.sql.Date alertRangeStart) {
     if (accountNumber != null) {
       pst.setString(++i, accountNumber);
     }
+    
+    if (typeId > 0) {
+      pst.setInt(++i, typeId);
+    }    
 
     return i;
   }
