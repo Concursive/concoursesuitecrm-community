@@ -242,7 +242,7 @@ public class ContactReport extends ContactList {
   }
   
   public String generateFilename() throws Exception {
-    SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddhhmmss");
+    SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddHHmmss");
 		filenameToUse = formatter.format(new java.util.Date());
     return filenameToUse;
   }

@@ -6,7 +6,7 @@ import org.theseus.actions.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.utils.*;
 import java.sql.*;
-import java.util.Vector;
+import java.util.ArrayList;
 import com.darkhorseventures.webutils.*;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -412,7 +412,7 @@ public final class MyCFS extends CFSModule {
 
     int i_alerts = Integer.parseInt(alertsRequest);
 
-    Vector newsList = new Vector();
+    ArrayList newsList = new ArrayList();
 
     String industryCheck = context.getRequest().getParameter("industry");
 
@@ -499,7 +499,7 @@ public final class MyCFS extends CFSModule {
       rs = st.executeQuery(sql.toString());
       while (rs.next()) {
         NewsArticle thisNews = new NewsArticle(rs);
-        newsList.addElement(thisNews);
+        newsList.add(thisNews);
       }
       rs.close();
       st.close();

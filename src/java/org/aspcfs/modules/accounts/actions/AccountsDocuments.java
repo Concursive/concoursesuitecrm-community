@@ -98,7 +98,7 @@ public final class AccountsDocuments extends CFSModule {
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
       
-      Hashtable parts = multiPart.parseData(
+      HashMap parts = multiPart.parseData(
         context.getRequest().getInputStream(), "---------------------------", filePath);
       
       String id = (String)parts.get("id");
@@ -202,7 +202,7 @@ public final class AccountsDocuments extends CFSModule {
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
       
-      Hashtable parts = multiPart.parseData(
+      HashMap parts = multiPart.parseData(
         context.getRequest().getInputStream(), "---------------------------", filePath);
       
       String id = (String)parts.get("id");

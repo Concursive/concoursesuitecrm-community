@@ -1,6 +1,7 @@
 package com.darkhorseventures.utils;
 
 import java.lang.reflect.*;
+import java.text.SimpleDateFormat;
 
 public class ObjectUtils {
 
@@ -42,5 +43,13 @@ public class ObjectUtils {
     } catch (Exception e) {
       return null;
     }
+  }
+  
+  public static String generateGuid(java.util.Date inDate, int id) {
+    SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddHHmmssSS");
+    if (id < 0) {
+      id = 0;
+    }
+    return (formatter.format(inDate) + id);
   }
 }

@@ -192,7 +192,7 @@ public class OpportunityReport extends OpportunityList {
 	}
 	
 	public boolean saveAndInsert(Connection db) throws Exception {
-		SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddhhmmss");
+		SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddHHmmss");
 		filenameToUse = formatter.format(new java.util.Date());
 		File f = new File(filePath);
 		f.mkdirs();

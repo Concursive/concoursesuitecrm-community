@@ -1,6 +1,6 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="NewsList" class="java.util.Vector" scope="request"/>
+<jsp:useBean id="NewsList" class="java.util.ArrayList" scope="request"/>
 <jsp:useBean id="IndSelect" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="CompanyCalendar" class="com.darkhorseventures.utils.CalendarView" scope="request"/>
 <jsp:useBean id="NewUserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>

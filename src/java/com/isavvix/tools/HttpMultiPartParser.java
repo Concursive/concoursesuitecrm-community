@@ -27,7 +27,7 @@ import javax.servlet.*;
 
 /**
  *  This class provides methods for parsing a HTML multi-part form. Each method
- *  returns a Hashtable which contains keys for all parameters sent from the web
+ *  returns a HashMap which contains keys for all parameters sent from the web
  *  browser. The corresponding values are either type "String" or "FileInfo"
  *  depending on the type of data in the corresponding part. <P>
  *
@@ -123,9 +123,9 @@ public class HttpMultiPartParser {
 
   /**
    *  Parses the InputStream, separates the various parts and returns them as
-   *  key=value pairs in a Hashtable. Any incoming files are saved in directory
+   *  key=value pairs in a HashMap. Any incoming files are saved in directory
    *  "saveInDir" using the client's file name; the file information is stored
-   *  as java.io.File object in the Hashtable ("value" part).
+   *  as java.io.File object in the HashMap ("value" part).
    *
    *@param  data                          Description of Parameter
    *@param  boundary                      Description of Parameter
@@ -135,7 +135,7 @@ public class HttpMultiPartParser {
    *@exception  IOException               Description of Exception
    *@since
    */
-  public Hashtable parseData(ServletInputStream data,
+  public HashMap parseData(ServletInputStream data,
       String boundary,
       String saveInDir)
        throws IllegalArgumentException, IOException {
@@ -145,9 +145,9 @@ public class HttpMultiPartParser {
 
   /**
    *  Parses the InputStream, separates the various parts and returns them as
-   *  key=value pairs in a Hashtable. Any incoming files are saved as byte
+   *  key=value pairs in a HashMap. Any incoming files are saved as byte
    *  arrays; the file information is stored as java.io.File object in the
-   *  Hashtable ("value" part).
+   *  HashMap ("value" part).
    *
    *@param  data                          Description of Parameter
    *@param  boundary                      Description of Parameter
@@ -156,7 +156,7 @@ public class HttpMultiPartParser {
    *@exception  IOException               Description of Exception
    *@since
    */
-  public Hashtable parseData(ServletInputStream data,
+  public HashMap parseData(ServletInputStream data,
       String boundary)
        throws IllegalArgumentException, IOException {
     return processData(data, boundary, null);
@@ -263,7 +263,7 @@ public class HttpMultiPartParser {
    *@exception  IOException               Description of Exception
    *@since
    */
-  private Hashtable processData(ServletInputStream is,
+  private HashMap processData(ServletInputStream is,
       String boundary,
       String saveInDir)
        throws IllegalArgumentException, IOException {
@@ -282,7 +282,7 @@ public class HttpMultiPartParser {
 
     StringTokenizer stFields = null;
     FileInfo fileInfo = null;
-    Hashtable dataTable = new Hashtable(5);
+    HashMap dataTable = new HashMap(5);
     String line = null;
     String field = null;
     String paramName = null;
@@ -415,7 +415,7 @@ public class HttpMultiPartParser {
         }
       }
 
-      // Process data: If not a file, add to hashtable and continue
+      // Process data: If not a file, add to hashmap and continue
       if (!isFile) {
         line = getLine(is);
         if (line == null) {
@@ -456,7 +456,7 @@ public class HttpMultiPartParser {
           f.mkdirs();
           
           if (useUniqueName) {
-            SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddhhmmss");
+            SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddHHmmss");
             filenameToUse = formatter.format(new java.util.Date());
           } else {
             filenameToUse = fileInfo.getClientFileName();

@@ -6,6 +6,7 @@ import org.theseus.beans.*;
 import org.theseus.actions.*;
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.utils.ObjectUtils;
 
 public class Model extends GenericBean {
 
@@ -57,7 +58,8 @@ public class Model extends GenericBean {
   public int getModifiedBy() { return modifiedBy; }
   public Make getMake() { return make; }
   public String getGuid() {
-    return String.valueOf(entered.getTime());
+    return ObjectUtils.generateGuid(entered, enteredBy);
+    //return String.valueOf(entered.getTime());
   }
 
   public boolean exists(Connection db) throws SQLException {
