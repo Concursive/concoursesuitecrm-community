@@ -94,7 +94,7 @@ function switchStyle(E){
      <%}
       if(!firstTime){
         %>
-        <script type="text/javascript">document.getElementById('category<%=i%>').innerHTML = '[<%=categoryCount%>]';</script>
+        <script type="text/javascript">document.getElementById('category<%=i%>').innerHTML = '(<%=categoryCount%>)';</script>
         </table>
       <%}
      }%>
