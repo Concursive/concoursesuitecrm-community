@@ -1,11 +1,13 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
+<jsp:useBean id="FaxEnabled" class="java.lang.String" scope="application"/>
 <jsp:useBean id="DeliveryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="document.inputForm.activeDate.focus()">
+<body onLoad="document.inputForm.activeDate.focus();">
 <script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/spanDisplay.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
     formTest = true;
@@ -19,6 +21,15 @@
       return false;
     } else {
       return true;
+    }
+  }
+  
+  function checkDelivery(){
+    var selectedIndex = document.forms[0].sendMethodId.options.selectedIndex;
+    if(document.forms[0].sendMethodId.options[selectedIndex].text.indexOf("Fax") != -1){
+      showSpan('faxError');
+    }else{
+      hideSpan('faxError');
     }
   }
 </script>
@@ -68,7 +79,12 @@ Delivery
       Delivery Method
     </td>
     <td>
-      <%= DeliveryList.getHtmlSelect("sendMethodId",Campaign.getSendMethodId() ) %>
+        <dhv:evaluate if="<%= "".equals(toString(FaxEnabled)) || "false".equals(toString(FaxEnabled)) %>">
+          <% DeliveryList.setJsEvent("onChange=\"javascript:checkDelivery();\""); 
+          %>
+        </dhv:evaluate>
+        <%= DeliveryList.getHtmlSelect("sendMethodId",Campaign.getSendMethodId() ) %>
+        <span id="faxError" style="display:none"><font color="red">Fax Server is not configured.</font></span>
     </td>
   </tr>
 </table>
