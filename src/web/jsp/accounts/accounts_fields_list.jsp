@@ -91,7 +91,7 @@
     } else {
 %>
       <tr class="containerBody">
-        <td colspan="4">
+        <td colspan="5">
           <font color="#9E9E9E">No records have been entered.</font>
         </td>
       </tr>
