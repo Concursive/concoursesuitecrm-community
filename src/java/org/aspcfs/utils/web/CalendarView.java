@@ -1029,14 +1029,14 @@ public class CalendarView {
     }
     this.addEvent("1/" + (tmpCal.get(Calendar.DATE) + 14) + "/" + theYear, "", "Martin Luther King's Birthday", "holiday");
 
-    //Washington's birthday : third Monday in February;
+    //Washington's birthday : third Monday in February; (President's Day)
     tmpCal.set(theYear, Calendar.FEBRUARY, 1);
     dayOfWeek = tmpCal.get(Calendar.DAY_OF_WEEK);
     while (dayOfWeek != Calendar.MONDAY) {
       tmpCal.add(Calendar.DATE, 1);
       dayOfWeek = tmpCal.get(Calendar.DAY_OF_WEEK);
     }
-    this.addEvent("2/" + (tmpCal.get(Calendar.DATE) + 14) + "/" + theYear, "", "Washington's Birthday", "holiday");
+    this.addEvent("2/" + (tmpCal.get(Calendar.DATE) + 14) + "/" + theYear, "", "President's Day", "holiday");
 
     //Memorial Day : last Monday in May;
     tmpCal.set(theYear, Calendar.MAY, 1);
