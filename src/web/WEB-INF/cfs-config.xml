@@ -834,7 +834,7 @@
     <forward name="ToggleOK" resource="/AdminFieldsFolder.do?command=ListFolders"/>
   </action>
   <action name="AdminFieldsGroup" class="org.aspcfs.modules.admin.actions.AdminFields">
-    <bean name="Group" class="org.aspcfs.utils.web.CustomFieldGroup" scope="request"/>
+    <bean name="Group" class="org.aspcfs.modules.base.CustomFieldGroup" scope="request"/>
     <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
