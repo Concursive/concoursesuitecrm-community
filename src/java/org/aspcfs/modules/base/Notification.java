@@ -2,6 +2,7 @@ package com.darkhorseventures.cfsbase;
 
 import java.sql.*;
 import com.darkhorseventures.utils.*;
+import com.darkhorseventures.cfsbase.*;
 import java.net.*;
 
 /**
@@ -32,16 +33,24 @@ public class Notification {
   private String status = "";
   private String errorMessage = null;
   String faxLogEntry = null;
+  Contact contact = null;
 
 	public final static int EMAIL = 1;
-	public final static int EMAILFAX = 2;
-	public final static int IM = 3;
-	public final static int FAX = 4;
+	public final static int FAX = 2;
+  public final static int LETTER = 3;
+  public final static int EMAILFAX = 4;
+  public final static int EMAILLETTER = 5;
+  public final static int EMAILFAXLETTER = 6;
+  public final static int IM = 7;
 	
   public final static String EMAIL_TEXT = "Email";
-  public final static String EMAILFAX_TEXT = "Email first, try Fax";
-  public final static String IM_TEXT = "Instant Message";
   public final static String FAX_TEXT = "Fax";
+  public final static String LETTER_TEXT = "Letter";
+  public final static String EMAILFAX_TEXT = "Email first, try Fax";
+  public final static String EMAILLETTER_TEXT = "Email first, then Letter";
+  public final static String EMAILFAXLETTER_TEXT = "Email first, try Fax, then Letter";
+  public final static String IM_TEXT = "Instant Message";
+  
 
 
   /**
@@ -118,6 +127,28 @@ public class Notification {
 
 	public void setType(int tmp) {
 		this.type = tmp;
+    switch (this.type) {
+      case EMAIL:
+        this.setTypeText(EMAIL_TEXT);
+        break;
+      case FAX:
+        this.setTypeText(FAX_TEXT);
+        break;
+      case LETTER:
+        this.setTypeText(LETTER_TEXT);
+        break;
+      case EMAILFAX:
+        this.setTypeText(EMAILFAX_TEXT);
+        break;
+      case EMAILLETTER:
+        this.setTypeText(EMAILLETTER_TEXT);
+        break;
+      case EMAILFAXLETTER:
+        this.setTypeText(EMAILFAXLETTER_TEXT);
+        break;
+      default:
+        break;
+    }
 	}
 
   /**
@@ -206,6 +237,10 @@ public class Notification {
 
   public String getFaxLogEntry() {
     return faxLogEntry;
+  }
+  
+  public Contact getContact() {
+    return contact;
   }
 
   /**
@@ -358,6 +393,17 @@ public class Notification {
     if (type > -1) {
       try {
         Contact thisContact = new Contact(db, "" + contactToNotify);
+        //Determine the method...
+        if (type == EMAILFAXLETTER) {
+          if (thisContact.getEmailAddress("Business").equals("") &&
+              thisContact.getPhoneNumber("Demo Fax").equals("") &&
+              thisContact.getAddress("Business") != null) {
+            type = LETTER;
+          } else {
+            type = EMAILFAX;
+          }
+        }
+        //2nd level
         if (type == EMAILFAX) {
           if (thisContact.getEmailAddress("Business").equals("") &&
               !thisContact.getPhoneNumber("Demo Fax").equals("")) {
@@ -365,7 +411,15 @@ public class Notification {
           } else {
             type = EMAIL;
           }
+        } else if (type == EMAILLETTER) {
+          if (thisContact.getEmailAddress("Business").equals("") &&
+              thisContact.getAddress("Business") != null) {
+            type = LETTER;
+          } else {
+            type = EMAIL;
+          }
         }
+        //Send it...
         if (type == EMAIL) {
           System.out.println("Notification-> To: " + thisContact.getEmailAddress("Business"));
           SMTPMessage mail = new SMTPMessage();
@@ -414,6 +468,9 @@ public class Notification {
             faxLogEntry = databaseName + "|" + messageIdToSend + "|" + phoneNumber;
             status = "Fax Queued";
           }
+        } else if (type == LETTER) {
+          contact = thisContact;
+          status = "Added to Report";
         }
       } catch (Exception e) {
         result = 2;

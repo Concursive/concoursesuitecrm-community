@@ -19,16 +19,102 @@ import org.xml.sax.SAXException;
  *@created    October 16, 2001
  *@version    $Id$
  */
-public class Notifier extends ReportBuilder {	
+public class Notifier extends ReportBuilder {
 
-	Hashtable config = new Hashtable();
-	
+  Hashtable config = new Hashtable();
+
+
   /**
    *  Constructor for the Notifier object
    *
    *@since
    */
   public Notifier() { }
+
+
+  /**
+   *  Starts the process. Processes all of the enabled sites in the database.
+   *
+   *@param  args  Description of Parameter
+   *@since
+   */
+  public static void main(String args[]) {
+
+    Notifier thisNotifier = new Notifier();
+    thisNotifier.loadConfig();
+    
+    System.out.println("Generating and sending reports... ");
+
+    thisNotifier.baseName = (String)thisNotifier.config.get("GKHOST");
+    thisNotifier.dbUser = (String)thisNotifier.config.get("GKUSER");
+    thisNotifier.dbPass = (String)thisNotifier.config.get("GKUSERPW");
+
+    if (thisNotifier.baseName.equals("debug")) {
+      thisNotifier.sendAdminReport("Notifier manual sendmail test");
+    } else {
+      try {
+        Class.forName((String)thisNotifier.config.get("DatabaseDriver"));
+
+        Vector siteList = new Vector();
+
+        Connection dbSites = DriverManager.getConnection(
+            thisNotifier.baseName, thisNotifier.dbUser, thisNotifier.dbPass);
+        Statement stSites = dbSites.createStatement();
+        ResultSet rsSites = stSites.executeQuery(
+            "SELECT * " +
+            "FROM sites " +
+            "WHERE enabled = true ");
+        while (rsSites.next()) {
+          Hashtable siteInfo = new Hashtable();
+          siteInfo.put("driver", rsSites.getString("driver"));
+          siteInfo.put("host", rsSites.getString("dbhost"));
+          siteInfo.put("name", rsSites.getString("dbname"));
+          siteInfo.put("port", rsSites.getString("dbport"));
+          siteInfo.put("user", rsSites.getString("dbuser"));
+          siteInfo.put("password", rsSites.getString("dbpw"));
+          siteInfo.put("sitecode", rsSites.getString("sitecode"));
+          siteList.add(siteInfo);
+        }
+        rsSites.close();
+        stSites.close();
+        dbSites.close();
+
+        Iterator i = siteList.iterator();
+        while (i.hasNext()) {
+
+          Hashtable siteInfo = (Hashtable) i.next();
+          Class.forName((String) siteInfo.get("driver"));
+          Connection db = DriverManager.getConnection(
+              (String) siteInfo.get("host") + ":" +
+              (String) siteInfo.get("port") + "/" +
+              (String) siteInfo.get("name"),
+              (String) siteInfo.get("user"),
+              (String) siteInfo.get("password"));
+          thisNotifier.baseName = (String) siteInfo.get("sitecode");
+
+          System.out.println("Running Alerts...");
+          thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db));
+          //thisNotifier.output.append(thisNotifier.buildCallAlerts(db));
+          thisNotifier.output.append("<br><hr><br>");
+
+          System.out.println("Running Communications...");
+          thisNotifier.output.append(thisNotifier.buildCommunications(db, (String) siteInfo.get("name")));
+          thisNotifier.output.append("<br><hr><br>");
+
+          db.close();
+        }
+
+        System.out.println(thisNotifier.output.toString());
+        //thisNotifier.sendAdminReport(thisNotifier.output.toString());
+        java.util.Date end = new java.util.Date();
+      } catch (Exception exc) {
+        System.out.println("Sending error email...");
+        //thisNotifier.sendAdminReport(exc.toString());
+        System.err.println("BuildReport Error: " + exc.toString());
+      }
+      System.exit(0);
+    }
+  }
 
 
   /**
@@ -63,7 +149,7 @@ public class Notifier extends ReportBuilder {
     int notifyCount = 0;
     Iterator i = thisList.iterator();
     while (i.hasNext()) {
-      Opportunity thisOpportunity = (Opportunity)i.next();
+      Opportunity thisOpportunity = (Opportunity) i.next();
       System.out.println(thisOpportunity.toString());
       Notification thisNotification = new Notification();
       thisNotification.setUserToNotify(thisOpportunity.getOwner());
@@ -75,11 +161,11 @@ public class Notifier extends ReportBuilder {
         thisNotification.setSiteCode(baseName);
         thisNotification.setSubject("CFS Opportunity: " + thisOpportunity.getDescription());
         thisNotification.setMessageToSend(
-          "The following opportunity in CFS has an alert set: <br>" + 
-          "<br>" +
-          thisOpportunity.getDescription() + "<br>");
+            "The following opportunity in CFS has an alert set: <br>" +
+            "<br>" +
+            thisOpportunity.getDescription() + "<br>");
         thisNotification.setType(Notification.EMAIL);
-				thisNotification.setTypeText(Notification.EMAIL_TEXT);
+        thisNotification.setTypeText(Notification.EMAIL_TEXT);
         thisNotification.notifyUser(db);
         ++notifyCount;
       } else {
@@ -92,7 +178,15 @@ public class Notifier extends ReportBuilder {
     thisReport.setHeader("Opportunity Alerts Report for " + start.toString() + "<br>" + "Total Records: " + notifyCount);
     return thisReport.getHtml();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   private String buildCallAlerts(Connection db) throws SQLException {
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
@@ -112,7 +206,7 @@ public class Notifier extends ReportBuilder {
     int notifyCount = 0;
     Iterator i = thisList.iterator();
     while (i.hasNext()) {
-      Call thisCall = (Call)i.next();
+      Call thisCall = (Call) i.next();
       Notification thisNotification = new Notification();
       thisNotification.setUserToNotify(thisCall.getEnteredBy());
       thisNotification.setModule("Calls");
@@ -122,16 +216,16 @@ public class Notifier extends ReportBuilder {
         System.out.println("Notifier-> ...it's new");
         thisNotification.setSiteCode(baseName);
         thisNotification.setSubject(
-          "Call Alert: " + thisCall.getSubject());
+            "Call Alert: " + thisCall.getSubject());
         thisNotification.setMessageToSend(
-          "The following call in CFS has an alert set: <br>" +
-          "<br>" +
-          "Contact: " + thisCall.getContactName() + "<br>" +
-          "<br>" +
-          thisCall.getNotes() + "<br>" +
-          "<br>");
+            "The following call in CFS has an alert set: <br>" +
+            "<br>" +
+            "Contact: " + thisCall.getContactName() + "<br>" +
+            "<br>" +
+            thisCall.getNotes() + "<br>" +
+            "<br>");
         thisNotification.setType(Notification.EMAIL);
-				thisNotification.setTypeText(Notification.EMAIL_TEXT);
+        thisNotification.setTypeText(Notification.EMAIL_TEXT);
         thisNotification.notifyUser(db);
         ++notifyCount;
       } else {
@@ -144,17 +238,19 @@ public class Notifier extends ReportBuilder {
     thisReport.setHeader("Opportunity Alerts Report for " + start.toString() + "<br>" + "Total Records: " + notifyCount);
     return thisReport.getHtml();
   }
-  
+
+
   /**
    *  Scans the Communications module to see if there are any recipients that
    *  need to be sent a message.
    *
    *@param  db                Description of Parameter
+   *@param  dbName            Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    *@since
    */
-  private String buildCommunications(Connection db, String dbName) throws SQLException {
+  private String buildCommunications(Connection db, String dbName) throws Exception {
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
     thisReport.addColumn("Report");
@@ -181,8 +277,9 @@ public class Notifier extends ReportBuilder {
       int campaignCount = 0;
       int sentCount = 0;
       Vector faxLog = new Vector();
+      ContactReport letterLog = new ContactReport();
       System.out.println("  Getting campaign ...");
-      Campaign thisCampaign = (Campaign)i.next();
+      Campaign thisCampaign = (Campaign) i.next();
       System.out.println("  Getting recipient list ...");
       RecipientList recipientList = new RecipientList();
       recipientList.setCampaignId(thisCampaign.getId());
@@ -205,7 +302,7 @@ public class Notifier extends ReportBuilder {
       while (iList.hasNext()) {
         ++campaignCount;
         System.out.println("  Getting contact ...");
-        Recipient thisRecipient = (Recipient)iList.next();
+        Recipient thisRecipient = (Recipient) iList.next();
         Contact thisContact = new Contact(db, "" + thisRecipient.getContactId());
 
         Notification thisNotification = new Notification();
@@ -220,12 +317,12 @@ public class Notifier extends ReportBuilder {
           thisNotification.setSubject(thisCampaign.getSubject());
           thisNotification.setMessageIdToSend(thisCampaign.getMessageId());
           thisNotification.setMessageToSend(thisCampaign.getMessage());
-          //TODO: Check campaign for email vs. fax
-          thisNotification.setType(Notification.EMAILFAX);
-					thisNotification.setTypeText(Notification.EMAILFAX_TEXT);
+          thisNotification.setType(thisCampaign.getSendMethodId());
           thisNotification.notifyContact(db);
           if (thisNotification.getFaxLogEntry() != null) {
             faxLog.add(thisNotification.getFaxLogEntry());
+          } else if (thisNotification.getContact() != null) {
+            letterLog.add(thisNotification.getContact());
           }
           ++notifyCount;
           ++sentCount;
@@ -234,7 +331,7 @@ public class Notifier extends ReportBuilder {
           thisRecipient.setStatusDate(new java.sql.Timestamp(System.currentTimeMillis()));
           thisRecipient.setStatusId(1);
           thisRecipient.setStatus(thisNotification.getStatus());
-					System.out.println("Notifier-> Notification status: " + thisNotification.getStatus());
+          System.out.println("Notifier-> Notification status: " + thisNotification.getStatus());
           thisRecipient.update(db);
         } else {
           System.out.println("Notifier-> ...it's old");
@@ -244,6 +341,7 @@ public class Notifier extends ReportBuilder {
         }
       }
       if (campaignCount > 0) {
+        outputLetterLog(thisCampaign, letterLog, dbName);
         outputFaxLog(faxLog);
         thisCampaign.setStatusId(Campaign.FINISHED);
         thisCampaign.setStatus(Campaign.FINISHED_TEXT);
@@ -258,129 +356,56 @@ public class Notifier extends ReportBuilder {
 
 
   /**
-   *  Starts the process. Processes all of the enabled sites in the database.
-   *
-   *@param  args  Description of Parameter
-   *@since
+   *  Description of the Method
    */
-  public static void main(String args[]) {
-
-    if (args.length < 3) {
-      System.out.println("usage: Notifier SitesDatabaseUrl DatabaseUser DatabasePassword");
-      return;
-    }
-
-    Notifier thisNotifier = new Notifier();
-
-    System.out.println("Generating and sending reports... ");
-
-    thisNotifier.baseName = args[0];
-    thisNotifier.dbUser = args[1];
-    thisNotifier.dbPass = args[2];
-		thisNotifier.loadConfig();
-    
-    if (thisNotifier.baseName.equals("debug")) {
-      thisNotifier.sendAdminReport("Notifier manual sendmail test");
-    } else {
-      try {
-				Class.forName((String)thisNotifier.config.get("DatabaseDriver"));
-				
-				Vector siteList = new Vector();
-				
-				Connection dbSites = DriverManager.getConnection(
-						thisNotifier.baseName, thisNotifier.dbUser, thisNotifier.dbPass);
-				Statement stSites = dbSites.createStatement();
-				ResultSet rsSites = stSites.executeQuery(
-						"SELECT * " +
-						"FROM sites " +
-						"WHERE enabled = true ");
-				while (rsSites.next()) {
-					Hashtable siteInfo = new Hashtable();
-					siteInfo.put("driver", rsSites.getString("driver"));
-					siteInfo.put("host", rsSites.getString("dbhost"));
-					siteInfo.put("name", rsSites.getString("dbname"));
-					siteInfo.put("port", rsSites.getString("dbport"));
-					siteInfo.put("user", rsSites.getString("dbuser"));
-					siteInfo.put("password", rsSites.getString("dbpw"));
-					siteInfo.put("sitecode", rsSites.getString("sitecode"));
-					siteList.add(siteInfo);
-				}
-				rsSites.close();
-				stSites.close();
-				dbSites.close();
-				
-				Iterator i = siteList.iterator();
-				while (i.hasNext()) {
-				
-					Hashtable siteInfo = (Hashtable)i.next();
-					Class.forName((String)siteInfo.get("driver"));
-					Connection db = DriverManager.getConnection(
-							(String)siteInfo.get("host") + ":" +
-							(String)siteInfo.get("port") + "/" +
-							(String)siteInfo.get("name"),
-							(String)siteInfo.get("user"),
-							(String)siteInfo.get("password"));
-					thisNotifier.baseName = (String)siteInfo.get("sitecode");
-				
-					System.out.println("Running Alerts...");
-					thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db));
-					//thisNotifier.output.append(thisNotifier.buildCallAlerts(db));
-					thisNotifier.output.append("<br><hr><br>");
-					
-					System.out.println("Running Communications...");
-					thisNotifier.output.append(thisNotifier.buildCommunications(db, (String)siteInfo.get("name")));
-					thisNotifier.output.append("<br><hr><br>");
-					
-					db.close();
-				}
-				
-				System.out.println(thisNotifier.output.toString());
-				//thisNotifier.sendAdminReport(thisNotifier.output.toString());
-				java.util.Date end = new java.util.Date();
-      } catch (Exception exc) {
-				System.out.println("Sending error email...");
-				//thisNotifier.sendAdminReport(exc.toString());
-				System.err.println("BuildReport Error: " + exc.toString());
-			}
-      System.exit(0);
-    }
-  }
-	
-	private void loadConfig() {
+  private void loadConfig() {
     File file = new File("notifier.xml");
-		if (file == null) {
-			System.err.println("Notifier configuration file not found-> notifier.xml");
+    if (file == null) {
+      System.err.println("Notifier configuration file not found-> notifier.xml");
       return;
-    } try {
+    }
+    try {
       Document document = parseDocument(file);
       config.clear();
-			NodeList tags = document.getElementsByTagName("init-param");
-			for (int i = 0; i < tags.getLength(); i++) {
-				Element tag = (Element)tags.item(i);
-				NodeList params = tag.getChildNodes();
-				String name = null;
-				String value = null;
-				for (int j = 0; j < params.getLength(); j++) {
-					Node param = (Node)params.item(j);
-					if (param.hasChildNodes()) {
-						NodeList children = param.getChildNodes();
-						Node thisNode = (Node)children.item(0);
-						if (param.getNodeName().equals("param-name")) {
-							name = thisNode.getNodeValue();
-						}
-						if (param.getNodeName().equals("param-value")) {
-							value = thisNode.getNodeValue();
-						}
-					}
-				}
-				config.put(name, value);
-			}
+      NodeList tags = document.getElementsByTagName("init-param");
+      for (int i = 0; i < tags.getLength(); i++) {
+        Element tag = (Element) tags.item(i);
+        NodeList params = tag.getChildNodes();
+        String name = null;
+        String value = null;
+        for (int j = 0; j < params.getLength(); j++) {
+          Node param = (Node) params.item(j);
+          if (param.hasChildNodes()) {
+            NodeList children = param.getChildNodes();
+            Node thisNode = (Node) children.item(0);
+            if (param.getNodeName().equals("param-name")) {
+              name = thisNode.getNodeValue();
+            }
+            if (param.getNodeName().equals("param-value")) {
+              value = thisNode.getNodeValue();
+            }
+          }
+        }
+        if (value == null) value = "";
+        config.put(name, value);
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
-	
-	private Document parseDocument(File file)
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  file                              Description of Parameter
+   *@return                                   Description of the Returned Value
+   *@exception  FactoryConfigurationError     Description of Exception
+   *@exception  ParserConfigurationException  Description of Exception
+   *@exception  SAXException                  Description of Exception
+   *@exception  IOException                   Description of Exception
+   */
+  private Document parseDocument(File file)
        throws FactoryConfigurationError, ParserConfigurationException, SAXException, IOException {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
@@ -388,53 +413,94 @@ public class Notifier extends ReportBuilder {
     return document;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  faxLog  Description of Parameter
+   *@return         Description of the Returned Value
+   */
   private boolean outputFaxLog(Vector faxLog) {
-		System.out.println("Notifier-> Outputting fax log");
-		String fs = System.getProperty("file.separator");
-    if (faxLog == null || faxLog.size() == 0) return false;
+    System.out.println("Notifier-> Outputting fax log");
+    String fs = System.getProperty("file.separator");
+    if (faxLog == null || faxLog.size() == 0) {
+      return false;
+    }
     PrintWriter out = null;
-		String baseDirectory = (String)config.get("BaseDirectory");
-		if (baseDirectory != null && !baseDirectory.equals("")) {
-			if (!baseDirectory.endsWith(fs)) baseDirectory += fs;
-			File dir = new File(baseDirectory);
-			dir.mkdirs();
-		}
-		SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMMddhhmmss");
-		String uniqueScript = formatter1.format(new java.util.Date());
+    String baseDirectory = (String) config.get("BaseDirectory");
+    if (baseDirectory != null && !baseDirectory.equals("")) {
+      if (!baseDirectory.endsWith(fs)) {
+        baseDirectory += fs;
+      }
+      File dir = new File(baseDirectory);
+      dir.mkdirs();
+    }
+    SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMMddhhmmss");
+    String uniqueScript = formatter1.format(new java.util.Date());
     try {
-      out = new PrintWriter(new BufferedWriter(new FileWriter(baseDirectory + (String)config.get("BaseFilename") + uniqueScript + ".sh")));
-			Iterator faxEntries = faxLog.iterator();
+      out = new PrintWriter(new BufferedWriter(new FileWriter(baseDirectory + (String) config.get("BaseFilename") + uniqueScript + ".sh")));
+      Iterator faxEntries = faxLog.iterator();
       while (faxEntries.hasNext()) {
-        String thisEntry = (String)faxEntries.next();
-				StringTokenizer st = new StringTokenizer(thisEntry, "|");
-				String databaseName = st.nextToken();
-				String messageId = st.nextToken();
-				String faxNumber = st.nextToken();
-				String uniqueId = formatter1.format(new java.util.Date());
-				
-				String baseFilename = baseDirectory + (String)config.get("BaseFilename") + uniqueId + messageId + "-" + faxNumber;
-        out.println("perl /usr/local/bin/html2ps -o " + baseFilename + ".ps http://" + (String)config.get("CFSWebServer") + "/ProcessMessage.do?id=" + databaseName + "\\|" + messageId + " >/dev/null 2>&1");
+        String thisEntry = (String) faxEntries.next();
+        StringTokenizer st = new StringTokenizer(thisEntry, "|");
+        String databaseName = st.nextToken();
+        String messageId = st.nextToken();
+        String faxNumber = st.nextToken();
+        String uniqueId = formatter1.format(new java.util.Date());
+
+        String baseFilename = baseDirectory + (String) config.get("BaseFilename") + uniqueId + messageId + "-" + faxNumber;
+        out.println("perl /usr/local/bin/html2ps -o " + baseFilename + ".ps http://" + (String) config.get("CFSWebServer") + "/ProcessMessage.do?id=" + databaseName + "\\|" + messageId + " >/dev/null 2>&1");
         out.println("gs -q -sDEVICE=tiffg4 -dNOPAUSE -dBATCH -sOutputFile=" + baseFilename + ".tiff " + baseFilename + ".ps");
-				out.println("rm " + baseFilename + ".ps");
-				
-				if (!"false".equals((String)config.get("FaxEnabled"))) {
-					out.println("sendfax -n -h " + (String)config.get("FaxServer") + " -d " + faxNumber + " " + baseFilename + ".tiff");
-				}
-				out.println("rm " + baseFilename + ".tiff");
+        out.println("rm " + baseFilename + ".ps");
+
+        if (!"false".equals((String) config.get("FaxEnabled"))) {
+          out.println("sendfax -n -h " + (String) config.get("FaxServer") + " -d " + faxNumber + " " + baseFilename + ".tiff");
+        }
+        out.println("rm " + baseFilename + ".tiff");
       }
     } catch (IOException e) {
       e.printStackTrace(System.err);
       return false;
     } finally {
-      if (out != null) out.close();
+      if (out != null) {
+        out.close();
+      }
     }
-		
-		try {
-			java.lang.Process process = java.lang.Runtime.getRuntime().exec("/bin/sh " + baseDirectory + "cfsfax" + uniqueScript + ".sh");
-		} catch (Exception e) {
-			e.printStackTrace(System.out);
-		}
-		
+
+    try {
+      java.lang.Process process = java.lang.Runtime.getRuntime().exec("/bin/sh " + baseDirectory + "cfsfax" + uniqueScript + ".sh");
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+    }
+
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  thisCampaign  Description of Parameter
+   *@param  letterLog     Description of Parameter
+   *@return               Description of the Returned Value
+   */
+  private boolean outputLetterLog(Campaign thisCampaign, ContactReport contactReport, String dbName) throws Exception {
+    System.out.println("Notifier-> Outputting letter log");
+    if (contactReport == null || contactReport.size() == 0) {
+      return false;
+    }
+    String fs = System.getProperty("file.separator");
+    String filePath = (String)config.get("FileLibrary") + fs + dbName + fs + "communications" + fs;
+    String[] fields = {"nameLast", "nameMiddle", "nameFirst", "company", "title", "department", "businessPhone", "businessAddress", "city", "state", "zip", "country"};
+    contactReport.setCriteria(fields);
+    contactReport.setFilePath(filePath);
+    contactReport.setEnteredBy(0);
+    contactReport.setModifiedBy(0);
+    contactReport.setSubject("Communications mail merge");
+    contactReport.buildReportBaseInfo();
+		contactReport.buildReportHeaders();
+    contactReport.buildReportData(null);
+    contactReport.save();
     return true;
   }
 

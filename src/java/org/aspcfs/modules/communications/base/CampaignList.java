@@ -331,7 +331,8 @@ public void setIdRange(String idRange) {
 
       //Determine column to sort by
       if (pagedListInfo.getColumnToSortBy() == null || pagedListInfo.getColumnToSortBy().equals("")) {
-        pagedListInfo.setColumnToSortBy("name");
+        pagedListInfo.setColumnToSortBy("modified");
+        pagedListInfo.setSortOrder("desc");
       }
       sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + " ");
       if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
@@ -345,7 +346,7 @@ public void setIdRange(String idRange) {
 
       sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
     } else {
-      sqlOrder.append("ORDER BY name ");
+      sqlOrder.append("ORDER BY modified desc ");
     }
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
