@@ -13,7 +13,6 @@
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript">
   function updateSubList1() {
@@ -46,20 +45,6 @@
     var url = "TroubleTickets.do?command=OrganizationJSList&orgId=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
-  function checkContactForm(form) {
-    formTest = true;
-    message = "";
-    if ((!checkPhone(form.phone1number.value))) { 
-      message += "- The entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
-      formTest = false;
-    }
-    if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
-      return false;
-    } else {
-      return true;
-    }
-  }
   function checkForm(form){
     formTest = true;
     message = "";
@@ -72,7 +57,7 @@
       formTest = false;
     }
     if (form.problem.value == "") { 
-      message += "- Check that an issue is entered\r\n";
+      message += "- Check that <dhv:label name="tickets-problem">Issue</dhv:label> is entered\r\n";
       formTest = false;
     }
     if (formTest == false) {
@@ -122,11 +107,7 @@
 <a href="TroubleTickets.do">Tickets</a> > 
 Add Ticket<br>
 <hr color="#BFBFBB" noshade>
-<% if (request.getParameter("contact") != null) {%>
-<input type="submit" value="Insert" name="Save" onClick="return checkContactForm(this.form)">
-<%} else {%>
 <input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
-<%}%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
 <input type="reset" value="Reset">	
 <br>
@@ -179,64 +160,10 @@ Add Ticket<br>
       <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
 	<%}%>
       <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-      [<a href="javascript:popURL('Contacts.do?command=Add&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','500','600','yes','yes');" onClick="return isAccountValid();">Add New</a>] 
+      [<a href="javascript:popURL('Contacts.do?command=Add&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','500','600','yes','yes');" onClick="return isAccountValid();">Create New Contact</a>] 
     </td>
 	</tr>
 </table>
-<dhv:evaluate if="<%= request.getParameter("contact") != null %>">
-<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	<tr class="title">
-    <td colspan="2">
-      <strong>New Contact</strong>
-    </td>
-	</tr>
-	<tr>
-    <td class="formLabel">
-      First Name
-    </td>
-    <td>
-      <input type="text" size="35" name="thisContact_nameFirst" value="<%=TicketDetails.getThisContact().getNameFirst()%>">
-    </td>
-  </tr>
-  <tr>
-    <td class="formLabel">
-      Last Name
-    </td>
-    <td valign="center">
-      <input type="text" size="35" name="thisContact_nameLast" value="<%=TicketDetails.getThisContact().getNameLast()%>">
-      <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
-    </td>
-  </tr>
-  <tr>
-    <td class="formLabel">
-      Title
-    </td>
-    <td>
-      <input type="text" size="35" name="thisContact_title" value="<%=TicketDetails.getThisContact().getTitle()%>">
-    </td>
-  </tr>
-  <tr>
-    <td class="formLabel">
-      Email
-    </td>
-    <td>
-      <input type="hidden" name="email1type" value="1">
-      <input type="text" size="40" name="email1address" maxlength="255">
-    </td>
-  </tr>
-  <tr>
-    <td class="formLabel">
-      Phone
-    </td>
-    <td>
-      <input type="hidden" name="phone1type" value="1">
-      <input type="text" size="20" name="phone1number">&nbsp;ext.
-      <input type="text" size="5" name="phone1ext" maxlength="10">
-    </td>
-  </tr>
-</table>
-</dhv:evaluate>
 <br>
 <a name="categories"></a> 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -377,11 +304,7 @@ Add Ticket<br>
 	</tr>
 </table>
 <br>
-<% if (request.getParameter("contact") != null) {%>
-<input type="submit" value="Insert" name="Save" onClick="return checkContactForm(this.form)">
-<%} else {%>
 <input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
-<%}%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
 <input type="reset" value="Reset">
 </form>

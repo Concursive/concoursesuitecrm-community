@@ -13,7 +13,6 @@
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
   <script language="JavaScript">
   function doCheck(form) {
@@ -56,8 +55,8 @@
   function checkForm(form) {
     formTest = true;
     message = "";
-    if ((!checkPhone(form.phone1number.value))) { 
-      message += "- The entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
+    if (form.problem.value == "") { 
+      message += "- Check that <dhv:label name="tickets-problem">Issue</dhv:label> is entered\r\n";
       formTest = false;
     }
     if (formTest == false) {
@@ -140,64 +139,10 @@ Add Ticket<br>
       <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
 <%}%>
       <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-      <a href="javascript:popURL('Contacts.do?command=Add&popup=true&orgId=<%= OrgDetails.getOrgId() %>', 'New_Contact','500','600','yes','yes');">Add New</a>
+      [<a href="javascript:popURL('Contacts.do?command=Add&popup=true&orgId=<%= OrgDetails.getOrgId() %>', 'New_Contact','500','600','yes','yes');">Create New Contact</a>]
     </td>
 	</tr>
 </table>
-<% if ( request.getParameter("contact") != null ) {%>
-<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	<tr class="title">
-    <td colspan="2">
-      <strong>New Contact</strong>
-    </td>     
-	</tr>
-	<tr class="containerBody">
-    <td class="formLabel">
-      First Name
-    </td>
-    <td>
-      <input type="text" size="35" name="thisContact_nameFirst" value="<%= TicketDetails.getThisContact().getNameFirst() %>">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Last Name
-    </td>
-    <td>
-      <input type="text" size="35" name="thisContact_nameLast" value="<%= TicketDetails.getThisContact().getNameLast() %>">
-      <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Title
-    </td>
-    <td>
-      <input type="text" size="35" name="thisContact_title" value="<%= TicketDetails.getThisContact().getTitle() %>">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Email
-    </td>
-    <td>
-      <input type="hidden" name="email1type" value="1">
-      <input type="text" size="40" name="email1address" maxlength="255">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Phone
-    </td>
-    <td>
-      <input type="hidden" name="phone1type" value="1">
-      <input type="text" size="20" name="phone1number">&nbsp;ext.
-      <input type="text" size="5" name="phone1ext" maxlength="10">
-    </td>
-  </tr>
-</table>
-<%}%>
 <br>
 <a name="categories"></a> 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
