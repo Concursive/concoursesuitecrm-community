@@ -23,16 +23,16 @@ Attachments
         <li>Certain attachments must be created and modified in the <a href="CampaignManagerAttachment.do">Create Attachments</a> utility</li>
       </ul>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
-    <td colspan="2" valign="center" align="left">
+  <tr class="title">
+    <td colspan="2">
       <strong>Configured attachments for this campaign</strong>
     </td>     
   </tr>
   <tr class="containerBody">
-    <td width="50" valign="top" nowrap class="formLabel">
+    <td valign="top" nowrap class="formLabel">
       Surveys
     </td>
-    <td width="100%" valign="top">
+    <td valign="top">
       <a href="CampaignManager.do?command=ViewAttachment&id=<%= Campaign.getId() %>">
         Change survey
       </a>
@@ -42,10 +42,10 @@ Attachments
     </td>
   </tr>
   <tr class="containerBody">
-    <td width="50" valign="top" nowrap class="formLabel">
+    <td valign="top" nowrap class="formLabel">
       File Attachments
     </td>
-    <td width="100%" valign="top">
+    <td valign="top">
       <a href="CampaignManager.do?command=ManageFileAttachments&id=<%= Campaign.getId() %>">  
         Change file attachments
       </a>

@@ -52,29 +52,29 @@ Add Message
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="2" valign="center" align="left">
+    <td colspan="2">
       <strong>New Message</strong>
     </td>
   </tr>
   <tr>
-    <td valign="center" align="right" class="formLabel">
+    <td class="formLabel">
       Name
     </td>
-    <td valign="center" width="100%">
+    <td>
       <input type="text" size="50" maxlength="80" name="name" value="<%= toHtmlValue(Message.getName()) %>">
       <font color="red">*</font> <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
   <tr>
-    <td valign="top" align="right" class="formLabel">
+    <td valign="top" class="formLabel">
       Internal Description
     </td>
-    <td valign="top">
+    <td>
       <input type="text" size="50" maxlength="255" name="description" value="<%= toHtmlValue(Message.getDescription()) %>">
     </td>
   </tr>
 	<tr>
-    <td valign="top" align="right" class="formLabel">
+    <td valign="top" class="formLabel">
       Message
     </td>
     <td valign=center>

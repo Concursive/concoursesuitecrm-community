@@ -22,16 +22,6 @@ Campaign Details
   <li>Items can be worked on in any order</li>
   <li>Campaigns will not start until each section is complete, and the campaign has been activated</li>
 </ul>
-<%--
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td valign="center" align="left">
-      <strong>Campaign Details</strong>
-    </td>     
-  </tr>
-  <tr class="containerBody">
-    <td>
-  --%>
       <table cellpadding="0" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr>
           <td valign="top" align="center">
@@ -116,11 +106,6 @@ Campaign Details
           </td>
         </tr>
       </table>
-  <%--
-    </td>
-  </tr>
-</table>
-  --%>
 &nbsp;
 
 <%  
@@ -173,7 +158,7 @@ Campaign Details
     <td class="formLabel" valign="top">
       Description
     </td>
-    <td width="100%">
+    <td>
       <%= toHtmlValue(Campaign.getDescription()) %>&nbsp;
     </td>
   </tr>
@@ -181,7 +166,7 @@ Campaign Details
     <td class="formLabel">
       Created
     </td>
-    <td width="100%">
+    <td>
       <dhv:username id="<%= Campaign.getEnteredBy() %>" /> - <%= Campaign.getEnteredString() %>
     </td>
   </tr>
@@ -190,14 +175,12 @@ Campaign Details
     <td class="formLabel">
       Modified
     </td>
-    <td width="100%">
+    <td>
       <dhv:username id="<%= Campaign.getModifiedBy() %>" /> - <%= Campaign.getModifiedString() %>
     </td>
   </tr>
 </table>
 &nbsp;<br>
-
-
 <dhv:permission name="campaign-campaigns-edit">
   <input type="button" value="Rename Campaign" onClick="javascript:this.form.action='/CampaignManager.do?command=Modify&id=<%= Campaign.getId() %>';submit();">
 </dhv:permission>

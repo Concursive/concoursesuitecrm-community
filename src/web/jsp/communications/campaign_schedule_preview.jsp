@@ -4,10 +4,9 @@
 <jsp:useBean id="DeliveryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="document.inputForm.activeDate.focus()">
-
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
+<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Schedule
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -26,29 +25,28 @@ Schedule
     <td class="containerBack">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Delivery Options</strong>
     </td>     
   </tr>
   <tr class="containerBody">
-    <td class="formLabel" valign="center" nowrap>
+    <td class="formLabel">
       Run Date
     </td>
-    <td width="100%">
+    <td>
       <%= toHtmlValue(Campaign.getActiveDateString()) %>
     </td>
   </tr>
   <tr class="containerBody">
-      <td class="formLabel" valign="center" nowrap>
+    <td class="formLabel">
       Delivery Method
     </td>
-    <td width="100%">
-      <%=Campaign.getDeliveryName()%>
+    <td>
+      <%= Campaign.getDeliveryName() %>
     </td>
   </tr>
-  
 </table>
   </td>
   </tr>
 </table>
-</form>
+</body>

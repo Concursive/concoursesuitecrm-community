@@ -4,7 +4,6 @@
 <jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script type="text/javascript">
-
 function downloadMessage(campaignId){
   fileList = document.getElementById('attList');
   if(fileList.selectedIndex != -1){
@@ -14,10 +13,9 @@ function downloadMessage(campaignId){
   }
 }
 </script>
-
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
+<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Message
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -56,7 +54,7 @@ Message
               <table cellpadding="4" cellspacing="0" border="0" width="20%">
                 <tr class="containerBody">
                   <td valign="top" align="left">
-                       <strong>Attachments :</strong>
+                       <strong>Attachments:</strong>
                   </td>
                 </tr>
                 <tr>
@@ -64,18 +62,18 @@ Message
                     <select size="3" name="attList" id="attList" multiple>
               <%
                 while (j.hasNext()) {
-                  if (rowid != 1) rowid = 1; else rowid = 2;
-                  FileItem thisFile = (FileItem)j.next();
+                  rowid = (rowid != 1?1:2);
+                  FileItem thisFile = (FileItem) j.next();
                 %>      
-                  <option  value = "<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></option>
+                  <option value="<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></option>
                <%}%>
                   </select>
                  </td>
                 </tr>
                 <tr class="containerBody">
-                    <td valign="top" align="center">
-                         <a href="javascript:downloadMessage('<%=Campaign.getId()%>');">Download</a><br>
-                    </td>
+                   <td valign="top" align="center">
+                     <a href="javascript:downloadMessage('<%= Campaign.getId() %>');">Download</a><br>
+                   </td>
                  </tr>
                 </table>
              </td>

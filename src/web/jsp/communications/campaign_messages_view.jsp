@@ -27,58 +27,51 @@ Message List
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
   <dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete">
-   <td valign=center align=left bgcolor="#DEE0FA">
+   <td>
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td width=40% valign=center align=left>
+    <td width="40%" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=name"><strong>Name</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("name") %>
     </td>  
-    <td width=60% valign=center align=left>
+    <td width="60%" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=description"><strong>Description</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("description") %>
     </td>
-    <td valign=center align=left nowrap>
+    <td align="center" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=m.enteredby"><strong>Entered By</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("m.enteredby") %>
     </td>
-    <td valign="center" align="left" nowrap>
+    <td align="center" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=m.modified"><strong>Last Modified</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("m.modified") %>
     </td>
   </tr>
 <%
 	Iterator j = MessageList.iterator();
-	
 	if ( j.hasNext() ) {
 		int rowid = 0;
-	       	while (j.hasNext()) {
-		
-			if (rowid != 1) {
-				rowid = 1;
-			} else {
-				rowid = 2;
-			}
-		
-		Message thisMessage = (Message)j.next();
+    while (j.hasNext()) {
+		  rowid = (rowid != 1?1:2);
+      Message thisMessage = (Message)j.next();
 %>      
   <tr class="containerBody">
   <dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete">
-    <td width=8 valign=center nowrap align="center" class="row<%= rowid %>">
+    <td width="8" valign="center" nowrap align="center" class="row<%= rowid %>">
       <dhv:permission name="campaign-campaigns-messages-edit"><a href="CampaignManagerMessage.do?command=Modify&id=<%=thisMessage.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-messages-delete"><a href="javascript:popURLReturn('CampaignManagerMessage.do?command=ConfirmDelete&id=<%=thisMessage.getId()%>&popup=true','CampaignManagerMessage.do?command=View', 'Delete_message','330','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
-		<td width=40% valign=center class="row<%= rowid %>">
+		<td width="40%" valign="center" class="row<%= rowid %>">
       <a href="CampaignManagerMessage.do?command=Details&id=<%=thisMessage.getId()%>"><%= toHtml(thisMessage.getName()) %></a>
 		</td>
-		<td width=60% valign=center class="row<%= rowid %>">
+		<td width="60%" valign="center" class="row<%= rowid %>">
       <%= toHtml(thisMessage.getDescription()) %>
     </td>
-    <td valign="center" align="left" class="row<%= rowid %>" nowrap>
+    <td valign="center" align="center" class="row<%= rowid %>" nowrap>
       <dhv:username id="<%= thisMessage.getEnteredBy() %>" />
     </td>
-    <td valign="center" align="right" class="row<%= rowid %>" nowrap>
+    <td valign="center" align="center" class="row<%= rowid %>" nowrap>
       <%= toHtml(thisMessage.getModifiedDateTimeString()) %>
     </td>
   </tr>
@@ -86,7 +79,7 @@ Message List
     }
   } else {%>
   <tr class="containerBody">
-    <td colspan="5" valign="center">
+    <td colspan="5">
       No messages found.
     </td>
   </tr>

@@ -8,9 +8,10 @@
 <dhv:permission name="campaign-campaigns-groups-edit"><a href="CampaignManagerGroup.do?command=Modify&id=<%= request.getAttribute("id") %>">Group Details</a> ></dhv:permission>
 Contact Preview
 <hr color="#BFBFBB" noshade>
+<dhv:pagedListStatus object="CampaignGroupsPreviewInfo"/>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="3" valign="center" align="left">
+    <td colspan="3">
       <strong>List of Matching Contacts</strong>
     </td>     
   </tr>
@@ -31,16 +32,10 @@ Contact Preview
 	if ( j.hasNext() ) {
 		int rowid = 0;
 		int count = CampaignGroupsPreviewInfo.getCurrentOffset();
-		
 	  while (j.hasNext()) {
 			count++;		
-			if (rowid != 1) {
-				rowid = 1;
-			} else {
-				rowid = 2;
-			}
-		
-		Contact thisContact = (Contact)j.next();
+			rowid = (rowid != 1?1:2);
+      Contact thisContact = (Contact)j.next();
 %>      
   <tr>
     <td align="right" nowrap>
@@ -59,7 +54,7 @@ Contact Preview
 <dhv:pagedListControl object="CampaignGroupsPreviewInfo" tdClass="row1"/>
 <%} else {%>
   <tr bgcolor="white">
-    <td colspan="3" valign="center">
+    <td colspan="3">
       No contacts matched query.
     </td>
   </tr>

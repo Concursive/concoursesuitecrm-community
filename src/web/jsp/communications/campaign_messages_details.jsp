@@ -16,22 +16,20 @@ Message Details
 <dhv:permission name="campaign-campaigns-messages-add"><input type="button" value="Clone" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=Clone&id=<%= MessageDetails.getId() %>';submit();"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="2" valign="center" align="left">
+    <td colspan="2">
       <strong>Message Details</strong>
     </td>
   </tr>
-  
   <tr>
-    <td width="125" class="formLabel" valign="center" align="right">
+    <td class="formLabel">
       Name
     </td>
-    <td width="100%" valign="center" width="100%">
+    <td>
       <%= toHtml(MessageDetails.getName()) %>&nbsp; 
     </td>
   </tr>
-  
   <tr>
-    <td width="125" class="formLabel" valign="top" align="right">
+    <td class="formLabel" valign="top">
       Internal Description
     </td>
     <td valign="top">
@@ -39,7 +37,7 @@ Message Details
     </td>
   </tr>
 	<tr>
-    <td width="125" class="formLabel" valign="top" align="right">
+    <td class="formLabel" valign="top">
       Message
     </td>
     <td valign="top">

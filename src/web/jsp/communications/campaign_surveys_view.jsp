@@ -3,7 +3,7 @@
 <jsp:useBean id="CampaignSurveyListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="SurveyList" class="org.aspcfs.modules.communications.base.SurveyList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManagerAttachment.do">Create Attachments</a> >
 Surveys
@@ -29,38 +29,31 @@ Surveys
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
   <dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete">
-   <td valign=center align=left bgcolor="#DEE0FA">
+   <td>
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td width=40% valign=center align=left>
+    <td width="50%">
       <a href="CampaignManagerSurvey.do?command=View&column=name"><strong>Name</strong></a>
     </td>  
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <a href="CampaignManagerSurvey.do?command=View&column=s.enteredby"><strong>Entered By</strong></a>
     </td>
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <a href="CampaignManagerSurvey.do?command=View&column=s.modified"><strong>Last Modified</strong></a>
     </td>
   </tr>
 <%    
 	Iterator i = SurveyList.iterator();
-	
 	if (i.hasNext()) {
-	int rowid = 0;
-	
+    int rowid = 0;
 		while (i.hasNext()) {
-			if (rowid != 1) {
-				rowid = 1;
-			} else {
-				rowid = 2;
-			}
-			
-		Survey thisSurvey = (Survey)i.next();
+			rowid = (rowid != 1?1:2);
+      Survey thisSurvey = (Survey)i.next();
 %>      
       <tr>
         <dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete">
-        <td width=8 valign=center nowrap class="row<%= rowid %>">
+        <td width="8" valign="center" nowrap class="row<%= rowid %>">
           <dhv:permission name="campaign-campaigns-surveys-edit"><a href="CampaignManagerSurvey.do?command=Modify&id=<%=thisSurvey.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-surveys-delete"><a href="javascript:popURLReturn('/CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=thisSurvey.getId()%>&popup=true','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">Del</a></dhv:permission>
         </td>
 	</dhv:permission>
@@ -78,7 +71,7 @@ Surveys
     }
   } else {%>  
   <tr>
-    <td class="row2" valign="center" colspan="5">
+    <td class="containerBody" colspan="5">
       No surveys found.
     </td>
   </tr>

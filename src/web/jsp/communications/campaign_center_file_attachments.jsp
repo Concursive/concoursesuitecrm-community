@@ -3,17 +3,15 @@
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="fileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" type="text/javascript" src="/javascript/confirmDelete.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
 <script language="JavaScript">
   function checkFileForm(form) {
     var formTest = true;
     var messageText = "";
-
     if (form.id<%= Campaign.getId() %>.value.length < 5) {
       messageText += "- File is required\r\n";
       formTest = false;
     }
-    
     if (formTest == false) {
       messageText = "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
       alert(messageText);
@@ -56,7 +54,7 @@ File Attachments
 <%-- List of Documents --%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="4" align="left">
+    <td colspan="4">
       <strong>Attached files...</strong>
     </td>
   </tr>
@@ -71,7 +69,7 @@ File Attachments
   if ( j.hasNext() ) {
     int rowid = 0;
     while (j.hasNext()) {
-      if (rowid != 1) rowid = 1; else rowid = 2;
+      rowid = (rowid != 1?1:2);
       FileItem thisFile = (FileItem)j.next();
 %>      
     <tr class="row<%= rowid %>">
@@ -93,7 +91,7 @@ File Attachments
   <%}%>
 <%} else {%>
     <tr class="containerBody">
-      <td colspan="4" valign="center">
+      <td colspan="4">
         No files attached.
       </td>
     </tr>
@@ -119,7 +117,7 @@ File Attachments
 </dhv:permission>
 </tr>
 <tr>
-  <td colspan="2" align="left">
+  <td colspan="2">
     &nbsp;<br>
     <input type="button" value="Done" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'">
   </td>

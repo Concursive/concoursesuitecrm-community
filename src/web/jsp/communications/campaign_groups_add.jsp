@@ -9,18 +9,14 @@
 <jsp:useBean id="SCL" class="org.aspcfs.modules.communications.base.SearchCriteriaList" scope="request"/>
 <jsp:useBean id="ContactSource" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-
 <SCRIPT LANGUAGE="JavaScript">
 <!-- 
 //updateOperators has to be defined in each file because it uses bean
 //information to populate selects
-
 function updateOperators(){
 	operatorList = document.searchForm.operatorSelect;
 	fieldSelectIndex = searchField[document.searchForm.fieldSelect.selectedIndex].type
-	
 	if (document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 8) {
-    
     //clear the select
     deleteOptions("idSelect");
     <%
@@ -34,7 +30,6 @@ function updateOperators(){
       }
     }
     %>
-    
 		javascript:ShowSpan('new0');
     javascript:HideSpan('searchText1');
     javascript:HideSpan('searchText2');
@@ -61,9 +56,7 @@ function updateOperators(){
     <%
       }
     }
-    
     %>
-    
 		javascript:ShowSpan('new0');
     javascript:HideSpan('searchText1');
     javascript:HideSpan('searchText2');
@@ -75,7 +68,6 @@ function updateOperators(){
     javascript:ShowSpan('searchText2');
 		document.searchForm.searchValue.value = "";
 	}
-	
 	// empty the operator list
 	for (i = operatorList.options.length; i >= 0; i--)
 		operatorList.options[i]= null;
@@ -84,20 +76,16 @@ function updateOperators(){
 		operatorList.options[i] = new Option(listOfOperators[fieldSelectIndex][i].displayText, listOfOperators[fieldSelectIndex][i].id)
 	}
 } // end updateOperators
-
 //  End -->
 </SCRIPT>
-
-
 <body onLoad="javascript:HideSpans();javascript:document.forms[0].groupName.focus();">
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
-<script language="JavaScript" type="text/javascript" src="/javascript/searchForm.js"></script>
-<script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/searchForm.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <script language="JavaScript" type="text/javascript">
 var searchCriteria = new Array();
-
 searchField = new Array();
 <%
 	Iterator f = SearchFieldList.iterator();
@@ -133,7 +121,6 @@ dateOperators = new Array();
 %> 
 dateOperators[<%= dateArrayID %>] = new operator(<%= thisDateOperator.getId() %>, "<%= thisDateOperator.getOperator() %>", "<%= thisDateOperator.getDisplayText() %>");
 <% } } %>
-
 numberOperators = new Array();
 <%
 	Iterator n = NumberOperatorList.iterator();
@@ -145,7 +132,6 @@ numberOperators = new Array();
 %> 
 numberOperators[<%= numberArrayID %>] = new operator(<%= thisNumberOperator.getId() %>, "<%= thisNumberOperator.getOperator() %>", "<%= thisNumberOperator.getDisplayText() %>");
 <% } } %>
-
 listOfOperators = new Array()
 listOfOperators[0] = stringOperators
 listOfOperators[1] = dateOperators
@@ -180,14 +166,12 @@ Add a Group
   </tr>
 	<tr>
     <td align="left" valign="top" width="40%">
-    
-    <table width=100% border=0 cellpadding=2 cellspacing=0>
-    <tr>
-    <td width=98 nowrap>
-    Field
-    </td>
-    
-    <td width=100% valign=center>
+      <table width="100%" border="0" cellpadding="2" cellspacing="0">
+        <tr>
+          <td width="98" nowrap>
+            Field
+          </td>
+          <td width="100%" valign="center">
       <script language="JavaScript">
         var page = "" // start assembling next part of page and form
         page += "<SELECT NAME='fieldSelect' onChange='updateOperators()'> "
@@ -201,17 +185,14 @@ Add a Group
         }
         page += "</SELECT>" // close selection item tag
         document.write(page) // lay out this part of the page
-      </script>       
-    </td>
-    
-    </tr>
-    
-    <tr>
-    <td width=98 nowrap>
-    Operator
-    </td>
-    
-    <td width=100% valign=center>
+      </script>
+          </td>
+        </tr>
+        <tr>
+          <td width="98" nowrap>
+            Operator
+          </td>
+          <td width="100%" valign="center">
       <script language="JavaScript">
         var page = "" // start assembling next part of page and form
         var fieldSelectIndex = searchField[document.searchForm.fieldSelect.options.selectedIndex].type
@@ -226,59 +207,50 @@ Add a Group
         }
         page += "</SELECT>" // close selection item tag
         document.write(page) // lay out this part of the page
-      </script>   
+      </script>
+          </td>
+        </tr>
+        <tr>
+          <td valign="center">
+            &nbsp;
+          </td>
+          <td valign="center">
+            <span name="new0" ID="new0" style="position:relative; visibility:hidden"><select id="idSelect" name="idSelect" onChange="javascript:setText(document.searchForm.idSelect);"></select>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td width="98" nowrap>
+            <span name="searchText1" ID="searchText1" style="position:relative">Search Text</span>
+          </td>
+          <td width="100%" valign="center">
+            <span name="searchText2" ID="searchText2" style="position:relative"><input type="text" name="searchValue" value="" size=25  maxlength=125></span>
+          </td>
+        </tr>
+        <tr>
+          <td valign="center">
+            &nbsp;
+          </td>
+          <td align="right" valign="center">
+            <span name="new1" ID="new1" style="position:relative; visibility:hidden"><a href="javascript:popCalendar('searchForm', 'searchValue');">Date</a></span>
+          </td>
+        </tr>
+        <tr>
+          <td width="98" nowrap>
+            From
+          </td>
+          <td width="100%" valign="center">
+            <%= ContactSource.getHtml("contactSource", -1) %>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" colspan="2" nowrap>
+            <br>
+            <input type="button" value="Add >" onclick="javascript:addValues()">
+          </td>
+        </tr>
+      </table>
     </td>
-    
-    </tr>
-    
-    <tr><td valign=center>
-    &nbsp;
-    </td><td valign=center>
-    <span name="new0" ID="new0" style="position:relative; visibility:hidden"><select id="idSelect" name="idSelect" onChange="javascript:setText(document.searchForm.idSelect);"></select>
-    </span>
-    </td></tr>
-    
-    <tr>
-    <td width=98 nowrap>
-    <span name="searchText1" ID="searchText1" style="position:relative">Search Text</span>
-    </td>
-    
-    <td width=100% valign=center>
-    <span name="searchText2" ID="searchText2" style="position:relative"><input type="text" name="searchValue" value="" size=25  maxlength=125></span>
-    </td>
-    
-    </tr>    
-    
-    <tr><td valign=center>
-    &nbsp;
-    </td><td align=right valign=center>
-    <span name="new1" ID="new1" style="position:relative; visibility:hidden"><a href="javascript:popCalendar('searchForm', 'searchValue');">Date</a></span>
-    </td></tr>
-    
-    <tr>
-    <td width=98 nowrap>
-    From
-    </td>
-    
-    <td width=100% valign=center>
-    <%= ContactSource.getHtml("contactSource", -1) %>
-    </td>
-    
-    </tr> 
-    
-    <tr>
-    <td align=center colspan=2 nowrap>
-    <br>
-    <input type="button" value="Add >" onclick="javascript:addValues()">
-    </td>
-    </tr>      
-    
-    
-    </table>
-    
-        
-    </td>
-    
 		<td align="center" valign="center" width="50%">
 		<% if (SCL.size() > 0) {%>
 			<%= SCL.getHtmlSelect("searchCriteria") %>

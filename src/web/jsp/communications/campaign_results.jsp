@@ -7,13 +7,12 @@
 <%@ include file="../initPage.jsp" %>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
+<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Results
 <hr color="#BFBFBB" noshade>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
-    <td colspan="2" valign="center" align="left">
+    <td colspan="2">
       <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
     </td>
   </tr>
@@ -50,9 +49,8 @@ Results
             </table>
           </td>
         </tr>
-        
         <tr>
-            <td>
+          <td>
 <%
         Iterator z = SurveyQuestionList.iterator();
         
@@ -60,21 +58,17 @@ Results
           int rowid = 0;
           int count = 0;
           while (z.hasNext()) {
-            count++;		
-            if (rowid != 1) {
-              rowid = 1;
-            } else {
-              rowid = 2;
-            }
-            ActiveSurveyQuestion thisItem = (ActiveSurveyQuestion)z.next();
+            count++;
+            rowid = (rowid != 1?1:2);
+            ActiveSurveyQuestion thisItem = (ActiveSurveyQuestion) z.next();
             int type = thisItem.getType();
 %>
           <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-            <%if(type != SurveyQuestion.ITEMLIST){%>
+            <% if (type != SurveyQuestion.ITEMLIST) { %>
              <tr class="containerHeader">
-               <td align="left" colspan="8" nowrap><%=count%>. <%= toHtml(thisItem.getDescription()) %> </td>
+               <td align="left" colspan="8" nowrap><%= count %>. <%= toHtml(thisItem.getDescription()) %> </td>
              </tr>
-             <dhv:evaluate exp="<%=(type != SurveyQuestion.OPEN_ENDED)%>">
+             <dhv:evaluate exp="<%= (type != SurveyQuestion.OPEN_ENDED) %>">
                 <tr class="title">
                   <td colspan="8" valign="center" align="left" width="24">
                     Quantitive Statistics
@@ -123,7 +117,7 @@ Results
                  }else{
                  %>
                     <tr>
-                      <td colspan="8" valign="center" align="left">
+                      <td colspan="8">
                         No comments found.
                       </td>
                     </tr>
@@ -134,7 +128,7 @@ Results
             </dhv:evaluate>
             <%}else{%>
              <tr class="containerHeader">
-               <td align="left" nowrap><%=count%>. <%= toHtml(thisItem.getDescription()) %> </td>
+               <td align="left" nowrap><%= count %>. <%= toHtml(thisItem.getDescription()) %> </td>
              </tr>
              <tr>
                   <td class="containerBody" valign="center" align="left" width="100%">

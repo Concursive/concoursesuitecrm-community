@@ -43,7 +43,7 @@ Delivery
       </ul>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Delivery Options</strong>
     </td>     
   </tr>
@@ -51,22 +51,19 @@ Delivery
     <td class="formLabel" valign="center" nowrap>
       Run Date
     </td>
-    <td width="100%">
-      <input type=text size=10 name="activeDate" value="<%= toHtmlValue(Campaign.getActiveDateString()) %>">
-      <dhv:permission name="campaign-campaigns-edit"><a href="javascript:popCalendar('inputForm', 'activeDate');">Date</a> (mm/dd/yyyy)</dhv:permission><%--<br>
-      <input type="checkbox" name="active" <%= Campaign.getActive("checked") %>>Ready to Run--%>
+    <td>
+      <input type="text" size="10" name="activeDate" value="<%= toHtmlValue(Campaign.getActiveDateString()) %>">
+      <dhv:permission name="campaign-campaigns-edit"><a href="javascript:popCalendar('inputForm', 'activeDate');">Date</a> (mm/dd/yyyy)</dhv:permission>
     </td>
   </tr>
-  
   <tr class="containerBody">
       <td class="formLabel" valign="center" nowrap>
       Delivery Method
     </td>
-    <td width="100%">
-      <%=DeliveryList.getHtmlSelect("sendMethodId",Campaign.getSendMethodId() )%>
+    <td>
+      <%= DeliveryList.getHtmlSelect("sendMethodId",Campaign.getSendMethodId() ) %>
     </td>
   </tr>
-  
 </table>
 <dhv:permission name="campaign-campaigns-edit">
 <br>

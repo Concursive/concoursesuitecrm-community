@@ -5,7 +5,7 @@
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="CampaignCenterPreviewInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -19,8 +19,8 @@
         <li>The removed recipient will not be deleted from the group or from other campaigns</li>
       </ul>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
-    <td colspan="4" valign="center" align="left">
+  <tr class="title">
+    <td colspan="4">
       <strong>Contacts in this group</strong>
     </td>     
   </tr>
@@ -40,20 +40,13 @@
   </tr>
 <%
 	Iterator j = ContactList.iterator();
-	
 	if ( j.hasNext() ) {
 		int rowid = 0;
 		int count = CampaignCenterPreviewInfo.getCurrentOffset();
-		
 	  while (j.hasNext()) {
 			count++;		
-			if (rowid != 1) {
-				rowid = 1;
-			} else {
-				rowid = 2;
-			}
-		
-		Contact thisContact = (Contact)j.next();
+			rowid = (rowid != 1?1:2);
+      Contact thisContact = (Contact)j.next();
 %>      
   <tr class="containerBody">
     <td align="right" nowrap>
@@ -77,7 +70,7 @@
 <dhv:pagedListControl object="CampaignCenterPreviewInfo"/>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="4" valign="center">
+    <td colspan="4">
       No contacts matched query.
     </td>
   </tr>

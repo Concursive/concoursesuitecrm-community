@@ -5,7 +5,6 @@
 <head>
   <title>Thank you for visiting our survey page</title>
 </head>
-
 <body>
   The requested survey could not be found.<br>
   It may have been deleted.

@@ -1,26 +1,22 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.utils.web.HtmlSelect"%>
 <%@ include file="../initPage.jsp" %>
-
 <SCRIPT LANGUAGE="JavaScript">
-  
   function arrayToString(){
     var items = "";
-      for(i = 0; i < itemList.length ; i++){
-        if(i > 0){
-          if(itemList[i] != ""){
-            items = items + "^|^" + itemList[i]  ;
-          }
-        }else{
-          if(itemList[i] != ""){
-            items = itemList[i];
-          }
+    for(i = 0; i < itemList.length ; i++){
+      if(i > 0){
+        if(itemList[i] != ""){
+          items = items + "^|^" + itemList[i]  ;
+        }
+      }else{
+        if(itemList[i] != ""){
+          items = itemList[i];
         }
       }
-      return items;
+    }
+    return items;
   }
-  
-  
   function removeValues(){
     var tmpList = document.getElementById("itemSelectId");
     var tempArray = new Array()
@@ -32,7 +28,6 @@
         itemList[count] = tmpList.options[count].value;
       }
     }
-    
     if (tmpList.length == 0) {
       alert("Nothing to remove")
     }	else if (tmpList.selectedIndex == -1) {
@@ -70,12 +65,10 @@
     var text = document.getElementById("newitem").value;
     var tmpList = document.getElementById("itemSelectId");
     var mode = document.getElementById("addButton").value;
-    
     if(text == ""){
       alert('Description is required');
       return;
     }
-    
     if (tmpList.length == 0 || tmpList.options[0].value == "-1"){
       tmpList.options[0] = new Option(text)
     }	else {
@@ -117,17 +110,16 @@
     document.getElementById("newitem").value = "";
   }
 </SCRIPT>
-
 <script>var itemList = new Array();</script>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF" id="viewTable">
-<tr align="left" class="title">
-    <td align="left" colspan="2">
-      <strong>Edit Items</strong>
-    </td>
+<tr class="title">
+  <td colspan="2">
+    <strong>Edit Items</strong>
+  </td>
 </tr>
 <tr>
   <td align="left" valign="center" width="40%">
-    <table width=100% border="0" cellpadding="2" cellspacing="0">
+    <table width="100%" border="0" cellpadding="2" cellspacing="0">
       <tr>
         <td nowrap align="left">
           Description&nbsp;
@@ -158,7 +150,7 @@
           String description = itemList.nextToken();
           itemListSelect.addItem(description);
      %>
-          <script>itemList[<%=count%>] = "<%=description%>"</script>
+          <script>itemList[<%= count %>] = "<%=description%>"</script>
      <% 
         count++;
        }%>

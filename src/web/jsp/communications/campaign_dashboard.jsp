@@ -49,49 +49,40 @@ Dashboard
     </td> 
 	<%
 	Iterator j = campList.iterator();
-	
 	if ( j.hasNext() ) {
 		int rowid = 0;
-	while (j.hasNext()) {
-	
-		if (rowid != 1) {
-			rowid = 1;
-		} else {
-			rowid = 2;
-		}
-	
-		Campaign campaign = (Campaign)j.next();
+    while (j.hasNext()) {
+      rowid = (rowid != 1?1:2);
+      Campaign campaign = (Campaign)j.next();
 	%>      
 	<tr class="containerBody">
-	
     <td width="8" valign="center" align="center" nowrap class="row<%= rowid %>">
       <%= (campaign.hasRun() && !campaign.hasFiles()?"&nbsp":"") %>
       <dhv:permission name="campaign-campaigns-edit"><%= (campaign.hasRun()?"":"<a href=\"javascript:confirmForward('/CampaignManager.do?command=Cancel&id=" + campaign.getId() +"&notify=true')\">Cancel</a>") %></dhv:permission>
       <dhv:permission name="campaign-campaigns-edit" none="true">&nbsp;</dhv:permission>
       <%= (campaign.hasFiles()?"<a href=\"CampaignManager.do?command=PrepareDownload&id=" + campaign.getId() + "\">Download<br>Available</a>":"") %>
     </td>
-
     <td valign="center" width="100%" class="row<%= rowid %>">
       <a href="CampaignManager.do?command=Details&id=<%=campaign.getId()%>&reset=true"><%=toHtml(campaign.getName())%></a>
       <%= ("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id"))?" <font color=\"red\">(Added)</font>":"") %>
     </td>
-    <td valign="center" width="20%" nowrap class="row<%= rowid %>">
+    <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <%=toHtml(campaign.getActiveDateString())%>
     </td>
-    <td valign="center" width="5%" align="center" nowrap class="row<%= rowid %>">
+    <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <%=campaign.getRecipientCount()%>
     </td>
-    <td valign="center" width="25%" nowrap class="row<%= rowid %>">
+    <td valign="center" nowrap class="row<%= rowid %>">
       <%=toHtml(campaign.getStatus())%>
     </td>
-    <td valign="center" width="10" nowrap class="row<%= rowid %>">
+    <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <%=toHtml(campaign.getActiveYesNo())%>
     </td>
 	</tr>
 	<%}%>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="6" valign="center">
+    <td colspan="6">
       No running campaigns found.
     </td>
   </tr>

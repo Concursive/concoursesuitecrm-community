@@ -784,7 +784,7 @@ public final class Accounts extends CFSModule {
     int passedId = Integer.parseInt(context.getRequest().getParameter("orgId"));
 
     PagedListInfo ticketListInfo = this.getPagedListInfo(context, "AccountTicketInfo", "t.entered", "desc");
-    ticketListInfo.setLink("/Accounts.do?command=ViewTickets&orgId=" + passedId);
+    ticketListInfo.setLink("Accounts.do?command=ViewTickets&orgId=" + passedId);
     ticList.setPagedListInfo(ticketListInfo);
     try {
       db = this.getConnection(context);

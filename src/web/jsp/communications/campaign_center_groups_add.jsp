@@ -4,8 +4,8 @@
 <jsp:useBean id="selectedList" class="org.aspcfs.modules.communications.base.SearchCriteriaListList" scope="request"/>
 <jsp:useBean id="CampaignCenterGroupInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <form name="modForm" action="CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>" method="post">
 <a href="CampaignManager.do">Communications Manager</a> > 
 <a href="CampaignManager.do?command=View">Campaign List</a> >
@@ -39,7 +39,7 @@ Choose Groups
 </table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="3" valign="center" align="left">
+    <td colspan="3">
       <strong>Select groups for this campaign</strong>
     </td>     
   </tr>

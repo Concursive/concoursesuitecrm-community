@@ -16,7 +16,7 @@ Campaign Details
   </tr>
   <tr class="containerMenu">
     <td colspan="2">
-      <% String param1 = "id=" + Campaign.getId(); %>
+      <% String param1="id=" + Campaign.getId(); %>
       <dhv:container name="communications" selected="details" param="<%= param1 %>" />
     </td>
   </tr>
@@ -24,7 +24,7 @@ Campaign Details
     <td class="containerBack">
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
-          <td colspan="2" valign="center" align="left">
+          <td colspan="2">
             <strong>Campaign Details </strong>
           </td>
         </tr>
@@ -32,7 +32,7 @@ Campaign Details
           <td class="formLabel" valign="top">
             Description
           </td>
-          <td width="100%">
+          <td>
             <%= toHtml(Campaign.getDescription()) %>
           </td>
         </tr>
@@ -40,32 +40,31 @@ Campaign Details
           <td class="formLabel">
             Groups
           </td>
-          <td width="100%">
-            <font color='green'><%= Campaign.getGroupCount() %> selected</font>
+          <td>
+            <font color="green"><%= Campaign.getGroupCount() %> selected</font>
           </td>
         </tr>
         <tr class="containerBody">
           <td valign="top" class="formLabel">
             Message
           </td>
-          <td width="100%">
-            <font color='green'><%= toHtml(Campaign.getMessageName()) %></font>
+          <td>
+            <font color="green"><%= toHtml(Campaign.getMessageName()) %></font>
           </td>
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
             Schedule
           </td>
-          <td width="100%">
-            <font color='green'>Scheduled to run on <%= Campaign.getActiveDateString() %></font>
+          <td>
+            <font color="green">Scheduled to run on <%= Campaign.getActiveDateString() %></font>
           </td>
         </tr>
-        
         <tr class="containerBody">
           <td class="formLabel">
             Delivery
           </td>
-          <td width="100%">
+          <td>
             <%= (Campaign.hasDetails()?"<font color='green'>" + toHtml(Campaign.getDeliveryName())  + "</font>":"<font color='red'>Not Specified</font>") %>
           </td>
         </tr>
@@ -73,29 +72,27 @@ Campaign Details
           <td class="formLabel">
             Entered
           </td>
-          <td width="100%">
+          <td>
             <dhv:username id="<%= Campaign.getEnteredBy() %>" /> - <%= toHtml(Campaign.getEnteredString()) %>
           </td>
         </tr>
-        
         <tr class="containerBody">
           <td class="formLabel">
             Modified
           </td>
-          <td width="100%">
+          <td>
             <dhv:username id="<%= Campaign.getModifiedBy() %>" /> - <%= toHtml(Campaign.getModifiedString()) %>
           </td>
         </tr>
-	<tr class="containerBody">
+        <tr class="containerBody">
           <td class="formLabel">
             Mail Merge
           </td>
-          <td width="100%" nowrap>
+          <td nowrap>
             <%= (Campaign.hasFiles()?"<a href=\"CampaignManager.do?command=PrepareDownload&id=" + Campaign.getId() + "\">Download<br>Available</a>":"None") %>
           </td>
         </tr>
-	
-     </table>
-   </td>
+      </table>
+    </td>
   </tr>
 </table>

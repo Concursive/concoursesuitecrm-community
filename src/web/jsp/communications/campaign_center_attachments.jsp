@@ -45,16 +45,16 @@ Surveys
 &nbsp;<br>
 </dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
+  <tr class="title">
     <td colspan="2" valign="center" align="left">
       <strong>Select a survey for this campaign</strong>
     </td>     
   </tr>
   <tr class="containerBody">
-    <td width="50" valign="center" nowrap class="formLabel">
+    <td valign="center" nowrap class="formLabel">
       Survey
     </td>
-    <td width="100%" valign="center">
+    <td valign="center">
     <SELECT SIZE="1" name="ListView" onChange="javascript:updateList();">
       <OPTION VALUE="my"<dhv:evaluate if="<%= "my".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>>My Surveys</OPTION>
       <OPTION VALUE="all"<dhv:evaluate if="<%= "all".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>>All Surveys</OPTION>
@@ -64,15 +64,14 @@ Surveys
     </td>
   </tr>
   <tr class="containerBody">
-    <td width="50" valign="top" nowrap class="formLabel">
+    <td valign="top" nowrap class="formLabel">
       Preview
     </td>
-    <td width="100%" valign="center">
+    <td valign="center">
       <iframe id="edit" name="edit" frameborder="0" <dhv:browser id="ie" include="false">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 100%;"</dhv:browser> onblur="return false" src="">
       </iframe>
     </td>
   </tr>
-  
 </table>
 <dhv:permission name="campaign-campaigns-edit">
 <br>

@@ -35,20 +35,20 @@ Add a Campaign
   <%= showError(request, "actionError") %>
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
-      <td valign=center colspan=2 align=left>
+      <td colspan="2">
         <strong>Begin by naming the campaign</strong>
       </td>
     </tr>
     <tr>
-      <td nowrap class="formLabel">
+      <td class="formLabel">
        Campaign Name
       </td>
       <td>
-        <input type=text size=35 name="name" value="<%= toHtmlValue(Campaign.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
+        <input type="text" size="35" name="name" value="<%= toHtmlValue(Campaign.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
       </td>
     </tr>
     <tr>
-      <td nowrap class="formLabel" valign="top">
+      <td class="formLabel" valign="top">
         Description
       </td>
       <td>

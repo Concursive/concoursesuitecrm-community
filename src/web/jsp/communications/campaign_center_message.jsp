@@ -36,13 +36,13 @@ Message
 &nbsp;<br>
 </dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
-    <td colspan="2" valign="center" align="left">
+  <tr class="title">
+    <td colspan="2">
       <strong>Select a message for this campaign</strong>
     </td>     
   </tr>
   <tr class="containerBody">
-    <td width="50" valign="center" nowrap class="formLabel">
+    <td nowrap class="formLabel">
       Message
     </td>
     <td width="100%" valign="center">
@@ -55,10 +55,10 @@ Message
     </td>
   </tr>
   <tr class="containerBody">
-    <td width="50" valign="top" nowrap class="formLabel">
+    <td valign="top" nowrap class="formLabel">
       Preview
     </td>
-    <td width="100%" valign="center">
+    <td valign="center">
       <iframe id="edit" name="edit" frameborder="0" <dhv:browser id="ie" include="false">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 200;"</dhv:browser> onblur="return false" src="CampaignManagerMessage.do?command=PreviewMessage&id=<%= Campaign.getMessageId() %>">
         Message text not available
       </iframe>

@@ -5,9 +5,9 @@
 <form>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="3" valign="center" align="left">
+    <td colspan="3">
       <strong>List of Contacts</strong>
-    </td>     
+    </td>
   </tr>
   <tr class="title">
     <td width="8" align="right" nowrap>
@@ -26,16 +26,10 @@
 	if ( j.hasNext() ) {
 		int rowid = 0;
 		int count = 0;
-		
 	  while (j.hasNext()) {
 			count++;		
-			if (rowid != 1) {
-				rowid = 1;
-			} else {
-				rowid = 2;
-			}
-		
-		Contact thisContact = (Contact)j.next();
+			rowid = (rowid != 1?1:2);
+      Contact thisContact = (Contact)j.next();
 %>      
   <tr>
     <td align="center" nowrap>
@@ -53,8 +47,8 @@
 <br>
 <dhv:pagedListControl object="CampaignGroupsContactsInfo" tdClass="row1"/>
 <%} else {%>
-  <tr bgcolor="white">
-    <td colspan="3" valign="center">
+  <tr class="containerBody">
+    <td colspan="3">
       No contacts matched query.
     </td>
   </tr>

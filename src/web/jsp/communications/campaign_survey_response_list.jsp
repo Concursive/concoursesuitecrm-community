@@ -10,10 +10,9 @@
 <a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
 Response
 <hr color="#BFBFBB" noshade>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
-    <td colspan="2" valign="center" align="left">
+    <td colspan="2">
       <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
     </td>
   </tr>
@@ -29,38 +28,40 @@ Response
 <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="SurveyResponseListInfo"/>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td align="left" width="20%" nowrap>
+    <td width="20%" nowrap>
       <strong><a href="CampaignManager.do?command=ViewResponse&id=<%= Campaign.getId() %>&column=c.namelast">Name</a></strong>
       <%= SurveyResponseListInfo.getSortIcon("c.namelast") %>
       </td>
-    <td align="left" nowrap><strong><a href="CampaignManager.do?command=ViewResponse&id=<%= Campaign.getId() %>&column=sr.entered">Submitted</a></strong>
+    <td nowrap>
+      <strong><a href="CampaignManager.do?command=ViewResponse&id=<%= Campaign.getId() %>&column=sr.entered">Submitted</a></strong>
       <%= SurveyResponseListInfo.getSortIcon("sr.entered") %>
     </td>
-    <td align="left" nowrap><strong>IpAddress</strong></td>
-    <td align="left" nowrap><strong>Email Address</strong></td>
-    <td align="left" nowrap><strong>Phone Number</strong></td>
+    <td nowrap><strong>IP Address</strong></td>
+    <td nowrap><strong>Email Address</strong></td>
+    <td nowrap><strong>Phone Number</strong></td>
   </tr>
 <%
   Iterator j = SurveyResponseList.iterator();
-  
   if ( j.hasNext() ) {
     int rowid = 0;
     while (j.hasNext()) {
-      if (rowid != 1) rowid = 1; else rowid = 2;
-      SurveyResponse thisResponse = (SurveyResponse)j.next();
+      rowid = (rowid != 1?1:2);
+      SurveyResponse thisResponse = (SurveyResponse) j.next();
 %>      
     <tr class="row<%= rowid %>">
-      <td valign="middle" width="30" align="left" nowrap>
+      <td width="30" nowrap>
         <a href="CampaignManager.do?command=ResponseDetails&id=<%= Campaign.getId() %>&contactId=<%= thisResponse.getContactId() %>&responseId=<%= thisResponse.getId() %>"><%= toHtml(thisResponse.getContact().getNameLastFirst()) %></a>
       </td>
-      <td valign="middle" align="left" nowrap>
+      <td nowrap>
         <%= toDateTimeString(thisResponse.getEntered()) %>&nbsp;
       </td>
-      <td align="left"><%= toHtml(thisResponse.getIpAddress()) %>&nbsp;</td>
-      <td align="left" valign="middle" align="left"  nowrap>
-        <%= thisResponse.getContact().getEmailAddress("Business") %> &nbsp;
+      <td>
+        <%= toHtml(thisResponse.getIpAddress()) %>&nbsp;
       </td>
-      <td align="left" valign="middle" align="left" nowrap>
+      <td nowrap>
+        <%= thisResponse.getContact().getEmailAddress("Business") %>&nbsp;
+      </td>
+      <td nowrap>
         <%= thisResponse.getContact().getPhoneNumber("Business") %>&nbsp;
       </td>
     </tr>
@@ -70,7 +71,7 @@ Response
   <dhv:pagedListControl object="SurveyResponseListInfo"/>
 <%} else {%>
     <tr class="containerBody">
-      <td colspan="7" valign="center">
+      <td colspan="7">
         No Response Found.
       </td>
     </tr>

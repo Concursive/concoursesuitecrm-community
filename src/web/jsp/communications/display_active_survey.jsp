@@ -9,7 +9,6 @@
 function checkForm(form){
   formTest = true;
   message = "";
-  
   for (i=0; i < required.length; i++){
     if(required[i].indexOf('comments') != -1){
       var field = document.getElementById(required[i]);
@@ -43,9 +42,9 @@ function checkForm(form){
 }
 
 function validateRadio (field) {
-  if (!field.length && field.checked)
+  if (!field.length && field.checked) {
     return true;
-  else {
+  } else {
     for (var b = 0; b < field.length; b++) {
       if (field[b].checked) return true;
     }
@@ -54,7 +53,6 @@ function validateRadio (field) {
 }
 </script>
 </head>
-
 <body>
 <script>var required = new Array();</script>
 &nbsp;<br>
@@ -72,7 +70,7 @@ function validateRadio (field) {
   <table cellpadding="0" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="containerBody">
       <td colspan="2" valign="center">
-        <%=toHtml(ActiveSurvey.getIntro())%>
+        <%= toHtml(ActiveSurvey.getIntro()) %>
       </td>
     </tr>
   </table>
@@ -111,7 +109,7 @@ function validateRadio (field) {
          for(int i =0 ; i < 7 ;){
        %>
           <td valign="center" align="center">
-            <input type="radio" name="quest<%=count%>qans" value="<%=++i%>" id="quest<%=count%>qans">
+            <input type="radio" name="quest<%= count %>qans" value="<%=++i%>" id="quest<%= count %>qans">
           </td>
        <%
          }
@@ -186,7 +184,7 @@ function validateRadio (field) {
     else {
     %>
       <tr bgcolor="white">
-        <td colspan="6" valign="center">
+        <td colspan="6">
           No Questions found in this Survey
         </td>
       </tr>
@@ -194,9 +192,9 @@ function validateRadio (field) {
         }
       %>
     </table><br>
-    <input type=hidden name="id" value="<%=request.getParameter("id")%>">
+    <input type="hidden" name="id" value="<%=request.getParameter("id")%>">
     <input type="submit" value="Submit Survey">
-<br>
+    <br>
     </form>
   </center>
  </body>

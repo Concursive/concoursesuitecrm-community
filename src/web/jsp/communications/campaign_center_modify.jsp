@@ -23,12 +23,12 @@
   }
 </script>
 <body onLoad="javascript:document.forms[0].name.focus();">
+<form name="addForm" action="CampaignManager.do?command=Update&auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <a href="CampaignManager.do">Communications Manager</a> > 
 <a href="CampaignManager.do?command=View">Campaign List</a> >
 <a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Modify
 <hr color="#BFBFBB" noshade>
-<form name="addForm" action="CampaignManager.do?command=Update&auto-populate=true" method="post" onSubmit="return checkForm(this);">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= Campaign.getId() %>">
   <input type="hidden" name="modified" value="<%= Campaign.getModified() %>">
@@ -39,20 +39,20 @@ Modify
   <%= showError(request, "actionError") %>
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
-      <td valign=center colspan=2 align=left>
-        <strong>Modify base campaign information</strong>
+      <td colspan="2">
+        <strong>Rename campaign</strong>
       </td>
     </tr>
     <tr>
-      <td nowrap class="formLabel">
+      <td class="formLabel">
        Campaign Name
       </td>
       <td>
-        <input type=text size=35 name="name" value="<%= toHtmlValue(Campaign.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
+        <input type="text" size="35" name="name" value="<%= toHtmlValue(Campaign.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
       </td>
     </tr>
     <tr>
-      <td nowrap class="formLabel" valign="top">
+      <td class="formLabel" valign="top">
         Description
       </td>
       <td>

@@ -11,7 +11,7 @@ Recipients
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
-    <td colspan="2" valign="center" align="left">
+    <td colspan="2">
       <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
     </td>
   </tr>
@@ -27,58 +27,52 @@ Recipients
     <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CampaignDashboardRecipientInfo"/>
 	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	  <tr class="title">
-	    <td colspan="6" valign="center" align="left">
+	    <td colspan="6">
 	      <strong>List of Recipients</strong>
 	    </td>     
 	  </tr>
 	  <tr class="title">
-	    <td width="24" align=right nowrap>
+	    <td width="24" align="center" nowrap>
 	      Count
 	    </td>
 	    <td>
 	      Name
 	    </td>
-	    <td width=100%>
+	    <td width="100%">
 	      Company
 	    </td>
-	    <td valign=center width="102" nowrap>
+	    <td align="center" nowrap>
 	      Sent Date
 	    </td>
-	    <td width="102" nowrap>
+	    <td align="center" nowrap>
 	      Status
 	    </td>
 	  </tr>
 	<%
 		Iterator j = RecipientList.iterator();
-		
 		if ( j.hasNext() ) {
 			int rowid = 0;
 			int count = CampaignDashboardRecipientInfo.getCurrentOffset();
-			
 		  while (j.hasNext()) {
 				count++;		
-				if (rowid != 1) {
-					rowid = 1;
-				} else {
-					rowid = 2;
-				}
+				rowid = (rowid != 1?1:2);
 	      Recipient thisRecipient = (Recipient)j.next();
 	      Contact thisContact = thisRecipient.getContact();
 	%>      
 	  <tr class="row<%= rowid %>">
-	    <td align=right nowrap>
+	    <td align="right" nowrap>
 	      <%= count %>
 	    </td>
 	    <td nowrap>
 	      <%= toHtml(thisContact.getNameLastFirst()) %>
 	    </td>
-	    <td width=100% nowrap>
+	    <td width="100%">
 	      <%= toHtml(thisContact.getCompany()) %>
 	    </td>
-	    <td width="102" nowrap>
+	    <td align="center" nowrap>
 	      <%= toHtml(thisRecipient.getSentDateString()) %>
 	    </td>
-	    <td width="102" nowrap>
+	    <td align="center" nowrap>
 	      <%= toHtml(thisRecipient.getStatus()) %>
 	    </td>
 	  </tr>
@@ -87,8 +81,8 @@ Recipients
 	<br>
 	<dhv:pagedListControl object="CampaignDashboardRecipientInfo" />
 	<%} else {%>
-	  <tr bgcolor="white">
-	    <td colspan="6" valign="center">
+	  <tr class="containerBody">
+	    <td colspan="6">
 	      No recipients found.
 	    </td>
 	  </tr>

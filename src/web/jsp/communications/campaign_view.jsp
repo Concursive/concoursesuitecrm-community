@@ -4,10 +4,6 @@
 <jsp:useBean id="CampaignListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<%--
-<dhv:permission name="campaign-campaigns-add"><a href="/CampaignManager.do?command=Add">Create a Campaign</a></dhv:permission>
-<dhv:permission name="campaign-campaigns-add" none="true"><br></dhv:permission>
---%>
 <a href="CampaignManager.do">Communications Manager</a> >
 Campaign List
 <hr color="#BFBFBB" noshade>
@@ -57,21 +53,14 @@ Campaign List
       <strong>Activate?</strong>
     </td>
     </dhv:permission>
-	<%
+<%
 	Iterator j = campList.iterator();
-	
 	if ( j.hasNext() ) {
 		int rowid = 0;
-	while (j.hasNext()) {
-	
-		if (rowid != 1) {
-			rowid = 1;
-		} else {
-			rowid = 2;
-		}
-	
-		Campaign campaign = (Campaign)j.next();
-	%>      
+    while (j.hasNext()) {
+      rowid = (rowid != 1?1:2);
+      Campaign campaign = (Campaign)j.next();
+%>
 	<tr class="containerBody">
 	<dhv:permission name="campaign-campaigns-edit,campaign-campaigns-delete">
     <td width="8" valign="center" nowrap class="row<%= rowid %>">
