@@ -32,6 +32,10 @@ public final class ForwardNote extends CFSModule {
 		try {
 			 db = getConnection(context);
 			 
+			LookupList departmentList = new LookupList(db, "lookup_department");
+			departmentList.addItem(0, "-- Select Department --");
+			context.getRequest().setAttribute("DepartmentList", departmentList);
+			 
 			 if (linkModId != null && linkRecId != null) {
 			 	//forwarding a call
 				 if (Integer.parseInt(linkModId) == Constants.CONTACTS_CALLS) {
@@ -77,6 +81,26 @@ public final class ForwardNote extends CFSModule {
       			return ("SystemError");
     		}
   	}
+	
+	public String executeCommandUpdateUserList(ActionContext context) {
+		Exception errorMessage = null;
+		Connection db = null;
+		try {
+			String deptId = context.getRequest().getParameter("deptId");
+			db = this.getConnection(context);
+			UserList userList = new UserList();
+			if (deptId != null) {
+				userList.setDepartment(deptId);
+			}
+			userList.buildList(db);
+			context.getRequest().setAttribute("UserList", userList);
+	} catch (SQLException e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+		return ("MakeUserListOK");
+	}
 	
 	public String executeCommandForward(ActionContext context) {
 		Exception errorMessage = null;

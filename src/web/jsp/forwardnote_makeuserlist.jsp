@@ -6,21 +6,29 @@
 <body onload='page_init();'>
 <script language='Javascript'>
 function page_init() {
-  var list = parent.document.forms['projectMemberForm'].elements['selTotalList'];
+  var list = parent.document.forms['ForwardForm'].elements['selTotalList'];
+  var hiddendept = parent.document.forms['ForwardForm'].elements['hiddendept'];
+  var str = "";
+  
   list.options.length = 0;
-  //list.options[list.length] = new Option("--None--", "-1");
 
 <%
   Iterator i = UserList.iterator();
+  
   while (i.hasNext()) {
     User thisUser = (User)i.next();
 %>
-  if ( !(inArray(parent.document.forms['projectMemberForm'].elements['selProjectList'], <%= thisUser.getId() %>)) ) {
+  if ( !(inArray(parent.document.forms['ForwardForm'].elements['selectedList'], <%= thisUser.getId() %>)) ) {
   	list.options[list.length] = new Option("<%= thisUser.getContact().getNameFull() %>", "<%= thisUser.getId() %>");
   }
+  
+  str = str + "<%= thisUser.getId() %>" + "|";
 <%
   }
 %>
+  //alert(str);
+  hiddendept.value = str;
+  //alert(hiddendept.value);
 }
 
 function inArray(a, s) {

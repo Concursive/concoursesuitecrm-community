@@ -71,6 +71,7 @@
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="PopupOK" resource="/forwardnote_form.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
+    <forward name="MakeUserListOK" resource="/forwardnote_makeuserlist.jsp"/>
   </action>
   
   <action name="MyCFSPassword" class="com.darkhorseventures.cfsmodule.MyCFS">
