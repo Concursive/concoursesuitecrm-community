@@ -304,9 +304,11 @@ public class RegistrationBean extends GenericBean {
     javaElement.appendChild(document.createTextNode(java));
     rootElement.appendChild(javaElement);
     //Web Server type
-    Element webElement = document.createElement("webserver");
-    webElement.appendChild(document.createTextNode(webserver));
-    rootElement.appendChild(webElement);
+    if (webserver != null) {
+      Element webElement = document.createElement("webserver");
+      webElement.appendChild(document.createTextNode(webserver));
+      rootElement.appendChild(webElement);
+    }
     //Key
     if (zlib != null) {
       Element zlibElement = document.createElement("zlib");
