@@ -34,15 +34,17 @@ public class InitHook implements ControllerInitHook {
   public String executeControllerInit(ServletConfig config) {
     System.out.println("InitHook-> Executing");
     ServletContext context = config.getServletContext();
-    //Load the system prefs to determine the file library path
+    //Load the system prefs from the Java registry to determine the file library path
     org.aspcfs.modules.setup.utils.Prefs.loadPrefs(context);
     //Load the build.properties file to set the rest of the prefs
     File propertyFile = null;
     if (context.getAttribute("FileLibrary") != null) {
+      //The value was loaded from the binary distribution
       propertyFile = new File((String) context.getAttribute("FileLibrary") + "build.properties");
     } else {
       propertyFile = new File(context.getRealPath("/") + "WEB-INF" + fs + "fileLibrary" + fs + "build.properties");
       if (propertyFile.exists()) {
+        //The value can be set since it wasn't required during the enterprise build process
         context.setAttribute("FileLibrary", context.getRealPath("/") + "WEB-INF" + fs + "fileLibrary" + fs);
       }
     }
