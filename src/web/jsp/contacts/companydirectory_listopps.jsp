@@ -2,7 +2,7 @@
 <%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.pipeline.base.OpportunityHeader,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OpportunityHeaderList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
-<jsp:useBean id="OpportunityPagedListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="ExternalOppsPagedListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <a href="ExternalContacts.do">General Contacts</a> > 
@@ -25,8 +25,23 @@ Opportunities<br>
   <tr>
     <td class="containerBack">
 <dhv:permission name="contacts-external_contacts-opportunities-add"><a href="ExternalContactsOpps.do?command=AddOpp&contactId=<%= ContactDetails.getId() %>">Add an Opportunity</a></dhv:permission>
-<center><%= OpportunityPagedListInfo.getAlphabeticalPageLinks() %></center>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OpportunityPagedListInfo"/>
+<center><%= ExternalOppsPagedListInfo.getAlphabeticalPageLinks() %></center>
+<table width="100%" border="0">
+  <tr>
+    <form name="listView" method="post" action="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>">
+    <td align="left">
+      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
+        <option <%= ExternalOppsPagedListInfo.getOptionValue("my") %>>My Opportunities </option>
+        <option <%= ExternalOppsPagedListInfo.getOptionValue("all") %>>All Opportunities</option>
+      </select>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ExternalOppsPagedListInfo"/>
+    </td>
+    </form>
+  </tr>
+</table>
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
@@ -37,7 +52,7 @@ Opportunities<br>
   
     <td valign=center align=left>
       <strong><a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%=ContactDetails.getId()%>&column=description">Opportunity Name</a></strong>
-      <%= OpportunityPagedListInfo.getSortIcon("description") %>
+      <%= ExternalOppsPagedListInfo.getSortIcon("description") %>
     </td>
     
     <td valign=center align=left>
@@ -46,7 +61,7 @@ Opportunities<br>
     
     <td valign=center align=left>
       <strong><a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%=ContactDetails.getId()%>&column=modified">Last Modified</a></strong>
-      <%= OpportunityPagedListInfo.getSortIcon("modified") %>
+      <%= ExternalOppsPagedListInfo.getSortIcon("modified") %>
     </td>
     
   </tr>
@@ -100,7 +115,7 @@ Opportunities<br>
 <%}%>
 </table>
 <br>
-<dhv:pagedListControl object="OpportunityPagedListInfo"/>
+<dhv:pagedListControl object="ExternalOppsPagedListInfo"/>
 </td>
 </tr>
 </table>
