@@ -62,52 +62,7 @@ Modify Message
 <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	<tr class="title">
-  	<td colspan="2">
-    	<strong>Modify Message</strong>
-  	</td>
-	</tr>
-  <tr>
-    <td class="formLabel">
-      Name
-    </td>
-    <td>
-      <input type="text" size="50" maxlength="80" name="name" value="<%= toHtmlValue(Message.getName()) %>">
-			<font color="red">*</font> <%= showAttribute(request, "nameError") %>
-    </td>
-  </tr>
-  <tr>
-    <td valign="top" class="formLabel">
-      Internal Description
-    </td>
-    <td valign="top">
-      <input type="text" size="50" maxlength="255" name="description" value="<%= toHtmlValue(Message.getDescription()) %>">
-    </td>
-  </tr>
-	<tr>
-    <td class="formLabel">
-      Message
-    </td>
-    <td valign=center>
-      From: <input type="text" size="40" maxlength="255" name="replyTo" value="<%= toHtmlValue(Message.getReplyTo()) %>">
-			<font color="red">*</font> <%= showAttribute(request, "replyToError") %>
-      (Email address)<br>
-      Subject: <input type="text" size="50" maxlength="255" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
-			<font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %><br>
-      <dhv:evaluate if="<%= !enhancedEditor %>">
-        &nbsp;<br>
-        <b>Plain Text</b> editing mode: html tags are not supported in message editor<br>
-        <input type="hidden" name="formatLineFeeds" value="true"/>
-        <textarea id="messageText" name="messageText" style="width:550; border: inset 2pt" rows="20"><%= StringUtils.toHtmlTextValue(Message.getMessageText()) %></textarea>
-      </dhv:evaluate>
-      <dhv:evaluate if="<%= enhancedEditor %>">
-        <input type="hidden" name="formatLineFeeds" value="false"/>
-        <textarea id="messageText" name="messageText" style="width:550" rows="20"><%= toString(Message.getMessageText()) %></textarea>
-      </dhv:evaluate>
-    </td>
-  </tr>
-</table>
+<%@ include file="message_form.jsp" %>
 <br>
 <input type="submit" value="Update Message" name="Save" onclick="javascript:save();">
 <% if (request.getParameter("return") != null) {%>

@@ -15,6 +15,7 @@ Dashboard
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= CampaignDashboardListInfo.getOptionValue("my") %>>My Running Campaigns</option>
         <option <%= CampaignDashboardListInfo.getOptionValue("all") %>>All Running Campaigns</option>
+        <option <%= CampaignDashboardListInfo.getOptionValue("instant") %>>All Instant Campaigns</option>
       </select>
     </td>
     <td>
