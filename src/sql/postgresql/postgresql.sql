@@ -1,3 +1,4 @@
+-- Script (C) 2004 Dark Horse Ventures, all rights reserved
 
 SET search_path = public, pg_catalog;
 

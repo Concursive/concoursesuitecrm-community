@@ -1,3 +1,4 @@
+-- Script (C) 2004 Dark Horse Ventures, all rights reserved
 
 CREATE TABLE [events] (
 	[event_id] [int] IDENTITY (1, 1) NOT NULL ,
