@@ -1,5 +1,6 @@
 package org.aspcfs.utils.web;
 
+import java.io.Serializable;
 import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.util.Enumeration;
@@ -23,7 +24,7 @@ import org.aspcfs.utils.web.HtmlSelect;
  *@version    $Id: PagedListInfo.java,v 1.10 2001/08/31 17:36:15 mrajkowski Exp
  *      $
  */
-public class PagedListInfo {
+public class PagedListInfo implements Serializable {
   public final String[] lettersArray = {"0", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
   public static final int DEFAULT_ITEMS_PER_PAGE = 10;
   String link = "";

@@ -1,5 +1,6 @@
 package org.aspcfs.utils.web;
 
+import java.io.Serializable;
 import javax.servlet.http.HttpServletRequest;
 import com.darkhorseventures.framework.actions.*;
 import java.util.Iterator;
@@ -16,7 +17,7 @@ import org.aspcfs.modules.admin.base.UserList;
  *@created    February 24, 2003
  *@version    $Id$
  */
-public class ViewpointInfo {
+public class ViewpointInfo implements Serializable {
   private String id = null;
   private int vpUserId = -1;
   private String vpUserName = null;
@@ -39,7 +40,6 @@ public class ViewpointInfo {
    */
   public void setParameters(ActionContext context) {
     HttpServletRequest request = context.getRequest();
-
     if (request.getParameter("viewpointId") != null) {
       vpUserId = Integer.parseInt((String) request.getParameter("viewpointId"));
     }
