@@ -6,7 +6,6 @@
 <%
   boolean openEnded =  "open".equalsIgnoreCase(request.getParameter("type"));
 %>
-<center><%= CommentListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CommentListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
