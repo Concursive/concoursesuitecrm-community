@@ -272,6 +272,9 @@ public class CustomForm extends CustomFieldCategory {
         jsTabCheck.append("function checkTab(form) {\n");
         jsTabCheck.append("    formTest = true;\n");
         jsTabCheck.append("    message = \"\";\n");
+        jsTabCheck.append("    if (form.clickFrom.value=\"back\"){ \n");
+        jsTabCheck.append("       return true;\n");
+        jsTabCheck.append("    }\n");
       }
       appendJsField(thisField, jsTabCheck);
     }
