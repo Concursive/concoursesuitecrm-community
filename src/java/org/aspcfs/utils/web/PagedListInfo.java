@@ -404,6 +404,18 @@ public class PagedListInfo {
       return linkOff;
     }
   }
+  
+  public String getSortIcon(String columnName) {
+    if (columnName.equals(columnToSortBy)) {
+      if (sortOrder != null && sortOrder.indexOf("desc") > -1) {
+        return "<img border=0 src=\"images/down.gif\" align=\"bottom\">";
+      } else {
+        return "<img border=0 src=\"images/up.gif\" align=\"bottom\">";
+      }
+    } else {
+      return "";
+    }
+  }
 
 
   /**

@@ -13,6 +13,7 @@
     </td>
     <td width=30% valign=center align=left>
       <strong><a href="/Accounts.do?command=View&column=o.name">Account Name</a></strong>
+      <%= OrgListInfo.getSortIcon("o.name") %>
     </td>
     <td width=20% valign=center align=left nowrap>
       <strong>Phone</strong>

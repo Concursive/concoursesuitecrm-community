@@ -21,16 +21,19 @@
       <a href="/CompanyDirectory.do?command=ListEmployees&column=c.namelast">
         <strong>Name</strong>
       </a>
+      <%= CompanyDirectoryInfo.getSortIcon("c.namelast") %>
     </td>
     <td>
       <a href="/CompanyDirectory.do?command=ListEmployees&column=departmentname">
         <strong>Department</strong>
       </a>
+      <%= CompanyDirectoryInfo.getSortIcon("departmentname") %>
     </td>
     <td>
       <a href="/CompanyDirectory.do?command=ListEmployees&column=title">
         <strong>Title</strong>
       </a>
+      <%= CompanyDirectoryInfo.getSortIcon("title") %>
     </td>
     <td nowrap>
       <strong>Business Phone</strong>
@@ -47,10 +50,11 @@
 %>      
       <tr>
         <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>&action=modify&return=list">Edit</a>|<a href="javascript:confirmDelete('/CompanyDirectory.do?command=DeleteEmployee&empid=<%= thisEmployee.getId() %>');">Del</a>|<%= thisEmployee.getEmailAddressTag("Business", "Email", "<font color=#AAAAAA>Email</font>") %>
+          <a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>&action=modify&return=list">Edit</a>|<a href="javascript:confirmDelete('/CompanyDirectory.do?command=DeleteEmployee&empid=<%= thisEmployee.getId() %>');">Del</a>
         </td>
         <td class="row<%= rowid %>"><font class="columntext1">
           <a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLast()) %>, <%= toHtml(thisEmployee.getNameFirst()) %></a></font>
+          <%= thisEmployee.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
         </td>
         <td class="row<%= rowid %>">
           <%= toHtml(thisEmployee.getDepartmentName()) %>

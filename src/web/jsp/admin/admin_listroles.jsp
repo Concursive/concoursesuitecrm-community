@@ -20,11 +20,13 @@
       <b><font class="column">
       <a href="/Roles.do?command=ListRoles&column=role">
       Role</a></font></b>
+      <%= RoleListInfo.getSortIcon("role") %>
     </td>
     <td bgcolor="#DEE0FA">
       <b><font class="column">
       <a href="/Roles.do?command=ListRoles&column=description">
       Description</a></font></b>
+      <%= RoleListInfo.getSortIcon("description") %>
     </td>
     <td bgcolor="#DEE0FA">
       <b><font class="column">

@@ -24,18 +24,22 @@
     </td>
     <td valign=center align=left>
       <a href="/CampaignManager.do?command=Dashboard&column=name"><strong>Name</strong></a>
+      <%= CampaignDashboardListInfo.getSortIcon("name") %>
     </td>  
     <td valign=center align=left>
       <a href="/CampaignManager.do?command=Dashboard&column=active_date"><strong>Start Date</strong></a>
+      <%= CampaignDashboardListInfo.getSortIcon("active_date") %>
     </td> 
     <td valign=center align=left>
       <strong># Recipients</strong>
     </td> 
     <td valign=center align=left>
       <a href="/CampaignManager.do?command=Dashboard&column=status"><strong>Status</strong></a>
+      <%= CampaignDashboardListInfo.getSortIcon("status") %>
     </td>
     <td width=10 valign=center align=left>
       <a href="/CampaignManager.do?command=Dashboard&column=active"><strong>Active?</strong></a>
+      <%= CampaignDashboardListInfo.getSortIcon("active") %>
     </td> 
 	<%
 	Iterator j = campList.iterator();

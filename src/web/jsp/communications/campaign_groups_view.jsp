@@ -25,12 +25,15 @@
     </td>
     <td valign=center align=left width="100%">
       <a href="/CampaignManagerGroup.do?command=View&column=name"><strong>Group Name</strong></a>
+      <%= CampaignGroupListInfo.getSortIcon("name") %>
     </td>
     <td valign=center align=left nowrap>
       <a href="/CampaignManagerGroup.do?command=View&column=enteredby"><strong>Entered By</strong></a>
+      <%= CampaignGroupListInfo.getSortIcon("enteredby") %>
     </td>
     <td valign=center align=left nowrap>
       <a href="/CampaignManagerGroup.do?command=View&column=modified"><strong>Last Modified</strong></a>
+      <%= CampaignGroupListInfo.getSortIcon("modified") %>
     </td>
 	<%
 	Iterator j = sclList.iterator();

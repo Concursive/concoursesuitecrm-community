@@ -30,16 +30,24 @@
     </td>
     <td bgcolor="#DEE0FA"><b><font class="column">
       <a href="/Users.do?command=ListUsers&column=namelast">
-      Name</a></font></b></td>
+      Name</a></font></b>
+      <%= UserListInfo.getSortIcon("namelast") %>
+    </td>
     <td bgcolor="#DEE0FA"><b><font class="column">
       <a href="/Users.do?command=ListUsers&column=username">
-      Username</a></font></b></td>
+      Username</a></font></b>
+      <%= UserListInfo.getSortIcon("username") %>
+    </td>
     <td bgcolor="#DEE0FA"><b><font class="column">
       <a href="/Users.do?command=ListUsers&column=role">
-      Role</a></font></b></td>
+      Role</a></font></b>
+      <%= UserListInfo.getSortIcon("role") %>
+    </td>
     <td bgcolor="#DEE0FA"><b><font class="column">
       <a href="/Users.do?command=ListUsers&column=mgr_namelast">
-      Reports To</a></font></b></td>
+      Reports To</a></font></b>
+      <%= UserListInfo.getSortIcon("mgr_namelast") %>
+    </td>
   </tr>
 <%    
     while (i.hasNext()) {

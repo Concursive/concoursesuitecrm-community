@@ -25,15 +25,19 @@
     </td>
     <td width=40% valign=center align=left>
       <a href="/CampaignManagerMessage.do?command=View&column=name"><strong>Name</strong></a>
+      <%= CampaignMessageListInfo.getSortIcon("name") %>
     </td>  
     <td width=60% valign=center align=left>
       <a href="/CampaignManagerMessage.do?command=View&column=description"><strong>Description</strong></a>
+      <%= CampaignMessageListInfo.getSortIcon("description") %>
     </td>
     <td valign=center align=left nowrap>
       <a href="/CampaignManagerMessage.do?command=View&column=enteredby"><strong>Entered By</strong></a>
+      <%= CampaignMessageListInfo.getSortIcon("enteredby") %>
     </td>
     <td valign=center align=left>
       <a href="/CampaignManagerMessage.do?command=View&column=modified"><strong>Last Modified</strong></a>
+      <%= CampaignMessageListInfo.getSortIcon("modified") %>
     </td>
   </tr>
 <%

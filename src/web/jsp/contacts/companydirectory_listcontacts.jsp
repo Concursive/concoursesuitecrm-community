@@ -12,8 +12,8 @@
   <tr>
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= ExternalContactsInfo.getOptionValue("my") %>>My Contacts & Resources</option>
-        <option <%= ExternalContactsInfo.getOptionValue("all") %>>All Contacts & Resources</option>
+        <option <%= ExternalContactsInfo.getOptionValue("my") %>>My Contacts </option>
+        <option <%= ExternalContactsInfo.getOptionValue("all") %>>All Contacts</option>
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>
@@ -27,9 +27,11 @@
     </td>
     <td>
       <strong><a href="/ExternalContacts.do?command=ListContacts&column=c.namelast">Name</a></strong>
+      <%= ExternalContactsInfo.getSortIcon("c.namelast") %>
     </td>
     <td>
       <strong><a href="/ExternalContacts.do?command=ListContacts&column=company">Company</a></strong>
+      <%= ExternalContactsInfo.getSortIcon("company") %>
     </td>
     <td>
       <strong>Phone: Business</strong>
@@ -55,10 +57,12 @@
 %>      
       <tr>
         <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <a href="/ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>&action=modify&return=list">Edit</a>|<a href="javascript:confirmDelete('/ExternalContacts.do?command=DeleteContact&id=<%= thisContact.getId() %>');">Del</a>|<%= thisContact.getEmailAddressTag("Business", "Email", "<font color=#AAAAAA>Email</font>") %>
+          <a href="/ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>&action=modify&return=list">Edit</a>|<a href="javascript:confirmDelete('/ExternalContacts.do?command=DeleteContact&id=<%= thisContact.getId() %>');">Del</a>
         </td>
         <td class="row<%= rowid %>" nowrap>
           <a href="/ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameLast()) %>, <%= toHtml(thisContact.getNameFirst()) %></a>
+          <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
+          <%= ((thisContact.getOrgId() > 0)?"<a href=\"/Accounts.do?command=Details&orgId=" + thisContact.getOrgId() + "\">[Account]</a>":"") %>
         </td>
         <td class="row<%= rowid %>">
           <%= toHtml(thisContact.getCompany()) %>

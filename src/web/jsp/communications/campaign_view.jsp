@@ -24,9 +24,11 @@
     </td>
     <td valign=center width="70%" align=left>
       <a href="/CampaignManager.do?command=View&column=name"><strong>Name</strong></a>
+      <%= CampaignListInfo.getSortIcon("name") %>
     </td>  
     <td valign=center width="30%" align=left>
       <a href="/CampaignManager.do?command=View&column=active_date"><strong>Start Date</strong></a>
+      <%= CampaignListInfo.getSortIcon("active_date") %>
     </td> 
     <td valign=center align=left>
       <strong>Groups?</strong>

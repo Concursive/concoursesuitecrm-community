@@ -514,14 +514,13 @@ public class UserList extends Vector {
       }
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals("")) {
-        sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + ", c.namelast ");
-        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
-          sqlOrder.append(pagedListInfo.getSortOrder() + " ");
-        }
-      } else {
-        sqlOrder.append("ORDER BY c.namelast ");
-      }
+      if (pagedListInfo.getColumnToSortBy() == null || pagedListInfo.getColumnToSortBy().equals("")) {
+				pagedListInfo.setColumnToSortBy("namelast");
+			}
+			sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + " ");
+			if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
+				sqlOrder.append(pagedListInfo.getSortOrder() + " ");
+			}
 
       //Determine items per page
       if (pagedListInfo.getItemsPerPage() > 0) {

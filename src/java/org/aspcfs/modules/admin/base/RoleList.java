@@ -97,14 +97,13 @@ public class RoleList extends Vector {
       }
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() != null && !pagedListInfo.getColumnToSortBy().equals("")) {
-        sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + ", role ");
-        if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
-          sqlOrder.append(pagedListInfo.getSortOrder() + " ");
-        }
-      } else {
-        sqlOrder.append("ORDER BY role ");
-      }
+      if (pagedListInfo.getColumnToSortBy() == null || pagedListInfo.getColumnToSortBy().equals("")) {
+				pagedListInfo.setColumnToSortBy("role");
+			}
+			sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + " ");
+			if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
+				sqlOrder.append(pagedListInfo.getSortOrder() + " ");
+			}
 
       //Determine items per page
       if (pagedListInfo.getItemsPerPage() > 0) {
