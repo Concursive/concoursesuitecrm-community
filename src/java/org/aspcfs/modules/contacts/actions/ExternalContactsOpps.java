@@ -65,8 +65,13 @@ public final class ExternalContactsOpps extends CFSModule {
       oppList.setContactId(contactId);
       if ("all".equals(oppPagedListInfo.getListView())) {
         oppList.setOwnerIdRange(this.getUserRange(context));
-      } else {
+        oppList.setQueryOpenOnly(true);
+      } else if ("closed".equals(oppPagedListInfo.getListView())) {
+        oppList.setOwnerIdRange(this.getUserRange(context));
+        oppList.setQueryClosedOnly(true);
+      }else{
         oppList.setOwner(this.getUserId(context));
+        oppList.setQueryOpenOnly(true);
       }
       oppList.buildList(db);
       thisContact = new Contact(db, contactId);

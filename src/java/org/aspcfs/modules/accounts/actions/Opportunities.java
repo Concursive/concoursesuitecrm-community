@@ -71,9 +71,15 @@ public final class Opportunities extends CFSModule {
       oppList.setEnteredBy(this.getUserId(context));
       if ("all".equals(oppPagedInfo.getListView())) {
         oppList.setOwnerIdRange(this.getUserRange(context));
-      } else {
+        oppList.setQueryOpenOnly(true);
+      } else if("closed".equals(oppPagedInfo.getListView())){
+        oppList.setOwnerIdRange(this.getUserRange(context));
+        oppList.setQueryClosedOnly(true);
+      }else{
         oppList.setOwner(this.getUserId(context));
+        oppList.setQueryOpenOnly(true);
       }
+      
       oppList.buildList(db);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
