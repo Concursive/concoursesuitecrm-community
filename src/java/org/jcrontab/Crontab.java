@@ -290,12 +290,13 @@ public class Crontab {
          || getProperty("org.jcrontab.data.holidaysource") == "") {
       return false;
     }
-    Date today = Calendar.getInstance().getTime();
+    Calendar today = Calendar.getInstance();
+    Calendar holiday = Calendar.getInstance();
     HoliDay[] holidays = HoliDayFactory.getInstance().findAll();
-
     for (int i = 0; i < holidays.length; i++) {
-      if (holidays[i].getDate().getDay() == today.getDay() &&
-          holidays[i].getDate().getMonth() == today.getMonth()) {
+      holiday.setTime(holidays[i].getDate());
+      if (holiday.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH) &&
+          holiday.get(Calendar.MONTH) == today.get(Calendar.MONTH)) {
         return true;
       }
     }
