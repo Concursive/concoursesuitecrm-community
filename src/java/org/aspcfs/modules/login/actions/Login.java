@@ -108,13 +108,12 @@ public final class Login extends CFSModule {
     int aliasId = -1;
     try {
       db = sqlDriver.getConnection(ce);
-
       //A good place to initialize this SystemStatus, must be done before getting a user
       SystemStatus thisSystem = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Login-> Retrieved SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
       }
-
+      //Query the user record
       pst = db.prepareStatement(
           "SELECT password, expires, alias, user_id " +
           "FROM access " +
@@ -141,12 +140,12 @@ public final class Login extends CFSModule {
       }
       rs.close();
       pst.close();
-
+      //Perform rest of user initialization if a valid user
       if (userId > -1) {
         thisUser = new UserBean();
         thisUser.setUserId(aliasId > 0 ? aliasId : userId);
         thisUser.setActualUserId(userId);
-        
+        //The user record must be in user cache to proceed
         User userRecord = thisSystem.getUser(thisUser.getUserId());
         if (userRecord != null) {
           if (System.getProperty("DEBUG") != null) {
@@ -157,7 +156,8 @@ public final class Login extends CFSModule {
           thisUser.setTemplate("template0");
           thisUser.setIdRange(userRecord.getIdRange());
           thisUser.setUserRecord(userRecord);
-          
+          //Log that the user attempted login (does not necessarily mean logged in
+          //anymore due to the single-session manager below
           userRecord.setIp(context.getIpAddress());
           userRecord.updateLogin(db);
         } else {
@@ -177,20 +177,21 @@ public final class Login extends CFSModule {
       loginBean.setMessage("* Access: " + e.getMessage());
       e.printStackTrace(System.out);
       thisUser = null;
+    } finally {
+      if (db != null) {
+        sqlDriver.free(db);
+      }
     }
-
-    if (db != null) {
-      sqlDriver.free(db);
-    }
-
+    //If user record is not found, ask them to login again
     if (thisUser == null) {
       return "LoginRetry";
     }
-
+    //A valid user must have this information in their session, or the
+    //security manager will not let them access any secure pages
     context.getSession().setAttribute("User", thisUser);
     context.getSession().setAttribute("ConnectionElement", ce);
-    
-    //Check to see if user is already logged in. If not then add him to the valid users list
+    //Check to see if user is already logged in. 
+    //If not then add them to the valid users list
     SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     SessionManager sessionManager = thisSystem.getSessionManager();
     if (sessionManager.isUserLoggedIn(userId)) {
@@ -201,7 +202,6 @@ public final class Login extends CFSModule {
     }
     context.getSession().setMaxInactiveInterval(thisSystem.getSessionTimeout());
     sessionManager.addUser(context, userId);
-
     return "LoginOK";
   }
 
