@@ -39,11 +39,13 @@ public class Ticket extends GenericBean {
   private int orgId = -1;
   private int contactId = -1;
   private int assignedTo = -1;
-
+  private java.sql.Timestamp assignedDate = null;
   private String problem = "";
+  private String location = null;
   private String comment = "";
+  private java.sql.Timestamp estimatedResolutionDate = null;
+  private String cause = null;
   private String solution = "";
-
   private int priorityCode = -1;
   private int levelCode = -1;
   private int departmentCode = -1;
@@ -53,14 +55,13 @@ public class Ticket extends GenericBean {
   private int subCat2 = 0;
   private int subCat3 = 0;
   private int severityCode = -1;
-
+  private java.sql.Timestamp resolutionDate = null;
   private int enteredBy = -1;
   private int modifiedBy = -1;
-
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp closed = null;
-
+  //Related descriptions
   private String companyName = "";
   private String categoryName = "";
   private String departmentName = "";
@@ -75,11 +76,11 @@ public class Ticket extends GenericBean {
   private int ageHours = 0;
   private int campaignId = -1;
   private boolean hasEnabledOwnerAccount = true;
-
+  //Resources
   private boolean buildFiles = false;
   private boolean buildTasks = false;
   private boolean buildHistory = false;
-  
+
   private TicketLogList history = new TicketLogList();
   private FileItemList files = new FileItemList();
   private TaskList tasks = new TaskList();
@@ -361,6 +362,26 @@ public class Ticket extends GenericBean {
    */
   public void setAssignedTo(int assignedTo) {
     this.assignedTo = assignedTo;
+  }
+
+
+  /**
+   *  Sets the assignedDate attribute of the Ticket object
+   *
+   *@param  tmp  The new assignedDate value
+   */
+  public void setAssignedDate(java.sql.Timestamp tmp) {
+    this.assignedDate = tmp;
+  }
+
+
+  /**
+   *  Sets the assignedDate attribute of the Ticket object
+   *
+   *@param  tmp  The new assignedDate value
+   */
+  public void setAssignedDate(String tmp) {
+    this.assignedDate = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
@@ -790,6 +811,16 @@ public class Ticket extends GenericBean {
 
 
   /**
+   *  Sets the location attribute of the Ticket object
+   *
+   *@param  tmp  The new location value
+   */
+  public void setLocation(String tmp) {
+    this.location = tmp;
+  }
+
+
+  /**
    *  Sets the Comment attribute of the Ticket object
    *
    *@param  tmp  The new Comment value
@@ -797,6 +828,36 @@ public class Ticket extends GenericBean {
    */
   public void setComment(String tmp) {
     this.comment = tmp;
+  }
+
+
+  /**
+   *  Sets the estimatedResolutionDate attribute of the Ticket object
+   *
+   *@param  tmp  The new estimatedResolutionDate value
+   */
+  public void setEstimatedResolutionDate(java.sql.Timestamp tmp) {
+    this.estimatedResolutionDate = tmp;
+  }
+
+
+  /**
+   *  Sets the estimatedResolutionDate attribute of the Ticket object
+   *
+   *@param  tmp  The new estimatedResolutionDate value
+   */
+  public void setEstimatedResolutionDate(String tmp) {
+    this.estimatedResolutionDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the cause attribute of the Ticket object
+   *
+   *@param  tmp  The new cause value
+   */
+  public void setCause(String tmp) {
+    this.cause = tmp;
   }
 
 
@@ -939,6 +1000,26 @@ public class Ticket extends GenericBean {
    */
   public void setSeverityCode(String tmp) {
     this.severityCode = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the resolutionDate attribute of the Ticket object
+   *
+   *@param  tmp  The new resolutionDate value
+   */
+  public void setResolutionDate(java.sql.Timestamp tmp) {
+    this.resolutionDate = tmp;
+  }
+
+
+  /**
+   *  Sets the resolutionDate attribute of the Ticket object
+   *
+   *@param  tmp  The new resolutionDate value
+   */
+  public void setResolutionDate(String tmp) {
+    this.resolutionDate = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
@@ -1199,6 +1280,16 @@ public class Ticket extends GenericBean {
 
 
   /**
+   *  Gets the assignedDate attribute of the Ticket object
+   *
+   *@return    The assignedDate value
+   */
+  public java.sql.Timestamp getAssignedDate() {
+    return assignedDate;
+  }
+
+
+  /**
    *  Gets the CloseIt attribute of the Ticket object
    *
    *@return    The CloseIt value
@@ -1362,6 +1453,16 @@ public class Ticket extends GenericBean {
 
 
   /**
+   *  Gets the location attribute of the Ticket object
+   *
+   *@return    The location value
+   */
+  public String getLocation() {
+    return location;
+  }
+
+
+  /**
    *  Gets the problemHeader attribute of the Ticket object
    *
    *@return    The problemHeader value
@@ -1410,6 +1511,26 @@ public class Ticket extends GenericBean {
    */
   public String getComment() {
     return comment;
+  }
+
+
+  /**
+   *  Gets the estimatedResolutionDate attribute of the Ticket object
+   *
+   *@return    The estimatedResolutionDate value
+   */
+  public java.sql.Timestamp getEstimatedResolutionDate() {
+    return estimatedResolutionDate;
+  }
+
+
+  /**
+   *  Gets the cause attribute of the Ticket object
+   *
+   *@return    The cause value
+   */
+  public String getCause() {
+    return cause;
   }
 
 
@@ -1487,6 +1608,16 @@ public class Ticket extends GenericBean {
    */
   public int getSeverityCode() {
     return severityCode;
+  }
+
+
+  /**
+   *  Gets the resolutionDate attribute of the Ticket object
+   *
+   *@return    The resolutionDate value
+   */
+  public java.sql.Timestamp getResolutionDate() {
+    return resolutionDate;
   }
 
 
@@ -1658,7 +1789,7 @@ public class Ticket extends GenericBean {
         db.rollback();
       }
       throw new SQLException(e.getMessage());
-    }finally {
+    } finally {
       if (commit) {
         db.setAutoCommit(true);
       }
@@ -1697,8 +1828,9 @@ public class Ticket extends GenericBean {
         sql.append("closed = ?, ");
       }
     }
-    sql.append("solution = ? ");
-    sql.append("WHERE ticketid = ? ");
+    sql.append("solution = ?, location = ?, assigned_date = ?, " +
+        "est_resolution_date = ?, resolution_date = ?, cause = ? " +
+        "WHERE ticketid = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
     }
@@ -1758,6 +1890,11 @@ public class Ticket extends GenericBean {
       pst.setTimestamp(++i, closed);
     }
     pst.setString(++i, this.getSolution());
+    pst.setString(++i, location);
+    DatabaseUtils.setTimestamp(pst, ++i, assignedDate);
+    DatabaseUtils.setTimestamp(pst, ++i, estimatedResolutionDate);
+    DatabaseUtils.setTimestamp(pst, ++i, resolutionDate);
+    pst.setString(++i, cause);
     pst.setInt(++i, id);
     if (!override) {
       pst.setTimestamp(++i, this.getModified());
@@ -1905,6 +2042,7 @@ public class Ticket extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@param  baseFilePath      Description of the Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    *@since
@@ -1917,7 +2055,7 @@ public class Ticket extends GenericBean {
       db.setAutoCommit(false);
       //delete any related action list items
       ActionItemLog.deleteLink(db, this.getId(), Constants.TICKET_OBJECT);
-      
+
       //Delete any documents
       FileItemList fileList = new FileItemList();
       fileList.setLinkModuleId(Constants.DOCUMENTS_TICKETS);
@@ -1925,7 +2063,7 @@ public class Ticket extends GenericBean {
       fileList.buildList(db);
       fileList.delete(db, baseFilePath);
       fileList = null;
-      
+
       //Delete any folder data
       CustomFieldRecordList folderList = new CustomFieldRecordList();
       folderList.setLinkModuleId(Constants.FOLDERS_TICKETS);
@@ -1933,7 +2071,7 @@ public class Ticket extends GenericBean {
       folderList.buildList(db);
       folderList.delete(db);
       folderList = null;
-      
+
       //delete all history data
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM ticketlog WHERE ticketid = ?");
@@ -2057,7 +2195,7 @@ public class Ticket extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     closed = rs.getTimestamp("closed");
-    if(!rs.wasNull()){
+    if (!rs.wasNull()) {
       closeIt = true;
     }
     priorityCode = DatabaseUtils.getInt(rs, "pri_code");
@@ -2071,6 +2209,11 @@ public class Ticket extends GenericBean {
     assignedTo = DatabaseUtils.getInt(rs, "assigned_to");
     solution = rs.getString("solution");
     severityCode = DatabaseUtils.getInt(rs, "scode");
+    location = rs.getString("location");
+    assignedDate = rs.getTimestamp("assigned_date");
+    estimatedResolutionDate = rs.getTimestamp("est_resolution_date");
+    resolutionDate = rs.getTimestamp("resolution_date");
+    cause = rs.getString("cause");
 
     //organization table
     companyName = rs.getString("orgname");
@@ -2121,5 +2264,18 @@ public class Ticket extends GenericBean {
     return (files != null && files.size() > 0);
   }
 
+
+  /**
+   *  Gets the properties that are TimeZone sensitive for auto-populating
+   *
+   *@return    The timeZoneParams value
+   */
+  public static ArrayList getTimeZoneParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("assignedDate");
+    thisList.add("estimatedResolutionDate");
+    thisList.add("resolutionDate");
+    return thisList;
+  }
 }
 

@@ -45,6 +45,7 @@ public class TicketReport extends TicketList {
 
   protected boolean displayId = true;
   protected boolean displayProblem = true;
+  protected boolean displayLocation = true;
   protected boolean displaySourceName = true;
   protected boolean displayContactName = true;
   protected boolean displaySeverity = true;
@@ -270,6 +271,8 @@ public class TicketReport extends TicketList {
     return displayProblem;
   }
 
+  public boolean getDisplayLocation() { return displayLocation; }
+
 
   /**
    *  Gets the displaySourceName attribute of the TicketReport object
@@ -420,6 +423,7 @@ public class TicketReport extends TicketList {
     this.displayProblem = tmp;
   }
 
+  public void setDisplayLocation(boolean tmp) { this.displayLocation = tmp; }
 
   /**
    *  Sets the displaySourceName attribute of the TicketReport object
@@ -706,6 +710,9 @@ public class TicketReport extends TicketList {
     if (!(criteria.contains("problem"))) {
       displayProblem = false;
     }
+    if (!criteria.contains("location")) {
+      displayLocation = false;
+    }
     if (!(criteria.contains("source"))) {
       displaySourceName = false;
     }
@@ -821,6 +828,9 @@ public class TicketReport extends TicketList {
       if (param.equals("problem")) {
         rep.addColumn("Issue");
       }
+      if (param.equals("location")) {
+        rep.addColumn("Location");
+      }
       if (param.equals("source")) {
         rep.addColumn("Source");
       }
@@ -857,7 +867,7 @@ public class TicketReport extends TicketList {
         rep.addColumn("Modified By");
       }
       if (param.equals("assignedTo")) {
-        rep.addColumn("Assigned To");
+        rep.addColumn("Resource Assigned");
       }
       if (param.equals("organization")) {
         rep.addColumn("Organization");
@@ -881,6 +891,9 @@ public class TicketReport extends TicketList {
       }
       if (param.equals("problem")) {
         passedReport.addColumn("Issue");
+      }
+      if (param.equals("location")) {
+        rep.addColumn("Location");
       }
       if (param.equals("source")) {
         passedReport.addColumn("Source");
@@ -918,7 +931,7 @@ public class TicketReport extends TicketList {
         passedReport.addColumn("Modified By");
       }
       if (param.equals("assignedTo")) {
-        passedReport.addColumn("Assigned To");
+        passedReport.addColumn("Resource Assigned");
       }
       if (param.equals("organization")) {
         passedReport.addColumn("Organization");
@@ -970,6 +983,9 @@ public class TicketReport extends TicketList {
           }
           if (param.equals("problem")) {
             thisRow.addCell(thisTic.getProblem());
+          }
+          if (param.equals("location")) {
+            thisRow.addCell(thisTic.getLocation());
           }
           if (param.equals("source")) {
             thisRow.addCell(thisTic.getSourceName());

@@ -113,7 +113,7 @@ Search Form
 	</tr>
   <tr>
     <td class="formLabel">
-      Assigned To
+      Resource Assigned
     </td>
     <td>
       <table class="empty">
@@ -129,7 +129,7 @@ Search Form
           </td>
           <td>
             <input type="hidden" name="searchcodeAssignedTo" id="ownerid" value="<%= TicListInfo.getSearchOptionValue("searchcodeAssignedTo") %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&reset=true');">Change Owner</a>]
+            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&reset=true');">Change Owner</a>]
           </td>
         </tr>
       </table>

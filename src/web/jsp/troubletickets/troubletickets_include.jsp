@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
@@ -13,6 +14,7 @@
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript">
   function updateSubList1() {
     var sel = document.forms['addticket'].elements['catCode'];
@@ -207,6 +209,14 @@
       </table>
     </td>
 	</tr>
+  <tr class="containerBody">
+    <td valign="top" class="formLabel">
+      Location
+    </td>
+    <td>
+      <input type="text" name="location" value="<%= toHtmlValue(TicketDetails.getLocation()) %>" size="50" maxlength="256" />
+    </td>
+  </tr>
 <dhv:include name="tickets-code" none="true">
 	<tr>
     <td class="formLabel">
@@ -248,15 +258,6 @@
     </td>
 	</tr>
 </dhv:include>
-</table>
-<br>
-<a name="department"></a> 
-<table cellpadding="4" cellspacing="0" width="100%" class="details">
-	<tr>
-    <th colspan="2">
-      <strong>Assignment</strong>
-    </th>
-	</tr>
 <dhv:include name="tickets-severity" none="true">
 	<tr>
     <td class="formLabel">
@@ -267,6 +268,14 @@
     </td>
 	</tr>
 </dhv:include>
+</table>
+<br>
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+	<tr>
+    <th colspan="2">
+      <strong>Assignment</strong>
+    </th>
+	</tr>
 <dhv:include name="tickets-priority" none="true">
 	<tr>
     <td class="formLabel">
@@ -287,15 +296,33 @@
 	</tr>
 	<tr>
     <td class="formLabel">
-      Assign To
+      Resource Assigned
     </td>
     <td>
       <%= UserList.getHtmlSelect("assignedTo", TicketDetails.getAssignedTo() ) %>
     </td>
 	</tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Assignment Date
+    </td>
+    <td>
+      <input type="text" size="10" name="assignedDate" value="<dhv:tz timestamp="<%= TicketDetails.getAssignedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
+      <a href="javascript:popCalendar('addticket', 'assignedDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Estimated Resolution Date
+    </td>
+    <td>
+      <input type="text" size="10" name="estimatedResolutionDate" value="<dhv:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
+      <a href="javascript:popCalendar('addticket', 'estimatedResolutionDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+    </td>
+  </tr>
 	<tr>
     <td valign="top" class="formLabel">
-      Entry Comments
+      Issue Notes
     </td>
     <td>
       <textarea name="comment" cols="55" rows="3"><%= toString(TicketDetails.getComment()) %></textarea>
@@ -309,9 +336,17 @@
       <strong>Resolution</strong>
     </th>
 	</tr>
+  <tr class="containerBody">
+    <td valign="top" class="formLabel">
+      Cause
+    </td>
+    <td>
+      <textarea name="cause" cols="55" rows="3"><%= toString(TicketDetails.getCause()) %></textarea>
+    </td>
+  </tr>
 	<tr>
     <td valign="top" class="formLabel">
-      Solution
+      Resolution
     </td>
     <td>
       <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
@@ -322,5 +357,14 @@
       --%>
     </td>
 	</tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Resolution Date
+    </td>
+    <td>
+      <input type="text" size="10" name="resolutionDate" value="<dhv:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
+      <a href="javascript:popCalendar('addticket', 'resolutionDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+    </td>
+  </tr>
 </table>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>

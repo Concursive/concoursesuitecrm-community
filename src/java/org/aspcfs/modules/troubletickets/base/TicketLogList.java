@@ -12,7 +12,7 @@ import org.aspcfs.modules.troubletickets.base.*;
 import javax.servlet.http.*;
 
 /**
- *  Description of the Class
+ *  A generated list of changes to a ticket based on the saved history
  *
  *@author     chris price
  *@created    December 5, 2001
@@ -122,7 +122,7 @@ public class TicketLogList extends ArrayList {
         if (tempLog.getAssignedToName() != null) {
           tempLog.setEntryText("[ Assigned to " + current.getAssignedToName() + " ]");
         } else {
-          tempLog.setEntryText("[ Ticket is un-assigned ]");
+          tempLog.setEntryText("[ Ticket is unassigned ]");
         }
         this.add(tempLog);
       }
@@ -157,34 +157,34 @@ public class TicketLogList extends ArrayList {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
         if (tempLog.getAssignedToName() != null) {
-          tempLog.setEntryText("[ Re-assigned from " + prev.getAssignedToName() + " to " + current.getAssignedToName() + " ]");
+          tempLog.setEntryText("[ Reassigned from " + isAssigned(prev.getAssignedToName()) + " to " + isAssigned(current.getAssignedToName()) + " ]");
         } else {
-          tempLog.setEntryText("[ Ticket is un-assigned ]");
+          tempLog.setEntryText("[ Ticket is unassigned ]");
         }
         this.add(tempLog);
       }
       if (current.getDepartmentCode() != prev.getDepartmentCode()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Department changed from " + prev.getDepartmentName() + " to " + current.getDepartmentName() + " ]");
+        tempLog.setEntryText("[ Department changed from " + isAssigned(prev.getDepartmentName()) + " to " + isAssigned(current.getDepartmentName()) + " ]");
         this.add(tempLog);
       }
       if (current.getPriorityCode() != prev.getPriorityCode()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Priority changed from " + prev.getPriorityName() + " to " + current.getPriorityName() + " ]");
+        tempLog.setEntryText("[ Priority changed from " + isAssigned(prev.getPriorityName()) + " to " + isAssigned(current.getPriorityName()) + " ]");
         this.add(tempLog);
       }
       if (current.getSeverityCode() != prev.getSeverityCode()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Severity changed from " + prev.getSeverityName() + " to " + current.getSeverityName() + " ]");
+        tempLog.setEntryText("[ Severity changed from " + isAssigned(prev.getSeverityName()) + " to " + isAssigned(current.getSeverityName()) + " ]");
         this.add(tempLog);
       }
       if (!current.getClosed() && prev.getClosed()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Ticket Re-opened ]");
+        tempLog.setEntryText("[ Ticket Reopened ]");
         this.add(tempLog);
       }
       if (current.getClosed() && !prev.getClosed()) {
@@ -425,5 +425,19 @@ public class TicketLogList extends ArrayList {
     return i;
   }
 
+
+  /**
+   *  Returns the string or if null returns unassigned
+   *
+   *@param  value  Description of the Parameter
+   *@return        The assigned value
+   */
+  private String isAssigned(String value) {
+    if (value == null) {
+      return "unassigned";
+    } else {
+      return value;
+    }
+  }
 }
 

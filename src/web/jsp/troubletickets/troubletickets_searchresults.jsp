@@ -37,7 +37,7 @@ Search Results
     <th><b>Priority</b></th>
     <th><b>Age</b></th>
     <th><b>Company</b></th>
-		<th nowrap><b>Assigned To</b></th>
+    <th nowrap><b>Resource Assigned</b></th>
   </tr>
 <%
 	Iterator j = TicList.iterator();
@@ -105,3 +105,4 @@ Search Results
     </tr>
   </table>
 <%}%>
+

@@ -91,6 +91,7 @@ New Export
     </td>
     <td width="50%">
       <select size="5" name="fields">
+        <option value="location">Location</option>
         <option value="entered" >Entered</option>
         <option value="enteredBy" >Entered By</option>
         <option value="modified" >Modified</option>
@@ -100,8 +101,8 @@ New Export
         <option value="severity" >Severity</option>
         <option value="department" >Department</option>
         <option value="source" >Ticket Source</option>
-        <option value="solution" >Solution</option>
-        <option value="assignedTo" >Assigned To</option>
+        <option value="solution" >Resolution</option>
+        <option value="assignedTo" >Resource Assigned</option>
         <option value="category" >Category</option>
       </select>
      </td>

@@ -42,6 +42,7 @@ Ticket Details
               <dhv:permission name="accounts-accounts-tickets-delete"><input type="button" value="Delete" onClick="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%= TicketDetails.getOrgId() %>&id=<%= TicketDetails.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');"></dhv:permission>
         <%}%>
         <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br>&nbsp;</dhv:permission>
+        <%-- Ticket Information --%>
         <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
           <tr>
             <th colspan="2">
@@ -67,6 +68,14 @@ Ticket Details
               <input type="hidden" name="id" value="<%= TicketDetails.getId() %>">
             </td>
           </tr>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Location
+            </td>
+            <td>
+              <%= toHtml(TicketDetails.getLocation()) %>
+            </td>
+          </tr>
         <dhv:include name="tickets-code" none="true">
           <tr class="containerBody">
             <td class="formLabel">
@@ -87,41 +96,6 @@ Ticket Details
             </td>
           </tr>
         </dhv:include>
-        <dhv:include name="tickets-priority" none="true">
-          <tr class="containerBody">
-            <td class="formLabel">
-              Priority
-            </td>
-            <td>
-              <%=toHtml(TicketDetails.getPriorityName())%>
-            </td>
-          </tr>
-        </dhv:include>
-          <tr class="containerBody">
-            <td class="formLabel">
-              Department
-            </td>
-            <td>
-              <%= toHtml(TicketDetails.getDepartmentName()) %>
-            </td>
-          </tr>
-          <tr class="containerBody">
-            <td class="formLabel">
-              Assigned To
-            </td>
-            <td>
-              <dhv:username id="<%= TicketDetails.getAssignedTo() %>" default="-- unassigned --"/>
-              <dhv:evaluate exp="<%= !(TicketDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
-            </td>
-          </tr>
-          <tr class="containerBody">
-            <td class="formLabel">
-              Solution
-            </td>
-            <td>
-              <%= toHtml(TicketDetails.getSolution()) %>
-            </td>
-          </tr>
           <tr class="containerBody">
             <td class="formLabel">
               Entered
@@ -144,12 +118,13 @@ Ticket Details
           </tr>
         </table>
         &nbsp;
+        <%-- Primary Contact --%>
         <%
           if (TicketDetails.getThisContact() != null ) {
         %>
         <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
           <tr>
-            <th colspan="4">
+            <th colspan="2">
               <strong>Primary Contact</strong>
             </th>     
           </tr>
@@ -188,7 +163,91 @@ Ticket Details
         </table>
         &nbsp;
         <%}%>
-        
+        <%-- Assignment --%>
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+          <tr>
+            <th colspan="2">
+              <strong>Assignment</strong>
+            </th>
+          </tr>
+          <dhv:include name="tickets-priority" none="true">
+          <tr class="containerBody">
+            <td class="formLabel">
+              Priority
+            </td>
+            <td>
+              <%=toHtml(TicketDetails.getPriorityName())%>
+            </td>
+          </tr>
+          </dhv:include>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Department
+            </td>
+            <td>
+              <%= toHtml(TicketDetails.getDepartmentCode() > 0 ? TicketDetails.getDepartmentName() : "-- unassigned --") %>
+            </td>
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Resource Assigned
+            </td>
+            <td>
+              <dhv:username id="<%= TicketDetails.getAssignedTo() %>" default="-- unassigned --"/>
+              <dhv:evaluate if="<%= !(TicketDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
+            </td>
+          </tr>
+          <tr class="containerBody">
+            <td nowrap class="formLabel">
+              Assignment Date
+            </td>
+            <td>
+              <dhv:tz timestamp="<%= TicketDetails.getAssignedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+            </td>
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Estimated Resolution Date
+            </td>
+            <td>
+              <dhv:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+            </td>
+          </tr>
+        </table>
+        &nbsp;
+        <%-- Resolution --%>
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+          <tr>
+            <th colspan="2">
+              <strong>Resolution</strong>
+            </th>     
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel" valign="top">
+              Cause
+            </td>
+            <td>
+              <%= toHtml(TicketDetails.getCause()) %>
+            </td>
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel" valign="top">
+              Resolution
+            </td>
+            <td>
+              <%= toHtml(TicketDetails.getSolution()) %>
+            </td>
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Resolution Date
+            </td>
+            <td>
+              <dhv:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+            </td>
+          </tr>
+        </table>
+        &nbsp;
         <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br></dhv:permission>
         <% if (TicketDetails.getClosed() != null) { %>
               <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>';submit();"></dhv:permission>
@@ -200,6 +259,3 @@ Ticket Details
  </tr>
 </table>
 </form>
-
-
-

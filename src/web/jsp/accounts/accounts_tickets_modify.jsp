@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.troubletickets.base.TicketLog" %>
+<%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -13,8 +14,8 @@
 <jsp:useBean id="SubList3" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript">
-<!-- Begin
   function updateSubList1() {
     var sel = document.forms['details'].elements['catCode'];
     var value = sel.options[sel.selectedIndex].value;
@@ -53,7 +54,6 @@
       return true;
     }
   }
-//  End -->
 </script>
 <body>
 <%-- Trails --%>
@@ -162,6 +162,14 @@ Modify Ticket
               </table>
             </td>
           </tr>
+          <tr class="containerBody">
+            <td valign="top" class="formLabel">
+              Location
+            </td>
+            <td>
+              <input type="text" name="location" value="<%= toHtmlValue(TicketDetails.getLocation()) %>" size="50" maxlength="256" />
+            </td>
+          </tr>
           <dhv:include name="tickets-code" none="true">
           <tr class="containerBody">
             <td class="formLabel">
@@ -202,15 +210,6 @@ Modify Ticket
             </td>
           </tr>
           </dhv:include>
-        </table>
-        <br>
-        <a name="department"></a> 
-        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-          <tr>
-            <th colspan="2">
-              <strong>Assignment</strong>
-            </th>
-          </tr>
           <dhv:include name="tickets-severity" none="true">
           <tr class="containerBody">
             <td class="formLabel">
@@ -221,6 +220,14 @@ Modify Ticket
             </td>
           </tr>
           </dhv:include>
+        </table>
+        <br>
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+          <tr>
+            <th colspan="2">
+              <strong>Assignment</strong>
+            </th>
+          </tr>
           <dhv:include name="tickets-priority" none="true">
           <tr class="containerBody">
             <td class="formLabel">
@@ -241,15 +248,33 @@ Modify Ticket
           </tr>
           <tr class="containerBody">
             <td nowrap class="formLabel">
-              Reassign To
+              Resource Assigned
             </td>
             <td valign=center>
               <%= UserList.getHtmlSelect("assignedTo", TicketDetails.getAssignedTo() ) %>
             </td>
           </tr>
           <tr class="containerBody">
+            <td nowrap class="formLabel">
+              Assignment Date
+            </td>
+            <td>
+              <input type="text" size="10" name="assignedDate" value="<dhv:tz timestamp="<%= TicketDetails.getAssignedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
+              <a href="javascript:popCalendar('details', 'assignedDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+            </td>
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Estimated Resolution Date
+            </td>
+            <td>
+              <input type="text" size="10" name="estimatedResolutionDate" value="<dhv:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
+              <a href="javascript:popCalendar('details', 'estimatedResolutionDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+            </td>
+          </tr>
+          <tr class="containerBody">
             <td class="formLabel" valign="top">
-              User Comments
+              Issue Notes
             </td>
             <td>
               <textarea name="comment" cols="55" rows="3"><%= toString(TicketDetails.getComment()) %></textarea>
@@ -264,18 +289,35 @@ Modify Ticket
             </th>
           </tr>
           <tr class="containerBody">
+            <td valign="top" class="formLabel">
+              Cause
+            </td>
+            <td>
+              <textarea name="cause" cols="55" rows="3"><%= toString(TicketDetails.getCause()) %></textarea>
+            </td>
+          </tr>
+          <tr class="containerBody">
             <td class="formLabel" valign="top">
-              Solution
+              Resolution
             </td>
             <td>
               <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
-                <input type="checkbox" name="closeNow" <%= TicketDetails.getCloseIt() ? " checked" : ""%>>Close ticket
-                <%--
-                <br>
-                <input type="checkbox" name="kbase">Add this solution to Knowledge Base
-                --%>
-              </td>
-            </tr>
+              <input type="checkbox" name="closeNow" <%= TicketDetails.getCloseIt() ? " checked" : ""%>>Close ticket
+              <%--
+              <br>
+              <input type="checkbox" name="kbase">Add this solution to Knowledge Base
+              --%>
+            </td>
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Resolution Date
+            </td>
+            <td>
+              <input type="text" size="10" name="resolutionDate" value="<dhv:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
+              <a href="javascript:popCalendar('details', 'resolutionDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
+            </td>
+          </tr>
         </table>
         &nbsp;<br>
         <% if (TicketDetails.getClosed() != null) { %>
