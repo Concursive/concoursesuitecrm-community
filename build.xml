@@ -101,16 +101,18 @@
 			<srcfiles dir="${SRC_CLASSES}/com/zeroio" includes="**/*.java"/>
 		</uptodate-->
     
-		<uptodate property="ChartServlet-uptodate" 
+		<!--uptodate property="ChartServlet-uptodate" 
 				targetfile="${DEST_DOCROOT}/WEB-INF/classes/ChartServlet.class">
 			<srcfiles dir="${SRC_APP}" includes="WEB-INF/classes/ChartServlet.class"/>
-		</uptodate>
+		</uptodate-->
 
 		<uptodate property="site-uptodate" >
 			<srcfiles dir="${SRC_APP}" >
 				<include name="*" />
 				<include name="images/**" />
 				<include name="WEB-INF/*.xml" />
+				<include name="javascript/**" />
+				<include name="css/**" />
         <include name="WEB-INF/*.tld" />
 			</srcfiles>
 			<mapper type="glob" from="*" to="${DEST_DOCROOT}/*"/>
@@ -325,9 +327,10 @@ determined user is ${USER}
 			<fileset dir="${SRC_APP}">
 				<include name="*" />
 				<include name="images/**" />
-        <include name="javascript/**" />
+				<include name="javascript/**" />
 				<include name="WEB-INF/*.xml" />
-        <include name="WEB-INF/*.tld" />
+				<include name="css/**" />
+				<include name="WEB-INF/*.tld" />
 			</fileset>
 		</copy>
     
@@ -384,10 +387,10 @@ determined user is ${USER}
 			</fileset>
 		</copy>
 
-		<exec executable="chown" os="Linux" >
+		<!--exec executable="chown" os="Linux" >
 			<arg value="${WEBUSER}.${CFSGRP}"/>
 			<arg value="${DEST_DOCROOT}/WEB-INF/classes/ChartServlet.class"/>
-		</exec>
+		</exec-->
 
 <!--
 		<exec executable="chmod" os="Linux" failonerror="true">
@@ -400,7 +403,7 @@ determined user is ${USER}
 
 	<target name="lib" 
 			description="Install library files to site." 
-			depends="init,site,darkhorseventures,theseus,ChartServlet,apps">
+			depends="init,site,darkhorseventures,theseus,apps">
 		<echo message="Installing JAR files"/>
 		<echo message=" Site: ${SITECODE}"/>
 		<echo message=" Destination: ${DEST_DOCROOT}"/>
