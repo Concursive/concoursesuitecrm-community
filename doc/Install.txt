@@ -10,7 +10,7 @@
 
 *** Software Installation ***
 
-- Install Red Hat 8.0
+- Install Red Hat 9
   Purpose: Operating system
   http://www.redhat.com
   - Configure to boot up to shell
@@ -20,26 +20,20 @@
       - Server stuff (mail, firewall, ssh, ssl)
       - Developer tools (make, etc)
       - Text based browsers (links, lynx)
-      - Do not install Red Hat PostgreSQL
+      - Install Red Hat Database PostgreSQL (v7.3.2)
   - Configure IP
   - Turn on port 80 and 443 during install or in iptables later
 
-- Install Postgresql 7.2.3 RPMS for Red Hat 8.0 (not 7.3.1+ yet)
-  Purpose: Database server
-  http://www.postgresql.org
-  destination: /var/lib/pgsql
-  $ rpm --install [files]
-
-- Install Java2 SDK 1.4.1 RPM for Linux
+- Install Java2 SDK 1.4.1_02 RPM for Linux
   Purpose: Programming language just-in-time compiler, 
     required for executing Java applications
   http://java.sun.com
-  file: 2sdk-1_4_1-fcs-linux-i586.rpm
+  file: 2sdk-1_4_1_02-fcs-linux-i586.rpm
   destination: /usr/java/j2sdk1.4.1
   $ rpm --install [file]
   $ ln -s /usr/java/j2sdk1.4.1 /usr/java/j2se
 
-- Install Apache Tomcat 4.1.12 or 4.1.24 binary (nothing inbetween)
+- Install Apache Tomcat 4.1.24 binary
   Purpose: Web Server
   http://jakarta.apache.org 
   file: jakarta-tomcat-4.1.24-LE-jdk14.tar.gz
@@ -65,7 +59,7 @@
   $ make
   $ make install
 
-- Install HylaFax 4.1.5 RPM for Red Hat 8.0 
+- Install HylaFax 4.1.5 RPM for Red Hat 9 
   Purpose: Fax client for sending documents to fax server
   http://www.hylafax.org
   file: hylafax-4.1.5-1rh8.i386.rpm
@@ -201,10 +195,7 @@
   # Edit sendmail configuration to allow emails to be sent from any domain user.
   # The default already allows localhost to RELAY, do not put other domains or
   # mail will be used by spammers.
-  # Running the following command will report any errors, if postfix is used
-  # instead of sendmail
-    $ postfix check
-    
+    TODO: ADD DETAILS REGARDING REDHAT 9
 
 - Install ASPCFS
   # Login as your own username
@@ -235,19 +226,10 @@
     $ sudo /sbin/service tomcat start
   
   # Test ASPCFS, should see login prompt or message to use secure login
-    $ mozilla http://127.0.0.1
+    $ links http://127.0.0.1
   # Test SSL ASPCFS, should see Security Alert due to not having a signed cert,
   # choose to proceed, then you should see login prompt
-    $ mozilla https://127.0.0.1
-
-- Setup cron items (as root)
-  # There are several tasks to keep ASPCFS running... eventually the ASPCFS
-  # items will be integrated into the ASPCFS application
-    $ sudo crontab -e
-  
-# Clean up graphs and data every night
-1 3 * * * /usr/bin/lynx -dump http://127.0.0.1/ProcessSystem.do?command=ClearGraphData > /dev/null
-
+    $ links https://127.0.0.1
 
 *** Software Maintenace ***
 
@@ -256,8 +238,25 @@ is remotely backed up, as well as the file library.  There are several ways to
 handle this, the simplest being a download of the database that can be restored
 to the same server or other servers fairly easily.
 
+# Copy the postgres backup script
+  $ cp cfs2/bin/postgres-backup.sh /var/lib/pgsql/
+  $ chown .postgres /var/lib/pgsql/postgres-backup.sh
+  $ chmod a+x /var/lib/pgsql/postgres-backup.sh
+
+# On this server make a cron entry to run postgres-backup.sh,
+# the resulting backup will be in /home/backup/DB_BACKUP
+37 4 * * * su postgres -c "/var/lib/pgsql/postgres-backup.sh '' 127.0.0.1 all `date +%a`"
+
+# This script could also be installed on another server,
+# just change the domain name/ip and make sure that
+# postgres allows the other server access to this server by
+# updating pg_hba.conf and iptables
+37 4 * * * su postgres -c "/var/lib/pgsql/postgres-backup.sh '' 127.0.0.1 all `date +%a`"
+
+# If the postgres version is not the same on both servers,
+# then here is a solution:
 - On a remote server, install Postgresql from the RPMs
-- Copy the backup.sh from the ASPCFS distribution into /var/lib/pgsql
+- Copy the postgres-backup.sh from the ASPCFS distribution into /var/lib/pgsql
 - For the corresponding Postgresql version number, copy the following files into
   /var/lib/pgsql/ so that the backup is compatible with future versions of postgresql
   $ cp /usr/bin/pg_dump /var/lib/pgsql/pg_dump723
@@ -277,6 +276,6 @@ to the same server or other servers fairly easily.
 # Backup all the remote datebases for a server, and keep a 7 day rolling backup
 # The first parameter after backup.sh is the Postgresql version to backup from,
 # 723 matches Postgresql 7.2.3
-37 4 * * * su postgres -c "/var/lib/pgsql/backup.sh 723 aspcfs.darkhorseventures.com all `date +%a`"
+37 4 * * * su postgres -c "/var/lib/pgsql/postgres-backup.sh 723 aspcfs.darkhorseventures.com all `date +%a`"
 
 
