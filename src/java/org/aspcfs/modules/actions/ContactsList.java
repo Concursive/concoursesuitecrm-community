@@ -40,6 +40,7 @@ public final class ContactsList extends CFSModule {
 
     String selectedIds = context.getRequest().getParameter("selectedIds");
     String listType = context.getRequest().getParameter("listType");
+    String displayType = context.getRequest().getParameter("displayType");
 
     HashMap selectedList = new HashMap();
     //initialize from page, if list...
@@ -117,8 +118,8 @@ public final class ContactsList extends CFSModule {
               }
             }
 
-            //If User does not have a emailAddress replace with Name(LastFirst)
-            if (emailAddress.equals("") || "single".equals(listType)) {
+            //If User does not have a emailAddress or if it is not a message use Name(LastFirst)
+            if (emailAddress.equals("") || "single".equals(listType) || "name".equals(displayType)) {
               if (context.getRequest().getParameter("hiddenname" + rowCount) != null) {
                 emailAddress = "P:" + context.getRequest().getParameter("hiddenname" + rowCount);
               }
@@ -216,6 +217,7 @@ public final class ContactsList extends CFSModule {
 
     if (firstFilter.equalsIgnoreCase("all")) {
       contactList.setPersonalId(getUserId(context));
+      contactList.addIgnoreTypeId(1);
       contactList.setOwnerIdRange(this.getUserRange(context));
     }
     if (firstFilter.equalsIgnoreCase("employees")) {
@@ -225,6 +227,7 @@ public final class ContactsList extends CFSModule {
       }
     }
     if (firstFilter.equalsIgnoreCase("mycontacts")) {
+      contactList.addIgnoreTypeId(1);
       contactList.setPersonalId(getUserId(context));
       contactList.setOwner(getUserId(context));
     }
