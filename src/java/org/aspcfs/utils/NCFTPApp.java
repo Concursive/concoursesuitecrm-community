@@ -20,6 +20,7 @@ public class NCFTPApp {
   private String stdOut = null;
   private String stdErr = null;
   private boolean deleteSourceFilesAfterSend = false;
+  private boolean makeRemoteDir = false;
 
 
   /**
@@ -88,6 +89,8 @@ public class NCFTPApp {
   public void setDeleteSourceFilesAfterSend(boolean tmp) {
     this.deleteSourceFilesAfterSend = tmp;
   }
+
+  public void setMakeRemoteDir(boolean tmp) { this.makeRemoteDir = tmp; }
 
 
   /**
@@ -189,13 +192,19 @@ public class NCFTPApp {
       //Upload as a tmp file, then rename
       command.add("-S");
       command.add(".tmp");
-      
+      //Make sure the remote directory exists, or create it
+      if (makeRemoteDir) {
+        command.add("-m");
+      }
+      //Delete the source files when done
       if (deleteSourceFilesAfterSend) {
         command.add("-DD");
       }
+      //Set the host
       command.add(this.getFtpHost(ftpUrl));
+      //Set the remote dir
       command.add(this.getFtpRemoteDir(ftpUrl));
-
+      //Add the files
       Iterator fileList = files.iterator();
       while (fileList.hasNext()) {
         String file = (String) fileList.next();
@@ -203,7 +212,6 @@ public class NCFTPApp {
       }
 
       String[] commands = (String[]) command.toArray(new String[0]);
-
       Process process = Runtime.getRuntime().exec(commands);
       BufferedReader brErr
            = new BufferedReader(

@@ -412,6 +412,7 @@ public class PilotOnlineReader implements DataReader {
     if (processOK) {
       NCFTPApp ftp = new NCFTPApp();
       ftp.setDeleteSourceFilesAfterSend(true);
+      ftp.setMakeRemoteDir(true);
       ftp.addFile(pictureDestinationPath + "*.jpg");
       processOK = (ftp.put(ftpPictures) == 0);
       if (!processOK) {
@@ -422,6 +423,7 @@ public class PilotOnlineReader implements DataReader {
     if (processOK) {
       NCFTPApp ftp = new NCFTPApp();
       ftp.setDeleteSourceFilesAfterSend(true);
+      ftp.setMakeRemoteDir(true);
       ftp.addFile(((TextWriter) writer).getFilename());
       processOK = (ftp.put(ftpData) == 0);
       if (!processOK) {
