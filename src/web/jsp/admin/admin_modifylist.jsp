@@ -65,7 +65,7 @@ Edit List
         </tr>
         <tr>
           <td valign="center">
-            <input type="text" name="newValue" value="" size="25" maxlength="125">
+            <input type="text" name="newValue" value="" size="25" maxlength="50">
           </td>
         </tr>
         <tr>
