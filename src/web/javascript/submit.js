@@ -58,7 +58,7 @@ function lettersubmit(thisLetter) {
 	  }
     var i = 0;
 	for(i=0; i < a.length; i++) {
-		//insertNewOption(a[i],"");
+		insertNewOption(a[i],"");
 	}
   }
   
