@@ -73,6 +73,7 @@ public final class CampaignManagerProto extends CFSModule {
     try {
       db = this.getConnection(context);
       //roleList.setPagedListInfo(roleInfo);
+      //roleList.setEnabledState(Constants.TRUE);
       //roleList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
