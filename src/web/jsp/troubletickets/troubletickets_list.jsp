@@ -64,17 +64,17 @@
 		<td width="8%" valign="top" nowrap class="row<%= rowid %>">
 			<%=assignedTic.getAgeOf()%>
 		</td>
-		<td width="40%" valign="top" class="row<%= rowid %>">
+		<td width="90%" valign="top" class="row<%= rowid %>">
 			<%=toHtml(assignedTic.getCompanyName())%><dhv:evaluate exp="<%=!(assignedTic.getCompanyEnabled())%>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
-		<td valign="top" class="row<%= rowid %>">
+		<td width=150 valign="top" class="row<%= rowid %>">
 			<% if (assignedTic.getCategoryName() != null) { %>
           <%=toHtml(assignedTic.getCategoryName())%>
       <%} else {%>
           --none--
       <%}%>
 		</td>
-		<td width=10% nowrap valign="top" class="row<%= rowid %>">
+		<td width=150 nowrap valign="top" class="row<%= rowid %>">
 			<%=toHtml(assignedTic.getOwnerName())%>
 		</td>
 	</tr>
@@ -148,17 +148,17 @@
 		<td width="8%" valign="top" nowrap class="row<%= rowid %>">
 			<%=openTic.getAgeOf()%>
 		</td>
-		<td width="40%" valign="top" class="row<%= rowid %>">
+		<td width="90%" valign="top" class="row<%= rowid %>">
 			<%=toHtml(openTic.getCompanyName())%><dhv:evaluate exp="<%=!(openTic.getCompanyEnabled())%>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
-		<td valign="top" class="row<%= rowid %>">
+		<td width=150 valign="top" class="row<%= rowid %>">
 			<% if (openTic.getCategoryName() != null) { %>
           <%=toHtml(openTic.getCategoryName())%>
       <%} else {%>
           --none--
       <%}%>
 		</td>
-		<td width=10% nowrap valign="top" class="row<%= rowid %>">
+		<td width=150 nowrap valign="top" class="row<%= rowid %>">
 			<%=toHtml(openTic.getOwnerName())%>
 		</td>
 	</tr>
@@ -236,14 +236,14 @@
 		<td width="90%" valign="top" class="row<%= rowid %>">
 			<%=toHtml(thisTic.getCompanyName())%><dhv:evaluate exp="<%=!(thisTic.getCompanyEnabled())%>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
-		<td valign="top" class="row<%= rowid %>">
+		<td width=150 valign="top" class="row<%= rowid %>">
 			<% if (thisTic.getCategoryName() != null) { %>
           <%=toHtml(thisTic.getCategoryName())%>
       <%} else {%>
           --none--
       <%}%>
 		</td>
-		<td width=10% nowrap valign="top" class="row<%= rowid %>">
+		<td width=150 nowrap valign="top" class="row<%= rowid %>">
 			<%=toHtml(thisTic.getOwnerName())%>
 		</td>
 	</tr>
