@@ -883,15 +883,17 @@ public class CustomFieldCategory extends ArrayList {
     StringBuffer sql = new StringBuffer();
     
     sql.append("INSERT INTO custom_field_category ");
-    sql.append("(module_id, category_name, description, enabled, ");
+    sql.append("(module_id, category_name, description, ");
     sql.append("multiple_records, read_only, ");
                 if (entered != null) {
                         sql.append("entered, ");
                 }
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+    sql.append("enabled ) ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ");
                 if (entered != null) {
                         sql.append("?, ");
                 }
+    sql.append("?) ");
     
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
