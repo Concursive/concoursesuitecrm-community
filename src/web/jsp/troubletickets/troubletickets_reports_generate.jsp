@@ -128,7 +128,7 @@ New Export
       <select size="5" name="selectedList" multiple>
         <option value="ticketid" >Ticket ID</option>
         <option value="organization" >Organization Name</option>
-        <option value="problem"><dhv:label name="tickets-problem">Issue</dhv:label></option>
+        <option value="problem"><dhv:label name="ticket.issue">Issue</dhv:label></option>
       </select>
     </td>
     <td width="25">

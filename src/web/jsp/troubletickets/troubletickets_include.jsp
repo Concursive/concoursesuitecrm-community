@@ -53,7 +53,7 @@
       formTest = false;
     }
     if (form.problem.value == "") { 
-      message += "- Check that <dhv:label name="tickets-problem">Issue</dhv:label> is entered\r\n";
+      message += "- Check that <dhv:label name="ticket.issue">Issue</dhv:label> is entered\r\n";
       formTest = false;
     }
     if (formTest == false) {
@@ -191,7 +191,7 @@
 	</tr>
 	<tr>
     <td valign="top" class="formLabel">
-      <dhv:label name="tickets-problem">Issue</dhv:label>
+      <dhv:label name="ticket.issue">Issue</dhv:label>
     </td>
     <td>
       <table border="0" cellspacing="0" cellpadding="0" class="empty">

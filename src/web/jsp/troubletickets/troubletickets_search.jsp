@@ -52,7 +52,7 @@ Search Form
   </tr>
   <tr>
     <td class="formLabel">
-      <dhv:label name="tickets-problem">Issue</dhv:label>
+      <dhv:label name="ticket.issue">Issue</dhv:label>
     </td>
     <td>
       <input type="text" size="40" name="searchDescription" value="<%= TicListInfo.getSearchOptionValue("searchDescription") %>">
