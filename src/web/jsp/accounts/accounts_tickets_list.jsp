@@ -42,7 +42,7 @@
       <b>Age</b>
     </td>
     <td>
-      <b><dhv:label name="tickets-problem">Problem</dhv:label></b>
+      <b><dhv:label name="tickets-problem">Issue</dhv:label></b>
     </td>
   </tr>
 <%

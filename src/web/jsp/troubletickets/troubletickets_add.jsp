@@ -188,7 +188,7 @@
 	
 	<tr>
     <td width=100 class="formLabel">
-      <dhv:label name="tickets-problem">Problem</dhv:label>
+      <dhv:label name="tickets-problem">Issue</dhv:label>
     </td>
     <td bgColor="white" valign="top">
       <textarea name="problem" cols=55 rows=3><%=TicketDetails.getProblem()%></textarea>
