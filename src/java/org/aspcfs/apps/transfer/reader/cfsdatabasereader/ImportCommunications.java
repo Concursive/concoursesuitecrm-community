@@ -44,7 +44,7 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
     if (!processOK) {
       return false;
     }
-    /**
+
     logger.info("ImportCommunications-> Inserting Saved Criteria Elements");
     processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "savedCriteriaElement");
     
@@ -56,7 +56,7 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
     if (!processOK) {
       return false;
     }
-    */
+
     /**
     logger.info("ImportCommunications-> Inserting Campaign Records");
     CampaignList campaigns = new CampaignList();
