@@ -140,33 +140,17 @@ public final class CampaignManagerGroup extends CFSModule {
     String passedId = null;
 
     Connection db = null;
-    SearchFieldList searchFieldList = new SearchFieldList();
-    SearchOperatorList stringOperatorList = new SearchOperatorList();
-    SearchOperatorList dateOperatorList = new SearchOperatorList();
-    SearchOperatorList numberOperatorList = new SearchOperatorList();
-
     passedId = context.getRequest().getParameter("id");
 
     // building the search field and operator lists
     try {
       db = this.getConnection(context);
-
-      ContactTypeList typeList = new ContactTypeList(db);
-      LookupList ctl = typeList.getLookupList("typeId", 0);
-      ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
-      context.getRequest().setAttribute("ContactTypeList", ctl);
-
-      searchFieldList.buildFieldList(db);
-      stringOperatorList.buildOperatorList(db, 0);
-      dateOperatorList.buildOperatorList(db, 1);
-      numberOperatorList.buildOperatorList(db, 2);
+      buildFormElements(context, db);
 
       if (passedId != null) {
         SearchCriteriaList scl = new SearchCriteriaList(db, passedId);
         context.getSession().setAttribute("SCL", scl);
       }
-
-      this.buildContactSource(context);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -184,11 +168,6 @@ public final class CampaignManagerGroup extends CFSModule {
     addModuleBean(context, submenu, "Build New Group");
 
     if (errorMessage == null) {
-
-      context.getRequest().setAttribute("SearchFieldList", searchFieldList);
-      context.getRequest().setAttribute("StringOperatorList", stringOperatorList);
-      context.getRequest().setAttribute("DateOperatorList", dateOperatorList);
-      context.getRequest().setAttribute("NumberOperatorList", numberOperatorList);
       return ("AddOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -378,28 +357,12 @@ public final class CampaignManagerGroup extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
 
-    SearchFieldList searchFieldList = new SearchFieldList();
-    SearchOperatorList stringOperatorList = new SearchOperatorList();
-    SearchOperatorList dateOperatorList = new SearchOperatorList();
-    SearchOperatorList numberOperatorList = new SearchOperatorList();
-
     String passedId = context.getRequest().getParameter("id");
 
     // building the search field and operator lists
     try {
       db = this.getConnection(context);
-
-      ContactTypeList typeList = new ContactTypeList(db);
-      LookupList ctl = typeList.getLookupList("typeId", 0);
-      ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
-      context.getRequest().setAttribute("ContactTypeList", ctl);
-
-      searchFieldList.buildFieldList(db);
-      stringOperatorList.buildOperatorList(db, 0);
-      dateOperatorList.buildOperatorList(db, 1);
-      numberOperatorList.buildOperatorList(db, 2);
-
-      this.buildContactSource(context);
+      buildFormElements(context, db);
 
       if (passedId != null) {
         SearchCriteriaList scl = new SearchCriteriaList(db, passedId);
@@ -422,10 +385,6 @@ public final class CampaignManagerGroup extends CFSModule {
     addModuleBean(context, submenu, "Modify Criteria");
 
     if (errorMessage == null) {
-      context.getRequest().setAttribute("SearchFieldList", searchFieldList);
-      context.getRequest().setAttribute("StringOperatorList", stringOperatorList);
-      context.getRequest().setAttribute("DateOperatorList", dateOperatorList);
-      context.getRequest().setAttribute("NumberOperatorList", numberOperatorList);
       return ("ModifyOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -549,22 +508,36 @@ public final class CampaignManagerGroup extends CFSModule {
     }
   }
 
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of the Parameter
-   */
-  public void buildContactSource(ActionContext context) {
-    HtmlSelect contactSource = new HtmlSelect();
-    contactSource.addItem(SearchCriteriaList.SOURCE_MY_CONTACTS, "My Contacts");
-    contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "All Contacts");
-    contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "Account Contacts");
-    //contactSource.addItem(SearchCriteriaList.SOURCE_MY_ACCOUNTS, "My Accounts");
-    //contactSource.addItem(SearchCriteriaList.SOURCE_MY_ACCOUNT_HIERARCHY, "My Account Hierarchy");
-    contactSource.addItem(SearchCriteriaList.SOURCE_EMPLOYEES, "Employees");
-    context.getRequest().setAttribute("ContactSource", contactSource);
-  }
+        public void buildFormElements(ActionContext context, Connection db) throws SQLException {
+                SearchFieldList searchFieldList = new SearchFieldList();
+                SearchOperatorList stringOperatorList = new SearchOperatorList();
+                SearchOperatorList dateOperatorList = new SearchOperatorList();
+                SearchOperatorList numberOperatorList = new SearchOperatorList();         
+                
+                HtmlSelect contactSource = new HtmlSelect();
+                contactSource.addItem(SearchCriteriaList.SOURCE_MY_CONTACTS, "My Contacts");
+                contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "All Contacts");
+                contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "Account Contacts");
+                contactSource.addItem(SearchCriteriaList.SOURCE_EMPLOYEES, "Employees");
+                context.getRequest().setAttribute("ContactSource", contactSource);
+                
+                ContactTypeList typeList = new ContactTypeList(db);
+                LookupList ctl = typeList.getLookupList("typeId", 0);
+                ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
+                context.getRequest().setAttribute("ContactTypeList", ctl);
+                
+                searchFieldList.buildFieldList(db);
+                context.getRequest().setAttribute("SearchFieldList", searchFieldList);
+                
+                stringOperatorList.buildOperatorList(db, 0);
+                context.getRequest().setAttribute("StringOperatorList", stringOperatorList);
+                
+                dateOperatorList.buildOperatorList(db, 1);
+                context.getRequest().setAttribute("DateOperatorList", dateOperatorList);
+                
+                numberOperatorList.buildOperatorList(db, 2);
+                context.getRequest().setAttribute("NumberOperatorList", numberOperatorList);
+        }        
 
 }
 
