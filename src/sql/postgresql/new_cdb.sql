@@ -264,7 +264,7 @@ CREATE TABLE organization (
   ins_type VARCHAR(80),
   cust_status VARCHAR(80),
   sic_code VARCHAR(40),
-  ticker_symbol VARCHAR(10),
+  ticker_symbol VARCHAR(10) DEFAULT NULL,
   area CHAR(1),
   taxid CHAR(80),
   industry_code CHAR(2),
@@ -280,6 +280,7 @@ CREATE TABLE organization (
   enabled BOOLEAN DEFAULT true,
   industry_temp_code SMALLINT,
   owner INT NOT NULL,
+  duplicate boolean default 'f',
   duplicate_id int default -1,
   custom_data TEXT
 );

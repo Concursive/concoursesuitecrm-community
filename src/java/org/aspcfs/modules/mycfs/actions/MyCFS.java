@@ -141,13 +141,14 @@ public final class MyCFS extends CFSModule {
 
 		Connection db = null;
 
-		String name = new String();
-		name = context.getRequest().getParameter("name");
+		String name = context.getRequest().getParameter("name");
+		String sym = context.getRequest().getParameter("stockSymbol");
 
 		Organization newOrg = (Organization) new Organization();
 
 		try {
 			newOrg.setName(name);
+			newOrg.setTicker(sym);
 			newOrg.setIndustry("1");
 			newOrg.setEnteredBy(getUserId(context));
 			newOrg.setMiner_only(true);
