@@ -1552,9 +1552,9 @@ public class Ticket extends GenericBean {
     sourceName = rs.getString("sourcename");
 
     //contact table
-    enteredByName = rs.getString("eb_namelast") + ", " + rs.getString("eb_namefirst");
-    modifiedByName = rs.getString("mb_namelast") + ", " + rs.getString("mb_namefirst");
-    ownerName = rs.getString("owner_namelast") + ", " + rs.getString("owner_namefirst");
+    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
+    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
+    ownerName =  Contact.getNameLastFirst(rs.getString("owner_namelast"), rs.getString("owner_namefirst"));
 
     
     if (entered != null) {
@@ -1562,6 +1562,5 @@ public class Ticket extends GenericBean {
       ageOf = java.lang.Math.round(ageCheck);
     }
   }
-
 }
 

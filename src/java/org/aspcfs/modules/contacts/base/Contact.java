@@ -936,7 +936,6 @@ public class Contact extends GenericBean {
     }
 
     if (out.toString().length() == 0) {
-      System.out.println("chris");
       return company;
     }
 
@@ -1805,6 +1804,23 @@ public class Contact extends GenericBean {
     st.close();
 
     return (recordCount > 0);
+  }
+  
+  public static String getNameLastFirst(String nameLast, String nameFirst) {
+    StringBuffer out = new StringBuffer();
+    if (nameLast != null && nameLast.length() > 0) {
+      out.append(nameLast);
+    }
+    if (nameFirst != null && nameFirst.length() > 0) {
+      if (nameLast.length() > 0) {
+        out.append(", ");
+      }
+      out.append(nameFirst);
+    }
+    if (out.toString().length() == 0) {
+      return null;
+    }
+    return out.toString().trim();
   }
 }
 
