@@ -24,6 +24,11 @@ import java.text.*;
 public final class ExternalContacts extends CFSModule {
 	
 public String executeCommandReports(ActionContext context) {
+	
+	if (!(hasPermission(context, "contacts-external_contacts-reports-view"))) {
+	    return ("PermissionError");
+    	}
+    
 	Exception errorMessage = null;
 	Connection db = null;
 	
@@ -73,6 +78,11 @@ public String executeCommandReports(ActionContext context) {
   }
   
   public String executeCommandDownloadCSVReport(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-reports-view"))) {
+	    return ("PermissionError");
+    	}
+	  
     Exception errorMessage = null;
 
     String itemId = (String)context.getRequest().getParameter("fid");
@@ -126,6 +136,11 @@ public String executeCommandReports(ActionContext context) {
   
   
   public String executeCommandDeleteReport(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-reports-delete"))) {
+	    return ("PermissionError");
+    	}
+	  
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -178,11 +193,21 @@ public String executeCommandReports(ActionContext context) {
 
   
   public String executeCommandGenerateForm(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-reports-add"))) {
+	    return ("PermissionError");
+    	}
+	  
 	addModuleBean(context, "Reports", "Generate new");
 	return("GenerateFormOK");
   }
   
   public String executeCommandShowReportHtml(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-reports-view"))) {
+	    return ("PermissionError");
+    	}
+	  
 	Exception errorMessage = null;
 	
 	String projectId = (String)context.getRequest().getParameter("pid");
@@ -209,6 +234,11 @@ public String executeCommandReports(ActionContext context) {
   }
   
   public String executeCommandExportReport(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-reports-add"))) {
+	    return ("PermissionError");
+    	}
+	  
 	Exception errorMessage = null;
 	boolean recordInserted = false;
 	Connection db = null;
@@ -274,7 +304,11 @@ public String executeCommandReports(ActionContext context) {
    *@since           1.1
    */
   public String executeCommandListContacts(ActionContext context) {
-
+	  
+    if (!(hasPermission(context, "contacts-external_contacts-view"))) {
+	    return ("PermissionError");
+    }
+	    
     Exception errorMessage = null;
     
     PagedListInfo externalContactsInfo = this.getPagedListInfo(context, "ExternalContactsInfo");
@@ -354,6 +388,12 @@ public String executeCommandReports(ActionContext context) {
   }
   
   public String executeCommandMessageDetails(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-messages-view"))) {
+	    return ("PermissionError");
+    	}
+	
+	
     Exception errorMessage = null;
     addModuleBean(context, "External Contacts", "Message Details");
     Connection db = null;
@@ -384,6 +424,11 @@ public String executeCommandReports(ActionContext context) {
   }
   
   public String executeCommandViewMessages(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-messages-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Connection db = null;
     Exception errorMessage = null;
     Contact thisContact = null;
@@ -432,6 +477,11 @@ public String executeCommandReports(ActionContext context) {
   
   
   public String executeCommandAddFolderRecord(ActionContext context) {
+	  
+  	if (!(hasPermission(context, "contacts-external_contacts-folders-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     Contact thisContact = null;
@@ -471,6 +521,11 @@ public String executeCommandReports(ActionContext context) {
   
   
    public String executeCommandFields(ActionContext context) {
+	   
+	if (!(hasPermission(context, "contacts-external_contacts-folders-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     Contact thisContact = null;
@@ -553,6 +608,10 @@ public String executeCommandReports(ActionContext context) {
    *@since           1.2
    */
   public String executeCommandSearchContactsForm(ActionContext context) {
+	if (!(hasPermission(context, "contacts-external_contacts-view"))) {
+	    return ("PermissionError");
+    	}
+	
     PagedListInfo externalContactsInfo = this.getPagedListInfo(context, "ExternalContactsInfo");
     externalContactsInfo.setCurrentOffset(0);
     externalContactsInfo.setCurrentLetter("");
@@ -573,10 +632,19 @@ public String executeCommandReports(ActionContext context) {
    *@since           1.1
    */
   public String executeCommandContactDetails(ActionContext context) {
+    
+    if (!(hasPermission(context, "contacts-external_contacts-view"))) {
+	    return ("PermissionError");
+    }
+    
     Exception errorMessage = null;
 
     String contactId = context.getRequest().getParameter("id");
     String action = context.getRequest().getParameter("action");
+    
+    if (action != null && action.equals("modify") &&  !(hasPermission(context, "contacts-external_contacts-edit"))) {
+	    return ("PermissionError");
+    }
     
     UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
 	
@@ -638,6 +706,10 @@ public String executeCommandReports(ActionContext context) {
    *@since           1.1
    */
   public String executeCommandUpdateContact(ActionContext context) {
+    if (!(hasPermission(context, "contacts-external_contacts-edit"))) {
+	    return ("PermissionError");
+    }
+    
     Exception errorMessage = null;
 
     Contact thisContact = (Contact)context.getFormBean();
@@ -688,27 +760,32 @@ public String executeCommandReports(ActionContext context) {
    *@since           1.1
    */
   public String executeCommandInsertContactForm(ActionContext context) {
-    Exception errorMessage = null;
-
-    addModuleBean(context, "Add Contact", "Add a new contact");
-
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
-      buildFormElements(context, db);
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
-      context.getSession().removeAttribute("ContactMessageListInfo");
-      return ("ContactInsertFormOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    
+	    if (!(hasPermission(context, "contacts-external_contacts-add"))) {
+		    return ("PermissionError");
+	    }
+	    
+	    Exception errorMessage = null;
+	
+	    addModuleBean(context, "Add Contact", "Add a new contact");
+	
+	    Connection db = null;
+	    try {
+	      db = this.getConnection(context);
+	      buildFormElements(context, db);
+	    } catch (Exception e) {
+	      errorMessage = e;
+	    } finally {
+	      this.freeConnection(context, db);
+	    }
+	
+	    if (errorMessage == null) {
+	      context.getSession().removeAttribute("ContactMessageListInfo");
+	      return ("ContactInsertFormOK");
+	    } else {
+	      context.getRequest().setAttribute("Error", errorMessage);
+	      return ("SystemError");
+	    }
   }
 
 
@@ -720,6 +797,11 @@ public String executeCommandReports(ActionContext context) {
    *@since           1.1
    */
   public String executeCommandInsertContact(ActionContext context) {
+	  
+    if (!(hasPermission(context, "contacts-external_contacts-add"))) {
+	    return ("PermissionError");
+    }
+	    
     Exception errorMessage = null;
     boolean recordInserted = false;
 
@@ -767,6 +849,10 @@ public String executeCommandReports(ActionContext context) {
    *@since           1.1
    */
   public String executeCommandDeleteContact(ActionContext context) {
+	if (!(hasPermission(context, "contacts-external_contacts-delete"))) {
+		return ("PermissionError");
+	}
+	    
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Contact thisContact = null;
@@ -825,6 +911,11 @@ public String executeCommandReports(ActionContext context) {
   }
   
   public String executeCommandModifyFields(ActionContext context) {
+	
+  	if (!(hasPermission(context, "contacts-external_contacts-folders-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     Contact thisContact = null;
@@ -865,6 +956,10 @@ public String executeCommandReports(ActionContext context) {
   }
   
   public String executeCommandUpdateFields(ActionContext context) {
+	if (!(hasPermission(context, "contacts-external_contacts-folders-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     Contact thisContact = null;
@@ -932,6 +1027,11 @@ public String executeCommandReports(ActionContext context) {
   }
   
   public String executeCommandInsertFields(ActionContext context) {
+	
+  	if (!(hasPermission(context, "contacts-external_contacts-folders-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCode = -1;

@@ -46,6 +46,11 @@ public final class CompanyDirectory extends CFSModule {
    *@since           1.0
    */
   public String executeCommandListEmployees(ActionContext context) {
+	  
+    if (!(hasPermission(context, "contacts-internal_contacts-view"))) {
+	    return ("PermissionError");
+    }
+    
     Exception errorMessage = null;
 
     PagedListInfo companyDirectoryInfo = this.getPagedListInfo(context, "CompanyDirectoryInfo");
@@ -86,6 +91,11 @@ public final class CompanyDirectory extends CFSModule {
    *@since           1.0
    */
   public String executeCommandEmployeeDetails(ActionContext context) {
+	  
+    if (!(hasPermission(context, "contacts-internal_contacts-view"))) {
+	    return ("PermissionError");
+    }
+	  
     Exception errorMessage = null;
 
     String employeeId = context.getRequest().getParameter("empid");
@@ -138,6 +148,11 @@ public final class CompanyDirectory extends CFSModule {
    *@since           1.0
    */
   public String executeCommandUpdateEmployee(ActionContext context) {
+	  
+    if (!(hasPermission(context, "contacts-internal_contacts-edit"))) {
+	    return ("PermissionError");
+    }
+	  
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -188,6 +203,11 @@ public final class CompanyDirectory extends CFSModule {
    *@since           1.10
    */
   public String executeCommandInsertEmployeeForm(ActionContext context) {
+	  
+    if (!(hasPermission(context, "contacts-internal_contacts-add"))) {
+	    return ("PermissionError");
+    }
+	  
     Exception errorMessage = null;
 
     addModuleBean(context, "Add Employee", "Add a new Employee");
@@ -219,6 +239,11 @@ public final class CompanyDirectory extends CFSModule {
    *@since           1.10
    */
   public String executeCommandInsertEmployee(ActionContext context) {
+	  
+    if (!(hasPermission(context, "contacts-internal_contacts-add"))) {
+	    return ("PermissionError");
+    }
+	  
     Exception errorMessage = null;
     boolean recordInserted = false;
 
@@ -268,6 +293,11 @@ public final class CompanyDirectory extends CFSModule {
    *@since           1.10
    */
   public String executeCommandDeleteEmployee(ActionContext context) {
+	  
+    if (!(hasPermission(context, "contacts-internal_contacts-delete"))) {
+	    return ("PermissionError");
+    }
+	  
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Contact thisContact = null;

@@ -21,6 +21,11 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandView(ActionContext context) {
+	
+	if (!(hasPermission(context, "contacts-external_contacts-calls-view"))) {
+	    return ("PermissionError");
+    	}
+	  
     Exception errorMessage = null;
 
     String contactId = context.getRequest().getParameter("contactId");
@@ -71,6 +76,12 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
+	
+    	if (!(hasPermission(context, "contacts-external_contacts-calls-add"))) {
+	    return ("PermissionError");
+    	}
+	
+	  
     Exception errorMessage = null;
     boolean recordInserted = false;
     
@@ -112,6 +123,11 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandDetails(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-calls-view"))) {
+	    return ("PermissionError");
+    	}
+	  
     Exception errorMessage = null;
     addModuleBean(context, "External Contacts", "Calls");
     
@@ -151,6 +167,11 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
+	  
+    	if (!(hasPermission(context, "contacts-external_contacts-calls-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -190,6 +211,12 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandAdd(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-calls-add"))) {
+	    return ("PermissionError");
+    	}
+	
+	
     Exception errorMessage = null;
 
     String contactId = context.getRequest().getParameter("contactId");
@@ -225,6 +252,12 @@ public final class ExternalContactsCalls extends CFSModule {
 
 
   public String executeCommandModify(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-calls-edit"))) {
+	    return ("PermissionError");
+    	}
+	
+	
     Exception errorMessage = null;
     addModuleBean(context, "External Contacts", "Calls");
     
@@ -271,6 +304,11 @@ public final class ExternalContactsCalls extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-calls-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     Call thisCall = (Call)context.getFormBean();
