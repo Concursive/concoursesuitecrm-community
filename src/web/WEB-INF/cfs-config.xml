@@ -863,7 +863,7 @@
     <forward name="ModifyUrlOK" resource="/admin/admin_modify_url.jsp" layout="nav"/>
   </action>
   <action name="AdminQA" class="org.aspcfs.modules.admin.actions.AdminQA">
-    <forward name="QAReportOK" resource="/admin/admin_qa_report.jsp" layout="nav"/>
+    <forward name="QAReportOK" resource="/admin/admin_qa_report.jsp" layout="style"/>
   </action>
   <action name="AdminFieldsFolder" class="org.aspcfs.modules.admin.actions.AdminFields">
     <bean name="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>

@@ -55,6 +55,7 @@
 <dhv:evaluate if="<%= !thisNote.getComplete() %>">
         <img src="images/box.gif" border="0"/>
 </dhv:evaluate>
+        <dhv:username id="<%= thisNote.getModifiedBy() %>"/><br>
         <%= toHtml(thisNote.getDescription()) %><br>
 <%
       previousSection = thisItem.getSection();
