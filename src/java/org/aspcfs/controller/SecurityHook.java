@@ -164,20 +164,16 @@ public class SecurityHook implements ControllerHook {
     Hashtable statusList = (Hashtable) context.getAttribute("SystemStatus");
     //Create the SystemStatus object if it does not exist for this connection,
     if (!statusList.containsKey(ce.getUrl())) {
-      //synchronized (this) {
-      if (!statusList.containsKey(ce.getUrl())) {
-        SystemStatus newSystemStatus = new SystemStatus();
-        newSystemStatus.setConnectionElement((ConnectionElement) ce.clone());
-        newSystemStatus.setFileLibraryPath(
-            context.getRealPath("/") + "WEB-INF" + fs +
-            "fileLibrary" + fs + ce.getDbName() + fs);
-        newSystemStatus.queryRecord(db);
-        statusList.put(ce.getUrl(), newSystemStatus);
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("CFSModule-> Added new System Status object: " + ce.getUrl());
-        }
+      SystemStatus newSystemStatus = new SystemStatus();
+      newSystemStatus.setConnectionElement((ConnectionElement) ce.clone());
+      newSystemStatus.setFileLibraryPath(
+          context.getRealPath("/") + "WEB-INF" + fs +
+          "fileLibrary" + fs + ce.getDbName() + fs);
+      newSystemStatus.queryRecord(db);
+      statusList.put(ce.getUrl(), newSystemStatus);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("CFSModule-> Added new System Status object: " + ce.getUrl());
       }
-      //}
     }
     return (SystemStatus) statusList.get(ce.getUrl());
   }
