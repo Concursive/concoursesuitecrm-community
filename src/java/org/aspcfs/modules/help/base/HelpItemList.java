@@ -88,7 +88,7 @@ public class HelpItemList extends ArrayList {
     }
 
     //Determine column to sort by
-    pagedListInfo.setDefaultSort("c.module, c.section, c.subsection, c.entered", "");
+    pagedListInfo.setDefaultSort("c.help_id", "");
     pagedListInfo.appendSqlTail(db, sqlOrder);
 
     //Need to build a base SQL statement for returning records
