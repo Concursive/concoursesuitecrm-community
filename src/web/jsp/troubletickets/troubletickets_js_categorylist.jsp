@@ -28,10 +28,12 @@ function page_init() {
   Iterator list1 = SubList1.iterator();
   while (list1.hasNext()) {
     TicketCategory thisCategory = (TicketCategory)list1.next();
+     if (thisCategory.getEnabled()) {
 %>
   list.options[list.length] = newOpt("<%= thisCategory.getDescription() %>", "<%= thisCategory.getId() %>");
 <%
   }
+ }
 %>
   resetList(parent.document.forms[0].elements['subCat2']);
   resetList(parent.document.forms[0].elements['subCat3']);
@@ -46,13 +48,12 @@ function page_init() {
   while (list2.hasNext()) {
     TicketCategory thisCategory = (TicketCategory)list2.next();
     String elementText = thisCategory.getDescription();
-      if (!(thisCategory.getEnabled())) {
-        elementText += " *";
-      }
+      if (thisCategory.getEnabled()) {
 %>
   list2.options[list2.length] = newOpt("<%= elementText %>", "<%= thisCategory.getId() %>");
 <%
   }
+ }
 %>
   resetList(parent.document.forms[0].elements['subCat3']);
 </dhv:evaluate>
@@ -65,9 +66,11 @@ function page_init() {
   Iterator list3 = SubList3.iterator();
   while (list3.hasNext()) {
     TicketCategory thisCategory = (TicketCategory)list3.next();
+     if (thisCategory.getEnabled()) {
 %>
   list3.options[list3.length] = newOpt("<%= thisCategory.getDescription() %>", "<%= thisCategory.getId() %>");
-<%
+<%  
+    }
   }
 %>
 </dhv:evaluate>
