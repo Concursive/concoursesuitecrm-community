@@ -1813,6 +1813,11 @@ public boolean getEnabled() {
     enabled = rs.getBoolean("enabled");
     industry = rs.getInt("industry_temp_code");
     owner = rs.getInt("owner");
+    
+    if (rs.wasNull()) {
+	    owner = -1; 
+    }
+    
     duplicateId = rs.getInt("duplicate_id");
     contractEndDate = rs.getDate("contract_end");
     alertDate = rs.getDate("alertdate");
