@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="MasterReport"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="550"
+		 pageHeight="842"
+		 columnWidth="510"
+		 columnSpacing="0"
+		 leftMargin="20"
+		 rightMargin="20"
+		 topMargin="30"
+		 bottomMargin="30"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<reportFont name="Arial_Normal" isDefault="true" fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+	<reportFont name="Arial_Bold" isDefault="false" fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+	<reportFont name="Arial_Italic" isDefault="false" fontName="Arial" size="12" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Oblique" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+	<parameter name="lookup_department" isForPrompting="true" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Department]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new Integer(-1)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup_department_where" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[" AND t.department_code = $P{lookup_department} "]]></parameterDescription>
+		<defaultValueExpression><![CDATA["  "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date_start" isForPrompting="true" class="java.sql.Timestamp">
+		<parameterDescription><![CDATA[Entered Date from]]></parameterDescription>
+		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2002-10-01 00:00:00")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date_end" isForPrompting="true" class="java.sql.Timestamp">
+		<parameterDescription><![CDATA[Entered Date to]]></parameterDescription>
+		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2003-12-01 00:00:00")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="path" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression><![CDATA["/home/ananth/source/cfs2/src/jasper_reports/"
+
+]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[select distinct ld.code as lookup_department, 
+ld.description as dept  
+from ticket t
+left join lookup_department ld
+on t.department_code = ld.code
+WHERE
+     t.entered >= $P{date_start}
+     AND t.entered <= $P{date_end}
+     $P!{lookup_department_where}
+order by dept]]></queryString>
+	<field name="lookup_department" class="java.lang.Integer"/>
+	<field name="dept" class="java.lang.String"/>
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="47"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
+						mode="Opaque"
+						x="0"
+						y="0"
+						width="510"
+						height="47"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Serif" pdfFontName="Times-Bold" size="14" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Ticket Summary by Department" + "\r\n" +
+"Date Range: "+(new SimpleDateFormat("M/dd/yyyy")).format($P{date_start}) +
+" - " +
+(new SimpleDateFormat("M/dd/yyyy")).format($P{date_end}) +
+" "]]></textFieldExpression>
+				</textField>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="70"  isSplitAllowed="true" >
+				<rectangle radius="0" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="18"
+						width="510"
+						height="15"
+						forecolor="#CCCCCC"
+						backcolor="#CCCCCC"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+				</rectangle>
+				<rectangle radius="0" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="0"
+						width="510"
+						height="18"
+						forecolor="#8080FF"
+						backcolor="#000000"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
+				</rectangle>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
+						mode="Transparent"
+						x="5"
+						y="1"
+						width="448"
+						height="16"
+						forecolor="#FFFFFF"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Serif" pdfFontName="Times-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{dept} == null ?
+"Tickets not assigned to any department ":
+$F{dept}]]></textFieldExpression>
+				</textField>
+				<subreport  isUsingCache="true">
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="54"
+						width="510"
+						height="16"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="Float"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="true"/>
+					<subreportParameter  name="lookup_department">
+						<subreportParameterExpression><![CDATA[$F{lookup_department}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="date_start">
+						<subreportParameterExpression><![CDATA[$P{date_start}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="date_end">
+						<subreportParameterExpression><![CDATA[$P{date_end}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="path">
+						<subreportParameterExpression><![CDATA[$P{path}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{path}+"ticket_severity_r_sb.jasper"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="6"
+						y="36"
+						width="237"
+						height="14"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font reportFont="Arial_Bold" fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[Number of tickets entered 
+]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="6"
+						y="18"
+						width="212"
+						height="14"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Number of open/close tickets]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="318"
+						y="18"
+						width="71"
+						height="14"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Total Opened]]></text>
+				</staticText>
+				<subreport  isUsingCache="true">
+					<reportElement
+						mode="Opaque"
+						x="343"
+						y="36"
+						width="43"
+						height="14"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<subreportParameter  name="date_start">
+						<subreportParameterExpression><![CDATA[$P{date_start}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="date_end">
+						<subreportParameterExpression><![CDATA[$P{date_end}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="lookup_department">
+						<subreportParameterExpression><![CDATA[$F{lookup_department}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "ticket_open_r_sb.jasper"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="396"
+						y="18"
+						width="65"
+						height="14"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Total Closed]]></text>
+				</staticText>
+				<subreport  isUsingCache="true">
+					<reportElement
+						mode="Opaque"
+						x="416"
+						y="36"
+						width="49"
+						height="14"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<subreportParameter  name="date_start">
+						<subreportParameterExpression><![CDATA[$P{date_start}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="date_end">
+						<subreportParameterExpression><![CDATA[$P{date_end}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="lookup_department">
+						<subreportParameterExpression><![CDATA[$F{lookup_department}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "ticket_close_r_sb.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="28"  isSplitAllowed="true" >
+				<line direction="TopDown">
+					<reportElement
+						mode="Opaque"
+						x="2"
+						y="5"
+						width="502"
+						height="0"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+				</line>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="3"
+						y="8"
+						width="446"
+						height="19"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Generated by Dark Horse CRM]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
+						mode="Transparent"
+						x="0"
+						y="8"
+						width="105"
+						height="19"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None" >					<reportElement
+						mode="Transparent"
+						x="478"
+						y="8"
+						width="30"
+						height="19"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
+						mode="Transparent"
+						x="304"
+						y="8"
+						width="174"
+						height="19"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+				</textField>
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="35"  isSplitAllowed="true" >
+				<subreport  isUsingCache="true">
+					<reportElement
+						mode="Opaque"
+						x="341"
+						y="21"
+						width="36"
+						height="14"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<subreportParameter  name="date_start">
+						<subreportParameterExpression><![CDATA[$P{date_start}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="date_end">
+						<subreportParameterExpression><![CDATA[$P{date_end}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="lookup_department_where">
+						<subreportParameterExpression><![CDATA[$P{lookup_department_where}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "ticket_totalopen_r_sb.jasper"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="3"
+						y="21"
+						width="237"
+						height="14"
+						forecolor="#3333FF"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font reportFont="Arial_Bold" fontName="SansSerif" size="10" isBold="false"/>
+					</textElement>
+				<text><![CDATA[Grand Total]]></text>
+				</staticText>
+				<subreport  isUsingCache="true">
+					<reportElement
+						mode="Opaque"
+						x="418"
+						y="21"
+						width="36"
+						height="14"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<subreportParameter  name="date_start">
+						<subreportParameterExpression><![CDATA[$P{date_start}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="date_end">
+						<subreportParameterExpression><![CDATA[$P{date_end}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="lookup_department_where">
+						<subreportParameterExpression><![CDATA[$P{lookup_department_where}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "ticket_totalclose_r_sb.jasper"]]></subreportExpression>
+				</subreport>
+				<line direction="TopDown">
+					<reportElement
+						mode="Opaque"
+						x="4"
+						y="18"
+						width="502"
+						height="0"
+						forecolor="#0033CC"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+				</line>
+			</band>
+		</summary>
+</jasperReport>

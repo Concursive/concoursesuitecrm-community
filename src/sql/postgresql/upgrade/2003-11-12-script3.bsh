@@ -8,12 +8,12 @@ import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.admin.base.Permission;
 
 //Set these and the rest will insert the new report
-String filename = "accounts_expire.xml";
-String moduleName = "Account Management";
-String permissionName = "accounts-accounts";
+String filename = "opportunity_owner.xml";
+String moduleName = "Pipeline";
+String permissionName = "pipeline-opportunities";
 int typeId = 1;//not implemented as of this date
-String title = "Accounts by Contract End Date";
-String description = "Which accounts are expiring?";
+String title = "Opportunities by Owner";
+String description = "What are all the opportunities based on ownership?";
 
 //Check to see if report already exists
 int reportId = Report.lookupId(db, filename);

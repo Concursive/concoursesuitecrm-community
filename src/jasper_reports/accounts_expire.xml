@@ -18,11 +18,11 @@
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<parameter name="date_start" isForPrompting="true" class="java.sql.Timestamp">
-		<parameterDescription><![CDATA[Contract Ends From]]></parameterDescription>
+		<parameterDescription><![CDATA[End Date From]]></parameterDescription>
 		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2002-01-01 00:00:00")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="date_end" isForPrompting="true" class="java.sql.Timestamp">
-		<parameterDescription><![CDATA[Contract Ends To]]></parameterDescription>
+		<parameterDescription><![CDATA[End Date To]]></parameterDescription>
 		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2003-10-01 00:00:00")]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT
@@ -444,7 +444,7 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Bold" size="14" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Serif" pdfFontName="Times-Bold" size="14" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Accounts by Contract End Date\r\n" + 
 (new SimpleDateFormat("M/dd/yyyy")).format($P{date_start}) +

@@ -25,6 +25,9 @@
 		<parameterDescription><![CDATA[AND lat.code = $P{lookup_account_types}]]></parameterDescription>
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="userid" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
+	</parameter>
 	<queryString><![CDATA[SELECT
 o.*, o.entered as org_entered,
 ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst,
@@ -35,6 +38,7 @@ LEFT JOIN lookup_industry i ON (o.industry_temp_code = i.code)
 LEFT JOIN account_type_levels atl ON (o.org_id = atl.org_id) 
 LEFT JOIN lookup_account_types lat ON (atl.type_id = lat.code)
 WHERE o.org_id > 0 
+AND o.owner = $P{userid}
 $P!{lookup_account_types_where}
 ORDER BY type_desc, o.name]]></queryString>
 	<field name="name" class="java.lang.String"/>
@@ -238,7 +242,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 						printWhenGroupChanges="type_desc"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Serif" pdfFontName="Times-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{type_desc}]]></textFieldExpression>
 				</textField>
@@ -254,7 +258,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 			</band>
 		</background>
 		<title>
-			<band height="38"  isSplitAllowed="true" >
+			<band height="32"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="0"
@@ -269,7 +273,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Bold" size="14" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Serif" pdfFontName="Times-Bold" size="14" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Accounts by Type"]]></textFieldExpression>
 				</textField>
@@ -299,7 +303,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{name}]]></textFieldExpression>
 				</textField>
@@ -317,7 +321,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[($F{o_namelast} != null ? ($F{o_namelast} + ", " + $F{o_namefirst}):"")]]></textFieldExpression>
 				</textField>
@@ -335,7 +339,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{account_number}]]></textFieldExpression>
 				</textField>
@@ -355,7 +359,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 							<printWhenExpression><![CDATA[new Boolean($F{industry_name} != null)]]></printWhenExpression>
 						</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{industry_name}]]></textFieldExpression>
 				</textField>
@@ -373,7 +377,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[(new SimpleDateFormat("M/dd/yyyy")).format($F{org_entered})]]></textFieldExpression>
 				</textField>
@@ -391,7 +395,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[(new SimpleDateFormat("M/dd/yyyy")).format($F{contract_end})]]></textFieldExpression>
 				</textField>

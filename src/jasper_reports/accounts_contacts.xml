@@ -111,7 +111,7 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 			</band>
 		</background>
 		<title>
-			<band height="36"  isSplitAllowed="true" >
+			<band height="52"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="1"
@@ -136,7 +136,7 @@ $F{o_namefirst}]]></textFieldExpression>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Report" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
 						x="609"
-						y="18"
+						y="33"
 						width="131"
 						height="18"
 						forecolor="#333333"
@@ -194,7 +194,7 @@ $F{o_namefirst}]]></textFieldExpression>
 						width="738"
 						height="16"
 						forecolor="#000000"
-						backcolor="#666666"
+						backcolor="#999999"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"

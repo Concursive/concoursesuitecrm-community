@@ -8,12 +8,12 @@ import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.admin.base.Permission;
 
 //Set these and the rest will insert the new report
-String filename = "accounts_expire.xml";
-String moduleName = "Account Management";
-String permissionName = "accounts-accounts";
+String filename = "folder_accounts.xml";
+String moduleName = "Accounts";
+String permissionName = "accounts-accounts-folders";
 int typeId = 1;//not implemented as of this date
-String title = "Accounts by Contract End Date";
-String description = "Which accounts are expiring?";
+String title = "Account Folders";
+String description = "What is the folder data for each account?";
 
 //Check to see if report already exists
 int reportId = Report.lookupId(db, filename);

@@ -6,7 +6,7 @@
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Landscape"
-		 pageWidth="125"
+		 pageWidth="136"
 		 pageHeight="70"
 		 columnWidth="125"
 		 columnSpacing="0"
@@ -17,29 +17,16 @@
 		 whenNoDataType="NoPages"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
-	<parameter name="contact_id" isForPrompting="false" class="java.lang.Integer"/>
+	<parameter name="org_id" isForPrompting="false" class="java.lang.Integer"/>
 	<queryString><![CDATA[SELECT 
-c_addr.*,
-lat.description as addr_type
-FROM contact_address c_addr, lookup_contactaddress_types lat
-WHERE c_addr.address_type = lat.code
-AND c_addr.contact_id = $P{contact_id}]]></queryString>
-	<field name="addr_type" class="java.lang.String"/>
-	<field name="addrline1" class="java.lang.String"/>
-	<field name="addrline2" class="java.lang.String"/>
-	<field name="addrline3" class="java.lang.String"/>
-	<field name="city" class="java.lang.String"/>
-	<field name="state" class="java.lang.String"/>
-	<field name="country" class="java.lang.String"/>
-	<field name="postalcode" class="java.lang.String"/>
-	<variable name="address" class="java.lang.String" resetType="Page" calculation="Nothing">
-		<variableExpression><![CDATA[(($F{addrline1} != null && !$F{addrline1}.equals("")) ? $F{addrline1} : "") +  
-(($F{addrline2} != null && !$F{addrline2}.equals("")) ? "\n" + $F{addrline2}:"") +
-(($F{addrline3} != null && !$F{addrline3}.equals("")) ? "\n" + $F{addrline3}:"") +  
-(($F{city} != null && !$F{city}.equals("")) ? "\n" + $F{city}:"") +
-(($F{state} != null && !$F{state}.equals("")) ? ", " + $F{state}:"") +
-(($F{postalcode} != null && !$F{postalcode}.equals("")) ? " - " + $F{postalcode}:"") +
-(($F{country} != null && !$F{country}.equals("")) ? "\n" + $F{country}:"")]]></variableExpression>		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
+o_phone.*,
+lpt.description as ph_type
+FROM organization_phone o_phone, lookup_orgphone_types lpt   
+WHERE o_phone.phone_type = lpt.code
+AND o_phone.org_id = $P{org_id}]]></queryString>
+	<field name="ph_type" class="java.lang.String"/>
+	<field name="number" class="java.lang.String"/>
+	<field name="extension" class="java.lang.String"/>
 		<background>
 			<band height="0"  isSplitAllowed="true" >
 			</band>
@@ -57,13 +44,13 @@ AND c_addr.contact_id = $P{contact_id}]]></queryString>
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="28"  isSplitAllowed="true" >
+			<band height="29"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="0"
-						y="1"
-						width="123"
-						height="12"
+						y="0"
+						width="134"
+						height="14"
 						forecolor="#3333FF"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -74,14 +61,14 @@ AND c_addr.contact_id = $P{contact_id}]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[(($F{addr_type} != null && !$F{addr_type}.equals("")) ? $F{addr_type} + " address" : "")]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ph_type}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="0"
-						y="13"
-						width="124"
-						height="14"
+						y="14"
+						width="134"
+						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -92,7 +79,7 @@ AND c_addr.contact_id = $P{contact_id}]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$V{address}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{number} + ($F{extension} != null && !$F{extension}.equals("") ? " x" + $F{extension} : "")]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>

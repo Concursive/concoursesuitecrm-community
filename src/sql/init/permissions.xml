@@ -24,6 +24,8 @@
       <permission name="myhomepage-profile-settings" attributes="v-e-" description="Settings" enabled="false"/>
       <permission name="myhomepage-profile-password" attributes="--e-" description="Password"/>
       <permission name="myhomepage-action-lists" attributes="vaed" description="My Action Lists"/>
+      <report file="task_date.xml" type="user" permission="myhomepage-tasks" title="Task list by due date" description="What are the tasks due withing a date range?"/>
+      <report file="task_nodate.xml" type="user" permission="myhomepage-tasks" title="Task list" description="What are all the tasks in the system?"/>
     </category>
     <category id="2" name="Contacts" folders="true" lookups="true" reports="true">
       <folder constantId="2" description="Contacts"/>
@@ -50,6 +52,9 @@
       <permission name="pipeline-opportunities-calls" attributes="vaed" description="Calls"/>
       <permission name="pipeline-opportunities-documents" attributes="vaed" description="Documents"/>
       <report file="opportunity_pipeline.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Stage" description="What are my upcoming opportunities by stage?"/>
+      <report file="opportunity_account.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Account" description="What are all the accounts associated with my opportunities?"/>
+      <report file="opportunity_owner.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Owner" description="What are all the opportunities based on ownership?"/>
+      <report file="opportunity_contact.xml" type="user" permission="pipeline-opportunities" title="Opportunity Contacts" description="Who are the contacts of my opportunities?"/>
     </category>
     <category id="1" name="Accounts" folders="true" lookups="true" reports="true">
       <folder constantId="1" description="Accounts"/>
@@ -74,9 +79,10 @@
       <permission name="accounts-accounts-tickets-tasks" attributes="vaed" description="Ticket Tasks"/>
       <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Accounts by Type" description="What are my accounts by type?"/>
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Accounts by Date Added" description="What are my recent accounts?"/>
-      <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="What accounts are expiring?"/>
+      <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="Which accounts are expiring?"/>
       <report file="accounts_current.xml" type="user" permission="accounts-accounts" title="Current Accounts" description="What are my current accounts?"/>
       <report file="accounts_contacts.xml" type="user" permission="accounts-accounts-contacts" title="Account Contacts" description="Who are the contacts in each account?"/>
+      <report file="folder_accounts.xml" type="user" permission="accounts-accounts-folders" title="Account Folders" description="What is the folder data for each account?"/>
     </category>
     <category id="3" name="Auto Guide" folders="false" lookups="false" enabled="false">
       <permission name="autoguide" attributes="v---" description="Access to the Auto Guide module"/>
@@ -89,6 +95,7 @@
       <permission name="campaign-campaigns-groups" attributes="vaed" description="Group Records"/>
       <permission name="campaign-campaigns-messages" attributes="vaed" description="Message Records"/>
       <permission name="campaign-campaigns-surveys" attributes="vaed" description="Survey Records"/>
+      <report file="campaign.xml" type="user" permission="campaign-campaigns" title="Campaigns by date" description="What are my active campaigns?"/>
     </category>
     <category id="7" name="Project Management" folders="false" lookups="false" enabled="false">
       <permission name="projects" attributes="v---" description="Access to Project Management module"/>
@@ -105,11 +112,14 @@
       <permission name="tickets-reports" attributes="vaed" description="Export Ticket Data"/>
       <permission name="tickets-tickets-tasks" attributes="vaed" description="Tasks"/>
       <report file="tickets_department.xml" type="user" permission="tickets-tickets" title="Tickets by Department" description="What tickets are there in each department?"/>
+      <report file="ticket_summary_date.xml" type="user" permission="tickets-tickets" title="Ticket counts by Department" description="How man tickets are there in the system on a particular date?"/>
+      <report file="ticket_summary_range.xml" type="user" permission="tickets-tickets" title="Ticket activity by Department" description="How many tickets exist within a date range?"/>
     </category>
-    <category id="1111031131" name="Employees" folders="false" lookups="true">
+    <category id="1111031131" name="Employees" folders="false" lookups="true" reports="true">
       <lookup constantId="1111031132" class="lookupList" table="lookup_department" description="Departments"/>
       <permission name="employees" attributes="v---" description="Access to Employee module"/>
       <permission name="contacts-internal_contacts" attributes="vaed" description="Employees"/>
+      <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Employees" description="Who are the employees in my organization?"/>
     </category>
     <category id="16" name="Reports" folders="false" lookups="false">
       <permission name="reports" attributes="v---" description="Access to Reports module"/>
@@ -124,6 +134,7 @@
       <permission name="admin-sysconfig-folders" attributes="vaed" description="Configure Custom Folders &amp; Fields"/>
       <permission name="admin-object-workflow" attributes="vaed" description="Configure Object Workflow"/>
       <permission name="admin-sysconfig-categories" attributes="vaed" description="Categories"/>
+      <report file="users.xml" type="user" permission="admin" title="System Users" description="Who are all the users of the system?"/>
     </category>
     <category id="10" name="Help" folders="false" lookups="false">
       <permission name="help" attributes="v---" description="Access to Help System"/>

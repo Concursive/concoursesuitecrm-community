@@ -18,12 +18,15 @@
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<parameter name="date_start" isForPrompting="true" class="java.sql.Timestamp">
-		<parameterDescription><![CDATA[Added From]]></parameterDescription>
+		<parameterDescription><![CDATA[Add Date From]]></parameterDescription>
 		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2002-1-01 00:00:00")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="date_end" isForPrompting="true" class="java.sql.Timestamp">
-		<parameterDescription><![CDATA[Added To]]></parameterDescription>
+		<parameterDescription><![CDATA[Add Date To]]></parameterDescription>
 		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2003-10-01 00:00:00")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="userid" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT
 o.*,
@@ -37,6 +40,7 @@ LEFT JOIN lookup_account_types lat ON (atl.type_id = lat.code)
 WHERE o.org_id > 0
 AND o.entered >= $P{date_start}
 AND o.entered < $P{date_end}
+AND o.owner = $P{userid}
 ORDER BY o.entered, lat.level]]></queryString>
 	<field name="account_number" class="java.lang.String"/>
 	<field name="owner" class="java.lang.Integer"/>
@@ -432,7 +436,7 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Bold" size="14" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Serif" pdfFontName="Times-Bold" size="14" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Accounts by Date Added\r\n" + 
 (new SimpleDateFormat("M/dd/yyyy")).format($P{date_start}) +

@@ -8,12 +8,12 @@ import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.admin.base.Permission;
 
 //Set these and the rest will insert the new report
-String filename = "accounts_expire.xml";
-String moduleName = "Account Management";
-String permissionName = "accounts-accounts";
+String filename = "task_date.xml";
+String moduleName = "My Home Page";
+String permissionName = "myhomepage-tasks";
 int typeId = 1;//not implemented as of this date
-String title = "Accounts by Contract End Date";
-String description = "Which accounts are expiring?";
+String title = "Task list by due date";
+String description = "What are the tasks due within a date range?";
 
 //Check to see if report already exists
 int reportId = Report.lookupId(db, filename);

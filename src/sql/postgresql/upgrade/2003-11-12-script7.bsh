@@ -8,12 +8,12 @@ import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.admin.base.Permission;
 
 //Set these and the rest will insert the new report
-String filename = "accounts_expire.xml";
-String moduleName = "Account Management";
-String permissionName = "accounts-accounts";
+String filename = "ticket_summary_date.xml";
+String moduleName = "Tickets";
+String permissionName = "tickets-tickets";
 int typeId = 1;//not implemented as of this date
-String title = "Accounts by Contract End Date";
-String description = "Which accounts are expiring?";
+String title = "Ticket counts by department";
+String description = "How man tickets are there in the system on a particular date?";
 
 //Check to see if report already exists
 int reportId = Report.lookupId(db, filename);
