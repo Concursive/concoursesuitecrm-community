@@ -736,7 +736,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       pst.close();
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("product_name", null);
+      pagedListInfo.setDefaultSort("pctlg.product_name", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY entered ");
