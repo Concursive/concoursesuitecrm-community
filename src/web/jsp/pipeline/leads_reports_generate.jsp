@@ -25,26 +25,28 @@
   }
 </script>
 <body onLoad="javascript:document.forms[0].subject.focus();">
-<form name="generate" action="Leads.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
+<form name="generate" action="LeadsReports.do?command=Export" method="post" onSubmit="return checkForm(this);">
 <a href="Leads.do">Pipeline Management</a> > 
-<a href="Leads.do?command=Reports">Reports</a> > 
-Generate New Report <br>
+<a href="LeadsReports.do?command=ExportList">Export Data</a> > 
+New Export<br>
 <hr color="#BFBFBB" noshade>
+<%-- Display viewpoint info --%>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>
 </dhv:evaluate>
+<%-- Begin the container contents --%>
 <input type="submit" value="Generate">
-<input type="button" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Reports';javascript:this.form.submit();">
+<input type="button" value="Cancel" onClick="javascript:this.form.action='LeadsReports.do?command=ExportList';javascript:this.form.submit();">
 <br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
+  <tr class="containerBody">
     <th colspan="5">
       <strong>Generate a New Report</strong>
     </th>     
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel">
       Type
     </td>
@@ -54,7 +56,7 @@ Generate New Report <br>
       </select>
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel">
       Subject
     </td>
@@ -62,7 +64,7 @@ Generate New Report <br>
       <input type="text" size="35" name="subject" maxlength="50">
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel">
       Criteria
     </td>
@@ -73,7 +75,7 @@ Generate New Report <br>
       </select>
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel">
       Sorting
     </td>
@@ -94,7 +96,7 @@ Generate New Report <br>
       </select>
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td nowrap valign="top" class="formLabel">
       Select fields<br>
       to include
@@ -164,6 +166,7 @@ Generate New Report <br>
 </table>
 <br>
 <input type="submit" value="Generate">
-<input type="button" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Reports';javascript:this.form.submit();">
+<input type="button" value="Cancel" onClick="javascript:this.form.action='LeadsReports.do?command=ExportList';javascript:this.form.submit();">
+<%-- End container contents --%>
 </form>
 </body>

@@ -14,15 +14,15 @@
   
   //Menu link functions
   function details() {
-    popURL('Leads.do?command=ShowReportHtml&pid=-1&fid=' + thisReportId + '&popup=true','Report','600','400','yes','yes');
+    popURL('LeadsReports.do?command=ShowExportHtml&pid=-1&fid=' + thisReportId + '&popup=true','Report','600','400','yes','yes');
   }
   
   function download() {
-    window.location.href = 'Leads.do?command=DownloadCSVReport&fid=' + thisReportId;
+    window.location.href = 'LeadsReports.do?command=DownloadCSVExport&fid=' + thisReportId;
   }
   
   function deleteReport() {
-    confirmDelete('Leads.do?command=DeleteReport&pid=-1&fid=' + thisReportId);
+    confirmDelete('LeadsReports.do?command=DeleteCSVExport&pid=-1&fid=' + thisReportId);
   }
   
 </script>
