@@ -480,7 +480,7 @@ public class PilotOnlineReader implements DataReader {
       }
     }
 
-    if (processOK) {
+    if (processOK && picturesToProcess.size() > 0) {
       processLog.add("INFO: FTP Sending pictures");
       boolean sendComplete = false;
       int retryCount = 0;
@@ -498,7 +498,9 @@ public class PilotOnlineReader implements DataReader {
         }
       }
     } else {
-      processLog.add("ERROR: FTP Sending pictures-> Skipped because of previous error");
+      if (picturesToProcess.size() > 0) {
+        processLog.add("ERROR: FTP Sending pictures-> Skipped because of previous error");
+      }
     }
 
     if (processOK) {
