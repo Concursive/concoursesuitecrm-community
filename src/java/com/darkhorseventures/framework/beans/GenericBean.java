@@ -21,6 +21,8 @@ import org.aspcfs.utils.*;
 
 public class GenericBean implements Serializable {
   protected HashMap errors = new HashMap();
+  protected HashMap warnings = new HashMap();
+  protected boolean onlyWarnings = false;
   protected SimpleDateFormat shortDateFormat = new SimpleDateFormat("M/d/yyyy");
   protected SimpleDateFormat shortTimeFormat = new SimpleDateFormat("h:mm a");
   protected SimpleDateFormat shortDateTimeFormat = new SimpleDateFormat("M/d/yyyy h:mm:ss a");
@@ -154,6 +156,56 @@ public class GenericBean implements Serializable {
    */
   public boolean hasErrors() {
     return (errors.size() > 0);
+  }
+
+
+  /**
+   *  Gets the warnings attribute of the GenericBean object
+   *
+   *@return    The warnings value
+   */
+  public HashMap getWarnings() {
+    return warnings;
+  }
+
+
+  /**
+   *  Returns whether the object has added any warnings to the warning HashMap
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean hasWarnings() {
+    return (warnings.size() > 0);
+  }
+
+
+  /**
+   *  Sets the onlyWarnings attribute of the GenericBean object
+   *
+   *@param  tmp  The new onlyWarnings value
+   */
+  public void setOnlyWarnings(boolean tmp) {
+    this.onlyWarnings = tmp;
+  }
+
+
+  /**
+   *  Sets the onlyWarnings attribute of the GenericBean object
+   *
+   *@param  tmp  The new onlyWarnings value
+   */
+  public void setOnlyWarnings(String tmp) {
+    this.onlyWarnings = "on".equals(tmp);
+  }
+
+
+  /**
+   *  Gets the onlyWarnings attribute of the GenericBean object
+   *
+   *@return    The onlyWarnings value
+   */
+  public boolean getOnlyWarnings() {
+    return onlyWarnings;
   }
 
 
@@ -352,7 +404,7 @@ public class GenericBean implements Serializable {
    */
   public void setTimeZoneForDateFields(HttpServletRequest request, String value, String field) {
     try {
-      if ((value != null) && (!"".equals(value))){
+      if ((value != null) && (!"".equals(value))) {
         sanitizeDate(request, value, field);
       }
     } catch (Exception e) {
