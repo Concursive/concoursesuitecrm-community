@@ -27,6 +27,7 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
     
     //Loop through created items until complete, in the following order
     OpportunityList oppList = new OpportunityList();
+    oppList.buildList(db);
     
     writer.setAutoCommit(false);
     this.saveOppList(db, oppList);
@@ -38,18 +39,25 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
     return true;
   }
   
-  private void saveOppList(Connection db, OpportunityList oppList) {
+  private void saveOppList(Connection db, OpportunityList oppList) throws SQLException {
     Iterator opps = oppList.iterator();
+    
     while (opps.hasNext()) {
       Opportunity thisOpp = (Opportunity)opps.next();
       DataRecord thisRecord = mappings.createDataRecord(thisOpp, "insert");
       writer.save(thisRecord);
-      
-      //CallList callList = new CallList();
-      //callList.setOppId(thisOpp.getId());
-      //callList.buildList() ??
-      
-      //Iterate thru calls and create datarecords and write like we did for opps?
+      /**
+              CallList callList = new CallList();
+              callList.setOppId(thisOpp.getId());
+              callList.buildList(db);
+              
+              Iterator calls = callList.iterator();
+              while (calls.hasNext()) {
+                      Call thisCall = (Call)calls.next();
+                      DataRecord thisCallRecord = mappings.createDataRecord(thisCall, "insert");
+                      writer.save(thisCallRecord);
+              }
+       */
       
     }
   }
