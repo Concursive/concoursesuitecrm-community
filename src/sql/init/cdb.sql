@@ -24,11 +24,12 @@ INSERT INTO lookup_account_types (description, level) VALUES ('Small', 10);
 INSERT INTO lookup_account_types (description, level) VALUES ('Medium', 20);
 INSERT INTO lookup_account_types (description, level) VALUES ('Large', 30);
 INSERT INTO lookup_account_types (description, level) VALUES ('Contract', 40);
-INSERT INTO lookup_account_types (description, level) VALUES ('Territory 1: Northeast', 50);
-INSERT INTO lookup_account_types (description, level) VALUES ('Territory 2: Southeast', 60);
-INSERT INTO lookup_account_types (description, level) VALUES ('Territory 3: Midwest', 70);
-INSERT INTO lookup_account_types (description, level) VALUES ('Territory 4: Northwest', 80);
-INSERT INTO lookup_account_types (description, level) VALUES ('Territory 5: Southwest', 90);
+INSERT INTO lookup_account_types (description, level) VALUES ('Non-contract', 50);
+INSERT INTO lookup_account_types (description, level) VALUES ('Territory 1: Northeast', 60);
+INSERT INTO lookup_account_types (description, level) VALUES ('Territory 2: Southeast', 70);
+INSERT INTO lookup_account_types (description, level) VALUES ('Territory 3: Midwest', 80);
+INSERT INTO lookup_account_types (description, level) VALUES ('Territory 4: Northwest', 90);
+INSERT INTO lookup_account_types (description, level) VALUES ('Territory 5: Southwest', 100);
 
 INSERT INTO lookup_orgaddress_types (description, level) VALUES ('Primary', 10);
 INSERT INTO lookup_orgaddress_types (description, level) VALUES ('Auxiliary', 20);
