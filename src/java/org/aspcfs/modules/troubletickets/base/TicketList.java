@@ -382,8 +382,26 @@ public class TicketList extends ArrayList implements SyncableList {
     this.description = description;
   }
 
-  public void setMinutesOlderThan(int tmp) { this.minutesOlderThan = tmp; }
-  public void setMinutesOlderThan(String tmp) { this.minutesOlderThan = Integer.parseInt(tmp); }
+
+  /**
+   *  Sets the minutesOlderThan attribute of the TicketList object
+   *
+   *@param  tmp  The new minutesOlderThan value
+   */
+  public void setMinutesOlderThan(int tmp) {
+    this.minutesOlderThan = tmp;
+  }
+
+
+  /**
+   *  Sets the minutesOlderThan attribute of the TicketList object
+   *
+   *@param  tmp  The new minutesOlderThan value
+   */
+  public void setMinutesOlderThan(String tmp) {
+    this.minutesOlderThan = Integer.parseInt(tmp);
+  }
+
 
   /**
    *  Sets the onlyClosed attribute of the TicketList object
@@ -808,7 +826,7 @@ public class TicketList extends ArrayList implements SyncableList {
         sqlFilter.append("AND t.entered <= ? ");
       }
     }
-    if (searchText == null || (searchText.equals(""))) {
+    if (searchText != null && !(searchText.equals(""))) {
       if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
         sqlFilter.append(
             "AND ( LOWER(CONVERT(VARCHAR(2000),t.problem)) LIKE LOWER(?) OR " +
@@ -902,7 +920,9 @@ public class TicketList extends ArrayList implements SyncableList {
         pst.setTimestamp(++i, adjustedDate);
       }
     }
-    if (searchText == null || (searchText.equals(""))) {
+
+
+    if (searchText != null && !(searchText.equals(""))) {
       pst.setString(++i, searchText);
       pst.setString(++i, searchText);
       pst.setString(++i, searchText);
