@@ -24,12 +24,15 @@
     <td>
       Dark Horse CRM stores and retrieves data using a database.<br>
       <br>
-      Dark Horse CRM is intended to work with the Open Source database <a href="http://www.postgresql.org" target="_new">PostgreSQL</a>.
-      Before continuing, PostgreSQL must be installed.  Have the database administrator
-      create a database for Dark Horse CRM called "darkhorse_crm" and a database user
-      called "darkhorse_crm" then
-      enter the database connection information below:<br>
-      &nbsp;
+      Dark Horse CRM works best with the Open Source database server <a href="http://www.postgresql.org" target="_new">PostgreSQL</a>.
+      <ul>
+      <li>Before continuing, PostgreSQL must be installed and functional</li>
+      <li>The database administrator should create a user called "darkhorse_crm"</li>
+      <li>The database administrator should create a new database, with
+      UNICODE encoding, called "darkhorse_crm"</li> 
+      <li>Once configured, enter the database connection information below, then press continue
+      to see if the database is found</li>
+      </ul>
     </td>
   </tr>
   <tr class="sectionTitle">

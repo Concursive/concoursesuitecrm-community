@@ -19,7 +19,7 @@
       valid = false;
     }
     if (form.company.value.length == 0) {
-      message += "- Company is a required field\r\n";
+      message += "- Organization is a required field\r\n";
       valid = false;
     }
     if (form.email.value.length == 0) {
@@ -102,7 +102,7 @@
         </tr>
         <tr>
           <td class="formLabel">
-            Company Name:
+            Organization Name:
           </td>
           <td>
             <input type="text" size="30" name="company" value="<%= toHtmlValue(registration.getCompany()) %>"/><font color="red">*</font>

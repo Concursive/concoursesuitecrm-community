@@ -12,7 +12,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <jsp:include page="cssInclude.jsp" flush="true"/>
 </head>
-<body>
+<body bgcolor="#FFFFFF" LEFTMARGIN="0" MARGINWIDTH="0" TOPMARGIN="0" MARGINHEIGHT="0">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td><img src="images/dhv1.gif" width="339" height="65"></td>
@@ -33,26 +33,20 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td width="100%">
-            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <table width="100%" border="0" cellpadding="8" cellspacing="0">
               <tr>
-                <td width="100%" valign="top" style="padding-right: 10px">
+                <td width="150" valign="top" nowrap style="border-right: #333333 solid 1px;">
+                  <jsp:include page="../setup/configure_global_items.jsp" flush="true"/>
+                </td>
+                <td width="100%" valign="top" style="padding-left: 10px">
                   <% String includeModule = (String) request.getAttribute("IncludeModule"); %>
                   <jsp:include page="<%= includeModule %>" flush="true"/>
-                </td>
-                <td width="150" valign="top" nowrap>
-                  &nbsp;<br>
-                  <jsp:include page="../setup/configure_global_items.jsp" flush="true"/>
                 </td>
               </tr>
             </table>
           </td>
         </tr>
       </table>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2">
-      &nbsp;
     </td>
   </tr>
   <tr>

@@ -29,14 +29,13 @@
     <td>
       Users will have the capability to upload and create files on the server.<br>
       Where should Dark Horse CRM store files that get created?<br>
-      <br>
-      - If the target directory does not exist it will be created
-      - The target directory should have plenty of free storage space for uploads<br>
-      - The target directory must have write permissions<br>
-      - The target directory should be backed up often to prevent data loss<br>
-      - The target directory should not be located in the servlet path to make upgrades easier<br>
-      <br>
-      <br>
+      <ul>
+      <li>If the target directory does not exist it will be created</li>
+      <li>The target directory should have plenty of free storage space for uploads</li>
+      <li>The target directory must have write permissions</li>
+      <li>The target directory should be backed up often to prevent data loss</li>
+      <li>The target directory should not be located in the servlet path to make upgrades easier</li>
+      </ul>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">

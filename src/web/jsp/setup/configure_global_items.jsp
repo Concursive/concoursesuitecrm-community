@@ -7,7 +7,7 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th colspan="2">
-      Installation Steps
+      You are here...
     </th>
   </tr>
   <tr>
@@ -46,7 +46,8 @@
   </tr>
   <tr>
     <td>
-      Dark Horse CRM saves time and money...<br>
+      Dark Horse CRM<br>
+      saves time and money...<br>
       <br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
       <a href="http://www.darkhorsecrm.com" target="_blank">Learn more about our products</a><br>
@@ -83,7 +84,7 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      Storage
+      Storage Resources
     </th>
   </tr>
   <tr>
@@ -102,7 +103,7 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      Servers
+      Server Resources
     </th>
   </tr>
   <tr>
@@ -121,7 +122,7 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      Database
+      Database Resources
     </th>
   </tr>
   <tr>
@@ -138,7 +139,7 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      CRM Setup
+      Dark Horse CRM Resources
     </th>
   </tr>
   <tr>

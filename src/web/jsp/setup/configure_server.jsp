@@ -27,10 +27,13 @@
   </tr>
   <tr>
     <td>
-      Every user in Dark Horse CRM can configure the time zone in which they are currently in.
-      This allows users to see and enter dates and times according to their configured time zone.<br>
-      What should the default time zone be set to for new users?
-      <br>
+      Every user in Dark Horse CRM can configure the time zone in which they are currently in.<br>
+      What should the default time zone be set to for new users?<br>
+      <ul>
+      <li>Users will still be able to change their time zone, but for new users this setting 
+      will be used as the default</li>
+      <li>Dates and times will be displayed according to the user's configured time zone</li>
+      </ul>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
@@ -54,8 +57,9 @@
       Dark Horse CRM sends various notifications to users by email.  Dark Horse CRM can also be used
       to send email to contacts that have been entered into Dark Horse CRM.<br>
       Which email server should Dark Horse CRM use?<br>
-      - The specified server must allow this server to relay email<br>
-      <br>
+      <ul>
+      <li>The specified server must allow this server to relay email</li>
+      </ul>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
@@ -101,10 +105,14 @@
   <tr>
     <td>
       For system emails, what URL should be included to allow the user to return back to the site?<br>
-      The URL must be specific and must exist in your DNS.<br>
-      If a domain name is not configured, you can specify the IP address, include the full URL to
-      get to the Dark Horse CRM web application.<br>
-      <br>
+      <ul>
+      <li>The URL must exist in your DNS so that users can connect</li>
+      <li>Optionally, you can specify the IP address</li>
+      <li>Include the full URL path to get to the Dark Horse CRM web application, 
+      excluding HTTP:// or HTTPS://</li>
+      <li>Clicking the Test button will attempt to bring up a Dark Horse CRM confirmation
+      page located on this server</li>
+      </ul>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
@@ -128,14 +136,15 @@
   </tr>
   <tr>
     <td>
-      <font color="red">* </font><b>The HylaFax server application requires Linux or Unix.</b><br>
-      Users will have the capability to send faxes using Dark Horse CRM.<br>
+      <font color="red">* </font><b>The HylaFax server application requires Linux or Unix and has further software and hardware requirements.</b><br>
+      Users may have the capability to send faxes using Dark Horse CRM.<br>
       The faxing component requires a properly configured
       <a href="http://www.hylafax.org" target="_new">HylaFax</a> server including fax hardware.<br>
       Which fax server should Dark Horse CRM use?<br>
-      - The specified server must allow this server to send faxes<br>
-      - Leave blank if faxing will not be used<br>
-      <br>
+      <ul>
+      <li>The specified server must allow this server to send faxes</li>
+      <li>Leave blank if faxing will not be used</li>
+      </ul>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
