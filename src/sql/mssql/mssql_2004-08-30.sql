@@ -91,13 +91,8 @@ ALTER TABLE [call_log] WITH NOCHECK ADD
 	CONSTRAINT [DF__call_log__alertd__14B10FFA] DEFAULT ('America/New_York') FOR [alertdate_timezone]
 GO
 
-
------
---TODO:verify this...
---ALTER TABLE project_issues DROP CONSTRAINT "$2";
--- "$2" FOREIGN KEY (category_id) REFERENCES project_issues_categories(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE project_issues ALTER COLUMN [category_id] [int] NULL;
------
+ALTER TABLE project_issues
+	DROP CONSTRAINT FK__project_i__type___6D181FEC
 
 DROP TABLE lookup_project_issues;
 
@@ -135,43 +130,43 @@ ALTER TABLE projects ADD category_id integer;
 
 ALTER TABLE projects ADD portal BIT;
 UPDATE projects SET portal = 0 WHERE portal IS NULL;
-ALTER TABLE projects ADD portal BIT NOT NULL;
+ALTER TABLE projects ALTER COLUMN portal BIT NOT NULL;
 
 ALTER TABLE projects ADD allow_guests BIT;
 UPDATE projects SET allow_guests = 0 WHERE allow_guests IS NULL;
-ALTER TABLE projects ADD allow_guests BIT NOT NULL;
+ALTER TABLE projects ALTER COLUMN allow_guests BIT NOT NULL;
 
 ALTER TABLE projects ADD news_enabled BIT;
 UPDATE projects SET news_enabled = 1 WHERE news_enabled IS NULL;
-ALTER TABLE projects ADD news_enabled BIT NOT NULL;
+ALTER TABLE projects ALTER COLUMN news_enabled BIT NOT NULL;
 
 ALTER TABLE projects ADD details_enabled BIT;
 UPDATE projects SET details_enabled = 1 WHERE details_enabled IS NULL;
-ALTER TABLE projects ADD details_enabled BIT NOT NULL;
+ALTER TABLE projects ALTER COLUMN details_enabled BIT NOT NULL;
 
 ALTER TABLE projects ADD team_enabled BIT;
 UPDATE projects SET team_enabled = 1 WHERE team_enabled IS NULL;
-ALTER TABLE projects ADD team_enabled BIT NOT NULL;
+ALTER TABLE projects ALTER COLUMN team_enabled BIT NOT NULL;
 
 ALTER TABLE projects ADD plan_enabled BIT;
 UPDATE projects SET plan_enabled = 1 WHERE plan_enabled IS NULL;
-ALTER TABLE projects ADD plan_enabled BIT NOT NULL;
+ALTER TABLE projects ALTER COLUMN plan_enabled BIT NOT NULL;
 
 ALTER TABLE projects ADD lists_enabled BIT;
 UPDATE projects SET lists_enabled = 1 WHERE lists_enabled IS NULL;
-ALTER TABLE projects ADD lists_enabled BIT NOT NULL;
+ALTER TABLE projects ALTER COLUMN lists_enabled BIT NOT NULL;
 
 ALTER TABLE projects ADD discussion_enabled BIT;
 UPDATE projects SET discussion_enabled = 1 WHERE discussion_enabled IS NULL;
-ALTER TABLE projects ADD discussion_enabled BIT NOT NULL;
+ALTER TABLE projects ALTER COLUMN discussion_enabled BIT NOT NULL;
 
 ALTER TABLE projects ADD tickets_enabled BIT;
 UPDATE projects SET tickets_enabled = 1 WHERE tickets_enabled IS NULL;
-ALTER TABLE projects ADD tickets_enabled BIT NOT NULL;
+ALTER TABLE projects ALTER COLUMN tickets_enabled BIT NOT NULL;
 
 ALTER TABLE projects ADD documents_enabled BIT;
 UPDATE projects SET documents_enabled = 1 WHERE documents_enabled IS NULL;
-ALTER TABLE projects ADD documents_enabled BIT NOT NULL;
+ALTER TABLE projects ALTER COLUMN documents_enabled BIT NOT NULL;
 
 ALTER TABLE projects ADD news_label [varchar] (50);
 ALTER TABLE projects ADD details_label [varchar] (50);
@@ -214,7 +209,11 @@ CREATE TABLE [project_assignments_folder] (
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
-ALTER TABLE project_assignments DROP activity_id;
+ALTER TABLE project_assignments
+	DROP CONSTRAINT FK__project_a__activ__6AFACD50;
+DROP INDEX project_assignments.project_assignments_idx;
+ALTER TABLE project_assignments DROP COLUMN activity_id;
+
 ALTER TABLE project_assignments ADD folder_id integer;
 ALTER TABLE project_assignments ADD percent_complete integer;
 
@@ -235,7 +234,9 @@ CREATE TABLE [project_issues_categories] (
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
-ALTER TABLE project_issues DROP type_id;
+DROP INDEX project_issues.project_issues_limit_idx;
+DROP INDEX project_issues.project_issues_idx;
+ALTER TABLE project_issues DROP COLUMN type_id;
 ALTER TABLE project_issues ADD category_id integer;
 
 ALTER TABLE project_issues ADD reply_count INTEGER;
@@ -244,40 +245,50 @@ ALTER TABLE project_issues ALTER COLUMN reply_count INTEGER NOT NULL;
 
 ALTER TABLE project_issues ADD last_reply_date DATETIME;
 UPDATE project_issues SET last_reply_date = modified WHERE last_reply_date IS NULL;
-ALTER TABLE project_issues ADD last_reply_date DATETIME NOT NULL;
+ALTER TABLE project_issues ALTER COLUMN last_reply_date DATETIME NOT NULL;
 
 ALTER TABLE project_issues ADD last_reply_by integer;
 
-ALTER TABLE [project_issues] WITH NOCHECK ADD 
-	CONSTRAINT [DF__project_i__reply__08162EEB] DEFAULT (0) FOR [reply_count],
-	CONSTRAINT [DF__project_i__last___090A5324] DEFAULT (getdate()) FOR [last_reply_date]
-GO
 
-
-ALTER TABLE project_folders DROP parent;
+ALTER TABLE project_folders DROP COLUMN parent;
 ALTER TABLE project_folders ADD parent_id integer;
 
 ALTER TABLE project_folders ADD entered DATETIME;
 UPDATE project_folders SET entered = CURRENT_TIMESTAMP WHERE entered IS NULL;
 ALTER TABLE project_folders ALTER COLUMN entered DATETIME NOT NULL;
 
-ALTER TABLE project_folders ADD enteredBy INTEGER REFERENCES access(user_id);
-UPDATE project_folders SET enteredBy = 0 WHERE enteredBy IS NULL;
-ALTER TABLE project_folders ALTER COLUMN enteredBy INTEGER REFERENCES access(user_id) NOT NULL;
+ALTER TABLE project_folders ADD enteredby INTEGER;
+UPDATE project_folders SET enteredby = 0 WHERE enteredby IS NULL;
+ALTER TABLE project_folders ALTER COLUMN enteredby INTEGER NOT NULL;
 
 ALTER TABLE project_folders ADD modified DATETIME;
 UPDATE project_folders SET modified = CURRENT_TIMESTAMP WHERE modified IS NULL;
 ALTER TABLE project_folders ALTER COLUMN modified DATETIME NOT NULL;
 
-ALTER TABLE project_folders ADD modifiedBy INTEGER REFERENCES access(user_id);
-UPDATE project_folders SET modifiedBy = 0 WHERE modifiedBy IS NULL;
-ALTER TABLE project_folders ADD modifiedBy INTEGER REFERENCES access(user_id) NOT NULL;
+ALTER TABLE project_folders ADD modifiedBy INTEGER;
+UPDATE project_folders SET modifiedby = 0 WHERE modifiedby IS NULL;
+ALTER TABLE project_folders ALTER COLUMN modifiedby INTEGER NOT NULL;
 
 ALTER TABLE project_folders ADD display integer;
 
 ALTER TABLE [project_folders] WITH NOCHECK ADD 
 	CONSTRAINT [DF__project_f__enter__1387E197] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__project_f__modif__15702A09] DEFAULT (getdate()) FOR [modified]
+GO
+
+ALTER TABLE [project_folders] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredBy]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedBy]
+	) REFERENCES [access] (
+		[user_id]
+	)
 GO
 
 CREATE TABLE [project_files_thumbnail] (
@@ -384,7 +395,7 @@ GO
 
 ALTER TABLE task ADD duedate_timezone [varchar] (255);
 
-ALTER TABLE tasklink_contact ADD COLUMN notes text;
+ALTER TABLE tasklink_contact ADD notes text;
 
 -- Insert default lookup_call_priority
 SET NOCOUNT ON
@@ -552,10 +563,6 @@ GO
 
 
 
-DROP INDEX project_issues_idx;
-
-
-
  CREATE  UNIQUE  INDEX [project_team_uni_idx] ON [project_team]([project_id], [user_id]) ON [PRIMARY]
 GO
 
@@ -563,12 +570,6 @@ GO
 
  CREATE  INDEX [proj_req_map_pr_req_pos_idx] ON [project_requirements_map]([project_id], [requirement_id], [position]) ON [PRIMARY]
 GO
-
-
-
-CREATE INDEX "ticket_problem_idx" ON "ticket" (problem);
-CREATE INDEX "ticket_comment_idx" ON "ticket" (comment);
-CREATE INDEX "ticket_solution_idx" ON "ticket" (solution);
 
 
 
@@ -713,8 +714,12 @@ GO
 
 
 
-ALTER TABLE ONLY project_assignments_folder
-    ADD CONSTRAINT project_assignments_folder_pkey PRIMARY KEY (folder_id);
+ALTER TABLE [project_assignments_folder] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[folder_id]
+	)  ON [PRIMARY] 
+GO
 
 ALTER TABLE [project_assignments_folder] WITH NOCHECK ADD 
 	CONSTRAINT [DF__project_a__enter__5C37ACAD] DEFAULT (getdate()) FOR [entered],
