@@ -23,7 +23,6 @@ public final class LookupSelector extends CFSModule {
     String displayFieldId = null;
     
     PagedListInfo lookupSelectorInfo = this.getPagedListInfo(context, "LookupSelectorInfo");
-    lookupSelectorInfo.setEnableJScript(true);
     
     String tableName = context.getRequest().getParameter("table");
     
