@@ -54,6 +54,9 @@ public final class Contacts extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("AddContactPopupOK");
+      }
       return ("AddOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -158,6 +161,9 @@ public final class Contacts extends CFSModule {
             context.getRequest().setAttribute("ContactDetails", newContact);
             return (executeCommandAdd(context));
           }
+        }
+        if (context.getRequest().getParameter("popup") != null) {
+          return ("CloseInsertContactPopup");
         }
         return ("DetailsOK");
       } else {
