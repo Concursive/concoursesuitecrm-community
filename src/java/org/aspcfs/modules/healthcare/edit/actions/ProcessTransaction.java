@@ -102,6 +102,7 @@ public final class ProcessTransaction extends CFSModule {
     // This project is phasing out so all requests are being forwarded
     try {
       if (xml != null && ce != null) {
+        System.out.println("ProcessTransaction-> CE: " + ce.getUrl());
         System.out.println("ProcessTransaction-> Trying to forward to: " + getValue(context, ce, "FORWARD.URL") + " the value: " + xml.toString());
         HTTPUtils.sendPacket(getValue(context, ce, "FORWARD.URL"), xml.toString());
         System.out.println("ProcessTransaction-> Forwarded to: " + getValue(context, ce, "FORWARD.URL"));
