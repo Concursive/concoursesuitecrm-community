@@ -90,33 +90,33 @@ public final class ProcessCalculation extends CFSModule {
     recordList.setPerformed(dateToProcess);
     //The report progress will be stored in a StringBuffer and emailed
     StringBuffer sb = new StringBuffer();
+    ConnectionElement ce = null;
     try {
       //get a local database connection
       AuthenticationItem auth = new AuthenticationItem();
-      ConnectionElement ce = auth.getConnectionElement(context);
+      ce = auth.getConnectionElement(context);
       db = this.getConnection(context, ce);
       SystemStatus thisSystem = this.getSystemStatus(context, ce);
       if (thisSystem == null) {
         //Since typical login was bypassed, make sure the system status is in memory
         thisSystem = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
       }
-      
       //get connections to the remote production database
       sqlDriver.setMaxConnections(2);
       if (System.getProperty("DEBUG") != null) {
         sqlDriver.setDebug(true);
       }
       connectionElement = new ConnectionElement(
-          this.getValue(context, "DATABASE.URL"),
-          this.getValue(context, "DATABASE.USERNAME"),
-          this.getValue(context, "DATABASE.PASSWORD"));
+          this.getValue(context, ce, "DATABASE.URL"),
+          this.getValue(context, ce, "DATABASE.USERNAME"),
+          this.getValue(context, ce, "DATABASE.PASSWORD"));
       connectionElement.setAllowCloseOnIdle(false);
-      connectionElement.setDriver(this.getValue(context, "DATABASE.DRIVER"));
+      connectionElement.setDriver(this.getValue(context, ce, "DATABASE.DRIVER"));
       prodDb = sqlDriver.getConnection(connectionElement);
       //build list of yesterday's records on transaction server
       recordList.buildList(db);
       //Get list of Accounts folders categories (Provider Transaction Details)
-      providerTransDetails = new CustomFieldCategory(prodDb, getValueAsInt(context, "PROVIDER_TRANSACTION_DETAILS"));
+      providerTransDetails = new CustomFieldCategory(prodDb, getValueAsInt(context, ce, "PROVIDER_TRANSACTION_DETAILS"));
       providerTransDetails.setLinkModuleId(Constants.ACCOUNTS);
       providerTransDetails.setIncludeEnabled(Constants.TRUE);
       providerTransDetails.setIncludeScheduled(Constants.TRUE);
@@ -125,7 +125,7 @@ public final class ProcessCalculation extends CFSModule {
       providerTransDetails.setModifiedBy(1);
       providerTransDetails.buildResources(prodDb);
       //Get list of Accounts folders categories (Office Transaction Details)
-      officeTransDetails = new CustomFieldCategory(prodDb, getValueAsInt(context, "OFFICE_TRANSACTION_DETAILS"));
+      officeTransDetails = new CustomFieldCategory(prodDb, getValueAsInt(context, ce, "OFFICE_TRANSACTION_DETAILS"));
       officeTransDetails.setLinkModuleId(Constants.ACCOUNTS);
       officeTransDetails.setIncludeEnabled(Constants.TRUE);
       officeTransDetails.setIncludeScheduled(Constants.TRUE);
@@ -136,7 +136,7 @@ public final class ProcessCalculation extends CFSModule {
       //build a list of all the accounts custom categories
       fullCategoryList.buildList(prodDb);
       //get mapping of providers to orgIds and build
-      CustomFieldCategory providerCategory = fullCategoryList.getCategory(getValueAsInt(context, "OFFICE_PROVIDER_DETAILS"));
+      CustomFieldCategory providerCategory = fullCategoryList.getCategory(getValueAsInt(context, ce, "OFFICE_PROVIDER_DETAILS"));
       providerCategory.setBuildResources(true);
       providerCategory.buildResources(prodDb);
       //Get the actual provider records
@@ -165,7 +165,7 @@ public final class ProcessCalculation extends CFSModule {
       //end mapping of providers to orgIds
 
       //get mapping of payors to orgIds
-      CustomFieldCategory payorCategory = fullCategoryList.getCategory(getValueAsInt(context, "OFFICE_PAYOR_DETAILS"));
+      CustomFieldCategory payorCategory = fullCategoryList.getCategory(getValueAsInt(context, ce, "OFFICE_PAYOR_DETAILS"));
       payorCategory.setBuildResources(true);
       payorCategory.buildResources(prodDb);
 
@@ -212,7 +212,6 @@ public final class ProcessCalculation extends CFSModule {
       while (i.hasNext()) {
         boolean hasErrors = false;
         TransactionRecord thisRec = (TransactionRecord) i.next();
-
         //error checking!
         if (providerOrgMapping.get(thisRec.getTaxId()) == null) {
           hasErrors = true;
@@ -221,7 +220,6 @@ public final class ProcessCalculation extends CFSModule {
           hasErrors = true;
           errors.put(new Integer(thisRec.getId()), new String("Error: Payor with ID = " + thisRec.getPayerId() + " not found in CFS!"));
         }
-
         if (!hasErrors) {
           //error checking
           ArrayList tempArray = (ArrayList) payorOrgMapping.get(thisRec.getPayerId());
@@ -230,7 +228,6 @@ public final class ProcessCalculation extends CFSModule {
             errors.put(new Integer(thisRec.getId()), new String("Error: Payor with ID = " + thisRec.getPayerId() + " not associated with Provider " + thisRec.getTaxId() + " in CFS!"));
           }
         }
-
         if (!hasErrors) {
           FolderInsertRecord tempFir = new FolderInsertRecord();
           if (!tempFir.process(thisRec)) {
@@ -412,17 +409,19 @@ public final class ProcessCalculation extends CFSModule {
       sqlDriver.free(prodDb);
     }
     //Mail the final report
-    SMTPMessage mail = new SMTPMessage();
-    mail.setHost((String) System.getProperty("MailServer"));
-    mail.setFrom("cfs-messenger@darkhorseventures.com");
-    mail.setType("text/html");
-    mail.setTo(this.getValue(context, "ERROR_REPORT_ADDRESS"));
-    mail.setSubject("EDIT transaction data summary: " + month + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
-    mail.setBody(sb.toString());
-    if (mail.send() == 2) {
-      System.err.println(mail.getErrorMsg());
-    } else {
-      System.err.println("ProcessCalculation-> Sending report to " + this.getValue(context, "ERROR_REPORT_ADDRESS"));
+    if (ce != null) {
+      SMTPMessage mail = new SMTPMessage();
+      mail.setHost((String) System.getProperty("MailServer"));
+      mail.setFrom("cfs-messenger@darkhorseventures.com");
+      mail.setType("text/html");
+      mail.setTo(this.getValue(context, ce, "ERROR_REPORT_ADDRESS"));
+      mail.setSubject("EDIT transaction data summary: " + month + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
+      mail.setBody(sb.toString());
+      if (mail.send() == 2) {
+        System.err.println(mail.getErrorMsg());
+      } else {
+        System.err.println("ProcessCalculation-> Sending report to " + this.getValue(context, ce, "ERROR_REPORT_ADDRESS"));
+      }
     }
     return ("-none-");
   }
@@ -436,8 +435,8 @@ public final class ProcessCalculation extends CFSModule {
    *@param  param    Description of the Parameter
    *@return          The value value
    */
-  private int getValueAsInt(ActionContext context, String param) {
-    return this.getSystemStatus(context).getValueAsInt("org.aspcfs.modules.healthcare.edit.actions.ProcessCalculation", param);
+  private int getValueAsInt(ActionContext context, ConnectionElement ce, String param) {
+    return this.getSystemStatus(context, ce).getValueAsInt("org.aspcfs.modules.healthcare.edit.actions.ProcessCalculation", param);
   }
 
 
@@ -448,8 +447,8 @@ public final class ProcessCalculation extends CFSModule {
    *@param  param    Description of the Parameter
    *@return          The value value
    */
-  private String getValue(ActionContext context, String param) {
-    return this.getSystemStatus(context).getValue("org.aspcfs.modules.healthcare.edit.actions.ProcessCalculation", param);
+  private String getValue(ActionContext context, ConnectionElement ce, String param) {
+    return this.getSystemStatus(context, ce).getValue("org.aspcfs.modules.healthcare.edit.actions.ProcessCalculation", param);
   }
 }
 
