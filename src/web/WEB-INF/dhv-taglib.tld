@@ -80,6 +80,24 @@
   </tag>
   
   <tag>
+    <name>contactname</name> 
+    <tag-class>com.darkhorseventures.taglib.ContactNameHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Access the request scope and retrieve contact's name from id.
+    </display-name>
+    <attribute>
+      <name>id</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>listName</name>
+      <required>yes</required>
+    </attribute>
+  </tag>
+  
+  <tag>
     <name>include</name> 
     <tag-class>com.darkhorseventures.taglib.FieldHandler</tag-class>
     <body-content>JSP</body-content>
