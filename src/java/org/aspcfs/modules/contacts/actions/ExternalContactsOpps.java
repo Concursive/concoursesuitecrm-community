@@ -256,6 +256,9 @@ public final class ExternalContactsOpps extends CFSModule {
       if (!recordInserted) {
         processErrors(context, newOpp.getHeader().getErrors());
         processErrors(context, newOpp.getComponent().getErrors());
+        LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
+        context.getRequest().setAttribute("TypeSelect", typeSelect);
+        context.getRequest().setAttribute("TypeList", newOpp.getComponent().getTypeList());
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
@@ -315,6 +318,9 @@ public final class ExternalContactsOpps extends CFSModule {
         buildAddFormElements(db, context);
         OpportunityHeader oppHeader = new OpportunityHeader(db, newComponent.getHeaderId());
         context.getRequest().setAttribute("opportunityHeader", oppHeader);
+        LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
+        context.getRequest().setAttribute("TypeSelect", typeSelect);
+        context.getRequest().setAttribute("TypeList", newComponent.getTypeList());
       }
       context.getRequest().setAttribute("oppComponentDetails", newComponent);
       context.getRequest().setAttribute("contactDetails", thisContact);
@@ -812,6 +818,9 @@ public final class ExternalContactsOpps extends CFSModule {
         userList.setIncludeMe(true);
         userList.setExcludeDisabledIfUnselected(true);
         context.getRequest().setAttribute("userList", userList);
+        LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
+        context.getRequest().setAttribute("TypeSelect", typeSelect);
+        context.getRequest().setAttribute("TypeList", component.getTypeList());
         buildAddFormElements(db, context);
       }
       context.getRequest().setAttribute("contactDetails", thisContact);

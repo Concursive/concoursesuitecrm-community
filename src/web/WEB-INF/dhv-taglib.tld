@@ -291,4 +291,25 @@
     </attribute>
   </tag>
   
+  <tag>
+    <name>lookupHtml</name>
+    <tag-class>org.aspcfs.taglib.LookupHtmlHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Displays a drop down box for a List object specified(default ArrayList)
+    </display-name>
+    <attribute>
+      <name>lookupName</name>
+      <required>yes</required>
+    </attribute>
+    <attribute>
+      <name>listName</name>
+      <required>yes</required>
+    </attribute>
+    <attribute>
+      <name>listType</name>
+      <required>no</required>
+    </attribute>
+  </tag>
+  
 </taglib>

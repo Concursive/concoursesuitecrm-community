@@ -819,7 +819,6 @@ public final class Accounts extends CFSModule {
 
     //set the name to namelastfirstmiddle if individual
     if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
-      System.out.println("form type is indi");
       newOrg.setName(newOrg.getNameLastFirstMiddle());
       newOrg.populatePrimaryContact();
       ((Contact) newOrg.getPrimaryContact()).setRequestItems(context.getRequest());

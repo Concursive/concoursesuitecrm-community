@@ -133,13 +133,15 @@ public class HtmlSelect extends ArrayList {
    *@since       1.0
    */
   public void setDefaultKey(String tmp) {
-    if (!tmp.equals(defaultKey)) {
-      built = false;
-    }
-    if (defaultKey != null) {
-      this.defaultKey = tmp;
-    } else {
-      this.defaultKey = "";
+    if (tmp != null) {
+      if (!tmp.equals(defaultKey)) {
+        built = false;
+      }
+      if (defaultKey != null) {
+        this.defaultKey = tmp;
+      } else {
+        this.defaultKey = "";
+      }
     }
   }
 

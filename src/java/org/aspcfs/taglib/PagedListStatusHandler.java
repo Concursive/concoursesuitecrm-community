@@ -220,8 +220,6 @@ public class PagedListStatusHandler extends TagSupport {
 
         //The status cell on the right
         out.write("<td valign=\"bottom\" align=\"" + (showControlOnly ? "center" : "right") + "\" nowrap>");
-        out.write("<input type=\"hidden\" name=\"offset\" value=\"\">");
-        out.write("<input type=\"hidden\" name=\"pagedListInfoId\" value=\"" + object + "\">");
 
         //Display record count
         if (pagedListInfo.getMaxRecords() > 0) {

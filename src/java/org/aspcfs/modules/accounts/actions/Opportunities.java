@@ -131,6 +131,9 @@ public final class Opportunities extends CFSModule {
         addRecentItem(context, newComponent);
       } else {
         processErrors(context, newComponent.getErrors());
+        LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
+        context.getRequest().setAttribute("TypeSelect", typeSelect);
+        context.getRequest().setAttribute("TypeList", newComponent.getTypeList());
       }
       thisOrg = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrg);
@@ -167,7 +170,7 @@ public final class Opportunities extends CFSModule {
     String orgId = context.getRequest().getParameter("orgId");
     String headerId = context.getRequest().getParameter("headerId");
     Connection db = null;
-    
+
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     User thisRec = thisUser.getUserRecord();
     UserList shortChildList = thisRec.getShortChildList();
@@ -177,7 +180,7 @@ public final class Opportunities extends CFSModule {
     userList.setIncludeMe(true);
     userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
-    
+
     try {
       db = this.getConnection(context);
       buildFormElements(db, context);
@@ -216,7 +219,7 @@ public final class Opportunities extends CFSModule {
     String orgId = context.getRequest().getParameter("orgId");
     Organization thisOrganization = null;
     Connection db = null;
-    
+
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     User thisRec = thisUser.getUserRecord();
     UserList shortChildList = thisRec.getShortChildList();
@@ -309,6 +312,9 @@ public final class Opportunities extends CFSModule {
       if (!recordInserted) {
         processErrors(context, newOpp.getHeader().getErrors());
         processErrors(context, newOpp.getComponent().getErrors());
+        LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
+        context.getRequest().setAttribute("TypeSelect", typeSelect);
+        context.getRequest().setAttribute("TypeList", newOpp.getComponent().getTypeList());
       }
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
     } catch (Exception e) {
@@ -347,7 +353,7 @@ public final class Opportunities extends CFSModule {
     String componentId = context.getRequest().getParameter("id");
     String orgId = context.getRequest().getParameter("orgId");
     OpportunityComponent thisComponent = null;
-    
+
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -415,7 +421,7 @@ public final class Opportunities extends CFSModule {
         return "PermissionError";
       }
       context.getRequest().setAttribute("HeaderDetails", thisHeader);
-      
+
       componentList = new OpportunityComponentList();
       componentList.setPagedListInfo(componentListInfo);
       componentList.setOwnerIdRange(this.getUserRange(context));
@@ -750,6 +756,9 @@ public final class Opportunities extends CFSModule {
         userList.setIncludeMe(true);
         userList.setExcludeDisabledIfUnselected(true);
         context.getRequest().setAttribute("UserList", userList);
+        LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
+        context.getRequest().setAttribute("TypeSelect", typeSelect);
+        context.getRequest().setAttribute("TypeList", component.getTypeList());
         buildFormElements(db, context);
       }
       thisOrg = new Organization(db, Integer.parseInt(orgId));

@@ -1925,7 +1925,15 @@ public class Campaign extends GenericBean {
             "AND sent_date IS NULL ");
         pst.setInt(1, id);
         pst.execute();
+        pst.close();
 
+        pst = db.prepareStatement(
+            "DELETE FROM active_campaign_groups " +
+            "WHERE campaign_id = ? ");
+        pst.setInt(1, id);
+        pst.execute();
+        pst.close();
+        
         //Remove attached survey if campaign has one
         int activeSurveyId = ActiveSurvey.getId(db, id);
         if (activeSurveyId > -1) {

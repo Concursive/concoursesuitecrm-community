@@ -16,6 +16,7 @@ import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.accounts.base.OrganizationList;
+import org.aspcfs.modules.accounts.base.Organization;
 import java.io.*;
 import java.util.*;
 import com.jrefinery.chart.*;
@@ -140,9 +141,9 @@ public final class Leads extends CFSModule {
       } else {
         processErrors(context, newComponent.getErrors());
         //rebuild the form
-        buildFormElements(db, context);
-        OpportunityHeader oppHeader = new OpportunityHeader(db, newComponent.getHeaderId());
-        context.getRequest().setAttribute("OpportunityHeader", oppHeader);
+        LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
+        context.getRequest().setAttribute("TypeSelect", typeSelect);
+        context.getRequest().setAttribute("TypeList", newComponent.getTypeList());
       }
       context.getRequest().setAttribute("OppComponentDetails", newComponent);
     } catch (Exception e) {
@@ -154,7 +155,7 @@ public final class Leads extends CFSModule {
       if (recordInserted) {
         return (executeCommandDetailsOpp(context));
       } else {
-        return ("AddOppComponentOK");
+        return (executeCommandAddOppComponent(context));
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -204,6 +205,13 @@ public final class Leads extends CFSModule {
       if (!recordInserted) {
         processErrors(context, newOpp.getHeader().getErrors());
         processErrors(context, newOpp.getComponent().getErrors());
+        LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
+        context.getRequest().setAttribute("TypeSelect", typeSelect);
+        context.getRequest().setAttribute("TypeList", newOpp.getComponent().getTypeList());
+        if(newOpp.getHeader().getAccountLink() > -1){
+          Organization thisOrg = new Organization(db, newOpp.getHeader().getAccountLink());
+          newOpp.getHeader().setAccountName(thisOrg.getName());
+        }
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -1671,6 +1679,7 @@ public final class Leads extends CFSModule {
       }
       context.getRequest().setAttribute("OppComponentDetails", component);
       if (resultCount == -1) {
+        buildFormElements(db, context);
         UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
         User thisRec = thisUser.getUserRecord();
         UserList shortChildList = thisRec.getShortChildList();
@@ -1680,7 +1689,9 @@ public final class Leads extends CFSModule {
         userList.setIncludeMe(true);
         userList.setExcludeDisabledIfUnselected(true);
         context.getRequest().setAttribute("UserList", userList);
-        buildFormElements(db, context);
+        LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
+        context.getRequest().setAttribute("TypeSelect", typeSelect);
+        context.getRequest().setAttribute("TypeList", component.getTypeList());
         //Build the container item
         OpportunityHeader oppHeader = new OpportunityHeader(db, component.getHeaderId());
         context.getRequest().setAttribute("opportunityHeader", oppHeader);

@@ -342,9 +342,18 @@ public final class CompanyDirectory extends CFSModule {
           context.getRequest().removeAttribute("EmployeeBean");
           return (executeCommandInsertEmployeeForm(context));
         }
+        if ("adduser".equals(context.getRequest().getParameter("source"))) {
+          context.getRequest().setAttribute("ContactDetails", thisEmployee);
+          return ("CloseInsertContactPopup");
+        }
+        context.getRequest().setAttribute("EmployeeBean", thisEmployee);
         return ("EmployeeDetailsOK");
       } else {
-        return (executeCommandInsertEmployeeForm(context));
+        if (!"adduser".equals(context.getRequest().getParameter("source"))) {
+          return (executeCommandInsertEmployeeForm(context));
+        }else{
+          return "ReloadAddContactPopup";
+        }
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
