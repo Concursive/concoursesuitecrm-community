@@ -424,7 +424,7 @@ public class HtmlSelect extends ArrayList {
     }
     StringBuffer outputHtml = new StringBuffer();
     if (!checkboxOutput) {
-      outputHtml.append("<select size='" + this.selectSize + "' name='" + this.selectName + "'" + (jsEvent != null?" " + this.jsEvent:"") + (idName != null?" " + "id='" + this.idName:"") + "'" + (multiple != false?" multiple ":"") + ">");
+      outputHtml.append("<select size='" + this.selectSize + "' name='" + this.selectName + "'" + (jsEvent != null?" " + this.jsEvent:"") + (idName != null?" " + "id='" + this.idName + "' ":"")  + (multiple != false?" multiple ":"") + ">");
     }
 
     //Process the rows

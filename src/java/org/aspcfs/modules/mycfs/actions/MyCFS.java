@@ -911,7 +911,7 @@ public final class MyCFS extends CFSModule {
     newUserList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
     newUserList.setIncludeMe(true);
 
-    newUserList.setJsEvent("onChange = javascript:document.forms[0].action='/MyCFS.do?command=Home';document.forms[0].submit()");
+    newUserList.setJsEvent("onChange = \"javascript:document.forms[0].action='/MyCFS.do?command=Home';document.forms[0].submit()\"");
 
     //
     //	Alerts Selection
