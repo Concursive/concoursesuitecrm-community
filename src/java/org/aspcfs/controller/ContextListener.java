@@ -40,6 +40,7 @@ public class ContextListener implements ServletContextListener {
     try {
       ConnectionPool cp = new ConnectionPool();
       cp.setDebug(true);
+      cp.setTestConnections(true);
       context.setAttribute("ConnectionPool", cp);
     } catch (SQLException e) {
       System.err.println(e.toString());

@@ -611,7 +611,6 @@ public class OrganizationList extends Vector {
     }
     rs.close();
     pst.close();
-
     return events;
   }
 
@@ -741,8 +740,8 @@ public class OrganizationList extends Vector {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
+      pst.close();
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {

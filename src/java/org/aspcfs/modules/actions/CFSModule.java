@@ -60,6 +60,33 @@ public class CFSModule {
 
 
   /**
+   *  Returns the ViewpointInfo object setting the required parameters <br>
+   *  Creates the object and stores it in the session if it's not already in
+   *  there.
+   *
+   *@param  context   Description of the Parameter
+   *@param  viewName  Description of the Parameter
+   *@return           The viewpointInfo value
+   */
+  protected ViewpointInfo getViewpointInfo(ActionContext context, String viewName) {
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    UserSession thisSession = systemStatus.getSessionManager().getUserSession(this.getActualUserId(context));
+    ViewpointInfo tmpInfo = (ViewpointInfo) context.getSession().getAttribute(viewName);
+    //if viewpoints were updated then invalidate the reload ViewpointInfo
+    if (!thisSession.isViewpointsValid()) {
+      tmpInfo = null;
+    }
+    if (tmpInfo == null) {
+      tmpInfo = new ViewpointInfo();
+      tmpInfo.setId(viewName);
+      context.getSession().setAttribute(viewName, tmpInfo);
+    }
+    tmpInfo.setParameters(context);
+    return tmpInfo;
+  }
+
+
+  /**
    *  Gets the pagedListInfo attribute of the CFSModule object
    *
    *@param  context        Description of the Parameter
@@ -121,6 +148,17 @@ public class CFSModule {
    */
   protected int getUserId(ActionContext context) {
     return ((UserBean) context.getSession().getAttribute("User")).getUserId();
+  }
+
+
+  /**
+   *  Gets the actualUserId attribute of the CFSModule object
+   *
+   *@param  context  Description of the Parameter
+   *@return          The actualUserId value
+   */
+  protected int getActualUserId(ActionContext context) {
+    return ((UserBean) context.getSession().getAttribute("User")).getActualUserId();
   }
 
 
@@ -703,13 +741,16 @@ public class CFSModule {
       thisItem = new RecentItem(
           RecentItem.OPPORTUNITY,
           thisOpp.getShortDescription(),
-          "Leads.do?command=DetailsOpp&id=" + thisOpp.getId() + "&reset=true");
-    } else if (itemObject instanceof OpportunityComponent) {
-      OpportunityComponent thisComponent = (OpportunityComponent) itemObject;
-      thisItem = new RecentItem(
-          RecentItem.COMPONENT,
-          thisComponent.getShortDescription(),
-          "LeadsComponents.do?command=DetailsComponent&id=" + thisComponent.getId());
+          "Leads.do?command=DetailsOpp&headerId=" + thisOpp.getId() + "&reset=true");
+      /*
+       *  /NOTE: This is too granular right now and requires some maintenance
+       *  } else if (itemObject instanceof OpportunityComponent) {
+       *  OpportunityComponent thisComponent = (OpportunityComponent) itemObject;
+       *  thisItem = new RecentItem(
+       *  RecentItem.COMPONENT,
+       *  thisComponent.getShortDescription(),
+       *  "LeadsComponents.do?command=DetailsComponent&id=" + thisComponent.getId());
+       */
     } else if (itemObject instanceof com.zeroio.iteam.base.Project) {
       com.zeroio.iteam.base.Project thisProject = (com.zeroio.iteam.base.Project) itemObject;
       thisItem = new RecentItem(
@@ -821,6 +862,91 @@ public class CFSModule {
     User userRecord = this.getUser(context, userId);
     User childRecord = userRecord.getChild(ownerId);
     return (childRecord != null);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of the Parameter
+   *@param  permName          Description of the Parameter
+   *@param  owner             Description of the Parameter
+   *@param  vpUser            Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean hasViewpointAuthority(Connection db, ActionContext context, String permName, int owner, int vpUser) throws SQLException {
+    //check if user has auth
+    if (hasAuthority(context, owner) || (vpUser == owner)) {
+      return true;
+    }
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    UserSession thisSession = systemStatus.getSessionManager().getUserSession(getActualUserId(context));
+    HashMap viewpoints = thisSession.getViewpoints(db, permName, this.getUserId(context));
+    ArrayList vpUsers = null;
+    if (viewpoints.get(permName) != null) {
+      vpUsers = (ArrayList) viewpoints.get(permName);
+      Iterator i = vpUsers.iterator();
+      while (i.hasNext()) {
+        int user = ((Integer) i.next()).intValue();
+        if (vpUser == user) {
+          User userRecord = this.getUser(context, user);
+          User childRecord = userRecord.getChild(owner);
+          if (childRecord != null) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+
+  /**
+   *  Adds a feature to the Viewpoints attribute of the CFSModule object
+   *
+   *@param  context           The feature to be added to the Viewpoints
+   *      attribute
+   *@param  permName          The feature to be added to the Viewpoints
+   *      attribute
+   *@param  db                The feature to be added to the Viewpoints
+   *      attribute
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public UserList addViewpoints(Connection db, ActionContext context, String permName) throws SQLException {
+    UserList userList = new UserList();
+    userList.add(this.getUser(context, this.getUserId(context)));
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    UserSession thisSession = systemStatus.getSessionManager().getUserSession(this.getActualUserId(context));
+    HashMap viewpoints = thisSession.getViewpoints(db, permName, this.getUserId(context));
+    ArrayList vpUsers = null;
+    if (viewpoints.get(permName) != null) {
+      vpUsers = (ArrayList) viewpoints.get(permName);
+      Iterator i = vpUsers.iterator();
+      while (i.hasNext()) {
+        int userId = ((Integer) i.next()).intValue();
+        User thisUser = new User();
+        thisUser.setBuildContact(true);
+        thisUser.buildRecord(db, userId);
+        userList.add(thisUser);
+      }
+    }
+    context.getRequest().setAttribute("Viewpoints", userList);
+    return userList;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   */
+  public void invalidateViewpoints(ActionContext context) {
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    UserSession thisSession = systemStatus.getSessionManager().getUserSession(this.getActualUserId(context));
+    thisSession.invalidateViewpoints();
   }
 }
 

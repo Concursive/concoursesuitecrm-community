@@ -86,13 +86,12 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     rs = st.executeQuery(sql.toString());
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
-      throw new SQLException("Phone record not found.");
     }
     rs.close();
     st.close();
+    if (this.getId() == -1) {
+      throw new SQLException("Phone record not found.");
+    }
   }
 
 

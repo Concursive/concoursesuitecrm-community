@@ -1585,7 +1585,6 @@ public class Organization extends GenericBean {
    */
   public void buildTypes(Connection db) throws SQLException {
     ResultSet rs = null;
-
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT atl.type_id " +
@@ -1596,11 +1595,9 @@ public class Organization extends GenericBean {
     int i = 0;
     pst.setInt(++i, this.getId());
     rs = pst.executeQuery();
-
     while (rs.next()) {
       types.add(new LookupElement(db, rs.getInt("type_id"), "lookup_account_types"));
     }
-
     rs.close();
   }
 
@@ -1866,12 +1863,10 @@ public class Organization extends GenericBean {
         //thisEmailAddress.insert(db, this.getOrgId(), this.getEnteredBy());
         thisEmailAddress.process(db, orgId, this.getEnteredBy(), this.getModifiedBy());
       }
-
       this.update(db, true);
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -1917,15 +1912,13 @@ public class Organization extends GenericBean {
         OrganizationEmailAddress thisEmailAddress = (OrganizationEmailAddress) iemail.next();
         thisEmailAddress.process(db, this.getOrgId(), this.getEnteredBy(), this.getModifiedBy());
       }
-
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    db.setAutoCommit(true);
     return i;
   }
 
@@ -2088,7 +2081,7 @@ public class Organization extends GenericBean {
       int lvlcount = 0;
       for (int k = 0; k < typeList.size(); k++) {
         String val = (String) typeList.get(k);
-        if (val != null && !(val.equals(""))) {
+        if (val != null && !(val.equals("")) && !(val.equals("-1"))) {
           int type_id = Integer.parseInt((String) typeList.get(k));
           lvlcount++;
           insertType(db, type_id, lvlcount);
@@ -2113,7 +2106,6 @@ public class Organization extends GenericBean {
     if (this.getOrgId() == -1) {
       throw new SQLException("Organization ID not specified.");
     }
-
     try {
       db.setAutoCommit(false);
 
@@ -2315,7 +2307,7 @@ public class Organization extends GenericBean {
     Statement st = db.createStatement();
     ResultSet rs = st.executeQuery(
         "SELECT count(*) as count " +
-        "FROM opportunity " +
+        "FROM opportunity_component " +
         "WHERE acctlink = " + this.getOrgId());
     rs.next();
     int recordCount = rs.getInt("count");

@@ -202,15 +202,11 @@ public class RevenueDetailTypeList extends Vector {
    *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    Statement st = null;
-    ResultSet rs = null;
-
     StringBuffer sql = new StringBuffer();
     sql.append("SELECT * FROM lookup_revenuedetail_types WHERE code > -1 ");
     sql.append("ORDER BY level, description ");
-
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+    Statement st = db.createStatement();
+    ResultSet rs = st.executeQuery(sql.toString());
     while (rs.next()) {
       RevenueDetailType thisRevenueType = new RevenueDetailType(rs);
       this.addElement(thisRevenueType);

@@ -100,6 +100,10 @@ public class DataRecord extends ArrayList {
   public void addField(String thisName, String thisValue, String thisLookupValue, String thisAlias) {
     this.add(new DataField(thisName, thisValue, thisLookupValue, thisAlias));
   }
+  
+  public void addField(String thisName, int thisValue, String thisLookupValue, String thisAlias) {
+    this.add(new DataField(thisName, String.valueOf(thisValue), thisLookupValue, thisAlias));
+  }
 
 
   /**

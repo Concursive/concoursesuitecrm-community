@@ -82,18 +82,16 @@ public class RevenueDetail extends GenericBean {
     } else {
       throw new SQLException("Revenue Detail ID not specified.");
     }
-
     st = db.createStatement();
     rs = st.executeQuery(sql.toString());
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
-      throw new SQLException("Revenue Detail record not found.");
     }
     rs.close();
     st.close();
+    if (id == -1) {
+      throw new SQLException("Revenue Detail record not found.");
+    }
   }
 
 
@@ -465,12 +463,10 @@ public class RevenueDetail extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
     }
-
     return true;
   }
 
@@ -488,13 +484,13 @@ public class RevenueDetail extends GenericBean {
     try {
       db.setAutoCommit(false);
       st.executeUpdate("DELETE FROM revenue_detail WHERE id = " + this.getId());
+      st.close();
       db.commit();
     } catch (SQLException e) {
       db.rollback();
       System.out.println(e.toString());
     } finally {
       db.setAutoCommit(true);
-      st.close();
     }
     return true;
   }
@@ -564,11 +560,10 @@ public class RevenueDetail extends GenericBean {
       db.commit();
     } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    db.setAutoCommit(true);
     return resultCount;
   }
 

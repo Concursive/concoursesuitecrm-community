@@ -1,7 +1,10 @@
 package org.aspcfs.controller;
 
+import java.util.*;
+import java.sql.*;
 import javax.servlet.http.HttpSession;
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.admin.base.*;
 
 /**
  *  Stores a user's session data
@@ -18,6 +21,7 @@ public class UserSession {
   long lastAccessed = -1;
   long creationTime = -1;
   String ipAddress = null;
+  HashMap viewpoints = null;
 
 
   /**
@@ -83,6 +87,26 @@ public class UserSession {
    */
   public void setCreationTime(long creationTime) {
     this.creationTime = creationTime;
+  }
+
+
+  /**
+   *  Sets the viewpoints attribute of the UserSession object
+   *
+   *@param  viewpoints  The new viewpoints value
+   */
+  public void setViewpoints(HashMap viewpoints) {
+    this.viewpoints = viewpoints;
+  }
+
+
+  /**
+   *  Gets the viewpoints attribute of the UserSession object
+   *
+   *@return    The viewpoints value
+   */
+  public HashMap getViewpoints() {
+    return viewpoints;
   }
 
 
@@ -158,5 +182,93 @@ public class UserSession {
     lastAccessed = session.getLastAccessedTime();
   }
 
+
+  /**
+   *  Description of the Method
+   */
+  public void invalidateViewpoints() {
+    viewpoints = null;
+  }
+
+
+  /**
+   *  Builds Viewpoints for a single permission
+   *
+   *@param  db                Description of the Parameter
+   *@param  userId            Description of the Parameter
+   *@param  permName          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildViewpoints(Connection db, String permName, int userId) throws SQLException {
+    if(viewpoints == null){
+      viewpoints = new HashMap();
+    }
+    //build the viewpoints
+    ViewpointList vpList = new ViewpointList();
+    vpList.setUserId(userId);
+    vpList.setBuildResources(true);
+    vpList.setIncludeEnabledOnly(true);
+    vpList.buildList(db);
+
+    //build details for each viewpoints and store them
+    Iterator i = vpList.iterator();
+    while (i.hasNext()) {
+      Viewpoint thisVp = (Viewpoint) i.next();
+      ViewpointPermissionList vpPermList = thisVp.getPermissionList();
+      Iterator j = vpPermList.keySet().iterator();
+      while (j.hasNext()) {
+        Permission thisPermission = (Permission) vpPermList.get((String) j.next());
+        String pName = thisPermission.getName();
+        if (permName.equals(pName)) {
+            if (viewpoints.containsKey(pName)) {
+              ArrayList vpUsers = (ArrayList) viewpoints.get(pName);
+              viewpoints.remove(pName);
+              vpUsers.add(new Integer(thisVp.getVpUserId()));
+              viewpoints.put(pName, vpUsers);
+            } else {
+              ArrayList vpUsers = new ArrayList();
+              //if user is aliased insert the alias user Id
+              if(thisVp.getVpUser().getAlias() != -1){
+                vpUsers.add(new Integer(thisVp.getVpUser().getAlias()));
+              }else{
+                vpUsers.add(new Integer(thisVp.getVpUserId()));
+              }
+              viewpoints.put(pName, vpUsers);
+            }
+        }
+      }
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  userId            Description of the Parameter
+   *@param  permName          Description of the Parameter
+   *@return                   The viewpoints value
+   *@exception  SQLException  Description of the Exception
+   */
+  public HashMap getViewpoints(Connection db, String permName, int userId) throws SQLException {
+    // if viewpoints is null because viewpoints were updated or this module has never been demanded then build Viewpoints
+    if (viewpoints == null || (viewpoints != null && !viewpoints.containsKey(permName))) {
+      buildViewpoints(db, permName, userId);
+    }
+    return viewpoints;
+  }
+
+
+  /**
+   *  Gets the viewpointValid attribute of the UserSession object
+   *
+   *@return    The viewpointValid value
+   */
+  public boolean isViewpointsValid() {
+    if (viewpoints == null) {
+      return false;
+    }
+    return true;
+  }
 }
 

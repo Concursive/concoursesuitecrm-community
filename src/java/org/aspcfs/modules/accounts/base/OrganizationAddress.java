@@ -83,13 +83,12 @@ public class OrganizationAddress extends Address {
     rs = st.executeQuery(sql.toString());
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
-      throw new SQLException("Address record not found.");
     }
     rs.close();
     st.close();
+    if (this.getId() == -1) {
+      throw new SQLException("Address record not found.");
+    }
   }
 
 

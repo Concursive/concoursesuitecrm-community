@@ -1035,7 +1035,6 @@ public class Revenue extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -1146,11 +1145,10 @@ public class Revenue extends GenericBean {
       db.commit();
     } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    db.setAutoCommit(true);
     return resultCount;
   }
 

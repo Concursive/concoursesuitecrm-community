@@ -9,9 +9,9 @@ import java.util.*;
  *  Taken from Core Servlets and JavaServer Pages http://www.coreservlets.com/.
  *  &copy; 2000 Marty Hall; may be freely used or adapted. <P>
  *
- *  The ConnectionPool class can either be configured once so that all
- *  calls to getConnection() use the same database URL, or a ConnectionElement
- *  can be supplied to request a specic database.<P>
+ *  The ConnectionPool class can either be configured once so that all calls to
+ *  getConnection() use the same database URL, or a ConnectionElement can be
+ *  supplied to request a specic database.<P>
  *
  *  Store busy connections with a connection key and conn element value
  *  .free(connection) removes the connection from busy and then puts it on the
@@ -23,19 +23,20 @@ import java.util.*;
  *
  *@author     Matt Rajkowski
  *@created    December 12, 2000
- *@version    $Id$
+ *@version    $Id: ConnectionPool.java,v 1.11 2003/01/13 14:42:24 mrajkowski Exp
+ *      $
  */
 public class ConnectionPool implements Runnable {
-  public static final int BUSY_CONNECTION = 1;
-  public static final int AVAILABLE_CONNECTION = 2;
-  
+  public final static int BUSY_CONNECTION = 1;
+  public final static int AVAILABLE_CONNECTION = 2;
+
   //5 minutes then connection is closed
 
   private String url = "";
   private String username = "";
   private String password = "";
   private String driver = "org.postgresql.Driver";
-  
+
   private java.util.Date startDate = new java.util.Date();
   private Hashtable availableConnections;
   private Hashtable busyConnections;
@@ -45,13 +46,15 @@ public class ConnectionPool implements Runnable {
 
   private int maxConnections = 10;
   private boolean waitIfBusy = true;
-  private boolean allowShrinking = true;
+  private boolean allowShrinking = false;
+  private boolean testConnections = false;
   private boolean forceClose = false;
   private Timer cleanupTimer = null;
   //60 seconds then connection is closed and no longer available
   private int maxIdleTime = 60000;
   //5 minutes then connection is shutdown and is no longer busy
   private int maxDeadTime = 300000;
+
 
 
   /**
@@ -97,8 +100,8 @@ public class ConnectionPool implements Runnable {
     }
     availableConnections = new Hashtable(min);
     busyConnections = new Hashtable();
-    ConnectionElement thisElement = new ConnectionElement(this.url, 
-      this.username, this.password);
+    ConnectionElement thisElement = new ConnectionElement(this.url,
+        this.username, this.password);
     for (int i = 0; i < min; i++) {
       Connection thisConnection = makeNewConnection(thisElement);
       if (thisConnection != null) {
@@ -108,9 +111,16 @@ public class ConnectionPool implements Runnable {
     initializeCleanupTimer();
   }
 
+
+  /**
+   *  Sets the driver attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new driver value
+   */
   public void setDriver(String tmp) {
     this.driver = tmp;
   }
+
 
   /**
    *  Sets the Url attribute of the ConnectionPool object
@@ -157,6 +167,26 @@ public class ConnectionPool implements Runnable {
 
 
   /**
+   *  Sets the allowShrinking attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new allowShrinking value
+   */
+  public void setAllowShrinking(boolean tmp) {
+    this.allowShrinking = tmp;
+  }
+
+
+  /**
+   *  Sets the testConnections attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new testConnections value
+   */
+  public void setTestConnections(boolean tmp) {
+    this.testConnections = tmp;
+  }
+
+
+  /**
    *  Sets the ForceClose attribute of the ConnectionPool object
    *
    *@param  tmp  The new ForceClose value
@@ -176,30 +206,67 @@ public class ConnectionPool implements Runnable {
   public void setMaxConnections(int tmp) {
     this.maxConnections = tmp;
   }
-  
+
+
+  /**
+   *  Sets the requireParameters attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new requireParameters value
+   */
   public void setRequireParameters(boolean tmp) {
     this.requireParameters = tmp;
   }
-  
+
+
+  /**
+   *  Sets the requireParameters attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new requireParameters value
+   */
   public void setRequireParameters(String tmp) {
     requireParameters = "true".equalsIgnoreCase(tmp);
   }
 
+
+  /**
+   *  Gets the url attribute of the ConnectionPool object
+   *
+   *@return    The url value
+   */
   public String getUrl() {
     return url;
   }
-  
+
+
+  /**
+   *  Gets the username attribute of the ConnectionPool object
+   *
+   *@return    The username value
+   */
   public String getUsername() {
     return username;
   }
-  
+
+
+  /**
+   *  Gets the password attribute of the ConnectionPool object
+   *
+   *@return    The password value
+   */
   public String getPassword() {
     return password;
   }
-  
+
+
+  /**
+   *  Gets the driver attribute of the ConnectionPool object
+   *
+   *@return    The driver value
+   */
   public String getDriver() {
     return driver;
   }
+
 
   /**
    *  Gets the Connection attribute of the ConnectionPool object when the
@@ -225,30 +292,44 @@ public class ConnectionPool implements Runnable {
    *  max connections has been reached then a thread will be spawned to wait for
    *  the next available connection.
    *
+   *@param  requestElement    Description of the Parameter
+   *@return                   The connection value
+   *@exception  SQLException  Description of the Exception
    */
   public synchronized Connection getConnection(ConnectionElement requestElement) throws SQLException {
-
     //Get an available matching connection
     if (!availableConnections.isEmpty()) {
       Enumeration e = availableConnections.keys();
       while (e.hasMoreElements()) {
-        ConnectionElement thisElement = (ConnectionElement)e.nextElement();
+        ConnectionElement thisElement = (ConnectionElement) e.nextElement();
         if (thisElement.getUrl().equals(requestElement.getUrl())) {
           try {
             Connection existingConnection =
-                (Connection)availableConnections.get(thisElement);
+                (Connection) availableConnections.get(thisElement);
             availableConnections.remove(thisElement);
-
             if (existingConnection.isClosed()) {
               existingConnection = null;
               notifyAll();
               // Freed up a spot for anybody waiting
               return (getConnection(requestElement));
-            } else {
-              requestElement.renew();
-              busyConnections.put(existingConnection, requestElement);
-              return (existingConnection);
+            } else if (testConnections) {
+              try {
+                PreparedStatement pst = existingConnection.prepareStatement(
+                    "SELECT CURRENT_TIMESTAMP");
+                ResultSet rs = pst.executeQuery();
+                rs.next();
+                rs.close();
+                pst.close();
+              } catch (SQLException sqe) {
+                existingConnection = null;
+                notifyAll();
+                return (getConnection(requestElement));
+              }
             }
+            //Go with the connection
+            requestElement.renew();
+            busyConnections.put(existingConnection, requestElement);
+            return (existingConnection);
           } catch (NullPointerException npe) {
             return (getConnection(requestElement));
           } catch (java.lang.ClassCastException cce) {
@@ -262,7 +343,7 @@ public class ConnectionPool implements Runnable {
       if (!connectionPending && (totalConnections() == maxConnections)) {
         e = availableConnections.keys();
         if (e.hasMoreElements()) {
-          ConnectionElement thisElement = (ConnectionElement)e.nextElement();
+          ConnectionElement thisElement = (ConnectionElement) e.nextElement();
           availableConnections.remove(thisElement);
         }
         e = null;
@@ -336,8 +417,8 @@ public class ConnectionPool implements Runnable {
   public void run() {
     // Make the connection
     try {
-      ConnectionElement thisElement = new ConnectionElement(this.url, 
-        this.username, this.password);
+      ConnectionElement thisElement = new ConnectionElement(this.url,
+          this.username, this.password);
       thisElement.setDriver(this.driver);
       Connection connection = makeNewConnection(thisElement);
       synchronized (this) {
@@ -375,37 +456,45 @@ public class ConnectionPool implements Runnable {
    *@since              1.0
    */
   public synchronized void free(Connection connection) {
-    
     if (connection != null) {
-      ConnectionElement thisElement = (ConnectionElement)busyConnections.get(connection);
-      busyConnections.remove(connection);
-
-      try {
-        if (forceClose) {
-          if (!connection.isClosed()) {
-            connection.close();
+      ConnectionElement thisElement = (ConnectionElement) busyConnections.get(connection);
+      if (thisElement == null) {
+        System.out.println("Connection has already been returned to pool");
+      } else {
+        busyConnections.remove(connection);
+        try {
+          if (forceClose) {
+            if (!connection.isClosed()) {
+              connection.close();
+              if (!forceClose) {
+                System.out.println("Removed a possibly dead busy connection");
+              }
+            }
           }
-        }
-  
-        if (connection.isClosed()) {
+          if (connection.isClosed()) {
+            connection = null;
+          } else {
+            availableConnections.put(new ConnectionElement(thisElement.getUrl(),
+                thisElement.getUsername(), thisElement.getPassword()), connection);
+          }
+        } catch (SQLException e) {
           connection = null;
-        } else {
-          availableConnections.put(new ConnectionElement(thisElement.getUrl(),
-              thisElement.getUsername(), thisElement.getPassword()), connection);
         }
-  
-      } catch (SQLException e) {
-        connection = null;
+        // Wake up threads that are waiting for a connection
+        notifyAll();
       }
-  
-      // Wake up threads that are waiting for a connection
-      notifyAll();
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  connection  Description of the Parameter
+   */
   public void renew(Connection connection) {
     if (connection != null) {
-      ConnectionElement thisElement = (ConnectionElement)busyConnections.get(connection);
+      ConnectionElement thisElement = (ConnectionElement) busyConnections.get(connection);
       thisElement.renew();
     }
   }
@@ -437,7 +526,7 @@ public class ConnectionPool implements Runnable {
     }
     closeConnections(AVAILABLE_CONNECTION, availableConnections);
     availableConnections = new Hashtable();
-    
+
     if (debug) {
       System.out.println("ConnectionPool-> Closing busy connections");
     }
@@ -519,7 +608,9 @@ public class ConnectionPool implements Runnable {
            */
           public void run() {
             //Gets rid of idle connections
-            cleanupAvailableConnections();
+            if (allowShrinking) {
+              cleanupAvailableConnections();
+            }
             //Gets rid of deadlocked connections
             cleanupBusyConnections();
           }
@@ -536,18 +627,21 @@ public class ConnectionPool implements Runnable {
    *@since    1.2
    */
   private synchronized void cleanupAvailableConnections() {
-    Enumeration e = availableConnections.keys();
     java.util.Date currentDate = new java.util.Date();
+    Enumeration e = availableConnections.keys();
     while (e.hasMoreElements()) {
       ConnectionElement thisElement = null;
       try {
-        thisElement = (ConnectionElement)e.nextElement();
+        thisElement = (ConnectionElement) e.nextElement();
         java.util.Date testDate = thisElement.getActiveDate();
-        Connection connection = (Connection)availableConnections.get(thisElement);
+        Connection connection = (Connection) availableConnections.get(thisElement);
         if (connection.isClosed() || (testDate.getTime() < (currentDate.getTime() - maxIdleTime))) {
-          connection.close();
+          //TODO: Removing needs to be synchronized
           availableConnections.remove(thisElement);
-          if (debug) System.out.println("Removed an idle available connection");
+          connection.close();
+          if (debug) {
+            System.out.println("Removed an idle available connection");
+          }
           notify();
         }
       } catch (Exception sqle) {
@@ -572,26 +666,26 @@ public class ConnectionPool implements Runnable {
    */
   private synchronized void cleanupBusyConnections() {
     try {
-      Enumeration e = busyConnections.keys();
       java.util.Date currentDate = new java.util.Date();
+      Enumeration e = busyConnections.keys();
       while (e.hasMoreElements()) {
-        Connection connection = (Connection)e.nextElement();
-        ConnectionElement thisElement = (ConnectionElement)busyConnections.get(connection);
-        java.util.Date testDate = thisElement.getActiveDate();
-        if (connection.isClosed() ||
-            (thisElement.getAllowCloseOnIdle() && 
-             testDate.getTime() < (currentDate.getTime() - maxDeadTime))) {
-          System.out.println("ConnectionPool-> CE allowCloseOnIdle: " + thisElement.getAllowCloseOnIdle());
-          connection.close();
-          busyConnections.remove(connection);
-          if (debug) {
-            System.out.println("Removed a possibly dead busy connection");
+        Connection connection = (Connection) e.nextElement();
+        ConnectionElement thisElement = (ConnectionElement) busyConnections.get(connection);
+        if (thisElement != null) {
+          java.util.Date testDate = thisElement.getActiveDate();
+          if (connection.isClosed() ||
+              (thisElement.getAllowCloseOnIdle() &&
+              testDate.getTime() < (currentDate.getTime() - maxDeadTime))) {
+            System.out.println("ConnectionPool-> CE allowCloseOnIdle: " + thisElement.getAllowCloseOnIdle());
+            //TODO: This is not synchronized and could error if this isn't really a closed connection
+            busyConnections.remove(connection);
+            connection.close();
+            connection = null;
           }
-          notify();
         }
       }
       e = null;
-    } catch (SQLException sqle) {
+    } catch (Exception sqle) {
       // Ignore errors; garbage collect anyhow
     }
   }
@@ -606,10 +700,8 @@ public class ConnectionPool implements Runnable {
    *  then wait. You get woken up either when the new connection is established
    *  or if someone finishes with an existing connection.
    *
-   *@param  thisUrl       Description of Parameter
-   *@param  thisUsername  Description of Parameter
-   *@param  thisPassword  Description of Parameter
-   *@since                1.0
+   *@param  thisElement  Description of the Parameter
+   *@since               1.0
    */
   private void makeBackgroundConnection(ConnectionElement thisElement) {
     connectionPending = true;
@@ -631,11 +723,9 @@ public class ConnectionPool implements Runnable {
    *  initializing the ConnectionPool, and called in the background when
    *  running.
    *
-   *@param  thisUrl       Description of Parameter
-   *@param  thisUsername  Description of Parameter
-   *@param  thisPassword  Description of Parameter
-   *@return               Description of the Returned Value
-   *@since                1.0
+   *@param  thisElement  Description of the Parameter
+   *@return              Description of the Returned Value
+   *@since               1.0
    */
   private Connection makeNewConnection(ConnectionElement thisElement) {
     try {
@@ -668,10 +758,10 @@ public class ConnectionPool implements Runnable {
       while (e.hasMoreElements()) {
         Connection connection = null;
         if (connectionType == AVAILABLE_CONNECTION) {
-          connection = (Connection)e.nextElement();
+          connection = (Connection) e.nextElement();
         } else {
-          ConnectionElement ce = (ConnectionElement)e.nextElement();
-          connection = (Connection)connections.get(ce);
+          ConnectionElement ce = (ConnectionElement) e.nextElement();
+          connection = (Connection) connections.get(ce);
         }
         if (!connection.isClosed()) {
           connection.close();

@@ -83,13 +83,12 @@ public class OrganizationEmailAddress extends EmailAddress {
     rs = st.executeQuery(sql.toString());
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
-      throw new SQLException("Email record not found.");
     }
     rs.close();
     st.close();
+    if (this.getId() == -1) {
+      throw new SQLException("Email record not found.");
+    }
   }
 
 

@@ -37,22 +37,22 @@
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${previous.enteredBy}"/>
             <parameter name="notification.subject">CFS Ticket Closed: ${this.paddedId}</parameter>
-<parameter name="notification.body">
-The following ticket in CFS has been closed:&#13;
-&#13;
---- Ticket Details ---&#13;
-&#13;
-Ticket # ${this.paddedId}&#13;
-Priority: ${ticketPriorityLookup.description}&#13;
-Severity: ${ticketSeverityLookup.description}&#13;
-Issue: ${this.problem}&#13;
-&#13;
-Comment: ${this.comment}&#13;
-&#13;
-Closed by: ${ticketModifiedByContact.nameFirstLast}&#13;
-&#13;
+<parameter name="notification.body"><![CDATA[
+The following ticket in CFS has been closed:
+
+--- Ticket Details ---
+
+Ticket # ${this.paddedId}
+Priority: ${ticketPriorityLookup.description}
+Severity: ${ticketSeverityLookup.description}
+Issue: ${this.problem}
+
+Comment: ${this.comment}
+
+Closed by: ${ticketModifiedByContact.nameFirstLast}
+
 Solution: ${this.solution}
-</parameter>
+]]></parameter>
           </parameters>
         </component>
         <component id="5" parent="3" if="true" class="com.darkhorseventures.cfs.component.SendUserNotification">
@@ -62,19 +62,19 @@ Solution: ${this.solution}
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${this.assignedTo}"/>
             <parameter name="notification.subject">CFS Ticket Assigned: ${this.paddedId}</parameter>
-<parameter name="notification.body">
-The following ticket in CFS has been assigned to you:&#13;
-&#13;
---- Ticket Details ---&#13;
-&#13;
-Ticket # ${this.paddedId}&#13;
-Priority: ${ticketPriorityLookup.description}&#13;
-Severity: ${ticketSeverityLookup.description}&#13;
-Issue: ${this.problem}&#13;
-&#13;
-Assigned By: ${ticketModifiedByContact.nameFirstLast}&#13;
+<parameter name="notification.body"><![CDATA[
+The following ticket in CFS has been assigned to you:
+
+--- Ticket Details ---
+
+Ticket # ${this.paddedId}
+Priority: ${ticketPriorityLookup.description}
+Severity: ${ticketSeverityLookup.description}
+Issue: ${this.problem}
+
+Assigned By: ${ticketModifiedByContact.nameFirstLast}
 Comment: ${this.comment}
-</parameter>
+]]></parameter>
           </parameters>
         </component>
         <component id="6" parent="1" class="com.darkhorseventures.cfs.troubletickets.component.SendTicketToBPM" enabled="true">
@@ -99,17 +99,17 @@ Comment: ${this.comment}
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${this.userAssignedId}"/>
             <parameter name="notification.subject">CFS Activity assigned for project ${project.title}</parameter>
-<parameter name="notification.body">
-The following activity was assigned to you in CFS:&#13;
-&#13;
---- Activity Details ---&#13;
-&#13;
-Project Name: ${project.title}&#13;
-Requirement Name: ${requirement.shortDescription}&#13;
-Activity: ${this.role}&#13;
-Due Date: ${this.dueDateString}&#13;
-Assigned By: ${assignmentAssignedByContact.nameFirstLast}&#13;
-</parameter>
+<parameter name="notification.body"><![CDATA[
+The following activity was assigned to you in CFS:
+
+--- Activity Details ---
+
+Project Name: ${project.title}
+Requirement Name: ${requirement.shortDescription}
+Activity: ${this.role}
+Due Date: ${this.dueDateString}
+Assigned By: ${assignmentAssignedByContact.nameFirstLast}
+]]></parameter>
           </parameters>
         </component>
       </components>
@@ -127,33 +127,33 @@ Assigned By: ${assignmentAssignedByContact.nameFirstLast}&#13;
         </component>
         <component id="202" parent="201" if="true" class="com.darkhorseventures.cfs.component.SendSSLNotification">
           <parameters>
-<parameter name="notification.body">
-&lt;?xml version=&quot;1.0&quot; standalone=&quot;yes&quot;?&gt;
-&lt;!-- The only field you will be editing is instructions --&gt;
-&lt;!-- The max field length of instructions is 216 --&gt;
-&lt;tas&gt;
-   &lt;tsPacket&gt;
-      &lt;transactionId&gt;13&lt;/transactionId&gt;
-      &lt;status&gt;0&lt;/status&gt;
-      &lt;callId&gt;0&lt;/callId&gt;
-      &lt;teamId&gt;3&lt;/teamId&gt;
-      &lt;opId&gt;547&lt;/opId&gt;
-      &lt;data&gt;
-         &lt;psId&gt;289&lt;/psId&gt;
-         &lt;specialInstr&gt;
-            &lt;instructionId&gt;0&lt;/instructionId&gt;
-            &lt;dayOfWeek&gt;&lt;/dayOfWeek&gt;
-            &lt;instructions&gt;${this.fieldValue(11):xml}&lt;/instructions&gt;
-            &lt;status&gt;T&lt;/status&gt;
-            &lt;effective&gt;&lt;/effective&gt;
-            &lt;expires&gt;&lt;/expires&gt;
-            &lt;inactive&gt;N&lt;/inactive&gt;
-            &lt;opName&gt;&lt;/opName&gt;
-         &lt;/specialInstr&gt;
-      &lt;/data&gt;
-   &lt;/tsPacket&gt;
-&lt;/tas&gt;
-</parameter>
+<parameter name="notification.body"><![CDATA[
+<?xml version="1.0" standalone="yes"?>
+<!-- The only field you will be editing is instructions -->
+<!-- The max field length of instructions is 216 -->
+<tas>
+   <tsPacket>
+      <transactionId>13</transactionId>
+      <status>0</status>
+      <callId>0</callId>
+      <teamId>3</teamId>
+      <opId>547</opId>
+      <data>
+         <psId>289</psId>
+         <specialInstr>
+            <instructionId>0</instructionId>
+            <dayOfWeek></dayOfWeek>
+            <instructions>${this.fieldValue(11):xml}</instructions>
+            <status>T</status>
+            <effective></effective>
+            <expires></expires>
+            <inactive>N</inactive>
+            <opName></opName>
+         </specialInstr>
+      </data>
+   </tsPacket>
+</tas>
+]]></parameter>
           </parameters>
         </component>
       </components>

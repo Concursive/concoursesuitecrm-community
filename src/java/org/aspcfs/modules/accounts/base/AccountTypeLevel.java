@@ -222,11 +222,11 @@ public class AccountTypeLevel {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      throw new SQLException("Account Type Level entry not found.");
     }
     rs.close();
+    if (typeId == -1) {
+      throw new SQLException("Account Type Level entry not found.");
+    }
   }
 
 
@@ -238,9 +238,7 @@ public class AccountTypeLevel {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-
     StringBuffer sql = new StringBuffer();
-
     try {
       db.setAutoCommit(false);
       sql.append(
@@ -260,7 +258,6 @@ public class AccountTypeLevel {
         sql.append("?, ");
       }
       sql.append("?) ");
-
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       if (orgId > -1) {
@@ -280,14 +277,11 @@ public class AccountTypeLevel {
         pst.setTimestamp(++i, modified);
       }
       pst.setInt(++i, this.getLevel());
-
       pst.execute();
       pst.close();
-
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
