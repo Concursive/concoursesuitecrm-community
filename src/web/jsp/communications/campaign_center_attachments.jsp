@@ -11,6 +11,12 @@ function fillFrame(object){
     window.frames['edit'].location.href='CampaignManager.do?command=PreviewSurvey&preview=0&id=' + object.options[object.selectedIndex].value;
   }
 }
+function updateList() {
+  var sel = document.forms['modForm'].elements['ListView'];
+  var value = sel.options[sel.selectedIndex].value;
+  var url = "CampaignManager.do?command=SurveyJSList&listView=" + escape(value);
+  window.frames['server_commands'].location.href=url;
+}
 </script>
 <body onLoad="javascript:fillFrame(document.forms['modForm'].surveyId);">
 <form name="modForm" action="CampaignManager.do?command=InsertAttachment&id=<%= Campaign.getId() %>" method="post">
@@ -21,6 +27,7 @@ function fillFrame(object){
 Interactive Response
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   <tr class="containerHeader">
     <td>
       <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
@@ -48,6 +55,10 @@ Interactive Response
       Survey
     </td>
     <td width="100%" valign="center">
+    <SELECT SIZE="1" name="ListView" onChange="javascript:updateList();">
+      <OPTION VALUE="my"<dhv:evaluate if="<%= "my".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>>My Interactive Responses</OPTION>
+      <OPTION VALUE="all"<dhv:evaluate if="<%= "all".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>>All Interactive Responses</OPTION>
+    </SELECT>
     <% SurveyList.setJsEvent("onChange=\"javascript:fillFrame(this);\""); %>
       <%= SurveyList.getHtmlSelect("surveyId", Campaign.getSurveyId()) %>
     </td>

@@ -2,15 +2,23 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
 <jsp:useBean id="MessageList" class="com.darkhorseventures.cfsbase.MessageList" scope="request"/>
-<jsp:useBean id="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form name="modForm" action="/CampaignManager.do?command=InsertMessage&id=<%= Campaign.getId() %>" method="post">
+<script language="JavaScript">
+  function updateMessageList() {
+    var sel = document.forms['modForm'].elements['ListView'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "CampaignManager.do?command=MessageJSList&listView=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+</script>
+<form name="modForm" action="CampaignManager.do?command=InsertMessage&id=<%= Campaign.getId() %>" method="post">
 <a href="CampaignManager.do">Communications Manager</a> > 
-<a href="/CampaignManager.do?command=View">Campaign List</a> >
-<a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
+<a href="CampaignManager.do?command=View">Campaign List</a> >
+<a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Message
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   <tr class="containerHeader">
     <td>
       <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
@@ -38,7 +46,11 @@ Message
       Message
     </td>
     <td width="100%" valign="center">
-			<% MessageList.setJsEvent("onChange=\"javascript:window.frames['edit'].location.href='/CampaignManagerMessage.do?command=PreviewMessage&id=' + this.options[this.selectedIndex].value;\""); %>
+      <SELECT SIZE="1" name="ListView" onChange="javascript:updateMessageList();">
+        <OPTION VALUE="my"<dhv:evaluate if="<%= "my".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>>My Messages</OPTION>
+        <OPTION VALUE="all"<dhv:evaluate if="<%= "all".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>>All Messages</OPTION>
+      </SELECT>
+			<% MessageList.setJsEvent("onChange=\"javascript:window.frames['edit'].location.href='CampaignManagerMessage.do?command=PreviewMessage&id=' + this.options[this.selectedIndex].value;\""); %>
       <%= MessageList.getHtmlSelect("messageId", Campaign.getMessageId()) %>
     </td>
   </tr>
@@ -47,8 +59,8 @@ Message
       Preview
     </td>
     <td width="100%" valign="center">
-      <iframe id="edit" name="edit" frameborder="0" <dhv:browser id="ns">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 200;"</dhv:browser> onblur="return false" src="/CampaignManagerMessage.do?command=PreviewMessage&id=<%= Campaign.getMessageId() %>">
-        <%= Message.getMessageText() %>
+      <iframe id="edit" name="edit" frameborder="0" <dhv:browser id="ns">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 200;"</dhv:browser> onblur="return false" src="CampaignManagerMessage.do?command=PreviewMessage&id=<%= Campaign.getMessageId() %>">
+        Message text not available
       </iframe>
     </td>
   </tr>
