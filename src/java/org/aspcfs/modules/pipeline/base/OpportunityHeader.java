@@ -1,4 +1,4 @@
-//Copyright 2001-2002 Dark Horse Ventures
+//Copyright 2002-2003 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -15,11 +15,11 @@ import com.darkhorseventures.utils.DateUtils;
 import com.zeroio.iteam.base.FileItemList;
 
 /**
- *  OpportunityHeader: A header related to an Opportunity ( = OpportunityHeader
- *  + OpportunityComponent(s))
+ *  An OpportunityHeader is a top level description for all of the components
+ *  that make up an Opportunity.
  *
  *@author     chris
- *@created    September 13, 2001
+ *@created    December, 2002
  *@version    $Id$
  */
 
@@ -766,13 +766,11 @@ public class OpportunityHeader extends GenericBean {
    *@param  db                Description of Parameter
    *@return                   The Valid value
    *@exception  SQLException  Description of Exception
-   *@since
    */
   protected boolean isValid(Connection db) throws SQLException {
     if (description == null || description.trim().equals("")) {
       errors.put("descriptionError", "Description cannot be left blank");
     }
-
     if (hasErrors()) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Opportunity Header-> Cannot insert: object is not valid");
@@ -1003,11 +1001,10 @@ public class OpportunityHeader extends GenericBean {
     if (oppId == -1) {
       throw new SQLException("Opportunity ID not specified");
     }
-    String sql = "DELETE FROM opportunity_component_levels WHERE opp_id in (SELECT id from opportunity_component oc where oc.opp_id = ?) ";
-    System.out.println(sql.toString());
-    int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql);
-    pst.setInt(++i, this.getId());
+    PreparedStatement pst = db.prepareStatement(
+      "DELETE FROM opportunity_component_levels " +
+      "WHERE opp_id in (SELECT id from opportunity_component oc where oc.opp_id = ?) ");
+    pst.setInt(1, this.getId());
     pst.execute();
     pst.close();
     return true;
@@ -1118,27 +1115,20 @@ public class OpportunityHeader extends GenericBean {
 
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity Header-> Updating the opportunity header");
     }
     sql.append(
         "UPDATE opportunity_header " +
         "SET description = ?, acctlink = ?, contactlink = ?, ");
-
     if (!override) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
-
     sql.append("modifiedby = ? ");
-
-
     sql.append("WHERE opp_id = ? ");
-
     if (!override) {
       sql.append("AND modified = ? ");
     }
-
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getDescription());
@@ -1157,16 +1147,11 @@ public class OpportunityHeader extends GenericBean {
     if (!override) {
       pst.setTimestamp(++i, modified);
     }
-
     resultCount = pst.executeUpdate();
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity Header-> ResultCount: " + resultCount);
     }
     pst.close();
-
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("Opportunity Header-> Closing PreparedStatement");
-    }
     return resultCount;
   }
 
@@ -1179,13 +1164,11 @@ public class OpportunityHeader extends GenericBean {
    */
   public void retrieveComponentCount(Connection db) throws SQLException {
     int count = 0;
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT COUNT(*) as componentcount " +
-        "FROM opportunity_component oc " +
-        "WHERE id > 0 ");
-    sql.append("AND oc.opp_id = ?");
-    PreparedStatement pst = db.prepareStatement(sql.toString());
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT COUNT(*) as componentcount " +
+      "FROM opportunity_component oc " +
+      "WHERE id > 0 " +
+      "AND oc.opp_id = ?");
     pst.setInt(1, oppId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -1205,13 +1188,11 @@ public class OpportunityHeader extends GenericBean {
    */
   public void buildTotal(Connection db) throws SQLException {
     double total = 0;
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT sum(guessvalue) as total " +
-        "FROM opportunity_component oc " +
-        "WHERE id > 0 ");
-    sql.append("AND oc.opp_id = ?");
-    PreparedStatement pst = db.prepareStatement(sql.toString());
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT sum(guessvalue) as total " +
+      "FROM opportunity_component oc " +
+      "WHERE id > 0 " +
+      "AND oc.opp_id = ?");
     pst.setInt(1, oppId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

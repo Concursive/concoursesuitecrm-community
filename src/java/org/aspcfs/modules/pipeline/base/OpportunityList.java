@@ -1,4 +1,4 @@
-//Copyright 2001-2002 Dark Horse Ventures
+//Copyright 2001-2003 Dark Horse Ventures
 // The createFilter method and the prepareFilter method need to have the same
 // number of parameters if modified.
 
@@ -14,8 +14,8 @@ import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.ObjectUtils;
 
 /**
- *  Contains a list of opportunities... currently used to build the list from the
- *  database with any of the parameters to limit the results.
+ *  Contains a list of opportunities, which are now a combination of
+ *  OpportunityHeader and OpportunityComponent objects.
  *
  *@author     chris
  *@created    August 29, 2001
@@ -550,7 +550,6 @@ public class OpportunityList extends Vector {
    *@since                    1.1
    */
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
@@ -727,23 +726,18 @@ public class OpportunityList extends Vector {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
     if (orgId != -1) {
       sqlFilter.append("AND x.acctlink = ? ");
     }
-
     if (contactId != -1) {
       sqlFilter.append("AND x.contactlink = ? ");
     }
-
     if (enteredBy != -1) {
       sqlFilter.append("AND x.enteredby = ? ");
     }
-
     if (hasAlertDate == true) {
       sqlFilter.append("AND oc.alertdate IS NOT NULL ");
     }
-
     if (ignoreTypeIdList.size() > 0) {
       Iterator iList = ignoreTypeIdList.iterator();
       sqlFilter.append("AND x.contactlink NOT IN (");
@@ -756,7 +750,6 @@ public class OpportunityList extends Vector {
       }
       sqlFilter.append(") ");
     }
-
     if (description != null) {
       if (description.indexOf("%") >= 0) {
         sqlFilter.append("AND lower(x.description) like lower(?) ");
@@ -764,54 +757,42 @@ public class OpportunityList extends Vector {
         sqlFilter.append("AND lower(x.description) = lower(?) ");
       }
     }
-
     if (alertDate != null) {
       sqlFilter.append("AND oc.alertdate = ? ");
     }
-
     if (alertRangeStart != null) {
       sqlFilter.append("AND oc.alertdate >= ? ");
     }
-
     if (alertRangeEnd != null) {
       sqlFilter.append("AND oc.alertdate <= ? ");
     }
-
     if (closeDateStart != null) {
       sqlFilter.append("AND oc.closedate >= ? ");
     }
     if (closeDateEnd != null) {
       sqlFilter.append("AND oc.closedate <= ? ");
     }
-
     if (owner != -1) {
       sqlFilter.append("AND oc.owner = ? ");
     }
-
     if (ownerIdRange != null) {
       sqlFilter.append("AND oc.owner in (" + this.ownerIdRange + ") ");
     }
-
     if (accountOwnerIdRange != null) {
       sqlFilter.append("AND x.acctlink IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
     }
-
     if (units != null) {
       sqlFilter.append("AND oc.units = ? ");
     }
-
     if (includeEnabled == TRUE || includeEnabled == FALSE) {
       sqlFilter.append("AND oc.enabled = ? ");
     }
-
     if (stage != -1) {
       sqlFilter.append("AND oc.stage = ? ");
     }
-
     if (queryOpenOnly) {
       sqlFilter.append("AND oc.closed IS NULL ");
     }
-
     if (typeId > 0) {
       sqlFilter.append("AND oc.id IN (select ocl.opp_id from opportunity_component_levels ocl where ocl.type_id = ?) ");
     }
@@ -832,15 +813,12 @@ public class OpportunityList extends Vector {
     if (orgId != -1) {
       pst.setInt(++i, orgId);
     }
-
     if (contactId != -1) {
       pst.setInt(++i, contactId);
     }
-
     if (enteredBy != -1) {
       pst.setInt(++i, enteredBy);
     }
-
     if (ignoreTypeIdList.size() > 0) {
       Iterator iList = ignoreTypeIdList.iterator();
       while (iList.hasNext()) {
@@ -848,53 +826,41 @@ public class OpportunityList extends Vector {
         pst.setInt(++i, thisType);
       }
     }
-
     if (description != null) {
       pst.setString(++i, description);
     }
-
     if (alertDate != null) {
       pst.setDate(++i, alertDate);
     }
-
     if (alertRangeStart != null) {
       pst.setDate(++i, alertRangeStart);
     }
-
     if (alertRangeEnd != null) {
       pst.setDate(++i, alertRangeEnd);
     }
-
     if (closeDateStart != null) {
       pst.setDate(++i, closeDateStart);
     }
-
     if (closeDateEnd != null) {
       pst.setDate(++i, closeDateEnd);
     }
-
     if (owner != -1) {
       pst.setInt(++i, owner);
     }
-
     if (units != null) {
       pst.setString(++i, units);
     }
-
     if (includeEnabled == TRUE) {
       pst.setBoolean(++i, true);
     } else if (includeEnabled == FALSE) {
       pst.setBoolean(++i, false);
     }
-
     if (stage != -1) {
       pst.setInt(++i, stage);
     }
-
     if (typeId > 0) {
       pst.setInt(++i, typeId);
     }
-
     return i;
   }
 

@@ -1,4 +1,4 @@
-//Copyright 2001-2002 Dark Horse Ventures
+//Copyright 2002-2003 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -17,12 +17,14 @@ import com.darkhorseventures.webutils.LookupElement;
 import com.zeroio.iteam.base.FileItemList;
 
 /**
- *  OpportunityComponent: A component related to an Opportunity ( =
- *  OpportunityHeader + OpportunityComponent(s))
+ *  An OpportunityComponent makes up 1 or more elements of an Opportunity.
+ *  An OpportunityHeader is a top level description for all of the components
+ *  that make up the Opportunity.
  *
  *@author     chris
- *@created    September 13, 2001
- *@version    $Id$
+ *@created    December, 2002
+ *@version    $Id: OpportunityComponent.java,v 1.5 2002/12/24 17:02:33 akhi_m
+ *      Exp $
  */
 
 public class OpportunityComponent extends GenericBean {
@@ -138,7 +140,6 @@ public class OpportunityComponent extends GenericBean {
     } else {
       typeList = new ArrayList();
     }
-
     this.typeList = typeList;
   }
 
@@ -1391,14 +1392,12 @@ public class OpportunityComponent extends GenericBean {
     if (this.getOwner() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
-
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM access " +
         "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
-    System.out.println(pst.toString());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       this.setHasEnabledOwnerAccount(true);
@@ -2141,7 +2140,6 @@ public class OpportunityComponent extends GenericBean {
           }
         }
       }
-
       this.updateHeaderModified(db);
     }
 
