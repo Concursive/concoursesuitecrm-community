@@ -25,13 +25,13 @@ Tasks<br>
         <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
         &nbsp;<br>
       </dhv:evaluate>
-      <dhv:permission name="tickets-tickets-edit">
+      <dhv:permission name="tickets-tickets-tasks-add">
       <a href="javascript:popURL('TroubleTicketTasks.do?command=Add&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');">Add a Task</a><br><br>
       </dhv:permission>
       <%-- include the tasks created --%>
       <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
          <tr>
-          <dhv:permission name="tickets-tickets-edit">
+          <dhv:permission name="tickets-tickets-tasks-delete">
             <th align="center" nowrap>
               <strong>Action</strong>
             </th>
@@ -71,7 +71,7 @@ Tasks<br>
             Task thisTask = (Task) j.next();
       %>
         <tr class="row<%= rowid %>">
-        <dhv:permission name="tickets-tickets-edit">
+        <dhv:permission name="tickets-tickets-tasks-delete">
             <td align="center" valign="top">
               <%-- <a href="javascript:window.location.href='MyTasksForward.do?command=ForwardMessage&forwardType=<%= Constants.TASKS %>&id=<%=thisTask.getId()%>&return=' + escape('MyTasks.do?command=ListTasks') + '&sendUrl='+ escape('MyTasksForward.do?command=SendMessage');">Fwd</a>|--%>
               <a href="javascript:popURL('TroubleTicketTasks.do?command=ConfirmDelete&id=<%= thisTask.getId() %>&popup=true', 'Delete_task','320','200','yes','no');">Del</a>
@@ -83,7 +83,7 @@ Tasks<br>
           <td>
           <table cellpadding="0" cellspacing="0" class="empty">
             <tr <%= thisTask.getComplete()?"class=\"strike\"":"class=\"\""%> id="complete<%=count%>">
-            <dhv:permission name="tickets-tickets-edit">
+            <dhv:permission name="tickets-tickets-tasks-edit">
               <td>
             <% boolean hasAuthority = false; %> 
             <dhv:hasAuthority owner="<%= thisTask.getOwner() %>">
