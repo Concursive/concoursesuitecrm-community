@@ -281,6 +281,7 @@ public class SystemStatus {
     tmpListA.setBuildContactDetails(false);
     tmpListA.setBuildHierarchy(false);
     tmpListA.setTopLevel(true);
+    tmpListA.setIncludeUsersWithRolesOnly(false);
     tmpListA.buildList(db);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("SystemStatus-> buildHierarchyList: A " + tmpListA.size());
