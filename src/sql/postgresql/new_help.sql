@@ -3,11 +3,8 @@
  *
  *@author       mrajkowski
  *@created      March 19, 2002
- *@modifiedby	kbhoopal
- *@modified	November 5,2003
  *@version      $Id$
  */
- 
  
 CREATE TABLE help_module (
   module_id serial PRIMARY KEY,
@@ -83,7 +80,8 @@ CREATE TABLE help_features (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   completedate TIMESTAMP(3),
   completedby INT REFERENCES access(user_id),
-  enabled boolean NOT NULL DEFAULT true
+  enabled boolean NOT NULL DEFAULT true,
+  level INTEGER DEFAULT 0
 );
 
 CREATE TABLE help_related_links (

@@ -25,6 +25,7 @@ public class HelpFeature extends GenericBean {
   private int linkHelpId = -1;
   private int linkFeatureId = -1;
   private String description = null;
+  private int level = -1;
   private int enteredBy = -1;
   private java.sql.Timestamp entered = null;
   private int modifiedBy = -1;
@@ -36,14 +37,14 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *Constructor for the HelpFeature object
+   *  Constructor for the HelpFeature object
    */
   public HelpFeature() { }
 
 
 
   /**
-   *Constructor for the HelpFeature object
+   *  Constructor for the HelpFeature object
    *
    *@param  db                Description of the Parameter
    *@param  thisId            Description of the Parameter
@@ -73,7 +74,7 @@ public class HelpFeature extends GenericBean {
 
 
   /**
-   *Constructor for the HelpFeature object
+   *  Constructor for the HelpFeature object
    *
    *@param  rs                Description of the Parameter
    *@exception  SQLException  Description of the Exception
@@ -130,6 +131,26 @@ public class HelpFeature extends GenericBean {
    */
   public void setDescription(String tmp) {
     this.description = tmp;
+  }
+
+
+  /**
+   *  Sets the level attribute of the HelpFeature object
+   *
+   *@param  tmp  The new level value
+   */
+  public void setLevel(int tmp) {
+    this.level = tmp;
+  }
+
+
+  /**
+   *  Sets the level attribute of the HelpFeature object
+   *
+   *@param  tmp  The new level value
+   */
+  public void setLevel(String tmp) {
+    this.level = Integer.parseInt(tmp);
   }
 
 
@@ -369,6 +390,16 @@ public class HelpFeature extends GenericBean {
 
 
   /**
+   *  Gets the level attribute of the HelpFeature object
+   *
+   *@return    The level value
+   */
+  public int getLevel() {
+    return level;
+  }
+
+
+  /**
    *  Gets the enteredBy attribute of the HelpFeature object
    *
    *@return    The enteredBy value
@@ -429,6 +460,30 @@ public class HelpFeature extends GenericBean {
 
 
   /**
+   *  Gets the maxLevel attribute of the HelpFeature object
+   *
+   *@param  db                Description of the Parameter
+   *@return                   The maxLevel value
+   *@exception  SQLException  Description of the Exception
+   */
+  private int getMaxLevel(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT max(level) AS max " +
+        "FROM help_features " +
+        "WHERE link_help_id = ? ");
+    int i = 0;
+    int max = 0;
+    pst.setInt(++i, this.getLinkHelpId());
+    pst.execute();
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      max = DatabaseUtils.getInt(rs, "max");
+    }
+    return max;
+  }
+
+
+  /**
    *  Insert a Help Feature
    *
    *@param  db                Description of the Parameter
@@ -439,21 +494,27 @@ public class HelpFeature extends GenericBean {
     try {
       db.setAutoCommit(false);
       int i = 0;
+      //NOTE: Not a safe way to ensure the highest number if more than one
+      //insert happens at same time, but ok for this
+      if (this.getLevel() < 1) {
+        this.setLevel(getMaxLevel(db) + 1);
+      }
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO help_features " +
-          "(link_help_id, description, enteredby, modifiedby, enabled, " +
-          (linkFeatureId > 0 ? " link_feature_id, " : "") + 
+          "(link_help_id, description, level, enteredby, modifiedby, enabled, " +
+          (linkFeatureId > 0 ? " link_feature_id, " : "") +
           "completedate, completedby) " +
-          "VALUES (?, ?, ?, ?, ?, " +
+          "VALUES (?, ?, ?, ?, ?, ?, " +
           (linkFeatureId > 0 ? "?, " : "") +
           "?, ? ) "
           );
       pst.setInt(++i, this.getLinkHelpId());
       pst.setString(++i, this.getDescription());
+      pst.setInt(++i, this.getLevel());
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
       pst.setBoolean(++i, this.getEnabled());
-      if(linkFeatureId > 0){
+      if (linkFeatureId > 0) {
         pst.setInt(++i, linkFeatureId);
       }
       if (this.getComplete()) {
@@ -492,23 +553,27 @@ public class HelpFeature extends GenericBean {
     if (id == -1) {
       throw new SQLException("Feature ID not specified");
     }
-
     try {
+      if (this.getLevel() < 1) {
+        //NOTE: Doesn't ensure the highest, but that's ok for this
+        this.setLevel(getMaxLevel(db) + 1);
+      }
       db.setAutoCommit(false);
       HelpFeature previousFeature = new HelpFeature(db, id);
       int i = 0;
       pst = db.prepareStatement(
           "UPDATE help_features " +
-          "SET modifiedby = ?, description = ?, enabled = ?, " +
+          "SET modifiedby = ?, description = ?, level = ?, enabled = ?, " +
           (linkFeatureId > 0 ? " link_feature_id = ?, " : "") +
           "completedate = ?, completedby = ? " +
           "WHERE feature_id = ? AND modified = ? "
           );
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());
+      pst.setInt(++i, this.getLevel());
       pst.setBoolean(++i, this.getEnabled());
-      if(linkFeatureId > 0){
-         pst.setInt(++i, linkFeatureId);
+      if (linkFeatureId > 0) {
+        pst.setInt(++i, linkFeatureId);
       }
       if (previousFeature.getComplete() && this.getComplete()) {
         pst.setTimestamp(++i, previousFeature.getCompleteDate());
@@ -589,6 +654,7 @@ public class HelpFeature extends GenericBean {
     }
     completedBy = rs.getInt("completedby");
     enabled = rs.getBoolean("enabled");
+    level = rs.getInt("level");
   }
 }
 

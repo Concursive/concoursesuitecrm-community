@@ -51,6 +51,15 @@ function validate() {
     <input type="checkbox" name="complete" <%= Feature.getComplete() ?  " checked" : ""%>>
    </td>
 </tr>
+<tr class="containerBody">
+  <td class="formLabel">
+    Level
+  </td>
+  <td>
+    <input type="text" name="level" value="<%= (Feature.getLevel() == -1) ? 0 : Feature.getLevel() %>" size="2">
+   </td>
+</tr>
+
 </table>
 <br>
 Where do you want to go after this action?<br>

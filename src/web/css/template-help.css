@@ -1,0 +1,9 @@
+BODY { 
+  font-family: serif;
+  font-size: 12pt; background: white;
+}
+TABLE, TD, TH, LI, P, UL, OL, TEXTAREA, INPUT, SELECT, A {
+  font-family: serif; 
+  font-size: 12pt;
+}
+

@@ -34,7 +34,7 @@
      <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
      <tr>
        <th>
-          <strong>General Features supported on this page</strong><dhv:permission name="qa-add"> [<a href="javascript:popURL('HelpFeatures.do?command=PrepareFeature&linkHelpId=<%= Help.getId()%>&popup=true', 'QA_Feature_Add','600','240','yes','yes');">Add New</a>]</dhv:permission>
+          <strong>General Features supported on this page</strong><dhv:permission name="qa-add"> [<a href="javascript:popURL('HelpFeatures.do?command=PrepareFeature&linkHelpId=<%= Help.getId()%>&popup=true', 'QA_Feature_Add','600','250','yes','yes');">Add New</a>]</dhv:permission>
        </th>
       </tr>
       <%
@@ -49,7 +49,7 @@
               <tr>
                 <dhv:permission name="qa-edit,qa-delete">
                  <td valign="top" nowrap>
-                  <dhv:permission name="qa-edit"><a href="javascript:popURL('HelpFeatures.do?command=ModifyFeature&id=<%= thisFeature.getId() %>&linkHelpId=<%= Help.getId() %>&popup=true', 'QA_Feature_Add','600','240','yes','yes');">Edit</a>&nbsp;</dhv:permission><dhv:permission name="qa-delete"><a href="javascript:confirmDelete('HelpFeatures.do?command=DeleteFeature&id=<%= thisFeature.getId() %>')">Del</a>&nbsp;</dhv:permission>
+                  <dhv:permission name="qa-edit"><a href="javascript:popURL('HelpFeatures.do?command=ModifyFeature&id=<%= thisFeature.getId() %>&linkHelpId=<%= Help.getId() %>&popup=true', 'QA_Feature_Add','600','250','yes','yes');">Edit</a>&nbsp;</dhv:permission><dhv:permission name="qa-delete"><a href="javascript:confirmDelete('HelpFeatures.do?command=DeleteFeature&id=<%= thisFeature.getId() %>')">Del</a>&nbsp;</dhv:permission>
                   <dhv:permission name="qa-edit"><a href="javascript:changeImages('feature<%= thisFeature.getId() %>','QA.do?command=ProcessFeature&id=box.gif|gif|'+<%= thisFeature.getId() %>+'|<%= thisFeature.getComplete() ? "0" : "1" %>','QA.do?command=ProcessFeature&id=box-checked.gif|gif|'+<%= thisFeature.getId() %>+'|1');"  onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/<%= thisFeature.getComplete() ? "box-checked.gif" : "box.gif" %>" name="feature<%= thisFeature.getId() %>" id="<%= thisFeature.getComplete() ? "1" : "0" %>" border="0" title="Click to change"></a></dhv:permission>
                 </td>
                 </dhv:permission>

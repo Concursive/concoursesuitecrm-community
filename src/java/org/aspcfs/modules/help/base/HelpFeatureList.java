@@ -158,7 +158,7 @@ public class HelpFeatureList extends ArrayList {
     }
 
     //Determine column to sort by
-    pagedListInfo.setDefaultSort("hf.modified", "DESC");
+    pagedListInfo.setDefaultSort("hf.level", "ASC");
     pagedListInfo.appendSqlTail(db, sqlOrder);
 
     //Need to build a base SQL statement for returning records

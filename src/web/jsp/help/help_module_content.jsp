@@ -1,6 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.help.base.*" %>
 <jsp:useBean id="helpModule" class="org.aspcfs.modules.help.base.HelpModule" scope="request"/>
+<link rel="stylesheet" href="css/template-help.css" type="text/css">
 <html>
 <body>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
@@ -10,7 +11,7 @@
   <%-- Introduction --%>
   <tr>
     <td>
-      <table cellpadding="4" cellspacing="0" width="100%" class="details">
+      <table cellpadding="4" cellspacing="0" width="100%" class="empty">
 <dhv:evaluate if="<%= hasText(helpModule.getModuleName()) %>">
       <tr>
        <td><h2><%= toHtml(helpModule.getModuleName())%></h2></td>
@@ -29,7 +30,7 @@
   </tr>
   <tr>
     <td>
-     <table cellpadding="4" cellspacing="0" width="100%" class="details">
+     <table cellpadding="4" cellspacing="0" width="100%" class="empty">
      <tr>
        <td><h3>Module Detail Description</h3></td>
       </tr>

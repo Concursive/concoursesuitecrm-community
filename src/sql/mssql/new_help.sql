@@ -80,7 +80,8 @@ CREATE TABLE help_features (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   completedate DATETIME,
   completedby INT REFERENCES access(user_id),
-  enabled BIT NOT NULL DEFAULT 1
+  enabled BIT NOT NULL DEFAULT 1,
+  level INT DEFAULT 0
 );
 
 CREATE TABLE help_related_links (

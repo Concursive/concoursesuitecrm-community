@@ -2,6 +2,7 @@
 <%@ page import="java.util.*,org.aspcfs.modules.help.base.*" %>
 <jsp:useBean id="Help" class="org.aspcfs.modules.help.base.HelpItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<link rel="stylesheet" href="css/template-help.css" type="text/css">
 <html>
 <body>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -45,7 +46,7 @@
             <table cellpadding="0" cellspacing="0" class="empty">
               <tr>
                 <td>
-                 <%= toHtml(thisFeature.getDescription())%>
+                 <li><%= toHtml(thisFeature.getDescription())%></li>
                 </td>
               </tr>
             </table>
@@ -72,7 +73,7 @@
               <table cellpadding="0" cellspacing="0" class="empty">
                 <tr>
                   <td>
-                    <%= toHtml(thisRule.getDescription()) %>
+                    <li><%= toHtml(thisRule.getDescription()) %></li>
                   </td>
                 </tr>
               </table>
@@ -82,7 +83,7 @@
 	 }%>
       </table><br>
       <%-- List the Tips --%>
-      <table cellpadding="2" cellspacing="0" width="100%" class="pagedList">
+      <table cellpadding="4" cellspacing="0" width="100%" class="empty">
      <tr>
 <%
           Iterator tips = Help.getTips().iterator();
@@ -99,7 +100,7 @@
               <table class="empty" cellpadding="0" cellspacing="0">
                <tr>
                   <td>
-                    <%= toHtml(thisTip.getDescription()) %>
+                    <li><%= toHtml(thisTip.getDescription()) %></li>
                   </td>
                 </tr>
                </table>

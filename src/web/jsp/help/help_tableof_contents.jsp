@@ -1,6 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.help.base.*" %>
 <jsp:useBean id="helpTOC" class="org.aspcfs.modules.help.base.HelpTOC" scope="request"/>
+<link rel="stylesheet" href="css/template-help.css" type="text/css">
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/images.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
@@ -32,7 +33,7 @@
         HelpTableOfContentItem thisTOCItem = (HelpTableOfContentItem) i0.next();
         %>
           <tr>
-            <td>
+            <td nowrap>
               <%=toHtml(getIndents(thisTOCItem.getContentLevel()))%>
               <%
                 Iterator il0 = thisTOCItem.getHTOCLinks().iterator();
@@ -50,7 +51,7 @@
             HelpTableOfContentItem thisTOCItem1 = (HelpTableOfContentItem) i1.next();
          %>
             <tr>
-              <td>
+              <td nowrap>
                 <%=toHtml(getIndents(thisTOCItem1.getContentLevel()))%> 
                 <%
                   Iterator il1 = thisTOCItem1.getHTOCLinks().iterator();
@@ -68,7 +69,7 @@
                   HelpTableOfContentItem thisTOCItem2 = (HelpTableOfContentItem) i2.next();
              %>
               <tr>
-                <td>
+                <td nowrap>
                 <%=toHtml(getIndents(thisTOCItem2.getContentLevel()))%> 
                 <%
                   Iterator il2 = thisTOCItem2.getHTOCLinks().iterator();
@@ -86,7 +87,7 @@
                     HelpTableOfContentItem thisTOCItem3 = (HelpTableOfContentItem) i3.next();
                %>
                <tr>
-                 <td>
+                 <td nowrap>
                  <%=toHtml(getIndents(thisTOCItem3.getContentLevel()))%> 
                  <%
                   Iterator il3 = thisTOCItem3.getHTOCLinks().iterator();
@@ -104,7 +105,7 @@
                       HelpTableOfContentItem thisTOCItem4 = (HelpTableOfContentItem) i4.next();
                 %>
                 <tr>
-                  <td>
+                  <td nowrap>
                   <%=toHtml(getIndents(thisTOCItem4.getContentLevel()))%> 
                   <%
                     Iterator il4 = thisTOCItem4.getHTOCLinks().iterator();
