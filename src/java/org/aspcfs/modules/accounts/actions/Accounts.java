@@ -278,8 +278,6 @@ public final class Accounts extends CFSModule {
     OrganizationReport orgReport = new OrganizationReport();
     orgReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
     orgReport.setFilePath(filePath);
-    //orgReport.setEnteredBy(getUserId(context));
-    //orgReport.setModifiedBy(getUserId(context));
     orgReport.setSubject(subject);
     orgReport.setMinerOnly(false);
 

@@ -987,12 +987,11 @@ public final class Leads extends CFSModule {
     OpportunityReport oppReport = new OpportunityReport();
     oppReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
     oppReport.setFilePath(filePath);
-    //oppReport.setEnteredBy(getUserId(context));
-    //oppReport.setModifiedBy(getUserId(context));
     oppReport.setSubject(subject);
 
     PagedListInfo thisInfo = new PagedListInfo();
     thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
+    thisInfo.setItemsPerPage(50);
     oppReport.setPagedListInfo(thisInfo);
 
     if (ownerCriteria.equals("my")) {

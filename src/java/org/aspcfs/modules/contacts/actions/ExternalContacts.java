@@ -308,6 +308,7 @@ public final class ExternalContacts extends CFSModule {
 
     PagedListInfo thisInfo = new PagedListInfo();
     thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
+    thisInfo.setItemsPerPage(50);
     contactReport.setPagedListInfo(thisInfo);
 
     if (ownerCriteria.equals("my")) {

@@ -120,9 +120,10 @@ public final class TroubleTickets extends CFSModule {
     ticketReport.setFilePath(filePath);
     ticketReport.setSubject(subject);
 
-    //PagedListInfo thisInfo = new PagedListInfo();
-    //thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
-    //ticketReport.setPagedListInfo(thisInfo);
+    PagedListInfo thisInfo = new PagedListInfo();
+    thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
+    thisInfo.setItemsPerPage(50);
+    ticketReport.setPagedListInfo(thisInfo);
 
     if (ownerCriteria.equals("assignedToMe")) {
       ticketReport.setAssignedTo(this.getUserId(context));
