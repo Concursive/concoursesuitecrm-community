@@ -379,7 +379,7 @@ public class Zlib {
    *@exception  Exception  Description of the Exception
    */
   public boolean sendEmailRegistration() throws Exception {
-    String theCode = getCode();
+    String theLicense = "<license>" + getCode() + "</license>" + CRLF;
     SMTPMessage mail = new SMTPMessage();
     mail.setHost("127.0.0.1");
     mail.setType("text/plain");
@@ -388,11 +388,17 @@ public class Zlib {
     mail.addReplyTo("registration@darkhorsecrm.com");
     mail.setSubject("Dark Horse CRM Registration");
     mail.setBody(
-        "Thank you for your interest in Dark Horse CRM." + CRLF +
+        "Thank you for registering Dark Horse CRM." + CRLF +
         CRLF +
-        "Paste the complete registation code that follows into the Dark Horse CRM license validation field:" + CRLF +
+        "Paste the complete registation code from the attached file " +
+        "(including the <license> tags) into the Dark Horse CRM license validation field." + CRLF +
         CRLF +
-        "<license>" + theCode + "</license>" + CRLF);
+        "Some mail programs may have a problem with the attachment, if so please report " +
+        "the client mail application name and the mail server software name to Dark Horse CRM." + CRLF +
+        CRLF +
+        "The Dark Horse CRM Team"
+        );
+    mail.addByteArrayAttachment("license.txt", theLicense, "text/plain");
     if (mail.send() == 2) {
       mailError = mail.getErrorMsg();
       return false;

@@ -1,0 +1,63 @@
+#!/bin/sh
+//bin/true; exec java -classpath .:lib/bsh.jar:lib/activation.jar:lib/mail.jar:build/lib/aspcfs.jar:build/lib/zeroio-iteam.jar:build/lib/darkhorseventures.jar bsh.Interpreter "$0" "$@"
+
+/* Test sending an email */
+
+import org.aspcfs.utils.SMTPMessage;
+
+String CRLF = System.getProperty("line.separator");
+
+System.setProperty("DEBUG", "1");
+
+if (bsh.args.length == 0) {
+  print("Usage:");
+  print("  mailTest [address-to]");
+  print("");
+  System.exit(0);
+}
+
+String address = bsh.args[0];
+String host = "127.0.0.1";
+
+SMTPMessage mail = new SMTPMessage();
+mail.setHost(host);
+mail.setType("text/plain");
+mail.addTo(address);
+mail.setFrom("Mail Test <test@127.0.0.1>");
+mail.addReplyTo("test@127.0.0.1");
+mail.setSubject("This is the subject");
+mail.setBody(
+  "This is the body." + CRLF);
+print("Sending message 1: text/plain");
+if (mail.send() == 2) {
+  print("Mail error: " + mail.getErrorMsg());
+  System.exit(2);
+}
+
+print("Sending message 2: text/plain w/attachment");
+mail.setBody(
+  "This is the body." + CRLF + 
+  CRLF +
+  "This message should have a text attachment.");
+mail.addByteArrayAttachment("a_file.txt", "Hello, this is an attached string" + CRLF + "wrapped in an attachment by the SMTPMessage class.", "text/plain");
+if (mail.send() == 2) {
+  print("Mail error: " + mail.getErrorMsg());
+  System.exit(2);
+}
+
+print("Sending message 3: text/html w/attachment");
+mail.setType("text/html");
+mail.setBody(
+  "This is the <b>HTML</b> body.<br />" +
+  "<br />" +
+  "This message should have a text attachment.");
+if (mail.send() == 2) {
+  print("Mail error: " + mail.getErrorMsg());
+  System.exit(2);
+}
+
+print("Done.");
+System.exit(0);
+
+
+

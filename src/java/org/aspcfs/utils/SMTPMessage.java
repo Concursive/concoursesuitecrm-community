@@ -28,6 +28,7 @@ public class SMTPMessage {
   private String errorMsg = "";
   private ArrayList replyTo = new ArrayList();
   private FileItemList attachments = null;
+  private ArrayList byteArrayAttachments = null;
 
 
   /**
@@ -214,6 +215,46 @@ public class SMTPMessage {
 
 
   /**
+   *  Adds a feature to the ByteArrayAttachment attribute of the SMTPMessage
+   *  object
+   *
+   *@param  fileName  The feature to be added to the ByteArrayAttachment
+   *      attribute
+   *@param  data      The feature to be added to the ByteArrayAttachment
+   *      attribute
+   *@param  mimeType  The feature to be added to the ByteArrayAttachment
+   *      attribute
+   */
+  public void addByteArrayAttachment(String fileName, String data, String mimeType) {
+    DataSource attachment = new ByteArrayDataSource(fileName, data, mimeType);
+    if (byteArrayAttachments == null) {
+      byteArrayAttachments = new ArrayList();
+    }
+    byteArrayAttachments.add(attachment);
+  }
+
+
+  /**
+   *  Adds a feature to the ByteArrayAttachment attribute of the SMTPMessage
+   *  object
+   *
+   *@param  fileName  The feature to be added to the ByteArrayAttachment
+   *      attribute
+   *@param  data      The feature to be added to the ByteArrayAttachment
+   *      attribute
+   *@param  mimeType  The feature to be added to the ByteArrayAttachment
+   *      attribute
+   */
+  public void addByteArrayAttachment(String fileName, byte[] data, String mimeType) {
+    DataSource attachment = new ByteArrayDataSource(fileName, data, mimeType);
+    if (byteArrayAttachments == null) {
+      byteArrayAttachments = new ArrayList();
+    }
+    byteArrayAttachments.add(attachment);
+  }
+
+
+  /**
    *  Sends an email based on this objects properties
    *
    *@return    Description of the Returned Value
@@ -280,8 +321,21 @@ public class SMTPMessage {
 
       //Set the content
       if ("text".equals(type) || "text/plain".equals(type)) {
-        //A text only message
-        message.setText(body);
+        if (attachments != null || byteArrayAttachments != null) {
+          //Send a text message with attachments
+          MimeBodyPart messageBodyPart = new MimeBodyPart();
+          messageBodyPart.setText(body);
+          MimeMultipart multipart = new MimeMultipart();
+          multipart.addBodyPart(messageBodyPart);
+          //Attach the files to the root
+          this.addFileAttachments(multipart);
+          //Attach a string as a file attachment
+          this.addByteArrayFileAttachments(multipart);
+          message.setContent(multipart);
+        } else {
+          //Send a text message without attachments
+          message.setText(body);
+        }
       } else if (!"text/html".equals(type)) {
         //A custom message test
         message.setContent(body, type);
@@ -326,6 +380,9 @@ public class SMTPMessage {
         //Attach the files to the root
         this.addFileAttachments(mpRoot);
 
+        //Attach a string as a file attachment
+        this.addByteArrayFileAttachments(mpRoot);
+
         //Add add the parts to the message
         message.setContent(mpRoot);
       }
@@ -357,6 +414,31 @@ public class SMTPMessage {
         attachmentBodyPart.setDisposition(Part.ATTACHMENT);
         attachmentBodyPart.setDataHandler(new DataHandler(source));
         attachmentBodyPart.setFileName(fileItem.getClientFilename());
+        root.addBodyPart(attachmentBodyPart);
+      }
+    }
+  }
+
+
+  /**
+   *  Adds a feature to the ByteArrayFileAttachments attribute of the
+   *  SMTPMessage object
+   *
+   *@param  root                    The feature to be added to the
+   *      ByteArrayFileAttachments attribute
+   *@exception  MessagingException  Description of the Exception
+   */
+  private void addByteArrayFileAttachments(MimeMultipart root) throws MessagingException {
+    if (byteArrayAttachments != null) {
+      Iterator attachments = byteArrayAttachments.iterator();
+      while (attachments.hasNext()) {
+        // Retrieve the attachment
+        DataSource attachment = (DataSource) attachments.next();
+        // attach the file to the message
+        BodyPart attachmentBodyPart = new MimeBodyPart();
+        attachmentBodyPart.setDisposition(Part.ATTACHMENT);
+        attachmentBodyPart.setDataHandler(new DataHandler(attachment));
+        attachmentBodyPart.setFileName(attachment.getName());
         root.addBodyPart(attachmentBodyPart);
       }
     }
