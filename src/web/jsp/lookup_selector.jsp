@@ -13,8 +13,14 @@
 <form name="elementListView" method="post" action="LookupSelector.do?command=PopupSelector">
 <br>
 <center><%= LookupSelectorInfo.getAlphabeticalPageLinks("setFieldSubmit","elementListView") %></center>
-<br>
 <input type="hidden" name="letter">
+<table width="100%" border="0">
+  <tr>
+      <td align="right">
+        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LookupSelectorInfo" showHiddenParams="true" enableJScript="true"/>
+      </td>
+  </tr>
+</table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td align="center" nowrap width="8">
@@ -52,7 +58,7 @@
     }
   } else {
 %>
-      <tr bgcolor="containerBody">
+      <tr class="containerBody">
         <td colspan="2">
           No options matched query.
         </td>
@@ -70,8 +76,6 @@
 [<a href="javascript:SetChecked(1,'checkelement','elementListView','<%= User.getBrowserId() %>');">Check All</a>]
 [<a href="javascript:SetChecked(0,'checkelement','elementListView','<%= User.getBrowserId() %>');">Clear All</a>]
 <br>
-&nbsp;<br>
-<dhv:pagedListControl object="LookupSelectorInfo" showForm="false" resetList="false" enableJScript="true"/>
 </form>
   <%} else {%>
 <body onLoad="javascript:setParentList(selectedValues,selectedIds,'list','<%= DisplayFieldId %>','<%= User.getBrowserId() %>');window.close();">
