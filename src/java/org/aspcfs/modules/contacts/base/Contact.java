@@ -818,6 +818,10 @@ public class Contact extends GenericBean {
     if (nameLast != null && nameLast.length() > 0) {
       out.append(nameLast);
     }
+    
+    if (out.toString().length() == 0) {
+	    return company;
+    }
 
     return out.toString().trim();
   }
@@ -844,6 +848,7 @@ public class Contact extends GenericBean {
     }
     
     if (out.toString().length() == 0) {
+	    System.out.println("chris");
 	    return company;
     }
 
