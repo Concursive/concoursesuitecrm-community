@@ -53,42 +53,72 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
    *@return                  Description of the Return Value
    */
   public String calendarAlerts(CalendarView companyCalendar, Connection db) {
-    System.out.println("AccountsListScheduledActions --> Building Account Alerts ");
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("AccountsListScheduledActions --> Building Account Alerts ");
+    }
+    
+    String alertType = companyCalendar.getCalendarInfo().getCalendarDetailsView();
+    if(alertType.equalsIgnoreCase("AccountsAlertDates")){
+      this.addAlertDates(companyCalendar,db);
+    }else if(alertType.equalsIgnoreCase("AccountsContractEndDates")){
+      this.addContractEndDates(companyCalendar,db);
+    }else{
+      this.addAlertDates(companyCalendar,db);
+      this.addContractEndDates(companyCalendar,db);
+    }
+    return ("CalAccountsOK");
+  }
+  
+  
+  public void addAlertDates(CalendarView companyCalendar, Connection db){
     PagedListInfo orgAlertPaged = new PagedListInfo();
     orgAlertPaged.setMaxRecords(20);
     orgAlertPaged.setColumnToSortBy("alertdate");
 
-    this.setPagedListInfo(orgAlertPaged);
-    this.setEnteredBy(this.getUserId());
-    this.setHasAlertDate(true);
-
-    /*
-     *  OrganizationList expireOrgs = new OrganizationList();
-     *  expireOrgs.setPagedListInfo(orgAlertPaged);
-     *  expireOrgs.setEnteredBy(this.getUserId());
-     *  expireOrgs.setHasExpireDate(true);
-     */
+    OrganizationList alertOrgs = new OrganizationList();
+    alertOrgs.setPagedListInfo(orgAlertPaged);
+    alertOrgs.setEnteredBy(this.getUserId());
+    alertOrgs.setHasExpireDate(false);
+    alertOrgs.setHasAlertDate(true);
+    
     try {
-      this.buildList(db);
-      //expireOrgs.buildList(db);
+      alertOrgs.buildList(db);
+    } catch (SQLException e) {
+      System.out.println("AccountsListScheduledActions --> Alerts SQLException ");
+    }
+
+    Iterator n = alertOrgs.iterator();
+    while (n.hasNext()) {
+      Organization thisOrg = (Organization) n.next();
+        companyCalendar.addEvent(thisOrg.getAlertDateStringLongYear(), "", thisOrg.getName() + ": " + thisOrg.getAlertText(), "Accounts", thisOrg.getOrgId());
+    }
+  }
+  
+  
+  public void addContractEndDates(CalendarView companyCalendar, Connection db){
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("AccountsListScheduledActions --> Building Account Contract End Dates ");
+    }
+    PagedListInfo orgAlertPaged = new PagedListInfo();
+    orgAlertPaged.setMaxRecords(20);
+    orgAlertPaged.setColumnToSortBy("alertdate");
+
+    OrganizationList contractEndOrgs = new OrganizationList(); 
+    contractEndOrgs.setPagedListInfo(orgAlertPaged);
+    contractEndOrgs.setEnteredBy(this.getUserId());
+    contractEndOrgs.setHasAlertDate(false);
+    contractEndOrgs.setHasExpireDate(true);
+    try {
+      contractEndOrgs.buildList(db);
     } catch (SQLException e) {
       System.out.println("AccountsListScheduledActions --> calendarAlerts SQLException ");
     }
 
-    Iterator n = this.iterator();
+    Iterator n = contractEndOrgs.iterator();
     while (n.hasNext()) {
       Organization thisOrg = (Organization) n.next();
-      companyCalendar.addEvent(thisOrg.getAlertDateStringLongYear(), "", thisOrg.getName() + ": " + thisOrg.getAlertText(), "Accounts", thisOrg.getOrgId());
+        companyCalendar.addEvent(thisOrg.getContractEndDateStringLongYear(), "", thisOrg.getName() + ": " + "Contract Expiration", "Accounts", thisOrg.getOrgId());
     }
-
-    /*
-     *  Iterator m = expireOrgs.iterator();
-     *  while (m.hasNext()) {
-     *  Organization thatOrg = (Organization) m.next();
-     *  companyCalendar.addEvent(thatOrg.getContractEndDateStringLongYear(), "", thatOrg.getName() + ": " + "Contract Expiration", "Account", thatOrg.getOrgId());
-     *  }
-     */
-    return ("CalAccountsOK");
   }
 }
 

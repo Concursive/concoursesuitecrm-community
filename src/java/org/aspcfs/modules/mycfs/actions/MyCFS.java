@@ -1064,8 +1064,7 @@ public final class MyCFS extends CFSModule {
       for (int i = 0; i < alertTypes.size(); i++) {
         String className = "com.darkhorseventures.cfsbase." + ((String) alertTypes.get(i)).trim() + "ListScheduledActions";
         Object thisInstance = Class.forName(className).newInstance();
-        
-        if (((String)alertTypes.get(i)).equalsIgnoreCase(selectedAlertType) || selectedAlertType.equalsIgnoreCase("all")) {
+        if (selectedAlertType.toLowerCase().startsWith((((String)alertTypes.get(i)).toLowerCase())) || selectedAlertType.equalsIgnoreCase("all")) {
           //set UserId
           Method method = Class.forName(className).getMethod("setUserId", new Class[]{int.class});
           method.invoke(thisInstance, new Object[]{new Integer(calendarInfo.getSelectedUserId())});

@@ -28,7 +28,7 @@
 <tr style="visibility:hidden"><td></td></tr>
 <tr valign="top">
   <td valign="top" bgcolor="#FFFFFF" width="300">
-    <iframe id="calendarid" name="calendar" frameborder="0" marginwidth="0" marginheight="0" width="310" height="360" src="MyCFS.do?command=MonthView&source=Calendar<%=returnPage!=null?"&return="+returnPage:""%>">
+    <iframe id="calendarid" name="calendar" frameborder="0" marginwidth="0" marginheight="0" width="310" height="380" src="MyCFS.do?command=MonthView&source=Calendar<%=returnPage!=null?"&return="+returnPage:""%>">
     </iframe>
   </td>
 <td bgcolor="#FFFFFF" valign="top" height="100%" width="100%">
@@ -38,7 +38,11 @@
           <table width="100%" cellspacing="0" cellpadding="0" border="0">
             <tr>
               <td width="60%" valign="center">
-               <strong>&nbsp;Account Alerts</strong>
+               <select id="alerts" size="1" name="alertsView" onChange="javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=calendardetails&return=Accounts&alertsView='+document.getElementById('alerts').value);">
+                <option  value="AccountsAll"      <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAll")?" selected":"" %>>All Scheduled Actions</option>
+                <option  value="AccountsContractEndDates"    <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsEndDates")?" selected":"" %>>Contract End Dates</option>
+                <option  value="AccountsAlertDates"    <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAlertDates")?" selected":"" %>>Alert Dates</option>
+               </select>
               </td>
               <td valign="center" align="right">
               <% if(NewUserList.size()!=0){%>
@@ -55,7 +59,6 @@
   <tr>
   <td width="100%" valign="top" height="90%">
     <iframe id="calendardetailsid" name="calendardetails" frameborder="0" marginheight="0" width="99%" height="88%" src="MyCFS.do?command=Alerts&source=calendarDetails<%=returnPage!=null?"&return="+returnPage:""%>">
-    <%--<iframe id="calendardetailsid" name="calendardetails" frameborder="0" marginheight="0" width="99%" height="88%" src="images/arrowright.gif" onblur="return false">--%>
     </iframe>
     </td>
   </tr>
