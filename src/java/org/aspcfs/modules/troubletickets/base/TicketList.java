@@ -26,6 +26,8 @@ public class TicketList extends Vector {
 	private boolean unassignedToo = false;
 	private int severity = 0;
 	private int priority = 0;
+	
+	private String searchText = "";
 
 	/**
 	 *  Constructor for the TicketList object
@@ -74,6 +76,12 @@ public void setSeverity(int tmp) { this.severity = tmp; }
 public void setPriority(int tmp) { this.priority = tmp; }
 public void setSeverity(String tmp) { this.severity = Integer.parseInt(tmp); }
 public void setPriority(String tmp) { this.priority = Integer.parseInt(tmp); }
+public String getSearchText() {
+	return searchText;
+}
+public void setSearchText(String searchText) {
+	this.searchText = searchText;
+}
 
 	/**
 	 *  Sets the OrgId attribute of the TicketList object
@@ -304,44 +312,49 @@ public void setOnlyClosed(boolean onlyClosed) {
 	 *@since             1.2
 	 */
 	private void createFilter(StringBuffer sqlFilter) {
-		if (enteredBy > -1) {
-			sqlFilter.append("AND t.enteredby = ? ");
-		}
-
-		if (onlyOpen == true) {
-			sqlFilter.append("AND t.closed is null ");
-		}
-		
-		if (onlyClosed == true) {
-			sqlFilter.append("AND t.closed is not null ");
-		}
-
-		if (id > -1) {
-			sqlFilter.append("AND t.ticketid = ? ");
-		}
-
-		if (orgId > -1) {
-			sqlFilter.append("AND t.org_id = ? ");
-		}
-		
-		if (department > -1) {
-			if (unassignedToo == true) {
-				sqlFilter.append("AND t.department_code in (?, 0) ");
-			} else {
-				sqlFilter.append("AND t.department_code = ? ");
+		if ( searchText == null || (searchText.equals("")) ) {
+			if (enteredBy > -1) {
+				sqlFilter.append("AND t.enteredby = ? ");
 			}
-		}
-		
-		if (assignedTo > -1) {
-			sqlFilter.append("AND t.assigned_to = ? ");
-		}
-		
-		if (severity > 0) {
-			sqlFilter.append("AND t.scode = ? ");
-		}
-		
-		if (priority > 0) {
-			sqlFilter.append("AND t.pri_code = ? ");
+	
+			if (onlyOpen == true) {
+				sqlFilter.append("AND t.closed is null ");
+			}
+			
+			if (onlyClosed == true) {
+				sqlFilter.append("AND t.closed is not null ");
+			}
+	
+			if (id > -1) {
+				sqlFilter.append("AND t.ticketid = ? ");
+			}
+	
+			if (orgId > -1) {
+				sqlFilter.append("AND t.org_id = ? ");
+			}
+			
+			if (department > -1) {
+				if (unassignedToo == true) {
+					sqlFilter.append("AND t.department_code in (?, 0) ");
+				} else {
+					sqlFilter.append("AND t.department_code = ? ");
+				}
+			}
+			
+			if (assignedTo > -1) {
+				sqlFilter.append("AND t.assigned_to = ? ");
+			}
+			
+			if (severity > 0) {
+				sqlFilter.append("AND t.scode = ? ");
+			}
+			
+			if (priority > 0) {
+				sqlFilter.append("AND t.pri_code = ? ");
+			}
+		} else {
+			
+			sqlFilter.append("AND ( lower(t.problem) like lower(?) OR lower(t.comment) like lower(?) OR lower(t.solution) like lower(?) ) ");
 		}
 	}
 
@@ -358,26 +371,33 @@ public void setOnlyClosed(boolean onlyClosed) {
 	private int prepareFilter(PreparedStatement pst) throws SQLException {
 		int i = 0;
 
-		if (enteredBy > -1) {
-			pst.setInt(++i, enteredBy);
-		}
-		if (id > -1) {
-			pst.setInt(++i, id);
-		}
-		if (orgId > -1) {
-			pst.setInt(++i, orgId);
-		}
-		if (department > -1) {
-			pst.setInt(++i, department);
-		}
-		if (assignedTo > -1) {
-			pst.setInt(++i, assignedTo);
-		}
-		if (severity > 0) {
-			pst.setInt(++i, severity);
-		}
-		if (priority > 0) {
-			pst.setInt(++i, priority);
+		if ( searchText == null || (searchText.equals("")) ) {
+			
+			if (enteredBy > -1) {
+				pst.setInt(++i, enteredBy);
+			}
+			if (id > -1) {
+				pst.setInt(++i, id);
+			}
+			if (orgId > -1) {
+				pst.setInt(++i, orgId);
+			}
+			if (department > -1) {
+				pst.setInt(++i, department);
+			}
+			if (assignedTo > -1) {
+				pst.setInt(++i, assignedTo);
+			}
+			if (severity > 0) {
+				pst.setInt(++i, severity);
+			}
+			if (priority > 0) {
+				pst.setInt(++i, priority);
+			}
+		} else {
+			pst.setString(++i, searchText);
+			pst.setString(++i, searchText);
+			pst.setString(++i, searchText);
 		}
 		
 		return i;

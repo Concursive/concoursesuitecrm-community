@@ -25,6 +25,7 @@ public class OrganizationList extends Vector {
 	private String name = null;
 	private int ownerId = -1;
 	private String HtmlJsEvent = "";
+	private boolean showMyCompany = false;
 
 
 	/**
@@ -58,6 +59,17 @@ public class OrganizationList extends Vector {
 	 */
 	public void setMinerOnly(boolean tmp) {
 		this.minerOnly = new Boolean(tmp);
+	}
+
+
+	/**
+	 *  Sets the ShowMyCompany attribute of the OrganizationList object
+	 *
+	 *@param  showMyCompany  The new ShowMyCompany value
+	 *@since
+	 */
+	public void setShowMyCompany(boolean showMyCompany) {
+		this.showMyCompany = showMyCompany;
 	}
 
 
@@ -108,6 +120,17 @@ public class OrganizationList extends Vector {
 
 
 	/**
+	 *  Gets the ShowMyCompany attribute of the OrganizationList object
+	 *
+	 *@return    The ShowMyCompany value
+	 *@since
+	 */
+	public boolean getShowMyCompany() {
+		return showMyCompany;
+	}
+
+
+	/**
 	 *  Gets the HtmlJsEvent attribute of the OrganizationList object
 	 *
 	 *@return    The HtmlJsEvent value
@@ -151,7 +174,7 @@ public class OrganizationList extends Vector {
 	 */
 	public String getHtmlSelect(String selectName, int defaultKey) {
 		HtmlSelect orgListSelect = new HtmlSelect();
-		
+
 		Iterator i = this.iterator();
 		while (i.hasNext()) {
 			Organization thisOrg = (Organization) i.next();
@@ -160,11 +183,11 @@ public class OrganizationList extends Vector {
 					thisOrg.getName()
 					);
 		}
-		
+
 		if (!(this.getHtmlJsEvent().equals(""))) {
 			orgListSelect.setJsEvent(this.getHtmlJsEvent());
 		}
-		
+
 		return orgListSelect.getHtml(selectName, defaultKey);
 	}
 
@@ -188,11 +211,11 @@ public class OrganizationList extends Vector {
 					thisOrg.getName()
 					);
 		}
-		
+
 		if (!(this.getHtmlJsEvent().equals(""))) {
 			orgListSelect.setJsEvent(this.getHtmlJsEvent());
 		}
-		
+
 		return orgListSelect.getHtml(selectName);
 	}
 
@@ -220,22 +243,22 @@ public class OrganizationList extends Vector {
 		//Need to build a base SQL statement for returning records
 		sqlSelect.append(
 				"SELECT o.*, " +
-        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
-        "i.name as industry_name " +
+				"ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
+				"ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
+				"ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
+				"i.name as industry_name " +
 				"FROM organization o " +
 				"LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id) " +
 				"LEFT JOIN contact ct_eb ON (o.enteredby = ct_eb.user_id) " +
 				"LEFT JOIN contact ct_mb ON (o.modifiedby = ct_mb.user_id) " +
 				"LEFT JOIN industry_temp i ON (o.industry_temp_code = i.code) " +
-				"WHERE o.org_id > 0 ");
+				"WHERE o.org_id >= 0 ");
 
 		//Need to build a base SQL statement for counting records
 		sqlCount.append(
 				"SELECT COUNT(*) AS recordcount " +
 				"FROM organization o " +
-				"WHERE o.org_id > 0 ");
+				"WHERE o.org_id >= 0 ");
 
 		createFilter(sqlFilter);
 
@@ -283,9 +306,10 @@ public class OrganizationList extends Vector {
 			}
 
 			sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
-		} else {
-      sqlOrder.append("ORDER BY o.name ");
-    }
+		}
+		else {
+			sqlOrder.append("ORDER BY o.name ");
+		}
 
 		pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
 		items = prepareFilter(pst);
@@ -332,6 +356,10 @@ public class OrganizationList extends Vector {
 
 		if (ownerId > -1) {
 			sqlFilter.append("AND o.owner = ? ");
+		}
+		
+		if (showMyCompany == false) {
+			sqlFilter.append("AND o.org_id != 0 ");
 		}
 
 	}

@@ -53,6 +53,8 @@ public class ContactList extends Vector {
 	private String dateOnOrAfter = null;
 
 	private SearchCriteriaList scl = null;
+	private boolean showEmployeeContacts = false;
+	private String searchText = "";
 
 
 	/**
@@ -73,6 +75,12 @@ public class ContactList extends Vector {
 		this.companyRange = companyRange;
 	}
 
+public boolean getShowEmployeeContacts() {
+	return showEmployeeContacts;
+}
+public void setShowEmployeeContacts(boolean showEmployeeContacts) {
+	this.showEmployeeContacts = showEmployeeContacts;
+}
 
 	/**
 	 *  Sets the FirstName attribute of the ContactList object
@@ -84,6 +92,12 @@ public class ContactList extends Vector {
 		this.firstName = firstName;
 	}
 
+public String getSearchText() {
+	return searchText;
+}
+public void setSearchText(String searchText) {
+	this.searchText = searchText;
+}
 
 	/**
 	 *  Sets the Company attribute of the ContactList object
@@ -804,126 +818,138 @@ public class ContactList extends Vector {
 	 *@since             1.3
 	 */
 	private void createFilter(StringBuffer sqlFilter) {
-		if (sqlFilter == null) {
-			sqlFilter = new StringBuffer();
-		}
-
-		if (orgId != -1) {
-			sqlFilter.append("AND c.org_id = ? ");
-		}
-
-		if (owner != -1) {
-			sqlFilter.append("AND c.owner = ? ");
-		}
-
-		if (typeId != -1) {
-			sqlFilter.append("AND c.type_id = ? ");
-		}
-
-		if (firstName != null) {
-			if (firstName.indexOf("%") >= 0) {
-				sqlFilter.append("AND lower(c.namefirst) like lower(?) ");
+		if ( searchText == null || (searchText.equals("")) ) {
+			if (sqlFilter == null) {
+				sqlFilter = new StringBuffer();
 			}
-			else {
-				sqlFilter.append("AND lower(c.namefirst) = lower(?) ");
+	
+			if (orgId != -1) {
+				sqlFilter.append("AND c.org_id = ? ");
 			}
-		}
-
-		if (middleName != null) {
-			if (middleName.indexOf("%") >= 0) {
-				sqlFilter.append("AND lower(c.namemiddle) like lower(?) ");
+	
+			if (owner != -1) {
+				sqlFilter.append("AND c.owner = ? ");
 			}
-			else {
-				sqlFilter.append("AND lower(c.namemiddle) = lower(?) ");
+	
+			if (typeId != -1) {
+				sqlFilter.append("AND c.type_id = ? ");
 			}
-		}
-
-		if (lastName != null) {
-			if (lastName.indexOf("%") >= 0) {
-				sqlFilter.append("AND lower(c.namelast) like lower(?) ");
-			}
-			else {
-				sqlFilter.append("AND lower(c.namelast) = lower(?) ");
-			}
-		}
-
-		if (title != null) {
-			if (title.indexOf("%") >= 0) {
-				sqlFilter.append("AND lower(c.title) like lower(?) ");
-			}
-			else {
-				sqlFilter.append("AND lower(c.title) = lower(?) ");
-			}
-		}
-
-		if (company != null) {
-			if (company.indexOf("%") >= 0) {
-				sqlFilter.append("AND lower(c.company) like lower(?) ");
-			}
-			else {
-				sqlFilter.append("AND lower(c.company) = lower(?) ");
-			}
-		}
-
-		if (companyRange != null) {
-			sqlFilter.append("AND (lower(o.name) in (" + companyRange + ") OR lower(c.company) in (" + companyRange + "))");
-		}
-
-		if (nameFirstRange != null) {
-			sqlFilter.append("AND lower(c.namefirst) in (" + nameFirstRange + ") ");
-		}
-
-		if (nameLastRange != null) {
-			sqlFilter.append("AND lower(c.namelast) in (" + nameLastRange + ") ");
-		}
-		
-		if (typeIdRange != null) {
-			sqlFilter.append("AND c.type_id in (" + typeIdRange + ") ");
-		}
-
-		if (zipRange != null) {
-			sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and postalcode in (" + zipRange + ")) ");
-		}
-
-		if (areaCodeRange != null) {
-			sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_phone where phone_type = 1 and substr(number,0,4) in (" + areaCodeRange + ")) ");
-		}
-
-		if (cityRange != null) {
-			sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and lower(city) in (" + cityRange + ")) ");
-		}
-
-		if (dateBefore != null) {
-			sqlFilter.append("AND (c.entered < " + dateBefore + ") ");
-		}
-
-		if (dateAfter != null) {
-			sqlFilter.append("AND (c.entered > " + dateAfter + ") ");
-		}
-
-		if (dateOnOrBefore != null) {
-			sqlFilter.append("AND (c.entered <= " + dateOnOrBefore + ") ");
-		}
-
-		if (dateOnOrAfter != null) {
-			sqlFilter.append("AND (c.entered >= " + dateOnOrAfter + ") ");
-		}
-
-		if (ownerIdRange != null) {
-			sqlFilter.append("AND c.owner IN (" + ownerIdRange + ") ");
-		}
-
-		if (ignoreTypeIdList.size() > 0) {
-			Iterator iList = ignoreTypeIdList.iterator();
-			sqlFilter.append("AND c.type_id not in (");
-			while (iList.hasNext()) {
-				String placeHolder = (String) iList.next();
-				sqlFilter.append("?");
-				if (iList.hasNext()) {
-					sqlFilter.append(",");
+	
+			if (firstName != null) {
+				if (firstName.indexOf("%") >= 0) {
+					sqlFilter.append("AND lower(c.namefirst) like lower(?) ");
+				}
+				else {
+					sqlFilter.append("AND lower(c.namefirst) = lower(?) ");
 				}
 			}
-			sqlFilter.append(") ");
+	
+			if (middleName != null) {
+				if (middleName.indexOf("%") >= 0) {
+					sqlFilter.append("AND lower(c.namemiddle) like lower(?) ");
+				}
+				else {
+					sqlFilter.append("AND lower(c.namemiddle) = lower(?) ");
+				}
+			}
+	
+			if (lastName != null) {
+				if (lastName.indexOf("%") >= 0) {
+					sqlFilter.append("AND lower(c.namelast) like lower(?) ");
+				}
+				else {
+					sqlFilter.append("AND lower(c.namelast) = lower(?) ");
+				}
+			}
+	
+			if (title != null) {
+				if (title.indexOf("%") >= 0) {
+					sqlFilter.append("AND lower(c.title) like lower(?) ");
+				}
+				else {
+					sqlFilter.append("AND lower(c.title) = lower(?) ");
+				}
+			}
+	
+			if (company != null) {
+				if (company.indexOf("%") >= 0) {
+					sqlFilter.append("AND lower(c.company) like lower(?) ");
+				}
+				else {
+					sqlFilter.append("AND lower(c.company) = lower(?) ");
+				}
+			}
+	
+			if (companyRange != null) {
+				sqlFilter.append("AND (lower(o.name) in (" + companyRange + ") OR lower(c.company) in (" + companyRange + "))");
+			}
+	
+			if (nameFirstRange != null) {
+				sqlFilter.append("AND lower(c.namefirst) in (" + nameFirstRange + ") ");
+			}
+	
+			if (nameLastRange != null) {
+				sqlFilter.append("AND lower(c.namelast) in (" + nameLastRange + ") ");
+			}
+			
+			if (typeIdRange != null) {
+				sqlFilter.append("AND c.type_id in (" + typeIdRange + ") ");
+			}
+	
+			if (zipRange != null) {
+				sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and postalcode in (" + zipRange + ")) ");
+			}
+	
+			if (areaCodeRange != null) {
+				sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_phone where phone_type = 1 and substr(number,0,4) in (" + areaCodeRange + ")) ");
+			}
+	
+			if (cityRange != null) {
+				sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and lower(city) in (" + cityRange + ")) ");
+			}
+	
+			if (dateBefore != null) {
+				sqlFilter.append("AND (c.entered < " + dateBefore + ") ");
+			}
+	
+			if (dateAfter != null) {
+				sqlFilter.append("AND (c.entered > " + dateAfter + ") ");
+			}
+	
+			if (dateOnOrBefore != null) {
+				sqlFilter.append("AND (c.entered <= " + dateOnOrBefore + ") ");
+			}
+	
+			if (dateOnOrAfter != null) {
+				sqlFilter.append("AND (c.entered >= " + dateOnOrAfter + ") ");
+			}
+	
+			if (ownerIdRange != null) {
+				sqlFilter.append("AND c.owner IN (" + ownerIdRange + ") ");
+			}
+	
+			if (ignoreTypeIdList.size() > 0) {
+				Iterator iList = ignoreTypeIdList.iterator();
+				sqlFilter.append("AND c.type_id not in (");
+				while (iList.hasNext()) {
+					String placeHolder = (String) iList.next();
+					sqlFilter.append("?");
+					if (iList.hasNext()) {
+						sqlFilter.append(",");
+					}
+				}
+				sqlFilter.append(") ");
+			}
+		} else {
+			if (typeId != -1) {
+				sqlFilter.append("AND c.type_id = ? ");
+			}
+			
+			if (ownerIdRange != null) {
+				sqlFilter.append("AND c.owner IN (" + ownerIdRange + ") ");
+			}
+			
+			sqlFilter.append("AND ( lower(c.namelast) like lower(?) OR lower(c.namefirst) like lower(?) OR lower(c.company) like lower(?) ) ");
 		}
 	}
 
@@ -939,44 +965,56 @@ public class ContactList extends Vector {
 	 */
 	private int prepareFilter(PreparedStatement pst) throws SQLException {
 		int i = 0;
-		if (orgId != -1) {
-			pst.setInt(++i, orgId);
-		}
-
-		if (owner != -1) {
-			pst.setInt(++i, owner);
-		}
-
-		if (typeId != -1) {
-			pst.setInt(++i, typeId);
-		}
-
-		if (firstName != null) {
-			pst.setString(++i, firstName);
-		}
-
-		if (middleName != null) {
-			pst.setString(++i, middleName);
-		}
-
-		if (lastName != null) {
-			pst.setString(++i, lastName);
-		}
 		
-		if (title != null) {
-			pst.setString(++i, title);
-		}
-
-		if (company != null) {
-			pst.setString(++i, company);
-		}
-
-		if (ignoreTypeIdList.size() > 0) {
-			Iterator iList = ignoreTypeIdList.iterator();
-			while (iList.hasNext()) {
-				int thisType = Integer.parseInt((String) iList.next());
-				pst.setInt(++i, thisType);
+		if ( searchText == null || (searchText.equals("")) ) {
+		
+			if (orgId != -1) {
+				pst.setInt(++i, orgId);
 			}
+	
+			if (owner != -1) {
+				pst.setInt(++i, owner);
+			}
+	
+			if (typeId != -1) {
+				pst.setInt(++i, typeId);
+			}
+	
+			if (firstName != null) {
+				pst.setString(++i, firstName);
+			}
+	
+			if (middleName != null) {
+				pst.setString(++i, middleName);
+			}
+	
+			if (lastName != null) {
+				pst.setString(++i, lastName);
+			}
+			
+			if (title != null) {
+				pst.setString(++i, title);
+			}
+	
+			if (company != null) {
+				pst.setString(++i, company);
+			}
+	
+			if (ignoreTypeIdList.size() > 0) {
+				Iterator iList = ignoreTypeIdList.iterator();
+				while (iList.hasNext()) {
+					int thisType = Integer.parseInt((String) iList.next());
+					pst.setInt(++i, thisType);
+				}
+			}
+		} else {
+			if (typeId != -1) {
+				pst.setInt(++i, typeId);
+			}
+			
+			pst.setString(++i, searchText);
+			pst.setString(++i, searchText);
+			pst.setString(++i, searchText);
 		}
 
 		//System.out.println(pst.toString());

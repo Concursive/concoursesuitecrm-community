@@ -189,8 +189,10 @@ public final class CampaignManagerGroup extends CFSModule {
   public String executeCommandInsert(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
+    boolean recordInserted = false;
 
-    SearchFormBean thisSearchForm = (SearchFormBean)context.getRequest().getAttribute("SearchForm");
+    //SearchFormBean thisSearchForm = (SearchFormBean)context.getRequest().getAttribute("SearchForm");
+    SearchFormBean thisSearchForm = (SearchFormBean)context.getFormBean();
     SearchCriteriaList thisSCL = thisSearchForm.getSearchCriteriaList();
 
     try {
@@ -199,20 +201,26 @@ public final class CampaignManagerGroup extends CFSModule {
       thisSCL.setEnteredBy(getUserId(context));
       thisSCL.setModifiedBy(getUserId(context));
       thisSCL.setOwner(getUserId(context));
-      thisSCL.insert(db);
-      context.getRequest().setAttribute("id", "" + thisSCL.getId());
+      recordInserted = thisSCL.insert(db);
       
-      context.getSession().removeAttribute("CampaignGroupsPreviewInfo");
-      PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsPreviewInfo");
-      pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
-
-      ContactList contacts = new ContactList();
-      contacts.setScl(thisSCL);
-      contacts.setPagedListInfo(pagedListInfo);
-      contacts.setOwner(this.getUserId(context));
-      contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-      contacts.buildList(db);
-      context.getRequest().setAttribute("ContactList", contacts);
+	if (!recordInserted) {
+		processErrors(context, thisSCL.getErrors());
+	} else {
+      
+	      context.getRequest().setAttribute("id", "" + thisSCL.getId());
+	      
+	      context.getSession().removeAttribute("CampaignGroupsPreviewInfo");
+	      PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsPreviewInfo");
+	      pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
+	
+	      ContactList contacts = new ContactList();
+	      contacts.setScl(thisSCL);
+	      contacts.setPagedListInfo(pagedListInfo);
+	      contacts.setOwner(this.getUserId(context));
+	      contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+	      contacts.buildList(db);
+	      context.getRequest().setAttribute("ContactList", contacts);
+       }
 
     } catch (Exception e) {
       errorMessage = e;
@@ -221,8 +229,13 @@ public final class CampaignManagerGroup extends CFSModule {
     }
 
     if (errorMessage == null) {
-      addModuleBean(context, "ManageGroups", "Preview");
-      return ("InsertOK");
+        if (recordInserted) {
+		addModuleBean(context, "ManageGroups", "Preview");
+		return ("InsertOK");
+	} else {
+		return (executeCommandAdd(context));
+	}
+
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -317,19 +330,25 @@ public final class CampaignManagerGroup extends CFSModule {
       thisSCL.setOwner(thisSearchForm.getOwner());
       thisSCL.setModifiedBy(getUserId(context));
       resultCount = thisSCL.update(db);
-      context.getRequest().setAttribute("id", "" + thisSCL.getId());
-
-      context.getSession().removeAttribute("CampaignGroupsPreviewInfo");
-      PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsPreviewInfo");
-      pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
-
-      ContactList contacts = new ContactList();
-      contacts.setScl(thisSCL);
-      contacts.setPagedListInfo(pagedListInfo);
-      contacts.setOwner(this.getUserId(context));
-      contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-      contacts.buildList(db);
-      context.getRequest().setAttribute("ContactList", contacts);
+      
+      	if (resultCount == -1) {
+		processErrors(context, thisSCL.getErrors());
+	} else {
+      
+	      context.getRequest().setAttribute("id", "" + thisSCL.getId());
+	
+	      context.getSession().removeAttribute("CampaignGroupsPreviewInfo");
+	      PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsPreviewInfo");
+	      pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
+	
+	      ContactList contacts = new ContactList();
+	      contacts.setScl(thisSCL);
+	      contacts.setPagedListInfo(pagedListInfo);
+	      contacts.setOwner(this.getUserId(context));
+	      contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+	      contacts.buildList(db);
+	      context.getRequest().setAttribute("ContactList", contacts);
+       }
     } catch (Exception e) {
       errorMessage = e;
     } finally {

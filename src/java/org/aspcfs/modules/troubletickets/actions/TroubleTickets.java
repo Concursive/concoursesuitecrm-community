@@ -99,6 +99,7 @@ public String executeCommandModify(ActionContext context) {
 		OrganizationList orgList = new OrganizationList();
 		orgList.setMinerOnly(false);
 		orgList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/TroubleTickets.do?command=Modify&passedid=" + newTic.getId() + "&auto-populate=true';document.forms[0].submit()");
+		orgList.setShowMyCompany(true);
 		orgList.buildList(db);
 		context.getRequest().setAttribute("OrgList", orgList);
 		
@@ -114,6 +115,9 @@ public String executeCommandModify(ActionContext context) {
 		//contactList.setTypeId(Integer.parseInt(typeId));
 		contactList.setBuildDetails(false);
 		contactList.setOrgId(newTic.getOrgId());
+		
+		if (newTic.getOrgId() == -1) { contactList.setShowEmployeeContacts(true); }
+		
 		contactList.buildList(db);
 		context.getRequest().setAttribute("ContactList", contactList);
 		
@@ -402,6 +406,7 @@ public String executeCommandDetails(ActionContext context) {
 		
 			OrganizationList orgList = new OrganizationList();
 			orgList.setMinerOnly(false);
+			orgList.setShowMyCompany(true);
 			orgList.buildList(db);
 			context.getRequest().setAttribute("OrgList", orgList);
 			
@@ -591,6 +596,7 @@ public String executeCommandDetails(ActionContext context) {
 		OrganizationList orgList = new OrganizationList();
 		orgList.setMinerOnly(false);
 		orgList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/TroubleTickets.do?command=Add&auto-populate=true';document.forms[0].submit()");
+		orgList.setShowMyCompany(true);
 		orgList.buildList(db);
 		context.getRequest().setAttribute("OrgList", orgList);
 		

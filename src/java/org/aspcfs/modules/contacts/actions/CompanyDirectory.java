@@ -224,6 +224,7 @@ public final class CompanyDirectory extends CFSModule {
 
     Contact thisEmployee = (Contact)context.getFormBean();
     thisEmployee.setTypeId(Contact.EMPLOYEE_TYPE);
+    thisEmployee.setOrgId(0);
     thisEmployee.setRequestItems(context.getRequest());
     thisEmployee.setEnteredBy(getUserId(context));
     thisEmployee.setModifiedBy(getUserId(context));
