@@ -1872,6 +1872,7 @@ public class Organization extends GenericBean {
       //Insert primary contact if account is an individual
       if(nameLast != null && !"".equals(nameLast)){
         primaryContact.setOrgId(orgId);
+        primaryContact.setOrgName(this.getName());
         primaryContact.insert(db);
       }
       
@@ -1995,6 +1996,7 @@ public class Organization extends GenericBean {
     primaryContact.setModifiedBy(this.getModifiedBy());
     primaryContact.setOwner(this.getOwner());
     primaryContact.setNameLast(this.getNameLast());
+    primaryContact.setOrgName(this.getName());
     //designate this as a primary contact
     primaryContact.setPrimaryContact(true);
   }
@@ -2009,6 +2011,7 @@ public class Organization extends GenericBean {
     primaryContact.setNameMiddle(this.getNameMiddle());
     primaryContact.setModifiedBy(this.getModifiedBy());
     primaryContact.setOwner(this.getOwner());
+    primaryContact.setOrgName(this.getName());
   }
 
 
