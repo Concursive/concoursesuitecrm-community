@@ -1257,8 +1257,8 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the revenue attribute of the Organization object, formatted as
-   *  US currency
+   *  Gets the revenue attribute of the Organization object, formatted as US
+   *  currency
    *
    *@return    The revenueCurrency value
    */
@@ -1868,18 +1868,16 @@ public class Organization extends GenericBean {
 
       orgId = DatabaseUtils.getCurrVal(db, "organization_org_id_seq");
 
-      
       //Insert primary contact if account is an individual
-      if(nameLast != null && !"".equals(nameLast)){
+      if (nameLast != null && !"".equals(nameLast)) {
         primaryContact.setOrgId(orgId);
         primaryContact.setOrgName(this.getName());
         boolean contactInserted = primaryContact.insert(db);
-        if(!contactInserted){
+        if (!contactInserted) {
           throw new SQLException("Contact could not be inserted");
         }
       }
-      
-      
+
       //Insert the phone numbers if there are any
       Iterator iphone = phoneNumberList.iterator();
       while (iphone.hasNext()) {
@@ -2139,6 +2137,24 @@ public class Organization extends GenericBean {
 
 
   /**
+   *  Renames the CFS organization running this database
+   *
+   *@param  db                Description of the Parameter
+   *@param  newName           Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void renameMyCompany(Connection db, String newName) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE organization " +
+        "SET name = ? " +
+        "WHERE org_id = 0 ");
+    pst.setString(1, newName);
+    pst.execute();
+    pst.close();
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of Parameter
@@ -2209,7 +2225,6 @@ public class Organization extends GenericBean {
       st.executeUpdate(
           "DELETE FROM organization WHERE org_id = " + this.getOrgId());
       st.close();
-
       db.commit();
     } catch (SQLException e) {
       e.printStackTrace(System.out);
@@ -2232,7 +2247,6 @@ public class Organization extends GenericBean {
     if (this.getOrgId() == -1) {
       throw new SQLException("The Organization could not be found.");
     }
-
     try {
       db.setAutoCommit(false);
       Statement st = db.createStatement();
@@ -2275,12 +2289,10 @@ public class Organization extends GenericBean {
    */
   protected boolean isValid(Connection db) throws SQLException {
     errors.clear();
-
     if ((name == null || name.trim().equals("")) && (nameLast == null || nameLast.trim().equals(""))) {
       errors.put("nameError", "An account name is required.");
       errors.put("nameLastError", "An account name is required.");
     }
-
     if (hasErrors()) {
       return false;
     } else {
@@ -2384,13 +2396,11 @@ public class Organization extends GenericBean {
       }
       out.append(nameMiddle);
     }
-
     if (out.toString().length() == 0) {
       return null;
     }
     return out.toString().trim();
   }
-
 }
 
 
