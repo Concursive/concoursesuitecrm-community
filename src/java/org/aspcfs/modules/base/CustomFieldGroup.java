@@ -537,7 +537,7 @@ public class CustomFieldGroup extends ArrayList {
                         sql.append("entered, ");
                 }
     sql.append("description ) ");
-    sql.append("VALUES (?, ?, ?, ");
+    sql.append("VALUES (?, ?, ");
                 if (entered != null) {
                         sql.append("?, ");
                 }
