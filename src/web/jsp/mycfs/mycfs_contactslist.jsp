@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*,org.aspcfs.modules.contacts.base.Contact,org.aspcfs.modules.contacts.base.ContactFilter,org.aspcfs.modules.base.EmailAddress" %>
+<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*,org.aspcfs.modules.contacts.base.Contact,org.aspcfs.modules.base.Filter,org.aspcfs.modules.base.EmailAddress" %>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
-<jsp:useBean id="Filters" class="org.aspcfs.modules.contacts.base.ContactFilterList" scope="request"/>
+<jsp:useBean id="Filters" class="org.aspcfs.modules.base.FilterList" scope="request"/>
 <jsp:useBean id="ContactListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="selectedContacts" class="java.util.HashMap" scope="session"/>
 <jsp:useBean id="finalContacts" class="java.util.HashMap" scope="session"/>
@@ -31,7 +31,7 @@
         <%
           Iterator filters = Filters.iterator();
           while(filters.hasNext()){
-          ContactFilter thisFilter = (ContactFilter) filters.next();
+          Filter thisFilter = (Filter) filters.next();
         %>
             <option <%= ContactListInfo.getOptionValue(thisFilter.getValue()) %>><%= thisFilter.getDisplayName() %></option>
         <%}%>
@@ -169,10 +169,12 @@
   </table>
 <% if("list".equals(request.getParameter("listType"))){ %>
   <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','contactListView');">
-  <input type="button" value="Cancel" onClick="javascript:window.close()">
+  <input type="button" value="Cancel" onClick="javascript:window.close();">
   [<a href="javascript:SetChecked(1,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Check All</a>]
   [<a href="javascript:SetChecked(0,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Clear All</a>]
   <br>
+<%}else{%>
+  <input type="button" value="Cancel" onClick="javascript:window.close();">
 <%}%>
   &nbsp;<br>
   <dhv:pagedListControl object="ContactListInfo" showForm="false" resetList="false"/>
