@@ -1,4 +1,4 @@
-package org.aspcfs.controller;
+package org.aspcfs.controller.objectHookManager;
 
 /**
  *  All base object hooks to be executed need to implement this class
