@@ -560,6 +560,9 @@ public class Setup extends CFSModule {
           //Add BEGIN WORK; to beginning of file, COMMIT; to end of file
           switch (DatabaseUtils.getType(db)) {
             case DatabaseUtils.POSTGRESQL:
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("Setup-> Installing PostgreSQL Schema");
+              }
               String sql = StringUtils.loadText(
                 context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql.sql");
               Statement st = db.createStatement();
@@ -567,10 +570,16 @@ public class Setup extends CFSModule {
               st.close();
               break;
             case DatabaseUtils.MSSQL:
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("Setup-> Installing MSSQL Schema");
+              }
               DatabaseUtils.executeSQL(db, 
                 context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "mssql.sql");
               break;
             default:
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("Setup-> * Database could not be determined: " + DatabaseUtils.getType(db));
+              }
               break;
           }
           
@@ -1043,4 +1052,3 @@ public class Setup extends CFSModule {
     prefs.populateContext(context.getServletContext());
   }
 }
-
