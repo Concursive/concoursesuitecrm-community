@@ -807,6 +807,7 @@ public final class ExternalContacts extends CFSModule {
 
     try {
       thisContact.setRequestItems(context.getRequest());
+      thisContact.setEnteredBy(getUserId(context));
       thisContact.setModifiedBy(getUserId(context));
       db = this.getConnection(context);
       resultCount = thisContact.update(db);

@@ -407,7 +407,6 @@ public class PhoneNumber {
     if (request.getParameter("phone" + parseItem + "number") != null &&
         !request.getParameter("phone" + parseItem + "number").trim().equals("")) {
       thisString.append(convertToFormattedNumber(request.getParameter("phone" + parseItem + "number")));
-      System.out.println(thisString);
     }
 
     this.setNumber(thisString.toString());

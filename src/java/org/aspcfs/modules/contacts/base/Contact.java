@@ -29,7 +29,7 @@ public class Contact extends GenericBean {
   private String orgName = "";
   private String company = "";
   private String title = "";
-  private int department = -1;
+  private int department = 0;
   private String nameSalutation = "";
   private String nameFirst = "";
   private String nameMiddle = "";
@@ -1802,7 +1802,7 @@ public class Contact extends GenericBean {
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getCompany());
     pst.setString(++i, this.getTitle());
-    if (department > -1) {
+    if (department > 0) {
       pst.setInt(++i, this.getDepartment());
     } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
@@ -1875,7 +1875,7 @@ public class Contact extends GenericBean {
     title = rs.getString("title");
     department = rs.getInt("department");
     if (rs.wasNull()) {
-      department = -1;
+      department = 0;
     }
     nameSalutation = rs.getString("namesalutation");
     nameLast = rs.getString("namelast");
