@@ -45,6 +45,10 @@ public final class AccountTicketTasks extends CFSModule {
       db = this.getConnection(context);
       taskList.setTicketId(Integer.parseInt(ticketId));
       taskList.buildList(db);
+      
+      //get the ticket
+      Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      context.getRequest().setAttribute("TicketDetails", thisTicket);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -222,7 +226,7 @@ public final class AccountTicketTasks extends CFSModule {
     }
     if (errorMessage == null) {
       context.getRequest().setAttribute("Task", thisTask);
-      context.getRequest().setAttribute("refreshUrl", "AccountTickets.do?command=TicketDetails&id=" + thisTask.getLinkDetails().getLinkItemId());
+      context.getRequest().setAttribute("refreshUrl", "AccountTicketTasks.do?command=List&ticketId=" + thisTask.getLinkDetails().getLinkItemId());
       return ("DeleteOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
