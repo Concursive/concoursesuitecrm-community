@@ -72,8 +72,8 @@
       <property>minerOnly</property>
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
-      <property>contactEndDate</property>
-      <property>alertDate</property>
+      <property alias="contractEndDate">contactEndDateString</property>
+      <property alias="alertDate">alertDateString</property>
       <property>alertText</property>
       <property>enabled</property>
       <property>employees</property>
@@ -91,7 +91,7 @@
       <property lookup="user">managerId</property>
       <property>timeZone</property>
       <property lookup="user">enteredBy</property>
-      <property>expires</property>
+      <property alias="expires">expiresString</property>
       <property>aliasName</property>
       <property lookup="user">assistant</property>
       <property lookup="user">alias</property>
@@ -110,7 +110,7 @@
       <property>description</property>
       <property lookup="account">accountLink</property>
       <property>contactLink</property>
-      <property>closeDate</property>
+      <property alias="closeDate">closeDateString</property>
       <property>closeProb</property>
       <property>terms</property>
       <property>units</property>
@@ -118,11 +118,11 @@
       <property>guess</property>
       <property>high</property>
       <property lookup="lookupStage">stage</property>
-      <property>stageDate</property>
+      <property alias="stageDate">stageDateString</property>
       <property>commission</property>
       <property>type</property>
-      <property>alertDate</property>
-      <property lookup="user">enteredby</property>
+      <property alias="alertDate">alertDateString</property>
+      <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>alertText</property>
       <property>enabled</property>

@@ -189,6 +189,14 @@ public void setStage(String stage) {
   public void setAlertDate(java.sql.Date tmp) {
     this.alertDate = tmp;
   }
+  
+  public String getTableName() {
+    return tableName;
+  }
+  
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
 public java.sql.Date getCloseDateStart() { return closeDateStart; }
 public java.sql.Date getCloseDateEnd() { return closeDateEnd; }

@@ -219,6 +219,21 @@ public void setAlertText(String alertText) {
     this.alertDate = tmp;
   }
   
+  /**
+   *  Sets the alertDate attribute of the Opportunity object
+   *
+   *@param  tmp  The new alertDate value
+   */
+  public void setAlertDate(String tmp) {
+    try {
+      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
+      alertDate = new java.sql.Date(new java.util.Date().getTime());
+      alertDate.setTime(tmpDate.getTime());
+    } catch (Exception e) {
+      alertDate = null;
+    }
+  }
+  
   public boolean getAccountEnabled() {
 	return accountEnabled;
 }
@@ -260,22 +275,6 @@ public void setEnabled(boolean enabled) {
       this.enabled = false;
     } else {
       this.enabled = true;
-    }
-  }
-
-
-  /**
-   *  Sets the alertDate attribute of the Opportunity object
-   *
-   *@param  tmp  The new alertDate value
-   */
-  public void setAlertDate(String tmp) {
-    try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
-      alertDate = new java.sql.Date(new java.util.Date().getTime());
-      alertDate.setTime(tmpDate.getTime());
-    } catch (Exception e) {
-      alertDate = null;
     }
   }
 
@@ -483,6 +482,9 @@ public void setEnabled(boolean enabled) {
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
   }
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -648,7 +650,7 @@ public void setEnabled(boolean enabled) {
   }
   
   public void setCloseNow(String tmp) {
-    this.closeIt = ("ON").equalsIgnoreCase(tmp);
+    this.closeIt = ("ON".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -1519,6 +1521,9 @@ public void setEnabled(boolean enabled) {
     }
 
     if (hasErrors()) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Opportunity-> Cannot insert: object is not valid");
+      }
       return false;
     } else {
       return true;

@@ -7,6 +7,7 @@ import java.lang.reflect.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.utils.ObjectUtils;
 import com.darkhorseventures.webutils.PagedListInfo;
+import org.theseus.beans.*;
 
 /**
  *  Every Transaction can be made of many TransactionItems. TransactionItems
@@ -426,6 +427,7 @@ public class TransactionItem {
           ObjectUtils.setParam(object, "modified", syncClientMap.getStatusDate());
         }
         Object result = doExecute(db, executeMethod);
+        checkResult(result);
         if (System.getProperty("DEBUG") != null) {
           System.out.println("TransactionItem-> " + object.getClass().getName() + " " + executeMethod);
         }
@@ -598,6 +600,24 @@ public class TransactionItem {
     Object[] dbObject = new Object[]{db};
     Method method = object.getClass().getMethod(executeMethod, dbClass);
     return (method.invoke(object, dbObject));
+  }
+  
+  private void checkResult(Object result) {
+    try {
+      if (result instanceof Boolean && !((Boolean)result).booleanValue()) {
+        System.out.println("Inserting object failed");
+        //TODO: Show error messages from object
+        if (object instanceof GenericBean) {
+          HashMap errors = ((GenericBean)object).getErrors();
+          Iterator i = errors.keySet().iterator();
+          while (i.hasNext()) {
+            String errorText = (String)errors.get((String)(i.next()));
+            System.out.println("--------> " + errorText); 
+          }
+        }
+      }
+    } catch (Exception e) {
+    }
   }
 
 
