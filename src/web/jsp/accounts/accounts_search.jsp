@@ -1,6 +1,6 @@
 <jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <body onLoad="javascript:document.forms[0].searchName.focus();">
-<form name="searchAccount" action="Accounts.do?command=View" method="post">
+<form name="searchAccount" action="Accounts.do?command=Search" method="post">
 <a href="Accounts.do">Account Management</a> > 
 Search Accounts<br>
 <hr color="#BFBFBB" noshade>
