@@ -282,8 +282,8 @@ public class AdRunList extends ArrayList {
         "ad.entered, ad.enteredby, " +
         "ad.modified, ad.modifiedby, " +
         "adtype.description " +
-        "FROM autoguide_ad_run ad, autoguide_ad_run_types adtype ");
-    sql.append("WHERE ad.ad_run_id > -1 AND ad.ad_type = adtype.code ");
+        "FROM autoguide_ad_run ad, autoguide_ad_run_types adtype " +
+        "WHERE ad.ad_run_id > -1 AND ad.ad_type = adtype.code ");
     createFilter(sql);
     sql.append("ORDER BY run_date ");
     //sql.append("ORDER BY inventory_id, start_date DESC ");

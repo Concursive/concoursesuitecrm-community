@@ -135,7 +135,14 @@ public class OptionList extends ArrayList {
   public void setInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
   }
+  
+  public void setAccountInventoryId(int tmp) {
+    this.setInventoryId(tmp);
+  }
 
+  public void setAccountInventoryId(String tmp) {
+    this.setInventoryId(tmp);
+  }
 
   /**
    *  Gets the tableName attribute of the OptionList object

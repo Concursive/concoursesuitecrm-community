@@ -251,15 +251,17 @@ public class TransactionItem {
    *@exception  SQLException  Description of Exception
    */
   public void insertClientMapping(Connection db, Record record) throws SQLException {
-    clientManager.insert(
-      syncClientMap.getClientId(),
-      syncClientMap.getTableId(),
-      new Integer(record.getRecordId()),
-      new Integer((String)record.get("guid"))
-    );
-    syncClientMap.setRecordId(record.getRecordId());
-    syncClientMap.setClientUniqueId((String)record.get("guid"));
-    syncClientMap.insert(db, (String) record.get("modified"));
+    if (record.containsKey("guid")) {
+      clientManager.insert(
+        syncClientMap.getClientId(),
+        syncClientMap.getTableId(),
+        new Integer(record.getRecordId()),
+        new Integer((String)record.get("guid"))
+      );
+      syncClientMap.setRecordId(record.getRecordId());
+      syncClientMap.setClientUniqueId((String)record.get("guid"));
+      syncClientMap.insert(db, (String) record.get("modified"));
+    }
   }
 
 

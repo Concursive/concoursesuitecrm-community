@@ -510,6 +510,7 @@ public class SyncClientMap {
     pst.setInt(++i, clientId);
     pst.setInt(++i, tableId);
     ResultSet rs = pst.executeQuery();
+    System.out.println(this.toString());
     return rs;
   }
 

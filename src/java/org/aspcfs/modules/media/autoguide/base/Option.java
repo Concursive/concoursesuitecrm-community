@@ -53,6 +53,13 @@ public class Option {
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
   }
+  
+  public void setAccountInventoryId(String tmp) {
+    this.inventoryId = Integer.parseInt(tmp);
+  }
+  public void setOptionId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -90,6 +97,12 @@ public class Option {
   public java.sql.Timestamp getEntered() { return entered; }
   public java.sql.Timestamp getModified() { return modified; }
 
+  public int getAccountInventoryId() {
+    return this.inventoryId;
+  }
+  public int getOptionId() {
+    return this.id;
+  }
 
 
   /**

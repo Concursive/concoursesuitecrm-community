@@ -73,6 +73,8 @@ CREATE TABLE autoguide_inventory_options (
   option_id INTEGER NOT NULL
 );
 
+CREATE UNIQUE INDEX idx_autog_inv_opt ON autoguide_inventory_options (inventory_id, option_id);
+
 CREATE TABLE autoguide_ad_run (
   ad_run_id INT IDENTITY PRIMARY KEY,
   inventory_id INTEGER NOT NULL,

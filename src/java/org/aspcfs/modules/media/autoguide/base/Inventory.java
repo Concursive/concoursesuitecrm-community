@@ -79,8 +79,7 @@ public class Inventory {
    *@exception  SQLException  Description of Exception
    */
   public Inventory(Connection db, int inventoryId) throws SQLException {
-    StringBuffer sql = new StringBuffer();
-    sql.append(
+    String sql =
         "SELECT i.inventory_id, i.vehicle_id AS inventory_vehicle_id, " +
         "i.account_id, vin, mileage, is_new, " +
         "condition, comments, stock_no, ext_color, int_color, invoice_price, " +
@@ -98,9 +97,9 @@ public class Inventory {
         "FROM autoguide_inventory i " +
         " LEFT JOIN autoguide_vehicle v ON i.vehicle_id = v.vehicle_id " +
         " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
-        " LEFT JOIN autoguide_model model ON v.model_id = model.model_id ");
-    sql.append("WHERE i.inventory_id = ? ");
-    PreparedStatement pst = db.prepareStatement(sql.toString());
+        " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
+        "WHERE i.inventory_id = ? ";
+    PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, inventoryId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

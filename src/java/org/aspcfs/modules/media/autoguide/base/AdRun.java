@@ -43,6 +43,26 @@ public class AdRun {
     buildRecord(rs);
   }
 
+  public AdRun(Connection db, int adRunId) throws SQLException {
+    String sql =
+        "SELECT ad.ad_run_id, ad.inventory_id, " +
+        "ad.run_date, ad.ad_type, ad.include_photo, complete_date, completedby, " +
+        "ad.entered, ad.enteredby, " +
+        "ad.modified, ad.modifiedby, " +
+        "adtype.description " +
+        "FROM autoguide_ad_run ad, autoguide_ad_run_types adtype " +
+        "WHERE ad.ad_run_id = ? AND ad.ad_type = adtype.code ";
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, adRunId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    } else {
+      System.out.println("AdRun-> * RECORD NOT FOUND: " + adRunId);
+    }
+    rs.close();
+    pst.close();
+  }
 
   /**
    *  Sets the id attribute of the AdRun object
