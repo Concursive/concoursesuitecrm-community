@@ -17,7 +17,7 @@
       <a href="/ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Folders</font></a> | 
       <a href="/ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Calls</font></a> |
       <a href="/ExternalContacts.do?command=ViewMessages&contactId=<%= ContactDetails.getId() %>"><font color="#0000FF">Messages</font></a> |
-      <a href = "/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Opportunities</font></a> 
+      <a href="/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Opportunities</font></a> 
     </td>
   </tr>
   <tr>
@@ -27,29 +27,27 @@
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>
       <strong>Selected message</strong>
-    </td>     
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Message
-    </td>
-    <td width="100%">
-	<%=toHtml(Campaign.getMessageName())%>
     </td>
   </tr>
-  
-    <tr class="containerBody">
+	<tr class="containerBody">
     <td class="formLabel">
       Campaign
     </td>
     <td width="100%">
-	<%=toHtml(Campaign.getName())%>
+			<%=toHtml(Campaign.getName())%>
     </td>
   </tr>
-  
+  <tr class="containerBody">
+    <td class="formLabel">
+      Message Subject
+    </td>
+    <td width="100%">
+			<%=toHtml(Campaign.getMessageName())%>
+    </td>
+  </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="top">
-      Preview
+      Message Text
     </td>
     <td valign=center>
 			<%= (Message.getMessageText()) %>&nbsp; 

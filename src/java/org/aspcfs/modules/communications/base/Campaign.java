@@ -38,6 +38,9 @@ public class Campaign extends GenericBean {
   private int recipientCount = -1;
   private int sentCount = -1;
   private ContactList contactList = null;
+	private String subject = null;
+	private String message = null;
+	private int sendMethodId = -1;
 
   public final static int IDLE = 1;
   public final static int QUEUE = 2;
@@ -518,6 +521,13 @@ public class Campaign extends GenericBean {
     st.close();
   }
 
+	public void setSendMethodId(int tmp) {
+		sendMethodId = tmp;
+	}
+	
+	public void setSendMethodId(String tmp) {
+		sendMethodId = Integer.parseInt(tmp);
+	}
 
   /**
    *  Gets the RecipientCount attribute of the Campaign object
@@ -1387,13 +1397,31 @@ public class Campaign extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
-
+		
+		String thisMessageSubject = null;
+		String thisMessageText = null;
+		
     PreparedStatement pst = null;
+		pst = db.prepareStatement(
+		  "SELECT subject, body " +
+			"FROM message " +
+			"WHERE id = ? ");
+		pst.setInt(1, this.getMessageId());
+		ResultSet rs = pst.executeQuery();
+		if (rs.next()) {
+			thisMessageSubject = rs.getString("subject");
+			thisMessageText = rs.getString("body");
+		}
+		rs.close();
+		pst.close();
+		
     pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET status_id = ?, " +
         "status = ?, " +
         "active = true, " +
+				"subject = ?, " +
+				"message = ?, " +
         "modifiedby = " + modifiedBy + ", " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE id = " + id + " " +
@@ -1401,6 +1429,8 @@ public class Campaign extends GenericBean {
     int i = 0;
     pst.setInt(++i, QUEUE);
     pst.setString(++i, QUEUE_TEXT);
+		pst.setString(++i, thisMessageSubject);
+		pst.setString(++i, thisMessageText);
     pst.setTimestamp(++i, modified);
     resultCount = pst.executeUpdate();
     pst.close();
@@ -1508,6 +1538,8 @@ public class Campaign extends GenericBean {
     pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET message_id = " + messageId + ", " +
+				"subject = null, " +
+				"message = null, " +
         "modifiedby = " + modifiedBy + ", " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE id = " + id);
@@ -1539,20 +1571,11 @@ public class Campaign extends GenericBean {
         "UPDATE campaign " +
         "SET message_id = " + messageId + ", " +
         "active_date = ?, " +
-    //"active = ?, " +
-    //"status_id = ?, " +
-    //"status = ?, " +
+				"send_method_id = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE id = " + id);
     pst.setDate(++i, activeDate);
-    //pst.setBoolean(++i, active);
-    //if (active) {
-    //  pst.setInt(++i, QUEUE);
-    //  pst.setString(++i, QUEUE_TEXT);
-    //} else {
-    //  pst.setInt(++i, IDLE);
-    //  pst.setString(++i, IDLE_TEXT);
-    //}
+    pst.setInt(++i, sendMethodId);
     resultCount = pst.executeUpdate();
     pst.close();
 
@@ -1657,6 +1680,9 @@ public class Campaign extends GenericBean {
     name = rs.getString("name");
     description = rs.getString("description");
     messageId = rs.getInt("message_id");
+		subject = rs.getString("subject");
+		message = rs.getString("message");
+		sendMethodId = rs.getInt("send_method_id");
     groupId = rs.getInt("list_id");
     statusId = rs.getInt("status_id");
     enabled = rs.getBoolean("enabled");
