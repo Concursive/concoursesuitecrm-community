@@ -7,28 +7,44 @@ import org.theseus.actions.*;
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 
-public class Make extends GenericBean {
+public class Vehicle extends GenericBean {
 
   private int id = -1;
-  private String name = null;
+  private int year = -1;
+  private int makeId = -1;
+  private int modelId = -1;
   private java.sql.Timestamp entered = null;
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
   
-  public Make() { }
+  public Vehicle() { }
 
-  public Make(String tmp) {
-    name = tmp;
+  public Vehicle(int year, int make, int model) {
+    this.setYear(year);
+    this.makeId = make;
+    this.modelId = model;
   }
 
-  public Make(ResultSet rs) throws SQLException {
+  public Vehicle(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
 
-  public void setId(int tmp) { this.id = tmp; }
-  public void setId(String tmp) { this.id = Integer.parseInt(tmp); }
-  public void setName(String tmp) { this.name = tmp; }
+  public void setId(int tmp) { id = tmp; }
+  public void setId(String tmp) { id = Integer.parseInt(tmp); }
+  public void setYear(int inYear) { 
+    if (inYear < 20) {
+      inYear += 2000;
+    } else {
+      inYear += 1900;
+    }
+    this.year = inYear;
+  }
+  public void setYear(String tmp) { this.setYear(Integer.parseInt(tmp)); }
+  public void setMakeId(int tmp) { this.makeId = tmp; }
+  public void setMakeId(String tmp) { this.makeId = Integer.parseInt(tmp); }
+  public void setModelId(int tmp) { this.modelId = tmp; }
+  public void setModelId(String tmp) { this.modelId = Integer.parseInt(tmp); }
   public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
   public void setEntered(String tmp) {
     this.entered = java.sql.Timestamp.valueOf(tmp);
@@ -43,42 +59,31 @@ public class Make extends GenericBean {
   public void setModifiedBy(String tmp) { this.modifiedBy = Integer.parseInt(tmp); }
   
   public int getId() { return id; }
-  public String getName() { return name; }
+  public int getYear() { return year; }
+  public int getMakeId() { return makeId; }
+  public int getModelId() { return modelId; }
   public java.sql.Timestamp getEntered() { return entered; }
   public int getEnteredBy() { return enteredBy; }
   public java.sql.Timestamp getModified() { return modified; }
   public int getModifiedBy() { return modifiedBy; }
 
-  public boolean exists(Connection db) throws SQLException {
-    PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM autoguide_make " +
-      "WHERE lower(make_name) = ? ");
-    pst.setString(1, name.toLowerCase());
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      buildRecord(rs);
-    }
-    rs.close();
-    pst.close();
-    return (id > -1);
-  }
-
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "INSERT INTO autoguide_make " +
-        "(make_name, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?) ");
+        "INSERT INTO autoguide_vehicle " +
+        "(year, make_id, model_id, enteredby, modifiedby) " +
+        "VALUES (?, ?, ?, ?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
-    pst.setString(++i, name);
-    pst.setInt(++i, this.getEnteredBy());
-    pst.setInt(++i, this.getEnteredBy());
+    pst.setInt(++i, year);
+    pst.setInt(++i, makeId);
+    pst.setInt(++i, modelId);
+    pst.setInt(++i, enteredBy);
+    pst.setInt(++i, enteredBy);
     pst.execute();
     pst.close();
 
-    id = DatabaseUtils.getCurrVal(db, "autoguide_make_make_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "autoguide_vehicl_vehicle_id_seq");
     return true;
   }
 
@@ -94,8 +99,8 @@ public class Make extends GenericBean {
     //Delete the record
     int recordCount = 0;
     pst = db.prepareStatement(
-        "DELETE FROM autoguide_make " +
-        "WHERE make_id = ? ");
+        "DELETE FROM autoguide_vehicle " +
+        "WHERE vehicle_id = ? ");
     pst.setInt(1, id);
     recordCount = pst.executeUpdate();
     pst.close();
@@ -118,7 +123,7 @@ public class Make extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public int update(Connection db, ActionContext context) throws SQLException {
-    if (this.getId() == -1) {
+    if (id == -1) {
       throw new SQLException("Record ID was not specified");
     }
 
@@ -126,14 +131,16 @@ public class Make extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE autoguide_make " +
-        "SET make_name = ?, modifiedby = ?, " +
+        "UPDATE autoguide_vehicle " +
+        "SET year = ?, make_id = ?, model_id = ?, modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
-        "WHERE make_id = ? " +
+        "WHERE id = ? " +
         "AND modified = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
-    pst.setString(++i, name);
+    pst.setInt(++i, year);
+    pst.setInt(++i, makeId);
+    pst.setInt(++i, modelId);
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, id);
     pst.setTimestamp(++i, this.getModified());
@@ -144,8 +151,10 @@ public class Make extends GenericBean {
 
 
   protected void buildRecord(ResultSet rs) throws SQLException {
-    id = rs.getInt("make_id");
-    name = rs.getString("make_name");
+    id = rs.getInt("id");
+    year = rs.getInt("year");
+    makeId = rs.getInt("make_id");
+    modelId = rs.getInt("model_id");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");

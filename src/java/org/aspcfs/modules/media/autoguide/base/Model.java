@@ -54,6 +54,20 @@ public class Model extends GenericBean {
   public java.sql.Timestamp getModified() { return modified; }
   public int getModifiedBy() { return modifiedBy; }
 
+  public boolean exists(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM autoguide_model " +
+      "WHERE lower(model_name) = ? ");
+    pst.setString(1, name.toLowerCase());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
+    return (id > -1);
+  }
 
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();

@@ -44,7 +44,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'makes', 'com.darkhorseventures.autoguide.base.MakeList', 50, true, 
+ VALUES (2, 'makeList', 'com.darkhorseventures.autoguide.base.MakeList', 50, true, 
 'CREATE TABLE makes (
        make_id              int NOT NULL,
        make_name            nchar varying(20) NULL,
@@ -75,8 +75,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 )'
 );
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'make_model', null, 80,
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'modelList', 'com.darkhorseventures.autoguide.base.ModelList', 80, true, 
 'CREATE TABLE make_model (
        model_id             int NOT NULL,
        make_id              int NULL,
@@ -107,8 +107,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 )'
 );
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'make_model_year', null, 110,
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'vehicleList', 'com.darkhorseventures.autoguide.base.VehicleList', 110, true, 
 'CREATE TABLE make_model_year (
        year                 nchar varying(4) NOT NULL,
        make_id              int NOT NULL,
@@ -170,8 +170,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 )'
 );
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'sales_rep', null, 170,
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'userList', 'com.darkhorseventures.cfsbase.UserList', 170, true, 
 'CREATE TABLE sales_rep (
        rep_id               int NOT NULL,
        record_status_id     int NULL,
@@ -193,7 +193,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'vehicles', null, 190,
+ VALUES (2, 'accountInventoryList', null, 190,
 'CREATE TABLE vehicles (
        vehicle_id           int NOT NULL,
        vin                  nchar varying(20) NULL,

@@ -26,6 +26,7 @@ CREATE TABLE autoguide_model (
 );
 
 CREATE TABLE autoguide_vehicle (
+  vehicle_id SERIAL PRIMARY KEY,
   year VARCHAR(4) NOT NULL,
   make_id INTEGER NOT NULL,
   model_id INTEGER NOT NULL,

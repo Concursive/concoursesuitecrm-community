@@ -30,7 +30,13 @@ public class ParseKBB {
    */
   public static void main(String[] args) {
     ParseKBB thisApp = new ParseKBB();
-    thisApp.process();
+    String fileName = null;
+    if (args.length > 0) {
+      fileName = args[0];
+    } else {
+      fileName = "kbb.csv";
+    }
+    thisApp.process(fileName);
     System.exit(0);
   }
 
@@ -38,7 +44,7 @@ public class ParseKBB {
   /**
    *  Description of the Method
    */
-  public void process() {
+  public void process(String fileName) {
     Logger logger = Logger.getLogger("com.darkhorseventures.autoguide");
     java.util.Date startDate = new java.util.Date();
     long startMs = System.currentTimeMillis();
@@ -60,10 +66,9 @@ public class ParseKBB {
       thisElement.setDriver("org.postgresql.Driver");
       db = sqlDriver.getConnection(thisElement);
 
-      String file = "kbb.csv";
       String line = null;
       try {
-        BufferedReader in = new BufferedReader(new FileReader(file));
+        BufferedReader in = new BufferedReader(new FileReader(fileName));
         while ((line = in.readLine()) != null) {
           processLine(db, line);
         }
@@ -98,35 +103,23 @@ public class ParseKBB {
     String modelText = st.nextToken().trim();
     String makeText = st.nextToken().trim();
 
-    Make thisMake = new Make(makeText);
-    if (!thisMake.exists(db)) {
-      thisMake.insert(db);
+    Make make = new Make(makeText);
+    if (!make.exists(db)) {
+      make.insert(db);
       Logger logger = Logger.getLogger("com.darkhorseventures.autoguide");
-      logger.fine("Inserting Make-> " + thisMake.getName());
+      logger.fine("Inserting Make-> " + make.getName());
     }
 
-    Model thisModel = new Model(modelText);
-    thisModel.setMakeId(thisMake.getId());
-    thisModel.insert(db);
+    Model model = new Model(modelText);
+    if (!model.exists(db)) {
+      model.setMakeId(make.getId());
+      model.insert(db);
+    }
 
     while (st.hasMoreTokens()) {
       int year = Integer.parseInt(st.nextToken());
-      if (year < 5) {
-        year += 2000;
-      } else {
-        year += 1900;
-      }
-      PreparedStatement pst = db.prepareStatement(
-          "INSERT INTO autoguide_vehicle " +
-          "(year, make_id, model_id, enteredby, modifiedby) " +
-          "VALUES (?, ?, ?, ?, ?) ");
-      pst.setInt(1, year);
-      pst.setInt(2, thisMake.getId());
-      pst.setInt(3, thisModel.getId());
-      pst.setInt(4, -1);
-      pst.setInt(5, -1);
-      pst.execute();
-      pst.close();
+      Vehicle thisVehicle = new Vehicle(year, make.getId(), model.getId());
+      thisVehicle.insert(db);
     }
   }
 }
