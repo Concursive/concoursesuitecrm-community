@@ -108,7 +108,7 @@ public class PermissionsAndRolesWriter implements DataWriter {
     try {
       if (record.getName().equals("permissionCategory")) {
         PermissionCategory thisCategory = new PermissionCategory();
-        thisCategory.setCategory(record.getValue("name"));
+        thisCategory.setCategory(record.getValue("category"));
         thisCategory.setLevel(record.getValue("level"));
         thisCategory.setEnabled(record.getValue("enabled"));
         thisCategory.setActive(record.getValue("active"));
@@ -140,6 +140,8 @@ public class PermissionsAndRolesWriter implements DataWriter {
         Role thisRole = new Role();
         thisRole.setRole(record.getValue("role"));
         thisRole.setDescription(record.getValue("description"));
+        thisRole.setEnteredBy(0);
+        thisRole.setModifiedBy(0);
         thisRole.insert(db);
         id = thisRole.getId();
         return true;
