@@ -121,7 +121,7 @@
     </submenu>
     
     <submenu name="Reports">
-      <permission value="contacts-external_contacts-reports"/>
+      <permission value="contacts-external_contacts-reports-view"/>
       <long_html value="Reports"/>
       <short_html value="Reports"/>
       <link value="/ExternalContacts.do?command=Reports"/>
