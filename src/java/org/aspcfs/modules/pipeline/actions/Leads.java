@@ -104,11 +104,9 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsertOppComponent(ActionContext context) {
-
     if (!(hasPermission(context, "pipeline-opportunities-add"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordInserted = false;
     Connection db = null;
@@ -120,7 +118,6 @@ public final class Leads extends CFSModule {
     newComponent.setOwner(getUserId(context));
     newComponent.setEnteredBy(getUserId(context));
     newComponent.setModifiedBy(getUserId(context));
-
     try {
       db = this.getConnection(context);
       recordInserted = newComponent.insert(db, context);
@@ -157,7 +154,6 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsertOpp(ActionContext context) {
-
     if (!(hasPermission(context, "pipeline-opportunities-add"))) {
       return ("PermissionError");
     }
@@ -239,7 +235,6 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDetailsOpp(ActionContext context) {
-
     if (!(hasPermission(context, "pipeline-opportunities-view"))) {
       return ("PermissionError");
     }
@@ -259,13 +254,10 @@ public final class Leads extends CFSModule {
 
     PagedListInfo componentListInfo = this.getPagedListInfo(context, "LeadsComponentListInfo");
     componentListInfo.setLink("Leads.do?command=DetailsOpp&oppId=" + oppId);
-
     try {
       db = this.getConnection(context);
       thisHeader = new OpportunityHeader(db, oppId);
-
       //check whether or not the owner is an active User
-
       componentList = new OpportunityComponentList();
       componentList.setPagedListInfo(componentListInfo);
       componentList.setOwnerIdRange(this.getUserRange(context));
@@ -296,7 +288,6 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAddOppComponent(ActionContext context) {
-
     if (!(hasPermission(context, "pipeline-opportunities-add"))) {
       return ("PermissionError");
     }
@@ -370,18 +361,14 @@ public final class Leads extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandSearchOpp(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+    if (!hasPermission(context, "pipeline-opportunities-view")) {
       return ("PermissionError");
     }
-
     Connection db = null;
     int errorCode = 0;
     Exception errorMessage = null;
-
     try {
       db = this.getConnection(context);
 
@@ -393,7 +380,6 @@ public final class Leads extends CFSModule {
 
       LookupList stageSelect = new LookupList(db, "lookup_stage");
       context.getRequest().setAttribute("StageList", stageSelect);
-
     } catch (Exception e) {
       errorCode = 1;
       errorMessage = e;
@@ -408,7 +394,6 @@ public final class Leads extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-
   }
 
 
@@ -458,41 +443,30 @@ public final class Leads extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Action method to generate dashboard graphs, opportunities, and
+   *  hierarchy gross pipeline.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
-
   public String executeCommandDashboard(ActionContext context) {
-
     if (!(hasPermission(context, "pipeline-dashboard-view"))) {
       if (!(hasPermission(context, "pipeline-opportunities-view"))) {
         return ("PermissionError");
       }
-
       return (executeCommandViewOpp(context));
     }
-
     addModuleBean(context, "Dashboard", "Dashboard");
 
     int errorCode = 0;
     int idToUse = 0;
-
     java.util.Date d = new java.util.Date();
-
     String errorMessage = "";
     String graphString = new String();
     String fileName = "";
-    StringBuffer sql = new StringBuffer();
     String checkFileName = "";
 
-    Connection db = null;
-    Statement st = null;
-    ResultSet rs = null;
-
-    //build the graph selection
+    //Build the html graph combo box
     HtmlSelect graphTypeSelect = new HtmlSelect();
     graphTypeSelect.setSelectName("whichGraph");
     graphTypeSelect.setJsEvent("onChange=\"document.forms[0].submit();\"");
@@ -500,24 +474,52 @@ public final class Leads extends CFSModule {
     graphTypeSelect.addItem("ramr", "Risk Adjusted Monthly Revenue");
     graphTypeSelect.addItem("cgmr", "Commission Gross Monthly Revenue");
     graphTypeSelect.addItem("cramr", "Commission Risk Adj. Monthly Revenue");
-    //done
 
+    //Prepare the user id to base all data on
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-    String overrideId = null;
-
-    if (context.getRequest().getParameter("oid") != null) {
-      overrideId = context.getRequest().getParameter("oid");
-      if (Integer.parseInt(overrideId) == getUserId(context)) {
+    User thisRec = null;
+    //Check if a specific user was selected
+    int overrideId = StringUtils.parseInt(context.getRequest().getParameter("oid"), -1);
+    //Check if the list is being reset
+    if (context.getRequest().getParameter("reset") != null) {
+      overrideId = -1;
+      context.getSession().setAttribute("leadsoverride", null);
+      context.getSession().setAttribute("leadsothername", null);
+      context.getSession().setAttribute("leadspreviousId", null);
+    }
+    //Determine the user whose data is being shown, by default it's the current user
+    if (overrideId > -1) {
+      if (overrideId == getUserId(context)) {
+        //TODO: Can these just be removed?
         context.getSession().setAttribute("leadsoverride", null);
         context.getSession().setAttribute("leadsothername", null);
         context.getSession().setAttribute("leadspreviousId", null);
       }
     } else if (context.getSession().getAttribute("leadsoverride") != null) {
-      overrideId = (String) context.getSession().getAttribute("leadsoverride");
+      overrideId = StringUtils.parseInt((String) context.getSession().getAttribute("leadsoverride"), -1);
+    } else {
+      overrideId = thisUser.getUserId();
     }
-
-    User thisRec = null;
-
+    
+    //Check that the user hasAuthority for this oid
+    if (hasAuthority(context, overrideId)) {
+      idToUse = overrideId;
+    } else {
+      idToUse = thisUser.getUserId();
+    }
+    thisRec = this.getUser(context, idToUse);
+    
+    //Track the id in the request and the session
+    if (idToUse > -1 && idToUse != getUserId(context)) {
+      context.getRequest().setAttribute("override", String.valueOf(idToUse));
+      context.getRequest().setAttribute("othername", thisRec.getContact().getNameFull());
+      context.getRequest().setAttribute("previousId", String.valueOf(thisRec.getManagerId()));
+      context.getSession().setAttribute("leadsoverride", String.valueOf(overrideId));
+      context.getSession().setAttribute("leadsothername", thisRec.getContact().getNameFull());
+      context.getSession().setAttribute("leadspreviousId", String.valueOf(thisRec.getManagerId()));
+    }
+    
+    
     UserList shortChildList = new UserList();
     UserList fullChildList = new UserList();
     UserList tempUserList = new UserList();
@@ -527,24 +529,7 @@ public final class Leads extends CFSModule {
     OpportunityList tempOppList = new OpportunityList();
     OpportunityList realFullOppList = new OpportunityList();
 
-    OpportunityList oppList = new OpportunityList();
-
-    PagedListInfo dashboardListInfo = this.getPagedListInfo(context, "DashboardListInfo");
-    dashboardListInfo.setLink("Leads.do?command=Dashboard");
-    dashboardListInfo.setColumnToSortBy("x.description");
-
     XYDataset categoryData = null;
-
-    if (overrideId != null && !(overrideId.equals("null")) && !(overrideId.equals("" + thisUser.getUserId()))) {
-      idToUse = Integer.parseInt(overrideId);
-      thisRec = thisUser.getUserRecord().getChild(idToUse);
-      context.getRequest().setAttribute("override", overrideId);
-      context.getRequest().setAttribute("othername", thisRec.getContact().getNameFull());
-      context.getRequest().setAttribute("previousId", "" + thisRec.getManagerId());
-    } else {
-      idToUse = thisUser.getUserId();
-      thisRec = thisUser.getUserRecord();
-    }
 
     if (context.getRequest().getParameter("whichGraph") != null) {
       graphString = context.getRequest().getParameter("whichGraph");
@@ -557,28 +542,11 @@ public final class Leads extends CFSModule {
     graphTypeSelect.setDefaultKey(graphString);
     graphTypeSelect.build();
 
-    if (context.getRequest().getParameter("reset") != null) {
-      overrideId = null;
-      context.getSession().setAttribute("leadsoverride", null);
-      context.getSession().setAttribute("leadsothername", null);
-      context.getSession().setAttribute("leadspreviousId", null);
-    }
-
-    if (overrideId != null && !(overrideId.equals("null")) && !(Integer.parseInt(overrideId) == getUserId(context))) {
-      idToUse = Integer.parseInt(overrideId);
-      thisRec = thisUser.getUserRecord().getChild(idToUse);
-      context.getSession().setAttribute("leadsoverride", overrideId);
-      context.getSession().setAttribute("leadsothername", thisRec.getContact().getNameFull());
-      context.getSession().setAttribute("leadspreviousId", "" + thisRec.getManagerId());
-    } else {
-      idToUse = thisUser.getUserId();
-      thisRec = thisUser.getUserRecord();
-    }
-
     if (context.getRequest().getParameter("whichGraph") != null) {
       context.getSession().setAttribute("whichGraph", context.getRequest().getParameter("whichGraph"));
     }
 
+    Connection db = null;
     try {
       db = this.getConnection(context);
 
@@ -590,35 +558,34 @@ public final class Leads extends CFSModule {
       fullChildList = thisRec.getFullChildList(shortChildList, new UserList());
 
       //get the opportunities that were entered by anyone in the full list
-
       String range = fullChildList.getUserListIds(idToUse);
 
       realFullOppList.setUnits("M");
       realFullOppList.setOwnerIdRange(range);
       realFullOppList.buildList(db);
 
+      //Generate the opportunities list for the idToUse
+      PagedListInfo dashboardListInfo = this.getPagedListInfo(context, "DashboardListInfo");
+      dashboardListInfo.setLink("Leads.do?command=Dashboard");
+      dashboardListInfo.setColumnToSortBy("x.description");
+      OpportunityList oppList = new OpportunityList();
+      oppList.setPagedListInfo(dashboardListInfo);
       oppList.setOwner(idToUse);
       oppList.setBuildComponentInfo(true);
-      oppList.setPagedListInfo(dashboardListInfo);
       oppList.buildList(db);
-
       context.getRequest().setAttribute("OppList", oppList);
 
       //filter out my opportunities for displaying on page
-
       Iterator z = realFullOppList.iterator();
 
       while (z.hasNext()) {
         Opportunity tempOpp = (Opportunity) (z.next());
-
         //try it out
         //tempOppList is MY (or user drilled-to) Opps
-
         if (tempOpp.getOwner() == idToUse) {
           tempOppList.addElement(tempOpp);
         }
       }
-
     } catch (Exception e) {
       errorCode = 1;
       errorMessage = e.toString();
@@ -639,13 +606,12 @@ public final class Leads extends CFSModule {
     }
 
     if (checkFileName.equals("")) {
-
-      System.out.println("Leads-> Preparing the chart");
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Leads-> Preparing the chart");
+      }
 
       //add up all stuff for children
-
       Iterator n = fullChildList.iterator();
-
       while (n.hasNext()) {
         User thisRecord = (User) n.next();
         tempUserList = prepareLines(thisRecord, realFullOppList, tempUserList);
@@ -654,7 +620,6 @@ public final class Leads extends CFSModule {
       linesToDraw = calculateLine(tempUserList, linesToDraw);
 
       //set my own
-
       tempUserList = prepareLines(thisRec, tempOppList, tempUserList);
 
       //add me up -- keep this
@@ -700,7 +665,9 @@ public final class Leads extends CFSModule {
       int width = 275;
       int height = 200;
 
-      System.out.println("Leads-> Drawing the chart");
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Leads-> Drawing the chart");
+      }
       BufferedImage img = draw(chart, width, height);
 
       //Output the chart
@@ -741,7 +708,9 @@ public final class Leads extends CFSModule {
       }
 
     } else {
-      System.out.println("This file is valid, and cached: " + checkFileName);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("This file is valid, and cached: " + checkFileName);
+      }
       context.getRequest().setAttribute("GraphFileName", checkFileName);
     }
 
@@ -766,10 +735,8 @@ public final class Leads extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandDeleteOpp(ActionContext context) {
-
     if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
       return ("PermissionError");
     }
@@ -813,7 +780,6 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDeleteComponent(ActionContext context) {
-
     if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
       return ("PermissionError");
     }
@@ -905,7 +871,6 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModifyComponent(ActionContext context) {
-
     if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
       return ("PermissionError");
     }
@@ -967,7 +932,6 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModifyOpp(ActionContext context) {
-
     if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
       return ("PermissionError");
     }
@@ -1016,12 +980,9 @@ public final class Leads extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
-
   public String executeCommandViewOpp(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+    if (!hasPermission(context, "pipeline-opportunities-view")) {
       return ("PermissionError");
     }
 
@@ -1074,11 +1035,9 @@ public final class Leads extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandGenerateForm(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-reports-add"))) {
+    if (!hasPermission(context, "pipeline-reports-add")) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "Reports", "Generate new");
     return ("GenerateFormOK");
   }
@@ -1091,11 +1050,9 @@ public final class Leads extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDeleteReport(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-reports-delete"))) {
+    if (!hasPermission(context, "pipeline-reports-delete")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -1152,11 +1109,9 @@ public final class Leads extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDownloadCSVReport(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-reports-view"))) {
+    if (!hasPermission(context, "pipeline-reports-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
 
     String itemId = (String) context.getRequest().getParameter("fid");
@@ -1216,11 +1171,9 @@ public final class Leads extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandShowReportHtml(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-reports-view"))) {
+    if (!hasPermission(context, "pipeline-reports-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
 
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -1231,7 +1184,7 @@ public final class Leads extends CFSModule {
     try {
       db = getConnection(context);
 
-      //-1 is the project ID for non-projects
+      //TODO: -1 is the project ID for non-projects (and shouldn't be used anymore here)
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
 
       String filePath = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
@@ -1254,8 +1207,7 @@ public final class Leads extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandExportReport(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-reports-add"))) {
+    if (!hasPermission(context, "pipeline-reports-add")) {
       return ("PermissionError");
     }
 
@@ -1317,11 +1269,9 @@ public final class Leads extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandReports(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-reports-view"))) {
+    if (!hasPermission(context, "pipeline-reports-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
 
@@ -1376,11 +1326,9 @@ public final class Leads extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandUpdateOpp(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
+    if (!hasPermission(context, "pipeline-opportunities-edit")) {
       return ("PermissionError");
     }
 
@@ -1434,8 +1382,7 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDetailsComponent(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+    if (!hasPermission(context, "pipeline-opportunities-view")) {
       return ("PermissionError");
     }
 
@@ -1480,7 +1427,6 @@ public final class Leads extends CFSModule {
    *@param  width   Description of Parameter
    *@param  height  Description of Parameter
    *@return         Description of the Returned Value
-   *@since
    */
   protected BufferedImage draw(JFreeChart chart, int width, int height) {
     BufferedImage img =
@@ -1502,7 +1448,6 @@ public final class Leads extends CFSModule {
    *@param  oppList       Description of Parameter
    *@param  usersToGraph  Description of Parameter
    *@return               Description of the Returned Value
-   *@since
    */
   private UserList prepareLines(User pertainsTo, OpportunityList oppList, UserList usersToGraph) {
 
@@ -1540,7 +1485,6 @@ public final class Leads extends CFSModule {
     rightNowAdjusted.add(java.util.Calendar.DATE, -1);
 
     //twelve months
-
     twelveMonths.setTime(d);
     twelveMonths.add(java.util.Calendar.MONTH, +13);
 
@@ -1548,7 +1492,9 @@ public final class Leads extends CFSModule {
       pertainsTo.doOpportunityLock();
       if (pertainsTo.getIsValid() == false) {
         try {
-          System.out.println("(RE)BUILDING DATA FOR " + pertainsTo.getId());
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("(RE)BUILDING DATA FOR " + pertainsTo.getId());
+          }
 
           pertainsTo.setGmr(new GraphSummaryList());
           pertainsTo.setRamr(new GraphSummaryList());
@@ -1651,10 +1597,8 @@ public final class Leads extends CFSModule {
    *@param  passedList  Description of Parameter
    *@param  whichGraph  Description of Parameter
    *@return             Description of the Returned Value
-   *@since
    */
   private XYDataset createCategoryDataset(UserList passedList, String whichGraph) {
-
     if (passedList.size() == 0) {
       return createEmptyCategoryDataset();
     }
@@ -1669,15 +1613,12 @@ public final class Leads extends CFSModule {
     int x = 0;
 
     Iterator n = passedList.iterator();
-
     while (n.hasNext()) {
       User thisUser = (User) n.next();
-
       String[] valKeys = thisUser.getGmr().getRange(12);
 
       iteratorDate.setTime(d);
       //iteratorDate.add(java.util.Calendar.MONTH, +1);
-
       for (count = 0; count < 12; count++) {
         data[x][count][0] = createDate(iteratorDate.get(java.util.Calendar.YEAR), iteratorDate.get(java.util.Calendar.MONTH), 0);
 
@@ -1690,13 +1631,10 @@ public final class Leads extends CFSModule {
         } else if (whichGraph.equals("cramr")) {
           data[x][count][1] = thisUser.getCramr().getValue(valKeys[count]);
         }
-
         iteratorDate.add(java.util.Calendar.MONTH, +1);
       }
-
       x++;
     }
-
     return new DefaultXYDataset(data);
   }
 
@@ -1707,7 +1645,6 @@ public final class Leads extends CFSModule {
    *@param  primaryNode   Description of Parameter
    *@param  currentLines  Description of Parameter
    *@return               Description of the Returned Value
-   *@since
    */
   private UserList calculateLine(User primaryNode, UserList currentLines) {
     if (currentLines.size() == 0) {
@@ -1720,16 +1657,12 @@ public final class Leads extends CFSModule {
 
     Iterator x = currentLines.iterator();
     User addToMe = (User) x.next();
-
-    int count = 0;
-
-    for (count = 0; count < 12; count++) {
+    for (int count = 0; count < 12; count++) {
       thisLine.getGmr().setValue(valKeys[count], new Double(primaryNode.getGmr().getValue(valKeys[count]).doubleValue() + (addToMe.getGmr().getValue(valKeys[count])).doubleValue()));
       thisLine.getRamr().setValue(valKeys[count], new Double(primaryNode.getRamr().getValue(valKeys[count]).doubleValue() + (addToMe.getRamr().getValue(valKeys[count])).doubleValue()));
       thisLine.getCgmr().setValue(valKeys[count], new Double(primaryNode.getCgmr().getValue(valKeys[count]).doubleValue() + (addToMe.getCgmr().getValue(valKeys[count])).doubleValue()));
       thisLine.getCramr().setValue(valKeys[count], new Double(primaryNode.getCramr().getValue(valKeys[count]).doubleValue() + (addToMe.getCramr().getValue(valKeys[count])).doubleValue()));
     }
-
     currentLines.addElement(thisLine);
     return currentLines;
   }
@@ -1741,31 +1674,24 @@ public final class Leads extends CFSModule {
    *@param  toRollUp      Description of Parameter
    *@param  currentLines  Description of Parameter
    *@return               Description of the Returned Value
-   *@since
    */
   private UserList calculateLine(UserList toRollUp, UserList currentLines) {
     if (toRollUp.size() == 0) {
       return new UserList();
     }
-
     User thisLine = new User();
     String[] valKeys = thisLine.getGmr().getRange(12);
 
-    int count = 0;
-
     Iterator x = toRollUp.iterator();
-
     while (x.hasNext()) {
       User thisUser = (User) x.next();
-
-      for (count = 0; count < 12; count++) {
+      for (int count = 0; count < 12; count++) {
         thisLine.getGmr().setValue(valKeys[count], thisUser.getGmr().getValue(valKeys[count]));
         thisLine.getRamr().setValue(valKeys[count], thisUser.getRamr().getValue(valKeys[count]));
         thisLine.getCgmr().setValue(valKeys[count], thisUser.getCgmr().getValue(valKeys[count]));
         thisLine.getCramr().setValue(valKeys[count], thisUser.getCramr().getValue(valKeys[count]));
       }
     }
-
     currentLines.addElement(thisLine);
     return currentLines;
   }
@@ -1775,12 +1701,9 @@ public final class Leads extends CFSModule {
    *  Description of the Method
    *
    *@return    Description of the Returned Value
-   *@since
    */
   private XYDataset createEmptyCategoryDataset() {
-
     Object[][][] data;
-
     data = new Object[][][]{
         {
         {createDate(2001, 12, 20), new Integer(0)},
@@ -1791,7 +1714,6 @@ public final class Leads extends CFSModule {
         {createDate(2002, 5, 18), new Integer(56)}
         }
         };
-
     return new DefaultXYDataset(data);
   }
 
@@ -1803,11 +1725,9 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpdateComponent(ActionContext context) {
-
     if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "View Opportunities", "Update Opportunity Component");
     Exception errorMessage = null;
     Connection db = null;
@@ -1855,6 +1775,5 @@ public final class Leads extends CFSModule {
       return ("SystemError");
     }
   }
-
 }
 
