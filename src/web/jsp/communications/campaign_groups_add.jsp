@@ -31,6 +31,7 @@ function HideSpans()
   }
 
   return true;
+  
 }
 
 
@@ -38,7 +39,7 @@ function HideSpans()
 </SCRIPT>
 
 
-<body onLoad="javascript:document.forms[0].groupName.focus();HideSpans();">
+<body onLoad="javascript:HideSpans();javascript:document.forms[0].groupName.focus();">
 <script language="JavaScript" type="text/javascript" src="/javascript/searchForm.js"></script>
 <script language="JavaScript" type="text/javascript">
 var searchCriteria = new Array();
@@ -157,7 +158,8 @@ listOfOperators[2] = numberOperators
         page += "</SELECT>" // close selection item tag
         document.write(page) // lay out this part of the page
       </script>
-      <span name="new0" ID="new0" style="position:relative; visibility:hidden"><br>&nbsp;<br>Select&nbsp;&nbsp;<%=ContactTypeList.getHtmlSelect("typeId",0)%></span>
+      <!--span name="new0" ID="new0" style="position:relative; visibility:hidden"><br>&nbsp;<br>Select&nbsp;&nbsp;<%=ContactTypeList.getHtmlSelect("typeId",0)%></span-->
+      <br>&nbsp;<br><span name="new0" ID="new0" style="position:relative; visibility:hidden">Select&nbsp;&nbsp;<%=ContactTypeList.getHtmlSelect("typeId",0)%></span>
       <br>
       &nbsp;<br>
       

@@ -17,7 +17,7 @@ function ShowSpan(thisID)
 	isIE4 = (document.all && !document.getElementById) ? true : false;
 	isIE5 = (document.all && document.getElementById) ? true : false;
 	isNS6 = (!document.all && document.getElementById) ? true : false;
-
+	
 	if (isNS4){
 	elm = document.layers[thisID];
 	}
@@ -74,10 +74,10 @@ function updateOperators(){
 	fieldSelectIndex = searchField[document.searchForm.fieldSelect.selectedIndex].type
 	
 	if (document.searchForm.fieldSelect.selectedIndex == 7) {
-		ShowSpan('new0');
+		javascript:ShowSpan('new0');
 		document.searchForm.searchValue.value = document.searchForm.typeId.options[document.searchForm.typeId.selectedIndex].value;
 	} else {
-		HideSpan('new0');
+		javascript:HideSpan('new0');
 		document.searchForm.searchValue.value = "";
 	}
 	
