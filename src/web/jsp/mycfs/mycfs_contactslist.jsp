@@ -99,7 +99,7 @@
   <%}
   else{%>
   <%--<input type=checkbox name="checkcontact<%=count%>" value=<%=thisContact.getId()%><%=((selectedContacts.get(new Integer(thisContact.getId()))!= null)?" checked":"")%> onClick="return keepCount('checkcontact','contactListView')">--%>
-  <a href="javascript:document.contactListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%=count%>','contactListView');">ADD</a>
+  <a href="javascript:document.contactListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%=count%>','contactListView');">Add</a>
   <%}%>
 	<input type=hidden name="hiddencontactid<%=count%>" value=<%=thisContact.getId()%>>
   <input type=hidden name="hiddenname<%=count%>" value="<%=toHtml(thisContact.getNameLastFirst())%>">

@@ -13,10 +13,14 @@ import java.text.*;
 public class HtmlDialog {
 
   //static variables
+  final static int TOP = 1;
+  final static int MIDDLE = 2;
+  final static int BOTTOM = 3;
 
   //other
   private int height = 90;
   private int width = 218;
+  private int synchFrameCounter = 3;
   private String text = "";
   private String title = "";
   private String header = "";
@@ -227,6 +231,16 @@ public class HtmlDialog {
 
 
   /**
+   *  Gets the synchFrameCounter attribute of the HtmlDialog object
+   *
+   *@return    The synchFrameCounter value
+   */
+  public int getSynchFrameCounter() {
+    return synchFrameCounter;
+  }
+
+
+  /**
    *  Gets the buttonString attribute of the HtmlDialog object
    *
    *@return    The buttonString value
@@ -295,6 +309,42 @@ public class HtmlDialog {
    */
   public void addButton(String displayName, String action) {
     buttons.put(displayName, action);
+  }
+
+
+  /**
+   *  Gets the frameHtml attribute of the HtmlDialog object
+   *
+   *@param  frameId  Description of the Parameter
+   *@return          The frameHtml value
+   */
+  public String getFrameHtml(int frameId) {
+    String htmlString = "";
+
+    switch (frameId) {
+        case HtmlDialog.TOP:
+          htmlString += "<strong>" + this.getHeader() + "</strong><br>";
+          break;
+        case HtmlDialog.MIDDLE:
+          if (this.getRelationships().size() != 0) {
+            htmlString += "The following Relationships will be deleted ";
+            htmlString += this.getRelationshipString();
+          }
+          break;
+        case HtmlDialog.BOTTOM:
+          htmlString += "<center>" + this.getButtonString() + "</center>";
+          break;
+    }
+    decrementSynchFrameCounter();
+    return htmlString;
+  }
+
+
+  /**
+   *  Description of the Method
+   */
+  private synchronized void decrementSynchFrameCounter() {
+    --synchFrameCounter;
   }
 }
 

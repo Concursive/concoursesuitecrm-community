@@ -100,9 +100,9 @@
     <forward name="TaskListOK" resource="/mytasks_list.jsp" layout="nav"/>
     <forward name="NewTaskOK" resource="/mytasks_new.jsp" layout="nav"/>
     <forward name="InsertTaskOK" resource="/MyTasks.do?command=ListTasks"/>
-    <forward name="ConfirmDeleteOK" resource="/dialog.jsp" layout="style"/>
-    <forward name="DeleteOK" resource="/mytasks_delete_details.jsp" layout="style"/>
-  </action>
+     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    </action>
   
   <action name="MyTasksForward" class="com.darkhorseventures.cfsmodule.MyCFS">
     <bean name="NoteDetails" class="com.darkhorseventures.cfsbase.CFSNote" scope="request"/>

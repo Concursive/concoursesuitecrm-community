@@ -45,16 +45,20 @@ public final class MyTasks extends CFSModule {
   public String executeCommandListTasks(ActionContext context) {
 
     Exception errorMessage = null;
-    PagedListInfo taskInfo = this.getPagedListInfo(context, "TaskListInfo");
-    taskInfo.setLink("/MyTasks.do?command=ListTasks");
-
+    PagedListInfo taskListInfo = this.getPagedListInfo(context, "TaskListInfo");
+    int contactId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
+    taskListInfo.setLink("/MyTasks.do?command=ListTasks");
     Connection db = null;
     TaskList taskList = new TaskList();
-
+    if (!taskListInfo.hasListFilters()) {
+      taskListInfo.addFilter(1, "taskstome");
+      taskListInfo.addFilter(2, "false");
+    }
     try {
       db = this.getConnection(context);
-      taskList.setPagedListInfo(taskInfo);
+      taskList.setPagedListInfo(taskListInfo);
       taskList.setEnteredBy(getUserId(context));
+      taskList.setFilterParams(getUserId(context), contactId);
       taskList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -119,7 +123,6 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
-    System.out.println("Comin in to uinsert");
     Exception errorMessage = null;
     Connection db = null;
     int id = -1;
@@ -131,7 +134,6 @@ public final class MyTasks extends CFSModule {
     }
 
     if (context.getRequest().getParameter("id") != null) {
-      System.out.println("The id is"+id);
       id = Integer.parseInt(context.getRequest().getParameter("id"));
     }
 
@@ -142,7 +144,6 @@ public final class MyTasks extends CFSModule {
       if (id != -1) {
         done = newTask.update(db, id);
       } else {
-        System.out.println("trying to insert");
         done = newTask.insert(db);
       }
     } catch (Exception e) {
@@ -159,7 +160,7 @@ public final class MyTasks extends CFSModule {
     }
   }
 
-  
+
 
   /**
    *  Description of the Method
@@ -194,7 +195,7 @@ public final class MyTasks extends CFSModule {
         htmlDialog.setTitle("Confirm");
         htmlDialog.setHeader("Are you sure you want to delete this item:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='/MyTasks.do?command=Delete&id=" + id + "'");
-        htmlDialog.addButton("No", "javascript:window.close()");
+        htmlDialog.addButton("No", "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -202,7 +203,7 @@ public final class MyTasks extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      context.getRequest().setAttribute("Dialog", htmlDialog);
+      context.getSession().setAttribute("Dialog", htmlDialog);
       return ("ConfirmDeleteOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -246,6 +247,7 @@ public final class MyTasks extends CFSModule {
     }
     if (errorMessage == null) {
       context.getRequest().setAttribute("Task", thisTask);
+      context.getRequest().setAttribute("refreshUrl","MyTasks.do?command=ListTasks");
       return ("DeleteOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -300,8 +302,6 @@ public final class MyTasks extends CFSModule {
     } catch (Exception e) {
       errorMessage = e;
       System.out.println(e.toString());
-    } finally {
-      this.freeConnection(context, db);
     }
     return ("-none-");
   }

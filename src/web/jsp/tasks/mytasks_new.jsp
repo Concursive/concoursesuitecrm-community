@@ -5,7 +5,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
- 
+<body onLoad="javascript:document.forms[0].description.focus();">
 <br>
 <form name="addTask" action="/MyTasks.do?command=Insert&id=<%=Task.getId()%>&auto-populate=true" method="post" onSubmit="return validateTask();">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -59,7 +59,7 @@
    <tr>
     <td><input type=checkbox name="chk1" value="true" onclick="javascript:setField('complete',document.addTask.chk1.checked,'addTask');" <%=Task.getComplete()?" checked":""%>></td>
     <input type=hidden name="complete" value="<%=Task.getComplete()?"1":"0"%>">
-    <td>Done</td>
+    <td>Complete</td>
    </tr>
    </table>
    </td>
@@ -128,6 +128,10 @@
           <td>
             <input type=hidden name="contact" value="<%=(Task.getContactId() == -1)?-1:Task.getContactId()%>"><a href="javascript:popURLReturn('/MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=contactsingle&parentFormName=addTask', 'MyTasks.do?command=New', 'Inbox_message','700','450','yes','no');">Change Contact</a>
           </td>
+          <td>
+            <a href="javascript:document.addTask.contact.value='-1';javascript:changeDivContent('changecontact','None');">Clear Contact</a>
+          </td>
+        
         </tr>
       </table>
     </td>
@@ -138,5 +142,5 @@
 <input type="submit" value="Insert">
 <input type="button" value="Cancel" onClick="javascript:window.location.href='MyTasks.do?command=ListTasks';">
 </form>
-
+</body>
 

@@ -7,6 +7,7 @@ package com.darkhorseventures.cfsbase;
 import java.sql.*;
 import java.text.*;
 import java.util.*;
+import javax.servlet.http.HttpServletRequest;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
 import com.darkhorseventures.utils.DatabaseUtils;
@@ -22,6 +23,10 @@ public class TaskList extends Vector {
   private int enteredBy = -1;
   private PagedListInfo pagedListInfo = null;
   private int owner = -1;
+  private boolean completeEnabled = false;
+  private boolean complete = false;
+  private boolean tasksAssignedToMeOnly = false;
+  private boolean tasksAssignedByMeOnly = false;
 
 
   /**
@@ -48,6 +53,36 @@ public class TaskList extends Vector {
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
+  }
+
+
+  /**
+   *  Sets the complete attribute of the TaskList object
+   *
+   *@param  tmp  The new complete value
+   */
+  public void setComplete(boolean tmp) {
+    this.complete = tmp;
+  }
+
+
+  /**
+   *  Sets the tasksAssignedToMeOnly attribute of the TaskList object
+   *
+   *@param  tmp  The new tasksAssignedToMeOnly value
+   */
+  public void setTasksAssignedToMeOnly(boolean tmp) {
+    this.tasksAssignedToMeOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the tasksAssignedByMeOnly attribute of the TaskList object
+   *
+   *@param  tmp  The new tasksAssignedByMeOnly value
+   */
+  public void setTasksAssignedByMeOnly(boolean tmp) {
+    this.tasksAssignedByMeOnly = tmp;
   }
 
 
@@ -127,7 +162,9 @@ public class TaskList extends Vector {
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-
+    //if (System.getProperty("DEBUG") != null) {
+      System.out.println("TaskList Query --> " + pst.toString());
+    //}
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
@@ -163,9 +200,19 @@ public class TaskList extends Vector {
     if (enteredBy != -1) {
       sqlFilter.append("AND t.enteredby = ? ");
     }
-    if (owner != -1) {
+
+    if (tasksAssignedToMeOnly) {
       sqlFilter.append("AND t.owner = ? ");
+    } else if (tasksAssignedByMeOnly) {
+      sqlFilter.append("AND t.owner != ? ");
+    } else {
+      sqlFilter.append("OR t.owner = ? ");
     }
+
+    if (completeEnabled) {
+      sqlFilter.append("AND t.complete = ? ");
+    }
+
   }
 
 
@@ -182,9 +229,15 @@ public class TaskList extends Vector {
     if (enteredBy != -1) {
       pst.setInt(++i, enteredBy);
     }
+
     if (owner != -1) {
       pst.setInt(++i, owner);
     }
+
+    if (completeEnabled) {
+      pst.setBoolean(++i, complete);
+    }
+
     return i;
   }
 
@@ -225,6 +278,32 @@ public class TaskList extends Vector {
       db.setAutoCommit(true);
     }
     return 0;
+  }
+
+
+  /**
+   *  Sets the filterParams attribute of the TaskList object
+   *
+   *@param  request    The new filterParams value
+   *@param  userId     The new filterParams value
+   *@param  contactId  The new filterParams value
+   */
+  public void setFilterParams(int userId, int contactId) {
+    String filter1 = pagedListInfo.getFilterValue("listFilter1");
+    String filter2 = pagedListInfo.getFilterValue("listFilter2");
+    this.owner = contactId;
+    if (filter1.equalsIgnoreCase("taskstome")) {
+      tasksAssignedToMeOnly = true;
+      enteredBy = -1;
+    } else if (filter1.equalsIgnoreCase("tasksbyme")) {
+      tasksAssignedByMeOnly = true;
+      enteredBy = userId;
+    }
+
+    if (!filter2.equalsIgnoreCase("all")) {
+      completeEnabled = true;
+      complete = "true".equalsIgnoreCase(filter2);
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 package com.darkhorseventures.cfsbase;
 
+import com.darkhorseventures.cfsbase.*;
 import org.theseus.beans.*;
 import java.util.*;
 import java.sql.*;
@@ -45,7 +46,8 @@ public class Task extends GenericBean {
   private int contactId = -1;
   private String contactName = "";
   private int ticketId = -1;
-
+  private Contact contact = null;
+  private Ticket ticket = null;
 
 
   /**
@@ -270,15 +272,13 @@ public class Task extends GenericBean {
   }
 
 
-  
-  
+
   /**
    *  Sets the owner attribute of the Task object
    *
    *@param  owner  The new owner value
    */
   public void setOwner(String owner) {
-    System.out.println("Setting owner "+ owner);
     this.owner = Integer.parseInt(owner);
   }
 
@@ -345,6 +345,26 @@ public class Task extends GenericBean {
 
 
   /**
+   *  Gets the contact attribute of the Task object
+   *
+   *@return    The contact value
+   */
+  public Contact getContact() {
+    return contact;
+  }
+
+
+  /**
+   *  Gets the ticket attribute of the Task object
+   *
+   *@return    The ticket value
+   */
+  public Ticket getTicket() {
+    return ticket;
+  }
+
+
+  /**
    *  Gets the ticketId attribute of the Task object
    *
    *@return    The ticketId value
@@ -393,7 +413,7 @@ public class Task extends GenericBean {
     return age + "d";
   }
 
-  
+
   /**
    *  Gets the estimatedLOE attribute of the Task object
    *
@@ -562,7 +582,6 @@ public class Task extends GenericBean {
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
-      System.out.println("Task --> "+ pst.toString());
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getPriority());
       pst.setString(++i, this.getDescription());
@@ -572,7 +591,9 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getOwner());
       pst.setDate(++i, this.getDueDate());
       pst.setInt(++i, this.getEstimatedLOE());
-      System.out.println("Task insert-->"+pst.toString()); 
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Task Insert Query --> " + pst.toString());
+      }
       pst.execute();
       this.id = DatabaseUtils.getCurrVal(db, "task_task_id_seq");
       insertContacts(pst, db);
@@ -587,6 +608,7 @@ public class Task extends GenericBean {
     }
     return true;
   }
+
 
 
   /**
@@ -624,6 +646,9 @@ public class Task extends GenericBean {
       pst.setDate(++i, this.getDueDate());
       pst.setInt(++i, this.getEstimatedLOE());
       pst.setInt(++i, thisId);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Task -> Update Query is " + pst.toString());
+      }
       pst.execute();
       this.id = thisId;
       insertContacts(pst, db);
@@ -824,6 +849,7 @@ public class Task extends GenericBean {
       rs = pst.executeQuery();
       if (rs.next()) {
         this.contactId = rs.getInt("contact_id");
+        this.contact = new Contact(db, new Integer(this.contactId).toString());
         this.contactName = rs.getString("ct_lastname") + "," + rs.getString("ct_firstname");
       }
       sql = "SELECT ticket_id " +
@@ -836,6 +862,7 @@ public class Task extends GenericBean {
       rs = pst.executeQuery();
       if (rs.next()) {
         this.ticketId = rs.getInt("ticket_id");
+        this.ticket = new Ticket(db, this.ticketId);
       }
       pst.close();
     } catch (SQLException e) {
@@ -845,7 +872,7 @@ public class Task extends GenericBean {
     }
   }
 
-  
+
 
   /**
    *  Description of the Method
