@@ -199,9 +199,11 @@ public final class ContactsList extends CFSModule {
       context.getRequest().setAttribute("ListType", listType);
       context.getRequest().setAttribute("ContactList", contactList);
       
-        if(context.getRequest().getParameter("campaign")!=null){
-                context.getRequest().setAttribute("Campaign", (String)context.getRequest().getParameter("campaign"));
-        }
+      if (context.getRequest().getParameter("campaign") != null) {
+              if (((String) context.getRequest().getParameter("campaign")).equalsIgnoreCase("true")) {
+                      context.getRequest().setAttribute("Campaign", (String)context.getRequest().getParameter("campaign"));
+              }
+      }
     
       context.getSession().setAttribute("selectedContacts", selectedList);
       if (listDone) {

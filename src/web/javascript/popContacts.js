@@ -51,6 +51,8 @@ function popContactsListMultipleCampaign(displayFieldId,highLightedId) {
 }
 
 function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hiddenFieldId){
+        alert("here");
+        
 	  if(recipientEmails.length == 0 && listType == "list"){
       opener.deleteOptions(displayFieldId);
 		  opener.insertOption("None Selected","",displayFieldId);
@@ -69,6 +71,7 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
   }
   
   function setParentListCampaign(recipientEmails,recipientIds,listType,displayFieldId,hiddenFieldId){
+          alert("here2");
 	  //if(recipientEmails.length == 0 && listType == "list"){
     //  opener.deleteOptions(displayFieldId);
 		//  opener.insertOption("None Selected","",displayFieldId);

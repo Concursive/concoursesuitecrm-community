@@ -106,6 +106,8 @@
   <%}%>
 	<input type=hidden name="hiddencontactid<%=count%>" value=<%=thisContact.getId()%>>
   <input type=hidden name="hiddenname<%=count%>" value="<%=toHtml(thisContact.getNameLastFirst())%>">
+  <input type=hidden name="campaign" value="<%=Campaign.toString()%>">
+  
     </td>
     <td nowrap>
       <%= toHtml(thisContact.getNameLastFirst()) %>
@@ -190,11 +192,12 @@ else{%>
       else {
       %>
       
-      <% if (Campaign != null) {%>
-      <body OnLoad="javascript:setParentListCampaign(recipientEmails,recipientIds,'<%=ListType%>','<%=DisplayFieldId%>','<%=HiddenFieldId%>','<%=User.getBrowserId()%>');window.close()">
+      <% if (((String) request.getParameter("campaign")).equalsIgnoreCase("true")) { %>
+        <body OnLoad="javascript:setParentListCampaign(recipientEmails,recipientIds,'<%=ListType%>','<%=DisplayFieldId%>','<%=HiddenFieldId%>','<%=User.getBrowserId()%>');window.close()">
       <%} else {%>
-      <body OnLoad="javascript:setParentList(recipientEmails,recipientIds,'<%=ListType%>','<%=DisplayFieldId%>','<%=HiddenFieldId%>','<%=User.getBrowserId()%>');window.close()">
+        <body OnLoad="javascript:setParentList(recipientEmails,recipientIds,'<%=ListType%>','<%=DisplayFieldId%>','<%=HiddenFieldId%>','<%=User.getBrowserId()%>');window.close()">
       <%}%>
+      
       <script>recipientEmails = new Array();recipientIds = new Array();</script>
       <%
         Set s = selectedContacts.keySet();
