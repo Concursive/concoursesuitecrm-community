@@ -11,9 +11,9 @@
     <form name="listView" method="post" action="/Users.do?command=ListUsers">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= UserListInfo.getOptionValue("enabled") %>>Enabled Users</option>
+        <option <%= UserListInfo.getOptionValue("enabled") %>>Active Users</option>
 	<option <%= UserListInfo.getOptionValue("aliases") %>>Aliased Users</option>
-        <option <%= UserListInfo.getOptionValue("disabled") %>>Disabled Users</option>
+        <option <%= UserListInfo.getOptionValue("disabled") %>>Inactive Users</option>
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>

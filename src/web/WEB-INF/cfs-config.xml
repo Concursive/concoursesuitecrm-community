@@ -645,6 +645,7 @@
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="ListRolesOK" resource="/admin_listroles.jsp" layout="nav"/>
     <forward name="RoleInsertFormOK" resource="/admin_roleinsertform.jsp" layout="nav"/>
+    <forward name="RoleAddOK" resource="/Roles.do?command=ListRoles"/>
     <forward name="RoleDetailsOK" resource="/admin_roledetails.jsp" layout="nav"/>
     <forward name="RoleDetailsModifyOK" resource="/admin_roledetails.jsp" layout="nav"/>
     <forward name="RoleUpdateOK" resource="/Roles.do?command=ListRoles"/>

@@ -208,7 +208,7 @@ public final class Roles extends CFSModule {
     addModuleBean(context, "Roles", "Insert a Role");
     if (errorMessage == null) {
       if (recordInserted) {
-        return ("RoleDetailsOK");
+        return ("RoleAddOK");
       } else {
         return (executeCommandInsertRoleForm(context));
       }
@@ -231,6 +231,9 @@ public final class Roles extends CFSModule {
     
     Connection db = null;
     try {
+      if (Integer.parseInt(roleId) == 1) {
+        throw new Exception("Administrator Role cannot be deleted.");
+      }
       db = this.getConnection(context);
       thisRole = new Role(db, Integer.parseInt(roleId));
       recordDeleted = thisRole.delete(db);

@@ -1,16 +1,17 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="com.darkhorseventures.cfsbase.User" %>
 <%@ include file="initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <jsp:useBean id="UserRecord" class="com.darkhorseventures.cfsbase.User" scope="request"/>
 <a href="/Users.do?command=ListUsers">Back to List</a>
 <p>
 <form name="details" action="/Users.do?auto-populate=true" method="post">
 <input type=hidden name="id" value="<%= UserRecord.getId() %>">
 <dhv:permission name="admin-users-edit">
-  <input type=button name="action" value="Modify"	onClick="document.details.command.value='ModifyUser';document.details.submit()">
+  <input type="button" name="action" value="Modify"	onClick="document.details.command.value='ModifyUser';document.details.submit()">
 </dhv:permission>
 <dhv:permission name="admin-users-delete">  
-  <input type=button name="action" value="Delete" onClick="document.details.command.value='DeleteUser';document.details.submit()">
+  <input type="button" name="action" value="Delete" onClick="document.details.command.value='DeleteUser';confirmSubmit(document.details);">
 </dhv:permission>
 <dhv:permission name="admin-users-edit,admin-users-delete">
   <br>
@@ -50,8 +51,8 @@
 <br>
 <input type=hidden name="command" value="">
 <dhv:permission name="admin-users-edit">
-  <input type=button name="action" value="Modify"	onClick="document.details.command.value='ModifyUser';document.details.submit()">
+  <input type="button" name="action" value="Modify"	onClick="document.details.command.value='ModifyUser';document.details.submit()">
 </dhv:permission>
 <dhv:permission name="admin-users-delete">  
-  <input type=button name="action" value="Delete" onClick="document.details.command.value='DeleteUser';document.details.submit()">
+  <input type="button" name="action" value="Delete" onClick="document.details.command.value='DeleteUser';confirmSubmit(document.details)">
 </dhv:permission>

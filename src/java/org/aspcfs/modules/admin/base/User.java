@@ -1612,23 +1612,23 @@ public void setRevenueLock(boolean revenueLock) {
         "LEFT JOIN contact als ON (a.alias = als.user_id) " +
         "LEFT JOIN contact m ON (a.manager_id = m.user_id), " +
         "role r " +
-        "WHERE a.role_id = r.role_id " +
-        "AND a.enabled = ? ");
+        "WHERE a.role_id = r.role_id ");
     if (userId > -1) {
       sql.append("AND a.user_id = ? ");
     } else {
       sql.append(
           "AND lower(username) = ? " +
-          "AND password = ? ");
+          "AND password = ? " +
+          "AND a.enabled = ? ");
     }
     pst = db.prepareStatement(sql.toString());
     int i = 0;
-    pst.setBoolean(++i, true);
     if (userId > -1) {
       pst.setInt(++i, userId);
     } else {
       pst.setString(++i, username);
       pst.setString(++i, encryptPassword(password));
+      pst.setBoolean(++i, true);
     }
     rs = pst.executeQuery();
     if (rs.next()) {
