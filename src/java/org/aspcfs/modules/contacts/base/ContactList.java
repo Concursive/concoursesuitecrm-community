@@ -24,7 +24,13 @@ import org.aspcfs.modules.communications.base.*;
  */
 public class ContactList extends Vector {
 
+  /**
+   *  Description of the Field
+   */
   public final static int TRUE = 1;
+  /**
+   *  Description of the Field
+   */
   public final static int FALSE = 0;
   private int includeEnabled = TRUE;
 
@@ -409,6 +415,7 @@ public class ContactList extends Vector {
    *@param  scl            The new Scl value
    *@param  thisOwnerId    The new scl value
    *@param  thisUserRange  The new scl value
+   *@param  personalId     The new scl value
    *@since
    */
   public void setScl(SearchCriteriaList scl, int thisOwnerId, String thisUserRange, int personalId) {
