@@ -23,6 +23,7 @@ public class HelpNoteList extends ArrayList {
   private int enteredBy = -1;
   private boolean incompleteOnly = false;
   private boolean ignoreDone = false;
+  private boolean enabledOnly = false;
 
 
   /**
@@ -106,6 +107,26 @@ public class HelpNoteList extends ArrayList {
 
 
   /**
+   *  Sets the enabledOnly attribute of the HelpNoteList object
+   *
+   *@param  tmp  The new enabledOnly value
+   */
+  public void setEnabledOnly(boolean tmp) {
+    this.enabledOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the enabledOnly attribute of the HelpNoteList object
+   *
+   *@param  tmp  The new enabledOnly value
+   */
+  public void setEnabledOnly(String tmp) {
+    this.enabledOnly = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Gets the pagedListInfo attribute of the HelpNoteList object
    *
    *@return    The pagedListInfo value
@@ -152,6 +173,16 @@ public class HelpNoteList extends ArrayList {
    */
   public boolean getIncompleteOnly() {
     return incompleteOnly;
+  }
+
+
+  /**
+   *  Gets the enabledOnly attribute of the HelpNoteList object
+   *
+   *@return    The enabledOnly value
+   */
+  public boolean getEnabledOnly() {
+    return enabledOnly;
   }
 
 
@@ -271,6 +302,9 @@ public class HelpNoteList extends ArrayList {
     if (ignoreDone) {
       sqlFilter.append("AND hf.description NOT LIKE 'DONE:%' ");
     }
+    if (enabledOnly) {
+      sqlFilter.append("AND hf.enabled = ? ");
+    }
   }
 
 
@@ -288,6 +322,9 @@ public class HelpNoteList extends ArrayList {
     }
     if (linkHelpId != -1) {
       pst.setInt(++i, linkHelpId);
+    }
+    if (enabledOnly) {
+      pst.setBoolean(++i, true);
     }
     return i;
   }

@@ -81,7 +81,7 @@ public class HelpItem extends GenericBean {
 
 
   /**
-   *Constructor for the HelpItem object
+   *  Constructor for the HelpItem object
    *
    *@param  db                Description of the Parameter
    *@param  id                Description of the Parameter
@@ -140,7 +140,7 @@ public class HelpItem extends GenericBean {
     String sql =
         "SELECT * " +
         "FROM help_contents h " +
-        "WHERE module = ? " + 
+        "WHERE module = ? " +
         (section != null ? "AND section = ? " : "AND section IS NULL ") +
         (subsection != null ? "AND subsection = ? " : "AND subsection IS NULL ");
     pst = db.prepareStatement(sql);
@@ -149,7 +149,7 @@ public class HelpItem extends GenericBean {
     }
     int i = 0;
     pst.setString(++i, module);
-    if(section != null){
+    if (section != null) {
       pst.setString(++i, section);
     }
     if (subsection != null) {
@@ -677,6 +677,7 @@ public class HelpItem extends GenericBean {
    */
   public void buildNotes(Connection db) throws SQLException {
     notes.setLinkHelpId(this.getId());
+    notes.setEnabledOnly(true);
     notes.buildList(db);
   }
 
