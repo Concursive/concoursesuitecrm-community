@@ -40,6 +40,7 @@ public class ContactList extends Vector {
   private boolean includeEnabledUsersOnly = false;
   private boolean includeNonUsersOnly = false;
   private boolean includeUsersOnly = false;
+  private int userRoleType = -1;
 
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
@@ -119,6 +120,36 @@ public class ContactList extends Vector {
    */
   public void setIncludeUsersOnly(boolean includeUsersOnly) {
     this.includeUsersOnly = includeUsersOnly;
+  }
+
+
+  /**
+   *  Gets the userRoleType attribute of the ContactList object
+   *
+   *@return    The userRoleType value
+   */
+  public int getUserRoleType() {
+    return userRoleType;
+  }
+
+
+  /**
+   *  Sets the userRoleType attribute of the ContactList object
+   *
+   *@param  tmp  The new userRoleType value
+   */
+  public void setUserRoleType(int tmp) {
+    this.userRoleType = tmp;
+  }
+
+
+  /**
+   *  Sets the userRoleType attribute of the ContactList object
+   *
+   *@param  tmp  The new userRoleType value
+   */
+  public void setUserRoleType(String tmp) {
+    this.userRoleType = Integer.parseInt(tmp);
   }
 
 
@@ -1704,7 +1735,11 @@ public class ContactList extends Vector {
     }
 
     if (includeEnabledUsersOnly) {
-      sqlFilter.append("AND c.user_id IN (SELECT user_id FROM access WHERE enabled = ?) ");
+      if (userRoleType > -1) {
+        sqlFilter.append("AND c.user_id IN (SELECT user_id FROM access WHERE enabled = ? AND role_id IN (SELECT role_id FROM role WHERE role_type = ?)) ");
+      } else {
+        sqlFilter.append("AND c.user_id IN (SELECT user_id FROM access WHERE enabled = ?) ");
+      }
     }
 
     if (includeNonUsersOnly) {
@@ -2280,7 +2315,12 @@ public class ContactList extends Vector {
     }
 
     if (includeEnabledUsersOnly) {
-      pst.setBoolean(++i, true);
+      if (userRoleType > -1) {
+        pst.setBoolean(++i, true);
+        pst.setInt(++i, userRoleType);
+      } else {
+        pst.setBoolean(++i, true);
+      }
     }
 
     if (employeesOnly) {

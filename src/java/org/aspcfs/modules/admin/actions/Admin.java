@@ -134,6 +134,7 @@ public final class Admin extends CFSModule {
       //Users enabled as of date range
       UserList userList = new UserList();
       userList.setEnabled(Constants.TRUE);
+      userList.setRoleType(Constants.ROLETYPE_REGULAR);
       int userListCount = userList.queryRecordCount(db);
       usageList.add(nf.format(userListCount) + " user" + StringUtils.addS(userListCount) + " enabled");
 

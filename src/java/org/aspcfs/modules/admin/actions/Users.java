@@ -69,7 +69,7 @@ public final class Users extends CFSModule {
       list.setBuildContact(false);
       list.setBuildContactDetails(false);
       list.setBuildHierarchy(false);
-      list.setRoleType(0); //fetch only regular users
+      list.setRoleType(Constants.ROLETYPE_REGULAR); //fetch only regular users
       list.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -247,6 +247,7 @@ public final class Users extends CFSModule {
       userList.setEmptyHtmlSelectRecord("-- None --");
       userList.setBuildContact(false);
       userList.setBuildContactDetails(false);
+      userList.setRoleType(Constants.ROLETYPE_REGULAR);
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
     } catch (Exception e) {
@@ -574,6 +575,7 @@ public final class Users extends CFSModule {
       userList.setBuildContact(false);
       userList.setBuildContactDetails(false);
       userList.setExcludeDisabledIfUnselected(true);
+      userList.setRoleType(Constants.ROLETYPE_REGULAR);
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
       //Prepare the role list
@@ -620,6 +622,7 @@ public final class Users extends CFSModule {
         userList.setEmptyHtmlSelectRecord("-- None --");
         userList.setBuildContact(false);
         userList.setBuildContactDetails(false);
+        userList.setRoleType(Constants.ROLETYPE_REGULAR);
         userList.buildList(db);
         context.getRequest().setAttribute("UserList", userList);
         //Prepare the role list

@@ -13,6 +13,7 @@ import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.FilterList;
 import java.util.*;
 import com.zeroio.iteam.base.*;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Creates a Contacts List with 5 filters & subfilters . Can be used in two
@@ -260,7 +261,11 @@ public final class ContactsList extends CFSModule {
     contactList.setBuildDetails(true);
     contactList.setBuildTypes(true);
     if ("true".equals(usersOnly)) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("ContactsList-> Only ROLETYPE_REGULAR is valid");
+      }
       contactList.setIncludeEnabledUsersOnly(true);
+      contactList.setUserRoleType(Constants.ROLETYPE_REGULAR);
     }
     if ("true".equals(nonUsersOnly)) {
       contactList.setIncludeNonUsersOnly(true);

@@ -408,6 +408,7 @@ public final class TroubleTickets extends CFSModule {
       userList.setBuildContactDetails(false);
       userList.setDepartment(newTic.getDepartmentCode());
       userList.setExcludeDisabledIfUnselected(true);
+      userList.setRoleType(Constants.ROLETYPE_REGULAR);
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
 
@@ -1218,6 +1219,7 @@ public final class TroubleTickets extends CFSModule {
     userList.setBuildContact(true);
     userList.setBuildContactDetails(false);
     userList.setExcludeDisabledIfUnselected(true);
+    userList.setRoleType(Constants.ROLETYPE_REGULAR);
     if (newTic.getDepartmentCode() > 0) {
       userList.setDepartment(newTic.getDepartmentCode());
       userList.buildList(db);
@@ -1341,6 +1343,7 @@ public final class TroubleTickets extends CFSModule {
         userList.setBuildContact(true);
         userList.setBuildContactDetails(false);
         userList.setDepartment(Integer.parseInt(departmentCode));
+        userList.setRoleType(Constants.ROLETYPE_REGULAR);
         userList.buildList(db);
       }
       context.getRequest().setAttribute("UserList", userList);

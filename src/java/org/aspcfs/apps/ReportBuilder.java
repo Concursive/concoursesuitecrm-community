@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Description of the Class
@@ -75,7 +76,7 @@ public class ReportBuilder {
     //need to set criteria here... otherwise sent to all!
     userList.setBuildContact(true);
     userList.setBuildContactDetails(true);
-    userList.setRoleType(0); //only regular users
+    userList.setRoleType(Constants.ROLETYPE_REGULAR); //only regular users
     userList.buildList(db);
     Iterator i = userList.iterator();
     StringBuffer log = new StringBuffer();
