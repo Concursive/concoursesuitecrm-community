@@ -29,6 +29,15 @@ if (!exists) {
   }
   rs.close();
   st.close();
+  //Update the category report capability
+  pst = db.prepareStatement(
+    "UPDATE permission_category " +
+    "SET reports = ? " +
+    "WHERE category_id = ? ");
+  pst.setBoolean(1, true);
+  pst.setInt(2, categoryId);
+  pst.execute();
+  pst.close();
   //Get the permission id for accessing this report
   st = db.createStatement();
   rs = st.executeQuery(
