@@ -22,10 +22,6 @@ public class DatabaseUtils {
   public final static int MSSQL = 2;
   public final static int ORACLE = 3;
 
-  public final static String POSTGRESQL_DRIVER = "postgresql";
-  public final static String MSSQL_DRIVER = "sqlserver";
-  public final static String ORACLE_DRIVER = "oracle";
-
   public final static String CRLF = System.getProperty("line.separator");
 
   /**
@@ -35,15 +31,15 @@ public class DatabaseUtils {
    *@return     The true value
    */
   public static String getTrue(Connection db) {
-    String databaseName = db.getClass().getName();
-    if (databaseName.indexOf(POSTGRESQL_DRIVER) > -1) {
-      return "true";
-    } else if (databaseName.indexOf(MSSQL_DRIVER) > -1) {
-      return "1";
-    } else if (databaseName.indexOf(ORACLE_DRIVER) > -1) {
-      return "true";
-    } else {
-      return "true";
+    switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          return "true";
+        case DatabaseUtils.MSSQL:
+          return "1";
+        case DatabaseUtils.ORACLE:
+          return "true";
+        default:
+          return "true";
     }
   }
 
@@ -55,15 +51,15 @@ public class DatabaseUtils {
    *@return     The false value
    */
   public static String getFalse(Connection db) {
-    String databaseName = db.getClass().getName();
-    if (databaseName.indexOf(POSTGRESQL_DRIVER) > -1) {
-      return "false";
-    } else if (databaseName.indexOf(MSSQL_DRIVER) > -1) {
-      return "0";
-    } else if (databaseName.indexOf(ORACLE_DRIVER) > -1) {
-      return "false";
-    } else {
-      return "false";
+    switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          return "false";
+        case DatabaseUtils.MSSQL:
+          return "0";
+        case DatabaseUtils.ORACLE:
+          return "false";
+        default:
+          return "false";
     }
   }
 
@@ -75,15 +71,15 @@ public class DatabaseUtils {
    *@return     The currentTimestamp value
    */
   public static String getCurrentTimestamp(Connection db) {
-    String databaseName = db.getClass().getName();
-    if (databaseName.indexOf(POSTGRESQL_DRIVER) > -1) {
-      return "CURRENT_TIMESTAMP";
-    } else if (databaseName.indexOf(MSSQL_DRIVER) > -1) {
-      return "CURRENT_TIMESTAMP";
-    } else if (databaseName.indexOf(ORACLE_DRIVER) > -1) {
-      return "CURRENT_TIMESTAMP";
-    } else {
-      return "CURRENT_TIMESTAMP";
+    switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          return "CURRENT_TIMESTAMP";
+        case DatabaseUtils.MSSQL:
+          return "CURRENT_TIMESTAMP";
+        case DatabaseUtils.ORACLE:
+          return "CURRENT_TIMESTAMP";
+        default:
+          return "CURRENT_TIMESTAMP";
     }
   }
 
@@ -96,11 +92,13 @@ public class DatabaseUtils {
    */
   public static int getType(Connection db) {
     String databaseName = db.getClass().getName();
-    if (databaseName.indexOf(POSTGRESQL_DRIVER) > -1) {
+    if (databaseName.indexOf("postgresql") > -1) {
       return POSTGRESQL;
-    } else if (databaseName.indexOf(MSSQL_DRIVER) > -1) {
+    } else if (databaseName.indexOf("sqlserver") > -1) {
       return MSSQL;
-    } else if (databaseName.indexOf(ORACLE_DRIVER) > -1) {
+    } else if ("net.sourceforge.jtds.jdbc.TdsConnection".equals(databaseName)) {
+      return MSSQL;
+    } else if (databaseName.indexOf("oracle") > -1) {
       return ORACLE;
     } else {
       return -1;
@@ -390,7 +388,9 @@ public class DatabaseUtils {
       if (line.startsWith("--")) {
         continue;
       }
-      sql.append(line);
+      if (!"GO".equals(line.trim())) {
+        sql.append(line);
+      }
       // check for delimeter
       if (line.trim().endsWith(";") || line.trim().equals("GO")) {
         // Got a transaction, so execute it
@@ -400,11 +400,6 @@ public class DatabaseUtils {
       } else {
         // Continue with another line
         sql.append(CRLF);
-      }
-      if (System.getProperty("DEBUG") != null) {
-        if (tCount%10 == 0) {
-          System.out.println("Up to " + tCount + " statements");
-        }
       }
     }
     // Statement didn't end with a delimiter
