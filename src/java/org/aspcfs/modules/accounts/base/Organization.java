@@ -651,6 +651,17 @@ public class Organization extends GenericBean {
     }
     return tmp;
   }
+  
+    public String getEnteredStringLongYear() {
+    String tmp = "";
+    try {
+      SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
+      formatter.applyPattern("M/d/yyyy");
+      return formatter.format(entered);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
 
 
 
