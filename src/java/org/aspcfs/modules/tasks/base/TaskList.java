@@ -147,34 +147,29 @@ public class TaskList extends ArrayList {
    *@exception  SQLException  Description of the Exception
    */
   public HashMap queryRecordCount(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
-
     HashMap events = new HashMap();
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlTail = new StringBuffer();
-
     createFilter(sqlFilter);
-
     sqlSelect.append(
         "SELECT duedate, count(*) " +
         "FROM task t " +
         "WHERE t.task_id > -1 ");
-
     sqlFilter.append("AND duedate IS NOT NULL ");
     sqlTail.append("GROUP BY duedate ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
     prepareFilter(pst);
     rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("TaskList --> Queryin Record Count " + pst.toString());
+      System.out.println("TaskList-> Queryin Record Count " + pst.toString());
     }
     while (rs.next()) {
       String duedate = Task.getAlertDateStringLongYear(rs.getDate("duedate"));
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("TaskList --> Added tuple " + duedate + ":" + rs.getInt("count"));
+        System.out.println("TaskList-> Added tuple " + duedate + ":" + rs.getInt("count"));
       }
       events.put(duedate, new Integer(rs.getInt("count")));
     }
@@ -191,15 +186,11 @@ public class TaskList extends ArrayList {
    *@exception  SQLException  Description of the Exception
    */
   public void buildShortList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
-
     createFilter(sqlFilter);
-
     sqlSelect.append(
         "SELECT t.task_id, t.description, t.duedate, t.complete " +
         "FROM task t " +
@@ -227,24 +218,19 @@ public class TaskList extends ArrayList {
    *@exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-
-    //Need to build a base SQL statement for counting records
+    //Build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM task t " +
         "WHERE t.task_id > -1 ");
-
     createFilter(sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -256,7 +242,6 @@ public class TaskList extends ArrayList {
       }
       rs.close();
       pst.close();
-
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
@@ -272,15 +257,13 @@ public class TaskList extends ArrayList {
         rs.close();
         pst.close();
       }
-
       //Determine column to sort by
       pagedListInfo.setDefaultSort("t.priority", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY t.priority, description ");
     }
-
-    //Need to build a base SQL statement for returning records
+    //Build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     } else {
@@ -299,7 +282,6 @@ public class TaskList extends ArrayList {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -313,7 +295,6 @@ public class TaskList extends ArrayList {
     }
     rs.close();
     pst.close();
-
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Task thisTask = (Task) i.next();
@@ -337,7 +318,7 @@ public class TaskList extends ArrayList {
     }
 
     if (tasksAssignedByUser > 0) {
-      sqlFilter.append("AND t.enteredby = ? AND t.owner NOT IN (SELECT contact_id FROM contact WHERE user_id = ?) AND t.owner IS NOT NULL ");
+      sqlFilter.append("AND t.enteredby = ? AND t.owner NOT IN (SELECT user_id FROM contact WHERE user_id = ?) AND t.owner IS NOT NULL ");
     }
 
     if (owner > 0) {
@@ -410,8 +391,7 @@ public class TaskList extends ArrayList {
     }
     return i;
   }
-
-
+  
   /**
    *  Description of the Method
    *
@@ -420,7 +400,7 @@ public class TaskList extends ArrayList {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public static int queryPendingCount(Connection db, int myContactId) throws SQLException {
+  public static int queryPendingCount(Connection db, int userId) throws SQLException {
     int toReturn = 0;
     String sql =
         "SELECT count(*) as taskcount " +
@@ -428,7 +408,7 @@ public class TaskList extends ArrayList {
         "WHERE owner = ? AND complete = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
-    pst.setInt(++i, myContactId);
+    pst.setInt(++i, userId);
     pst.setBoolean(++i, false);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
