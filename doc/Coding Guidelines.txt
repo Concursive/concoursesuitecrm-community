@@ -6,7 +6,7 @@
  *@version    $Id$
  */
 
-http://java.sun.com/docs/codeconv/
+Review http://java.sun.com/docs/codeconv/ for coding conventions
  
 Commenting Code:
   - Comment code using JavaDoc style
@@ -94,5 +94,12 @@ Displaying contact names:
 - Always use thisContact."getNameLastFirst" or "getNameFirstLast" or 
   "Contact.getNameLastFirst(last, first)" when displaying names.  This will
   ensure name are retrieved correctly.
+
+==========================
+Reserved system properties
+
+System.getProperty("MailServer");
+
+
 
 
