@@ -214,6 +214,22 @@
       <permission value="admin-users-view"/>
       <link value="Viewpoints.do?command=ListViewpoints&amp;userId=${id}"/>
     </submenu>
-  </container>    
+  </container>
+
+  <container name="categories">
+    <separator value=" | "/>
+    <long_css on="containerOn" off="containerOff"/>
+    <short_css on="containerOn" off="containerOff"/>
+    <submenu name="active categories">
+      <long_html value="Active Categories"/>
+      <permission value="admin-view"/>
+      <link value="AdminCategories.do?command=ViewActive&amp;moduleId=${moduleId}"/>
+    </submenu>
+    <submenu name="draft categories">
+      <long_html value="Draft Categories"/>
+      <permission value="admin-view"/>
+      <link value="AdminCategories.do?command=View&amp;moduleId=${moduleId}"/>
+    </submenu>
+  </container>
   
 </application>
