@@ -440,6 +440,22 @@ public class StringUtils {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  tmp           Description of the Parameter
+   *@param  defaultValue  Description of the Parameter
+   *@return               Description of the Return Value
+   */
+  public static double parseDouble(String tmp, double defaultValue) {
+    try {
+      return Double.parseDouble(tmp);
+    } catch (Exception e) {
+      return defaultValue;
+    }
+  }
+
+
+  /**
    *  Reads a line of text in the Excel CSV format<br>
    *  Each field is separated by a comma, except some fields have quotes around
    *  them because the field has commas or spaces.<br>
