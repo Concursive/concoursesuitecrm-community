@@ -593,31 +593,21 @@ public class CFSModule {
    *@since
    */
   protected void invalidateUserInMemory(int userId, ActionContext context) {
-
     Hashtable globalStatus = (Hashtable) context.getServletContext().getAttribute("SystemStatus");
-
     Iterator i = globalStatus.values().iterator();
-
     UserList shortChildList = new UserList();
     UserList fullChildList = new UserList();
-
     while (i.hasNext()) {
       SystemStatus thisStatus = (SystemStatus) i.next();
-
       UserList thisList = thisStatus.getHierarchyList();
       Iterator j = thisList.iterator();
-
       while (j.hasNext()) {
         User thisUser = (User) j.next();
-
         shortChildList = thisUser.getShortChildList();
         fullChildList = thisUser.getFullChildList(shortChildList, new UserList());
-
         Iterator k = fullChildList.iterator();
-
         while (k.hasNext()) {
           User indUser = (User) k.next();
-
           if (indUser.getId() == userId) {
             indUser.setIsValid(false, true);
             System.out.println("clearing: " + indUser.getId());
@@ -948,6 +938,23 @@ public class CFSModule {
     SystemStatus systemStatus = this.getSystemStatus(context);
     UserSession thisSession = systemStatus.getSessionManager().getUserSession(this.getActualUserId(context));
     thisSession.invalidateViewpoints();
+  }
+
+
+  /**
+   *  Tells the SystemStatus to reload the specified user's contact information
+   *
+   *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  protected void updateUserContact(Connection db, ActionContext context, int id) throws SQLException {
+    if (id > -1) {
+      ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      systemStatus.updateUserContact(db, id);
+    }
   }
 }
 
