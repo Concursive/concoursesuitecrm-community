@@ -315,7 +315,7 @@ public final class Accounts extends CFSModule {
         contactReport.setHeader("CFS Accounts");
         contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         contactReport.setPersonalId(this.getUserId(context));
-	      contactReport.setCriteria(null);
+        contactReport.setCriteria(null);
         contactReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
 
         if (ownerCriteria.equals("my")) {
@@ -544,10 +544,10 @@ public final class Accounts extends CFSModule {
       int tempid = Integer.parseInt(temporgId);
       db = this.getConnection(context);
       newOrg = new Organization(db, tempid);
-      
+
       //check whether or not the owner is an active User
       newOrg.checkEnabledOwnerAccount(db);
-      
+
       addRecentItem(context, newOrg);
     } catch (Exception e) {
       errorMessage = e;
@@ -945,7 +945,7 @@ public final class Accounts extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
         deleteRecentItem(context, thisOrganization);
-        context.getRequest().setAttribute("refreshUrl","Accounts.do?command=View");
+        context.getRequest().setAttribute("refreshUrl", "Accounts.do?command=View");
         return ("DeleteOK");
       } else {
         processErrors(context, thisOrganization.getErrors());
@@ -1023,18 +1023,18 @@ public final class Accounts extends CFSModule {
     if (context.getRequest().getParameter("id") != null) {
       id = context.getRequest().getParameter("id");
     }
-    
+
     try {
       db = this.getConnection(context);
       thisOrg = new Organization(db, Integer.parseInt(id));
       htmlDialog.setRelationships(thisOrg.processDependencies(db));
-      
-        htmlDialog.setTitle("CFS: Confirm Delete");
-        htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='/Accounts.do?command=Delete&action=delete&orgId=" + thisOrg.getOrgId() + "'");
-        htmlDialog.addButton("Disable Only", "javascript:window.location.href='/Accounts.do?command=Delete&orgId=" + thisOrg.getOrgId() + "&action=disable'");
-        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
-        
+
+      htmlDialog.setTitle("CFS: Confirm Delete");
+      htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
+      htmlDialog.addButton("Delete All", "javascript:window.location.href='/Accounts.do?command=Delete&action=delete&orgId=" + thisOrg.getOrgId() + "'");
+      htmlDialog.addButton("Disable Only", "javascript:window.location.href='/Accounts.do?command=Delete&orgId=" + thisOrg.getOrgId() + "&action=disable'");
+      htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1149,7 +1149,7 @@ public final class Accounts extends CFSModule {
     String recordId = null;
     boolean showRecords = true;
     String selectedCatId = null;
-    
+
     try {
       String orgId = context.getRequest().getParameter("orgId");
       db = this.getConnection(context);
@@ -1190,7 +1190,7 @@ public final class Accounts extends CFSModule {
           //of records matching this category that the user can choose from
           PagedListInfo folderListInfo = this.getPagedListInfo(context, "AccountFolderInfo");
           folderListInfo.setLink("/Accounts.do?command=Fields&orgId=" + orgId + "&catId=" + selectedCatId);
-  
+
           CustomFieldRecordList recordList = new CustomFieldRecordList();
           recordList.setLinkModuleId(Constants.ACCOUNTS);
           recordList.setLinkItemId(thisOrganization.getOrgId());
@@ -1214,7 +1214,7 @@ public final class Accounts extends CFSModule {
           thisCategory.setBuildResources(true);
           thisCategory.buildResources(db);
           showRecords = false;
-  
+
           if (thisCategory.getRecordId() > -1) {
             CustomFieldRecord thisRecord = new CustomFieldRecord(db, thisCategory.getRecordId());
             context.getRequest().setAttribute("Record", thisRecord);
@@ -1359,7 +1359,6 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandUpdateFields(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-folders-edit"))) {
       return ("PermissionError");
     }
@@ -1411,7 +1410,6 @@ public final class Accounts extends CFSModule {
         context.getRequest().setAttribute("Record", thisRecord);
       }
       context.getRequest().setAttribute("Category", thisCategory);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1441,7 +1439,6 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandInsertFields(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-folders-add"))) {
       return ("PermissionError");
     }
@@ -1486,29 +1483,7 @@ public final class Accounts extends CFSModule {
           System.out.println("Accounts-> InsertField validation error");
         }
       } else {
-        if (this.getDbName(context).equals("cdb_matt") &&
-            thisCategory.hasField(4)) {
-          Template template = new Template();
-          template.setText(includeFile(this.getPath(context, "triggers") + "new_folder_item.template"));
-          template.addParseElement("$instructions", thisCategory.getFieldValue(4));
-          template.setValueEncoding(Template.XMLEncoding);
-          Notification thisNotification = new Notification(Notification.SSL);
-          thisNotification.setHost("127.0.0.1");
-          thisNotification.setPort(44444);
-          thisNotification.setMessageToSend(template.getParsedText());
-          thisNotification.send(context);
-        } else if (this.getDbName(context).equals("cdb_vport") &&
-            thisCategory.hasField(11)) {
-          Template template = new Template();
-          template.setText(includeFile(this.getPath(context, "triggers") + "new_folder_item.template"));
-          template.addParseElement("$instructions", thisCategory.getFieldValue(11));
-          template.setValueEncoding(Template.XMLEncoding);
-          Notification thisNotification = new Notification(Notification.SSL);
-          thisNotification.setHost("151.204.140.140");
-          thisNotification.setPort(44444);
-          thisNotification.setMessageToSend(template.getParsedText());
-          thisNotification.send(context);
-        }
+        processInsertHook(context, thisCategory);
       }
       context.getRequest().setAttribute("Category", thisCategory);
     } catch (Exception e) {
