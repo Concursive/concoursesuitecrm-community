@@ -17,23 +17,31 @@ import org.aspcfs.modules.base.Constants;
  *
  *@author     mrajkowski
  *@created    September 4, 2001
- *@version    $Id$
+ *@version    $Id: ContactPhoneNumberList.java,v 1.4 2003/01/15 15:51:07
+ *      mrajkowski Exp $
  */
 public class ContactPhoneNumberList extends PhoneNumberList {
-        
+
   public final static String tableName = "contact_emailaddress";
   public final static String uniqueField = "emailaddress_id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
 
+
   /**
    *  Constructor for the ContactPhoneNumberList object
    *
-   *@since 1.1
+   *@since    1.1
    */
   public ContactPhoneNumberList() { }
 
+
+  /**
+   *  Constructor for the ContactPhoneNumberList object
+   *
+   *@param  request  Description of the Parameter
+   */
   public ContactPhoneNumberList(HttpServletRequest request) {
     int i = 0;
     while (request.getParameter("phone" + (++i) + "type") != null) {
@@ -44,14 +52,87 @@ public class ContactPhoneNumberList extends PhoneNumberList {
       }
     }
   }
-public String getTableName() { return tableName; }
-public String getUniqueField() { return uniqueField; }
-public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
-public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
-public int getSyncType() { return syncType; }
-public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
-public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
-public void setSyncType(int tmp) { this.syncType = tmp; }
+
+
+  /**
+   *  Gets the tableName attribute of the ContactPhoneNumberList object
+   *
+   *@return    The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   *  Gets the uniqueField attribute of the ContactPhoneNumberList object
+   *
+   *@return    The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   *  Gets the lastAnchor attribute of the ContactPhoneNumberList object
+   *
+   *@return    The lastAnchor value
+   */
+  public java.sql.Timestamp getLastAnchor() {
+    return lastAnchor;
+  }
+
+
+  /**
+   *  Gets the nextAnchor attribute of the ContactPhoneNumberList object
+   *
+   *@return    The nextAnchor value
+   */
+  public java.sql.Timestamp getNextAnchor() {
+    return nextAnchor;
+  }
+
+
+  /**
+   *  Gets the syncType attribute of the ContactPhoneNumberList object
+   *
+   *@return    The syncType value
+   */
+  public int getSyncType() {
+    return syncType;
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the ContactPhoneNumberList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the ContactPhoneNumberList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the syncType attribute of the ContactPhoneNumberList object
+   *
+   *@param  tmp  The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
 
   /**
    *  Builds a list of addresses based on several parameters. The parameters are
@@ -95,8 +176,8 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
+      pst.close();
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
@@ -128,7 +209,6 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
       if (pagedListInfo.getItemsPerPage() > 0) {
         sqlOrder.append("LIMIT " + pagedListInfo.getItemsPerPage() + " ");
       }
-
       sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
     }
 
