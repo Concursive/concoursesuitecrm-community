@@ -59,6 +59,8 @@ public final class ProcessPacket extends CFSModule {
         }
         
         //Now process all of the transactions in the packet
+        SyncClientManager clientManager = new SyncClientManager();
+        clientManager.addClient(db, auth.getClientId());
         dbLookup = auth.getConnection(context);
         HashMap objectMap = this.getObjectMap(context, db, auth.getSystemId());
         LinkedList transactionList = new LinkedList();
@@ -67,13 +69,15 @@ public final class ProcessPacket extends CFSModule {
         while (trans.hasNext()) {
           Element thisElement = (Element) trans.next();
           Transaction thisTransaction = new Transaction();
+          thisTransaction.setAuth(auth);
           thisTransaction.setMapping(objectMap);
+          thisTransaction.setClientManager(clientManager);
           SyncTable metaMapping = new SyncTable();
           metaMapping.setName("meta");
           metaMapping.setMappedClassName("com.darkhorseventures.utils.TransactionMeta");
           thisTransaction.addMapping("meta", metaMapping);
           thisTransaction.build(thisElement);
-          int statusCode = thisTransaction.execute(db, dbLookup, auth);
+          int statusCode = thisTransaction.execute(db, dbLookup);
           TransactionStatus thisStatus = new TransactionStatus();
           thisStatus.setStatusCode(statusCode);
           thisStatus.setId(thisTransaction.getId());

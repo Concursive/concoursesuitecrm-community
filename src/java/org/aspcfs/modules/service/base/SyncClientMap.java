@@ -8,6 +8,8 @@ import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.ObjectUtils;
 import com.darkhorseventures.utils.RecordList;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  *  Description of the Class
@@ -81,8 +83,16 @@ public class SyncClientMap {
   public void setComplete(boolean tmp) {
     this.complete = tmp;
   }
-  
-  public void setStatusDate(java.sql.Timestamp tmp) { this.statusDate = tmp; }
+
+
+  /**
+   *  Sets the statusDate attribute of the SyncClientMap object
+   *
+   *@param  tmp  The new statusDate value
+   */
+  public void setStatusDate(java.sql.Timestamp tmp) {
+    this.statusDate = tmp;
+  }
 
 
 
@@ -135,8 +145,25 @@ public class SyncClientMap {
     return complete;
   }
 
-  public java.sql.Timestamp getStatusDate() { return statusDate; }
 
+  /**
+   *  Gets the statusDate attribute of the SyncClientMap object
+   *
+   *@return    The statusDate value
+   */
+  public java.sql.Timestamp getStatusDate() {
+    return statusDate;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  timestamp         Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean insert(Connection db, String timestamp) throws SQLException {
     if (timestamp != null && !timestamp.trim().equals("")) {
       return insertMap(db, java.sql.Timestamp.valueOf(timestamp));
@@ -145,11 +172,13 @@ public class SyncClientMap {
       return insertMap(db, null);
     }
   }
-  
+
+
   /**
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@param  timestamp         Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
@@ -183,9 +212,10 @@ public class SyncClientMap {
    *
    *@param  db                Description of Parameter
    *@param  referenceTable    Description of Parameter
-   *@param  clientUniqueId    Description of Parameter
+   *@param  serverId          Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
+   *@deprecated
    */
   public int lookupClientId(Connection db, int referenceTable, String serverId) throws SQLException {
     int resultId = -1;
@@ -210,6 +240,50 @@ public class SyncClientMap {
     return resultId;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  clientManager   Description of Parameter
+   *@param  referenceTable  Description of Parameter
+   *@param  serverId        Description of Parameter
+   *@return                 Description of the Returned Value
+   */
+  public int lookupClientId(SyncClientManager clientManager, int referenceTable, String serverId) {
+    int resultId = -1;
+    if (clientManager.containsKey(new Integer(clientId)) && serverId != null) {
+      Hashtable clientLookup = (Hashtable) clientManager.get(new Integer(clientId));
+      Hashtable tableLookup = (Hashtable) clientLookup.get(new Integer(referenceTable));
+      Integer serverNum = new Integer(serverId);
+      if (tableLookup.containsKey(serverNum)) {
+        Integer value = (Integer)tableLookup.get(serverNum);
+        if (value != null) {
+          resultId = ((Integer)value).intValue();
+        } else {
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("SyncClientMap-> lookupClientId: Null value for table " + referenceTable + " record " + serverId);
+          }
+        }
+      }
+    } else {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("SyncClientMap-> lookupClientId: Skipping search table " + referenceTable + " record " + serverId);
+      }
+    }
+    return resultId;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  referenceTable    Description of Parameter
+   *@param  clientCuid        Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   *@deprecated
+   */
   public int lookupServerId(Connection db, int referenceTable, String clientCuid) throws SQLException {
     int resultId = -1;
     StringBuffer sql = new StringBuffer();
@@ -233,6 +307,33 @@ public class SyncClientMap {
     return resultId;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  clientManager   Description of Parameter
+   *@param  referenceTable  Description of Parameter
+   *@param  clientCuid      Description of Parameter
+   *@return                 Description of the Returned Value
+   */
+  public int lookupServerId(SyncClientManager clientManager, int referenceTable, String clientCuid) {
+    int resultId = -1;
+    if (clientManager.containsKey(new Integer(clientId))) {
+      Hashtable clientLookup = (Hashtable) clientManager.get(new Integer(clientId));
+      Hashtable tableLookup = (Hashtable) clientLookup.get(new Integer(referenceTable));
+
+      Iterator i = tableLookup.keySet().iterator();
+      while (i.hasNext()) {
+        Integer serverNum = (Integer) i.next();
+        if (((Integer) tableLookup.get(serverNum)) == new Integer(clientCuid)) {
+          return serverNum.intValue();
+        }
+      }
+    }
+    return resultId;
+  }
+
+
   /**
    *  Description of the Method
    *
@@ -251,10 +352,10 @@ public class SyncClientMap {
     //Delete the record
     int recordCount = 0;
     pst = db.prepareStatement(
-      "DELETE FROM sync_map " +
-      "WHERE client_id = ? " +
-      "AND table_id = ? " +
-      "AND record_id = ? ");
+        "DELETE FROM sync_map " +
+        "WHERE client_id = ? " +
+        "AND table_id = ? " +
+        "AND record_id = ? ");
     int i = 0;
     pst.setInt(++i, clientId);
     pst.setInt(++i, tableId);
@@ -286,11 +387,11 @@ public class SyncClientMap {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "UPDATE sync_map " +
-      "SET complete = ? " +
-      "WHERE client_id = ? " +
-      "AND table_id = ? " +
-      "AND record_id = ? ");
+        "UPDATE sync_map " +
+        "SET complete = ? " +
+        "WHERE client_id = ? " +
+        "AND table_id = ? " +
+        "AND record_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setBoolean(++i, complete);
@@ -301,7 +402,16 @@ public class SyncClientMap {
     pst.close();
     return resultCount;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  timestamp         Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public int updateStatusDate(Connection db, java.sql.Timestamp timestamp) throws SQLException {
     if (clientId == -1 && tableId == -1 && recordId == -1) {
       throw new SQLException("Record ID was not specified");
@@ -311,11 +421,11 @@ public class SyncClientMap {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "UPDATE sync_map " +
-      "SET status_date = ? " +
-      "WHERE client_id = ? " +
-      "AND table_id = ? " +
-      "AND record_id = ? ");
+        "UPDATE sync_map " +
+        "SET status_date = ? " +
+        "WHERE client_id = ? " +
+        "AND table_id = ? " +
+        "AND record_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     if (timestamp != null) {

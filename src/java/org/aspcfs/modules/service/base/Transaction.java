@@ -4,6 +4,7 @@ import java.util.*;
 import org.w3c.dom.*;
 import java.sql.*;
 import com.darkhorseventures.cfsbase.SyncTable;
+import com.darkhorseventures.cfsbase.SyncClientManager;
 
 /**
  *  A Transaction is an array of TransactionItems.  When a system requests
@@ -23,6 +24,8 @@ public class Transaction extends ArrayList {
   private StringBuffer errorMessage = new StringBuffer();
   private RecordList recordList = null;
   private TransactionMeta meta = null;
+  private SyncClientManager clientManager = null;
+  private AuthenticationItem auth = null;
 
 
   /**
@@ -63,6 +66,13 @@ public class Transaction extends ArrayList {
   public void setMapping(HashMap tmp) {
     mapping = tmp;
   }
+  
+  public void setClientManager(SyncClientManager tmp) {
+    clientManager = tmp;
+  }
+  
+  public void setAuth(AuthenticationItem tmp) { this.auth = tmp; }
+
   
 
   /**
@@ -156,7 +166,7 @@ public class Transaction extends ArrayList {
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
-  public int execute(Connection db, Connection dbLookup, AuthenticationItem auth) throws SQLException {
+  public int execute(Connection db, Connection dbLookup) throws SQLException {
     Exception exception = null;
     try {
       db.setAutoCommit(false);
@@ -164,7 +174,10 @@ public class Transaction extends ArrayList {
       while (items.hasNext()) {
         TransactionItem thisItem = (TransactionItem) items.next();
         thisItem.setMeta(meta);
-        thisItem.execute(db, dbLookup, auth, mapping);
+        thisItem.setClientManager(clientManager);
+        thisItem.setMapping(mapping);
+        thisItem.setAuth(auth);
+        thisItem.execute(db, dbLookup);
         if (thisItem.hasError()) {
           appendErrorMessage(thisItem.getErrorMessage());
         }

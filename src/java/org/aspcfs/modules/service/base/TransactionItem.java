@@ -45,7 +45,11 @@ public class TransactionItem {
   private RecordList recordList = null;
   private TransactionMeta meta = null;
   private HashMap ignoredProperties = null;
-
+  private SyncClientManager clientManager = null;
+  private AuthenticationItem auth = null;
+  private HashMap mapping = null;
+  private SyncClientMap syncClientMap = null;
+  
 
   /**
    *  Constructor for the TransactionItem object
@@ -180,6 +184,10 @@ public class TransactionItem {
   public void setMeta(TransactionMeta tmp) {
     this.meta = tmp;
   }
+  
+  public void setClientManager(SyncClientManager tmp) { this.clientManager = tmp; }
+  public void setAuth(AuthenticationItem tmp) { this.auth = tmp; }
+  public void setMapping(HashMap tmp) { this.mapping = tmp; }
 
 
   /**
@@ -240,10 +248,15 @@ public class TransactionItem {
    *@param  syncClientMap     Description of Parameter
    *@exception  SQLException  Description of Exception
    */
-  public void insertClientMapping(Connection db, SyncClientMap syncClientMap,
-      Record record) throws SQLException {
+  public void insertClientMapping(Connection db, Record record) throws SQLException {
+    clientManager.insert(
+      syncClientMap.getClientId(),
+      syncClientMap.getTableId(),
+      new Integer(record.getRecordId()),
+      new Integer((String)record.get("guid"))
+    );
     syncClientMap.setRecordId(record.getRecordId());
-    syncClientMap.setClientUniqueId((String) record.get("guid"));
+    syncClientMap.setClientUniqueId((String)record.get("guid"));
     syncClientMap.insert(db, (String) record.get("modified"));
   }
 
@@ -262,7 +275,7 @@ public class TransactionItem {
    *@param  dbLookup       Description of Parameter
    *@exception  Exception  Description of Exception
    */
-  public void execute(Connection db, Connection dbLookup, AuthenticationItem auth, HashMap mapping) throws Exception {
+  public void execute(Connection db, Connection dbLookup) throws Exception {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("TransactionItem-> Executing transaction");
     }
@@ -271,7 +284,7 @@ public class TransactionItem {
       return;
     }
 
-    SyncClientMap syncClientMap = new SyncClientMap();
+    syncClientMap = new SyncClientMap();
     syncClientMap.setClientId(auth.getClientId());
     if (!"system".equals(name)) {
       syncClientMap.setTableId(((SyncTable) mapping.get(name)).getId());
@@ -302,14 +315,14 @@ public class TransactionItem {
     } else if (action == SYNC) {
       ObjectUtils.setParam(object, "lastAnchor", auth.getLastAnchor());
       ObjectUtils.setParam(object, "nextAnchor", auth.getNextAnchor());
-      //TODO: Is this needed? setGuidParameters(db, mapping, syncClientMap);
+      //TODO: Is this needed? setGuidParameters(db);
       //Build inserts for client
       if (auth.getNextAnchor() != null) {
-        buildRecords(object, db, dbLookup, Constants.SYNC_INSERTS, mapping, syncClientMap);
+        buildRecords(object, db, dbLookup, Constants.SYNC_INSERTS);
       }
       //Build updates for client
       if (auth.getLastAnchor() != null) {
-        buildRecords(object, db, dbLookup, Constants.SYNC_UPDATES, mapping, syncClientMap);
+        buildRecords(object, db, dbLookup, Constants.SYNC_UPDATES);
       }
     } else if (action == SYNC_DELETE) {
       //Build deletes for client
@@ -356,7 +369,7 @@ public class TransactionItem {
       if (executeMethod != null) {
         if (action == INSERT || action == UPDATE) {
           //Populate any client GUIDs with the correct server ID
-          setGuidParameters(db, mapping, syncClientMap);
+          setGuidParameters(db);
         }
 
         if (action == UPDATE) {
@@ -389,7 +402,7 @@ public class TransactionItem {
           //Object updatedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
           //syncClientMap.update(db, ObjectUtils.getParam(updatedObject, "modified"));
         }
-        addRecords(object, recordList, "processed", mapping, syncClientMap, db);
+        addRecords(db, object, recordList, "processed");
       }
     }
     if (pagedListInfo != null) {
@@ -441,7 +454,7 @@ public class TransactionItem {
    *@param  syncClientMap     The new guidParameters value
    *@exception  SQLException  Description of Exception
    */
-  private void setGuidParameters(Connection db, HashMap mapping, SyncClientMap syncClientMap) throws SQLException {
+  private void setGuidParameters(Connection db) throws SQLException {
     if (ignoredProperties != null && ignoredProperties.size() > 0) {
       Iterator ignoredList = ignoredProperties.keySet().iterator();
       while (ignoredList.hasNext()) {
@@ -451,7 +464,7 @@ public class TransactionItem {
           param = param.substring(0, param.indexOf("Guid"));
           SyncTable referencedTable = (SyncTable) mapping.get(param + "List");
           if (referencedTable != null) {
-            int recordId = syncClientMap.lookupServerId(db, referencedTable.getId(), value);
+            int recordId = syncClientMap.lookupServerId(clientManager, referencedTable.getId(), value);
             ObjectUtils.setParam(object, param + "Id", String.valueOf(recordId));
             if (System.getProperty("DEBUG") != null) {
               System.out.println("TransactionItem-> Setting new parameter: " + param + "Id");
@@ -510,7 +523,7 @@ public class TransactionItem {
    *@param  syncClientMap  The feature to be added to the Records attribute
    *@exception  Exception  Description of Exception
    */
-  private void buildRecords(Object object, Connection db, Connection dbLookup, int syncType, HashMap mapping, SyncClientMap syncClientMap) throws Exception {
+  private void buildRecords(Object object, Connection db, Connection dbLookup, int syncType) throws Exception {
     PreparedStatement pst = null;
     Class[] dbClass = new Class[]{Class.forName("java.sql.Connection"), Class.forName("java.sql.PreparedStatement")};
     Object[] dbObject = new Object[]{db, pst};
@@ -535,12 +548,12 @@ public class TransactionItem {
           default:
             break;
       }
-      Record thisRecord = addRecords(thisObject, recordList, recordAction, mapping, syncClientMap, dbLookup);
+      Record thisRecord = addRecords(dbLookup, thisObject, recordList, recordAction);
       //if exists then insert it
       if (syncType == Constants.SYNC_INSERTS) {
-        this.insertClientMapping(dbLookup, syncClientMap, thisRecord);
+        this.insertClientMapping(dbLookup, thisRecord);
       } else if (syncType == Constants.SYNC_UPDATES) {
-        //this.updateClientMapping(dbLookup, syncClientMap, thisRecord);
+        //this.updateClientMapping(dbLookup, thisRecord);
       }
       //TODO: else it shouldn't be in the result!
       //TODO: if the record has a guid from a subobject, then retrieve the
@@ -565,7 +578,7 @@ public class TransactionItem {
    *@param  db                The feature to be added to the Records attribute
    *@exception  SQLException  Description of Exception
    */
-  private Record addRecords(Object object, RecordList recordList, String recordAction, HashMap mapping, SyncClientMap syncClientMap, Connection db) throws SQLException {
+  private Record addRecords(Connection db, Object object, RecordList recordList, String recordAction) throws SQLException {
     if (recordList != null) {
       //Need to see if the Object is a collection of Objects, otherwise
       //just process it as a single record.
@@ -574,13 +587,13 @@ public class TransactionItem {
         while (objectItems.hasNext()) {
           Object objectItem = objectItems.next();
           Record thisRecord = new Record(recordAction);
-          this.addFields(thisRecord, meta, objectItem, mapping, syncClientMap, db);
+          this.addFields(db, thisRecord, meta, objectItem);
           recordList.add(thisRecord);
         }
         return null;
       } else {
         Record thisRecord = new Record(recordAction);
-        this.addFields(thisRecord, meta, object, mapping, syncClientMap, db);
+        this.addFields(db, thisRecord, meta, object);
         recordList.add(thisRecord);
         return thisRecord;
       }
@@ -600,7 +613,7 @@ public class TransactionItem {
    *@param  db                The feature to be added to the Fields attribute
    *@exception  SQLException  Description of Exception
    */
-  private void addFields(Record thisRecord, TransactionMeta thisMeta, Object thisObject, HashMap mapping, SyncClientMap syncClientMap, Connection db) throws SQLException {
+  private void addFields(Connection db, Record thisRecord, TransactionMeta thisMeta, Object thisObject) throws SQLException {
     if (thisMeta != null && thisMeta.getFields() != null) {
       Iterator fields = thisMeta.getFields().iterator();
       while (fields.hasNext()) {
@@ -615,14 +628,14 @@ public class TransactionItem {
             thisField = thisField.substring(0, thisField.indexOf("^"));
             SyncTable referencedTable = (SyncTable) mapping.get(param + "List");
             if (referencedTable != null) {
-              int recordId = syncClientMap.lookupClientId(db, referencedTable.getId(),
+              int recordId = syncClientMap.lookupClientId(clientManager, referencedTable.getId(),
                   ObjectUtils.getParam(thisObject, lookupField));
               thisValue = String.valueOf(recordId);
             }
           } else {
             SyncTable referencedTable = (SyncTable) mapping.get(param + "List");
             if (referencedTable != null) {
-              int recordId = syncClientMap.lookupClientId(db, referencedTable.getId(),
+              int recordId = syncClientMap.lookupClientId(clientManager, referencedTable.getId(),
                   ObjectUtils.getParam(thisObject, lookupField + "Id"));
               thisValue = String.valueOf(recordId);
             }
@@ -635,7 +648,7 @@ public class TransactionItem {
             String lookupField = thisField.substring(0, thisField.indexOf(".guid"));
             SyncTable referencedTable = (SyncTable) mapping.get(lookupField + "List");
             if (referencedTable != null) {
-              int recordId = syncClientMap.lookupClientId(db, referencedTable.getId(), thisValue);
+              int recordId = syncClientMap.lookupClientId(clientManager, referencedTable.getId(), thisValue);
               thisValue = String.valueOf(recordId);
             }
           }
