@@ -60,7 +60,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
   //lookup context ids
   public final static int LOOKUP_USERID = 21;
-
+  
+  public final static int HTMLAREA = 22;
+  
   //Properties for a Field
   private int id = -1;
   private int groupId = -1;
@@ -502,6 +504,8 @@ public class CustomField extends GenericBean implements Cloneable {
         this.type = CHECKBOX;
       } else if (tmp.equalsIgnoreCase("textarea")) {
         this.type = TEXTAREA;
+      } else if (tmp.equalsIgnoreCase("htmlarea")) {
+        this.type = HTMLAREA;
       } else if (tmp.equalsIgnoreCase("rowlist")) {
         this.type = ROWLIST;
       } else if (tmp.equalsIgnoreCase("hidden")) {
@@ -1359,6 +1363,8 @@ public class CustomField extends GenericBean implements Cloneable {
     switch (type) {
         case TEXTAREA:
           return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.toString(enteredValue) + "</textarea>");
+        case HTMLAREA:
+          return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.fromHtmlValue(enteredValue) + "</textarea>");
         case SELECT:
           if (!(((LookupList) elementData).containsKey(-1))) {
             ((LookupList) elementData).addItem(-1, "-- None --");
