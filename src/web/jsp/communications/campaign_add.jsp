@@ -49,7 +49,7 @@ Campaign Details (New)
       </td>
     </tr>
     <tr>
-      <td nowrap class="formLabel">
+      <td nowrap class="formLabel" valign="top">
         Description
       </td>
       <td>

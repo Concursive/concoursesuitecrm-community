@@ -119,7 +119,7 @@ Campaign Details
 %>  
   <dhv:permission name="campaign-campaigns-edit">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="containerBody">
+    <tr class="containerBack">
       <td class="formLabel">
         <center>
           This campaign has been configured and can now be activated.<br>
@@ -139,12 +139,12 @@ Campaign Details
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2" align="left">
       <strong>Campaign Details</strong>
     </td>     
   </tr>
   <tr class="containerBody">
-    <td class="formLabel">
+    <td class="formLabel" valign="top">
       Description
     </td>
     <td width="100%">
