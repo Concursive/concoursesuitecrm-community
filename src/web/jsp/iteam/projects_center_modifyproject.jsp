@@ -6,9 +6,9 @@
 <script language="JavaScript" type="text/javascript" src="/javascript/checkDate.js"></script>
 <script language="JavaScript" type="text/javascript" src="/javascript/popCalendar.js"></script>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
-  <input type="hidden" name="id" value="<%= Project.getId() %>">
-  <input type="hidden" name="modified" value="<%= Project.getModified() %>">
   <form method="POST" name="inputForm" action="/ProjectManagement.do?command=UpdateProject&auto-populate=true">
+    <input type="hidden" name="id" value="<%= Project.getId() %>">
+    <input type="hidden" name="modified" value="<%= Project.getModified() %>">
     <tr>
       <td width="2" bgcolor="#808080">&nbsp;</td>
       <td width="100%" colspan="2" bgcolor="#808080" rowspan="2">
