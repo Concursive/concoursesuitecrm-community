@@ -6,6 +6,7 @@
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkInt.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
@@ -21,6 +22,11 @@
     formTest = true;
     message = "";
     alertMessage = "";
+    
+    if (!checkInt(form.length.value)){
+      message += "- Check that Length is a whole number\r\n";
+      formTest = false;
+    }
     if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
       message += "- Check that Alert Date is entered correctly\r\n";
       formTest = false;

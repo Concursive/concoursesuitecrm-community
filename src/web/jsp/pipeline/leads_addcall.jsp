@@ -8,6 +8,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].subject.focus();">
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkInt.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
@@ -27,6 +28,10 @@
     var tmpList = document.forms['addCall'].elements['contactId'];
     if (tmpList.options[tmpList.selectedIndex].value == "-1") { 
       message += "- Check that a Contact is selected\r\n";
+      formTest = false;
+    }
+    if (!checkInt(form.length.value)){
+      message += "- Check that Length is a whole number\n";
       formTest = false;
     }
     if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
