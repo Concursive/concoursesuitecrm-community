@@ -86,7 +86,7 @@
 <%}%>
 </table>
 <br>
-[<%= LeadRptListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= LeadRptListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= LeadRptListInfo.getNumericalPageLinks() %>
+<dhv:pagedListControl object="LeadRptListInfo" tdClass="row1"/>
 <%} else {%>
   <tr bgcolor="white"><td colspan=6 valign=center>No reports found.</td></tr>
 </table>

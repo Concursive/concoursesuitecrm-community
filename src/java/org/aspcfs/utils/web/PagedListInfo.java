@@ -374,7 +374,7 @@ public class PagedListInfo {
    *@return     The listPropertiesHeader value
    */
   public String getListPropertiesHeader(String id) {
-    return ("<form name=\"listProperties" + id + "\" action=\"" + link + "\" method=\"post\">");
+    return ("<form name=\"" + id + "\" action=\"" + link + "\" method=\"post\">");
   }
 
 

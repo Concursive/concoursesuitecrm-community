@@ -83,4 +83,4 @@
 %>
 </table>
 <br>
-[<%= CompanyDirectoryInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CompanyDirectoryInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]  <%= CompanyDirectoryInfo.getNumericalPageLinks() %>
+<dhv:pagedListControl object="CompanyDirectoryInfo" tdClass="row1"/>

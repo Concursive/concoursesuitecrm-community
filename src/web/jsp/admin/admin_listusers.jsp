@@ -94,18 +94,5 @@
 %>
 </table>
 <br>
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <%= UserListInfo.getListPropertiesHeader("2") %>
-  <tr>
-    <td valign="middle" align="center" class="row1">
-      <font color="#666666">
-      [<%= UserListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %>|<%= UserListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
-      Page <%= UserListInfo.getNumericalPageEntry() %>
-      of <%= UserListInfo.getNumberOfPages() %>,
-      Items per page: <%= UserListInfo.getItemsPerPageEntry() %>
-      <input type="submit" value="go">
-      </font>
-    </td>
-  </tr>
-  <%= UserListInfo.getListPropertiesFooter() %>
-</table>
+<dhv:pagedListControl object="UserListInfo" tdClass="row1"/>
+

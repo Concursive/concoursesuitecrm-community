@@ -51,7 +51,7 @@
   <%}%>
 </table>
 <br>
-[<%= CampaignGroupsContactsInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignGroupsContactsInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= CampaignGroupsContactsInfo.getNumericalPageLinks() %>
+<dhv:pagedListControl object="CampaignGroupsContactsInfo" tdClass="row1"/>
 <%} else {%>
   <tr bgcolor="white">
     <td colspan="3" valign="center">

@@ -77,7 +77,7 @@
   <%}%>
 </table>
 <br>
-[<%= CampaignCenterPreviewInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignCenterPreviewInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= CampaignCenterPreviewInfo.getNumericalPageLinks() %>
+<dhv:pagedListControl object="CampaignCenterPreviewInfo" tdClass="row1"/>
 <%} else {%>
   <tr class="containerBody">
     <td colspan="4" valign="center">

@@ -4,11 +4,11 @@
 <jsp:useBean id="CampaignDashboardListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="listView" method="post" action="/CampaignManager.do?command=Dashboard">
 &nbsp;
 <center><%= CampaignDashboardListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="/CampaignManager.do?command=Dashboard">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= CampaignDashboardListInfo.getOptionValue("my") %>>My Running Campaigns</option>
@@ -16,6 +16,7 @@
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>
+    </form>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -94,6 +95,5 @@
 <%}%>
 </table>
 <br>
-[<%= CampaignDashboardListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignDashboardListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]  <%= CampaignDashboardListInfo.getNumericalPageLinks() %>
-</form>
+<dhv:pagedListControl object="CampaignDashboardListInfo" tdClass="row1"/>
 

@@ -4,12 +4,12 @@
 <jsp:useBean id="CampaignListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="listView" method="post" action="/CampaignManager.do?command=View">
 <dhv:permission name="campaign-campaigns-add"><a href="/CampaignManager.do?command=Add">Create a Campaign</a></dhv:permission>
 <dhv:permission name="campaign-campaigns-add" none="true"><br></dhv:permission>
 <center><%= CampaignListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="/CampaignManager.do?command=View">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= CampaignListInfo.getOptionValue("my") %>>My Incomplete Campaigns</option>
@@ -17,6 +17,7 @@
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>
+    </form>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -101,5 +102,4 @@
 <%}%>
 </table>
 <br>
-[<%= CampaignListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]  <%= CampaignListInfo.getNumericalPageLinks() %>
-</form>
+<dhv:pagedListControl object="CampaignListInfo" tdClass="row1"/>

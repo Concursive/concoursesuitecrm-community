@@ -89,7 +89,7 @@
 <%}%>
 	</table>
 	<br>
-	[<%= ContactListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= ContactListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
+  <dhv:pagedListControl object="ContactListInfo"/>
 </td>
 </tr>
 </table>

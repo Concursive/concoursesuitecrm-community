@@ -4,7 +4,6 @@
 <jsp:useBean id="TicList" class="com.darkhorseventures.cfsbase.TicketList" scope="request"/>
 <jsp:useBean id="TicListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
-<form name="details" action="/Accounts.do" method="post">
 <a href="/Accounts.do?command=View">Back to Account List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -98,9 +97,8 @@
 <%}%>
 </table>
 	<br>
-	[<%= TicListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= TicListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] 
-	&nbsp;<%= TicListInfo.getNumericalPageLinks() %>
+  <dhv:pagedListControl object="TicListInfo"/>
 <br>
 </td></tr>
 </table>
-</form>
+

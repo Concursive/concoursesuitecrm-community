@@ -146,4 +146,33 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+  
+  <tag>
+    <name>pagedListControl</name> 
+    <tag-class>com.darkhorseventures.taglib.PagedListControlHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Displays a control panel(form) for the PagedListInfo specified.
+    </display-name>
+    <attribute>
+      <name>name</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>object</name>
+      <required>yes</required>
+    </attribute>
+    <attribute>
+      <name>bgColor</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>fontColor</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>tdClass</name>
+      <required>no</required>
+    </attribute>
+  </tag>
 </taglib>

@@ -148,7 +148,7 @@
   <%}%>
 </table>
 <br>
-[<%= CampaignDashboardRecipientInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignDashboardRecipientInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= CampaignDashboardRecipientInfo.getNumericalPageLinks() %>
+<dhv:pagedListControl object="CampaignDashboardRecipientInfo" tdClass="row1"/>
 <%} else {%>
   <tr bgcolor="white">
     <td colspan="6" valign="center">

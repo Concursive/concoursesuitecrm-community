@@ -6,7 +6,6 @@
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 
-<form name="listView" method="post" action="/ExternalContacts.do?command=ListContacts">
 <dhv:permission name="contacts-external_contacts-add">
 <a href="/ExternalContacts.do?command=InsertContactForm">Add a Contact</a>
 </dhv:permission>
@@ -19,6 +18,7 @@
 
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="/ExternalContacts.do?command=ListContacts">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= ExternalContactsInfo.getOptionValue("my") %>>My Contacts </option>
@@ -28,6 +28,7 @@
 			<%= ContactTypeList.getHtmlSelect("listFilter1", ExternalContactsInfo.getFilterKey("listFilter1")) %>
       <%= showAttribute(request, "actionError") %>
     </td>
+    </form>
   </tr>
 </table>
 
@@ -100,5 +101,4 @@
 <%}%>
 </table>
 <br>
-[<%= ExternalContactsInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= ExternalContactsInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= ExternalContactsInfo.getNumericalPageLinks() %>
-</form>
+<dhv:pagedListControl object="ExternalContactsInfo" tdClass="row1"/>

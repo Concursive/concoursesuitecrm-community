@@ -4,11 +4,12 @@
 <jsp:useBean id="OpportunityListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<form name="listView" method="post" action="/Leads.do?command=ViewOpp"><br>
+<br>
 <center><%= OpportunityListInfo.getAlphabeticalPageLinks() %></center>
 
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="/Leads.do?command=ViewOpp">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= OpportunityListInfo.getOptionValue("my") %>>My Opportunities</option>
@@ -16,6 +17,7 @@
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>
+    </form>
   </tr>
 </table>
 
@@ -128,6 +130,5 @@
 <%}%>
 </table>
 <br>
-[<%= OpportunityListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= OpportunityListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= OpportunityListInfo.getNumericalPageLinks() %>
-</form>
+<dhv:pagedListControl object="OpportunityListInfo" tdClass="row1"/>
 

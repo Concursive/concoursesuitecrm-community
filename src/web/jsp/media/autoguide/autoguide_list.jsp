@@ -127,18 +127,5 @@
 <%}%>
 </table>
 <br>
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <%= AutoGuideDirectoryInfo.getListPropertiesHeader("2") %>
-  <tr>
-    <td valign="middle" align="center" class="row1">
-      <font color="#666666">
-      [<%= AutoGuideDirectoryInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %>|<%= AutoGuideDirectoryInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
-      Page <%= AutoGuideDirectoryInfo.getNumericalPageEntry() %>
-      of <%= AutoGuideDirectoryInfo.getNumberOfPages() %>,
-      Items per page: <%= AutoGuideDirectoryInfo.getItemsPerPageEntry() %>
-      <input type="submit" value="go">
-      </font>
-    </td>
-  </tr>
-  <%= AutoGuideDirectoryInfo.getListPropertiesFooter() %>
-</table>
+<dhv:pagedListControl object="AutoGuideDirectoryInfo" tdClass="row1"/>
+

@@ -5,13 +5,13 @@
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
-<form name="listView" method="post" action="/Accounts.do?command=Reports">
 <dhv:permission name="accounts-accounts-reports-add"><a href="/Accounts.do?command=GenerateForm">Generate new report</a></dhv:permission>
 <dhv:permission name="accounts-accounts-reports-add" none="true"><br></dhv:permission>
 <center><%= RptListInfo.getAlphabeticalPageLinks() %></center>
 
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="/Accounts.do?command=Reports">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= RptListInfo.getOptionValue("my") %>>My Reports</option>
@@ -19,6 +19,7 @@
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>
+    </form>
   </tr>
 </table>
 
@@ -88,9 +89,9 @@
 <%}%>
 </table>
 <br>
-[<%= RptListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= RptListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= RptListInfo.getNumericalPageLinks() %>
+<dhv:pagedListControl object="RptListInfo"/>
 <%} else {%>
   <tr bgcolor="white"><td colspan=6 valign=center>No reports found.</td></tr>
 </table>
 <%}%>
-</form>
+

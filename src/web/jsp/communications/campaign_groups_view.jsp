@@ -4,12 +4,12 @@
 <jsp:useBean id="sclList" class="com.darkhorseventures.cfsbase.SearchCriteriaListList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="listView" method="post" action="/CampaignManagerGroup.do?command=View">
 <dhv:permission name="campaign-campaigns-groups-add"><a href="/CampaignManagerGroup.do?command=Add">Add a Contact Group</a></dhv:permission>
 <dhv:permission name="campaign-campaigns-messages-add" none="true"><br></dhv:permission>
 <center><%= CampaignGroupListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="/CampaignManagerGroup.do?command=View">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= CampaignGroupListInfo.getOptionValue("my") %>>My Groups</option>
@@ -17,6 +17,7 @@
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>
+    </form>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -79,5 +80,4 @@
 <%}%>
 </table>
 <br>
-[<%= CampaignGroupListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignGroupListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= CampaignGroupListInfo.getNumericalPageLinks() %>
-</form>
+<dhv:pagedListControl object="CampaignGroupListInfo" tdClass="row1"/>

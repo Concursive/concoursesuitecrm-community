@@ -70,18 +70,5 @@
 <%}%>
 </table>
 <br>
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <%= OrgListInfo.getListPropertiesHeader("2") %>
-  <tr>
-    <td valign="middle" align="center" class="row1">
-      <font color="#666666">
-      [<%= OrgListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %>|<%= OrgListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
-      Page <%= OrgListInfo.getNumericalPageEntry() %>
-      of <%= OrgListInfo.getNumberOfPages() %>,
-      Items per page: <%= OrgListInfo.getItemsPerPageEntry() %>
-      <input type="submit" value="go">
-      </font>
-    </td>
-  </tr>
-  <%= OrgListInfo.getListPropertiesFooter() %>
-</table>
+<dhv:pagedListControl object="OrgListInfo" tdClass="row1"/>
+

@@ -4,13 +4,13 @@
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
-<form name="listView" method="post" action="/MyCFSInbox.do?command=Inbox">
 <a href="javascript:popURLReturn('/ForwardNote.do?command=ShowForm&popup=true', 'MyCFSInbox.do?command=Inbox', 'Inbox_message','600','450','yes','no');">New Message</a>
 <br>
 <center><%= InboxInfo.getAlphabeticalPageLinks() %></center>
 
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="/MyCFSInbox.do?command=Inbox">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= InboxInfo.getOptionValue("new") %>>Messages (Inbox)</option>
@@ -18,6 +18,7 @@
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>
+    </form>
   </tr>
 </table>
 
@@ -72,10 +73,9 @@
 	
 </table>
 <br>
-[<%= InboxInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= InboxInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= InboxInfo.getNumericalPageLinks() %>
+<dhv:pagedListControl object="InboxInfo" tdClass="row1"/>
 <%} else {%>
   <tr bgcolor="white"><td colspan=5 valign=center>No messages found.</td></tr>
 </table>
 <%}%>
-</form>
 

@@ -92,21 +92,7 @@
 <%}%>
 </table>
 <br>
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <%= AutoGuideAccountInfo.getListPropertiesHeader("2") %>
-  <tr>
-    <td valign="middle" align="center">
-      <font color="#666666">
-      [<%= AutoGuideAccountInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %>|<%= AutoGuideAccountInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
-      Page <%= AutoGuideAccountInfo.getNumericalPageEntry() %>
-      of <%= AutoGuideAccountInfo.getNumberOfPages() %>,
-      Items per page: <%= AutoGuideAccountInfo.getItemsPerPageEntry() %>
-      <input type="submit" value="go">
-      </font>
-    </td>
-  </tr>
-  <%= AutoGuideAccountInfo.getListPropertiesFooter() %>
-</table>
+<dhv:pagedListControl object="AutoGuideAccountInfo"/>
 </td>
 </tr>
 </table>

@@ -109,7 +109,7 @@
 <%}%>
 </table>
 <br>
-[<%= ContactMessageListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= ContactMessageListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]  <%= ContactMessageListInfo.getNumericalPageLinks() %>
+<dhv:pagedListControl object="ContactMessageListInfo" tdClass="row1"/>
 <br>
 </td></tr>
 </table>
