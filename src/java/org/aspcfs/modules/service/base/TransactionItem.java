@@ -708,7 +708,7 @@ public class TransactionItem {
         if (param != null) {
           String value = (String) ignoredProperties.get(param);
           if (value != null && value.indexOf("$C{") > -1) {
-            value = (String) transactionContext.getPropertyMap().get(value.substring(value.indexOf("${C") + 4, value.indexOf("}")));
+              value = (String) transactionContext.getPropertyMap().get(value.substring(value.indexOf("$C{") + 3, value.indexOf("}")));
             if (value != null) {
               ObjectUtils.setParam(object, param, value);
               if (System.getProperty("DEBUG") != null) {
