@@ -131,7 +131,24 @@ public class InitPermissionsAndRoles implements DataReader {
           int permissionId = Integer.parseInt(writer.getLastResponse());
           permissionIds.put((String) permission.getAttribute("name"), new Integer(permissionId));
         }
-      
+        
+        //Insert any folders under this category
+        ArrayList folderList = new ArrayList();
+        XMLUtils.getAllChildren(category, "folder", folderList);
+        Iterator folderItems = folderList.iterator();
+        int folderLevel = 0;
+        while (folderItems.hasNext()) {
+          folderLevel = folderLevel + 10;
+          Element folder = (Element) folderItems.next();
+          DataRecord folderRecord = new DataRecord();
+          folderRecord.setName("folder");
+          folderRecord.setAction("insert");
+          folderRecord.addField("moduleId", String.valueOf(categoryId));
+          folderRecord.addField("categoryId", (String) folder.getAttribute("constantId"));
+          folderRecord.addField("level", String.valueOf(folderLevel));
+          folderRecord.addField("description", (String) folder.getAttribute("description"));
+          writer.save(folderRecord);
+        }
       }
       
       //Read in all of the roles and associate with previously read in permissions so IDs match

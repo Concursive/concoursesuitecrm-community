@@ -239,6 +239,25 @@ public class PermissionsAndRolesWriter implements DataWriter {
         id = thisPermission.getId();
         return true;
       }
+      
+      if (record.getName().equals("folder")) {
+        try {
+          PreparedStatement pst = db.prepareStatement(
+            "INSERT INTO module_field_categorylink " +
+            "(module_id, category_id, level, description) " +
+            "VALUES (?, ?, ?, ?) ");
+          pst.setInt(1, record.getIntValue("moduleId"));
+          pst.setInt(2, record.getIntValue("categoryId"));
+          pst.setInt(3, record.getIntValue("level"));
+          pst.setString(4, record.getValue("description"));
+          pst.executeUpdate();
+          pst.close();
+        } catch (SQLException e) {
+          e.printStackTrace(System.out);
+          return false;
+        }
+        return true;
+      }
 
       if (record.getName().equals("role")) {
         Role thisRole = new Role();
