@@ -26,6 +26,12 @@
       <report file="task_date.xml" type="user" permission="myhomepage-tasks" title="Task list by due date" description="What are the tasks due withing a date range?"/>
       <report file="task_nodate.xml" type="user" permission="myhomepage-tasks" title="Task list" description="What are all the tasks in the system?"/>
     </category>
+    <category id="1111031131" name="Employees" folders="false" lookups="true" reports="true">
+      <lookup constantId="1111031132" class="lookupList" table="lookup_department" description="Departments"/>
+      <permission name="employees" attributes="v---" description="Access to Employee module"/>
+      <permission name="contacts-internal_contacts" attributes="vaed" description="Employees"/>
+      <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Employees" description="Who are the employees in my organization?"/>
+    </category>
     <category id="2" name="Contacts" folders="true" lookups="true" reports="true">
       <folder constantId="2" description="Contacts"/>
       <lookup constantId="1" class="contactType" table="lookup_contact_types" description="Types"/>
@@ -115,12 +121,6 @@
       <report file="tickets_department.xml" type="user" permission="tickets-tickets" title="Tickets by Department" description="What tickets are there in each department?"/>
       <report file="ticket_summary_date.xml" type="user" permission="tickets-tickets" title="Ticket counts by Department" description="How man tickets are there in the system on a particular date?"/>
       <report file="ticket_summary_range.xml" type="user" permission="tickets-tickets" title="Ticket activity by Department" description="How many tickets exist within a date range?"/>
-    </category>
-    <category id="1111031131" name="Employees" folders="false" lookups="true" reports="true">
-      <lookup constantId="1111031132" class="lookupList" table="lookup_department" description="Departments"/>
-      <permission name="employees" attributes="v---" description="Access to Employee module"/>
-      <permission name="contacts-internal_contacts" attributes="vaed" description="Employees"/>
-      <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Employees" description="Who are the employees in my organization?"/>
     </category>
     <category id="16" name="Reports" folders="false" lookups="false">
       <permission name="reports" attributes="v---" description="Access to Reports module"/>
