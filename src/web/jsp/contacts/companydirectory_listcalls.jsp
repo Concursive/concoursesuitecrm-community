@@ -25,9 +25,7 @@ Calls<br>
     <td class="containerBack">
 <dhv:permission name="contacts-external_contacts-calls-add"><a href="ExternalContactsCalls.do?command=Add&contactId=<%= ContactDetails.getId() %>">Add a Call</a></dhv:permission>
 <center><%= CallListInfo.getAlphabeticalPageLinks() %></center>
-<dhv:evaluate if="<%= request.getAttribute("actionError") != null %>">
-<%= showError(request, "actionError") %>
-</dhv:evaluate>
+<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CallListInfo"/>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
   <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete">
@@ -38,20 +36,16 @@ Calls<br>
     <td valign=center align=left>
       <strong>Subject</strong>
     </td>
-    
     <td valign=center align=left>
       <strong>Type</strong>
     </td>
-    
     <td valign=center align=center>
       <strong>Length</strong>
     </td>
-    
     <td valign=center align=center>
       <strong>Date</strong>
     </td>
   </tr>
-
 <%
 	Iterator j = CallList.iterator();
 	
