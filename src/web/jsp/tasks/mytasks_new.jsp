@@ -112,7 +112,7 @@
      Estimated LOE
     </td>
     <td>
-      <input type=text name="estimatedLOE" value="<%=(Task.getEstimatedLOE()==-1)?"":(new Integer(Task.getEstimatedLOE())).toString()%>">
+      <input type="text" size="4" name="estimatedLOE" value="<%= Task.getEstimatedLOEValue() %>">
       &nbsp;<%=EstimatedLOETypeList.getHtmlSelect("estimatedLOEType",Task.getEstimatedLOEType()) %>
      </td>
      

@@ -572,6 +572,17 @@ public java.sql.Timestamp getModified() {
   public int getEstimatedLOE() {
     return estimatedLOE;
   }
+  
+  public String getEstimatedLOEValue() {
+    String toReturn = String.valueOf(estimatedLOE);
+    if (toReturn.endsWith(".0")) {
+      toReturn = (toReturn.substring(0, toReturn.length() - 2));
+    }
+    if ("0".equals(toReturn) || estimatedLOE < 0) {
+      toReturn = "";
+    }
+    return toReturn;
+  }
 
 
   /**
