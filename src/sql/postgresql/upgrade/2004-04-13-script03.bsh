@@ -6,7 +6,6 @@
   - Adds a customer role to the role table
   - Specify permissions for the for the customer portal role
   
-  //NEEDS TO BE TESTED
 */
 import java.sql.*;
 
