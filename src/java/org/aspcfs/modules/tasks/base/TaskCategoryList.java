@@ -37,7 +37,7 @@ public class TaskCategoryList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the TaskList object
+   *  Sets the pagedListInfo attribute of the TaskCategoryList object
    *
    *@param  tmp  The new pagedListInfo value
    */
