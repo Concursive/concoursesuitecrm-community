@@ -16,11 +16,13 @@
       <permission name="myhomepage" attributes="v---" description="Access to My Home Page module"/>
       <permission name="myhomepage-dashboard" attributes="v---" description="View Performance Dashboard"/>
       <permission name="myhomepage-miner" attributes="va-d" description="Industry News records" enabled="false"/>
+      <permission name="myhomepage-inbox" attributes="v---" description="My Mailbox"/>
+      <permission name="myhomepage-tasks" attributes="vaed" description="My Tasks"/>
+      <permission name="admin-reassign" attributes="v-e-" description="Re-assign Items"/>
       <permission name="myhomepage-profile" attributes="v---" description="My Profile"/>
       <permission name="myhomepage-profile-personal" attributes="v-e-" description="Personal Information"/>
       <permission name="myhomepage-profile-settings" attributes="v-e-" description="Settings"/>
       <permission name="myhomepage-profile-password" attributes="--e-" description="Password"/>
-      <permission name="myhomepage-inbox" attributes="v---" description="My Inbox"/>
     </category>
     <category id="2" name="Contacts &amp; Resources" folders="true" lookups="true">
       <folder constantId="2" description="Contacts"/>
@@ -80,8 +82,8 @@
     <category id="9" name="Admin" folders="false" lookups="false">
       <permission name="admin" attributes="v---" description="Access to Admin module"/>
       <permission name="admin-users" attributes="vaed" description="Users"/>
-      <permission name="admin-reassign" attributes="v-e-" description="Re-assign Items"/>
       <permission name="admin-roles" attributes="vaed" description="Roles"/>
+      <permission name="admin-usage" attributes="v---" description="System Usage"/>
       <permission name="admin-sysconfig" attributes="v-e-" description="System Configuration"/>
       <permission name="admin-sysconfig-lists" attributes="v-e-" description="Configure Lookup Lists"/>
       <permission name="admin-sysconfig-folders" attributes="vaed" description="Configure Custom Folders &amp; Fields"/>
@@ -103,7 +105,7 @@
       <permission name="myhomepage-profile-settings" attributes="v-e-"/>
       <permission name="myhomepage-profile-password" attributes="--e-"/>
       <permission name="myhomepage-inbox" attributes="v---"/>
-      
+      <permission name="myhomepage-tasks" attributes="vaed"/>
       <permission name="contacts" attributes="v---"/>
       <permission name="contacts-external_contacts" attributes="vaed"/>
       <permission name="contacts-internal_contacts" attributes="vaed"/>
@@ -113,6 +115,7 @@
       <permission name="admin-reassign" attributes="v-e-"/>
       <permission name="admin-roles" attributes="vaed"/>
       <permission name="admin-sysconfig" attributes="v-e-"/>
+      <permission name="admin-usage" attributes="v---"/>
       <permission name="admin-sysconfig-lists" attributes="v-e-"/>
       <permission name="admin-sysconfig-folders" attributes="vaed"/>
       
@@ -131,6 +134,7 @@
       <permission name="myhomepage-profile-settings" attributes="v-e-"/>
       <permission name="myhomepage-profile-password" attributes="--e-"/>
       <permission name="myhomepage-inbox" attributes="v---"/>
+      <permission name="myhomepage-tasks" attributes="vaed"/>
       
       <permission name="accounts" attributes="v---" />
       <permission name="accounts-accounts" attributes="vae-"/>
