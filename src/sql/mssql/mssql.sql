@@ -8471,7 +8471,7 @@ INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby]
 INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(8,'Accounting Manager','Reviews revenue and opportunities',0,'Jun 15 2004  8:50:05:040AM',0,'Jun 15 2004  8:50:05:040AM',1,0)
 INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(9,'HR Representative','Manages employee information',0,'Jun 15 2004  8:50:05:630AM',0,'Jun 15 2004  8:50:05:630AM',1,0)
 INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(10,'Customer','Customer portal user',0,'Jun 15 2004  8:50:05:890AM',0,'Jun 15 2004  8:50:05:890AM',1,1)
-INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(11,'Products and Services Customer','Products and Services portal user',0,'Jun 15 2004  8:50:05:950AM',0,'Jun 15 2004  8:50:05:950AM',1,420041011)
+INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(11,'Products and Services Customer','Products and Services portal user',0,'Jun 15 2004  8:50:05:950AM',0,'Jun 15 2004  8:50:05:950AM',0,420041011)
 
 SET IDENTITY_INSERT [role] OFF
 GO
