@@ -4099,9 +4099,7 @@ This page lists the different roles present in the system, their role descriptio
 <featureDescription>You can view the process details by clicking on the select button under the Action column or by clicking on the name of the Triggered Process.</featureDescription>
 </features>
 <notes/>
-<rules>
-<ruleDescription>BUG: HIGH Priority: page cannot be found. Error shown &quot;The included page caused a problem. &quot; </ruleDescription>
-</rules>
+<rules/>
 <tips/>
 </pageDescription>
 <pageDescription contentLevel="0">
