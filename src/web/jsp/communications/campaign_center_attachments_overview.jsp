@@ -4,10 +4,10 @@
 <jsp:useBean id="Survey" class="com.darkhorseventures.cfsbase.Survey" scope="request"/>
 <jsp:useBean id="fileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form name="modForm" action="/CampaignManager.do?command=InsertAttachment&id=<%= Campaign.getId() %>" method="post">
+<form name="modForm" action="CampaignManager.do?command=InsertAttachment&id=<%= Campaign.getId() %>" method="post">
 <a href="CampaignManager.do">Communications Manager</a> >
-<a href="/CampaignManager.do?command=View">Campaign List</a> >
-<a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
+<a href="CampaignManager.do?command=View">Campaign List</a> >
+<a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Attachments
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -20,7 +20,7 @@ Attachments
     <td width="100%" class="containerBack">
       <ul>
         <li>Choose from any of the following attachment types to include with your Message</li>
-        <li>Certain attachments must be created or edited in the <a href="CampaignManagerAttachment.do">Create Attachments</a> utility</li>
+        <li>Certain attachments must be created and modified in the <a href="CampaignManagerAttachment.do">Create Attachments</a> utility</li>
       </ul>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
