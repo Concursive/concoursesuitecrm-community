@@ -455,6 +455,7 @@ public final class RevenueManager extends CFSModule {
     
     thisRevenue = (Revenue)context.getFormBean();
     thisRevenue.setEnteredBy(getUserId(context));
+    thisRevenue.setModifiedBy(getUserId(context));
     thisRevenue.setOwner(getUserId(context));
     
     try {

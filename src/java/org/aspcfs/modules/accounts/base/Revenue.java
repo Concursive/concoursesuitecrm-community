@@ -349,7 +349,11 @@ public String getOwnerNameAbbr() {
       } else {
 	      pst.setNull(++i, java.sql.Types.INTEGER);
       }
-			pst.setInt(++i, owner);
+			if (owner > -1) {
+	      pst.setInt(++i, this.getOwner());
+      } else {
+	      pst.setNull(++i, java.sql.Types.INTEGER);
+      }
       pst.setString(++i, description);
         if (entered != null) {
                 pst.setTimestamp(++i, entered);
@@ -470,6 +474,9 @@ public String getOwnerNameAbbr() {
           type = -1;
   }
 	owner = rs.getInt("owner");
+  if (rs.wasNull()) {
+          owner = -1;
+  }
 	description = rs.getString("description");
 	
 	entered = rs.getTimestamp("entered");
