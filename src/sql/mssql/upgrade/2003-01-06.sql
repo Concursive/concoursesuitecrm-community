@@ -1,22 +1,5 @@
 /* October 3, 2002: Need to manually modify relationships also */
 
-DROP TABLE system_prefs
-
-GO
-
-CREATE TABLE system_prefs (
-  pref_id INT IDENTITY PRIMARY KEY,
-  category VARCHAR(255) NOT NULL,
-  data TEXT DEFAULT '' NOT NULL,
-  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL references access(user_id),
-  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL references access(user_id),
-  enabled BIT NOT NULL DEFAULT 1
-)
-
-GO
-
 UPDATE access_log
 SET user_id = a.user_id 
 FROM access a 
@@ -29,6 +12,287 @@ DELETE FROM access_log
 WHERE user_id = -1
 
 GO
+
+ALTER TABLE access_log DROP CONSTRAINT DF_access_log_user_id
+
+GO
+
+ALTER TABLE call_log ADD alert VARCHAR(100) NULL
+
+ALTER TABLE call_log DROP CONSTRAINT DF_call_log_org_id
+ALTER TABLE call_log DROP CONSTRAINT DF_call_log_contact_id
+ALTER TABLE call_log DROP CONSTRAINT DF_call_log_opp_id
+
+GO
+
+ALTER TABLE cfsinbox_message ADD delete_flag BIT NULL
+
+GO
+
+DROP TABLE config
+
+GO
+
+ALTER TABLE contact ALTER COLUMN owner INT NULL
+ALTER TABLE contact ADD primary_contact BIT NULL
+//ALTER TABLE contact DROP CONSTRAINT DF_contact_type_id
+//ALTER TABLE contact ADD CONSTRAINT primary_contact
+
+GO
+
+ALTER TABLE contact_phone ALTER COLUMN number VARCHAR(30) NULL
+
+GO
+
+DROP TABLE departments
+
+GO
+
+ALTER TABLE field_types ADD enabled bit NULL
+//CONSTRAINT [DF__field_typ__enabl__1446FBA6] DEFAULT (1) FOR [enabled],
+
+GO
+
+DROP TABLE groups
+
+GO
+
+DROP TABLE industry_temp
+
+GO
+
+/* NEED TO USE DROP AND CREATE, VERIFY CUSTOMER ENTRIES */
+DROP TABLE lookup_contact_types
+GO
+CREATE TABLE lookup_contact_types (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1,
+  user_id INT references access(user_id),
+  category INT NOT NULL DEFAULT 0
+)
+GO
+INSERT INTO lookup_contact_types (description) VALUES ('Employee');
+INSERT INTO lookup_contact_types (description) VALUES ('Personal');
+INSERT INTO lookup_contact_types (description) VALUES ('Sales');
+INSERT INTO lookup_contact_types (description) VALUES ('Billing');
+INSERT INTO lookup_contact_types (description) VALUES ('Technical');
+GO
+
+DROP TABLE lookup_project_templates
+
+GO
+
+ALTER TABLE message ALTER COLUMN url VARCHAR(255) NULL
+
+GO
+
+DROP TABLE mod_log
+
+GO
+
+DROP TABLE motd
+
+GO
+
+DROP TABLE note
+
+GO
+
+DROP TABLE opportunity
+CREATE TABLE opportunity (
+  opp_id INT IDENTITY PRIMARY KEY,
+  owner INT NOT NULL REFERENCES access(user_id),
+  description VARCHAR(80),
+  acctlink INT DEFAULT -1,
+  contactlink INT DEFAULT -1,
+  closedate DATETIME NOT NULL,
+  closeprob FLOAT,
+  terms FLOAT,
+  units CHAR(1),
+  lowvalue FLOAT,
+  guessvalue FLOAT,
+  highvalue FLOAT,
+  stage INT REFERENCES lookup_stage(code),
+  stagedate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  commission FLOAT,
+  type CHAR(1),
+  alertdate DATETIME,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  custom1 int default -1,
+  custom2 int default -1,
+  closed DATETIME,
+  custom_data TEXT,
+  alert varchar(100) DEFAULT NULL,
+  enabled BIT NOT NULL DEFAULT 1,
+  notes TEXT
+)
+GO
+
+DROP TABLE org_type
+
+GO
+
+ALTER TABLE organization DROP COLUMN type
+ALTER TABLE organization DROP COLUMN industry_desc
+ALTER TABLE organization DROP COLUMN ins_type
+ALTER TABLE organization DROP COLUMN cust_status
+ALTER TABLE organization DROP COLUMN area
+ALTER TABLE organization DROP COLUMN industry_code
+ALTER TABLE organization DROP COLUMN duplicate
+ALTER TABLE organization ALTER COLUMN owner int NULL
+ALTER TABLE organization ALTER COLUMN duplicate_id int NULL
+ALTER TABLE organization ADD [namesalutation] [varchar] (80)NULL
+ALTER TABLE organization ADD [namelast] [varchar] (80) NULL
+ALTER TABLE organization ADD [namefirst] [varchar] (80) NULL
+ALTER TABLE organization ADD [namemiddle] [varchar] (80) NULL
+ALTER TABLE organization ADD [namesuffix] [varchar] (80) NULL
+
+GO
+
+ALTER TABLE organization_phone ALTER COLUMN number VARCHAR(30) NULL
+
+GO
+
+/* NEED TO REBUILD TABLE AND EXISTING DATA */
+ALTER TABLE permission_category ADD [folders] [bit] NOT NULL
+ALTER TABLE permission_category ADD [lookups] [bit] NOT NULL
+
+GO
+
+/* REBUILD THIS */
+DROP TABLE project_assignments
+
+GO
+
+ALTER TABLE project_files ALTER COLUMN project_id INT NULL
+//REMOVE default from folder_id
+
+GO
+
+ALTER TABLE project_files_download ALTER COLUMN user_download_id INT NULL
+
+GO
+
+ALTER TABLE project_folders ALTER COLUMN parent INT NULL
+//REMOVE default from parent
+
+GO
+
+DROP TABLE project_inbox
+
+GO
+
+DROP TABLE project_inbox_items
+
+GO
+
+ALTER TABLE project_issues ALTER COLUMN type_id INT NULL
+
+GO
+
+/* Rebuild project_issue_replies */
+DROP table project_issue_replies
+
+GO
+
+/* REBUILD */
+ALTER TABLE project_requirements ALTER COLUMN [submittedBy] [varchar] (50) NULL
+ALTER TABLE project_requirements ALTER COLUMN [estimated_loevalue] [int] NULL
+ALTER TABLE project_requirements ALTER COLUMN [actual_loevalue] [int] NULL
+
+GO
+
+/* REBUILD */
+ALTER TABLE project_team ALTER COLUMN [userLevel] [int] NULL
+
+GO
+
+DROP TABLE project_timesheet
+
+GO
+
+/* REBUILD */
+ALTER TABLE projects ALTER COLUMN [group_id] [int] NULL
+ALTER TABLE projects ALTER COLUMN [department_id] [int] NULL
+ALTER TABLE projects ALTER COLUMN [template_id] [int] NULL
+ALTER TABLE projects ALTER COLUMN [owner] [int] NULL
+
+GO
+
+DROP TABLE recipient_list
+
+GO
+
+/* NEED TO REBUILD THESE TABLES */
+ALTER TABLE saved_criteriaelement ADD [source] [int] NOT NULL
+ALTER TABLE saved_criterialist ADD [enabled] [bit] NOT NULL
+scheduled_recipient
+
+GO
+
+/* REBUILD */
+ALTER TABLE search_fields ADD [enabled] [bit] NULL
+
+GO
+
+DROP TABLE system_modules
+
+GO
+
+/* RECREATE THIS TABLE */
+DROP TABLE system_prefs
+
+GO
+
+/* RECREATE THIS TABLE */
+DROP TABLE ticket
+
+GO
+
+/* RECREATE THIS TABLE */
+DROP TABLE ticket_level
+
+GO
+
+DROP TABLE ticket_source
+
+GO
+
+/* RECREATE THIS TABLE */
+DROP TABLE ticket_log
+
+GO
+
+DROP TABLE user_groups
+
+GO
+
+DROP TABLE users
+
+GO
+
+
+
+/* defaults differ - rebuild table */
+call_log
+campaign
+campaign_run
+cfsinbox_message
+
+
+
+
+
+
+
+
+
 
 UPDATE contact
 SET type_id = NULL
@@ -1058,4 +1322,20 @@ CREATE TABLE usage_log (
 )
 
 GO
+
+
+
+
+
+/* Foreign Keys */
+
+ALTER TABLE [dbo].[access_log] ADD 
+	 FOREIGN KEY 
+	(
+		[user_id]
+	) REFERENCES [dbo].[access] (
+		[user_id]
+	)
+GO
+
 
