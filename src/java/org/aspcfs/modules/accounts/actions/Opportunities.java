@@ -156,9 +156,9 @@ public final class Opportunities extends CFSModule {
    */
   public String executeCommandInsert(ActionContext context) {
 	  
-	if (!(hasPermission(context, "accounts-accounts-opportunities-add"))) {
+    if (!(hasPermission(context, "accounts-accounts-opportunities-add"))) {
 	    return ("PermissionError");
-    	}
+    }
 	
     Exception errorMessage = null;
     boolean recordInserted = false;

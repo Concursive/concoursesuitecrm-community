@@ -6,7 +6,7 @@
 <body onload='page_init();'>
 <script language='Javascript'>
 function page_init() {
-  var list = parent.document.forms['addVehicle'].elements['modelId'];
+  var list = parent.document.forms['addVehicle'].elements['vehicle_modelId'];
   list.options.length = 0;
   list.options[list.length] = new Option("--None--", "-1");
 <%

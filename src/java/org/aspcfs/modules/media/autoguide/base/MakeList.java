@@ -16,6 +16,7 @@ public class MakeList extends ArrayList {
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
+  private int year = -1;
   
   public MakeList() { }
 
@@ -29,7 +30,14 @@ public class MakeList extends ArrayList {
   }
   public void setSyncType(int tmp) { this.syncType = tmp; }
   public void setSyncType(String tmp) { this.syncType = Integer.parseInt(tmp); }
-  
+  public void setYear(int tmp) { this.year = tmp; }
+  public void setYear(String tmp) { 
+    try {
+      this.year = Integer.parseInt(tmp);
+    } catch (Exception e) {
+    }
+  }
+
   public String getTableName() { return tableName; }
   public String getUniqueField() { return uniqueField; }
 
@@ -87,6 +95,9 @@ public class MakeList extends ArrayList {
       sqlFilter.append("AND make.entered < ? ");
       sqlFilter.append("AND make.modified < ? ");
     }
+    if (year > -1) {
+      sqlFilter.append("AND make.make_id IN (SELECT DISTINCT make_id FROM autoguide_vehicle WHERE year = ?) ");
+    }
   }
   
   private int prepareFilter(PreparedStatement pst) throws SQLException {
@@ -101,6 +112,9 @@ public class MakeList extends ArrayList {
       pst.setTimestamp(++i, lastAnchor);
       pst.setTimestamp(++i, lastAnchor);
       pst.setTimestamp(++i, nextAnchor);
+    }
+    if (year > -1) {
+      pst.setInt(++i, year);
     }
     return i;
   }

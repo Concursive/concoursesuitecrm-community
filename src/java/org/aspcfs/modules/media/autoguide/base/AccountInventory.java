@@ -291,5 +291,9 @@ public class AccountInventory {
     }
     organization = new Organization(db, accountId);
   }
+  
+  public void generateVehicleId(Connection db) throws SQLException {
+    vehicleId = this.getVehicle().generateId(db);
+  }
 }
 

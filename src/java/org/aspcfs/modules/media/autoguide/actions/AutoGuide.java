@@ -255,15 +255,82 @@ public final class AutoGuide extends CFSModule {
     }
   }
   
+  public String executeCommandAccountInsert(ActionContext context) {
+/*     if (!(hasPermission(context, "contacts-external_contacts-add"))) {
+      return ("PermissionError");
+    }
+ */
+    Exception errorMessage = null;
+    boolean recordInserted = false;
+
+    AccountInventory thisItem = (AccountInventory)context.getFormBean();
+    //thisItem.setRequestItems(context.getRequest());
+    thisItem.setEnteredBy(getUserId(context));
+    thisItem.setModifiedBy(getUserId(context));
+
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      thisItem.generateVehicleId(db);
+      recordInserted = thisItem.insert(db);
+      if (recordInserted) {
+        thisItem = new AccountInventory(db, thisItem.getId());
+        context.getRequest().setAttribute("InventoryDetails", thisItem);
+        //addRecentItem(context, thisItem);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "View Accounts", "Add Vehicle");
+    if (errorMessage == null) {
+      if (recordInserted) {
+        return ("InsertOK");
+      } else {
+        //processErrors(context, thisItem.getErrors());
+        return (executeCommandAccountAdd(context));
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandUpdateMakeList(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+      String year = context.getRequest().getParameter("year");
+      db = this.getConnection(context);
+      MakeList makeList = new MakeList();
+      if (year != null) {
+        makeList.setYear(year);
+      }
+      makeList.buildList(db);
+      context.getRequest().setAttribute("MakeList", makeList);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("MakeListOK");
+  }
+  
   public String executeCommandUpdateModelList(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
     try {
       int makeId = Integer.parseInt(context.getRequest().getParameter("makeId"));
+      String year = context.getRequest().getParameter("year");
       db = this.getConnection(context);
       ModelList modelList = new ModelList();
       if (makeId > -1) {
         modelList.setMakeId(makeId);
+        if (year != null) {
+          modelList.setYear(year);
+        }
         modelList.buildList(db);
       }
       context.getRequest().setAttribute("ModelList", modelList);
@@ -272,14 +339,7 @@ public final class AutoGuide extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "View Accounts", "Add Vehicle");
-      return ("ModelListOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("ModelListOK");
   }
 }
 

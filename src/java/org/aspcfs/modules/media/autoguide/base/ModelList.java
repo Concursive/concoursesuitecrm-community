@@ -17,6 +17,7 @@ public class ModelList extends ArrayList {
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
   private int makeId = -1;
+  private int year = -1;
   
   public ModelList() { }
 
@@ -33,7 +34,15 @@ public class ModelList extends ArrayList {
   public void setMakeId(int tmp) { this.makeId = tmp; }
   public void setMakeId(String tmp) { this.makeId = Integer.parseInt(tmp); }
   public int getMakeId() { return makeId; }
-  
+  public void setYear(int tmp) { this.year = tmp; }
+  public void setYear(String tmp) { 
+    try {
+      this.year = Integer.parseInt(tmp); 
+    } catch(Exception e) {
+    }
+  }
+  public int getYear() { return year; }
+
   public String getTableName() { return tableName; }
   public String getUniqueField() { return uniqueField; }
   
@@ -96,6 +105,9 @@ public class ModelList extends ArrayList {
     }
     if (makeId > -1) {
       sqlFilter.append("AND make.make_id = ? ");
+      if (year > -1) {
+        sqlFilter.append("AND model.model_id IN (SELECT DISTINCT model_id FROM autoguide_vehicle WHERE year = ?) ");
+      }
     }
   }
   
@@ -114,6 +126,9 @@ public class ModelList extends ArrayList {
     }
     if (makeId > -1) {
       pst.setInt(++i, makeId);
+      if (year > -1) {
+        pst.setInt(++i, year);
+      }
     }
     return i;
   }

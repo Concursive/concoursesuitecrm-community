@@ -167,6 +167,7 @@
   
   <!-- Auto Guide Module -->
   <action name="AccountsAutoGuide" class="com.darkhorseventures.autoguide.module.AutoGuide">
+    <bean name="InventoryDetails" class="com.darkhorseventures.autoguide.base.AccountInventory" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -174,8 +175,9 @@
     <forward name="ListOK" resource="/autoguide_accountlist.jsp" layout="nav"/>
     <forward name="List2OK" resource="/autoguide_accountlist2.jsp" layout="nav"/>
     <forward name="AddOK" resource="/autoguide_account_add.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/AccountsAutoGuide.do?command=AccountList"/>
     <forward name="DetailsOK" resource="/autoguide_accountdetails.jsp" layout="nav"/>
-    <forward name="DeleteOK" resource="/AccountsAutoGuide.do?command=List"/>
+    <forward name="DeleteOK" resource="/AccountsAutoGuide.do?command=AccountList"/>
   </action>
   <action name="AutoGuide" class="com.darkhorseventures.autoguide.module.AutoGuide">
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
@@ -186,6 +188,7 @@
     <forward name="List2OK" resource="/autoguide_list2.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/autoguide_details.jsp" layout="nav"/>
     <forward name="DeleteOK" resource="/AutoGuide.do?command=List"/>
+    <forward name="MakeListOK" resource="/autoguide_makelist.jsp"/>
     <forward name="ModelListOK" resource="/autoguide_modellist.jsp"/>
   </action>
   

@@ -4,9 +4,6 @@
 <jsp:useBean id="YearSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="MakeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="ModelSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<jsp:useBean id="Vehicle" class="com.darkhorseventures.autoguide.base.Vehicle" scope="request"/>
-<jsp:useBean id="Make" class="com.darkhorseventures.autoguide.base.Make" scope="request"/>
-<jsp:useBean id="Model" class="com.darkhorseventures.autoguide.base.Model" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].description.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
@@ -30,15 +27,28 @@
       return true;
     }
   }
-    
-  function updateList() {
-    var sel = document.forms['addVehicle'].elements['makeId'];
+  function updateMakeList() {
+    var sel = document.forms['addVehicle'].elements['vehicle_year'];
     var value = sel.options[sel.selectedIndex].value;
-    var url = "AutoGuide.do?command=UpdateModelList&makeId=" + escape(value);
+    var url = "AutoGuide.do?command=UpdateMakeList&year=" + escape(value);
+    
+    if (document.forms['addVehicle'].elements['vehicle_makeId'].selectedIndex < 1) {
+      window.frames['server_commands'].location.href=url;
+    } else {
+      updateModelList();
+    }
+  }
+  function updateModelList() {
+    var sel = document.forms['addVehicle'].elements['vehicle_makeId'];
+    var value = sel.options[sel.selectedIndex].value;
+    var sel2 = document.forms['addVehicle'].elements['vehicle_year'];
+    var value2 = sel2.options[sel2.selectedIndex].value;
+    var url = "AutoGuide.do?command=UpdateModelList&makeId=" + escape(value) + "&year=" + escape(value2);
     window.frames['server_commands'].location.href=url;
   }
 </script>
-<form name="addVehicle" action="AccountsAutoGuide.do?command=AccountInsert&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<form name="addVehicle" action="AccountsAutoGuide.do?command=AccountInsert&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<input type="hidden" name="accountId" value="<%= OrgDetails.getOrgId() %>"/>
 <a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>">Back to Vehicle List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -79,7 +89,8 @@
       Year
     </td>
     <td>
-      <%= YearSelect.getHtml() %>
+      <% YearSelect.setJsEvent("onchange=\"updateMakeList();\""); %>
+      <%= YearSelect.getHtml("vehicle_year", InventoryDetails.getVehicle().getYear()) %>
       <%= showAttribute(request, "yearError") %>
     </td>
   </tr>
@@ -88,8 +99,8 @@
       Make
     </td>
     <td>
-      <% MakeSelect.setJsEvent("onchange=\"updateList();\""); %>
-      <%= MakeSelect.getHtml("makeId") %>
+      <% MakeSelect.setJsEvent("onchange=\"updateModelList();\""); %>
+      <%= MakeSelect.getHtml("vehicle_makeId", InventoryDetails.getVehicle().getMakeId()) %>
       <font color=red>*</font> <%= showAttribute(request, "makeIdError") %>
       <%= showAttribute(request, "modelError") %>
       <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
@@ -100,7 +111,7 @@
       Model
     </td>
     <td>
-      <%= ModelSelect.getHtml("modelId") %>
+      <%= ModelSelect.getHtml("vehicle_modelId", InventoryDetails.getVehicle().getModelId()) %>
       <%= showAttribute(request, "modelIdError") %>
     </td>
   </tr>

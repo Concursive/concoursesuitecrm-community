@@ -18,8 +18,8 @@ public class Vehicle {
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
-  private Make make = new Make();
-  private Model model = new Model();
+  private Make make = null;
+  private Model model = null;
   
   public Vehicle() { }
 
@@ -38,14 +38,21 @@ public class Vehicle {
   public void setId(int tmp) { id = tmp; }
   public void setId(String tmp) { id = Integer.parseInt(tmp); }
   public void setYear(int inYear) { 
-    if (inYear < 20) {
-      inYear += 2000;
-    } else {
-      inYear += 1900;
+    if (inYear < 100) {
+      if (inYear < 20) {
+        inYear += 2000;
+      } else {
+        inYear += 1900;
+      }
     }
     this.year = inYear;
   }
-  public void setYear(String tmp) { this.setYear(Integer.parseInt(tmp)); }
+  public void setYear(String tmp) { 
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Vehicle-> setYear(" + tmp + ")");
+    }
+    this.setYear(Integer.parseInt(tmp)); 
+  }
   public void setMakeId(int tmp) { this.makeId = tmp; }
   public void setMakeId(String tmp) { this.makeId = Integer.parseInt(tmp); }
   public void setModelId(int tmp) { this.modelId = tmp; }
@@ -77,8 +84,18 @@ public class Vehicle {
     //return ObjectUtils.generateGuid(entered, enteredBy, id);
     return String.valueOf(id);
   }
-  public Make getMake() { return make; }
-  public Model getModel() { return model; }
+  public Make getMake() { 
+    if (make == null) {
+      make = new Make();
+    }
+    return make; 
+  }
+  public Model getModel() {
+    if (model == null) {
+      model = new Model();
+    }
+    return model; 
+  }
 
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -174,5 +191,27 @@ public class Vehicle {
     modifiedBy = rs.getInt("vehicle_modifiedby");
   }
 
+  public int generateId(Connection db) throws SQLException {
+    String sql =
+      "SELECT vehicle_id " +
+      "FROM autoguide_vehicle " +
+      "WHERE year = ? " +
+      "AND make_id = ? " +
+      "AND model_id = ? ";
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, year);
+    pst.setInt(2, makeId);
+    pst.setInt(3, modelId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      id = rs.getInt("vehicle_id");
+    }
+    rs.close();
+    pst.close();
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Vehicle-> Looking up id for: year(" + year + ") make(" + makeId + ") model(" + modelId + ") = " + id);
+    }
+    return id;
+  }
 }
 
