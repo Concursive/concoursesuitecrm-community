@@ -1,0 +1,13 @@
+#Thu Sep 30 08:41:33 EDT 2004
+#jEdit properties
+javastyle.formatOnSave=false
+javastyle.shortcut=F4
+javastyle.tagDescr.author=your name here
+javastyle.tagDescr.created={1}
+javastyle.tagDescr.version=$Id\: Exp $
+javastyle.tagRequired.author=true
+javastyle.tagRequired.created=true
+javastyle.tagRequired.version=true
+lineguides.default-set=\#c0c0ff|76,\#8080ff|80
+lineguides.enabled=true
+

@@ -741,7 +741,17 @@ public class Setup extends CFSModule {
     try {
       //Save the settings as encrypted text so it can be reloaded later
       String fileLibrary = getPref(context, "FILELIBRARY") + "init" + fs;
-      Key key = PrivateString.loadKey(fileLibrary + "zlib.jar");
+      Key key = null;
+      synchronized (this) {
+        //Get or make the key file
+        String keyFile = fileLibrary + "zlib.jar";
+        File thisFile = new File(keyFile);
+        if (!thisFile.exists()) {
+          key = PrivateString.generateKeyFile(keyFile);
+        } else {
+          key = PrivateString.loadKey(keyFile);
+        }
+      }
       String serverInfo = bean.getServerInfo();
       StringUtils.saveText(fileLibrary + "srv1.sgml", PrivateString.encrypt(key, serverInfo));
       // BEGIN DHV CODE ONLY

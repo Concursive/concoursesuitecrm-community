@@ -24,10 +24,10 @@ detailed information.
 J2SE SDK 1.4 or higher 
 http://java.sun.com
 
-Ant 1.5.1 or higher
+Ant 1.6 or higher
 http://ant.apache.org
 
-Tomcat 4.1.24 or higher
+Tomcat 5 or higher
 http://jakarta.apache.org/tomcat
 
 Postgresql 7.3.x or higher

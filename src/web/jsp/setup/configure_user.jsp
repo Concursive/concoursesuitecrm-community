@@ -59,7 +59,7 @@
     return true;
   }
 </script>
-<body onLoad="javascript:document.forms[0].password1.focus();">
+<body onLoad="javascript:document.forms[0].company.focus();">
 <dhv:formMessage showSpace="false" />
 <form name="configure" action="SetupUser.do?command=ConfigureUser&auto-populate=true" method="post" onSubmit="return checkForm(this)">
 <table border="0" width="100%">
