@@ -23,12 +23,11 @@
   }
 </script>
 <body onLoad="javascript:document.forms[0].name.focus();">
+<form name="addForm" action="/CampaignManager.do?command=Insert&auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="/CampaignManager.do?command=View">Campaign List</a> >
 Add a Campaign
 <hr color="#BFBFBB" noshade>
-<form name="addForm" action="/CampaignManager.do?command=Insert&auto-populate=true" method="post" onSubmit="return checkForm(this);">
-  <input type="hidden" name="dosubmit" value="true">
   <input type="submit" value="Insert" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/CampaignManager.do?command=View';">
   <input type="reset" value="Reset">
@@ -61,5 +60,6 @@ Add a Campaign
   <input type="submit" value="Insert" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/CampaignManager.do?command=View';">
   <input type="reset" value="Reset">
+  <input type="hidden" name="dosubmit" value="true">
 </form>
 </body>
