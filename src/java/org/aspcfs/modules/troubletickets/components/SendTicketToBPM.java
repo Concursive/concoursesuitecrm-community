@@ -1,8 +1,7 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfs.component;
+package com.darkhorseventures.cfs.troubletickets.component;
 
-import com.darkhorseventures.cfs.troubletickets.component.LoadTicketDetails;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
@@ -16,6 +15,8 @@ import com.darkhorseventures.webutils.LookupElement;
 
 public class SendTicketToBPM extends ObjectHookComponent implements ComponentInterface {
   
+  public static final String BPM_HOST_URL = "bpm.host.url";
+  
   public String getDescription() {
     return "Send ticket information to NetDecisions BPM.";
   }
@@ -23,16 +24,16 @@ public class SendTicketToBPM extends ObjectHookComponent implements ComponentInt
   public boolean execute(ComponentContext context) {
     boolean result = false;
     Ticket thisTicket = (Ticket)context.getThisObject();
-    Organization organization = (Organization)context.getAttribute(LoadTicketDetails.ORGANIZATION);
-    Contact contact = (Contact)context.getAttribute(LoadTicketDetails.CONTACT);
-    
-    LookupElement categoryLookup = (LookupElement)context.getAttribute(LoadTicketDetails.CATEGORY_LOOKUP);
-    LookupElement subCategory1Lookup = (LookupElement)context.getAttribute(LoadTicketDetails.SUBCATEGORY1_LOOKUP);
-    LookupElement subCategory2Lookup = (LookupElement)context.getAttribute(LoadTicketDetails.SUBCATEGORY2_LOOKUP);
-    LookupElement subCategory3Lookup = (LookupElement)context.getAttribute(LoadTicketDetails.SUBCATEGORY3_LOOKUP);
-    LookupElement severityLookup = (LookupElement)context.getAttribute(LoadTicketDetails.SEVERITY_LOOKUP);
     
     try {
+      Organization organization = (Organization)context.getAttribute(LoadTicketDetails.ORGANIZATION);
+      Contact contact = (Contact)context.getAttribute(LoadTicketDetails.CONTACT);
+      TicketCategory categoryLookup = (TicketCategory)context.getAttribute(LoadTicketDetails.CATEGORY_LOOKUP);
+      TicketCategory subCategory1Lookup = (TicketCategory)context.getAttribute(LoadTicketDetails.SUBCATEGORY1_LOOKUP);
+      TicketCategory subCategory2Lookup = (TicketCategory)context.getAttribute(LoadTicketDetails.SUBCATEGORY2_LOOKUP);
+      TicketCategory subCategory3Lookup = (TicketCategory)context.getAttribute(LoadTicketDetails.SUBCATEGORY3_LOOKUP);
+      LookupElement severityLookup = (LookupElement)context.getAttribute(LoadTicketDetails.SEVERITY_LOOKUP);
+    
       //Build an XML document needed for BPM
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = dbf.newDocumentBuilder();
@@ -125,12 +126,8 @@ public class SendTicketToBPM extends ObjectHookComponent implements ComponentInt
         ticketXML.appendChild(thisElement);
       }
 
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("TicketHook-> XML: " + XMLUtils.toString(app));
-      }
-      
       CCPHTTPProcessInitiator ccp = new CCPHTTPProcessInitiator();
-      ccp.setLocation("http://ds21.darkhorseventures.com:8080/Horse/servlet/ProcessInitiateServlet");
+      ccp.setLocation(context.getParameter(BPM_HOST_URL));
       ccp.initiateProcess(ticketXML);
       return true;
     } catch (Exception e) {
