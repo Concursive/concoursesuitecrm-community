@@ -58,31 +58,32 @@ public class DependencyList extends ArrayList {
    *@return    The htmlString value
    */
   public String getHtmlString() {
-    boolean canDelete = this.canDelete();
+    boolean canDelete = true;
     Iterator i = this.iterator();
     StringBuffer html = new StringBuffer();
     html.append("<br />");
     int count = 0;
     while (i.hasNext()) {
       Dependency thisDependency = (Dependency) i.next();
-      if (canDelete) {
-        if (thisDependency.getCount() > 0) {
-          ++count;
-          html.append("&nbsp;&nbsp;");
-          html.append("- ");
-          html.append(thisDependency.getName() + " (" + thisDependency.getCount() + ")");
-          html.append("<br />");
-        }
-      } else if (!thisDependency.getCanDelete()) {
+      if (thisDependency.getCount() > 0) {
         ++count;
         html.append("&nbsp;&nbsp;");
-        html.append("- ");
+        if (thisDependency.getCanDelete()){
+          html.append("- ");
+        }else{
+          html.append("* ");
+          canDelete = false;
+        }
         html.append(thisDependency.getName() + " (" + thisDependency.getCount() + ")");
         html.append("<br />");
       }
     }
     if (count == 0) {
       html.append("&nbsp;&nbsp;There are no dependencies for this action.<br />");
+    }
+    if (!canDelete){
+      html.append("(*) The dependencies preventing this item from being deleted.<br />");
+      html.append("Some of these may not be accessible if they are not owned by you.<br />");
     }
     return html.toString();
   }
