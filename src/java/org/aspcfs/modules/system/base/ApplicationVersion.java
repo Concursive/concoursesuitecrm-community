@@ -24,7 +24,7 @@ package org.aspcfs.modules.system.base;
  *      Exp $
  */
 public class ApplicationVersion {
-  public final static String VERSION = "2.9 test 2 (2004-09-29)";
+  public final static String VERSION = "2.9 test 3 (2004-10-08)";
 
 
   /**
