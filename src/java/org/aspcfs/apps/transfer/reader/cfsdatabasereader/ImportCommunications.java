@@ -65,6 +65,12 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
       return false;
     }
     
+    logger.info("ImportCommunications-> Inserting Scheduled Recipient Records");
+    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "scheduledRecipient");
+    if (!processOK) {
+      return false;
+    }
+    
     /**
     processOK = writer.commit();
     if (!processOK) {

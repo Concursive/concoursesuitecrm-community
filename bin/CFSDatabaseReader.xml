@@ -494,5 +494,20 @@
       <property lookup="user" field="enteredby"/>
       <property lookup="user" field="modifiedby"/>
     </map>
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="scheduledRecipient" table="scheduled_recipient" uniqueField="id">
+      <property alias="guid" field="id"/>
+      <property lookup="campaign" field="campaign_id"/>
+      <property lookup="contact" field="contact_id"/>
+      <property field="run_id"/>
+      <property field="status_id"/>
+      <property field="status"/>
+      <property field="status_date"/>
+      <property field="zone"/>
+      <property field="scheduled_date"/>
+      <property field="zone"/>
+      <property field="sent_date"/>
+      <property field="reply_date"/>
+      <property field="bounce_date"/>
+    </map>
   </mappings>
 </CFSDatabaseReader>
