@@ -29,7 +29,8 @@ public final class ProcessMessage extends CFSModule {
 
       sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
       ConnectionElement ce = new ConnectionElement();
-      //TODO: Remove this hard-coded url
+      //TODO: Remove this hard-coded url and get the URL from the gatekeeper
+      ce.setDriver("org.postgresql.Driver");
       ce.setUrl("jdbc:postgresql://127.0.0.1:5432/" + dbName);
       ce.setUsername("cfsdba");
       ce.setPassword("");
@@ -41,7 +42,7 @@ public final class ProcessMessage extends CFSModule {
 
     } catch (Exception e) {
       errorMessage = e;
-      System.out.println(e.toString());
+      e.printStackTrace(System.out);
     } finally {
       if (sqlDriver != null && db != null) {
         sqlDriver.free(db);
