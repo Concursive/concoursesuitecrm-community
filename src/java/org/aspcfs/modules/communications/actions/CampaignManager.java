@@ -2200,7 +2200,7 @@ public final class CampaignManager extends CFSModule {
    *@param  context  Description of the Parameter
    */
   private void resetPagedListInfo(ActionContext context) {
-    this.deletePagedListInfo(context, "CampaignDashboardListInfo");
+    //this.deletePagedListInfo(context, "CampaignDashboardListInfo");
     this.deletePagedListInfo(context, "CampaignListInfo");
     this.deletePagedListInfo(context, "CampaignCenterPreviewInfo");
     this.deletePagedListInfo(context, "CampaignCenterGroupInfo");

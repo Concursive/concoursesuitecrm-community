@@ -173,6 +173,6 @@ New Export
 </table>
 <br>
 <input type="submit" value="Generate">
-<input type="button" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=Reports';javascript:this.form.submit();">
+<input type="button" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Reports';javascript:this.form.submit();">
 </form>
 </body>
