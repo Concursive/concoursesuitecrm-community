@@ -247,10 +247,10 @@ public final class ExternalContacts extends CFSModule {
     if (!(hasPermission(context, "contacts-external_contacts-reports-add"))) {
       return ("PermissionError");
     }
-    
+
     Exception errorMessage = null;
     Connection db = null;
-    
+
     CustomFieldCategoryList thisList = new CustomFieldCategoryList();
     thisList.setLinkModuleId(Constants.CONTACTS);
     thisList.setIncludeEnabled(Constants.TRUE);
@@ -440,7 +440,7 @@ public final class ExternalContacts extends CFSModule {
         contactList.setOwnerIdRange(this.getUserRange(context));
       } else if ("archived".equals(externalContactsInfo.getListView())) {
         contactList.setIncludeEnabled(ContactList.FALSE);
-      }else{
+      } else {
         contactList.setOwner(this.getUserId(context));
       }
       contactList.buildList(db);
@@ -779,23 +779,20 @@ public final class ExternalContacts extends CFSModule {
     String contactId = context.getRequest().getParameter("id");
     String action = context.getRequest().getParameter("cmd");
 
-    if (action != null && action.equals("modify") && !(hasPermission(context, "contacts-external_contacts-edit"))) {
-      return ("PermissionError");
+    if (action != null && action.equals("modify")) {
+      if (!(hasPermission(context, "contacts-external_contacts-edit"))) {
+        return ("PermissionError");
+      }
+      UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+      User thisRec = thisUser.getUserRecord();
+      UserList shortChildList = thisRec.getShortChildList();
+      UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+      userList.setMyId(getUserId(context));
+      userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+      userList.setIncludeMe(true);
+      userList.setExcludeDisabledIfUnselected(true);
+      context.getRequest().setAttribute("UserList", userList);
     }
-
-    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-
-    //this is how we get the multiple-level heirarchy...recursive function.
-
-    User thisRec = thisUser.getUserRecord();
-
-    UserList shortChildList = thisRec.getShortChildList();
-    UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
-    userList.setMyId(getUserId(context));
-    userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
-    userList.setIncludeMe(true);
-    userList.setExcludeDisabledIfUnselected(true);
-    context.getRequest().setAttribute("UserList", userList);
 
     Connection db = null;
     Contact thisContact = null;
@@ -886,6 +883,15 @@ public final class ExternalContacts extends CFSModule {
       thisContact.setModifiedBy(getUserId(context));
       resultCount = thisContact.update(db);
       if (resultCount == -1) {
+        UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+        User thisRec = thisUser.getUserRecord();
+        UserList shortChildList = thisRec.getShortChildList();
+        UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+        userList.setMyId(getUserId(context));
+        userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+        userList.setIncludeMe(true);
+        userList.setExcludeDisabledIfUnselected(true);
+        context.getRequest().setAttribute("UserList", userList);
         processErrors(context, thisContact.getErrors());
         buildFormElements(context, db);
       }
@@ -1049,9 +1055,9 @@ public final class ExternalContacts extends CFSModule {
     addModuleBean(context, "External Contacts", "Add a new contact");
     if (errorMessage == null) {
       if (recordInserted) {
-        if ("true".equals((String)context.getRequest().getParameter("saveAndNew"))) {
-            context.getRequest().removeAttribute("ContactDetails");
-            return (executeCommandInsertContactForm(context));
+        if ("true".equals((String) context.getRequest().getParameter("saveAndNew"))) {
+          context.getRequest().removeAttribute("ContactDetails");
+          return (executeCommandInsertContactForm(context));
         }
         if (context.getRequest().getParameter("popup") != null) {
           return ("CloseInsertContactPopup");
@@ -1331,6 +1337,12 @@ public final class ExternalContacts extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDeleteFields(ActionContext context) {
     if (!(hasPermission(context, "contacts-external_contacts-folders-delete"))) {
       return ("PermissionError");
@@ -1370,8 +1382,8 @@ public final class ExternalContacts extends CFSModule {
       return ("SystemError");
     }
   }
-  
-  
+
+
   /**
    *  Description of the Method
    *
