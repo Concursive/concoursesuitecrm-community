@@ -506,22 +506,16 @@ public final class TroubleTickets extends CFSModule {
     Ticket newTic = null;
     String ticketId = null;
 
-    PagedListInfo ticTaskListInfo = this.getPagedListInfo(context, "TicketTaskListInfo");
-    ticTaskListInfo.setItemsPerPage(0);
-
     try {
       ticketId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
       newTic = new Ticket();
-      newTic.getTasks().setPagedListInfo(ticTaskListInfo);
       newTic.queryRecord(db, Integer.parseInt(ticketId));
 
       //check whether or not the owner is an active User
       if (newTic.getAssignedTo() > -1) {
         newTic.checkEnabledOwnerAccount(db);
       }
-
-      context.getRequest().setAttribute("TaskList", newTic.getTasks());
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -579,6 +573,7 @@ public final class TroubleTickets extends CFSModule {
     addModuleBean(context, "View Tickets", "Ticket Details");
     if (errorMessage == null) {
       context.getRequest().setAttribute("TicketDetails", thisTic);
+      addModuleBean(context, "ViewTickets", "View Tickets");
       addRecentItem(context, thisTic);
       return ("ViewHistoryOK");
     } else {

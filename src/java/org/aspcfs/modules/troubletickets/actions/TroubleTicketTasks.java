@@ -41,9 +41,13 @@ public final class TroubleTicketTasks extends CFSModule {
     String ticketId = context.getRequest().getParameter("ticketId");
     Connection db = null;
     TaskList taskList = new TaskList();
+    
+    PagedListInfo ticTaskListInfo = this.getPagedListInfo(context, "TicketTaskListInfo");
+    ticTaskListInfo.setItemsPerPage(0);
     try {
       db = this.getConnection(context);
       taskList.setTicketId(Integer.parseInt(ticketId));
+      taskList.setPagedListInfo(ticTaskListInfo);
       taskList.buildList(db);
       
       //get the ticket
