@@ -34,12 +34,14 @@ View Components<br>
       </select>
 			<% TypeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
       <%=TypeSelect.getHtmlSelect("listFilter1", OpportunityListInfo.getFilterKey("listFilter1"))%>
+      <dhv:evaluate if="<%= "all".equals(OpportunityListInfo.getListView()) || "closed".equals(OpportunityListInfo.getListView()) %>">
       &nbsp;Owner: 
       <% UserList.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); 
          HtmlSelect userSelect = UserList.getHtmlSelectObj("listFilter2", OpportunityListInfo.getFilterKey("listFilter2"));
-         userSelect.addItem(-1, "All Users");
+         userSelect.addItem(-1, "All Users", 0);
       %>
       <%= userSelect.getHtml("listFilter2", OpportunityListInfo.getFilterKey("listFilter2")) %>
+      </dhv:evaluate>
     </td>
     <td>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OpportunityListInfo"/>
@@ -142,7 +144,7 @@ View Components<br>
     }
   } else {%>
   <tr class="containerBody">
-    <td colspan="7" valign="center">No opportunities found.</td>
+    <td colspan="8" valign="center">No opportunities found.</td>
   </tr>
 <%}%>
 </table>
