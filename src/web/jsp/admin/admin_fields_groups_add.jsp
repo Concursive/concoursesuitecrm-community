@@ -7,12 +7,13 @@
 <jsp:useBean id="ModId" class="java.lang.String" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body onLoad="document.forms[0].name.focus();">
-<form name="details" action="/AdminFieldsGroup.do?command=InsertGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&auto-populate=true" method="post">
-<a href="/Admin.do">Setup</a> >
-<a href="/Admin.do?command=Config">System Configuration</a> >
-<a href="/Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
-<a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
-<a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>">Folder</a> >
+<form name="details" action="AdminFieldsGroup.do?command=InsertGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&auto-populate=true" method="post">
+<a href="Admin.do">Setup</a> >
+<a href="Admin.do?command=Manage">System Management</a> >
+<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
+<a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
+<a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>">Folder</a> >
 New Group<br>
 <hr color="#BFBFBB" noshade>
 

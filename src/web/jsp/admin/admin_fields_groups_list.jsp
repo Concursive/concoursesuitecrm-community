@@ -32,11 +32,12 @@
     }
   }
 </script>
-<form name="details" action="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>" method="post" onSubmit="return checkForm(this);">
-<a href="/Admin.do">Setup</a> >
-<a href="/Admin.do?command=Config&modId=<%= ModId %>">System Configuration</a> >
-<a href="/Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
-<a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
+<form name="details" action="AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>" method="post" onSubmit="return checkForm(this);">
+<a href="Admin.do">Setup</a> >
+<a href="Admin.do?command=Manage">System Management</a> >
+<a href="Admin.do?command=Config&modId=<%= ModId %>">Configure Modules</a> >
+<a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
+<a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
 Folder<br>
 <hr color="#BFBFBB" noshade>
 

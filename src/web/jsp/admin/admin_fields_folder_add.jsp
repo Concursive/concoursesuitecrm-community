@@ -6,10 +6,11 @@
 <%@ include file="initPage.jsp" %>
 <body onLoad="document.forms[0].name.focus();">
 <form name="details" action="/AdminFieldsFolder.do?command=InsertFolder&modId=<%= ModId %>&auto-populate=true" method="post">
-<a href="/Admin.do">Setup</a> >
-<a href="/Admin.do?command=Config">System Configuration</a> >
-<a href="/Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
-<a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> >
+<a href="Admin.do">Setup</a> >
+<a href="Admin.do?command=Manage">System Management</a> >
+<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
+<a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> >
 New Folder<br>
 <hr color="#BFBFBB" noshade>
 <% if (request.getAttribute("actionError") != null) { %>

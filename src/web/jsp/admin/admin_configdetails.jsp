@@ -3,7 +3,8 @@
 <%@ include file="initPage.jsp" %>
 <jsp:useBean id="PermissionCategory" class="com.darkhorseventures.cfsbase.PermissionCategory" scope="request"/>
 <a href="Admin.do">Setup</a> > 
-<a href="Admin.do?command=Config">System Configuration</a> >
+<a href="Admin.do?command=Manage">System Management</a> >
+<a href="Admin.do?command=Config">Configure Modules</a> >
 Configuration Options<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

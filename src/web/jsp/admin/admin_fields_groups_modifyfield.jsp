@@ -21,12 +21,13 @@
   }
 </script>
 <body<% if (CustomField.getName() == null) { %> onLoad="document.forms[0].name.focus();"<%}%>>
-<form name="modifyList" action="/AdminFields.do?command=ModifyField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true" onSubmit="return doCheck();" method="post">
-<a href="/Admin.do">Setup</a> >
-<a href="/Admin.do?command=Config">System Configuration</a> >
-<a href="/Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
-<a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
-<a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>">Folder</a> >
+<form name="modifyList" action="AdminFields.do?command=ModifyField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true" onSubmit="return doCheck();" method="post">
+<a href="Admin.do">Setup</a> >
+<a href="Admin.do?command=Manage">System Management</a> >
+<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
+<a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
+<a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>">Folder</a> >
 Existing Field<br>
 <hr color="#BFBFBB" noshade>
 <% if (request.getAttribute("actionError") != null) { %>

@@ -14,11 +14,12 @@
     }
   }
 </script>
-<form name="modifyList" method="post" action="/Admin.do?command=UpdateList" onSubmit="return doCheck();">
-<a href="/Admin.do">Setup</a> >
-<a href="/Admin.do?command=Config">System Configuration</a> >
-<a href="/Admin.do?command=ConfigDetails&moduleId=<%=moduleId%>">Configuration Options</a> >
-<a href="/Admin.do?command=EditLists&moduleId=<%=moduleId%>">Lookup Lists</a> > 
+<form name="modifyList" method="post" action="Admin.do?command=UpdateList" onSubmit="return doCheck();">
+<a href="Admin.do">Setup</a> >
+<a href="Admin.do?command=Manage">System Management</a> >
+<a href="Admin.do?command=Config">System Configuration</a> >
+<a href="Admin.do?command=ConfigDetails&moduleId=<%=moduleId%>">Configuration Options</a> >
+<a href="Admin.do?command=EditLists&moduleId=<%=moduleId%>">Lookup Lists</a> > 
 Edit List<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

@@ -2,8 +2,9 @@
 <%@ page import="com.darkhorseventures.cfsbase.PermissionCategory, java.util.*" %>
 <%@ include file="initPage.jsp" %>
 <jsp:useBean id="PermissionCategoryList" class="com.darkhorseventures.cfsbase.PermissionCategoryList" scope="request"/>
-<a href="/Admin.do">Setup</a> > 
-System Configuration<br>
+<a href="Admin.do">Setup</a> > 
+<a href="Admin.do?command=Manage">System Management</a> >
+Configure Modules<br>
 <hr color="#BFBFBB" noshade>
 Setup CFS to meet the specific needs of your organization, including configuration of lookup lists and custom fields.  Choose a CFS module to proceed.<br>
 &nbsp;<br>
