@@ -128,12 +128,12 @@ public final class ProcessPacket extends CFSModule {
       document.appendChild(app);
 
       //Convert the result messages to XML
+      int returnedRecordCount = 0;
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("ProcessPacket-> Processing StatusMessages for output: " + statusMessages.size());
+      }
       Iterator messages = statusMessages.iterator();
       while (messages.hasNext()) {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("ProcessPacket-> Processing StatusMessage for output");
-        }
-
         TransactionStatus thisMessage = (TransactionStatus) messages.next();
         Element response = document.createElement("response");
         if (thisMessage.getId() > -1) {
@@ -155,11 +155,9 @@ public final class ProcessPacket extends CFSModule {
           if (thisMessage.getRecordList().getTotalRecords() > -1) {
             recordSet.setAttribute("total", String.valueOf(thisMessage.getRecordList().getTotalRecords()));
           }
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("ProcessPacket-> Records: " + thisMessage.getRecordList().size()); 
-          }
           response.appendChild(recordSet);
 
+          returnedRecordCount += thisMessage.getRecordList().size();
           Iterator recordList = thisMessage.getRecordList().iterator();
           while (recordList.hasNext()) {
             Element record = document.createElement("record");
@@ -182,6 +180,9 @@ public final class ProcessPacket extends CFSModule {
           }
 
         }
+      }
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("ProcessPacket-> Total Records: " + returnedRecordCount); 
       }
 
       context.getRequest().setAttribute("statusXML", XMLUtils.toString(document));

@@ -86,12 +86,10 @@ public class Call extends GenericBean {
         "ct.namefirst as ctfirst, ct.namelast as ctlast " +
         "FROM call_log c " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
-        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code), " +
-        "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
-        "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
-        "WHERE c.enteredby = a1.user_id " +
-        "AND c.modifiedby = a2.user_id ");
-
+        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
+        "LEFT JOIN contact e ON (c.enteredby = e.user_id) " +
+        "LEFT JOIN contact m ON (c.modifiedby = m.user_id) " +
+        "WHERE call_id > -1 ");
     if (callId > -1) {
       sql.append("AND call_id = " + callId + " ");
     } else {

@@ -276,7 +276,7 @@ public class CFSDatabaseReader implements DataReader {
       }
     } catch (Exception ex) {
       logger.info(ex.toString());
-      logger.info(writer.getLastResponse());
+      //logger.info(writer.getLastResponse());
     } finally {
       sqlDriver.free(db);
       sqlDriver.destroy();
