@@ -1674,52 +1674,6 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Generate a list of Campaign files that can be downloaded.
-   *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   */
-  public String executeCommandPrepareDownload(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-view"))) {
-      return ("PermissionError");
-    }
-
-    addModuleBean(context, "Dashboard", "Campaign: Downloads");
-    Exception errorMessage = null;
-    Connection db = null;
-
-    try {
-      String campaignId = context.getRequest().getParameter("id");
-      db = this.getConnection(context);
-      Campaign thisCampaign = new Campaign(db, campaignId);
-      if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
-        return ("PermissionError");
-      }
-      FileItemList files = new FileItemList();
-      files.setLinkModuleId(Constants.COMMUNICATIONS);
-      files.setLinkItemId(thisCampaign.getId());
-      files.buildList(db);
-
-      context.getRequest().setAttribute("Campaign", thisCampaign);
-      context.getRequest().setAttribute("FileItemList", files);
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
-      return ("PrepareDownloadOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
-  }
-
-
-
-  /**
    *  Description of the Method
    *
    *@param  context  Description of the Parameter
@@ -1738,7 +1692,7 @@ public final class CampaignManager extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      itemToDownload = new FileItem(db, Integer.parseInt(fileId), Integer.parseInt(linkItemId), Constants.COMMUNICATIONS);
+      itemToDownload = new FileItem(db, Integer.parseInt(fileId), Integer.parseInt(linkItemId), Constants.COMMUNICATIONS_DOCUMENTS);
     } catch (Exception e) {
       errorMessage = e;
       e.printStackTrace(System.out);

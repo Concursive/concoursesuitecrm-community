@@ -87,14 +87,6 @@ Campaign Details
             <dhv:tz timestamp="<%= Campaign.getModified() %>"  dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
           </td>
         </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Mail Merge
-          </td>
-          <td nowrap>
-            <%= (Campaign.hasFiles()?"<a href=\"CampaignManager.do?command=PrepareDownload&id=" + Campaign.getId() + "\">Download<br>Available</a>":"None") %>
-          </td>
-        </tr>
       </table>
     </td>
   </tr>

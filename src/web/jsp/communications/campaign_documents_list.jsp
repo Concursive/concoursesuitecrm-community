@@ -31,7 +31,8 @@ Documents
 <table cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td class="containerBack">
-<dhv:permission name="campaign-campaigns-edit"><a href="CampaignDocuments.do?command=Add&id=<%= Campaign.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
+<dhv:permission name="campaign-campaigns-edit"><a href="CampaignDocuments.do?command=Add&id=<%= Campaign.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a> |
+<a href="CampaignManager.do?command=ExportReport&id=<%= Campaign.getId() %>">Export Campaign to Excel file</a><br></dhv:permission>
 <center><%= CampaignDocListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CampaignDocListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">

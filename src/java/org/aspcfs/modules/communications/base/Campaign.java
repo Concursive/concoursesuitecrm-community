@@ -1492,8 +1492,8 @@ public class Campaign extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public void buildFileCount(Connection db) throws SQLException {
-    //Exported recipient list
-    files = FileItemList.retrieveRecordCount(db, Constants.COMMUNICATIONS, id);
+    //All internal documents for a campaign
+    files = FileItemList.retrieveRecordCount(db, Constants.COMMUNICATIONS_DOCUMENTS, id);
   }
 
 
@@ -1905,7 +1905,7 @@ public class Campaign extends GenericBean {
       fileList.delete(db, baseFilePath + "communications" + Constants.fs);
       fileList = null;
       
-      //Delete any dashboard documents
+      //Delete any dashboard documents, included exported recipients
       FileItemList docList = new FileItemList();
       docList.setLinkModuleId(Constants.COMMUNICATIONS_DOCUMENTS);
       docList.setLinkItemId(id);
@@ -1913,14 +1913,6 @@ public class Campaign extends GenericBean {
       docList.delete(db, baseFilePath + "campaign" + Constants.fs);
       docList = null;
       
-      //Delete any exported recipient documents
-      FileItemList recipientList = new FileItemList();
-      recipientList.setLinkModuleId(Constants.COMMUNICATIONS);
-      recipientList.setLinkItemId(id);
-      recipientList.buildList(db);
-      recipientList.delete(db, baseFilePath + "communications" + Constants.fs);
-      recipientList = null;
-
       pst = db.prepareStatement(
           "DELETE FROM campaign WHERE campaign_id = ? ");
       //"DELETE FROM campaign WHERE id = ? ");

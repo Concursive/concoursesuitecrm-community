@@ -1,6 +1,9 @@
 ## These files will be deleted by ant deploy
 ## and exist in the CFS_HOME directory
 
+## 2003-12-18 no longer used because of documents tab
+communications/campaign_download.jsp
+
 ## 2003-10-12 unused ##
 addLead.jsp
 contacts/companydirectory_calendar.jsp

@@ -943,7 +943,7 @@ public class CampaignReport {
     thisItem.setLinkItemId(campaignId);
     thisItem.setEnteredBy(enteredBy);
     thisItem.setModifiedBy(modifiedBy);
-    thisItem.setSubject("Exported Report");
+    thisItem.setSubject("Exported Campaign Report");
     thisItem.setClientFilename("campaignreports-" + filenameToUse + ".xls");
     thisItem.setFilename(filenameToUse + "-" + enteredBy);
     thisItem.setVersion(1.0);

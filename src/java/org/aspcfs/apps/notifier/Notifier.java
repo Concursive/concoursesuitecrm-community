@@ -641,7 +641,7 @@ public class Notifier extends ReportBuilder {
     int fileSize = (int) (new File(filePath + baseFilename)).length();
 
     FileItem thisItem = new FileItem();
-    thisItem.setLinkModuleId(Constants.COMMUNICATIONS);
+    thisItem.setLinkModuleId(Constants.COMMUNICATIONS_DOCUMENTS);
     thisItem.setLinkItemId(thisCampaign.getId());
     thisItem.setEnteredBy(thisCampaign.getEnteredBy());
     thisItem.setModifiedBy(thisCampaign.getModifiedBy());

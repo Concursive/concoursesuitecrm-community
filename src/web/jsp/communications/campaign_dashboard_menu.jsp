@@ -20,21 +20,11 @@
     }else{
       showSpan('menuCancel');
     }
-    
-    if(hasDownload == 0){
-      hideSpan('menuDownload');
-    }else{
-      showSpan('menuDownload');
-    }
   }
   
   //Menu link functions
   function details() {
     window.location.href='CampaignManager.do?command=Details&id=' + thisCampaignId + '&reset=true';
-  }
-  
-  function download() {
-    window.location.href='CampaignManager.do?command=PrepareDownload&id=' + thisCampaignId;
   }
   
   function generateReport() {
@@ -58,14 +48,6 @@
         </td>
       </tr>
       </dhv:permission>
-      <tr id="menuDownload">
-        <td>
-          <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
-        <td width="100%">
-          <a href="javascript:download()">Download Mail Merge</a>
-        </td>
-      </tr>
       <dhv:permission name="campaign-campaigns-view">
       <tr id="menuReport">
         <td>
