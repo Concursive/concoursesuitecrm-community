@@ -1538,7 +1538,7 @@ public void setServerName(String serverName) {
     
 	Template template = new Template();
 	template.setText(thisMessageText);
-	template.addParseElement("${survey_url}", "<a href=\"http://" + this.getServerName() + "/ProcessSurvey.do?command=View&surveyId=" + this.getSurveyId() + "\">http://ds21.darkhorseventures.com/ProcessSurvey.do?command=View&surveyId=" + this.getSurveyId() + "</a>");
+	template.addParseElement("${survey_url}", "<a href=\"http://" + this.getServerName() + "/ProcessSurvey.do?id=" + this.getSurveyId() + "\">http://ds21.darkhorseventures.com/ProcessSurvey.do?id=" + this.getSurveyId() + "</a>");
 	  
     pst = db.prepareStatement(
         "UPDATE campaign " +

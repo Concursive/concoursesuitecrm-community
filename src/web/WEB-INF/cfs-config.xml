@@ -14,6 +14,11 @@
   <action name="ProcessImage" class="com.darkhorseventures.cfsmodule.ProcessImage">
     <forward name="SystemError" resource="/error_system.jsp"/>
   </action>
+  
+  <action name="ProcessSurvey" class="com.darkhorseventures.cfsmodule.ProcessSurvey">
+    <forward name="SystemError" resource="/error_system.jsp"/>
+    <forward name="ViewOK" resource="/campaign_surveys_preview.jsp" layout="style"/>
+  </action>
 	
   <action name="ProcessMessage" class="com.darkhorseventures.cfsmodule.ProcessMessage">
     <forward name="PreviewOK" resource="/campaign_messages_preview.jsp"/>
