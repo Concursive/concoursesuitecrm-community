@@ -1033,6 +1033,9 @@ public class Setup extends CFSModule {
    *@param  context  Description of the Parameter
    */
   private void finalizePrefs(ActionContext context) {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Setup-> finalizePrefs - start");
+    }
     //Update the final configuration file
     ApplicationPrefs prefs = getApplicationPrefs(context);
     prefs.add("CONTROL", "configured");
@@ -1044,7 +1047,11 @@ public class Setup extends CFSModule {
     prefs.add("CONNECTION_POOL.MAX_IDLE_TIME.SECONDS", "60");
     prefs.add("CONNECTION_POOL.MAX_DEAD_TIME.SECONDS", "300");
     prefs.add("WEB-INF", context.getServletContext().getRealPath("/") + "WEB-INF" + fs);
+    prefs.add("IMPORT_QUEUE_MAX", "1");
     prefs.save();
     prefs.populateContext(context.getServletContext());
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Setup-> finalizePrefs - end (" + prefs.getPrefs().size() + ")");
+    }
   }
 }
