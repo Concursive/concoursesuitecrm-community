@@ -256,7 +256,7 @@ if (i.hasNext()) {
       </td>
       
       <td valign=center nowrap class="row<%= rowid %>">
-        <%= toHtml(thisOpp.getCloseDate()) %>
+        <%= toHtml(thisOpp.getCloseDateString()) %>
       </td>
 
     </tr>
