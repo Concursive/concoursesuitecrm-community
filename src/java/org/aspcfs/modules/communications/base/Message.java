@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -99,34 +99,25 @@ public class Message extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int messageId) throws SQLException {
-
-    Statement st = null;
-    ResultSet rs = null;
-
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT m.*  FROM message m " +
-        "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
-        "WHERE m.id > -1 ");
-
-    if (messageId > -1) {
-      sql.append("AND m.id = " + messageId + " ");
-    } else {
+    if (messageId == -1) {
       throw new SQLException("Invalid Message ID.");
     }
-
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT m.* " +
+        "FROM message m " +
+        "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
+        "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
+        "WHERE m.id = ? ");
+    pst.setInt(1, messageId);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
-      throw new SQLException("Message not found.");
     }
     rs.close();
-    st.close();
+    pst.close();
+    if (id == -1) {
+      throw new SQLException("Message not found.");
+    }
   }
 
 
