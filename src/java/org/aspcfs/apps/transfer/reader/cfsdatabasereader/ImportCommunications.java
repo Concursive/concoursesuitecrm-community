@@ -47,7 +47,6 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
     
     logger.info("ImportCommunications-> Inserting Saved Criteria Elements");
     processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "savedCriteriaElement");
-    System.out.println("result " + processOK);
     
     if (!processOK) {
       return false;
