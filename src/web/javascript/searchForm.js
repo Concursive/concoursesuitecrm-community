@@ -12,7 +12,7 @@ function operator(id, operand, text){
 }
 
 function addValueFromChild(thisID, thisName){
-	var newOption = "Contact Name ( is ) " + thisName;
+	var newOption = "Contact Name (is) " + thisName;
 	var searchList = document.searchForm.searchCriteria;
 	var newCriteria = "9|1|" + thisID;
 	
