@@ -73,6 +73,11 @@ public final class Leads extends CFSModule {
    *@since
    */
   public String executeCommandDetailsOpp(ActionContext context) {
+	  
+	if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "View Opportunities", "View Opportunity Details");
     Exception errorMessage = null;
 
@@ -109,6 +114,11 @@ public final class Leads extends CFSModule {
    *@since
    */
   public String executeCommandSearchOpp(ActionContext context) {
+	  
+	if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "Search Leads", "Search Opportunities");
     return ("SearchOK");
   }
@@ -123,6 +133,10 @@ public final class Leads extends CFSModule {
    */
 
   public String executeCommandDashboard(ActionContext context) {
+	  
+  	if (!(hasPermission(context, "pipeline-dashboard-view"))) {
+	    return ("PermissionError");
+    	}
 
     addModuleBean(context, "Dashboard", "Dashboard");
 
@@ -379,6 +393,11 @@ public final class Leads extends CFSModule {
    *@since
    */
   public String executeCommandDeleteOpp(ActionContext context) {
+	  
+	if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Opportunity newOpp = null;
@@ -421,6 +440,11 @@ public final class Leads extends CFSModule {
    *@since
    */
   public String executeCommandModifyOpp(ActionContext context) {
+	  
+	if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "View Opportunities", "Modify an Opportunity");
     Exception errorMessage = null;
 
@@ -498,6 +522,11 @@ public final class Leads extends CFSModule {
    */
 
   public String executeCommandViewOpp(ActionContext context) {
+	  
+	if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     PagedListInfo oppListInfo = this.getPagedListInfo(context, "OpportunityListInfo");
     oppListInfo.setLink("/Leads.do?command=ViewOpp");
@@ -551,6 +580,11 @@ public final class Leads extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandGenerateForm(ActionContext context) {
+	  
+	if (!(hasPermission(context, "pipeline-reports-add"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "Reports", "Generate new");
     return ("GenerateFormOK");
   }
@@ -563,6 +597,11 @@ public final class Leads extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDeleteReport(ActionContext context) {
+	  
+	if (!(hasPermission(context, "pipeline-reports-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -619,6 +658,11 @@ public final class Leads extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDownloadCSVReport(ActionContext context) {
+	  
+	if (!(hasPermission(context, "pipeline-reports-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     String itemId = (String) context.getRequest().getParameter("fid");
@@ -678,6 +722,11 @@ public final class Leads extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandShowReportHtml(ActionContext context) {
+	  
+	if (!(hasPermission(context, "pipeline-reports-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -711,6 +760,11 @@ public final class Leads extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandExportReport(ActionContext context) {
+	  
+	if (!(hasPermission(context, "pipeline-reports-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordInserted = false;
     Connection db = null;
@@ -768,6 +822,11 @@ public final class Leads extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandReports(ActionContext context) {
+	  
+	if (!(hasPermission(context, "pipeline-reports-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -825,6 +884,11 @@ public final class Leads extends CFSModule {
    *@since
    */
   public String executeCommandUpdateOpp(ActionContext context) {
+	  
+	if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     Connection db = null;

@@ -32,6 +32,11 @@ public final class ExternalContactsOpps extends CFSModule {
    *@since
    */
   public String executeCommandViewOpps(ActionContext context) {
+	  
+  	if (!(hasPermission(context, "contacts-external_contacts-opportunities-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     String contactId = context.getRequest().getParameter("contactId");
@@ -76,6 +81,11 @@ public final class ExternalContactsOpps extends CFSModule {
    *@since
    */
   public String executeCommandAddOpp(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-opportunities-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     String contactId = context.getRequest().getParameter("contactId");
@@ -90,9 +100,6 @@ public final class ExternalContactsOpps extends CFSModule {
     HtmlSelect unitSelect = new HtmlSelect();
     unitSelect.setSelectName("units");
     unitSelect.addItem("M", "Months");
-    //unitSelect.addItem("D", "Days");
-    //unitSelect.addItem("W", "Weeks");
-    //unitSelect.addItem("Y", "Years");
     unitSelect.build();
 
     Connection db = null;
@@ -133,6 +140,11 @@ public final class ExternalContactsOpps extends CFSModule {
    *@since
    */
   public String executeCommandInsertOpp(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-opportunities-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordInserted = false;
 
@@ -184,6 +196,11 @@ public final class ExternalContactsOpps extends CFSModule {
    *@since
    */
   public String executeCommandDetailsOpp(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-opportunities-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     addModuleBean(context, "External Contacts", "Opportunities");
 
@@ -224,6 +241,11 @@ public final class ExternalContactsOpps extends CFSModule {
    *@since
    */
   public String executeCommandDeleteOpp(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-opportunities-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Opportunity newOpp = null;
@@ -266,6 +288,11 @@ public final class ExternalContactsOpps extends CFSModule {
    *@since
    */
   public String executeCommandModifyOpp(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-opportunities-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     addModuleBean(context, "External Contacts", "Opportunities");
 
@@ -347,6 +374,11 @@ public final class ExternalContactsOpps extends CFSModule {
    *@since
    */
   public String executeCommandUpdateOpp(ActionContext context) {
+	  
+	if (!(hasPermission(context, "contacts-external_contacts-opportunities-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     Opportunity newOpp = (Opportunity) context.getFormBean();

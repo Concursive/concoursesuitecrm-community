@@ -134,6 +134,7 @@
 </action>
   <action name="ExternalContactsOpps" class="com.darkhorseventures.cfsmodule.ExternalContactsOpps">
     <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -163,6 +164,7 @@
   <!-- Pipeline Management Module -->
   <action name="Leads" class="com.darkhorseventures.cfsmodule.Leads">
     <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>

@@ -160,10 +160,10 @@
       <link value="/Leads.do?module=Add%20Record&amp;include=pipeline_addrecord.htm"/>
     </submenu-->
     
-    <submenu name="Search Leads">
+    <submenu name="Search Opportunities">
       <permission value="pipeline-leads-view"/>
-      <long_html value="Search Leads"/>
-      <short_html value="Search&lt;br&gt;Leads"/>
+      <long_html value="Search Opportunities"/>
+      <short_html value="Search&lt;br&gt;Opportunities"/>
       <link value="/Leads.do?command=SearchOpp"/>
     </submenu>
     
@@ -188,12 +188,12 @@
       <link value="/Leads.do?command=ViewOpp"/>
     </submenu>
     
-    <submenu name="Manage Lists">
+    <!--submenu name="Manage Lists">
       <permission value="pipeline-managelists-view"/>
       <long_html value="List Manager"/>
       <short_html value="List&lt;br&gt;Manager"/>
       <link value="#/Leads.do?module=Manage%20Lists&amp;include=pipeline_managelists.htm"/>
-    </submenu>
+    </submenu-->
     
     <submenu name="Reports">
       <permission value="pipeline-reports-view"/>
