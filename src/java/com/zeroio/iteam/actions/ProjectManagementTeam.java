@@ -38,12 +38,6 @@ public final class ProjectManagementTeam extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
-
-    /*
-     *  if (!(hasPermission(context, "projects-team-edit"))) {
-     *  return ("PermissionError");
-     *  }
-     */
     Exception errorMessage = null;
 
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -166,12 +160,6 @@ public final class ProjectManagementTeam extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
-
-    /*
-     *  if (!(hasPermission(context, "projects-team-edit"))) {
-     *  return ("PermissionError");
-     *  }
-     */
     Exception errorMessage = null;
     Connection db = null;
 

@@ -37,11 +37,6 @@ public final class ProjectManagementLists extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-    /*
-     *  if (!(hasPermission(context, "projects-issues-add"))) {
-     *  return ("PermissionError");
-     *  }
-     */
     Exception errorMessage = null;
     String projectId = (String) context.getRequest().getParameter("pid");
     Connection db = null;
@@ -92,11 +87,6 @@ public final class ProjectManagementLists extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
-    /*
-     *  if (!(hasPermission(context, "myhomepage-inbox-view"))) {
-     *  return ("DefaultError");
-     *  }
-     */
     String projectId = (String) context.getRequest().getParameter("pid");
 
     try {
@@ -145,11 +135,6 @@ public final class ProjectManagementLists extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
-    /*
-     *  if (!(hasPermission(context, "myhomepage-inbox-view"))) {
-     *  return ("DefaultError");
-     *  }
-     */
     String projectId = (String) context.getRequest().getParameter("pid");
 
     try {
@@ -194,11 +179,6 @@ public final class ProjectManagementLists extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAddCategory(ActionContext context) {
-    /*
-     *  if (!(hasPermission(context, "projects-issues-add"))) {
-     *  return ("PermissionError");
-     *  }
-     */
     Exception errorMessage = null;
     String projectId = (String) context.getRequest().getParameter("pid");
     Connection db = null;
@@ -239,11 +219,6 @@ public final class ProjectManagementLists extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
-    /*
-     *  if (!(hasPermission(context, "myhomepage-inbox-view"))) {
-     *  return ("DefaultError");
-     *  }
-     */
     String projectId = (String) context.getRequest().getParameter("pid");
 
     try {
@@ -290,11 +265,6 @@ public final class ProjectManagementLists extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
-    /*
-     *  if (!(hasPermission(context, "myhomepage-inbox-view"))) {
-     *  return ("DefaultError");
-     *  }
-     */
     String projectId = (String) context.getRequest().getParameter("pid");
 
     try {

@@ -40,7 +40,6 @@ public final class ProjectManagement extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandDefault(ActionContext context) {
     //based on user settings...go to their default page
@@ -426,9 +425,6 @@ public final class ProjectManagement extends CFSModule {
         projectAssignmentsInfo.setItemsPerPage(0);
         projectAssignmentsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=" + thisProject.getId());
         thisProject.getAssignments().setPagedListInfo(projectAssignmentsInfo);
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("ProjectManagement-> Assignments pagedListInfo view: " + projectAssignmentsInfo.getListView());
-        }
         if ("all".equals(projectAssignmentsInfo.getListView())) {
 
         } else if ("closed".equals(projectAssignmentsInfo.getListView())) {

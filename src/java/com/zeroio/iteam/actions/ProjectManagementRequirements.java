@@ -35,12 +35,6 @@ public final class ProjectManagementRequirements extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-
-    /*
-     *  if (!(hasPermission(context, "projects-requirements-add"))) {
-     *  return ("PermissionError");
-     *  }
-     */
     Exception errorMessage = null;
 
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -78,12 +72,6 @@ public final class ProjectManagementRequirements extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
-
-    /*
-     *  if (!(hasPermission(context, "projects-requirements-add"))) {
-     *  return ("PermissionError");
-     *  }
-     */
     Exception errorMessage = null;
     Connection db = null;
 
@@ -132,12 +120,6 @@ public final class ProjectManagementRequirements extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
-
-    /*
-     *  if (!(hasPermission(context, "projects-requirements-view"))) {
-     *  return ("PermissionError");
-     *  }
-     */
     Exception errorMessage = null;
 
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -175,12 +157,6 @@ public final class ProjectManagementRequirements extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
-
-    /*
-     *  if (!(hasPermission(context, "projects-requirements-edit"))) {
-     *  return ("PermissionError");
-     *  }
-     */
     Exception errorMessage = null;
 
     String projectId = (String) context.getRequest().getParameter("pid");
@@ -221,12 +197,6 @@ public final class ProjectManagementRequirements extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
-
-    /*
-     *  if (!(hasPermission(context, "projects-requirements-edit"))) {
-     *  return ("PermissionError");
-     *  }
-     */
     Exception errorMessage = null;
 
     Requirement thisRequirement = (Requirement) context.getFormBean();
