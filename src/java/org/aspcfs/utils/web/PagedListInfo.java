@@ -472,7 +472,6 @@ public class PagedListInfo {
           if (tempKey.startsWith("searchcode") || tempKey.startsWith("searchdate")) {
             ObjectUtils.setParam(obj, tempKey.substring(10), this.getCriteriaValue(tempKey));
           } else {
-            System.out.println("Trying to set " + tempKey.substring(6) + " to " + this.getCriteriaValue(tempKey));
             ObjectUtils.setParam(obj, tempKey.substring(6), "%" + this.getCriteriaValue(tempKey) + "%");
           }
         }

@@ -389,7 +389,6 @@ public void setYTD(double YTD) {
     if (rs.next()) {
 	    this.setYTD(rs.getDouble("s"));
     } 
-    System.out.println("Revenue Calc: " + pst.toString());
     rs.close();
     pst.close();
   }
@@ -1286,7 +1285,6 @@ public boolean getEnabled() {
   public void listTypes() {
     for (int i = 0; i < typeList.size(); i++) {
       String val = (String) typeList.get(i);
-      //System.out.println(val);
     }
   }
 
