@@ -6,13 +6,13 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
-<a href="CampaignDocuments.do?command=View&id=<%=Campaign.getId()%>">Documents</a> >
+<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
+<a href="CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>">Documents</a> >
 Document Details<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
-    <td colspan="2" valign="center" align="left">
+    <td colspan="2">
       <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
     </td>
   </tr>
@@ -45,7 +45,7 @@ Document Details<br>
   
   int rowid = 0;
   while (versionList.hasNext()) {
-    if (rowid != 1) rowid = 1; else rowid = 2;
+    rowid = (rowid != 1?1:2);
     FileItemVersion thisVersion = (FileItemVersion)versionList.next();
 %>      
     <tr class="row<%= rowid %>">

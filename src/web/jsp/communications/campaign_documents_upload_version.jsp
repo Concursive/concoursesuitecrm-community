@@ -8,20 +8,16 @@
     if (form.dosubmit.value == "false") {
       return true;
     }
-    
     var formTest = true;
     var messageText = "";
-
     if (form.subject.value == "") {
       messageText += "- Subject is required\r\n";
       formTest = false;
     }
-    
     if (form.id<%= Campaign.getId() %>.value.length < 5) {
       messageText += "- File is required\r\n";
       formTest = false;
     }
-    
     if (formTest == false) {
       messageText = "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
       form.dosubmit.value = "true";
@@ -38,17 +34,16 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
-
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
-<a href="CampaignDocuments.do?command=View&id=<%=Campaign.getId()%>">Documents</a> >
+<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
+<a href="CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>">Documents</a> >
 Upload New Version<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <form method="post" name="inputForm" action="CampaignDocuments.do?command=UploadVersion" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
   <tr class="containerHeader">
-    <td colspan="2" valign="center" align="left">
+    <td colspan="2">
       <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
     </td>
   </tr>
@@ -103,8 +98,8 @@ Upload New Version<br>
     * Large files may take a while to upload.<br>
     Wait for file completion message when upload is complete.
   </p>
-  <input type='submit' value=' Upload ' name="upload">
-  <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>';">
+  <input type="submit" value=" Upload " name="upload">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>';">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= Campaign.getId() %>">
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">

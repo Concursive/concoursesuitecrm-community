@@ -17,12 +17,12 @@
     </td>
   </tr>
   <tr class="title">
-    <%if(!openEnded){%>
-      <td width="20" valign="top" align="center" nowrap>
+    <dhv:evaluate if="<%= !openEnded %>">
+      <td width="20" align="center" nowrap>
         Answer Provided
       </td>
-    <%}%>
-    <td width="60" valign="center" align="left" nowrap>
+    </dhv:evaluate>
+    <td width="60" align="left" nowrap>
       Comment Provided
     </td>
     <td valign="center" align="left" nowrap>
@@ -37,45 +37,38 @@
 	if (i.hasNext()) {
     int rowid = 0;
 		while (i.hasNext()) {
-			if (rowid != 1) {
-				rowid = 1;
-			} else {
-				rowid = 2;
-			}
+			rowid = (rowid != 1?1:2);
       SurveyAnswer thisAnswer = (SurveyAnswer)i.next();
 %>      
    <tr class="row<%= rowid %>">
-    <%if(!openEnded){%>
-      <td valign="top" align="center" class="row<%= rowid %>" nowrap>
-        <%= thisAnswer.getQuantAns() != -1 ? thisAnswer.getQuantAns()+"" : "&nbsp;" %>
-      </td>
-    <%}%>
-    
-      <td width="60">
-        <%=toHtml(thisAnswer.getComments())%>
-      </td>
-      <td valign="center" align="left" nowrap>
-        <dhv:contactname id="<%=thisAnswer.getContactId()%>" listName="SurveyContactList"/>
-      </td>
-      <td valign="center" align="left" nowrap>
-        <%= toDateString(thisAnswer.getEntered()) %>
-      </td>
-      
-    </tr>
-    <%
+ <dhv:evaluate if="<%= !openEnded %>">
+    <td valign="top" align="center" class="row<%= rowid %>" nowrap>
+      <%= thisAnswer.getQuantAns() != -1 ? thisAnswer.getQuantAns()+"" : "&nbsp;" %>
+    </td>
+  </dhv:evaluate>
+    <td width="60">
+      <%=toHtml(thisAnswer.getComments())%>
+    </td>
+    <td valign="center" align="left" nowrap>
+      <dhv:contactname id="<%=thisAnswer.getContactId()%>" listName="SurveyContactList"/>
+    </td>
+    <td valign="center" align="left" nowrap>
+      <%= toDateString(thisAnswer.getEntered()) %>
+    </td>
+  </tr>
+<%
    }
-    %>
-    </table>
+%>
+</table>
     <br>
     <dhv:pagedListControl object="CommentListInfo" />
   <%} else {%>  
   <tr>
-    <td class="row2" valign="center" colspan="<%= openEnded ? "3" : "4" %>">
+    <td class="containerBody" colspan="<%= openEnded ? "3" : "4" %>">
       No comments found for this question.
     </td>
   </tr>
   </table>
 <%}%>
 <br>
-
 <input type="button" value="Close Window" onClick="javascript:window.close();">

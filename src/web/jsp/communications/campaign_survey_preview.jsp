@@ -2,7 +2,6 @@
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*"%>
 <jsp:useBean id="Survey" class="org.aspcfs.modules.communications.base.Survey" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-
 <html>
 <head>
   <title>Thank you for visiting our survey page</title>
@@ -28,7 +27,6 @@ function checkForm(form) {
     return true;
   }
 }
-    
 function validateRadio (field) {
   if (!field.length && field.checked)
     return true;
@@ -41,7 +39,6 @@ function validateRadio (field) {
 }
 </script>
 </head>
-
 <body>
 &nbsp;<br>
 &nbsp;<br>
@@ -65,7 +62,7 @@ function validateRadio (field) {
   <table cellpadding="4" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="containerBody">
       <td colspan="2" valign="center">
-        <%=toHtml(Survey.getIntro())%>
+        <%= toHtml(Survey.getIntro()) %>
       </td>
     </tr>
   </table>
@@ -77,8 +74,8 @@ function validateRadio (field) {
 		int count = 0;
 	  while (j.hasNext()) {
 			count++;		
-		SurveyQuestion thisQuestion = (SurveyQuestion)j.next();
-    int type = thisQuestion.getType();
+      SurveyQuestion thisQuestion = (SurveyQuestion)j.next();
+      int type = thisQuestion.getType();
    %>
  <tr>
   <td width="100%" valign="top">
@@ -98,12 +95,12 @@ function validateRadio (field) {
        <tr class="containerBack">
        <% for(int i =0 ; i < 7 ;){%>
         <td valign="center" align="center">
-          <input type="radio" name="quest<%=count%>qans" value="<%=++i%>">
+          <input type="radio" name="quest<%= count %>qans" value="<%=++i%>">
         </td>
         <%}%>
        </tr>
      </dhv:evaluate>
-     <dhv:evaluate exp="<%=(type == SurveyQuestion.QUANT_COMMENTS) || (type == SurveyQuestion.OPEN_ENDED)%>">
+     <dhv:evaluate if="<%=(type == SurveyQuestion.QUANT_COMMENTS) || (type == SurveyQuestion.OPEN_ENDED)%>">
        <tr class="containerBody">
           <td width="15%" valign="center" align="right">
             Comments
@@ -118,23 +115,23 @@ function validateRadio (field) {
       <%
         Iterator k = thisQuestion.getItemList().iterator();
         if ( k.hasNext() ) {
-        int itemCount = 0;
-        while (k.hasNext()) {
-        Item thisItem = (Item)k.next();
+          int itemCount = 0;
+          while (k.hasNext()) {
+            Item thisItem = (Item)k.next();
         %>
         <tr class="containerBack">
           <td valign="center" align="center" width="6%">
-            <input type="checkbox" name="quest<%=count%>item<%=++itemCount%>">
-            <input type="hidden" name="quest<%=count%>item<%=itemCount%>id" value="<%=thisItem.getId()%>">
+            <input type="checkbox" name="quest<%= count %>item<%=++itemCount%>">
+            <input type="hidden" name="quest<%= count %>item<%= itemCount %>id" value="<%= thisItem.getId() %>">
           </td>
-          <td valign="center" align="left">
-            <%=thisItem.getDescription()%>
+          <td valign="center">
+            <%= toHtml(thisItem.getDescription()) %>
           </td>
         </tr>
        <%}
        }else{%>
-       <tr>
-           <td valign="center" align="center">
+        <tr>
+           <td align="center">
             No items found.
            </td>
         </tr>
@@ -145,16 +142,15 @@ function validateRadio (field) {
     </tr>
     <% 
       }
-    }
-    else {%>
+    } else {%>
       <tr bgcolor="white">
-        <td colspan="6" valign="center">
+        <td colspan="6">
           No Questions found in this Survey
         </td>
       </tr>
       <%}%>
     </table><br>
-    <input type=hidden name="id" value="<%=request.getParameter("id")%>">
+    <input type="hidden" name="id" value="<%=request.getParameter("id")%>">
     <input type="submit" value="Submit Survey"><br>
     </form>
   </center>

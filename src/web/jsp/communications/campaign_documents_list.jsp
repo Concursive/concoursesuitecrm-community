@@ -4,7 +4,7 @@
 <jsp:useBean id="CampaignDocListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" type="text/javascript" src="/javascript/confirmDelete.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
 <a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
@@ -45,11 +45,10 @@ Documents
   </tr>
 <%
   Iterator j = FileItemList.iterator();
-  
   if ( j.hasNext() ) {
     int rowid = 0;
     while (j.hasNext()) {
-      if (rowid != 1) rowid = 1; else rowid = 2;
+      rowid = (rowid != 1?1:2);
       FileItem thisFile = (FileItem)j.next();
 %>      
     <tr class="row<%= rowid %>">
@@ -83,7 +82,7 @@ Documents
   <dhv:pagedListControl object="CampaignDocListInfo"/>
 <%} else {%>
     <tr class="containerBody">
-      <td colspan="7" valign="center">
+      <td colspan="7">
         No documents found.
       </td>
     </tr>

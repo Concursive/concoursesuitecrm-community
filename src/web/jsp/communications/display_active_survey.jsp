@@ -90,16 +90,16 @@ function validateRadio (field) {
     <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr>
         <td colspan="7" width="100%" valign="center" class="containerHeader">
-          <input type="hidden" name="quest<%=count%>id" value="<%=thisQuestion.getId()%>">
-          <%=count%>.&nbsp;<%=thisQuestion.getDescription()%>
+          <input type="hidden" name="quest<%= count %>id" value="<%= thisQuestion.getId() %>">
+          <%= count %>.&nbsp;<%= toHtml(thisQuestion.getDescription()) %>
         </td>
       </tr>
-      <dhv:evaluate exp="<%=(type == SurveyQuestion.QUANT_NOCOMMENTS) || (type == SurveyQuestion.QUANT_COMMENTS)%>">
+      <dhv:evaluate if="<%= (type == SurveyQuestion.QUANT_NOCOMMENTS) || (type == SurveyQuestion.QUANT_COMMENTS) %>">
       <tr class="containerBack">
       <% 
         for(int i =0 ; i < 7;){
       %>
-        <td valign="center" align="center"><%=++i%></td>
+        <td valign="center" align="center"><%= ++i %></td>
       <%
         }
       %>
@@ -109,65 +109,65 @@ function validateRadio (field) {
          for(int i =0 ; i < 7 ;){
        %>
           <td valign="center" align="center">
-            <input type="radio" name="quest<%= count %>qans" value="<%=++i%>" id="quest<%= count %>qans">
+            <input type="radio" name="quest<%= count %>qans" value="<%= ++i %>" id="quest<%= count %>qans">
           </td>
        <%
          }
        %>
-        <dhv:evaluate exp="<%=thisQuestion.getRequired()%>">
+        <dhv:evaluate if="<%= thisQuestion.getRequired() %>">
           <script>
-            required[required.length] = '<%="quest" +count+ "qans"%>' ;
+            required[required.length] = '<%="quest" + count + "qans" %>' ;
           </script>
         </dhv:evaluate>
        </tr>
      </dhv:evaluate>
-     <dhv:evaluate exp="<%=(type == SurveyQuestion.QUANT_COMMENTS) || (type == SurveyQuestion.OPEN_ENDED)%>">
+     <dhv:evaluate if="<%= (type == SurveyQuestion.QUANT_COMMENTS) || (type == SurveyQuestion.OPEN_ENDED) %>">
        <tr class="containerBody">
           <td width="15%" valign="center" align="right">
             Comments
           </td>
           <td colspan="6" valign="center">
-            <textarea name="quest<%=count%>comments" rows="2" cols="80" id="quest<%=count%>comments"></textarea>
+            <textarea name="quest<%= count %>comments" rows="2" cols="80" id="quest<%= count %>comments"></textarea>
           </td>
        </tr>
-       <dhv:evaluate exp="<%=thisQuestion.getRequired()%>">
+       <dhv:evaluate if="<%= thisQuestion.getRequired() %>">
           <script>
-            required[required.length] = '<%="quest" +count+  "comments"%>'
+            required[required.length] = '<%="quest" + count +  "comments"%>'
           </script>
        </dhv:evaluate>
      </dhv:evaluate>
-     <dhv:evaluate exp="<%=(type == SurveyQuestion.ITEMLIST)%>">
-     <input type="hidden" name="quest<%=count%>itemCount" value="<%= thisQuestion.getItemList()!=null?thisQuestion.getItemList().size():0%>">
+     <dhv:evaluate if="<%= (type == SurveyQuestion.ITEMLIST) %>">
+     <input type="hidden" name="quest<%= count %>itemCount" value="<%= thisQuestion.getItemList()!=null?thisQuestion.getItemList().size():0 %>">
       <%
         Iterator k = thisQuestion.getItemList().iterator();
         if ( k.hasNext() ) {
           int itemCount = 0;
           while (k.hasNext()) {
-          ActiveSurveyQuestionItem thisItem = (ActiveSurveyQuestionItem)k.next();
-          %>
+            ActiveSurveyQuestionItem thisItem = (ActiveSurveyQuestionItem)k.next();
+      %>
           <tr class="containerBack">
             <td valign="center" align="center" width="6%">
-              <input type="checkbox" name="quest<%=count%>item<%=++itemCount%>" id="quest<%=count%>item<%=itemCount%>">
-              <input type="hidden" name="quest<%=count%>item<%=itemCount%>id" value="<%=thisItem.getId()%>">
+              <input type="checkbox" name="quest<%= count %>item<%= ++itemCount %>" id="quest<%= count %>item<%= itemCount %>">
+              <input type="hidden" name="quest<%= count %>item<%= itemCount %>id" value="<%= thisItem.getId() %>">
             </td>
             <td valign="center" align="left">
-              <%=thisItem.getDescription()%>
+              <%= toHtml(thisItem.getDescription()) %>
             </td>
           </tr>
         <%
           }
         %>
-          <dhv:evaluate exp="<%=thisQuestion.getRequired()%>">
+          <dhv:evaluate if="<%= thisQuestion.getRequired() %>">
             <script>
-              required[required.length] = '<%="quest" +count+  "item"%>'
-              required[required.length] = '<%=thisQuestion.getItemList().size()%>'
+              required[required.length] = '<%= "quest" + count +  "item" %>'
+              required[required.length] = '<%= thisQuestion.getItemList().size() %>'
             </script>
          </dhv:evaluate>
         <%
         }else{
         %>
        <tr>
-           <td valign="center" align="center">
+           <td align="center">
             No items found.
            </td>
         </tr>
@@ -180,8 +180,7 @@ function validateRadio (field) {
     </tr>
     <% 
       }
-    }
-    else {
+    } else {
     %>
       <tr bgcolor="white">
         <td colspan="6">
@@ -192,7 +191,7 @@ function validateRadio (field) {
         }
       %>
     </table><br>
-    <input type="hidden" name="id" value="<%=request.getParameter("id")%>">
+    <input type="hidden" name="id" value="<%= request.getParameter("id") %>">
     <input type="submit" value="Submit Survey">
     <br>
     </form>

@@ -25,7 +25,7 @@ View Accounts<br>
         <%}%>
       </select>
 			<% TypeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
-      <%=TypeSelect.getHtmlSelect("listFilter1", OrgListInfo.getFilterKey("listFilter1"))%>
+      <%= TypeSelect.getHtmlSelect("listFilter1", OrgListInfo.getFilterKey("listFilter1")) %>
     </td>
     <td>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OrgListInfo"/>

@@ -7,7 +7,6 @@
 <a href="CampaignManager.do?command=ShowItems&questionId=<%= request.getParameter("questionId") %>"> View Items </a>> Item Details <br>
 <hr color="#BFBFBB" noshade>
 <br>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <tr class="containerHeader">
   <td colspan="2" valign="center" align="left">
@@ -18,16 +17,16 @@
   <td class="containerBack">
   <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
-       <td valign="center" align="left" nowrap>
+       <td nowrap>
           Name
         </td>
-       <td width="15%" valign="center" align="left" nowrap>
+       <td width="15%" nowrap>
           Phone Number(s)
         </td>
-      <td width="15%" valign="center" align="left" nowrap>
+      <td width="15%" nowrap>
         Email Addresses
       </td>
-      <td valign="center" align="left" nowrap>
+      <td nowrap>
         Entered
       </td>
     </tr>
@@ -36,24 +35,20 @@
     if (i.hasNext()) {
       int rowid = 0;
       while (i.hasNext()) {
-        if (rowid != 1) {
-          rowid = 1;
-        } else {
-          rowid = 2;
-        }
+        rowid = (rowid != 1?1:2);
         SurveyAnswerItem thisItem = (SurveyAnswerItem)i.next();
   %>      
      <tr class="row<%= rowid %>" nowrap>
-        <td align="left" valign="center" class="row<%= rowid %>" nowrap>
+        <td class="row<%= rowid %>" nowrap>
           <%= thisItem.getRecipient().getNameLastFirst() %>
         </td>
-        <td width="15%" align="left" valign="center" nowrap>
+        <td width="15%" nowrap>
           <%= toHtml(thisItem.getRecipient().getPhoneNumber(PhoneNumber.BUSINESS)) %>
         </td>
-        <td width="15%" align="left" valign="center" nowrap>
+        <td width="15%" nowrap>
           <%= toHtml(thisItem.getRecipient().getEmailAddress(EmailAddress.BUSINESS)) %>
         </td>
-        <td align="left" valign="center" nowrap>
+        <td nowrap>
           <%= toDateTimeString(thisItem.getEntered()) %>
         </td>
       </tr>
@@ -66,7 +61,7 @@
       <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="ItemDetailsListInfo"/>
     <%} else {%>  
     <tr>
-      <td class="row2" valign="center" colspan="4">
+      <td class="row2" colspan="4">
         No responses found for this item.
       </td>
     </tr>

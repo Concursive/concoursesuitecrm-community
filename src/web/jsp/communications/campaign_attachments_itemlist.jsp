@@ -22,7 +22,6 @@
     var tempArray = new Array()
     var offset = 0;
     var count = 0;
-    
     if (itemList.length != tmpList.length) {
       for (count=0; count<(tmpList.length); count++) {
         itemList[count] = tmpList.options[count].value;
@@ -40,14 +39,11 @@
           offset = 1;
           delete itemList[i];
           tempArray[i] = itemList[i+offset];
+        } else if (i+offset == itemList.length) {
+          break;
+        } else {
+          tempArray[i] = itemList[i+offset];
         }
-        else 
-          if (i+offset == itemList.length) {
-            break;
-          }
-          else {
-            tempArray[i] = itemList[i+offset];
-          }
       }
       delete itemList
       itemList = new Array();
@@ -60,7 +56,6 @@
     document.getElementById("addButton").value  = "Add >";
     document.getElementById("newitem").value = "";
   }
-
   function addValues(){
     var text = document.getElementById("newitem").value;
     var tmpList = document.getElementById("itemSelectId");
@@ -72,35 +67,33 @@
     if (tmpList.length == 0 || tmpList.options[0].value == "-1"){
       tmpList.options[0] = new Option(text)
     }	else {
-        if (itemList.length == 0) {
-          for (count=0; count<(tmpList.length); count++) {
-            itemList[count] = tmpList.options[count].value;
-          }
-        }
-        if(mode  == "Add >"){
-          tmpList.options[tmpList.length] = new Option(text);
-        }else{
-          tmpList.options[tmpList.selectedIndex].text = text;
+      if (itemList.length == 0) {
+        for (count=0; count<(tmpList.length); count++) {
+          itemList[count] = tmpList.options[count].value;
         }
       }
-      if(mode == "Add >"){
-        itemList[tmpList.length-1] = text;
+      if(mode  == "Add >"){
+        tmpList.options[tmpList.length] = new Option(text);
       }else{
-        itemList[tmpList.selectedIndex] = text;
+        tmpList.options[tmpList.selectedIndex].text = text;
       }
-      document.getElementById("addButton").value  = "Add >";
-      document.getElementById("newitem").value = "";
-      document.getElementById("newitem").focus();
-   }
-   
-   function editValues(){
+    }
+    if(mode == "Add >"){
+      itemList[tmpList.length-1] = text;
+    }else{
+      itemList[tmpList.selectedIndex] = text;
+    }
+    document.getElementById("addButton").value  = "Add >";
+    document.getElementById("newitem").value = "";
+    document.getElementById("newitem").focus();
+  }
+  function editValues(){
    var tmpList = document.getElementById("itemSelectId");
     if(tmpList.options[0].value != "-1"){
       document.getElementById("addButton").value  = "Update >";
       document.getElementById("newitem").value = tmpList.options[tmpList.selectedIndex].text;
-      }
-   }
-  
+    }
+  }
   function setParentItems(){
     opener.document.forms['survey'].items.value = arrayToString();
   }

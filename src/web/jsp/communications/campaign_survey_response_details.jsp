@@ -7,11 +7,10 @@
 <%@ include file="../initPage.jsp" %>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
-<a href="CampaignManager.do?command=ViewResponse&id=<%=Campaign.getId()%>">Response</a> >
+<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
+<a href="CampaignManager.do?command=ViewResponse&id=<%= Campaign.getId() %>">Response</a> >
 Response Details
 <hr color="#BFBFBB" noshade>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td colspan="2" valign="center" align="left">
@@ -31,29 +30,23 @@ Response Details
             <td>
 <%
         Iterator z = ResponseDetails.iterator();
-        
         if ( z.hasNext() ) {
           int rowid = 0;
           int count = 0;
           while (z.hasNext()) {
             count++;		
-            if (rowid != 1) {
-              rowid = 1;
-            } else {
-              rowid = 2;
-            }
+            rowid = (rowid != 1?1:2);
             ActiveSurveyQuestion thisItem = (ActiveSurveyQuestion)z.next();
             int type = thisItem.getType();
             int border = (thisItem.getType() == SurveyQuestion.ITEMLIST || thisItem.getType() == SurveyQuestion.QUANT_COMMENTS ? 1 : 0);
             SurveyAnswerList answers = thisItem.getAnswerList();
-             
 %>
           <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
              <tr class="containerHeader">
                <td align="left" colspan="8" nowrap><%=count%>. <%= toHtml(thisItem.getDescription()) %> </td>
              </tr>
                <tr class="title">
-                  <td valign="center" align="left" width="24">
+                  <td width="24">
                     Answer Provided
                   </td>
                </tr>
@@ -82,11 +75,10 @@ Response Details
                     <dhv:evaluate exp="<%= (type != SurveyQuestion.ITEMLIST) %>">
                       <%
                          Iterator answerList = answers.iterator();
-                         if(answerList.hasNext()){
-                          while(answerList.hasNext()){
-                          SurveyAnswer thisAnswer = (SurveyAnswer) answerList.next();
+                         if (answerList.hasNext()) {
+                           while (answerList.hasNext()) {
+                             SurveyAnswer thisAnswer = (SurveyAnswer) answerList.next();
                        %>
-                            
                             <dhv:evaluate exp="<%= (type == SurveyQuestion.OPEN_ENDED) %>">
                               <tr><td width="100%" align="left"><li><%= (thisAnswer.getComments() != null && !"".equals(thisAnswer.getComments())) ? toHtml(thisAnswer.getComments()) : "No comments provided" %></li></td></tr>
                             </dhv:evaluate>
@@ -99,7 +91,7 @@ Response Details
                        <% }
                          }else{
                        %>
-                          <tr><td width="100%" align="left">No Answers Found.</td></tr>
+                          <tr><td width="100%">No Answers Found.</td></tr>
                        <%}
                         %>
                      </dhv:evaluate>

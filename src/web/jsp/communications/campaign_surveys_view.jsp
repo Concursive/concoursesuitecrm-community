@@ -33,14 +33,16 @@ Surveys
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td width="50%">
+    <td nowrap>
       <a href="CampaignManagerSurvey.do?command=View&column=name"><strong>Name</strong></a>
+      <%= CampaignSurveyListInfo.getSortIcon("name") %>
     </td>  
     <td nowrap>
-      <a href="CampaignManagerSurvey.do?command=View&column=s.enteredby"><strong>Entered By</strong></a>
+      <strong>Entered By</strong>
     </td>
     <td nowrap>
       <a href="CampaignManagerSurvey.do?command=View&column=s.modified"><strong>Last Modified</strong></a>
+      <%= CampaignSurveyListInfo.getSortIcon("s.modified") %>
     </td>
   </tr>
 <%    
@@ -57,7 +59,7 @@ Surveys
           <dhv:permission name="campaign-campaigns-surveys-edit"><a href="CampaignManagerSurvey.do?command=Modify&id=<%=thisSurvey.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-surveys-delete"><a href="javascript:popURLReturn('/CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=thisSurvey.getId()%>&popup=true','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">Del</a></dhv:permission>
         </td>
 	</dhv:permission>
-        <td class="row<%= rowid %>" nowrap>
+        <td class="row<%= rowid %>" width="100%" nowrap>
           <a href="CampaignManagerSurvey.do?command=Details&id=<%= thisSurvey.getId() %>"><%= toHtml(thisSurvey.getName()) %></a>
         </td>
         <td class="row<%= rowid %>" nowrap>
