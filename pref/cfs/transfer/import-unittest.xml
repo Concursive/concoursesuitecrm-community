@@ -1,0 +1,12 @@
+<data-import-config>
+  <description>
+    Copies test data into CFS using an existing user
+  </description>
+  <reader class="org.aspcfs.apps.transfer.reader.UnitTestReader"/>
+  <writer class="org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter">
+    <url>http://@URL@/ProcessPacket.do</url>
+    <id>@URL@</id>
+    <code>@CODE@</code>
+    <systemId>@SYSTEM.ID@</systemId>
+  </writer>
+</data-import-config>

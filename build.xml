@@ -902,6 +902,28 @@
     </java>
   </target>
   
+  <!-- Test the XML HTTP API -->
+  <target name="import.unittest" depends="init">
+    <fail unless="arg2">Missing arg2: Virtual Host to import to not specified</fail>
+    <fail unless="arg3">Missing arg3: Import code not specified</fail>
+    <mkdir dir="${build.pref.dir}"/>
+    <copy file="${pref.dir}/cfs/transfer/import-unittest.xml" todir="${build.pref.dir}" overwrite="true"/>
+    <replace file="${build.pref.dir}/import-unittest.xml"
+             token="@URL@" value="${arg2}"/>
+    <replace file="${build.pref.dir}/import-unittest.xml"
+             token="@CODE@" value="${arg3}"/>
+    <replace file="${build.pref.dir}/import-unittest.xml"
+             token="@SYSTEM.ID@" value="4"/>
+    <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${CFS_HOME}/WEB-INF/lib">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+      <arg value="${build.pref.dir}${fs}import-unittest.xml"/>
+    </java>
+  </target>
   
   
   
