@@ -115,9 +115,9 @@ public final class ForwardNote extends CFSModule {
 				//if (replyAddr != null && !(replyAddr.equals("")))
 				//	mail.setFrom(replyAddr);
 				//else
-					mail.setFrom(thisNote.getSentName());
+				//	mail.setFrom(thisNote.getSentName());
 				
-				//mail.setFrom("root@darkhorseventures.com");
+				mail.setFrom("root@darkhorseventures.com");
 				
 				mail.setType("text/html");
 				mail.setTo(tempUser.getContact().getEmailAddress("Business"));
