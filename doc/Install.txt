@@ -98,7 +98,9 @@
   # Setup tomcat as a service
     $ ln -s /usr/java/tomcat/bin/catalina.sh /etc/init.d/tomcat
     $ vi /etc/init.d/tomcat
+  
   # At top of file make sure the following is added:
+  
 
 #!/bin/sh
 # -----------------------------------------------------------------------------
@@ -118,18 +120,24 @@
     # Scroll down past the "else" statement and insert the following 
     #  on a new line after "-Djava.io.tmpdir="$CATALINA_TMPDIR" \
       -Djava.awt.headless="true" \
-
+    # Save and exit
+    
   # Setup tomcat to start when server starts up
     $ chkconfig --level 2345 tomcat on
-
+    
+  # Make sure Apache Web Server is not installed
+    $ chkconfig --level 2345 httpd off
+    $ service httpd stop
+    
   # Setup the port and web context
     $ cd /usr/java/tomcat/conf
     $ vi server.xml
     ...skipped relevent code to add port 80 connector and context...
+    ...this file can be copied from our cvs repository...
 
   # Test the web server, Tomcat welcome page should show:
     $ service tomcat start
-    $ mozilla http://127.0.0.1
+    $ mozilla http://127.0.0.1:8080
 
 
 - Configure Postgresql
@@ -203,3 +211,12 @@
   # Test ASPCFS
     $ mozilla http://127.0.0.1
 
+
+- Configure Sendmail
+  # Make sure sendmail is running on startup
+    $ chkconfig --level 2345 sendmail on
+  # Edit sendmail configuration to allow emails to be sent from specified
+  # domains.  In ASPCFS we allow 127.0.0.1 to sendmail from any domain user,
+  # not just darkhorseventures.com.
+  
+  
