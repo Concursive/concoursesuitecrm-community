@@ -29,6 +29,8 @@ public class ContactTypeList extends ArrayList {
   private int includeDefinedByUser = -1;
   //includes types already selected by user for ContactTypeList , contactId to be used not userId
   private int includeSelectedByUser = -1;
+  //Ids selected on case of a form validation failure
+  private String includeIds = null;
   protected PagedListInfo pagedListInfo = null;
 
 
@@ -213,6 +215,9 @@ public class ContactTypeList extends ArrayList {
     this.showDisabled = showDisabled;
   }
 
+public void setIncludeIds(String includeIds) {
+	this.includeIds = includeIds;
+}
 
   /**
    *  Gets the showDisabled attribute of the ContactTypeList object
@@ -563,7 +568,7 @@ public class ContactTypeList extends ArrayList {
     } else {
       sqlFilter.append("AND lct.user_id IS NULL ");
     }
-
+    
   }
 
 
@@ -603,6 +608,9 @@ public class ContactTypeList extends ArrayList {
     int i = 0;
     if (includeSelectedByUser != -1) {
       sqlFilterTail.append("OR (lct.code in (select type_id from contact_type_levels where contact_id = " + includeSelectedByUser + ") ) ");
+    }
+    if (includeIds != null && !"".equals(includeIds)) {
+      sqlFilterTail.append("OR (lct.code in (" + includeIds + ") ) ");
     }
   }
 }

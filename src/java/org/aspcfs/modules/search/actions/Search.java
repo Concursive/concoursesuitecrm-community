@@ -9,6 +9,7 @@ import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.pipeline.base.OpportunityList;
 import java.sql.*;
 
@@ -41,10 +42,11 @@ public final class Search extends CFSModule {
       db = this.getConnection(context);
       if (hasPermission(context, "contacts-external_contacts-view")) {
         ContactList contactList = new ContactList();
-        contactList.setPersonalId(getUserId(context));
         contactList.setSearchText(searchCriteria);
         contactList.setPagedListInfo(searchSiteInfo);
+        contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         contactList.setOwnerIdRange(this.getUserRange(context));
+        contactList.setPersonalId(this.getUserId(context));
         contactList.setBuildDetails(true);
         contactList.setBuildTypes(false);
         contactList.buildList(db);

@@ -415,17 +415,9 @@ public final class TroubleTickets extends CFSModule {
 
       ContactList contactList = new ContactList();
       contactList.setEmptyHtmlSelectRecord("-- None --");
-      contactList.setOwner(getUserId(context));
-      contactList.setPersonalId(getUserId(context));
-      //contactList.setTypeId(Integer.parseInt(typeId));
       contactList.setBuildDetails(false);
       contactList.setBuildTypes(false);
       contactList.setOrgId(newTic.getOrgId());
-
-      if (newTic.getOrgId() == -1) {
-        contactList.setShowEmployeeContacts(true);
-      }
-
       contactList.buildList(db);
       context.getRequest().setAttribute("ContactList", contactList);
 
@@ -1115,8 +1107,6 @@ public final class TroubleTickets extends CFSModule {
     if (newTic != null && newTic.getOrgId() != -1) {
       contactList.setBuildDetails(false);
       contactList.setBuildTypes(false);
-      contactList.setOwner(getUserId(context));
-      contactList.setPersonalId(getUserId(context));
       contactList.setOrgId(newTic.getOrgId());
       contactList.buildList(db);
     }
@@ -1277,8 +1267,6 @@ public final class TroubleTickets extends CFSModule {
       if (orgId != null && !"-1".equals(orgId)) {
         contactList.setBuildDetails(false);
         contactList.setBuildTypes(false);
-        contactList.setOwner(getUserId(context));
-        contactList.setPersonalId(getUserId(context));
         contactList.setOrgId(Integer.parseInt(orgId));
         contactList.buildList(db);
       }

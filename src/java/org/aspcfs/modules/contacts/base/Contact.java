@@ -2251,9 +2251,13 @@ public class Contact extends GenericBean {
     errors.clear();
     if (company == null || company.trim().equals("")) {
       if (nameLast == null || nameLast.trim().equals("")) {
-        errors.put("nameLastError", "Last name is required");
+        errors.put("nameLastError", "Last Name is required");
         errors.put("lastcompanyError", "Last Name or Company Name is required");
       }
+    }
+    
+    if(orgId != -1 && typeList.contains(String.valueOf(PERSONAL_TYPE))){
+      errors.put("personalContactError", "Account Contact cannot be personal");
     }
     if (hasErrors()) {
       return false;

@@ -137,6 +137,7 @@ Add Contact<br>
             <%}else{%>
                 [<a href="javascript:setCategoryPopContactType('selectedList', <%= request.getParameter("id") %>);">Select</a>]
             <%}%>
+            <%= showAttribute(request, "personalContactError") %>
           </td>
         </tr>
       </table>

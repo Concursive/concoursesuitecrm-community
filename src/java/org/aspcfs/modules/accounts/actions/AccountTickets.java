@@ -732,6 +732,7 @@ public final class AccountTickets extends CFSModule {
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
+   *@deprecated      Replaced combobox with a pop-up
    */
   public String executeCommandOrganizationJSList(ActionContext context) {
     Exception errorMessage = null;
@@ -744,8 +745,6 @@ public final class AccountTickets extends CFSModule {
       if (orgId != null && !"-1".equals(orgId)) {
         contactList.setBuildDetails(false);
         contactList.setBuildTypes(false);
-        contactList.setOwner(getUserId(context));
-        contactList.setPersonalId(getUserId(context));
         contactList.setOrgId(Integer.parseInt(orgId));
         contactList.buildList(db);
       }

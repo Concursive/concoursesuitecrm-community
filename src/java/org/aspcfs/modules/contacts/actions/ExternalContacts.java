@@ -1465,11 +1465,11 @@ public final class ExternalContacts extends CFSModule {
 
     String category = context.getRequest().getParameter("category");
     String contactId = context.getRequest().getParameter("contactId");
+    String previousSelection = context.getRequest().getParameter("previousSelection");
 
-    if (context.getRequest().getParameter("previousSelection") != null) {
+    if (previousSelection != null) {
       int j = 0;
-      StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("previousSelection"), "|");
-
+      StringTokenizer st = new StringTokenizer(previousSelection, "|");
       while (st.hasMoreTokens()) {
         selectedList.put(new Integer(st.nextToken()), "");
         j++;
@@ -1527,6 +1527,7 @@ public final class ExternalContacts extends CFSModule {
       contactTypeList.setShowDisabled(false);
       contactTypeList.setIncludeDefinedByUser(this.getUserId(context));
       contactTypeList.setIncludeSelectedByUser(Integer.parseInt(contactId));
+      contactTypeList.setIncludeIds(previousSelection.replace('|', ','));
       if ("accounts".equals(category)) {
         contactTypeList.setCategory(ContactType.ACCOUNT);
       } else {

@@ -244,39 +244,6 @@ public final class Users extends CFSModule {
 
 
   /**
-   *  Action that generates a filtered contact list for use in a combobox
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandContactJSList(ActionContext context) {
-    Exception errorMessage = null;
-    Connection db = null;
-    try {
-      String typeId = context.getRequest().getParameter("typeId");
-      if (typeId == null || typeId.equals("")) {
-        typeId = String.valueOf(Contact.EMPLOYEE_TYPE);
-      }
-      db = this.getConnection(context);
-      ContactList contactList = new ContactList();
-      contactList.setOwner(getUserId(context));
-      contactList.setPersonalId(getUserId(context));
-      contactList.setTypeId(Integer.parseInt(typeId));
-      contactList.setIncludeNonUsersOnly(true);
-      contactList.setBuildDetails(false);
-      contactList.setBuildTypes(false);
-      contactList.buildList(db);
-      context.getRequest().setAttribute("ContactList", contactList);
-    } catch (SQLException e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-    return ("ContactJSListOK");
-  }
-
-
-  /**
    *  Action that adds a user to the database based on submitted html form
    *
    *@param  context  Description of Parameter

@@ -76,7 +76,6 @@ public class ContactList extends Vector {
   private String contactIdRange = null;
 
   private SearchCriteriaList scl = null;
-  private boolean showEmployeeContacts = false;
 
   private String searchText = "";
 
@@ -89,17 +88,6 @@ public class ContactList extends Vector {
    *@since    1.1
    */
   public ContactList() { }
-
-
-  /**
-   *  Sets the ShowEmployeeContacts attribute of the ContactList object
-   *
-   *@param  showEmployeeContacts  The new ShowEmployeeContacts value
-   *@since
-   */
-  public void setShowEmployeeContacts(boolean showEmployeeContacts) {
-    this.showEmployeeContacts = showEmployeeContacts;
-  }
 
 
   /**
@@ -430,8 +418,6 @@ public class ContactList extends Vector {
     this.scl = scl;
     this.sclOwnerId = thisOwnerId;
     this.sclOwnerIdRange = thisUserRange;
-    this.setPersonalId(-2);
-
     buildQuery(thisOwnerId, thisUserRange);
   }
 
@@ -794,17 +780,6 @@ public class ContactList extends Vector {
    */
   public void setAreaCodeHash(HashMap areaCodeHash) {
     this.areaCodeHash = areaCodeHash;
-  }
-
-
-  /**
-   *  Gets the ShowEmployeeContacts attribute of the ContactList object
-   *
-   *@return    The ShowEmployeeContacts value
-   *@since
-   */
-  public boolean getShowEmployeeContacts() {
-    return showEmployeeContacts;
   }
 
 
@@ -1462,6 +1437,7 @@ public class ContactList extends Vector {
             break;
           //Typical contact list by a specific user
           default:
+            sqlFilter.append("AND (c.personal = ?  OR (c.personal = ? AND c.owner = ?)) ");
             break;
       }
       if (ignoreTypeIdList.size() > 0) {
@@ -1921,8 +1897,7 @@ public class ContactList extends Vector {
       sqlFilter.append("AND ( lower(c.namelast) like lower(?) OR lower(c.namefirst) like lower(?) OR lower(c.company) like lower(?) ) ");
 
       if (personalId != -1) {
-        sqlFilter.append("AND ( ( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id != 2)) OR (c.contact_id not in (SELECT contact_id from contact_type_levels) ) ) " +
-            "OR ( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id = 2)) OR (c.owner = ?) ) ) ");
+        sqlFilter.append("AND (c.personal = ?  OR (c.personal = ? AND c.owner = ?)) ");
       }
     }
 
@@ -1998,7 +1973,9 @@ public class ContactList extends Vector {
             pst.setBoolean(++i, false);
             break;
           default:
-            //pst.setBoolean(++i, true);
+            pst.setBoolean(++i, false);
+            pst.setBoolean(++i, true);
+            pst.setInt(++i, personalId);
             break;
       }
       if (ignoreTypeIdList.size() > 0) {
@@ -2014,6 +1991,8 @@ public class ContactList extends Vector {
       pst.setString(++i, searchText);
 
       if (personalId != -1) {
+        pst.setBoolean(++i, false);
+        pst.setBoolean(++i, true);
         pst.setInt(++i, personalId);
       }
     }
@@ -2054,21 +2033,17 @@ public class ContactList extends Vector {
     switch (type) {
         case SearchCriteriaList.SOURCE_MY_CONTACTS:
           sqlFilter.append(" AND c.owner = " + sclOwnerId + " ");
-          //sqlFilter.append(" AND ( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id not in (" + Contact.EMPLOYEE_TYPE + ") ) ) OR (c.contact_id not in (SELECT contact_id from contact_type_levels) ) ) ");
           sqlFilter.append(" AND c.employee = " + DatabaseUtils.getFalse(db) + " ");
           break;
         case SearchCriteriaList.SOURCE_ALL_CONTACTS:
           sqlFilter.append(" AND c.owner in (" + sclOwnerIdRange + ") ");
-          //sqlFilter.append(" AND ( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id not in (" + Contact.EMPLOYEE_TYPE + ") ) ) OR (c.contact_id not in (SELECT contact_id from contact_type_levels) ) ) ");
           sqlFilter.append(" AND c.employee = " + DatabaseUtils.getFalse(db) + " ");
           break;
         case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
           sqlFilter.append(" AND c.org_id > 0 ");
-          //sqlFilter.append(" AND ( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id not in (" + Contact.EMPLOYEE_TYPE + ") ) ) OR (c.contact_id not in (SELECT contact_id from contact_type_levels) ) ) ");
           sqlFilter.append(" AND c.employee = " + DatabaseUtils.getFalse(db) + " ");
           break;
         case SearchCriteriaList.SOURCE_EMPLOYEES:
-          //sqlFilter.append(" AND (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id = " + Contact.EMPLOYEE_TYPE + " ) ) ");
           sqlFilter.append(" AND c.employee = " + DatabaseUtils.getTrue(db) + " ");
           break;
         default:

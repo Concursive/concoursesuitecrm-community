@@ -132,7 +132,7 @@ Modify Contact<br>
     </td>
     <td>
       <dhv:evaluate if="<%= ContactDetails.getOrgId() == -1 %>">
-        <input type="radio" name="contactcategory" value="1" <%= ContactDetails.getOrgId() == -1 ? " checked":""%> onclick="javascript:document.forms[0].orgId.value = '-1';"> General Contact<br>
+        <input type="radio" name="contactcategory" value="1" <%= ContactDetails.getOrgId() == -1 ? " checked":""%> onclick="javascript:document.forms[0].orgId.value = '-1';">General Contact<br>
       </dhv:evaluate>
       <table cellspacing="0" cellpadding="0" border="0">
           <tr>
@@ -189,7 +189,7 @@ Modify Contact<br>
         <% }else{ %>
           &nbsp;[<a href="javascript:popContactTypeSelectMultiple('selectedList', 'accounts', <%= ContactDetails.getId() %>);">Select</a>]
         <%}%>
-        
+        <%= showAttribute(request, "personalContactError") %>
        </td>
       </tr>
      </table>
