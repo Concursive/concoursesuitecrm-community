@@ -12,55 +12,23 @@
 <%
   CurrentTeam.setSelectSize(10);
   CurrentTeam.setJsEvent("onChange=\"switchList(this.form, 'remove')\"");
-  DepartmentList.setJsEvent("onChange=\"changeDept(this.form, null)\"");
 %>
 <script language="JavaScript">
   var vector1, vector2, vector3, vector4, vector5;
   var arIndex = <%= UserSize %>;
   var newIndex;
   var newSubIndex;
-  vector1 = "<%= vector1 %>".split("|");
-  vector2 = "<%= vector2 %>".split("|");
-  vector3 = "<%= vector3 %>".split("|");
-  vector4 = "<%= vector4 %>".split("|");
-  vector5 = "<%= vector5 %>".split("|");
+  vector1 = "<%= vector1 %>".split("|");<%-- First/Last name --%>
+  vector2 = "<%= vector2 %>".split("|");<%-- Department id --%>
+  vector3 = "<%= vector3 %>".split("|");<%-- User id --%>
+  vector4 = "<%= vector4 %>".split("|");<%-- Saved state of member on team --%>
+  vector5 = "<%= vector5 %>".split("|");<%-- Current state of member on team --%>
   
   var i; //counter var
   var j; //counter var
   
-  function changeDept(form, optValue) {
-    newIndex = 0;
-    newSubIndex = 0;
-    var tempVector;
-    var tempFlag2 = 1;
-  
-    if(optValue == "" || optValue == null) {
-      tempVector = form.selDepartment.options[form.selDepartment.selectedIndex].value;
-    } else {
-      tempVector = optValue;
-    }
-  
+  function changeDept(form) {
     form.selTotalList.options.length = 0;
-    for(i = 0; i < arIndex; i++) {
-      if(vector2[i] == tempVector && parseInt(vector5[i]) != 1) {
-        if(tempFlag2 == 1) {
-          newSubIndex = i;
-          tempFlag2 = 0;
-        }
-        newIndex++;
-      }
-    }
-  
-    form.selTotalList.options.length = newIndex;
-    var counterOffset = 0;
-  
-    for(i = 0, j = newSubIndex; j < arIndex; i++, j++) {
-      if(vector2[j] == tempVector && parseInt(vector5[j]) != 1) {
-        form.selTotalList.options[i - counterOffset] = new Option(vector1[j], vector3[j]);
-      } else {
-       counterOffset++;
-      }    
-    }
   }
   
   function updateUserList() {
@@ -108,7 +76,7 @@
         if(vector5[i] == "1") {
           var thisUser = new getUser(buildUser(copyText));
   
-          if(form.selDepartment.options[form.selDepartment.selectedIndex].value == thisUser.deptName) {
+          if(form.selDepartment.selectedIndex > -1 && form.selDepartment.options[form.selDepartment.selectedIndex].value == thisUser.deptName) {
             selTotalListLength = form.selTotalList.options.length;
             form.selProjectList.options[index] = null;
             form.selTotalList.options.length += 1;
@@ -153,9 +121,9 @@
   
     for(x = 0; x < arIndex; x++) {
       vector5[x] = vector4[x];  
-      if(vector5[x] == "1" && vector2[x] == "-- Select Department --") {
+      if(vector5[x] == "1" && vector2[x] == "-2") {
         newIndexProject++;
-      } else if(vector5[x] == "0" && vector2[x] == "-- Select Department --") {
+      } else if(vector5[x] == "0" && vector2[x] == "-2") {
         newIndexTotal++;
       }
     }
@@ -173,7 +141,7 @@
     var thisUser;
     for(x = 0; x < arIndex; x++) {
       thisUser = new getUser(x);
-      if(thisUser.origConfig == "0" && thisUser.deptName == "-- Select Department --") {
+      if(thisUser.origConfig == "0" && thisUser.deptName == "-2") {
         form.selTotalList.options[runningCtr1] = new Option(thisUser.fullName, thisUser.userID);
         runningCtr1++;
       } else if(thisUser.origConfig == "1") {
@@ -183,6 +151,8 @@
     }
     form.insertMembers.value = "";
     form.deleteMembers.value = "";
+    
+    updateUserList();
   }
   
   function checkSubmit(form) {
@@ -203,7 +173,7 @@
     }
   }
 </script>
-<body bgcolor='#FFFFFF' onLoad="changeDept(document.all.projectMemberForm, '- Select Department -')">
+<body bgcolor='#FFFFFF' onLoad="changeDept(document.all.projectMemberForm)">
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
   <form name="projectMemberForm" method="post" action="ProjectManagementTeam.do?command=Update&pid=<%= Project.getId() %>&auto-populate=true">
     <tr>
@@ -232,9 +202,9 @@
     <tr>
       <td width='2' bgcolor='#808080'>&nbsp;</td>
       <td width="33%" align="center">
-        <% DepartmentList.setSelectSize(10); %>
+  <% DepartmentList.setSelectSize(10); %>
 	<% DepartmentList.setJsEvent("onchange=\"updateUserList();\""); %>
-	<%= DepartmentList.getHtmlSelect("selDepartment", 0) %>
+	<%= DepartmentList.getHtmlSelect("selDepartment", -1) %>
       </td>
       <td width="33%" align="center">
         <select size='10' name='selTotalList' onChange="switchList(this.form, 'add')">

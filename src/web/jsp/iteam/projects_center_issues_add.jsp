@@ -10,14 +10,25 @@
       return true;
     }
     var formTest = true;
-  
+    var messageText = "";
+    
     //Check required fields
-    if ((form.subject.value == "") || (form.body.value == "")) {    
-      alert("Subject and Description are required, please verify then try submitting your information again.");
+    if (form.categoryId.selectedIndex == 0) {
+      messageText += "- Category is a required field\r\n";
+      formTest = false;
+    }
+    if (form.subject.value == "") {    
+      messageText += "- Subject is a required field\r\n";
+      formTest = false;
+    }
+    if (form.body.value == "") {    
+      messageText += "- Description is a required field\r\n";
       formTest = false;
     }
   
     if (formTest == false) {
+      messageText = "The issue form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      alert(messageText);
       return false;
     } else {
       return true;
@@ -82,7 +93,7 @@
       <td width='50%' bgcolor='#808080' height='30'>
         <p align='left'>
           &nbsp;&nbsp;
-          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>&cid=<%= Issue.getCategoryId() %>';">
+          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues<%= ((Issue.getCategoryId() == -1)?"_Categories":"") %>&pid=<%= Project.getId() %>&cid=<%= Issue.getCategoryId() %>';">
         </p>
       </td>
       <td width='2' bgcolor='#808080'>&nbsp;</td>

@@ -11,14 +11,21 @@
       return true;
     }
     var formTest = true;
-  
+    var messageText = "";
+    
     //Check required fields
-    if ((form.subject.value == "") || (form.body.value == "")) {    
-      alert("Subject and Description are required, please verify then try submitting your information again.");
+    if (form.subject.value == "") {    
+      messageText += "- Subject is a required field\r\n";
       formTest = false;
     }
-  
+    if (form.body.value == "") {    
+      messageText += "- Description is a required field\r\n";
+      formTest = false;
+    }
+    
     if (formTest == false) {
+      messageText = "The issue form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      alert(messageText);
       return false;
     } else {
       return true;

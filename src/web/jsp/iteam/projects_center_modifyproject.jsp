@@ -5,8 +5,39 @@
 <body bgcolor='#FFFFFF' onLoad="document.inputForm.title.focus()">
 <script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
+<script language="JavaScript">
+  function checkForm(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    }
+    var formTest = true;
+    var messageText = "";
+    
+    //Check required fields
+    if (form.title.value == "") {
+      messageText += "- Title is a required field\r\n";
+      formTest = false;
+    }
+    if (form.shortDescription.value == "") {    
+      messageText += "- Description is a required field\r\n";
+      formTest = false;
+    }
+    if (form.requestDate.value == "") {    
+      messageText += "- Start Date is a required field\r\n";
+      formTest = false;
+    }
+  
+    if (formTest == false) {
+      messageText = "The form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      alert(messageText);
+      return false;
+    } else {
+      return true;
+    }
+  }
+</script>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
-  <form method="POST" name="inputForm" action="ProjectManagement.do?command=UpdateProject&auto-populate=true">
+  <form method="POST" name="inputForm" action="ProjectManagement.do?command=UpdateProject&auto-populate=true" onSubmit="return checkForm(this);">
     <input type="hidden" name="id" value="<%= Project.getId() %>">
     <input type="hidden" name="modified" value="<%= Project.getModified() %>">
     <tr>
@@ -113,14 +144,14 @@
       <td width="2" bgcolor="#808080">&nbsp;</td>
       <td width="50%" bgcolor="#808080" height="30">
         <p align="right">
-          &nbsp;
-          <input type='submit' value=' Update '>
+          &nbsp;<input type="hidden" name="dosubmit" value="false">
+          <input type="submit" value=" Update " onClick="javascript:this.form.dosubmit.value='true';">
           &nbsp;&nbsp;
         </p>
       </td>
       <td width="50%" bgcolor="#808080" height="30">
         <p align="left">
-          &nbsp;&nbsp;<input type="submit" value="Cancel" onClick="javascript:this.form.action='ProjectManagement.do?command=ProjectCenter&pid=<%= Project.getId() %>'">
+          &nbsp;&nbsp;<input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&pid=<%= Project.getId() %>'">
         </p>
       </td>
       <td width="2" bgcolor="#808080">&nbsp;</td>

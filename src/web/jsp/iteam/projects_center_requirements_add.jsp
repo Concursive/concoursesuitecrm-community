@@ -14,14 +14,12 @@
     var formTest = true;
     var messageText = "";
     //Required fields
-    if ((form.shortDescription.value == "") || (form.description.value == "")) {    
-      messageText += "- Title and Description are required\r\n";
+    if (form.shortDescription.value == "") {    
+      messageText += "- Title is a required field\r\n";
       formTest = false;
     }
-    
-    //Check date fields
-    if ((form.deadline.value != "") && (!checkDate(form.deadline.value))) {
-      messageText += "- Requirements due date was not properly entered\r\n";
+    if (form.description.value == "") {    
+      messageText += "- Description is a required field\r\n";
       formTest = false;
     }
     
@@ -40,7 +38,13 @@
         formTest = false;
       }
     }
-  
+    
+    //Check date fields
+    if ((form.deadline.value != "") && (!checkDate(form.deadline.value))) {
+      messageText += "- Requirements due date was not properly entered\r\n";
+      formTest = false;
+    }
+    
     if (formTest == false) {
       messageText = "The requirements form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
       alert(messageText);
