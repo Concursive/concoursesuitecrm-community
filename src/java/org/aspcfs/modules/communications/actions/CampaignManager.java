@@ -65,7 +65,12 @@ public final class CampaignManager extends CFSModule {
       campaignList.setCompleteOnly(true);
       if ("all".equals(pagedListInfo.getListView())) {
         campaignList.setOwnerIdRange(this.getUserRange(context));
+        campaignList.setType(Campaign.GENERAL);
+      } else if ("instant".equals(pagedListInfo.getListView())) {
+        campaignList.setOwnerIdRange(this.getUserRange(context));
+        campaignList.setType(Campaign.INSTANT);
       } else {
+        campaignList.setType(Campaign.GENERAL);
         campaignList.setOwner(this.getUserId(context));
       }
       campaignList.buildList(db);
@@ -167,14 +172,13 @@ public final class CampaignManager extends CFSModule {
     }
 
     Exception errorMessage = null;
-    
-    if("list".equals(context.getRequest().getParameter("source"))){
+
+    if ("list".equals(context.getRequest().getParameter("source"))) {
       addModuleBean(context, "ManageCampaigns", "Build New Campaign");
-    }else{
+    } else {
       addModuleBean(context, "Add Campaign", "Build New Campaign");
     }
 
-    
 
     try {
       context.getSession().removeAttribute("CampaignCenterGroupInfo");
@@ -447,8 +451,8 @@ public final class CampaignManager extends CFSModule {
       thisContact.build(db);
       thisContact.checkExcludedFromCampaign(db, Integer.parseInt(campaignId));
       thisContact.toggleExcluded(db, Integer.parseInt(campaignId));
-      context.getRequest().setAttribute("recipientText", 
-        thisContact.getExcludedFromCampaign()?"No":"Yes");
+      context.getRequest().setAttribute("recipientText",
+          thisContact.getExcludedFromCampaign() ? "No" : "Yes");
     } catch (Exception e) {
       errorMessage = e;
       System.out.println(e.toString());
@@ -1543,6 +1547,12 @@ public final class CampaignManager extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandResponseDetails(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-campaigns-view"))) {
@@ -1592,8 +1602,8 @@ public final class CampaignManager extends CFSModule {
       return ("SystemError");
     }
   }
-  
-  
+
+
   /**
    *  Description of the Method
    *
@@ -2255,7 +2265,7 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return ("MessageJSListOK");
+    return this.getReturn(context, "MessageJSList");
   }
 
 
