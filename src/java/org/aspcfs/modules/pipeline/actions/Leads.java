@@ -437,7 +437,7 @@ public final class Leads extends CFSModule {
 
 
   /**
-   *  Modify Contact
+   *  Modify Opportunity
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value

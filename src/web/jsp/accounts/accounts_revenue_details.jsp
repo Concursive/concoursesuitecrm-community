@@ -12,12 +12,12 @@
       <strong><%= toHtml(OrgDetails.getName()) %></strong>
     </td>
   </tr>
-  <!--tr class="containerMenu">
+  <tr class="containerMenu">
     <td>
       <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="contacts" param="<%= param1 %>" />
+      <dhv:container name="accounts" selected="revenue" param="<%= param1 %>" />
     </td>
-  </tr-->
+  </tr>
   <tr>
     <td class="containerBack">
 <input type='submit' value="Modify" name="Modify">
@@ -49,10 +49,18 @@
   </tr>
     <tr class="containerBody">
     <td class="formLabel">
-      Date
+      Month
     </td>
     <td>
-      <%= Revenue.getMonth() %>/<%= Revenue.getYear() %>
+      <%= Revenue.getMonthName() %>
+    </td>
+  </tr>
+      <tr class="containerBody">
+    <td class="formLabel">
+      Year
+    </td>
+    <td>
+      <%= Revenue.getYear() %>
     </td>
   </tr>
       <tr class="containerBody">
@@ -60,7 +68,7 @@
       Amount
     </td>
     <td>
-      <%= Revenue.getAmountValue() %>
+      $<%= Revenue.getAmountCurrency() %>
     </td>
   </tr>
     <tr class="containerBody">

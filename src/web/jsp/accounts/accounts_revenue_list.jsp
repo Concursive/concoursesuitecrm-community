@@ -12,12 +12,12 @@
       <strong><%= toHtml(OrgDetails.getName()) %></strong>
     </td>
   </tr>
-  <!--tr class="containerMenu">
+  <tr class="containerMenu">
     <td>
       <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="contacts" param="<%= param1 %>" />
+      <dhv:container name="accounts" selected="revenue" param="<%= param1 %>" />
     </td>
-  </tr-->
+  </tr>
   <tr>
     <td class="containerBack">
 <a href="RevenueManager.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add a new Revenue</a>
@@ -72,7 +72,7 @@
         <%= thisRevenue.getYear() %>
       </td>
       <td width=30% valign=center class="row<%= rowid %>">
-        <%=thisRevenue.getAmountValue()%>
+        $<%=thisRevenue.getAmountCurrency()%>
       </td>
 		</tr>
 <%}%>

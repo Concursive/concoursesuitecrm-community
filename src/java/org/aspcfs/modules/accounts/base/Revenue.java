@@ -16,7 +16,7 @@ public class Revenue extends GenericBean {
   private int orgId = -1;
   private int transactionId = -1;
   private int month = -1;
-  private int year = -1;
+  private int year = 0;
   private double amount = 0;
   private int type = -1;
   private int owner = -1;
@@ -31,6 +31,7 @@ public class Revenue extends GenericBean {
   private String modifiedByName = "";
   private String ownerName = "";
   private String typeName = "";
+  private String monthName = "";
 
   public Revenue() { }
   
@@ -46,12 +47,13 @@ public class Revenue extends GenericBean {
     sql.append(
         "SELECT r.*, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, ct_own.namelast as own_namelast, ct_own.namefirst as own_namefirst, rt.description as typename " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, ct_own.namelast as own_namelast, ct_own.namefirst as own_namefirst, rt.description as typename, lm.description as monthname " +
         "FROM revenue r " +
         "LEFT JOIN contact ct_eb ON (r.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (r.modifiedby = ct_mb.user_id) " +
 	"LEFT JOIN contact ct_own ON (r.owner = ct_own.user_id) " +
 	"LEFT JOIN lookup_revenue_types rt ON (r.type = rt.code) " +
+	"LEFT JOIN lookup_months lm ON (r.month = lm.code) " +
         "WHERE r.id > -1 ");
 
     if (revenueId != null && !revenueId.equals("")) {
@@ -88,7 +90,13 @@ public class Revenue extends GenericBean {
     }
     return ("");
   }
-  
+  public String getMonthName() {
+	return monthName;
+}
+public void setMonthName(String monthName) {
+	this.monthName = monthName;
+}
+
   public String getModifiedString() {
     try {
       return DateFormat.getDateInstance(DateFormat.SHORT).format(modified);
@@ -118,6 +126,34 @@ public void setOwnerName(String ownerName) {
       return (toReturn.substring(0, toReturn.length() - 2));
     } else {
       return toReturn;
+    }
+  }
+  
+  public String getAmountCurrency() {
+    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+    String amountOut = numberFormatter.format(amount);
+    return amountOut;
+  }
+  
+  protected boolean isValid(Connection db) throws SQLException {
+    errors.clear();
+
+    if (description == null || description.trim().equals("")) {
+      errors.put("descriptionError", "Description cannot be left blank");
+    }
+
+    if (amount == 0) {
+      errors.put("amountError", "Amount needs to be entered");
+    }
+    
+    if (year < 1900) {
+      errors.put("yearError", "Invalid year");
+    }
+
+    if (hasErrors()) {
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -163,6 +199,10 @@ public int getType() { return type; }
 public int getOwner() { return owner; }
 
 	public boolean insert(Connection db) throws SQLException {
+		    if (!isValid(db)) {
+			    return false;
+		    }
+    
 		StringBuffer sql = new StringBuffer();
   
 		sql.append(
@@ -218,6 +258,10 @@ public int getOwner() { return owner; }
   
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
+    
+    		    if (!isValid(db)) {
+			    return -1;
+		    }
 
     if (this.getId() == -1) {
       throw new SQLException("Revenue ID was not specified");
@@ -294,6 +338,7 @@ public int getOwner() { return owner; }
 	modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
 	ownerName = Contact.getNameLastFirst(rs.getString("own_namelast"), rs.getString("own_namefirst"));
 	typeName = rs.getString("typename");
+	monthName = rs.getString("monthname");
   }
   
 }

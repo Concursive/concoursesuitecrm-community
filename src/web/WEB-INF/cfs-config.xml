@@ -315,6 +315,8 @@
     <forward name="DetailsOK" resource="/accounts_revenue_details.jsp" layout="nav"/>
     <forward name="DeleteOK" resource="/RevenueManager.do?command=View"/>
     <forward name="ViewOK" resource="/accounts_revenue_list.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/accounts_revenue_modify.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/RevenueManager.do?command=Details"/>
   </action>
   <action name="Opportunities" class="com.darkhorseventures.cfsmodule.Opportunities">
     <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>

@@ -91,12 +91,13 @@ public class RevenueList extends Vector {
     sqlSelect.append(
         "r.*, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, ct_own.namelast as own_namelast, ct_own.namefirst as own_namefirst, rt.description as typename " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, ct_own.namelast as own_namelast, ct_own.namefirst as own_namefirst, rt.description as typename, lm.description as monthname " +
         "FROM revenue r " +
         "LEFT JOIN contact ct_eb ON (r.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (r.modifiedby = ct_mb.user_id) " +
 	"LEFT JOIN contact ct_own ON (r.owner = ct_own.user_id) " +
 	"LEFT JOIN lookup_revenue_types rt ON (r.type = rt.code) " +
+	"LEFT JOIN lookup_months lm ON (r.month = lm.code) " +
         "WHERE r.id > -1 ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

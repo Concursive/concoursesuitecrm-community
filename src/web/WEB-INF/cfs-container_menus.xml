@@ -29,6 +29,11 @@
       <permission value="accounts-accounts-opportunities-view"/>
       <link value="Opportunities.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
+    <submenu name="revenue">
+      <long_html value="Revenue"/>
+      <permission value="accounts-accounts-opportunities-view"/>
+      <link value="RevenueManager.do?command=View&amp;orgId=${orgId}"/>
+    </submenu>
     <submenu name="tickets">
       <long_html value="Tickets"/>
       <permission value="accounts-accounts-tickets-view"/>

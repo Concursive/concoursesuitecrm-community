@@ -1,11 +1,12 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="Revenue" class="com.darkhorseventures.cfsbase.Revenue" scope="request"/>
 <jsp:useBean id="RevenueTypeList" class="com.darkhorseventures.cfsbase.RevenueTypeList" scope="request"/>
 <jsp:useBean id="MonthList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].description.focus();">
-<form name="addRevenue" action="/RevenueManager.do?command=Insert&auto-populate=true" method="post">
+<form name="modify" action="/RevenueManager.do?command=Update&auto-populate=true&orgId=<%=Revenue.getOrgId()%>" method="post">
 <a href="/RevenueManager.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Back to Revenue List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -21,31 +22,43 @@
   </tr>
   <tr>
     <td class="containerBack">
-<input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
-<input type=submit value="Save">
-<input type=reset value="Reset">
+<input type="hidden" name="id" value="<%= Revenue.getId() %>">
+<input type="hidden" name="modified" value="<%= Revenue.getModified() %>">
+<input type="submit" value="Update" name="Save">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/RevenueManager.do?command=Details&id=<%= Revenue.getId() %>'">
+<input type="reset" value="Reset">
 <br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
-      <strong>Add a New Revenue</strong>
-    </td>     
+      <strong>Modify <%= toHtml(Revenue.getDescription()) %></strong>
+    </td>
   </tr>
+  
+	<tr class="containerBody">
+	<td nowrap class="formLabel">
+	Reassign To
+	</td>
+	<td colspan=1 valign=center>
+	<%= UserList.getHtmlSelect("owner", Revenue.getOwner() ) %>
+	</td>
+	</tr>
+  
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Type
+      Revenue Type
     </td>
     <td valign=center>
-      <%=RevenueTypeList.getHtmlSelect("type", Revenue.getType())%>
+      <%= RevenueTypeList.getHtmlSelect("type", Revenue.getType()) %>
     </td>
   </tr>
-  <tr class="containerBody">
+    <tr class="containerBody">
     <td nowrap class="formLabel">
       Description
     </td>
     <td valign=center>
-      <input type=text size=40 name="description" value="<%= toString(Revenue.getDescription()) %>">
+      <input type=text size=40 name="description" value="<%=toHtml(Revenue.getDescription())%>">
       <font color="red">*</font> <%= showAttribute(request, "descriptionError") %>
     </td>
   </tr>
@@ -75,13 +88,12 @@
       <font color="red">*</font> <%= showAttribute(request, "amountError") %>
     </td>
   </tr>
-  
 </table>
 <br>
-<input type=submit value="Save">
-<input type=reset value="Reset">
-    </td>
+<input type="submit" value="Update" name="Save">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/RevenueManager.do?command=Details&id=<%= Revenue.getId() %>'">
+<input type="reset" value="Reset">
+  </td>
   </tr>
-</table>
+  </table>
 </form>
-</body>

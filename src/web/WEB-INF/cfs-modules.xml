@@ -216,6 +216,7 @@
     <action name="Accounts"/>
     <action name="Contacts"/>
     <action name="Opportunities"/>
+    <action name="RevenueManager"/>
     <action name="AccountTickets"/>
 		<action name="AccountsDocuments"/>
     <action name="AccountsAutoGuide"/>
