@@ -175,5 +175,7 @@
   <input type="hidden" name="id" value="<%= Assignment.getId() %>">
   <input type="hidden" name="modified" value="<%= Assignment.getModified() %>">
   <input type="hidden" name="dosubmit" value="false">
+  <input type="hidden" name="return" value="<%= request.getAttribute("return") %>">
+  <input type="hidden" name="param" value="<%= request.getAttribute("param") %>">
 </form>
 </body>

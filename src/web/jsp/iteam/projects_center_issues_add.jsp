@@ -45,7 +45,7 @@
   String categoryId = request.getParameter("cid");
   if (categoryId != null) Issue.setCategoryId(Integer.parseInt(categoryId));
 %>
-        &nbsp;Issue Category: <%= CategoryList.getHtmlSelect("categoryId", Issue.getCategoryId()) %><br>
+        &nbsp;Issue Category: <%= CategoryList.getHtmlSelect("categoryId", Issue.getCategoryId()) %><font color=red>*</font> <%= showAttribute(request, "categoryIdError") %><br>
         &nbsp;
       </td>
       <td width='2' bgcolor='#808080'>&nbsp;</td>

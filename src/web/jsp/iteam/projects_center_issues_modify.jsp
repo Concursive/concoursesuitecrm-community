@@ -43,7 +43,7 @@
       <td width='100%' colspan='2' valign='center'>
         &nbsp;<br>
         <%--= issueByLine --%>
-        &nbsp;Issue Category: <%= CategoryList.getHtmlSelect("categoryId", Issue.getCategoryId()) %><br>
+        &nbsp;Issue Category: <%= CategoryList.getHtmlSelect("categoryId", Issue.getCategoryId()) %><font color=red>*</font> <%= showAttribute(request, "categoryIdError") %><br>
         &nbsp;
       </td>
       <td width='2' bgcolor='#808080'>&nbsp;</td>

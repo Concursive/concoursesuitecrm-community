@@ -191,6 +191,7 @@ public final class ProjectManagementAssignments extends CFSModule {
 
     String projectId = (String)context.getRequest().getParameter("pid");
     String assignmentId = (String)context.getRequest().getParameter("aid");
+    this.checkReturnPage(context);
     
     Connection db = null;
     try {
@@ -257,6 +258,7 @@ public final class ProjectManagementAssignments extends CFSModule {
     Exception errorMessage = null;
 
     Assignment thisAssignment = (Assignment)context.getFormBean();
+    this.checkReturnPage(context);
     
     Connection db = null;
     int resultCount = 0;
@@ -306,6 +308,16 @@ public final class ProjectManagementAssignments extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+  }
+  
+  private static void checkReturnPage(ActionContext context) {
+    String returnPage = (String)context.getRequest().getParameter("return");
+    if (returnPage == null) returnPage = (String)context.getRequest().getAttribute("return");
+    context.getRequest().setAttribute("return", returnPage);
+    
+    String param = (String)context.getRequest().getParameter("param");
+    if (param == null) param = (String)context.getRequest().getAttribute("param");
+    context.getRequest().setAttribute("param", param);
   }
 }
 

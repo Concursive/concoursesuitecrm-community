@@ -42,7 +42,7 @@ public final class ProjectManagementIssues extends CFSModule {
       context.getRequest().setAttribute("IncludeSection", ("issues_add").toLowerCase());
       
       LookupList categoryList = new LookupList(db, "lookup_project_issues");
-      categoryList.addItem(0, "-- Select Category --");
+      categoryList.addItem(-1, "-- Select Category --");
       context.getRequest().setAttribute("CategoryList", categoryList);
     } catch (Exception e) {
       errorMessage = e;
@@ -123,11 +123,9 @@ public final class ProjectManagementIssues extends CFSModule {
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", ("issues_details").toLowerCase());
       
-      String categoryId = context.getRequest().getParameter("cid");
-      IssueCategory issueCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
-      context.getRequest().setAttribute("IssueCategory", issueCategory);
-      
       Issue thisIssue = new Issue(db, Integer.parseInt(issueId), thisProject.getId());
+      IssueCategory issueCategory = new IssueCategory(db, thisIssue.getCategoryId(), thisProject.getId());
+      context.getRequest().setAttribute("IssueCategory", issueCategory);
       Contact user = this.getUser(context, thisIssue.getEnteredBy()).getContact();
       thisIssue.setUser(user.getNameFirstLast()); 
       thisIssue.buildReplyList(db);
@@ -170,15 +168,14 @@ public final class ProjectManagementIssues extends CFSModule {
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", ("issues_modify").toLowerCase());
       
-      String categoryId = context.getRequest().getParameter("cid");
-      IssueCategory issueCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
-      context.getRequest().setAttribute("IssueCategory", issueCategory);
-      
       Issue thisIssue = new Issue(db, Integer.parseInt(issueId), thisProject.getId());
       context.getRequest().setAttribute("Issue", thisIssue);
       
+      IssueCategory issueCategory = new IssueCategory(db, thisIssue.getCategoryId(), thisProject.getId());
+      context.getRequest().setAttribute("IssueCategory", issueCategory);
+      
       LookupList categoryList = new LookupList(db, "lookup_project_issues");
-      categoryList.addItem(0, "-- Select Category --");
+      categoryList.addItem(-1, "-- Select Category --");
       context.getRequest().setAttribute("CategoryList", categoryList);
     } catch (Exception e) {
       errorMessage = e;
@@ -208,12 +205,11 @@ public final class ProjectManagementIssues extends CFSModule {
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", ("issues_reply").toLowerCase());
       
-      String categoryId = context.getRequest().getParameter("cid");
-      IssueCategory issueCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
-      context.getRequest().setAttribute("IssueCategory", issueCategory);
-      
       Issue thisIssue = new Issue(db, Integer.parseInt(issueId), thisProject.getId());
       context.getRequest().setAttribute("Issue", thisIssue);
+      
+      IssueCategory issueCategory = new IssueCategory(db, thisIssue.getCategoryId(), thisProject.getId());
+      context.getRequest().setAttribute("IssueCategory", issueCategory);
       
       IssueReply issueReply = new IssueReply();
       issueReply.setSubject("RE: " + thisIssue.getSubject());
@@ -246,12 +242,11 @@ public final class ProjectManagementIssues extends CFSModule {
       Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
       context.getRequest().setAttribute("Project", thisProject);
 
-      String categoryId = context.getRequest().getParameter("cid");
-      IssueCategory issueCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
-      context.getRequest().setAttribute("IssueCategory", issueCategory);
-      
       Issue thisIssue = new Issue(db, Integer.parseInt(issueId), thisProject.getId());
       context.getRequest().setAttribute("Issue", thisIssue);
+      
+      IssueCategory issueCategory = new IssueCategory(db, thisIssue.getCategoryId(), thisProject.getId());
+      context.getRequest().setAttribute("IssueCategory", issueCategory);
       
       IssueReply issueReply = (IssueReply)context.getFormBean();
       issueReply.setIssueId(thisIssue.getId());
