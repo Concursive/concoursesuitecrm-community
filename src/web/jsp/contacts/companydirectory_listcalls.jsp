@@ -89,21 +89,21 @@
     <td valign=center align=left>
       <strong>Action</strong>
     </td>
-  
-    <td valign=center align=center>
-      <strong>Date</strong>
+    
+    <td valign=center align=left>
+      <strong>Subject</strong>
     </td>
     
     <td valign=center align=left>
       <strong>Type</strong>
     </td>
     
-    <td valign=center align=left>
-      <strong>Subject</strong>
+    <td valign=center align=center>
+      <strong>Length</strong>
     </td>
     
     <td valign=center align=center>
-      <strong>Length</strong>
+      <strong>Date</strong>
     </td>
   </tr>
 
@@ -124,20 +124,21 @@
 %>      
     <tr class="containerBody">
       <td width=8 valign=center nowrap class="row<%= rowid %>">
-        <a href="/ExternalContactsCalls.do?command=Modify&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId() %>">Edit</a>|<a href="javascript:confirmDelete('/ExternalContactsCalls.do?command=Delete&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId() %>');">Del</a></td>
-      <td valign=center nowrap class="row<%= rowid %>">
+        <a href="/ExternalContactsCalls.do?command=Modify&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId() %>">Edit</a>|<a href="javascript:confirmDelete('/ExternalContactsCalls.do?command=Delete&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId() %>');">Del</a>
+      </td>
+      <td width="100%" valign=center class="row<%= rowid %>">
         <a href="/ExternalContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId() %>">
-        <%= toHtml(thisCall.getEnteredString()) %>
+        <%= toHtml(thisCall.getSubject()) %>
         </a>
       </td>
       <td valign=center nowrap class="row<%= rowid %>">
         <%= toHtml(thisCall.getCallType()) %>
       </td>
-      <td width="100%" valign=center class="row<%= rowid %>">
-        <%= toHtml(thisCall.getSubject()) %>
-      </td>
       <td align=center valign=center nowrap class="row<%= rowid %>">
         <%= toHtml(thisCall.getLengthText()) %>
+      </td>
+      <td valign=center nowrap class="row<%= rowid %>">
+        <%= toHtml(thisCall.getEnteredString()) %>
       </td>
     </tr>
 <%}%>

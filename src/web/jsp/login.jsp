@@ -84,7 +84,9 @@
               </tr>
 <%} else {%>
               <tr>
-                <td align="center" colspan="4"><font face="Arial, Helvetica, sans-serif" size="2" color='red'><%= LoginBean.getMessage() %></font></td>
+                <td align="center" colspan="4">
+                  <center><font face="Arial, Helvetica, sans-serif" size="2" color='red'><%= LoginBean.getMessage() %></font></center>
+                </td>
               </tr>
               <tr>
                 <td width="33%">&nbsp;</td>
@@ -111,7 +113,7 @@
                 <td valign="center" align="right" width="100">&nbsp;</td>
                 <td valign="center" align="left">
                   <input type="submit" value="Login" name="action">
-                  <input type="submit" value="Clear" name="action">
+                  <input type="reset" value="Reset">
                 </td>
                 <td width="43%">&nbsp;</td>
               </tr>
