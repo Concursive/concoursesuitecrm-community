@@ -90,7 +90,7 @@ public class OrganizationPhoneNumber extends PhoneNumber {
   }
   
   public void insert(Connection db) throws SQLException {
-          queryRecord(db, this.getOrgId(), this.getEnteredBy());
+          insert(db, this.getOrgId(), this.getEnteredBy());
   }
           
   public void insert(Connection db, int orgId, int enteredBy) throws SQLException {
