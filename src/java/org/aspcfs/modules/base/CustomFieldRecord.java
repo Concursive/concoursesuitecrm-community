@@ -106,25 +106,49 @@ public class CustomFieldRecord {
   }
   
   public void delete(Connection db) throws SQLException {
-    String sql =
+    StringBuffer sql = new StringBuffer();
+    sql.append(
       "DELETE FROM custom_field_data " +
-      "WHERE record_id IN (SELECT record_id FROM custom_field_record WHERE link_module_id = ? " +
-      "AND category_id = ?) ";
-    PreparedStatement pst = db.prepareStatement(sql);
+      "WHERE record_id IN (SELECT record_id FROM custom_field_record WHERE link_module_id = ? ");
+    if (categoryId > -1) {
+      sql.append("AND category_id = ? ");
+    }
+    if (linkItemId > -1) {
+      sql.append("AND link_item_id = ? ");
+    }
+    sql.append(") ");
+    
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, linkModuleId);
-    pst.setInt(++i, categoryId);
+    if (categoryId > -1) {
+      pst.setInt(++i, categoryId);
+    }
+    if (linkItemId > -1) {
+      pst.setInt(++i, linkItemId);
+    }
     pst.execute();
     pst.close();
     
-    sql =
+    sql.setLength(0);
+    sql.append(
       "DELETE FROM custom_field_record " +
-      "WHERE link_module_id = ? " +
-      "AND category_id = ? ";
-    pst = db.prepareStatement(sql);
+      "WHERE link_module_id = ? ");
+    if (categoryId > -1) {
+      sql.append("AND category_id = ? ");
+    }
+    if (linkItemId > -1) {
+      sql.append("AND link_item_id = ? ");
+    }
+    pst = db.prepareStatement(sql.toString());
     i = 0;
     pst.setInt(++i, linkModuleId);
-    pst.setInt(++i, categoryId);
+    if (categoryId > -1) {
+      pst.setInt(++i, categoryId);
+    }
+    if (linkItemId > -1) {
+      pst.setInt(++i, linkItemId);
+    }
     pst.execute();
     pst.close();
     System.out.println("CustomFieldRecord-> Delete Complete");
