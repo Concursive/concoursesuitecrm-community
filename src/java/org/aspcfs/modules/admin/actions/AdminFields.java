@@ -268,7 +268,8 @@ public final class AdminFields extends CFSModule {
       }
     } catch (Exception e) {
       errorMessage = e;
-      System.out.println(e.toString());
+      e.printStackTrace(System.out);
+      context.getRequest().setAttribute("actionError", "Category could not be deleted due to referential integrity.");
     } finally {
       this.freeConnection(context, db);
     }

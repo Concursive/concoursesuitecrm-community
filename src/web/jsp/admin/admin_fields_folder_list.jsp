@@ -12,8 +12,13 @@ Custom Folders<br>
 <hr color="#BFBFBB" noshade>
   <dhv:permission name="admin-sysconfig-folders-add">
     <a href="AdminFieldsFolder.do?command=AddFolder&modId=<%= ModId %>">Add a Folder to this Module</a><br>
+    <% if (request.getAttribute("actionError") == null) { %>
     &nbsp;<br>
+    <%}%>
   </dhv:permission>
+<% if (request.getAttribute("actionError") != null) { %>
+<%= showError(request, "actionError") %>
+<%}%>
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
       <dhv:permission name="admin-sysconfig-folders-edit">
