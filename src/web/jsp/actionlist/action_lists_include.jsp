@@ -17,11 +17,11 @@ function setField(formField,thisValue,thisForm) {
         }
 }
 </SCRIPT>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>CFS ActionList</strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
@@ -56,11 +56,10 @@ function setField(formField,thisValue,thisForm) {
   </tr>
   --%>
   <input type="hidden" name="owner" id="ownerid" value="<%= User.getUserId() %>">
-  
   <tr class="containerBody"> 
     <td class="formLabel">Status</td>
     <td>
-      <table cellpadding="3" cellspacing="0" border="0">
+      <table cellpadding="3" cellspacing="0" border="0" class="empty">
         <tr>
           <td>
             <input type="checkbox" name="chk1" value="true" onclick="javascript:setField('complete',document.searchForm.chk1.checked,'searchForm');" <%= ActionList.getComplete() ? " checked" : "" %>>

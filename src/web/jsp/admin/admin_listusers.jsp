@@ -26,28 +26,28 @@ View Users<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
     <dhv:permission name="admin-users-edit,admin-users-delete">
-    <td align="center">
+    <th align="center">
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td nowrap>
+    <th nowrap>
       <b><a href="Users.do?command=ListUsers&column=c.namelast">Name</a></b>
       <%= UserListInfo.getSortIcon("c.namelast") %>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <b><a href="Users.do?command=ListUsers&column=username">Username</a></b>
       <%= UserListInfo.getSortIcon("username") %>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <b><a href="Users.do?command=ListUsers&column=role">Role</a></b>
       <%= UserListInfo.getSortIcon("role") %>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <b>Reports To</b>
-    </td>
+    </th>
   </tr>
 <%
   Iterator i = UserList.iterator();

@@ -66,11 +66,11 @@
 <input type=reset value="Reset">
 <br>
 <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
-      <strong>Add a New Employee Record</strong>
-    </td>     
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong>Add an Employee Record</strong>
+    </th>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -113,10 +113,8 @@
   </tr>
 </table>
 &nbsp;<br>  
-
 <%--  include basic contact form --%>
 <%@ include file="../contacts/contact_include.jsp" %>
-
 <br>
   <input type="submit" value="Save" name="Save" onClick="this.form.dosubmit.value='true';">
   <dhv:evaluate exp="<%= !isPopup(request) %>">

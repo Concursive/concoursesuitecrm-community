@@ -6,28 +6,28 @@
 <a href="CampaignManager.do?command=ShowItems&questionId=<%= request.getParameter("questionId") %>">Item List</a> >
 Item Details<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
 <tr class="containerHeader">
-  <td colspan="2" valign="center" align="left">
-    <strong>Item: </strong><%= toHtml(ItemDetails.getItem().getDescription()) %>
-  </td>     
+  <th colspan="2" valign="center">
+    <strong>Item:</strong> <%= toHtml(ItemDetails.getItem().getDescription()) %>
+  </th>
 </tr>
 <tr>
   <td class="containerBack">
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="title">
-       <td nowrap>
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+    <tr>
+       <th>
           Name
-        </td>
-       <td width="15%" nowrap>
+        </th>
+       <th width="15%" nowrap>
           Phone Number(s)
-        </td>
-      <td width="15%" nowrap>
+        </th>
+      <th width="15%" nowrap>
         Email Addresses
-      </td>
-      <td nowrap>
+      </th>
+      <th nowrap>
         Entered
-      </td>
+      </th>
     </tr>
   <%    
     Iterator i = ItemDetails.iterator();

@@ -7,37 +7,30 @@
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>">Ticket Details</a> >
 History<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-    <strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
-    <%= toHtml(TicketDetails.getCompanyName()) %></strong>
-    <dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + TicketDetails.getId(); %>
-      <dhv:container name="tickets" selected="history" param="<%= param1 %>"/>
-      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
-      </dhv:evaluate>
-    </td>
-  </tr>
+<strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
+<%= toHtml(TicketDetails.getCompanyName()) %></strong>
+<dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
+<% String param1 = "id=" + TicketDetails.getId(); %>
+<dhv:container name="tickets" selected="history" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
 		<td class="containerBack">
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td colspan="3">
+      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
+        <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
+        &nbsp;<br>
+      </dhv:evaluate>
+      <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+        <tr>
+          <th colspan="3">
             <strong>Ticket Log History</strong>
-          </td>     
+          </th>
         </tr>
-      <%  
+<%
           Iterator hist = TicketDetails.getHistory().iterator();
           if (hist.hasNext()) {
             while (hist.hasNext()) {
               TicketLog thisEntry = (TicketLog)hist.next();
-      %>
+%>
             <% if (thisEntry.getSystemMessage() == true) {%>
           <tr bgColor="#F1F0E0">
             <% } else { %>

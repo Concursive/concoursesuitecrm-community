@@ -8,25 +8,17 @@
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
 Campaign Details
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td colspan="2" valign="center" align="left">
-      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-    </td>     
-  </tr>
-  <tr class="containerMenu">
-    <td colspan="2">
-      <% String param1="id=" + Campaign.getId(); %>
-      <dhv:container name="communications" selected="details" param="<%= param1 %>" />
-    </td>
-  </tr>
+<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
+<% String param1="id=" + Campaign.getId(); %>
+<dhv:container name="communications" selected="details" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td class="containerBack">
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td colspan="2">
+      <table cellpadding="4" cellspacing="0" width="100%" class="details">
+        <tr>
+          <th colspan="2">
             <strong>Campaign Details </strong>
-          </td>
+          </th>
         </tr>
         <tr class="containerBody">
           <td class="formLabel" valign="top">

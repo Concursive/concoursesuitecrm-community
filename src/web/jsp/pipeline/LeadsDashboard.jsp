@@ -22,23 +22,23 @@ Dashboard<br>
     <%-- Left Column --%>
     <td width="275" valign="top">
       <%-- Graphic --%>
-      <table width="275" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <table width="275" cellpadding="3" cellspacing="0" border="0" class="pagedList">
         <dhv:evaluate exp="<%= Viewpoints.size() > 1 %>">
         <tr class="<%= (PipelineViewpointInfo.isVpSelected(User.getUserId())?"warning":"title") %>">
-          <td valign="top" align="center" nowrap>
+          <th valign="top" align="center" nowrap>
             <% Viewpoints.setJsEvent("onChange=\"javascript:document.forms[0].reset.value='true';document.forms[0].submit();\""); %>
             Viewpoint: <%= Viewpoints.getHtmlSelect("viewpointId", PipelineViewpointInfo.getVpUserId()) %><br>
-          </td>
+          </th>
         </tr>
         </dhv:evaluate>
-        <tr class="title">
-          <td valign="top" align="center" nowrap>
+        <tr>
+          <th valign="top" align="center" nowrap>
           <% if (request.getSession().getAttribute("leadsoverride") != null) { %>
             Dashboard: <%= toHtml((String)request.getSession().getAttribute("leadsothername")) %>
           <%} else {%>
             My Dashboard
           <%}%>
-          </td>
+          </th>
         </tr>
         <tr>
           <td>
@@ -68,14 +68,14 @@ Dashboard<br>
         </tr>
       </table>
       <%-- User List --%>
-      <table width="285" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td valign="center" nowrap>
+      <table width="285" cellpadding="3" cellspacing="0" border="0" class="pagedList">
+        <tr>
+          <th valign="center" nowrap>
             Reports ($Gr. Pipe.)
-          </td>
-          <td width="125" valign=center>
+          </th>
+          <th width="125" valign=center>
             Title
-          </td>
+          </th>
         </tr>
 <%
     Iterator x = ShortChildList.iterator();
@@ -89,13 +89,13 @@ Dashboard<br>
           }
           User thisRec = (User)x.next();
 %>
-        <tr>
-          <td class="row<%= rowid %>" valign=center nowrap>
+        <tr class="row<%= rowid %>">
+          <td valign="center" nowrap>
             <a href="Leads.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLastFirst()) %></a>
             ($<%=thisRec.getGrossPipelineCurrency(1000)%>K)
             <dhv:evaluate exp="<%=!(thisRec.getEnabled())%>"><font color="red">*</font></dhv:evaluate>
           </td>
-          <td width=125 class="row<%= rowid %>" valign=center>
+          <td width="125" valign="center">
             <%= toHtml(thisRec.getContact().getTitle()) %>
           </td>
         </tr>
@@ -103,7 +103,7 @@ Dashboard<br>
       } else {
 %>
         <tr>
-          <td valign=center colspan=3>No Reporting staff.</td>
+          <td valign="center" colspan="3">No Reporting staff.</td>
         </tr>
       <%}%>
       </table>
@@ -111,10 +111,10 @@ Dashboard<br>
     <%-- Right Column --%>
     <td valign=top width="100%">
       <%-- Opportunity List --%>
-      <table width="100%" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <table cellpadding="3" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr class="title">
-          <td>Opportunity</td>
-          <td align="left">Amnt</td>
+          <th>Opportunity</th>
+          <th align="left">Amnt</th>
         </tr>
 <%
 	Iterator n = oppList.iterator();

@@ -13,18 +13,10 @@
 <a href="AccountTickets.do?command=TicketDetails&id=<%=TicketDetails.getId()%>">Ticket Details</a> >
 Documents<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="tickets" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="tickets" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
   	<td class="containerBack">
       <% String param2 = "id=" + TicketDetails.getId(); %>
@@ -36,20 +28,20 @@ Documents<br>
       <br><br>
       <dhv:permission name="accounts-accounts-tickets-edit"><a href="AccountTicketsDocuments.do?command=Add&tId=<%= TicketDetails.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountTicketDocumentListInfo"/>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-      <tr class="title">
-        <td width="10" align="center"><strong>Action</strong></td>
-        <td>
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+        <tr>
+        <th width="10" align="center"><strong>Action</strong></th>
+        <th>
           <strong><a href="AccountTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>&column=subject">Item</a></strong>
           <%= AccountTicketDocumentListInfo.getSortIcon("subject") %>
-        </td>
-        <td align="center"><strong>Ext</strong></td>
-        <td align="center"><strong>Size</strong></td>
-        <td align="center"><strong>Version</strong></td>
+        </th>
+        <th align="center"><strong>Ext</strong></th>
+        <th align="center"><strong>Size</strong></th>
+        <th align="center"><strong>Version</strong></th>
         <dhv:permission name="accounts-accounts-tickets-edit">
-          <td>&nbsp;</td>
+          <th>&nbsp;</th>
         </dhv:permission>
-        <td align="center"><strong>Submitted</strong></td>
+        <th align="center"><strong>Submitted</strong></th>
       </tr>
         <%
           Iterator j = FileItemList.iterator();

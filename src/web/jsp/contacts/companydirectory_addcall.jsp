@@ -13,19 +13,11 @@
 Add Call<br>
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="contact_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + ContactDetails.getId(); 
-          String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-      <dhv:container name="contacts" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
-    </td>
-  </tr>
+<%@ include file="contact_details_header_include.jsp" %>
+<% String param1 = "id=" + ContactDetails.getId(); 
+   String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+<dhv:container name="contacts" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
@@ -33,9 +25,7 @@ Add Call<br>
       <input type="reset" value="Reset">
       <br>
       <%= showError(request, "actionError") %>
-      
-<%@ include file="call_include.jsp" %>
-
+      <%@ include file="call_include.jsp" %>
 &nbsp;
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">

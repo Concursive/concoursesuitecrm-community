@@ -42,21 +42,21 @@ function checkForm(form) {
 <a href="Admin.do">Setup</a> >
 Add User<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 <% if (request.getAttribute("actionError") != null) { %>
   <%= showError(request, "actionError") %>
 <%}%>
-  <tr class="title">
-    <td colspan="2">
-    <strong>Add a user account</strong>
-    </td>
+  <tr>
+    <th colspan="2">
+      <strong>Add a user account</strong>
+    </th>
   </tr>
   <tr>
     <td class="formLabel">
       Contact
     </td>
     <td>
-      <table border="0" cellspacing="0" cellpadding="4">
+      <table border="0" cellspacing="0" cellpadding="4" class="empty">
         <tr>
           <td valign="top" nowrap>
             <div id="changecontact"><%= UserRecord.getContactId() == -1 ? "None Selected" : UserRecord.getContact().getNameLastFirst() %></div>

@@ -222,18 +222,18 @@ Add Account<br>
 <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Add a New Account</strong>
-    </td>
+    </th>
   </tr>
    <tr>
     <td nowrap class="formLabel" valign="top">
       Account Type(s)
     </td>
     <td>
-      <table border="0" cellspacing="0" cellpadding="0">
+      <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td>
             <select multiple name="selectedList" id="selectedList" size="5">
@@ -369,11 +369,11 @@ Add Account<br>
   </tr>
 </table>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Phone Numbers</strong>
-	  </td>
+	  </th>
   </tr>
 <%
   boolean noneSelected = false;
@@ -479,11 +479,11 @@ Add Account<br>
 </dhv:evaluate>
 </table>
 &nbsp;<br>  
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Addresses</strong>
-    </td>
+    </th>
   </tr>
   
   <%
@@ -582,8 +582,7 @@ Add Account<br>
   }
   ++acount;
 %>
-
-<tr class="containerBody">
+  <tr class="containerBody">
     <td class="formLabel">
       Type
     </td>
@@ -832,7 +831,6 @@ Add Account<br>
   }
 %>
   </dhv:evaluate>
-  
 <dhv:evaluate exp="<%= noneSelected %>">  
   <tr>
     <td class="formLabel">
@@ -980,19 +978,17 @@ Add Account<br>
  </dhv:evaluate>
 </table>
 &nbsp;<br>  
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Email Addresses</strong>
-	  </td>
+	  </th>
   </tr>
-  
   <%
     noneSelected = false;
   %>
-  
  <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
-<%  
+<%
   int ecount = 0;
   Iterator enumber = OrgDetails.getEmailAddressList().iterator();
   if(enumber.hasNext()){
@@ -1090,11 +1086,11 @@ Add Account<br>
   </dhv:evaluate>
 </table>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Additional Details</strong>
-	  </td>
+	  </th>
   </tr>
   <tr>
     <td valign="top" nowrap class="formLabel">Notes</td>

@@ -2,11 +2,11 @@
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
 My Settings<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th>
       <strong>Make a selection</strong>
-    </td>
+    </th>
   </tr>
   <dhv:permission name="myhomepage-profile-personal-view">
   <tr>

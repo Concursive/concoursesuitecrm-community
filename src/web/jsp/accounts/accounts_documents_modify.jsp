@@ -35,27 +35,19 @@
 <a href="AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Documents</a> >
 Modify Document<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="documents" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <form method="post" name="inputForm" action="AccountsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="documents" param="<%= param1 %>" />
-    </td>
-  </tr>
   <tr>
     <td class="containerBack">
       <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <img border="0" src="images/file.gif" align="absmiddle"><b>Modify Document Information</b>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">

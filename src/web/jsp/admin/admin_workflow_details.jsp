@@ -39,15 +39,15 @@
 </dhv:evaluate>
 Process Details<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th>
       <strong>Process: <%= toHtml(process.getDescription()) %></strong>
-    </td>
+    </th>
   </tr>
   <tr>
     <td>
-      <table cellpadding="4" cellspacing="0" border="0" width="100%">
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="empty">
 <%!
   //Looks up the count of the step involved with this component
   public int getCount(LinkedHashMap map, int id) {
@@ -110,7 +110,7 @@ Process Details<br>
 %>
   <tr class="row1">
     <td colspan="2">
-      <table border="0" cellpadding="0" cellspacing="0">
+      <table border="0" cellpadding="0" cellspacing="0" class="empty">
         <tr>
           <td width="100" nowrap>
             <strong>Step <%= count %>:</strong><dhv:evaluate if="<%= !component.getEnabled() %>"><br><font color="red">(disabled)</font></dhv:evaluate>

@@ -8,20 +8,20 @@
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
 Lookup Lists<br> 
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td width="35" align="center">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th width="35" align="center">
       <strong>Action</strong>
-    </td>
-    <td width="200">
+    </th>
+    <th width="200">
       <strong>List Name</strong>
-    </td>
-    <td width="35" align="center">
+    </th>
+    <th width="35" align="center">
       <strong>Items</strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Preview</strong>
-    </td>
+    </th>
   </tr>
 <%
   Iterator i = LookupLists.iterator();

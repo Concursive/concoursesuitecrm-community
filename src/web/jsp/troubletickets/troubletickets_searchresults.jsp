@@ -9,23 +9,22 @@
 Search Results
 <hr color="#BFBFBB" noshade>
 <dhv:pagedListStatus title="Current Search Results" object="TicListInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
     <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
-		<td valign="center" align="left">
+		<th valign="center" align="left">
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td valign="center" align="left">
+    <th valign="center" align="left">
       <strong>Number</strong>
-    </td>
-    <td><b>Priority</b></td>
-    <td><b>Age</b></td>
-    <td><b>Company</b></td>
-		<td nowrap><b>Assigned To</b></td>
+    </th>
+    <th><b>Priority</b></th>
+    <th><b>Age</b></th>
+    <th><b>Company</b></th>
+		<th nowrap><b>Assigned To</b></th>
   </tr>
-  
-  <%
+<%
 	Iterator j = TicList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;

@@ -56,7 +56,7 @@
             </font>
           </td>
           <td width="15%" valign="top" height="266"> 
-            <table width="200" border="0" cellspacing="2" cellpadding="2" bordercolorlight="#CCCCCC" bordercolordark="#CCCCCC">
+            <table width="200" border="0" cellspacing="2" cellpadding="2">
               <tr> 
                 <td valign="center">
                   &nbsp;<br>

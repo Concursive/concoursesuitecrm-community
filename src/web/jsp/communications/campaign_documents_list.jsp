@@ -10,38 +10,29 @@
 <a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
 Documents
 <hr color="#BFBFBB" noshade>
-
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td colspan="2" valign="center" align="left">
-      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td colspan="2">
-      <% String param1 = "id=" + Campaign.getId(); %>
-      <dhv:container name="communications" selected="documents" param="<%= param1 %>" />
-    </td>
-  </tr>
+<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
+<% String param1 = "id=" + Campaign.getId(); %>
+<dhv:container name="communications" selected="documents" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td class="containerBack">
 <dhv:permission name="campaign-campaigns-edit"><a href="CampaignDocuments.do?command=Add&id=<%= Campaign.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
 <center><%= CampaignDocListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CampaignDocListInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td width="10" align="center">Action</td>
-    <td>
-    <strong><a href="CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>&column=subject">Item</a></strong>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th width="10" align="center">Action</th>
+    <th>
+      <strong><a href="CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>&column=subject">Item</a></strong>
       <%= CampaignDocListInfo.getSortIcon("subject") %>
-      </td>
-    <td align="center">Ext</td>
-    <td align="center">Size</td>
-    <td align="center">Version</td>
+    </th>
+    <th align="center">Ext</th>
+    <th align="center">Size</th>
+    <th align="center">Version</th>
     <dhv:permission name="campaign-campaigns-edit">
-      <td>&nbsp;</td>
+      <th>&nbsp;</th>
     </dhv:permission>
-    <td align="center">Submitted</td>
+    <th align="center">Submitted</th>
   </tr>
 <%
   Iterator j = FileItemList.iterator();

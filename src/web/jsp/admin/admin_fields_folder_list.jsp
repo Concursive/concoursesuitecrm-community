@@ -19,25 +19,25 @@ Custom Folders<br>
 <% if (request.getAttribute("actionError") != null) { %>
 <%= showError(request, "actionError") %>
 <%}%>
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="title">
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+    <tr>
       <dhv:permission name="admin-sysconfig-folders-edit">
-      <td align="center">
+      <th align="center">
         <strong>Action</strong>
-      </td>
+      </th>
       </dhv:permission>
-      <td width="100%">
+      <th width="100%">
         <strong>Custom Folders</strong>
-      </td>
-      <td align="center">
+      </th>
+      <th align="center">
         <strong>Enabled</strong>
-      </td>
-      <td align="center" nowrap>
+      </th>
+      <th align="center" nowrap>
         <strong>Active Date</strong>
-      </td>
-      <td align="center" nowrap>
+      </th>
+      <th align="center" nowrap>
         <strong>End Date</strong>
-      </td>
+      </th>
     </tr>
 <%
   if (CategoryList.size() > 0) {

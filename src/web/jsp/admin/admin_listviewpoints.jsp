@@ -10,42 +10,34 @@
 <a href="Users.do?command=UserDetails&id=<%= request.getParameter("userId") %>">User Details</a> >
 Viewpoints<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + UserRecord.getId(); %>
-      <dhv:container name="users" selected="viewpoints" param="<%= param1 %>" />
-    </td>
-  </tr>
+<strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
+<% String param1 = "id=" + UserRecord.getId(); %>
+<dhv:container name="users" selected="viewpoints" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <dhv:permission name="admin-roles-add"><a href="Viewpoints.do?command=InsertViewpointForm&userId=<%= UserRecord.getId() %>">Add New Viewpoint</a></dhv:permission>
 <center><%= ViewpointListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ViewpointListInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
     <dhv:permission name="admin-roles-edit,admin-roles-delete">
-    <td valign="center" width="8" nowrap>
+    <th valign="center" width="8" nowrap>
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td nowrap>
+    <th nowrap>
       <b><a href="Viewpoints.do?command=ListViewpoints&userId=<%= UserRecord.getId()%>&column=c.namelast">Viewpoint</a></b>
       <%= ViewpointListInfo.getSortIcon("c.namelast") %>
-    </td>
-    <td width="120" nowrap>
+    </th>
+    <th width="120" nowrap>
       <b><a href="Viewpoints.do?command=ListViewpoints&userId=<%= UserRecord.getId()%>&column=vp.entered">Entered</a></b>
       <%= ViewpointListInfo.getSortIcon("vp.entered") %>
-    </td>
-    <td width="30" nowrap>
+    </th>
+    <th width="30" nowrap>
       <b><a href="Viewpoints.do?command=ListViewpoints&userId=<%= UserRecord.getId()%>&column=vp.enabled">Enabled</a></b>
       <%= ViewpointListInfo.getSortIcon("vp.enabled") %>
-    </td>
+    </th>
   </tr>
 <%
   Iterator i = ViewpointList.iterator();
@@ -89,7 +81,7 @@ Viewpoints<br>
 %>
 </table>
 <br>
-<dhv:pagedListControl object="ViewpointListInfo" tdClass="containerBack"/>
+<dhv:pagedListControl object="ViewpointListInfo" tdClass="empty"/>
 </td></tr>
 </table>
 

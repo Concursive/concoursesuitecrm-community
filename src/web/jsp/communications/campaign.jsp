@@ -3,11 +3,11 @@ Communications Manager
 <hr color="#BFBFBB" noshade>
 Review and manage campaigns with the following options:<br>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th>
       <strong><a href="CampaignManager.do?command=Dashboard">Dashboard</a></strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td>
@@ -22,11 +22,11 @@ Review and manage campaigns with the following options:<br>
   </tr>
 </table>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th>
       <strong><a href="CampaignManager.do?command=View">Campaign Builder</a></strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td>
@@ -44,11 +44,11 @@ Review and manage campaigns with the following options:<br>
   </tr>
 </table>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th>
       <strong><a href="CampaignManagerGroup.do?command=View">Build Groups</a></strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td>
@@ -62,11 +62,11 @@ Review and manage campaigns with the following options:<br>
   </tr>
 </table>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th>
       <strong><a href="CampaignManagerMessage.do?command=View">Create Messages</a></strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td>
@@ -80,11 +80,11 @@ Review and manage campaigns with the following options:<br>
   </tr>
 </table>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th>
       <strong><a href="CampaignManagerAttachment.do">Create Attachments</a></strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td>

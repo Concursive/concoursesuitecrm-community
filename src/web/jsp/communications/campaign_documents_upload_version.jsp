@@ -40,27 +40,18 @@
 <a href="CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>">Documents</a> >
 Upload New Version<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <form method="post" name="inputForm" action="CampaignDocuments.do?command=UploadVersion" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
-  <tr class="containerHeader">
-    <td colspan="2">
-      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td colspan="2">
-      <% String param1 = "id=" + Campaign.getId(); %>
-      <dhv:container name="communications" selected="documents" param="<%= param1 %>" />
-    </td>
-  </tr>
+<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
+<% String param1 = "id=" + Campaign.getId(); %>
+<dhv:container name="communications" selected="documents" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td class="containerBack">
       <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th colspan="2">
       <img border="0" src="images/file.gif" align="absmiddle"><b>Upload a New Version of Document</b>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">

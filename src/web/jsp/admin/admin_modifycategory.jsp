@@ -165,15 +165,15 @@
   
 </SCRIPT>
 <script>var itemList = new Array();</script>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF" id="viewTable">
-<tr class="title">
-  <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details" id="viewTable">
+<tr>
+  <th colspan="2">
     <strong>Edit Categories</strong>
-  </td>
+  </th>
 </tr>
 <tr>
   <td align="left" valign="center" width="40%">
-    <table width="100%" border="0" cellpadding="2" cellspacing="0">
+    <table width="100%" border="0" cellpadding="2" cellspacing="0" class="empty">
       <tr>
         <td nowrap align="left">
           Description&nbsp;
@@ -221,7 +221,7 @@
   </tr>
  </table>
   <br>
- <table cellpadding="0" cellspacing="0" border="0" width="100%">
+ <table cellpadding="0" cellspacing="0" border="0" width="100%" class="empty">
   <tr>
     <td align="left" colspan="2">
       <input type="button" value="Save" onClick="javascript:confirmSave();">&nbsp;

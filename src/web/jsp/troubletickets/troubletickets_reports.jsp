@@ -25,28 +25,28 @@ Reports<br>
     </td>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
     <dhv:permission name="tickets-tickets-reports-view,tickets-tickets-reports-delete">
-    <td>
+    <th>
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td>
+    <th>
       <strong>Subject</strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Size</strong>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong>Create Date</strong>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong>Created By</strong>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong>D/L</strong>
-    </td>
+    </th>
   </tr>
 <%
 	Iterator j = FileList.iterator();

@@ -15,21 +15,13 @@
 Modify Call<br>
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="contact_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <dhv:evaluate if="<%= (!isPopup(request) || isInLinePopup(request)) %>"> 
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + ContactDetails.getId(); 
-          String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-      <dhv:container name="contacts" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
-    </td>
-  </tr>
-  </dhv:evaluate>
+<%@ include file="contact_details_header_include.jsp" %>
+<dhv:evaluate if="<%= (!isPopup(request) || isInLinePopup(request)) %>"> 
+  <% String param1 = "id=" + ContactDetails.getId(); 
+      String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+  <dhv:container name="contacts" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
+</dhv:evaluate>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
   <td class="containerBack">
     <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">

@@ -28,11 +28,11 @@ Add a Group
 <input type="button" value="Preview" onClick="javascript:popPreview()">
 <br>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       Begin by entering a name for the new contact group
-    </td>
+    </th>
   </tr>
   <tr>
     <td class="formLabel" nowrap>
@@ -43,11 +43,8 @@ Add a Group
     </td>
   </tr>
 </table>
-&nbsp;<br>
-
 <%-- include jsp for contact criteria --%>
 <%@ include file="group_criteria_include.jsp" %>
-
 &nbsp;<br>
 <input type="submit" value="Save">
 <input type="button" value="Cancel" onClick="javascript:window.location.href='CampaignManagerGroup.do?command=View'">

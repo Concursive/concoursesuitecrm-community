@@ -12,34 +12,34 @@ View Employees<br>
 <dhv:permission name="contacts-internal_contacts-add" none="true"><br></dhv:permission>
 <center><%= CompanyDirectoryInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CompanyDirectoryInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
   <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete">
-    <td>
+    <th>
       <strong>Action</strong>
-    </td>
+    </th>
   </dhv:permission>
-    <td nowrap>
+    <th nowrap>
       <a href="CompanyDirectory.do?command=ListEmployees&column=c.namelast">
         <strong>Name</strong>
       </a>
       <%= CompanyDirectoryInfo.getSortIcon("c.namelast") %>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <a href="CompanyDirectory.do?command=ListEmployees&column=departmentname">
         <strong>Department</strong>
       </a>
       <%= CompanyDirectoryInfo.getSortIcon("departmentname") %>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <a href="CompanyDirectory.do?command=ListEmployees&column=c.title">
         <strong>Title</strong>
       </a>
       <%= CompanyDirectoryInfo.getSortIcon("c.title") %>
-    </td nowrap>
-    <td nowrap>
+    </th nowrap>
+    <th nowrap>
       <strong>Business Phone</strong>
-    </td>
+    </th>
   </tr>
 <%
   Iterator i = EmployeeList.iterator();

@@ -16,41 +16,33 @@ Calls<br>
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="leads_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + opportunityHeader.getId(); %>      
-      <dhv:container name="opportunities" selected="calls" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="leads_details_header_include.jsp" %>
+<% String param1 = "id=" + opportunityHeader.getId(); %>      
+<dhv:container name="opportunities" selected="calls" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <dhv:permission name="contacts-external_contacts-calls-add"><a href="LeadsCalls.do?command=Add&headerId=<%= opportunityHeader.getId() %>">Add a Call</a><br></dhv:permission>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsCallListInfo"/>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+        <tr>
         <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete">
-          <td>
+          <th>
             <strong>Action</strong>
-          </td>
+          </th>
         </dhv:permission>  
-          <td>
+          <th>
             <strong>Subject</strong>
-          </td>
-          <td>
+          </th>
+          <th>
             <strong>Type</strong>
-          </td>
-          <td>
+          </th>
+          <th>
             <strong>Length</strong>
-          </td>
-          <td>
+          </th>
+          <th>
             <strong>Date</strong>
-          </td>
+          </th>
         </tr>
 <%
     Iterator j = LeadsCallList.iterator();

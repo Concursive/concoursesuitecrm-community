@@ -33,26 +33,26 @@ View Accounts<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
     <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete">
-    <td>
+    <th>
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td width="30%" nowrap>
+    <th width="30%" nowrap>
       <strong><a href="Accounts.do?command=View&column=o.name">Account Name</a></strong>
       <%= OrgListInfo.getSortIcon("o.name") %>
-    </td>
-    <td width="20%" nowrap>
+    </th>
+    <th width="20%" nowrap>
       <strong>Phone</strong>
-    </td>
-    <td width="20%" nowrap>
+    </th>
+    <th width="20%" nowrap>
       <strong>Fax</strong>
-    </td>
-    <td width="30%" nowrap>
+    </th>
+    <th width="30%" nowrap>
       <strong>Email</strong>
-    </td>
+    </th>
   </tr>
 <%
 	Iterator j = OrgList.iterator();

@@ -4,16 +4,16 @@
 <%@ include file="../initPage.jsp" %>
 Item List<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="3">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="3">
       <strong>Survey Item Results</strong>
-    </td>     
+    </th>
   </tr>
-  <tr class="title">
-    <td width="24" align="right" nowrap>&nbsp;&nbsp;Item</td>
-    <td>Text</td>
-    <td width="30" nowrap>Total Response.</td>
+  <tr>
+    <th width="24" align="right" nowrap>&nbsp;&nbsp;Item</th>
+    <th>Text</th>
+    <th width="30" nowrap>Total Response.</th>
   </tr>
   <%
 	Iterator z = ItemList.iterator();
@@ -40,7 +40,6 @@ Item List<br>
         No Items Found
       </td>
     </tr>
-  
   <%}
 %>
 </table>

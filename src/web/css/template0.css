@@ -73,8 +73,8 @@ A:visited:hover{color:#FF3300;}
   text-align: center;
   vertical-align: middle;
   font-weight: bold;
-  font-style: italic;
-  padding: 3px 3px 1px 3px;
+  /*font-style: italic;*/
+  padding: 3px 3px 3px 3px;
   background-repeat: no-repeat;
   background-position: top left;
   cursor: pointer;
@@ -100,4 +100,98 @@ A:visited:hover{color:#FF3300;}
 }
 .menutabs a {
 	text-decoration: none;
+}
+/* container menu tabs */
+.tabs {
+	color: #fff;
+  margin: 0;
+	padding-top: .67em;
+	padding-left: 0px;
+}
+.tabs td, .tabs th {
+  text-align: center;
+  vertical-align: middle;
+  font-weight: bold;
+  padding: 3px 9px;
+  background-repeat: no-repeat;
+  background-position: top left;
+  cursor: pointer;
+}
+/* selected tab */
+.tabs th {
+	background-image: url(../images/tabs/tabtopleft-sel.gif);
+  border-right: 1px solid #333;
+	background-color: #FFFDED;
+	border-left: 1px solid #FFF;
+}
+.tabs th, .tabs th a:link, .tabs th a:visited {
+	color: #000;
+}
+/*
+.tabs {
+	border-bottom: 3px #E7E9EB solid;
+}
+*/
+/* unselected tab */
+.tabs td {
+	background-image: url(../images/tabs/tabtopleft-unsel.gif);
+  background-color: #999;
+	border-bottom: 1px solid #666;
+	border-right: 1px solid #333;
+	border-left: 1px solid #FFF;
+}
+.tabs td, .tabs td a:link, .tabs td a:visited {
+	color: #FFF;
+}
+.tabs a {
+	text-decoration: none;
+}
+/* containers */
+.containerHeader { background: #FFFF95; }
+.containerMenu { background: #F1F0E0; }
+.containerBack { 
+  background: #FFFDED;
+  border-right: 1px solid #666;
+  border-bottom: 1px solid #666;
+  border-left: 1px solid #666;
+}
+.containerBody { background: #FFFFFF; }
+/* paged list */
+.pagedList {
+  border: 1px solid #000;
+}
+.pagedList th {
+  text-align: left;
+  border-bottom: 1px solid #000;
+  border-right: 1px solid #666;
+  background-color: #DEE0FA;
+}
+.pagedList td {
+  border-bottom: 1px solid #666 !important;
+  border-right: 1px solid #666 !important;
+}
+/* form details */
+.details {
+  border: 1px solid #000;
+}
+.details th {
+  text-align: left;
+  border-bottom: 1px solid #000;
+  border-right: 1px solid #666;
+  background-color: #DEE0FA;
+}
+.formLabel { 
+  text-align: right !important;
+  width: 100 !important;
+  background-color: #EDEDED !important;
+  border-bottom: 1px solid #666 !important;
+  border-right: 1px solid #666 !important;
+}
+.details td {
+  text-align: left;
+  border-bottom: 1px solid #666;
+  border-right: 1px solid #666;
+}
+.empty td {
+  border: none !important;
 }

@@ -41,11 +41,11 @@
     }
   }
 </script>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong><%= CallDetails.getId() > 0 ? "Call Details" : "Log a New Call" %></strong>
-    </td>     
+    </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">

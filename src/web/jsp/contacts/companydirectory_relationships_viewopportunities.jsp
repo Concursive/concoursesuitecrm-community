@@ -5,23 +5,21 @@
 <%@ page import="org.aspcfs.modules.pipeline.beans.*" %>
 <jsp:useBean id="opportunityList" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td valign="center" align="left">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th valign="center" align="left">
       <strong>Organization</strong>
-    </td>
-    <td valign="center" align="left">
+    </th>
+    <th valign="center" align="left">
       <strong>Description</strong>
-    </td>
-    <td valign="center" align="left">
+    </th>
+    <th valign="center" align="left">
       <strong>Amount</strong>
-    </td>
-    <td valign="center" align="left">
+    </th>
+    <th valign="center" align="left">
       <strong>Close</strong>
-    </td>
+    </th>
   </tr>
-  <!-- Paged List -->
 <%
   Iterator oppList = opportunityList.iterator();
   if (oppList.hasNext()) {
@@ -57,7 +55,4 @@
 <%
   }
 %>
-  <!-- End Paged List -->
 </table>
-
-

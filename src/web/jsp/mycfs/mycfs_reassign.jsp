@@ -30,18 +30,18 @@ Re-assignments<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
 <form name="adminReassign" action="Reassignments.do?command=DoReassign" method="post">
-  <tr class="title">
-    <td nowrap>
+  <tr>
+    <th nowrap>
       <strong>Re-assign</strong>
-    </td>
-    <td width="150" nowrap>
+    </th>
+    <th width="150" nowrap>
       <strong>From User</strong>
-    </td>
-    <td width="150" nowrap>
+    </th>
+    <th width="150" nowrap>
       <strong>To User</strong>
-    </td>
+    </th>
   </tr>
 <% int rowid = 0; %>
 <% rowid = (rowid != 1?1:2); %>

@@ -19,42 +19,29 @@ New Group<br>
 <% if (request.getAttribute("actionError") != null) { %>
 <%= showError(request, "actionError") %>
 <%}%>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong>Module: <%=PermissionCategory.getCategory()%></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <strong>Folder: <%= toHtml(Category.getName()) %></strong>
-    </td>
-  </tr>
+<strong>Module:</strong> <%= toHtml(PermissionCategory.getCategory()) %><br>
+<strong>Folder:</strong> <%= toHtml(Category.getName()) %><br>
+&nbsp;<br>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
-    <td class="containerBack">
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td colspan="2">
-            Add a Group
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Group Name
-          </td>
-          <td>
-            <input type="text" name="name" maxlength="200" value="<%= toHtmlValue(Group.getName()) %>"><font color="red">*</font>
-            <%= showAttribute(request, "nameError") %>
-          </td>
-        </tr>
-      </table>
-      &nbsp;<br>
-      <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
-      <input type="hidden" name="moduleId" value="<%= ConstantId %>">
-      <input type="submit" value="Save">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>'">
+    <th colspan="2">
+      Add a Group
+    </th>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Group Name
+    </td>
+    <td>
+      <input type="text" name="name" maxlength="200" value="<%= toHtmlValue(Group.getName()) %>"><font color="red">*</font>
+      <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
 </table>
+&nbsp;<br>
+<input type="hidden" name="categoryId" value="<%= Category.getId() %>">
+<input type="hidden" name="moduleId" value="<%= ConstantId %>">
+<input type="submit" value="Save">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>'">
 </form>
 </body>

@@ -58,18 +58,10 @@ Add a Call<br>
   &nbsp;<br>
 </dhv:evaluate>
 <%-- Begin container --%>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="leads_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + opportunityHeader.getId(); %>      
-      <dhv:container name="opportunities" selected="calls" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="leads_details_header_include.jsp" %>
+<% String param1 = "id=" + opportunityHeader.getId(); %>      
+<dhv:container name="opportunities" selected="calls" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <%-- Begin the container contents --%>
@@ -78,7 +70,7 @@ Add a Call<br>
       <input type="reset" value="Reset">
       <br>
       <%= showError(request, "actionError") %>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr class="title">
           <td colspan="2">
             <strong>Log a New Call</strong>

@@ -11,18 +11,10 @@
 <a href="ExternalContactsPrototype.do?module=ExternalContacts&include=companydirectory_relationships_view.jsp&contactId=<%=ContactDetails.getId()%>">Relationships</a> >
 Build Relationship
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="contact_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + ContactDetails.getId(); %>
-      <dhv:container name="contacts" selected="relationships" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="contact_details_header_include.jsp" %>
+<% String param1 = "id=" + ContactDetails.getId(); %>
+<dhv:container name="contacts" selected="relationships" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <%= toHtml(ContactDetails.getNameFull()) %> (Subject) is a/an: <%= relationshipTypeSelect.getHtml() %> (Relationship Type)<br>

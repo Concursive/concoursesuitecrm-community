@@ -5,11 +5,11 @@
 <%@ include file="../initPage.jsp" %>
 <a href="CampaignManager.do?command=Dashboard">Back to Dashboard</a>
 <br>&nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2" valign="center" align="left">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2" valign="center" align="left">
       <strong>Campaign Details</strong>
-    </td>     
+    </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
@@ -80,18 +80,18 @@
   </tr>
 </table>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="5" valign="center" align="left">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th colspan="5" valign="center" align="left">
       <strong>List of Documents Available</strong>
-    </td>     
+    </th>     
   </tr>
-  <tr class="title">
-    <td width="10" align="center">Action</td>
-    <td>Item</td>
-    <td>Size</td>
-    <td>Created</td>
-    <td nowrap>Created By</td>
+  <tr>
+    <th width="10" align="center">Action</th>
+    <th>Item</th>
+    <th>Size</th>
+    <th>Created</th>
+    <th nowrap>Created By</th>
   </tr>
 <%
   Iterator j = FileItemList.iterator();

@@ -53,7 +53,7 @@ function checkForm(form) {
 }
 </SCRIPT>
 <%
-    boolean popUp = false;
+   boolean popUp = false;
    if(request.getParameter("popup")!=null){
      popUp = true;
    }
@@ -77,18 +77,10 @@ Modify Component<br>
 </dhv:evaluate>
 <%-- Begin container --%>
 <dhv:evaluate if="<%= !popUp %>">
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="leads_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + opportunityHeader.getId(); %>      
-      <dhv:container name="opportunities" selected="details" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="leads_details_header_include.jsp" %>
+<% String param1 = "id=" + opportunityHeader.getId(); %>
+<dhv:container name="opportunities" selected="details" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 </dhv:evaluate>
@@ -123,10 +115,8 @@ Modify Component<br>
 </dhv:evaluate>
 <br>
 <%= showError(request, "actionError") %>
-
 <%--  include basic opportunity form --%>
 <%@ include file="opportunity_include.jsp" %>
-
 &nbsp;
 <br>
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
@@ -138,8 +128,7 @@ Modify Component<br>
  <%}
  } else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>';this.form.dosubmit.value='false';">
-  <%}%>
- 
+<%}%>
 <input type="reset" value="Reset">
 <dhv:evaluate exp="<%= popUp %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">

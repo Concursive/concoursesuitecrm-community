@@ -9,9 +9,9 @@
 <a href="CampaignManager.do?command=View">Campaign List</a> >
 Campaign Details
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" width="100%" style="border: 1px solid #000;">
   <tr class="containerHeader">
-    <td>
+    <td style="border-bottom: 1px solid #000;">
       <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
     </td>
   </tr>
@@ -22,17 +22,17 @@ Campaign Details
   <li>Items can be worked on in any order</li>
   <li>Campaigns will not start until each section is complete, and the campaign has been activated</li>
 </ul>
-      <table cellpadding="0" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
           <td valign="top" align="center">
-            <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-              <tr class="title">
-                <td align="center">
+            <table cellpadding="4" cellspacing="0" width="100%" class="details">
+              <tr>
+                <th style="text-align: center;">
                   <strong>Group(s)</strong>
-                </td>
+                </th>
               </tr>
               <tr class="containerBody">
-                <td align="center">
+                <td style="text-align: center;">
                   <%= (Campaign.hasGroups()?"<font color='green'>" + Campaign.getGroupCount() + " selected</font>":"<font color='red'>No Groups Selected</font>") %><br>
                   &nbsp;<br>
                   <dhv:permission name="campaign-campaigns-edit"><a href="CampaignManager.do?command=AddGroups&id=<%= Campaign.getId() %>">Choose Groups</a><br>&nbsp;</dhv:permission>
@@ -44,14 +44,14 @@ Campaign Details
             &nbsp;
           </td>
           <td valign="top" align="center">
-            <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-              <tr class="title">
-                <td align="center">
+            <table cellpadding="4" cellspacing="0" width="100%" class="details">
+              <tr>
+                <th style="text-align: center;">
                   <strong>Message</strong>
-                </td>
+                </th>
               </tr>
               <tr class="containerBody">
-                <td align="center">
+                <td style="text-align: center;">
                   <%= (Campaign.hasMessage()?"<font color='green'>" + Campaign.getMessageName() + "</font>":"<font color='red'>No Message Selected</font>") %><br>
                   &nbsp;<br>
                   <dhv:permission name="campaign-campaigns-edit"><a href="CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>">Choose Message</a><br>&nbsp;</dhv:permission>
@@ -63,14 +63,14 @@ Campaign Details
             &nbsp;
           </td>
           <td valign="top" align="center">
-            <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-              <tr class="title">
-                <td align="center">
+            <table cellpadding="4" cellspacing="0" width="100%" class="details">
+              <tr>
+                <th style="text-align: center;">
                   <strong>Attachments</strong>
-                </td>
+                </th>
               </tr>
               <tr class="containerBody">
-                <td align="center">
+                <td style="text-align: center;">
                   <dhv:evaluate if="<%= Campaign.hasSurvey() %>">
                     <font color="green">Survey</font><br>
                   </dhv:evaluate>
@@ -90,14 +90,14 @@ Campaign Details
             &nbsp;
           </td>
           <td valign="top" align="center">
-            <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-              <tr class="title">
-                <td align="center">
+            <table cellpadding="4" cellspacing="0" width="100%" class="details">
+              <tr>
+                <th style="text-align: center;">
                   <strong>Delivery</strong>
-                </td>
+                </th>
               </tr>
               <tr class="containerBody">
-                <td align="center">
+                <td style="text-align: center;">
                   <%= (Campaign.hasDetails()?"<font color='green'>Scheduled for " + Campaign.getActiveDateString() + "<br>" + toHtml(Campaign.getDeliveryName()) + "</font><br>":"<font color='red'>Not Scheduled</font><br>&nbsp;<br>") %>
                   <dhv:permission name="campaign-campaigns-view"><a href="CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>">Choose Options</a><br>&nbsp;</dhv:permission>
                 </td>
@@ -112,7 +112,7 @@ Campaign Details
   if (Campaign.isReadyToActivate()) {
 %>  
   <dhv:permission name="campaign-campaigns-edit">
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr class="containerBack">
       <td>
         <center>
@@ -130,7 +130,7 @@ Campaign Details
   } else {
 %>  
   <dhv:permission name="campaign-campaigns-edit">
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr class="containerBack">
       <td>
         <center>
@@ -148,11 +148,11 @@ Campaign Details
 %>
 <br>
 
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2" align="left">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2" align="left">
       <strong>Campaign Details</strong>
-    </td>     
+    </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="top">

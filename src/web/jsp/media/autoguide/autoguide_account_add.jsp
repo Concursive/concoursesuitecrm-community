@@ -83,18 +83,10 @@
 <a href="AccountsAutoGuide.do?command=AccountList&orgId=<%=OrgDetails.getOrgId()%>">Vehicle Inventory List</a> >
 Add Vehicle<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong><%= toHtml(OrgDetails.getName()) %></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>
+<dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <input type="submit" value="Save">
@@ -103,11 +95,11 @@ Add Vehicle<br>
 <input type="hidden" name="dosubmit" value="true">
 <br>
 <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan=2 valign=center align=left>
-      <strong>Add a New Vehicle Record</strong>
-    </td>
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2" valign="center">
+      <strong>Add a Vehicle Record</strong>
+    </th>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">

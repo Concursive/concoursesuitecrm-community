@@ -52,54 +52,42 @@ function updateUserList() {
 <%}%>
 Modify Ticket<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr>
-    <td class="containerHeader">
-      <strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
-      <%= toHtml(TicketDetails.getCompanyName()) %></strong>
-      <dhv:evaluate if="<%= !(TicketDetails.getCompanyEnabled()) %>">
-        <font color="red">(account disabled)</font>
-      </dhv:evaluate>
-      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + TicketDetails.getId(); %>
-      <dhv:container name="tickets" selected="details" param="<%= param1 %>"/>
-      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
-      </dhv:evaluate>
-    </td>
-  </tr>
+<strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
+<%= toHtml(TicketDetails.getCompanyName()) %></strong>
+<dhv:evaluate if="<%= !(TicketDetails.getCompanyEnabled()) %>">
+  <font color="red">(account disabled)</font>
+</dhv:evaluate>
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<% String param1 = "id=" + TicketDetails.getId(); %>
+<dhv:container name="tickets" selected="details" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
   	<td class="containerBack">
-  <table cellpadding="0" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr>
-      <td colspan="2">
-		<% if (TicketDetails.getClosed() != null) { %>
-      <input type="button" value="Reopen">
-			<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
-		<%} else {%>
-			<input type="submit" value="Update">
+      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
+        <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
+        &nbsp;<br>
+      </dhv:evaluate>
+      <% if (TicketDetails.getClosed() != null) { %>
+        <input type="button" value="Reopen">
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
+      <%} else {%>
+        <input type="submit" value="Update">
         <% if ("list".equals(request.getParameter("return"))) {%>
           <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
-      <%} else {%>
-        <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
+        <%} else {%>
+          <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
+        <%}%>
       <%}%>
-		<%}%>
-      </td>
-    </tr>
-  </table>
+      <br>
 <%= showError(request, "actionError") %>
 <% if (request.getAttribute("closedError") != null) { %>
   <%= showAttribute(request, "closedError") %>
 <%}%>
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-		<tr class="title">
-      <td colspan="2">
+  <table cellpadding="4" cellspacing="0" width="100%" class="details">
+		<tr>
+      <th colspan="2">
         <strong>Ticket Information</strong>
-      </td>     
+      </th>
 		</tr>
 		<tr class="containerBody">
       <td class="formLabel">
@@ -125,18 +113,18 @@ Modify Ticket<br>
   </table>
   <br>
   <a name="categories"></a> 
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-		<tr class="title">
-      <td colspan="2">
+  <table cellpadding="4" cellspacing="0" width="100%" class="details">
+		<tr>
+      <th colspan="2">
         <strong>Classification</strong>
-      </td>     
+      </th>
 		</tr>
 		<tr class="containerBody">
       <td valign="top" class="formLabel">
         <dhv:label name="tickets-problem">Issue</dhv:label>
       </td>
       <td>
-        <table border="0" cellspacing="0" cellpadding="0">
+        <table border="0" cellspacing="0" cellpadding="0" class="empty">
           <tr>
             <td>
               <textarea name="problem" cols="55" rows="3"><%= toString(TicketDetails.getProblem()) %></textarea>
@@ -199,11 +187,11 @@ Modify Ticket<br>
   </table>
   <br>
   <a name="department"></a> 
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="title">
-      <td colspan="2">
+  <table cellpadding="4" cellspacing="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
         <strong>Assignment</strong>
-      </td>
+      </th>
 		</tr>
   <dhv:include name="tickets-severity" none="true">
 		<tr class="containerBody">
@@ -251,11 +239,11 @@ Modify Ticket<br>
 		</tr>
   </table>
   <br>
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="title">
-      <td colspan="2">
+  <table cellpadding="4" cellspacing="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
         <strong>Resolution</strong>
-      </td>
+      </th>
 		</tr>
 		<tr class="containerBody">
       <td valign="top" class="formLabel">

@@ -9,16 +9,16 @@
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
 <a href="AutoGuide.do?command=List">Back to Vehicle List</a><p>
 <form action='AutoGuide.do?command=Details&id=<%= InventoryItem.getId() %>&action=modify' method='post'>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td width="100%" valign="top">
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2" valign="center" align="center">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th colspan="2" valign="center" style="text-align: center;">
 	    <strong><%= toHtml(InventoryItem.getVehicle().getMake().getName()) %>
       <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %><dhv:evaluate exp="<%= hasText(InventoryItem.getStyle()) %>"> <%= toHtml(InventoryItem.getStyle()) %></dhv:evaluate>
       <%= InventoryItem.getVehicle().getYear() %></strong>
-	  </td>
+	  </th>
   </tr>
   <tr>
     <td nowrap class="formLabel">Organization</td>
@@ -103,22 +103,22 @@
         AdRun thisAdRun = (AdRun)adruns.next();
 %>
   <tr>
-    <td class="rowUnderline" width="10" nowrap align="left">
+    <td class="rowUnderline" width="10" nowrap>
       <img border="0" src="<%= (thisAdRun.isComplete()?"images/box-checked.gif":"images/box.gif") %>" alt="" align="absmiddle">
     </td>
-    <td class="rowUnderline" width="10%" nowrap align="center">
+    <td class="rowUnderline" width="10%" nowrap style="text-align: center;">
       <%= toDateString(thisAdRun.getRunDate()) %>
     </td>
-    <td class="rowUnderline" width="10%" nowrap align="center">
+    <td class="rowUnderline" width="10%" nowrap style="text-align: center;">
       <%= toHtml(thisAdRun.getAdTypeName()) %>
     </td>
-    <td class="rowUnderline" width="10%" nowrap align="center">
+    <td class="rowUnderline" width="10%" nowrap style="text-align: center;">
       <%= (thisAdRun.getIncludePhoto()?"Include Photo":"No Photo") %>
     </td>
     <td class="rowUnderline" width="90%" nowrap>
       &nbsp;
     </td>
-    <td class="rowUnderline" width="10%" nowrap align="right">
+    <td class="rowUnderline" width="10%" nowrap style="text-align: right;">
 <dhv:permission name="autoguide-adruns-edit">
 <dhv:evaluate exp="<%= !thisAdRun.isComplete() %>">
       <a href="javascript:confirmForward('AutoGuide.do?command=MarkComplete&id=<%= InventoryItem.getId() %>&adId=<%= thisAdRun.getId() %>');">Set this item as completed</a>
@@ -150,7 +150,7 @@ Ad Text:
 %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getComments()) %>"> <%= toHtml(InventoryItem.getComments()) %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getCondition()) %>"> <%= toHtml(InventoryItem.getCondition()) %></dhv:evaluate><dhv:evaluate exp="<%= (InventoryItem.getSellingPrice() > 0) %>"> <%= InventoryItem.getSellingPriceString() %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getSellingPriceText()) %>"> <%= toHtml(InventoryItem.getSellingPriceText()) %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getOrganization().getPhoneNumber(phoneType)) %>"> <%= toHtml(InventoryItem.getOrganization().getPhoneNumber("Main")) %></dhv:evaluate>"><br>
 <dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
 &nbsp;<br><%-- End formatting --%>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="empty">
   <tr>
     <td>
 <font color="#8F8F8F">Status Icons:<br>
@@ -178,6 +178,5 @@ Ad Text:
     </td>
   </tr>
 </table>
-
 </form>
 

@@ -17,18 +17,10 @@
 <%}%>
 Modify Revenue<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="revenue" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="revenue" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <input type="hidden" name="id" value="<%= Revenue.getId() %>">
@@ -47,11 +39,11 @@ Modify Revenue<br>
       <input type="reset" value="Reset">
       <br>
       <%= showError(request, "actionError") %>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td colspan="2">
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+        <tr>
+          <th colspan="2">
             <strong>Modify <%= toHtml(Revenue.getDescription()) %></strong>
-          </td>
+          </th>
         </tr>
         <tr class="containerBody">
           <td class="formLabel">

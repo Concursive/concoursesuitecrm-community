@@ -245,20 +245,12 @@
 Modify Account<br>
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
   <dhv:evaluate exp="<%= !popUp %>">
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="details" param="<%= param1 %>" />
-    </td>
-  </tr>
+    <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+    <dhv:container name="accounts" selected="details" param="<%= param1 %>" style="tabs"/>
   </dhv:evaluate>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <input type="hidden" name="modified" value="<%= OrgDetails.getModified() %>">
@@ -279,11 +271,11 @@ Modify Account<br>
 </dhv:evaluate>
 <br>
 <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Modify Primary Information</strong>
-    </td>     
+    </th>     
   </tr>
 <dhv:evaluate exp="<%= OrgDetails.getOwner() == User.getUserId() || isManagerOf(pageContext, User.getUserId(), OrgDetails.getOwner()) %>">
   <tr class="containerBody">
@@ -300,7 +292,7 @@ Modify Account<br>
       Account Type(s)
     </td>
   	<td>
-      <table border="0" cellspacing="0" cellpadding="0">
+      <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td>
             <select multiple name="selectedList" id="selectedList" size="5">
@@ -453,11 +445,11 @@ Modify Account<br>
   </tr>
 </table>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Phone Numbers</strong>
-	  </td>
+	  </th>
   </tr>
 <dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() == null) %>">    
 <%  
@@ -531,11 +523,11 @@ Modify Account<br>
 </dhv:evaluate>
 </table>
 &nbsp;<br>  
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Addresses</strong>
-    </td>
+    </th>
   </tr>
 <dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() == null) %>">  
 <%  
@@ -871,11 +863,11 @@ Modify Account<br>
   </dhv:evaluate>
 </table>
 &nbsp;<br>  
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Email Addresses</strong>
-	  </td>
+	  </th>
   </tr>
 <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
 <%  
@@ -945,11 +937,11 @@ Modify Account<br>
 </dhv:evaluate>
 </table>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Additional Details</strong>
-    </td>
+    </th>
   </tr>  
   <tr class="containerBody">
     <td valign="top" class="formLabel">

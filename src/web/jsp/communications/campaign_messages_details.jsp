@@ -14,11 +14,11 @@ Message Details
 </dhv:permission>
 <dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete"></dhv:permission>
 <dhv:permission name="campaign-campaigns-messages-add"><input type="button" value="Clone" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=Clone&id=<%= MessageDetails.getId() %>';submit();"><br>&nbsp;</dhv:permission>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Message Details</strong>
-    </td>
+    </th>
   </tr>
   <tr>
     <td class="formLabel">

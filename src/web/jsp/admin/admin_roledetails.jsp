@@ -17,11 +17,11 @@ Update Role
 </dhv:permission>
 <br>
 <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Update Role</strong>
-	  </td>
+	  </th>
   </tr>
   <tr>
     <td class="formLabel">Role Name</td>
@@ -33,11 +33,11 @@ Update Role
   </tr>
 </table>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="5">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th colspan="5">
 	    <strong>Permissions</strong>
-	  </td>
+	  </th>
   </tr>
 <%
   Iterator i = PermissionList.iterator();
@@ -72,7 +72,7 @@ Update Role
 <%
       } else {
 %>
-        <input type="checkbox" disabled>
+        --
 <%
       }
 %>
@@ -85,7 +85,7 @@ Update Role
 <%
       } else {
 %>
-        <input type="checkbox" disabled>
+        --
 <%
       }
 %>
@@ -98,7 +98,7 @@ Update Role
 <%
       } else {
 %>
-        <input type="checkbox" disabled>
+        --
 <%
       }
 %>
@@ -111,7 +111,7 @@ Update Role
 <%
       } else {
 %>
-        <input type="checkbox" disabled>
+        --
 <%
       }
 %>

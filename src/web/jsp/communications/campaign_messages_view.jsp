@@ -24,29 +24,29 @@ Message List
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
   <dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete">
-   <td>
+    <th>
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td width="40%" nowrap>
+    <th width="40%" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=name"><strong>Name</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("name") %>
-    </td>  
-    <td width="60%" nowrap>
+    </th>
+    <th width="60%" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=description"><strong>Description</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("description") %>
-    </td>
-    <td align="center" nowrap>
+    </th>
+    <th align="center" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=ct_eb.namelast,ct_eb.namefirst"><strong>Entered By</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("ct_eb.namelast,ct_eb.namefirst") %>
-    </td>
-    <td align="center" nowrap>
+    </th>
+    <th align="center" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=m.modified"><strong>Last Modified</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("m.modified") %>
-    </td>
+    </th>
   </tr>
 <%
 	Iterator j = MessageList.iterator();

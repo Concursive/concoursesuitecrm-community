@@ -27,19 +27,11 @@ Folder Record Details
 <br>
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="contact_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + ContactDetails.getId(); 
-         String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-      <dhv:container name="contacts" selected="folders" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
-    </td>
-  </tr>
+<%@ include file="contact_details_header_include.jsp" %>
+<% String param1 = "id=" + ContactDetails.getId(); 
+   String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+<dhv:container name="contacts" selected="folders" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <% if (!Category.getAllowMultipleRecords()) {
@@ -62,11 +54,11 @@ Folder Record Details
   while (groups.hasNext()) {
     CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
 %>    
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th colspan="2">
 	    <strong><%= thisGroup.getName() %></strong>
-	  </td>
+	  </th>
   </tr>
 <%  
   Iterator fields = thisGroup.iterator();
@@ -96,11 +88,11 @@ Folder Record Details
 </table>
 &nbsp;
 <%}%>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Record Information</strong>
-    </td>     
+    </th>     
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">

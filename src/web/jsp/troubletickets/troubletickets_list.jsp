@@ -13,20 +13,20 @@ View Tickets<br>
 <hr color="#BFBFBB" noshade>
 <% if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus showExpandLink="true" title="Tickets Assigned to Me" object="AssignedToMeInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
     <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
-		<td valign="center" align="left">
+		<th valign="center" align="left">
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td valign="center" align="left">
+    <th valign="center" align="left">
       <strong>Number</strong>
-    </td>
-    <td><b>Priority</b></td>
-    <td><b>Age</b></td>
-    <td><b>Company</b></td>
-		<td><b>Assigned&nbsp;To</b></td>
+    </th>
+    <th><b>Priority</b></th>
+    <th><b>Age</b></th>
+    <th><b>Company</b></th>
+		<th><b>Assigned&nbsp;To</b></th>
   </tr>
 <%
 	Iterator k = AssignedToMeList.iterator();
@@ -99,20 +99,20 @@ View Tickets<br>
 <%}%>
 <% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || OpenInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus showExpandLink="true" title="Other Tickets in My Department" object="OpenInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
   <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
-		<td valign="center" align="left">
+		<th valign="center" align="left">
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td valign="center" align="left">
+    <th valign="center" align="left">
       <strong>Number</strong>
-    </td>
-    <td><b>Priority</b></td>
-    <td><b>Age</b></td>
-    <td><b>Company</b></td>
-		<td><b>Assigned&nbsp;To</b></td>
+    </th>
+    <th><b>Priority</b></th>
+    <th><b>Age</b></th>
+    <th><b>Company</b></th>
+		<th><b>Assigned&nbsp;To</b></th>
   </tr>
 <%
 	Iterator n = OpenList.iterator();
@@ -191,20 +191,20 @@ View Tickets<br>
 <%}%>
 <% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection())) || CreatedByMeInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus showExpandLink="true" title="Tickets Created by Me" object="CreatedByMeInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
   <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
-		<td valign="center" align="left">
+		<th valign="center" align="left">
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td valign="center" align="left">
+    <th valign="center" align="left">
       <strong>Number</strong>
-    </td>
-    <td><b>Priority</b></td>
-    <td><b>Age</b></td>
-    <td><b>Company</b></td>
-		<td><b>Assigned&nbsp;To</b></td>
+    </th>
+    <th><b>Priority</b></th>
+    <th><b>Age</b></th>
+    <th><b>Company</b></th>
+		<th><b>Assigned&nbsp;To</b></th>
   </tr>
 <%
 	Iterator j = CreatedByMeList.iterator();

@@ -9,35 +9,27 @@
 <a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
 Response
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td colspan="2">
-      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td colspan="2">
-      <% String param1 = "id=" + Campaign.getId(); %>
-      <dhv:container name="communications" selected="response" param="<%= param1 %>" /><br>
-    </td>
-  </tr>
+<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
+<% String param1 = "id=" + Campaign.getId(); %>
+<dhv:container name="communications" selected="response" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td class="containerBack">
 <center><%= SurveyResponseListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="SurveyResponseListInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td width="20%" nowrap>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th width="20%" nowrap>
       <strong><a href="CampaignManager.do?command=ViewResponse&id=<%= Campaign.getId() %>&column=c.namelast">Name</a></strong>
       <%= SurveyResponseListInfo.getSortIcon("c.namelast") %>
-      </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong><a href="CampaignManager.do?command=ViewResponse&id=<%= Campaign.getId() %>&column=sr.entered">Submitted</a></strong>
       <%= SurveyResponseListInfo.getSortIcon("sr.entered") %>
-    </td>
-    <td nowrap><strong>IP Address</strong></td>
-    <td nowrap><strong>Email Address</strong></td>
-    <td nowrap><strong>Phone Number</strong></td>
+    </th>
+    <th nowrap><strong>IP Address</strong></th>
+    <th nowrap><strong>Email Address</strong></th>
+    <th nowrap><strong>Phone Number</strong></th>
   </tr>
 <%
   Iterator j = SurveyResponseList.iterator();

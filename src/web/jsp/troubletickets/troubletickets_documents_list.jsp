@@ -10,42 +10,35 @@
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>">Ticket Details</a> >
 Documents<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-    <strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
-    <%= toHtml(TicketDetails.getCompanyName()) %></strong>
-    <dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + TicketDetails.getId(); %>
-      <dhv:container name="tickets" selected="documents" param="<%= param1 %>"/>
-      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
-      </dhv:evaluate>
-   </td>
-  </tr>
+<strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
+<%= toHtml(TicketDetails.getCompanyName()) %></strong>
+<dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
+<% String param1 = "id=" + TicketDetails.getId(); %>
+<dhv:container name="tickets" selected="documents" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
 		<td class="containerBack">
-      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTicketsDocuments.do?command=Add&tId=<%= TicketDetails.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
-      <center><%= TicketDocumentListInfo.getAlphabeticalPageLinks() %></center>
+    <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
+      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
+      &nbsp;<br>
+    </dhv:evaluate>
+    <dhv:permission name="tickets-tickets-edit"><a href="TroubleTicketsDocuments.do?command=Add&tId=<%= TicketDetails.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
+    <center><%= TicketDocumentListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="TicketDocumentListInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td width="10" align="center">Action</td>
-    <td>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th width="10" align="center">Action</th>
+    <th>
       <strong><a href="TroubleTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>&column=subject">Item</a></strong>
       <%= TicketDocumentListInfo.getSortIcon("subject") %>
-    </td>
-    <td align="center">Ext</td>
-    <td align="center">Size</td>
-    <td align="center">Version</td>
+    </th>
+    <th align="center">Ext</th>
+    <th align="center">Size</th>
+    <th align="center">Version</th>
     <dhv:permission name="tickets-tickets-edit">
-      <td>&nbsp;</td>
+      <th>&nbsp;</th>
     </dhv:permission>
-    <td align="center">Submitted</td>
+    <th align="center">Submitted</th>
   </tr>
     <%
       Iterator j = FileItemList.iterator();

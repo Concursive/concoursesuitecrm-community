@@ -8,37 +8,30 @@
 <a href="TroubleTickets.do?command=Home">View Tickets</a> >
 Ticket Details<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-    <strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
-    <%= toHtml(TicketDetails.getCompanyName()) %></strong>
-    <dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + TicketDetails.getId(); %>
-      <dhv:container name="tickets" selected="details" param="<%= param1 %>"/>
-      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
-      </dhv:evaluate>
-    </td>
-  </tr>
+<strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
+<%= toHtml(TicketDetails.getCompanyName()) %></strong>
+<dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
+<% String param1 = "id=" + TicketDetails.getId(); %>
+<dhv:container name="tickets" selected="details" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
 		<td class="containerBack">
-      <% if (TicketDetails.getClosed() != null) { %>
-        <dhv:permission name="tickets-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();"></dhv:permission>
-      <%} else {%>
-        <dhv:permission name="tickets-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='TroubleTickets.do?command=Modify&auto-populate=true';submit();"></dhv:permission>
-        <dhv:permission name="tickets-tickets-delete"><input type="button" value="Delete" onClick="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= TicketDetails.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');"></dhv:permission>
-      <%}%>
+    <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
+      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
+      &nbsp;<br>
+    </dhv:evaluate>
+    <% if (TicketDetails.getClosed() != null) { %>
+      <dhv:permission name="tickets-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();"></dhv:permission>
+    <%} else {%>
+      <dhv:permission name="tickets-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='TroubleTickets.do?command=Modify&auto-populate=true';submit();"></dhv:permission>
+      <dhv:permission name="tickets-tickets-delete"><input type="button" value="Delete" onClick="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= TicketDetails.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');"></dhv:permission>
+    <%}%>
 <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete"><br>&nbsp;<br></dhv:permission>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Ticket Information</strong>
-    </td>     
+    </th>
   </tr>
   <tr class="containerBody">
 		<td nowrap class="formLabel">
@@ -148,11 +141,11 @@ Ticket Details<br>
 </table>
 &nbsp;
 <dhv:evaluate if="<%= TicketDetails.getThisContact() != null %>">
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Primary Contact</strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">

@@ -17,18 +17,10 @@
 </dhv:evaluate>
 Add Folder Record
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="folders" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="folders" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       Folder: <strong><%= Category.getName() %></strong><br>
@@ -44,11 +36,11 @@ Add Folder Record
     while (groups.hasNext()) {
     CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
 %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong><%= thisGroup.getName() %></strong>
-	  </td>
+	  </th>
   </tr>
 <%  
   Iterator fields = thisGroup.iterator();

@@ -27,37 +27,37 @@ My Mailbox<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th>
       <strong>Action</strong>
-    </td>
+    </th>
     <dhv:evaluate if="<%= InboxInfo.getListView().equalsIgnoreCase("new") %>">
-      <td>
+      <th>
         <strong>Status</strong>
-      </td>
+      </th>
     </dhv:evaluate>
-    <td width="40%" nowrap>
+    <th width="40%" nowrap>
       <strong><a href="MyCFSInbox.do?command=Inbox&column=m.subject">Subject</a></strong>
       <%= InboxInfo.getSortIcon("m.subject") %>
-    </td>
+    </th>
   <% if(!InboxInfo.getListView().equalsIgnoreCase("sent")){%>
-    <td width="30%" nowrap>
+    <th width="30%" nowrap>
       <strong><a href="MyCFSInbox.do?command=Inbox&column=sent_namelast">From</a></strong>
       <%= InboxInfo.getSortIcon("sent_namelast") %>
-    </td>
-    <td width="30%" nowrap>
+    </th>
+    <th width="30%" nowrap>
       <strong><a href="MyCFSInbox.do?command=Inbox&column=m.sent">Received</a></strong>
   <%} else {%>
-    <td width="30%" nowrap>
+    <th width="30%" nowrap>
       <strong>To</strong>
       <%= InboxInfo.getSortIcon("sent_namelast") %>
-    </td>
-    <td width="30%"  nowrap>
+    </th>
+    <th width="30%"  nowrap>
       <strong><a href="MyCFSInbox.do?command=Inbox&column=m.sent">Sent</a></strong>
   <%}%>
       <%= InboxInfo.getSortIcon("m.sent") %>
-    </td>
+    </th>
   </tr>
 <%
 	Iterator j = CFSNoteList.iterator();

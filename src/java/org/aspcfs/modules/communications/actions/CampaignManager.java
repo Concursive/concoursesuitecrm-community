@@ -1554,18 +1554,16 @@ public final class CampaignManager extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandResponseDetails(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+    if (!hasPermission(context, "campaign-campaigns-view")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
     Campaign campaign = null;
-
+    //Parameters
     String id = context.getRequest().getParameter("id");
     String contactId = context.getRequest().getParameter("contactId");
     String responseId = context.getRequest().getParameter("responseId");
+    //Paged List
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("ResponseDetailsListInfo");
     }
@@ -1573,9 +1571,13 @@ public final class CampaignManager extends CFSModule {
     pagedListInfo.setLink("CampaignManager.do?command=ResponseDetails&id=" + id);
     try {
       db = this.getConnection(context);
+      //Load the campaign
       campaign = new Campaign(db, id);
       context.getRequest().setAttribute("Campaign", campaign);
-
+      //Load the contact
+      Contact thisContact = new Contact(db, Integer.parseInt(contactId));
+      context.getRequest().setAttribute("contact", thisContact);
+      //Load the answers for this contact
       int surveyId = -1;
       if ((surveyId = ActiveSurvey.getId(db, campaign.getId())) > 0) {
         ActiveSurveyQuestionList thisList = new ActiveSurveyQuestionList();
@@ -1585,22 +1587,17 @@ public final class CampaignManager extends CFSModule {
         thisList.buildResponse(db, Integer.parseInt(contactId), Integer.parseInt(responseId));
         context.getRequest().setAttribute("ResponseDetails", thisList);
       }
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (!hasAuthority(context, campaign.getEnteredBy())) {
-        return ("PermissionError");
-      }
-      addModuleBean(context, "Dashboard", "Campaign: Response Details");
-      return ("ResponseDetailsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (!hasAuthority(context, campaign.getEnteredBy())) {
+      return ("PermissionError");
     }
+    addModuleBean(context, "Dashboard", "Campaign: Response Details");
+    return ("ResponseDetailsOK");
   }
 
 

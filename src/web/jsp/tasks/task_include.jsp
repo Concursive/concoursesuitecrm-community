@@ -5,11 +5,11 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <SCRIPT language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></script>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Task</strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
@@ -39,7 +39,7 @@
   <tr class="containerBody"> 
     <td class="formLabel">Status</td>
     <td>
-      <table cellpadding="3" cellspacing="0" border="0">
+      <table cellpadding="3" cellspacing="0" class="empty">
         <tr>
           <td>
             <input type="checkbox" name="chk1" value="true" onclick="javascript:setField('complete',document.addTask.chk1.checked,'addTask');" <%= Task.getComplete()?" checked":"" %>>
@@ -54,7 +54,7 @@
   <tr class="containerBody"> 
     <td class="formLabel">Sharing</td>
     <td>
-      <table cellpadding="3" cellspacing="0" border="0">
+      <table cellpadding="3" cellspacing="0" class="empty">
         <tr>
           <td>
             <input type="checkbox" name="chk2" onclick="javascript:setField('sharing',document.addTask.chk2.checked,'addTask');" <%= (Task.getSharing()==1)?" checked":"" %>>
@@ -70,7 +70,7 @@
       Assign To
     </td>
     <td>
-      <table>
+      <table class="empty">
         <tr>
           <td>
             <div id="changeowner">
@@ -109,7 +109,7 @@
       Link Contact
     </td>
     <td>
-      <table>
+      <table class="empty">
         <tr>
           <td>
             <div id="changecontact"><%=Task.getContactName()!=null?Task.getContactName():"None"%></div>

@@ -8,26 +8,18 @@
 <a href="Users.do?command=UserDetails&id=<%=UserRecord.getId()%>">User Details</a> >
 Login History<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + UserRecord.getId(); %>      
-      <dhv:container name="users" selected="history" param="<%= param1 %>" />
-    </td>
-  </tr>
+<strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
+<% String param1 = "id=" + UserRecord.getId(); %>      
+<dhv:container name="users" selected="history" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <dhv:pagedListStatus object="AccessLogInfo"/>
-        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-          <tr class="title">
-            <td><b>Username</b></td>
-            <td nowrap><b>Login IP Address</b></td>
-            <td nowrap><b>Date/Time</b></td>
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+          <tr>
+            <th><b>Username</b></th>
+            <th nowrap><b>Login IP Address</b></th>
+            <th nowrap><b>Date/Time</b></th>
           </tr>
 <%
 	Iterator k = AccessLog.iterator();

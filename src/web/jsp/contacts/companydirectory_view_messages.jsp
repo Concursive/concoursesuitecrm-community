@@ -11,19 +11,11 @@
 Messages<br>
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="contact_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + ContactDetails.getId(); 
-          String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-      <dhv:container name="contacts" selected="messages" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
-    </td>
-  </tr>
+<%@ include file="contact_details_header_include.jsp" %>
+<% String param1 = "id=" + ContactDetails.getId(); 
+   String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+<dhv:container name="contacts" selected="messages" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <br>
@@ -44,22 +36,23 @@ Messages<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td width="8">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th width="8">
       <strong>Action</strong>
-    </td>
-    <td width="65%" nowrap>
+    </th>
+    <th width="65%" nowrap>
       <a href="ExternalContacts.do?command=ViewMessages&column=c.name&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><strong>Name</strong></a>
       <%= ContactMessageListInfo.getSortIcon("c.name") %>
-    </td>  
-    <td width="20%" nowrap>
+    </th>
+    <th width="20%" nowrap>
       <a href="ExternalContacts.do?command=ViewMessages&column=active_date&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><strong>Run Date</strong></a>
       <%= ContactMessageListInfo.getSortIcon("active_date") %>
-    </td> 
-    <td width="15%">
+    </th>
+    <th width="15%">
       <strong>Status</strong>
-    </td>
+    </th>
+  </tr>
 <%
     Iterator j = campList.iterator();
     if ( j.hasNext() ) {

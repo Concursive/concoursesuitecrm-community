@@ -14,18 +14,10 @@
 Opportunity Details<br>
 <hr color="#BFBFBB" noshade>
 <%-- Begin container --%>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="opportunities" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="opportunities" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <%-- Begin container content --%>
@@ -41,36 +33,36 @@ Opportunity Details<br>
         <a href="OpportunitiesComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>&orgId=<%= opportunityHeader.getAccountLink() %>">Add a Component</a><br>
       </dhv:permission>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountsComponentListInfo"/>
- <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+ <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+   <tr>
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
-    <td>
+    <th>
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td nowrap>
+    <th nowrap>
       <strong><a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.description">Component</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("oc.description") %>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong><a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.closed">Status</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("oc.closed") %>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong><a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.guessvalue">Guess Amount</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("oc.guessvalue") %>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong><a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%=OrgDetails.getId()%>&column=oc.closedate">Close Date</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("oc.closedate") %>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong><a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%=OrgDetails.getId()%>&column=stagename">Current Stage</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("stagename") %>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Owner</strong>
-    </td>
+    </th>
   </tr>
 <%
 	Iterator j = ComponentList.iterator();

@@ -8,18 +8,10 @@
 <a href="Users.do?command=ListUsers">View Users</a> >
 User Details<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + UserRecord.getId(); %>
-      <dhv:container name="users" selected="details" param="<%= param1 %>" />
-    </td>
-  </tr>
+<strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
+<% String param1 = "id=" + UserRecord.getId(); %>
+<dhv:container name="users" selected="details" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <dhv:evaluate exp="<%=(UserRecord.getEnabled())%>">
@@ -41,11 +33,11 @@ User Details<br>
   <br>
   &nbsp;
 </dhv:permission>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Primary Information</strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">Username</td>

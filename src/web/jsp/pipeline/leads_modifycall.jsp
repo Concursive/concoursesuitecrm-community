@@ -66,20 +66,12 @@ Modify Call<br>
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="leads_details_header_include.jsp" %>
-    </td>
-  </tr>
- <dhv:evaluate exp="<%= !popUp %>">
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + opportunityHeader.getId(); %>      
-      <dhv:container name="opportunities" selected="calls" param="<%= param1 %>" />
-    </td>
-  </tr>
- </dhv:evaluate>
+<%@ include file="leads_details_header_include.jsp" %>
+<dhv:evaluate exp="<%= !popUp %>">
+  <% String param1 = "id=" + opportunityHeader.getId(); %>      
+  <dhv:container name="opportunities" selected="calls" param="<%= param1 %>" style="tabs"/>
+</dhv:evaluate>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
@@ -99,11 +91,11 @@ Modify Call<br>
       <input type="reset" value="Reset">
       <br>
       <%= showError(request, "actionError") %>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td colspan="2">
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+        <tr>
+          <th colspan="2">
             <strong>Call Details</strong>
-          </td>     
+          </th>
         </tr>
         <tr class="containerBody">
           <td class="formLabel">

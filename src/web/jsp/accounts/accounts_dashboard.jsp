@@ -17,14 +17,13 @@
     window.frames['calendardetails'].location.href='MyCFS.do?command=Alerts&source=calendarDetails&return=<%=returnPage%>&inline=true';
   }
 </script>
-
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <td>
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="empty">
   <%-- User Selected Info --%>
   <tr>
-    <td width="100%" align="center" valign="top" colspan="2" height="20">
+    <td width="100%" valign="top" colspan="2" height="20" style="text-align: center !important">
       <strong><div id="userName">Scheduled Actions for <%= CalendarInfo.getSelectedUserId()!=-1?toHtml(CalendarInfo.getSelectedUserName()) : toHtml(User.getUserRecord().getContact().getNameLastFirst())%></div></strong>
     </td>
   </tr>
@@ -36,18 +35,15 @@
     </td>
     <td valign="top" height="100%" width="100%">
       <table height="100%" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr class="title">
-          <td width="100%">
-          <table width="100%" cellspacing="0" cellpadding="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
-            <tr>
-              <td>
-            <table width="100%" cellspacing="4" cellpadding="0" border="0" class="title">
-              <tr class="title">
+        <tr>
+          <td width="100%" style="border: 1px solid #000; background-color: #DEE0FA;">
+            <table width="100%" cellspacing="4" cellpadding="0" border="0">
+              <tr>
                 <td valign="center" nowrap>
                   <select id="alerts" size="1" name="alertsView" onChange="javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=calendardetails&inline=true&return=Accounts&alertsView='+document.getElementById('alerts').value);">
-                    <option  value="AccountsAll" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAll")?" selected":"" %>>All Sched. Actions</option>
-                    <option  value="AccountsContractEndDates" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsEndDates")?" selected":"" %>>Contract End Dates</option>
-                    <option  value="AccountsAlertDates" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAlertDates")?" selected":"" %>>Alert Dates</option>
+                    <option value="AccountsAll" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAll")?" selected":"" %>>All Sched. Actions</option>
+                    <option value="AccountsContractEndDates" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsEndDates")?" selected":"" %>>Contract End Dates</option>
+                    <option value="AccountsAlertDates" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAlertDates")?" selected":"" %>>Alert Dates</option>
                   </select>
                 <% if(NewUserList.size()!=0){%>
                   <%= NewUserList.getHtml("userId",CalendarInfo.getSelectedUserId()) %>
@@ -55,9 +51,6 @@
                 </td>
               </tr>
             </table>
-              </td>
-            </tr>
-          </table>
           </td>
         </tr>
         <tr>

@@ -28,7 +28,7 @@
 <a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Delivery
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr class="containerHeader">
     <td>
       <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
@@ -41,11 +41,11 @@ Delivery
 </dhv:permission>
 <input type="button" value="Cancel" onClick="javascript:window.location.href='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'"><br>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Delivery Options</strong>
-    </td>     
+    </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="center" nowrap>

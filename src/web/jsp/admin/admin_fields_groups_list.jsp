@@ -42,23 +42,13 @@ Folder<br>
 <%
   CategoryList.setJsEvent("onChange=\"javascript:this.form.dosubmit.value='false';document.forms[0].submit();\"");
 %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong>Module: <%=PermissionCategory.getCategory()%></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      Folder: <%= CategoryList.getHtmlSelect("catId", Category.getId()) %>
-    </td>
-  </tr>
-  <tr>
-    <td class="containerBack">
-      <dhv:permission name="admin-sysconfig-folders-add">
-        <a href="AdminFieldsGroup.do?command=AddGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>">Add a Group to this Folder</a><br>
-        &nbsp;<br>
-      </dhv:permission>
+  <strong>Module:</strong> <%= toHtml(PermissionCategory.getCategory()) %><br>
+  <strong>Folder:</strong> <%= CategoryList.getHtmlSelect("catId", Category.getId()) %><br>
+  &nbsp;<br>
+  <dhv:permission name="admin-sysconfig-folders-add">
+    <a href="AdminFieldsGroup.do?command=AddGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>">Add a Group to this Folder</a><br>
+    &nbsp;<br>
+  </dhv:permission>
 <%
   if (Category.size() > 0) {
     int rowId = 0;
@@ -91,20 +81,20 @@ Folder<br>
     </tr>
   </table>
   </dhv:permission>
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="title">
-      <td <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete,admin-sysconfig-folders-add">colspan="3" </dhv:permission><dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete" none="true">colspan="2" </dhv:permission>width="100%" nowrap>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <th <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete,admin-sysconfig-folders-add">colspan="3" </dhv:permission><dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete" none="true">colspan="2" </dhv:permission>width="100%" nowrap>
         <strong><%= thisGroup.getName() %></strong>
-      </td>
-      <td align="center">
+      </th>
+      <th align="center">
         <strong>Enabled</strong>
-      </td>
-      <td align="center" nowrap>
+      </th>
+      <th align="center" nowrap>
         <strong>Active Date</strong>
-      </td>
-      <td align="center" nowrap>
+      </th>
+      <th align="center" nowrap>
         <strong>End Date</strong>
-      </td>
+      </th>
     </tr>
 <%      
       Iterator fields = thisGroup.iterator();
@@ -146,16 +136,16 @@ Folder<br>
         <%= toHtml(toDateString(thisField.getEndDate())) %>
       </td>
     </tr>
-<%    
+<%
       }
 %>
   </table>
   &nbsp;<br>
-<%      
+<%
     }
   } else {
 %>
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <table cellpadding="4" cellspacing="0" border="1" width="100%" class="details">
     <tr class="containerBody">
       <td colspan="6">
         No groups have been added.
@@ -164,13 +154,10 @@ Folder<br>
   </table>
   &nbsp;<br>
 <%}%>
-      <input type="hidden" name="dosubmit" value="true">
-      <input type="hidden" name="moduleId" value="<%= ModId %>">
-      <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
-      <dhv:permission name="admin-sysconfig-folders-delete">
-        <input type='submit' value='Delete this folder and all fields' onClick="javascript:this.form.dosubmit.value='true';">
-      </dhv:permission>
-    </td>
-  </tr>
-</table>
+  <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="moduleId" value="<%= ModId %>">
+  <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
+  <dhv:permission name="admin-sysconfig-folders-delete">
+    <input type='submit' value='Delete this folder and all fields' onClick="javascript:this.form.dosubmit.value='true';">
+  </dhv:permission>
 </form>

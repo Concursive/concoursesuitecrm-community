@@ -95,11 +95,11 @@
 <input type=reset value="Reset">
 <br>
 <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
-      <strong>Add a New Contact</strong>
-    </td>     
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong>Add a Contact</strong>
+    </th>
   </tr>
     <tr class="containerBody">
     <td class="formLabel" nowrap>
@@ -112,7 +112,7 @@
       <% }else{ %>
         <input type="radio" name="contactcategory" value="1" onclick="javascript:updateCategoryInfo('general');" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>
       <% } %>
-      <table cellspacing="0" cellpadding="0" border="0">
+      <table cellspacing="0" cellpadding="0" border="0" class="empty">
           <tr>
             <td>
               <input type="radio" name="contactcategory" value="2" onChange="javascript:updateCategoryInfo('account');" <%= ContactDetails.getOrgId() > -1 ? " checked":""%>>
@@ -136,7 +136,7 @@
       Contact Type(s)
     </td>
     <td>
-      <table border="0" cellspacing="0" cellpadding="0">
+      <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td>
             <select multiple name="selectedList" id="selectedList" size="5">

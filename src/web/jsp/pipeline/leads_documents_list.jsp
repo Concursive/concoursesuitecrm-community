@@ -15,33 +15,25 @@ Documents<br>
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="leads_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + opportunityHeader.getId(); %>      
-      <dhv:container name="opportunities" selected="documents" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="leads_details_header_include.jsp" %>
+<% String param1 = "id=" + opportunityHeader.getId(); %>      
+<dhv:container name="opportunities" selected="documents" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <dhv:permission name="pipeline-opportunities-documents-add"><a href="LeadsDocuments.do?command=Add&headerId=<%= opportunityHeader.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
       <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td width="10" align="center">Action</td>
-    <td>Item</td>
-    <td align="center">Ext</td>
-    <td align="center">Size</td>
-    <td align="center">Version</td>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th width="10" align="center">Action</th>
+    <th>Item</th>
+    <th align="center">Ext</th>
+    <th align="center">Size</th>
+    <th align="center">Version</th>
     <dhv:permission name="pipeline-opportunities-documents-add">
-      <td>&nbsp;</td>
+      <th>&nbsp;</th>
     </dhv:permission>
-    <td>Submitted</td>
+    <th>Submitted</th>
   </tr>
 <%
   Iterator j = FileItemList.iterator();

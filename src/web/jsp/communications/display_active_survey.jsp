@@ -58,7 +58,7 @@ function validateRadio (field) {
 &nbsp;<br>
 &nbsp;<br>
 <center>
-<table cellpadding="4" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="85%">
   <tr class="row1">
     <td>
       <font color="#8c8c8c"><strong>Web Survey</strong></font>
@@ -67,7 +67,7 @@ function validateRadio (field) {
 </table>
 &nbsp;<br>
 <form name="survey" action="ProcessSurvey.do?command=Insert&auto-populate=true"  method="post" onSubmit="return checkForm(this);">
-  <table cellpadding="0" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <table cellpadding="0" cellspacing="0" border="0" width="85%">
     <tr class="containerBody">
       <td colspan="2" valign="center">
         <%= toHtml(ActiveSurvey.getIntro()) %>
@@ -75,7 +75,7 @@ function validateRadio (field) {
     </tr>
   </table>
   &nbsp;<br>
-  <table cellpadding="4" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <table cellpadding="4" cellspacing="0" border="0" width="85%">
     <%
   Iterator j = ActiveSurvey.getQuestions().iterator();
 	if ( j.hasNext() ) {
@@ -87,7 +87,7 @@ function validateRadio (field) {
    %>
  <tr>
   <td width="100%" valign="top">
-    <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+    <table cellpadding="4" cellspacing="0" width="100%" class="details">
       <tr>
         <td colspan="7" width="100%" valign="center" class="containerHeader">
           <input type="hidden" name="quest<%= count %>id" value="<%= thisQuestion.getId() %>">

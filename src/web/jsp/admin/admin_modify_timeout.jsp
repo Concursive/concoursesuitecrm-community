@@ -7,11 +7,11 @@ Modify Timeout<br>
 The session timeout is the time in which a user will automatically be logged out if the specified period of inactivity is reached.<br>
 &nbsp;<br>
 <dhv:permission name="admin-sysconfig-view">
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="title">
-      <td colspan="2">
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
         <strong>Modify Timeout</strong>
-      </td>
+      </th>
     </tr>
     <tr class="containerBody">
       <td align="center" width="12">

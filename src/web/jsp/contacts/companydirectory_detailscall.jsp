@@ -14,30 +14,22 @@
 Call Details
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="contact_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + ContactDetails.getId(); 
-          String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-      <dhv:container name="contacts" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
-    </td>
-  </tr>
+<%@ include file="contact_details_header_include.jsp" %>
+<% String param1 = "id=" + ContactDetails.getId(); 
+   String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+<dhv:container name="contacts" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <dhv:permission name="contacts-external_contacts-calls-edit"><input type="submit" name="command" value="Modify"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-calls-delete"><input type="button" value="Delete" onClick="javascript:popURL('ExternalContactsCalls.do?command=ConfirmDelete&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId()%><%= isPopup(request) ? "" : "&popup=true" %><%= addLinkParams(request, "popup|popupType|actionId") %>', 'CONFIRM_DELETE','320','200','yes','no');"></dhv:permission>
-<dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardMessage&forwardType=<%= Constants.CONTACTS_CALLS %>&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %>;'"></dhv:permission>
+<dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardMessage&forwardType=<%= Constants.CONTACTS_CALLS %>&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %>'"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete"><br>&nbsp;</dhv:permission>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Call Details</strong>  
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>

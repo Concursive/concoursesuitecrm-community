@@ -5,7 +5,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <form name="modForm" action="CampaignManager.do?command=Update&id=<%= Campaign.getId() %>&auto-populate=true" method="post">
 <a href="CampaignManager.do?command=View">Back to Campaign List</a><br>&nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr class="containerHeader">
     <td>
       <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
@@ -14,11 +14,11 @@
   <tr>
     <td class="containerBack">
 Add Recipient | Rebuild Recipients from Groups<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Recipients</strong>
-    </td>     
+    </th>
   </tr>
 <%
   Iterator i = sclList.iterator();

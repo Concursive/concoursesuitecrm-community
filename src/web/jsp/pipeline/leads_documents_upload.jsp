@@ -45,27 +45,19 @@ Upload Document<br>
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <form method="post" name="inputForm" action="LeadsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="leads_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + opportunityHeader.getId(); %>      
-      <dhv:container name="opportunities" selected="documents" param="<%= param1 %>" />
-    </td>
-  </tr>
+<form method="post" name="inputForm" action="LeadsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+<%@ include file="leads_details_header_include.jsp" %>
+<% String param1 = "id=" + opportunityHeader.getId(); %>      
+<dhv:container name="opportunities" selected="documents" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th colspan="2">
       <img border="0" src="images/file.gif" align="absmiddle"><b>Upload a New Document</b>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">

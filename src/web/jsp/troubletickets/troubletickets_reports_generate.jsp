@@ -31,11 +31,11 @@ Generate New Report<br>
 <input type="button" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Reports';javascript:this.form.submit();">
 <br>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="5">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="5">
       <strong>Generate a New Report</strong>
-    </td>
+    </th>
   </tr>
   <tr>
     <td class="formLabel">
@@ -99,7 +99,7 @@ Generate New Report<br>
       </select>
      </td>
      <td width="25">
-       <table width="100%" cellspacing="0" cellpadding="2" border="0">
+       <table width="100%" cellspacing="0" cellpadding="2" border="0" class="empty">
          <tr>
            <td>
              <input type="button" value="All >" onclick="javascript:allValues()">
@@ -125,7 +125,7 @@ Generate New Report<br>
       </select>
     </td>
     <td width="25">
-      <table width="100%" cellspacing="0" cellpadding="2" border="0">
+      <table width="100%" cellspacing="0" cellpadding="2" border="0" class="empty">
         <tr>
           <td>
             <input type="button" value="Up" onclick="javascript:moveOptionUp(document.generate.selectedList)">

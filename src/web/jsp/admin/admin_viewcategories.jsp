@@ -71,68 +71,60 @@ function activate(){
 
 </script>
 <%--  This jsp is currently ticket specific but can be extended to make it generic  --%>
-<table border="1" width="100%" cellpadding="4" cellspacing="0">
-  <tr class="containerHeader">
-    <td align="left" colspan="4">
-      <strong>Categories</strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "moduleId=" + PermissionCategory.getId();   %>
-      <dhv:container name="categories" selected="draft categories" param="<%= param1 %>"/>
-    </td>
-  </tr>
+<strong>Categories</strong>
+<% String param1 = "moduleId=" + PermissionCategory.getId();   %>
+<dhv:container name="categories" selected="draft categories" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
-  <td align="center">
-    <table border="0" cellspacing="0" cellpadding="2">
-    <tr>
-      <td align="center">
-        Level 1<br>
-        <% int value = ((selectedCategories.get(new Integer(0)) != null) ? ((Integer) selectedCategories.get(new Integer(0))).intValue() : -1); 
-        CategoryEditor.getTopCategoryList().getCatListSelect().setSelectSize(10);
-        CategoryEditor.getTopCategoryList().setHtmlJsEvent("onChange=\"javascript:loadCategories('0');\"");
-        CategoryEditor.getTopCategoryList().getCatListSelect().addAttribute("style", "width: 150px");
-        %>
-        
-        <%= CategoryEditor.getTopCategoryList().getHtmlSelect("level0", value) %><br>
-        <input type="button" value="Edit" id="edit0" onClick="javascript:editCategory('0');">
-      </td>
-      <td align="center">
-        Level 2 <br>
-        <% value = ((selectedCategories.get(new Integer(1)) != null) ? ((Integer) selectedCategories.get(new Integer(1))).intValue() : -1);
-        SubList1.getCatListSelect().setSelectSize(10);
-        SubList1.getCatListSelect().addAttribute("style", "width: 150px");
-        %>
-        <%= SubList1.getHtmlSelect("level1", value) %><br>
-        <input type="button" value="Edit" id="edit1" onClick="javascript:editCategory('1');" disabled>
-      </td>
-      <td align="center">
-        Level 3<br>
-        <% value = ((selectedCategories.get(new Integer(2)) != null) ? ((Integer) selectedCategories.get(new Integer(2))).intValue() : -1);
-        SubList2.getCatListSelect().setSelectSize(10);
-        SubList2.getCatListSelect().addAttribute("style", "width: 150px");
-        %>
-        <%= SubList2.getHtmlSelect("level2", value) %><br>
-        <input type="button" value="Edit" id="edit2" onClick="javascript:editCategory('2');" disabled>
-      </td>
-      <td align="center">
-        Level 4<br>
-        <%
-          SubList3.getCatListSelect().setSelectSize(10);
-          SubList3.getCatListSelect().addAttribute("style", "width: 150px");
-        %>
-        <%= SubList3.getHtmlSelect("level3", -1) %><br>
-        <input type="button" value="Edit" id="edit3" onClick="javascript:editCategory('3');" disabled>
-      </td>
-    </tr>
-    </table>
-  </td>
- </tr>
-</table><br>
+    <td class="containerBack" align="center">
+      <table border="0" cellpadding="2" cellspacing="0" class="empty">
+        <tr>
+          <td align="center">
+            Level 1<br>
+            <% int value = ((selectedCategories.get(new Integer(0)) != null) ? ((Integer) selectedCategories.get(new Integer(0))).intValue() : -1); 
+            CategoryEditor.getTopCategoryList().getCatListSelect().setSelectSize(10);
+            CategoryEditor.getTopCategoryList().setHtmlJsEvent("onChange=\"javascript:loadCategories('0');\"");
+            CategoryEditor.getTopCategoryList().getCatListSelect().addAttribute("style", "width: 150px");
+            %>
+            
+            <%= CategoryEditor.getTopCategoryList().getHtmlSelect("level0", value) %><br>
+            <input type="button" value="Edit" id="edit0" onClick="javascript:editCategory('0');">
+          </td>
+          <td align="center">
+            Level 2 <br>
+            <% value = ((selectedCategories.get(new Integer(1)) != null) ? ((Integer) selectedCategories.get(new Integer(1))).intValue() : -1);
+            SubList1.getCatListSelect().setSelectSize(10);
+            SubList1.getCatListSelect().addAttribute("style", "width: 150px");
+            %>
+            <%= SubList1.getHtmlSelect("level1", value) %><br>
+            <input type="button" value="Edit" id="edit1" onClick="javascript:editCategory('1');" disabled>
+          </td>
+          <td align="center">
+            Level 3<br>
+            <% value = ((selectedCategories.get(new Integer(2)) != null) ? ((Integer) selectedCategories.get(new Integer(2))).intValue() : -1);
+            SubList2.getCatListSelect().setSelectSize(10);
+            SubList2.getCatListSelect().addAttribute("style", "width: 150px");
+            %>
+            <%= SubList2.getHtmlSelect("level2", value) %><br>
+            <input type="button" value="Edit" id="edit2" onClick="javascript:editCategory('2');" disabled>
+          </td>
+          <td align="center">
+            Level 4<br>
+            <%
+              SubList3.getCatListSelect().setSelectSize(10);
+              SubList3.getCatListSelect().addAttribute("style", "width: 150px");
+            %>
+            <%= SubList3.getHtmlSelect("level3", -1) %><br>
+            <input type="button" value="Edit" id="edit3" onClick="javascript:editCategory('3');" disabled>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
 <input type="button" value="Revert to Active List" onClick="javascript:confirmReset('AdminCategories.do?command=Reset&moduleId=<%= PermissionCategory.getId() %>', 'You will lose all the changes made to the draft. Proceed ?');">
 <input type="button" value="Activate Now" onClick="javascript:activate();">
-
 <%-- script to enable edit buttons if any categories are selected --%>
 <script>
 <%
@@ -164,6 +156,4 @@ function activate(){
 %>
 </script>
 <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-
-
 

@@ -92,19 +92,11 @@
   Modify Contact<br>
   <hr color="#BFBFBB" noshade>
   </dhv:evaluate>
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="contact_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + ContactDetails.getId(); 
-          String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-      <dhv:container name="contacts" selected="details" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
-    </td>
-  </tr>
+<%@ include file="contact_details_header_include.jsp" %>
+<% String param1 = "id=" + ContactDetails.getId(); 
+   String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+<dhv:container name="contacts" selected="details" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
@@ -118,11 +110,11 @@
 <input type=reset value="Reset">
 <br>
 <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
-      <strong>Add a New Contact</strong>
-    </td>     
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong><%= ContactDetails.getId() > 0 ? "Update" : "Add" %> a Contact</strong>
+    </th>
   </tr>
     <tr class="containerBody">
     <td class="formLabel" nowrap>
@@ -141,7 +133,7 @@
      <dhv:evaluate if="<%= ContactDetails.getOrgId() == -1 %>">
         <input type="radio" name="contactcategory" value="1" onclick="javascript:document.forms[0].orgId.value = '-1';" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>
      </dhv:evaluate>
-      <table cellspacing="0" cellpadding="0" border="0">
+      <table cellspacing="0" cellpadding="0" border="0" class="empty">
           <tr>
             <td>
               <input type="radio" name="contactcategory" value="2" <%= ContactDetails.getOrgId() > -1 ? " checked":""%>>
@@ -167,7 +159,7 @@
       Contact Type(s)
     </td>
     <td>
-      <table border="0" cellspacing="0" cellpadding="0">
+      <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td>
             <select multiple name="selectedList" id="selectedList" size="5">

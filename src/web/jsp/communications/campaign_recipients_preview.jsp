@@ -9,44 +9,36 @@
 <a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
 Recipients
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td colspan="2">
-      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td colspan="2">
-      <% String param1 = "id=" + Campaign.getId(); %>
-      <dhv:container name="communications" selected="recipients" param="<%= param1 %>" />
-    </td>
-  </tr>
+<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
+<% String param1 = "id=" + Campaign.getId(); %>
+<dhv:container name="communications" selected="recipients" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td class="containerBack">
     <center><%= CampaignDashboardRecipientInfo.getAlphabeticalPageLinks() %></center>
     <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CampaignDashboardRecipientInfo"/>
-	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	  <tr class="title">
-	    <td colspan="6">
+	<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+	  <tr>
+	    <th colspan="6">
 	      <strong>List of Recipients</strong>
-	    </td>     
+	    </th>     
 	  </tr>
-	  <tr class="title">
-	    <td width="24" align="center" nowrap>
+	  <tr>
+	    <th width="24" align="center" nowrap>
 	      Count
-	    </td>
-	    <td>
+	    </th>
+	    <th>
 	      Name
-	    </td>
-	    <td width="100%">
+	    </th>
+	    <th width="100%">
 	      Company
-	    </td>
-	    <td align="center" nowrap>
+	    </th>
+	    <th align="center" nowrap>
 	      Sent Date
-	    </td>
-	    <td align="center" nowrap>
+	    </th>
+	    <th align="center" nowrap>
 	      Status
-	    </td>
+	    </th>
 	  </tr>
 	<%
 		Iterator j = RecipientList.iterator();
@@ -88,6 +80,6 @@ Recipients
 	  </tr>
 	</table>
 	<%}%>
-     </td>	
+     </td>
    </tr>
 </table>

@@ -11,18 +11,10 @@
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 Vehicle Inventory List<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong><%= toHtml(OrgDetails.getName()) %></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <dhv:permission name="accounts-autoguide-inventory-add"><a href="AccountsAutoGuide.do?command=AccountAdd&orgId=<%= OrgDetails.getOrgId() %>">Add a Vehicle</a></dhv:permission>
@@ -47,37 +39,37 @@ Vehicle Inventory List<br>
   </tr>
 </table>
 
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
     <dhv:permission name="accounts-autoguide-inventory-edit,accounts-autoguide-inventory-delete">
-    <td valign="center" align="left" class="title">
+    <th valign="center" align="left" class="title">
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td>
+    <th>
       <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Year</a></strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Make</a></strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Model</a></strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Mileage</a></strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Color</a></strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Next Ad</a></strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Photo</a></strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Sold</a></strong>
-    </td>
+    </th>
   </tr>
 <%    
 	Iterator i = InventoryList.iterator();
@@ -96,37 +88,37 @@ Vehicle Inventory List<br>
 			
       Inventory thisItem = (Inventory)i.next();
 %>
-      <tr>
+      <tr class="row<%= rowid %>">
         <dhv:permission name="accounts-autoguide-inventory-edit,accounts-autoguide-inventory-delete">
-        <td width="8" valign="center" nowrap class="row<%= rowid %>">
+        <td width="8" valign="center" nowrap>
           <dhv:permission name="accounts-autoguide-inventory-edit"><a href="AccountsAutoGuide.do?command=AccountModify&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-autoguide-inventory-edit,accounts-autoguide-inventory-delete" all="true">|</dhv:permission><dhv:permission name="accounts-autoguide-inventory-delete"><a href="javascript:confirmDelete('AccountsAutoGuide.do?command=Delete&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId() %>');">Del</a></dhv:permission>
         </td>
         </dhv:permission>
-        <td class="row<%= rowid %>" nowrap>
+        <td nowrap>
           <a href="AccountsAutoGuide.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId() %>"><%= thisItem.getVehicle().getYear() %></a>
         </td>
-        <td class="row<%= rowid %>" nowrap>
+        <td nowrap>
           <%= toHtml(thisItem.getVehicle().getMake().getName()) %>
         </td>
-        <td class="row<%= rowid %>" nowrap>
+        <td nowrap>
           <%= toHtml(thisItem.getVehicle().getModel().getName()) %>
 					<dhv:evaluate exp="<%= hasText(thisItem.getStyle()) %>">
 						<%= toHtml(thisItem.getStyle()) %>
 					</dhv:evaluate>
         </td>
-        <td class="row<%= rowid %>" align="right">
+        <td style="text-align: right;">
           <%= toHtml(thisItem.getMileageString()) %>
         </td>
-        <td class="row<%= rowid %>">
+        <td>
           <%= toHtml(thisItem.getExteriorColor()) %>
         </td>
-        <td class="row<%= rowid %>">
+        <td nowrap>
           <%= (thisItem.hasAdRuns()?toDateString(thisItem.getAdRuns().getNextAdRun().getRunDate()):"&nbsp;") %>
         </td>
-        <td class="row<%= rowid %>" nowrap>
+        <td nowrap>
           <%= (thisItem.hasPictureId()?"yes":"&nbsp;") %>
         </td>
-        <td class="row<%= rowid %>" nowrap>
+        <td nowrap>
           <%= (thisItem.getSold()?"yes":"no") %>
         </td>
       </tr>

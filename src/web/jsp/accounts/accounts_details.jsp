@@ -11,18 +11,10 @@
 <%}%>
 Account Details<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="details" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="details" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
@@ -38,11 +30,11 @@ Account Details<br>
 </dhv:evaluate>
 <dhv:permission name="accounts-accounts-delete"><input type="button" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br>&nbsp;</dhv:permission>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Primary Information</strong>
-    </td>     
+    </th>     
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -175,11 +167,11 @@ Account Details<br>
   </tr>
 </table>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Phone Numbers</strong>
-	  </td>
+	  </th>
   </tr>
 <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
 <%  
@@ -235,11 +227,11 @@ Account Details<br>
 </dhv:evaluate>
 </table>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF"> 
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Addresses</strong>
-	  </td>
+	  </th>
   </tr>
 <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
 <%  
@@ -295,11 +287,11 @@ Account Details<br>
 </dhv:evaluate>
 </table>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr class="title">
-    <td colspan="2">
+    <th colspan="2">
 	    <strong>Email Addresses</strong>
-	  </td>
+	  </th>
   </tr>
 <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
 <%
@@ -355,11 +347,11 @@ Account Details<br>
 </dhv:evaluate>
 </table>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Additional Details</strong>
-	  </td>
+	  </th>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">

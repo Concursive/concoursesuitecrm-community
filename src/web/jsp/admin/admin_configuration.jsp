@@ -7,7 +7,7 @@ Configure Modules<br>
 <hr color="#BFBFBB" noshade>
 Setup CFS to meet the specific needs of your organization, including configuration of lookup lists and custom fields.  Choose a CFS module to proceed.<br>
 &nbsp;<br>
-<table cellpadding="0" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>
     <td width="49%" valign="top">
 <%
@@ -18,11 +18,11 @@ Setup CFS to meet the specific needs of your organization, including configurati
     count++;
     PermissionCategory thisPermissionCat = (PermissionCategory)i.next();
 %>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td>
+      <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+        <tr>
+          <th>
             <strong><a href="Admin.do?command=ConfigDetails&moduleId=<%=thisPermissionCat.getId()%>"><%=thisPermissionCat.getCategory()%></a></strong>
-          </td>
+          </th>
         </tr>
         <tr class="containerBody">
           <td>

@@ -10,18 +10,10 @@
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 Revenue<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="revenue" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="revenue" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <dhv:permission name="accounts-accounts-revenue-add"><a href="RevenueManager.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add Revenue</a></dhv:permission>
@@ -41,29 +33,29 @@ Revenue<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-<tr class="title">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+<tr>
   <dhv:permission name="accounts-accounts-revenue-edit,accounts-accounts-revenue-delete">
-  <td width="8">
+  <th width="8">
     <strong>Action</strong>
-  </td>
+  </th>
   </dhv:permission>
-  <td width="100%" nowrap>
+  <th width="100%" nowrap>
     <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=description">Description</a></strong>
     <%= RevenueListInfo.getSortIcon("description") %>
-  </td>  
-  <td align="center" nowrap>
+  </th>  
+  <th align="center" nowrap>
     <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=r.month">Month</a></strong>
     <%= RevenueListInfo.getSortIcon("r.month") %>
-  </td>   
-  <td align="center" nowrap>
+  </th>
+  <th align="center" nowrap>
     <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=r.year,r.month">Year</a></strong>
     <%= RevenueListInfo.getSortIcon("r.year,r.month") %>
-  </td>
-  <td align="center" nowrap>
+  </th>
+  <th align="center" nowrap>
     <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=amount">Amount</a></strong>
     <%= RevenueListInfo.getSortIcon("amount") %>
-  </td>
+  </th>
 </tr>
 <%
 	Iterator j = RevenueList.iterator();

@@ -8,23 +8,23 @@
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
 Scheduled Events<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th>
       <strong>Action</strong>
-    </td>
-    <td width="50%" nowrap>
+    </th>
+    <th width="50%" nowrap>
       <strong>Process to Execute</strong>
-    </td>
-    <td width="50%">
+    </th>
+    <th width="50%">
       <strong>Schedule</strong>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong>Number of<br>components</strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Available</strong>
-    </td>
+    </th>
   </tr>
 <%
     Iterator i = processList.values().iterator();

@@ -15,11 +15,11 @@ Message Details<br>
 <input type="button" name="btn" value="Forward" onClick="javascript:window.location.href='MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%=NoteDetails.getId()%>'">
 <input type="button" name="btn" value="Delete" onClick="javascript:window.location.href='MyCFSInbox.do?command=CFSNoteDelete&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>';">
 <br>&nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong><%= toHtml(NoteDetails.getSubject()) %></strong> 
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">

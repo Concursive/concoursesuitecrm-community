@@ -9,18 +9,10 @@
 <a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Groups
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + Campaign.getId(); %>
-      <dhv:container name="communications" selected="groups" param="<%= param1 %>" />
-    </td>
-  </tr>
+<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
+<% String param1 = "id=" + Campaign.getId(); %>
+<dhv:container name="communications" selected="groups" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td class="containerBack">
       <%
@@ -31,11 +23,11 @@ Groups
           rowid = 2;
           String groupName = (String) i.next();
       %>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td colspan="2">
+      <table cellpadding="4" cellspacing="0" width="100%" class="details">
+        <tr>
+          <th colspan="2">
             <strong><%= toHtml(groupName) %></strong>
-          </td>
+          </th>
         </tr>
         <tr class="containerBody">
           <td valign="top" class="formLabel" nowrap>
@@ -66,7 +58,7 @@ Groups
         }
         if (Campaign.getGroups().size() == 0) {
       %>  
-       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <table cellpadding="4" cellspacing="0" width="100%" class="details">
         <tr class="containerBody">
           <td colspan="3">
             No groups selected.

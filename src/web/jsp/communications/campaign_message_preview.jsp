@@ -18,25 +18,17 @@ function downloadMessage(campaignId){
 <a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Message
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + Campaign.getId(); %>
-      <dhv:container name="communications" selected="message" param="<%= param1 %>" />
-    </td>
-  </tr>
+<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
+<% String param1 = "id=" + Campaign.getId(); %>
+<dhv:container name="communications" selected="message" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td width="100%" class="containerBack">
-     <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td colspan="2" valign="center" align="left">
+     <table cellpadding="4" cellspacing="0" width="100%" class="details">
+        <tr>
+          <th colspan="2" valign="center" align="left">
              <strong>Message Details</strong>
-          </td>
+          </th>
         </tr>
         <tr class="containerBody">
             <td valign="top" align="left">
@@ -51,7 +43,7 @@ Message
               int rowid = 0;
             %>
             <td valign="top" align="right" width="20%">
-              <table cellpadding="4" cellspacing="0" border="0" width="20%">
+              <table cellpadding="4" cellspacing="0" border="0" width="20%" class="empty">
                 <tr class="containerBody">
                   <td valign="top" align="left">
                        <strong>Attachments:</strong>

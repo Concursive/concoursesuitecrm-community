@@ -4,11 +4,11 @@
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Email Addresses</strong>
-	  </td>
+	  </th>
   </tr>
 <%
   int ecount = 0;
@@ -50,11 +50,11 @@
 %>
 </table>
 <div align="center" style="padding:3px;">Note: All international phone numbers must be preceded by a "+" symbol.</div>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Phone Numbers</strong>
-	  </td>
+	  </th>
   </tr>
 <%  
   int icount = 0;
@@ -97,11 +97,11 @@
 <%}%>  
 </table>
 &nbsp;<br>  
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Addresses</strong>
-    </td>
+    </th>
   </tr>
 <%  
   int acount = 0;
@@ -279,11 +279,11 @@
 <%}%>  
 </table>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Additional Details</strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">

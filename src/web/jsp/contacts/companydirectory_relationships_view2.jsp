@@ -8,18 +8,10 @@
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 Relationships
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="contact_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + ContactDetails.getId(); %>      
-      <dhv:container name="contacts" selected="relationships" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="contact_details_header_include.jsp" %>
+<% String param1 = "id=" + ContactDetails.getId(); %>      
+<dhv:container name="contacts" selected="relationships" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <dhv:permission name="demo-add"><a href="ExternalContactsPrototype.do?module=ExternalContacts&include=companydirectory_relationships_add.jsp&contactId=<%= ContactDetails.getId() %>">Build New Relationship</a></dhv:permission><br>
@@ -29,17 +21,15 @@ Relationships
 <input type="BUTTON" value="Build Group" onclick=""><br>
 &nbsp;<br>
 How Direct? <%= howDirectSelect.getHtml() %><br>
-
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td valign="center" align="left">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th valign="center" align="left">
       <strong>Relationships</strong>
-    </td>
-    <td valign="center" align="left">
+    </th>
+    <th valign="center" align="left">
       <strong>Index</strong>
-    </td>
+    </th>
   </tr>
-  <!-- Paged List -->
   <tr class="containerBody">
     <td width="100%" valign="center" class="row1">
       <a href="#">Name</a> (Spouse) to <%= toHtml(ContactDetails.getNameFull()) %>
@@ -64,7 +54,6 @@ How Direct? <%= howDirectSelect.getHtml() %><br>
       .60
     </td>
   </tr>
-  <!-- End Paged List -->
 </table>
 </td>
 </tr>

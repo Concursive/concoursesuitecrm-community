@@ -10,19 +10,10 @@
 <a href="AccountTickets.do?command=TicketDetails&id=<%=TicketDetails.getId()%>">Ticket Details</a> >
 History<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <%-- submenu for accounts --%>
-      <% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="tickets" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="tickets" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
   	<td class="containerBack">
         <% String param2 = "id=" + TicketDetails.getId(); %>
@@ -33,11 +24,11 @@ History<br>
         </dhv:evaluate>
         <br><br>
         <%-- display history --%>
-        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-          <tr class="title">
-            <td colspan="4">
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+          <tr>
+            <th colspan="4">
               <strong>Ticket Log History</strong>
-            </td>     
+            </th>     
           </tr>
         <%  
             Iterator hist = TicketDetails.getHistory().iterator();

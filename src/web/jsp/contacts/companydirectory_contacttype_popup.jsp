@@ -22,14 +22,14 @@
       </td>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td width="8">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th width="8">
       &nbsp;
-    </td>
-    <td width="100%">
+    </th>
+    <th width="100%">
       Option
-    </td>
+    </th>
   </tr>
 <%
   Iterator j = ContactTypeList.iterator();

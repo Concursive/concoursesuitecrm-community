@@ -26,24 +26,24 @@ Surveys
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
   <dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete">
-   <td>
+   <th>
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td nowrap>
+    <th nowrap>
       <a href="CampaignManagerSurvey.do?command=View&column=name"><strong>Name</strong></a>
       <%= CampaignSurveyListInfo.getSortIcon("name") %>
-    </td>  
-    <td nowrap>
+    </th>  
+    <th nowrap>
       <strong>Entered By</strong>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <a href="CampaignManagerSurvey.do?command=View&column=s.modified"><strong>Last Modified</strong></a>
       <%= CampaignSurveyListInfo.getSortIcon("s.modified") %>
-    </td>
+    </th>
   </tr>
 <%    
 	Iterator i = SurveyList.iterator();

@@ -11,16 +11,16 @@ Group Details
 <input type="button" name="cmd" value="Preview" onClick="window.location.href='CampaignManagerGroup.do?command=Preview&id=<%= request.getAttribute("id") %>&reset=true'">
 <br>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong><%= scl.getGroupName() %></strong>
-    </td>
+    </th>
   </tr>
-  <tr class="title">
-    <td colspan="2">
+  <tr>
+    <th colspan="2">
       Criteria
-    </td>
+    </th>
   </tr>
 <%
   LinkedHashMap criteriaList = scl.getCriteriaTextArray();

@@ -16,19 +16,9 @@
 <a href="AccountTickets.do?command=TicketDetails&id=<%=TicketDetails.getId()%>">Ticket Details</a> >
 Tasks<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <%-- submenu for accounts --%>
-      <% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="tickets" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<dhv:container name="accounts" selected="tickets" param="<%= "orgId=" + TicketDetails.getOrgId() %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
   	<td class="containerBack">
         <% String param2 = "id=" + TicketDetails.getId(); %>
@@ -41,29 +31,29 @@ Tasks<br>
         <%-- display all tasks --%>
         <a  href="javascript:popURL('AccountTicketTasks.do?command=Add&orgId=<%= TicketDetails.getOrgId() %>&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');">Add a Task</a><br>
         &nbsp;<br>
-        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-         <tr class="title">
-          <td align="center" nowrap>
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+          <tr>
+          <th align="center" nowrap>
             <strong>Action</strong>
-          </td>
-          <td align="center" nowrap>
+          </th>
+          <th align="center" nowrap>
             <strong>Priority</strong>
-          </td>
-           <td width="100%" nowrap>
+          </th>
+          <th width="100%" nowrap>
             <strong>Task</strong>
-          </td>
-          <td align="center" nowrap>
+          </th>
+          <th align="center" nowrap>
             <strong>Assigned To</strong>
-          </td>
-          <td align="center" nowrap>
+          </th>
+          <th align="center" nowrap>
             <strong>Due Date</strong>
-          </td>
-          <td align="center" nowrap>
+          </th>
+          <th align="center" nowrap>
             <strong>Complete Date</strong>
-          </td>
-          <td align="center" nowrap>
+          </th>
+          <th align="center" nowrap>
             <strong>Age</strong>
-          </td>
+          </th>
          </tr>
        <%
         Iterator j = TaskList.iterator();

@@ -11,18 +11,10 @@
 <a href="Viewpoints.do?command=ListViewpoints&userId=<%= request.getParameter("userId") %>">Viewpoints</a> >
 Update Viewpoint <br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + UserRecord.getId(); %>      
-      <dhv:container name="users" selected="viewpoints" param="<%= param1 %>" />
-    </td>
-  </tr>
+<strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
+<% String param1 = "id=" + UserRecord.getId(); %>      
+<dhv:container name="users" selected="viewpoints" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <dhv:permission name="admin-roles-edit">
@@ -36,11 +28,11 @@ Update Viewpoint <br>
 <input type="hidden" name="vpUserId" value="<%= Viewpoint.getVpUserId() %>">
 <input type="hidden" name="id" value="<%= Viewpoint.getId() %>">
 <input type="hidden" name="modified" value="<%= Viewpoint.getModified() %>">
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th colspan="2">
 	    <strong>Update Viewpoint</strong>
-	  </td>
+	  </th>
   </tr>
   <tr class="containerBody">
     <td width="150" align="right" class="formLabel">Viewpoint</td>
@@ -56,11 +48,11 @@ Update Viewpoint <br>
   </tr>
 </table>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="5">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="5">
 	    <strong>Permissions</strong>
-	  </td>
+	  </th>
   </tr>
 <%
   Iterator i = PermissionList.iterator();

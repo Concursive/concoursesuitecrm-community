@@ -4,17 +4,17 @@
 Global Parameters<br>
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="admin-sysconfig-view">
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="title">
-      <td width="8">
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <th width="8">
         <strong>Action</strong>
-      </td>
-      <td>
+      </th>
+      <th>
         <strong>Parameter</strong>
-      </td>
-      <td>
+      </th>
+      <th>
         <strong>Current Value</strong>
-      </td>
+      </th>
     </tr>
     <tr class="containerBody">
       <td align="center">

@@ -12,18 +12,10 @@
 Ticket Details<br>
 <hr color="#BFBFBB" noshade>
 <%-- Begin container --%>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="tickets" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="tickets" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
   	<td class="containerBack">
       <%-- Begin container content --%>
@@ -43,11 +35,11 @@ Ticket Details<br>
               <dhv:permission name="accounts-accounts-tickets-delete"><input type="button" value="Delete" onClick="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%= TicketDetails.getOrgId() %>&id=<%= TicketDetails.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');"></dhv:permission>
         <%}%>
         <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br>&nbsp;</dhv:permission>
-        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-          <tr class="title">
-            <td colspan="2">
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+          <tr>
+            <th colspan="2">
               <strong>Ticket Information</strong>
-            </td>     
+            </th>     
           </tr>
           <tr class="containerBody">
             <td class="formLabel">
@@ -148,11 +140,11 @@ Ticket Details<br>
         <%
           if (TicketDetails.getThisContact() != null ) {
         %>
-        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-          <tr class="title">
-            <td colspan="4">
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+          <tr>
+            <th colspan="4">
               <strong>Primary Contact</strong>
-            </td>     
+            </th>     
           </tr>
           <tr class="containerBody">
             <td class="formLabel">

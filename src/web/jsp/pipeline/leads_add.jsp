@@ -77,7 +77,7 @@ Add Opportunity<br>
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
@@ -85,10 +85,8 @@ Add Opportunity<br>
 <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
-
 <%--  include basic opportunity form --%>
 <%@ include file="opportunity_include.jsp" %>
-
 &nbsp;
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">

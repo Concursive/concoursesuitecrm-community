@@ -26,10 +26,10 @@ function updateList() {
 <a href="CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>">Attachments</a> >
 Surveys
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" width="100%" style="border: 1px solid #000;">
   <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   <tr class="containerHeader">
-    <td>
+    <td style="border-bottom: 1px solid #000;">
       <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
     </td>
   </tr>
@@ -40,11 +40,11 @@ Surveys
 </dhv:permission>
 <input type="button" value="Back to Attachment Overview" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'"><br>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2" valign="center" align="left">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2" valign="center">
       <strong>Select a survey for this campaign</strong>
-    </td>     
+    </th>
   </tr>
   <tr class="containerBody">
     <td valign="center" nowrap class="formLabel">

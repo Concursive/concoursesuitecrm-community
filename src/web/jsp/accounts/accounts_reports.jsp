@@ -26,30 +26,30 @@ Reports<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
     <dhv:permission name="accounts-accounts-reports-view,accounts-accounts-reports-delete">
-    <td>
+    <th>
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td nowrap>
+    <th nowrap>
       <strong><a href="Accounts.do?command=Reports&column=subject">Subject</a></strong>
       <%= RptListInfo.getSortIcon("subject") %>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Size</strong>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong><a href="Accounts.do?command=Reports&column=entered">Create Date</a></strong>
       <%= RptListInfo.getSortIcon("entered") %>
-    </td>
-     <td nowrap>
+    </th>
+    <th nowrap>
       <strong>Created By</strong>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong>D/L</strong>
-    </td>
+    </th>
   </tr>
 <%
 	Iterator j = FileList.iterator();

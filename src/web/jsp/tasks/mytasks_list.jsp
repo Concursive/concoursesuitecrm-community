@@ -11,26 +11,22 @@
 <form name="addTask" action="MyTasks.do?command=Insert&auto-populate=true" method="post" onSubmit="return validateTask();">
 <a href="MyCFS.do?command=Home">My Home Page</a> > My Tasks<br>
 <hr color="#BFBFBB" noshade>
- <table cellpadding="4" cellspacing="0" border="1" width="50%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="3">
+ <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th>
       <strong>Quickly Add a Task</strong>
-    </td>
+    </th>
   </tr>
   <tr>
-    <td valign="center" nowrap width="25%">
+    <td nowrap>
       Description&nbsp;
       <input type="text" name="description" value="" size="30">
       <font color="red">*</font>
       <input type="hidden" name="owner" value="<%= User.getUserRecord().getId() %>">
       <input type="hidden" name="priority" value="1">
-    </td>
-    <td valign="center" nowrap>
       <input type="checkbox" name="chk2" onclick="javascript:setField('sharing',document.addTask.chk2.checked,'addTask');">
       Personal
       <input type="hidden" name="sharing" value="">
-    </td>
-    <td valign="center" nowrap>
       <input type="submit" value="Insert">
     </td>
   </tr>
@@ -60,38 +56,38 @@
     </td>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-   <tr class="title">
-    <td align="center" nowrap>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+ <tr>
+    <th align="center" nowrap>
       <strong>Action</strong>
-    </td>
-    <td align="center" nowrap>
+    </th>
+    <th align="center" nowrap>
       <strong><a href="MyTasks.do?command=ListTasks&column=t.priority">Priority</a></strong>
       <%= TaskListInfo.getSortIcon("t.priority") %>
-    </td>
-     <td width="100%" nowrap>
+    </th>
+    <th width="100%" nowrap>
       <strong><a href="MyTasks.do?command=ListTasks&column=t.description">Task</a></strong>
       <%= TaskListInfo.getSortIcon("t.description") %>
-    </td>
+    </th>
     <% if (TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("tasksbyme")) { %>
-      <td align="center" nowrap>
+    <th align="center" nowrap>
       <strong>Assigned To</strong>
-    </td>
+    </th>
     <%}%>
-    <td align="center" nowrap>
+    <th align="center" nowrap>
       <strong><a href="MyTasks.do?command=ListTasks&column=t.duedate">Due Date</a></strong>
       <%= TaskListInfo.getSortIcon("t.duedate") %>
-    </td>
+    </th>
     <%if(TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("true")){%>
-    <td align="center" nowrap>
+    <th align="center" nowrap>
       <strong><a href="MyTasks.do?command=ListTasks&column=t.completedate">Complete Date</a></strong>
       <%= TaskListInfo.getSortIcon("t.completedate") %>
-    </td>
+    </th>
     <%}%>
-    <td align="center" nowrap>
+    <th align="center" nowrap>
       <strong><a href="MyTasks.do?command=ListTasks&column=t.entered">Age</a></strong>
       <%= TaskListInfo.getSortIcon("t.entered") %>
-    </td>
+    </th>
    </tr>
  <%
 	Iterator j = TaskList.iterator();
@@ -111,7 +107,7 @@
       <%= thisTask.getPriority()==-1?"-NA-":(new Integer(thisTask.getPriority())).toString() %>
     </td>
     <td>
-    <table cellpadding="0" cellspacing="0">
+    <table cellpadding="0" cellspacing="0" class="empty">
       <tr <%= thisTask.getComplete()?"class=\"strike\"":"class=\"\""%> id="complete<%=count%>">
         <td>
         <% boolean hasAuthority = false; %> 
@@ -167,7 +163,7 @@
         <td></td>
         <td>
           <span style="visibility:hidden" id="taskdetails<%= count %>">
-            <table>
+            <table class="empty">
               <tr>
                 <td>Contact Information: </td>
               </tr>

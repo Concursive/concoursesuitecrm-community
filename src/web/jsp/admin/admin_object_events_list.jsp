@@ -11,23 +11,23 @@
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
 Object Events<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th>
       <strong>Action</strong>
-    </td>
-    <td width="50%">
+    </th>
+    <th width="50%">
       <strong>Object Event</strong>
-    </td>
-    <td width="50%" nowrap>
+    </th>
+    <th width="50%" nowrap>
       <strong>Triggered Process</strong>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong>Number of<br>components</strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Available</strong>
-    </td>
+    </th>
   </tr>
 <dhv:evaluate if="<%= hookList.values().size() == 0 %>">
   <tr>

@@ -20,20 +20,20 @@ Your search for <b><%= request.getParameter("search") %></b> returned:
 Iterator i = ContactList.iterator();
 if (i.hasNext()) {
 %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th>
       <strong>Name</strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Company</strong>
-    </td>
-    <td width="100">
+    </th>
+    <th width="100">
       <strong>Phone: Business</strong>
-    </td>
-    <td width="100">
+    </th>
+    <th width="100">
       <strong>Phone: Mobile</strong>
-    </td>
+    </th>
   </tr>
 <%    
 	int rowid = 0;
@@ -71,20 +71,20 @@ if (i.hasNext()) {
   if (j.hasNext()) {
     int rowid = 0;
 %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th>
       <strong>Name</strong>
-    </td>
-    <td width="175">
+    </th>
+    <th width="175">
       <strong>Department</strong>
-    </td>
-    <td width="100">
+    </th>
+    <th width="100">
       <strong>Title</strong>
-    </td>
-    <td width="100" nowrap>
+    </th>
+    <th width="100" nowrap>
       <strong>Phone: Business</strong>
-    </td>
+    </th>
   </tr>
 <%    
     while (j.hasNext()) {
@@ -123,20 +123,20 @@ if (i.hasNext()) {
   if (k.hasNext()) {
     int rowid = 0;
 %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th>
       <strong>Account Name</strong>
-    </td>
-    <td width="175">
+    </th>
+    <th width="175">
       <strong>Email</strong>
-    </td>
-        <td width="100">
+    </th>
+    <th width="100">
       <strong>Phone</strong>
-    </td>
-    <td width="100">
+    </th>
+    <th width="100">
       <strong>Fax</strong>
-    </td>
+    </th>
   </tr>
 <%    
     while (k.hasNext()) {
@@ -168,20 +168,20 @@ if (i.hasNext()) {
   if (m.hasNext()) {
     int rowid = 0;
 %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-<tr class="title">
-    <td valign="center">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th valign="center">
       <strong>Opportunity</strong>
-    </td>
-    <td width="175" valign="center">
+    </th>
+    <th width="175" valign="center">
       <strong>Organization</strong>
-    </td>
-    <td width="100" valign="center">
+    </th>
+    <th width="100" valign="center">
       <strong>Amount</strong>
-    </td>
-    <td width="100" valign="center" nowrap>
+    </th>
+    <th width="100" valign="center" nowrap>
       <strong>Revenue Start</strong>
-    </td>
+    </th>
   </tr>
   <%
     while (m.hasNext()) {
@@ -231,15 +231,15 @@ if (i.hasNext()) {
   if (n.hasNext()) {
     int rowid = 0;
 %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td valign="center">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th valign="center">
       <strong>Number</strong>
-    </td>
-    <td><b>Priority</b></td>
-    <td><b>Age</b></td>
-    <td><b>Company</b></td>
-    <td><b>Assigned&nbsp;To</b></td>
+    </th>
+    <th><b>Priority</b></th>
+    <th><b>Age</b></th>
+    <th><b>Company</b></th>
+    <th><b>Assigned&nbsp;To</b></th>
   </tr>
   <%
   	while (n.hasNext()) {

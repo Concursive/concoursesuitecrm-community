@@ -28,7 +28,7 @@ else{%>
   <title><%= Dialog.getTitle() %></title>
   <body>
     <br>
-    <table cellpadding="4" cellspacing="0" border="0" width="95%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+    <table cellpadding="4" cellspacing="0" border="0" width="95%">
       <tr valign="center">
         <td>
           <center>

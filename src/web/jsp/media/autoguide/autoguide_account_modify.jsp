@@ -86,18 +86,10 @@
 </dhv:evaluate>
 Modify Vehicle<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong><%= toHtml(OrgDetails.getName()) %></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <input type="submit" value="Update">
@@ -108,11 +100,11 @@ Modify Vehicle<br>
 <input type="hidden" name="dosubmit" value="true">
 <br>
 <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan=2 valign=center align=left>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th colspan="2" valign="center">
       <strong>Modify Existing Vehicle Record</strong>
-    </td>     
+    </th>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -237,11 +229,11 @@ Modify Vehicle<br>
 </table>
 <br>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="3" valign="center" align="left">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th colspan="3" valign="center" align="left">
       <strong>Select Vehicle Options</strong>
-    </td>     
+    </th>
   </tr>
 <%
   int rows = (OptionList.size()/3);
@@ -293,11 +285,11 @@ Modify Vehicle<br>
 </table>
 <br>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td valign="center" align="left">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th valign="center" align="left">
       <strong>Select Ad Run Dates</strong>
-    </td>
+    </th>
   </tr>
 <%
   int runCount = 0;

@@ -65,26 +65,15 @@
 <%}%>
 Modify Ticket<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-    </td>
-  </tr>
-  <% if (TicketDetails.getClosed() != null) { %>  
-  <tr>
-    <td bgColor="#F1F0E0">
-      <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<% if (TicketDetails.getClosed() != null) { %>  
+  <br>
+  <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
 <%}%>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="tickets" param="<%= param1 %>" />
-    </td>
-  </tr>
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>
+<dhv:container name="accounts" selected="tickets" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
           <% String param2 = "id=" + TicketDetails.getId(); %>
@@ -113,11 +102,11 @@ Modify Ticket<br>
         <%}%>
               <br>
               <%= showError(request, "actionError") %>
-        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-          <tr class="title">
-            <td colspan="2">
-            <strong>Ticket Information</strong>
-            </td>     
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+          <tr>
+            <th colspan="2">
+              <strong>Ticket Information</strong>
+            </th>     
           </tr>
           <tr class="containerBody">
             <td class="formLabel">
@@ -143,18 +132,18 @@ Modify Ticket<br>
         </table>
         <br>
         <a name="categories"></a>
-        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-          <tr class="title">
-            <td colspan="2">
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+          <tr>
+            <th colspan="2">
               <strong>Classification</strong>
-            </td>     
+            </th>
           </tr>
           <tr class="containerBody">
             <td class="formLabel" valign="top">
               <dhv:label name="tickets-problem">Issue</dhv:label>
             </td>
             <td>
-              <table border="0" cellspacing="0" cellpadding="0">
+              <table border="0" cellspacing="0" cellpadding="0" class="empty">
                 <tr>
                   <td>
                     <textarea name="problem" cols="55" rows="3"><%= toString(TicketDetails.getProblem()) %></textarea>
@@ -209,11 +198,11 @@ Modify Ticket<br>
         </table>
         <br>
         <a name="department"></a> 
-        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-          <tr class="title">
-            <td colspan="2">
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+          <tr>
+            <th colspan="2">
               <strong>Assignment</strong>
-            </td>     
+            </th>
           </tr>
           <dhv:include name="tickets-severity" none="true">
           <tr class="containerBody">
@@ -261,11 +250,11 @@ Modify Ticket<br>
           </tr>
         </table>
         <br>
-        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-          <tr class="title">
-            <td colspan="2">
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+          <tr>
+            <th colspan="2">
               <strong>Resolution</strong>
-            </td>     
+            </th>
           </tr>
           <tr class="containerBody">
             <td class="formLabel" valign="top">

@@ -7,11 +7,11 @@
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <%= PermissionCategory.getCategory() %><br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th>
       <strong>Configuration Options</strong>
-    </td>
+    </th>
   </tr>
 <% 
   int count = 0;

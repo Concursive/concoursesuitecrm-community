@@ -8,18 +8,10 @@
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 Relationships
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="contact_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + ContactDetails.getId(); %>      
-      <dhv:container name="contacts" selected="relationships" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="contact_details_header_include.jsp" %>
+<% String param1 = "id=" + ContactDetails.getId(); %>      
+<dhv:container name="contacts" selected="relationships" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <dhv:permission name="demo-add"><a href="ExternalContactsPrototype.do?module=ExternalContacts&include=companydirectory_relationships_add.jsp&contactId=<%= ContactDetails.getId() %>">Build New Relationship</a></dhv:permission><br>
@@ -29,23 +21,22 @@ Relationships
 <input type="BUTTON" value="Build Group" onclick=""><br>
 &nbsp;<br>
 Relationship Type: <%= relationshipTypeSelect.getHtml() %><br>
-
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
     <dhv:permission name="demo-edit,demo-delete">
-    <td valign="center" align="left">
+    <th valign="center" align="left">
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td valign="center" align="left">
+    <th valign="center" align="left">
       <strong>Subject</strong>
-    </td>
-    <td valign="center" align="left">
+    </th>
+    <th valign="center" align="left">
       <strong>Relationship</strong>
-    </td>
-    <td valign="center" align="left">
+    </th>
+    <th valign="center" align="left">
       <strong>Object</strong>
-    </td>
+    </th>
   </tr>
   <!-- Paged List -->
   <tr class="containerBody">

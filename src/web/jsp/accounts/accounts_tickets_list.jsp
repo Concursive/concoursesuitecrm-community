@@ -10,18 +10,10 @@
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 Tickets<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="tickets" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="tickets" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <dhv:permission name="accounts-accounts-tickets-add"><a href="AccountTickets.do?command=AddTicket&orgId=<%= OrgDetails.getOrgId() %>">Add New Ticket</a>
@@ -29,32 +21,32 @@ Tickets<br>
 <br>
 </dhv:permission>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountTicketInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
     <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete">
-    <td>
+    <th>
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td align="center">
+    <th align="center">
       <strong>Status</strong>
-    </td>
-    <td width="100%" nowrap>
+    </th>
+    <th width="100%" nowrap>
       <strong><dhv:label name="tickets-problem"><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=problem">Issue</a></dhv:label></strong>
       <%= AccountTicketInfo.getSortIcon("problem") %>
-    </td>
-    <td align="center" nowrap>
+    </th>
+    <th align="center" nowrap>
       <strong><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=pri_code">Priority</a></strong>
       <%= AccountTicketInfo.getSortIcon("pri_code") %>
-    </td>
-    <td align="center" nowrap>
+    </th>
+    <th align="center" nowrap>
       <strong><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=entered">Age</a></strong>
       <%= AccountTicketInfo.getSortIcon("entered") %>
-    </td nowrap>
-    <td align="center" nowrap>
+    </th nowrap>
+    <th align="center" nowrap>
       <strong><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=modified">Last Modified</a></strong>
       <%= AccountTicketInfo.getSortIcon("modified") %>
-    </td>
+    </th>
   </tr>
 <%
 	Iterator j = TicList.iterator();

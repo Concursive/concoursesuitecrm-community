@@ -60,11 +60,11 @@ Usage<br>
 <hr color="#BFBFBB" noshade>
 Current Usage and Billing Usage Information<br>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th>
       <strong>Current system resources:</strong>
-    </td>
+    </th>
   </tr>
 <%
   Iterator items = usageList.iterator();
@@ -113,11 +113,11 @@ Current Usage and Billing Usage Information<br>
     </tr>
   </form>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th>
       <strong>Usage for <%= toDateString(dateStart) %> - <%= toDateString(dateEnd) %></strong>
-    </td>
+    </th>
   </tr>
 <%
   Iterator items2 = usageList2.iterator();

@@ -80,18 +80,10 @@
 <a href="Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>">Tickets</a> >
 Add Ticket<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="tickets" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="tickets" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <form name="addticket" action="AccountTickets.do?command=InsertTicket&auto-populate=true" onSubmit="return doCheck(this);" method="post">
@@ -101,11 +93,11 @@ Add Ticket<br>
   <%= showAttribute(request, "closedError") %>
   <br>
   <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 	<tr class="title">
-    <td colspan="2">
+    <th colspan="2">
       <strong>Add a new Ticket</strong>
-    </td>     
+    </th>
 	</tr>
 	<tr class="containerBody">
     <td class="formLabel">
@@ -141,18 +133,18 @@ Add Ticket<br>
 </table>
 <br>
 <a name="categories"></a> 
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	<tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Classification</strong>
-    </td>     
+    </th>     
 	</tr>
 	<tr class="containerBody">
     <td class="formLabel" valign="top">
       <dhv:label name="tickets-problem">Issue</dhv:label>
     </td>
     <td valign="top">
-      <table border="0" cellspacing="0" cellpadding="0">
+      <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td>
             <textarea name="problem" cols="55" rows="3"><%= toString(TicketDetails.getProblem()) %></textarea>
@@ -209,11 +201,11 @@ Add Ticket<br>
 </table>
 <br>
 <a name="department"></a> 
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	<tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+	<tr>
+    <th colspan="2">
       <strong>Assignment</strong>
-    </td>     
+    </th>
 	</tr>
 <dhv:include name="tickets-severity" none="true">
 	<tr class="containerBody">
@@ -261,11 +253,11 @@ Add Ticket<br>
 	</tr>
 </table>
 <br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	<tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Resolution</strong>
-    </td>     
+    </th>     
 	</tr>
 	<tr class="containerBody">
     <td class="formLabel" valign="top">

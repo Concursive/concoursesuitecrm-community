@@ -10,7 +10,7 @@
   </tr>
 </table>
    
-<table border='0' width='100%' bgcolor="#FFFFFF" cellpadding='0' cellspacing='0' bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table border='0' width='100%' bgcolor="#FFFFFF" cellpadding='0' cellspacing='0'>
   <tr bgcolor='#808080'>
     <td width="10" align="center"><font color="#FFFFFF">&lt;Action&gt;</font></td>
     <td width="100%"><font color='#FFFFFF'>&lt;Item&gt;</font></td>

@@ -68,8 +68,5 @@ function checkForm(form) {
 <input type="submit" value="Cancel" onClick="javascript:window.close();">
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
-    </td>
-  </tr>
-</table>
 </form>
 </body>

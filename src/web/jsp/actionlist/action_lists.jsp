@@ -23,22 +23,22 @@ My Action Lists<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td rowspan="2" valign="middle">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th rowspan="2" valign="middle">
       <strong>Action</strong>
-    </td>
-    <td rowspan="2" valign="middle" width="100%">
+    </th>
+    <th rowspan="2" valign="middle" width="100%">
       <strong><a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>&column=al.description">Name</a></strong>
       <%= ActionListInfo.getSortIcon("al.description") %>
-    </td>
-    <td colspan="2" align="center">
+    </th>
+    <th colspan="2" align="center">
       <strong>Progress</strong>
-    </td>
-    <td rowspan="2" valign="middle" nowrap>
+    </th>
+    <th rowspan="2" valign="middle" nowrap>
       <strong><a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>&column=al.modified">Last Updated</a></strong>
       <%= ActionListInfo.getSortIcon("al.modified") %>
-    </td>
+    </th>
   </tr>
   <tr class="title">
     <td>

@@ -24,30 +24,30 @@ Dashboard
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	<tr class="title">
-    <td width="8" align="left" nowrap>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+	<tr>
+    <th width="8" align="left" nowrap>
       <strong>Action</strong>
-    </td>
-    <td align="left" nowrap>
+    </th>
+    <th align="left" nowrap>
       <a href="CampaignManager.do?command=Dashboard&column=c.name"><strong>Name</strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("c.name") %>
-    </td>  
-    <td align="left" nowrap>
+    </th>
+    <th align="left" nowrap>
       <a href="CampaignManager.do?command=Dashboard&column=active_date"><strong>Start Date</strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("active_date") %>
-    </td> 
-    <td align="left" nowrap>
+    </th>
+    <th align="left" nowrap>
       <strong># Recipients</strong>
-    </td> 
-    <td align="left" nowrap>
+    </th>
+    <th align="left" nowrap>
       <a href="CampaignManager.do?command=Dashboard&column=status"><strong>Status</strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("status") %>
-    </td>
-    <td width="10" align="left" nowrap>
+    </th>
+    <th width="10" align="left" nowrap>
       <a href="CampaignManager.do?command=Dashboard&column=active"><strong>Active?</strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("active") %>
-    </td> 
+    </th>
 	<%
 	Iterator j = campList.iterator();
 	if ( j.hasNext() ) {

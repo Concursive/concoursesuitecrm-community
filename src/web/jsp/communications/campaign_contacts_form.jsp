@@ -3,22 +3,22 @@
 <jsp:useBean id="CampaignGroupsContactsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <form>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="3">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th colspan="3">
       <strong>List of Contacts</strong>
-    </td>
+    </th>
   </tr>
-  <tr class="title">
-    <td width="8" align="right" nowrap>
+  <tr>
+    <th width="8" align="right" nowrap>
       Action
-    </td>
-    <td width="50%" nowrap>
+    </th>
+    <th width="50%" nowrap>
       Name
-    </td>
-    <td width="50%" nowrap>
+    </th>
+    <th width="50%" nowrap>
       Company
-    </td>
+    </th>
   </tr>
 <%
 	Iterator j = ContactList.iterator();

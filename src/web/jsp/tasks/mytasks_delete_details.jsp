@@ -7,4 +7,3 @@
 <br>
 <input type="button" value="OK" onClick="javascript:opener.window.location.href='MyTasks.do?command=ListTasks';javascript:window.close()">
 
-

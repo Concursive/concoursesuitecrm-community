@@ -12,11 +12,11 @@ Add Role<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
 <br>
 <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Add a Role</strong>
-	  </td>
+	  </th>
   </tr>
   <tr>
     <td class="formLabel">Role Name</td>
@@ -28,11 +28,11 @@ Add Role<br>
   </tr>
 </table>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="5">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="5">
 	    <strong>Configure permissions for this role</strong>
-	  </td>
+	  </th>
   </tr>
 <%
   Iterator i = PermissionList.iterator();

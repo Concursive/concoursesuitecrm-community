@@ -10,33 +10,25 @@
 <a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Results
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td colspan="2">
-      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td colspan="2">
-      <% String param1 = "id=" + Campaign.getId(); %>
-      <dhv:container name="communications" selected="results" param="<%= param1 %>" />
-    </td>
-  </tr>
+<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
+<% String param1 = "id=" + Campaign.getId(); %>
+<dhv:container name="communications" selected="results" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td class="containerBack">
-      <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <table cellpadding="4" cellspacing="0" width="100%" border="0">
         <tr>
           <td>
-            <table cellpadding="4" cellspacing="0" border="1" width="100%">
-              <tr class="title">
-                <td valign="center" align="left">
+            <table cellpadding="4" cellspacing="0" width="100%" class="details">
+              <tr>
+                <th>
                   <strong>Summary</strong>
-                </td>
+                </th>
               </tr>
               <tr class="containerBody">
                 <td align="left" nowrap>
-                  <%= Campaign.getRecipientCount() %> Total Recipient<%= Campaign.getRecipientCount()==1?"":"s" %><br>
-                  <%= Campaign.getResponseCount() %> Total Response<%= Campaign.getResponseCount()==1?"":"s" %><br>
+                  <b><%= Campaign.getResponseCount() %></b> response<%= Campaign.getResponseCount()==1?"":"s" %> received from
+                  <b><%= Campaign.getRecipientCount() %></b> recipient<%= Campaign.getRecipientCount()==1?"":"s" %><br>
                   Last Response Received:
                   <dhv:evaluate if="<%= "".equals(Campaign.getLastResponseString()) %>">
                   --
@@ -63,39 +55,39 @@ Results
             ActiveSurveyQuestion thisItem = (ActiveSurveyQuestion) z.next();
             int type = thisItem.getType();
 %>
-          <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+          <table cellpadding="4" cellspacing="0" width="100%" class="details">
             <% if (type != SurveyQuestion.ITEMLIST) { %>
              <tr class="containerHeader">
                <td colspan="8" width="100%"><%= count %>. <%= toHtml(thisItem.getDescription()) %></td>
              </tr>
              <dhv:evaluate exp="<%= (type != SurveyQuestion.OPEN_ENDED) %>">
-                <tr class="title">
-                  <td colspan="8">
+                <tr>
+                  <th colspan="8">
                     Quantitive Statistics
-                  </td>
+                  </th>
                 </tr>
-                 <tr class="title">
-                 <td width="16%" align="center">Avg</td>
+                 <tr>
+                 <th width="16%" style="text-align: center;">Avg</th>
                   <% for (int i=0; i < 7;) {%>
-                    <td width="12%" align="center"><%= ++i %></td>
+                    <th width="12%" style="text-align: center;"><%= ++i %></th>
                   <%}%>
                  </tr>
                  <tr class="containerBody">
-                  <td align="center" nowrap><%= toHtml(thisItem.getAverageValue()) %></td>
-                  <td align="center" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(0))) %></td>
-                  <td align="center" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(1))) %></td>
-                  <td align="center" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(2))) %></td>
-                  <td align="center" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(3))) %></td>
-                  <td align="center" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(4))) %></td>
-                  <td align="center" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(5))) %></td>
-                  <td align="center" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(6))) %></td>
+                  <td style="text-align: center;" nowrap><%= toHtml(thisItem.getAverageValue()) %></td>
+                  <td style="text-align: center;" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(0))) %></td>
+                  <td style="text-align: center;" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(1))) %></td>
+                  <td style="text-align: center;" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(2))) %></td>
+                  <td style="text-align: center;" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(3))) %></td>
+                  <td style="text-align: center;" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(4))) %></td>
+                  <td style="text-align: center;" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(5))) %></td>
+                  <td style="text-align: center;" nowrap><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(6))) %></td>
                  </tr>
              </dhv:evaluate>
              <dhv:evaluate exp="<%= ((type != SurveyQuestion.QUANT_NOCOMMENTS)) %>">
-                <tr class="title">
-                  <td colspan="8">
+                <tr>
+                  <th colspan="8">
                     Most recent user comments &nbsp; [<a href="javascript:popURLReturn('CampaignManager.do?command=ShowComments&reset=true&surveyId=<%= SurveyQuestionList.getId() %>&questionId=<%= thisItem.getId() %>&type=<%= thisItem.getType()==1?"open":"quant" %>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','500','400','yes','yes');">Show All...</a>]
-                  </td>
+                  </th>
                 </tr>
                 <%
                   SurveyAnswerList commentList = thisItem.getAnswerList();
@@ -128,15 +120,16 @@ Results
             </dhv:evaluate>
             <%}else{%>
              <tr class="containerHeader">
-               <td align="left" nowrap><%= count %>. <%= toHtml(thisItem.getDescription()) %> </td>
+               <td style="text-align: left;" nowrap><%= count %>. <%= toHtml(thisItem.getDescription()) %> </td>
              </tr>
              <tr>
-                  <td class="containerBody" valign="center" align="left" width="100%">
-                    [<a href="javascript:popURLReturn('CampaignManager.do?command=ShowItems&questionId=<%= thisItem.getId() %>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Items','600','450','yes','no');">View Item Details</a>]
-                  </td>
+                <td class="containerBody" valign="center" style="text-align: left;" width="100%">
+                  [<a href="javascript:popURLReturn('CampaignManager.do?command=ShowItems&questionId=<%= thisItem.getId() %>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Items','600','450','yes','no');">View Item Details</a>]
+                </td>
              </tr>
             <%}%>
-         </table><br>
+         </table>
+         <br>
       <%
           }
         }else {
@@ -145,7 +138,7 @@ Results
       <%
         }
       %>
-          </td>     
+          </td>
         </tr>
       </table>
     </td>

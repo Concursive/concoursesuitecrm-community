@@ -24,7 +24,7 @@ function switchStyle(E){
   }
 }
 </script>
-<table bgcolor="#FFFFFF" width="100%" border="0" cellpadding="0" cellspacing="0" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
 <%-- Display header label --%>
   <tr>
     <td align="center" valign="top" width="100%" nowrap>

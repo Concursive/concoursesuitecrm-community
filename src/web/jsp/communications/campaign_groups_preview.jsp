@@ -13,25 +13,25 @@ Contact List<br>
 <input type="button" name="cmd" value="Back to Criteria" onClick="window.location.href='CampaignManagerGroup.do?command=Details&id=<%= request.getAttribute("id") %>&return=<%= request.getParameter("return") %>'">
 </dhv:evaluate>
 <dhv:pagedListStatus object="CampaignGroupsPreviewInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="4">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="4">
       <strong><%= scl.getGroupName() %></strong>
-    </td>     
+    </th>
   </tr>
-  <tr class="title">
-    <td>
+  <tr>
+    <th>
       &nbsp;
-    </td>
-    <td width="33%">
+    </th>
+    <th width="33%">
       Name
-    </td>
-    <td width="33%">
+    </th>
+    <th width="33%">
       Company
-    </td>
-    <td width="34%">
+    </th>
+    <th width="34%">
       Email
-    </td>
+    </th>
   </tr>
 <%
 	Iterator j = ContactList.iterator();

@@ -68,20 +68,11 @@
   Add Contact<br>
   <hr color="#BFBFBB" noshade>
   </dhv:evaluate>
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="containerHeader">
-      <td>
-        <%@ include file="accounts_details_header_include.jsp" %>
-      </td>
-    </tr>
-    <dhv:evaluate exp="<%= !popUp %>">
-    <tr class="containerMenu">
-      <td>
-        <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-        <dhv:container name="accounts" selected="contacts" param="<%= param1 %>" />
-      </td>
-    </tr>
-    </dhv:evaluate>
+  <%@ include file="accounts_details_header_include.jsp" %>
+  <dhv:evaluate exp="<%= !popUp %>">
+    <dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
+  </dhv:evaluate>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%">
     <tr>
       <td class="containerBack">
   <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
@@ -93,18 +84,18 @@
 <input type=reset value="Reset">
 <br>
 <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Add a New Contact</strong>
-    </td>     
+    </th>     
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Contact Type(s)
     </td>
     <td>
-      <table border="0" cellspacing="0" cellpadding="0">
+      <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td>
             <select multiple name="selectedList" id="selectedList" size="5">
@@ -155,10 +146,8 @@
   </tr>
 </table>
 &nbsp;<br>  
-
 <%--  include basic contact form --%>
 <%@ include file="../contacts/contact_include.jsp" %>
-
 <br>
 <input type=submit value="Save" onClick="return checkForm(this.form)">
   <dhv:evaluate exp="<%= !popUp %>">

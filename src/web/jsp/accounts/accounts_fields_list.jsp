@@ -12,18 +12,10 @@
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 List of Folder Records<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="folders" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="folders" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <%
@@ -35,27 +27,27 @@ List of Folder Records<br>
     This folder can have multiple records...<br>
     &nbsp;<br>
     <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>"><dhv:permission name="accounts-accounts-folders-add"><a href="Accounts.do?command=AddFolderRecord&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= (String)request.getAttribute("catId") %>">Add a record to this folder</a><br>&nbsp;<br></dhv:permission></dhv:evaluate>
-    <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-      <tr class="title">
+    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+      <tr>
         <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
         <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
-          <td valign="center">
+          <th valign="center">
             <strong>Action</strong>
-          </td>
+          </th>
         </dhv:permission>
         </dhv:evaluate>
-        <td>
+        <th>
           <strong>Record</strong>
-        </td>
-        <td>
+        </th>
+        <th>
           <strong>Entered</strong>
-        </td>
-        <td>
+        </th>
+        <th>
           <strong>Modified By</strong>
-        </td>
-        <td>
+        </th>
+        <th>
           <strong>Last Modified</strong>
-        </td>
+        </th>
       </tr>
 <%
     if (Records.size() > 0) {
@@ -98,7 +90,7 @@ List of Folder Records<br>
       </tr>
 <%  }  %>
 <%} else {%>
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr class="containerBody">
       <td>
         No custom folders available.

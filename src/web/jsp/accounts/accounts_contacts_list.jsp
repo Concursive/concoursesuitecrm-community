@@ -10,42 +10,34 @@
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 Contacts<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="contacts" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
+<%-- Begin the container contents --%>
 <dhv:permission name="accounts-accounts-contacts-add"><a href="Contacts.do?command=Prepare&orgId=<%=request.getParameter("orgId")%>">Add a Contact</a></dhv:permission>
 <center><%= ContactListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactListInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-<tr class="title">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+<tr>
   <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete">
-  <td width="8">
+  <th width="8">
     <strong>Action</strong>
-  </td>
+  </th>
   </dhv:permission>
-  <td>
+  <th>
     <strong>Name</strong>
-  </td>  
-  <td>
+  </th>
+  <th>
     <strong>Title</strong>
-  </td>   
-  <td>
+  </th>   
+  <th>
     <strong>Phone</strong>
-  </td>
-  <td>
+  </th>
+  <th>
     <strong>Email</strong>
-  </td>
+  </th>
 </tr>
 <%
 	Iterator j = ContactList.iterator();

@@ -5,11 +5,11 @@ Create Attachments
 Customize and configure your Campaigns with the following attachments:<br>
 &nbsp;<br>
 <dhv:permission name="campaign-campaigns-surveys-view">
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th>
       <strong><a href="CampaignManagerSurvey.do?command=View">Surveys</a></strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td>

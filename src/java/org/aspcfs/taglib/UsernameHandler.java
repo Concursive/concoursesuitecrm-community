@@ -87,17 +87,21 @@ public class UsernameHandler extends TagSupport {
       User thisUser = systemStatus.getUser(userId);
       if (thisUser != null) {
         Contact thisContact = thisUser.getContact();
-        if (lastFirst) {
-          this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameLastFirst()));
+        if (thisContact != null) {
+          if (lastFirst) {
+            this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameLastFirst()));
+          } else {
+            this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameFirstLast()));
+          }
         } else {
-          this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameFirstLast()));
+          System.out.println("UsernameHandler-> Contact is null");
         }
       } else {
         //NOTE: the default text will already be in the output format
         this.pageContext.getOut().write(defaultText);
       }
     } catch (Exception e) {
-      throw new JspException("UsernameHandler-> Error: " + e.getMessage());
+      e.printStackTrace(System.out);
     }
     return SKIP_BODY;
   }

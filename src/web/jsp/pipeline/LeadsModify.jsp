@@ -30,20 +30,12 @@
     &nbsp;<br>
   </dhv:evaluate>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="leads_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <dhv:evaluate exp="<%= !popUp %>">
-    <tr class="containerMenu">
-     <td>
-      <% String param1 = "id=" + opportunityHeader.getId(); %>      
-      <dhv:container name="opportunities" selected="details" param="<%= param1 %>" />
-      </td>
-    </tr>
-  </dhv:evaluate>
+<%@ include file="leads_details_header_include.jsp" %>
+<dhv:evaluate exp="<%= !popUp %>">
+  <% String param1 = "id=" + opportunityHeader.getId(); %>      
+  <dhv:container name="opportunities" selected="details" param="<%= param1 %>" style="tabs"/>
+</dhv:evaluate>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <% if (request.getParameter("return") != null) {%>
@@ -67,11 +59,11 @@
       <% if (request.getAttribute("actionError") != null) { %>
       <%= showError(request, "actionError") %>
       <%}%>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td colspan="2">
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+        <tr>
+          <th colspan="2">
             <strong><%= opportunityHeader.getDescription() %></strong>
-          </td>
+          </th>
         </tr>
         <tr class="containerBody">
           <td nowrap class="formLabel">

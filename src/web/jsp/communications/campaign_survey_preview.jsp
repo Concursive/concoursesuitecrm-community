@@ -50,7 +50,7 @@ function validateRadio (field) {
 %> 
 <dhv:evaluate exp="<%=!surveyBlank%>">
 <center>
-<table cellpadding="4" cellspacing="0" border="0" width="<%= (request.getParameter("inline") != null?"100%":"85%") %>" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="<%= (request.getParameter("inline") != null?"100%":"85%") %>">
   <tr class="row1">
     <td>
       <font color="#8c8c8c"><strong>Web Survey</strong></font>
@@ -59,7 +59,7 @@ function validateRadio (field) {
 </table>
 &nbsp;<br>
 <form name="survey" action="CampaignManagerSurvey.do?command=MockInsert&id=<%=Survey.getId()%>"  method="post" onSubmit="return checkForm(this);">
-  <table cellpadding="4" cellspacing="0" border="0" width="<%= (request.getParameter("inline") != null?"100%":"85%") %>" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <table cellpadding="4" cellspacing="0" border="0" width="<%= (request.getParameter("inline") != null?"100%":"85%") %>">
     <tr class="containerBody">
       <td colspan="2" valign="center">
         <%= toHtml(Survey.getIntro()) %>
@@ -67,7 +67,7 @@ function validateRadio (field) {
     </tr>
   </table>
   &nbsp;<br>
-  <table cellpadding="4" cellspacing="0" border="0" width="<%= (request.getParameter("inline") != null?"100%":"85%") %>" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <table cellpadding="4" cellspacing="0" border="0" width="<%= (request.getParameter("inline") != null?"100%":"85%") %>">
     <%
   Iterator j = Survey.getQuestions().iterator();
 	if ( j.hasNext() ) {
@@ -79,9 +79,9 @@ function validateRadio (field) {
    %>
  <tr>
   <td width="100%" valign="top">
-    <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+    <table cellpadding="4" cellspacing="0" width="100%" class="details">
       <tr>
-        <td colspan="7" width="100%" valign="center" class="containerHeader" align="left">
+        <td colspan="7" width="100%" valign="center" class="containerHeader">
           <input type="hidden" name="quest<%=count%>id" value="<%=thisQuestion.getId()%>">
           <%=count%>. &nbsp;<%=thisQuestion.getDescription()%>
         </td>
@@ -89,12 +89,12 @@ function validateRadio (field) {
       <dhv:evaluate exp="<%=(type == SurveyQuestion.QUANT_NOCOMMENTS) || (type == SurveyQuestion.QUANT_COMMENTS)%>">
       <tr class="containerBack">
       <% for(int i =0 ; i < 7;){%>
-        <td valign="center" align="center"><%=++i%></td>
+        <td valign="center" style="text-align: center;"><%=++i%></td>
         <%}%>
        </tr>
        <tr class="containerBack">
        <% for(int i =0 ; i < 7 ;){%>
-        <td valign="center" align="center">
+        <td valign="center" style="text-align: center;">
           <input type="radio" name="quest<%= count %>qans" value="<%=++i%>">
         </td>
         <%}%>
@@ -102,7 +102,7 @@ function validateRadio (field) {
      </dhv:evaluate>
      <dhv:evaluate if="<%=(type == SurveyQuestion.QUANT_COMMENTS) || (type == SurveyQuestion.OPEN_ENDED)%>">
        <tr class="containerBody">
-          <td width="15%" valign="center" align="right">
+          <td width="15%" valign="center" style="text-align: right;">
             Comments
           </td>
           <td colspan="6" valign="center">
@@ -120,7 +120,7 @@ function validateRadio (field) {
             Item thisItem = (Item)k.next();
         %>
         <tr class="containerBack">
-          <td valign="center" align="center" width="6%">
+          <td valign="center" style="text-align: center;" width="6%">
             <input type="checkbox" name="quest<%= count %>item<%=++itemCount%>">
             <input type="hidden" name="quest<%= count %>item<%= itemCount %>id" value="<%= thisItem.getId() %>">
           </td>
@@ -131,7 +131,7 @@ function validateRadio (field) {
        <%}
        }else{%>
         <tr>
-           <td align="center">
+           <td style="text-align: center;">
             No items found.
            </td>
         </tr>
@@ -150,7 +150,7 @@ function validateRadio (field) {
       </tr>
       <%}%>
     </table><br>
-    <input type="hidden" name="id" value="<%=request.getParameter("id")%>">
+    <input type="hidden" name="id" value="<%= request.getParameter("id") %>">
     <input type="submit" value="Submit Survey"><br>
     </form>
   </center>

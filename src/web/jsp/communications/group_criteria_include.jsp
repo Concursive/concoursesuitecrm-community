@@ -141,22 +141,22 @@ listOfOperators[1] = dateOperators
 listOfOperators[2] = numberOperators
 </script>
 <%= showAttribute(request, "criteriaError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       Select criteria for this group&nbsp;<font color="red">*</font>
-    </td>
+    </th>
   </tr>
 	<tr>
-    <td align="center" valign="center" width="50%">
-      <table width="100%" border="0" cellpadding="2" cellspacing="0">
+    <td style="text-align: center;" valign="center" width="50%">
+      <table width="100%" border="0" cellpadding="2" cellspacing="0" class="empty">
         <tr>
           <td class="row1" colspan="2">
             Choose specific contacts:
           </td>
         </tr>
         <tr>
-          <td colspan="2" align="center">
+          <td colspan="2" style="text-align: center;">
             [<a href="javascript:popContactsListMultipleCampaign('listViewId','1'<%= request.getParameter("params") != null ?  ",'" + request.getParameter("params") + "'" : ""%>);">Add/Remove Contacts</a>]
           </td>
         </tr>
@@ -171,7 +171,7 @@ listOfOperators[2] = numberOperators
           </td>
         </tr>
         <tr>
-          <td align="right" nowrap>
+          <td style="text-align: right;" nowrap>
             Field
           </td>
           <td width="100%" valign="center">
@@ -192,7 +192,7 @@ listOfOperators[2] = numberOperators
           </td>
         </tr>
         <tr>
-          <td align="right" nowrap>
+          <td style="text-align: right;" nowrap>
             Operator
           </td>
           <td width="100%" valign="center">
@@ -214,7 +214,7 @@ listOfOperators[2] = numberOperators
           </td>
         </tr>
         <tr>
-          <td align="right" nowrap>
+          <td style="text-align: right;" nowrap>
             <span name="searchText1" ID="searchText1">Search Text</span>
           </td>
           <td width="100%" valign="center">
@@ -222,15 +222,15 @@ listOfOperators[2] = numberOperators
           </td>
         </tr>
         <tr>
-          <td align="right">
+          <td style="text-align: right;">
             <span name="new1a" ID="new1a" style="display:none">&nbsp;</span>
           </td>
-          <td align="left" valign="center">
+          <td valign="center">
             <span name="new1" ID="new1" style="display:none">[<a href="javascript:popCalendar('searchForm', 'searchValue');">Date</a>]</span>
           </td>
         </tr>
         <tr>
-          <td align="right" nowrap>
+          <td style="text-align: right;" nowrap>
             <span name="new0a" ID="new0a" style="display:none">Search Text</span>
           </td>
           <td valign="center">
@@ -238,7 +238,7 @@ listOfOperators[2] = numberOperators
           </td>
         </tr>
         <tr>
-          <td align="right" nowrap>
+          <td style="text-align: right;" nowrap>
             From
           </td>
           <td width="100%" valign="center">
@@ -246,17 +246,17 @@ listOfOperators[2] = numberOperators
           </td>
         </tr>
         <tr>
-          <td align="center" colspan="2" nowrap>
+          <td style="text-align: center;" colspan="2" nowrap>
             <br>
             <input type="button" value="Add >" onclick="javascript:addValues()">
           </td>
         </tr>
       </table>
     </td>
-		<td align="center" valign="top" width="50%">
-      <table width="100%" border="0" cellpadding="2" cellspacing="0">
+		<td style="text-align: center;" valign="top" width="50%">
+      <table width="100%" border="0" cellpadding="2" cellspacing="0" class="empty">
         <tr>
-          <td align="left" class="row1">
+          <td class="row1">
             Selected criteria and contacts:
           </td>
         </tr>
@@ -266,7 +266,7 @@ listOfOperators[2] = numberOperators
           </td>
         </tr>
         <tr>
-          <td align="center">
+          <td style="text-align: center;">
 		<% if (SCL.size() > 0) {%>
       <% SCL.setHtmlSelectIdName("listViewId"); %>
 			<%= SCL.getHtmlSelect("searchCriteria") %>

@@ -40,17 +40,17 @@
       </td>
     </tr>
   </table>
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="title">
-      <td align="center" width="8">
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th align="center" width="8">
         &nbsp;
-      </td>
-      <td>
+      </th>
+      <th>
         <strong>Name</strong>
-      </td>
-      <td>
+      </th>
+      <th>
         <strong>Phone</strong>
-      </td>
+      </th>
     </tr>
 <%
 	Iterator j = AccountList.iterator();

@@ -37,31 +37,31 @@ View Contacts<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
     <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete">
-    <td valign="center">
+    <th valign="center">
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td nowrap>
+    <th nowrap>
       <strong><a href="ExternalContacts.do?command=ListContacts&column=c.namelast">Name</a></strong>
       <%= ExternalContactsInfo.getSortIcon("c.namelast") %>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong><a href="ExternalContacts.do?command=ListContacts&column=c.company">Company</a></strong>
       <%= ExternalContactsInfo.getSortIcon("c.company") %>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Phone: Business</strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Phone: Mobile</strong>
-    </td>
+    </th>
     <dhv:evaluate if="<%= !"my".equals(ExternalContactsInfo.getListView()) && !"".equals(ExternalContactsInfo.getListView()) %>">
-      <td>
+      <th>
         <strong>Owner</strong>
-      </td>
+      </th>
     </dhv:evaluate>
   </tr>
 <%    

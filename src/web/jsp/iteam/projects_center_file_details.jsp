@@ -4,34 +4,34 @@
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body bgcolor='#FFFFFF'>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="7">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th colspan="7">
       &nbsp;<strong>All Versions:</strong>
-    </td>
+    </th>
   </tr>
   <tr>
-    <td nowrap>
+    <th nowrap>
       &lt;Action&gt;
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       &lt;Item&gt;
-    </td>
-    <td align="right" nowrap>
+    </th>
+    <th align="right" nowrap>
       &lt;Size&gt;
-    </td>
-    <td align="right" nowrap>
+    </th>
+    <th align="right" nowrap>
       &lt;Version&gt;
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       &lt;Submitted&gt;
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       &lt;Sent By&gt;
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       &lt;D/L&gt;
-    </td>
+    </th>
   </tr>
 <%          
   int rowid = 0;

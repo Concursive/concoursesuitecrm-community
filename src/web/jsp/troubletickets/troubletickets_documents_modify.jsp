@@ -10,29 +10,22 @@
 <a href="TroubleTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>">Documents</a> >
 Modify Document<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <form method="post" name="inputForm" action="TroubleTicketsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
-  <tr class="containerHeader">
-    <td>
-    <strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
-    <%= toHtml(TicketDetails.getCompanyName()) %></strong>
-    <dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + TicketDetails.getId(); %>
-      <dhv:container name="tickets" selected="documents" param="<%= param1 %>"/>
-      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
-      </dhv:evaluate>
-   </td>
-  </tr>
+<strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
+<%= toHtml(TicketDetails.getCompanyName()) %></strong>
+<dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
+<% String param1 = "id=" + TicketDetails.getId(); %>
+<dhv:container name="tickets" selected="documents" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
 		<td class="containerBack">
-      <%= showError(request, "actionError") %>
-      <%-- include modify form --%>
-      <%@ include file="documents_modify_include.jsp" %>
+    <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
+      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
+      &nbsp;<br>
+    </dhv:evaluate>
+    <%= showError(request, "actionError") %>
+    <%-- include modify form --%>
+    <%@ include file="documents_modify_include.jsp" %>
   &nbsp;<br>
   <input type="submit" value=" Update " name="update">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>';">
@@ -41,6 +34,6 @@ Modify Document<br>
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
   </td>
 </tr>
-</form>
 </table>
+</form>
 </body>

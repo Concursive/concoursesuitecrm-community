@@ -8,27 +8,27 @@
 %>
 <center><%= CommentListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CommentListInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="<%= openEnded ? "3" : "4"%>">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="<%= openEnded ? "3" : "4"%>">
       <strong>Survey Comments</strong>
-    </td>
+    </th>
   </tr>
-  <tr class="title">
+  <tr>
     <dhv:evaluate if="<%= !openEnded %>">
-      <td width="20" align="center" nowrap>
+      <th width="20" style="text-align: left;" nowrap>
         Answer Provided
-      </td>
+      </th>
     </dhv:evaluate>
-    <td width="60" align="left" nowrap>
+    <th width="100%" style="text-align: left;" nowrap>
       Comment Provided
-    </td>
-    <td valign="center" align="left" nowrap>
+    </th>
+    <th valign="center" style="text-align: left;" nowrap>
       User
-    </td>
-    <td valign="center" align="left" nowrap>
+    </th>
+    <th valign="center" style="text-align: left;" nowrap>
       Entered
-    </td>
+    </th>
   </tr>
 <%    
 	Iterator i = SurveyAnswerList.iterator();
@@ -40,17 +40,17 @@
 %>      
    <tr class="row<%= rowid %>">
  <dhv:evaluate if="<%= !openEnded %>">
-    <td valign="top" align="center" class="row<%= rowid %>" nowrap>
+    <td valign="top" style="text-align: center;" class="row<%= rowid %>" nowrap>
       <%= thisAnswer.getQuantAns() != -1 ? thisAnswer.getQuantAns()+"" : "&nbsp;" %>
     </td>
   </dhv:evaluate>
-    <td width="60">
+    <td width="100%">
       <%=toHtml(thisAnswer.getComments())%>
     </td>
-    <td valign="center" align="left" nowrap>
+    <td valign="center" style="text-align: left;" nowrap>
       <dhv:contactname id="<%=thisAnswer.getContactId()%>" listName="SurveyContactList"/>
     </td>
-    <td valign="center" align="left" nowrap>
+    <td valign="center" style="text-align: left;" nowrap>
       <%= toDateString(thisAnswer.getEntered()) %>
     </td>
   </tr>

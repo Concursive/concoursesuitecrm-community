@@ -11,19 +11,13 @@ Employee Details<br>
 <dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='CompanyDirectory.do?command=DeleteEmployee&empid=<%=ContactDetails.getId() %>';confirmSubmit(document.details);"></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br>&nbsp;</dhv:permission>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
-	    <%@ include file="contact_details_header_include.jsp" %>
-	  </td>
-  </tr>
-</table>
-&nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<%@ include file="contact_details_header_include.jsp" %>
+&nbsp;<br>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Email Addresses</strong>
-	  </td>
+	  </th>
   </tr>
 <%  
   Iterator iemail = ContactDetails.getEmailAddressList().iterator();
@@ -45,11 +39,11 @@ Employee Details<br>
 <%}%>
 </table>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Phone Numbers</strong>
-	  </td>
+	  </th>
   </tr>
 <%  
   Iterator inumber = ContactDetails.getPhoneNumberList().iterator();
@@ -71,11 +65,11 @@ Employee Details<br>
 <%}%>
 </table>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Addresses</strong>
-	  </td>
+	  </th>
   </tr>
 <%  
   Iterator iaddress = ContactDetails.getAddressList().iterator();
@@ -97,11 +91,11 @@ Employee Details<br>
 <%}%>
 </table>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Additional Details</strong>
-	  </td>
+	  </th>
   </tr>
   <tr>
     <td class="formLabel" nowrap>Notes</td>

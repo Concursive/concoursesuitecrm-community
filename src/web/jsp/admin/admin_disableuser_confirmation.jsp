@@ -15,11 +15,11 @@
 <%}%>
 Disable User Account
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th>
       <strong>Disable a User account</strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBack">
     <td align="left">

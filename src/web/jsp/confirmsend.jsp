@@ -3,11 +3,11 @@
 <jsp:useBean id="finalContacts" class="java.util.HashMap" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <p>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th>
       Your message has been sent to the following recipients:
-    </td>
+    </th>
   </tr>
 <%
 	Set s = finalContacts.keySet();

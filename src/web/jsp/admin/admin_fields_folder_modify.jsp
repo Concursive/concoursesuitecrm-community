@@ -16,61 +16,52 @@ Existing Folder<br>
 <% if (request.getAttribute("actionError") != null) { %>
   <%= showError(request, "actionError") %>
 <%}%>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
+<strong>Module:</strong> <%=PermissionCategory.getCategory()%><br>
+&nbsp;<br>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong>Update an Existing Folder</strong>
+    </th>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Folder Name
+    </td>
     <td>
-      <strong>Module: <%=PermissionCategory.getCategory()%></strong>
+      <input type="text" name="name" maxlength="200" value="<%= toHtmlValue(Category.getName()) %>"><font color="red">*</font>
+      <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
-  <tr>
-    <td class="containerBack">
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td colspan="2">
-            <strong>Update an Existing Folder</strong>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Folder Name
-          </td>
-          <td>
-            <input type="text" name="name" maxlength="200" value="<%= toHtmlValue(Category.getName()) %>"><font color="red">*</font>
-            <%= showAttribute(request, "nameError") %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Records
-          </td>
-          <td>
-            <input type="checkbox" value="ON" name="allowMultipleRecords" <%= Category.getAllowMultipleRecords()?"checked":"" %>>folder can have multiple records
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Read Only
-          </td>
-          <td>
-            <input type="checkbox" value="ON" name="readOnly" <%= Category.getReadOnly()?"checked":"" %>>folder is read only by all users
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Enabled
-          </td>
-          <td>
-            <input type="checkbox" value="ON" name="enabled" <%= Category.getEnabled()?"checked":"" %>>folder is visible by users
-          </td>
-        </tr>
-      </table>
-      &nbsp;<br>
-      <input type="hidden" name="moduleId" value="<%= ConstantId %>">
-      <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
-      <input type="submit" value="Update">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>'">
+  <tr class="containerBody">
+    <td class="formLabel">
+      Records
+    </td>
+    <td>
+      <input type="checkbox" value="ON" name="allowMultipleRecords" <%= Category.getAllowMultipleRecords()?"checked":"" %>>folder can have multiple records
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Read Only
+    </td>
+    <td>
+      <input type="checkbox" value="ON" name="readOnly" <%= Category.getReadOnly()?"checked":"" %>>folder is read only by all users
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Enabled
+    </td>
+    <td>
+      <input type="checkbox" value="ON" name="enabled" <%= Category.getEnabled()?"checked":"" %>>folder is visible by users
     </td>
   </tr>
 </table>
+&nbsp;<br>
+<input type="hidden" name="moduleId" value="<%= ConstantId %>">
+<input type="hidden" name="categoryId" value="<%= Category.getId() %>">
+<input type="submit" value="Update">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>'">
 </form>
 </body>

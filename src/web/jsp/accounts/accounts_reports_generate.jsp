@@ -41,11 +41,11 @@ Generate New Report<br>
 <input type="button" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Reports';javascript:this.form.submit();">
 <br>
 &nbsp;
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="5">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="5">
       <strong>Generate New Report</strong>
-    </td>     
+    </th>     
   </tr>
   <tr>
     <td nowrap class="formLabel">

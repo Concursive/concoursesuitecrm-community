@@ -25,13 +25,13 @@
   }
 </script>
 
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <td>
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" class="empty">
   <%-- User Selected Info --%>
   <tr>
-    <td width="100%" align="center" valign="top" colspan="2" height="20">
+    <td width="100%" valign="top" colspan="2" height="20" style="text-align: center !important">
       <strong><div id="userName">Scheduled Actions for <%= CalendarInfo.getSelectedUserId()!=-1?toHtml(CalendarInfo.getSelectedUserName()) : toHtml(User.getUserRecord().getContact().getNameLastFirst())%></div></strong>
     </td>
   </tr>
@@ -43,14 +43,10 @@
     </td>
     <td valign="top" height="100%" width="100%">
       <table height="100%" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr class="title">
-          <td width="100%">
-          
-          <table width="100%" cellspacing="0" cellpadding="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
-            <tr>
-              <td>
-            <table width="100%" cellspacing="4" cellpadding="0" border="0" class="title">
-              <tr class="title">
+        <tr>
+          <td width="100%" style="border: 1px solid #000; background-color: #DEE0FA;">
+            <table width="100%" cellspacing="4" cellpadding="0" border="0">
+              <tr>
                 <td valign="center" nowrap>
                  <select id="alerts" size="1" name="alertsView" onChange="javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=calendardetails&inline=true&alertsView='+document.getElementById('alerts').value);">
                   <option value="all" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("all") ? " selected":"" %>>All Sched. Actions</option>
@@ -71,10 +67,6 @@
                 </td>
               </tr>
             </table>
-              </td>
-            </tr>
-          </table>
-            
           </td>
         </tr>
         <tr>
@@ -94,17 +86,17 @@
 <%-- Next section --%>
 <br>
 <dhv:permission name="myhomepage-miner-view">
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
     <td>
       <input type="hidden" name="command" value="Home">
       <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <form name="miner_select" type="get" action="MyCFS.do">
-          <tr class="title">
-            <td width="60%" valign="center">
+          <tr>
+            <th width="60%" valign="center">
               <strong>Personalized Industry News &amp; Events</strong>
-            </td>
-            <td width="40%" align="right" valign="center">
+            </th>
+            <td width="40%" style="text-align: right;" valign="center">
     	<% if (request.getParameter("industry") == null || request.getParameter("industry").equals("")) { %>
               <%=IndSelect.getHtmlSelect("industry",1)%>
       <% } else { %>

@@ -3,11 +3,11 @@
 <jsp:useBean id="refreshUrl" class="java.lang.String" scope="request"/>
 <body onload="window.opener.location=window.opener.location;">
 <p>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th>
       Your message has been queued and will be sent to the following contacts:
-    </td>
+    </th>
   </tr>
   <tr class="row2">
     <td>

@@ -25,24 +25,24 @@ View Groups
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	<tr class="title">
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+	<tr>
 	<dhv:permission name="campaign-campaigns-groups-edit,campaign-campaigns-groups-delete">
-    <td width="8">
+    <th width="8">
       <strong>Action</strong>
-    </td>
-    	</dhv:permission>
-    <td width="100%" nowrap>
+    </th>
+  </dhv:permission>
+    <th width="100%" nowrap>
       <a href="CampaignManagerGroup.do?command=View&column=name"><strong>Group Name</strong></a>
       <%= CampaignGroupListInfo.getSortIcon("name") %>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong>Entered By</strong>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <a href="CampaignManagerGroup.do?command=View&column=modified"><strong>Last Modified</strong></a>
       <%= CampaignGroupListInfo.getSortIcon("modified") %>
-    </td>
+    </th>
 <%
 	Iterator j = sclList.iterator();
 	if ( j.hasNext() ) {

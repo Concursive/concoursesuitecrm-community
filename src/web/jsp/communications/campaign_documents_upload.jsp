@@ -39,28 +39,19 @@
 <a href="CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>">Documents</a> >
 Upload Document<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
+<% String param1 = "id=" + Campaign.getId(); %>
+<dhv:container name="communications" selected="documents" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" width="100%">
   <form method="post" name="inputForm" action="CampaignDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td colspan="2">
-      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td colspan="2">
-      <% String param1 = "id=" + Campaign.getId(); %>
-      <dhv:container name="communications" selected="documents" param="<%= param1 %>" />
-    </td>
-  </tr>
   <tr>
     <td class="containerBack">
       <%= showError(request, "actionError") %>
-	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	  <tr class="title">
-	    <td colspan="2">
+	<table cellpadding="4" cellspacing="0" width="100%" class="details">
+	  <tr>
+	    <th colspan="2">
 	      <img border="0" src="images/file.gif" align="absmiddle"><b>Upload a New Document</b>
-	    </td>
+	    </th>
 	  </tr>
 	  <tr class="containerBody">
 	    <td class="formLabel">
@@ -80,16 +71,16 @@ Upload Document<br>
 	    </td>
 	  </tr>
 	</table>
-	  <p align="center">
-	    * Large files may take a while to upload.<br>
-	    Wait for file completion message when upload is complete.
-	  </p>
-    <input type="submit" value=" Upload " name="upload">
-    <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>';">
-    <input type="hidden" name="dosubmit" value="true">
-    <input type="hidden" name="id" value="<%= Campaign.getId() %>">
+  <p align="center">
+    * Large files may take a while to upload.<br>
+    Wait for file completion message when upload is complete.
+  </p>
+  <input type="submit" value=" Upload " name="upload">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>';">
+  <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="id" value="<%= Campaign.getId() %>">
      </td>
     </tr>
   </form>
- </table>
+</table>
 </body>

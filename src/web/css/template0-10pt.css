@@ -5,11 +5,6 @@ BODY  { font-family: verdana, helvetica, arial, sans-serif; font-size: 10pt; bac
   .title2 { background: #D4D4D4; }
   .warning { background: #FF3300; font-weight: bold; color: #FFFFFF }
   
-  .containerHeader { background: #FFFF95; }
-  .containerMenu { background: #F1F0E0; }
-  .containerBack { background: #FFFDED; }
-  .containerBody { background: #FFFFFF; }
-  
   .column { color: #000080; font-weight: bold; }
   .row1old { background: #E5E5E5; }
   .row1 { background: #EDEDED; }
@@ -51,6 +46,5 @@ BODY  { font-family: verdana, helvetica, arial, sans-serif; font-size: 10pt; bac
   
 TABLE, TD, TH, LI, P, UL, OL, TEXTAREA, INPUT, SELECT  { font-family: verdana, helvetica, arial, sans-serif; font-size: 10pt }
 .list { background-color: #D4D4D4 }
-.formLabel { text-align: right; width: 100; background-color: #EDEDED }
 .pulldown { background-color: #EEF3FB; border-left: 2px solid #FFFFFF; border-top: 2px solid #FFFFFF; border-right: 2px solid #B6C7E5; border-bottom: 2px solid #B6C7E5}
 .menu { visibility:hidden; left:0px; top:0px; position:absolute }

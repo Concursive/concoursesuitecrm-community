@@ -56,11 +56,11 @@ Action Contacts<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td  colspan="4">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
+    <th colspan="4">
       <strong><%= toHtml(ActionList.getDescription()) %></strong>
-    </td>
+    </th>
   </tr>
   <tr class="title">
     <td align="center">
@@ -111,7 +111,7 @@ Action Contacts<br>
     </td>
     <td valign="top" width="100%">
     <% if(thisContact.getMostRecentItem().getId() > 0){ %>
-    <table border="0" width="100%">
+    <table border="0" width="100%" class="empty">
     <tr>
       <td valign="top">
         <a href="javascript:toggleImage('<%= thisContact.getId() %>', 'history<%= thisContact.getId() %>', 'contact<%= thisContact.getId() %>', '<%= rowid %>','<%= thisContact.getContact().getId() %>');"><img src="images/arrowright.gif" name="hisImage<%= thisContact.getId() %>" id="1" border="0" title="Click To View History"></a>

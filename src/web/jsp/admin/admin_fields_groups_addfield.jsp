@@ -20,105 +20,92 @@ New Field<br>
 <%
   CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
 %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong>Module: <%=PermissionCategory.getCategory()%></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <strong>Folder: <%= toHtml(Category.getName()) %></strong>
-    </td>
-  </tr>
+<strong>Module:</strong> <%= toHtml(PermissionCategory.getCategory()) %><br>
+<strong>Folder:</strong> <%= toHtml(Category.getName()) %><br>
+&nbsp;<br>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
-    <td class="containerBack">
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td colspan="2">
-            Add a Custom Field
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Field Label
-          </td>
-          <td>
-            <input type="text" name="name" maxlength="200" value="<%= toHtmlValue(CustomField.getName()) %>"><font color="red">*</font>
-            <%= showAttribute(request, "nameError") %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Field Type
-          </td>
-          <td>
-            <%= CustomField.getHtmlSelect("type", "onChange=\"javascript:document.forms[0].submit();\"") %><font color="red">*</font>
-            <%= showAttribute(request, "typeError") %>
-          </td>
-        </tr>
+    <th colspan="2">
+      Add a Custom Field
+    </th>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Field Label
+    </td>
+    <td>
+      <input type="text" name="name" maxlength="200" value="<%= toHtmlValue(CustomField.getName()) %>"><font color="red">*</font>
+      <%= showAttribute(request, "nameError") %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Field Type
+    </td>
+    <td>
+      <%= CustomField.getHtmlSelect("type", "onChange=\"javascript:document.forms[0].submit();\"") %><font color="red">*</font>
+      <%= showAttribute(request, "typeError") %>
+    </td>
+  </tr>
 <%        
-        if (CustomField.getLengthRequired()) {
+  if (CustomField.getLengthRequired()) {
 %>        
-        <tr class="containerBody">
-          <td class="formLabel">
-            Field Length
-          </td>
-          <td>
-            <input type="text" name="maxLength" maxlength="3" value="<%= CustomField.getParameter("maxLength") %>" size="5"><font color="red">*</font>
-            <%= showAttribute(request, "maxLengthError") %>
-          </td>
-        </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Field Length
+    </td>
+    <td>
+      <input type="text" name="maxLength" maxlength="3" value="<%= CustomField.getParameter("maxLength") %>" size="5"><font color="red">*</font>
+      <%= showAttribute(request, "maxLengthError") %>
+    </td>
+  </tr>
 <%      
-        }
-        if (CustomField.getLookupListRequired()) {
+  }
+  if (CustomField.getLookupListRequired()) {
 %>        
-        <tr class="containerBody">
-          <td valign="top" class="formLabel">
-            Lookup List
-          </td>
-          <td>
-            Enter values to appear in the selection list, each on a separate line.<br>
-            <textarea cols="50" rows="8" name="lookupListText" wrap="SOFT"><%= toString(CustomField.getLookupList()) %></textarea>
-            <%= showAttribute(request, "lookupListError") %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Display Type
-          </td>
-          <td>
-            Drop-down box
-            List box
-            Multiple selection list box
-          </td>
-        </tr>
+  <tr class="containerBody">
+    <td valign="top" class="formLabel">
+      Lookup List
+    </td>
+    <td>
+      Enter values to appear in the selection list, each on a separate line.<br>
+      <textarea cols="50" rows="8" name="lookupListText" wrap="SOFT"><%= toString(CustomField.getLookupList()) %></textarea>
+      <%= showAttribute(request, "lookupListError") %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Display Type
+    </td>
+    <td>
+      Drop-down box
+      List box
+      Multiple selection list box
+    </td>
+  </tr>
 <%      
-        }
+  }
 %>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Additional Text to Display
-          </td>
-          <td>
-            <input type="text" name="additionalText" maxlength="255" width="50" value="<%= toHtmlValue(CustomField.getAdditionalText()) %>">
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Required at Data Entry
-          </td>
-          <td>
-            <input type="checkbox" value="ON" name="required" <%= CustomField.getRequired()?"checked":"" %>>
-          </td>
-        </tr>
-      </table>
-      &nbsp;<br>
-      <input type="hidden" name="groupId" value="<%= (String)request.getParameter("grpId") %>">
-      <input type="submit" value="Save" onClick="javascript:this.form.action='AdminFields.do?command=InsertField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true'">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>'">
+  <tr class="containerBody">
+    <td class="formLabel">
+      Additional Text to Display
+    </td>
+    <td>
+      <input type="text" name="additionalText" maxlength="255" width="50" value="<%= toHtmlValue(CustomField.getAdditionalText()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Required at Data Entry
+    </td>
+    <td>
+      <input type="checkbox" value="ON" name="required" <%= CustomField.getRequired()?"checked":"" %>>
     </td>
   </tr>
 </table>
+&nbsp;<br>
+<input type="hidden" name="groupId" value="<%= (String)request.getParameter("grpId") %>">
+<input type="submit" value="Save" onClick="javascript:this.form.action='AdminFields.do?command=InsertField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>'">
 </form>
 </body>

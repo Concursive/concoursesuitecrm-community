@@ -30,18 +30,18 @@ function sendMessage() {
   }
 }
 </script>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>New CFS Message</strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
       Recipient(s)
     </td>
     <td>
-      <table border="0" cellpadding="0" cellspacing="0">
+      <table border="0" cellpadding="0" cellspacing="0" class="empty">
         <tr>
           <td>
             <select size="3" name="listView" id="listViewId" multiple>

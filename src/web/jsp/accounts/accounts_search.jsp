@@ -4,11 +4,11 @@
 <a href="Accounts.do">Account Management</a> > 
 Search Accounts<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Search Accounts</strong>
-    </td>
+    </th>
   </tr>
   <tr>
     <td class="formLabel">
@@ -26,12 +26,9 @@ Search Accounts<br>
       <input type="text" size="35" name="searchAccountNumber">
     </td>
   </tr>
-  <tr>
-    <td colspan="2">
-      <input type=submit value="Search">
-      <input type=reset value="Clear">
-    </td>
-  </tr>
 </table>
+&nbsp;<br>
+<input type="submit" value="Search">
+<input type="reset" value="Reset">
 </form>
 </body>

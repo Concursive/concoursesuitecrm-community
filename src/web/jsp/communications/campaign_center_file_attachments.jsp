@@ -32,9 +32,9 @@
 <a href="CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>">Attachments</a> >
 File Attachments
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" width="100%" style="border: 1px solid #000;">
   <tr class="containerHeader">
-    <td>
+    <td style="border-bottom: 1px solid #000;">
       <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
     </td>
   </tr>
@@ -43,17 +43,17 @@ File Attachments
       <input type="button" value="Back to Attachment Overview" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'"><br>
       &nbsp;<br>
       <%-- List of Documents --%>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td colspan="4">
+      <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+        <tr>
+          <th colspan="4">
             <strong>Attached files...</strong>
-          </td>
+          </th>
         </tr>
-        <tr class="title">
-          <td width="10" align="center">Action</td>
-          <td>File Name</td>
-          <td align="center">Size</td>
-          <td align="center">Date</td>
+        <tr>
+          <th width="10" style="text-align: center;">Action</th>
+          <th>File Name</th>
+          <th style="text-align: center;">Size</th>
+          <th style="text-align: center;">Date</th>
         </tr>
       <%
         Iterator j = fileItemList.iterator();
@@ -64,14 +64,14 @@ File Attachments
             FileItem thisFile = (FileItem)j.next();
       %>      
           <tr class="row<%= rowid %>">
-            <td width="10" valign="middle" align="center" nowrap>
+            <td width="10" valign="middle" style="text-align: center;" nowrap>
               <a href="CampaignManager.do?command=DownloadFile&id=<%= Campaign.getId() %>&fid=<%= thisFile.getId() %>">Download</a>
               <dhv:permission name="campaign-campaigns-edit"><a href="javascript:confirmDelete('CampaignManager.do?command=RemoveFile&fid=<%= thisFile.getId() %>&id=<%= Campaign.getId()%>');"><br>Remove</a></dhv:permission>
             </td>
             <td valign="middle" width="100%">
               <%= thisFile.getImageTag() %><%= toHtml(thisFile.getClientFilename()) %>
             </td>
-            <td align="center" valign="middle" nowrap>
+            <td style="text-align: center;" valign="middle" nowrap>
               <%= thisFile.getRelativeSize() %> k&nbsp;
             </td>
             <td nowrap>
@@ -91,20 +91,22 @@ File Attachments
       <%-- File upload form, if permission --%>
       <dhv:permission name="campaign-campaigns-edit">
       &nbsp;<br>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td>
+      <table cellpadding="4" cellspacing="0" width="100%" class="details">
+        <tr>
+          <th>
             <strong>Attach a file</strong>
-          </td>
+          </th>
         </tr>
         <tr class="containerBody">
           <form method="post" name="inputForm" action="CampaignManager.do?command=UploadFile&id=<%= Campaign.getId() %>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
-            <td align="center" width="100%">
-              <input type="file" name="id<%= Campaign.getId() %>" size="30"><br>
-              * Large files may take a while to upload.<br>
-              * Remember: This file will eventually be e-mailed, so limit file size to under 2 Megabytes<br>
-              Wait for file completion message when upload is complete.<br>
-              <input type="submit" value=" Upload File " name="upload">
+            <td width="100%">
+              <center>
+                <input type="file" name="id<%= Campaign.getId() %>" size="30"><br>
+                * Large files may take a while to upload.<br>
+                * Remember: This file will eventually be e-mailed, so limit file size to under 2 Megabytes<br>
+                Wait for file completion message when upload is complete.<br>
+                <input type="submit" value=" Upload File " name="upload">
+              </center>
             </td>
           </form>
         </tr>

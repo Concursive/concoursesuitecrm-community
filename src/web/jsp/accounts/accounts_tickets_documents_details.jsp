@@ -13,19 +13,10 @@
 <a href="AccountTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>">Documents</a> >
 Details<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <%-- submenu for accounts --%>
-      <% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="tickets" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="tickets" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
   	<td class="containerBack">
       <% String param2 = "id=" + TicketDetails.getId(); %>
@@ -36,11 +27,11 @@ Details<br>
       </dhv:evaluate>
       <br><br>
       <%= showError(request, "actionError") %>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr class="title">
-          <td colspan="7">
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+        <tr>
+          <th colspan="7">
             <strong>All Versions of this Document</strong>
-          </td>
+          </th>
         </tr>
         <tr class="title2">
           <td width="10" align="center">Action</td>

@@ -14,9 +14,9 @@
     //Returning iframe will set the change+id to the new value (Yes/No)
   }
 </script>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" width="100%" style="border: 1px solid #000;">
   <tr class="containerHeader">
-    <td>
+    <td style="border-bottom: 1px solid #000;">
       <strong>Group Preview: </strong><%= toHtml(SCL.getGroupName()) %>
     </td>
   </tr>
@@ -26,28 +26,28 @@
         <li>A recipient can be removed from this campaign</li>
         <li>The removed recipient will not be deleted from the group or from other campaigns</li>
       </ul>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="5">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="5">
       <strong>Contacts in this group</strong>
-    </td>     
+    </th>
   </tr>
-  <tr class="title">
-    <td align="right">
+  <tr>
+    <th style="text-align: right;">
       Count
-    </td>
-    <td width="33%">
+    </th>
+    <th width="33%">
       Name
-    </td>
-    <td width="33%">
+    </th>
+    <th width="33%">
       Company
-    </td>
-    <td width="34%">
+    </th>
+    <th width="34%">
       Email
-    </td>
-    <td align="center">
+    </th>
+    <th align="center">
       Included
-    </td>
+    </th>
   </tr>
 <%
 	Iterator j = ContactList.iterator();

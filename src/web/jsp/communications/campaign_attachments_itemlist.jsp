@@ -104,33 +104,33 @@
   }
 </SCRIPT>
 <script>var itemList = new Array();</script>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF" id="viewTable">
-<tr class="title">
-  <td colspan="2">
+<table cellpadding="4" cellspacing="0" width="100%" id="viewTable" class="details">
+<tr>
+  <th colspan="2">
     <strong>Edit Items</strong>
-  </td>
+  </th>
 </tr>
 <tr>
-  <td align="left" valign="center" width="40%">
-    <table width="100%" border="0" cellpadding="2" cellspacing="0">
+  <td valign="center" width="40%">
+    <table width="100%" border="0" cellpadding="2" cellspacing="0" class="empty">
       <tr>
-        <td nowrap align="left">
+        <td nowrap>
           Description&nbsp;
         </td>
       </tr>
       <tr>
-        <td nowrap align="left">
+        <td nowrap>
           <input type="text" name="description" value="" size="30" id ="newitem">
           <font color="red">*</font>
           <input type="hidden" name="questionid" value="<%=request.getParameter("questionid")%>">
         </td>
-        <td nowrap align="right" width="12">
+        <td nowrap style="text-align: right;" width="12">
           <input type="button" value="Add >" onClick="javascript:addValues();" id="addButton">
         </td>
      </tr>
     </table>
   </td>
-  <td align="center" valign="center" width="50%">
+  <td style="text-align: center;" valign="center" width="50%">
     <%
     int count = 0;
     String items =  request.getParameter("items");
@@ -164,12 +164,11 @@
   <br>
  <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>
-    <td align="left" colspan="2">
+    <td colspan="2">
       <input type="button" value="Save" onclick="javascript:setParentItems();javascript:window.close();">&nbsp;
       <input type="button" value="Cancel" onclick="javascript:window.close();">
     </td>
   </tr>
  </table>
  <script>document.getElementById("newitem").focus();document.getElementById("itemSelectId").selectedIndex = "-1"; </script>
-<br>
-
+ 

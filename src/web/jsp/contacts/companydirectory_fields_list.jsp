@@ -14,19 +14,11 @@
 List of Folder Records<br>
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="contact_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + ContactDetails.getId(); 
-          String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-      <dhv:container name="contacts" selected="folders" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
-    </td>
-  </tr>
+<%@ include file="contact_details_header_include.jsp" %>
+<% String param1 = "id=" + ContactDetails.getId(); 
+    String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+<dhv:container name="contacts" selected="folders" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <%
@@ -38,27 +30,27 @@ List of Folder Records<br>
     This folder can have multiple records...<br>
     &nbsp;<br>
     <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>"><dhv:permission name="contacts-external_contacts-folders-add"><a href="ExternalContacts.do?command=AddFolderRecord&contactId=<%= ContactDetails.getId() %>&catId=<%=(String)request.getAttribute("catId") %><%= addLinkParams(request, "popup|popupType|actionId") %>">Add a record to this folder</a><br>&nbsp;<br></dhv:permission></dhv:evaluate>
-    <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-      <tr class="title">
+    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+      <tr>
         <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
         <dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete">
-          <td valign="center">
+          <th valign="center">
             <strong>Action</strong>
-          </td>
+          </th>
         </dhv:permission>
         </dhv:evaluate>
-        <td align="left">
+        <th align="left">
           <strong>Record</strong>
-        </td>
-        <td align="left">
+        </th>
+        <th align="left">
           <strong>Entered</strong>
-        </td>
-        <td align="left">
+        </th>
+        <th align="left">
           <strong>Modified By</strong>
-        </td>
-        <td align="left">
+        </th>
+        <th align="left">
           <strong>Last Modified</strong>
-        </td>
+        </th>
       </tr>
 <%
     if (Records.size() > 0) {
@@ -100,7 +92,7 @@ List of Folder Records<br>
       </tr>
 <%  }  %>
 <%} else {%>
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr class="containerBody">
       <td>
         No custom folders available.

@@ -10,20 +10,12 @@
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 Opportunities<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="accounts_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="opportunities" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<dhv:container name="accounts" selected="opportunities" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
+      <%-- Begin container content --%>
 <dhv:permission name="accounts-accounts-opportunities-add"><a href="Opportunities.do?command=Prepare&orgId=<%= request.getParameter("orgId") %>">Add an Opportunity</a></dhv:permission>
 <center><%= OpportunityPagedInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
@@ -42,24 +34,24 @@ Opportunities<br>
     </form>
   </tr>
 </table>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
-    <td width="8" nowrap>
+    <th width="8" nowrap>
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td width="100%" nowrap>
+    <th width="100%" nowrap>
       <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.description">Opportunity Name</a></strong>
       <%= OpportunityPagedInfo.getSortIcon("x.description") %>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong>Best Guess Total</strong>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.modified">Last Modified</a></strong>
       <%= OpportunityPagedInfo.getSortIcon("x.modified") %>
-    </td>
+    </th>
   </tr>
 <%
 	Iterator j = OpportunityList.iterator();

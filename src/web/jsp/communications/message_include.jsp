@@ -23,11 +23,11 @@ function highlight() {
   editor.surroundHTML('<span style="background:yellow">', '</span>');
 }
 </script>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>New Message</strong>
-    </td>
+    </th>
   </tr>
   <dhv:evaluate if="<%= request.getParameter("actionId") == null %>">
   <tr>

@@ -24,15 +24,15 @@
 <a href="Admin.do?command=EditLists&moduleId=<%=moduleId%>">Lookup Lists</a> > 
 Edit List<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="3">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="3">
       <strong><%= SubTitle %></strong>
-    </td>
+    </th>
   </tr>
   <tr>
     <td width="50%">
-      <table width="100%" cellspacing="0" cellpadding="2" border="0">
+      <table width="100%" cellspacing="0" cellpadding="2" border="0" class="empty">
         <tr>
           <td valign="center">
             New Option
@@ -51,7 +51,7 @@ Edit List<br>
       </table>
     </td>
     <td width="25">
-      <table width="100%" cellspacing="0" cellpadding="2" border="0">
+      <table width="100%" cellspacing="0" cellpadding="2" border="0" class="empty">
         <tr>
           <td valign="center">
             <input type="button" value="Up" onclick="javascript:moveOptionUp(document.modifyList.selectedList)">

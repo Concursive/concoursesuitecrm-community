@@ -13,55 +13,48 @@
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>">Ticket Details</a> >
 Tasks<br>
 <hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-    <strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
-    <%= toHtml(TicketDetails.getCompanyName()) %></strong>
-    <dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + TicketDetails.getId(); %>
-      <dhv:container name="tickets" selected="tasks" param="<%= param1 %>"/>
-      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
-      </dhv:evaluate>
-    </td>
-  </tr>
+<strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
+<%= toHtml(TicketDetails.getCompanyName()) %></strong>
+<dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
+<% String param1 = "id=" + TicketDetails.getId(); %>
+<dhv:container name="tickets" selected="tasks" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
 		<td class="containerBack">
-      <br><a  href="javascript:popURL('TroubleTicketTasks.do?command=Add&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');">Add a Task</a><br><br>
+      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
+        <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
+        &nbsp;<br>
+      </dhv:evaluate>
+      <a href="javascript:popURL('TroubleTicketTasks.do?command=Add&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');">Add a Task</a><br><br>
       <%-- include the tasks created --%>
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-         <tr class="title">
-          <td align="center" nowrap>
+      <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+         <tr>
+          <th align="center" nowrap>
             <strong>Action</strong>
-          </td>
-          <td align="center" nowrap>
+          </th>
+          <th align="center" nowrap>
             <strong><a href="TroubleTicketTasks.do?command=List&ticketId=<%= TicketDetails.getId() %>&column=t.priority">Priority</a></strong>
             <%= TicketTaskListInfo.getSortIcon("t.priority") %>
-          </td>
-           <td width="100%" nowrap>
+          </th>
+          <th width="100%" nowrap>
             <strong><a href="TroubleTicketTasks.do?command=List&ticketId=<%= TicketDetails.getId() %>&column=t.description">Task</a></strong>
             <%= TicketTaskListInfo.getSortIcon("t.description") %>
-          </td>
-          <td align="center" nowrap>
+          </th>
+          <th align="center" nowrap>
             <strong>Assigned To</strong>
-          </td>
-          <td align="center" nowrap>
+          </th>
+          <th align="center" nowrap>
             <strong><a href="TroubleTicketTasks.do?command=List&ticketId=<%= TicketDetails.getId() %>&column=t.duedate">Due Date</a></strong>
             <%= TicketTaskListInfo.getSortIcon("t.duedate") %>
-          </td>
-          <td align="center" nowrap>
+          </th>
+          <th align="center" nowrap>
             <strong><a href="TroubleTicketTasks.do?command=List&ticketId=<%= TicketDetails.getId() %>&column=t.completedate">Complete Date</a></strong>
             <%= TicketTaskListInfo.getSortIcon("t.completedate") %>
-          </td>
-          <td align="center" nowrap>
+          </th>
+          <th align="center" nowrap>
             <strong><a href="TroubleTicketTasks.do?command=List&ticketId=<%= TicketDetails.getId() %>&column=t.entered">Age</a></strong>
             <%= TicketTaskListInfo.getSortIcon("t.entered") %>
-          </td>
+          </th>
          </tr>
        <%
         Iterator j = TaskList.iterator();
@@ -82,7 +75,7 @@ Tasks<br>
             <%= thisTask.getPriority() == -1 ? "-NA-" : (new Integer(thisTask.getPriority())).toString() %>
           </td>
           <td>
-          <table cellpadding="0" cellspacing="0">
+          <table cellpadding="0" cellspacing="0" class="empty">
             <tr <%= thisTask.getComplete()?"class=\"strike\"":"class=\"\""%> id="complete<%=count%>">
               <td>
         <% boolean hasAuthority = false; %> 
@@ -133,7 +126,7 @@ Tasks<br>
               <td></td>
               <td>
                 <span style="visibility:hidden" id="taskdetails<%= count %>">
-                  <table>
+                  <table class="empty">
                     <tr>
                       <td>Contact Information: </td>
                     </tr>

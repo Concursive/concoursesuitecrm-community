@@ -13,42 +13,34 @@
 Calls<br>
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <%@ include file="contact_details_header_include.jsp" %>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + ContactDetails.getId(); 
-          String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-      <dhv:container name="contacts" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
-    </td>
-  </tr>
+<%@ include file="contact_details_header_include.jsp" %>
+<% String param1 = "id=" + ContactDetails.getId(); 
+    String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+<dhv:container name="contacts" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
 <dhv:permission name="contacts-external_contacts-calls-add"><a href="ExternalContactsCalls.do?command=Add&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">Add a Call</a></dhv:permission>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CallListInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
   <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete">
-    <td>
+    <th>
       <strong>Action</strong>
-    </td>
+    </th>
    </dhv:permission> 
-    <td>
+    <th>
       <strong>Subject</strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Type</strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Length</strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Date</strong>
-    </td>
+    </th>
   </tr>
 <%
 	Iterator j = CallList.iterator();

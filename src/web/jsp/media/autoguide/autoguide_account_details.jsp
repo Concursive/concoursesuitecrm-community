@@ -13,36 +13,27 @@
 <a href="AccountsAutoGuide.do?command=AccountList&orgId=<%=OrgDetails.getOrgId()%>">Vehicle Inventory List</a> >
 Vehicle Details<br>
 <hr color="#BFBFBB" noshade>
-<%-- Account header --%>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong><%= toHtml(OrgDetails.getName()) %></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" />
-    </td>
-  </tr>
+<%@ include file="accounts_details_header_include.jsp" %>
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+<dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
     <%-- Begin container content --%>
 <dhv:permission name="accounts-autoguide-inventory-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountModify&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>';submit();"></dhv:permission>
 <dhv:permission name="accounts-autoguide-inventory-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=Delete&id=<%=InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>';confirmSubmit(this.form);"></dhv:permission>
 <dhv:permission name="accounts-autoguide-inventory-edit,accounts-autoguide-inventory-delete"><br>&nbsp;</dhv:permission>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td width="100%" valign="top">
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2" valign="center" align="center">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2" valign="center" style="text-align: center;">
 	    <strong><%= InventoryItem.getVehicle().getYear() %>
       <%= toHtml(InventoryItem.getVehicle().getMake().getName()) %>
       <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %>
       <%= toHtml(InventoryItem.getStyle()) %></strong>
-	  </td>
+	  </th>
   </tr>
 <dhv:evaluate exp="<%= hasText(InventoryItem.getStockNo()) %>">
   <tr class="containerBody">
@@ -112,26 +103,26 @@ Vehicle Details<br>
   <tr class="containerBody">
     <td nowrap class="formLabel" valign="top">Ad Runs</td>
     <td>
-      <table cellpadding="4" cellspacing="0" border="0" width="100%">
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="empty">
 <%
       Iterator adruns = InventoryItem.getAdRuns().iterator();
       while (adruns.hasNext()) {
         AdRun thisAdRun = (AdRun)adruns.next();
 %>
   <tr>
-    <td class="rowUnderline" width="10" nowrap align="left">
+    <td class="rowUnderline" width="10" nowrap style="text-align: left;">
       <img border="0" src="<%= (thisAdRun.isComplete()?"images/box-checked.gif":"images/box.gif") %>" alt="" align="absmiddle">
     </td>
-    <td class="rowUnderline" width="10%" nowrap align="center">
+    <td class="rowUnderline" width="10%" nowrap style="text-align: center;">
       <%= toDateString(thisAdRun.getRunDate()) %>
     </td>
-    <td class="rowUnderline" width="10%" nowrap align="center">
+    <td class="rowUnderline" width="10%" nowrap style="text-align: center;">
       <%= toHtml(thisAdRun.getAdTypeName()) %>
     </td>
-    <td class="rowUnderline" width="10%" nowrap align="center">
+    <td class="rowUnderline" width="10%" nowrap style="text-align: center;">
       <%= (thisAdRun.getIncludePhoto()?"Include Photo":"No Photo") %>
     </td>
-    <td class="rowUnderline" width="10%" nowrap align="left">
+    <td class="rowUnderline" width="10%" nowrap style="text-align: left;">
       &nbsp;
     </td>
     <td class="rowUnderline" width="90%" nowrap>
@@ -148,12 +139,14 @@ Vehicle Details<br>
 </table>
 <dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td>
 <font color="#8F8F8F">Status Icons:<br>
-<img border="0" src="images/box.gif" alt="" align="absmiddle"> Ad Run has not been processed by Graphic Designer<br>
-<img border="0" src="images/box-checked.gif" alt="" align="absmiddle"> Ad Run has been processed by Graphic Designer
+<img border="0" src="images/box.gif" alt="" align="absmiddle">
+Ad Run has not been processed by Graphic Designer<br>
+<img border="0" src="images/box-checked.gif" alt="" align="absmiddle">
+Ad Run has been processed by Graphic Designer
 </font> 
     </td>
   </tr>

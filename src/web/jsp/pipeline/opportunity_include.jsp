@@ -14,11 +14,11 @@
     }
 %>
 <dhv:evaluate if="<%= opportunityHeader.getId() == -1 %>">
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Opportunity details</strong>
-    </td>     
+    </th>     
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -32,11 +32,11 @@
 </table>
 &nbsp;<br>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong><%= (ComponentDetails.getId() > 0 ? "Update" : "Add") %> a Component</strong>
-    </td>
+    </th>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -60,7 +60,7 @@
       Component<br>Type(s)
     </td>
     <td>
-      <table border="0" cellspacing="0" cellpadding="0">
+      <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td>
             <select multiple name="selectedList" id="selectedList" size="5">
@@ -97,7 +97,7 @@
       Associate With
     </td>
     <td>
-      <table cellspacing="0" cellpadding="0" border="0">
+      <table cellspacing="0" cellpadding="0" border="0" class="empty">
           <tr>
               <td>
                 <input type="radio" name="<%= opportunityHeader.getId() > 0 ? "type" : "opp_type" %>" value="org"  onclick=<%= "\"javascript:document.forms['opportunityForm']." + (opportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink")  + ".value = '-1';\" " %><dhv:evaluate exp="<%=(opportunityHeader.getAccountLink() > -1)%>">checked</dhv:evaluate>>
@@ -114,7 +114,7 @@
               </td>
             </tr>
        </table>
-      <table border="0" cellspacing="0" cellpadding="0">
+      <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td>
             <input type="radio" name="<%= opportunityHeader.getId() > 0 ? "type" : "opp_type"%>" value="contact" onclick=<%= "\"javascript:document.forms['opportunityForm']." + (opportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink")  + ".value = '-1';\" " %> <dhv:evaluate if="<%= opportunityHeader.getContactLink() > -1 %>">checked</dhv:evaluate>>

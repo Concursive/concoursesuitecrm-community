@@ -57,11 +57,11 @@ Personal Information<br>
 <input type="hidden" name="orgId" value="<%= EmployeeBean.getOrgId() %>">
 <input type="hidden" name="typeId" value="<%= EmployeeBean.getTypesNameString() %>">
 <input type="hidden" name="department" value="<%=EmployeeBean.getDepartment()%>">
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Details for: <%= toHtml(EmployeeBean.getNameFirstLast()) %></strong>
-    </td>
+    </th>
   </tr>
   <tr>
     <td nowrap class="formLabel">First Name</td>
@@ -90,11 +90,11 @@ Personal Information<br>
   </tr>
 </table>
 &nbsp;<br>  
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Email Addresses</strong>
-	  </td>
+	  </th>
   </tr>
   <tr>
 <%  
@@ -130,11 +130,11 @@ Personal Information<br>
   </tr>
 </table>
 &nbsp;<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
 	    <strong>Phone Numbers</strong>
-	  </td>
+	  </th>
   </tr>
 <%  
   int icount = 0;
@@ -171,11 +171,11 @@ Personal Information<br>
   </tr>
 </table>
 &nbsp;<br>  
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Addresses</strong>
-    </td>
+    </th>
   </tr>
 <%  
   int acount = 0;

@@ -17,11 +17,11 @@ Locale<br>
 <br>
 &nbsp;
 <input type="hidden" name="modified" value="<%= User.getModifiedString() %>">
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
       <strong>Location Settings</strong>
-    </td>
+    </th>
   </tr>
   <tr>
     <td nowrap class="formLabel">Start of Day</td>

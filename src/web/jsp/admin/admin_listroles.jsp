@@ -10,24 +10,24 @@ View Roles<br>
 <dhv:permission name="admin-roles-add"><a href="Roles.do?command=InsertRoleForm">Add New Role</a></dhv:permission>
 <center><%= RoleListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="RoleListInfo"/>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+  <tr>
     <dhv:permission name="admin-roles-edit,admin-roles-delete">
-    <td>
+    <th>
       <strong>Action</strong>
-    </td>
+    </th>
     </dhv:permission>
-    <td width="35%" nowrap>
+    <th width="35%" nowrap>
       <b><a href="Roles.do?command=ListRoles&column=role">Role</a></b>
       <%= RoleListInfo.getSortIcon("role") %>
-    </td>
-    <td width="65%" nowrap>
+    </th>
+    <th width="65%" nowrap>
       <b><a href="Roles.do?command=ListRoles&column=description">Description</a></b>
       <%= RoleListInfo.getSortIcon("description") %>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <b># of users</b>
-    </td>
+    </th>
   </tr>
 <%
   Iterator i = RoleList.iterator();

@@ -179,7 +179,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
     //Output the menus
     String[] theMenus = new String[3];
-    theMenus[0] = menu.toString() + "<td width='100%' style='border: 0px; background: #fff;  border-bottom: 1px #000 solid; cursor: default'>&nbsp;</td>";
+    theMenus[0] = menu.toString() + "<td width=\"100%\" style=\"border: 0px; background: #fff; border-bottom: 1px #000 solid; cursor: default\">&nbsp;</td>";
     theMenus[1] = "<td width=\"" + menuWidth + "\" nowrap>" + graphicMenu.toString() + "</td>";
     theMenus[2] = smallMenu.toString();
     request.setAttribute("MainMenu", theMenus[0]);

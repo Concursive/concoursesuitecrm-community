@@ -23,10 +23,14 @@ import org.xml.sax.*;
  *      mrajkowski Exp $
  */
 public class ContainerMenuHandler extends TagSupport {
+  public final static int LINKS = 0;
+  public final static int TABS = 1;
+
   private String name = null;
   private String selected = null;
   private HashMap params = null;
   private String appendToUrl = "";
+  private int style = LINKS;
 
 
   /**
@@ -89,6 +93,20 @@ public class ContainerMenuHandler extends TagSupport {
 
 
   /**
+   *  Sets the style attribute of the ContainerMenuHandler object
+   *
+   *@param  tmp  The new style value
+   */
+  public void setStyle(String tmp) {
+    if ("tabs".equals(tmp.toLowerCase())) {
+      style = TABS;
+    } else {
+      style = LINKS;
+    }
+  }
+
+
+  /**
    *  This will generate a submenu. Each submenu item will be added if it
    *  doesn't require a permission, or if the user has the required permission.
    *
@@ -117,30 +135,50 @@ public class ContainerMenuHandler extends TagSupport {
         LinkedList submenuItems = (LinkedList) containerMenu.get(this.name);
         Iterator i = submenuItems.iterator();
         boolean itemOutput = false;
+        if (style == TABS) {
+          this.pageContext.getOut().write("<div class=\"tabs\" id=\"toptabs\">");
+          this.pageContext.getOut().write("<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\"><tr>");
+        }
         while (i.hasNext()) {
           SubmenuItem thisItem = (SubmenuItem) i.next();
           if (thisItem.getPermission() == null ||
               (thisItem.getPermission() != null && thisItem.getPermission().equals("")) ||
               (thisUser != null && systemStatus != null &&
               systemStatus.hasPermission(thisUser.getUserId(), thisItem.getPermission()))) {
-            if (itemOutput) {
+            if (style != TABS && itemOutput) {
               this.pageContext.getOut().write(" | ");
             }
             if (thisItem.getName().equals(selected)) {
               Template linkText = new Template(thisItem.getLink());
               linkText.setParseElements(params);
-              this.pageContext.getOut().write("<a class=\"containerOn\"href=\"" + linkText.getParsedText() + appendToUrl + "\">");
-              this.pageContext.getOut().write(thisItem.getLongHtml());
-              this.pageContext.getOut().write("</a>");
+              if (style == TABS) {
+                this.pageContext.getOut().write("<th nowrap onClick=\"javascript:window.location.href='" + linkText.getParsedText() + appendToUrl + "'\">");
+                this.pageContext.getOut().write(thisItem.getLongHtml());
+                this.pageContext.getOut().write("</th>");
+              } else {
+                this.pageContext.getOut().write("<a class=\"containerOn\" href=\"" + linkText.getParsedText() + appendToUrl + "\">");
+                this.pageContext.getOut().write(thisItem.getLongHtml());
+                this.pageContext.getOut().write("</a>");
+              }
             } else {
               Template linkText = new Template(thisItem.getLink());
               linkText.setParseElements(params);
-              this.pageContext.getOut().write("<a class=\"containerOff\" href=\"" + linkText.getParsedText() + appendToUrl + "\">");
-              this.pageContext.getOut().write(thisItem.getLongHtml());
-              this.pageContext.getOut().write("</a>");
+              if (style == TABS) {
+                this.pageContext.getOut().write("<td nowrap onClick=\"javascript:window.location.href='" + linkText.getParsedText() + appendToUrl + "'\">");
+                this.pageContext.getOut().write(thisItem.getLongHtml());
+                this.pageContext.getOut().write("</td>");
+              } else {
+                this.pageContext.getOut().write("<a class=\"containerOff\" href=\"" + linkText.getParsedText() + appendToUrl + "\">");
+                this.pageContext.getOut().write(thisItem.getLongHtml());
+                this.pageContext.getOut().write("</a>");
+              }
             }
             itemOutput = true;
           }
+        }
+        if (style == TABS) {
+          this.pageContext.getOut().write("<td width=\"100%\" style=\"background-image: none; background-color: transparent; border: 0px; border-bottom: 1px solid #666; cursor: default\">&nbsp;</td>");
+          this.pageContext.getOut().write("</tr></table></div>");
         }
       }
     } catch (Exception e) {
