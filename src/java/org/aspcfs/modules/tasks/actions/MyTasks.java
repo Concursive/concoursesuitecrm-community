@@ -234,15 +234,11 @@ public final class MyTasks extends CFSModule {
       return ("DefaultError");
     }
 
-    if (context.getRequest().getParameter("id") != null) {
-      id = Integer.parseInt(context.getRequest().getParameter("id"));
-    }
-
     try {
       db = this.getConnection(context);
       Task thisTask = (Task) context.getFormBean();
       thisTask.setModifiedBy(getUserId(context));
-      int count = thisTask.update(db, id);
+      int count = thisTask.update(db);
       if (count == -1) {
         processErrors(context, thisTask.getErrors());
       }
@@ -405,7 +401,7 @@ public final class MyTasks extends CFSModule {
       } else {
         thisTask.setComplete(false);
       }
-      count = thisTask.update(db, taskId);
+      count = thisTask.update(db);
       this.freeConnection(context, db);
       if (count != -1) {
         String filePath = context.getServletContext().getRealPath("/") + "images" + fs + fileName;

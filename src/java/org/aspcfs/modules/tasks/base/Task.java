@@ -887,19 +887,21 @@ public class Task extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public int update(Connection db, int thisId) throws SQLException {
+  public int update(Connection db) throws SQLException {
     String sql = null;
     ResultSet rs = null;
     PreparedStatement pst = null;
     int count = 0;
-
+    if (id == -1) {
+      throw new SQLException("Task ID not specified");
+    }
     if (!isValid()) {
       return -1;
     }
 
     try {
       db.setAutoCommit(false);
-      Task previousTask = new Task(db, thisId);
+      Task previousTask = new Task(db, id);
       sql = "UPDATE task " +
           "SET modifiedby = ?, priority = ?, description = ?, notes = ?, " +
           "sharing = ?, owner = ?, duedate = ?, estimatedloe = ?, " +
@@ -928,10 +930,9 @@ public class Task extends GenericBean {
         pst.setTimestamp(++i, null);
       }
       DatabaseUtils.setInt(pst, ++i, categoryId);
-      pst.setInt(++i, thisId);
+      pst.setInt(++i, id);
       pst.setTimestamp(++i, this.getModified());
       count = pst.executeUpdate();
-      this.id = thisId;
       pst.close();
       if (this.getContactId() != -1) {
         insertContacts(db);
@@ -1244,9 +1245,9 @@ public class Task extends GenericBean {
     if (this.getDescription() == null || this.getDescription().equals("")) {
       errors.put("descriptionError", "Task Description is required");
     }
-    //if (this.getOwner() == -1) {
-    //  errors.put("ownerError", "Owner name is required");
-    //}
+    if (this.getCategoryId() == -1 && this.getOwner() == -1) {
+      errors.put("ownerError", "Owner name is required");
+    }
     if (hasErrors()) {
       return false;
     } else {
