@@ -12,16 +12,24 @@ public class SyncTableList extends Vector {
 
   private int systemId = -1;
   private boolean buildTextFields = true;
+  private boolean buildSyncElementsOnly = false;
 
   public SyncTableList() { }
 
   public void setSystemId(int tmp) { this.systemId = tmp; }
   public void setSystemId(String tmp) { this.systemId = Integer.parseInt(tmp); }
   public void setBuildTextFields(boolean tmp) { this.buildTextFields = tmp; }
+  public void setBuildSyncElementsOnly(boolean tmp) { this.buildSyncElementsOnly = tmp; }
+  public void setBuildSyncElementsOnly(String tmp) { 
+    this.buildSyncElementsOnly = 
+      (tmp.equalsIgnoreCase("true") || 
+      tmp.equalsIgnoreCase("on")); 
+  }
 
   public int getSystemId() { return systemId; }
   public boolean getBuildTextFields() { return buildTextFields; }
-  
+  public boolean getBuildSyncElementsOnly() { return buildSyncElementsOnly; }
+
   public void select(Connection db) throws SQLException {
     buildList(db);
   }
@@ -33,11 +41,11 @@ public class SyncTableList extends Vector {
     
     StringBuffer sql = new StringBuffer(); 
     sql.append(  
-      "SELECT table_id, system_id, table_name, mapped_class_name, entered, modified ");
+      "SELECT table_id, system_id, element_name, mapped_class_name, entered, modified ");
     if (buildTextFields) {
       sql.append(", create_statement ");
     }
-    sql.append(", order_id ");
+    sql.append(", order_id, sync_item ");
     sql.append(
       "FROM sync_table ");
     sql.append("WHERE table_id > -1 ");
@@ -65,12 +73,19 @@ public class SyncTableList extends Vector {
     if (systemId != -1) {
       sqlFilter.append("AND system_id = ? ");
     }
+    
+    if (buildSyncElementsOnly) {
+      sqlFilter.append("AND sync_item = ? ");
+    }
   }
   
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (systemId != -1) {
       pst.setInt(++i, systemId);
+    }
+    if (buildSyncElementsOnly) {
+      pst.setBoolean(++i, true);
     }
     return i;
   }
@@ -80,8 +95,8 @@ public class SyncTableList extends Vector {
     Iterator iList = this.iterator();
     while (iList.hasNext()) {
       SyncTable thisTable = (SyncTable)iList.next();
-      if (thisTable.getSystemId() == thisSystemId) {
-        objectMap.put(thisTable.getTableName(), thisTable.getMappedClassName());
+      if (thisTable.getSystemId() == thisSystemId && thisTable.getMappedClassName() != null) {
+        objectMap.put(thisTable.getName(), thisTable.getMappedClassName());
       }
     }
     return objectMap;

@@ -1,24 +1,18 @@
 <?xml version="1.0" standalone="yes"?> 
-<aspcfs>
+<app>
   <authentication>
-    <id>127.0.0.1</id>
-    <code>20178A</code>
+    <id>127.0.0.1</id> 
+    <code>BZTST27A</code> 
+    <systemId>2</systemId>
+    <clientId>*PUT YOUR PDA_ID HERE*</clientId>
   </authentication>
-  <transaction>
-    <ticket type="insert">
-      <orgId>0</orgId>
-      <contactId>0</contactId>
-      <problem>
-        First line is return phone #
-        Second line is message text
-        Any additional lines can be used for the message
-      </problem>
-      <severityCode>1</severityCode>
-      <comment>
-        Message taken by and timestamp
-      </comment>
-    </ticket>
+  <transaction id="3">
+    <meta>
+      <property>name</property>
+    </meta>
+    <tableList action="select">
+      <systemId>2</systemId>
+      <buildSyncElementsOnly>true</buildSyncElementsOnly>
+    </tableList>
   </transaction>
-</aspcfs>
-
-  
+</app>

@@ -11,12 +11,13 @@ public class SyncTable extends GenericBean {
 
   private int id = -1;
   private int systemId = -1;
-  private String tableName = null;
+  private String name = null;
   private String mappedClassName = null;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
   private String createStatement = null;
   private int orderId = -1;
+  private boolean syncItem = false;
   
   private boolean buildTextFields = true;
 
@@ -28,7 +29,7 @@ public class SyncTable extends GenericBean {
 
   public void setId(int tmp) { this.id = tmp; }
   public void setSystemId(int tmp) { this.systemId = tmp; }
-  public void setTableName(String tmp) { this.tableName = tmp; }
+  public void setName(String tmp) { this.name = tmp; }
   public void setMappedClassName(String tmp) { this.mappedClassName = tmp; }
   public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
   public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
@@ -38,27 +39,27 @@ public class SyncTable extends GenericBean {
 
   public int getId() { return id; }
   public int getSystemId() { return systemId; }
-  public String getTableName() { return tableName; }
+  public String getName() { return name; }
   public String getMappedClassName() { return mappedClassName; }
   public java.sql.Timestamp getEntered() { return entered; }
   public java.sql.Timestamp getModified() { return modified; }
   public String getCreateStatement() { return createStatement; }
   public int getOrderId() { return orderId; }
+  public boolean getSyncItem() { return syncItem; }
   public boolean getBuildTextFields() { return buildTextFields; }
 
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("table_id");
     systemId = rs.getInt("system_id");
-    tableName = rs.getString("table_name");
+    name = rs.getString("element_name");
     mappedClassName = rs.getString("mapped_class_name");
-    System.out.println("SyncTable-> Getting entered");
     entered = rs.getTimestamp("entered");
-    System.out.println("SyncTable-> Getting modified");
     modified = rs.getTimestamp("modified");
     if (buildTextFields) {
       createStatement = rs.getString("create_statement");
     }
     orderId = rs.getInt("order_id");
+    syncItem = rs.getBoolean("sync_item");
   }
 }
 

@@ -25,11 +25,12 @@ CREATE TABLE sync_system (
 CREATE TABLE sync_table (
   table_id SERIAL PRIMARY KEY,
   system_id INT NOT NULL,
-  table_name VARCHAR(255),
+  element_name VARCHAR(255),
   mapped_class_name VARCHAR(255),
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   create_statement TEXT,
-  order_id INT DEFAULT -1
+  order_id INT DEFAULT -1,
+  sync_item BOOLEAN DEFAULT false
 );
 

@@ -289,11 +289,13 @@ public class TransactionItem {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TransactionItem-> " + object.getClass().getName() + " " + executeMethod);
       }
-      if (action == SELECT || action == INSERT) {
+      if ((action == INSERT && meta != null) || action == SELECT) {
         if (recordList == null) {
           recordList = new RecordList(name);
         }
-
+      }
+      
+      if (recordList != null) {
         //Need to see if the Object is a collection of Objects, otherwise
         //just process it as a single record.
         if (object instanceof java.util.AbstractList) {
