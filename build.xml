@@ -49,6 +49,9 @@
   <property name="DEST_DOCROOT" value="${DEST}/html"/>
   <property name="DEST_BIN" value="${DEST}/bin"/>
   <property name="DEST_LOGS" value="${DEST}/logs"/>
+  
+  <property name="DBTYPE2" value="postgresql"/>
+  <property name="DBTYPE" value="mssql"/>
 
   <target name="showuser" >
     <echo message="Username: ${USER}"/>
@@ -437,5 +440,73 @@ determined user is ${USER}
         <pathelement location="${SRC_LIB}/theseus.jar"/>
       </classpath>
     </javadoc>
+  </target>
+  
+  <target name="builddb" description="Creates a new database">
+    <echo message="Building database"/>
+    
+    <!-- Prepare files for any database type -->
+    <delete dir="${SRC}/tmp" failonerror="false"/>
+    <mkdir dir="${SRC}/tmp"/>
+    <copy todir="${SRC}/tmp">
+      <fileset dir="${SRC}/database">
+        <include name="*.init" />
+      </fileset>
+    </copy>
+    
+    <!-- Only needed for MSSQL -->
+    <replace dir="${SRC}/tmp" token="true" value="1">
+      <include name="*.init"/>
+    </replace>
+    <replace dir="${SRC}/tmp" token="false" value="0">
+      <include name="*.init"/>
+    </replace>
+  
+    <!-- Create database and initialize data -->
+    <sql
+        driver="com.microsoft.jdbc.sqlserver.SQLServerDriver"
+        url="jdbc:microsoft:sqlserver://216.54.81.105:1433;DatabaseName=cdb_cfs"
+        userid="postgres"
+        password="p0stgres">
+        <!--driver="org.postgresql.Driver"-->
+      <classpath>
+        <path refid="cfs2.classpath"/>
+      </classpath>
+        
+      <transaction src="database/${DBTYPE}/gatekeeper.sql"/>
+      <transaction src="database/gatekeeper.init"/>
+      
+      <transaction src="database/${DBTYPE}/new_cdb.sql"/>
+      <transaction src="database/code_tables.init"/>
+      <transaction src="database/access.init"/>
+      <transaction src="database/organization.init"/>
+      <transaction src="${SRC}/tmp/permissions.init"/>
+      <transaction src="${SRC}/tmp/data.init"/>
+      
+      <transaction src="database/${DBTYPE}/new_cfs2.sql"/>
+      
+      <transaction src="database/${DBTYPE}/new_opportunity.sql"/>
+      <transaction src="${SRC}/tmp/opportunity.init"/>
+      
+      <transaction src="database/${DBTYPE}/new_tms.sql"/>
+      <transaction src="${SRC}/tmp/tms.init"/>
+      
+      <transaction src="database/${DBTYPE}/new_custom_field.sql"/>
+      
+      <transaction src="database/${DBTYPE}/new_project.sql"/>
+      <transaction src="${SRC}/tmp/project.init"/>
+      
+      <transaction src="database/${DBTYPE}/new_campaign.sql"/>
+      <transaction src="${SRC}/tmp/campaign.init"/>
+      
+      <transaction src="database/${DBTYPE}/new_help.sql"/>
+      
+      <transaction src="database/${DBTYPE}/new_sync.sql"/>
+      <transaction src="${SRC}/tmp/sync.init"/>
+      
+      <transaction src="database/${DBTYPE}/new_autoguide.sql"/>
+      <transaction src="${SRC}/tmp/autoguide.init"/>
+    </sql>
+    <delete dir="${SRC}/tmp" failonerror="false"/>
   </target>
 </project>

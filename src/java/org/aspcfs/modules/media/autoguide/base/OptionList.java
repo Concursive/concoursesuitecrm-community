@@ -98,7 +98,7 @@ public class OptionList extends ArrayList {
     }
     sql.append("WHERE o.option_id > -1 ");
     createFilter(sql);
-    sql.append("ORDER BY level, option_id ");
+    sql.append("ORDER BY level, o.option_id ");
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();

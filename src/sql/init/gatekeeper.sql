@@ -7,14 +7,24 @@ DELETE FROM sites;
 INSERT INTO sites 
 (sitecode,vhost,dbhost,dbname,dbport,dbuser,dbpw,driver) 
 VALUES 
-('ds21','ds21.darkhorseventures.com'
-,'jdbc:postgresql://216.54.81.101','cdb_ds21',5432,'cfsdba','','org.postgresql.Driver');
+('cfs',
+ '127.0.0.1',
+ 'jdbc:postgresql://127.0.0.1',
+ 'cdb_cfs',
+ 5432,
+ 'postgres','',
+ 'org.postgresql.Driver');
 
 INSERT INTO sites 
 (sitecode,vhost,dbhost,dbname,dbport,dbuser,dbpw,driver) 
 VALUES 
-('ds22','ds23.darkhorseventures.com'
-,'jdbc:postgresql://12.101.73.29','cdb_ds23',5432,'cfsdba','','org.postgresql.Driver');
-
+('cfs2',
+ '127.0.0.1',
+ 'jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs',
+ 'cdb_cfs',
+ 1433,
+ 'postgres',
+ 'p0stgres',
+ 'com.microsoft.jdbc.sqlserver.SQLServerDriver');
 
 

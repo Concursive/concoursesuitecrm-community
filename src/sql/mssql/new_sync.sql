@@ -13,7 +13,8 @@ CREATE TABLE sync_client (
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL
+  modifiedby INT NOT NULL,
+  anchor DATETIME DEFAULT NULL
 );
 
 CREATE TABLE sync_system (
@@ -32,4 +33,13 @@ CREATE TABLE sync_table (
   create_statement TEXT,
   order_id INT DEFAULT -1,
   sync_item BIT DEFAULT 0
-);  
+);
+
+CREATE TABLE sync_map (
+  map_id INT IDENTITY PRIMARY KEY,
+  client_id INT NOT NULL,
+  table_id INT NOT NULL,
+  record_id INT NOT NULL,
+  cuid VARCHAR(50) NOT NULL,
+  complete BIT DEFAULT 0
+);

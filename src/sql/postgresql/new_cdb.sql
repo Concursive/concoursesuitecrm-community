@@ -462,8 +462,6 @@ create user gatekeeper nocreatedb nocreateuser;
 grant select on access to gatekeeper;
 grant insert on mod_log to gatekeeper;
 
-
-
 CREATE TABLE organization_address (
   address_id SERIAL PRIMARY KEY,
   org_id INT REFERENCES organization(org_id),
@@ -584,6 +582,4 @@ CREATE TABLE cfsinbox_messagelink (
   sent_from INT NOT NULL
 );
   
-
-
 

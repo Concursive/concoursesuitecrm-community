@@ -2,10 +2,9 @@
  *  MSSQL Table Creation
  *
  *@author     mrajkowski
- *@created    March 20, 2002
+ *@created    March 27, 2002
  *@version    $Id$
  */
- 
 
 CREATE TABLE groups (
 	group_id INT IDENTITY PRIMARY KEY ,

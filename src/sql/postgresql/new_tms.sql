@@ -1,3 +1,11 @@
+/**
+ *  PostgreSQL Table Creation
+ *
+ *@author     chris price
+ *@created    April 10, 2002
+ *@version    $Id$
+ */
+ 
 CREATE TABLE ticket_level (
   id serial
   ,level_code int NOT NULL PRIMARY KEY

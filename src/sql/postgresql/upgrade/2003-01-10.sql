@@ -35,6 +35,7 @@ CREATE TABLE sync_table (
   Run sync.init as well
   Move the fileLibrary folder to WEB-INF
   Update the web.xml file with the ContainerMenuConfig
+  Delete the tomcat work folders
 */
 
 /* 05/09/2002 - ds21 up to date */

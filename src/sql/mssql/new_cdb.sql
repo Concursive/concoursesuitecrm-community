@@ -58,6 +58,27 @@ INSERT INTO lookup_contact_types (description) VALUES ('Sales');
 INSERT INTO lookup_contact_types (description) VALUES ('Billing');
 INSERT INTO lookup_contact_types (description) VALUES ('Technical');
 
+CREATE TABLE lookup_account_types (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
+INSERT INTO lookup_account_types (description) VALUES ('Customer');
+INSERT INTO lookup_account_types (description) VALUES ('Competitor');
+INSERT INTO lookup_account_types (description) VALUES ('Partner');
+INSERT INTO lookup_account_types (description) VALUES ('Vendor');
+
+CREATE TABLE account_type_levels (
+  id int not null,
+  type_id int not null,
+  level INTEGER not null,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+)
+;
 
 CREATE TABLE state (
   state_code CHAR(2) PRIMARY KEY NOT NULL,
@@ -224,6 +245,9 @@ CREATE TABLE access (
   enabled BIT NOT NULL DEFAULT 1
 );
 
+
+
+
 CREATE TABLE role (
   role_id INT IDENTITY PRIMARY KEY,
   role VARCHAR(80) NOT NULL,
@@ -308,6 +332,9 @@ CREATE TABLE organization (
   custom_data TEXT
 );
 
+
+
+
 CREATE TABLE lookup_stage (
   code INT IDENTITY PRIMARY KEY,
   order_id INT,
@@ -368,7 +395,8 @@ CREATE TABLE contact (
   owner INT NOT NULL,
   custom1 int default -1,
   custom2 int default -1,
-  custom_data TEXT
+  custom_data TEXT,
+  url VARCHAR(100)
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" ("user_id");
@@ -430,10 +458,8 @@ CREATE TABLE motd (
   modifiedby INT NOT NULL
 );
 
-/*create user gatekeeper nocreatedb nocreateuser;
-grant select on access to gatekeeper;
-grant insert on mod_log to gatekeeper;
-*/
+
+
 
 
 CREATE TABLE organization_address (

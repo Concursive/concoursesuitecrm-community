@@ -1,3 +1,11 @@
+/**
+ *  PostgreSQL Table Creation
+ *
+ *@author     mrajkowski
+ *@created    March 19, 2002
+ *@version    $Id$
+ */
+ 
 CREATE TABLE help_contents (
   help_id SERIAL PRIMARY KEY,
   module VARCHAR(255) NOT NULL,

@@ -74,8 +74,10 @@ public class Make {
 
   public boolean exists(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM autoguide_make " +
+      "SELECT make.make_id, make.make_name, " +
+      "make.entered as make_entered, make.enteredby as make_enteredby, " +
+      "make.modified as make_modified, make.modifiedby as make_modifiedby " +
+      "FROM autoguide_make make " +
       "WHERE lower(make_name) = ? ");
     pst.setString(1, name.toLowerCase());
     ResultSet rs = pst.executeQuery();

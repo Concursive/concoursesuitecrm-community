@@ -65,8 +65,10 @@ public class Model {
 
   public boolean exists(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM autoguide_model " +
+      "SELECT model.model_id, model.make_id AS model_make_id, model.model_name, " +
+      "model.entered, model.enteredby, " + 
+      "model.modified, model.modifiedby " +
+      "FROM autoguide_model model " +
       "WHERE lower(model_name) = ? ");
     pst.setString(1, name.toLowerCase());
     ResultSet rs = pst.executeQuery();
