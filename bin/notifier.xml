@@ -5,10 +5,10 @@
     <param-name>DatabaseDriver</param-name>
     <param-value>org.postgresql.Driver</param-value>
   </init-param>
-  <!-- Web address for CFS Web Server to retrieve data from -->
+  <!-- Web address for CFS Web Server to retrieve messages from -->
   <init-param>
     <param-name>CFSWebServer</param-name>
-    <param-value>127.0.0.1:8080</param-value>
+    <param-value>127.0.0.1</param-value>
   </init-param>
   <!-- Remote Hylafax fax server -->
   <init-param>
