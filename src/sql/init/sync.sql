@@ -227,8 +227,6 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
        record_status_id     int NULL,
        entered              datetime NULL,
        PRIMARY KEY (inventory_id), 
-       FOREIGN KEY (vehicle_id)
-                             REFERENCES vehicle (vehicle_id), 
        FOREIGN KEY (account_id)
                              REFERENCES account (account_id), 
        FOREIGN KEY (record_status_id)

@@ -7,6 +7,7 @@ import org.theseus.actions.*;
 import java.sql.*;
 import com.darkhorseventures.cfsbase.Constants;
 import com.darkhorseventures.cfsbase.SyncClientMap;
+import com.darkhorseventures.cfsbase.SyncTable;
 import com.darkhorseventures.cfsmodule.CFSModule;
 import com.darkhorseventures.autoguide.base.*;
 import com.darkhorseventures.utils.ImageUtils;
@@ -73,11 +74,12 @@ public final class ProcessFTP extends CFSModule {
           //Look up the server's id from the client's id
           SyncClientMap thisClientMap = new SyncClientMap();
           thisClientMap.setClientId(Integer.parseInt(clientId));
-          //TODO: Do not hardcode the table_id, lookup accountInventoryList
-          int recordId = thisClientMap.lookupServerId(db, 23, inventoryId);
-
+          int tableId = SyncTable.lookupTableId(db, 2, "com.darkhorseventures.autoguide.base.InventoryList");
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("ProcessFTP-> TableID = " + tableId);
+          }
+          int recordId = thisClientMap.lookupServerId(db, tableId, inventoryId);
           if (recordId > -1) {
-
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
             String datedFilename = formatter.format(new java.util.Date()) + i;
             System.out.println(datedPath.getPath());
@@ -132,6 +134,9 @@ public final class ProcessFTP extends CFSModule {
       if (db != null) {
         freeConnection(context, db);
       }
+    }
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("ProcessFTP-> Finished");
     }
     return "-none-";
   }

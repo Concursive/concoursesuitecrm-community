@@ -22,6 +22,18 @@
       message += "- StockNo is a required field\r\n";
       formTest = false;
     }
+    if (form.vehicle_year.selectedIndex == 0) {
+      message += "- Year is a required field\r\n";
+      formTest = false;
+    }
+    if (form.vehicle_makeId.selectedIndex == 0) {
+      message += "- Make is a required field\r\n";
+      formTest = false;
+    }
+    if (form.vehicle_modelId.selectedIndex == 0) {
+      message += "- Model is a required field\r\n";
+      formTest = false;
+    }
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
