@@ -1,5 +1,3 @@
-INSERT INTO lookup_contact_types (description) VALUES ('Employee');
-INSERT INTO lookup_contact_types (description) VALUES ('Personal');
 INSERT INTO lookup_contact_types (description) VALUES ('Sales');
 INSERT INTO lookup_contact_types (description) VALUES ('Billing');
 INSERT INTO lookup_contact_types (description) VALUES ('Technical');

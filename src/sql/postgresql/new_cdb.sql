@@ -222,7 +222,6 @@ CREATE TABLE organization (
 
 CREATE INDEX "orglist_name" ON "organization" (name);
 
-
 CREATE TABLE contact (
   contact_id serial PRIMARY KEY,
   user_id INT references access(user_id),
@@ -231,18 +230,17 @@ CREATE TABLE contact (
   title VARCHAR(80),
   department INT references lookup_department(code),
   super INT REFERENCES contact,
-  nameSalutation varchar(80),
-  nameLast VARCHAR(80) NOT NULL,
-  nameFirst VARCHAR(80) NOT NULL,
-  nameMiddle VARCHAR(80),
-  nameSuffix VARCHAR(80),
+  namesalutation varchar(80),
+  namelast VARCHAR(80) NOT NULL,
+  namefirst VARCHAR(80) NOT NULL,
+  namemiddle VARCHAR(80),
+  namesuffix VARCHAR(80),
   assistant INT REFERENCES contact,
   birthdate DATE,
-  type_id INT REFERENCES lookup_contact_types,
   notes TEXT,
   site INT,
-  imName VARCHAR(30),
-  imService INT,
+  imname VARCHAR(30),
+  imservice INT,
   locale INT,
   employee_id varchar(80) UNIQUE,
   employmenttype INT,
@@ -255,15 +253,12 @@ CREATE TABLE contact (
   enabled BOOLEAN DEFAULT true,
   owner INT REFERENCES access(user_id),
   custom1 int default -1,
-  custom2 int default -1,
-  custom_data TEXT,
   url VARCHAR(100),
   primary_contact BOOLEAN DEFAULT false,
   employee boolean NOT NULL DEFAULT false,
-  personal boolean NOT NULL DEFAULT false,
   org_name VARCHAR(255),
   access_type INT REFERENCES lookup_access_types(code) 
-) ;
+);
 
 CREATE INDEX "contact_user_id_idx" ON "contact" USING btree ("user_id");
 CREATE INDEX "contactlist_namecompany" ON "contact" (namelast, namefirst, company);
