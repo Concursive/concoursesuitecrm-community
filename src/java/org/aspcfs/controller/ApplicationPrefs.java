@@ -261,6 +261,7 @@ public class ApplicationPrefs {
     //Define the mail server to be used within CFS
     addParameter(context, "MailServer", this.get("MAILSERVER"));
     addParameter(context, "FaxServer", this.get("FAXSERVER"));
+    addParameter(context, "FaxEnabled", this.get("FAXENABLED"));
     addParameter(context, "SYSTEM.TIMEZONE", this.get("SYSTEM.TIMEZONE"));
     if (this.has("MAILSERVER")) {
       System.setProperty("MailServer", this.get("MAILSERVER"));
