@@ -10,6 +10,9 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 import org.aspcfs.modules.setup.beans.Zlib;
+import org.aspcfs.modules.setup.base.Registration;
+import java.sql.Connection;
+import org.aspcfs.modules.login.base.AuthenticationItem;
 
 public class SetupServer extends CFSModule {
 
@@ -38,8 +41,34 @@ public class SetupServer extends CFSModule {
       //Append the error text
       Element errorText = document.createElement("errorText");
       if (license.isValid()) {
-        status.appendChild(document.createTextNode("0"));
-        errorText.appendChild(document.createTextNode("SUCCESS"));
+        //Store the license information in the database
+        Connection db = null;
+        try {
+          //get a database connection using the vhost context info
+          AuthenticationItem auth = new AuthenticationItem();
+          db = auth.getConnection(context, false);
+          Registration registration = new Registration();
+          registration.setKeyFile(license.getKeyText());
+          registration.setNameFirst(license.getNameFirst());
+          registration.setNameLast(license.getNameLast());
+          registration.setCompany(license.getCompany());
+          registration.setEmail(license.getEmail());
+          registration.setProfile(license.getProfile());
+          registration.setText(license.getText());
+          registration.setOs(license.getOs());
+          registration.setJava(license.getJava());
+          registration.setWebserver(license.getWebserver());
+          registration.setIp(context.getIpAddress());
+          registration.insert(db);
+          status.appendChild(document.createTextNode("0"));
+          errorText.appendChild(document.createTextNode("SUCCESS"));
+        } catch (Exception e) {
+          status.appendChild(document.createTextNode("1"));
+          errorText.appendChild(document.createTextNode("FAILURE"));
+        } finally {
+          freeConnection(context, db);
+        }
+        //Send the registration email
         license.sendEmailRegistration();
       } else {
         status.appendChild(document.createTextNode("1"));

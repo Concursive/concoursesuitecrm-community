@@ -17,9 +17,10 @@ Users will have the capability to send faxes using Dark Horse CRM.<br>
 The faxing component requires a properly configured
 <a href="http://www.hylafax.org" target="_new">HylaFax</a> server including fax hardware.<br>
 Which fax server should Dark Horse CRM use?<br>
-- The specified server must allow this server to send faxes<br>
-- Leave blank if faxing will not be used<br>
-&nbsp;<br>
+<ul>
+<li>The specified server must allow this server to send faxes</li>
+<li>Leave blank if faxing will not be used</li>
+</ul>
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>

@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="registration" class="org.aspcfs.modules.setup.beans.RegistrationBean" scope="request"/>
+<jsp:useBean id="server" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
 <script language="JavaScript">
@@ -47,20 +48,18 @@
   </tr>
   <tr>
     <td>
-      To request a registration key, fill out the following information.<br>
-      <br>
-      The information will be sent to Dark Horse Ventures and processed.<br>
-      <br>
-      A key will be sent by email to the address specified below.<br>
-      <br>
-      In good faith, Dark Horse Ventures provides this software and
-      entitles you to use it with up to five (5) users.
-      In return, anonymous email addresses will not be accepted
-      when processing registrations.
-      Your email address will not be provided to others without
-      your consent.<br>
-      <br>
-      - The Dark Horse Ventures Team
+      To request a registration license, fill out the following information.<br>
+      <ul>
+      <li>The information below will be sent to Dark Horse Ventures and processed</li>
+      <li>A license file will be sent by email to the address specified below</li>
+      <li>In good faith, Dark Horse Ventures provides this software and
+      entitles you to use it according to the license agreement</li>
+      <li>Anonymous email addresses will not be accepted
+      when processing registrations</li>
+      <li>Your email address and contact information will not be provided to others without
+      your consent</li>
+      </ul>
+      The Dark Horse Ventures Team
       <br>&nbsp;
     </td>
   </tr>
@@ -68,7 +67,7 @@
     <th>Registration</th>
   </tr>
   <tr>
-    <td nowrap>
+    <td>
       A profile will allow you to manage this account online and is simply a name
       that you would like to refer to for this system.<br>
       <br>
@@ -116,6 +115,31 @@
           <td>
             <input type="text" size="40" maxlength="255" name="email" value="<%= toHtmlValue(registration.getEmail()) %>"/><font color="red">*</font>
             <%= showAttribute(request, "emailError") %>
+          </td>
+        </tr>
+        
+        <tr>
+          <td class="formLabel">
+            O/S
+          </td>
+          <td>
+            <%= System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version") %>
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            JVM
+          </td>
+          <td>
+            <%= System.getProperty("java.version") %>
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            Server
+          </td>
+          <td>
+            <%= toHtml(server) %>
           </td>
         </tr>
         <tr>

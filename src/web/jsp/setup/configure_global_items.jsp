@@ -4,6 +4,11 @@
 <%
   String image = "<img alt=\"Current Step\" src=\"images/bullet.gif\" align=\"absmiddle\"/>&nbsp;";
 %>
+<table width="100%" border="0">
+  <tr>
+    <td><b>Dark Horse CRM Installation</b></td>
+  </tr>
+</table>
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th colspan="2">

@@ -41,8 +41,9 @@ import java.util.TimeZone;
  */
 public class Setup extends CFSModule {
 
-  public static final String os = System.getProperty("os.name");
-  
+  public final static String os = System.getProperty("os.name");
+
+
   /**
    *  The user is going to the setup page
    *
@@ -101,6 +102,9 @@ public class Setup extends CFSModule {
         } catch (Exception e) {
         }
       }
+      context.getRequest().setAttribute("server",
+          HTTPUtils.getServerName(context.getRequest().getScheme() + "://" +
+          HTTPUtils.getServerUrl(context.getRequest())));
       return "SetupNeedRegOK";
     }
   }
@@ -125,6 +129,9 @@ public class Setup extends CFSModule {
     try {
       if (!bean.isValid()) {
         processErrors(context, bean.getErrors());
+        context.getRequest().setAttribute("server",
+            HTTPUtils.getServerName(context.getRequest().getScheme() + "://" +
+            HTTPUtils.getServerUrl(context.getRequest())));
         return "SendRegERROR";
       }
       String response = null;
@@ -163,6 +170,7 @@ public class Setup extends CFSModule {
       BASE64Encoder encoder = new BASE64Encoder();
       bean.setZlib(encoder.encode(ObjectUtils.toByteArray(key)));
       bean.setText(PrivateString.encrypt(key, "5USERBINARY-1.0"));
+      bean.setWebserver(HTTPUtils.getServerName("http://127.0.0.1"));
       //Make sure the server received the key ok
       if (bean.getSsl()) {
         response = HTTPUtils.sendPacket("https://ds21.darkhorseventures.com/setup/LicenseServer.do?command=SubmitRegistration", bean.toXmlString());
@@ -241,7 +249,14 @@ public class Setup extends CFSModule {
         throw new Exception("Invalid key for this system -- try again or request a new key");
       }
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError", "An error occurred in processing the license.  The following error was supplied: " + e.getMessage());
+      if (e.getMessage() == null) {
+        context.getRequest().setAttribute("actionError", "An error occurred in processing the license.  " +
+            "The license code does not match the key on this machine.  " +
+            "A new license should be requested");
+      } else {
+        context.getRequest().setAttribute("actionError", "An error occurred in processing the license.  " +
+            "The following error was supplied: " + e.getMessage());
+      }
       return "ValidateRETRY";
     }
   }
@@ -505,6 +520,7 @@ public class Setup extends CFSModule {
       prefs.add("GATEKEEPER.DBTYPE", bean.getTypeValue());
       prefs.add("GATEKEEPER.DRIVER", bean.getDriver());
       prefs.add("GATEKEEPER.URL", bean.getUrl());
+      prefs.add("GATEKEEPER.DATABASE", bean.getName());
       prefs.add("GATEKEEPER.USER", bean.getUser());
       prefs.add("GATEKEEPER.PASSWORD", bean.getPassword());
       prefs.save();

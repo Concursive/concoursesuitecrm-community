@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Timeout" class="java.lang.String" scope="request"/>
+<%@ page import="org.aspcfs.utils.web.HtmlSelectTimeZone" %>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
 <table class="trails">
@@ -79,6 +80,17 @@ Configure System
       </td>
       <td>
          <%= toHtml(getPref(getServletContext(), "FAXSERVER")) %>
+      </td>
+    </tr>
+    <tr class="row<%= (++count % 2 == 0 ? "1":"2") %>">
+      <td align="center">
+        <a href="AdminConfig.do?command=Modify&param=SYSTEM.TIMEZONE">Edit</a>
+      </td>
+      <td>
+         Default Time Zone for new users
+      </td>
+      <td>
+         <%= HtmlSelectTimeZone.getSelect("timeZone", getPref(getServletContext(), "SYSTEM.TIMEZONE")).getValueFromId(getPref(getServletContext(), "SYSTEM.TIMEZONE")) %>
       </td>
     </tr>
 </dhv:evaluate>

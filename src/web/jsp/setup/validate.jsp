@@ -19,14 +19,13 @@
   <tr>
     <td>
       If you have already registered for Dark Horse CRM, you should have received a
-      registration key by email.<br>
-      <br>
-      This registration key can only be used on the system that requested it.<br>
-      <br>
-      If you have misplaced your key or you are installing Dark Horse CRM on a different server, then you can
-      <a href="Setup.do?command=Register">request a new key</a>
-      to be sent by email.<br>
-      &nbsp;
+      license file by email.<br>
+      <ul>
+      <li>The license can only be used on the system that requested it</li>
+      <li>If you have misplaced your license or you are installing Dark Horse CRM on a different server, then you can
+      <a href="Setup.do?command=Register">request a new license</a>
+      to be sent by email</li>
+      </ul>
     </td>
   </tr>
   <tr class="sectionTitle">
@@ -40,7 +39,7 @@
             License Key
           </td>
           <td nowrap>
-            Paste your registration key into the text field to continue:<br>
+            Paste your license into the text field to continue:<br>
             <textarea cols="60" rows="5" name="license"></textarea>
           </td>
         </tr>

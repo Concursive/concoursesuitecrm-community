@@ -43,6 +43,7 @@ public class SiteUtils {
         Site thisSite = new Site();
         thisSite.setDatabaseDriver((String) config.get("GATEKEEPER.DRIVER"));
         thisSite.setDatabaseUrl((String) config.get("GATEKEEPER.URL"));
+        thisSite.setDatabaseName((String) config.get("GATEKEEPER.DATABASE"));
         thisSite.setDatabaseUsername((String) config.get("GATEKEEPER.USER"));
         thisSite.setDatabasePassword((String) config.get("GATEKEEPER.PASSWORD"));
         thisSite.setSiteCode((String) config.get("GATEKEEPER.APPCODE"));

@@ -24,6 +24,7 @@ import org.xml.sax.*;
 public class Zlib {
 
   private Key key = null;
+  private String keyText = null;
   private String nameFirst = null;
   private String nameLast = null;
   private String company = null;
@@ -31,6 +32,9 @@ public class Zlib {
   private String text = null;
   private String profile = null;
   private String mailError = null;
+  private String os = null;
+  private String java = null;
+  private String webserver = null;
 
 
   /**
@@ -40,21 +44,224 @@ public class Zlib {
    */
   public Zlib(XMLUtils xml) {
     try {
-      //Extract the key and the properties
-      BASE64Decoder decoder = new BASE64Decoder();
-      key = (Key) ObjectUtils.toObject(
-          decoder.decodeBuffer(
-          XMLUtils.getNodeText(xml.getFirstChild("zlib"))));
+      //Process the properties
+      keyText = XMLUtils.getNodeText(xml.getFirstChild("zlib"));
       nameFirst = XMLUtils.getNodeText(xml.getFirstChild("nameFirst"));
       nameLast = XMLUtils.getNodeText(xml.getFirstChild("nameLast"));
       company = XMLUtils.getNodeText(xml.getFirstChild("company"));
       email = XMLUtils.getNodeText(xml.getFirstChild("email"));
       profile = XMLUtils.getNodeText(xml.getFirstChild("profile"));
+      os = XMLUtils.getNodeText(xml.getFirstChild("os"));
+      java = XMLUtils.getNodeText(xml.getFirstChild("java"));
+      webserver = XMLUtils.getNodeText(xml.getFirstChild("webserver"));
+      //Extract the key
+      BASE64Decoder decoder = new BASE64Decoder();
+      key = (Key) ObjectUtils.toObject(decoder.decodeBuffer(keyText));
       //Test the key
       text = PrivateString.decrypt(key, XMLUtils.getNodeText(xml.getFirstChild("text")));
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
+  }
+
+
+  /**
+   *  Sets the key attribute of the Zlib object
+   *
+   *@param  tmp  The new key value
+   */
+  public void setKey(Key tmp) {
+    this.key = tmp;
+  }
+
+
+  /**
+   *  Sets the keyText attribute of the Zlib object
+   *
+   *@param  tmp  The new keyText value
+   */
+  public void setKeyText(String tmp) {
+    this.keyText = tmp;
+  }
+
+
+  /**
+   *  Sets the nameFirst attribute of the Zlib object
+   *
+   *@param  tmp  The new nameFirst value
+   */
+  public void setNameFirst(String tmp) {
+    this.nameFirst = tmp;
+  }
+
+
+  /**
+   *  Sets the nameLast attribute of the Zlib object
+   *
+   *@param  tmp  The new nameLast value
+   */
+  public void setNameLast(String tmp) {
+    this.nameLast = tmp;
+  }
+
+
+  /**
+   *  Sets the company attribute of the Zlib object
+   *
+   *@param  tmp  The new company value
+   */
+  public void setCompany(String tmp) {
+    this.company = tmp;
+  }
+
+
+  /**
+   *  Sets the email attribute of the Zlib object
+   *
+   *@param  tmp  The new email value
+   */
+  public void setEmail(String tmp) {
+    this.email = tmp;
+  }
+
+
+  /**
+   *  Sets the text attribute of the Zlib object
+   *
+   *@param  tmp  The new text value
+   */
+  public void setText(String tmp) {
+    this.text = tmp;
+  }
+
+
+  /**
+   *  Sets the profile attribute of the Zlib object
+   *
+   *@param  tmp  The new profile value
+   */
+  public void setProfile(String tmp) {
+    this.profile = tmp;
+  }
+
+
+  /**
+   *  Sets the mailError attribute of the Zlib object
+   *
+   *@param  tmp  The new mailError value
+   */
+  public void setMailError(String tmp) {
+    this.mailError = tmp;
+  }
+
+
+  /**
+   *  Sets the os attribute of the Zlib object
+   *
+   *@param  tmp  The new os value
+   */
+  public void setOs(String tmp) {
+    this.os = tmp;
+  }
+
+
+  /**
+   *  Sets the java attribute of the Zlib object
+   *
+   *@param  tmp  The new java value
+   */
+  public void setJava(String tmp) {
+    this.java = tmp;
+  }
+
+
+  /**
+   *  Sets the webserver attribute of the Zlib object
+   *
+   *@param  tmp  The new webserver value
+   */
+  public void setWebserver(String tmp) {
+    this.webserver = tmp;
+  }
+
+
+  /**
+   *  Gets the key attribute of the Zlib object
+   *
+   *@return    The key value
+   */
+  public Key getKey() {
+    return key;
+  }
+
+
+  /**
+   *  Gets the keyText attribute of the Zlib object
+   *
+   *@return    The keyText value
+   */
+  public String getKeyText() {
+    return keyText;
+  }
+
+
+  /**
+   *  Gets the nameFirst attribute of the Zlib object
+   *
+   *@return    The nameFirst value
+   */
+  public String getNameFirst() {
+    return nameFirst;
+  }
+
+
+  /**
+   *  Gets the nameLast attribute of the Zlib object
+   *
+   *@return    The nameLast value
+   */
+  public String getNameLast() {
+    return nameLast;
+  }
+
+
+  /**
+   *  Gets the company attribute of the Zlib object
+   *
+   *@return    The company value
+   */
+  public String getCompany() {
+    return company;
+  }
+
+
+  /**
+   *  Gets the email attribute of the Zlib object
+   *
+   *@return    The email value
+   */
+  public String getEmail() {
+    return email;
+  }
+
+
+  /**
+   *  Gets the text attribute of the Zlib object
+   *
+   *@return    The text value
+   */
+  public String getText() {
+    return text;
+  }
+
+
+  /**
+   *  Gets the profile attribute of the Zlib object
+   *
+   *@return    The profile value
+   */
+  public String getProfile() {
+    return profile;
   }
 
 
@@ -65,6 +272,36 @@ public class Zlib {
    */
   public String getMailError() {
     return mailError;
+  }
+
+
+  /**
+   *  Gets the os attribute of the Zlib object
+   *
+   *@return    The os value
+   */
+  public String getOs() {
+    return os;
+  }
+
+
+  /**
+   *  Gets the java attribute of the Zlib object
+   *
+   *@return    The java value
+   */
+  public String getJava() {
+    return java;
+  }
+
+
+  /**
+   *  Gets the webserver attribute of the Zlib object
+   *
+   *@return    The webserver value
+   */
+  public String getWebserver() {
+    return webserver;
   }
 
 
@@ -97,13 +334,13 @@ public class Zlib {
     mail.setHost("127.0.0.1");
     mail.setType("text/html");
     mail.addTo(email);
-    mail.setFrom("Dark Horse CRM Registration <info@darkhorseventures.com>");
-    mail.addReplyTo("info@darkhorseventures.com");
+    mail.setFrom("Dark Horse CRM Registration <register@darkhorseventures.com>");
+    mail.addReplyTo("register@darkhorseventures.com");
     mail.setSubject("Dark Horse CRM Registration");
     mail.setBody(
-        "Thanks for your interest in Dark Horse CRM.<br>" +
+        "Thank you for your interest in Dark Horse CRM.<br>" +
         "<br>" +
-        "Paste the complete registation code that follows into the Dark Horse CRM validation field:<br>" +
+        "Paste the complete registation code that follows into the Dark Horse CRM license validation field:<br>" +
         "<br>" +
         "&lt;license&gt;" + theCode + "&lt;/license&gt;");
     if (mail.send() == 2) {
@@ -127,7 +364,7 @@ public class Zlib {
     DocumentBuilder builder = dbf.newDocumentBuilder();
     Document document = builder.newDocument();
     //Root element
-    Element rootElement = document.createElement("cfsLicense");
+    Element rootElement = document.createElement("crmLicense");
     document.appendChild(rootElement);
     //First name
     Element nameFirstElement = document.createElement("nameFirst");

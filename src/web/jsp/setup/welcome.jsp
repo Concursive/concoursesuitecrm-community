@@ -22,11 +22,17 @@
       Although installation can be completed in just a few minutes, you will
       have the option at any time during the setup to continue at a later time.<br>
       <br>
-      By registering this application with Dark Horse Ventures:<br>
-      - This system will be entitled to five (5) users that can be added to Dark Horse CRM<br>
-      - The Dark Horse CRM administrator will receive information about software updates
-      as they become available
-      <br>&nbsp;
+      Registering this application with Dark Horse Ventures is required before installation,
+      whether you already have a license or not,
+      so we have made the registration process very simple.<br>
+      <ul>
+      <li>An internet connection is required before continuing</li>
+      <li>The freely available version of Dark Horse CRM
+      will entitle this system to a maximum of five (5) users</li>
+      <li>You must agree to the Dark Horse CRM License Agreement</li>
+      <li>The Dark Horse CRM administrator will receive information about software updates
+      as they become available</li>
+      </ul>
     </td>
   </tr>
   <tr class="sectionTitle">

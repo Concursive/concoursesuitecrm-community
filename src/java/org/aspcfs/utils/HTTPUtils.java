@@ -220,5 +220,27 @@ public class HTTPUtils {
     int port = request.getServerPort();
     return (request.getServerName() + (port != 80 && port != 443 ? ":" + String.valueOf(port) : "") + request.getContextPath());
   }
+
+
+  /**
+   *  Connects to a web server and gets the Server header field
+   *
+   *@param  address  Description of the Parameter
+   *@return          The serverName value
+   */
+  public static String getServerName(String address) {
+    try {
+      URL url = new URL(address);
+      URLConnection conn = url.openConnection();
+      if (conn instanceof HttpURLConnection) {
+        HttpURLConnection httpConnection = (HttpURLConnection) conn;
+        httpConnection.setRequestMethod("HEAD");
+        httpConnection.connect();
+        return httpConnection.getHeaderField("Server");
+      }
+    } catch (Exception e) {
+    }
+    return null;
+  }
 }
 

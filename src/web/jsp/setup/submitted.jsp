@@ -1,3 +1,6 @@
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<jsp:useBean id="registration" class="org.aspcfs.modules.setup.beans.RegistrationBean" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>Registration Sent</th>
@@ -8,7 +11,9 @@
       Dark Horse Ventures.<br>
       <br>
       A confirmation will be sent by email, as well as the
-      registration key for this system.
+      license file for this system.<br>
+      <br>
+      The email will be sent to: <%= toHtml(registration.getEmail()) %>
       <br>&nbsp;
     </td>
   </tr>
@@ -17,8 +22,8 @@
   </tr>
   <tr>
     <td>
-      Proceed to the key validation step once the
-      registration key has been been received by email.
+      Proceed to the validation step once the
+      license file has been been received by email.
       <br>&nbsp;<br>
       <input type="button" value="Continue >" onClick="javascript:window.location.href='Setup.do?command=Register&doReg=have'"/>
     </td>

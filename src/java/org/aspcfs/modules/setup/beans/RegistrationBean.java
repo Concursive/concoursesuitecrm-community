@@ -28,6 +28,7 @@ public class RegistrationBean extends GenericBean {
   private String zlib = null;
   private String text = null;
   private String profile = null;
+  private String webserver = null;
 
 
   /**
@@ -141,6 +142,16 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
+   *  Sets the webserver attribute of the RegistrationBean object
+   *
+   *@param  tmp  The new webserver value
+   */
+  public void setWebserver(String tmp) {
+    this.webserver = tmp;
+  }
+
+
+  /**
    *  Gets the configured attribute of the RegistrationBean object
    *
    *@return    The configured value
@@ -211,6 +222,16 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
+   *  Gets the webserver attribute of the RegistrationBean object
+   *
+   *@return    The webserver value
+   */
+  public String getWebserver() {
+    return webserver;
+  }
+
+
+  /**
    *  Gets the valid attribute of the RegistrationBean object
    *
    *@return    The valid value
@@ -250,7 +271,7 @@ public class RegistrationBean extends GenericBean {
     DocumentBuilder builder = dbf.newDocumentBuilder();
     Document document = builder.newDocument();
     //Root element
-    Element rootElement = document.createElement("cfsRegistration");
+    Element rootElement = document.createElement("crmRegistration");
     document.appendChild(rootElement);
     //First name
     Element nameFirstElement = document.createElement("nameFirst");
@@ -282,6 +303,10 @@ public class RegistrationBean extends GenericBean {
     Element javaElement = document.createElement("java");
     javaElement.appendChild(document.createTextNode(java));
     rootElement.appendChild(javaElement);
+    //Web Server type
+    Element webElement = document.createElement("webserver");
+    webElement.appendChild(document.createTextNode(webserver));
+    rootElement.appendChild(webElement);
     //Key
     if (zlib != null) {
       Element zlibElement = document.createElement("zlib");
