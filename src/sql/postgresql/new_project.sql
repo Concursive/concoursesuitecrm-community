@@ -1,72 +1,3 @@
-DROP TABLE groups;
-DROP SEQUENCE groups_group_id_seq;
-
-DROP TABLE users;
-DROP SEQUENCE users_user_id_seq;
-
-DROP TABLE user_groups;
-
-DROP TABLE departments;
-DROP SEQUENCE departments_code_seq;
-
-DROP TABLE project_assignments;
-DROP SEQUENCE project_assig_assignment_id_seq;
-
-DROP TABLE project_assignments_status;
-DROP SEQUENCE project_assignmen_status_id_seq;
-
-DROP TABLE project_inbox;
-
-DROP TABLE project_inbox_items;
-DROP SEQUENCE project_inbox_it_message_id_seq;
-
-DROP TABLE project_issues;
-DROP SEQUENCE project_issues_issue_id_seq;
-
-DROP TABLE project_issue_replies;
-DROP SEQUENCE project_issue_repl_reply_id_seq;
-
-DROP TABLE project_folders;
-DROP SEQUENCE project_folders_folder_id_seq;
-
-DROP TABLE project_files;
-DROP SEQUENCE project_files_item_id_seq;
-
-DROP TABLE project_files_version;
-
-DROP TABLE project_files_download;
-
-DROP TABLE lookup_project_templates;
-DROP SEQUENCE lookup_project_templat_code_seq;
-
-DROP TABLE lookup_project_activity;
-DROP SEQUENCE lookup_project_activit_code_seq;
-
-DROP TABLE lookup_project_priority;
-DROP SEQUENCE lookup_project_priorit_code_seq;
-
-DROP TABLE lookup_project_issues;
-DROP SEQUENCE lookup_project_issues_code_seq;
-
-DROP TABLE lookup_project_status;
-DROP SEQUENCE lookup_project_status_code_seq;
-
-DROP TABLE lookup_project_loe;
-DROP SEQUENCE lookup_project_loe_code_seq;
-
-DROP TABLE project_requirements;
-DROP SEQUENCE project_requi_requirement_i_seq;
-
-DROP TABLE projects;
-DROP SEQUENCE projects_project_id_seq;
-
-DROP TABLE project_timesheet;
-DROP SEQUENCE project_timesh_timesheet_id_seq;
-
-DROP TABLE project_team;
-
-
-
 
 CREATE TABLE groups (
 	group_id SERIAL PRIMARY KEY ,
@@ -116,12 +47,6 @@ CREATE TABLE departments (
   level INTEGER DEFAULT 0,
 	enabled BOOLEAN DEFAULT false NOT NULL
 );
-
-
-
-
-
-
 
 
 CREATE TABLE project_assignments (
@@ -399,70 +324,4 @@ CREATE TABLE project_team (
   modifiedby INTEGER DEFAULT 0 NOT NULL
 );
 
-GRANT ALL ON "groups" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "groups_group_id_seq" TO "app_user";
-
-GRANT ALL ON "users" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "users_user_id_seq" TO "app_user";
-
-GRANT ALL ON "departments" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "departments_code_seq" TO "app_user";
-
-GRANT ALL ON "user_groups" TO "app_user";
-
-GRANT ALL ON "project_assignments" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "project_assig_assignment_id_seq" TO "app_user";
-
-GRANT ALL ON "project_assignments_status" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "project_assignmen_status_id_seq" TO "app_user";
-
-GRANT ALL ON "project_inbox" TO "app_user";
-
-GRANT ALL ON "project_inbox_items" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "project_inbox_it_message_id_seq" TO "app_user";
-
-GRANT ALL ON "project_issues" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "project_issues_issue_id_seq" TO "app_user";
-
-GRANT ALL ON "project_issue_replies" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "project_issue_repl_reply_id_seq" TO "app_user";
-
-GRANT ALL ON "project_folders" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "project_folders_folder_id_seq" TO "app_user";
-
-GRANT ALL ON "project_files" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "project_files_item_id_seq" TO "app_user";
-
-GRANT ALL ON "project_files_version" TO "app_user";
-
-GRANT ALL ON "project_files_download" TO "app_user";
-
-GRANT ALL ON "lookup_project_templates" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "lookup_project_templat_code_seq" TO "app_user";
-
-GRANT ALL ON "lookup_project_activity" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "lookup_project_activit_code_seq" TO "app_user";
-
-GRANT ALL ON "lookup_project_priority" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "lookup_project_priorit_code_seq" TO "app_user";
-
-GRANT ALL ON "lookup_project_issues" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "lookup_project_issues_code_seq" TO "app_user";
-
-GRANT ALL ON "lookup_project_status" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "lookup_project_status_code_seq" TO "app_user";
-
-GRANT ALL ON "lookup_project_loe" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "lookup_project_loe_code_seq" TO "app_user";
-
-GRANT ALL ON "project_requirements" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "project_requi_requirement_i_seq" TO "app_user";
-
-GRANT ALL ON "projects" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "projects_project_id_seq" TO "app_user";
-
-GRANT ALL ON "project_timesheet" TO "app_user";
-GRANT SELECT, UPDATE, INSERT ON "project_timesh_timesheet_id_seq" TO "app_user";
-
-GRANT ALL ON "project_team" TO "app_user";
 

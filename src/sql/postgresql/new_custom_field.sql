@@ -92,9 +92,4 @@ CREATE TABLE custom_field_data (
 );
 
 CREATE INDEX "custom_field_dat_idx" ON "custom_field_data" USING btree ("record_id", "field_id");
-/*
-INSERT INTO custom_field_data 
-  (link_module_id, link_item_id, field_id, selected_item_id, entered_value) VALUES  
-  (1, 2, 1, 3, 'Credit Card')
-;
-*/
+

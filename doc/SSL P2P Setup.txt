@@ -1,0 +1,22 @@
+/**
+ *  SSL Setup
+ *
+ *@author     mrajkowski
+ *@created    March 19, 2002
+ *@version    $Id$
+ */
+
+ASPCFS can make SSL socket connections in order to transfer data to other
+systems.
+
+To create a keystore, use the following command:
+
+% keytool -genkey -alias aspcfs -keyalg RSA -keysize 1024 -dname CN=www.aspcfs.com -keystore keystore -keypass aspcfs -storepass aspcfs
+
+The resulting keystore file should be placed in the ASPCFS WEB-INF folder.
+
+When connecting to other systems, the peer system's key should be added to
+the keystore:
+
+% keytool -import -keystore keystore -alias unique_name -file file.cert
+
