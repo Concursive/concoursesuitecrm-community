@@ -80,6 +80,7 @@ Modify Component<br>
 </dhv:evaluate>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+  &nbsp;<br>
 </dhv:evaluate>
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 <% 

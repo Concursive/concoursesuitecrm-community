@@ -10,25 +10,12 @@
 <a href="Leads.do">Pipeline Management</a> > 
 Reports<br>
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="pipeline-reports-add"><a href="Leads.do?command=GenerateForm">Generate new report</a></dhv:permission>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td align="left" width="30%" nowrap>
-      <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>&nbsp;&nbsp;
-    </td>
-    <td align="center" width="40%" nowrap>
-      <%= LeadRptListInfo.getAlphabeticalPageLinks() %>
-    </td>
-    <td align="right" width="30%">
-      &nbsp;
-    </td>
-  </tr>
-</table>
+  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+  &nbsp;<br>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= !(PipelineViewpointInfo.isVpSelected(User.getUserId())) %>">
-  <center><%= LeadRptListInfo.getAlphabeticalPageLinks() %></center>
-</dhv:evaluate>
+<dhv:permission name="pipeline-reports-add"><a href="Leads.do?command=GenerateForm">Generate new report</a></dhv:permission>
+<center><%= LeadRptListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="Leads.do?command=Reports">

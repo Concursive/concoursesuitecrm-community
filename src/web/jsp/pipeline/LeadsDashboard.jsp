@@ -8,6 +8,7 @@
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="oppList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="GraphTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Read in the image map for the graph --%>
 <% String includePage = "../graphs/" + (String) request.getAttribute("GraphFileName") + ".map";%>          
@@ -23,14 +24,14 @@ Dashboard<br>
       <%-- Graphic --%>
       <table width="275" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <dhv:evaluate exp="<%= Viewpoints.size() > 1 %>">
-        <tr bgcolor="#DEE0FA">
+        <tr class="<%= (PipelineViewpointInfo.isVpSelected(User.getUserId())?"warning":"title") %>">
           <td valign="top" align="center" nowrap>
             <% Viewpoints.setJsEvent("onChange=\"javascript:document.forms[0].reset.value='true';document.forms[0].submit();\""); %>
             Viewpoint: <%= Viewpoints.getHtmlSelect("viewpointId", PipelineViewpointInfo.getVpUserId()) %><br>
           </td>
         </tr>
         </dhv:evaluate>
-        <tr bgcolor="#DEE0FA">
+        <tr class="title">
           <td valign="top" align="center" nowrap>
           <% if (request.getSession().getAttribute("leadsoverride") != null) { %>
             Dashboard: <%= toHtml((String)request.getSession().getAttribute("leadsothername")) %>
@@ -66,11 +67,11 @@ Dashboard<br>
       </table>
       <%-- User List --%>
       <table width="285" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr bgcolor="#DEE0FA">
+        <tr class="title">
           <td valign="center" nowrap>
             Reports ($Gr. Pipe.)
           </td>
-          <td width=125 valign=center>
+          <td width="125" valign=center>
             Title
           </td>
         </tr>
@@ -109,7 +110,7 @@ Dashboard<br>
     <td valign=top width="100%">
       <%-- Opportunity List --%>
       <table width="100%" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr bgcolor="#DEE0FA">
+        <tr class="title">
           <td>Opportunity</td>
           <td align="left">Amnt</td>
         </tr>

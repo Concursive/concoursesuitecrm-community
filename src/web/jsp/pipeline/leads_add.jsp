@@ -71,7 +71,8 @@ function checkForm(form) {
 Add Opportunity<br>
 <hr color="#BFBFBB" noshade>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
+  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+  &nbsp;<br>
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
@@ -137,22 +138,30 @@ Add Opportunity<br>
       Associate With
     </td>
     <td>
-      <table>
+      <table border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td>
             <input type="radio" name="opp_type" value="org" <dhv:evaluate exp="<%=(OppDetails.getHeader().getAccountLink() > -1)%>">checked</dhv:evaluate>>Account
           </td>
           <td>
-            &nbsp;<%= OrgList.getHtmlSelectDefaultNone("header_accountLink", OppDetails.getHeader().getAccountLink())%><font color=red>*</font> <%= showAttribute(request, "orgError") %>
+            &nbsp;<%= OrgList.getHtmlSelectDefaultNone("header_accountLink", OppDetails.getHeader().getAccountLink())%><font color="red">*</font> <%= showAttribute(request, "orgError") %>
           </td>
         </tr>
+      </table>
+      <table border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td>
-            <input type="radio" name="opp_type" value="contact" <dhv:evaluate exp="<%=(OppDetails.getHeader().getContactLink() > -1)%>">checked</dhv:evaluate>>Contact
+            <input type="radio" name="opp_type" value="contact" <dhv:evaluate exp="<%=(OppDetails.getHeader().getContactLink() > -1)%>">checked</dhv:evaluate>>
           </td>
-          <td align="left" valign="bottom">
-            <a href="javascript:popContactsListSingle('header_contactLink','changecontact','reset=true&filters=mycontacts|accountcontacts');"><div id="changecontact"><%= String.valueOf(OppDetails.getHeader().getContactLink()).equals("-1")?"&nbsp;None Selected":"&nbsp;" + OppDetails.getHeader().getContactName()%></div></a>
+          <td>
+            Contact:&nbsp;
+          </td>
+          <td>
+            <div id="changecontact"><%= String.valueOf(OppDetails.getHeader().getContactLink()).equals("-1")?"None Selected":"&nbsp;" + OppDetails.getHeader().getContactName()%></div>
+          </td>
+          <td>
             <input type="hidden" name="header_contactLink" id="header_contactLink" value="<%= OppDetails.getHeader().getContactLink() == -1?-1:OppDetails.getHeader().getContactLink() %>">
+            &nbsp;[<a href="javascript:popContactsListSingle('header_contactLink','changecontact','reset=true&filters=mycontacts|accountcontacts');">Select</a>]
           </td>
         </tr>
       </table>

@@ -14,26 +14,12 @@
 <a href="Leads.do">Pipeline Management</a> > 
 View Opportunities<br>
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="pipeline-opportunities-add"><a href="Leads.do?command=AddOpp&source=list">Add an Opportunity</a></dhv:permission>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td align="left" width="30%" nowrap>
-      <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b>
-    </td>
-    <td align="center" width="30%" nowrap>
-      <%= OpportunityListInfo.getAlphabeticalPageLinks() %>
-    </td>
-    <td align="right" width="40%">
-      &nbsp;
-    </td>
-    </tr>
-  </table>
+  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+  &nbsp;<br>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= !(PipelineViewpointInfo.isVpSelected(User.getUserId())) %>">
-    <center><%= OpportunityListInfo.getAlphabeticalPageLinks() %></center>
-</dhv:evaluate>
-
+<dhv:permission name="pipeline-opportunities-add"><a href="Leads.do?command=AddOpp&source=list">Add an Opportunity</a></dhv:permission>
+<center><%= OpportunityListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="Leads.do?command=ViewOpp">
