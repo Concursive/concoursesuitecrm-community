@@ -726,6 +726,7 @@ public class CFSModule {
       synchronized (this) {
         if (!statusList.containsKey(ce.getUrl())) {
           SystemStatus newSystemStatus = new SystemStatus();
+          newSystemStatus.setConnectionElement((ConnectionElement)ce.clone());
           newSystemStatus.setFileLibraryPath( 
             context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
               "fileLibrary" + fs + ce.getDbName() + fs);
