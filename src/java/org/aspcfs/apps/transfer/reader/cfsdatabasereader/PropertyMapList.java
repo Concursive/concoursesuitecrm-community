@@ -33,7 +33,7 @@ public class PropertyMapList extends HashMap {
    *@param  configFile  Description of the Parameter
    *@param  modules     Description of the Parameter
    */
-  public PropertyMapList(String configFile, ArrayList modules) {
+  public PropertyMapList(String configFile, ArrayList modules) throws Exception {
     loadMap(configFile, modules);
   }
 
@@ -44,69 +44,59 @@ public class PropertyMapList extends HashMap {
    *@param  mapFile  Description of the Parameter
    *@param  modules  Description of the Parameter
    */
-  public void loadMap(String mapFile, ArrayList modules) {
+  public void loadMap(String mapFile, ArrayList modules) throws Exception {
+    File configFile = new File(mapFile);
+    XMLUtils xml = new XMLUtils(configFile);
+    xml.getAllChildrenText(xml.getFirstChild("processes"), "module", modules);
+    logger.info("PropertyMapList module count: " + modules.size());
 
-    try {
-      File configFile = new File(mapFile);
-      XMLUtils xml = new XMLUtils(configFile);
-      xml.getAllChildrenText(xml.getFirstChild("processes"), "module", modules);
-      logger.info("PropertyMapList module count: " + modules.size());
+    ArrayList mapElements = new ArrayList();
+    XMLUtils.getAllChildren(xml.getFirstChild("mappings"), "map", mapElements);
+    Iterator mapItems = mapElements.iterator();
+    while (mapItems.hasNext()) {
+      //Get the map node
+      Element map = (Element) mapItems.next();
+      PropertyMap mapProperties = new PropertyMap();
+      mapProperties.setId((String) map.getAttribute("id"));
+      mapProperties.setTable((String) map.getAttribute("table"));
+      mapProperties.setUniqueField((String) map.getAttribute("uniqueField"));
 
-      ArrayList mapElements = new ArrayList();
-      XMLUtils.getAllChildren(xml.getFirstChild("mappings"), "map", mapElements);
-      Iterator mapItems = mapElements.iterator();
-      while (mapItems.hasNext()) {
-        //Get the map node
-        Element map = (Element) mapItems.next();
-        PropertyMap mapProperties = new PropertyMap();
-        mapProperties.setId((String) map.getAttribute("id"));
-        mapProperties.setTable((String) map.getAttribute("table"));
-        mapProperties.setUniqueField((String) map.getAttribute("uniqueField"));
-
-        //Get any property nodes
-        NodeList nl = map.getChildNodes();
-        for (int i = 0; i < nl.getLength(); i++) {
-          Node n = nl.item(i);
-          if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals("property")) {
-            String nodeText = XMLUtils.getNodeText((Element) n);
-            Property thisProperty = null;
-            if (nodeText != null) {
-              thisProperty = new Property(nodeText);
-            } else {
-              thisProperty = new Property();
-            }
-
-            String lookupValue = ((Element) n).getAttribute("lookup");
-            if (lookupValue != null && !"".equals(lookupValue)) {
-              thisProperty.setLookupValue(lookupValue);
-            }
-
-            String alias = ((Element) n).getAttribute("alias");
-            if (alias != null && !"".equals(alias)) {
-              thisProperty.setAlias(alias);
-            }
-
-            String field = ((Element) n).getAttribute("field");
-            if (field != null && !"".equals(field)) {
-              thisProperty.setField(field);
-            }
-
-            String value = ((Element) n).getAttribute("value");
-            if (value != null && !"".equals(value)) {
-              thisProperty.setValue(value);
-            }
-
-            mapProperties.add(thisProperty);
+      //Get any property nodes
+      NodeList nl = map.getChildNodes();
+      for (int i = 0; i < nl.getLength(); i++) {
+        Node n = nl.item(i);
+        if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals("property")) {
+          String nodeText = XMLUtils.getNodeText((Element) n);
+          Property thisProperty = null;
+          if (nodeText != null) {
+            thisProperty = new Property(nodeText);
+          } else {
+            thisProperty = new Property();
           }
-        }
-        if (this.containsKey(map.getAttribute("class"))) {
-          this.put((String) map.getAttribute("class") + ++count, mapProperties);
-        } else {
-          this.put((String) map.getAttribute("class"), mapProperties);
+          String lookupValue = ((Element) n).getAttribute("lookup");
+          if (lookupValue != null && !"".equals(lookupValue)) {
+            thisProperty.setLookupValue(lookupValue);
+          }
+          String alias = ((Element) n).getAttribute("alias");
+          if (alias != null && !"".equals(alias)) {
+            thisProperty.setAlias(alias);
+          }
+          String field = ((Element) n).getAttribute("field");
+          if (field != null && !"".equals(field)) {
+            thisProperty.setField(field);
+          }
+          String value = ((Element) n).getAttribute("value");
+          if (value != null && !"".equals(value)) {
+            thisProperty.setValue(value);
+          }
+          mapProperties.add(thisProperty);
         }
       }
-    } catch (Exception e) {
-      logger.info("Error reading module configuration-> " + e.toString());
+      if (this.containsKey(map.getAttribute("class"))) {
+        this.put((String) map.getAttribute("class") + ++count, mapProperties);
+      } else {
+        this.put((String) map.getAttribute("class"), mapProperties);
+      }
     }
   }
 

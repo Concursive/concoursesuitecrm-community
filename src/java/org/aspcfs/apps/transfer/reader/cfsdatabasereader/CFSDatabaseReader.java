@@ -183,7 +183,12 @@ public class CFSDatabaseReader implements DataReader {
       return false;
     }
     modules = new ArrayList();
-    mappings = new PropertyMapList(processConfigFile, modules);
+    try {
+      mappings = new PropertyMapList(processConfigFile, modules);
+    } catch (Exception e) {
+      logger.info(e.toString());
+      return false;
+    }
     return true;
   }
 
