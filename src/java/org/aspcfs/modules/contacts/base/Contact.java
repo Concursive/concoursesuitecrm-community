@@ -2503,8 +2503,6 @@ public class Contact extends GenericBean {
     url = rs.getString("url");
     primaryContact = rs.getBoolean("primary_contact");
     employee = rs.getBoolean("employee");
-    //TODO:drop column personal from contact table
-    rs.getBoolean("personal");
     accessType = rs.getInt("access_type");
 
     //lookup_department table
