@@ -24,7 +24,7 @@ public class SyncClientMap {
   private int clientId = -1;
   private int tableId = -1;
   private int recordId = -1;
-  private String clientUniqueId = null;
+  private int clientUniqueId = -1;
   private boolean complete = false;
   private java.sql.Timestamp statusDate = null;
 
@@ -71,6 +71,10 @@ public class SyncClientMap {
    *@param  tmp  The new clientUniqueId value
    */
   public void setClientUniqueId(String tmp) {
+    this.clientUniqueId = Integer.parseInt(tmp);
+  }
+  
+  public void setClientUniqueId(int tmp) {
     this.clientUniqueId = tmp;
   }
 
@@ -131,7 +135,7 @@ public class SyncClientMap {
    *
    *@return    The clientUniqueId value
    */
-  public String getClientUniqueId() {
+  public int getClientUniqueId() {
     return clientUniqueId;
   }
 
@@ -194,7 +198,7 @@ public class SyncClientMap {
     pst.setInt(++i, clientId);
     pst.setInt(++i, tableId);
     pst.setInt(++i, recordId);
-    pst.setString(++i, clientUniqueId);
+    pst.setInt(++i, clientUniqueId);
     pst.setBoolean(++i, complete);
     if (timestamp != null) {
       pst.setTimestamp(++i, timestamp);
@@ -355,7 +359,7 @@ public class SyncClientMap {
     pst.setInt(++i, clientId);
     pst.setInt(++i, tableId);
     pst.setInt(++i, recordId);
-    pst.setString(++i, clientUniqueId);
+    pst.setInt(++i, clientUniqueId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       statusDate = rs.getTimestamp("status_date");
@@ -526,7 +530,7 @@ public class SyncClientMap {
     clientId = rs.getInt("client_id");
     tableId = rs.getInt("table_id");
     recordId = rs.getInt("record_id");
-    clientUniqueId = rs.getString("cuid");
+    clientUniqueId = rs.getInt("cuid");
     complete = rs.getBoolean("complete");
     statusDate = rs.getTimestamp("status_date");
   }

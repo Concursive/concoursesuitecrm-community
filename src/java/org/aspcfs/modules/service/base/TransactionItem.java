@@ -396,6 +396,10 @@ public class TransactionItem {
           //Retrieve the previous modified date to ensure integrity of update
           syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
           syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
+          SyncTable referencedTable = (SyncTable) mapping.get(name + "List");
+          if (referencedTable != null) {
+            syncClientMap.setTableId(referencedTable.getId());
+          }
           syncClientMap.buildStatusDate(db);
           ObjectUtils.setParam(object, "modified", syncClientMap.getStatusDate());
         }

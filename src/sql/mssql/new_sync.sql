@@ -39,7 +39,7 @@ CREATE TABLE sync_map (
   client_id INT NOT NULL,
   table_id INT NOT NULL,
   record_id INT NOT NULL,
-  cuid VARCHAR(50) NOT NULL,
+  cuid INT NOT NULL,
   complete BIT DEFAULT 0,
   status_date DATETIME
 );
