@@ -204,7 +204,7 @@ public class TaskList extends ArrayList {
         "t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
         "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
         "t.estimatedloetype, t.owner, t.completedate, t.modified, " +
-        "t.category_id " +
+        "t.modifiedby, t.category_id " +
         "FROM task t " +
         "WHERE t.task_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

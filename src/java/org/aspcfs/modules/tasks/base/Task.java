@@ -29,7 +29,7 @@ public class Task extends GenericBean {
   private int priority = -1;
   private int reminderId = -1;
   private int sharing = -1;
-  private int modifiedby = -1;
+  private int modifiedBy = -1;
   private double estimatedLOE = -1;
   private int estimatedLOEType = -1;
   private int owner = -1;
@@ -81,7 +81,7 @@ public class Task extends GenericBean {
         "SELECT t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
         "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
         "t.estimatedloetype, t.owner, t.completedate, t.modified, " +
-        "t.category_id " +
+        "t.modifiedby, t.category_id " +
         "FROM task t " +
         "WHERE task_id = ? ");
     int i = 0;
@@ -238,6 +238,8 @@ public class Task extends GenericBean {
     this.sharing = Integer.parseInt(sharing);
   }
 
+  public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
+  public void setModifiedBy(String tmp) { this.modifiedBy = Integer.parseInt(tmp); }
 
   /**
    *  Sets the complete attribute of the Task object
@@ -470,6 +472,10 @@ public class Task extends GenericBean {
    */
   public java.sql.Timestamp getModified() {
     return modified;
+  }
+  
+  public int getModifiedBy() {
+    return modifiedBy;
   }
 
 
@@ -826,16 +832,17 @@ public class Task extends GenericBean {
     try {
       db.setAutoCommit(false);
       sql = "INSERT INTO task " +
-          "(enteredby, priority, description, notes, sharing, owner, duedate, estimatedloe, " +
+          "(enteredby, modifiedby, priority, description, notes, sharing, owner, duedate, estimatedloe, " +
           (estimatedLOEType == -1 ? "" : "estimatedLOEType, ") +
           "complete, completedate, category_id) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " +
           (estimatedLOEType == -1 ? "" : "?, ") +
           "?, ?, ? ) ";
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getPriority());
       pst.setString(++i, this.getDescription());
       pst.setString(++i, this.getNotes());
@@ -894,14 +901,14 @@ public class Task extends GenericBean {
       db.setAutoCommit(false);
       Task previousTask = new Task(db, thisId);
       sql = "UPDATE task " +
-          "SET enteredby = ?, priority = ?, description = ?, notes = ?, " +
+          "SET modifiedby = ?, priority = ?, description = ?, notes = ?, " +
           "sharing = ?, owner = ?, duedate = ?, estimatedloe = ?, " +
           (estimatedLOEType == -1 ? "" : "estimatedloetype = ?, ") +
           "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ?, category_id = ? " +
           "WHERE task_id = ? AND modified = ? ";
       int i = 0;
       pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getPriority());
       pst.setString(++i, this.getDescription());
       pst.setString(++i, this.getNotes());
@@ -1215,6 +1222,7 @@ public class Task extends GenericBean {
     owner = rs.getInt("owner");
     completeDate = rs.getTimestamp("completeDate");
     modified = rs.getTimestamp("modified");
+    modifiedBy = rs.getInt("modifiedby");
     categoryId = DatabaseUtils.getInt(rs, "category_id");
     if (entered != null) {
       float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
