@@ -224,6 +224,9 @@ CREATE TABLE access (
   enabled boolean NOT NULL DEFAULT true
 );
 
+DROP SEQUENCE access_user_id_seq;
+CREATE SEQUENCE access_user_id_seq start 0 increment 1 maxvalue 2147483647 minvalue 0 cache 1 ;
+
 CREATE TABLE role (
   role_id SERIAL PRIMARY KEY,
   role VARCHAR(80) NOT NULL,
@@ -307,6 +310,9 @@ CREATE TABLE organization (
   alert varchar(100) default null,
   custom_data TEXT
 );
+
+DROP SEQUENCE organization_org_id_seq;
+CREATE SEQUENCE organization_org_id_seq start 0 increment 1 maxvalue 2147483647 minvalue 0 cache 1 ;
 
 CREATE TABLE lookup_stage (
   code SERIAL PRIMARY KEY,

@@ -202,7 +202,7 @@ INSERT INTO lookup_contactphone_types (description) VALUES ('Pager');
 INSERT INTO lookup_contactphone_types (description) VALUES ('Other');
 
 CREATE TABLE access (
-  user_id INT IDENTITY PRIMARY KEY,
+  user_id INT IDENTITY(0,1) PRIMARY KEY,
   username VARCHAR(80) NOT NULL, 
   password VARCHAR(80),
   contact_id INT DEFAULT -1,
@@ -214,9 +214,9 @@ CREATE TABLE access (
   timezone VARCHAR(255) DEFAULT 'America/New_York',
   last_ip VARCHAR(15),
   last_login DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL REFERENCES access,
+  enteredby INT NOT NULL,
   entered TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access,
+  modifiedby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   expires DATETIME DEFAULT NULL,
   alias INT DEFAULT -1,
@@ -269,7 +269,7 @@ CREATE TABLE role_permission (
 );
 
 CREATE TABLE organization (
-  org_id INT IDENTITY PRIMARY KEY,
+  org_id INT IDENTITY(0,1) PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
   account_number VARCHAR(50),
   account_group INT,

@@ -1,14 +1,14 @@
 
-INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('company', 'Company Name', 't', 0);
-INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('namefirst', 'Contact First Name', 't', 0);
-INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('namelast', 'Contact Last Name', 't', 0);
-INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('entered', 'Entered Date', 't', 1);
-INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('zip', 'Zip Code', 't', 0);
-INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('areacode', 'Area Code', 't', 0);
-INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('city', 'City', 't', 0);
-INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('typeId', 'Contact Type', 't', 0);
-INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('contactId', 'Contact ID', 't', 0);
-INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('title', 'Contact Title', 'f', 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('company', 'Company Name', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('namefirst', 'Contact First Name', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('namelast', 'Contact Last Name', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('entered', 'Entered Date', true, 1);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('zip', 'Zip Code', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('areacode', 'Area Code', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('city', 'City', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('typeId', 'Contact Type', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('contactId', 'Contact ID', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('title', 'Contact Title', false, 0);
 
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', '=', 'is');
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', '!=', 'is not');
