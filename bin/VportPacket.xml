@@ -1,0 +1,25 @@
+<?xml version="1.0" standalone="yes"?>
+<!-- The only field you will be editing is instructions -->
+<!-- The max field length of instructions is 216 -->
+<tas>
+   <tsPacket>
+      <transactionId>13</transactionId>
+      <status>0</status>
+      <callId>0</callId>
+      <teamId>3</teamId>
+      <opId>547</opId>
+      <data>
+         <psId>289</psId>
+         <specialInstr>
+            <instructionId>0</instructionId>
+            <dayOfWeek></dayOfWeek>
+            <instructions>This is the text you will be filling</instructions>
+            <status>T</status>
+            <effective></effective>
+            <expires></expires>
+            <inactive>N</inactive>
+            <opName></opName>
+         </specialInstr>
+      </data>
+   </tsPacket>
+</tas>
