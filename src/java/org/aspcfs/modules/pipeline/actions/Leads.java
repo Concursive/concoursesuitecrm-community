@@ -72,7 +72,6 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-add")) {
       return ("PermissionError");
     }
-    
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
@@ -89,7 +88,6 @@ public final class Leads extends CFSModule {
     userList.setIncludeMe(true);
     userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
-    
     try {
       db = this.getConnection(context);
       buildFormElements(db, context);
@@ -300,7 +298,6 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-add")) {
       return ("PermissionError");
     }
-    
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
@@ -730,7 +727,6 @@ public final class Leads extends CFSModule {
       db = this.getConnection(context);
       newOpp = new OpportunityHeader(db, context.getRequest().getParameter("id"));
       if (!hasViewpointAuthority(db, context, "pipeline", newOpp.getEnteredBy(), userId)) {
-        this.freeConnection(context, db);
         return "PermissionError";
       }
       recordDeleted = newOpp.delete(db, context, this.getPath(context, "opportunities"));
@@ -780,7 +776,6 @@ public final class Leads extends CFSModule {
       db = this.getConnection(context);
       component = new OpportunityComponent(db, context.getRequest().getParameter("id"));
       if (!hasViewpointAuthority(db, context, "pipeline", component.getEnteredBy(), userId)) {
-        this.freeConnection(context, db);
         return "PermissionError";
       }
       recordDeleted = component.delete(db, context, this.getPath(context, "opportunities"));
@@ -859,18 +854,16 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-edit")) {
       return ("PermissionError");
     }
-    
     //Get viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-    
+    //Prepare the action items
     Exception errorMessage = null;
     Connection db = null;
     OpportunityComponent component = null;
     addModuleBean(context, "View Opportunities", "Opportunities");
 
     String componentId = context.getRequest().getParameter("id");
-    
     
     User thisRec = this.getUser(context, userId);
     UserList shortChildList = thisRec.getShortChildList();
@@ -885,8 +878,10 @@ public final class Leads extends CFSModule {
       db = this.getConnection(context);
       buildFormElements(db, context);
       component = new OpportunityComponent(db, componentId);
+      //Build the container item
+      OpportunityHeader oppHeader = new OpportunityHeader(db, component.getHeaderId());
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
       if (!hasViewpointAuthority(db, context, "pipeline", component.getOwner(), userId)) {
-        this.freeConnection(context, db);
         return "PermissionError";
       }
     } catch (Exception e) {
@@ -1034,7 +1029,6 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-reports-delete")) {
       return ("PermissionError");
     }
-    
     //Get viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
@@ -1048,28 +1042,23 @@ public final class Leads extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-
       //-1 is the project ID for non-projects
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
-
       if (!hasViewpointAuthority(db, context, "pipeline", thisItem.getEnteredBy(), userId)) {
-        this.freeConnection(context, db);
         return "PermissionError";
       }
-        recordDeleted = thisItem.delete(db, this.getPath(context, "lead-reports"));
-
-        String filePath1 = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
-        java.io.File fileToDelete1 = new java.io.File(filePath1);
-        if (!fileToDelete1.delete()) {
-          System.err.println("FileItem-> Tried to delete file: " + filePath1);
-        }
-
-        String filePath2 = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
-        java.io.File fileToDelete2 = new java.io.File(filePath2);
-        if (!fileToDelete2.delete()) {
-          System.err.println("FileItem-> Tried to delete file: " + filePath2);
-        }
-      
+      recordDeleted = thisItem.delete(db, this.getPath(context, "lead-reports"));
+      //Delete any related files
+      String filePath1 = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
+      java.io.File fileToDelete1 = new java.io.File(filePath1);
+      if (!fileToDelete1.delete()) {
+        System.err.println("FileItem-> Tried to delete file: " + filePath1);
+      }
+      String filePath2 = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+      java.io.File fileToDelete2 = new java.io.File(filePath2);
+      if (!fileToDelete2.delete()) {
+        System.err.println("FileItem-> Tried to delete file: " + filePath2);
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1324,7 +1313,6 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-edit")) {
       return ("PermissionError");
     }
-    
     //Get viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
@@ -1338,7 +1326,6 @@ public final class Leads extends CFSModule {
       db = this.getConnection(context);
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
       if (!hasViewpointAuthority(db, context, "pipeline", oppHeader.getEnteredBy(), userId)) {
-        this.freeConnection(context, db);
         return "PermissionError";
       }
       oppHeader.setModifiedBy(getUserId(context));
@@ -1383,25 +1370,26 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
       return ("PermissionError");
     }
-    
     //Get viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-    
+    //Configure the action
     Exception errorMessage = null;
     addModuleBean(context, "View Opportunities", "Component Details");
     String componentId = context.getRequest().getParameter("id");
     OpportunityComponent thisComponent = null;
-
+    //Begin processing
     Connection db = null;
     try {
       db = this.getConnection(context);
       thisComponent = new OpportunityComponent(db, Integer.parseInt(componentId));
       if (!hasViewpointAuthority(db, context, "pipeline", thisComponent.getOwner(), userId)) {
-        this.freeConnection(context, db);
         return "PermissionError";
       }
       thisComponent.checkEnabledOwnerAccount(db);
+      //Build the container item
+      OpportunityHeader oppHeader = new OpportunityHeader(db, thisComponent.getHeaderId());
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1658,7 +1646,6 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-edit")) {
       return ("PermissionError");
     }
-    
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
@@ -1671,16 +1658,12 @@ public final class Leads extends CFSModule {
     
     OpportunityComponent component = (OpportunityComponent) context.getFormBean();
     component.setTypeList(context.getRequest().getParameterValues("selectedList"));
-    
-
     try {
       db = this.getConnection(context);
       OpportunityComponent oldComponent = new OpportunityComponent(db, Integer.parseInt(componentId));
       if (!hasViewpointAuthority(db, context, "pipeline", oldComponent.getOwner(), userId)) {
-        this.freeConnection(context, db);
         return "PermissionError";
       }
-      
       component.setModifiedBy(getUserId(context));
       resultCount = component.update(db, context);
       if (resultCount == 1) {
@@ -1698,6 +1681,9 @@ public final class Leads extends CFSModule {
         userList.setExcludeDisabledIfUnselected(true);
         context.getRequest().setAttribute("UserList", userList);
         buildFormElements(db, context);
+        //Build the container item
+        OpportunityHeader oppHeader = new OpportunityHeader(db, component.getHeaderId());
+        context.getRequest().setAttribute("opportunityHeader", oppHeader);
       }
     } catch (Exception e) {
       errorMessage = e;
