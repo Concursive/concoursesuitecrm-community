@@ -763,4 +763,9 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'campaign', 'com.darkhorseventures.cfsbase.Campaign');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'campaignList', 'com.darkhorseventures.cfsbase.CampaignList');
+ 
+ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'savedCriteriaElement', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'savedCriteriaElementList', 'com.darkhorseventures.webutils.CustomLookupList');
 
