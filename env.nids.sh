@@ -1,0 +1,23 @@
+#!/bin/sh
+# $Id$
+# $Revision$
+#
+# Common shell environment settings
+#
+#export JAVA_HOME=/usr/local/java/jdk1.3.1_01
+#export APACHE_HOME=/etc/httpd
+#export TOMCAT_HOME=/usr/local/java/jakarta-tomcat-4.0
+#export TOMCAT_HOME=/usr/local/java/jakarta-tomcat-3.2.3
+#export ANT_HOME=/usr/local/java/jakarta-ant-1.4
+#export SITE_LIB=/home/cfs/html/WEB-INF/lib
+
+export SITE_LIB=/home/cfs2/html/WEB-INF/lib
+export TOMCAT_HOME=/usr/local/jakarta-tomcat-4.1.12-LE-jdk14
+export 
+CLASSPATH=.:${TOMCAT_HOME}/common/lib/servlet.jar:${TOMCAT_HOME}/common/lib/mail.jar:${TOMCAT_HOME}/common/lib/mailapi.jar:${TOMCAT_HOME}/common/lib/smtp.jar:${TOMCAT_HOME}/common/lib/xerces.jar:${SITE_LIB}/darkhorseventures.jar:${SITE_LIB}/zeroio-iteam.jar:${SITE_LIB}/theseus.jar:${TOMCAT_HOME}/common/lib/activation.jar:${TOMCAT_HOME}/common/lib/pgjdbc2.jar
+
+# Site specific variables during installation
+GKHOST="jdbc:postgresql://216.54.81.101:5432/cfs2gk"
+SITECODE="cfs2"
+DEBUGLEVEL="2"
+
