@@ -48,8 +48,9 @@ sub insert {
         my $type = $rqpairs{'type'};
         my $email = $rqpairs{'email'};
 
-        $conn = Pg::connectdb("port=5432 dbname=$DBNAME user=cfsdba");
-
+        #$conn = Pg::connectdb("port=5432 dbname=$DBNAME user=cfsdba");
+	$conn = DBI->connect("dbi:Pg:dbname=$DBNAME, user=cfsdba, port=5432");
+	
 	while ( $idx < $count ) {
         	my $head = @$head[$idx];
 
@@ -130,7 +131,9 @@ print LOG "\nconfiguration: $site_config\n";
 
 	print LOG "database: $DBNAME\n"; 
 
-	$conn = Pg::connectdb("port=5432 dbname=$DBNAME user=cfsdba");
+	#$conn = Pg::connectdb("port=5432 dbname=$DBNAME user=cfsdba");
+	$conn = DBI->connect("dbi:Pg:dbname=$DBNAME, user=cfsdba, port=5432");
+
 	if ($conn->status != PGRES_CONNECTION_OK)
 	{
 		$errmsg = $conn->errorMessage;
