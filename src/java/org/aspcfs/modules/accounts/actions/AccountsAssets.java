@@ -138,6 +138,7 @@ public class AccountsAssets extends CFSModule {
       return ("PermissionError");
     }
     Connection db = null;
+    boolean inserted = false;
     try {
       //Get a connection from the connection pool for this user
       db = this.getConnection(context);
@@ -146,8 +147,11 @@ public class AccountsAssets extends CFSModule {
       Asset thisAsset = (Asset) context.getFormBean();
       thisAsset.setEnteredBy(getUserId(context));
       thisAsset.setModifiedBy(getUserId(context));
-      thisAsset.insert(db);
+      inserted = thisAsset.insert(db);
 
+      if(!inserted){
+        processErrors(context, thisAsset.getErrors());
+      }
     } catch (Exception errorMessage) {
       //An error occurred, go to generic error message page
       context.getRequest().setAttribute("Error", errorMessage);
@@ -156,7 +160,11 @@ public class AccountsAssets extends CFSModule {
       //Always free the database connection
       this.freeConnection(context, db);
     }
+    if (inserted) {
       return (executeCommandList(context));
+    } else {
+      return (executeCommandAdd(context));
+    }
   }
 
 
