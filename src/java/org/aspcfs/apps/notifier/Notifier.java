@@ -11,6 +11,7 @@ import org.aspcfs.modules.admin.base.Usage;
 import org.aspcfs.modules.communications.base.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.pipeline.base.*;
+import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.actions.*;
 import org.aspcfs.apps.ReportBuilder;
@@ -23,7 +24,8 @@ import java.util.zip.*;
 
 /**
  *  Application that processes various kinds of Alerts in CFS, generating
- *  notifications for users.
+ *  notifications for users.  This application should not be maintained,
+ *  but re-implemented to be module.
  *
  *@author     matt rajkowski
  *@created    October 16, 2001
@@ -37,7 +39,8 @@ public class Notifier extends ReportBuilder {
    */
   public final static String fs = System.getProperty("file.separator");
   public final static String lf = System.getProperty("line.separator");
-
+  public final static String NOREPLY_DISCLAIMER = 
+      "* THIS IS AN AUTOMATED MESSAGE, PLEASE DO NOT REPLY";
 
   /**
    *  Constructor for the Notifier object public Notifier() { } ** Starts the
@@ -106,7 +109,7 @@ public class Notifier extends ReportBuilder {
           thisNotifier.baseName = (String) siteInfo.get("sitecode");
 
           System.out.println("Running Alerts...");
-          thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db));
+          thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db, siteInfo));
           //thisNotifier.output.append(thisNotifier.buildCallAlerts(db));
           thisNotifier.output.append(lf+lf+lf);
 
@@ -139,14 +142,14 @@ public class Notifier extends ReportBuilder {
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
-  private String buildOpportunityAlerts(Connection db) throws SQLException {
+  private String buildOpportunityAlerts(Connection db, HashMap siteInfo) throws SQLException {
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
     thisReport.addColumn("User");
 
     Calendar thisCalendar = Calendar.getInstance();
 
-    OpportunityList thisList = new OpportunityList();
+    OpportunityComponentList thisList = new OpportunityComponentList();
     java.sql.Date thisDate = new java.sql.Date(System.currentTimeMillis());
     thisDate = thisDate.valueOf(
         thisCalendar.get(Calendar.YEAR) + "-" +
@@ -162,22 +165,30 @@ public class Notifier extends ReportBuilder {
     int notifyCount = 0;
     Iterator i = thisList.iterator();
     while (i.hasNext()) {
-      Opportunity thisOpportunity = (Opportunity) i.next();
-      System.out.println(thisOpportunity.toString());
+      OpportunityComponent thisComponent = (OpportunityComponent) i.next();
       Notification thisNotification = new Notification();
       thisNotification.setHost((String) this.config.get("MailServer"));
-      thisNotification.setUserToNotify(thisOpportunity.getOwner());
+      thisNotification.setUserToNotify(thisComponent.getOwner());
       thisNotification.setModule("Opportunities");
-      thisNotification.setItemId(thisOpportunity.getId());
-      thisNotification.setItemModified(thisOpportunity.getModified());
+      thisNotification.setItemId(thisComponent.getId());
+      thisNotification.setItemModified(thisComponent.getModified());
       if (thisNotification.isNew(db)) {
         System.out.println("Notifier-> ...it's new");
+        OpportunityHeader thisOpportunity = new OpportunityHeader(db, thisComponent.getHeaderId());
+        Organization thisOrganization = new Organization(db, thisOpportunity.getAccountLink());
+        thisNotification.setFrom("cfs-messenger@" + (String) siteInfo.get("vhost"));
         thisNotification.setSiteCode(baseName);
-        thisNotification.setSubject("CFS Opportunity: " + thisOpportunity.getDescription());
+        thisNotification.setSubject("CFS Opportunity: " + thisOrganization.getName());
         thisNotification.setMessageToSend(
-            "The following opportunity in CFS has an alert set: <br>" +
+            "The following opportunity component in CFS has an alert set:<br>" +
             "<br>" +
-            thisOpportunity.getDescription() + "<br>");
+            "Organization: " + StringUtils.toHtml(thisOrganization.getName()) + "<br>" +
+            "Opportunity Name: " + StringUtils.toHtml(thisOpportunity.getDescription()) + "<br>" +
+            "Component Description: " + StringUtils.toHtml(thisComponent.getDescription()) + "<br>" +
+            "Close Date: " + thisComponent.getCloseDateString() + "<br>" +
+            "Alert Text: " + StringUtils.toHtml(thisComponent.getAlertText()) + "<br>" +
+            "Notes: " + StringUtils.toHtml(thisComponent.getNotes()) + "<br>" +
+            "<br>" + NOREPLY_DISCLAIMER);
         thisNotification.setType(Notification.EMAIL);
         thisNotification.setTypeText(Notification.EMAIL_TEXT);
         thisNotification.notifyUser(db);
@@ -236,10 +247,9 @@ public class Notifier extends ReportBuilder {
         thisNotification.setMessageToSend(
             "The following call in CFS has an alert set: <br>" +
             "<br>" +
-            "Contact: " + thisCall.getContactName() + "<br>" +
-            "<br>" +
-            thisCall.getNotes() + "<br>" +
-            "<br>");
+            "Contact: " + StringUtils.toHtml(thisCall.getContactName()) + "<br>" +
+            "Call Notes: " + StringUtils.toHtml(thisCall.getNotes()) + "<br>" +
+            "<br>" + NOREPLY_DISCLAIMER);
         thisNotification.setType(Notification.EMAIL);
         thisNotification.setTypeText(Notification.EMAIL_TEXT);
         thisNotification.notifyUser(db);
