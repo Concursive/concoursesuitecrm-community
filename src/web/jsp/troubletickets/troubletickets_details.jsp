@@ -132,7 +132,7 @@ Ticket Details<br>
   </tr>
 		
   <tr class="containerBody">
-		<td class="formLabel">
+		<td class="formLabel" valign="top">
       Solution
 		</td>
 		<td>
