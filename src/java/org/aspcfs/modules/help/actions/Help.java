@@ -31,9 +31,10 @@ public final class Help extends CFSModule {
       String section = context.getRequest().getParameter("section");
       String subsection = context.getRequest().getParameter("sub");
       db = this.getConnection(context);
-      HelpContents helpContents = new HelpContents(db);
+      HelpContents helpContents = new HelpContents();
+      helpContents.build(db);
       context.getRequest().setAttribute("HelpContents", helpContents);
-      HelpItem thisItem = new HelpItem(db, module, section, subsection);
+      HelpItem thisItem = new HelpItem(db, module, section, subsection, this.getUserId(context));
       context.getRequest().setAttribute("Help", thisItem);
     } catch (Exception e) {
       errorMessage = e;
@@ -89,7 +90,8 @@ public final class Help extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      HelpContents contents = new HelpContents(db);
+      HelpContents contents = new HelpContents();
+      contents.build(db);
       context.getRequest().setAttribute("HelpContents", contents);
     } catch (Exception e) {
       errorMessage = e;
