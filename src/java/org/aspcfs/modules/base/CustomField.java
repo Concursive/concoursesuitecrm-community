@@ -50,6 +50,7 @@ public class CustomField extends GenericBean {
   private int id = -1;
   private int groupId = -1;
   private String name = null;
+  private String additionalText = null;
   private int level = -1;
   private int type = -1;
   private int validationType = -1;
@@ -161,6 +162,11 @@ public class CustomField extends GenericBean {
   public void setName(String tmp) {
     this.name = tmp;
   }
+  
+  public void setAdditionalText(String additionalText) {
+	this.additionalText = additionalText;
+}
+
 
 
   /**
@@ -472,6 +478,11 @@ public class CustomField extends GenericBean {
   public String getName() {
     return name;
   }
+  
+  public String getAdditionalText() {
+	return additionalText;
+}
+
 
 
   /**
@@ -974,8 +985,8 @@ public class CustomField extends GenericBean {
       db.setAutoCommit(false);
       String sql =
           "INSERT INTO custom_field_info " +
-          "(group_id, field_name, field_type, required, parameters ) " +
-          "VALUES (?, ?, ?, ?, ?) ";
+          "(group_id, field_name, field_type, required, parameters, additional_text ) " +
+          "VALUES (?, ?, ?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(++i, groupId);
@@ -983,6 +994,7 @@ public class CustomField extends GenericBean {
       pst.setInt(++i, type);
       pst.setBoolean(++i, required);
       pst.setString(++i, this.getParameterData());
+      pst.setString(++i, additionalText);
       pst.execute();
       pst.close();
 
@@ -1039,7 +1051,8 @@ public class CustomField extends GenericBean {
 
     String sql =
         "UPDATE custom_field_info " +
-        "SET field_name = ?, field_type = ?, required = ?, parameters = ? " +
+        "SET field_name = ?, field_type = ?, required = ?, parameters = ?, " +
+        "additional_text = ? " +
         "WHERE group_id = ? " +
         "AND field_id = ? ";
     int i = 0;
@@ -1048,6 +1061,7 @@ public class CustomField extends GenericBean {
     pst.setInt(++i, type);
     pst.setBoolean(++i, required);
     pst.setString(++i, this.getParameterData());
+    pst.setString(++i, additionalText);
     pst.setInt(++i, this.getGroupId());
     pst.setInt(++i, this.getId());
     pst.execute();
@@ -1299,6 +1313,7 @@ public class CustomField extends GenericBean {
    *@since                    1.1
    */
   private void buildRecord(ResultSet rs) throws SQLException {
+    //custom_field_info table
     groupId = rs.getInt("group_id");
     id = rs.getInt("field_id");
     name = rs.getString("field_name");
@@ -1311,6 +1326,7 @@ public class CustomField extends GenericBean {
     endDate = rs.getTimestamp("end_date");
     entered = rs.getTimestamp("entered");
     enabled = rs.getBoolean("enabled");
+    additionalText = rs.getString("additional_text");
 
     StringTokenizer st = new StringTokenizer(param, "^");
     while (st.hasMoreTokens()) {

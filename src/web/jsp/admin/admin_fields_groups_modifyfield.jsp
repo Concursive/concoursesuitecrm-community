@@ -147,6 +147,14 @@ Existing Field<br>
 %>
         <tr class="containerBody">
           <td class="formLabel">
+            Additional Text to Display
+          </td>
+          <td>
+            <input type="text" name="additionalText" maxlength="255" value="<%= toHtmlValue(CustomField.getAdditionalText()) %>">
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel">
             Required at Data Entry
           </td>
           <td>

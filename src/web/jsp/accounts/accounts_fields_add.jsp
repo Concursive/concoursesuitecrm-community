@@ -55,6 +55,7 @@
       <td valign="top" width="100%">
         <%= thisField.getHtmlElement() %> <font color="red"><%= (thisField.getRequired()?"*":"") %></font>
         <font color='#006699'><%= toHtml(thisField.getError()) %></font>
+        <%= toHtml(thisField.getAdditionalText()) %>
       </td>
     </tr>
 <%    
