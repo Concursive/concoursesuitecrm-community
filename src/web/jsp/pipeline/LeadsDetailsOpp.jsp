@@ -87,19 +87,19 @@ Opportunity Details<br>
     </td>
     </dhv:permission>
     <td valign=center align=left>
-	<strong><a href="Leads.do?command=Details&oppId=<%=HeaderDetails.getId()%>&column=description">Component</a></strong>
+	<strong><a href="Leads.do?command=DetailsOpp&oppId=<%=HeaderDetails.getId()%>&column=description">Component</a></strong>
 	<%= LeadsComponentListInfo.getSortIcon("description") %>
     </td>
     <td valign=center align=left>
-	<strong><a href="Leads.do?command=Details&oppId=<%=HeaderDetails.getId()%>&column=guessvalue">Guess Amount</a></strong>
+	<strong><a href="Leads.do?command=DetailsOpp&oppId=<%=HeaderDetails.getId()%>&column=guessvalue">Guess Amount</a></strong>
 	<%= LeadsComponentListInfo.getSortIcon("guessvalue") %>
     </td>
     <td valign=center align=left>
-      	<strong><a href="Leads.do?command=Details&oppId=<%=HeaderDetails.getId()%>&column=closedate">Close Date</a></strong>
+      	<strong><a href="Leads.do?command=DetailsOpp&oppId=<%=HeaderDetails.getId()%>&column=closedate">Close Date</a></strong>
 	<%= LeadsComponentListInfo.getSortIcon("closedate") %>
     </td>
     <td valign=center align=left>
-      	<strong><a href="Leads.do?command=Details&oppId=<%=HeaderDetails.getId()%>&column=stage">Current Stage</a></strong>
+      	<strong><a href="Leads.do?command=DetailsOpp&oppId=<%=HeaderDetails.getId()%>&column=stage">Current Stage</a></strong>
 	<%= LeadsComponentListInfo.getSortIcon("stage") %>
     </td>  
   </tr>
