@@ -1727,7 +1727,6 @@ public class User extends GenericBean {
    *@since                    1.1
    */
   public boolean insert(Connection db, ActionContext context) throws SQLException {
-
     if (!isValid(db, context)) {
       return false;
     }
@@ -2068,14 +2067,10 @@ public class User extends GenericBean {
   protected boolean isValid(Connection db, ActionContext context) throws SQLException {
     isValidNoPass(db, context);
 
-    if (contact == null || contact.getId() == -1) {
-      errors.put("contactId", "User is not associated with a Contact");
-    }
-
-    if (contactId < 1 && contact.getNameLast().length() == 0) {
+    if (contactId < 1 && (contact == null || !contact.isValid(db))) {
       errors.put("contactIdError", "Contact needs to be selected or newly created first");
     }
-
+    
     if (password1 == null || password1.trim().equals("")) {
       errors.put("password1Error", "Password cannot be left blank");
     }
