@@ -14,9 +14,10 @@
   <tr bgcolor='#808080'>
     <td width="10" align="center"><font color="#FFFFFF">&lt;Action&gt;</font></td>
     <td><font color='#FFFFFF'>&lt;Item&gt;</font></td>
-    <td>&nbsp;</td>
+    <td align="center"><font color='#FFFFFF'>&lt;Ext&gt;</font></td>
     <td><font color='#FFFFFF'>&lt;Size&gt;</font></td>
-    <td><font color='#FFFFFF'>&lt;Version&gt;</font></td>
+    <td align="center"><font color='#FFFFFF'>&lt;Version&gt;</font></td>
+    <td>&nbsp;</td>
     <td><font color='#FFFFFF'>&lt;Submitted&gt;</font></td>
     <td><font color='#FFFFFF'>&lt;Sent By&gt;</font></td>
   </tr>
@@ -32,18 +33,20 @@
       <a href="ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>">Download</a><br>
       <a href="ProjectManagementFiles.do?command=Modify&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>">Edit</a>|<a href="javascript:confirmDelete('ProjectManagementFiles.do?command=Delete&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>');">Del</a>&nbsp;
     </td>
-    <td valign="top">
-      <%= thisFile.getImageTag() %><a href="ProjectManagementFiles.do?command=Details&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></a><br>
-      <i><%= toHtml(thisFile.getSubject()) %></i>
+    <td valign="middle">
+      <%= thisFile.getImageTag() %><a href="ProjectManagementFiles.do?command=Details&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>"><%= toHtml(thisFile.getSubject()) %></a>
     </td>
-    <td align="center" valign="middle">
-      [<a href="ProjectManagementFiles.do?command=AddVersion&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
+    <td valign="middle" align="center">
+      <%= toHtml(thisFile.getExtension()) %>
     </td>
     <td align="right" valign="middle">
       <%= thisFile.getRelativeSize() %> k&nbsp;
     </td>
     <td align="center" valign="middle">
       <%= thisFile.getVersion() %>&nbsp;
+    </td>
+    <td align="center" valign="middle">
+      [<a href="ProjectManagementFiles.do?command=AddVersion&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
     </td>
     <td valign="middle" nowrap>
       <%= thisFile.getModifiedDateTimeString() %>

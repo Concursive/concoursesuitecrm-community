@@ -24,17 +24,15 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td width="10" align="center">Action</td>
+    <td>Item</td>
+    <td align="center">Ext</td>
+    <td align="center">Size</td>
+    <td align="center">Version</td>
     <dhv:permission name="accounts-accounts-documents-add">
-    <td colspan="2">
+      <td>&nbsp;</td>
     </dhv:permission>
-    <dhv:permission name="accounts-accounts-documents-add" none="true">
-    <td>
-    </dhv:permission>
-    Item</td>
-    <td>Size</td>
-    <td>Version</td>
-    <td>Submitted</td>
-    <td>Sent By</td>
+    <td align="center">Submitted</td>
+    <td align="center">Sent By</td>
   </tr>
 <%
   Iterator j = FileItemList.iterator();
@@ -48,22 +46,23 @@
     <tr class="row<%= rowid %>">
       <td width="10" valign="middle" align="center" rowspan="2" nowrap>
         <a href="AccountsDocuments.do?command=Download&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>">Download</a><br>
-	<dhv:permission name="accounts-accounts-documents-edit"><a href="AccountsDocuments.do?command=Modify&fid=<%= thisFile.getId() %>&orgId=<%= OrgDetails.getOrgId()%>">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-documents-edit,accounts-accounts-documents-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-documents-delete"><a href="javascript:confirmDelete('AccountsDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&orgId=<%= OrgDetails.getOrgId()%>');">Del</a></dhv:permission>
-	</td>
-      <td valign="top" width="100%">
-        <a href="AccountsDocuments.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getClientFilename()) %></a>
+        <dhv:permission name="accounts-accounts-documents-edit"><a href="AccountsDocuments.do?command=Modify&fid=<%= thisFile.getId() %>&orgId=<%= OrgDetails.getOrgId()%>">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-documents-edit,accounts-accounts-documents-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-documents-delete"><a href="javascript:confirmDelete('AccountsDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&orgId=<%= OrgDetails.getOrgId()%>');">Del</a></dhv:permission>
       </td>
-      <dhv:permission name="accounts-accounts-documents-add">
-      <td align="right" valign="middle" nowrap>
-        [<a href="AccountsDocuments.do?command=AddVersion&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
+      <td valign="middle" width="100%">
+        <a href="AccountsDocuments.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getSubject()) %></a>
       </td>
-      </dhv:permission>
+      <td align="center"><%= toHtml(thisFile.getExtension()) %></td>
       <td align="center" valign="middle" nowrap>
         <%= thisFile.getRelativeSize() %> k&nbsp;
       </td>
       <td align="right" valign="middle" nowrap>
         <%= thisFile.getVersion() %>&nbsp;
       </td>
+    <dhv:permission name="accounts-accounts-documents-add">
+      <td align="right" valign="middle" nowrap>
+        [<a href="AccountsDocuments.do?command=AddVersion&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
+      </td>
+    </dhv:permission>
       <td valign="middle" nowrap>
         <%= thisFile.getModifiedDateTimeString() %>
       </td>
@@ -71,16 +70,11 @@
         <dhv:username id="<%= thisFile.getEnteredBy() %>"/>
       </td>
     </tr>
-    <tr class="row<%= rowid %>">
-      <td valign="middle" align="left" colspan="6">
-        <i><%= toHtml(thisFile.getSubject()) %></i>
-      </td>
-    </tr>
 <%}%>
   </table>
 <%} else {%>
     <tr class="containerBody">
-      <td colspan="7" valign="center">
+      <td colspan="8" valign="center">
         No documents found.
       </td>
     </tr>

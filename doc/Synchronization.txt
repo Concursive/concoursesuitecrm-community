@@ -192,9 +192,9 @@ and limit.
     <meta>
       <property>guid</property>
       <property>name</property>
-      <property>enteredBy^userGuid</property>
+      <property>enteredBy</property>
       <property>modified</property>
-      <property>modifiedBy^userGuid</property>
+      <property>modifiedBy</property>
     </meta>
     <makeList action="sync" identity="1" offset="0" items="50"/>
   </transaction>
@@ -300,7 +300,7 @@ Client #1 Ends Synchronization
   
   <transaction id="2">
     <meta>
-      <property>guid</property>
+      <property>id</property>
       <property>username</property>
       <property>modified</property>
     </meta>
@@ -311,9 +311,9 @@ Client #1 Ends Synchronization
     <meta>
       <property>guid</property>
       <property>name</property>
-      <property>enteredBy^userGuid</property>
+      <property>enteredBy</property>
       <property>modified</property>
-      <property>modifiedBy^userGuid</property>
+      <property>modifiedBy</property>
     </meta>
     <accountList action="sync" identity="1"/>
   </transaction>
@@ -334,9 +334,9 @@ Client #1 Ends Synchronization
     <meta>
       <property>guid</property>
       <property>name</property>
-      <property>enteredBy^userGuid</property>
+      <property>enteredBy</property>
       <property>modified</property>
-      <property>modifiedBy^userGuid</property>
+      <property>modifiedBy</property>
     </meta>
     <makeList action="sync" identity="1"/>
   </transaction>
@@ -346,9 +346,9 @@ Client #1 Ends Synchronization
       <property>guid</property>
       <property>name</property>
       <property>make.guid</property>
-      <property>enteredBy^userGuid</property>
+      <property>enteredBy</property>
       <property>modified</property>
-      <property>modifiedBy^userGuid</property>
+      <property>modifiedBy</property>
     </meta>
     <modelList action="sync" identity="1"/>
   </transaction>
@@ -359,9 +359,9 @@ Client #1 Ends Synchronization
       <property>year</property>
       <property>make.guid</property>
       <property>model.guid</property>
-      <property>enteredBy^userGuid</property>
+      <property>enteredBy</property>
       <property>modified</property>
-      <property>modifiedBy^userGuid</property>
+      <property>modifiedBy</property>
     </meta>
     <vehicleList action="sync" identity="1">
       <year>*Optionally specify a specific year to receive, or remove this attribute*</year>
@@ -384,7 +384,7 @@ Client #1 Ends Synchronization
       <property>guid</property>
       <property>vehicleGuid</property>
       <property>accountGuid</property>
-      <property>enteredBy^userGuid</property>
+      <property>enteredBy</property>
       <property>stockNo</property>
       <property>mileage</property>
       <property>vin</property>
@@ -395,10 +395,11 @@ Client #1 Ends Synchronization
       <property>sold</property>
       <property>modified</property>
       <property>hasPicture</property>
-      <property>owner^userGuid</property>
+      <property>owner</property>
     </meta>
     <accountInventoryList action="sync" identity="1">
       <accountGuid>*OPTIONAL: SPECIFY AN ACCOUNT ID OR YOU GET ALL ACCOUNTS*</accountGuid>
+      <buildPictureId>true</buildPictureId>
     </accountInventoryList>
   </transaction>
   
@@ -439,10 +440,11 @@ Client #1 Ends Synchronization
   ** to replace a picture for the incorrect vehicle since pictures will 
   ** all have the same filenames.
   
-  ** Once pictures have been sent, tell the server to process them
-  <transaction id="20">
-    <inventoryPictureList action="process"/>
-  </transaction>
+  ** Once pictures have been sent by FTP, tell the server to process them.
+  ** Connecting to the following address will kick off the processing on the
+  ** server:
+  
+  http://ds21.darkhorseventures.com/ProcessFTP.do
   
 
 ...Client inserts a vehicle with options and ad runs (MUST HAVE
@@ -510,7 +512,7 @@ SYNC'D ALL TABLES FIRST):
       <runDate>2002-05-17</runDate>
       <adTypeGuid>3</adTypeGuid>
       <includePhoto>false</includePhoto>
-      <enteredBy lookup="user">10</enteredBy>
+      <enteredBy>10</enteredBy>
     </adRun>
   </transaction>
 </app>
