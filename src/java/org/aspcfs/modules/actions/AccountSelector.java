@@ -40,7 +40,7 @@ public final class AccountSelector extends CFSModule {
     String listType = context.getRequest().getParameter("listType");
     OrganizationList acctList = null;
     OrganizationList finalAccounts = null;
-    ArrayList selectedList = (ArrayList) context.getSession().getAttribute("selectedAccounts");
+    ArrayList selectedList = (ArrayList) context.getSession().getAttribute("SelectedAccounts");
 
     if (selectedList == null || "true".equals(context.getRequest().getParameter("reset"))) {
       selectedList = new ArrayList();
@@ -51,13 +51,13 @@ public final class AccountSelector extends CFSModule {
         selectedList.add(String.valueOf(st.nextToken()));
       }
     }
-
+    
     try {
       db = this.getConnection(context);
       int rowCount = 1;
       acctList = new OrganizationList();
 
-      if (listType.equalsIgnoreCase("list")) {
+      if ("list".equals(listType)) {
         while (context.getRequest().getParameter("hiddenAccountId" + rowCount) != null) {
           int acctId = Integer.parseInt(context.getRequest().getParameter("hiddenAccountId" + rowCount));
           if (context.getRequest().getParameter("account" + rowCount) != null) {
