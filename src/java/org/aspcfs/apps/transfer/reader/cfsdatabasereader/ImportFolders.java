@@ -105,9 +105,9 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
           thisRecord.addField("categoryId", String.valueOf(thisCFRecord.getCategoryId()), "customFieldCategory", null);
           thisRecord.addField("guid", String.valueOf(thisCFRecord.getId()));
           thisRecord.addField("entered", ObjectUtils.getParam(thisCFRecord, "entered"));
-          thisRecord.addField("enteredBy", String.valueOf(thisCFRecord.getEnteredBy()));
+          thisRecord.addField("enteredBy", String.valueOf(thisCFRecord.getEnteredBy()), "user", null);
           thisRecord.addField("modified", ObjectUtils.getParam(thisCFRecord, "modified"));
-          thisRecord.addField("modifiedBy", String.valueOf(thisCFRecord.getModifiedBy()));
+          thisRecord.addField("modifiedBy", String.valueOf(thisCFRecord.getModifiedBy()), "user", null);
           thisRecord.addField("enabled", ObjectUtils.getParam(thisCFRecord, "enabled"));
           processOK = writer.save(thisRecord);
           if (!processOK) {
