@@ -158,7 +158,56 @@ public final class Contacts extends CFSModule {
       return ("SystemError");
     }
   }
+  
+  public String executeCommandConfirmDelete(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    Contact thisContact = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+    String id = null;
+    String orgId = null;
 
+    if (!(hasPermission(context, "accounts-accounts-contacts-delete"))) {
+      return ("PermissionError");
+    }
+
+    if (context.getRequest().getParameter("id") != null) {
+      id = context.getRequest().getParameter("id");
+    }
+    
+    if (context.getRequest().getParameter("orgId") != null) {
+      orgId = context.getRequest().getParameter("orgId");
+    }    
+
+    try {
+      db = this.getConnection(context);
+      thisContact = new Contact(db, id);
+      thisContact.checkUserAccount(db);
+      htmlDialog.setRelationships(thisContact.processDependencies(db));
+
+      if (!thisContact.hasAccount()) {
+        htmlDialog.setTitle("CFS: Confirm Delete");
+        htmlDialog.setHeader("The contact you are requesting to delete has the following dependencies within CFS:");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='Contacts.do?command=Delete&orgId=" + orgId + "&id=" + id + "'");
+        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+      } else {
+        htmlDialog.setHeader("This contact cannot be deleted because it is associated with a User account.");
+        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+      }
+
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }  
 
   /**
    *  Description of the Method
@@ -231,15 +280,18 @@ public final class Contacts extends CFSModule {
     
     Contact thisContact = null;
     Organization thisOrganization = null;
+    String orgId = null;
     
-    String orgId = context.getRequest().getParameter("orgId");
+    if (context.getRequest().getParameter("orgId") != null) {
+      orgId = context.getRequest().getParameter("orgId");
+    }
 
     Connection db = null;
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, context.getRequest().getParameter("id"));
       recordDeleted = thisContact.delete(db);
-    thisOrganization = new Organization(db, Integer.parseInt(orgId));
+      thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
     } catch (Exception e) {
       errorMessage = e;
@@ -251,6 +303,8 @@ public final class Contacts extends CFSModule {
     if (errorMessage == null) {
       context.getRequest().setAttribute("orgId", orgId);
       if (recordDeleted) {
+        context.getRequest().setAttribute("refreshUrl", "Contacts.do?command=View&orgId="+orgId);
+        deleteRecentItem(context, thisContact);        
         return ("DeleteOK");
       } else {
         processErrors(context, thisContact.getErrors());

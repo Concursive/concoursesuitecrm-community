@@ -399,10 +399,11 @@
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
     <forward name="AddOK" resource="/accounts_contacts_add.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/Contacts.do?command=View"/>
-    <forward name="DeleteOK" resource="/Contacts.do?command=View"/>
     <forward name="ModifyOK" resource="/accounts_contacts_modify.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/Contacts.do?command=Details"/>
     <forward name="DetailsOK" resource="/accounts_contacts_details.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
   <action name="RevenueManager" class="com.darkhorseventures.cfsmodule.RevenueManager">
     <bean name="Revenue" class="com.darkhorseventures.cfsbase.Revenue" scope="request"/>

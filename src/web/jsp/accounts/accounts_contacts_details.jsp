@@ -3,7 +3,8 @@
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
+
 <form name="modContact" action="/Contacts.do?command=Modify&id=<%=ContactDetails.getId()%>&orgId=<%=ContactDetails.getOrgId()%>" method="post">
 <a href="/Accounts.do">Account Management</a> > 
 <a href="/Accounts.do?command=View">View Accounts</a> >
@@ -29,7 +30,7 @@ Contact Details<br>
       <input type="hidden" name="orgId" value="<%=ContactDetails.getOrgId()%>">
 <dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="Modify"	onClick="javascript:this.form.action='/Contacts.do?command=Modify';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="Clone"	onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
-<dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="Delete" onClick="javascript:this.form.action='/Contacts.do?command=Delete';confirmSubmit(document.modContact);"></dhv:permission>
+<dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="Delete" onClick="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>','Contacts.do?command=View', 'Delete_contact','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br>&nbsp;</dhv:permission>
 
 <input type="hidden" name="typeId" value="<%=ContactDetails.getTypeId()%>">
@@ -166,7 +167,7 @@ Contact Details<br>
 <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="Modify"	onClick="javascript:this.form.action='/Contacts.do?command=Modify';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="Clone"	onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
-<dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="Delete" onClick="javascript:this.form.action='/Contacts.do?command=Delete';confirmSubmit(document.modContact);"></dhv:permission>
+<dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="Delete" onClick="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>','Contacts.do?command=View', 'Delete_contact','320','200','yes','no');"></dhv:permission>
   </td>
   </tr>
 </table>

@@ -186,7 +186,7 @@ Add Opportunity<br>
       Current Stage
     </td>
     <td>
-      <%=StageList.getHtmlSelect("stage",0)%>
+      <%=StageList.getHtmlSelect("stage",OppDetails.getStage())%>
       <input type=checkbox name="closeNow">Close opportunity
     </td>
   </tr>
