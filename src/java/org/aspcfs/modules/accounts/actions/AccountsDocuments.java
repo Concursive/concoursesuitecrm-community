@@ -118,6 +118,8 @@ public final class AccountsDocuments extends CFSModule {
       //Update the database with the resulting file
       FileInfo newFileInfo = (FileInfo)parts.get("id" + id);
       
+      
+      
       db = getConnection(context);
       int orgId = addOrganization(context, db, id);
       
@@ -133,7 +135,12 @@ public final class AccountsDocuments extends CFSModule {
       thisItem.setVersion(1.0);
       thisItem.setSize(newFileInfo.getSize());
       
-      recordInserted = thisItem.insert(db);
+      if (thisItem.getSize() > 0) {
+	      recordInserted = thisItem.insert(db);
+      } else {
+	      recordInserted = false;
+      }
+      
       if (!recordInserted) {
         processErrors(context, thisItem.getErrors());
       }

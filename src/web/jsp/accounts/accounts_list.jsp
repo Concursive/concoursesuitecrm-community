@@ -62,7 +62,14 @@
 		</td>
 		<td width=20% valign=center class="row<%= rowid %>" nowrap><%= toHtml(thisOrg.getPhoneNumber("Main")) %></td>
 		<td width=20% valign=center class="row<%= rowid %>" nowrap><%= toHtml(thisOrg.getPhoneNumber("Fax")) %></td>
-		<td width=30% valign=center class="row<%= rowid %>" nowrap><a href="mailto:<%= toHtml(thisOrg.getEmailAddress("Primary")) %>"><%= toHtml(thisOrg.getEmailAddress("Primary")) %></a></td>
+		<td width=30% valign=center class="row<%= rowid %>" nowrap>
+		
+		<% if ( (thisOrg.getEmailAddress("Primary")).length() > 0 ) { %>
+			<a href="mailto:<%= toHtml(thisOrg.getEmailAddress("Primary")) %>"><%= toHtml(thisOrg.getEmailAddress("Primary")) %></a>
+		<%} else {%>
+			&nbsp;
+		<%}%>
+		</td>
   </tr>
 <%}%>
 <%} else {%>
