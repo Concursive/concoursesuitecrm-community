@@ -2,8 +2,7 @@ package com.darkhorseventures.utils;
 
 import com.darkhorseventures.cfsbase.CalendarEvent;
 import com.darkhorseventures.cfsbase.CalendarEventList;
-import java.text.DateFormat;
-import java.text.DateFormatSymbols;
+import java.text.*;
 import java.util.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
@@ -929,6 +928,16 @@ public class CalendarView {
     calNext.add(Calendar.MONTH, 1);
   }
 
+  /**
+   * The calendar should have used date objects...
+   */
+  public void addEvent(java.sql.Timestamp eventDate, String subject, String category) {
+    if (eventDate != null) {
+      SimpleDateFormat shortDateFormat = new SimpleDateFormat("M/d/yyyy");
+      String eventDateString = shortDateFormat.format(eventDate);
+      addEvent(eventDateString, "", subject, category);
+    }
+  }
 
   /**
    *  Adds an event to the calendar

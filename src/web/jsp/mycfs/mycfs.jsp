@@ -14,6 +14,10 @@
     CompanyCalendar.setCellSpacing(0);
     CompanyCalendar.setSortEvents(true);
     CompanyCalendar.addHolidays();
+    CompanyCalendar.setMonthArrows(true);
+		CompanyCalendar.setFrontPageView(true);
+		CompanyCalendar.setNumberOfCells(35);
+		CompanyCalendar.setShowSubject(false);
 %>
     <%= CompanyCalendar.getHtml() %>
   </td>

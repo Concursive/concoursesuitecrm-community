@@ -221,6 +221,8 @@ public class CalendarEvent implements Comparable {
 			return "<img border=0 src=\"images/alertopp.gif\" alt=\"Opp:" + this.getSubject() + "\" align=texttop>";
 		} else if (category.equalsIgnoreCase("Call")) {
 			return "<img border=0 src=\"images/alertcall.gif\" alt=\"Call:" + this.getSubject() + "\" align=texttop>";
+		} else if (category.equalsIgnoreCase("Assignment")) {
+			return "<img border=0 src=\"images/alertassignment.gif\" alt=\"Assignment:" + this.getSubject() + "\" align=texttop>";
 		}
     
 		return icon;

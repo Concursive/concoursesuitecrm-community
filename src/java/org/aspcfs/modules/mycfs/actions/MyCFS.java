@@ -212,22 +212,11 @@ public final class MyCFS extends CFSModule {
 		
 		String industryCheck = context.getRequest().getParameter("industry");
 		
-		OpportunityList alertOpps = new OpportunityList();
-		CallList alertCalls = new CallList();
-		
 		Connection db = null;
 		Statement st = null;
 		ResultSet rs = null;
 		ResultSet headline_rs = null;
 		
-		CalendarView companyCalendar = new CalendarView(context.getRequest());
-		//companyCalendar.addHolidays();
-		companyCalendar.setMonthArrows(true);
-		companyCalendar.setFrontPageView(true);
-		companyCalendar.setNumberOfCells(35);
-		companyCalendar.setShowSubject(false);
-		
-
 		try {
 			StringBuffer sql = new StringBuffer();
 			
@@ -301,37 +290,59 @@ public final class MyCFS extends CFSModule {
 			rs.close();
 			st.close();
 
-			//I'm just going to put the alertOpps here
+      
+			//Setup the calendar
+      
+      CalendarView companyCalendar = new CalendarView(context.getRequest());
+      
 			PagedListInfo alertPaged = new PagedListInfo();
 			alertPaged.setMaxRecords(5);
 			alertPaged.setColumnToSortBy("alertdate");
 
+      OpportunityList alertOpps = new OpportunityList();
 			alertOpps.setPagedListInfo(alertPaged);
 			alertOpps.setEnteredBy(getUserId(context));
 			alertOpps.setHasAlertDate(true);
 			alertOpps.buildList(db);
-			
 			Iterator n = alertOpps.iterator();
-			if ( n.hasNext() ) {
-				while (n.hasNext()) {
-					Opportunity thisOpp = (Opportunity)n.next();
-					companyCalendar.addEvent(thisOpp.getAlertDate(),"",thisOpp.getDescription(),"Opportunity");
-				}
-			}
+      while (n.hasNext()) {
+        Opportunity thisOpp = (Opportunity)n.next();
+        companyCalendar.addEvent(thisOpp.getAlertDate(),"",thisOpp.getDescription(),"Opportunity");
+      }
 			
+      CallList alertCalls = new CallList();
 			alertCalls.setPagedListInfo(alertPaged);
 			alertCalls.setEnteredBy(getUserId(context));
 			alertCalls.setHasAlertDate(true);
 			alertCalls.buildList(db);
-			
 			Iterator m = alertCalls.iterator();
-			if ( m.hasNext() ) {
-				while (m.hasNext()) {
-					Call thisCall = (Call)m.next();
-					companyCalendar.addEvent(thisCall.getAlertDate(),"",thisCall.getSubject(),"Call");
-				}
-			}
-
+      while (m.hasNext()) {
+        Call thisCall = (Call)m.next();
+        companyCalendar.addEvent(thisCall.getAlertDate(),"",thisCall.getSubject(),"Call");
+      }
+      
+      com.zeroio.iteam.base.ProjectList projects = new com.zeroio.iteam.base.ProjectList();
+			projects.setGroupId(-1);
+      projects.setOpenProjectsOnly(true);
+      projects.setProjectsWithAssignmentsOnly(true);
+      projects.setProjectsForUser(getUserId(context));
+      projects.setBuildAssignments(true);
+      projects.setAssignmentsForUser(getUserId(context));
+      projects.setOpenAssignmentsOnly(true);
+      projects.setWithAssignmentDaysComplete(0);
+      projects.setBuildIssues(false);
+      projects.buildList(db);
+      Iterator projectList = projects.iterator();
+      while (projectList.hasNext()) {
+        com.zeroio.iteam.base.Project thisProject = (com.zeroio.iteam.base.Project)projectList.next();
+        Iterator assignmentList = thisProject.getAssignments().iterator();
+        while (assignmentList.hasNext()) {
+          com.zeroio.iteam.base.Assignment thisAssignment = (com.zeroio.iteam.base.Assignment)assignmentList.next();
+          companyCalendar.addEvent(thisAssignment.getDueDate(),thisAssignment.getRole(),"Assignment");
+        }
+      }
+      
+      context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
 		}
 		catch (SQLException e) {
 			errorMessage = e;
@@ -341,7 +352,6 @@ public final class MyCFS extends CFSModule {
 		}
 
 		if (errorMessage == null) {
-			context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
 			context.getRequest().setAttribute("NewsList", newsList);
 			return ("HomeOK");
 		}
