@@ -163,13 +163,15 @@ public class NetDescAccountsReader implements DataReader {
     logger.info("Processing excel file" + excelFile);
     try {
       int userId = 1;
-      
-      User newUser = new User();
-      newUser.setId(userId);
-      newUser.setUsername("Importer");
-      DataRecord newUserRecord = mappings.createDataRecord(newUser, "insert");
+      DataRecord newUserRecord = new DataRecord();
+      newUserRecord.setName("user");
+      newUserRecord.setAction("insert");
+      newUserRecord.addField("guid", userId);
+      newUserRecord.addField("username", "Importer");
+      newUserRecord.addField("contactId", 6);
+      newUserRecord.addField("encryptedPassword", "none");
       writer.save(newUserRecord);
-
+      
       HashMap accounts = new HashMap();
 
       POIFSFileSystem fs =
@@ -196,6 +198,7 @@ public class NetDescAccountsReader implements DataReader {
           thisOrg.setOrgId(r);
           thisOrg.setName(row.getCell(firstCellNum).getStringCellValue());
           thisOrg.setUrl(row.getCell((short) (firstCellNum + 14)).getStringCellValue());
+          thisOrg.setOwner(userId);
           thisOrg.setEnteredBy(userId);
           thisOrg.setModifiedBy(userId);
 

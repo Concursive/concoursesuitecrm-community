@@ -3,7 +3,7 @@
     All the accounts and related contacts from a excel file will be read and written to a destination CFS system.
   </description>
   <reader class="org.aspcfs.apps.transfer.reader.netdescisions.NetDescAccountsReader">
-    <propertyFile>d:\source\dhv\cfs2\bin\CFSDatabaseReader.xml</propertyFile>
+    <propertyFile>d:\source\dhv\cfs2\bin\NetDecisionsReader.xml</propertyFile>
     <excelFile>d:\source\dhv\cfs2\ActToCFS22Jan03.xls</excelFile>
     <ignoreRow1>true</ignoreRow1>
   </reader>

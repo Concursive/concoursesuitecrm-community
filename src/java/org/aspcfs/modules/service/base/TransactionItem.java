@@ -613,7 +613,6 @@ public class TransactionItem {
               }
             }
           } else {
-            if (value != null && Integer.parseInt(value) > -1) {
               SyncTable referencedTable = (SyncTable) packetContext.getObjectMap().get(param + "List");
               if (referencedTable != null) {
                 int recordId = syncClientMap.lookupServerId(packetContext.getClientManager(), referencedTable.getId(), value);
@@ -624,7 +623,6 @@ public class TransactionItem {
               } else {
                 throw new SQLException("Sync reference does not exist, you must sync referenced tables first");
               }
-            }
           }
         }
       }
