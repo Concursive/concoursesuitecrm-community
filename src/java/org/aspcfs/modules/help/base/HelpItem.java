@@ -141,8 +141,8 @@ public class HelpItem extends GenericBean {
         "SELECT * " +
         "FROM help_contents h " +
         "WHERE module = ? " + 
-        (section != null ? "AND section = ? " : "") +
-        (subsection != null ? "AND subsection = ? " : "");
+        (section != null ? "AND section = ? " : "AND section IS NULL") +
+        (subsection != null ? "AND subsection = ? " : "AND subsection IS NULL");
     pst = db.prepareStatement(sql);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("HelpItem-> Prepared");
@@ -155,7 +155,6 @@ public class HelpItem extends GenericBean {
     if (subsection != null) {
       pst.setString(++i, subsection);
     }
-    System.out.println(pst.toString());
     rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
