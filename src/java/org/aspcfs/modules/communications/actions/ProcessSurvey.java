@@ -17,7 +17,6 @@ import org.aspcfs.modules.communications.base.*;
 import org.aspcfs.utils.web.CustomForm;
 import org.aspcfs.modules.login.base.AuthenticationItem;
 
-
 /**
  *  Allows respondants to take part in a survey in which they were invited to
  *
@@ -30,14 +29,20 @@ public final class ProcessSurvey extends CFSModule {
   /**
    *  Generates the survey for presentation
    *
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
     ActiveSurvey thisSurvey = null;
     ConnectionPool sqlDriver = null;
     Connection db = null;
+
+    String codedId = context.getRequest().getParameter("id");
+    //return alert message if someone tried clicking link from the campaign dashboard's message tab
+    if (codedId != null && codedId.startsWith("${surveyId")) {
+      return "InvalidRequestError";
+    }
 
     try {
       //CustomForm thisForm = getDynamicForm(context, "surveyview");
@@ -46,14 +51,9 @@ public final class ProcessSurvey extends CFSModule {
 
       String dbName = auth.getConnectionElement(context).getDbName();
       String filename = getPath(context) + dbName + fs + "keys" + fs + "survey.key";
-      String codedId = context.getRequest().getParameter("id");
       String uncodedId = PrivateString.decrypt(filename, codedId);
       int surveyId = -1;
-      
-      //return alert message if someone tried clicking link from the campaign dashboard's message tab
-      if(codedId != null && codedId.startsWith("${surveyId")){
-          return "InvalidRequestError";
-      }
+
       StringTokenizer st = new StringTokenizer(uncodedId, ",");
       while (st.hasMoreTokens()) {
         String pair = (st.nextToken());
@@ -89,8 +89,8 @@ public final class ProcessSurvey extends CFSModule {
   /**
    *  Processes the user's answers and inserts them
    *
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
     Exception errorMessage = null;
