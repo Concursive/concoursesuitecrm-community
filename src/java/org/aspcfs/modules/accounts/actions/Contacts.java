@@ -215,11 +215,14 @@ public final class Contacts extends CFSModule {
         if (thisContact.getPrimaryContact()) {
           htmlDialog.setHeader("This contact cannot be deleted because it is also an individual account.");
           htmlDialog.addButton("OK", "javascript:parent.window.close()");
-        } else {
+        } else if(dependencies.canDelete()){
           htmlDialog.setTitle("CFS: Confirm Delete");
           htmlDialog.setHeader("The contact you are requesting to delete has the following dependencies within CFS:");
           htmlDialog.addButton("Delete All", "javascript:window.location.href='Contacts.do?command=Delete&orgId=" + orgId + "&id=" + id + "'");
           htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+        }else{
+          htmlDialog.setHeader("This contact cannot be deleted because it has the following dependencies within CFS:");
+          htmlDialog.addButton("OK", "javascript:parent.window.close()");
         }
       } else {
         htmlDialog.setHeader("This contact cannot be deleted because it is associated with a User account.");
