@@ -25,7 +25,7 @@ CREATE TABLE sync_system (
 
 CREATE TABLE sync_table (
   table_id INT IDENTITY PRIMARY KEY,
-  system_id INT NOT NULL,
+  system_id INT NOT NULL REFERENCES sync_system(system_id),
   element_name VARCHAR(255),
   mapped_class_name VARCHAR(255),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -36,8 +36,8 @@ CREATE TABLE sync_table (
 );
 
 CREATE TABLE sync_map (
-  client_id INT NOT NULL,
-  table_id INT NOT NULL,
+  client_id INT NOT NULL REFERENCES sync_client(client_id),
+  table_id INT NOT NULL REFERENCES sync_table(table_id),
   record_id INT NOT NULL,
   cuid INT NOT NULL,
   complete BIT DEFAULT 0,
@@ -47,9 +47,8 @@ CREATE TABLE sync_map (
 CREATE UNIQUE INDEX idx_sync_map ON sync_map (client_id, table_id, record_id);
 
 CREATE TABLE sync_conflict_log (
-  client_id INT NOT NULL,
-  table_id INT NOT NULL,
+  client_id INT NOT NULL REFERENCES sync_client(client_id),
+  table_id INT NOT NULL REFERENCES sync_table(table_id),
   record_id INT NOT NULL,
   status_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-

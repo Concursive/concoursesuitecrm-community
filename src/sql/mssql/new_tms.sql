@@ -7,11 +7,10 @@
  */
  
 CREATE TABLE ticket_level (
-  id INT IDENTITY
-  ,level_code int NOT NULL PRIMARY KEY
-  ,level VARCHAR(300) NOT NULL UNIQUE
-  ,default_item BIT DEFAULT 0
-  ,enabled BIT DEFAULT 1
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL UNIQUE,
+  default_item BIT DEFAULT 0,
+  enabled BIT DEFAULT 1
 );
 
 
@@ -44,12 +43,6 @@ CREATE TABLE ticket_priority (
 );
 
 
-CREATE TABLE ticket_source (
-  source_code int NOT NULL PRIMARY KEY
-  ,source VARCHAR(300) NOT NULL UNIQUE 
-);
-
-
 CREATE TABLE ticket_category ( 
   id INT IDENTITY PRIMARY KEY
   ,cat_level int  NOT NULL DEFAULT 0 
@@ -64,26 +57,26 @@ CREATE TABLE ticket_category (
 
 CREATE TABLE ticket (
   ticketid INT IDENTITY PRIMARY KEY,
-  org_id INT NOT NULL REFERENCES organization, 
-  contact_id INT, 
+  org_id INT REFERENCES organization, 
+  contact_id INT REFERENCES contact,
   problem TEXT NOT NULL,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL,
+  enteredby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
   closed DATETIME,
-  pri_code INT NOT NULL DEFAULT -1, 
-  level_code INT NOT NULL DEFAULT -1,
-  department_code INT NOT NULL DEFAULT -1,
-  source_code INT NOT NULL DEFAULT -1, 
-  cat_code INT NOT NULL DEFAULT 0,
-  subcat_code1 INT NOT NULL DEFAULT 0,
-  subcat_code2 INT NOT NULL DEFAULT 0,
-  subcat_code3 INT NOT NULL DEFAULT 0,
-  assigned_to int default -1,
+  pri_code INT REFERENCES ticket_priority(code), 
+  level_code INT REFERENCES ticket_level(code),
+  department_code INT REFERENCES lookup_department,
+  source_code INT REFERENCES lookup_ticketsource(code),
+  cat_code INT,
+  subcat_code1 INT,
+  subcat_code2 INT,
+  subcat_code3 INT,
+  assigned_to INT REFERENCES access,
   comment TEXT,
   solution TEXT,
-  scode INT NOT NULL DEFAULT -1, 
+  scode INT REFERENCES ticket_severity(code),
   critical DATETIME,
   notified DATETIME,
   custom_data TEXT
@@ -92,19 +85,19 @@ CREATE TABLE ticket (
 CREATE INDEX "ticket_cidx" ON "ticket" ("assigned_to", "closed");
 
 CREATE TABLE ticketlog (
-  id INT IDENTITY
-  ,ticketid int NOT NULL
-  ,assigned_to int
-  ,comment text
-  ,closed BIT NOT NULL 
-  ,pri_code int NOT NULL 
-  ,level_code int NOT NULL 
-  ,department_code int NOT NULL 
-  ,cat_code int NOT NULL 
-  ,scode int NOT NULL 
+  id INT IDENTITY PRIMARY KEY
+  ,ticketid INT REFERENCES ticket(ticketid)
+  ,assigned_to INT REFERENCES access(user_id)
+  ,comment TEXT
+  ,closed BIT
+  ,pri_code INT REFERENCES ticket_priority(code)
+  ,level_code INT
+  ,department_code INT REFERENCES lookup_department(code)
+  ,cat_code INT
+  ,scode INT REFERENCES ticket_severity(code)
   ,entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-  ,enteredby INT NOT NULL
+  ,enteredby INT NOT NULL REFERENCES access(user_id)
   ,modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-  ,modifiedby INT NOT NULL
+  ,modifiedby INT NOT NULL REFERENCES access(user_id)
 );
 
