@@ -1510,6 +1510,7 @@ public final class CampaignManager extends CFSModule {
         ActiveSurveyQuestionList thisList = new ActiveSurveyQuestionList();
         thisList.setActiveSurveyId(surveyId);
         thisList.setPagedListInfo(pagedListInfo);
+        thisList.setBuildResults(true);
         thisList.buildList(db);
         context.getRequest().setAttribute("SurveyQuestionList", thisList);
       }
@@ -1523,8 +1524,62 @@ public final class CampaignManager extends CFSModule {
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
       }
-      addModuleBean(context, "Dashboard", "Campaign: Details");
+      addModuleBean(context, "Dashboard", "Campaign: Results");
       return ("ResultsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  View the survey response based on the recipients.
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandViewResponse(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    Connection db = null;
+    Campaign campaign = null;
+
+    String id = context.getRequest().getParameter("id");
+    if ("true".equals(context.getRequest().getParameter("reset"))) {
+      context.getSession().removeAttribute("SurveyResponseListInfo");
+    }
+    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "SurveyResponseListInfo");
+    pagedListInfo.setLink("/CampaignManager.do?command=ViewResponse&id=" + id);
+    try {
+      db = this.getConnection(context);
+      campaign = new Campaign(db, id);
+      context.getRequest().setAttribute("Campaign", campaign);
+
+      int surveyId = -1;
+      if ((surveyId = ActiveSurvey.getId(db, campaign.getId())) > 0) {
+        SurveyResponseList thisList = new SurveyResponseList();
+        thisList.setSurveyId(surveyId);
+        thisList.setPagedListInfo(pagedListInfo);
+        thisList.buildList(db);
+        context.getRequest().setAttribute("SurveyResponseList", thisList);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
+      addModuleBean(context, "Dashboard", "Campaign: Response");
+      return ("ResponseOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -1580,7 +1635,7 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
-      addModuleBean(context, "Dashboard", "Campaign: Details");
+      addModuleBean(context, "Dashboard", "Campaign: Recipients");
       return ("PreviewRecipientsOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -1653,7 +1708,7 @@ public final class CampaignManager extends CFSModule {
     String questionId = context.getRequest().getParameter("questionId");
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ItemDetailsListInfo");
     pagedListInfo.setLink("/CampaignManager.do?command=ShowItemDetails&itemId=" + itemId + "&questionId=" + questionId);
-    
+
     try {
       db = this.getConnection(context);
       itemDetails = new ActiveSurveyAnswerItemList();
