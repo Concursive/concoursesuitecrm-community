@@ -34,6 +34,7 @@ public class AccountInventory {
   private int modifiedBy = -1;
   private Vehicle vehicle = new Vehicle();
   private Organization organization = null;
+  private OptionList options = null;
   
   public AccountInventory() { }
 
@@ -116,6 +117,7 @@ public class AccountInventory {
   public void setModifiedBy(String tmp) { this.modifiedBy = Integer.parseInt(tmp); }
   public void setVehicle(Vehicle tmp) { this.vehicle = tmp; }
   public void setOrganization(Organization tmp) { this.organization = tmp; }
+  public void setOptions(OptionList tmp) { this.options = tmp; }
 
   public int getId() { return id; }
   public int getVehicleId() { return vehicleId; }
@@ -149,6 +151,7 @@ public class AccountInventory {
   }
   public Vehicle getVehicle() { return vehicle; }
   public Organization getOrganization() { return organization; }
+  public OptionList getOptions() { return options; }
 
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();

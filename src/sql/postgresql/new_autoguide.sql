@@ -57,3 +57,18 @@ CREATE TABLE autoguide_account_inventory (
   modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
 );
+
+CREATE TABLE autoguide_options (
+  option_id SERIAL PRIMARY KEY,
+  option_name VARCHAR(20) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE autoguide_inventory_options (
+  inventory_id INTEGER NOT NULL,
+  option_id INTEGER NOT NULL
+);

@@ -231,15 +231,18 @@ public final class AutoGuide extends CFSModule {
         makeSelect.addItem(thisMake.getId(), thisMake.getName());
       }
       rs.close();
+      if (pst != null) {
+        pst.close();
+      }
       context.getRequest().setAttribute("MakeSelect", makeSelect);
       
       HtmlSelect modelSelect = new HtmlSelect();
       modelSelect.addItem(-1, "--None--");
       context.getRequest().setAttribute("ModelSelect", modelSelect);
       
-      if (pst != null) {
-        pst.close();
-      }
+      OptionList options = new OptionList(db);
+      context.getRequest().setAttribute("OptionList", options);
+      
     } catch (SQLException e) {
       errorMessage = e;
     } finally {

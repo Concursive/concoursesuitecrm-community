@@ -1,9 +1,11 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,com.darkhorseventures.autoguide.base.*" %>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="InventoryDetails" class="com.darkhorseventures.autoguide.base.AccountInventory" scope="request"/>
 <jsp:useBean id="YearSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="MakeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="ModelSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
+<jsp:useBean id="OptionList" class="com.darkhorseventures.autoguide.base.OptionList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].description.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
@@ -168,6 +170,55 @@
       <%= showAttribute(request, "sellingPrice") %>
     </td>
   </tr>
+</table>
+<br>
+&nbsp;
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+    <td colspan="3" valign="center" align="left">
+      <strong>Select Vehicle Options</strong>
+    </td>     
+  </tr>
+<%
+  int rows = (OptionList.size()/3);
+  if ((OptionList.size()%3) > 0) {
+    ++rows;
+  }
+  
+  for (int rowCount = 0; rowCount < rows; rowCount++) { 
+    Option option1 = null;
+    Option option2 = null;
+    Option option3 = null;
+    option1 = (Option)OptionList.get(rowCount);
+    if (OptionList.size() > rowCount + rows) {
+      option2 = (Option)OptionList.get(rowCount + rows);
+    }
+    if (OptionList.size() > rowCount + (rows*2)) {
+      option3 = (Option)OptionList.get(rowCount + (rows*2));
+    }
+%>
+  <tr class="containerBody">
+    <td width="34%">
+      <input type="checkbox" name="option<%= option1.getId() %>"><%= option1.getName() %>
+    </td>
+    <td width="33%">
+<%
+    if (option2 != null) {
+%>
+      <input type="checkbox" name="option<%= option2.getId() %>"><%= option2.getName() %>
+<%  }  %>&nbsp;
+    </td>
+    <td width="33%">
+<%
+    if (option3 != null) {
+%>
+      <input type="checkbox" name="option<%= option3.getId() %>"><%= option3.getName() %>
+<%  }  %>&nbsp;
+    </td>
+  </tr>
+<%
+  }
+%>
 </table>
 &nbsp;
 <br>
