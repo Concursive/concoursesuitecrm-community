@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.controller.*,com.darkhorseventures.utils.*,com.darkhorseventures.webutils.StateSelect,com.darkhorseventures.webutils.CountrySelect" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.controller.*,com.darkhorseventures.utils.*,com.darkhorseventures.webutils.*" %>
 <jsp:useBean id="IndustryList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -15,6 +15,8 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popLookupSelect.js"></script>
+
 
 <script language="JavaScript">
   function doCheck(form) {
@@ -62,7 +64,10 @@
         alert("Form could not be saved, please check the following:\r\n\r\n" + message);
         return false;
       } else {
-        return true;
+        var test = document.addAccount.selectedList;
+        if (test != null) {
+          return selectAllOptions(document.addAccount.selectedList);
+        }
       }
     }
 </script>
@@ -153,27 +158,29 @@ Modify Account<br>
     <td nowrap class="formLabel" valign="top">
       Account Type(s)
     </td>
-    <td>
-    
-        <table width=100% cellpadding=0 cellspacing=0 border=0>
-	<tr>
-	<td width=90 valign=center>
-        <dhv:evaluate exp="<%=OrgDetails.getTypes().isEmpty()%>">
-		<%= AccountTypeList.getHtmlSelect("selectedList", 0) %>
-	</dhv:evaluate>
-	<dhv:evaluate exp="<%=!(OrgDetails.getTypes().isEmpty())%>">
-		<%= AccountTypeList.getHtmlSelect("selectedList", OrgDetails.getTypes()) %>
-	</dhv:evaluate>
-      	</td>
-	
-	<td valign=top>
-	Press "Shift" and drag for multiple consecutive selections. For non-consecutive selections, hold down "Ctrl" and click on each item you want to select. 
-	To de-select, press "Ctrl" and click on the item. 
-	</td>
-	
-	</tr>
-	</table>
-    </td>
+  
+  	<td valign=center>
+      
+      <select multiple name="selectedList" id="selectedList" size="5">
+      <dhv:evaluate exp="<%=OrgDetails.getTypes().isEmpty()%>">
+      <option value="-1">None Selected</option>
+      </dhv:evaluate>
+      
+      <dhv:evaluate exp="<%=!(OrgDetails.getTypes().isEmpty())%>">
+       <%
+        Iterator i = OrgDetails.getTypes().iterator();
+        
+        while (i.hasNext()) {
+          LookupElement thisElt = (LookupElement)i.next();
+      %>
+        <option value="<%=thisElt.getCode()%>"><%=thisElt.getDescription()%></option>
+      <%}%>
+      </dhv:evaluate>      
+      </select>
+      
+      <input type="hidden" name="previousSelection" value="">
+      <a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_account_types');">Select</a>
+  </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">

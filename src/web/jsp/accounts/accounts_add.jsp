@@ -10,6 +10,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popLookupSelect.js"></script>
 
 <script language="JavaScript">
   function doCheck(form) {
@@ -50,7 +51,10 @@
         alert("Form could not be saved, please check the following:\r\n\r\n" + message);
         return false;
       } else {
-        return true;
+        var test = document.addAccount.selectedList;
+        if (test != null) {
+          return selectAllOptions(document.addAccount.selectedList);
+        }
       }
     }
 </script>
@@ -77,21 +81,16 @@ Add Account<br>
     <td nowrap class="formLabel" valign="top">
       Account Type(s)
     </td>
-    <td>
-    <table width=100% cellpadding=0 cellspacing=5 border=0>
-	<tr>
 	<td valign=center>
-      <%= AccountTypeList.getHtmlSelect("selectedList", 0) %>
-      	</td>
+      <select multiple name="selectedList" id="selectedList" size="5">
+      <option value="-1">None Selected</option>
+			</select>
+      <input type="hidden" name="previousSelection" value="">
+      <a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_account_types');">Select</a>
+  </td>
   
-	<td valign=top>
-	Press "Shift" and drag for multiple consecutive selections. For non-consecutive selections, hold down "Ctrl" and click on each item you want to select. 
-	</td>
-	
 	</tr>
-	</table>
-    </td>
-  </tr>
+  
   <tr>
     <td nowrap class="formLabel">
       Name
