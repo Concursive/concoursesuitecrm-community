@@ -723,6 +723,12 @@ public java.sql.Timestamp getModified() {
     description = rs.getString("description");
     templateId = rs.getInt("template_id");
     messageSubject = rs.getString("subject");
+    
+    //when importing data, somehow several messages had null subjects
+    if (rs.wasNull()) {
+            messageSubject = "(no subject)";
+    }
+    
     messageText = rs.getString("body");
     replyTo = rs.getString("reply_addr");
     url = rs.getString("url");
