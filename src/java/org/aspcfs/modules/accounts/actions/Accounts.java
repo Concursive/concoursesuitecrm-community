@@ -529,23 +529,42 @@ public final class Accounts extends CFSModule {
    *@exception  SQLException  Description of the Exception
    */
   public void buildFormElements(ActionContext context, Connection db) throws SQLException {
+    
+    String index = null;
+    if (context.getRequest().getParameter("index") != null) {
+      index = context.getRequest().getParameter("index");
+    }
     LookupList industrySelect = new LookupList(db, "lookup_industry");
     industrySelect.addItem(0, "--None--");
     context.getRequest().setAttribute("IndustryList", industrySelect);
-
-    LookupList phoneTypeList = new LookupList(db, "lookup_orgphone_types");
-    context.getRequest().setAttribute("OrgPhoneTypeList", phoneTypeList);
-
-    LookupList addrTypeList = new LookupList(db, "lookup_orgaddress_types");
-    context.getRequest().setAttribute("OrgAddressTypeList", addrTypeList);
-
-    LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
-    context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
-
+    
     LookupList accountTypeList = new LookupList(db, "lookup_account_types");
     accountTypeList.setSelectSize(4);
     accountTypeList.setMultiple(true);
     context.getRequest().setAttribute("AccountTypeList", accountTypeList);
+    
+    if (index == null || (index!=null && Integer.parseInt(index) == 0)) {
+        LookupList phoneTypeList = new LookupList(db, "lookup_orgphone_types");
+        context.getRequest().setAttribute("OrgPhoneTypeList", phoneTypeList);
+
+        LookupList addrTypeList = new LookupList(db, "lookup_orgaddress_types");
+        context.getRequest().setAttribute("OrgAddressTypeList", addrTypeList);
+
+        LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
+        context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
+        
+        
+      } else {
+        LookupList phoneTypeList = new LookupList(db, "lookup_contactphone_types");
+        context.getRequest().setAttribute("OrgPhoneTypeList", phoneTypeList);
+
+        LookupList addrTypeList = new LookupList(db, "lookup_contactaddress_types");
+        context.getRequest().setAttribute("OrgAddressTypeList", addrTypeList);
+
+        LookupList emailTypeList = new LookupList(db, "lookup_contactemail_types");
+        context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
+        
+      }
   }
 
 
@@ -832,17 +851,20 @@ public final class Accounts extends CFSModule {
 
     newOrg.setTypeList(context.getRequest().getParameterValues("selectedList"));
     newOrg.setEnteredBy(getUserId(context));
+    newOrg.setModifiedBy(getUserId(context));
+    newOrg.setOwner(getUserId(context));
 
     //set the name to namelastfirstmiddle if individual
     if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
+      System.out.println("form type is indi");
       newOrg.setName(newOrg.getNameLastFirstMiddle());
+      newOrg.populatePrimaryContact();
+      ((Contact) newOrg.getPrimaryContact()).setRequestItems(context.getRequest());
     } else {
       //don't want to populate the addresses, etc. if this is an individual account
       newOrg.setRequestItems(context.getRequest());
     }
 
-    newOrg.setModifiedBy(getUserId(context));
-    newOrg.setOwner(getUserId(context));
 
     try {
       db = this.getConnection(context);
@@ -850,12 +872,6 @@ public final class Accounts extends CFSModule {
 
       if (recordInserted) {
         insertedOrg = new Organization(db, newOrg.getOrgId());
-        //if this is an individual account, populate and insert the primary contact
-        if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
-          insertedOrg.populatePrimaryContact();
-          ((Contact) insertedOrg.getPrimaryContact()).setRequestItems(context.getRequest());
-          ((Contact) insertedOrg.getPrimaryContact()).insert(db);
-        }
         context.getRequest().setAttribute("OrgDetails", insertedOrg);
         addRecentItem(context, newOrg);
       } else {
@@ -1695,7 +1711,6 @@ public final class Accounts extends CFSModule {
 
         LookupList emailTypeList = new LookupList(db, "lookup_contactemail_types");
         context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
-
       }
     } catch (SQLException e) {
       errorMessage = e;

@@ -1868,6 +1868,14 @@ public class Organization extends GenericBean {
 
       orgId = DatabaseUtils.getCurrVal(db, "organization_org_id_seq");
 
+      
+      //Insert primary contact if account is an individual
+      if(nameLast != null && !"".equals(nameLast)){
+        primaryContact.setOrgId(orgId);
+        primaryContact.insert(db);
+      }
+      
+      
       //Insert the phone numbers if there are any
       Iterator iphone = phoneNumberList.iterator();
       while (iphone.hasNext()) {
@@ -2019,7 +2027,9 @@ public class Organization extends GenericBean {
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      primaryContact = new Contact(db, rs.getInt("contact_id"));
+      primaryContact = new Contact();
+      primaryContact.setBuildDetails(true);
+      primaryContact.queryRecord(db, rs.getInt("contact_id"));
     }
     rs.close();
     pst.close();

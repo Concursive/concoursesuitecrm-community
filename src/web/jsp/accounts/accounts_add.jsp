@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.utils.web.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -15,6 +16,7 @@
 <script language="JavaScript">
   indSelected = 0;
   orgSelected = 1;
+  onLoad = 1;
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
       return true;
@@ -148,8 +150,11 @@
         document.addAccount.nameLast.value = "";     
       }
     }
-    var url = "Accounts.do?command=RebuildFormElements&index=" + index;
-    window.frames['server_commands'].location.href=url;
+    if(onLoad != 1){
+      var url = "Accounts.do?command=RebuildFormElements&index=" + index;
+      window.frames['server_commands'].location.href=url;
+    }
+    onLoad = 0;
   }
   //-------------------------------------------------------------------
   // getElementIndex(input_object)
@@ -236,8 +241,8 @@ Add Account<br>
       Classification
     </td>
     <td>
-      <input type="radio" name="form_type" value="organization" checked onClick="javascript:updateFormElements(0);">Organization
-      <input type="radio" name="form_type" value="individual" onClick="javascript:updateFormElements(1);">Individual
+      <input type="radio" name="form_type" value="organization" onClick="javascript:updateFormElements(0);" <%= (request.getParameter("form_type") == null || "organization".equals((String) request.getParameter("form_type"))) ? " checked" : "" %>>Organization
+      <input type="radio" name="form_type" value="individual" onClick="javascript:updateFormElements(1);" <%= "individual".equals((String) request.getParameter("form_type")) ? " checked" : "" %>>Individual
     </td>
   </tr>  
   <tr>
@@ -277,7 +282,7 @@ Add Account<br>
       Account Number
     </td>
     <td>
-      <input type="text" size="50" name="accountNumber" maxlength=50>
+      <input type="text" size="50" name="accountNumber" maxlength=50 value="<%= OrgDetails.getAccountNumber() != null ? OrgDetails.getAccountNumber() : ""%>">
     </td>
   </tr>
   <tr>
@@ -293,7 +298,7 @@ Add Account<br>
       Industry
     </td>
     <td>
-      <%= IndustryList.getHtmlSelect("industry",0) %>
+      <%= IndustryList.getHtmlSelect("industry",OrgDetails.getIndustry()) %>
     </td>
   </tr>
   <dhv:include name="accounts-employees" none="true">
@@ -302,7 +307,7 @@ Add Account<br>
       No. of Employees
     </td>
     <td>
-      <input type="text" size="10" name="employees">
+      <input type="text" size="10" name="employees" value="<%= OrgDetails.getEmployees() == 0 ? "" : "" + OrgDetails.getEmployees() %>">
     </td>
   </tr>
   </dhv:include>
@@ -312,7 +317,7 @@ Add Account<br>
       Revenue
     </td>
     <td>
-      <input type="text" size="10" name="revenue">
+      <input type="text" size="10" name="revenue" value="<%= OrgDetails.getRevenue() %>">
     </td>
   </tr>
   </dhv:include>
@@ -321,7 +326,7 @@ Add Account<br>
       Ticker Symbol
     </td>
     <td>
-      <input onFocus="if (indSelected == 1) { tabNext(this) }" type=text size=10 name="ticker">
+      <input onFocus="if (indSelected == 1) { tabNext(this) }" type=text size=10 name="ticker" value="<%= OrgDetails.getTicker() != null ? toHtml(OrgDetails.getTicker()) : ""%>">
     </td>
   </tr>
   <tr>
@@ -358,6 +363,87 @@ Add Account<br>
 	    <strong>Phone Numbers</strong>
 	  </td>
   </tr>
+<%
+  boolean noneSelected = false;
+%>
+  <dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() == null) %>">    
+<%  
+  int icount = 0;
+  Iterator inumber = OrgDetails.getPhoneNumberList().iterator();
+  if(inumber.hasNext()){
+  while (inumber.hasNext()) {
+    ++icount;
+    OrganizationPhoneNumber thisPhoneNumber = (OrganizationPhoneNumber)inumber.next();
+%>    
+  <tr class="containerBody">
+    <td class="formLabel">
+      Phone <%= icount %>
+    </td>
+    <td>
+      <input type="hidden" name="phone<%= icount %>id" value="<%= thisPhoneNumber.getId() %>">
+      <%= OrgPhoneTypeList.getHtmlSelect("phone" + icount + "type", thisPhoneNumber.getType()) %>
+      <input type="text" size="20" name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
+      <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10" value="<%= toHtmlValue(thisPhoneNumber.getExtension()) %>">
+    </td>
+  </tr>    
+  <%}
+  ++icount;
+%>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Phone <%= icount %>
+    </td>
+    <td>
+      <%= OrgPhoneTypeList.getHtmlSelect("phone" + icount + "type", "Business") %>
+      <input type="text" size="20" name="phone<%= icount %>number">&nbsp;ext.
+      <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10">
+    </td>
+  </tr>
+<%  }else{
+    noneSelected = true;
+  }
+%>
+</dhv:evaluate>
+<dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() != null) %>">    
+<%  
+  int icount = 0;
+  Iterator inumber = OrgDetails.getPrimaryContact().getPhoneNumberList().iterator();
+  if(inumber.hasNext()){
+  while (inumber.hasNext()) {
+    ++icount;
+    ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber) inumber.next();
+%>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Phone <%= icount %>
+    </td>
+    <td>
+      <input type="hidden" name="phone<%= icount %>id" value="<%= thisPhoneNumber.getId() %>">
+      <%= OrgPhoneTypeList.getHtmlSelect("phone" + icount + "type", thisPhoneNumber.getType()) %>
+      <input type="text" size="20" name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
+      <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10" value="<%= toHtmlValue(thisPhoneNumber.getExtension()) %>">
+    </td>
+  </tr>
+<%
+   }
+   ++icount;
+%>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Phone <%= icount %>
+    </td>
+    <td>
+      <%= OrgPhoneTypeList.getHtmlSelect("phone" + icount + "type", "Business") %>
+      <input type="text" size="20" name="phone<%= icount %>number">&nbsp;ext.
+      <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10">
+    </td>
+  </tr>
+<% }else{
+    noneSelected = true;
+   }
+%>
+</dhv:evaluate>
+<dhv:evaluate exp="<%= noneSelected %>">
   <tr>
     <td class="formLabel">
       Phone 1
@@ -378,6 +464,7 @@ Add Account<br>
       <input type="text" size="5" name="phone2ext" maxlength="10">
     </td>
   </tr>
+</dhv:evaluate>
 </table>
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -386,6 +473,296 @@ Add Account<br>
       <strong>Addresses</strong>
     </td>
   </tr>
+  
+  <%
+    noneSelected = false;
+  %>
+  
+  <dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() == null) %>">  
+<%  
+  int acount = 0;
+  Iterator anumber = OrgDetails.getAddressList().iterator();
+  if(anumber.hasNext()){
+  while (anumber.hasNext()) {
+    ++acount;
+    OrganizationAddress thisAddress = (OrganizationAddress)anumber.next();
+%>    
+  <tr class="containerBody">
+    <input type="hidden" name="address<%= acount %>id" value="<%= thisAddress.getId() %>">
+    <td class="formLabel">
+      Type
+    </td>
+    <td>
+      <%= OrgAddressTypeList.getHtmlSelect("address" + acount + "type", thisAddress.getType()) %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 1
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line1" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine1()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 2
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line2" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine2()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      City
+    </td>
+    <td>
+      <input type="text" size="28" name="address<%= acount %>city" maxlength="80" value="<%= toHtmlValue(thisAddress.getCity()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      State/Province
+    </td>
+    <td>
+      <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      <% StateSelect = new StateSelect(); %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Zip/Postal Code
+    </td>
+    <td>
+      <input type="text" size="10" name="address<%= acount %>zip" maxlength="12" value="<%= toHtmlValue(thisAddress.getZip()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Country
+    </td>
+    <td>
+      <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
+      <% CountrySelect = new CountrySelect(); %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td colspan="2">
+      &nbsp;
+    </td>
+  </tr> 
+<%    
+  }
+  ++acount;
+%>
+
+<tr class="containerBody">
+    <td class="formLabel">
+      Type
+    </td>
+    <td>
+      <%= OrgAddressTypeList.getHtmlSelect("address" + acount + "type", "Primary") %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 1
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line1" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 2
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line2" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      City
+    </td>
+    <td>
+      <input type="text" size="28" name="address<%= acount %>city" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      State/Province
+    </td>
+    <td>
+      <%= StateSelect.getHtml("address" + acount + "state") %>
+      <% StateSelect = new StateSelect(); %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Zip/Postal Code
+    </td>
+    <td>
+      <input type="text" size="10" name="address<%= acount %>zip" maxlength="12">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Country
+    </td>
+    <td>
+      <%= CountrySelect.getHtml("address" + acount + "country") %>
+      <% CountrySelect = new CountrySelect(); %>
+    </td>
+  </tr>
+<%
+  }else{
+    noneSelected = true;
+  }
+%>
+  </dhv:evaluate>
+<dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() != null) %>">  
+<%  
+  int acount = 0;
+  Iterator anumber = OrgDetails.getPrimaryContact().getAddressList().iterator();
+  if(anumber.hasNext()){
+  while (anumber.hasNext()) {
+    ++acount;
+    ContactAddress thisAddress = (ContactAddress)anumber.next();
+%>    
+  <tr class="containerBody">
+    <input type="hidden" name="address<%= acount %>id" value="<%= thisAddress.getId() %>">
+    <td class="formLabel">
+      Type
+    </td>
+    <td>
+      <%= OrgAddressTypeList.getHtmlSelect("address" + acount + "type", thisAddress.getType()) %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 1
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line1" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine1()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 2
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line2" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine2()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      City
+    </td>
+    <td>
+      <input type="text" size="28" name="address<%= acount %>city" maxlength="80" value="<%= toHtmlValue(thisAddress.getCity()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      State/Province
+    </td>
+    <td>
+      <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      <% StateSelect = new StateSelect(); %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Zip/Postal Code
+    </td>
+    <td>
+      <input type="text" size="10" name="address<%= acount %>zip" maxlength="12" value="<%= toHtmlValue(thisAddress.getZip()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Country
+    </td>
+    <td>
+      <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
+      <% CountrySelect = new CountrySelect(); %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td colspan="2">
+      &nbsp;
+    </td>
+  </tr> 
+<%    
+  }
+   ++acount;
+%>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Type
+    </td>
+    <td>
+      <%= OrgAddressTypeList.getHtmlSelect("address" + acount + "type", "Business") %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 1
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line1" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 2
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line2" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      City
+    </td>
+    <td>
+      <input type="text" size="28" name="address<%= acount %>city" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      State/Province
+    </td>
+    <td>
+      <%= StateSelect.getHtml("address" + acount + "state") %>
+      <% StateSelect = new StateSelect(); %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Zip/Postal Code
+    </td>
+    <td>
+      <input type="text" size="10" name="address<%= acount %>zip" maxlength="12">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Country
+    </td>
+    <td>
+      <%= CountrySelect.getHtml("address" + acount + "country") %>
+      <% CountrySelect = new CountrySelect(); %>
+    </td>
+  </tr>
+<%
+  }else{
+    noneSelected = true;
+  }
+%>
+  </dhv:evaluate>
+  
+<dhv:evaluate exp="<%= noneSelected %>">  
   <tr>
     <td class="formLabel">
       Type
@@ -501,6 +878,7 @@ Add Account<br>
       <%= CountrySelect.getHtml("address2country") %>
     </td>
   </tr>
+ </dhv:evaluate>
 </table>
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -509,6 +887,89 @@ Add Account<br>
 	    <strong>Email Addresses</strong>
 	  </td>
   </tr>
+  
+  <%
+    noneSelected = false;
+  %>
+  
+ <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
+<%  
+  int ecount = 0;
+  Iterator enumber = OrgDetails.getEmailAddressList().iterator();
+  if(enumber.hasNext()){
+  while (enumber.hasNext()) {
+    ++ecount;
+    OrganizationEmailAddress thisEmailAddress = (OrganizationEmailAddress)enumber.next();
+%>    
+  <tr class="containerBody">
+    <td class="formLabel">
+      Email <%= ecount %>
+    </td>
+    <td>
+      <input type="hidden" name="email<%= ecount %>id" value="<%= thisEmailAddress.getId() %>">
+      <%= OrgEmailTypeList.getHtmlSelect("email" + ecount + "type", thisEmailAddress.getType()) %>
+      <input type="text" size="40" name="email<%= ecount %>address" maxlength="255" value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
+    </td>
+  </tr>
+<%    
+  }
+   ++ecount;
+%>
+   <tr class="containerBody">
+    <td class="formLabel">
+      Email <%= ecount %>
+    </td>
+    <td>
+      <%= OrgEmailTypeList.getHtmlSelect("email" + ecount + "type", "Primary") %>
+      <input type="text" size="40" name="email<%= ecount %>address" maxlength="255">
+    </td>
+  </tr>
+<%
+  }else{
+    noneSelected = true;
+  }
+%>
+</dhv:evaluate>
+<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">
+<%  
+  int ecount = 0;
+  Iterator enumber = OrgDetails.getPrimaryContact().getEmailAddressList().iterator();
+  if(enumber.hasNext()){
+  while (enumber.hasNext()) {
+    ++ecount;
+    ContactEmailAddress thisEmailAddress = (ContactEmailAddress) enumber.next();
+%>    
+  <tr class="containerBody">
+    <td class="formLabel">
+      Email <%= ecount %>
+    </td>
+    <td>
+      <input type="hidden" name="email<%= ecount %>id" value="<%= thisEmailAddress.getId() %>">
+      <%= OrgEmailTypeList.getHtmlSelect("email" + ecount + "type", thisEmailAddress.getType()) %>
+      <input type="text" size="40" name="email<%= ecount %>address" maxlength="255" value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
+    </td>
+  </tr>
+<%    
+  }
+  ++ecount;
+%>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Email <%= ecount %>
+    </td>
+    <td>
+      <%= OrgEmailTypeList.getHtmlSelect("email" + ecount + "type", "Business") %>
+      <input type="text" size="40" name="email<%= ecount %>address" maxlength="255">
+    </td>
+  </tr>
+<%
+  }else{
+    noneSelected = true;
+  }
+%>
+</dhv:evaluate>
+
+<dhv:evaluate exp="<%= noneSelected %>">
   <tr>
     <td class="formLabel">
       Email 1
@@ -527,6 +988,7 @@ Add Account<br>
       <input type="text" size="40" name="email2address" maxlength="255">
     </td>
   </tr>
+  </dhv:evaluate>
 </table>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
