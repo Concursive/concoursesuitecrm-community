@@ -37,8 +37,7 @@ Group List
       <%= CampaignGroupListInfo.getSortIcon("name") %>
     </td>
     <td nowrap>
-      <a href="CampaignManagerGroup.do?command=View&column=enteredby"><strong>Entered By</strong></a>
-      <%= CampaignGroupListInfo.getSortIcon("enteredby") %>
+      <strong>Entered By</strong>
     </td>
     <td nowrap>
       <a href="CampaignManagerGroup.do?command=View&column=modified"><strong>Last Modified</strong></a>
@@ -62,7 +61,7 @@ Group List
       <a href="CampaignManagerGroup.do?command=Preview&id=<%= thisList.getId() %>"><%= toHtml(thisList.getGroupName()) %></a>
     </td>
     <td valign="center" align="left" class="row<%= rowid %>" nowrap>
-      <dhv:username id="<%= thisList.getEnteredBy() %>" />
+      <dhv:username id="<%= thisList.getEnteredBy() %>" lastFirst="true"/>
     </td>
     <td valign="center" nowrap class="row<%= rowid %>">
       <%= thisList.getModifiedDateTimeString() %>

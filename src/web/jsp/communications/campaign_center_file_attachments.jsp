@@ -40,89 +40,76 @@ File Attachments
   </tr>
   <tr>
     <td width="100%" class="containerBack">
-      <ul>
-        <li>Begin by selecting "Browse" then locate the file on your system to attach</li>
-        <li>Send the file to the server by selecting "Upload"</li>
-        <li>Attached files will be sent to email recipients</li>
-        <li>Attached files cannot be sent to fax recipients</li>
-        <li>Attached files can be exported for mail merge recipients</li>
-        <li>Files cannot be larger than 2 megabytes (2048k)</li>
-      </ul>
-<table border="0" width="100%">
-<tr>
-<td width="100%" valign="top">
-<%-- List of Documents --%>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="4">
-      <strong>Attached files...</strong>
+      <%-- List of Documents --%>
+      <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+        <tr class="title">
+          <td colspan="4">
+            <strong>Attached files...</strong>
+          </td>
+        </tr>
+        <tr class="title">
+          <td width="10" align="center">Action</td>
+          <td>File Name</td>
+          <td align="center">Size</td>
+          <td align="center">Date</td>
+        </tr>
+      <%
+        Iterator j = fileItemList.iterator();
+        if ( j.hasNext() ) {
+          int rowid = 0;
+          while (j.hasNext()) {
+            rowid = (rowid != 1?1:2);
+            FileItem thisFile = (FileItem)j.next();
+      %>      
+          <tr class="row<%= rowid %>">
+            <td width="10" valign="middle" align="center" nowrap>
+              <a href="CampaignManager.do?command=DownloadFile&id=<%= Campaign.getId() %>&fid=<%= thisFile.getId() %>">Download</a>
+              <dhv:permission name="campaign-campaigns-edit"><a href="javascript:confirmDelete('CampaignManager.do?command=RemoveFile&fid=<%= thisFile.getId() %>&id=<%= Campaign.getId()%>');"><br>Remove</a></dhv:permission>
+            </td>
+            <td valign="middle" width="100%">
+              <%= thisFile.getImageTag() %><%= toHtml(thisFile.getClientFilename()) %>
+            </td>
+            <td align="center" valign="middle" nowrap>
+              <%= thisFile.getRelativeSize() %> k&nbsp;
+            </td>
+            <td nowrap>
+              <%= thisFile.getModifiedDateTimeString() %><br>
+              <dhv:username id="<%= thisFile.getEnteredBy() %>"/>
+            </td>
+          </tr>
+        <%}%>
+      <%} else {%>
+          <tr class="containerBody">
+            <td colspan="4">
+              No files attached.
+            </td>
+          </tr>
+      <%}%>
+      </table>
+      <%-- File upload form, if permission --%>
+      <dhv:permission name="campaign-campaigns-edit">
+      &nbsp;<br>
+      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+        <tr class="title">
+          <td>
+            <strong>Attach a file</strong>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <form method="post" name="inputForm" action="CampaignManager.do?command=UploadFile&id=<%= Campaign.getId() %>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+            <td align="center" width="100%">
+              <input type="file" name="id<%= Campaign.getId() %>" size="30"><br>
+              * Large files may take a while to upload.<br>
+              * Remember: This file will eventually be e-mailed, so limit file size to under 2 Megabytes<br>
+              Wait for file completion message when upload is complete.<br>
+              <input type="submit" value=" Upload File " name="upload">
+            </td>
+          </form>
+        </tr>
+      </table>
+      </dhv:permission>
+      &nbsp;<br>
+      <input type="button" value="Done" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'">
     </td>
-  </tr>
-  <tr class="title">
-    <td width="10" align="center">Action</td>
-    <td>File Name</td>
-    <td align="center">Size</td>
-    <td align="center">Date</td>
-  </tr>
-<%
-  Iterator j = fileItemList.iterator();
-  if ( j.hasNext() ) {
-    int rowid = 0;
-    while (j.hasNext()) {
-      rowid = (rowid != 1?1:2);
-      FileItem thisFile = (FileItem)j.next();
-%>      
-    <tr class="row<%= rowid %>">
-      <td width="10" valign="middle" align="center" nowrap>
-        <a href="CampaignManager.do?command=DownloadFile&id=<%= Campaign.getId() %>&fid=<%= thisFile.getId() %>">Download</a>
-        <dhv:permission name="campaign-campaigns-edit"><a href="javascript:confirmDelete('CampaignManager.do?command=RemoveFile&fid=<%= thisFile.getId() %>&id=<%= Campaign.getId()%>');"><br>Remove</a></dhv:permission>
-      </td>
-      <td valign="middle" width="100%">
-        <%= thisFile.getImageTag() %><%= toHtml(thisFile.getClientFilename()) %>
-      </td>
-      <td align="center" valign="middle" nowrap>
-        <%= thisFile.getRelativeSize() %> k&nbsp;
-      </td>
-      <td nowrap>
-        <%= thisFile.getModifiedDateTimeString() %><br>
-        <dhv:username id="<%= thisFile.getEnteredBy() %>"/>
-      </td>
-    </tr>
-  <%}%>
-<%} else {%>
-    <tr class="containerBody">
-      <td colspan="4">
-        No files attached.
-      </td>
-    </tr>
-<%}%>
-</table>
-</td>
-<%-- File upload form, if permission --%>
-<dhv:permission name="campaign-campaigns-edit">
-<td width="200" valign="top">
-<table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerBack">
-    <form method="post" name="inputForm" action="CampaignManager.do?command=UploadFile&id=<%= Campaign.getId() %>" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
-      <td align="center" width="100%">
-        <input type="file" name="id<%= Campaign.getId() %>" size="30"><br>
-        * Large files may take a while to upload.<br>
-        Wait for file completion message when upload is complete.<br>
-        <input type="submit" value=" Upload File " name="upload">
-      </td>
-    </form>
-  </tr>
-</table>
-</td>
-</dhv:permission>
-</tr>
-<tr>
-  <td colspan="2">
-    &nbsp;<br>
-    <input type="button" value="Done" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'">
-  </td>
-</tr>
-</table>
-  </td>
   </tr>
 </table>
