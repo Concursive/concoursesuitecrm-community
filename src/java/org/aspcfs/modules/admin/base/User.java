@@ -1673,7 +1673,7 @@ public void setRevenueLock(boolean revenueLock) {
     buildResources(db);
   }
   
-    public void buildRevenueYTD(Connection db, int year) throws SQLException {
+  public void buildRevenueYTD(Connection db, int year, int type) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
 
@@ -1682,10 +1682,17 @@ public void setRevenueLock(boolean revenueLock) {
         "SELECT sum(rv.amount) as s " +
         "FROM revenue rv " +
         "WHERE rv.owner = ? AND rv.year = ? ");
+	
+    if (type > 0) {
+	sql.append("AND rv.type = ? ");
+    }
     pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, id);
     pst.setInt(++i, year);
+    if (type > 0) {
+	    pst.setInt(++i, type);
+    }
     rs = pst.executeQuery();
     if (rs.next()) {
 	    this.setYTD(rs.getDouble("s"));

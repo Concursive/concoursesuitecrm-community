@@ -127,6 +127,13 @@ public final class RevenueManager extends CFSModule {
            
       shortChildList = thisRec.getShortChildList();
       shortChildList.setRevenueYear(y);
+      
+      if (context.getRequest().getParameter("type") != null) {
+	      shortChildList.setRevenueType(Integer.parseInt(context.getRequest().getParameter("type")));
+      }  else if (context.getSession().getAttribute("RevenueGraphType") != null) {
+	      shortChildList.setRevenueType(Integer.parseInt((String)context.getSession().getAttribute("RevenueGraphType")));
+      }
+      
       shortChildList.buildRevenueYTD(db);
       
       context.getRequest().setAttribute("ShortChildList", shortChildList);
@@ -139,7 +146,6 @@ public final class RevenueManager extends CFSModule {
       realFullRevList.setYear(y);
       
       displayList.setRevenueYear(y);
-      
       displayList.setBuildRevenueYTD(true);
       
       //System.out.println("here is the session variable: " + context.getSession().getAttribute("RevenueGraphType"));

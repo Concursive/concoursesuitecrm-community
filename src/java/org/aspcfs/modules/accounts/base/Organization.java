@@ -344,7 +344,7 @@ public void setYTD(double YTD) {
     }
   }
 
-  public void buildRevenueYTD(Connection db, int year, int type) throws SQLException {
+  public void buildRevenueYTD(Connection db, int year, int type, int ownerId) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
 
@@ -352,8 +352,8 @@ public void setYTD(double YTD) {
     sql.append(
         "SELECT sum(rv.amount) as s " +
         "FROM revenue rv " +
-        "WHERE rv.org_id = ? AND rv.year = ? ");
-    if (type > -1) {
+        "WHERE rv.org_id = ? AND rv.year = ? AND rv.owner = ? ");
+    if (type > 0) {
 	    sql.append("AND rv.type = ? ");
     }
     
@@ -361,13 +361,15 @@ public void setYTD(double YTD) {
     int i = 0;
     pst.setInt(++i, orgId);
     pst.setInt(++i, year);
-    if (type > -1) {
+    pst.setInt(++i, ownerId);
+    if (type > 0) {
 	    pst.setInt(++i, type);
     }	    
     rs = pst.executeQuery();
     if (rs.next()) {
 	    this.setYTD(rs.getDouble("s"));
     } 
+    System.out.println("Revenue Calc: " + pst.toString());
     rs.close();
     pst.close();
   }

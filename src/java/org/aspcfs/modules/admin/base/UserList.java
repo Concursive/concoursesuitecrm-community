@@ -43,6 +43,7 @@ public class UserList extends Vector {
   
   private boolean buildRevenueYTD = false;
   private int revenueYear = -1;
+  private int revenueType = 0;
 
   private boolean includeMe = false;
   private String myValue = "";
@@ -184,6 +185,12 @@ public class UserList extends Vector {
     this.department = Integer.parseInt(department);
   }
 
+public int getRevenueType() {
+	return revenueType;
+}
+public void setRevenueType(int revenueType) {
+	this.revenueType = revenueType;
+}
 
   /**
    *  Sets the username attribute of the UserList object
@@ -620,7 +627,7 @@ public class UserList extends Vector {
         thisUser.setManagerUser(managerUser);
       }
       if (buildRevenueYTD && revenueYear > -1) {
-	      thisUser.buildRevenueYTD(db, this.getRevenueYear());
+	      thisUser.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType());
       }
       
       this.add(thisUser);
@@ -636,7 +643,7 @@ public class UserList extends Vector {
       Iterator x = this.iterator();
       while (x.hasNext()) {
 	      User tempUser = (User)x.next();
-	      tempUser.buildRevenueYTD(db, this.getRevenueYear());
+	      tempUser.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType());
       }
   }
 

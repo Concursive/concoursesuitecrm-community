@@ -37,7 +37,7 @@ public class OrganizationList extends Vector {
   private boolean hasAlertDate = false;
   private boolean hasExpireDate = false;
   
-  private int revenueType = -1;
+  private int revenueType = 0;
   private int revenueYear = -1;
   private int revenueOwnerId = -1;
   private boolean buildRevenueYTD = false;
@@ -354,8 +354,8 @@ public void setRevenueOwnerId(int revenueOwnerId) {
         break;
       }
       Organization thisOrganization = this.getObject(rs);
-      if (buildRevenueYTD && revenueYear > -1) {
-	      thisOrganization.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType());
+      if (buildRevenueYTD && revenueYear > -1 && revenueOwnerId > -1) {
+	      thisOrganization.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType(), this.getRevenueOwnerId());
       }
       this.add(thisOrganization);
     }
