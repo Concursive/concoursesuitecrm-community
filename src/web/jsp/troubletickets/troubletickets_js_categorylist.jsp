@@ -45,8 +45,12 @@ function page_init() {
   Iterator list2 = SubList2.iterator();
   while (list2.hasNext()) {
     TicketCategory thisCategory = (TicketCategory)list2.next();
+    String elementText = thisCategory.getDescription();
+      if (!(thisCategory.getEnabled())) {
+        elementText += " *";
+      }
 %>
-  list2.options[list2.length] = newOpt("<%= thisCategory.getDescription() %>", "<%= thisCategory.getId() %>");
+  list2.options[list2.length] = newOpt("<%= elementText %>", "<%= thisCategory.getId() %>");
 <%
   }
 %>
