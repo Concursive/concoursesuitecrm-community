@@ -207,6 +207,7 @@ Modify Contact<br>
 </table>
 <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
 <input type="hidden" name="primaryContact" value="<%=ContactDetails.getPrimaryContact()%>">
+<input type="hidden" name="orgName" value="<%= OrgDetails.getName() %>">
 <input type="hidden" name="modified" value="<%= ContactDetails.getModified() %>">
 <% if (request.getParameter("return") != null) {%>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">

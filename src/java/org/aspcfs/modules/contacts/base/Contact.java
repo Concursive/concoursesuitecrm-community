@@ -172,11 +172,8 @@ public class Contact extends GenericBean {
     StringBuffer sql = new StringBuffer();
     //NOTE: Update the UserList query if any changes are made to the contact query
     sql.append(
-        "SELECT c.*, d.description as departmentname, t.description as type_name, " +
-        "o.name as org_name, o.enabled as orgenabled " +
+        "SELECT c.*, d.description as departmentname " +
         "FROM contact c " +
-        "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "LEFT JOIN lookup_department d ON (c.department = d.code) " +
         "WHERE c.contact_id = ? ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -1264,6 +1261,16 @@ public class Contact extends GenericBean {
 
 
   /**
+   *  Sets the orgName attribute of the Contact object
+   *
+   *@param  orgName  The new orgName value
+   */
+  public void setOrgName(String orgName) {
+    this.orgName = orgName;
+  }
+
+
+  /**
    *  Gets the OrgName attribute of the Contact object
    *
    *@return    The OrgName value
@@ -1849,6 +1856,11 @@ public class Contact extends GenericBean {
       sql.append(
           "INSERT INTO contact " +
           "(user_id, namefirst, namelast, owner, primary_contact, ");
+
+      if (orgName != null) {
+        sql.append("org_name, ");
+      }
+
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -1857,6 +1869,10 @@ public class Contact extends GenericBean {
       }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ");
+      
+      if (orgName != null) {
+        sql.append("?, ");
+      }
       if (entered != null) {
         sql.append("?, ");
       }
@@ -1871,6 +1887,9 @@ public class Contact extends GenericBean {
       pst.setString(++i, this.getNameLast());
       DatabaseUtils.setInt(pst, ++i, this.getOwner());
       pst.setBoolean(++i, this.getPrimaryContact());
+      if (orgName != null) {
+        pst.setString(++i, orgName);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -2302,6 +2321,7 @@ public class Contact extends GenericBean {
     if (orgId > 0 && typeList != null && typeList.contains(String.valueOf(PERSONAL_TYPE))) {
       errors.put("personalContactError", "Account Contact cannot be personal");
     }
+
     if (hasErrors()) {
       return false;
     } else {
@@ -2334,6 +2354,10 @@ public class Contact extends GenericBean {
         "namefirst = ?, namelast = ?, " +
         "namemiddle = ?, namesuffix = ?, notes = ?, owner = ?, custom1 = ?, url = ?, " +
         "org_id = ?, primary_contact = ?, ");
+
+    if (orgName != null) {
+      sql.append("org_name = ?, ");
+    }
     if (imService > -1) {
       sql.append("imservice = ?, ");
     }
@@ -2374,6 +2398,9 @@ public class Contact extends GenericBean {
     pst.setString(++i, this.getUrl());
     DatabaseUtils.setInt(pst, ++i, orgId);
     pst.setBoolean(++i, this.getPrimaryContact());
+    if (orgName != null) {
+      pst.setString(++i, orgName);
+    }
     if (imService > -1) {
       pst.setInt(++i, this.getImService());
     }
@@ -2464,7 +2491,6 @@ public class Contact extends GenericBean {
 
     //organization table
     orgName = rs.getString("org_name");
-    orgEnabled = rs.getBoolean("orgenabled");
   }
 
 
@@ -2646,7 +2672,7 @@ public class Contact extends GenericBean {
       }
       rs.close();
       pst.close();
-      
+
       i = 0;
       pst = db.prepareStatement(
           "SELECT count(*) as taskcount " +
@@ -2663,7 +2689,7 @@ public class Contact extends GenericBean {
       }
       rs.close();
       pst.close();
-      
+
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
     }

@@ -84,10 +84,10 @@ View Contacts<br>
         <td class="row<%= rowid %>" nowrap>
           <a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
           <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
-          <dhv:permission name="accounts-view,accounts-accounts-view"><%= ((thisContact.getOrgId() > 0 && thisContact.getOrgEnabled())?"<a href=\"Accounts.do?command=Details&orgId=" + thisContact.getOrgId() + "\">[Account]</a>":"")%></dhv:permission>
+          <dhv:permission name="accounts-view,accounts-accounts-view"><%= ((thisContact.getOrgId() > 0 )?"<a href=\"Accounts.do?command=Details&orgId=" + thisContact.getOrgId() + "\">[Account]</a>":"")%></dhv:permission>
         </td>
         <td class="row<%= rowid %>">
-          <%= toHtml(thisContact.getCompany()) %><dhv:evaluate exp="<%= (!(thisContact.getOrgEnabled()) && thisContact.getOrgId() > 0)%>">&nbsp;<font color="red">*</font></dhv:evaluate>
+          <%= toHtml(thisContact.getCompany()) %>
         </td>
         <td class="row<%= rowid %>" nowrap>
           <%= toHtml(thisContact.getPhoneNumber("Business")) %>

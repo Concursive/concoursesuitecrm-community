@@ -1154,7 +1154,6 @@ public class ContactList extends Vector {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM contact c " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "LEFT JOIN lookup_department d ON (c.department = d.code) " +
         "WHERE c.contact_id > -1 ");
 
@@ -1202,10 +1201,8 @@ public class ContactList extends Vector {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "c.*, d.description as departmentname, " +
-        "o.name as org_name,o.enabled as orgenabled " +
+        "c.*, d.description as departmentname " +
         "FROM contact c " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "LEFT JOIN lookup_department d ON (c.department = d.code) " +
         "WHERE c.contact_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -1514,7 +1511,7 @@ public class ContactList extends Vector {
                   sqlFilter.append("(");
                 }
 
-                sqlFilter.append(" (lower(o.name) " + key1 + " '" + key2 + "' OR lower(c.company) " + key1 + " '" + key2 + "' ) ");
+                sqlFilter.append(" (lower(c.org_name) " + key1 + " '" + key2 + "' OR lower(c.company) " + key1 + " '" + key2 + "' ) ");
 
                 previousKey = key1;
                 processElementType(db, sqlFilter, elementType);

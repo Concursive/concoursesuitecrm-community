@@ -169,5 +169,6 @@
   </td>
   </tr>
 </table>
+<input type="hidden" name="orgName" value="<%= OrgDetails.getName() %>">
 </form>
 </body>
