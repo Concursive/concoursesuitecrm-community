@@ -29,7 +29,7 @@
 <% if (PermissionCategory.getCategories()) { %>
   <dhv:permission name="admin-sysconfig-folders-view">
   <tr>
-    <td><a href="AdminCategories.do?command=View&moduleId=<%= PermissionCategory.getId() %>">Categories</a></td>
+    <td><a href="AdminCategories.do?command=ViewActive&moduleId=<%= PermissionCategory.getId() %>">Categories</a></td>
   </tr>
   </dhv:permission>
 <%}%>
