@@ -71,9 +71,7 @@
 <input type="hidden" name="finalsubmit" value="false">
 <input type="hidden" name="rowcount" value="0">
 <input type="hidden" name="displayFieldId" value="<%= DisplayFieldId %>">
-<input type="hidden" name="category" value="<%= toHtmlValue(request.getParameter("category")) %>">
-<input type="hidden" name="contactId" value="<%= toHtmlValue(request.getParameter("contactId")) %>">
-<input type="hidden" name="previousSelection" value="<%= toHtmlValue(request.getParameter("previousSelection")) %>">
+<%= addHiddenParams(request, "contactId|category") %>
 <input type="button" value="Done" onClick="javascript:document.elementListView.finalsubmit.value='true';document.elementListView.submit();">
 <input type="button" value="Cancel" onClick="javascript:window.close()">
 [<a href="javascript:SetChecked(1,'checkelement','elementListView','<%= User.getBrowserId() %>');">Check All</a>]

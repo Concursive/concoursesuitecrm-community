@@ -1371,7 +1371,6 @@ public class ContactList extends Vector {
         "WHERE c.contact_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    System.out.println(pst.toString());
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
